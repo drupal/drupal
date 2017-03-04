@@ -171,7 +171,7 @@ class PoItem {
    *
    * @param array $values
    */
-  public function setFromArray(array $values = array()) {
+  public function setFromArray(array $values = []) {
     if (isset($values['context'])) {
       $this->setContext($values['context']);
     }

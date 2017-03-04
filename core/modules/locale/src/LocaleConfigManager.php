@@ -147,7 +147,7 @@ class LocaleConfigManager {
         return $this->getTranslatableData($typed_config);
       }
     }
-    return array();
+    return [];
   }
 
   /**
@@ -163,7 +163,7 @@ class LocaleConfigManager {
    *   TranslatableMarkup.
    */
   protected function getTranslatableData(TypedDataInterface $element) {
-    $translatable = array();
+    $translatable = [];
     if ($element instanceof TraversableTypedDataInterface) {
       foreach ($element as $key => $property) {
         $value = $this->getTranslatableData($property);
@@ -178,11 +178,11 @@ class LocaleConfigManager {
       $value = $element->getValue();
       $definition = $element->getDataDefinition();
       if (!empty($definition['translatable']) && $value !== '' && $value !== NULL) {
-        $options = array();
+        $options = [];
         if (isset($definition['translation context'])) {
           $options['context'] = $definition['translation context'];
         }
-        return new TranslatableMarkup($value, array(), $options);
+        return new TranslatableMarkup($value, [], $options);
       }
     }
     return $translatable;
@@ -215,7 +215,7 @@ class LocaleConfigManager {
    * @see self::getTranslatableData()
    */
   protected function processTranslatableData($name, array $active, array $translatable, $langcode) {
-    $translated = array();
+    $translated = [];
     foreach ($translatable as $key => $item) {
       if (!isset($active[$key])) {
         continue;
@@ -296,10 +296,10 @@ class LocaleConfigManager {
    * @return array
    *   Array of configuration object names.
    */
-  public function getComponentNames(array $components = array()) {
+  public function getComponentNames(array $components = []) {
     $components = array_filter($components);
     if ($components) {
-      $names = array();
+      $names = [];
       foreach ($components as $type => $list) {
         // InstallStorage::getComponentNames returns a list of folders keyed by
         // config name.
@@ -322,8 +322,8 @@ class LocaleConfigManager {
    *   Array of configuration object names.
    */
   public function getStringNames(array $lids) {
-    $names = array();
-    $locations = $this->localeStorage->getLocations(array('sid' => $lids, 'type' => 'configuration'));
+    $names = [];
+    $locations = $this->localeStorage->getLocations(['sid' => $lids, 'type' => 'configuration']);
     foreach ($locations as $location) {
       $names[$location->name] = $location->name;
     }
@@ -370,15 +370,15 @@ class LocaleConfigManager {
       // If translations for a language have not been loaded yet.
       if (!isset($this->translations[$name][$langcode])) {
         // Preload all translations for this configuration name and language.
-        $this->translations[$name][$langcode] = array();
-        foreach ($this->localeStorage->getTranslations(array('language' => $langcode, 'type' => 'configuration', 'name' => $name)) as $string) {
+        $this->translations[$name][$langcode] = [];
+        foreach ($this->localeStorage->getTranslations(['language' => $langcode, 'type' => 'configuration', 'name' => $name]) as $string) {
           $this->translations[$name][$langcode][$string->context][$string->source] = $string;
         }
       }
       if (!isset($this->translations[$name][$langcode][$context][$source])) {
         // There is no translation of the source string in this config location
         // to this language for this context.
-        if ($translation = $this->localeStorage->findTranslation(array('source' => $source, 'context' => $context, 'language' => $langcode))) {
+        if ($translation = $this->localeStorage->findTranslation(['source' => $source, 'context' => $context, 'language' => $langcode])) {
           // Look for a translation of the string. It might have one, but not
           // be saved in this configuration location yet.
           // If the string has a translation for this context to this language,
@@ -393,7 +393,7 @@ class LocaleConfigManager {
           // location so it can be translated, and the string is faster to look
           // for next time.
           $translation = $this->localeStorage
-            ->createString(array('source' => $source, 'context' => $context))
+            ->createString(['source' => $source, 'context' => $context])
             ->addLocation('configuration', $name)
             ->save();
         }
@@ -418,7 +418,7 @@ class LocaleConfigManager {
    * @return $this
    */
   public function reset() {
-    $this->translations = array();
+    $this->translations = [];
     return $this;
   }
 
@@ -442,7 +442,7 @@ class LocaleConfigManager {
       $this->translateString($name, $langcode, $source, $context);
       if ($string = $this->translations[$name][$langcode][$context][$source]) {
         if (!$string->isTranslation()) {
-          $conditions = array('lid' => $string->lid, 'language' => $langcode);
+          $conditions = ['lid' => $string->lid, 'language' => $langcode];
           $translation = $this->localeStorage->createTranslation($conditions);
           $this->translations[$name][$langcode][$context][$source] = $translation;
           return $translation;
@@ -564,7 +564,7 @@ class LocaleConfigManager {
    *   Total number of configuration override and active configuration objects
    *   updated (saved or removed).
    */
-  public function updateConfigTranslations(array $names, array $langcodes = array()) {
+  public function updateConfigTranslations(array $names, array $langcodes = []) {
     $langcodes = $langcodes ? $langcodes : array_keys($this->languageManager->getLanguages());
     $count = 0;
     foreach ($names as $name) {
@@ -589,7 +589,7 @@ class LocaleConfigManager {
           $data = $this->filterOverride($override->get(), $translatable);
           if (!empty($processed)) {
             // Merge in the Locale managed translations with existing data.
-            $data = NestedArray::mergeDeepArray(array($data, $processed), TRUE);
+            $data = NestedArray::mergeDeepArray([$data, $processed], TRUE);
           }
           if (empty($data) && !$override->isNew()) {
             // The configuration override contains Locale overrides that no
@@ -607,7 +607,7 @@ class LocaleConfigManager {
           // If the language code is the active storage language, we should
           // update. If it is English, we should only update if English is also
           // translatable.
-          $active = NestedArray::mergeDeepArray(array($active, $processed), TRUE);
+          $active = NestedArray::mergeDeepArray([$active, $processed], TRUE);
           $this->saveTranslationActive($name, $active);
           $count++;
         }
@@ -629,7 +629,7 @@ class LocaleConfigManager {
    *   also in $translatable.
    */
   protected function filterOverride(array $override_data, array $translatable) {
-    $filtered_data = array();
+    $filtered_data = [];
     foreach ($override_data as $key => $value) {
       if (isset($translatable[$key])) {
         // If the translatable default configuration has this key, look further

@@ -16,17 +16,17 @@ class ContentTranslationUISkipTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('content_translation_test', 'user', 'node');
+  public static $modules = ['content_translation_test', 'user', 'node'];
 
   /**
    * Tests the content_translation_ui_skip key functionality.
    */
   function testUICheckSkip() {
-    $admin_user = $this->drupalCreateUser(array(
+    $admin_user = $this->drupalCreateUser([
       'translate any entity',
       'administer content translation',
       'administer languages'
-    ));
+    ]);
     $this->drupalLogin($admin_user);
     // Visit the content translation.
     $this->drupalGet('admin/config/regional/content-language');

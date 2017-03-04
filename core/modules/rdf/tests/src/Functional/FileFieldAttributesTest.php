@@ -17,7 +17,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'file');
+  public static $modules = ['rdf', 'file'];
 
   /**
    * The name of the file field used in the test.
@@ -50,19 +50,19 @@ class FileFieldAttributesTest extends FileFieldTestBase {
 
     // Set the teaser display to show this field.
     entity_get_display('node', 'article', 'teaser')
-      ->setComponent($this->fieldName, array('type' => 'file_default'))
+      ->setComponent($this->fieldName, ['type' => 'file_default'])
       ->save();
 
     // Set the RDF mapping for the new field.
     $mapping = rdf_get_mapping('node', 'article');
-    $mapping->setFieldMapping($this->fieldName, array('properties' => array('rdfs:seeAlso'), 'mapping_type' => 'rel'))->save();
+    $mapping->setFieldMapping($this->fieldName, ['properties' => ['rdfs:seeAlso'], 'mapping_type' => 'rel'])->save();
 
     $test_file = $this->getTestFile('text');
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $this->fieldName, $type_name);
 
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $this->node = $node_storage->load($nid);
     $this->file = File::load($this->node->{$this->fieldName}->target_id);
   }
@@ -75,7 +75,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    */
   function testNodeTeaser() {
     // Render the teaser.
-    $node_render_array = entity_view_multiple(array($this->node), 'teaser');
+    $node_render_array = entity_view_multiple([$this->node], 'teaser');
     $html = \Drupal::service('renderer')->renderRoot($node_render_array);
 
     // Parses front page where the node is displayed in its teaser form.
@@ -88,10 +88,10 @@ class FileFieldAttributesTest extends FileFieldTestBase {
     $file_uri = file_create_url($this->file->getFileUri());
 
     // Node relation to attached file.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => $file_uri,
-    );
+    ];
     $this->assertTrue($graph->hasProperty($node_uri, 'http://www.w3.org/2000/01/rdf-schema#seeAlso', $expected_value), 'Node to file relation found in RDF output (rdfs:seeAlso).');
     $this->drupalGet('node');
   }

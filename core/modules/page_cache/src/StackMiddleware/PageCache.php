@@ -168,7 +168,7 @@ class PageCache implements HttpKernelInterface {
         // In the case of a 304 response, certain headers must be sent, and the
         // remaining may not (see RFC 2616, section 10.3.5).
         foreach (array_keys($response->headers->all()) as $name) {
-          if (!in_array($name, array('content-location', 'expires', 'cache-control', 'vary'))) {
+          if (!in_array($name, ['content-location', 'expires', 'cache-control', 'vary'])) {
             $response->headers->remove($name);
           }
         }
@@ -357,10 +357,10 @@ class PageCache implements HttpKernelInterface {
    *   The cache ID for this request.
    */
   protected function getCacheId(Request $request) {
-    $cid_parts = array(
+    $cid_parts = [
       $request->getUri(),
       $request->getRequestFormat(),
-    );
+    ];
     return implode(':', $cid_parts);
   }
 

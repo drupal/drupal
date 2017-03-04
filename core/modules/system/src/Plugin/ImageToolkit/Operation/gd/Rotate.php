@@ -21,16 +21,16 @@ class Rotate extends GDImageToolkitOperationBase {
    * {@inheritdoc}
    */
   protected function arguments() {
-    return array(
-      'degrees' => array(
+    return [
+      'degrees' => [
         'description' => 'The number of (clockwise) degrees to rotate the image',
-      ),
-      'background' => array(
+      ],
+      'background' => [
         'description' => "A string specifying the hexadecimal color code to use as background for the uncovered area of the image after the rotation. E.g. '#000000' for black, '#ff00ff' for magenta, and '#ffffff' for white. For images that support transparency, this will default to transparent white",
         'required' => FALSE,
         'default' => NULL,
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -45,11 +45,11 @@ class Rotate extends GDImageToolkitOperationBase {
     // Validate or set background color argument.
     if (!empty($arguments['background'])) {
       // Validate the background color: Color::hexToRgb does so for us.
-      $background = Color::hexToRgb($arguments['background']) + array( 'alpha' => 0 );
+      $background = Color::hexToRgb($arguments['background']) + [ 'alpha' => 0 ];
     }
     else {
       // Background color is not specified: use transparent white as background.
-      $background = array('red' => 255, 'green' => 255, 'blue' => 255, 'alpha' => 127);
+      $background = ['red' => 255, 'green' => 255, 'blue' => 255, 'alpha' => 127];
     }
     // Store the color index for the background as that is what GD uses.
     $arguments['background_idx'] = imagecolorallocatealpha($this->getToolkit()->getResource(), $background['red'], $background['green'], $background['blue'], $background['alpha']);
@@ -89,7 +89,7 @@ class Rotate extends GDImageToolkitOperationBase {
   protected function execute(array $arguments) {
     // PHP installations using non-bundled GD do not have imagerotate.
     if (!function_exists('imagerotate')) {
-      $this->logger->notice('The image %file could not be rotated because the imagerotate() function is not available in this PHP installation.', array('%file' => $this->getToolkit()->getSource()));
+      $this->logger->notice('The image %file could not be rotated because the imagerotate() function is not available in this PHP installation.', ['%file' => $this->getToolkit()->getSource()]);
       return FALSE;
     }
 

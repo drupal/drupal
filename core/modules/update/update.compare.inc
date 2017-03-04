@@ -32,7 +32,7 @@ function update_process_project_info(&$projects) {
       // Figure out what the currently installed major version is. We need
       // to handle both contribution (e.g. "5.x-1.3", major = 1) and core
       // (e.g. "5.1", major = 5) version strings.
-      $matches = array();
+      $matches = [];
       if (preg_match('/^(\d+\.x-)?(\d+)\..*$/', $info['version'], $matches)) {
         $info['major'] = $matches[2];
       }
@@ -171,7 +171,7 @@ function update_calculate_project_data($available) {
  *   Data about available project releases of a specific project.
  */
 function update_calculate_project_update_status(&$project_data, $available) {
-  foreach (array('title', 'link') as $attribute) {
+  foreach (['title', 'link'] as $attribute) {
     if (!isset($project_data[$attribute]) && isset($available[$attribute])) {
       $project_data[$attribute] = $available[$attribute];
     }
@@ -184,33 +184,33 @@ function update_calculate_project_update_status(&$project_data, $available) {
       case 'insecure':
         $project_data['status'] = UPDATE_NOT_SECURE;
         if (empty($project_data['extra'])) {
-          $project_data['extra'] = array();
+          $project_data['extra'] = [];
         }
-        $project_data['extra'][] = array(
+        $project_data['extra'][] = [
           'label' => t('Project not secure'),
           'data' => t('This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!'),
-        );
+        ];
         break;
       case 'unpublished':
       case 'revoked':
         $project_data['status'] = UPDATE_REVOKED;
         if (empty($project_data['extra'])) {
-          $project_data['extra'] = array();
+          $project_data['extra'] = [];
         }
-        $project_data['extra'][] = array(
+        $project_data['extra'][] = [
           'label' => t('Project revoked'),
           'data' => t('This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
-        );
+        ];
         break;
       case 'unsupported':
         $project_data['status'] = UPDATE_NOT_SUPPORTED;
         if (empty($project_data['extra'])) {
-          $project_data['extra'] = array();
+          $project_data['extra'] = [];
         }
-        $project_data['extra'][] = array(
+        $project_data['extra'][] = [
           'label' => t('Project not supported'),
           'data' => t('This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
-        );
+        ];
         break;
       case 'not-fetched':
         $project_data['status'] = UPDATE_NOT_FETCHED;
@@ -233,7 +233,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
 
   // Figure out the target major version.
   $existing_major = $project_data['existing_major'];
-  $supported_majors = array();
+  $supported_majors = [];
   if (isset($available['supported_majors'])) {
     $supported_majors = explode(',', $available['supported_majors']);
   }
@@ -303,25 +303,25 @@ function update_calculate_project_update_status(&$project_data, $available) {
       elseif ($release['status'] == 'unpublished') {
         $project_data['status'] = UPDATE_REVOKED;
         if (empty($project_data['extra'])) {
-          $project_data['extra'] = array();
+          $project_data['extra'] = [];
         }
-        $project_data['extra'][] = array(
-          'class' => array('release-revoked'),
+        $project_data['extra'][] = [
+          'class' => ['release-revoked'],
           'label' => t('Release revoked'),
           'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
-        );
+        ];
       }
       elseif (isset($release['terms']['Release type']) &&
               in_array('Unsupported', $release['terms']['Release type'])) {
         $project_data['status'] = UPDATE_NOT_SUPPORTED;
         if (empty($project_data['extra'])) {
-          $project_data['extra'] = array();
+          $project_data['extra'] = [];
         }
-        $project_data['extra'][] = array(
-          'class' => array('release-not-supported'),
+        $project_data['extra'][] = [
+          'class' => ['release-not-supported'],
           'label' => t('Release not supported'),
           'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
-        );
+        ];
       }
     }
 
@@ -341,7 +341,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     if (isset($release['version_major']) && $release['version_major'] > $target_major) {
       if (in_array($release['version_major'], $supported_majors)) {
         if (!isset($project_data['also'])) {
-          $project_data['also'] = array();
+          $project_data['also'] = [];
         }
         if (!isset($project_data['also'][$release['version_major']])) {
           $project_data['also'][$release['version_major']] = $version;

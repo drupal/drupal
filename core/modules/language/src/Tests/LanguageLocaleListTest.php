@@ -16,7 +16,7 @@ class LanguageLocaleListTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'locale');
+  public static $modules = ['language', 'locale'];
 
   /**
    * {@inheritdoc}
@@ -32,28 +32,28 @@ class LanguageLocaleListTest extends WebTestBase {
    */
   function testLanguageLocaleList() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
     $this->drupalLogin($admin_user);
 
     // Add predefined language.
-    $edit = array(
+    $edit = [
       'predefined_langcode' => 'fr',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('The language French has been created and can now be used');
     $this->assertUrl(\Drupal::url('entity.configurable_language.collection', [], ['absolute' => TRUE]));
     $this->rebuildContainer();
 
     // Translate Spanish language to French (Espagnol).
-    $source = $this->storage->createString(array(
+    $source = $this->storage->createString([
       'source' => 'Spanish',
       'context' => '',
-    ))->save();
-    $this->storage->createTranslation(array(
+    ])->save();
+    $this->storage->createTranslation([
       'lid' => $source->lid,
       'language' => 'fr',
       'translation' => 'Espagnol',
-    ))->save();
+    ])->save();
 
     // Get language list displayed in select list.
     $this->drupalGet('fr/admin/config/regional/language/add');

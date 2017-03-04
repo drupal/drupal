@@ -26,7 +26,7 @@ class AggregatorFeed extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    $fields = array(
+    $fields = [
       'fid' => $this->t('The feed ID.'),
       'title' => $this->t('Title of the feed.'),
       'url' => $this->t('URL to the feed.'),
@@ -38,7 +38,7 @@ class AggregatorFeed extends DrupalSqlBase {
       'etag' => $this->t('Entity tag HTTP response header.'),
       'modified' => $this->t('When the feed was last modified.'),
       'block' => $this->t("Number of items to display in the feed's block."),
-    );
+    ];
     if ($this->getModuleSchemaVersion('system') >= 7000) {
       $fields['queued'] = $this->t('Time when this feed was queued for refresh, 0 if not queued.');
     }

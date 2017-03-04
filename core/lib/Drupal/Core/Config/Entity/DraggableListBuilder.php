@@ -25,7 +25,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
    *
    * @var \Drupal\Core\Entity\EntityInterface[]
    */
-  protected $entities = array();
+  protected $entities = [];
 
   /**
    * Name of the entity's weight field or FALSE if no field is provided.
@@ -62,7 +62,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header = array();
+    $header = [];
     if (!empty($this->weightKey)) {
       $header['weight'] = t('Weight');
     }
@@ -73,19 +73,19 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row = array();
+    $row = [];
     if (!empty($this->weightKey)) {
       // Override default values to markup elements.
       $row['#attributes']['class'][] = 'draggable';
       $row['#weight'] = $entity->get($this->weightKey);
       // Add weight column.
-      $row['weight'] = array(
+      $row['weight'] = [
         '#type' => 'weight',
-        '#title' => t('Weight for @title', array('@title' => $entity->label())),
+        '#title' => t('Weight for @title', ['@title' => $entity->label()]),
         '#title_display' => 'invisible',
         '#default_value' => $entity->get($this->weightKey),
-        '#attributes' => array('class' => array('weight')),
-      );
+        '#attributes' => ['class' => ['weight']],
+      ];
     }
     return $row + parent::buildRow($entity);
   }
@@ -104,18 +104,18 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form[$this->entitiesKey] = array(
+    $form[$this->entitiesKey] = [
       '#type' => 'table',
       '#header' => $this->buildHeader(),
-      '#empty' => t('There is no @label yet.', array('@label' => $this->entityType->getLabel())),
-      '#tabledrag' => array(
-        array(
+      '#empty' => t('There is no @label yet.', ['@label' => $this->entityType->getLabel()]),
+      '#tabledrag' => [
+        [
           'action' => 'order',
           'relationship' => 'sibling',
           'group' => 'weight',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     $this->entities = $this->load();
     $delta = 10;
@@ -129,7 +129,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
     foreach ($this->entities as $entity) {
       $row = $this->buildRow($entity);
       if (isset($row['label'])) {
-        $row['label'] = array('#markup' => $row['label']);
+        $row['label'] = ['#markup' => $row['label']];
       }
       if (isset($row['weight'])) {
         $row['weight']['#delta'] = $delta;
@@ -138,11 +138,11 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
     }
 
     $form['actions']['#type'] = 'actions';
-    $form['actions']['submit'] = array(
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => t('Save'),
       '#button_type' => 'primary',
-    );
+    ];
 
     return $form;
   }

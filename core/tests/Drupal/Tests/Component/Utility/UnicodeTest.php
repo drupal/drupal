@@ -51,15 +51,15 @@ class UnicodeTest extends UnitTestCase {
    *     - (optional) Boolean indicating invalid status. Defaults to FALSE.
    */
   public function providerTestStatus() {
-    return array(
-      array(Unicode::STATUS_SINGLEBYTE, Unicode::STATUS_SINGLEBYTE),
-      array(rand(10, 100), Unicode::STATUS_SINGLEBYTE, TRUE),
-      array(rand(10, 100), Unicode::STATUS_SINGLEBYTE, TRUE),
-      array(Unicode::STATUS_MULTIBYTE, Unicode::STATUS_MULTIBYTE),
-      array(rand(10, 100), Unicode::STATUS_MULTIBYTE, TRUE),
-      array(Unicode::STATUS_ERROR, Unicode::STATUS_ERROR),
-      array(Unicode::STATUS_MULTIBYTE, Unicode::STATUS_MULTIBYTE),
-    );
+    return [
+      [Unicode::STATUS_SINGLEBYTE, Unicode::STATUS_SINGLEBYTE],
+      [rand(10, 100), Unicode::STATUS_SINGLEBYTE, TRUE],
+      [rand(10, 100), Unicode::STATUS_SINGLEBYTE, TRUE],
+      [Unicode::STATUS_MULTIBYTE, Unicode::STATUS_MULTIBYTE],
+      [rand(10, 100), Unicode::STATUS_MULTIBYTE, TRUE],
+      [Unicode::STATUS_ERROR, Unicode::STATUS_ERROR],
+      [Unicode::STATUS_MULTIBYTE, Unicode::STATUS_MULTIBYTE],
+    ];
   }
 
   /**
@@ -83,11 +83,11 @@ class UnicodeTest extends UnitTestCase {
    *   An array containing a string and its encoded value.
    */
   public function providerTestMimeHeader() {
-    return array(
-      array('tést.txt', '=?UTF-8?B?dMOpc3QudHh0?='),
+    return [
+      ['tést.txt', '=?UTF-8?B?dMOpc3QudHh0?='],
       // Simple ASCII characters.
-      array('ASCII', 'ASCII'),
-    );
+      ['ASCII', 'ASCII'],
+    ];
   }
 
   /**
@@ -113,17 +113,17 @@ class UnicodeTest extends UnitTestCase {
    *   be processed as multibyte.
    */
   public function providerStrtolower() {
-    $cases = array(
-      array('tHe QUIcK bRoWn', 'the quick brown'),
-      array('FrançAIS is ÜBER-åwesome', 'français is über-åwesome'),
-    );
+    $cases = [
+      ['tHe QUIcK bRoWn', 'the quick brown'],
+      ['FrançAIS is ÜBER-åwesome', 'français is über-åwesome'],
+    ];
     foreach ($cases as $case) {
       // Test the same string both in multibyte and singlebyte conditions.
       array_push($case, TRUE);
       $cases[] = $case;
     }
     // Add a multibyte string.
-    $cases[] = array('ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', 'αβγδεζηθικλμνξοσὠ', TRUE);
+    $cases[] = ['ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', 'αβγδεζηθικλμνξοσὠ', TRUE];
     return $cases;
   }
 
@@ -150,17 +150,17 @@ class UnicodeTest extends UnitTestCase {
    *   be processed as multibyte.
    */
   public function providerStrtoupper() {
-    $cases = array(
-      array('tHe QUIcK bRoWn', 'THE QUICK BROWN'),
-      array('FrançAIS is ÜBER-åwesome', 'FRANÇAIS IS ÜBER-ÅWESOME'),
-    );
+    $cases = [
+      ['tHe QUIcK bRoWn', 'THE QUICK BROWN'],
+      ['FrançAIS is ÜBER-åwesome', 'FRANÇAIS IS ÜBER-ÅWESOME'],
+    ];
     foreach ($cases as $case) {
       // Test the same string both in multibyte and singlebyte conditions.
       array_push($case, TRUE);
       $cases[] = $case;
     }
     // Add a multibyte string.
-    $cases[] = array('αβγδεζηθικλμνξοσὠ', 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', TRUE);
+    $cases[] = ['αβγδεζηθικλμνξοσὠ', 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', TRUE];
     return $cases;
   }
 
@@ -183,14 +183,14 @@ class UnicodeTest extends UnitTestCase {
    *   An array containing a string and its uppercase first version.
    */
   public function providerUcfirst() {
-    return array(
-      array('tHe QUIcK bRoWn', 'THe QUIcK bRoWn'),
-      array('françAIS', 'FrançAIS'),
-      array('über', 'Über'),
-      array('åwesome', 'Åwesome'),
+    return [
+      ['tHe QUIcK bRoWn', 'THe QUIcK bRoWn'],
+      ['françAIS', 'FrançAIS'],
+      ['über', 'Über'],
+      ['åwesome', 'Åwesome'],
       // A multibyte string.
-      array('σion', 'Σion'),
-    );
+      ['σion', 'Σion'],
+    ];
   }
 
   /**
@@ -215,14 +215,14 @@ class UnicodeTest extends UnitTestCase {
    *   be processed as multibyte.
    */
   public function providerLcfirst() {
-    return array(
-      array('tHe QUIcK bRoWn', 'tHe QUIcK bRoWn'),
-      array('FrançAIS is ÜBER-åwesome', 'françAIS is ÜBER-åwesome'),
-      array('Über', 'über'),
-      array('Åwesome', 'åwesome'),
+    return [
+      ['tHe QUIcK bRoWn', 'tHe QUIcK bRoWn'],
+      ['FrançAIS is ÜBER-åwesome', 'françAIS is ÜBER-åwesome'],
+      ['Über', 'über'],
+      ['Åwesome', 'åwesome'],
       // Add a multibyte string.
-      array('ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', 'αΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', TRUE),
-    );
+      ['ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', 'αΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ', TRUE],
+    ];
   }
 
   /**
@@ -247,16 +247,16 @@ class UnicodeTest extends UnitTestCase {
    *   be processed as multibyte.
    */
   public function providerUcwords() {
-    return array(
-      array('tHe QUIcK bRoWn', 'THe QUIcK BRoWn'),
-      array('françAIS', 'FrançAIS'),
-      array('über', 'Über'),
-      array('åwesome', 'Åwesome'),
+    return [
+      ['tHe QUIcK bRoWn', 'THe QUIcK BRoWn'],
+      ['françAIS', 'FrançAIS'],
+      ['über', 'Über'],
+      ['åwesome', 'Åwesome'],
       // Make sure we don't mangle extra spaces.
-      array('frànçAIS is  über-åwesome', 'FrànçAIS Is  Über-Åwesome'),
+      ['frànçAIS is  über-åwesome', 'FrànçAIS Is  Über-Åwesome'],
       // Add a multibyte string.
-      array('σion', 'Σion', TRUE),
-    );
+      ['σion', 'Σion', TRUE],
+    ];
   }
 
   /**
@@ -283,11 +283,11 @@ class UnicodeTest extends UnitTestCase {
    *   An array containing a string and its length.
    */
   public function providerStrlen() {
-    return array(
-      array('tHe QUIcK bRoWn', 15),
-      array('ÜBER-åwesome', 12),
-      array('以呂波耳・ほへとち。リヌルヲ。', 15),
-    );
+    return [
+      ['tHe QUIcK bRoWn', 15],
+      ['ÜBER-åwesome', 12],
+      ['以呂波耳・ほへとち。リヌルヲ。', 15],
+    ];
   }
 
   /**
@@ -318,33 +318,33 @@ class UnicodeTest extends UnitTestCase {
    *     - The expected string result.
    */
   public function providerSubstr() {
-    return array(
-      array('frànçAIS is über-åwesome', 0, NULL, 'frànçAIS is über-åwesome'),
-      array('frànçAIS is über-åwesome', 0, 0, ''),
-      array('frànçAIS is über-åwesome', 0, 1, 'f'),
-      array('frànçAIS is über-åwesome', 0, 8, 'frànçAIS'),
-      array('frànçAIS is über-åwesome', 0, 23, 'frànçAIS is über-åwesom'),
-      array('frànçAIS is über-åwesome', 0, 24, 'frànçAIS is über-åwesome'),
-      array('frànçAIS is über-åwesome', 0, 25, 'frànçAIS is über-åwesome'),
-      array('frànçAIS is über-åwesome', 0, 100, 'frànçAIS is über-åwesome'),
-      array('frànçAIS is über-åwesome', 4, 4, 'çAIS'),
-      array('frànçAIS is über-åwesome', 1, 0, ''),
-      array('frànçAIS is über-åwesome', 100, 0, ''),
-      array('frànçAIS is über-åwesome', -4, 2, 'so'),
-      array('frànçAIS is über-åwesome', -4, 3, 'som'),
-      array('frànçAIS is über-åwesome', -4, 4, 'some'),
-      array('frànçAIS is über-åwesome', -4, 5, 'some'),
-      array('frànçAIS is über-åwesome', -7, 10, 'åwesome'),
-      array('frànçAIS is über-åwesome', 5, -10, 'AIS is üb'),
-      array('frànçAIS is über-åwesome', 0, -10, 'frànçAIS is üb'),
-      array('frànçAIS is über-åwesome', 0, -1, 'frànçAIS is über-åwesom'),
-      array('frànçAIS is über-åwesome', -7, -2, 'åweso'),
-      array('frànçAIS is über-åwesome', -7, -6, 'å'),
-      array('frànçAIS is über-åwesome', -7, -7, ''),
-      array('frànçAIS is über-åwesome', -7, -8, ''),
-      array('...', 0, 2, '..'),
-      array('以呂波耳・ほへとち。リヌルヲ。', 1, 3, '呂波耳'),
-    );
+    return [
+      ['frànçAIS is über-åwesome', 0, NULL, 'frànçAIS is über-åwesome'],
+      ['frànçAIS is über-åwesome', 0, 0, ''],
+      ['frànçAIS is über-åwesome', 0, 1, 'f'],
+      ['frànçAIS is über-åwesome', 0, 8, 'frànçAIS'],
+      ['frànçAIS is über-åwesome', 0, 23, 'frànçAIS is über-åwesom'],
+      ['frànçAIS is über-åwesome', 0, 24, 'frànçAIS is über-åwesome'],
+      ['frànçAIS is über-åwesome', 0, 25, 'frànçAIS is über-åwesome'],
+      ['frànçAIS is über-åwesome', 0, 100, 'frànçAIS is über-åwesome'],
+      ['frànçAIS is über-åwesome', 4, 4, 'çAIS'],
+      ['frànçAIS is über-åwesome', 1, 0, ''],
+      ['frànçAIS is über-åwesome', 100, 0, ''],
+      ['frànçAIS is über-åwesome', -4, 2, 'so'],
+      ['frànçAIS is über-åwesome', -4, 3, 'som'],
+      ['frànçAIS is über-åwesome', -4, 4, 'some'],
+      ['frànçAIS is über-åwesome', -4, 5, 'some'],
+      ['frànçAIS is über-åwesome', -7, 10, 'åwesome'],
+      ['frànçAIS is über-åwesome', 5, -10, 'AIS is üb'],
+      ['frànçAIS is über-åwesome', 0, -10, 'frànçAIS is üb'],
+      ['frànçAIS is über-åwesome', 0, -1, 'frànçAIS is über-åwesom'],
+      ['frànçAIS is über-åwesome', -7, -2, 'åweso'],
+      ['frànçAIS is über-åwesome', -7, -6, 'å'],
+      ['frànçAIS is über-åwesome', -7, -7, ''],
+      ['frànçAIS is über-åwesome', -7, -8, ''],
+      ['...', 0, 2, '..'],
+      ['以呂波耳・ほへとち。リヌルヲ。', 1, 3, '呂波耳'],
+    ];
   }
 
   /**
@@ -371,52 +371,52 @@ class UnicodeTest extends UnitTestCase {
    *     - (optional) Boolean for the $add_ellipsis flag. Defaults to FALSE.
    */
   public function providerTruncate() {
-    return array(
-      array('frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome'),
-      array('frànçAIS is über-åwesome', 23, 'frànçAIS is über-åwesom'),
-      array('frànçAIS is über-åwesome', 17, 'frànçAIS is über-'),
-      array('以呂波耳・ほへとち。リヌルヲ。', 6, '以呂波耳・ほ'),
-      array('frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome', FALSE, TRUE),
-      array('frànçAIS is über-åwesome', 23, 'frànçAIS is über-åweso…', FALSE, TRUE),
-      array('frànçAIS is über-åwesome', 17, 'frànçAIS is über…', FALSE, TRUE),
-      array('123', 1, '…', TRUE, TRUE),
-      array('123', 2, '1…', TRUE, TRUE),
-      array('123', 3, '123', TRUE, TRUE),
-      array('1234', 3, '12…', TRUE, TRUE),
-      array('1234567890', 10, '1234567890', TRUE, TRUE),
-      array('12345678901', 10, '123456789…', TRUE, TRUE),
-      array('12345678901', 11, '12345678901', TRUE, TRUE),
-      array('123456789012', 11, '1234567890…', TRUE, TRUE),
-      array('12345 7890', 10, '12345 7890', TRUE, TRUE),
-      array('12345 7890', 9, '12345…', TRUE, TRUE),
-      array('123 567 90', 10, '123 567 90', TRUE, TRUE),
-      array('123 567 901', 10, '123 567…', TRUE, TRUE),
-      array('Stop. Hammertime.', 17, 'Stop. Hammertime.', TRUE, TRUE),
-      array('Stop. Hammertime.', 16, 'Stop…', TRUE, TRUE),
-      array('frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome', TRUE, TRUE),
-      array('frànçAIS is über-åwesome', 23, 'frànçAIS is über…', TRUE, TRUE),
-      array('frànçAIS is über-åwesome', 17, 'frànçAIS is über…', TRUE, TRUE),
-      array('¿Dónde está el niño?', 20, '¿Dónde está el niño?', TRUE, TRUE),
-      array('¿Dónde está el niño?', 19, '¿Dónde está el…', TRUE, TRUE),
-      array('¿Dónde está el niño?', 13, '¿Dónde está…', TRUE, TRUE),
-      array('¿Dónde está el niño?', 10, '¿Dónde…', TRUE, TRUE),
-      array('Help! Help! Help!', 17, 'Help! Help! Help!', TRUE, TRUE),
-      array('Help! Help! Help!', 16, 'Help! Help!…', TRUE, TRUE),
-      array('Help! Help! Help!', 15, 'Help! Help!…', TRUE, TRUE),
-      array('Help! Help! Help!', 14, 'Help! Help!…', TRUE, TRUE),
-      array('Help! Help! Help!', 13, 'Help! Help!…', TRUE, TRUE),
-      array('Help! Help! Help!', 12, 'Help! Help!…', TRUE, TRUE),
-      array('Help! Help! Help!', 11, 'Help! Help…', TRUE, TRUE),
-      array('Help! Help! Help!', 10, 'Help!…', TRUE, TRUE),
-      array('Help! Help! Help!', 9, 'Help!…', TRUE, TRUE),
-      array('Help! Help! Help!', 8, 'Help!…', TRUE, TRUE),
-      array('Help! Help! Help!', 7, 'Help!…', TRUE, TRUE),
-      array('Help! Help! Help!', 6, 'Help!…', TRUE, TRUE),
-      array('Help! Help! Help!', 5, 'Help…', TRUE, TRUE),
-      array('Help! Help! Help!', 4, 'Hel…', TRUE, TRUE),
-      array('Help! Help! Help!', 3, 'He…', TRUE, TRUE),
-      array('Help! Help! Help!', 2, 'H…', TRUE, TRUE),
-    );
+    return [
+      ['frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome'],
+      ['frànçAIS is über-åwesome', 23, 'frànçAIS is über-åwesom'],
+      ['frànçAIS is über-åwesome', 17, 'frànçAIS is über-'],
+      ['以呂波耳・ほへとち。リヌルヲ。', 6, '以呂波耳・ほ'],
+      ['frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome', FALSE, TRUE],
+      ['frànçAIS is über-åwesome', 23, 'frànçAIS is über-åweso…', FALSE, TRUE],
+      ['frànçAIS is über-åwesome', 17, 'frànçAIS is über…', FALSE, TRUE],
+      ['123', 1, '…', TRUE, TRUE],
+      ['123', 2, '1…', TRUE, TRUE],
+      ['123', 3, '123', TRUE, TRUE],
+      ['1234', 3, '12…', TRUE, TRUE],
+      ['1234567890', 10, '1234567890', TRUE, TRUE],
+      ['12345678901', 10, '123456789…', TRUE, TRUE],
+      ['12345678901', 11, '12345678901', TRUE, TRUE],
+      ['123456789012', 11, '1234567890…', TRUE, TRUE],
+      ['12345 7890', 10, '12345 7890', TRUE, TRUE],
+      ['12345 7890', 9, '12345…', TRUE, TRUE],
+      ['123 567 90', 10, '123 567 90', TRUE, TRUE],
+      ['123 567 901', 10, '123 567…', TRUE, TRUE],
+      ['Stop. Hammertime.', 17, 'Stop. Hammertime.', TRUE, TRUE],
+      ['Stop. Hammertime.', 16, 'Stop…', TRUE, TRUE],
+      ['frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome', TRUE, TRUE],
+      ['frànçAIS is über-åwesome', 23, 'frànçAIS is über…', TRUE, TRUE],
+      ['frànçAIS is über-åwesome', 17, 'frànçAIS is über…', TRUE, TRUE],
+      ['¿Dónde está el niño?', 20, '¿Dónde está el niño?', TRUE, TRUE],
+      ['¿Dónde está el niño?', 19, '¿Dónde está el…', TRUE, TRUE],
+      ['¿Dónde está el niño?', 13, '¿Dónde está…', TRUE, TRUE],
+      ['¿Dónde está el niño?', 10, '¿Dónde…', TRUE, TRUE],
+      ['Help! Help! Help!', 17, 'Help! Help! Help!', TRUE, TRUE],
+      ['Help! Help! Help!', 16, 'Help! Help!…', TRUE, TRUE],
+      ['Help! Help! Help!', 15, 'Help! Help!…', TRUE, TRUE],
+      ['Help! Help! Help!', 14, 'Help! Help!…', TRUE, TRUE],
+      ['Help! Help! Help!', 13, 'Help! Help!…', TRUE, TRUE],
+      ['Help! Help! Help!', 12, 'Help! Help!…', TRUE, TRUE],
+      ['Help! Help! Help!', 11, 'Help! Help…', TRUE, TRUE],
+      ['Help! Help! Help!', 10, 'Help!…', TRUE, TRUE],
+      ['Help! Help! Help!', 9, 'Help!…', TRUE, TRUE],
+      ['Help! Help! Help!', 8, 'Help!…', TRUE, TRUE],
+      ['Help! Help! Help!', 7, 'Help!…', TRUE, TRUE],
+      ['Help! Help! Help!', 6, 'Help!…', TRUE, TRUE],
+      ['Help! Help! Help!', 5, 'Help…', TRUE, TRUE],
+      ['Help! Help! Help!', 4, 'Hel…', TRUE, TRUE],
+      ['Help! Help! Help!', 3, 'He…', TRUE, TRUE],
+      ['Help! Help! Help!', 2, 'H…', TRUE, TRUE],
+    ];
   }
 
   /**
@@ -444,14 +444,14 @@ class UnicodeTest extends UnitTestCase {
    *   self::testTruncateBytes().
    */
   public function providerTestTruncateBytes() {
-    return array(
+    return [
       // String shorter than max length.
-      array('Short string', 42, 'Short string'),
+      ['Short string', 42, 'Short string'],
       // Simple string longer than max length.
-      array('Longer string than previous.', 10, 'Longer str'),
+      ['Longer string than previous.', 10, 'Longer str'],
       // Unicode.
-      array('以呂波耳・ほへとち。リヌルヲ。', 10, '以呂波'),
-    );
+      ['以呂波耳・ほへとち。リヌルヲ。', 10, '以呂波'],
+    ];
   }
 
   /**
@@ -481,16 +481,16 @@ class UnicodeTest extends UnitTestCase {
    *   self::testValidateUtf8().
    */
   public function providerTestValidateUtf8() {
-    return array(
+    return [
       // Empty string.
-      array('', TRUE, 'An empty string did not validate.'),
+      ['', TRUE, 'An empty string did not validate.'],
       // Simple text string.
-      array('Simple text.', TRUE, 'A simple ASCII text string did not validate.'),
+      ['Simple text.', TRUE, 'A simple ASCII text string did not validate.'],
       // Invalid UTF-8, overlong 5 byte encoding.
-      array(chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), FALSE, 'Invalid UTF-8 was validated.'),
+      [chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), FALSE, 'Invalid UTF-8 was validated.'],
       // High code-point without trailing characters.
-      array(chr(0xD0) . chr(0x01), FALSE, 'Invalid UTF-8 was validated.'),
-    );
+      [chr(0xD0) . chr(0x01), FALSE, 'Invalid UTF-8 was validated.'],
+    ];
   }
 
   /**
@@ -518,11 +518,11 @@ class UnicodeTest extends UnitTestCase {
    *   self::testConvertUtf8().  }
    */
   public function providerTestConvertToUtf8() {
-    return array(
-      array(chr(0x97), 'Windows-1252', '—'),
-      array(chr(0x99), 'Windows-1252', '™'),
-      array(chr(0x80), 'Windows-1252', '€'),
-    );
+    return [
+      [chr(0x97), 'Windows-1252', '—'],
+      [chr(0x99), 'Windows-1252', '™'],
+      [chr(0x80), 'Windows-1252', '€'],
+    ];
   }
 
   /**
@@ -553,18 +553,18 @@ class UnicodeTest extends UnitTestCase {
    *     - The expected integer/FALSE result.
    */
   public function providerStrpos() {
-    return array(
-      array('frànçAIS is über-åwesome', 'frànçAIS is über-åwesome', 0, 0),
-      array('frànçAIS is über-åwesome', 'rànçAIS is über-åwesome', 0, 1),
-      array('frànçAIS is über-åwesome', 'not in string', 0, FALSE),
-      array('frànçAIS is über-åwesome', 'r', 0, 1),
-      array('frànçAIS is über-åwesome', 'nçAIS', 0, 3),
-      array('frànçAIS is über-åwesome', 'nçAIS', 2, 3),
-      array('frànçAIS is über-åwesome', 'nçAIS', 3, 3),
-      array('以呂波耳・ほへとち。リヌルヲ。', '波耳', 0, 2),
-      array('以呂波耳・ほへとち。リヌルヲ。', '波耳', 1, 2),
-      array('以呂波耳・ほへとち。リヌルヲ。', '波耳', 2, 2),
-    );
+    return [
+      ['frànçAIS is über-åwesome', 'frànçAIS is über-åwesome', 0, 0],
+      ['frànçAIS is über-åwesome', 'rànçAIS is über-åwesome', 0, 1],
+      ['frànçAIS is über-åwesome', 'not in string', 0, FALSE],
+      ['frànçAIS is über-åwesome', 'r', 0, 1],
+      ['frànçAIS is über-åwesome', 'nçAIS', 0, 3],
+      ['frànçAIS is über-åwesome', 'nçAIS', 2, 3],
+      ['frànçAIS is über-åwesome', 'nçAIS', 3, 3],
+      ['以呂波耳・ほへとち。リヌルヲ。', '波耳', 0, 2],
+      ['以呂波耳・ほへとち。リヌルヲ。', '波耳', 1, 2],
+      ['以呂波耳・ほへとち。リヌルヲ。', '波耳', 2, 2],
+    ];
   }
 
 }

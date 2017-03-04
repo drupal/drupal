@@ -19,7 +19,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'entity_test');
+  public static $modules = ['language', 'content_translation', 'entity_test'];
 
   /**
    * {@inheritdoc}
@@ -34,7 +34,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getTranslatorPermissions() {
-    return array_merge(parent::getTranslatorPermissions(), array('administer entity_test content', 'view test entity'));
+    return array_merge(parent::getTranslatorPermissions(), ['administer entity_test content', 'view test entity']);
   }
 
 }

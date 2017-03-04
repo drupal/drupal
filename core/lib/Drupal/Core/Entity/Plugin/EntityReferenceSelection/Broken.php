@@ -20,9 +20,9 @@ class Broken implements SelectionInterface {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['selection_handler'] = array(
+    $form['selection_handler'] = [
       '#markup' => t('The selected selection handler is broken.'),
-    );
+    ];
     return $form;
   }
 
@@ -40,7 +40,7 @@ class Broken implements SelectionInterface {
    * {@inheritdoc}
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
-    return array();
+    return [];
   }
 
   /**
@@ -54,7 +54,7 @@ class Broken implements SelectionInterface {
    * {@inheritdoc}
    */
   public function validateReferenceableEntities(array $ids) {
-    return array();
+    return [];
   }
 
   /**

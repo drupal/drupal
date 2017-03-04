@@ -19,7 +19,7 @@ class BundleConstraintValidatorTest extends KernelTestBase {
    */
   protected $typedData;
 
-  public static $modules = array('node', 'field', 'text', 'user');
+  public static $modules = ['node', 'field', 'text', 'user'];
 
   protected function setUp() {
     parent::setUp();
@@ -32,7 +32,7 @@ class BundleConstraintValidatorTest extends KernelTestBase {
    */
   public function testValidation() {
     // Test with multiple values.
-    $this->assertValidation(array('foo', 'bar'));
+    $this->assertValidation(['foo', 'bar']);
     // Test with a single string value as well.
     $this->assertValidation('foo');
   }
@@ -49,14 +49,14 @@ class BundleConstraintValidatorTest extends KernelTestBase {
       ->addConstraint('Bundle', $bundle);
 
     // Test the validation.
-    $node = $this->container->get('entity.manager')->getStorage('node')->create(array('type' => 'foo'));
+    $node = $this->container->get('entity.manager')->getStorage('node')->create(['type' => 'foo']);
 
     $typed_data = $this->typedData->create($definition, $node);
     $violations = $typed_data->validate();
     $this->assertEqual($violations->count(), 0, 'Validation passed for correct value.');
 
     // Test the validation when an invalid value is passed.
-    $page_node = $this->container->get('entity.manager')->getStorage('node')->create(array('type' => 'baz'));
+    $page_node = $this->container->get('entity.manager')->getStorage('node')->create(['type' => 'baz']);
 
     $typed_data = $this->typedData->create($definition, $page_node);
     $violations = $typed_data->validate();
@@ -64,7 +64,7 @@ class BundleConstraintValidatorTest extends KernelTestBase {
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];
-    $this->assertEqual($violation->getMessage(), t('The entity must be of bundle %bundle.', array('%bundle' => implode(', ', (array) $bundle))), 'The message for invalid value is correct.');
+    $this->assertEqual($violation->getMessage(), t('The entity must be of bundle %bundle.', ['%bundle' => implode(', ', (array) $bundle)]), 'The message for invalid value is correct.');
     $this->assertEqual($violation->getRoot(), $typed_data, 'Violation root is correct.');
     $this->assertEqual($violation->getInvalidValue(), $page_node, 'The invalid value is set correctly in the violation.');
   }

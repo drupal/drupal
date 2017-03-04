@@ -11,55 +11,55 @@ use Drupal\Core\Extension\Extension;
  * Implements hook_theme().
  */
 function theme_test_theme($existing, $type, $theme, $path) {
-  $items['theme_test'] = array(
+  $items['theme_test'] = [
     'file' => 'theme_test.inc',
-    'variables' => array('foo' => ''),
+    'variables' => ['foo' => ''],
     'function' => 'theme_theme_test',
-  );
-  $items['theme_test_template_test'] = array(
+  ];
+  $items['theme_test_template_test'] = [
     'template' => 'theme_test.template_test',
-  );
-  $items['theme_test_template_test_2'] = array(
+  ];
+  $items['theme_test_template_test_2'] = [
     'template' => 'theme_test.template_test',
-  );
-  $items['theme_test_suggestion_provided'] = array(
-    'variables' => array(),
-  );
-  $items['theme_test_specific_suggestions'] = array(
-    'variables' => array(),
-  );
-  $items['theme_test_suggestions'] = array(
-    'variables' => array(),
-  );
-  $items['theme_test_general_suggestions'] = array(
-    'variables' => array(),
-  );
-  $items['theme_test_function_suggestions'] = array(
-    'variables' => array(),
+  ];
+  $items['theme_test_suggestion_provided'] = [
+    'variables' => [],
+  ];
+  $items['theme_test_specific_suggestions'] = [
+    'variables' => [],
+  ];
+  $items['theme_test_suggestions'] = [
+    'variables' => [],
+  ];
+  $items['theme_test_general_suggestions'] = [
+    'variables' => [],
+  ];
+  $items['theme_test_function_suggestions'] = [
+    'variables' => [],
     'function' => 'theme_theme_test_function_suggestions',
-  );
-  $items['theme_test_suggestions_include'] = array(
-    'variables' => array(),
+  ];
+  $items['theme_test_suggestions_include'] = [
+    'variables' => [],
     'function' => 'theme_theme_test_suggestions_include',
-  );
-  $items['theme_test_foo'] = array(
-    'variables' => array('foo' => NULL),
+  ];
+  $items['theme_test_foo'] = [
+    'variables' => ['foo' => NULL],
     'function' => 'theme_theme_test_foo',
-  );
-  $items['theme_test_render_element'] = array(
+  ];
+  $items['theme_test_render_element'] = [
     'render element' => 'elements',
-  );
-  $items['theme_test_render_element_children'] = array(
+  ];
+  $items['theme_test_render_element_children'] = [
     'render element' => 'element',
     'function' => 'theme_theme_test_render_element_children',
-  );
-  $items['theme_test_function_template_override'] = array(
-    'variables' => array(),
+  ];
+  $items['theme_test_function_template_override'] = [
+    'variables' => [],
     'function' => 'theme_theme_test_function_template_override',
-  );
-  $info['test_theme_not_existing_function'] = array(
+  ];
+  $info['test_theme_not_existing_function'] = [
     'function' => 'test_theme_not_existing_function',
-  );
+  ];
   $items['theme_test_preprocess_suggestions'] = [
     'variables' => [
       'foo' => '',
@@ -83,7 +83,7 @@ function theme_test_preprocess_html(&$variables) {
  * Implements hook_page_bottom().
  */
 function theme_test_page_bottom(array &$page_bottom) {
-  $page_bottom['theme_test_page_bottom'] = array('#markup' => 'theme test page bottom markup');
+  $page_bottom['theme_test_page_bottom'] = ['#markup' => 'theme test page bottom markup'];
 }
 
 /**
@@ -167,7 +167,7 @@ function theme_theme_test_function_suggestions($variables) {
  * Implements hook_theme_suggestions_HOOK().
  */
 function theme_test_theme_suggestions_theme_test_suggestion_provided(array $variables) {
-  return array('theme_test_suggestion_provided__' . 'foo');
+  return ['theme_test_suggestion_provided__' . 'foo'];
 }
 
 /**

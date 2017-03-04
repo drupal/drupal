@@ -21,7 +21,7 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['tokenize'] = array('default' => FALSE);
+    $options['tokenize'] = ['default' => FALSE];
     return $options;
   }
 
@@ -39,14 +39,14 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
    * Adds tokenization form elements.
    */
   public function tokenForm(&$form, FormStateInterface $form_state) {
-    $form['tokenize'] = array(
+    $form['tokenize'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Use replacement tokens from the first row'),
       '#default_value' => $this->options['tokenize'],
-    );
+    ];
 
     // Get a list of the available fields and arguments for token replacement.
-    $options = array();
+    $options = [];
     $optgroup_arguments = (string) t('Arguments');
     $optgroup_fields = (string) t('Fields');
     foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
@@ -54,35 +54,35 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
     }
 
     foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
-      $options[$optgroup_arguments]["{{ arguments.$arg }}"] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
-      $options[$optgroup_arguments]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
+      $options[$optgroup_arguments]["{{ arguments.$arg }}"] = $this->t('@argument title', ['@argument' => $handler->adminLabel()]);
+      $options[$optgroup_arguments]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', ['@argument' => $handler->adminLabel()]);
     }
 
     if (!empty($options)) {
-      $form['tokens'] = array(
+      $form['tokens'] = [
         '#type' => 'details',
         '#title' => $this->t('Replacement patterns'),
         '#open' => TRUE,
         '#id' => 'edit-options-token-help',
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[tokenize]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
-      $form['tokens']['help'] = array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[tokenize]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['tokens']['help'] = [
         '#markup' => '<p>' . $this->t('The following tokens are available. You may use Twig syntax in this field.') . '</p>',
-      );
+      ];
       foreach (array_keys($options) as $type) {
         if (!empty($options[$type])) {
-          $items = array();
+          $items = [];
           foreach ($options[$type] as $key => $value) {
             $items[] = $key . ' == ' . $value;
           }
-          $form['tokens'][$type]['tokens'] = array(
+          $form['tokens'][$type]['tokens'] = [
             '#theme' => 'item_list',
             '#items' => $items,
-          );
+          ];
         }
       }
     }

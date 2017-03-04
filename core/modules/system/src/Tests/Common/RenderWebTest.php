@@ -19,7 +19,7 @@ class RenderWebTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('common_test');
+  public static $modules = ['common_test'];
 
   /**
    * Asserts the cache context for the wrapper format is always present.
@@ -45,133 +45,133 @@ class RenderWebTest extends WebTestBase {
    */
   function testDrupalRenderFormElements() {
     // Define a series of form elements.
-    $element = array(
+    $element = [
       '#type' => 'button',
       '#value' => $this->randomMachineName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'submit'));
+    ];
+    $this->assertRenderedElement($element, '//input[@type=:type]', [':type' => 'submit']);
 
-    $element = array(
+    $element = [
       '#type' => 'textfield',
       '#title' => $this->randomMachineName(),
       '#value' => $this->randomMachineName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'text'));
+    ];
+    $this->assertRenderedElement($element, '//input[@type=:type]', [':type' => 'text']);
 
-    $element = array(
+    $element = [
       '#type' => 'password',
       '#title' => $this->randomMachineName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'password'));
+    ];
+    $this->assertRenderedElement($element, '//input[@type=:type]', [':type' => 'password']);
 
-    $element = array(
+    $element = [
       '#type' => 'textarea',
       '#title' => $this->randomMachineName(),
       '#value' => $this->randomMachineName(),
-    );
+    ];
     $this->assertRenderedElement($element, '//textarea');
 
-    $element = array(
+    $element = [
       '#type' => 'radio',
       '#title' => $this->randomMachineName(),
       '#value' => FALSE,
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'radio'));
+    ];
+    $this->assertRenderedElement($element, '//input[@type=:type]', [':type' => 'radio']);
 
-    $element = array(
+    $element = [
       '#type' => 'checkbox',
       '#title' => $this->randomMachineName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'checkbox'));
+    ];
+    $this->assertRenderedElement($element, '//input[@type=:type]', [':type' => 'checkbox']);
 
-    $element = array(
+    $element = [
       '#type' => 'select',
       '#title' => $this->randomMachineName(),
-      '#options' => array(
+      '#options' => [
         0 => $this->randomMachineName(),
         1 => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $this->assertRenderedElement($element, '//select');
 
-    $element = array(
+    $element = [
       '#type' => 'file',
       '#title' => $this->randomMachineName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'file'));
+    ];
+    $this->assertRenderedElement($element, '//input[@type=:type]', [':type' => 'file']);
 
-    $element = array(
+    $element = [
       '#type' => 'item',
       '#title' => $this->randomMachineName(),
       '#markup' => $this->randomMachineName(),
-    );
-    $this->assertRenderedElement($element, '//div[contains(@class, :class) and contains(., :markup)]/label[contains(., :label)]', array(
+    ];
+    $this->assertRenderedElement($element, '//div[contains(@class, :class) and contains(., :markup)]/label[contains(., :label)]', [
       ':class' => 'js-form-type-item',
       ':markup' => $element['#markup'],
       ':label' => $element['#title'],
-    ));
+    ]);
 
-    $element = array(
+    $element = [
       '#type' => 'hidden',
       '#title' => $this->randomMachineName(),
       '#value' => $this->randomMachineName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'hidden'));
+    ];
+    $this->assertRenderedElement($element, '//input[@type=:type]', [':type' => 'hidden']);
 
-    $element = array(
+    $element = [
       '#type' => 'link',
       '#title' => $this->randomMachineName(),
       '#url' => Url::fromRoute('common_test.destination'),
-      '#options' => array(
+      '#options' => [
         'absolute' => TRUE,
-      ),
-    );
-    $this->assertRenderedElement($element, '//a[@href=:href and contains(., :title)]', array(
+      ],
+    ];
+    $this->assertRenderedElement($element, '//a[@href=:href and contains(., :title)]', [
       ':href' => URL::fromRoute('common_test.destination')->setAbsolute()->toString(),
       ':title' => $element['#title'],
-    ));
+    ]);
 
-    $element = array(
+    $element = [
       '#type' => 'details',
       '#open' => TRUE,
       '#title' => $this->randomMachineName(),
-    );
-    $this->assertRenderedElement($element, '//details/summary[contains(., :title)]', array(
+    ];
+    $this->assertRenderedElement($element, '//details/summary[contains(., :title)]', [
       ':title' => $element['#title'],
-    ));
+    ]);
 
-    $element = array(
+    $element = [
       '#type' => 'details',
       '#open' => TRUE,
       '#title' => $this->randomMachineName(),
-    );
+    ];
     $this->assertRenderedElement($element, '//details');
 
-    $element['item'] = array(
+    $element['item'] = [
       '#type' => 'item',
       '#title' => $this->randomMachineName(),
       '#markup' => $this->randomMachineName(),
-    );
-    $this->assertRenderedElement($element, '//details/div/div[contains(@class, :class) and contains(., :markup)]', array(
+    ];
+    $this->assertRenderedElement($element, '//details/div/div[contains(@class, :class) and contains(., :markup)]', [
       ':class' => 'js-form-type-item',
       ':markup' => $element['item']['#markup'],
-    ));
+    ]);
   }
 
   /**
    * Tests that elements are rendered properly.
    */
-  protected function assertRenderedElement(array $element, $xpath, array $xpath_args = array()) {
+  protected function assertRenderedElement(array $element, $xpath, array $xpath_args = []) {
     $original_element = $element;
     $this->setRawContent(drupal_render_root($element));
     $this->verbose('<hr />' . $this->getRawContent());
 
     // @see \Drupal\simpletest\WebTestBase::xpath()
     $xpath = $this->buildXPathQuery($xpath, $xpath_args);
-    $element += array('#value' => NULL);
-    $this->assertFieldByXPath($xpath, $element['#value'], format_string('#type @type was properly rendered.', array(
+    $element += ['#value' => NULL];
+    $this->assertFieldByXPath($xpath, $element['#value'], format_string('#type @type was properly rendered.', [
       '@type' => var_export($element['#type'], TRUE),
-    )));
+    ]));
   }
 
 }

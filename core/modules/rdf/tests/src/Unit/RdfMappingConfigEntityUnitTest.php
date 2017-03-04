@@ -72,7 +72,7 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
     $target_entity_type->expects($this->any())
       ->method('getProvider')
       ->will($this->returnValue('test_module'));
-    $values = array('targetEntityType' => $target_entity_type_id);
+    $values = ['targetEntityType' => $target_entity_type_id];
     $target_entity_type->expects($this->any())
       ->method('getBundleEntityType')
       ->will($this->returnValue(NULL));
@@ -102,11 +102,11 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
       ->method('getProvider')
       ->will($this->returnValue('test_module'));
     $bundle_id = $this->randomMachineName(10);
-    $values = array('targetEntityType' => $target_entity_type_id , 'bundle' => $bundle_id);
+    $values = ['targetEntityType' => $target_entity_type_id , 'bundle' => $bundle_id];
 
     $target_entity_type->expects($this->any())
       ->method('getBundleConfigDependency')
-      ->will($this->returnValue(array('type' => 'config', 'name' => 'test_module.type.' . $bundle_id)));
+      ->will($this->returnValue(['type' => 'config', 'name' => 'test_module.type.' . $bundle_id]));
 
     $this->entityManager->expects($this->at(0))
       ->method('getDefinition')

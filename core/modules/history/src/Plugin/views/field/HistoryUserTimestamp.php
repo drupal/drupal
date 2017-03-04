@@ -34,10 +34,10 @@ class HistoryUserTimestamp extends Node {
     parent::init($view, $display, $options);
 
     if (\Drupal::currentUser()->isAuthenticated()) {
-      $this->additional_fields['created'] = array('table' => 'node_field_data', 'field' => 'created');
-      $this->additional_fields['changed'] = array('table' => 'node_field_data', 'field' => 'changed');
+      $this->additional_fields['created'] = ['table' => 'node_field_data', 'field' => 'created'];
+      $this->additional_fields['changed'] = ['table' => 'node_field_data', 'field' => 'changed'];
       if (\Drupal::moduleHandler()->moduleExists('comment') && !empty($this->options['comments'])) {
-        $this->additional_fields['last_comment'] = array('table' => 'comment_entity_statistics', 'field' => 'last_comment_timestamp');
+        $this->additional_fields['last_comment'] = ['table' => 'comment_entity_statistics', 'field' => 'last_comment_timestamp'];
       }
     }
   }
@@ -45,7 +45,7 @@ class HistoryUserTimestamp extends Node {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['comments'] = array('default' => FALSE);
+    $options['comments'] = ['default' => FALSE];
 
     return $options;
   }
@@ -53,11 +53,11 @@ class HistoryUserTimestamp extends Node {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     if (\Drupal::moduleHandler()->moduleExists('comment')) {
-      $form['comments'] = array(
+      $form['comments'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Check for new comments as well'),
         '#default_value' => !empty($this->options['comments']),
-      );
+      ];
     }
   }
 
@@ -92,10 +92,10 @@ class HistoryUserTimestamp extends Node {
       elseif ($last_comment > $last_read && $last_comment > HISTORY_READ_LIMIT) {
         $mark = MARK_UPDATED;
       }
-      $build = array(
+      $build = [
         '#theme' => 'mark',
         '#status' => $mark,
-      );
+      ];
       return $this->renderLink(drupal_render($build), $values);
     }
   }

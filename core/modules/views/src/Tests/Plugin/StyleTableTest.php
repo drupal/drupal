@@ -16,7 +16,7 @@ class StyleTableTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_table');
+  public static $testViews = ['test_table'];
 
   /**
    * {@inheritdoc}
@@ -115,13 +115,13 @@ class StyleTableTest extends PluginTestBase {
     $data_set = $this->dataSet();
     $query = db_insert('views_test_data')
       ->fields(array_keys($data_set[0]));
-    $query->values(array(
+    $query->values([
       'name' => 'James McCartney',
       'age' => 0,
       'job' => 'Baby',
       'created' => gmmktime(6, 30, 10, 1, 1, 2000),
       'status' => 1,
-    ));
+    ]);
     $query->execute();
 
     $this->drupalGet('test-table');
@@ -162,11 +162,11 @@ class StyleTableTest extends PluginTestBase {
     // specific style options.
     $display = &$view->getDisplay('default');
     // Set job as the grouping field.
-    $display['display_options']['style']['options']['grouping'][0] = array(
+    $display['display_options']['style']['options']['grouping'][0] = [
       'field' => 'job',
       'rendered' => TRUE,
       'rendered_strip' => FALSE,
-    );
+    ];
     // Clear the caption text, the rendered job field will be used as a caption.
     $display['display_options']['style']['options']['caption'] = '';
     $display['display_options']['style']['options']['summary'] = '';
@@ -175,13 +175,13 @@ class StyleTableTest extends PluginTestBase {
 
     // Add a record containing unsafe markup to be sure it's filtered out.
     $unsafe_markup = '<script>alert("Rapper");</script>';
-    $unsafe_markup_data = array(
+    $unsafe_markup_data = [
       'name' => 'Marshall',
       'age' => 42,
       'job' => $unsafe_markup,
       'created' => gmmktime(0, 0, 0, 2, 15, 2001),
       'status' => 1,
-    );
+    ];
     $database = $this->container->get('database');
     $database->insert('views_test_data')
       ->fields(array_keys($unsafe_markup_data))
@@ -189,13 +189,13 @@ class StyleTableTest extends PluginTestBase {
       ->execute();
 
     $this->drupalGet('test-table');
-    $expected_captions = array(
+    $expected_captions = [
       'Job: Speaker',
       'Job: Songwriter',
       'Job: Drummer',
       'Job: Singer',
       'Job: ' . $unsafe_markup,
-    );
+    ];
 
     // Ensure that we don't find the caption containing unsafe markup.
     $this->assertNoRaw($unsafe_markup, "Didn't find caption containing unsafe markup.");
@@ -211,13 +211,13 @@ class StyleTableTest extends PluginTestBase {
     $view->save();
 
     $this->drupalGet('test-table');
-    $expected_captions = array(
+    $expected_captions = [
       'Speaker',
       'Songwriter',
       'Drummer',
       'Singer',
       $unsafe_markup,
-    );
+    ];
 
     // Ensure that we don't find the caption containing unsafe markup.
     $this->assertNoRaw($unsafe_markup, "Didn't find caption containing unsafe markup.");

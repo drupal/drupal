@@ -19,23 +19,23 @@ class Scale extends Resize {
    * {@inheritdoc}
    */
   protected function arguments() {
-    return array(
-      'width' => array(
+    return [
+      'width' => [
         'description' => 'The target width, in pixels. This value is omitted then the scaling will based only on the height value',
         'required' => FALSE,
         'default' => NULL,
-      ),
-      'height' => array(
+      ],
+      'height' => [
         'description' => 'The target height, in pixels. This value is omitted then the scaling will based only on the width value',
         'required' => FALSE,
         'default' => NULL,
-      ),
-      'upscale' => array(
+      ],
+      'upscale' => [
         'description' => 'Boolean indicating that files smaller than the dimensions will be scaled up. This generally results in a low quality image',
         'required' => FALSE,
         'default' => FALSE,
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -78,7 +78,7 @@ class Scale extends Resize {
   /**
    * {@inheritdoc}
    */
-  protected function execute(array $arguments = array()) {
+  protected function execute(array $arguments = []) {
     // Don't scale if we don't change the dimensions at all.
     if ($arguments['width'] !== $this->getToolkit()->getWidth() || $arguments['height'] !== $this->getToolkit()->getHeight()) {
       // Don't upscale if the option isn't enabled.

@@ -14,7 +14,7 @@ class SearchSetLocaleTest extends SearchTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment');
+  public static $modules = ['comment'];
 
   /**
    * A node search plugin instance.
@@ -29,7 +29,7 @@ class SearchSetLocaleTest extends SearchTestBase {
     // Create a plugin instance.
     $this->nodeSearchPlugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
     // Create a node with a very simple body.
-    $this->drupalCreateNode(array('body' => array(array('value' => 'tapir'))));
+    $this->drupalCreateNode(['body' => [['value' => 'tapir']]]);
     // Update the search index.
     $this->nodeSearchPlugin->updateIndex();
     search_update_totals();
@@ -41,7 +41,7 @@ class SearchSetLocaleTest extends SearchTestBase {
   public function testSearchWithNumericLocale() {
     // French decimal point is comma.
     setlocale(LC_NUMERIC, 'fr_FR');
-    $this->nodeSearchPlugin->setSearch('tapir', array(), array());
+    $this->nodeSearchPlugin->setSearch('tapir', [], []);
     // The call to execute will throw an exception if a float in the wrong
     // format is passed in the query to the database, so an assertion is not
     // necessary here.

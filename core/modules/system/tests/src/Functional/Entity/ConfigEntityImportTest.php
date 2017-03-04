@@ -21,7 +21,7 @@ class ConfigEntityImportTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('action', 'block', 'filter', 'image', 'search', 'search_extra_type');
+  public static $modules = ['action', 'block', 'filter', 'image', 'search', 'search_extra_type'];
 
   /**
    * {@inheritdoc}
@@ -48,10 +48,10 @@ class ConfigEntityImportTest extends BrowserTestBase {
   protected function doActionUpdate() {
     // Create a test action with a known label.
     $name = 'system.action.apple';
-    $entity = Action::create(array(
+    $entity = Action::create([
       'id' => 'apple',
       'plugin' => 'action_message_action',
-    ));
+    ]);
     $entity->save();
 
     $this->checkSinglePluginConfigSync($entity, 'configuration', 'message', '');
@@ -69,10 +69,10 @@ class ConfigEntityImportTest extends BrowserTestBase {
   protected function doBlockUpdate() {
     // Create a test block with a known label.
     $name = 'block.block.apple';
-    $block = $this->drupalPlaceBlock('system_powered_by_block', array(
+    $block = $this->drupalPlaceBlock('system_powered_by_block', [
       'id' => 'apple',
       'label' => 'Red Delicious',
-    ));
+    ]);
 
     $this->checkSinglePluginConfigSync($block, 'settings', 'label', 'Red Delicious');
 

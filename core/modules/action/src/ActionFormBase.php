@@ -58,32 +58,32 @@ abstract class ActionFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#default_value' => $this->entity->label(),
       '#maxlength' => '255',
       '#description' => $this->t('A unique label for this advanced action. This label will be displayed in the interface of modules that integrate with actions.'),
-    );
+    ];
 
-    $form['id'] = array(
+    $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $this->entity->id(),
       '#disabled' => !$this->entity->isNew(),
       '#maxlength' => 64,
       '#description' => $this->t('A unique name for this action. It must only contain lowercase letters, numbers and underscores.'),
-      '#machine_name' => array(
-        'exists' => array($this, 'exists'),
-      ),
-    );
-    $form['plugin'] = array(
+      '#machine_name' => [
+        'exists' => [$this, 'exists'],
+      ],
+    ];
+    $form['plugin'] = [
       '#type' => 'value',
       '#value' => $this->entity->get('plugin'),
-    );
-    $form['type'] = array(
+    ];
+    $form['type'] = [
       '#type' => 'value',
       '#value' => $this->entity->getType(),
-    );
+    ];
 
     if ($this->plugin instanceof PluginFormInterface) {
       $form += $this->plugin->buildConfigurationForm($form, $form_state);

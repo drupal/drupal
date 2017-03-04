@@ -67,23 +67,23 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
     if ($operation == 'edit') {
       // Only users with the "administer comments" permission can edit
       // administrative fields.
-      $administrative_fields = array(
+      $administrative_fields = [
         'uid',
         'status',
         'created',
         'date',
-      );
+      ];
       if (in_array($field_definition->getName(), $administrative_fields, TRUE)) {
         return AccessResult::allowedIfHasPermission($account, 'administer comments');
       }
 
       // No user can change read-only fields.
-      $read_only_fields = array(
+      $read_only_fields = [
         'hostname',
         'changed',
         'cid',
         'thread',
-      );
+      ];
       // These fields can be edited during comment creation.
       $create_only_fields = [
         'comment_type',

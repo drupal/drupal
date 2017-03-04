@@ -184,7 +184,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     $this->validate($entity);
     try {
       $entity->save();
-      $this->logger->notice('Created entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
+      $this->logger->notice('Created entity %type with ID %id.', ['%type' => $entity->getEntityTypeId(), '%id' => $entity->id()]);
 
       // 201 Created responses return the newly created entity in the response
       // body. These responses are not cacheable, so we add no cacheability
@@ -296,7 +296,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     $this->validate($original_entity);
     try {
       $original_entity->save();
-      $this->logger->notice('Updated entity %type with ID %id.', array('%type' => $original_entity->getEntityTypeId(), '%id' => $original_entity->id()));
+      $this->logger->notice('Updated entity %type with ID %id.', ['%type' => $original_entity->getEntityTypeId(), '%id' => $original_entity->id()]);
 
       // Return the updated entity in the response body.
       return new ModifiedResourceResponse($original_entity, 200);
@@ -324,7 +324,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     }
     try {
       $entity->delete();
-      $this->logger->notice('Deleted entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
+      $this->logger->notice('Deleted entity %type with ID %id.', ['%type' => $entity->getEntityTypeId(), '%id' => $entity->id()]);
 
       // DELETE responses have an empty body.
       return new ModifiedResourceResponse(NULL, 204);
@@ -376,7 +376,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     $route = parent::getBaseRoute($canonical_path, $method);
     $definition = $this->getPluginDefinition();
 
-    $parameters = $route->getOption('parameters') ?: array();
+    $parameters = $route->getOption('parameters') ?: [];
     $parameters[$definition['entity_type']]['type'] = 'entity:' . $definition['entity_type'];
     $route->setOption('parameters', $parameters);
 

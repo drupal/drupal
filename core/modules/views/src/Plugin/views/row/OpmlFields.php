@@ -29,14 +29,14 @@ class OpmlFields extends RowPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['text_field'] = array('default' => '');
-    $options['created_field'] = array('default' => '');
-    $options['type_field'] = array('default' => '');
-    $options['description_field'] = array('default' => '');
-    $options['html_url_field'] = array('default' => '');
-    $options['language_field'] = array('default' => '');
-    $options['xml_url_field'] = array('default' => '');
-    $options['url_field'] = array('default' => '');
+    $options['text_field'] = ['default' => ''];
+    $options['created_field'] = ['default' => ''];
+    $options['type_field'] = ['default' => ''];
+    $options['description_field'] = ['default' => ''];
+    $options['html_url_field'] = ['default' => ''];
+    $options['language_field'] = ['default' => ''];
+    $options['xml_url_field'] = ['default' => ''];
+    $options['url_field'] = ['default' => ''];
     return $options;
   }
 
@@ -46,101 +46,101 @@ class OpmlFields extends RowPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $initial_labels = array('' => $this->t('- None -'));
+    $initial_labels = ['' => $this->t('- None -')];
     $view_fields_labels = $this->displayHandler->getFieldLabels();
     $view_fields_labels = array_merge($initial_labels, $view_fields_labels);
 
-    $types = array(
+    $types = [
       'rss' => $this->t('RSS'),
       'link' => $this->t('Link'),
       'include' => $this->t('Include'),
-    );
+    ];
     $types = array_merge($initial_labels, $types);
-    $form['type_field'] = array(
+    $form['type_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Type attribute'),
       '#description' => $this->t('The type of this row.'),
       '#options' => $types,
       '#default_value' => $this->options['type_field'],
-    );
-    $form['text_field'] = array(
+    ];
+    $form['text_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Text attribute'),
       '#description' => $this->t('The field that is going to be used as the OPML text attribute for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['text_field'],
       '#required' => TRUE,
-    );
-    $form['created_field'] = array(
+    ];
+    $form['created_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Created attribute'),
       '#description' => $this->t('The field that is going to be used as the OPML created attribute for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['created_field'],
-    );
-    $form['description_field'] = array(
+    ];
+    $form['description_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Description attribute'),
       '#description' => $this->t('The field that is going to be used as the OPML description attribute for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['description_field'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="row_options[type_field]"]' => array('value' => 'rss'),
-        ),
-      ),
-    );
-    $form['html_url_field'] = array(
+      '#states' => [
+        'visible' => [
+          ':input[name="row_options[type_field]"]' => ['value' => 'rss'],
+        ],
+      ],
+    ];
+    $form['html_url_field'] = [
       '#type' => 'select',
       '#title' => $this->t('HTML URL attribute'),
       '#description' => $this->t('The field that is going to be used as the OPML htmlUrl attribute for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['html_url_field'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="row_options[type_field]"]' => array('value' => 'rss'),
-        ),
-      ),
-    );
-    $form['language_field'] = array(
+      '#states' => [
+        'visible' => [
+          ':input[name="row_options[type_field]"]' => ['value' => 'rss'],
+        ],
+      ],
+    ];
+    $form['language_field'] = [
       '#type' => 'select',
       '#title' => $this->t('Language attribute'),
       '#description' => $this->t('The field that is going to be used as the OPML language attribute for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['language_field'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="row_options[type_field]"]' => array('value' => 'rss'),
-        ),
-      ),
-    );
-    $form['xml_url_field'] = array(
+      '#states' => [
+        'visible' => [
+          ':input[name="row_options[type_field]"]' => ['value' => 'rss'],
+        ],
+      ],
+    ];
+    $form['xml_url_field'] = [
       '#type' => 'select',
       '#title' => $this->t('XML URL attribute'),
       '#description' => $this->t('The field that is going to be used as the OPML text attribute for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['xml_url_field'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="row_options[type_field]"]' => array('value' => 'rss'),
-        ),
-      ),
-    );
-    $form['url_field'] = array(
+      '#states' => [
+        'visible' => [
+          ':input[name="row_options[type_field]"]' => ['value' => 'rss'],
+        ],
+      ],
+    ];
+    $form['url_field'] = [
       '#type' => 'select',
       '#title' => $this->t('URL attribute'),
       '#description' => $this->t('The field that is going to be used as the OPML URL attribute for each row.'),
       '#options' => $view_fields_labels,
       '#default_value' => $this->options['url_field'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="row_options[type_field]"]' => array(
-            array('value' => 'link'),
-            array('value' => 'include'),
-          ),
-        ),
-      ),
-    );
+      '#states' => [
+        'visible' => [
+          ':input[name="row_options[type_field]"]' => [
+            ['value' => 'link'],
+            ['value' => 'include'],
+          ],
+        ],
+      ],
+    ];
   }
 
   /**
@@ -157,7 +157,7 @@ class OpmlFields extends RowPluginBase {
           $errors[] = $this->t('Row style plugin requires specifying which views field to use for XML URL attribute.');
         }
       }
-      elseif (in_array($this->options['type_field'], array('link', 'include'))) {
+      elseif (in_array($this->options['type_field'], ['link', 'include'])) {
         if (empty($this->options['url_field'])) {
           $errors[] = $this->t('Row style plugin requires specifying which views field to use for URL attribute.');
         }
@@ -171,7 +171,7 @@ class OpmlFields extends RowPluginBase {
    */
   public function render($row) {
     // Create the OPML item array.
-    $item = array();
+    $item = [];
     $row_index = $this->view->row_index;
     $item['text'] = $this->getField($row_index, $this->options['text_field']);
     $item['created'] = $this->getField($row_index, $this->options['created_field']);
@@ -190,13 +190,13 @@ class OpmlFields extends RowPluginBase {
     // Remove empty attributes.
     $item = array_filter($item);
 
-    $build = array(
+    $build = [
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
       '#options' => $this->options,
       '#row' => $item,
       '#field_alias' => isset($this->field_alias) ? $this->field_alias : '',
-    );
+    ];
     return $build;
   }
 

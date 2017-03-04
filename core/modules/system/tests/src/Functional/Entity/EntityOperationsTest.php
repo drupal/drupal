@@ -16,13 +16,13 @@ class EntityOperationsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = ['entity_test'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create and log in user.
-    $this->drupalLogin($this->drupalCreateUser(array('administer permissions')));
+    $this->drupalLogin($this->drupalCreateUser(['administer permissions']));
   }
 
   /**
@@ -36,7 +36,7 @@ class EntityOperationsTest extends BrowserTestBase {
     $roles = user_roles();
     foreach ($roles as $role) {
       $this->assertLinkByHref($role->url() . '/test_operation');
-      $this->assertLink(format_string('Test Operation: @label', array('@label' => $role->label())));
+      $this->assertLink(format_string('Test Operation: @label', ['@label' => $role->label()]));
     }
   }
 

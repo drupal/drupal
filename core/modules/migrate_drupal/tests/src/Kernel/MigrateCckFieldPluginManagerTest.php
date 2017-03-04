@@ -14,7 +14,7 @@ class MigrateCckFieldPluginManagerTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('system', 'user', 'field', 'migrate_drupal', 'options', 'file', 'text', 'migrate_cckfield_plugin_manager_test');
+  public static $modules = ['system', 'user', 'field', 'migrate_drupal', 'options', 'file', 'text', 'migrate_cckfield_plugin_manager_test'];
 
   /**
    * Tests that the correct MigrateCckField plugins are used.

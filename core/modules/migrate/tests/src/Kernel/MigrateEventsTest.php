@@ -40,17 +40,17 @@ class MigrateEventsTest extends KernelTestBase {
     parent::setUp();
     $this->state = \Drupal::state();
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::MAP_SAVE,
-      array($this, 'mapSaveEventRecorder'));
+      [$this, 'mapSaveEventRecorder']);
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::MAP_DELETE,
-      array($this, 'mapDeleteEventRecorder'));
+      [$this, 'mapDeleteEventRecorder']);
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::PRE_IMPORT,
-      array($this, 'preImportEventRecorder'));
+      [$this, 'preImportEventRecorder']);
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::POST_IMPORT,
-      array($this, 'postImportEventRecorder'));
+      [$this, 'postImportEventRecorder']);
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::PRE_ROW_SAVE,
-      array($this, 'preRowSaveEventRecorder'));
+      [$this, 'preRowSaveEventRecorder']);
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::POST_ROW_SAVE,
-      array($this, 'postRowSaveEventRecorder'));
+      [$this, 'postRowSaveEventRecorder']);
   }
 
   /**
@@ -129,11 +129,11 @@ class MigrateEventsTest extends KernelTestBase {
    *   The event name.
    */
   public function mapSaveEventRecorder(MigrateMapSaveEvent $event, $name) {
-    $this->state->set('migrate_events_test.map_save_event', array(
+    $this->state->set('migrate_events_test.map_save_event', [
       'event_name' => $name,
       'map' => $event->getMap(),
       'fields' => $event->getFields(),
-    ));
+    ]);
   }
 
   /**
@@ -145,11 +145,11 @@ class MigrateEventsTest extends KernelTestBase {
    *   The event name.
    */
   public function mapDeleteEventRecorder(MigrateMapDeleteEvent $event, $name) {
-    $this->state->set('migrate_events_test.map_delete_event', array(
+    $this->state->set('migrate_events_test.map_delete_event', [
       'event_name' => $name,
       'map' => $event->getMap(),
       'source_id' => $event->getSourceId(),
-    ));
+    ]);
   }
 
   /**
@@ -161,10 +161,10 @@ class MigrateEventsTest extends KernelTestBase {
    *   The event name.
    */
   public function preImportEventRecorder(MigrateImportEvent $event, $name) {
-    $this->state->set('migrate_events_test.pre_import_event', array(
+    $this->state->set('migrate_events_test.pre_import_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
-    ));
+    ]);
   }
 
   /**
@@ -176,10 +176,10 @@ class MigrateEventsTest extends KernelTestBase {
    *   The event name.
    */
   public function postImportEventRecorder(MigrateImportEvent $event, $name) {
-    $this->state->set('migrate_events_test.post_import_event', array(
+    $this->state->set('migrate_events_test.post_import_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
-    ));
+    ]);
   }
 
   /**
@@ -191,11 +191,11 @@ class MigrateEventsTest extends KernelTestBase {
    *   The event name.
    */
   public function preRowSaveEventRecorder(MigratePreRowSaveEvent $event, $name) {
-    $this->state->set('migrate_events_test.pre_row_save_event', array(
+    $this->state->set('migrate_events_test.pre_row_save_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
       'row' => $event->getRow(),
-    ));
+    ]);
   }
 
   /**
@@ -207,12 +207,12 @@ class MigrateEventsTest extends KernelTestBase {
    *   The event name.
    */
   public function postRowSaveEventRecorder(MigratePostRowSaveEvent $event, $name) {
-    $this->state->set('migrate_events_test.post_row_save_event', array(
+    $this->state->set('migrate_events_test.post_row_save_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
       'row' => $event->getRow(),
       'destination_id_values' => $event->getDestinationIdValues(),
-    ));
+    ]);
   }
 
 }

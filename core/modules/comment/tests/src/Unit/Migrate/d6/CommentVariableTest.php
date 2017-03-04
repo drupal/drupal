@@ -13,15 +13,15 @@ class CommentVariableTest extends MigrateSqlSourceTestCase {
 
   const PLUGIN_CLASS = CommentVariable::class;
 
-  protected $migrationConfiguration = array(
+  protected $migrationConfiguration = [
     'id' => 'test',
-    'source' => array(
+    'source' => [
       'plugin' => 'd6_comment_variable',
-    ),
-  );
+    ],
+  ];
 
-  protected $expectedResults = array(
-    array(
+  protected $expectedResults = [
+    [
       'comment' => '1',
       'comment_default_mode' => '1',
       'comment_default_order' => '1',
@@ -33,56 +33,56 @@ class CommentVariableTest extends MigrateSqlSourceTestCase {
       'comment_form_location' => '1',
       'node_type' => 'page',
       'comment_type' => 'comment',
-    ),
-  );
+    ],
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->databaseContents['node_type'] = array(
-      array(
+    $this->databaseContents['node_type'] = [
+      [
         'type' => 'page',
-      ),
-    );
-    $this->databaseContents['variable'] = array(
-      array(
+      ],
+    ];
+    $this->databaseContents['variable'] = [
+      [
         'name' => 'comment_page',
         'value' => serialize(1),
-      ),
-      array(
+      ],
+      [
         'name' => 'comment_default_mode_page',
         'value' => serialize(1),
-      ),
-      array(
+      ],
+      [
         'name' => 'comment_default_order_page',
         'value' => serialize(1),
-      ),
-      array(
+      ],
+      [
         'name' => 'comment_default_per_page_page',
         'value' => serialize(50),
-      ),
-      array(
+      ],
+      [
         'name' => 'comment_controls_page',
         'value' => serialize(1),
-      ),
-      array(
+      ],
+      [
         'name' => 'comment_anonymous_page',
         'value' => serialize(1),
-      ),
-      array(
+      ],
+      [
         'name' => 'comment_subject_field_page',
         'value' => serialize(1),
-      ),
-      array(
+      ],
+      [
         'name' => 'comment_preview_page',
         'value' => serialize(1),
-      ),
-      array(
+      ],
+      [
         'name' => 'comment_form_location_page',
         'value' => serialize(1),
-      ),
-    );
+      ],
+    ];
     parent::setUp();
   }
 

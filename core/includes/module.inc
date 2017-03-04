@@ -27,19 +27,19 @@ function system_list($type) {
     $lists = $cached->data;
   }
   else {
-    $lists = array(
-      'theme' => array(),
-      'filepaths' => array(),
-    );
+    $lists = [
+      'theme' => [],
+      'filepaths' => [],
+    ];
     // ThemeHandler maintains the 'system.theme.data' state record.
-    $theme_data = \Drupal::state()->get('system.theme.data', array());
+    $theme_data = \Drupal::state()->get('system.theme.data', []);
     foreach ($theme_data as $name => $theme) {
       $lists['theme'][$name] = $theme;
-      $lists['filepaths'][] = array(
+      $lists['filepaths'][] = [
         'type' => 'theme',
         'name' => $name,
         'filepath' => $theme->getPathname(),
-      );
+      ];
     }
     \Drupal::cache('bootstrap')->set('system_list', $lists);
   }
@@ -146,7 +146,7 @@ function module_load_include($type, $module, $name = NULL) {
 function drupal_required_modules() {
   $listing = new ExtensionDiscovery(\Drupal::root());
   $files = $listing->scan('module');
-  $required = array();
+  $required = [];
 
   // Unless called by the installer, an installation profile is required and
   // must always be loaded. drupal_get_profile() also returns the installation
@@ -191,7 +191,7 @@ function module_set_weight($module, $weight) {
     $current_module_filenames = $module_handler->getModuleList();
     $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
     $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
-    $module_filenames = array();
+    $module_filenames = [];
     foreach ($current_modules as $name => $weight) {
       $module_filenames[$name] = $current_module_filenames[$name];
     }
@@ -222,7 +222,7 @@ function module_config_sort($data) {
   // two modules and weights (spaces added for clarity):
   // - Block with weight -5: 0 0000000000000000005 block
   // - Node  with weight  0: 1 0000000000000000000 node
-  $sort = array();
+  $sort = [];
   foreach ($data as $name => $weight) {
     // Prefix negative weights with 0, positive weights with 1.
     // +/- signs cannot be used, since + (ASCII 43) is before - (ASCII 45).

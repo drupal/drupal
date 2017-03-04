@@ -17,7 +17,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
    *
    * @var array
    */
-  protected $guessers = array();
+  protected $guessers = [];
 
   /**
    * Holds the array of guessers sorted by priority.
@@ -98,7 +98,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
    *   A sorted array of MIME type guesser objects.
    */
   protected function sortGuessers() {
-    $sorted = array();
+    $sorted = [];
     krsort($this->guessers);
 
     foreach ($this->guessers as $guesser) {

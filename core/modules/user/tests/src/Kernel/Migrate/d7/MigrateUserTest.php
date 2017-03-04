@@ -177,20 +177,20 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
     foreach ($users as $source) {
       $rids = Database::getConnection('default', 'migrate')
         ->select('users_roles', 'ur')
-        ->fields('ur', array('rid'))
+        ->fields('ur', ['rid'])
         ->condition('ur.uid', $source->uid)
         ->execute()
         ->fetchCol();
-      $roles = array(RoleInterface::AUTHENTICATED_ID);
+      $roles = [RoleInterface::AUTHENTICATED_ID];
       $id_map = $this->getMigration('d7_user_role')->getIdMap();
       foreach ($rids as $rid) {
-        $role = $id_map->lookupDestinationId(array($rid));
+        $role = $id_map->lookupDestinationId([$rid]);
         $roles[] = reset($role);
       }
 
       $field_integer = Database::getConnection('default', 'migrate')
         ->select('field_data_field_integer', 'fi')
-        ->fields('fi', array('field_integer_value'))
+        ->fields('fi', ['field_integer_value'])
         ->condition('fi.entity_id', $source->uid)
         ->execute()
         ->fetchCol();

@@ -103,7 +103,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         // If the request format is not 'html' then show default maintenance
         // mode page else show a text/plain page with maintenance message.
         if ($request->getRequestFormat() !== 'html') {
-          $response = new Response($this->getSiteMaintenanceMessage(), 503, array('Content-Type' => 'text/plain'));
+          $response = new Response($this->getSiteMaintenanceMessage(), 503, ['Content-Type' => 'text/plain']);
           $event->setResponse($response);
           return;
         }
@@ -118,7 +118,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         // settings page.
         if ($route_match->getRouteName() != 'system.site_maintenance_mode') {
           if ($this->account->hasPermission('administer site configuration')) {
-            $this->drupalSetMessage($this->t('Operating in maintenance mode. <a href=":url">Go online.</a>', array(':url' => $this->urlGenerator->generate('system.site_maintenance_mode'))), 'status', FALSE);
+            $this->drupalSetMessage($this->t('Operating in maintenance mode. <a href=":url">Go online.</a>', [':url' => $this->urlGenerator->generate('system.site_maintenance_mode')]), 'status', FALSE);
           }
           else {
             $this->drupalSetMessage($this->t('Operating in maintenance mode.'), 'status', FALSE);
@@ -135,9 +135,9 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    *   The formatted site maintenance message.
    */
   protected function getSiteMaintenanceMessage() {
-    return SafeMarkup::format($this->config->get('system.maintenance')->get('message'), array(
+    return SafeMarkup::format($this->config->get('system.maintenance')->get('message'), [
       '@site' => $this->config->get('system.site')->get('name'),
-    ));
+    ]);
   }
 
   /**
@@ -151,8 +151,8 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = array('onKernelRequestMaintenance', 30);
-    $events[KernelEvents::EXCEPTION][] = array('onKernelRequestMaintenance');
+    $events[KernelEvents::REQUEST][] = ['onKernelRequestMaintenance', 30];
+    $events[KernelEvents::EXCEPTION][] = ['onKernelRequestMaintenance'];
     return $events;
   }
 

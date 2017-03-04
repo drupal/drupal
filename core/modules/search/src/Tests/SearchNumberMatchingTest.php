@@ -27,7 +27,7 @@ class SearchNumberMatchingTest extends SearchTestBase {
    *
    * @var string[]
    */
-  protected $numbers = array(
+  protected $numbers = [
     '123456789',
     '12/34/56789',
     '12.3456789',
@@ -35,7 +35,7 @@ class SearchNumberMatchingTest extends SearchTestBase {
     '123,456,789',
     '-123456789',
     '0123456789',
-  );
+  ];
 
   /**
    * An array of nodes created for testing purposes.
@@ -47,15 +47,15 @@ class SearchNumberMatchingTest extends SearchTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->testUser = $this->drupalCreateUser(array('search content', 'access content', 'administer nodes', 'access site reports'));
+    $this->testUser = $this->drupalCreateUser(['search content', 'access content', 'administer nodes', 'access site reports']);
     $this->drupalLogin($this->testUser);
 
     foreach ($this->numbers as $num) {
-      $info = array(
-        'body' => array(array('value' => $num)),
+      $info = [
+        'body' => [['value' => $num]],
         'type' => 'page',
         'language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      );
+      ];
       $this->nodes[] = $this->drupalCreateNode($info);
     }
 
@@ -75,9 +75,9 @@ class SearchNumberMatchingTest extends SearchTestBase {
       // Verify that the node title does not appear on the search page
       // with a dummy search.
       $this->drupalPostForm('search/node',
-        array('keys' => 'foo'),
+        ['keys' => 'foo'],
         t('Search'));
-      $this->assertNoText($node->label(), format_string('%number: node title not shown in dummy search', array('%number' => $i)));
+      $this->assertNoText($node->label(), format_string('%number: node title not shown in dummy search', ['%number' => $i]));
 
       // Now verify that we can find node i by searching for any of the
       // numbers.
@@ -88,9 +88,9 @@ class SearchNumberMatchingTest extends SearchTestBase {
         $number = ltrim($number, '-');
 
         $this->drupalPostForm('search/node',
-          array('keys' => $number),
+          ['keys' => $number],
           t('Search'));
-        $this->assertText($node->label(), format_string('%i: node title shown (search found the node) in search for number %number', array('%i' => $i, '%number' => $number)));
+        $this->assertText($node->label(), format_string('%i: node title shown (search found the node) in search for number %number', ['%i' => $i, '%number' => $number]));
       }
     }
 

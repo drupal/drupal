@@ -39,35 +39,35 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
     $this->state = $this->getMock('Drupal\Core\State\StateInterface');
 
     $this->renderer = new CssCollectionRenderer($this->state);
-    $this->fileCssGroup = array(
+    $this->fileCssGroup = [
       'group' => -100,
       'type' => 'file',
       'media' => 'all',
       'preprocess' => TRUE,
-      'browsers' => array('IE' => TRUE, '!IE' => TRUE),
-      'items' => array(
-        0 => array(
+      'browsers' => ['IE' => TRUE, '!IE' => TRUE],
+      'items' => [
+        0 => [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.012,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => 'tests/Drupal/Tests/Core/Asset/foo.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'foo.css',
-        ),
-        1 => array(
+        ],
+        1 => [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => 'tests/Drupal/Tests/Core/Asset/bar.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'bar.css',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -76,59 +76,59 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    * @see testRender
    */
   function providerTestRender() {
-    $create_link_element = function($href, $media = 'all', $browsers = array()) {
-      return array(
+    $create_link_element = function($href, $media = 'all', $browsers = []) {
+      return [
         '#type' => 'html_tag',
         '#tag' => 'link',
-        '#attributes' => array(
+        '#attributes' => [
           'rel' => 'stylesheet',
           'href' => $href,
           'media' => $media,
-        ),
+        ],
         '#browsers' => $browsers,
-      );
+      ];
     };
-    $create_style_element = function($value, $media, $browsers = array()) {
-      $style_element = array(
+    $create_style_element = function($value, $media, $browsers = []) {
+      $style_element = [
         '#type' => 'html_tag',
         '#tag' => 'style',
         '#value' => $value,
-        '#attributes' => array(
+        '#attributes' => [
           'media' => $media
-        ),
+        ],
         '#browsers' => $browsers,
-      );
+      ];
       return $style_element;
     };
 
     $create_file_css_asset = function($data, $media = 'all', $preprocess = TRUE) {
-      return array('group' => 0, 'type' => 'file', 'media' => $media, 'preprocess' => $preprocess, 'data' => $data, 'browsers' => array());
+      return ['group' => 0, 'type' => 'file', 'media' => $media, 'preprocess' => $preprocess, 'data' => $data, 'browsers' => []];
     };
 
-    return array(
+    return [
       // Single external CSS asset.
-      0 => array(
+      0 => [
         // CSS assets.
-        array(
-          0 => array('group' => 0, 'type' => 'external', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'http://example.com/popular.js', 'browsers' => array()),
-        ),
+        [
+          0 => ['group' => 0, 'type' => 'external', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'http://example.com/popular.js', 'browsers' => []],
+        ],
         // Render elements.
-        array(
+        [
           0 => $create_link_element('http://example.com/popular.js', 'all'),
-        ),
-      ),
+        ],
+      ],
       // Single file CSS asset.
-      2 => array(
-        array(
-          0 => array('group' => 0, 'type' => 'file', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'public://css/file-all', 'browsers' => array()),
-        ),
-        array(
+      2 => [
+        [
+          0 => ['group' => 0, 'type' => 'file', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'public://css/file-all', 'browsers' => []],
+        ],
+        [
           0 => $create_link_element(file_url_transform_relative(file_create_url('public://css/file-all')) . '?0', 'all'),
-        ),
-      ),
+        ],
+      ],
       // 31 file CSS assets: expect 31 link elements.
-      3 => array(
-        array(
+      3 => [
+        [
           0 => $create_file_css_asset('public://css/1.css'),
           1 => $create_file_css_asset('public://css/2.css'),
           2 => $create_file_css_asset('public://css/3.css'),
@@ -160,8 +160,8 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
           28 => $create_file_css_asset('public://css/29.css'),
           29 => $create_file_css_asset('public://css/30.css'),
           30 => $create_file_css_asset('public://css/31.css'),
-        ),
-        array(
+        ],
+        [
           0 => $create_link_element(file_url_transform_relative(file_create_url('public://css/1.css')) . '?0'),
           1 => $create_link_element(file_url_transform_relative(file_create_url('public://css/2.css')) . '?0'),
           2 => $create_link_element(file_url_transform_relative(file_create_url('public://css/3.css')) . '?0'),
@@ -193,11 +193,11 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
           28 => $create_link_element(file_url_transform_relative(file_create_url('public://css/29.css')) . '?0'),
           29 => $create_link_element(file_url_transform_relative(file_create_url('public://css/30.css')) . '?0'),
           30 => $create_link_element(file_url_transform_relative(file_create_url('public://css/31.css')) . '?0'),
-        ),
-      ),
+        ],
+      ],
       // 32 file CSS assets with the same properties: expect 2 style elements.
-      4 => array(
-        array(
+      4 => [
+        [
           0 => $create_file_css_asset('public://css/1.css'),
           1 => $create_file_css_asset('public://css/2.css'),
           2 => $create_file_css_asset('public://css/3.css'),
@@ -230,8 +230,8 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
           29 => $create_file_css_asset('public://css/30.css'),
           30 => $create_file_css_asset('public://css/31.css'),
           31 => $create_file_css_asset('public://css/32.css'),
-        ),
-        array(
+        ],
+        [
           0 => $create_style_element('
 @import url("' . file_url_transform_relative(file_create_url('public://css/1.css')) . '?0");
 @import url("' . file_url_transform_relative(file_create_url('public://css/2.css')) . '?0");
@@ -268,13 +268,13 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
           1 => $create_style_element('
 @import url("' . file_url_transform_relative(file_create_url('public://css/32.css')) . '?0");
 ', 'all'),
-        ),
-      ),
+        ],
+      ],
       // 32 file CSS assets with the same properties, except for the 10th and
       // 20th files, they have different 'media' properties. Expect 5 style
       // elements.
-      5 => array(
-        array(
+      5 => [
+        [
           0 => $create_file_css_asset('public://css/1.css'),
           1 => $create_file_css_asset('public://css/2.css'),
           2 => $create_file_css_asset('public://css/3.css'),
@@ -307,8 +307,8 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
           29 => $create_file_css_asset('public://css/30.css'),
           30 => $create_file_css_asset('public://css/31.css'),
           31 => $create_file_css_asset('public://css/32.css'),
-        ),
-        array(
+        ],
+        [
           0 => $create_style_element('
 @import url("' . file_url_transform_relative(file_create_url('public://css/1.css')) . '?0");
 @import url("' . file_url_transform_relative(file_create_url('public://css/2.css')) . '?0");
@@ -351,12 +351,12 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
 @import url("' . file_url_transform_relative(file_create_url('public://css/31.css')) . '?0");
 @import url("' . file_url_transform_relative(file_create_url('public://css/32.css')) . '?0");
 ', 'all'),
-        ),
-      ),
+        ],
+      ],
       // 32 file CSS assets with the same properties, except for the 15th, which
       // has 'preprocess' = FALSE. Expect 1 link element and 2 style elements.
-      6 => array(
-        array(
+      6 => [
+        [
           0 => $create_file_css_asset('public://css/1.css'),
           1 => $create_file_css_asset('public://css/2.css'),
           2 => $create_file_css_asset('public://css/3.css'),
@@ -389,8 +389,8 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
           29 => $create_file_css_asset('public://css/30.css'),
           30 => $create_file_css_asset('public://css/31.css'),
           31 => $create_file_css_asset('public://css/32.css'),
-        ),
-        array(
+        ],
+        [
           0 => $create_style_element('
 @import url("' . file_url_transform_relative(file_create_url('public://css/1.css')) . '?0");
 @import url("' . file_url_transform_relative(file_create_url('public://css/2.css')) . '?0");
@@ -427,9 +427,9 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
 @import url("' . file_url_transform_relative(file_create_url('public://css/31.css')) . '?0");
 @import url("' . file_url_transform_relative(file_create_url('public://css/32.css')) . '?0");
 ', 'all'),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -455,14 +455,14 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       ->will($this->returnValue(NULL));
     $this->setExpectedException('Exception', 'Invalid CSS asset type.');
 
-    $css_group = array(
+    $css_group = [
       'group' => 0,
       'type' => 'internal',
       'media' => 'all',
       'preprocess' => TRUE,
-      'browsers' => array(),
+      'browsers' => [],
       'data' => 'http://example.com/popular.js'
-    );
+    ];
     $this->renderer->render($css_group);
   }
 

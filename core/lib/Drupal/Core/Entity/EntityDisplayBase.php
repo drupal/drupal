@@ -69,14 +69,14 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    *
    * @var array
    */
-  protected $content = array();
+  protected $content = [];
 
   /**
    * List of components that are set to be hidden.
    *
    * @var array
    */
-  protected $hidden = array();
+  protected $hidden = [];
 
   /**
    * The original view or form mode that was requested (case of view/form modes
@@ -91,7 +91,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    *
    * @var array
    */
-  protected $plugins = array();
+  protected $plugins = [];
 
   /**
    * Context in which this entity will be used (e.g. 'view', 'form').
@@ -158,14 +158,14 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       // Fill in defaults for extra fields.
       $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
       $extra_fields = \Drupal::entityManager()->getExtraFields($this->targetEntityType, $this->bundle);
-      $extra_fields = isset($extra_fields[$context]) ? $extra_fields[$context] : array();
+      $extra_fields = isset($extra_fields[$context]) ? $extra_fields[$context] : [];
       foreach ($extra_fields as $name => $definition) {
         if (!isset($this->content[$name]) && !isset($this->hidden[$name])) {
           // Extra fields are visible by default unless they explicitly say so.
           if (!isset($definition['visible']) || $definition['visible'] == TRUE) {
-            $this->content[$name] = array(
+            $this->content[$name] = [
               'weight' => $definition['weight']
-            );
+            ];
           }
           else {
             $this->hidden[$name] = TRUE;
@@ -359,7 +359,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
-  public function setComponent($name, array $options = array()) {
+  public function setComponent($name, array $options = []) {
     // If no weight specified, make sure the field sinks at the bottom.
     if (!isset($options['weight'])) {
       $max = $this->getHighestWeight();
@@ -396,7 +396,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * {@inheritdoc}
    */
   public function getHighestWeight() {
-    $weights = array();
+    $weights = [];
 
     // Collect weights for the components in the display.
     foreach ($this->content as $options) {
@@ -406,7 +406,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     }
 
     // Let other modules feedback about their own additions.
-    $weights = array_merge($weights, \Drupal::moduleHandler()->invokeAll('field_info_max_weight', array($this->targetEntityType, $this->bundle, $this->displayContext, $this->mode)));
+    $weights = array_merge($weights, \Drupal::moduleHandler()->invokeAll('field_info_max_weight', [$this->targetEntityType, $this->bundle, $this->displayContext, $this->mode]));
 
     return $weights ? max($weights) : NULL;
   }
@@ -428,7 +428,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       // For "official" view modes and form modes, ignore fields whose
       // definition states they should not be displayed.
       if ($this->mode !== static::CUSTOM_MODE) {
-        $definitions = array_filter($definitions, array($this, 'fieldHasDisplayOptions'));
+        $definitions = array_filter($definitions, [$this, 'fieldHasDisplayOptions']);
       }
       $this->fieldDefinitions = $definitions;
     }

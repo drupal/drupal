@@ -40,10 +40,10 @@ class RestripeCommand implements CommandInterface {
    */
   public function render() {
 
-    return array(
+    return [
       'command' => 'restripe',
       'selector' => $this->selector,
-    );
+    ];
   }
 
 }

@@ -37,7 +37,7 @@ class FieldImportCreateTest extends FieldKernelTestBase {
 
     // Enable field_test_config module and check that the field and storage
     // shipped in the module's default config were created.
-    \Drupal::service('module_installer')->install(array('field_test_config'));
+    \Drupal::service('module_installer')->install(['field_test_config']);
 
     // A field storage with one single field.
     $field_storage = FieldStorageConfig::load($field_storage_id);

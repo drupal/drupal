@@ -43,12 +43,12 @@ class RearrangeFilter extends ViewsFormBase {
     $types = ViewExecutable::getHandlerTypes();
     $executable = $view->getExecutable();
     if (!$executable->setDisplay($display_id)) {
-      $form['markup'] = array('#markup' => $this->t('Invalid display id @display', array('@display' => $display_id)));
+      $form['markup'] = ['#markup' => $this->t('Invalid display id @display', ['@display' => $display_id])];
       return $form;
     }
     $display = $executable->displayHandlers->get($display_id);
     $form['#title'] = Html::escape($display->display['display_title']) . ': ';
-    $form['#title'] .= $this->t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
+    $form['#title'] .= $this->t('Rearrange @type', ['@type' => $types[$type]['ltitle']]);
     $form['#section'] = $display_id . 'rearrange-item';
 
     if ($display->defaultableSections($types[$type]['plural'])) {
@@ -68,12 +68,12 @@ class RearrangeFilter extends ViewsFormBase {
     $count = 0;
 
     // Get relationship labels
-    $relationships = array();
+    $relationships = [];
     foreach ($display->getHandlers('relationship') as $id => $handler) {
       $relationships[$id] = $handler->adminLabel();
     }
 
-    $group_options = array();
+    $group_options = [];
 
     /**
      * Filter groups is an array that contains:
@@ -88,59 +88,59 @@ class RearrangeFilter extends ViewsFormBase {
     $grouping = count(array_keys($groups['groups'])) > 1;
 
     $form['filter_groups']['#tree'] = TRUE;
-    $form['filter_groups']['operator'] = array(
+    $form['filter_groups']['operator'] = [
       '#type' => 'select',
-      '#options' => array(
+      '#options' => [
         'AND' => $this->t('And'),
         'OR' => $this->t('Or'),
-      ),
+      ],
       '#default_value' => $groups['operator'],
-      '#attributes' => array(
-        'class' => array('warning-on-change'),
-      ),
+      '#attributes' => [
+        'class' => ['warning-on-change'],
+      ],
       '#title' => $this->t('Operator to use on all groups'),
       '#description' => $this->t('Either "group 0 AND group 1 AND group 2" or "group 0 OR group 1 OR group 2", etc'),
       '#access' => $grouping,
-    );
+    ];
 
     $form['remove_groups']['#tree'] = TRUE;
 
     foreach ($groups['groups'] as $id => $group) {
-      $form['filter_groups']['groups'][$id] = array(
+      $form['filter_groups']['groups'][$id] = [
         '#title' => $this->t('Operator'),
         '#type' => 'select',
-        '#options' => array(
+        '#options' => [
           'AND' => $this->t('And'),
           'OR' => $this->t('Or'),
-        ),
+        ],
         '#default_value' => $group,
-        '#attributes' => array(
-          'class' => array('warning-on-change'),
-        ),
-      );
+        '#attributes' => [
+          'class' => ['warning-on-change'],
+        ],
+      ];
 
-      $form['remove_groups'][$id] = array(); // to prevent a notice
+      $form['remove_groups'][$id] = []; // to prevent a notice
       if ($id != 1) {
-        $form['remove_groups'][$id] = array(
+        $form['remove_groups'][$id] = [
           '#type' => 'submit',
-          '#value' => $this->t('Remove group @group', array('@group' => $id)),
+          '#value' => $this->t('Remove group @group', ['@group' => $id]),
           '#id' => "views-remove-group-$id",
-          '#attributes' => array(
-            'class' => array('views-remove-group'),
-          ),
+          '#attributes' => [
+            'class' => ['views-remove-group'],
+          ],
           '#group' => $id,
           '#ajax' => ['url' => NULL],
-        );
+        ];
       }
-      $group_options[$id] = $id == 1 ? $this->t('Default group') : $this->t('Group @group', array('@group' => $id));
-      $form['#group_renders'][$id] = array();
+      $group_options[$id] = $id == 1 ? $this->t('Default group') : $this->t('Group @group', ['@group' => $id]);
+      $form['#group_renders'][$id] = [];
     }
 
     $form['#group_options'] = $group_options;
     $form['#groups'] = $groups;
     // We don't use getHandlers() because we want items without handlers to
     // appear and show up as 'broken' so that the user can see them.
-    $form['filters'] = array('#tree' => TRUE);
+    $form['filters'] = ['#tree' => TRUE];
     foreach ($handlers as $id => $field) {
       // If the group does not exist, move the filters to the default group.
       if (empty($field['group']) || empty($groups['groups'][$field['group']])) {
@@ -162,24 +162,24 @@ class RearrangeFilter extends ViewsFormBase {
       // Place this item into the proper group for rendering.
       $form['#group_renders'][$field['group']][] = $id;
 
-      $form['filters'][$id]['weight'] = array(
-        '#title' => t('Weight for @id', array('@id' => $id)),
+      $form['filters'][$id]['weight'] = [
+        '#title' => t('Weight for @id', ['@id' => $id]),
         '#title_display' => 'invisible',
         '#type' => 'textfield',
         '#default_value' => ++$count,
         '#size' => 8,
-      );
-      $form['filters'][$id]['group'] = array(
-        '#title' => t('Group for @id', array('@id' => $id)),
+      ];
+      $form['filters'][$id]['group'] = [
+        '#title' => t('Group for @id', ['@id' => $id]),
         '#title_display' => 'invisible',
         '#type' => 'select',
         '#options' => $group_options,
         '#default_value' => $field['group'],
-        '#attributes' => array(
-          'class' => array('views-region-select', 'views-region-' . $id),
-        ),
+        '#attributes' => [
+          'class' => ['views-region-select', 'views-region-' . $id],
+        ],
         '#access' => $field['group'] !== 'ungroupable',
-      );
+      ];
 
       if ($handler) {
         $name = $handler->adminLabel() . ' ' . $handler->adminSummary();
@@ -187,34 +187,34 @@ class RearrangeFilter extends ViewsFormBase {
           $name = '(' . $relationships[$field['relationship']] . ') ' . $name;
         }
 
-        $form['filters'][$id]['name'] = array(
+        $form['filters'][$id]['name'] = [
           '#markup' => $name,
-        );
+        ];
       }
       else {
-        $form['filters'][$id]['name'] = array('#markup' => $this->t('Broken field @id', array('@id' => $id)));
+        $form['filters'][$id]['name'] = ['#markup' => $this->t('Broken field @id', ['@id' => $id])];
       }
-      $form['filters'][$id]['removed'] = array(
-        '#title' => t('Remove @id', array('@id' => $id)),
+      $form['filters'][$id]['removed'] = [
+        '#title' => t('Remove @id', ['@id' => $id]),
         '#title_display' => 'invisible',
         '#type' => 'checkbox',
         '#id' => 'views-removed-' . $id,
-        '#attributes' => array('class' => array('views-remove-checkbox')),
+        '#attributes' => ['class' => ['views-remove-checkbox']],
         '#default_value' => 0,
-      );
+      ];
     }
 
     $view->getStandardButtons($form, $form_state, 'views_ui_rearrange_filter_form');
-    $form['actions']['add_group'] = array(
+    $form['actions']['add_group'] = [
       '#type' => 'submit',
       '#value' => $this->t('Create new filter group'),
       '#id' => 'views-add-group',
       '#group' => 'add',
-      '#attributes' => array(
-        'class' => array('views-add-group'),
-      ),
+      '#attributes' => [
+        'class' => ['views-add-group'],
+      ],
       '#ajax' => ['url' => NULL],
-    );
+    ];
 
     return $form;
   }
@@ -226,7 +226,7 @@ class RearrangeFilter extends ViewsFormBase {
     $types = ViewExecutable::getHandlerTypes();
     $view = $form_state->get('view');
     $display = &$view->getExecutable()->displayHandlers->get($form_state->get('display_id'));
-    $remember_groups = array();
+    $remember_groups = [];
 
     if (!empty($view->form_cache)) {
       $old_fields = $view->form_cache['handlers'];
@@ -237,7 +237,7 @@ class RearrangeFilter extends ViewsFormBase {
 
     $groups = $form_state->getValue('filter_groups');
     // Whatever button was clicked, re-calculate field information.
-    $new_fields = $order = array();
+    $new_fields = $order = [];
 
     // Make an array with the weights
     foreach ($form_state->getValue('filters') as $field => $info) {

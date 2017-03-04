@@ -22,23 +22,23 @@ class FormTestRedirectForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['redirection'] = array(
+    $form['redirection'] = [
       '#type' => 'checkbox',
       '#title' => t('Use redirection'),
-    );
-    $form['destination'] = array(
+    ];
+    $form['destination'] = [
       '#type' => 'textfield',
       '#title' => t('Redirect destination'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="redirection"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
-    $form['submit'] = array(
+      '#states' => [
+        'visible' => [
+          ':input[name="redirection"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => t('Submit'),
-    );
+    ];
 
     return $form;
   }

@@ -56,7 +56,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
    */
   public function testLanguageNegotiationWithNoNegotiation() {
     $this->sourceDatabase->update('variable')
-      ->fields(array('value' => serialize(0)))
+      ->fields(['value' => serialize(0)])
       ->condition('name', 'language_negotiation')
       ->execute();
 
@@ -88,7 +88,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
    */
   public function testLanguageNegotiationWithPathPrefix() {
     $this->sourceDatabase->update('variable')
-      ->fields(array('value' => serialize(2)))
+      ->fields(['value' => serialize(2)])
       ->condition('name', 'language_negotiation')
       ->execute();
 
@@ -129,7 +129,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
    */
   public function testLanguageNegotiationWithDomain() {
     $this->sourceDatabase->update('variable')
-      ->fields(array('value' => serialize(3)))
+      ->fields(['value' => serialize(3)])
       ->condition('name', 'language_negotiation')
       ->execute();
 

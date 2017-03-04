@@ -17,11 +17,11 @@ class DatabaseStorageTest extends StorageTestBase {
    *
    * @var array
    */
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('key_value'));
+    $this->installSchema('system', ['key_value']);
   }
 
   /**

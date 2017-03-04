@@ -70,7 +70,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_rev');
 
-    ViewTestData::createTestViews(get_class($this), array('views_test_config'));
+    ViewTestData::createTestViews(get_class($this), ['views_test_config']);
 
     // Bypass any field access.
     $this->adminUser = User::create(['name' => $this->randomString()]);

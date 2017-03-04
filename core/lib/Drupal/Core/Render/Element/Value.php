@@ -25,9 +25,9 @@ class Value extends FormElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    return array(
+    return [
       '#input' => TRUE,
-    );
+    ];
   }
 
 }

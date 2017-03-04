@@ -65,12 +65,12 @@ class GroupwiseMax extends RelationshipPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['subquery_sort'] = array('default' => NULL);
+    $options['subquery_sort'] = ['default' => NULL];
     // Descending more useful.
-    $options['subquery_order'] = array('default' => 'DESC');
-    $options['subquery_regenerate'] = array('default' => FALSE);
-    $options['subquery_view'] = array('default' => FALSE);
-    $options['subquery_namespace'] = array('default' => FALSE);
+    $options['subquery_order'] = ['default' => 'DESC'];
+    $options['subquery_regenerate'] = ['default' => FALSE];
+    $options['subquery_view'] = ['default' => FALSE];
+    $options['subquery_namespace'] = ['default' => FALSE];
 
     return $options;
   }
@@ -83,7 +83,7 @@ class GroupwiseMax extends RelationshipPluginBase {
 
     // Get the sorts that apply to our base.
     $sorts = Views::viewsDataHelper()->fetchFields($this->definition['base'], 'sort');
-    $sort_options = array();
+    $sort_options = [];
     foreach ($sorts as $sort_id => $sort) {
       $sort_options[$sort_id] = "$sort[group]: $sort[title]";
     }
@@ -91,34 +91,34 @@ class GroupwiseMax extends RelationshipPluginBase {
 
     // Extends the relationship's basic options, allowing the user to pick a
     // sort and an order for it.
-    $form['subquery_sort'] = array(
+    $form['subquery_sort'] = [
       '#type' => 'select',
       '#title' => $this->t('Representative sort criteria'),
       // Provide the base field as sane default sort option.
       '#default_value' => !empty($this->options['subquery_sort']) ? $this->options['subquery_sort'] : $this->definition['base'] . '.' . $base_table_data['table']['base']['field'],
       '#options' => $sort_options,
       '#description' => $this->t("The sort criteria is applied to the data brought in by the relationship to determine how a representative item is obtained for each row. For example, to show the most recent node for each user, pick 'Content: Updated date'."),
-    );
+    ];
 
-    $form['subquery_order'] = array(
+    $form['subquery_order'] = [
       '#type' => 'radios',
       '#title' => $this->t('Representative sort order'),
       '#description' => $this->t("The ordering to use for the sort criteria selected above."),
-      '#options' => array('ASC' => $this->t('Ascending'), 'DESC' => $this->t('Descending')),
+      '#options' => ['ASC' => $this->t('Ascending'), 'DESC' => $this->t('Descending')],
       '#default_value' => $this->options['subquery_order'],
-    );
+    ];
 
-    $form['subquery_namespace'] = array(
+    $form['subquery_namespace'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subquery namespace'),
       '#description' => $this->t('Advanced. Enter a namespace for the subquery used by this relationship.'),
       '#default_value' => $this->options['subquery_namespace'],
-    );
+    ];
 
 
     // WIP: This stuff doesn't work yet: namespacing issues.
     // A list of suitable views to pick one as the subview.
-    $views = array('' => '- None -');
+    $views = ['' => '- None -'];
     foreach (Views::getAllViews() as $view) {
       // Only get views that are suitable:
       // - base must the base that our relationship joins towards
@@ -130,20 +130,20 @@ class GroupwiseMax extends RelationshipPluginBase {
       }
     }
 
-    $form['subquery_view'] = array(
+    $form['subquery_view'] = [
       '#type' => 'select',
       '#title' => $this->t('Representative view'),
       '#default_value' => $this->options['subquery_view'],
       '#options' => $views,
       '#description' => $this->t('Advanced. Use another view to generate the relationship subquery. This allows you to use filtering and more than one sort. If you pick a view here, the sort options above are ignored. Your view must have the ID of its base as its only field, and should have some kind of sorting.'),
-    );
+    ];
 
-    $form['subquery_regenerate'] = array(
+    $form['subquery_regenerate'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Generate subquery each time view is run'),
       '#default_value' => $this->options['subquery_regenerate'],
       '#description' => $this->t('Will re-generate the subquery for this relationship every time the view is run, instead of only when these options are saved. Use for testing if you are making changes elsewhere. WARNING: seriously impairs performance.'),
-    );
+    ];
   }
 
   /**
@@ -152,7 +152,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    * We use this to obtain our subquery SQL.
    */
   protected function getTemporaryView() {
-    $view = View::create(array('base_table' => $this->definition['base']));
+    $view = View::create(['base_table' => $this->definition['base']]);
     $view->addDisplay('default');
     return $view->getExecutable();
   }
@@ -198,7 +198,7 @@ class GroupwiseMax extends RelationshipPluginBase {
       // We work around this further down.
       $sort = $options['subquery_sort'];
       list($sort_table, $sort_field) = explode('.', $sort);
-      $sort_options = array('order' => $options['subquery_order']);
+      $sort_options = ['order' => $options['subquery_order']];
       $temp_view->addHandler('default', 'sort', $sort_table, $sort_field, $sort_options);
     }
 
@@ -219,7 +219,7 @@ class GroupwiseMax extends RelationshipPluginBase {
       list($relationship_table, $relationship_field) = explode(':', $this->definition['relationship']);
       $relationship_id = $temp_view->addHandler('default', 'relationship', $relationship_table, $relationship_field);
     }
-    $temp_item_options = array('relationship' => $relationship_id);
+    $temp_item_options = ['relationship' => $relationship_id];
 
     // Add the correct argument for our relationship's base
     // ie the 'how to get back to base' argument.

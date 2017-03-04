@@ -12,9 +12,9 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 class LanguageLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   protected function setUp() {
-    $this->directoryList = array(
+    $this->directoryList = [
       'language' => 'core/modules/language',
-    );
+    ];
     parent::setUp();
   }
 
@@ -31,19 +31,19 @@ class LanguageLocalTasksTest extends LocalTaskIntegrationTestBase {
    * Provides a list of routes to test.
    */
   public function getLanguageAdminOverviewRoutes() {
-    return array(
-      array('entity.configurable_language.collection', array(array('entity.configurable_language.collection', 'language.negotiation'))),
-      array('language.negotiation', array(array('entity.configurable_language.collection', 'language.negotiation'))),
-    );
+    return [
+      ['entity.configurable_language.collection', [['entity.configurable_language.collection', 'language.negotiation']]],
+      ['language.negotiation', [['entity.configurable_language.collection', 'language.negotiation']]],
+    ];
   }
 
   /**
    * Tests language edit local tasks existence.
    */
   public function testLanguageEditLocalTasks() {
-    $this->assertLocalTasks('entity.configurable_language.edit_form', array(
-      0 => array('entity.configurable_language.edit_form'),
-    ));
+    $this->assertLocalTasks('entity.configurable_language.edit_form', [
+      0 => ['entity.configurable_language.edit_form'],
+    ]);
   }
 
 }

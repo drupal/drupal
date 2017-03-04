@@ -17,7 +17,7 @@ function rdf_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.rdf':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The RDF module enriches your content with metadata to let other applications (e.g., search engines, aggregators, and so on) better understand its relationships and attributes. This semantically enriched, machine-readable output for your website uses the <a href=":rdfa">RDFa specification</a>, which allows RDF data to be embedded in HTML markup. Other modules can define mappings of their data to RDF terms, and the RDF module makes this RDF data available to the theme. The core modules define RDF mappings for their data model, and the core themes output this RDF metadata information along with the human-readable visual information. For more information, see the <a href=":rdf">online documentation for the RDF module</a>.', array(':rdfa' => 'http://www.w3.org/TR/xhtml-rdfa-primer/', ':rdf' => 'https://www.drupal.org/documentation/modules/rdf')) . '</p>';
+      $output .= '<p>' . t('The RDF module enriches your content with metadata to let other applications (e.g., search engines, aggregators, and so on) better understand its relationships and attributes. This semantically enriched, machine-readable output for your website uses the <a href=":rdfa">RDFa specification</a>, which allows RDF data to be embedded in HTML markup. Other modules can define mappings of their data to RDF terms, and the RDF module makes this RDF data available to the theme. The core modules define RDF mappings for their data model, and the core themes output this RDF metadata information along with the human-readable visual information. For more information, see the <a href=":rdf">online documentation for the RDF module</a>.', [':rdfa' => 'http://www.w3.org/TR/xhtml-rdfa-primer/', ':rdf' => 'https://www.drupal.org/documentation/modules/rdf']) . '</p>';
       return $output;
   }
 }
@@ -74,10 +74,10 @@ function rdf_get_mapping($entity_type, $bundle) {
 
   // If not found, create a fresh mapping object.
   if (!$mapping) {
-    $mapping = RdfMapping::create(array(
+    $mapping = RdfMapping::create([
       'targetEntityType' => $entity_type,
       'bundle' => $bundle,
-    ));
+    ]);
   }
 
   return $mapping;
@@ -87,7 +87,7 @@ function rdf_get_mapping($entity_type, $bundle) {
  * Implements hook_rdf_namespaces().
  */
 function rdf_rdf_namespaces() {
-  return array(
+  return [
     'content'  => 'http://purl.org/rss/1.0/modules/content/',
     'dc'       => 'http://purl.org/dc/terms/',
     'foaf'     => 'http://xmlns.com/foaf/0.1/',
@@ -98,7 +98,7 @@ function rdf_rdf_namespaces() {
     'sioct'    => 'http://rdfs.org/sioc/types#',
     'skos'     => 'http://www.w3.org/2004/02/skos/core#',
     'xsd'      => 'http://www.w3.org/2001/XMLSchema#',
-  );
+  ];
 }
 
 /**
@@ -108,14 +108,14 @@ function rdf_rdf_namespaces() {
  * implement it.
  */
 function rdf_get_namespaces() {
-  $namespaces = array();
+  $namespaces = [];
   // In order to resolve duplicate namespaces by using the earliest defined
   // namespace, do not use \Drupal::moduleHandler()->invokeAll().
   foreach (\Drupal::moduleHandler()->getImplementations('rdf_namespaces') as $module) {
     $function = $module . '_rdf_namespaces';
     foreach ($function() as $prefix => $namespace) {
       if (array_key_exists($prefix, $namespaces) && $namespace !== $namespaces[$prefix]) {
-        throw new Exception(t('Tried to map @prefix to @namespace, but @prefix is already mapped to @orig_namespace.', array('@prefix' => $prefix, '@namespace' => $namespace, '@orig_namespace' => $namespaces[$prefix])));
+        throw new Exception(t('Tried to map @prefix to @namespace, but @prefix is already mapped to @orig_namespace.', ['@prefix' => $prefix, '@namespace' => $namespace, '@orig_namespace' => $namespaces[$prefix]]));
       }
       else {
         $namespaces[$prefix] = $namespace;
@@ -165,7 +165,7 @@ function rdf_get_namespaces() {
  *   RDFa attributes suitable for Drupal\Core\Template\Attribute.
  */
 function rdf_rdfa_attributes($mapping, $data = NULL) {
-  $attributes = array();
+  $attributes = [];
 
   // The type of mapping defaults to 'property'.
   $type = isset($mapping['mapping_type']) ? $mapping['mapping_type'] : 'property';
@@ -249,14 +249,14 @@ function rdf_comment_storage_load($comments) {
  * Implements hook_theme().
  */
 function rdf_theme() {
-  return array(
-    'rdf_wrapper' => array(
-      'variables' => array('attributes' => array(), 'content' => NULL),
-    ),
-    'rdf_metadata' => array(
-      'variables' => array('metadata' => array()),
-    ),
-  );
+  return [
+    'rdf_wrapper' => [
+      'variables' => ['attributes' => [], 'content' => NULL],
+    ],
+    'rdf_metadata' => [
+      'variables' => ['metadata' => []],
+    ],
+  ];
 }
 
 /**
@@ -266,7 +266,7 @@ function rdf_preprocess_html(&$variables) {
   // Adds RDF namespace prefix bindings in the form of an RDFa 1.1 prefix
   // attribute inside the html element.
   if (!isset($variables['html_attributes']['prefix'])) {
-    $variables['html_attributes']['prefix'] = array();
+    $variables['html_attributes']['prefix'] = [];
   }
   foreach (rdf_get_namespaces() as $prefix => $uri) {
     $variables['html_attributes']['prefix'][] = $prefix . ': ' . $uri . " ";
@@ -315,20 +315,20 @@ function rdf_preprocess_node(&$variables) {
   if ($title_mapping) {
     $title_attributes['property'] = empty($title_mapping['properties']) ? NULL : $title_mapping['properties'];
     $title_attributes['content'] = $variables['node']->label();
-    $variables['title_suffix']['rdf_meta_title'] = array(
+    $variables['title_suffix']['rdf_meta_title'] = [
       '#theme' => 'rdf_metadata',
-      '#metadata' => array($title_attributes),
-    );
+      '#metadata' => [$title_attributes],
+    ];
   }
 
   // Adds RDFa markup for the date.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
   if (!empty($created_mapping) && $variables['display_submitted']) {
     $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->get('created')->first()->toArray());
-    $rdf_metadata = array(
+    $rdf_metadata = [
       '#theme' => 'rdf_metadata',
-      '#metadata' => array($date_attributes),
-    );
+      '#metadata' => [$date_attributes],
+    ];
     $variables['metadata'] = drupal_render($rdf_metadata);
   }
 
@@ -345,10 +345,10 @@ function rdf_preprocess_node(&$variables) {
         // Adds RDFa markup for the comment count near the node title as
         // metadata.
         $comment_count_attributes = rdf_rdfa_attributes($comment_count_mapping, $variables['node']->get($field_name)->comment_count);
-        $variables['title_suffix']['rdf_meta_comment_count'] = array(
+        $variables['title_suffix']['rdf_meta_comment_count'] = [
           '#theme' => 'rdf_metadata',
-          '#metadata' => array($comment_count_attributes),
-        );
+          '#metadata' => [$comment_count_attributes],
+        ];
       }
     }
   }
@@ -377,15 +377,15 @@ function rdf_preprocess_user(&$variables) {
     // rdf_preprocess_username().
     $name_mapping = $mapping->getPreparedFieldMapping('name');
     if (!empty($name_mapping['properties'])) {
-      $username_meta = array(
+      $username_meta = [
         '#tag' => 'meta',
-        '#attributes' => array(
+        '#attributes' => [
           'about' => $account->url(),
           'property' => $name_mapping['properties'],
           'content' => $account->getDisplayName(),
           'lang' => '',
-        ),
-      );
+        ],
+      ];
       $variables['#attached']['html_head'][] = [$username_meta, 'rdf_user_username'];
     }
   }
@@ -482,10 +482,10 @@ function rdf_preprocess_comment(&$variables) {
     // cached as part of the entity.
     $date_attributes = $comment->rdf_data['date'];
 
-    $rdf_metadata = array(
+    $rdf_metadata = [
       '#theme' => 'rdf_metadata',
-      '#metadata' => array($date_attributes),
-    );
+      '#metadata' => [$date_attributes],
+    ];
     // Ensure the original variable is represented as a render array.
     $created = !is_array($variables['created']) ? ['#markup' => $variables['created']] : $variables['created'];
     $submitted = !is_array($variables['submitted']) ? ['#markup' => $variables['submitted']] : $variables['submitted'];
@@ -527,10 +527,10 @@ function rdf_preprocess_comment(&$variables) {
   }
   // Adds RDF metadata markup above comment body if any.
   if (!empty($variables['rdf_metadata_attributes']) && isset($variables['content']['comment_body'])) {
-    $rdf_metadata = array(
+    $rdf_metadata = [
       '#theme' => 'rdf_metadata',
       '#metadata' => $variables['rdf_metadata_attributes'],
-    );
+    ];
     if (!empty($variables['content']['comment_body']['#prefix'])) {
       $rdf_metadata['#suffix'] = $variables['content']['comment_body']['#prefix'];
     }
@@ -555,14 +555,14 @@ function rdf_preprocess_taxonomy_term(&$variables) {
   // Add RDFa markup for the taxonomy term name as metadata, if present.
   $name_field_mapping = $mapping->getPreparedFieldMapping('name');
   if (!empty($name_field_mapping) && !empty($name_field_mapping['properties'])) {
-    $name_attributes = array(
+    $name_attributes = [
       'property' => $name_field_mapping['properties'],
       'content' => $term->getName(),
-    );
-    $variables['title_suffix']['taxonomy_term_rdfa'] = array(
+    ];
+    $variables['title_suffix']['taxonomy_term_rdfa'] = [
       '#theme' => 'rdf_metadata',
-      '#metadata' => array($name_attributes),
-    );
+      '#metadata' => [$name_attributes],
+    ];
   }
 }
 
@@ -573,7 +573,7 @@ function rdf_preprocess_image(&$variables) {
   // Adds the RDF type for image.  We cannot use the usual entity-based mapping
   // to get 'foaf:Image' because image does not have its own entity type or
   // bundle.
-  $variables['attributes']['typeof'] = array('foaf:Image');
+  $variables['attributes']['typeof'] = ['foaf:Image'];
 }
 
 /**

@@ -24,14 +24,14 @@ class StringLongItem extends StringItemBase {
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'value' => array(
+    return [
+      'columns' => [
+        'value' => [
           'type' => $field_definition->getSetting('case_sensitive') ? 'blob' : 'text',
           'size' => 'big',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**

@@ -137,7 +137,7 @@ class RegistryTest extends UnitTestCase {
     $this->moduleHandler->expects($this->exactly(2))
       ->method('getImplementations')
       ->with('theme')
-      ->will($this->returnValue(array('theme_test')));
+      ->will($this->returnValue(['theme_test']));
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModuleList')
       ->willReturn([]);
@@ -164,7 +164,7 @@ class RegistryTest extends UnitTestCase {
     $this->assertEquals('module', $info['type']);
     $this->assertEquals('core/modules/system/tests/modules/theme_test', $info['theme path']);
     $this->assertEquals('theme_theme_test_function_suggestions', $info['function']);
-    $this->assertEquals(array(), $info['variables']);
+    $this->assertEquals([], $info['variables']);
 
     // The second call will initialize with the second theme. Ensure that this
     // returns a different object and the discovery for the second theme's

@@ -71,12 +71,12 @@ class TextFieldTest extends UnitTestCase {
    * @covers ::processCckFieldValues
    */
   public function testProcessBooleanTextImplicitValues() {
-    $info = array(
+    $info = [
       'widget_type' => 'optionwidgets_onoff',
-      'global_settings' => array(
+      'global_settings' => [
         'allowed_values' => "foo\nbar",
-      )
-    );
+      ]
+    ];
     $this->plugin->processCckFieldValues($this->migration, 'field', $info);
 
     $expected = [
@@ -96,12 +96,12 @@ class TextFieldTest extends UnitTestCase {
    * @covers ::processCckFieldValues
    */
   public function testProcessBooleanTextExplicitValues() {
-    $info = array(
+    $info = [
       'widget_type' => 'optionwidgets_onoff',
-      'global_settings' => array(
+      'global_settings' => [
         'allowed_values' => "foo|Foo\nbaz|Baz",
-      )
-    );
+      ]
+    ];
     $this->plugin->processCckFieldValues($this->migration, 'field', $info);
 
     $expected = [
@@ -121,43 +121,43 @@ class TextFieldTest extends UnitTestCase {
    * Data provider for testGetFieldType().
    */
   public function getFieldTypeProvider() {
-    return array(
-      array('string_long', 'text_textfield', array(
+    return [
+      ['string_long', 'text_textfield', [
         'text_processing' => FALSE,
-      )),
-      array('string', 'text_textfield', array(
+      ]],
+      ['string', 'text_textfield', [
         'text_processing' => FALSE,
         'max_length' => 128,
-      )),
-      array('string_long', 'text_textfield', array(
+      ]],
+      ['string_long', 'text_textfield', [
         'text_processing' => FALSE,
         'max_length' => 4096,
-      )),
-      array('text_long', 'text_textfield', array(
+      ]],
+      ['text_long', 'text_textfield', [
         'text_processing' => TRUE,
-      )),
-      array('text', 'text_textfield', array(
+      ]],
+      ['text', 'text_textfield', [
         'text_processing' => TRUE,
         'max_length' => 128,
-      )),
-      array('text_long', 'text_textfield', array(
+      ]],
+      ['text_long', 'text_textfield', [
         'text_processing' => TRUE,
         'max_length' => 4096,
-      )),
-      array('list_string', 'optionwidgets_buttons'),
-      array('list_string', 'optionwidgets_select'),
-      array('boolean', 'optionwidgets_onoff'),
-      array('text_long', 'text_textarea'),
-      array(NULL, 'undefined'),
-    );
+      ]],
+      ['list_string', 'optionwidgets_buttons'],
+      ['list_string', 'optionwidgets_select'],
+      ['boolean', 'optionwidgets_onoff'],
+      ['text_long', 'text_textarea'],
+      [NULL, 'undefined'],
+    ];
   }
 
   /**
    * @covers ::getFieldType
    * @dataProvider getFieldTypeProvider
    */
-  public function testGetFieldType($expected_type, $widget_type, array $settings = array()) {
-    $row = new Row(array('widget_type' => $widget_type), array('widget_type' => array()));
+  public function testGetFieldType($expected_type, $widget_type, array $settings = []) {
+    $row = new Row(['widget_type' => $widget_type], ['widget_type' => []]);
     $row->setSourceProperty('global_settings', $settings);
     $this->assertSame($expected_type, $this->plugin->getFieldType($row));
   }

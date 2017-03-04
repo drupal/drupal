@@ -16,7 +16,7 @@ class GetRdfNamespacesTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'rdf_test_namespaces');
+  public static $modules = ['rdf', 'rdf_test_namespaces'];
 
   /**
    * Tests getting RDF namespaces.
@@ -31,7 +31,7 @@ class GetRdfNamespacesTest extends BrowserTestBase {
 
     // Enable rdf_conflicting_namespaces to ensure that an exception is thrown
     // when RDF namespaces are conflicting.
-    \Drupal::service('module_installer')->install(array('rdf_conflicting_namespaces'), TRUE);
+    \Drupal::service('module_installer')->install(['rdf_conflicting_namespaces'], TRUE);
     try {
       $ns = rdf_get_namespaces();
       $this->fail('Expected exception not thrown for conflicting namespace declaration.');

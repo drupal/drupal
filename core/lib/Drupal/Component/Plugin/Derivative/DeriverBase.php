@@ -12,7 +12,7 @@ abstract class DeriverBase implements DeriverInterface {
    *
    * @var array
    */
-  protected $derivatives = array();
+  protected $derivatives = [];
 
   /**
    * {@inheritdoc}

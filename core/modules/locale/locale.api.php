@@ -116,11 +116,11 @@
  */
 function hook_locale_translation_projects_alter(&$projects) {
   // The translations are located at a custom translation sever.
-  $projects['existing_project'] = array(
-    'info' => array(
+  $projects['existing_project'] = [
+    'info' => [
       'interface translation server pattern' => 'http://example.com/files/translations/%core/%project/%project-%version.%language.po',
-    ),
-  );
+    ],
+  ];
 }
 
 /**

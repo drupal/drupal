@@ -75,28 +75,28 @@ class ForumManager implements ForumManagerInterface {
    *
    * @var array
    */
-  protected $lastPostData = array();
+  protected $lastPostData = [];
 
   /**
    * Array of forum statistics keyed by forum (term) id.
    *
    * @var array
    */
-  protected $forumStatistics = array();
+  protected $forumStatistics = [];
 
   /**
    * Array of forum children keyed by parent forum (term) id.
    *
    * @var array
    */
-  protected $forumChildren = array();
+  protected $forumChildren = [];
 
   /**
    * Array of history keyed by nid.
    *
    * @var array
    */
-  protected $history = array();
+  protected $history = [];
 
   /**
    * Cached forum index.
@@ -135,11 +135,11 @@ class ForumManager implements ForumManagerInterface {
     $forum_per_page = $config->get('topics.page_limit');
     $sortby = $config->get('topics.order');
 
-    $header = array(
-      array('data' => $this->t('Topic'), 'field' => 'f.title'),
-      array('data' => $this->t('Replies'), 'field' => 'f.comment_count'),
-      array('data' => $this->t('Last reply'), 'field' => 'f.last_comment_timestamp'),
-    );
+    $header = [
+      ['data' => $this->t('Topic'), 'field' => 'f.title'],
+      ['data' => $this->t('Replies'), 'field' => 'f.comment_count'],
+      ['data' => $this->t('Last reply'), 'field' => 'f.last_comment_timestamp'],
+    ];
 
     $order = $this->getTopicOrder($sortby);
     for ($i = 0; $i < count($header); $i++) {
@@ -168,7 +168,7 @@ class ForumManager implements ForumManagerInterface {
 
     $query->setCountQuery($count_query);
     $result = $query->execute();
-    $nids = array();
+    $nids = [];
     foreach ($result as $record) {
       $nids[] = $record->nid;
     }
@@ -177,15 +177,15 @@ class ForumManager implements ForumManagerInterface {
 
       $query = $this->connection->select('node_field_data', 'n')
         ->extend('Drupal\Core\Database\Query\TableSortExtender');
-      $query->fields('n', array('nid'));
+      $query->fields('n', ['nid']);
 
       $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.field_name = 'comment_forum' AND ces.entity_type = 'node'");
-      $query->fields('ces', array(
+      $query->fields('ces', [
         'cid',
         'last_comment_uid',
         'last_comment_timestamp',
         'comment_count'
-      ));
+      ]);
 
       $query->join('forum_index', 'f', 'f.nid = n.nid');
       $query->addField('f', 'tid', 'forum_tid');
@@ -205,7 +205,7 @@ class ForumManager implements ForumManagerInterface {
         //   and just fall back to the default language.
         ->condition('n.default_langcode', 1);
 
-      $result = array();
+      $result = [];
       foreach ($query->execute() as $row) {
         $topic = $nodes[$row->nid];
         $topic->comment_mode = $topic->comment_forum->status;
@@ -217,10 +217,10 @@ class ForumManager implements ForumManagerInterface {
       }
     }
     else {
-      $result = array();
+      $result = [];
     }
 
-    $topics = array();
+    $topics = [];
     $first_new_found = FALSE;
     foreach ($result as $topic) {
       if ($account->isAuthenticated()) {
@@ -258,7 +258,7 @@ class ForumManager implements ForumManagerInterface {
       $topics[$topic->id()] = $topic;
     }
 
-    return array('topics' => $topics, 'header' => $header);
+    return ['topics' => $topics, 'header' => $header];
 
   }
 
@@ -280,16 +280,16 @@ class ForumManager implements ForumManagerInterface {
   protected function getTopicOrder($sortby) {
     switch ($sortby) {
       case static::NEWEST_FIRST:
-        return array('field' => 'f.last_comment_timestamp', 'sort' => 'desc');
+        return ['field' => 'f.last_comment_timestamp', 'sort' => 'desc'];
 
       case static::OLDEST_FIRST:
-        return array('field' => 'f.last_comment_timestamp', 'sort' => 'asc');
+        return ['field' => 'f.last_comment_timestamp', 'sort' => 'asc'];
 
       case static::MOST_POPULAR_FIRST:
-        return array('field' => 'f.comment_count', 'sort' => 'desc');
+        return ['field' => 'f.comment_count', 'sort' => 'desc'];
 
       case static::LEAST_POPULAR_FIRST:
-        return array('field' => 'f.comment_count', 'sort' => 'asc');
+        return ['field' => 'f.comment_count', 'sort' => 'asc'];
 
     }
   }
@@ -309,7 +309,7 @@ class ForumManager implements ForumManagerInterface {
   protected function lastVisit($nid, AccountInterface $account) {
     if (empty($this->history[$nid])) {
       $result = $this->connection->select('history', 'h')
-        ->fields('h', array('nid', 'timestamp'))
+        ->fields('h', ['nid', 'timestamp'])
         ->condition('uid', $account->id())
         ->execute();
       foreach ($result as $t) {
@@ -334,13 +334,13 @@ class ForumManager implements ForumManagerInterface {
     }
     // Query "Last Post" information for this forum.
     $query = $this->connection->select('node_field_data', 'n');
-    $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $tid));
+    $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', [':tid' => $tid]);
     $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.field_name = 'comment_forum' AND ces.entity_type = 'node'");
     $query->join('users_field_data', 'u', 'ces.last_comment_uid = u.uid AND u.default_langcode = 1');
     $query->addExpression('CASE ces.last_comment_uid WHEN 0 THEN ces.last_comment_name ELSE u.name END', 'last_comment_name');
 
     $topic = $query
-      ->fields('ces', array('last_comment_timestamp', 'last_comment_uid'))
+      ->fields('ces', ['last_comment_timestamp', 'last_comment_uid'])
       ->condition('n.status', 1)
       ->orderBy('last_comment_timestamp', 'DESC')
       ->range(0, 1)
@@ -378,7 +378,7 @@ class ForumManager implements ForumManagerInterface {
       $query->addExpression('COUNT(n.nid)', 'topic_count');
       $query->addExpression('SUM(ces.comment_count)', 'comment_count');
       $this->forumStatistics = $query
-        ->fields('f', array('tid'))
+        ->fields('f', ['tid'])
         ->condition('n.status', 1)
         ->condition('n.default_langcode', 1)
         ->groupBy('tid')
@@ -399,7 +399,7 @@ class ForumManager implements ForumManagerInterface {
     if (!empty($this->forumChildren[$tid])) {
       return $this->forumChildren[$tid];
     }
-    $forums = array();
+    $forums = [];
     $_forums = $this->entityManager->getStorage('taxonomy_term')->loadTree($vid, $tid, NULL, TRUE);
     foreach ($_forums as $forum) {
       // Merge in the topic and post counters.
@@ -430,13 +430,13 @@ class ForumManager implements ForumManagerInterface {
     }
 
     $vid = $this->configFactory->get('forum.settings')->get('vocabulary');
-    $index = $this->entityManager->getStorage('taxonomy_term')->create(array(
+    $index = $this->entityManager->getStorage('taxonomy_term')->create([
       'tid' => 0,
       'container' => 1,
-      'parents' => array(),
+      'parents' => [],
       'isIndex' => TRUE,
       'vid' => $vid
-    ));
+    ]);
 
     // Load the tree below.
     $index->forums = $this->getChildren($vid, 0);
@@ -451,7 +451,7 @@ class ForumManager implements ForumManagerInterface {
     // Reset the index.
     $this->index = NULL;
     // Reset history.
-    $this->history = array();
+    $this->history = [];
   }
 
   /**
@@ -475,8 +475,8 @@ class ForumManager implements ForumManagerInterface {
    */
   public function unreadTopics($term, $uid) {
     $query = $this->connection->select('node_field_data', 'n');
-    $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $term));
-    $query->leftJoin('history', 'h', 'n.nid = h.nid AND h.uid = :uid', array(':uid' => $uid));
+    $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', [':tid' => $term]);
+    $query->leftJoin('history', 'h', 'n.nid = h.nid AND h.uid = :uid', [':uid' => $uid]);
     $query->addExpression('COUNT(n.nid)', 'count');
     return $query
       ->condition('status', 1)
@@ -506,10 +506,10 @@ class ForumManager implements ForumManagerInterface {
   public function __wakeup() {
     $this->defaultWakeup();
     // Initialize static cache.
-    $this->history = array();
-    $this->lastPostData = array();
-    $this->forumChildren = array();
-    $this->forumStatistics = array();
+    $this->history = [];
+    $this->lastPostData = [];
+    $this->forumChildren = [];
+    $this->forumStatistics = [];
     $this->index = NULL;
   }
 

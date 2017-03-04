@@ -21,7 +21,7 @@ class TestItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('field_test');
+  public static $modules = ['field_test'];
 
   /**
    * The name of the field to use in this test.
@@ -34,11 +34,11 @@ class TestItemTest extends FieldKernelTestBase {
     parent::setUp();
 
     // Create a 'test_field' field and storage for validation.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
@@ -76,19 +76,19 @@ class TestItemTest extends FieldKernelTestBase {
     $this->assertEqual($entity->{$this->fieldName}->value, $new_value);
 
     // Test the schema for this field type.
-    $expected_schema = array(
-      'columns' => array(
-        'value' => array(
+    $expected_schema = [
+      'columns' => [
+        'value' => [
           'type' => 'int',
           'size' => 'medium',
-        ),
-      ),
-      'unique keys' => array(),
-      'indexes' => array(
-        'value' => array('value'),
-      ),
-      'foreign keys' => array(),
-    );
+        ],
+      ],
+      'unique keys' => [],
+      'indexes' => [
+        'value' => ['value'],
+      ],
+      'foreign keys' => [],
+    ];
     $field_schema = BaseFieldDefinition::create('test_field')->getSchema();
     $this->assertEqual($field_schema, $expected_schema);
   }

@@ -14,23 +14,23 @@ class BlockContentIntegrationTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_block_content_view');
+  public static $testViews = ['test_block_content_view'];
 
   /**
    * Tests basic block_content view with a block_content_type argument.
    */
   public function testBlockContentViewTypeArgument() {
     // Create two content types with three block_contents each.
-    $types = array();
-    $all_ids = array();
-    $block_contents = array();
+    $types = [];
+    $all_ids = [];
+    $block_contents = [];
     for ($i = 0; $i < 2; $i++) {
       $type = $this->createBlockContentType();
       $types[] = $type;
 
       for ($j = 0; $j < 5; $j++) {
         // Ensure the right order of the block_contents.
-        $block_content = $this->createBlockContent(array('type' => $type->id()));
+        $block_content = $this->createBlockContent(['type' => $type->id()]);
         $block_contents[$type->id()][$block_content->id()] = $block_content;
         $all_ids[] = $block_content->id();
       }
@@ -55,9 +55,9 @@ class BlockContentIntegrationTest extends BlockContentTestBase {
    * @param array $expected_ids
    *   An array of block_content IDs.
    */
-  protected function assertIds(array $expected_ids = array()) {
+  protected function assertIds(array $expected_ids = []) {
     $result = $this->xpath('//span[@class="field-content"]');
-    $ids = array();
+    $ids = [];
     foreach ($result as $element) {
       $ids[] = (int) $element;
     }

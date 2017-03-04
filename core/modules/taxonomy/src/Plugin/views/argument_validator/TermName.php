@@ -39,7 +39,7 @@ class TermName extends Entity {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['transform'] = array('default' => FALSE);
+    $options['transform'] = ['default' => FALSE];
 
     return $options;
   }
@@ -50,11 +50,11 @@ class TermName extends Entity {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['transform'] = array(
+    $form['transform'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Transform dashes in URL to spaces in term name filter values'),
       '#default_value' => $this->options['transform'],
-    );
+    ];
   }
 
   /**
@@ -64,7 +64,7 @@ class TermName extends Entity {
     if ($this->options['transform']) {
       $argument = str_replace('-', ' ', $argument);
     }
-    $terms = $this->termStorage->loadByProperties(array('name' => $argument));
+    $terms = $this->termStorage->loadByProperties(['name' => $argument]);
 
     if (!$terms) {
       // Returned empty array no terms with the name.

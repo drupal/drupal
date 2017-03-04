@@ -66,7 +66,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @var array
    */
-  protected $validated_views = array();
+  protected $validated_views = [];
 
   /**
    * The table column used for sorting by create date of this wizard.
@@ -80,21 +80,21 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @var array
    */
-  protected $filters = array();
+  protected $filters = [];
 
   /**
    * Views items configuration arrays for sorts added by the wizard.
    *
    * @var array
    */
-  protected $sorts = array();
+  protected $sorts = [];
 
   /**
    * The available store criteria.
    *
    * @var array
    */
-  protected $availableSorts = array();
+  protected $availableSorts = [];
 
   /**
    * Default values for filters.
@@ -104,11 +104,11 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @var array()
    */
-  protected $filter_defaults = array(
+  protected $filter_defaults = [
     'id' => NULL,
-    'expose' => array('operator' => FALSE),
+    'expose' => ['operator' => FALSE],
     'group' => 1,
-  );
+  ];
 
   /**
    * The bundle info service.
@@ -163,7 +163,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @return array
    */
   public function getFilters() {
-    $filters = array();
+    $filters = [];
 
     $default = $this->filter_defaults;
 
@@ -197,100 +197,100 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $style_options = Views::fetchPluginNames('style', 'normal', array($this->base_table));
-    $feed_row_options = Views::fetchPluginNames('row', 'feed', array($this->base_table));
+    $style_options = Views::fetchPluginNames('style', 'normal', [$this->base_table]);
+    $feed_row_options = Views::fetchPluginNames('row', 'feed', [$this->base_table]);
     $path_prefix = $this->url('<none>', [], ['absolute' => TRUE]);
 
     // Add filters and sorts which apply to the view as a whole.
     $this->buildFilters($form, $form_state);
     $this->buildSorts($form, $form_state);
 
-    $form['displays']['page'] = array(
+    $form['displays']['page'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Page settings'),
-      '#attributes' => array('class' => array('views-attachment', 'fieldset-no-legend')),
+      '#attributes' => ['class' => ['views-attachment', 'fieldset-no-legend']],
       '#tree' => TRUE,
-    );
-    $form['displays']['page']['create'] = array(
+    ];
+    $form['displays']['page']['create'] = [
       '#title' => $this->t('Create a page'),
       '#type' => 'checkbox',
-      '#attributes' => array('class' => array('strong')),
+      '#attributes' => ['class' => ['strong']],
       '#default_value' => FALSE,
       '#id' => 'edit-page-create',
-    );
+    ];
 
     // All options for the page display are included in this container so they
     // can be hidden as a group when the "Create a page" checkbox is unchecked.
-    $form['displays']['page']['options'] = array(
+    $form['displays']['page']['options'] = [
       '#type' => 'container',
-      '#attributes' => array('class' => array('options-set')),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="page[create]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#attributes' => ['class' => ['options-set']],
+      '#states' => [
+        'visible' => [
+          ':input[name="page[create]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#prefix' => '<div><div id="edit-page-wrapper">',
       '#suffix' => '</div></div>',
-      '#parents' => array('page'),
-    );
+      '#parents' => ['page'],
+    ];
 
-    $form['displays']['page']['options']['title'] = array(
+    $form['displays']['page']['options']['title'] = [
       '#title' => $this->t('Page title'),
       '#type' => 'textfield',
       '#maxlength' => 255,
-    );
-    $form['displays']['page']['options']['path'] = array(
+    ];
+    $form['displays']['page']['options']['path'] = [
       '#title' => $this->t('Path'),
       '#type' => 'textfield',
       '#field_prefix' => $path_prefix,
       // Account for the leading backslash.
       '#maxlength' => 254,
-    );
-    $form['displays']['page']['options']['style'] = array(
+    ];
+    $form['displays']['page']['options']['style'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Page display settings'),
-      '#attributes' => array('class' => array('container-inline', 'fieldset-no-legend')),
-    );
+      '#attributes' => ['class' => ['container-inline', 'fieldset-no-legend']],
+    ];
 
     // Create the dropdown for choosing the display format.
-    $form['displays']['page']['options']['style']['style_plugin'] = array(
+    $form['displays']['page']['options']['style']['style_plugin'] = [
       '#title' => $this->t('Display format'),
       '#type' => 'select',
       '#options' => $style_options,
-    );
+    ];
     $style_form = &$form['displays']['page']['options']['style'];
-    $style_form['style_plugin']['#default_value'] = static::getSelected($form_state, array('page', 'style', 'style_plugin'), 'default', $style_form['style_plugin']);
+    $style_form['style_plugin']['#default_value'] = static::getSelected($form_state, ['page', 'style', 'style_plugin'], 'default', $style_form['style_plugin']);
     // Changing this dropdown updates $form['displays']['page']['options'] via
     // AJAX.
-    views_ui_add_ajax_trigger($style_form, 'style_plugin', array('displays', 'page', 'options'));
+    views_ui_add_ajax_trigger($style_form, 'style_plugin', ['displays', 'page', 'options']);
 
     $this->buildFormStyle($form, $form_state, 'page');
-    $form['displays']['page']['options']['items_per_page'] = array(
+    $form['displays']['page']['options']['items_per_page'] = [
       '#title' => $this->t('Items to display'),
       '#type' => 'number',
       '#default_value' => 10,
       '#min' => 0,
-    );
-    $form['displays']['page']['options']['pager'] = array(
+    ];
+    $form['displays']['page']['options']['pager'] = [
       '#title' => $this->t('Use a pager'),
       '#type' => 'checkbox',
       '#default_value' => TRUE,
-    );
-    $form['displays']['page']['options']['link'] = array(
+    ];
+    $form['displays']['page']['options']['link'] = [
       '#title' => $this->t('Create a menu link'),
       '#type' => 'checkbox',
       '#id' => 'edit-page-link',
-    );
-    $form['displays']['page']['options']['link_properties'] = array(
+    ];
+    $form['displays']['page']['options']['link_properties'] = [
       '#type' => 'container',
-      '#states' => array(
-        'visible' => array(
-          ':input[name="page[link]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="page[link]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#prefix' => '<div id="edit-page-link-properties-wrapper">',
       '#suffix' => '</div>',
-    );
+    ];
     if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
       $menu_options = menu_ui_get_menus();
     }
@@ -301,162 +301,162 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         $menu_options[$name] = $this->t($title);
       }
     }
-    $form['displays']['page']['options']['link_properties']['menu_name'] = array(
+    $form['displays']['page']['options']['link_properties']['menu_name'] = [
       '#title' => $this->t('Menu'),
       '#type' => 'select',
       '#options' => $menu_options,
-    );
-    $form['displays']['page']['options']['link_properties']['title'] = array(
+    ];
+    $form['displays']['page']['options']['link_properties']['title'] = [
       '#title' => $this->t('Link text'),
       '#type' => 'textfield',
-    );
+    ];
     // Only offer a feed if we have at least one available feed row style.
     if ($feed_row_options) {
-      $form['displays']['page']['options']['feed'] = array(
+      $form['displays']['page']['options']['feed'] = [
         '#title' => $this->t('Include an RSS feed'),
         '#type' => 'checkbox',
         '#id' => 'edit-page-feed',
-      );
-      $form['displays']['page']['options']['feed_properties'] = array(
+      ];
+      $form['displays']['page']['options']['feed_properties'] = [
         '#type' => 'container',
-        '#states' => array(
-          'visible' => array(
-            ':input[name="page[feed]"]' => array('checked' => TRUE),
-          ),
-        ),
+        '#states' => [
+          'visible' => [
+            ':input[name="page[feed]"]' => ['checked' => TRUE],
+          ],
+        ],
         '#prefix' => '<div id="edit-page-feed-properties-wrapper">',
         '#suffix' => '</div>',
-      );
-      $form['displays']['page']['options']['feed_properties']['path'] = array(
+      ];
+      $form['displays']['page']['options']['feed_properties']['path'] = [
         '#title' => $this->t('Feed path'),
         '#type' => 'textfield',
         '#field_prefix' => $path_prefix,
         // Account for the leading backslash.
         '#maxlength' => 254,
-      );
+      ];
       // This will almost never be visible.
-      $form['displays']['page']['options']['feed_properties']['row_plugin'] = array(
+      $form['displays']['page']['options']['feed_properties']['row_plugin'] = [
         '#title' => $this->t('Feed row style'),
         '#type' => 'select',
         '#options' => $feed_row_options,
         '#default_value' => key($feed_row_options),
         '#access' => (count($feed_row_options) > 1),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="page[feed]"]' => array('checked' => TRUE),
-          ),
-        ),
+        '#states' => [
+          'visible' => [
+            ':input[name="page[feed]"]' => ['checked' => TRUE],
+          ],
+        ],
         '#prefix' => '<div id="edit-page-feed-properties-row-plugin-wrapper">',
         '#suffix' => '</div>',
-      );
+      ];
     }
 
     // Only offer the block settings if the module is enabled.
     if (\Drupal::moduleHandler()->moduleExists('block')) {
-      $form['displays']['block'] = array(
+      $form['displays']['block'] = [
         '#type' => 'fieldset',
         '#title' => $this->t('Block settings'),
-        '#attributes' => array('class' => array('views-attachment', 'fieldset-no-legend')),
+        '#attributes' => ['class' => ['views-attachment', 'fieldset-no-legend']],
         '#tree' => TRUE,
-      );
-      $form['displays']['block']['create'] = array(
+      ];
+      $form['displays']['block']['create'] = [
         '#title' => $this->t('Create a block'),
         '#type' => 'checkbox',
-        '#attributes' => array('class' => array('strong')),
+        '#attributes' => ['class' => ['strong']],
         '#id' => 'edit-block-create',
-      );
+      ];
 
       // All options for the block display are included in this container so
       // they can be hidden as a group when the "Create a block" checkbox is
       // unchecked.
-      $form['displays']['block']['options'] = array(
+      $form['displays']['block']['options'] = [
         '#type' => 'container',
-        '#attributes' => array('class' => array('options-set')),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="block[create]"]' => array('checked' => TRUE),
-          ),
-        ),
+        '#attributes' => ['class' => ['options-set']],
+        '#states' => [
+          'visible' => [
+            ':input[name="block[create]"]' => ['checked' => TRUE],
+          ],
+        ],
         '#prefix' => '<div id="edit-block-wrapper">',
         '#suffix' => '</div>',
-        '#parents' => array('block'),
-      );
+        '#parents' => ['block'],
+      ];
 
-      $form['displays']['block']['options']['title'] = array(
+      $form['displays']['block']['options']['title'] = [
         '#title' => $this->t('Block title'),
         '#type' => 'textfield',
         '#maxlength' => 255,
-      );
-      $form['displays']['block']['options']['style'] = array(
+      ];
+      $form['displays']['block']['options']['style'] = [
         '#type' => 'fieldset',
         '#title' => $this->t('Block display settings'),
-        '#attributes' => array('class' => array('container-inline', 'fieldset-no-legend')),
-      );
+        '#attributes' => ['class' => ['container-inline', 'fieldset-no-legend']],
+      ];
 
       // Create the dropdown for choosing the display format.
-      $form['displays']['block']['options']['style']['style_plugin'] = array(
+      $form['displays']['block']['options']['style']['style_plugin'] = [
         '#title' => $this->t('Display format'),
         '#type' => 'select',
         '#options' => $style_options,
-      );
+      ];
       $style_form = &$form['displays']['block']['options']['style'];
-      $style_form['style_plugin']['#default_value'] = static::getSelected($form_state, array('block', 'style', 'style_plugin'), 'default', $style_form['style_plugin']);
+      $style_form['style_plugin']['#default_value'] = static::getSelected($form_state, ['block', 'style', 'style_plugin'], 'default', $style_form['style_plugin']);
       // Changing this dropdown updates $form['displays']['block']['options']
       // via AJAX.
-      views_ui_add_ajax_trigger($style_form, 'style_plugin', array('displays', 'block', 'options'));
+      views_ui_add_ajax_trigger($style_form, 'style_plugin', ['displays', 'block', 'options']);
 
       $this->buildFormStyle($form, $form_state, 'block');
-      $form['displays']['block']['options']['items_per_page'] = array(
+      $form['displays']['block']['options']['items_per_page'] = [
         '#title' => $this->t('Items per block'),
         '#type' => 'number',
         '#default_value' => 5,
         '#min' => 0,
-      );
-      $form['displays']['block']['options']['pager'] = array(
+      ];
+      $form['displays']['block']['options']['pager'] = [
         '#title' => $this->t('Use a pager'),
         '#type' => 'checkbox',
         '#default_value' => FALSE,
-      );
+      ];
     }
 
     // Only offer the REST export settings if the module is enabled.
     if (\Drupal::moduleHandler()->moduleExists('rest')) {
-      $form['displays']['rest_export'] = array(
+      $form['displays']['rest_export'] = [
         '#type' => 'fieldset',
         '#title' => $this->t('REST export settings'),
-        '#attributes' => array('class' => array('views-attachment', 'fieldset-no-legend')),
+        '#attributes' => ['class' => ['views-attachment', 'fieldset-no-legend']],
         '#tree' => TRUE,
-      );
-      $form['displays']['rest_export']['create'] = array(
+      ];
+      $form['displays']['rest_export']['create'] = [
         '#title' => $this->t('Provide a REST export'),
         '#type' => 'checkbox',
-        '#attributes' => array('class' => array('strong')),
+        '#attributes' => ['class' => ['strong']],
         '#id' => 'edit-rest-export-create',
-      );
+      ];
 
       // All options for the REST export display are included in this container
       // so they can be hidden as a group when the "Provide a REST export"
       // checkbox is unchecked.
-      $form['displays']['rest_export']['options'] = array(
+      $form['displays']['rest_export']['options'] = [
         '#type' => 'container',
-        '#attributes' => array('class' => array('options-set')),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="rest_export[create]"]' => array('checked' => TRUE),
-          ),
-        ),
+        '#attributes' => ['class' => ['options-set']],
+        '#states' => [
+          'visible' => [
+            ':input[name="rest_export[create]"]' => ['checked' => TRUE],
+          ],
+        ],
         '#prefix' => '<div id="edit-rest-export-wrapper">',
         '#suffix' => '</div>',
-        '#parents' => array('rest_export'),
-      );
+        '#parents' => ['rest_export'],
+      ];
 
-      $form['displays']['rest_export']['options']['path'] = array(
+      $form['displays']['rest_export']['options']['path'] = [
         '#title' => $this->t('REST export path'),
         '#type' => 'textfield',
         '#field_prefix' => $path_prefix,
         // Account for the leading backslash.
         '#maxlength' => 254,
-      );
+      ];
     }
 
     return $form;
@@ -561,28 +561,28 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $style_plugin = Views::pluginManager('style')->createInstance($style);
     if (isset($style_plugin) && $style_plugin->usesRowPlugin()) {
       $options = $this->rowStyleOptions();
-      $style_form['row_plugin'] = array(
+      $style_form['row_plugin'] = [
         '#type' => 'select',
         '#title' => $this->t('of'),
         '#options' => $options,
         '#access' => count($options) > 1,
-      );
+      ];
       // For the block display, the default value should be "titles (linked)",
       // if it's available (since that's the most common use case).
       $block_with_linked_titles_available = ($type == 'block' && isset($options['titles_linked']));
       $default_value = $block_with_linked_titles_available ? 'titles_linked' : key($options);
-      $style_form['row_plugin']['#default_value'] = static::getSelected($form_state, array($type, 'style', 'row_plugin'), $default_value, $style_form['row_plugin']);
+      $style_form['row_plugin']['#default_value'] = static::getSelected($form_state, [$type, 'style', 'row_plugin'], $default_value, $style_form['row_plugin']);
       // Changing this dropdown updates the individual row options via AJAX.
-      views_ui_add_ajax_trigger($style_form, 'row_plugin', array('displays', $type, 'options', 'style', 'row_options'));
+      views_ui_add_ajax_trigger($style_form, 'row_plugin', ['displays', $type, 'options', 'style', 'row_options']);
 
       // This is the region that can be updated by AJAX. The base class doesn't
       // add anything here, but child classes can.
-      $style_form['row_options'] = array(
-        '#theme_wrappers' => array('container'),
-      );
+      $style_form['row_options'] = [
+        '#theme_wrappers' => ['container'],
+      ];
     }
     elseif ($style_plugin->usesFields()) {
-      $style_form['row_plugin'] = array('#markup' => '<span>' . $this->t('of fields') . '</span>');
+      $style_form['row_plugin'] = ['#markup' => '<span>' . $this->t('of fields') . '</span>'];
     }
   }
 
@@ -594,7 +594,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   protected function rowStyleOptions() {
     // Get all available row plugins by default.
-    $options = Views::fetchPluginNames('row', 'normal', array($this->base_table));
+    $options = Views::fetchPluginNames('row', 'normal', [$this->base_table]);
     return $options;
   }
 
@@ -611,21 +611,21 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // If the current base table support bundles and has more than one (like user).
     if (!empty($bundles) && $this->entityType && $this->entityType->hasKey('bundle')) {
       // Get all bundles and their human readable names.
-      $options = array('all' => $this->t('All'));
+      $options = ['all' => $this->t('All')];
       foreach ($bundles as $type => $bundle) {
         $options[$type] = $bundle['label'];
       }
-      $form['displays']['show']['type'] = array(
+      $form['displays']['show']['type'] = [
         '#type' => 'select',
         '#title' => $this->t('of type'),
         '#options' => $options,
-      );
-      $selected_bundle = static::getSelected($form_state, array('show', 'type'), 'all', $form['displays']['show']['type']);
+      ];
+      $selected_bundle = static::getSelected($form_state, ['show', 'type'], 'all', $form['displays']['show']['type']);
       $form['displays']['show']['type']['#default_value'] = $selected_bundle;
       // Changing this dropdown updates the entire content of $form['displays']
       // via AJAX, since each bundle might have entirely different fields
       // attached to it, etc.
-      views_ui_add_ajax_trigger($form['displays']['show'], 'type', array('displays'));
+      views_ui_add_ajax_trigger($form['displays']['show'], 'type', ['displays']);
     }
   }
 
@@ -635,16 +635,16 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * By default, this adds a "sorted by [date]" filter (when it is available).
    */
   protected function buildSorts(&$form, FormStateInterface $form_state) {
-    $sorts = array(
+    $sorts = [
       'none' => $this->t('Unsorted'),
-    );
+    ];
     // Check if we are allowed to sort by creation date.
     $created_column = $this->getCreatedColumn();
     if ($created_column) {
-      $sorts += array(
+      $sorts += [
         $created_column . ':DESC' => $this->t('Newest first'),
         $created_column . ':ASC' => $this->t('Oldest first'),
-      );
+      ];
     }
     if ($available_sorts = $this->getAvailableSorts()) {
       $sorts += $available_sorts;
@@ -652,12 +652,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     // If there is no sorts option available continue.
     if (!empty($sorts)) {
-      $form['displays']['show']['sort'] = array(
+      $form['displays']['show']['sort'] = [
         '#type' => 'select',
         '#title' => $this->t('sorted by'),
         '#options' => $sorts,
         '#default_value' => isset($created_column) ? $created_column . ':DESC' : 'none',
-      );
+      ];
     }
   }
 
@@ -669,13 +669,13 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   protected function instantiateView($form, FormStateInterface $form_state) {
     // Build the basic view properties and create the view.
-    $values = array(
+    $values = [
       'id' => $form_state->getValue('id'),
       'label' => $form_state->getValue('label'),
       'description' => $form_state->getValue('description'),
       'base_table' => $this->base_table,
       'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
-    );
+    ];
 
     $view = View::create($values);
 
@@ -702,25 +702,25 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function buildDisplayOptions($form, FormStateInterface $form_state) {
     // Display: Master
     $display_options['default'] = $this->defaultDisplayOptions();
-    $display_options['default'] += array(
-      'filters' => array(),
-      'sorts' => array(),
-    );
+    $display_options['default'] += [
+      'filters' => [],
+      'sorts' => [],
+    ];
     $display_options['default']['filters'] += $this->defaultDisplayFilters($form, $form_state);
     $display_options['default']['sorts'] += $this->defaultDisplaySorts($form, $form_state);
 
     // Display: Page
-    if (!$form_state->isValueEmpty(array('page', 'create'))) {
+    if (!$form_state->isValueEmpty(['page', 'create'])) {
       $display_options['page'] = $this->pageDisplayOptions($form, $form_state);
 
       // Display: Feed (attached to the page)
-      if (!$form_state->isValueEmpty(array('page', 'feed'))) {
+      if (!$form_state->isValueEmpty(['page', 'feed'])) {
         $display_options['feed'] = $this->pageFeedDisplayOptions($form, $form_state);
       }
     }
 
     // Display: Block
-    if (!$form_state->isValueEmpty(array('block', 'create'))) {
+    if (!$form_state->isValueEmpty(['block', 'create'])) {
       $display_options['block'] = $this->blockDisplayOptions($form, $form_state);
     }
 
@@ -812,7 +812,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   Returns an array of display options.
    */
   protected function defaultDisplayOptions() {
-    $display_options = array();
+    $display_options = [];
     $display_options['access']['type'] = 'none';
     $display_options['cache']['type'] = 'tag';
     $display_options['query']['type'] = 'views_query';
@@ -823,7 +823,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     // Add default options array to each plugin type.
     foreach ($display_options as &$options) {
-      $options['options'] = array();
+      $options['options'] = [];
     }
 
     // Add a least one field so the view validates and the user has a preview.
@@ -849,14 +849,14 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     }
     // @todo Refactor the code to use ViewExecutable::addHandler. See
     //   https://www.drupal.org/node/2383157.
-    $display_options['fields'][$default_field] = array(
+    $display_options['fields'][$default_field] = [
       'table' => $default_table,
       'field' => $default_field,
       'id' => $default_field,
       'entity_type' => isset($data[$default_field]['entity type']) ? $data[$default_field]['entity type'] : NULL,
       'entity_field' => isset($data[$default_field]['entity field']) ? $data[$default_field]['entity field'] : NULL,
       'plugin_id' => $data[$default_field]['field']['id'],
-    );
+    ];
 
     return $display_options;
   }
@@ -877,7 +877,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   accepted by a filter handler.
    */
   protected function defaultDisplayFilters($form, FormStateInterface $form_state) {
-    $filters = array();
+    $filters = [];
 
     // Add any filters provided by the plugin.
     foreach ($this->getFilters() as $name => $info) {
@@ -903,9 +903,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   accepted by a filter handler.
    */
   protected function defaultDisplayFiltersUser(array $form, FormStateInterface $form_state) {
-    $filters = array();
+    $filters = [];
 
-    if (($type = $form_state->getValue(array('show', 'type'))) && $type != 'all') {
+    if (($type = $form_state->getValue(['show', 'type'])) && $type != 'all') {
       $bundle_key = $this->entityType->getKey('bundle');
       // Figure out the table where $bundle_key lives. It may not be the same as
       // the base table for the view; the taxonomy vocabulary machine_name, for
@@ -928,14 +928,14 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       $handler = $table_data[$bundle_key]['filter']['id'];
       $handler_definition = Views::pluginManager('filter')->getDefinition($handler);
       if ($handler == 'in_operator' || is_subclass_of($handler_definition['class'], 'Drupal\\views\\Plugin\\views\\filter\\InOperator')) {
-        $value = array($type => $type);
+        $value = [$type => $type];
       }
       // Otherwise, use just a single value.
       else {
         $value = $type;
       }
 
-      $filters[$bundle_key] = array(
+      $filters[$bundle_key] = [
         'id' => $bundle_key,
         'table' => $table,
         'field' => $bundle_key,
@@ -943,7 +943,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         'entity_type' => isset($table_data['table']['entity type']) ? $table_data['table']['entity type'] : NULL,
         'entity_field' => isset($table_data[$bundle_key]['entity field']) ? $table_data[$bundle_key]['entity field'] : NULL,
         'plugin_id' => $handler,
-      );
+      ];
     }
 
     return $filters;
@@ -965,7 +965,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   accepted by a sort handler.
    */
   protected function defaultDisplaySorts($form, FormStateInterface $form_state) {
-    $sorts = array();
+    $sorts = [];
 
     // Add any sorts provided by the plugin.
     foreach ($this->getSorts() as $name => $info) {
@@ -991,11 +991,11 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   accepted by a sort handler.
    */
   protected function defaultDisplaySortsUser($form, FormStateInterface $form_state) {
-    $sorts = array();
+    $sorts = [];
 
     // Don't add a sort if there is no form value or the user set the sort to
     // 'none'.
-    if (($sort_type = $form_state->getValue(array('show', 'sort'))) && $sort_type != 'none') {
+    if (($sort_type = $form_state->getValue(['show', 'sort'])) && $sort_type != 'none') {
       list($column, $sort) = explode(':', $sort_type);
       // Column either be a column-name or the table-column-name.
       $column = explode('-', $column);
@@ -1014,7 +1014,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       // enabled.
       $data = Views::viewsData()->get($table);
       if (isset($data[$column]['sort'])) {
-        $sorts[$column] = array(
+        $sorts[$column] = [
           'id' => $column,
           'table' => $table,
           'field' => $column,
@@ -1022,7 +1022,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
           'entity_type' => isset($data['table']['entity type']) ? $data['table']['entity type'] : NULL,
           'entity_field' => isset($data[$column]['entity field']) ? $data[$column]['entity field'] : NULL,
           'plugin_id' => $data[$column]['sort']['id'],
-       );
+       ];
       }
     }
 
@@ -1041,15 +1041,15 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   Returns an array of display options.
    */
   protected function pageDisplayOptions(array $form, FormStateInterface $form_state) {
-    $display_options = array();
+    $display_options = [];
     $page = $form_state->getValue('page');
     $display_options['title'] = $page['title'];
     $display_options['path'] = $page['path'];
-    $display_options['style'] = array('type' => $page['style']['style_plugin']);
+    $display_options['style'] = ['type' => $page['style']['style_plugin']];
     // Not every style plugin supports row style plugins.
     // Make sure that the selected row plugin is a valid one.
     $options = $this->rowStyleOptions();
-    $display_options['row'] = array('type' => (isset($page['style']['row_plugin']) && isset($options[$page['style']['row_plugin']])) ? $page['style']['row_plugin'] : 'fields');
+    $display_options['row'] = ['type' => (isset($page['style']['row_plugin']) && isset($options[$page['style']['row_plugin']])) ? $page['style']['row_plugin'] : 'fields'];
 
     // If the specific 0 items per page, use no pager.
     if (empty($page['items_per_page'])) {
@@ -1087,12 +1087,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   Returns an array of display options.
    */
   protected function blockDisplayOptions(array $form, FormStateInterface $form_state) {
-    $display_options = array();
+    $display_options = [];
     $block = $form_state->getValue('block');
     $display_options['title'] = $block['title'];
-    $display_options['style'] = array('type' => $block['style']['style_plugin']);
+    $display_options['style'] = ['type' => $block['style']['style_plugin']];
     $options = $this->rowStyleOptions();
-    $display_options['row'] = array('type' => (isset($block['style']['row_plugin']) && isset($options[$block['style']['row_plugin']])) ? $block['style']['row_plugin'] : 'fields');
+    $display_options['row'] = ['type' => (isset($block['style']['row_plugin']) && isset($options[$block['style']['row_plugin']])) ? $block['style']['row_plugin'] : 'fields'];
     $display_options['pager']['type'] = $block['pager'] ? 'full' : (empty($block['items_per_page']) ? 'none' : 'some');
     $display_options['pager']['options']['items_per_page'] = $block['items_per_page'];
     return $display_options;
@@ -1110,9 +1110,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   Returns an array of display options.
    */
   protected function restExportDisplayOptions(array $form, FormStateInterface $form_state) {
-    $display_options = array();
+    $display_options = [];
     $display_options['path'] = $form_state->getValue(['rest_export', 'path']);
-    $display_options['style'] = array('type' => 'serializer');
+    $display_options['style'] = ['type' => 'serializer'];
 
     return $display_options;
   }
@@ -1129,16 +1129,16 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   Returns an array of display options.
    */
   protected function pageFeedDisplayOptions($form, FormStateInterface $form_state) {
-    $display_options = array();
+    $display_options = [];
     $display_options['pager']['type'] = 'some';
-    $display_options['style'] = array('type' => 'rss');
-    $display_options['row'] = array('type' => $form_state->getValue(array('page', 'feed_properties', 'row_plugin')));
-    $display_options['path'] = $form_state->getValue(array('page', 'feed_properties', 'path'));
-    $display_options['title'] = $form_state->getValue(array('page', 'title'));
-    $display_options['displays'] = array(
+    $display_options['style'] = ['type' => 'rss'];
+    $display_options['row'] = ['type' => $form_state->getValue(['page', 'feed_properties', 'row_plugin'])];
+    $display_options['path'] = $form_state->getValue(['page', 'feed_properties', 'path']);
+    $display_options['title'] = $form_state->getValue(['page', 'title']);
+    $display_options['displays'] = [
       'default' => 'default',
       'page_1' => 'page_1',
-    );
+    ];
     return $display_options;
   }
 

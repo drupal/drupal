@@ -16,7 +16,7 @@ class DateFormat extends FormElementBase {
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = \Drupal::service('date.formatter');
     $description = $this->t('A user-defined date format. See the <a href="http://php.net/manual/function.date.php">PHP manual</a> for available options.');
-    $format = $this->t('Displayed as %date_format', array('%date_format' => $date_formatter->format(REQUEST_TIME, 'custom', $translation_config)));
+    $format = $this->t('Displayed as %date_format', ['%date_format' => $date_formatter->format(REQUEST_TIME, 'custom', $translation_config)]);
 
     return [
       '#type' => 'textfield',

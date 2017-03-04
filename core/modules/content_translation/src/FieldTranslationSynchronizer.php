@@ -73,14 +73,14 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
           }
         }
         if (!empty($groups)) {
-          $columns = array();
+          $columns = [];
           foreach ($groups as $group) {
             $info = $column_groups[$group];
             // A missing 'columns' key indicates we have a single-column group.
-            $columns = array_merge($columns, isset($info['columns']) ? $info['columns'] : array($group));
+            $columns = array_merge($columns, isset($info['columns']) ? $info['columns'] : [$group]);
           }
           if (!empty($columns)) {
-            $values = array();
+            $values = [];
             foreach ($translations as $langcode => $language) {
               $values[$langcode] = $entity->getTranslation($langcode)->get($field_name)->getValue();
             }
@@ -108,18 +108,18 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
     $source_items = $values[$sync_langcode];
 
     // Make sure we can detect any change in the source items.
-    $change_map = array();
+    $change_map = [];
 
     // By picking the maximum size between updated and unchanged items, we make
     // sure to process also removed items.
-    $total = max(array(count($source_items), count($unchanged_items)));
+    $total = max([count($source_items), count($unchanged_items)]);
 
     // As a first step we build a map of the deltas corresponding to the column
     // values to be synchronized. Recording both the old values and the new
     // values will allow us to detect any change in the order of the new items
     // for each column.
     for ($delta = 0; $delta < $total; $delta++) {
-      foreach (array('old' => $unchanged_items, 'new' => $source_items) as $key => $items) {
+      foreach (['old' => $unchanged_items, 'new' => $source_items] as $key => $items) {
         if ($item_id = $this->itemHash($items, $delta, $columns)) {
           $change_map[$item_id][$key][] = $delta;
         }
@@ -132,7 +132,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
 
     // Reset field values so that no spurious one is stored. Source values must
     // be preserved in any case.
-    $values = array($sync_langcode => $source_items);
+    $values = [$sync_langcode => $source_items];
 
     // Update field translations.
     foreach ($translations as $langcode) {
@@ -211,7 +211,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
    *   A hash code that can be used to identify the item.
    */
   protected function itemHash(array $items, $delta, array $columns) {
-    $values = array();
+    $values = [];
 
     if (isset($items[$delta])) {
       foreach ($columns as $column) {

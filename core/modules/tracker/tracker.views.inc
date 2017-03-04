@@ -9,146 +9,146 @@
  * Implements hook_views_data().
  */
 function tracker_views_data() {
-  $data = array();
+  $data = [];
 
   $data['tracker_node']['table']['group'] = t('Tracker');
-  $data['tracker_node']['table']['join'] = array(
-    'node_field_data' => array(
+  $data['tracker_node']['table']['join'] = [
+    'node_field_data' => [
       'type' => 'INNER',
       'left_field' => 'nid',
       'field' => 'nid',
-    ),
-  );
-  $data['tracker_node']['nid'] = array(
+    ],
+  ];
+  $data['tracker_node']['nid'] = [
     'title' => t('Nid'),
     'help' => t('The node ID of the node.'),
-    'field' => array(
+    'field' => [
       'id' => 'node',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'node_nid',
       'name field' => 'title',
       'numeric' => TRUE,
       'validate type' => 'nid',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'numeric',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
-  $data['tracker_node']['published'] = array(
+    ],
+  ];
+  $data['tracker_node']['published'] = [
     'title' => t('Published'),
     'help' => t('Whether or not the node is published.'),
-    'field' => array(
+    'field' => [
       'id' => 'boolean',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'boolean',
       'label' => t('Published'),
       'type' => 'yes-no',
       'accept null' => TRUE,
       'use_equal' => TRUE,
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
-  $data['tracker_node']['changed'] = array(
+    ],
+  ];
+  $data['tracker_node']['changed'] = [
     'title' => t('Updated date'),
     'help' => t('The date the node was last updated.'),
-    'field' => array(
+    'field' => [
       'id' => 'date',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'date',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'date',
-    ),
-  );
+    ],
+  ];
 
   $data['tracker_user']['table']['group'] = t('Tracker - User');
-  $data['tracker_user']['table']['join'] = array(
-    'node_field_data' => array(
+  $data['tracker_user']['table']['join'] = [
+    'node_field_data' => [
       'type' => 'INNER',
       'left_field' => 'nid',
       'field' => 'nid',
-    ),
-    'user_field_data' => array(
+    ],
+    'user_field_data' => [
       'type' => 'INNER',
       'left_field' => 'uid',
       'field' => 'uid',
-    ),
-  );
-  $data['tracker_user']['nid'] = array(
+    ],
+  ];
+  $data['tracker_user']['nid'] = [
     'title' => t('Nid'),
     'help' => t('The node ID of the node a user created or commented on. You must use an argument or filter on UID or you will get misleading results using this field.'),
-    'field' => array(
+    'field' => [
       'id' => 'node',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'node_nid',
       'name field' => 'title',
       'numeric' => TRUE,
       'validate type' => 'nid',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'numeric',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
-  $data['tracker_user']['uid'] = array(
+    ],
+  ];
+  $data['tracker_user']['uid'] = [
     'title' => t('Uid'),
     'help' => t('The user ID of a user who touched the node (either created or commented on it).'),
-    'field' => array(
+    'field' => [
       'id' => 'user_name',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'user_uid',
       'name field' => 'name',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'title' => t('Name'),
       'id' => 'user_name',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
-  $data['tracker_user']['published'] = array(
+    ],
+  ];
+  $data['tracker_user']['published'] = [
     'title' => t('Published'),
     'help' => t('Whether or not the node is published. You must use an argument or filter on UID or you will get misleading results using this field.'),
-    'field' => array(
+    'field' => [
       'id' => 'boolean',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'boolean',
       'label' => t('Published'),
       'type' => 'yes-no',
       'accept null' => TRUE,
       'use_equal' => TRUE,
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
-  $data['tracker_user']['changed'] = array(
+    ],
+  ];
+  $data['tracker_user']['changed'] = [
     'title' => t('Updated date'),
     'help' => t('The date the node was last updated or commented on. You must use an argument or filter on UID or you will get misleading results using this field.'),
-    'field' => array(
+    'field' => [
       'id' => 'date',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'date',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'date',
-    ),
-  );
+    ],
+  ];
 
   return $data;
 }
@@ -158,22 +158,22 @@ function tracker_views_data() {
  */
 function tracker_views_data_alter(&$data) {
   // Provide additional uid_touch handlers which are handled by tracker
-  $data['node_field_data']['uid_touch_tracker'] = array(
+  $data['node_field_data']['uid_touch_tracker'] = [
     'group' => t('Tracker - User'),
     'title' => t('User posted or commented'),
     'help' => t('Display nodes only if a user posted the node or commented on the node.'),
-    'argument' => array(
+    'argument' => [
       'field' => 'uid',
       'name table' => 'users_field_data',
       'name field' => 'name',
       'id' => 'tracker_user_uid',
       'no group by' => TRUE,
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'field' => 'uid',
       'name table' => 'users_field_data',
       'name field' => 'name',
       'id' => 'tracker_user_uid'
-    ),
-  );
+    ],
+  ];
 }

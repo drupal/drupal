@@ -43,7 +43,7 @@ class Variable {
         // If the string contains a line break or a single quote, use the
         // double quote export mode. Encode backslash, dollar symbols, and
         // double quotes and transform some common control characters.
-        $var = str_replace(array('\\', '$', '"', "\n", "\r", "\t"), array('\\\\', '\$', '\"', '\n', '\r', '\t'), $var);
+        $var = str_replace(['\\', '$', '"', "\n", "\r", "\t"], ['\\\\', '\$', '\"', '\n', '\r', '\t'], $var);
         $output = '"' . $var . '"';
       }
       else {

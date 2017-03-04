@@ -12,10 +12,10 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   protected function setUp() {
-    $this->directoryList = array(
+    $this->directoryList = [
       'book' => 'core/modules/book',
       'node' => 'core/modules/node',
-    );
+    ];
     parent::setUp();
   }
 
@@ -26,19 +26,19 @@ class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function testBookAdminLocalTasks($route) {
 
-    $this->assertLocalTasks($route, array(
-      0 => array('book.admin', 'book.settings'),
-    ));
+    $this->assertLocalTasks($route, [
+      0 => ['book.admin', 'book.settings'],
+    ]);
   }
 
   /**
    * Provides a list of routes to test.
    */
   public function getBookAdminRoutes() {
-    return array(
-      array('book.admin'),
-      array('book.settings'),
-    );
+    return [
+      ['book.admin'],
+      ['book.settings'],
+    ];
   }
 
   /**
@@ -47,19 +47,19 @@ class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
    * @dataProvider getBookNodeRoutes
    */
   public function testBookNodeLocalTasks($route) {
-    $this->assertLocalTasks($route, array(
-      0 => array('entity.node.book_outline_form', 'entity.node.canonical', 'entity.node.edit_form', 'entity.node.delete_form', 'entity.node.version_history',),
-    ));
+    $this->assertLocalTasks($route, [
+      0 => ['entity.node.book_outline_form', 'entity.node.canonical', 'entity.node.edit_form', 'entity.node.delete_form', 'entity.node.version_history',],
+    ]);
   }
 
   /**
    * Provides a list of routes to test.
    */
   public function getBookNodeRoutes() {
-    return array(
-      array('entity.node.canonical'),
-      array('entity.node.book_outline_form'),
-    );
+    return [
+      ['entity.node.canonical'],
+      ['entity.node.book_outline_form'],
+    ];
   }
 
 }

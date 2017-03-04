@@ -18,22 +18,22 @@ class reEnableModuleFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'field',
     'node',
     // We use telephone module instead of test_field because test_field is
     // hidden and does not display on the admin/modules page.
     'telephone'
-  );
+  ];
 
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'article'));
-    $this->drupalLogin($this->drupalCreateUser(array(
+    $this->drupalCreateContentType(['type' => 'article']);
+    $this->drupalLogin($this->drupalCreateUser([
       'create article content',
       'edit own article content',
-    )));
+    ]));
   }
 
   /**
@@ -44,11 +44,11 @@ class reEnableModuleFieldTest extends WebTestBase {
   function testReEnabledField() {
 
     // Add a telephone field to the article content type.
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_telephone',
       'entity_type' => 'node',
       'type' => 'telephone',
-    ));
+    ]);
     $field_storage->save();
     FieldConfig::create([
       'field_storage' => $field_storage,
@@ -57,19 +57,19 @@ class reEnableModuleFieldTest extends WebTestBase {
     ])->save();
 
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent('field_telephone', array(
+      ->setComponent('field_telephone', [
         'type' => 'telephone_default',
-        'settings' => array(
+        'settings' => [
           'placeholder' => '123-456-7890',
-        ),
-      ))
+        ],
+      ])
       ->save();
 
     entity_get_display('node', 'article', 'default')
-      ->setComponent('field_telephone', array(
+      ->setComponent('field_telephone', [
         'type' => 'telephone_link',
         'weight' => 1,
-      ))
+      ])
       ->save();
 
     // Display the article node form and verify the telephone widget is present.
@@ -78,16 +78,16 @@ class reEnableModuleFieldTest extends WebTestBase {
 
     // Submit an article node with a telephone field so data exist for the
     // field.
-    $edit = array(
+    $edit = [
       'title[0][value]' => $this->randomMachineName(),
       'field_telephone[0][value]' => "123456789",
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw('<a href="tel:123456789">');
 
     // Test that the module can't be uninstalled from the UI while there is data
     // for it's fields.
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
+    $admin_user = $this->drupalCreateUser(['access administration pages', 'administer modules']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/modules/uninstall');
     $this->assertText("The Telephone number field type is used in the following field: node.field_telephone");
@@ -95,11 +95,11 @@ class reEnableModuleFieldTest extends WebTestBase {
     // Add another telephone field to a different entity type in order to test
     // the message for the case when multiple fields are blocking the
     // uninstallation of a module.
-    $field_storage2 = entity_create('field_storage_config', array(
+    $field_storage2 = entity_create('field_storage_config', [
       'field_name' => 'field_telephone_2',
       'entity_type' => 'user',
       'type' => 'telephone',
-    ));
+    ]);
     $field_storage2->save();
     FieldConfig::create([
       'field_storage' => $field_storage2,

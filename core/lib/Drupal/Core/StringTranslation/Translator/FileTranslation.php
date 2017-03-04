@@ -47,7 +47,7 @@ class FileTranslation extends StaticTranslation {
       return $this->filesToArray($langcode, $files);
     }
     else {
-      return array();
+      return [];
     }
   }
 
@@ -70,7 +70,7 @@ class FileTranslation extends StaticTranslation {
    * @see file_scan_directory()
    */
   public function findTranslationFiles($langcode = NULL) {
-    $files = file_scan_directory($this->directory, $this->getTranslationFilesPattern($langcode), array('recurse' => FALSE));
+    $files = file_scan_directory($this->directory, $this->getTranslationFilesPattern($langcode), ['recurse' => FALSE]);
     return $files;
   }
 

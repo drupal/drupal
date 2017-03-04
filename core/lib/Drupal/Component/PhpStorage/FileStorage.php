@@ -238,7 +238,7 @@ EOF;
    * {@inheritdoc}
    */
   public function listAll() {
-    $names = array();
+    $names = [];
     if (file_exists($this->directory)) {
       foreach (new \DirectoryIterator($this->directory) as $fileinfo) {
         if (!$fileinfo->isDot()) {

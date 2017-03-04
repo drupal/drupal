@@ -41,49 +41,49 @@ function system_form_form_test_alter_form_alter(&$form, FormStateInterface $form
  * Create a header and options array. Helper function for callbacks.
  */
 function _form_test_tableselect_get_data() {
-  $header = array(
+  $header = [
     'one' => t('One'),
     'two' => t('Two'),
     'three' => t('Three'),
     'four' => t('Four'),
-  );
+  ];
 
-  $options['row1'] = array(
-    'title' => array('data' => array('#title' => t('row1'))),
+  $options['row1'] = [
+    'title' => ['data' => ['#title' => t('row1')]],
     'one' => 'row1col1',
     'two' => t('row1col2'),
     'three' => t('row1col3'),
     'four' => t('row1col4'),
-  );
+  ];
 
-  $options['row2'] = array(
-    'title' => array('data' => array('#title' => t('row2'))),
+  $options['row2'] = [
+    'title' => ['data' => ['#title' => t('row2')]],
     'one' => 'row2col1',
     'two' => t('row2col2'),
     'three' => t('row2col3'),
     'four' => t('row2col4'),
-  );
+  ];
 
-  $options['row3'] = array(
-    'title' => array('data' => array('#title' => t('row3'))),
+  $options['row3'] = [
+    'title' => ['data' => ['#title' => t('row3')]],
     'one' => 'row3col1',
     'two' => t('row3col2'),
     'three' => t('row3col3'),
     'four' => t('row3col4'),
-  );
+  ];
 
-  return array($header, $options);
+  return [$header, $options];
 }
 
 /**
  * Implements hook_form_FORM_ID_alter() for the registration form.
  */
 function form_test_form_user_register_form_alter(&$form, FormStateInterface $form_state) {
-  $form['test_rebuild'] = array(
+  $form['test_rebuild'] = [
     '#type' => 'submit',
     '#value' => t('Rebuild'),
-    '#submit' => array('form_test_user_register_form_rebuild'),
-  );
+    '#submit' => ['form_test_user_register_form_rebuild'],
+  ];
 }
 
 /**

@@ -482,60 +482,60 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
  * @ingroup schemaapi
  */
 function hook_schema() {
-  $schema['node'] = array(
+  $schema['node'] = [
     // Example (partial) specification for table "node".
     'description' => 'The base table for nodes.',
-    'fields' => array(
-      'nid' => array(
+    'fields' => [
+      'nid' => [
         'description' => 'The primary identifier for a node.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'vid' => array(
+      ],
+      'vid' => [
         'description' => 'The current {node_field_revision}.vid version identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'type' => array(
+      ],
+      'type' => [
         'description' => 'The type of this node.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'title' => array(
+      ],
+      'title' => [
         'description' => 'The node title.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-    ),
-    'indexes' => array(
-      'node_changed'        => array('changed'),
-      'node_created'        => array('created'),
-    ),
-    'unique keys' => array(
-      'nid_vid' => array('nid', 'vid'),
-      'vid'     => array('vid'),
-    ),
+      ],
+    ],
+    'indexes' => [
+      'node_changed'        => ['changed'],
+      'node_created'        => ['created'],
+    ],
+    'unique keys' => [
+      'nid_vid' => ['nid', 'vid'],
+      'vid'     => ['vid'],
+    ],
     // For documentation purposes only; foreign keys are not created in the
     // database.
-    'foreign keys' => array(
-      'node_revision' => array(
+    'foreign keys' => [
+      'node_revision' => [
         'table' => 'node_field_revision',
-        'columns' => array('vid' => 'vid'),
-      ),
-      'node_author' => array(
+        'columns' => ['vid' => 'vid'],
+      ],
+      'node_author' => [
         'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-    'primary key' => array('nid'),
-  );
+        'columns' => ['uid' => 'uid'],
+      ],
+    ],
+    'primary key' => ['nid'],
+  ];
   return $schema;
 }
 

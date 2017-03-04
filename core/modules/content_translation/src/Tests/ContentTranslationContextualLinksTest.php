@@ -48,7 +48,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('content_translation', 'contextual', 'node');
+  public static $modules = ['content_translation', 'contextual', 'node'];
 
   /**
    * The profile to install as a basis for testing.
@@ -60,20 +60,20 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
     // Set up an additional language.
-    $this->langcodes = array(\Drupal::languageManager()->getDefaultLanguage()->getId(), 'es');
+    $this->langcodes = [\Drupal::languageManager()->getDefaultLanguage()->getId(), 'es'];
     ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Create a content type.
     $this->bundle = $this->randomMachineName();
-    $this->contentType = $this->drupalCreateContentType(array('type' => $this->bundle));
+    $this->contentType = $this->drupalCreateContentType(['type' => $this->bundle]);
 
     // Add a field to the content type. The field is not yet translatable.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => 'field_test_text',
       'entity_type' => 'node',
       'type' => 'text',
       'cardinality' => 1,
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'entity_type' => 'node',
       'field_name' => 'field_test_text',
@@ -81,19 +81,19 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
       'label' => 'Test text-field',
     ])->save();
     entity_get_form_display('node', $this->bundle, 'default')
-      ->setComponent('field_test_text', array(
+      ->setComponent('field_test_text', [
         'type' => 'text_textfield',
         'weight' => 0,
-      ))
+      ])
       ->save();
 
     // Create a translator user.
-    $permissions = array(
+    $permissions = [
       'access contextual links',
       'administer nodes',
       "edit any $this->bundle content",
       'translate any entity',
-    );
+    ];
     $this->translator = $this->drupalCreateUser($permissions);
   }
 
@@ -103,18 +103,18 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
   public function testContentTranslationContextualLinks() {
     // Create a node.
     $title = $this->randomString();
-    $this->drupalCreateNode(array('type' => $this->bundle, 'title' => $title, 'langcode' => 'en'));
+    $this->drupalCreateNode(['type' => $this->bundle, 'title' => $title, 'langcode' => 'en']);
     $node = $this->drupalGetNodeByTitle($title);
 
     // Use a UI form submission to make the node type and field translatable.
     // This tests that caches are properly invalidated.
     $this->drupalLogin($this->rootUser);
-    $edit = array(
+    $edit = [
       'entity_types[node]' => TRUE,
       'settings[node][' . $this->bundle . '][settings][language][language_alterable]' => TRUE,
       'settings[node][' . $this->bundle . '][translatable]' => TRUE,
       'settings[node][' . $this->bundle . '][fields][field_test_text]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
     $this->drupalLogout();
 
@@ -122,7 +122,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
     $this->drupalLogin($this->translator);
     $translate_link = 'node/' . $node->id() . '/translations';
 
-    $response = $this->renderContextualLinks(array('node:node=1:'), 'node/' . $node->id());
+    $response = $this->renderContextualLinks(['node:node=1:'], 'node/' . $node->id());
     $this->assertResponse(200);
     $json = Json::decode($response);
     $this->setRawContent($json['node:node=1:']);
@@ -130,7 +130,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
 
     // Check that the link leads to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw(t('Translations of %label', array('%label' => $node->label())), 'The contextual link leads to the translate page.');
+    $this->assertRaw(t('Translations of %label', ['%label' => $node->label()]), 'The contextual link leads to the translate page.');
   }
 
   /**
@@ -148,7 +148,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
    */
   protected function renderContextualLinks($ids, $current_path) {
     // Build POST values.
-    $post = array();
+    $post = [];
     for ($i = 0; $i < count($ids); $i++) {
       $post['ids[' . $i . ']'] = $ids[$i];
     }
@@ -163,15 +163,15 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
     $post = implode('&', $post);
 
     // Perform HTTP request.
-    return $this->curlExec(array(
-      CURLOPT_URL => \Drupal::url('contextual.render', array(), array('absolute' => TRUE, 'query' => array('destination' => $current_path))),
+    return $this->curlExec([
+      CURLOPT_URL => \Drupal::url('contextual.render', [], ['absolute' => TRUE, 'query' => ['destination' => $current_path]]),
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $post,
-      CURLOPT_HTTPHEADER => array(
+      CURLOPT_HTTPHEADER => [
         'Accept: application/json',
         'Content-Type: application/x-www-form-urlencoded',
-      ),
-    ));
+      ],
+    ]);
   }
 
 }

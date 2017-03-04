@@ -56,7 +56,7 @@ class YamlDirectoryDiscoveryTest extends UnitTestCase {
     $this->assertCount(4, $definitions);
 
     foreach ($definitions as $id => $definition) {
-      foreach (array('id', 'provider', ComponentYamlDirectoryDiscovery::FILE_KEY) as $key) {
+      foreach (['id', 'provider', ComponentYamlDirectoryDiscovery::FILE_KEY] as $key) {
         $this->assertArrayHasKey($key, $definition);
       }
       $this->assertEquals($id, $definition['id']);

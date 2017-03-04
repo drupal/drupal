@@ -42,15 +42,15 @@ abstract class ConfirmFormBase extends FormBase implements ConfirmFormInterface 
     $form['#title'] = $this->getQuestion();
 
     $form['#attributes']['class'][] = 'confirmation';
-    $form['description'] = array('#markup' => $this->getDescription());
-    $form[$this->getFormName()] = array('#type' => 'hidden', '#value' => 1);
+    $form['description'] = ['#markup' => $this->getDescription()];
+    $form[$this->getFormName()] = ['#type' => 'hidden', '#value' => 1];
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->getConfirmText(),
       '#button_type' => 'primary',
-    );
+    ];
 
     $form['actions']['cancel'] = ConfirmFormHelper::buildCancelLink($this, $this->getRequest());
 

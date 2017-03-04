@@ -13,7 +13,7 @@ use Drupal\Component\Utility\SafeMarkup;
 function user_hooks_test_user_format_name_alter(&$name, $account) {
   if (\Drupal::state()->get('user_hooks_test_user_format_name_alter', FALSE)) {
     if (\Drupal::state()->get('user_hooks_test_user_format_name_alter_safe', FALSE)) {
-      $name = SafeMarkup::format('<em>@uid</em>', array('@uid' => $account->id()));
+      $name = SafeMarkup::format('<em>@uid</em>', ['@uid' => $account->id()]);
     }
     else {
       $name = '<em>' . $account->id() . '</em>';

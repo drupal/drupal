@@ -16,7 +16,7 @@ abstract class OptionsFieldUnitTestBase extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('options');
+  public static $modules = ['options'];
 
   /**
    * The field name used in the test.
@@ -53,15 +53,15 @@ abstract class OptionsFieldUnitTestBase extends FieldKernelTestBase {
     parent::setUp();
     $this->container->get('router.builder')->rebuild();
 
-    $this->fieldStorageDefinition = array(
+    $this->fieldStorageDefinition = [
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
       'cardinality' => 1,
-      'settings' => array(
-        'allowed_values' => array(1 => 'One', 2 => 'Two', 3 => 'Three'),
-      ),
-    );
+      'settings' => [
+        'allowed_values' => [1 => 'One', 2 => 'Two', 3 => 'Three'],
+      ],
+    ];
     $this->fieldStorage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $this->fieldStorage->save();
 
@@ -72,9 +72,9 @@ abstract class OptionsFieldUnitTestBase extends FieldKernelTestBase {
     $this->field->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->fieldName, array(
+      ->setComponent($this->fieldName, [
         'type' => 'options_buttons',
-      ))
+      ])
       ->save();
   }
 

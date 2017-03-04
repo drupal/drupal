@@ -21,7 +21,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'user_hooks_test');
+  public static $modules = ['language', 'user_hooks_test'];
 
   /**
    * {@inheritdoc}
@@ -37,17 +37,17 @@ class UserTokenReplaceTest extends BrowserTestBase {
   function testUserTokenReplacement() {
     $token_service = \Drupal::token();
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-    $url_options = array(
+    $url_options = [
       'absolute' => TRUE,
       'language' => $language_interface,
-    );
+    ];
 
     \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
     \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
 
     // Create two users and log them in one after another.
-    $user1 = $this->drupalCreateUser(array());
-    $user2 = $this->drupalCreateUser(array());
+    $user1 = $this->drupalCreateUser([]);
+    $user2 = $this->drupalCreateUser([]);
     $this->drupalLogin($user1);
     $this->drupalLogout();
     $this->drupalLogin($user2);
@@ -56,7 +56,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     $global_account = User::load(\Drupal::currentUser()->id());
 
     // Generate and test tokens.
-    $tests = array();
+    $tests = [];
     $tests['[user:uid]'] = $account->id();
     $tests['[user:name]'] = $account->getAccountName();
     $tests['[user:account-name]'] = $account->getAccountName();
@@ -121,18 +121,18 @@ class UserTokenReplaceTest extends BrowserTestBase {
 
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
-      $output = $token_service->replace($input, array('user' => $anonymous_user), array('langcode' => $language_interface->getId()), $bubbleable_metadata);
-      $this->assertEqual($output, $expected, format_string('Sanitized user token %token replaced.', array('%token' => $input)));
+      $output = $token_service->replace($input, ['user' => $anonymous_user], ['langcode' => $language_interface->getId()], $bubbleable_metadata);
+      $this->assertEqual($output, $expected, format_string('Sanitized user token %token replaced.', ['%token' => $input]));
       $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
     }
 
     // Generate login and cancel link.
-    $tests = array();
+    $tests = [];
     $tests['[user:one-time-login-url]'] = user_pass_reset_url($account);
     $tests['[user:cancel-url]'] = user_cancel_url($account);
 
     // Generate tokens with interface language.
-    $link = \Drupal::url('user.page', [], array('absolute' => TRUE));
+    $link = \Drupal::url('user.page', [], ['absolute' => TRUE]);
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, ['user' => $account], ['langcode' => $language_interface->getId(), 'callback' => 'user_mail_tokens', 'clear' => TRUE]);
       $this->assertTrue(strpos($output, $link) === 0, 'Generated URL is in interface language.');
@@ -141,16 +141,16 @@ class UserTokenReplaceTest extends BrowserTestBase {
     // Generate tokens with the user's preferred language.
     $account->preferred_langcode = 'de';
     $account->save();
-    $link = \Drupal::url('user.page', [], array('language' => \Drupal::languageManager()->getLanguage($account->getPreferredLangcode()), 'absolute' => TRUE));
+    $link = \Drupal::url('user.page', [], ['language' => \Drupal::languageManager()->getLanguage($account->getPreferredLangcode()), 'absolute' => TRUE]);
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, ['user' => $account], ['callback' => 'user_mail_tokens', 'clear' => TRUE]);
       $this->assertTrue(strpos($output, $link) === 0, "Generated URL is in the user's preferred language.");
     }
 
     // Generate tokens with one specific language.
-    $link = \Drupal::url('user.page', [], array('language' => \Drupal::languageManager()->getLanguage('de'), 'absolute' => TRUE));
+    $link = \Drupal::url('user.page', [], ['language' => \Drupal::languageManager()->getLanguage('de'), 'absolute' => TRUE]);
     foreach ($tests as $input => $expected) {
-      foreach (array($user1, $user2) as $account) {
+      foreach ([$user1, $user2] as $account) {
         $output = $token_service->replace($input, ['user' => $account], ['langcode' => 'de', 'callback' => 'user_mail_tokens', 'clear' => TRUE]);
         $this->assertTrue(strpos($output, $link) === 0, "Generated URL in the requested language.");
       }

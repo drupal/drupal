@@ -19,7 +19,7 @@ class LinksTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('router_test', 'menu_link_content');
+  public static $modules = ['router_test', 'menu_link_content'];
 
   /**
    * The menu link plugin manager.
@@ -36,11 +36,11 @@ class LinksTest extends BrowserTestBase {
 
     $this->menuLinkManager = \Drupal::service('plugin.manager.menu.link');
 
-    Menu::create(array(
+    Menu::create([
       'id' => 'menu_test',
       'label' => 'Test menu',
       'description' => 'Description text',
-    ))->save();
+    ])->save();
   }
 
   /**
@@ -56,47 +56,47 @@ class LinksTest extends BrowserTestBase {
     //      - child-1-1
     //      - child-1-2
     //   - child-2
-    $base_options = array(
+    $base_options = [
       'title' => 'Menu link test',
       'provider' => $module,
       'menu_name' => 'menu_test',
-    );
+    ];
 
-    $parent = $base_options + array(
+    $parent = $base_options + [
       'link' => ['uri' => 'internal:/menu-test/hierarchy/parent'],
-    );
+    ];
     $link = MenuLinkContent::create($parent);
     $link->save();
     $links['parent'] = $link->getPluginId();
 
-    $child_1 = $base_options + array(
+    $child_1 = $base_options + [
       'link' => ['uri' => 'internal:/menu-test/hierarchy/parent/child'],
       'parent' => $links['parent'],
-    );
+    ];
     $link = MenuLinkContent::create($child_1);
     $link->save();
     $links['child-1'] = $link->getPluginId();
 
-    $child_1_1 = $base_options + array(
+    $child_1_1 = $base_options + [
       'link' => ['uri' => 'internal:/menu-test/hierarchy/parent/child2/child'],
       'parent' => $links['child-1'],
-    );
+    ];
     $link = MenuLinkContent::create($child_1_1);
     $link->save();
     $links['child-1-1'] = $link->getPluginId();
 
-    $child_1_2 = $base_options + array(
+    $child_1_2 = $base_options + [
       'link' => ['uri' => 'internal:/menu-test/hierarchy/parent/child2/child'],
       'parent' => $links['child-1'],
-    );
+    ];
     $link = MenuLinkContent::create($child_1_2);
     $link->save();
     $links['child-1-2'] = $link->getPluginId();
 
-    $child_2 = $base_options + array(
+    $child_2 = $base_options + [
       'link' => ['uri' => 'internal:/menu-test/hierarchy/parent/child'],
       'parent' => $links['parent'],
-    );
+    ];
     $link = MenuLinkContent::create($child_2);
     $link->save();
     $links['child-2'] = $link->getPluginId();
@@ -113,7 +113,7 @@ class LinksTest extends BrowserTestBase {
       $menu_link_plugin = $this->menuLinkManager->createInstance($links[$id]);
       $expected_parent = isset($links[$parent]) ? $links[$parent] : '';
 
-      $this->assertEqual($menu_link_plugin->getParent(), $expected_parent, SafeMarkup::format('Menu link %id has parent of %parent, expected %expected_parent.', array('%id' => $id, '%parent' => $menu_link_plugin->getParent(), '%expected_parent' => $expected_parent)));
+      $this->assertEqual($menu_link_plugin->getParent(), $expected_parent, SafeMarkup::format('Menu link %id has parent of %parent, expected %expected_parent.', ['%id' => $id, '%parent' => $menu_link_plugin->getParent(), '%expected_parent' => $expected_parent]));
     }
   }
 
@@ -121,18 +121,18 @@ class LinksTest extends BrowserTestBase {
    * Assert that a link entity's created timestamp is set.
    */
   public function testCreateLink() {
-    $options = array(
+    $options = [
       'menu_name' => 'menu_test',
       'bundle' => 'menu_link_content',
       'link' => [['uri' => 'internal:/']],
-    );
+    ];
     $link = MenuLinkContent::create($options);
     $link->save();
     // Make sure the changed timestamp is set.
     $this->assertEqual($link->getChangedTime(), REQUEST_TIME, 'Creating a menu link sets the "changed" timestamp.');
-    $options = array(
+    $options = [
       'title' => 'Test Link',
-    );
+    ];
     $link->link->options = $options;
     $link->changed->value = 0;
     $link->save();
@@ -147,32 +147,32 @@ class LinksTest extends BrowserTestBase {
     // Check the initial hierarchy.
     $links = $this->createLinkHierarchy($module);
 
-    $expected_hierarchy = array(
+    $expected_hierarchy = [
       'parent' => '',
       'child-1' => 'parent',
       'child-1-1' => 'child-1',
       'child-1-2' => 'child-1',
       'child-2' => 'parent',
-    );
+    ];
     $this->assertMenuLinkParents($links, $expected_hierarchy);
 
     // Start over, and move child-1 under child-2, and check that all the
     // children of child-1 have been moved too.
     $links = $this->createLinkHierarchy($module);
     /* @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
-    $this->menuLinkManager->updateDefinition($links['child-1'], array('parent' => $links['child-2']));
+    $this->menuLinkManager->updateDefinition($links['child-1'], ['parent' => $links['child-2']]);
     // Verify that the entity was updated too.
     $menu_link_plugin = $this->menuLinkManager->createInstance($links['child-1']);
     $entity = \Drupal::entityManager()->loadEntityByUuid('menu_link_content', $menu_link_plugin->getDerivativeId());
     $this->assertEqual($entity->getParentId(), $links['child-2']);
 
-    $expected_hierarchy = array(
+    $expected_hierarchy = [
       'parent' => '',
       'child-1' => 'child-2',
       'child-1-1' => 'child-1',
       'child-1-2' => 'child-1',
       'child-2' => 'parent',
-    );
+    ];
     $this->assertMenuLinkParents($links, $expected_hierarchy);
 
     // Start over, and delete child-1, and check that the children of child-1
@@ -180,12 +180,12 @@ class LinksTest extends BrowserTestBase {
     $links = $this->createLinkHierarchy($module);
     $this->menuLinkManager->removeDefinition($links['child-1']);
 
-    $expected_hierarchy = array(
+    $expected_hierarchy = [
       'parent' => FALSE,
       'child-1-1' => 'parent',
       'child-1-2' => 'parent',
       'child-2' => 'parent',
-    );
+    ];
     $this->assertMenuLinkParents($links, $expected_hierarchy);
 
     // Try changing the parent at the entity level.
@@ -194,12 +194,12 @@ class LinksTest extends BrowserTestBase {
     $entity->parent->value = '';
     $entity->save();
 
-    $expected_hierarchy = array(
+    $expected_hierarchy = [
       'parent' => '',
       'child-1-1' => 'parent',
       'child-1-2' => '',
       'child-2' => 'parent',
-    );
+    ];
     $this->assertMenuLinkParents($links, $expected_hierarchy);
 
     // @todo Figure out what makes sense to test in terms of automatic
@@ -210,7 +210,7 @@ class LinksTest extends BrowserTestBase {
    * Tests uninstalling a module providing default links.
    */
   public function testModuleUninstalledMenuLinks() {
-    \Drupal::service('module_installer')->install(array('menu_test'));
+    \Drupal::service('module_installer')->install(['menu_test']);
     \Drupal::service('router.builder')->rebuild();
     \Drupal::service('plugin.manager.menu.link')->rebuild();
     $menu_links = $this->menuLinkManager->loadLinksByRoute('menu_test.menu_test');
@@ -219,7 +219,7 @@ class LinksTest extends BrowserTestBase {
     $this->assertEqual($menu_link->getPluginId(), 'menu_test');
 
     // Uninstall the module and ensure the menu link got removed.
-    \Drupal::service('module_installer')->uninstall(array('menu_test'));
+    \Drupal::service('module_installer')->uninstall(['menu_test']);
     \Drupal::service('plugin.manager.menu.link')->rebuild();
     $menu_links = $this->menuLinkManager->loadLinksByRoute('menu_test.menu_test');
     $this->assertEqual(count($menu_links), 0);

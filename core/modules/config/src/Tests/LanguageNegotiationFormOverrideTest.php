@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
  */
 class LanguageNegotiationFormOverrideTest extends WebTestBase {
 
-  public static $modules = array('language', 'locale', 'locale_test');
+  public static $modules = ['language', 'locale', 'locale_test'];
 
   /**
    * Tests that overrides do not affect language-negotiation form values.
@@ -23,16 +23,16 @@ class LanguageNegotiationFormOverrideTest extends WebTestBase {
     $overridden_value_es = 'loquesea';
 
     // Set up an override.
-    $settings['config']['language.negotiation']['url']['prefixes'] = (object) array(
-      'value' => array('en' => $overridden_value_en, 'es' => $overridden_value_es),
+    $settings['config']['language.negotiation']['url']['prefixes'] = (object) [
+      'value' => ['en' => $overridden_value_en, 'es' => $overridden_value_es],
       'required' => TRUE,
-    );
+    ];
     $this->writeSettings($settings);
 
     // Add predefined language.
-    $edit = array(
+    $edit = [
       'predefined_langcode' => 'es',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Overridden string for language-negotiation should not exist in the form.

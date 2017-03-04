@@ -86,7 +86,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    *
    * @var array
    */
-  protected $third_party_settings = array();
+  protected $third_party_settings = [];
 
   /**
    * Information maintained by Drupal core about configuration.
@@ -263,7 +263,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function toArray() {
-    $properties = array();
+    $properties = [];
     /** @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $entity_type */
     $entity_type = $this->getEntityType();
 
@@ -411,7 +411,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
-  public function url($rel = 'edit-form', $options = array()) {
+  public function url($rel = 'edit-form', $options = []) {
     // Do not remove this override: the default value of $rel is different.
     return parent::url($rel, $options);
   }
@@ -551,7 +551,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function getThirdPartySettings($module) {
-    return isset($this->third_party_settings[$module]) ? $this->third_party_settings[$module] : array();
+    return isset($this->third_party_settings[$module]) ? $this->third_party_settings[$module] : [];
   }
 
   /**

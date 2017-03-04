@@ -139,7 +139,7 @@ class Image implements ImageInterface {
   /**
    * {@inheritdoc}
    */
-  public function apply($operation, array $arguments = array()) {
+  public function apply($operation, array $arguments = []) {
     return $this->getToolkit()->apply($operation, $arguments);
   }
 
@@ -147,56 +147,56 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function createNew($width, $height, $extension = 'png', $transparent_color = '#ffffff') {
-    return $this->apply('create_new', array('width' => $width, 'height' => $height, 'extension' => $extension, 'transparent_color' => $transparent_color));
+    return $this->apply('create_new', ['width' => $width, 'height' => $height, 'extension' => $extension, 'transparent_color' => $transparent_color]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function convert($extension) {
-    return $this->apply('convert', array('extension' => $extension));
+    return $this->apply('convert', ['extension' => $extension]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function crop($x, $y, $width, $height = NULL) {
-    return $this->apply('crop', array('x' => $x, 'y' => $y, 'width' => $width, 'height' => $height));
+    return $this->apply('crop', ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function desaturate() {
-    return $this->apply('desaturate', array());
+    return $this->apply('desaturate', []);
   }
 
   /**
    * {@inheritdoc}
    */
   public function resize($width, $height) {
-    return $this->apply('resize', array('width' => $width, 'height' => $height));
+    return $this->apply('resize', ['width' => $width, 'height' => $height]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function rotate($degrees, $background = NULL) {
-    return $this->apply('rotate', array('degrees' => $degrees, 'background' => $background));
+    return $this->apply('rotate', ['degrees' => $degrees, 'background' => $background]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function scaleAndCrop($width, $height) {
-    return $this->apply('scale_and_crop', array('width' => $width, 'height' => $height));
+    return $this->apply('scale_and_crop', ['width' => $width, 'height' => $height]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function scale($width, $height = NULL, $upscale = FALSE) {
-    return $this->apply('scale', array('width' => $width, 'height' => $height, 'upscale' => $upscale));
+    return $this->apply('scale', ['width' => $width, 'height' => $height, 'upscale' => $upscale]);
   }
 
   /**

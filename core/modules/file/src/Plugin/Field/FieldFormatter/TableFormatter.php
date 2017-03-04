@@ -21,33 +21,33 @@ class TableFormatter extends FileFormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     if ($files = $this->getEntitiesToView($items, $langcode)) {
-      $header = array(t('Attachment'), t('Size'));
-      $rows = array();
+      $header = [t('Attachment'), t('Size')];
+      $rows = [];
       foreach ($files as $delta => $file) {
-        $rows[] = array(
-          array(
-            'data' => array(
+        $rows[] = [
+          [
+            'data' => [
               '#theme' => 'file_link',
               '#file' => $file,
-              '#cache' => array(
+              '#cache' => [
                 'tags' => $file->getCacheTags(),
-              ),
-            ),
-          ),
-          array('data' => format_size($file->getSize())),
-        );
+              ],
+            ],
+          ],
+          ['data' => format_size($file->getSize())],
+        ];
       }
 
-      $elements[0] = array();
+      $elements[0] = [];
       if (!empty($rows)) {
-        $elements[0] = array(
+        $elements[0] = [
           '#theme' => 'table__file_formatter_table',
           '#header' => $header,
           '#rows' => $rows,
-        );
+        ];
       }
     }
 

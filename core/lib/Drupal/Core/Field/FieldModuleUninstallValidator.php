@@ -35,7 +35,7 @@ class FieldModuleUninstallValidator implements ModuleUninstallValidatorInterface
    * {@inheritdoc}
    */
   public function validate($module_name) {
-    $reasons = array();
+    $reasons = [];
 
     // We skip fields provided by the Field module as it implements field
     // purging.
@@ -49,10 +49,10 @@ class FieldModuleUninstallValidator implements ModuleUninstallValidatorInterface
             if ($storage_definition->getProvider() == $module_name) {
               $storage = $this->entityManager->getStorage($entity_type_id);
               if ($storage instanceof FieldableEntityStorageInterface && $storage->countFieldData($storage_definition, TRUE)) {
-                $reasons[] = $this->t('There is data for the field @field-name on entity type @entity_type', array(
+                $reasons[] = $this->t('There is data for the field @field-name on entity type @entity_type', [
                   '@field-name' => $storage_definition->getName(),
                   '@entity_type' => $entity_type->getLabel(),
-                ));
+                ]);
               }
             }
           }

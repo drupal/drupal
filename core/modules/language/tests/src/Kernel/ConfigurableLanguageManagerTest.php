@@ -16,7 +16,7 @@ class ConfigurableLanguageManagerTest extends LanguageTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('user');
+  public static $modules = ['user'];
 
   /**
    * The language negotiator.

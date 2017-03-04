@@ -16,7 +16,7 @@ class UserInstallTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('user');
+  public static $modules = ['user'];
 
   /**
    * {@inheritdoc}

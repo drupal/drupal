@@ -62,7 +62,7 @@ class CompiledRoute extends SymfonyCompiledRoute {
    * @param array $variables
    *   An array of variables (variables defined in the path and in the host patterns)
    */
-  public function __construct($fit, $pattern_outline, $num_parts, $staticPrefix, $regex, array $tokens, array $pathVariables, $hostRegex = NULL, array $hostTokens = array(), array $hostVariables = array(), array $variables = array()) {
+  public function __construct($fit, $pattern_outline, $num_parts, $staticPrefix, $regex, array $tokens, array $pathVariables, $hostRegex = NULL, array $hostTokens = [], array $hostVariables = [], array $variables = []) {
     parent::__construct($staticPrefix, $regex, $tokens, $pathVariables, $hostRegex, $hostTokens, $hostVariables, $variables);
 
     $this->fit = $fit;

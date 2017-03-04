@@ -39,19 +39,19 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
   public function optionsSummary(&$categories, &$options) {
     parent::optionsSummary($categories, $options);
 
-    $categories['display_extender_test'] = array(
+    $categories['display_extender_test'] = [
       'title' => $this->t('Display extender test settings'),
       'column' => 'second',
-      'build' => array(
+      'build' => [
         '#weight' => -100,
-      ),
-    );
+      ],
+    ];
 
-    $options['test_extender_test_option'] = array(
+    $options['test_extender_test_option'] = [
       'category' => 'display_extender_test',
       'title' => $this->t('Test option'),
       'value' => views_ui_truncate($this->options['test_extender_test_option'], 24),
-    );
+    ];
   }
 
   /**
@@ -61,12 +61,12 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
     switch ($form_state->get('section')) {
       case 'test_extender_test_option':
         $form['#title'] .= $this->t('Test option');
-        $form['test_extender_test_option'] = array(
+        $form['test_extender_test_option'] = [
           '#title' => $this->t('Test option'),
           '#type' => 'textfield',
           '#description' => $this->t('This is a textfield for test_option.'),
           '#default_value' => $this->options['test_extender_test_option'],
-        );
+        ];
     }
   }
 
@@ -86,7 +86,7 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
    * {@inheritdoc}
    */
   public function defaultableSections(&$sections, $section = NULL) {
-    $sections['test_extender_test_option'] = array('test_extender_test_option');
+    $sections['test_extender_test_option'] = ['test_extender_test_option'];
   }
 
   /**

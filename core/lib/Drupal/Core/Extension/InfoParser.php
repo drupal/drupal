@@ -12,7 +12,7 @@ class InfoParser extends InfoParserDynamic {
    *
    * @var array
    */
-  protected static $parsedInfos = array();
+  protected static $parsedInfos = [];
 
   /**
    * {@inheritdoc}

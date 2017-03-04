@@ -18,40 +18,40 @@ class CommonTestController {
    * generator.
    */
   public function typeLinkActiveClass() {
-    return array(
-      'no_query' => array(
+    return [
+      'no_query' => [
         '#type' => 'link',
         '#title' => t('Link with no query string'),
         '#url' => Url::fromRoute('<current>'),
-        '#options' => array(
+        '#options' => [
           'set_active_class' => TRUE,
-        ),
-      ),
-      'with_query' => array(
+        ],
+      ],
+      'with_query' => [
         '#type' => 'link',
         '#title' => t('Link with a query string'),
         '#url' => Url::fromRoute('<current>'),
-        '#options' => array(
-          'query' => array(
+        '#options' => [
+          'query' => [
             'foo' => 'bar',
             'one' => 'two',
-          ),
+          ],
           'set_active_class' => TRUE,
-        ),
-      ),
-      'with_query_reversed' => array(
+        ],
+      ],
+      'with_query_reversed' => [
         '#type' => 'link',
         '#title' => t('Link with the same query string in reverse order'),
         '#url' => Url::fromRoute('<current>'),
-        '#options' => array(
-          'query' => array(
+        '#options' => [
+          'query' => [
             'one' => 'two',
             'foo' => 'bar',
-          ),
+          ],
           'set_active_class' => TRUE,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -61,18 +61,18 @@ class CommonTestController {
    *   An empty string.
    */
   public function jsAndCssQuerystring() {
-    $attached = array(
-      '#attached' => array(
-        'library' => array(
+    $attached = [
+      '#attached' => [
+        'library' => [
           'node/drupal.node',
-        ),
-        'css' => array(
-          drupal_get_path('module', 'node') . '/css/node.admin.css' => array(),
+        ],
+        'css' => [
+          drupal_get_path('module', 'node') . '/css/node.admin.css' => [],
           // A relative URI may have a query string.
-          '/' . drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&arg2=value2' => array(),
-        ),
-      ),
-    );
+          '/' . drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&arg2=value2' => [],
+        ],
+      ],
+    ];
     return \Drupal::service('renderer')->renderRoot($attached);
   }
 

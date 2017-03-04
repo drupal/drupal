@@ -27,7 +27,7 @@ class EntityLink extends FieldPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['teaser'] = array('default' => FALSE);
+    $options['teaser'] = ['default' => FALSE];
     return $options;
   }
 
@@ -35,12 +35,12 @@ class EntityLink extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $form['teaser'] = array(
+    $form['teaser'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show teaser-style link'),
       '#default_value' => $this->options['teaser'],
       '#description' => $this->t('Show the comment link in the form used on standard entity teasers, rather than the full entity form.'),
-    );
+    ];
 
     parent::buildOptionsForm($form, $form_state);
   }
@@ -55,7 +55,7 @@ class EntityLink extends FieldPluginBase {
    */
   public function preRender(&$values) {
     // Render all nodes, so you can grep the comment links.
-    $entities = array();
+    $entities = [];
     foreach ($values as $row) {
       $entity = $row->_entity;
       $entities[$entity->id()] = $entity;

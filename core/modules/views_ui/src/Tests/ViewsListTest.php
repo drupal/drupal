@@ -18,7 +18,7 @@ class ViewsListTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'views_ui');
+  public static $modules = ['block', 'views_ui'];
 
   /**
    * A user with permission to administer views.

@@ -27,16 +27,16 @@ class PhpArrayContainer extends Container {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $container_definition = array()) {
+  public function __construct(array $container_definition = []) {
     if (isset($container_definition['machine_format']) && $container_definition['machine_format'] === TRUE) {
       throw new InvalidArgumentException('The machine-optimized format is not supported by this class. Use a human-readable format instead, e.g. as produced by \Drupal\Component\DependencyInjection\Dumper\PhpArrayDumper.');
     }
 
     // Do not call the parent's constructor as it would bail on the
     // machine-optimized format.
-    $this->aliases = isset($container_definition['aliases']) ? $container_definition['aliases'] : array();
-    $this->parameters = isset($container_definition['parameters']) ? $container_definition['parameters'] : array();
-    $this->serviceDefinitions = isset($container_definition['services']) ? $container_definition['services'] : array();
+    $this->aliases = isset($container_definition['aliases']) ? $container_definition['aliases'] : [];
+    $this->parameters = isset($container_definition['parameters']) ? $container_definition['parameters'] : [];
+    $this->serviceDefinitions = isset($container_definition['services']) ? $container_definition['services'] : [];
     $this->frozen = isset($container_definition['frozen']) ? $container_definition['frozen'] : FALSE;
 
     // Register the service_container with itself.
@@ -57,20 +57,20 @@ class PhpArrayContainer extends Container {
       throw new RuntimeException(sprintf('You have requested a synthetic service ("%s"). The service container does not know how to construct this service. The service will need to be set before it is first used.', $id));
     }
 
-    $arguments = array();
+    $arguments = [];
     if (isset($definition['arguments'])) {
       $arguments = $this->resolveServicesAndParameters($definition['arguments']);
     }
 
     if (isset($definition['file'])) {
-      $file = $this->frozen ? $definition['file'] : current($this->resolveServicesAndParameters(array($definition['file'])));
+      $file = $this->frozen ? $definition['file'] : current($this->resolveServicesAndParameters([$definition['file']]));
       require_once $file;
     }
 
     if (isset($definition['factory'])) {
       $factory = $definition['factory'];
       if (is_array($factory)) {
-        $factory = $this->resolveServicesAndParameters(array($factory[0], $factory[1]));
+        $factory = $this->resolveServicesAndParameters([$factory[0], $factory[1]]);
       }
       elseif (!is_string($factory)) {
         throw new RuntimeException(sprintf('Cannot create service "%s" because of invalid factory', $id));
@@ -79,7 +79,7 @@ class PhpArrayContainer extends Container {
       $service = call_user_func_array($factory, $arguments);
     }
     else {
-      $class = $this->frozen ? $definition['class'] : current($this->resolveServicesAndParameters(array($definition['class'])));
+      $class = $this->frozen ? $definition['class'] : current($this->resolveServicesAndParameters([$definition['class']]));
       $length = isset($definition['arguments_count']) ? $definition['arguments_count'] : count($arguments);
 
       // Optimize class instantiation for services with up to 10 parameters as
@@ -147,12 +147,12 @@ class PhpArrayContainer extends Container {
     if (isset($definition['calls'])) {
       foreach ($definition['calls'] as $call) {
         $method = $call[0];
-        $arguments = array();
+        $arguments = [];
         if (!empty($call[1])) {
           $arguments = $call[1];
           $arguments = $this->resolveServicesAndParameters($arguments);
         }
-        call_user_func_array(array($service, $method), $arguments);
+        call_user_func_array([$service, $method], $arguments);
       }
     }
 

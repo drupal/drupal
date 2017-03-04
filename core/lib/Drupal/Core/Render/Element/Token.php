@@ -21,13 +21,13 @@ class Token extends Hidden {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
-      '#pre_render' => array(
-        array($class, 'preRenderHidden'),
-      ),
+      '#pre_render' => [
+        [$class, 'preRenderHidden'],
+      ],
       '#theme' => 'input__hidden',
-    );
+    ];
   }
 
   /**

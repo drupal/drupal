@@ -39,7 +39,7 @@ class DisplayTest extends DisplayPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['test_option'] = array('default' => '');
+    $options['test_option'] = ['default' => ''];
 
     return $options;
   }
@@ -50,21 +50,21 @@ class DisplayTest extends DisplayPluginBase {
   public function optionsSummary(&$categories, &$options) {
     parent::optionsSummary($categories, $options);
 
-    $categories['display_test'] = array(
+    $categories['display_test'] = [
       'title' => $this->t('Display test settings'),
       'column' => 'second',
-      'build' => array(
+      'build' => [
         '#weight' => -100,
-      ),
-    );
+      ],
+    ];
 
     $test_option = $this->getOption('test_option') ?: $this->t('Empty');
 
-    $options['test_option'] = array(
+    $options['test_option'] = [
       'category' => 'display_test',
       'title' => $this->t('Test option'),
       'value' => views_ui_truncate($test_option, 24),
-    );
+    ];
   }
 
   /**
@@ -76,12 +76,12 @@ class DisplayTest extends DisplayPluginBase {
     switch ($form_state->get('section')) {
       case 'test_option':
         $form['#title'] .= $this->t('Test option');
-        $form['test_option'] = array(
+        $form['test_option'] = [
           '#title' => $this->t('Test option'),
           '#type' => 'textfield',
           '#description' => $this->t('This is a textfield for test_option.'),
           '#default_value' => $this->getOption('test_option'),
-        );
+        ];
         break;
     }
   }

@@ -19,14 +19,14 @@ class ViewsBlockTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test_views');
+  public static $modules = ['block', 'block_test_views'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view_block');
+  public static $testViews = ['test_view_block'];
 
   /**
    * {@inheritdoc}
@@ -34,7 +34,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
-    ViewTestData::createTestViews(get_class($this), array('block_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['block_test_views']);
   }
 
   /**
@@ -43,11 +43,11 @@ class ViewsBlockTest extends ViewsKernelTestBase {
    * @see \Drupal\views\Plugin\Block::getmachineNameSuggestion()
    */
   public function testMachineNameSuggestion() {
-    $plugin_definition = array(
+    $plugin_definition = [
       'provider' => 'views',
-    );
+    ];
     $plugin_id = 'views_block:test_view_block-block_1';
-    $views_block = ViewsBlock::create($this->container, array(), $plugin_id, $plugin_definition);
+    $views_block = ViewsBlock::create($this->container, [], $plugin_id, $plugin_definition);
 
     $this->assertEqual($views_block->getMachineNameSuggestion(), 'views_block__test_view_block_block_1');
   }
@@ -96,8 +96,8 @@ class ViewsBlockTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Add a fixed argument that sets a title and save the view.
-    $view->displayHandlers->get('default')->overrideOption('arguments', array(
-      'name' => array(
+    $view->displayHandlers->get('default')->overrideOption('arguments', [
+      'name' => [
         'default_action' => 'default',
         'title_enable' => TRUE,
         'title' => 'Overridden title',
@@ -105,16 +105,16 @@ class ViewsBlockTest extends ViewsKernelTestBase {
         'default_argument_options' => [
           'argument' => 'fixed'
         ],
-        'validate' => array(
+        'validate' => [
           'type' => 'none',
           'fail' => 'not found',
-        ),
+        ],
         'id' => 'name',
         'table' => 'views_test_data',
         'field' => 'name',
         'plugin_id' => 'string',
-      )
-    ));
+      ]
+    ]);
     $view->save();
 
     $plugin_definition = [

@@ -18,42 +18,42 @@ function statistics_uninstall() {
  * Implements hook_schema().
  */
 function statistics_schema() {
-  $schema['node_counter'] = array(
+  $schema['node_counter'] = [
     'description' => 'Access statistics for {node}s.',
-    'fields' => array(
-      'nid' => array(
+    'fields' => [
+      'nid' => [
         'description' => 'The {node}.nid for these statistics.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'totalcount' => array(
+      ],
+      'totalcount' => [
         'description' => 'The total number of times the {node} has been viewed.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'size' => 'big',
-      ),
-      'daycount' => array(
+      ],
+      'daycount' => [
         'description' => 'The total number of times the {node} has been viewed today.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'size' => 'medium',
-      ),
-      'timestamp' => array(
+      ],
+      'timestamp' => [
         'description' => 'The most recent time the {node} has been viewed.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-    ),
-    'primary key' => array('nid'),
-  );
+      ],
+    ],
+    'primary key' => ['nid'],
+  ];
 
   return $schema;
 }
@@ -63,7 +63,7 @@ function statistics_schema() {
  */
 function statistics_update_8001() {
   if (!\Drupal::moduleHandler()->moduleExists('node')) {
-    if (\Drupal::service('module_installer')->uninstall(array('statistics'), TRUE)) {
+    if (\Drupal::service('module_installer')->uninstall(['statistics'], TRUE)) {
       return 'The statistics module depends on the node module and has therefore been uninstalled.';
     }
     else {

@@ -21,11 +21,11 @@ class MockFileTransfer {
    * Returns a settings form with a text field to input a username.
    */
   public function getSettingsForm() {
-    $form = array();
-    $form['system_test_username'] = array(
+    $form = [];
+    $form['system_test_username'] = [
       '#type' => 'textfield',
       '#title' => t('System Test Username'),
-    );
+    ];
     return $form;
   }
 

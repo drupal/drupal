@@ -17,7 +17,7 @@ class UserTimeZoneTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'system_test');
+  public static $modules = ['node', 'system_test'];
 
   /**
    * Tests the display of dates and time when user-configurable time zones are set.
@@ -42,10 +42,10 @@ class UserTimeZoneTest extends WebTestBase {
     $date2 = '2007-03-11 01:00:00 -0800';
     // One date in PDT (summer time):
     $date3 = '2007-03-20 21:00:00 -0700';
-    $this->drupalCreateContentType(array('type' => 'article'));
-    $node1 = $this->drupalCreateNode(array('created' => strtotime($date1), 'type' => 'article'));
-    $node2 = $this->drupalCreateNode(array('created' => strtotime($date2), 'type' => 'article'));
-    $node3 = $this->drupalCreateNode(array('created' => strtotime($date3), 'type' => 'article'));
+    $this->drupalCreateContentType(['type' => 'article']);
+    $node1 = $this->drupalCreateNode(['created' => strtotime($date1), 'type' => 'article']);
+    $node2 = $this->drupalCreateNode(['created' => strtotime($date2), 'type' => 'article']);
+    $node3 = $this->drupalCreateNode(['created' => strtotime($date3), 'type' => 'article']);
 
     // Confirm date format and time zone.
     $this->drupalGet('node/' . $node1->id());
@@ -56,7 +56,7 @@ class UserTimeZoneTest extends WebTestBase {
     $this->assertText('2007-03-20 21:00 PDT', 'Date should be PDT.');
 
     // Change user time zone to Santiago time.
-    $edit = array();
+    $edit = [];
     $edit['mail'] = $web_user->getEmail();
     $edit['timezone'] = 'America/Santiago';
     $this->drupalPostForm("user/" . $web_user->id() . "/edit", $edit, t('Save'));

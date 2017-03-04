@@ -15,8 +15,8 @@ abstract class ComponentEntityDisplayBase extends DestinationBase {
   /**
    * {@inheritdoc}
    */
-  public function import(Row $row, array $old_destination_id_values = array()) {
-    $values = array();
+  public function import(Row $row, array $old_destination_id_values = []) {
+    $values = [];
     // array_intersect_key() won't work because the order is important because
     // this is also the return value.
     foreach (array_keys($this->getIds()) as $id) {
@@ -24,7 +24,7 @@ abstract class ComponentEntityDisplayBase extends DestinationBase {
     }
     $entity = $this->getEntity($values['entity_type'], $values['bundle'], $values[static::MODE_NAME]);
     if (!$row->getDestinationProperty('hidden')) {
-      $entity->setComponent($values['field_name'], $row->getDestinationProperty('options') ?: array());
+      $entity->setComponent($values['field_name'], $row->getDestinationProperty('options') ?: []);
     }
     else {
       $entity->removeComponent($values['field_name']);

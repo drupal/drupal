@@ -22,7 +22,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    *
    * @var array
    */
-  protected $tagCache = array();
+  protected $tagCache = [];
 
   /**
    * A list of tags that have already been invalidated in this request.
@@ -31,7 +31,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    *
    * @var array
    */
-  protected $invalidatedTags = array();
+  protected $invalidatedTags = [];
 
   /**
    * Constructs a DatabaseCacheTagsChecksum object.
@@ -56,7 +56,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
         $this->invalidatedTags[$tag] = TRUE;
         unset($this->tagCache[$tag]);
         $this->connection->merge('cachetags')
-          ->insertFields(array('invalidations' => 1))
+          ->insertFields(['invalidations' => 1])
           ->expression('invalidations', 'invalidations + 1')
           ->key('tag', $tag)
           ->execute();
@@ -107,9 +107,9 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
 
     $query_tags = array_diff($tags, array_keys($this->tagCache));
     if ($query_tags) {
-      $db_tags = array();
+      $db_tags = [];
       try {
-        $db_tags = $this->connection->query('SELECT tag, invalidations FROM {cachetags} WHERE tag IN ( :tags[] )', array(':tags[]' => $query_tags))
+        $db_tags = $this->connection->query('SELECT tag, invalidations FROM {cachetags} WHERE tag IN ( :tags[] )', [':tags[]' => $query_tags])
           ->fetchAllKeyed();
         $this->tagCache += $db_tags;
       }
@@ -134,8 +134,8 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    * {@inheritdoc}
    */
   public function reset() {
-    $this->tagCache = array();
-    $this->invalidatedTags = array();
+    $this->tagCache = [];
+    $this->invalidatedTags = [];
   }
 
   /**
@@ -165,25 +165,25 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    * Defines the schema for the {cachetags} table.
    */
   public function schemaDefinition() {
-    $schema = array(
+    $schema = [
       'description' => 'Cache table for tracking cache tag invalidations.',
-      'fields' => array(
-        'tag' => array(
+      'fields' => [
+        'tag' => [
           'description' => 'Namespace-prefixed tag string.',
           'type' => 'varchar_ascii',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
-        ),
-        'invalidations' => array(
+        ],
+        'invalidations' => [
           'description' => 'Number incremented when the tag is invalidated.',
           'type' => 'int',
           'not null' => TRUE,
           'default' => 0,
-        ),
-      ),
-      'primary key' => array('tag'),
-    );
+        ],
+      ],
+      'primary key' => ['tag'],
+    ];
     return $schema;
   }
 

@@ -18,10 +18,10 @@ class MenuListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['title'] = t('Title');
-    $header['description'] = array(
+    $header['description'] = [
       'data' => t('Description'),
-      'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
-    );
+      'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+    ];
     return $header + parent::buildHeader();
   }
 
@@ -29,10 +29,10 @@ class MenuListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['title'] = array(
+    $row['title'] = [
       'data' => $entity->label(),
-      'class' => array('menu-label'),
-    );
+      'class' => ['menu-label'],
+    ];
     $row['description']['data'] = ['#markup' => $entity->getDescription()];
     return $row + parent::buildRow($entity);
   }
@@ -45,11 +45,11 @@ class MenuListBuilder extends ConfigEntityListBuilder {
 
     if (isset($operations['edit'])) {
       $operations['edit']['title'] = t('Edit menu');
-      $operations['add'] = array(
+      $operations['add'] = [
         'title' => t('Add link'),
         'weight' => 20,
         'url' => $entity->urlInfo('add-link-form'),
-      );
+      ];
     }
     if (isset($operations['delete'])) {
       $operations['delete']['title'] = t('Delete menu');

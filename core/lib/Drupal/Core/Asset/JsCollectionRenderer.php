@@ -37,7 +37,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
    * logic for grouping and aggregating files.
    */
   public function render(array $js_assets) {
-    $elements = array();
+    $elements = [];
 
     // A dummy query-string is added to filenames, to gain control over
     // browser-caching. The string changes on every update or full cache
@@ -47,11 +47,11 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
     $default_query_string = $this->state->get('system.css_js_query_string') ?: '0';
 
     // Defaults for each SCRIPT element.
-    $element_defaults = array(
+    $element_defaults = [
       '#type' => 'html_tag',
       '#tag' => 'script',
       '#value' => '',
-    );
+    ];
 
     // Loop through all JS assets.
     foreach ($js_assets as $js_asset) {
@@ -62,12 +62,12 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
       // Element properties that depend on item type.
       switch ($js_asset['type']) {
         case 'setting':
-          $element['#attributes'] = array(
+          $element['#attributes'] = [
             // This type attribute prevents this from being parsed as an
             // inline script.
             'type' => 'application/json',
             'data-drupal-selector' => 'drupal-settings-json',
-          );
+          ];
           $element['#value'] = Json::encode($js_asset['data']);
           break;
 

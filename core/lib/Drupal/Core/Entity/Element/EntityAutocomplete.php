@@ -31,7 +31,7 @@ class EntityAutocomplete extends Textfield {
     // Apply default form element properties.
     $info['#target_type'] = NULL;
     $info['#selection_handler'] = 'default';
-    $info['#selection_settings'] = array();
+    $info['#selection_settings'] = [];
     $info['#tags'] = FALSE;
     $info['#autocreate'] = NULL;
     // This should only be set to FALSE if proper validation by the selection
@@ -42,8 +42,8 @@ class EntityAutocomplete extends Textfield {
     // it's value is properly checked for access.
     $info['#process_default_value'] = TRUE;
 
-    $info['#element_validate'] = array(array($class, 'validateEntityAutocomplete'));
-    array_unshift($info['#process'], array($class, 'processEntityAutocomplete'));
+    $info['#element_validate'] = [[$class, 'validateEntityAutocomplete']];
+    array_unshift($info['#process'], [$class, 'processEntityAutocomplete']);
 
     return $info;
   }
@@ -60,7 +60,7 @@ class EntityAutocomplete extends Textfield {
       elseif (!empty($element['#default_value']) && !is_array($element['#default_value'])) {
         // Convert the default value into an array for easier processing in
         // static::getEntityLabels().
-        $element['#default_value'] = array($element['#default_value']);
+        $element['#default_value'] = [$element['#default_value']];
       }
 
       if ($element['#default_value']) {
@@ -136,11 +136,11 @@ class EntityAutocomplete extends Textfield {
     }
 
     $element['#autocomplete_route_name'] = 'system.entity_autocomplete';
-    $element['#autocomplete_route_parameters'] = array(
+    $element['#autocomplete_route_parameters'] = [
       'target_type' => $element['#target_type'],
       'selection_handler' => $element['#selection_handler'],
       'selection_settings_key' => $selection_settings_key,
-    );
+    ];
 
     return $element;
   }
@@ -152,11 +152,11 @@ class EntityAutocomplete extends Textfield {
     $value = NULL;
 
     if (!empty($element['#value'])) {
-      $options = array(
+      $options = [
         'target_type' => $element['#target_type'],
         'handler' => $element['#selection_handler'],
         'handler_settings' => $element['#selection_settings'],
-      );
+      ];
       /** @var /Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface $handler */
       $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getInstance($options);
       $autocreate = (bool) $element['#autocreate'] && $handler instanceof SelectionWithAutocreateInterface;
@@ -167,7 +167,7 @@ class EntityAutocomplete extends Textfield {
         $value = $element['#value'];
       }
       else {
-        $input_values = $element['#tags'] ? Tags::explode($element['#value']) : array($element['#value']);
+        $input_values = $element['#tags'] ? Tags::explode($element['#value']) : [$element['#value']];
 
         foreach ($input_values as $input) {
           $match = static::extractEntityIdFromAutocompleteInput($input);
@@ -178,17 +178,17 @@ class EntityAutocomplete extends Textfield {
           }
 
           if ($match !== NULL) {
-            $value[] = array(
+            $value[] = [
               'target_id' => $match,
-            );
+            ];
           }
           elseif ($autocreate) {
             /** @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface $handler */
             // Auto-create item. See an example of how this is handled in
             // \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::presave().
-            $value[] = array(
+            $value[] = [
               'entity' => $handler->createNewEntity($element['#target_type'], $element['#autocreate']['bundle'], $input, $element['#autocreate']['uid']),
-            );
+            ];
           }
         }
       }
@@ -207,7 +207,7 @@ class EntityAutocomplete extends Textfield {
           $valid_ids = $handler->validateReferenceableEntities($ids);
           if ($invalid_ids = array_diff($ids, $valid_ids)) {
             foreach ($invalid_ids as $invalid_id) {
-              $form_state->setError($element, t('The referenced entity (%type: %id) does not exist.', array('%type' => $element['#target_type'], '%id' => $invalid_id)));
+              $form_state->setError($element, t('The referenced entity (%type: %id) does not exist.', ['%type' => $element['#target_type'], '%id' => $invalid_id]));
             }
           }
         }
@@ -233,7 +233,7 @@ class EntityAutocomplete extends Textfield {
 
           foreach ($invalid_new_entities as $entity) {
             /** @var \Drupal\Core\Entity\EntityInterface $entity */
-            $form_state->setError($element, t('This entity (%type: %label) cannot be referenced.', array('%type' => $element['#target_type'], '%label' => $entity->label())));
+            $form_state->setError($element, t('This entity (%type: %label) cannot be referenced.', ['%type' => $element['#target_type'], '%label' => $entity->label()]));
           }
         }
       }
@@ -275,10 +275,10 @@ class EntityAutocomplete extends Textfield {
     $entities = array_reduce($entities_by_bundle, function ($flattened, $bundle_entities) {
       return $flattened + $bundle_entities;
     }, []);
-    $params = array(
+    $params = [
       '%value' => $input,
       '@value' => $input,
-    );
+    ];
     if (empty($entities)) {
       if ($strict) {
         // Error if there are no entities available for a required field.
@@ -292,12 +292,12 @@ class EntityAutocomplete extends Textfield {
     }
     elseif (count($entities) > 1) {
       // More helpful error if there are only a few matching entities.
-      $multiples = array();
+      $multiples = [];
       foreach ($entities as $id => $name) {
         $multiples[] = $name . ' (' . $id . ')';
       }
       $params['@id'] = $id;
-      $form_state->setError($element, t('Multiple entities match this reference; "%multiple". Specify the one you want by appending the id in parentheses, like "@value (@id)".', array('%multiple' => implode('", "', $multiples)) + $params));
+      $form_state->setError($element, t('Multiple entities match this reference; "%multiple". Specify the one you want by appending the id in parentheses, like "@value (@id)".', ['%multiple' => implode('", "', $multiples)] + $params));
     }
     else {
       // Take the one and only matching entity.
@@ -318,7 +318,7 @@ class EntityAutocomplete extends Textfield {
    *   A string of entity labels separated by commas.
    */
   public static function getEntityLabels(array $entities) {
-    $entity_labels = array();
+    $entity_labels = [];
     foreach ($entities as $entity) {
       // Use the special view label, since some entities allow the label to be
       // viewed, even if the entity is not allowed to be viewed.

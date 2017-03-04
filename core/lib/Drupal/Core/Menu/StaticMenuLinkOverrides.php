@@ -73,7 +73,7 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
   public function loadOverride($id) {
     $all_overrides = $this->getConfig()->get('definitions');
     $id = static::encodeId($id);
-    return $id && isset($all_overrides[$id]) ? $all_overrides[$id] : array();
+    return $id && isset($all_overrides[$id]) ? $all_overrides[$id] : [];
   }
 
   /**
@@ -99,16 +99,16 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
    * {@inheritdoc}
    */
   public function deleteOverride($id) {
-    return $this->deleteMultipleOverrides(array($id));
+    return $this->deleteMultipleOverrides([$id]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function loadMultipleOverrides(array $ids) {
-    $result = array();
+    $result = [];
     if ($ids) {
-      $all_overrides = $this->getConfig()->get('definitions') ?: array();
+      $all_overrides = $this->getConfig()->get('definitions') ?: [];
       foreach ($ids as $id) {
         $encoded_id = static::encodeId($id);
         if (isset($all_overrides[$encoded_id])) {
@@ -124,13 +124,13 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
    */
   public function saveOverride($id, array $definition) {
     // Only allow to override a specific subset of the keys.
-    $expected = array(
+    $expected = [
       'menu_name' => '',
       'parent' => '',
       'weight' => 0,
       'expanded' => FALSE,
       'enabled' => FALSE,
-    );
+    ];
     // Filter the overrides to only those that are expected.
     $definition = array_intersect_key($definition, $expected);
     // Ensure all values are set.
@@ -173,7 +173,7 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
    *   The menu plugin ID with double underscore instead of dots.
    */
   protected static function encodeId($id) {
-    return strtr($id, array('.' => '__', '__' => '___'));
+    return strtr($id, ['.' => '__', '__' => '___']);
   }
 
 }

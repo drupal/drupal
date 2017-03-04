@@ -102,7 +102,7 @@ interface EntityStorageInterface {
    * @return \Drupal\Core\Entity\EntityInterface[]
    *   An array of entity objects indexed by their ids.
    */
-  public function loadByProperties(array $values = array());
+  public function loadByProperties(array $values = []);
 
   /**
    * Constructs a new entity object, without permanently saving it.
@@ -114,7 +114,7 @@ interface EntityStorageInterface {
    * @return \Drupal\Core\Entity\EntityInterface
    *   A new entity object.
    */
-  public function create(array $values = array());
+  public function create(array $values = []);
 
   /**
    * Deletes permanently saved entities.

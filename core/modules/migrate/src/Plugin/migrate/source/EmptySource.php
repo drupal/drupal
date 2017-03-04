@@ -17,16 +17,16 @@ class EmptySource extends SourcePluginBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'id' => t('ID'),
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function initializeIterator() {
-    return new \ArrayIterator(array(array('id' => '')));
+    return new \ArrayIterator([['id' => '']]);
   }
 
   /**

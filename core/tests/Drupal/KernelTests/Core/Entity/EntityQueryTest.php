@@ -24,7 +24,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('field_test', 'language');
+  public static $modules = ['field_test', 'language'];
 
   /**
    * @var array
@@ -62,21 +62,21 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     $this->installEntitySchema('entity_test_mulrev');
 
-    $this->installConfig(array('language'));
+    $this->installConfig(['language']);
 
     $figures = Unicode::strtolower($this->randomMachineName());
     $greetings = Unicode::strtolower($this->randomMachineName());
-    foreach (array($figures => 'shape', $greetings => 'text') as $field_name => $field_type) {
-      $field_storage = FieldStorageConfig::create(array(
+    foreach ([$figures => 'shape', $greetings => 'text'] as $field_name => $field_type) {
+      $field_storage = FieldStorageConfig::create([
         'field_name' => $field_name,
         'entity_type' => 'entity_test_mulrev',
         'type' => $field_type,
         'cardinality' => 2,
-      ));
+      ]);
       $field_storage->save();
       $field_storages[] = $field_storage;
     }
-    $bundles = array();
+    $bundles = [];
     for ($i = 0; $i < 2; $i++) {
       // For the sake of tablesort, make sure the second bundle is higher than
       // the first one. Beware: MySQL is not case sensitive.
@@ -93,24 +93,24 @@ class EntityQueryTest extends EntityKernelTestBase {
       $bundles[] = $bundle;
     }
     // Each unit is a list of field name, langcode and a column-value array.
-    $units[] = array($figures, 'en', array(
+    $units[] = [$figures, 'en', [
       'color' => 'red',
       'shape' => 'triangle',
-    ));
-    $units[] = array($figures, 'en', array(
+    ]];
+    $units[] = [$figures, 'en', [
       'color' => 'blue',
       'shape' => 'circle',
-    ));
+    ]];
     // To make it easier to test sorting, the greetings get formats according
     // to their langcode.
-    $units[] = array($greetings, 'tr', array(
+    $units[] = [$greetings, 'tr', [
       'value' => 'merhaba',
       'format' => 'format-tr'
-    ));
-    $units[] = array($greetings, 'pl', array(
+    ]];
+    $units[] = [$greetings, 'pl', [
       'value' => 'siema',
       'format' => 'format-pl'
-    ));
+    ]];
     // Make these languages available to the greetings field.
     ConfigurableLanguage::createFromLangcode('tr')->save();
     ConfigurableLanguage::createFromLangcode('pl')->save();
@@ -119,13 +119,13 @@ class EntityQueryTest extends EntityKernelTestBase {
     // decimal 13 is binary 1101 so unit 3,2 and 0 will be added to the
     // entity.
     for ($i = 1; $i <= 15; $i++) {
-      $entity = EntityTestMulRev::create(array(
+      $entity = EntityTestMulRev::create([
         'type' => $bundles[$i & 1],
         'name' => $this->randomMachineName(),
         'langcode' => 'en',
-      ));
+      ]);
       // Make sure the name is set for every language that we might create.
-      foreach (array('tr', 'pl') as $langcode) {
+      foreach (['tr', 'pl'] as $langcode) {
         $entity->addTranslation($langcode)->name = $this->randomMachineName();
       }
       foreach (array_reverse(str_split(decbin($i))) as $key => $bit) {
@@ -216,8 +216,8 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Do the same test but with IN operator.
     $query = $this->factory->get('entity_test_mulrev');
-    $group_blue = $query->andConditionGroup()->condition("$figures.color", array('blue'), 'IN');
-    $group_red = $query->andConditionGroup()->condition("$figures.color", array('red'), 'IN');
+    $group_blue = $query->andConditionGroup()->condition("$figures.color", ['blue'], 'IN');
+    $group_red = $query->andConditionGroup()->condition("$figures.color", ['red'], 'IN');
     $this->queryResults = $query
       ->condition($group_blue)
       ->condition($group_red)
@@ -228,7 +228,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // An entity might have either red or blue figure.
     $this->queryResults = $this->factory->get('entity_test_mulrev')
-      ->condition("$figures.color", array('blue', 'red'), 'IN')
+      ->condition("$figures.color", ['blue', 'red'], 'IN')
       ->sort('id')
       ->execute();
     // Bit 0 or 1 is on.
@@ -267,7 +267,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->allRevisions()
       ->sort('revision_id')
       ->execute();
-    $this->assertRevisionResult(array($first_entity->id()), array($first_entity->id()));
+    $this->assertRevisionResult([$first_entity->id()], [$first_entity->id()]);
     // When querying current revisions, this string is no longer found.
     $this->queryResults = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'merhaba')
@@ -279,14 +279,14 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->sort('revision_id')
       ->execute();
     // The query only matches the original revisions.
-    $this->assertRevisionResult(array(4, 5, 6, 7, 12, 13, 14, 15), array(4, 5, 6, 7, 12, 13, 14, 15));
+    $this->assertRevisionResult([4, 5, 6, 7, 12, 13, 14, 15], [4, 5, 6, 7, 12, 13, 14, 15]);
     $results = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'siema', 'CONTAINS')
       ->sort('id')
       ->execute();
     // This matches both the original and new current revisions, multiple
     // revisions are returned for some entities.
-    $assert = array(16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15');
+    $assert = [16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15'];
     $this->assertIdentical($results, $assert);
     $results = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'siema', 'STARTS_WITH')
@@ -309,7 +309,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->sort('revision_id')
       ->execute();
     // Now we get everything.
-    $assert = array(4 => '4', 5 => '5', 6 => '6', 7 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 12 => '12', 20 => '12', 13 => '13', 21 => '13', 14 => '14', 22 => '14', 15 => '15', 23 => '15');
+    $assert = [4 => '4', 5 => '5', 6 => '6', 7 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 12 => '12', 20 => '12', 13 => '13', 21 => '13', 14 => '14', 22 => '14', 15 => '15', 23 => '15'];
     $this->assertIdentical($results, $assert);
   }
 
@@ -376,9 +376,9 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Test the pager by setting element #1 to page 2 with a page size of 4.
     // Results will be #8-12 from above.
     $request = Request::createFromGlobals();
-    $request->query->replace(array(
+    $request->query->replace([
       'page' => '0,2',
-    ));
+    ]);
     \Drupal::getContainer()->get('request_stack')->push($request);
     $this->queryResults = $this->factory->get('entity_test_mulrev')
       ->sort("$figures.color")
@@ -407,40 +407,40 @@ class EntityQueryTest extends EntityKernelTestBase {
     // assert that all entities from one bundle are after the other as the
     // order dictates.
     $request = Request::createFromGlobals();
-    $request->query->replace(array(
+    $request->query->replace([
       'sort' => 'asc',
       'order' => 'Type',
-    ));
+    ]);
     \Drupal::getContainer()->get('request_stack')->push($request);
 
-    $header = array(
-      'id' => array('data' => 'Id', 'specifier' => 'id'),
-      'type' => array('data' => 'Type', 'specifier' => 'type'),
-    );
+    $header = [
+      'id' => ['data' => 'Id', 'specifier' => 'id'],
+      'type' => ['data' => 'Type', 'specifier' => 'type'],
+    ];
 
     $this->queryResults = array_values($this->factory->get('entity_test_mulrev')
       ->tableSort($header)
       ->execute());
     $this->assertBundleOrder('asc');
 
-    $request->query->add(array(
+    $request->query->add([
       'sort' => 'desc',
-    ));
+    ]);
     \Drupal::getContainer()->get('request_stack')->push($request);
 
-    $header = array(
-      'id' => array('data' => 'Id', 'specifier' => 'id'),
-      'type' => array('data' => 'Type', 'specifier' => 'type'),
-    );
+    $header = [
+      'id' => ['data' => 'Id', 'specifier' => 'id'],
+      'type' => ['data' => 'Type', 'specifier' => 'type'],
+    ];
     $this->queryResults = array_values($this->factory->get('entity_test_mulrev')
       ->tableSort($header)
       ->execute());
     $this->assertBundleOrder('desc');
 
     // Ordering on ID is definite, however.
-    $request->query->add(array(
+    $request->query->add([
       'order' => 'Id',
-    ));
+    ]);
     \Drupal::getContainer()->get('request_stack')->push($request);
     $this->queryResults = $this->factory->get('entity_test_mulrev')
       ->tableSort($header)
@@ -454,13 +454,13 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testCount() {
     // Create a field with the same name in a different entity type.
     $field_name = $this->figures;
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'shape',
       'cardinality' => 2,
       'translatable' => TRUE,
-    ));
+    ]);
     $field_storage->save();
     $bundle = $this->randomMachineName();
     FieldConfig::create([
@@ -468,10 +468,10 @@ class EntityQueryTest extends EntityKernelTestBase {
       'bundle' => $bundle,
     ])->save();
 
-    $entity = EntityTest::create(array(
+    $entity = EntityTest::create([
       'id' => 1,
       'type' => $bundle,
-    ));
+    ]);
     $entity->enforceIsNew();
     $entity->save();
 
@@ -545,8 +545,8 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Test the delta range condition.
     $this->queryResults = $this->factory->get('entity_test_mulrev')
-      ->condition("$figures.%delta.color", array('blue', 'red'), 'IN')
-      ->condition("$figures.%delta", array(0, 1), 'IN')
+      ->condition("$figures.%delta.color", ['blue', 'red'], 'IN')
+      ->condition("$figures.%delta", [0, 1], 'IN')
       ->sort('id')
       ->execute();
     // Figure delta 0 or 1 can be blue or red, this matches a lot of entities.
@@ -563,12 +563,12 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Numeric delta on single value base field should return results only if
     // the first item is being targeted.
     $this->queryResults = $this->factory->get('entity_test_mulrev')
-      ->condition("id.0.value", array(1, 3, 5), 'IN')
+      ->condition("id.0.value", [1, 3, 5], 'IN')
       ->sort('id')
       ->execute();
     $this->assertResult(1, 3, 5);
     $this->queryResults = $this->factory->get('entity_test_mulrev')
-      ->condition("id.1.value", array(1, 3, 5), 'IN')
+      ->condition("id.1.value", [1, 3, 5], 'IN')
       ->sort('id')
       ->execute();
     $this->assertResult();
@@ -576,18 +576,18 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Delta range condition on single value base field should return results
     // only if just the field value is targeted.
     $this->queryResults = $this->factory->get('entity_test_mulrev')
-      ->condition("id.%delta.value", array(1, 3, 5), 'IN')
+      ->condition("id.%delta.value", [1, 3, 5], 'IN')
       ->sort('id')
       ->execute();
     $this->assertResult(1, 3, 5);
     $this->queryResults = $this->factory->get('entity_test_mulrev')
-      ->condition("id.%delta.value", array(1, 3, 5), 'IN')
+      ->condition("id.%delta.value", [1, 3, 5], 'IN')
       ->condition("id.%delta", 0, '=')
       ->sort('id')
       ->execute();
     $this->assertResult(1, 3, 5);
     $this->queryResults = $this->factory->get('entity_test_mulrev')
-      ->condition("id.%delta.value", array(1, 3, 5), 'IN')
+      ->condition("id.%delta.value", [1, 3, 5], 'IN')
       ->condition("id.%delta", 1, '=')
       ->sort('id')
       ->execute();
@@ -596,7 +596,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   protected function assertResult() {
-    $assert = array();
+    $assert = [];
     $expected = func_get_args();
     if ($expected && is_array($expected[0])) {
       $expected = $expected[0];
@@ -608,7 +608,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   protected function assertRevisionResult($keys, $expected) {
-    $assert = array();
+    $assert = [];
     foreach ($expected as $key => $binary) {
       $assert[$keys[$key]] = strval($binary);
     }
@@ -659,41 +659,41 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testCaseSensitivity() {
     $bundle = $this->randomMachineName();
 
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_ci',
       'entity_type' => 'entity_test_mulrev',
       'type' => 'string',
       'cardinality' => 1,
       'translatable' => FALSE,
-      'settings' => array(
+      'settings' => [
         'case_sensitive' => FALSE,
-      )
-    ));
+      ]
+    ]);
     $field_storage->save();
 
-    FieldConfig::create(array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $bundle,
-    ))->save();
+    ])->save();
 
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_cs',
       'entity_type' => 'entity_test_mulrev',
       'type' => 'string',
       'cardinality' => 1,
       'translatable' => FALSE,
-      'settings' => array(
+      'settings' => [
         'case_sensitive' => TRUE,
-      ),
-    ));
+      ],
+    ]);
     $field_storage->save();
 
-    FieldConfig::create(array(
+    FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $bundle,
-    ))->save();
+    ])->save();
 
-    $fixtures = array();
+    $fixtures = [];
 
     for ($i = 0; $i < 2; $i++) {
       // If the last 4 of the string are all numbers, then there is no
@@ -701,20 +701,20 @@ class EntityQueryTest extends EntityKernelTestBase {
       // test will fail. Ensure that can not happen by appending a non-numeric
       // character. See https://www.drupal.org/node/2397297.
       $string = $this->randomMachineName(7) . 'a';
-      $fixtures[] = array(
+      $fixtures[] = [
         'original' => $string,
         'uppercase' => Unicode::strtoupper($string),
         'lowercase' => Unicode::strtolower($string),
-      );
+      ];
     }
 
-    EntityTestMulRev::create(array(
+    EntityTestMulRev::create([
       'type' => $bundle,
       'name' => $this->randomMachineName(),
       'langcode' => 'en',
       'field_ci' => $fixtures[0]['uppercase'] . $fixtures[1]['lowercase'],
       'field_cs' => $fixtures[0]['uppercase'] . $fixtures[1]['lowercase']
-    ))->save();
+    ])->save();
 
     // Check the case insensitive field, = operator.
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
@@ -750,33 +750,33 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Check the case insensitive field, IN operator.
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', array($fixtures[0]['lowercase'] . $fixtures[1]['lowercase']), 'IN'
+      'field_ci', [$fixtures[0]['lowercase'] . $fixtures[1]['lowercase']], 'IN'
     )->execute();
     $this->assertIdentical(count($result), 1, 'Case insensitive, lowercase');
 
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', array($fixtures[0]['uppercase'] . $fixtures[1]['uppercase']), 'IN'
+      'field_ci', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN'
     )->execute();
     $this->assertIdentical(count($result), 1, 'Case insensitive, uppercase');
 
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_ci', array($fixtures[0]['uppercase'] . $fixtures[1]['lowercase']), 'IN'
+      'field_ci', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN'
     )->execute();
     $this->assertIdentical(count($result), 1, 'Case insensitive, mixed');
 
     // Check the case sensitive field, IN operator.
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', array($fixtures[0]['lowercase'] . $fixtures[1]['lowercase']), 'IN'
+      'field_cs', [$fixtures[0]['lowercase'] . $fixtures[1]['lowercase']], 'IN'
     )->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, lowercase');
 
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', array($fixtures[0]['uppercase'] . $fixtures[1]['uppercase']), 'IN'
+      'field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN'
     )->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, uppercase');
 
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
-      'field_cs', array($fixtures[0]['uppercase'] . $fixtures[1]['lowercase']), 'IN'
+      'field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN'
     )->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, mixed');
 
@@ -863,19 +863,19 @@ class EntityQueryTest extends EntityKernelTestBase {
     $term1 = Term::create([
       'name' => $this->randomMachineName(),
       'vid' => 'tags',
-      'description' => array(
+      'description' => [
         'value' => $this->randomString(),
         'format' => 'format1',
-      )]);
+      ]]);
     $term1->save();
 
     $term2 = Term::create([
       'name' => $this->randomMachineName(),
       'vid' => 'tags',
-      'description' => array(
+      'description' => [
         'value' => $this->randomString(),
         'format' => 'format2',
-      )]);
+      ]]);
     $term2->save();
 
     $ids = \Drupal::entityQuery('taxonomy_term')
@@ -936,7 +936,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testInjectionInCondition() {
     try {
       $this->queryResults = $this->factory->get('entity_test_mulrev')
-        ->condition('1 ; -- ', array(0, 1), 'IN')
+        ->condition('1 ; -- ', [0, 1], 'IN')
         ->sort('id')
         ->execute();
       $this->fail('SQL Injection attempt in Entity Query condition in operator should result in an exception.');

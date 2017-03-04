@@ -40,7 +40,7 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'taxonomy');
+  public static $modules = ['language', 'content_translation', 'taxonomy'];
 
   protected function setUp() {
     parent::setUp();
@@ -79,7 +79,7 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
         'value' => $this->randomMachineName(),
         'format' => 'basic_html'
       ]],
-      $this->termFieldName => array(array('target_id' => $this->term->id())),
+      $this->termFieldName => [['target_id' => $this->term->id()]],
       'langcode' => $this->baseLangcode,
     ]);
     $node->save();
@@ -92,14 +92,14 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
    * Creates a test subject term, with translation.
    */
   protected function setUpTerm() {
-    $this->term = $this->createTerm($this->vocabulary, array(
+    $this->term = $this->createTerm($this->vocabulary, [
       'name' => $this->baseTagName,
       'langcode' => $this->baseLangcode,
-    ));
+    ]);
 
-    $this->term->addTranslation($this->translateToLangcode, array(
+    $this->term->addTranslation($this->translateToLangcode, [
       'name' => $this->translatedTagName,
-    ));
+    ]);
     $this->term->save();
   }
 

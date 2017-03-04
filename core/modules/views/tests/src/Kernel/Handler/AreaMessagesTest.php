@@ -18,7 +18,7 @@ class AreaMessagesTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_area_messages');
+  public static $testViews = ['test_area_messages'];
 
   /**
    * Tests the messages area handler.

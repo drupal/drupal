@@ -49,7 +49,7 @@ class MigratePluginManager extends DefaultPluginManager implements MigratePlugin
   /**
    * {@inheritdoc}
    */
-  public function createInstance($plugin_id, array $configuration = array(), MigrationInterface $migration = NULL) {
+  public function createInstance($plugin_id, array $configuration = [], MigrationInterface $migration = NULL) {
     $plugin_definition = $this->getDefinition($plugin_id);
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
     // If the plugin provides a factory method, pass the container to it.

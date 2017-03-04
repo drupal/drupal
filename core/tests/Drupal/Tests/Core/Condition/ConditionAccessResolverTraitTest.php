@@ -29,7 +29,7 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
   }
 
   public function providerTestResolveConditions() {
-    $data = array();
+    $data = [];
 
     $condition_true = $this->getMock('Drupal\Core\Condition\ConditionInterface');
     $condition_true->expects($this->any())
@@ -54,49 +54,49 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
       ->method('isNegated')
       ->will($this->returnValue(TRUE));
 
-    $conditions = array();
-    $data[] = array($conditions, 'and', TRUE);
-    $data[] = array($conditions, 'or', FALSE);
+    $conditions = [];
+    $data[] = [$conditions, 'and', TRUE];
+    $data[] = [$conditions, 'or', FALSE];
 
-    $conditions = array($condition_false);
-    $data[] = array($conditions, 'or', FALSE);
-    $data[] = array($conditions, 'and', FALSE);
+    $conditions = [$condition_false];
+    $data[] = [$conditions, 'or', FALSE];
+    $data[] = [$conditions, 'and', FALSE];
 
-    $conditions = array($condition_true);
-    $data[] = array($conditions, 'or', TRUE);
-    $data[] = array($conditions, 'and', TRUE);
+    $conditions = [$condition_true];
+    $data[] = [$conditions, 'or', TRUE];
+    $data[] = [$conditions, 'and', TRUE];
 
-    $conditions = array($condition_true, $condition_false);
-    $data[] = array($conditions, 'or', TRUE);
-    $data[] = array($conditions, 'and', FALSE);
+    $conditions = [$condition_true, $condition_false];
+    $data[] = [$conditions, 'or', TRUE];
+    $data[] = [$conditions, 'and', FALSE];
 
-    $conditions = array($condition_exception);
-    $data[] = array($conditions, 'or', FALSE);
-    $data[] = array($conditions, 'and', FALSE);
+    $conditions = [$condition_exception];
+    $data[] = [$conditions, 'or', FALSE];
+    $data[] = [$conditions, 'and', FALSE];
 
-    $conditions = array($condition_true, $condition_exception);
-    $data[] = array($conditions, 'or', TRUE);
-    $data[] = array($conditions, 'and', FALSE);
+    $conditions = [$condition_true, $condition_exception];
+    $data[] = [$conditions, 'or', TRUE];
+    $data[] = [$conditions, 'and', FALSE];
 
-    $conditions = array($condition_exception, $condition_true);
-    $data[] = array($conditions, 'or', TRUE);
-    $data[] = array($conditions, 'and', FALSE);
+    $conditions = [$condition_exception, $condition_true];
+    $data[] = [$conditions, 'or', TRUE];
+    $data[] = [$conditions, 'and', FALSE];
 
-    $conditions = array($condition_false, $condition_exception);
-    $data[] = array($conditions, 'or', FALSE);
-    $data[] = array($conditions, 'and', FALSE);
+    $conditions = [$condition_false, $condition_exception];
+    $data[] = [$conditions, 'or', FALSE];
+    $data[] = [$conditions, 'and', FALSE];
 
-    $conditions = array($condition_exception, $condition_false);
-    $data[] = array($conditions, 'or', FALSE);
-    $data[] = array($conditions, 'and', FALSE);
+    $conditions = [$condition_exception, $condition_false];
+    $data[] = [$conditions, 'or', FALSE];
+    $data[] = [$conditions, 'and', FALSE];
 
-    $conditions = array($condition_negated);
-    $data[] = array($conditions, 'or', TRUE);
-    $data[] = array($conditions, 'and', TRUE);
+    $conditions = [$condition_negated];
+    $data[] = [$conditions, 'or', TRUE];
+    $data[] = [$conditions, 'and', TRUE];
 
-    $conditions = array($condition_negated, $condition_negated);
-    $data[] = array($conditions, 'or', TRUE);
-    $data[] = array($conditions, 'and', TRUE);
+    $conditions = [$condition_negated, $condition_negated];
+    $data[] = [$conditions, 'or', TRUE];
+    $data[] = [$conditions, 'and', TRUE];
     return $data;
   }
 

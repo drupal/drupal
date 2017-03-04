@@ -31,21 +31,21 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
   function testInstallProfileConfigOverwrite() {
     $config_name = 'system.cron';
     // The expected configuration from the system module.
-    $expected_original_data = array(
-      'threshold' => array(
+    $expected_original_data = [
+      'threshold' => [
         'requirements_warning' => 172800,
         'requirements_error' => 1209600,
-      ),
+      ],
       'logging' => 1,
-    );
+    ];
     // The expected active configuration altered by the install profile.
-    $expected_profile_data = array(
-      'threshold' => array(
+    $expected_profile_data = [
+      'threshold' => [
         'requirements_warning' => 259200,
         'requirements_error' => 1209600,
-      ),
+      ],
       'logging' => 1,
-    );
+    ];
     $expected_profile_data['_core']['default_config_hash'] = Crypt::hashBase64(serialize($expected_profile_data));
 
     // Verify that the original data matches. We have to read the module config

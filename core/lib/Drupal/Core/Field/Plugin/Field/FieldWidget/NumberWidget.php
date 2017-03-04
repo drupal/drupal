@@ -27,21 +27,21 @@ class NumberWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'placeholder' => '',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element['placeholder'] = array(
+    $element['placeholder'] = [
       '#type' => 'textfield',
       '#title' => t('Placeholder'),
       '#default_value' => $this->getSetting('placeholder'),
       '#description' => t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
-    );
+    ];
     return $element;
   }
 
@@ -49,11 +49,11 @@ class NumberWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = [];
 
     $placeholder = $this->getSetting('placeholder');
     if (!empty($placeholder)) {
-      $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
+      $summary[] = t('Placeholder: @placeholder', ['@placeholder' => $placeholder]);
     }
     else {
       $summary[] = t('No placeholder');
@@ -69,11 +69,11 @@ class NumberWidget extends WidgetBase {
     $value = isset($items[$delta]->value) ? $items[$delta]->value : NULL;
     $field_settings = $this->getFieldSettings();
 
-    $element += array(
+    $element += [
       '#type' => 'number',
       '#default_value' => $value,
       '#placeholder' => $this->getSetting('placeholder'),
-    );
+    ];
 
     // Set the step for floating point and decimal numbers.
     switch ($this->fieldDefinition->getType()) {
@@ -104,7 +104,7 @@ class NumberWidget extends WidgetBase {
       $element['#field_suffix'] = FieldFilteredMarkup::create(array_pop($suffixes));
     }
 
-    return array('value' => $element);
+    return ['value' => $element];
   }
 
   /**

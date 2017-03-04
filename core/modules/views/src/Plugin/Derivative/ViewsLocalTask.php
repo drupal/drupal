@@ -67,7 +67,7 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    $this->derivatives = array();
+    $this->derivatives = [];
 
     $view_route_names = $this->state->get('views.view_route_names');
     foreach ($this->getApplicableMenuViews() as $pair) {
@@ -77,7 +77,7 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
 
       $executable->setDisplay($display_id);
       $menu = $executable->display_handler->getOption('menu');
-      if (in_array($menu['type'], array('tab', 'default tab'))) {
+      if (in_array($menu['type'], ['tab', 'default tab'])) {
         $plugin_id = 'view.' . $executable->storage->id() . '.' . $display_id;
         $route_name = $view_route_names[$executable->storage->id() . '.' . $display_id];
 
@@ -87,11 +87,11 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
           continue;
         }
 
-        $this->derivatives[$plugin_id] = array(
+        $this->derivatives[$plugin_id] = [
           'route_name' => $route_name,
           'weight' => $menu['weight'],
           'title' => $menu['title'],
-        ) + $base_plugin_definition;
+        ] + $base_plugin_definition;
 
         // Default local tasks have themselves as root tab.
         if ($menu['type'] == 'default tab') {
@@ -117,7 +117,7 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
       $menu = $executable->display_handler->getOption('menu');
 
       // We already have set the base_route for default tabs.
-      if (in_array($menu['type'], array('tab'))) {
+      if (in_array($menu['type'], ['tab'])) {
         $plugin_id = 'view.' . $executable->storage->id() . '.' . $display_id;
         $view_route_name = $view_route_names[$executable->storage->id() . '.' . $display_id];
 

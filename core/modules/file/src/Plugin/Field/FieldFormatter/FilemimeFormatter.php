@@ -43,12 +43,12 @@ class FilemimeFormatter extends BaseFieldFileFormatterBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
 
-    $form['filemime_image'] = array(
+    $form['filemime_image'] = [
       '#title' => $this->t('Display an icon'),
       '#description' => $this->t('The icon is representing the file type, instead of the MIME text (such as "image/jpeg")'),
       '#type' => 'checkbox',
       '#default_value' => $this->getSetting('filemime_image'),
-    );
+    ];
 
     return $form;
   }

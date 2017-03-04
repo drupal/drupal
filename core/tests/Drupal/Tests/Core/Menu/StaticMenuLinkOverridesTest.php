@@ -17,7 +17,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * @covers ::__construct
    */
   public function testConstruct() {
-    $config_factory = $this->getConfigFactoryStub(array('core.menu.static_menu_link_overrides' => array()));
+    $config_factory = $this->getConfigFactoryStub(['core.menu.static_menu_link_overrides' => []]);
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
     $this->assertAttributeEquals($config_factory, 'configFactory', $static_override);
@@ -48,7 +48,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * @covers ::getConfig
    */
   public function testLoadOverride($overrides, $id, $expected) {
-    $config_factory = $this->getConfigFactoryStub(array('core.menu.static_menu_link_overrides' => array('definitions' => $overrides)));
+    $config_factory = $this->getConfigFactoryStub(['core.menu.static_menu_link_overrides' => ['definitions' => $overrides]]);
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
     $this->assertEquals($expected, $static_override->loadOverride($id));
@@ -58,15 +58,15 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * Provides test data for testLoadOverride.
    */
   public function providerTestLoadOverride() {
-    $data = array();
+    $data = [];
     // No specified ID.
-    $data[] = array(array('test1' => array('parent' => 'test0')), NULL, array());
+    $data[] = [['test1' => ['parent' => 'test0']], NULL, []];
     // Valid ID.
-    $data[] = array(array('test1' => array('parent' => 'test0')), 'test1', array('parent' => 'test0'));
+    $data[] = [['test1' => ['parent' => 'test0']], 'test1', ['parent' => 'test0']];
     // Non existing ID.
-    $data[] = array(array('test1' => array('parent' => 'test0')), 'test2', array());
+    $data[] = [['test1' => ['parent' => 'test0']], 'test2', []];
     // Ensure that the ID is encoded properly
-    $data[] = array(array('test1__la___ma' => array('parent' => 'test0')), 'test1.la__ma', array('parent' => 'test0'));
+    $data[] = [['test1__la___ma' => ['parent' => 'test0']], 'test1.la__ma', ['parent' => 'test0']];
 
     return $data;
   }
@@ -78,15 +78,15 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * @covers ::getConfig
    */
   public function testLoadMultipleOverrides() {
-    $overrides = array();
-    $overrides['test1'] = array('parent' => 'test0');
-    $overrides['test2'] = array('parent' => 'test1');
-    $overrides['test1__la___ma'] = array('parent' => 'test2');
+    $overrides = [];
+    $overrides['test1'] = ['parent' => 'test0'];
+    $overrides['test2'] = ['parent' => 'test1'];
+    $overrides['test1__la___ma'] = ['parent' => 'test2'];
 
-    $config_factory = $this->getConfigFactoryStub(array('core.menu.static_menu_link_overrides' => array('definitions' => $overrides)));
+    $config_factory = $this->getConfigFactoryStub(['core.menu.static_menu_link_overrides' => ['definitions' => $overrides]]);
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
-    $this->assertEquals(array('test1' => array('parent' => 'test0'), 'test1.la__ma' => array('parent' => 'test2')), $static_override->loadMultipleOverrides(array('test1', 'test1.la__ma')));
+    $this->assertEquals(['test1' => ['parent' => 'test0'], 'test1.la__ma' => ['parent' => 'test2']], $static_override->loadMultipleOverrides(['test1', 'test1.la__ma']));
   }
 
   /**
@@ -103,23 +103,23 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
     $config->expects($this->at(0))
       ->method('get')
       ->with('definitions')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
     $config->expects($this->at(1))
       ->method('get')
       ->with('definitions')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
 
-    $definition_save_1 = array(
-      'definitions' => array(
-        'test1' => array('parent' => 'test0', 'menu_name' => '', 'weight' => 0, 'expanded' => FALSE, 'enabled' => FALSE)
-      )
-    );
-    $definitions_save_2 = array(
-      'definitions' => array(
-        'test1' => array('parent' => 'test0', 'menu_name' => '', 'weight' => 0, 'expanded' => FALSE, 'enabled' => FALSE),
-        'test1__la___ma' => array('parent' => 'test1', 'menu_name' => '', 'weight' => 0, 'expanded' => FALSE, 'enabled' => FALSE)
-      )
-    );
+    $definition_save_1 = [
+      'definitions' => [
+        'test1' => ['parent' => 'test0', 'menu_name' => '', 'weight' => 0, 'expanded' => FALSE, 'enabled' => FALSE]
+      ]
+    ];
+    $definitions_save_2 = [
+      'definitions' => [
+        'test1' => ['parent' => 'test0', 'menu_name' => '', 'weight' => 0, 'expanded' => FALSE, 'enabled' => FALSE],
+        'test1__la___ma' => ['parent' => 'test1', 'menu_name' => '', 'weight' => 0, 'expanded' => FALSE, 'enabled' => FALSE]
+      ]
+    ];
     $config->expects($this->at(2))
       ->method('set')
       ->with('definitions', $definition_save_1['definitions'])
@@ -148,8 +148,8 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
 
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
-    $static_override->saveOverride('test1', array('parent' => 'test0'));
-    $static_override->saveOverride('test1.la__ma', array('parent' => 'test1'));
+    $static_override->saveOverride('test1', ['parent' => 'test0']);
+    $static_override->saveOverride('test1.la__ma', ['parent' => 'test1']);
   }
 
   /**
@@ -202,15 +202,15 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * Provides test data for testDeleteOverrides.
    */
   public function providerTestDeleteOverrides() {
-    $data = array();
+    $data = [];
     // Delete a non existing ID.
-    $data[] = array('test0', array(), array());
+    $data[] = ['test0', [], []];
     // Delete an existing ID.
-    $data[] = array('test1', array('test1' => array('parent' => 'test0')), array());
+    $data[] = ['test1', ['test1' => ['parent' => 'test0']], []];
     // Delete an existing ID with a special ID.
-    $data[] = array('test1.la__ma', array('test1__la___ma' => array('parent' => 'test0')), array());
+    $data[] = ['test1.la__ma', ['test1__la___ma' => ['parent' => 'test0']], []];
     // Delete multiple IDs.
-    $data[] = array(array('test1.la__ma', 'test1'), array('test1' => array('parent' => 'test0'), 'test1__la___ma' => array('parent' => 'test0')), array());
+    $data[] = [['test1.la__ma', 'test1'], ['test1' => ['parent' => 'test0'], 'test1__la___ma' => ['parent' => 'test0']], []];
 
     return $data;
   }

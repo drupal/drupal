@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'mil', 'milg', 'milm', 'milb', 'mils', 'milt', 'milp', 'milh', 'mim', 'mib', 'mibs', 'mis', 'miss', 'ming', 'mij', 'mich',
   0x10 => 'mik', 'mit', 'mip', 'mih', 'ba', 'bag', 'bakk', 'bags', 'ban', 'banj', 'banh', 'bad', 'bal', 'balg', 'balm', 'balb',
   0x20 => 'bals', 'balt', 'balp', 'balh', 'bam', 'bab', 'babs', 'bas', 'bass', 'bang', 'baj', 'bach', 'bak', 'bat', 'bap', 'bah',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'byeoss', 'byeong', 'byeoj', 'byeoch', 'byeok', 'byeot', 'byeop', 'byeoh', 'bye', 'byeg', 'byekk', 'byegs', 'byen', 'byenj', 'byenh', 'byed',
   0xE0 => 'byel', 'byelg', 'byelm', 'byelb', 'byels', 'byelt', 'byelp', 'byelh', 'byem', 'byeb', 'byebs', 'byes', 'byess', 'byeng', 'byej', 'byech',
   0xF0 => 'byek', 'byet', 'byep', 'byeh', 'bo', 'bog', 'bokk', 'bogs', 'bon', 'bonj', 'bonh', 'bod', 'bol', 'bolg', 'bolm', 'bolb',
-);
+];

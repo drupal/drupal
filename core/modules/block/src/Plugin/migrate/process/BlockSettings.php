@@ -21,7 +21,7 @@ class BlockSettings extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     list($plugin, $delta, $old_settings, $title) = $value;
-    $settings = array();
+    $settings = [];
     $settings['label'] = $title;
     if ($title) {
       $settings['label_display'] = BlockPluginInterface::BLOCK_LABEL_VISIBLE;

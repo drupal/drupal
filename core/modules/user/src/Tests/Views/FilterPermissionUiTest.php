@@ -30,7 +30,7 @@ class FilterPermissionUiTest extends ViewTestBase {
   protected function setUp() {
     parent::setUp(TRUE);
 
-    ViewTestData::createTestViews(get_class($this), array('user_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['user_test_views']);
     $this->enableViewsTestModule();
   }
 

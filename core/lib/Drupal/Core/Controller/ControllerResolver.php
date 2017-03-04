@@ -122,7 +122,7 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
 
     $controller = $this->classResolver->getInstanceFromDefinition($class_or_service);
 
-    return array($controller, $method);
+    return [$controller, $method];
   }
 
   /**
@@ -131,7 +131,7 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
   protected function doGetArguments(Request $request, $controller, array $parameters) {
     $attributes = $request->attributes->all();
     $raw_parameters = $request->attributes->has('_raw_variables') ? $request->attributes->get('_raw_variables') : [];
-    $arguments = array();
+    $arguments = [];
     foreach ($parameters as $param) {
       if (array_key_exists($param->name, $attributes)) {
         $arguments[] = $attributes[$param->name];

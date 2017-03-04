@@ -34,16 +34,16 @@ class AggregatorPluginManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    $type_annotations = array(
+    $type_annotations = [
       'fetcher' => 'Drupal\aggregator\Annotation\AggregatorFetcher',
       'parser' => 'Drupal\aggregator\Annotation\AggregatorParser',
       'processor' => 'Drupal\aggregator\Annotation\AggregatorProcessor',
-    );
-    $plugin_interfaces = array(
+    ];
+    $plugin_interfaces = [
       'fetcher' => 'Drupal\aggregator\Plugin\FetcherInterface',
       'parser' => 'Drupal\aggregator\Plugin\ParserInterface',
       'processor' => 'Drupal\aggregator\Plugin\ProcessorInterface',
-    );
+    ];
 
     parent::__construct("Plugin/aggregator/$type", $namespaces, $module_handler, $plugin_interfaces[$type], $type_annotations[$type]);
     $this->setCacheBackend($cache_backend, 'aggregator_' . $type . '_plugins');

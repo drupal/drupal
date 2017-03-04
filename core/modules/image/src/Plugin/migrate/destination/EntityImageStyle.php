@@ -46,7 +46,7 @@ class EntityImageStyle extends EntityConfigBase {
 
     $style->save();
 
-    return array($style->id());
+    return [$style->id()];
   }
 
 }

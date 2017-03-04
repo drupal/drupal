@@ -18,7 +18,7 @@ class FilterTest extends FilterPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['test_enable'] = array('default' => TRUE);
+    $options['test_enable'] = ['default' => TRUE];
     return $options;
   }
 
@@ -30,11 +30,11 @@ class FilterTest extends FilterPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['test_enable'] = array(
+    $form['test_enable'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Controls whether the filter plugin should be active'),
       '#default_value' => $this->options['test_enable'],
-    );
+    ];
   }
 
   /**

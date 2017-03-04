@@ -28,10 +28,10 @@ class BlockDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to remove the @entity-type %label?', array(
+    return $this->t('Are you sure you want to remove the @entity-type %label?', [
       '@entity-type' => $this->getEntity()->getEntityType()->getLowercaseLabel(),
       '%label' => $this->getEntity()->label(),
-    ));
+    ]);
   }
 
   /**
@@ -39,10 +39,10 @@ class BlockDeleteForm extends EntityDeleteForm {
    */
   protected function getDeletionMessage() {
     $entity = $this->getEntity();
-    return $this->t('The @entity-type %label has been removed.', array(
+    return $this->t('The @entity-type %label has been removed.', [
       '@entity-type' => $entity->getEntityType()->getLowercaseLabel(),
       '%label' => $entity->label(),
-    ));
+    ]);
   }
 
 }

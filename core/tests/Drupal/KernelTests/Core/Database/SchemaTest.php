@@ -26,32 +26,32 @@ class SchemaTest extends KernelTestBase {
    */
   function testSchema() {
     // Try creating a table.
-    $table_specification = array(
+    $table_specification = [
       'description' => 'Schema table description may contain "quotes" and could be long—very long indeed.',
-      'fields' => array(
-        'id'  => array(
+      'fields' => [
+        'id'  => [
           'type' => 'int',
           'default' => NULL,
-        ),
-        'test_field'  => array(
+        ],
+        'test_field'  => [
           'type' => 'int',
           'not null' => TRUE,
           'description' => 'Schema table description may contain "quotes" and could be long—very long indeed. There could be "multiple quoted regions".',
-        ),
-        'test_field_string'  => array(
+        ],
+        'test_field_string'  => [
           'type' => 'varchar',
           'length' => 20,
           'not null' => TRUE,
           'default' => "'\"funky default'\"",
           'description' => 'Schema column description for string.',
-        ),
-        'test_field_string_ascii'  => array(
+        ],
+        'test_field_string_ascii'  => [
           'type' => 'varchar_ascii',
           'length' => 255,
           'description' => 'Schema column description for ASCII string.',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     db_create_table('test_table', $table_specification);
 
     // Assert that the table exists.
@@ -95,7 +95,7 @@ class SchemaTest extends KernelTestBase {
     $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
     $this->assertIdentical($index_exists, FALSE, 'Fake index does not exists');
     // Add index.
-    db_add_index('test_table', 'test_field', array('test_field'), $table_specification);
+    db_add_index('test_table', 'test_field', ['test_field'], $table_specification);
     // Test for created index and test for the boolean result of indexExists().
     $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
     $this->assertIdentical($index_exists, TRUE, 'Index created.');
@@ -123,13 +123,13 @@ class SchemaTest extends KernelTestBase {
     // Recreate the table.
     db_create_table('test_table', $table_specification);
     db_field_set_default('test_table', 'test_field', 0);
-    db_add_field('test_table', 'test_serial', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'description' => 'Added column description.'));
+    db_add_field('test_table', 'test_serial', ['type' => 'int', 'not null' => TRUE, 'default' => 0, 'description' => 'Added column description.']);
 
     // Assert that the column comment has been set.
     $this->checkSchemaComment('Added column description.', 'test_table', 'test_serial');
 
     // Change the new field to a serial column.
-    db_change_field('test_table', 'test_serial', 'test_serial', array('type' => 'serial', 'not null' => TRUE, 'description' => 'Changed column description.'), array('primary key' => array('test_serial')));
+    db_change_field('test_table', 'test_serial', 'test_serial', ['type' => 'serial', 'not null' => TRUE, 'description' => 'Changed column description.'], ['primary key' => ['test_serial']]);
 
     // Assert that the column comment has been set.
     $this->checkSchemaComment('Changed column description.', 'test_table', 'test_serial');
@@ -145,22 +145,22 @@ class SchemaTest extends KernelTestBase {
 
     // Test renaming of keys and constraints.
     db_drop_table('test_table');
-    $table_specification = array(
-      'fields' => array(
-        'id'  => array(
+    $table_specification = [
+      'fields' => [
+        'id'  => [
           'type' => 'serial',
           'not null' => TRUE,
-        ),
-        'test_field'  => array(
+        ],
+        'test_field'  => [
           'type' => 'int',
           'default' => 0,
-        ),
-      ),
-      'primary key' => array('id'),
-      'unique keys' => array(
-        'test_field' => array('test_field'),
-      ),
-    );
+        ],
+      ],
+      'primary key' => ['id'],
+      'unique keys' => [
+        'test_field' => ['test_field'],
+      ],
+    ];
     db_create_table('test_table', $table_specification);
 
     // Tests for indexes are Database specific.
@@ -215,18 +215,18 @@ class SchemaTest extends KernelTestBase {
     }
 
     // Use database specific data type and ensure that table is created.
-    $table_specification = array(
+    $table_specification = [
       'description' => 'Schema table description.',
-      'fields' => array(
-        'timestamp'  => array(
+      'fields' => [
+        'timestamp'  => [
           'mysql_type' => 'timestamp',
           'pgsql_type' => 'timestamp',
           'sqlite_type' => 'datetime',
           'not null' => FALSE,
           'default' => NULL,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     try {
       db_create_table('test_timestamp', $table_specification);
     }
@@ -244,52 +244,52 @@ class SchemaTest extends KernelTestBase {
     if (Database::getConnection()->databaseType() != 'mysql') {
       return;
     }
-    $table_specification = array(
-      'fields' => array(
-        'id'  => array(
+    $table_specification = [
+      'fields' => [
+        'id'  => [
           'type' => 'int',
           'default' => NULL,
-        ),
-        'test_field_text'  => array(
+        ],
+        'test_field_text'  => [
           'type' => 'text',
           'not null' => TRUE,
-        ),
-        'test_field_string_long'  => array(
+        ],
+        'test_field_string_long'  => [
           'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
-        ),
-        'test_field_string_ascii_long'  => array(
+        ],
+        'test_field_string_ascii_long'  => [
           'type' => 'varchar_ascii',
           'length' => 255,
-        ),
-        'test_field_string_short'  => array(
+        ],
+        'test_field_string_short'  => [
           'type' => 'varchar',
           'length' => 128,
           'not null' => TRUE,
-        ),
-      ),
-      'indexes' => array(
-        'test_regular' => array(
+        ],
+      ],
+      'indexes' => [
+        'test_regular' => [
           'test_field_text',
           'test_field_string_long',
           'test_field_string_ascii_long',
           'test_field_string_short',
-        ),
-        'test_length' => array(
-          array('test_field_text', 128),
-          array('test_field_string_long', 128),
-          array('test_field_string_ascii_long', 128),
-          array('test_field_string_short', 128),
-        ),
-        'test_mixed' => array(
-          array('test_field_text', 200),
+        ],
+        'test_length' => [
+          ['test_field_text', 128],
+          ['test_field_string_long', 128],
+          ['test_field_string_ascii_long', 128],
+          ['test_field_string_short', 128],
+        ],
+        'test_mixed' => [
+          ['test_field_text', 200],
           'test_field_string_long',
-          array('test_field_string_ascii_long', 200),
+          ['test_field_string_ascii_long', 200],
           'test_field_string_short',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     db_create_table('test_table_index_length', $table_specification);
 
     $schema_object = Database::getConnection()->schema();
@@ -331,29 +331,29 @@ class SchemaTest extends KernelTestBase {
 
     // Get index information.
     $results = db_query('SHOW INDEX FROM {test_table_index_length}');
-    $expected_lengths = array(
-      'test_regular' => array(
+    $expected_lengths = [
+      'test_regular' => [
         'test_field_text' => 191,
         'test_field_string_long' => 191,
         'test_field_string_ascii_long' => NULL,
         'test_field_string_short' => NULL,
-      ),
-      'test_length' => array(
+      ],
+      'test_length' => [
         'test_field_text' => 128,
         'test_field_string_long' => 128,
         'test_field_string_ascii_long' => 128,
         'test_field_string_short' => NULL,
-      ),
-      'test_mixed' => array(
+      ],
+      'test_mixed' => [
         'test_field_text' => 191,
         'test_field_string_long' => 191,
         'test_field_string_ascii_long' => 200,
         'test_field_string_short' => NULL,
-      ),
-      'test_separate' => array(
+      ],
+      'test_separate' => [
         'test_field_text' => 191,
-      ),
-    );
+      ],
+    ];
 
     // Count the number of columns defined in the indexes.
     $column_count = 0;
@@ -382,7 +382,7 @@ class SchemaTest extends KernelTestBase {
   function tryInsert($table = 'test_table') {
     try {
       db_insert($table)
-        ->fields(array('id' => mt_rand(10, 20)))
+        ->fields(['id' => mt_rand(10, 20)])
         ->execute();
       return TRUE;
     }
@@ -419,18 +419,18 @@ class SchemaTest extends KernelTestBase {
   function testUnsignedColumns() {
     // First create the table with just a serial column.
     $table_name = 'unsigned_table';
-    $table_spec = array(
-      'fields' => array('serial_column' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE)),
-      'primary key' => array('serial_column'),
-    );
+    $table_spec = [
+      'fields' => ['serial_column' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE]],
+      'primary key' => ['serial_column'],
+    ];
     db_create_table($table_name, $table_spec);
 
     // Now set up columns for the other types.
-    $types = array('int', 'float', 'numeric');
+    $types = ['int', 'float', 'numeric'];
     foreach ($types as $type) {
-      $column_spec = array('type' => $type, 'unsigned' => TRUE);
+      $column_spec = ['type' => $type, 'unsigned' => TRUE];
       if ($type == 'numeric') {
-        $column_spec += array('precision' => 10, 'scale' => 0);
+        $column_spec += ['precision' => 10, 'scale' => 0];
       }
       $column_name = $type . '_column';
       $table_spec['fields'][$column_name] = $column_spec;
@@ -439,8 +439,8 @@ class SchemaTest extends KernelTestBase {
 
     // Finally, check each column and try to insert invalid values into them.
     foreach ($table_spec['fields'] as $column_name => $column_spec) {
-      $this->assertTrue(db_field_exists($table_name, $column_name), format_string('Unsigned @type column was created.', array('@type' => $column_spec['type'])));
-      $this->assertFalse($this->tryUnsignedInsert($table_name, $column_name), format_string('Unsigned @type column rejected a negative value.', array('@type' => $column_spec['type'])));
+      $this->assertTrue(db_field_exists($table_name, $column_name), format_string('Unsigned @type column was created.', ['@type' => $column_spec['type']]));
+      $this->assertFalse($this->tryUnsignedInsert($table_name, $column_name), format_string('Unsigned @type column rejected a negative value.', ['@type' => $column_spec['type']]));
     }
   }
 
@@ -458,7 +458,7 @@ class SchemaTest extends KernelTestBase {
   function tryUnsignedInsert($table_name, $column_name) {
     try {
       db_insert($table_name)
-        ->fields(array($column_name => -1))
+        ->fields([$column_name => -1])
         ->execute();
       return TRUE;
     }
@@ -472,20 +472,20 @@ class SchemaTest extends KernelTestBase {
    */
   function testSchemaAddField() {
     // Test varchar types.
-    foreach (array(1, 32, 128, 256, 512) as $length) {
-      $base_field_spec = array(
+    foreach ([1, 32, 128, 256, 512] as $length) {
+      $base_field_spec = [
         'type' => 'varchar',
         'length' => $length,
-      );
-      $variations = array(
-        array('not null' => FALSE),
-        array('not null' => FALSE, 'default' => '7'),
-        array('not null' => FALSE, 'default' => substr('"thing"', 0, $length)),
-        array('not null' => FALSE, 'default' => substr("\"'hing", 0, $length)),
-        array('not null' => TRUE, 'initial' => 'd'),
-        array('not null' => FALSE, 'default' => NULL),
-        array('not null' => TRUE, 'initial' => 'd', 'default' => '7'),
-      );
+      ];
+      $variations = [
+        ['not null' => FALSE],
+        ['not null' => FALSE, 'default' => '7'],
+        ['not null' => FALSE, 'default' => substr('"thing"', 0, $length)],
+        ['not null' => FALSE, 'default' => substr("\"'hing", 0, $length)],
+        ['not null' => TRUE, 'initial' => 'd'],
+        ['not null' => FALSE, 'default' => NULL],
+        ['not null' => TRUE, 'initial' => 'd', 'default' => '7'],
+      ];
 
       foreach ($variations as $variation) {
         $field_spec = $variation + $base_field_spec;
@@ -494,19 +494,19 @@ class SchemaTest extends KernelTestBase {
     }
 
     // Test int and float types.
-    foreach (array('int', 'float') as $type) {
-      foreach (array('tiny', 'small', 'medium', 'normal', 'big') as $size) {
-        $base_field_spec = array(
+    foreach (['int', 'float'] as $type) {
+      foreach (['tiny', 'small', 'medium', 'normal', 'big'] as $size) {
+        $base_field_spec = [
           'type' => $type,
           'size' => $size,
-        );
-        $variations = array(
-          array('not null' => FALSE),
-          array('not null' => FALSE, 'default' => 7),
-          array('not null' => TRUE, 'initial' => 1),
-          array('not null' => TRUE, 'initial' => 1, 'default' => 7),
-          array('not null' => TRUE, 'initial_from_field' => 'serial_column'),
-        );
+        ];
+        $variations = [
+          ['not null' => FALSE],
+          ['not null' => FALSE, 'default' => 7],
+          ['not null' => TRUE, 'initial' => 1],
+          ['not null' => TRUE, 'initial' => 1, 'default' => 7],
+          ['not null' => TRUE, 'initial_from_field' => 'serial_column'],
+        ];
 
         foreach ($variations as $variation) {
           $field_spec = $variation + $base_field_spec;
@@ -516,25 +516,25 @@ class SchemaTest extends KernelTestBase {
     }
 
     // Test numeric types.
-    foreach (array(1, 5, 10, 40, 65) as $precision) {
-      foreach (array(0, 2, 10, 30) as $scale) {
+    foreach ([1, 5, 10, 40, 65] as $precision) {
+      foreach ([0, 2, 10, 30] as $scale) {
         // Skip combinations where precision is smaller than scale.
         if ($precision <= $scale) {
           continue;
         }
 
-        $base_field_spec = array(
+        $base_field_spec = [
           'type' => 'numeric',
           'scale' => $scale,
           'precision' => $precision,
-        );
-        $variations = array(
-          array('not null' => FALSE),
-          array('not null' => FALSE, 'default' => 7),
-          array('not null' => TRUE, 'initial' => 1),
-          array('not null' => TRUE, 'initial' => 1, 'default' => 7),
-          array('not null' => TRUE, 'initial_from_field' => 'serial_column'),
-        );
+        ];
+        $variations = [
+          ['not null' => FALSE],
+          ['not null' => FALSE, 'default' => 7],
+          ['not null' => TRUE, 'initial' => 1],
+          ['not null' => TRUE, 'initial' => 1, 'default' => 7],
+          ['not null' => TRUE, 'initial_from_field' => 'serial_column'],
+        ];
 
         foreach ($variations as $variation) {
           $field_spec = $variation + $base_field_spec;
@@ -556,15 +556,15 @@ class SchemaTest extends KernelTestBase {
   protected function assertFieldAdditionRemoval($field_spec) {
     // Try creating the field on a new table.
     $table_name = 'test_table_' . ($this->counter++);
-    $table_spec = array(
-      'fields' => array(
-        'serial_column' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+    $table_spec = [
+      'fields' => [
+        'serial_column' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
         'test_field' => $field_spec,
-      ),
-      'primary key' => array('serial_column'),
-    );
+      ],
+      'primary key' => ['serial_column'],
+    ];
     db_create_table($table_name, $table_spec);
-    $this->pass(format_string('Table %table created.', array('%table' => $table_name)));
+    $this->pass(format_string('Table %table created.', ['%table' => $table_name]));
 
     // Check the characteristics of the field.
     $this->assertFieldCharacteristics($table_name, 'test_field', $field_spec);
@@ -574,24 +574,24 @@ class SchemaTest extends KernelTestBase {
 
     // Try adding a field to an existing table.
     $table_name = 'test_table_' . ($this->counter++);
-    $table_spec = array(
-      'fields' => array(
-        'serial_column' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-      ),
-      'primary key' => array('serial_column'),
-    );
+    $table_spec = [
+      'fields' => [
+        'serial_column' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      ],
+      'primary key' => ['serial_column'],
+    ];
     db_create_table($table_name, $table_spec);
-    $this->pass(format_string('Table %table created.', array('%table' => $table_name)));
+    $this->pass(format_string('Table %table created.', ['%table' => $table_name]));
 
     // Insert some rows to the table to test the handling of initial values.
     for ($i = 0; $i < 3; $i++) {
       db_insert($table_name)
-        ->useDefaults(array('serial_column'))
+        ->useDefaults(['serial_column'])
         ->execute();
     }
 
     db_add_field($table_name, 'test_field', $field_spec);
-    $this->pass(format_string('Column %column created.', array('%column' => 'test_field')));
+    $this->pass(format_string('Column %column created.', ['%column' => 'test_field']));
 
     // Check the characteristics of the field.
     $this->assertFieldCharacteristics($table_name, 'test_field', $field_spec);
@@ -614,7 +614,7 @@ class SchemaTest extends KernelTestBase {
     if (isset($field_spec['initial'])) {
       // There should be no row with a value different then $field_spec['initial'].
       $count = db_select($table_name)
-        ->fields($table_name, array('serial_column'))
+        ->fields($table_name, ['serial_column'])
         ->condition($field_name, $field_spec['initial'], '<>')
         ->countQuery()
         ->execute()
@@ -627,7 +627,7 @@ class SchemaTest extends KernelTestBase {
       // There should be no row with a value different than
       // $field_spec['initial_from_field'].
       $count = db_select($table_name)
-        ->fields($table_name, array('serial_column'))
+        ->fields($table_name, ['serial_column'])
         ->where($table_name . '.' . $field_spec['initial_from_field'] . ' <> ' . $table_name . '.' . $field_name)
         ->countQuery()
         ->execute()
@@ -639,10 +639,10 @@ class SchemaTest extends KernelTestBase {
     if (isset($field_spec['default'])) {
       // Try inserting a row, and check the resulting value of the new column.
       $id = db_insert($table_name)
-        ->useDefaults(array('serial_column'))
+        ->useDefaults(['serial_column'])
         ->execute();
       $field_value = db_select($table_name)
-        ->fields($table_name, array($field_name))
+        ->fields($table_name, [$field_name])
         ->condition('serial_column', $id)
         ->execute()
         ->fetchField();
@@ -654,14 +654,14 @@ class SchemaTest extends KernelTestBase {
    * Tests changing columns between types.
    */
   function testSchemaChangeField() {
-    $field_specs = array(
-      array('type' => 'int', 'size' => 'normal', 'not null' => FALSE),
-      array('type' => 'int', 'size' => 'normal', 'not null' => TRUE, 'initial' => 1, 'default' => 17),
-      array('type' => 'float', 'size' => 'normal', 'not null' => FALSE),
-      array('type' => 'float', 'size' => 'normal', 'not null' => TRUE, 'initial' => 1, 'default' => 7.3),
-      array('type' => 'numeric', 'scale' => 2, 'precision' => 10, 'not null' => FALSE),
-      array('type' => 'numeric', 'scale' => 2, 'precision' => 10, 'not null' => TRUE, 'initial' => 1, 'default' => 7),
-    );
+    $field_specs = [
+      ['type' => 'int', 'size' => 'normal', 'not null' => FALSE],
+      ['type' => 'int', 'size' => 'normal', 'not null' => TRUE, 'initial' => 1, 'default' => 17],
+      ['type' => 'float', 'size' => 'normal', 'not null' => FALSE],
+      ['type' => 'float', 'size' => 'normal', 'not null' => TRUE, 'initial' => 1, 'default' => 7.3],
+      ['type' => 'numeric', 'scale' => 2, 'precision' => 10, 'not null' => FALSE],
+      ['type' => 'numeric', 'scale' => 2, 'precision' => 10, 'not null' => TRUE, 'initial' => 1, 'default' => 7],
+    ];
 
     foreach ($field_specs as $i => $old_spec) {
       foreach ($field_specs as $j => $new_spec) {
@@ -673,12 +673,12 @@ class SchemaTest extends KernelTestBase {
       }
     }
 
-    $field_specs = array(
-      array('type' => 'varchar_ascii', 'length' => '255'),
-      array('type' => 'varchar', 'length' => '255'),
-      array('type' => 'text'),
-      array('type' => 'blob', 'size' => 'big'),
-    );
+    $field_specs = [
+      ['type' => 'varchar_ascii', 'length' => '255'],
+      ['type' => 'varchar', 'length' => '255'],
+      ['type' => 'text'],
+      ['type' => 'blob', 'size' => 'big'],
+    ];
 
     foreach ($field_specs as $i => $old_spec) {
       foreach ($field_specs as $j => $new_spec) {
@@ -705,15 +705,15 @@ class SchemaTest extends KernelTestBase {
    */
   protected function assertFieldChange($old_spec, $new_spec, $test_data = NULL) {
     $table_name = 'test_table_' . ($this->counter++);
-    $table_spec = array(
-      'fields' => array(
-        'serial_column' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+    $table_spec = [
+      'fields' => [
+        'serial_column' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
         'test_field' => $old_spec,
-      ),
-      'primary key' => array('serial_column'),
-    );
+      ],
+      'primary key' => ['serial_column'],
+    ];
     db_create_table($table_name, $table_spec);
-    $this->pass(format_string('Table %table created.', array('%table' => $table_name)));
+    $this->pass(format_string('Table %table created.', ['%table' => $table_name]));
 
     // Check the characteristics of the field.
     $this->assertFieldCharacteristics($table_name, 'test_field', $old_spec);

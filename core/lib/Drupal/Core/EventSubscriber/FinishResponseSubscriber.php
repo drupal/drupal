@@ -298,10 +298,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::RESPONSE][] = array('onRespond');
+    $events[KernelEvents::RESPONSE][] = ['onRespond'];
     // There is no specific reason for choosing 16 beside it should be executed
     // before ::onRespond().
-    $events[KernelEvents::RESPONSE][] = array('onAllResponds', 16);
+    $events[KernelEvents::RESPONSE][] = ['onAllResponds', 16];
     return $events;
   }
 

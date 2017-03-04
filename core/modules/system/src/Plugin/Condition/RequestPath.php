@@ -94,22 +94,22 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array('pages' => '') + parent::defaultConfiguration();
+    return ['pages' => ''] + parent::defaultConfiguration();
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['pages'] = array(
+    $form['pages'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Pages'),
       '#default_value' => $this->configuration['pages'],
-      '#description' => $this->t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. An example path is %user-wildcard for every user page. %front is the front page.", array(
+      '#description' => $this->t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. An example path is %user-wildcard for every user page. %front is the front page.", [
         '%user-wildcard' => '/user/*',
         '%front' => '<front>',
-      )),
-    );
+      ]),
+    ];
     return parent::buildConfigurationForm($form, $form_state);
   }
 
@@ -128,9 +128,9 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
     $pages = array_map('trim', explode("\n", $this->configuration['pages']));
     $pages = implode(', ', $pages);
     if (!empty($this->configuration['negate'])) {
-      return $this->t('Do not return true on the following pages: @pages', array('@pages' => $pages));
+      return $this->t('Do not return true on the following pages: @pages', ['@pages' => $pages]);
     }
-    return $this->t('Return true on the following pages: @pages', array('@pages' => $pages));
+    return $this->t('Return true on the following pages: @pages', ['@pages' => $pages]);
   }
 
   /**

@@ -21,7 +21,7 @@ class SearchConfigurationRankings extends ProcessPluginBase {
    * Generate the configuration rankings.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $return = array();
+    $return = [];
     foreach ($row->getSource() as $name => $rank) {
       if (substr($name, 0, 10) == 'node_rank_' && $rank) {
         $return[substr($name, 10)] = $rank;

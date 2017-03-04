@@ -76,36 +76,36 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     $config = $this->configuration;
 
     $defaults = $this->defaultConfiguration();
-    $form['menu_levels'] = array(
+    $form['menu_levels'] = [
       '#type' => 'details',
       '#title' => $this->t('Menu levels'),
       // Open if not set to defaults.
       '#open' => $defaults['level'] !== $config['level'] || $defaults['depth'] !== $config['depth'],
       '#process' => [[get_class(), 'processMenuLevelParents']],
-    );
+    ];
 
     $options = range(0, $this->menuTree->maxDepth());
     unset($options[0]);
 
-    $form['menu_levels']['level'] = array(
+    $form['menu_levels']['level'] = [
       '#type' => 'select',
       '#title' => $this->t('Initial visibility level'),
       '#default_value' => $config['level'],
       '#options' => $options,
       '#description' => $this->t('The menu is only visible if the menu item for the current page is at this level or below it. Use level 1 to always display this menu.'),
       '#required' => TRUE,
-    );
+    ];
 
     $options[0] = $this->t('Unlimited');
 
-    $form['menu_levels']['depth'] = array(
+    $form['menu_levels']['depth'] = [
       '#type' => 'select',
       '#title' => $this->t('Number of levels to display'),
       '#default_value' => $config['depth'],
       '#options' => $options,
       '#description' => $this->t('This maximum number includes the initial level.'),
       '#required' => TRUE,
-    );
+    ];
 
     return $form;
   }
@@ -148,10 +148,10 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     }
 
     $tree = $this->menuTree->load($menu_name, $parameters);
-    $manipulators = array(
-      array('callable' => 'menu.default_tree_manipulators:checkAccess'),
-      array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
-    );
+    $manipulators = [
+      ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+      ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+    ];
     $tree = $this->menuTree->transform($tree, $manipulators);
     return $this->menuTree->build($tree);
   }

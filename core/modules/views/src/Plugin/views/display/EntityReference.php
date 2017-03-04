@@ -47,9 +47,9 @@ class EntityReference extends DisplayPluginBase {
 
     // Force the style plugin to 'entity_reference_style' and the row plugin to
     // 'fields'.
-    $options['style']['contains']['type'] = array('default' => 'entity_reference');
+    $options['style']['contains']['type'] = ['default' => 'entity_reference'];
     $options['defaults']['default']['style'] = FALSE;
-    $options['row']['contains']['type'] = array('default' => 'entity_reference');
+    $options['row']['contains']['type'] = ['default' => 'entity_reference'];
     $options['defaults']['default']['row'] = FALSE;
 
     // Make sure the query is not cached.
@@ -165,14 +165,14 @@ class EntityReference extends DisplayPluginBase {
     // Verify that search fields are set up.
     $style = $this->getOption('style');
     if (!isset($style['options']['search_fields'])) {
-      $errors[] = $this->t('Display "@display" needs a selected search fields to work properly. See the settings for the Entity Reference list format.', array('@display' => $this->display['display_title']));
+      $errors[] = $this->t('Display "@display" needs a selected search fields to work properly. See the settings for the Entity Reference list format.', ['@display' => $this->display['display_title']]);
     }
     else {
       // Verify that the search fields used actually exist.
       $fields = array_keys($this->handlers['field']);
       foreach ($style['options']['search_fields'] as $field_alias => $enabled) {
         if ($enabled && !in_array($field_alias, $fields)) {
-          $errors[] = $this->t('Display "@display" uses field %field as search field, but the field is no longer present. See the settings for the Entity Reference list format.', array('@display' => $this->display['display_title'], '%field' => $field_alias));
+          $errors[] = $this->t('Display "@display" uses field %field as search field, but the field is no longer present. See the settings for the Entity Reference list format.', ['@display' => $this->display['display_title'], '%field' => $field_alias]);
         }
       }
     }

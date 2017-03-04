@@ -63,11 +63,11 @@ class AliasStorage implements AliasStorageInterface {
       throw new \InvalidArgumentException(sprintf('Alias path %s has to start with a slash.', $alias));
     }
 
-    $fields = array(
+    $fields = [
       'source' => $source,
       'alias' => $alias,
       'langcode' => $langcode,
-    );
+    ];
 
     // Insert or update the alias.
     if (empty($pid)) {
@@ -99,7 +99,7 @@ class AliasStorage implements AliasStorageInterface {
       // Fetch the current values so that an update hook can identify what
       // exactly changed.
       try {
-        $original = $this->connection->query('SELECT source, alias, langcode FROM {url_alias} WHERE pid = :pid', array(':pid' => $pid))
+        $original = $this->connection->query('SELECT source, alias, langcode FROM {url_alias} WHERE pid = :pid', [':pid' => $pid])
           ->fetchAssoc();
       }
       catch (\Exception $e) {
@@ -116,7 +116,7 @@ class AliasStorage implements AliasStorageInterface {
     }
     if ($pid) {
       // @todo Switch to using an event for this instead of a hook.
-      $this->moduleHandler->invokeAll('path_' . $operation, array($fields));
+      $this->moduleHandler->invokeAll('path_' . $operation, [$fields]);
       Cache::invalidateTags(['route_match']);
       return $fields;
     }
@@ -174,7 +174,7 @@ class AliasStorage implements AliasStorageInterface {
       $deleted = FALSE;
     }
     // @todo Switch to using an event for this instead of a hook.
-    $this->moduleHandler->invokeAll('path_delete', array($path));
+    $this->moduleHandler->invokeAll('path_delete', [$path]);
     Cache::invalidateTags(['route_match']);
     return $deleted;
   }
@@ -313,7 +313,7 @@ class AliasStorage implements AliasStorageInterface {
    */
   public function languageAliasExists() {
     try {
-      return (bool) $this->connection->queryRange('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED))->fetchField();
+      return (bool) $this->connection->queryRange('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, [':langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED])->fetchField();
     }
     catch (\Exception $e) {
       $this->catchException($e);

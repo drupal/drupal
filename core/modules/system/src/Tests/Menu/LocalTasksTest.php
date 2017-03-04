@@ -48,19 +48,19 @@ class LocalTasksTest extends WebTestBase {
    *   secondary. Defaults to 0.
    */
   protected function assertLocalTasks(array $routes, $level = 0) {
-    $elements = $this->xpath('//*[contains(@class, :class)]//a', array(
+    $elements = $this->xpath('//*[contains(@class, :class)]//a', [
       ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
-    ));
+    ]);
     $this->assertTrue(count($elements), 'Local tasks found.');
     foreach ($routes as $index => $route_info) {
       list($route_name, $route_parameters) = $route_info;
       $expected = Url::fromRoute($route_name, $route_parameters)->toString();
       $method = ($elements[$index]['href'] == $expected ? 'pass' : 'fail');
-      $this->{$method}(format_string('Task @number href @value equals @expected.', array(
+      $this->{$method}(format_string('Task @number href @value equals @expected.', [
         '@number' => $index + 1,
         '@value' => (string) $elements[$index]['href'],
         '@expected' => $expected,
-      )));
+      ]));
     }
   }
 
@@ -89,9 +89,9 @@ class LocalTasksTest extends WebTestBase {
    *   secondary. Defaults to 0.
    */
   protected function assertNoLocalTasks($level = 0) {
-    $elements = $this->xpath('//*[contains(@class, :class)]//a', array(
+    $elements = $this->xpath('//*[contains(@class, :class)]//a', [
       ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
-    ));
+    ]);
     $this->assertFalse(count($elements), 'Local tasks not found.');
   }
 
@@ -176,7 +176,7 @@ class LocalTasksTest extends WebTestBase {
 
     // Test that we we correctly apply the active class to tabs where one of the
     // request attributes is upcast to an entity object.
-    $entity = \Drupal::entityManager()->getStorage('entity_test')->create(array('bundle' => 'test'));
+    $entity = \Drupal::entityManager()->getStorage('entity_test')->create(['bundle' => 'test']);
     $entity->save();
 
     $this->drupalGet(Url::fromRoute('menu_test.local_task_test_upcasting_sub1', ['entity_test' => '1']));

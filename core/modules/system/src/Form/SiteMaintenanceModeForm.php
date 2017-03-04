@@ -75,17 +75,17 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
     $config = $this->config('system.maintenance');
     $permissions = $this->permissionHandler->getPermissions();
     $permission_label = $permissions['access site in maintenance mode']['title'];
-    $form['maintenance_mode'] = array(
+    $form['maintenance_mode'] = [
       '#type' => 'checkbox',
       '#title' => t('Put site into maintenance mode'),
       '#default_value' => $this->state->get('system.maintenance_mode'),
-      '#description' => t('Visitors will only see the maintenance mode message. Only users with the "@permission-label" <a href=":permissions-url">permission</a> will be able to access the site. Authorized users can log in directly via the <a href=":user-login">user login</a> page.', array('@permission-label' => $permission_label, ':permissions-url' => $this->url('user.admin_permissions'), ':user-login' => $this->url('user.login'))),
-    );
-    $form['maintenance_mode_message'] = array(
+      '#description' => t('Visitors will only see the maintenance mode message. Only users with the "@permission-label" <a href=":permissions-url">permission</a> will be able to access the site. Authorized users can log in directly via the <a href=":user-login">user login</a> page.', ['@permission-label' => $permission_label, ':permissions-url' => $this->url('user.admin_permissions'), ':user-login' => $this->url('user.login')]),
+    ];
+    $form['maintenance_mode_message'] = [
       '#type' => 'textarea',
       '#title' => t('Message to display when in maintenance mode'),
       '#default_value' => $config->get('message'),
-    );
+    ];
 
     return parent::buildForm($form, $form_state);
   }

@@ -13,7 +13,7 @@ class ConfigTest extends BrowserTestBase {
 
   protected function setUp(){
     parent::setUp();
-    $this->drupalLogin ($this->drupalCreateUser(array('administer site configuration')));
+    $this->drupalLogin ($this->drupalCreateUser(['administer site configuration']));
   }
 
   /**
@@ -26,10 +26,10 @@ class ConfigTest extends BrowserTestBase {
     // The respective directories are created automatically
     // upon form submission.
     $file_path = $this->publicFilesDirectory;
-    $fields = array(
+    $fields = [
       'file_temporary_path' => $file_path . '/file_config_page_test/temporary',
       'file_default_scheme' => 'private',
-    );
+    ];
 
     // Check that public and private can be selected as default scheme.
     $this->assertText('Public local files served by the webserver.');
@@ -43,10 +43,10 @@ class ConfigTest extends BrowserTestBase {
 
     // Remove the private path, rebuild the container and verify that private
     // can no longer be selected in the UI.
-    $settings['settings']['file_private_path'] = (object) array(
+    $settings['settings']['file_private_path'] = (object) [
       'value' => '',
       'required' => TRUE,
-    );
+    ];
     $this->writeSettings($settings);
     $this->rebuildContainer();
 

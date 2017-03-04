@@ -29,7 +29,7 @@ class Zip implements ArchiverInterface {
   public function __construct($file_path) {
     $this->zip = new \ZipArchive();
     if ($this->zip->open($file_path) !== TRUE) {
-      throw new ArchiverException(t('Cannot open %file_path', array('%file_path' => $file_path)));
+      throw new ArchiverException(t('Cannot open %file_path', ['%file_path' => $file_path]));
     }
   }
 
@@ -54,7 +54,7 @@ class Zip implements ArchiverInterface {
   /**
    * {@inheritdoc}
    */
-  public function extract($path, array $files = array()) {
+  public function extract($path, array $files = []) {
     if ($files) {
       $this->zip->extractTo($path, $files);
     }
@@ -69,7 +69,7 @@ class Zip implements ArchiverInterface {
    * {@inheritdoc}
    */
   public function listContents() {
-    $files = array();
+    $files = [];
     for ($i = 0; $i < $this->zip->numFiles; $i++) {
       $files[] = $this->zip->getNameIndex($i);
     }

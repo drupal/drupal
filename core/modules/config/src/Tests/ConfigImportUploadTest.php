@@ -23,12 +23,12 @@ class ConfigImportUploadTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('config');
+  public static $modules = ['config'];
 
   protected function setUp() {
     parent::setUp();
 
-    $this->webUser = $this->drupalCreateUser(array('import configuration'));
+    $this->webUser = $this->drupalCreateUser(['import configuration']);
     $this->drupalLogin($this->webUser);
   }
 
@@ -42,7 +42,7 @@ class ConfigImportUploadTest extends WebTestBase {
 
     // Attempt to upload a non-tar file.
     $text_file = current($this->drupalGetTestFiles('text'));
-    $edit = array('files[import_tarball]' => drupal_realpath($text_file->uri));
+    $edit = ['files[import_tarball]' => drupal_realpath($text_file->uri)];
     $this->drupalPostForm('admin/config/development/configuration/full/import', $edit, t('Upload'));
     $this->assertText(t('Could not extract the contents of the tar file'));
 

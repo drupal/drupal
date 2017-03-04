@@ -65,7 +65,7 @@ class ContactSitewideTest extends WebTestBase {
       ->save();
 
     // Set settings.
-    $edit = array();
+    $edit = [];
     $edit['contact_default_status'] = TRUE;
     $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
@@ -77,11 +77,11 @@ class ContactSitewideTest extends WebTestBase {
     // Cannot use ::assertNoLinkByHref as it does partial url matching and with
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
     // @todo: See https://www.drupal.org/node/2031223 for the above.
-    $edit_link = $this->xpath('//a[@href=:href]', array(
-      ':href' => \Drupal::url('entity.contact_form.edit_form', array('contact_form' => 'personal'))
-    ));
+    $edit_link = $this->xpath('//a[@href=:href]', [
+      ':href' => \Drupal::url('entity.contact_form.edit_form', ['contact_form' => 'personal'])
+    ]);
     $this->assertTrue(empty($edit_link), format_string('No link containing href %href found.',
-      array('%href' => 'admin/structure/contact/manage/personal')
+      ['%href' => 'admin/structure/contact/manage/personal']
     ));
     $this->assertNoLinkByHref('admin/structure/contact/manage/personal/delete');
 
@@ -95,7 +95,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertNoLinkByHref('admin/structure/contact/manage/feedback');
 
     // Ensure that the contact form won't be shown without forms.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access site-wide contact form']);
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertResponse(404);
@@ -110,10 +110,10 @@ class ContactSitewideTest extends WebTestBase {
 
     // Add forms.
     // Test invalid recipients.
-    $invalid_recipients = array('invalid', 'invalid@', 'invalid@site.', '@site.', '@site.com');
+    $invalid_recipients = ['invalid', 'invalid@', 'invalid@site.', '@site.', '@site.com'];
     foreach ($invalid_recipients as $invalid_recipient) {
       $this->addContactForm($this->randomMachineName(16), $this->randomMachineName(16), $invalid_recipient, '', FALSE);
-      $this->assertRaw(t('%recipient is an invalid email address.', array('%recipient' => $invalid_recipient)));
+      $this->assertRaw(t('%recipient is an invalid email address.', ['%recipient' => $invalid_recipient]));
     }
 
     // Test validation of empty form and recipients fields.
@@ -123,24 +123,24 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertText(t('Recipients field is required.'));
 
     // Test validation of max_length machine name.
-    $recipients = array('simpletest&@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
+    $recipients = ['simpletest&@example.com', 'simpletest2@example.com', 'simpletest3@example.com'];
     $max_length = EntityTypeInterface::BUNDLE_MAX_LENGTH;
     $max_length_exceeded = $max_length + 1;
-    $this->addContactForm($id = Unicode::strtolower($this->randomMachineName($max_length_exceeded)), $label = $this->randomMachineName($max_length_exceeded), implode(',', array($recipients[0])), '', TRUE);
-    $this->assertText(format_string('Machine-readable name cannot be longer than @max characters but is currently @exceeded characters long.', array('@max' => $max_length, '@exceeded' => $max_length_exceeded)));
-    $this->addContactForm($id = Unicode::strtolower($this->randomMachineName($max_length)), $label = $this->randomMachineName($max_length), implode(',', array($recipients[0])), '', TRUE);
-    $this->assertText(t('Contact form @label has been added.', array('@label' => $label)));
+    $this->addContactForm($id = Unicode::strtolower($this->randomMachineName($max_length_exceeded)), $label = $this->randomMachineName($max_length_exceeded), implode(',', [$recipients[0]]), '', TRUE);
+    $this->assertText(format_string('Machine-readable name cannot be longer than @max characters but is currently @exceeded characters long.', ['@max' => $max_length, '@exceeded' => $max_length_exceeded]));
+    $this->addContactForm($id = Unicode::strtolower($this->randomMachineName($max_length)), $label = $this->randomMachineName($max_length), implode(',', [$recipients[0]]), '', TRUE);
+    $this->assertText(t('Contact form @label has been added.', ['@label' => $label]));
 
     // Verify that the creation message contains a link to a contact form.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'contact/'));
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'contact/']);
     $this->assert(isset($view_link), 'The message area contains a link to a contact form.');
 
     // Create first valid form.
-    $this->addContactForm($id = Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0])), '', TRUE);
-    $this->assertText(t('Contact form @label has been added.', array('@label' => $label)));
+    $this->addContactForm($id = Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', [$recipients[0]]), '', TRUE);
+    $this->assertText(t('Contact form @label has been added.', ['@label' => $label]));
 
     // Verify that the creation message contains a link to a contact form.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'contact/'));
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'contact/']);
     $this->assert(isset($view_link), 'The message area contains a link to a contact form.');
 
     // Check that the form was created in site default language.
@@ -156,13 +156,13 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertEscaped($recipients[0]);
 
     // Test update contact form.
-    $this->updateContactForm($id, $label = $this->randomMachineName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomMachineName(30), FALSE, 'Your message has been sent.', '/user');
+    $this->updateContactForm($id, $label = $this->randomMachineName(16), $recipients_str = implode(',', [$recipients[0], $recipients[1]]), $reply = $this->randomMachineName(30), FALSE, 'Your message has been sent.', '/user');
     $config = $this->config('contact.form.' . $id)->get();
     $this->assertEqual($config['label'], $label);
-    $this->assertEqual($config['recipients'], array($recipients[0], $recipients[1]));
+    $this->assertEqual($config['recipients'], [$recipients[0], $recipients[1]]);
     $this->assertEqual($config['reply'], $reply);
     $this->assertNotEqual($id, $this->config('contact.settings')->get('default_form'));
-    $this->assertText(t('Contact form @label has been updated.', array('@label' => $label)));
+    $this->assertText(t('Contact form @label has been updated.', ['@label' => $label]));
     // Ensure the label is displayed on the contact page for this form.
     $this->drupalGet('contact/' . $id);
     $this->assertText($label);
@@ -171,7 +171,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->config('contact.settings')->set('default_form', $id)->save();
 
     // Ensure that the contact form is shown without a form selection input.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access site-wide contact form']);
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertText(t('Your email address'));
@@ -179,26 +179,26 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Add more forms.
-    $this->addContactForm(Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
-    $this->assertText(t('Contact form @label has been added.', array('@label' => $label)));
+    $this->addContactForm(Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', [$recipients[0], $recipients[1]]), '', FALSE);
+    $this->assertText(t('Contact form @label has been added.', ['@label' => $label]));
 
-    $this->addContactForm($name = Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
-    $this->assertText(t('Contact form @label has been added.', array('@label' => $label)));
+    $this->addContactForm($name = Unicode::strtolower($this->randomMachineName(16)), $label = $this->randomMachineName(16), implode(',', [$recipients[0], $recipients[1], $recipients[2]]), '', FALSE);
+    $this->assertText(t('Contact form @label has been added.', ['@label' => $label]));
 
     // Try adding a form that already exists.
     $this->addContactForm($name, $label, '', '', FALSE);
-    $this->assertNoText(t('Contact form @label has been added.', array('@label' => $label)));
+    $this->assertNoText(t('Contact form @label has been added.', ['@label' => $label]));
     $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
 
     $this->drupalLogout();
 
     // Check to see that anonymous user cannot see contact page without permission.
-    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
+    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, ['access site-wide contact form']);
     $this->drupalGet('contact');
     $this->assertResponse(403);
 
     // Give anonymous user permission and see that page is viewable.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access site-wide contact form']);
     $this->drupalGet('contact');
     $this->assertResponse(200);
 
@@ -210,7 +210,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertText(t('Your email address field is required.'));
 
     $this->submitContact($this->randomMachineName(16), $invalid_recipients[0], $this->randomMachineName(16), $id, $this->randomMachineName(64));
-    $this->assertRaw(t('The email address %mail is not valid.', array('%mail' => 'invalid')));
+    $this->assertRaw(t('The email address %mail is not valid.', ['%mail' => 'invalid']));
 
     $this->submitContact($this->randomMachineName(16), $recipients[0], '', $id, $this->randomMachineName(64));
     $this->assertText(t('Subject field is required.'));
@@ -238,7 +238,7 @@ class ContactSitewideTest extends WebTestBase {
     }
     // Submit contact form one over limit.
     $this->submitContact($this->randomMachineName(16), $recipients[0], $this->randomMachineName(16), $id, $this->randomMachineName(64));
-    $this->assertRaw(t('You cannot send more than %number messages in 10 min. Try again later.', array('%number' => $this->config('contact.settings')->get('flood.limit'))));
+    $this->assertRaw(t('You cannot send more than %number messages in 10 min. Try again later.', ['%number' => $this->config('contact.settings')->get('flood.limit')]));
 
     // Test listing controller.
     $this->drupalLogin($admin_user);
@@ -246,7 +246,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->deleteContactForms();
 
     $label = $this->randomMachineName(16);
-    $recipients = implode(',', array($recipients[0], $recipients[1], $recipients[2]));
+    $recipients = implode(',', [$recipients[0], $recipients[1], $recipients[2]]);
     $contact_form = Unicode::strtolower($this->randomMachineName(16));
     $this->addContactForm($contact_form, $label, $recipients, '', FALSE);
     $this->drupalGet('admin/structure/contact');
@@ -293,15 +293,15 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertText($field_label);
 
     // Submit the contact form and verify the content.
-    $edit = array(
+    $edit = [
       'subject[0][value]' => $this->randomMachineName(),
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Send message'));
     $mails = $this->drupalGetMails();
     $mail = array_pop($mails);
-    $this->assertEqual($mail['subject'], t('[@label] @subject', array('@label' => $label, '@subject' => $edit['subject[0][value]'])));
+    $this->assertEqual($mail['subject'], t('[@label] @subject', ['@label' => $label, '@subject' => $edit['subject[0][value]']]));
     $this->assertTrue(strpos($mail['body'], $field_label));
     $this->assertTrue(strpos($mail['body'], $edit[$field_name . '[0][value]']));
 
@@ -315,11 +315,11 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalGet('contact/' . $contact_form);
 
     // Submit the contact form and verify the content.
-    $edit = array(
+    $edit = [
       'subject[0][value]' => $this->randomMachineName(),
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Send message'));
     $this->assertText('Thanks for your submission.');
     $this->assertUrl('user/' . $admin_user->id());
@@ -335,13 +335,13 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalGet('contact/' . $contact_form);
 
     // Submit the contact form and verify the content.
-    $edit = array(
+    $edit = [
       'subject[0][value]' => $this->randomMachineName(),
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Send message'));
-    $result = $this->xpath('//div[@role=:role]', array(':role' => 'contentinfo'));
+    $result = $this->xpath('//div[@role=:role]', [':role' => 'contentinfo']);
     $this->assertEqual(count($result), 0, 'Messages not found.');
     $this->assertUrl('user/' . $admin_user->id());
   }
@@ -369,7 +369,7 @@ class ContactSitewideTest extends WebTestBase {
 
     // Log the current user out in order to test the name and email fields.
     $this->drupalLogout();
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access site-wide contact form']);
 
     // Test the auto-reply for form 'foo'.
     $email = $this->randomMachineName(32) . '@example.com';
@@ -377,7 +377,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->submitContact($this->randomMachineName(16), $email, $subject, 'foo', $this->randomString(128));
 
     // We are testing the auto-reply, so there should be one email going to the sender.
-    $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
+    $captured_emails = $this->drupalGetMails(['id' => 'contact_page_autoreply', 'to' => $email]);
     $this->assertEqual(count($captured_emails), 1);
     $this->assertEqual(trim($captured_emails[0]['body']), trim(MailFormatHelper::htmlToText($foo_autoreply)));
 
@@ -386,14 +386,14 @@ class ContactSitewideTest extends WebTestBase {
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'bar', $this->randomString(128));
 
     // Auto-reply for form 'bar' should result in one auto-reply email to the sender.
-    $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
+    $captured_emails = $this->drupalGetMails(['id' => 'contact_page_autoreply', 'to' => $email]);
     $this->assertEqual(count($captured_emails), 1);
     $this->assertEqual(trim($captured_emails[0]['body']), trim(MailFormatHelper::htmlToText($bar_autoreply)));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomMachineName(32) . '@example.com';
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'no_autoreply', $this->randomString(128));
-    $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
+    $captured_emails = $this->drupalGetMails(['id' => 'contact_page_autoreply', 'to' => $email]);
     $this->assertEqual(count($captured_emails), 0);
 
     // Verify that the current error message doesn't show, that the auto-reply
@@ -432,7 +432,7 @@ class ContactSitewideTest extends WebTestBase {
    *   Array of third party settings to be added to the posted form data.
    */
   function addContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $third_party_settings = []) {
-    $edit = array();
+    $edit = [];
     $edit['label'] = $label;
     $edit['id'] = $id;
     $edit['message'] = $message;
@@ -464,7 +464,7 @@ class ContactSitewideTest extends WebTestBase {
    *   The path where user will be redirect after this form has been submitted..
    */
   function updateContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $redirect = '/') {
-    $edit = array();
+    $edit = [];
     $edit['label'] = $label;
     $edit['recipients'] = $recipients;
     $edit['reply'] = $reply;
@@ -489,7 +489,7 @@ class ContactSitewideTest extends WebTestBase {
    *   The message body.
    */
   function submitContact($name, $mail, $subject, $id, $message) {
-    $edit = array();
+    $edit = [];
     $edit['name'] = $name;
     $edit['mail'] = $mail;
     $edit['subject[0][value]'] = $subject;
@@ -514,9 +514,9 @@ class ContactSitewideTest extends WebTestBase {
         $this->assertResponse(403);
       }
       else {
-        $this->drupalPostForm("admin/structure/contact/manage/$id/delete", array(), t('Delete'));
-        $this->assertRaw(t('The contact form %label has been deleted.', array('%label' => $contact_form->label())));
-        $this->assertFalse(ContactForm::load($id), format_string('Form %contact_form not found', array('%contact_form' => $contact_form->label())));
+        $this->drupalPostForm("admin/structure/contact/manage/$id/delete", [], t('Delete'));
+        $this->assertRaw(t('The contact form %label has been deleted.', ['%label' => $contact_form->label()]));
+        $this->assertFalse(ContactForm::load($id), format_string('Form %contact_form not found', ['%contact_form' => $contact_form->label()]));
       }
     }
   }

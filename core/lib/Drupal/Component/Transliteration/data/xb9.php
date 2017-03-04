@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'luk', 'lut', 'lup', 'luh', 'lwo', 'lwog', 'lwokk', 'lwogs', 'lwon', 'lwonj', 'lwonh', 'lwod', 'lwol', 'lwolg', 'lwolm', 'lwolb',
   0x10 => 'lwols', 'lwolt', 'lwolp', 'lwolh', 'lwom', 'lwob', 'lwobs', 'lwos', 'lwoss', 'lwong', 'lwoj', 'lwoch', 'lwok', 'lwot', 'lwop', 'lwoh',
   0x20 => 'lwe', 'lweg', 'lwekk', 'lwegs', 'lwen', 'lwenj', 'lwenh', 'lwed', 'lwel', 'lwelg', 'lwelm', 'lwelb', 'lwels', 'lwelt', 'lwelp', 'lwelh',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'mal', 'malg', 'malm', 'malb', 'mals', 'malt', 'malp', 'malh', 'mam', 'mab', 'mabs', 'mas', 'mass', 'mang', 'maj', 'mach',
   0xE0 => 'mak', 'mat', 'map', 'mah', 'mae', 'maeg', 'maekk', 'maegs', 'maen', 'maenj', 'maenh', 'maed', 'mael', 'maelg', 'maelm', 'maelb',
   0xF0 => 'maels', 'maelt', 'maelp', 'maelh', 'maem', 'maeb', 'maebs', 'maes', 'maess', 'maeng', 'maej', 'maech', 'maek', 'maet', 'maep', 'maeh',
-);
+];

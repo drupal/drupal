@@ -20,8 +20,8 @@ class FieldNormalizer extends SerializationFieldNormalizer {
   /**
    * {@inheritdoc}
    */
-  public function normalize($field, $format = NULL, array $context = array()) {
-    $normalized_field_items = array();
+  public function normalize($field, $format = NULL, array $context = []) {
+    $normalized_field_items = [];
 
     // Get the field definition.
     $entity = $field->getEntity();
@@ -65,7 +65,7 @@ class FieldNormalizer extends SerializationFieldNormalizer {
    *   The array of normalized field items.
    */
   protected function normalizeFieldItems($field, $format, $context) {
-    $normalized_field_items = array();
+    $normalized_field_items = [];
     if (!$field->isEmpty()) {
       foreach ($field as $field_item) {
         $normalized_field_items[] = $this->serializer->normalize($field_item, $format, $context);

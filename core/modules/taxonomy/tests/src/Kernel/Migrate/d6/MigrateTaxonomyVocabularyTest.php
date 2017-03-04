@@ -15,7 +15,7 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('taxonomy');
+  public static $modules = ['taxonomy'];
 
   /**
    * {@inheritdoc}
@@ -32,7 +32,7 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal6TestBase {
     for ($i = 0; $i < 3; $i++) {
       $j = $i + 1;
       $vocabulary = Vocabulary::load("vocabulary_{$j}_i_{$i}_");
-      $this->assertIdentical($this->getMigration('d6_taxonomy_vocabulary')->getIdMap()->lookupDestinationID(array($j)), array($vocabulary->id()));
+      $this->assertIdentical($this->getMigration('d6_taxonomy_vocabulary')->getIdMap()->lookupDestinationID([$j]), [$vocabulary->id()]);
       $this->assertIdentical("vocabulary $j (i=$i)", $vocabulary->label());
       $this->assertIdentical("description of vocabulary $j (i=$i)", $vocabulary->getDescription());
       $this->assertIdentical($i, $vocabulary->getHierarchy());

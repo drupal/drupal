@@ -18,13 +18,13 @@ class HandlerFieldUserNameTest extends UserTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_views_handler_field_user_name');
+  public static $testViews = ['test_views_handler_field_user_name'];
 
   public function testUserName() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
-    $new_user = $this->drupalCreateUser(array('access user profiles'));
+    $new_user = $this->drupalCreateUser(['access user profiles']);
     $this->drupalLogin($new_user);
 
     // Set defaults.

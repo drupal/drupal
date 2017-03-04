@@ -17,7 +17,7 @@ class SiteMaintenanceTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   protected $adminUser;
 
@@ -29,9 +29,9 @@ class SiteMaintenanceTest extends WebTestBase {
     $this->config('system.performance')->set('js.preprocess', 1)->save();
 
     // Create a user allowed to access site in maintenance mode.
-    $this->user = $this->drupalCreateUser(array('access site in maintenance mode'));
+    $this->user = $this->drupalCreateUser(['access site in maintenance mode']);
     // Create an administrative user.
-    $this->adminUser = $this->drupalCreateUser(array('administer site configuration', 'access site in maintenance mode'));
+    $this->adminUser = $this->drupalCreateUser(['administer site configuration', 'access site in maintenance mode']);
     $this->drupalLogin($this->adminUser);
   }
 
@@ -44,27 +44,27 @@ class SiteMaintenanceTest extends WebTestBase {
     $permission_handler = $this->container->get('user.permissions');
     $permissions = $permission_handler->getPermissions();
     $permission_label = $permissions['access site in maintenance mode']['title'];
-    $permission_message = t('Visitors will only see the maintenance mode message. Only users with the "@permission-label" <a href=":permissions-url">permission</a> will be able to access the site. Authorized users can log in directly via the <a href=":user-login">user login</a> page.', array('@permission-label' => $permission_label, ':permissions-url' => \Drupal::url('user.admin_permissions'), ':user-login' => \Drupal::url('user.login')));
+    $permission_message = t('Visitors will only see the maintenance mode message. Only users with the "@permission-label" <a href=":permissions-url">permission</a> will be able to access the site. Authorized users can log in directly via the <a href=":user-login">user login</a> page.', ['@permission-label' => $permission_label, ':permissions-url' => \Drupal::url('user.admin_permissions'), ':user-login' => \Drupal::url('user.login')]);
     $this->drupalGet(Url::fromRoute('system.site_maintenance_mode'));
     $this->assertRaw($permission_message, 'Found the permission message.');
 
     $this->drupalGet(Url::fromRoute('user.page'));
     // JS should be aggregated, so drupal.js is not in the page source.
-    $links = $this->xpath('//script[contains(@src, :href)]', array(':href' => '/core/misc/drupal.js'));
+    $links = $this->xpath('//script[contains(@src, :href)]', [':href' => '/core/misc/drupal.js']);
     $this->assertFalse(isset($links[0]), 'script /core/misc/drupal.js not in page');
     // Turn on maintenance mode.
-    $edit = array(
+    $edit = [
       'maintenance_mode' => 1,
-    );
+    ];
     $this->drupalPostForm('admin/config/development/maintenance', $edit, t('Save configuration'));
 
-    $admin_message = t('Operating in maintenance mode. <a href=":url">Go online.</a>', array(':url' => \Drupal::url('system.site_maintenance_mode')));
+    $admin_message = t('Operating in maintenance mode. <a href=":url">Go online.</a>', [':url' => \Drupal::url('system.site_maintenance_mode')]);
     $user_message = t('Operating in maintenance mode.');
-    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => $this->config('system.site')->get('name')));
+    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', ['@site' => $this->config('system.site')->get('name')]);
 
     $this->drupalGet(Url::fromRoute('user.page'));
     // JS should not be aggregated, so drupal.js is expected in the page source.
-    $links = $this->xpath('//script[contains(@src, :href)]', array(':href' => '/core/misc/drupal.js'));
+    $links = $this->xpath('//script[contains(@src, :href)]', [':href' => '/core/misc/drupal.js']);
     $this->assertTrue(isset($links[0]), 'script /core/misc/drupal.js in page');
     $this->assertRaw($admin_message, 'Found the site maintenance mode message.');
 
@@ -88,10 +88,10 @@ class SiteMaintenanceTest extends WebTestBase {
 
     // Log in user and verify that maintenance mode message is displayed
     // directly after login.
-    $edit = array(
+    $edit = [
       'name' => $this->user->getUsername(),
       'pass' => $this->user->pass_raw,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Log in'));
     $this->assertText($user_message);
 
@@ -102,9 +102,9 @@ class SiteMaintenanceTest extends WebTestBase {
     $this->assertNoRaw($admin_message, 'Site maintenance mode message not displayed.');
 
     $offline_message = 'Sorry, not online.';
-    $edit = array(
+    $edit = [
       'maintenance_mode_message' => $offline_message,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
 
     // Logout and verify that custom site offline message is displayed.
@@ -118,20 +118,20 @@ class SiteMaintenanceTest extends WebTestBase {
     $this->assertText(t('Username or email address'), 'Anonymous users can access user/password');
 
     // Submit password reset form.
-    $edit = array(
+    $edit = [
       'name' => $this->user->getUsername(),
-    );
+    ];
     $this->drupalPostForm('user/password', $edit, t('Submit'));
     $mails = $this->drupalGetMails();
     $start = strpos($mails[0]['body'], 'user/reset/' . $this->user->id());
     $path = substr($mails[0]['body'], $start, 66 + strlen($this->user->id()));
 
     // Log in with temporary login link.
-    $this->drupalPostForm($path, array(), t('Log in'));
+    $this->drupalPostForm($path, [], t('Log in'));
     $this->assertText($user_message);
 
     // Regression test to check if title displays in Bartik on maintenance page.
-    \Drupal::service('theme_handler')->install(array('bartik'));
+    \Drupal::service('theme_handler')->install(['bartik']);
     $this->config('system.theme')->set('default', 'bartik')->save();
 
     // Logout and verify that offline message is displayed in Bartik.

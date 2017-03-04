@@ -13,26 +13,26 @@ use Drupal\user\RoleInterface;
  * Implements hook_requirements().
  */
 function node_requirements($phase) {
-  $requirements = array();
+  $requirements = [];
   if ($phase === 'runtime') {
     // Only show rebuild button if there are either 0, or 2 or more, rows
     // in the {node_access} table, or if there are modules that
     // implement hook_node_grants().
     $grant_count = \Drupal::entityManager()->getAccessControlHandler('node')->countGrants();
     if ($grant_count != 1 || count(\Drupal::moduleHandler()->getImplementations('node_grants')) > 0) {
-      $value = \Drupal::translation()->formatPlural($grant_count, 'One permission in use', '@count permissions in use', array('@count' => $grant_count));
+      $value = \Drupal::translation()->formatPlural($grant_count, 'One permission in use', '@count permissions in use', ['@count' => $grant_count]);
     }
     else {
       $value = t('Disabled');
     }
 
-    $requirements['node_access'] = array(
+    $requirements['node_access'] = [
       'title' => t('Node Access Permissions'),
       'value' => $value,
-      'description' => t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to content and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed, content will automatically use the new permissions. <a href=":rebuild">Rebuild permissions</a>', array(
+      'description' => t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to content and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed, content will automatically use the new permissions. <a href=":rebuild">Rebuild permissions</a>', [
         ':rebuild' => \Drupal::url('node.configure_rebuild_confirm'),
-      )),
-    );
+      ]),
+    ];
   }
   return $requirements;
 }
@@ -41,78 +41,78 @@ function node_requirements($phase) {
  * Implements hook_schema().
  */
 function node_schema() {
-  $schema['node_access'] = array(
+  $schema['node_access'] = [
     'description' => 'Identifies which realm/grant pairs a user must possess in order to view, update, or delete specific nodes.',
-    'fields' => array(
-      'nid' => array(
+    'fields' => [
+      'nid' => [
         'description' => 'The {node}.nid this record affects.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'langcode' => array(
+      ],
+      'langcode' => [
         'description' => 'The {language}.langcode of this node.',
         'type' => 'varchar_ascii',
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'fallback' => array(
+      ],
+      'fallback' => [
         'description' => 'Boolean indicating whether this record should be used as a fallback if a language condition is not provided.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 1,
         'size' => 'tiny',
-      ),
-      'gid' => array(
+      ],
+      'gid' => [
         'description' => "The grant ID a user must possess in the specified realm to gain this row's privileges on the node.",
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'realm' => array(
+      ],
+      'realm' => [
         'description' => 'The realm in which the user must possess the grant ID. Each node access node can define one or more realms.',
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'grant_view' => array(
+      ],
+      'grant_view' => [
         'description' => 'Boolean indicating whether a user with the realm/grant pair can view this node.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-      ),
-      'grant_update' => array(
+      ],
+      'grant_update' => [
         'description' => 'Boolean indicating whether a user with the realm/grant pair can edit this node.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-      ),
-      'grant_delete' => array(
+      ],
+      'grant_delete' => [
         'description' => 'Boolean indicating whether a user with the realm/grant pair can delete this node.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-      ),
-    ),
-    'primary key' => array('nid', 'gid', 'realm', 'langcode'),
-    'foreign keys' => array(
-      'affected_node' => array(
+      ],
+    ],
+    'primary key' => ['nid', 'gid', 'realm', 'langcode'],
+    'foreign keys' => [
+      'affected_node' => [
         'table' => 'node',
-        'columns' => array('nid' => 'nid'),
-      ),
-    ),
-  );
+        'columns' => ['nid' => 'nid'],
+      ],
+    ],
+  ];
 
   return $schema;
 }
@@ -129,20 +129,20 @@ function node_install() {
   // these permissions. Doing so also allows tests to continue to operate as
   // expected without first having to manually grant these default permissions.
   if (\Drupal::moduleHandler()->moduleExists('user')) {
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access content'));
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access content'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access content']);
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access content']);
   }
 
   // Populate the node access table.
   db_insert('node_access')
-    ->fields(array(
+    ->fields([
       'nid' => 0,
       'gid' => 0,
       'realm' => 'all',
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
-    ))
+    ])
     ->execute();
 }
 
@@ -216,7 +216,7 @@ function node_update_8003() {
   //   changes. SqlContentEntityStorageSchema::onEntityTypeUpdate() should be
   //   fixed to automatically handle this.
   //   See https://www.drupal.org/node/2554245.
-  foreach (array('status', 'uid') as $field_name) {
+  foreach (['status', 'uid'] as $field_name) {
     $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition($field_name, 'node'));
   }
 }

@@ -19,13 +19,13 @@ class GarbageCollectionTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   protected function setUp() {
     parent::setUp();
 
     // These additional tables are necessary due to the call to system_cron().
-    $this->installSchema('system', array('key_value_expire'));
+    $this->installSchema('system', ['key_value_expire']);
   }
 
   /**
@@ -44,13 +44,13 @@ class GarbageCollectionTest extends KernelTestBase {
     // Manually expire the data.
     for ($i = 0; $i <= 3; $i++) {
       db_merge('key_value_expire')
-        ->keys(array(
+        ->keys([
             'name' => 'key_' . $i,
             'collection' => $collection,
-          ))
-        ->fields(array(
+          ])
+        ->fields([
             'expire' => REQUEST_TIME - 1,
-          ))
+          ])
         ->execute();
     }
 
@@ -62,9 +62,9 @@ class GarbageCollectionTest extends KernelTestBase {
     // Query the database and confirm that the stale records were deleted.
     $result = db_query(
       'SELECT name, value FROM {key_value_expire} WHERE collection = :collection',
-      array(
+      [
         ':collection' => $collection,
-      ))->fetchAll();
+      ])->fetchAll();
     $this->assertIdentical(count($result), 1, 'Only one item remains after garbage collection');
 
   }

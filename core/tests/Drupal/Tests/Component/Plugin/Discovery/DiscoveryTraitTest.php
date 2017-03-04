@@ -19,10 +19,10 @@ class DiscoveryTraitTest extends UnitTestCase {
    *   - Plugin ID to get, passed to doGetDefinition().
    */
   public function providerDoGetDefinition() {
-    return array(
+    return [
       ['definition', ['plugin_name' => 'definition'], 'plugin_name'],
       [NULL, ['plugin_name' => 'definition'], 'bad_plugin_name'],
-    );
+    ];
   }
 
   /**
@@ -51,9 +51,9 @@ class DiscoveryTraitTest extends UnitTestCase {
    *   - Plugin ID to get, passed to doGetDefinition().
    */
   public function providerDoGetDefinitionException() {
-    return array(
+    return [
       [FALSE, ['plugin_name' => 'definition'], 'bad_plugin_name'],
-    );
+    ];
   }
 
   /**
@@ -123,10 +123,10 @@ class DiscoveryTraitTest extends UnitTestCase {
    *   - Plugin ID to look for.
    */
   public function providerHasDefinition() {
-    return array(
+    return [
       [TRUE, 'valid'],
       [FALSE, 'not_valid'],
-    );
+    ];
   }
 
   /**
@@ -135,16 +135,16 @@ class DiscoveryTraitTest extends UnitTestCase {
    */
   public function testHasDefinition($expected, $plugin_id) {
     $trait = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\DiscoveryTrait')
-      ->setMethods(array('getDefinition'))
+      ->setMethods(['getDefinition'])
       ->getMockForTrait();
     // Set up our mocked getDefinition() to return TRUE for 'valid' and FALSE
     // for 'not_valid'.
     $trait->expects($this->once())
       ->method('getDefinition')
-      ->will($this->returnValueMap(array(
+      ->will($this->returnValueMap([
         ['valid', FALSE, TRUE],
         ['not_valid', FALSE, FALSE],
-      )));
+      ]));
     // Call hasDefinition().
     $this->assertSame(
       $expected,

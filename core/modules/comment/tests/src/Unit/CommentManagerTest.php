@@ -32,13 +32,13 @@ class CommentManagerTest extends UnitTestCase {
 
     $entity_manager->expects($this->once())
       ->method('getFieldMapByFieldType')
-      ->will($this->returnValue(array(
-        'node' => array(
-          'field_foobar' => array(
+      ->will($this->returnValue([
+        'node' => [
+          'field_foobar' => [
             'type' => 'comment',
-          ),
-        ),
-      )));
+          ],
+        ],
+      ]));
 
     $entity_manager->expects($this->any())
       ->method('getDefinition')

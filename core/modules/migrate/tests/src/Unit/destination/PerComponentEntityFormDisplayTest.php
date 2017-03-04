@@ -22,13 +22,13 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
    * Tests the entity display import method.
    */
   public function testImport() {
-    $values = array(
+    $values = [
       'entity_type' => 'entity_type_test',
       'bundle' => 'bundle_test',
       'form_mode' => 'form_mode_test',
       'field_name' => 'field_name_test',
-      'options' => array('test setting'),
-    );
+      'options' => ['test setting'],
+    ];
     $row = new Row();
     foreach ($values as $key => $value) {
       $row->setDestinationProperty($key, $value);
@@ -38,14 +38,14 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
       ->getMock();
     $entity->expects($this->once())
       ->method('setComponent')
-      ->with('field_name_test', array('test setting'))
+      ->with('field_name_test', ['test setting'])
       ->will($this->returnSelf());
     $entity->expects($this->once())
       ->method('save')
       ->with();
     $plugin = new TestPerComponentEntityFormDisplay($entity);
-    $this->assertSame($plugin->import($row), array('entity_type_test', 'bundle_test', 'form_mode_test', 'field_name_test'));
-    $this->assertSame($plugin->getTestValues(), array('entity_type_test', 'bundle_test', 'form_mode_test'));
+    $this->assertSame($plugin->import($row), ['entity_type_test', 'bundle_test', 'form_mode_test', 'field_name_test']);
+    $this->assertSame($plugin->getTestValues(), ['entity_type_test', 'bundle_test', 'form_mode_test']);
   }
 
 }

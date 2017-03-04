@@ -17,7 +17,7 @@ class AlterTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'form_test');
+  public static $modules = ['block', 'form_test'];
 
   /**
    * Tests execution order of hook_form_alter() and hook_form_FORM_ID_alter().
@@ -26,13 +26,13 @@ class AlterTest extends WebTestBase {
     $this->drupalGet('form-test/alter');
     // Ensure that the order is first by module, then for a given module, the
     // id-specific one after the generic one.
-    $expected = array(
+    $expected = [
       'block_form_form_test_alter_form_alter() executed.',
       'form_test_form_alter() executed.',
       'form_test_form_form_test_alter_form_alter() executed.',
       'system_form_form_test_alter_form_alter() executed.',
-    );
-    $content = preg_replace('/\s+/', ' ', Xss::filter($this->content, array()));
+    ];
+    $content = preg_replace('/\s+/', ' ', Xss::filter($this->content, []));
     $this->assert(strpos($content, implode(' ', $expected)) !== FALSE, 'Form alter hooks executed in the expected order.');
   }
 

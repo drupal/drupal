@@ -22,14 +22,14 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'filter');
+  public static $modules = ['node', 'filter'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('filter', 'node'));
+    $this->installConfig(['filter', 'node']);
 
     $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
     $node_type->save();
@@ -40,10 +40,10 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
    * Creates a node, then tests the tokens generated from it.
    */
   function testNodeTokenReplacement() {
-    $url_options = array(
+    $url_options = [
       'absolute' => TRUE,
       'language' => $this->interfaceLanguage,
-    );
+    ];
 
     // Create a user and a node.
     $account = $this->createUser();
@@ -58,7 +58,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     $node->save();
 
     // Generate and test tokens.
-    $tests = array();
+    $tests = [];
     $tests['[node:nid]'] = $node->id();
     $tests['[node:vid]'] = $node->getRevisionId();
     $tests['[node:type]'] = 'article';
@@ -72,8 +72,8 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     $tests['[node:author]'] = $account->getUsername();
     $tests['[node:author:uid]'] = $node->getOwnerId();
     $tests['[node:author:name]'] = $account->getUsername();
-    $tests['[node:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getCreatedTime(), array('langcode' => $this->interfaceLanguage->getId()));
-    $tests['[node:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime(), array('langcode' => $this->interfaceLanguage->getId()));
+    $tests['[node:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getCreatedTime(), ['langcode' => $this->interfaceLanguage->getId()]);
+    $tests['[node:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime(), ['langcode' => $this->interfaceLanguage->getId()]);
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($node);
 
@@ -101,7 +101,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
 
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
-      $output = $this->tokenService->replace($input, array('node' => $node), array('langcode' => $this->interfaceLanguage->getId()), $bubbleable_metadata);
+      $output = $this->tokenService->replace($input, ['node' => $node], ['langcode' => $this->interfaceLanguage->getId()], $bubbleable_metadata);
       $this->assertEqual($output, $expected, format_string('Node token %token replaced.', ['%token' => $input]));
       $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
     }
@@ -116,14 +116,14 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     $node->save();
 
     // Generate and test token - use full body as expected value.
-    $tests = array();
+    $tests = [];
     $tests['[node:summary]'] = $node->body->processed;
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated for node without a summary.');
 
     foreach ($tests as $input => $expected) {
-      $output = $this->tokenService->replace($input, array('node' => $node), array('language' => $this->interfaceLanguage));
+      $output = $this->tokenService->replace($input, ['node' => $node], ['language' => $this->interfaceLanguage]);
       $this->assertEqual($output, $expected, new FormattableMarkup('Node token %token replaced for node without a summary.', ['%token' => $input]));
     }
   }

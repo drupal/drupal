@@ -30,7 +30,7 @@ abstract class ConfigurableSearchPluginBase extends SearchPluginBase implements 
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array();
+    return [];
   }
 
   /**
@@ -57,7 +57,7 @@ abstract class ConfigurableSearchPluginBase extends SearchPluginBase implements 
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    return array();
+    return [];
   }
 
   /**

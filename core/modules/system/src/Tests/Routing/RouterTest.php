@@ -21,7 +21,7 @@ class RouterTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('router_test');
+  public static $modules = ['router_test'];
 
   /**
    * Confirms that our FinishResponseSubscriber logic works properly.
@@ -133,7 +133,7 @@ class RouterTest extends WebTestBase {
    */
   public function testControllerPlaceholders() {
     // Test with 0 and a random value.
-    $values = array("0", $this->randomMachineName());
+    $values = ["0", $this->randomMachineName()];
     foreach ($values as $value) {
       $this->drupalGet('router_test/test3/' . $value);
       $this->assertResponse(200);
@@ -289,7 +289,7 @@ class RouterTest extends WebTestBase {
    * Tests that routes no longer exist for a module that has been uninstalled.
    */
   public function testRouterUninstallInstall() {
-    \Drupal::service('module_installer')->uninstall(array('router_test'));
+    \Drupal::service('module_installer')->uninstall(['router_test']);
     \Drupal::service('router.builder')->rebuild();
     try {
       \Drupal::service('router.route_provider')->getRouteByName('router_test.1');
@@ -299,7 +299,7 @@ class RouterTest extends WebTestBase {
       $this->pass('Route was delete on uninstall.');
     }
     // Install the module again.
-    \Drupal::service('module_installer')->install(array('router_test'));
+    \Drupal::service('module_installer')->install(['router_test']);
     \Drupal::service('router.builder')->rebuild();
     $route = \Drupal::service('router.route_provider')->getRouteByName('router_test.1');
     $this->assertNotNull($route, 'Route exists after module installation');

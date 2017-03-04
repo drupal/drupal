@@ -19,7 +19,7 @@ class Config extends DrupalSqlBase {
    */
   public function query() {
     $query = $this->select('config', 'c')
-      ->fields('c', array('collection', 'name', 'data'));
+      ->fields('c', ['collection', 'name', 'data']);
     if (!empty($this->configuration['collections'])) {
       $query->condition('collection', (array) $this->configuration['collections'], 'IN');
     }

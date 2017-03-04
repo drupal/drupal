@@ -35,7 +35,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'language', 'content_translation', 'node', 'datetime', 'field_ui', 'help');
+  public static $modules = ['block', 'language', 'content_translation', 'node', 'datetime', 'field_ui', 'help'];
 
   /**
    * The profile to install as a basis for testing.
@@ -50,11 +50,11 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     parent::setUp();
 
     // Ensure the help message is shown even with prefixed paths.
-    $this->drupalPlaceBlock('help_block', array('region' => 'content'));
+    $this->drupalPlaceBlock('help_block', ['region' => 'content']);
 
     // Display the language selector.
     $this->drupalLogin($this->administrator);
-    $edit = array('language_configuration[language_alterable]' => TRUE);
+    $edit = ['language_configuration[language_alterable]' => TRUE];
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalLogin($this->translator);
   }
@@ -75,13 +75,13 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->drupalLogin($this->administrator);
     // Delete all fields.
     $this->drupalGet('admin/structure/types/manage/article/fields');
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $this->fieldName . '/delete', array(), t('Delete'));
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_tags/delete', array(), t('Delete'));
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_image/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $this->fieldName . '/delete', [], t('Delete'));
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_tags/delete', [], t('Delete'));
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_image/delete', [], t('Delete'));
 
     // Add a node.
     $default_langcode = $this->langcodes[0];
-    $values[$default_langcode] = array('title' => array(array('value' => $this->randomMachineName())));
+    $values[$default_langcode] = ['title' => [['value' => $this->randomMachineName()]]];
     $entity_id = $this->createEntity($values[$default_langcode], $default_langcode);
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
@@ -91,14 +91,14 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     // Add a content translation.
     $langcode = 'fr';
     $language = ConfigurableLanguage::load($langcode);
-    $values[$langcode] = array('title' => array(array('value' => $this->randomMachineName())));
+    $values[$langcode] = ['title' => [['value' => $this->randomMachineName()]]];
 
     $entity_type_id = $entity->getEntityTypeId();
     $add_url = Url::fromRoute("entity.$entity_type_id.content_translation_add", [
       $entity->getEntityTypeId() => $entity->id(),
       'source' => $default_langcode,
       'target' => $langcode
-    ], array('language' => $language));
+    ], ['language' => $language]);
     $this->drupalPostForm($add_url, $this->getEditValues($values, $langcode), t('Save and unpublish (this translation)'));
 
     $storage->resetCache([$this->entityId]);
@@ -112,28 +112,28 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getTranslatorPermissions() {
-    return array_merge(parent::getTranslatorPermissions(), array('administer nodes', "edit any $this->bundle content"));
+    return array_merge(parent::getTranslatorPermissions(), ['administer nodes', "edit any $this->bundle content"]);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getEditorPermissions() {
-    return array('administer nodes', 'create article content');
+    return ['administer nodes', 'create article content'];
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getAdministratorPermissions() {
-    return array_merge(parent::getAdministratorPermissions(), array('access administration pages', 'administer content types', 'administer node fields', 'access content overview', 'bypass node access', 'administer languages', 'administer themes', 'view the administration theme'));
+    return array_merge(parent::getAdministratorPermissions(), ['access administration pages', 'administer content types', 'administer node fields', 'access content overview', 'bypass node access', 'administer languages', 'administer themes', 'view the administration theme']);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getNewEntityValues($langcode) {
-    return array('title' => array(array('value' => $this->randomMachineName()))) + parent::getNewEntityValues($langcode);
+    return ['title' => [['value' => $this->randomMachineName()]]] + parent::getNewEntityValues($langcode);
   }
 
   /**
@@ -158,18 +158,18 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $entity = $storage->load($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
 
-    $actions = array(
+    $actions = [
       t('Save and keep published'),
       t('Save and unpublish'),
-    );
+    ];
 
     foreach ($actions as $index => $action) {
       // (Un)publish the node translations and check that the translation
       // statuses are (un)published accordingly.
       foreach ($this->langcodes as $langcode) {
-        $options = array('language' => $languages[$langcode]);
+        $options = ['language' => $languages[$langcode]];
         $url = $entity->urlInfo('edit-form', $options);
-        $this->drupalPostForm($url, array(), $action . $this->getFormSubmitSuffix($entity, $langcode), $options);
+        $this->drupalPostForm($url, [], $action . $this->getFormSubmitSuffix($entity, $langcode), $options);
       }
       $storage->resetCache([$this->entityId]);
       $entity = $storage->load($this->entityId);
@@ -192,25 +192,25 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
-    $values = array();
+    $values = [];
 
     // Post different base field information for each translation.
     foreach ($this->langcodes as $langcode) {
       $user = $this->drupalCreateUser();
-      $values[$langcode] = array(
+      $values[$langcode] = [
         'uid' => $user->id(),
         'created' => REQUEST_TIME - mt_rand(0, 1000),
         'sticky' => (bool) mt_rand(0, 1),
         'promote' => (bool) mt_rand(0, 1),
-      );
-      $edit = array(
+      ];
+      $edit = [
         'uid[0][target_id]' => $user->getUsername(),
         'created[0][value][date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'created[0][value][time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
         'sticky[value]' => $values[$langcode]['sticky'],
         'promote[value]' => $values[$langcode]['promote'],
-      );
-      $options = array('language' => $languages[$langcode]);
+      ];
+      $options = ['language' => $languages[$langcode]];
       $url = $entity->urlInfo('edit-form', $options);
       $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode), $options);
     }
@@ -232,11 +232,11 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    */
   public function testTranslationLinkTheme() {
     $this->drupalLogin($this->administrator);
-    $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => $this->langcodes[0]));
+    $article = $this->drupalCreateNode(['type' => 'article', 'langcode' => $this->langcodes[0]]);
 
     // Set up Seven as the admin theme and use it for node editing.
-    $this->container->get('theme_handler')->install(array('seven'));
-    $edit = array();
+    $this->container->get('theme_handler')->install(['seven']);
+    $edit = [];
     $edit['admin_theme'] = 'seven';
     $edit['use_admin_theme'] = TRUE;
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
@@ -259,16 +259,16 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   public function testDisabledBundle() {
     // Create a bundle that does not have translation enabled.
     $disabledBundle = $this->randomMachineName();
-    $this->drupalCreateContentType(array('type' => $disabledBundle, 'name' => $disabledBundle));
+    $this->drupalCreateContentType(['type' => $disabledBundle, 'name' => $disabledBundle]);
 
     // Create a node for each bundle.
-    $node = $this->drupalCreateNode(array(
+    $node = $this->drupalCreateNode([
       'type' => $this->bundle,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
+    ]);
 
     // Make sure that nothing was inserted into the {content_translation} table.
-    $rows = db_query('SELECT nid, count(nid) AS count FROM {node_field_data} WHERE type <> :type GROUP BY nid HAVING count(nid) >= 2', array(':type' => $this->bundle))->fetchAll();
+    $rows = db_query('SELECT nid, count(nid) AS count FROM {node_field_data} WHERE type <> :type GROUP BY nid HAVING count(nid) >= 2', [':type' => $this->bundle])->fetchAll();
     $this->assertEqual(0, count($rows));
 
     // Ensure the translation tab is not accessible.
@@ -287,7 +287,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $node->setPromoted(TRUE);
 
     // Create translations.
-    foreach (array_diff($this->langcodes, array($default_langcode)) as $langcode) {
+    foreach (array_diff($this->langcodes, [$default_langcode]) as $langcode) {
       $values[$langcode] = $this->getNewEntityValues($langcode);
       $translation = $node->addTranslation($langcode, $values[$langcode]);
       // Publish and promote the translation to frontpage.
@@ -297,7 +297,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $node->save();
 
     // Test that the frontpage view displays the correct translations.
-    \Drupal::service('module_installer')->install(array('views'), TRUE);
+    \Drupal::service('module_installer')->install(['views'], TRUE);
     $this->rebuildContainer();
     $this->doTestTranslations('node', $values);
 
@@ -316,7 +316,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     // See also assertTaxonomyPage() in NodeAccessBaseTableTest.
     $node_href = 'node/' . $node->id();
     foreach ($this->langcodes as $langcode) {
-      $this->drupalGet('node', array('language' => \Drupal::languageManager()->getLanguage($langcode)));
+      $this->drupalGet('node', ['language' => \Drupal::languageManager()->getLanguage($langcode)]);
       $num_match_found = 0;
       if ($langcode == 'en') {
         // Site default language does not have langcode prefix in the URL.
@@ -338,7 +338,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     // language.
     $comment_form_href = 'node/' . $node->id() . '#comment-form';
     foreach ($this->langcodes as $langcode) {
-      $this->drupalGet('node', array('language' => \Drupal::languageManager()->getLanguage($langcode)));
+      $this->drupalGet('node', ['language' => \Drupal::languageManager()->getLanguage($langcode)]);
       $num_match_found = 0;
       if ($langcode == 'en') {
         // Site default language does not have langcode prefix in the URL.
@@ -374,8 +374,8 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   protected function doTestTranslations($path, array $values) {
     $languages = $this->container->get('language_manager')->getLanguages();
     foreach ($this->langcodes as $langcode) {
-      $this->drupalGet($path, array('language' => $languages[$langcode]));
-      $this->assertText($values[$langcode]['title'][0]['value'], format_string('The %langcode node translation is correctly displayed.', array('%langcode' => $langcode)));
+      $this->drupalGet($path, ['language' => $languages[$langcode]]);
+      $this->assertText($values[$langcode]['title'][0]['value'], format_string('The %langcode node translation is correctly displayed.', ['%langcode' => $langcode]));
     }
   }
 
@@ -398,8 +398,8 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       foreach ($urls as $alternate_langcode => $language_url) {
         // Retrieve desired link elements from the HTML head.
         $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]',
-          array(':href' => $language_url->toString(), ':hreflang' => $alternate_langcode));
-        $this->assert(isset($links[0]), format_string('The %langcode node translation has the correct alternate hreflang link for %alternate_langcode: %link.', array('%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url->toString())));
+          [':href' => $language_url->toString(), ':hreflang' => $alternate_langcode]);
+        $this->assert(isset($links[0]), format_string('The %langcode node translation has the correct alternate hreflang link for %alternate_langcode: %link.', ['%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url->toString()]));
       }
     }
   }
@@ -446,15 +446,15 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     foreach ($this->langcodes as $langcode) {
       // We only want to test the title for non-english translations.
       if ($langcode != 'en') {
-        $options = array('language' => $languages[$langcode]);
+        $options = ['language' => $languages[$langcode]];
         $url = $entity->urlInfo('edit-form', $options);
         $this->drupalGet($url);
 
-        $title = t('<em>Edit @type</em> @title [%language translation]', array(
+        $title = t('<em>Edit @type</em> @title [%language translation]', [
           '@type' => $type_name,
           '@title' => $entity->getTranslation($langcode)->label(),
           '%language' => $languages[$langcode]->getName(),
-        ));
+        ]);
         $this->assertRaw($title);
       }
     }

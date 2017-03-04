@@ -26,13 +26,13 @@ class Statement extends StatementPrefetch implements StatementInterface {
    *
    * See http://bugs.php.net/bug.php?id=45259 for more details.
    */
-  protected function getStatement($query, &$args = array()) {
+  protected function getStatement($query, &$args = []) {
     if (count($args)) {
       // Check if $args is a simple numeric array.
       if (range(0, count($args) - 1) === array_keys($args)) {
         // In that case, we have unnamed placeholders.
         $count = 0;
-        $new_args = array();
+        $new_args = [];
         foreach ($args as $value) {
           if (is_float($value) || is_int($value)) {
             if (is_float($value)) {
@@ -85,7 +85,7 @@ class Statement extends StatementPrefetch implements StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function execute($args = array(), $options = array()) {
+  public function execute($args = [], $options = []) {
     try {
       $return = parent::execute($args, $options);
     }
@@ -103,7 +103,7 @@ class Statement extends StatementPrefetch implements StatementInterface {
     // In some weird cases, SQLite will prefix some column names by the name
     // of the table. We post-process the data, by renaming the column names
     // using the same convention as MySQL and PostgreSQL.
-    $rename_columns = array();
+    $rename_columns = [];
     foreach ($this->columnNames as $k => $column) {
       // In some SQLite versions, SELECT DISTINCT(field) will return "(field)"
       // instead of "field".

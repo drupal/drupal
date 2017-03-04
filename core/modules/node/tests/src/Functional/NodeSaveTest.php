@@ -23,13 +23,13 @@ class NodeSaveTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_test');
+  public static $modules = ['node_test'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create a user that is allowed to post; we'll use this to test the submission.
-    $web_user = $this->drupalCreateUser(array('create article content'));
+    $web_user = $this->drupalCreateUser(['create article content']);
     $this->drupalLogin($web_user);
     $this->webUser = $web_user;
   }
@@ -51,13 +51,13 @@ class NodeSaveTest extends NodeTestBase {
     $max_nid = reset($nids);
     $test_nid = $max_nid + mt_rand(1000, 1000000);
     $title = $this->randomMachineName(8);
-    $node = array(
+    $node = [
       'title' => $title,
-      'body' => array(array('value' => $this->randomMachineName(32))),
+      'body' => [['value' => $this->randomMachineName(32)]],
       'uid' => $this->webUser->id(),
       'type' => 'article',
       'nid' => $test_nid,
-    );
+    ];
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::create($node);
     $node->enforceIsNew();
@@ -78,11 +78,11 @@ class NodeSaveTest extends NodeTestBase {
    */
   function testTimestamps() {
     // Use the default timestamps.
-    $edit = array(
+    $edit = [
       'uid' => $this->webUser->id(),
       'type' => 'article',
       'title' => $this->randomMachineName(8),
-    );
+    ];
 
     Node::create($edit)->save();
     $node = $this->drupalGetNodeByTitle($edit['title']);
@@ -105,13 +105,13 @@ class NodeSaveTest extends NodeTestBase {
     $this->assertEqual($node->getChangedTime(), 979534800, 'Saving a node uses "changed" timestamp set in presave hook.');
 
     // Programmatically set the timestamps on the node.
-    $edit = array(
+    $edit = [
       'uid' => $this->webUser->id(),
       'type' => 'article',
       'title' => $this->randomMachineName(8),
       'created' => 280299600, // Sun, 19 Nov 1978 05:00:00 GMT
       'changed' => 979534800, // Drupal 1.0 release.
-    );
+    ];
 
     Node::create($edit)->save();
     $node = $this->drupalGetNodeByTitle($edit['title']);
@@ -175,7 +175,7 @@ class NodeSaveTest extends NodeTestBase {
   function testNodeSaveOnInsert() {
     // node_test_node_insert() triggers a save on insert if the title equals
     // 'new'.
-    $node = $this->drupalCreateNode(array('title' => 'new'));
+    $node = $this->drupalCreateNode(['title' => 'new']);
     $this->assertEqual($node->getTitle(), 'Node ' . $node->id(), 'Node saved on node insert.');
   }
 

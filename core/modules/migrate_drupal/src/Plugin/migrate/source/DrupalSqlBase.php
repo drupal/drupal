@@ -59,7 +59,7 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
    */
   public function getSystemData() {
     if (!isset($this->systemData)) {
-      $this->systemData = array();
+      $this->systemData = [];
       try {
         $results = $this->select('system', 's')
           ->fields('s')
@@ -149,7 +149,7 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
   protected function variableGet($name, $default) {
     try {
       $result = $this->select('variable', 'v')
-        ->fields('v', array('value'))
+        ->fields('v', ['value'])
         ->condition('name', $name)
         ->execute()
         ->fetchField();

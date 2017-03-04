@@ -29,7 +29,7 @@ class SearchRankingTest extends SearchTestBase {
    *
    * @var array
    */
-  public static $modules = array('statistics', 'comment');
+  public static $modules = ['statistics', 'comment'];
 
   protected function setUp() {
     parent::setUp();
@@ -38,7 +38,7 @@ class SearchRankingTest extends SearchTestBase {
     $this->nodeSearch = SearchPage::load('node_search');
 
     // Log in with sufficient privileges.
-    $this->drupalLogin($this->drupalCreateUser(array('post comments', 'skip comment approval', 'create page content', 'administer search')));
+    $this->drupalLogin($this->drupalCreateUser(['post comments', 'skip comment approval', 'create page content', 'administer search']));
   }
 
   public function testRankings() {
@@ -46,24 +46,24 @@ class SearchRankingTest extends SearchTestBase {
     $this->addDefaultCommentField('node', 'page');
 
     // Build a list of the rankings to test.
-    $node_ranks = array('sticky', 'promote', 'relevance', 'recent', 'comments', 'views');
+    $node_ranks = ['sticky', 'promote', 'relevance', 'recent', 'comments', 'views'];
 
     // Create nodes for testing.
-    $nodes = array();
+    $nodes = [];
     foreach ($node_ranks as $node_rank) {
-      $settings = array(
+      $settings = [
         'type' => 'page',
-        'comment' => array(array(
+        'comment' => [[
           'status' => CommentItemInterface::HIDDEN,
-        )),
+        ]],
         'title' => 'Drupal rocks',
-        'body' => array(array('value' => "Drupal's search rocks")),
+        'body' => [['value' => "Drupal's search rocks"]],
         // Node is one day old.
         'created' => REQUEST_TIME - 24 * 3600,
         'sticky' => 0,
         'promote' => 0,
-      );
-      foreach (array(0, 1) as $num) {
+      ];
+      foreach ([0, 1] as $num) {
         if ($num == 1) {
           switch ($node_rank) {
             case 'sticky':
@@ -87,7 +87,7 @@ class SearchRankingTest extends SearchTestBase {
     }
 
     // Add a comment to one of the nodes.
-    $edit = array();
+    $edit = [];
     $edit['subject[0][value]'] = 'my comment title';
     $edit['comment_body[0][value]'] = 'some random comment';
     $this->drupalGet('comment/reply/node/' . $nodes['comments'][1]->id() . '/comment');
@@ -102,7 +102,7 @@ class SearchRankingTest extends SearchTestBase {
     // counter for this node.
     $nid = $nodes['views'][1]->id();
     db_insert('node_counter')
-      ->fields(array('totalcount' => 5, 'daycount' => 5, 'timestamp' => REQUEST_TIME, 'nid' => $nid))
+      ->fields(['totalcount' => 5, 'daycount' => 5, 'timestamp' => REQUEST_TIME, 'nid' => $nid])
       ->execute();
 
     // Run cron to update the search index and comment/statistics totals.
@@ -118,7 +118,7 @@ class SearchRankingTest extends SearchTestBase {
     }
 
     // Test each of the possible rankings.
-    $edit = array();
+    $edit = [];
     foreach ($node_ranks as $node_rank) {
       // Enable the ranking we are testing.
       $edit['rankings[' . $node_rank . '][value]'] = 10;
@@ -129,7 +129,7 @@ class SearchRankingTest extends SearchTestBase {
       // Reload the plugin to get the up-to-date values.
       $this->nodeSearch = SearchPage::load('node_search');
       // Do the search and assert the results.
-      $this->nodeSearch->getPlugin()->setSearch('rocks', array(), array());
+      $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
       $set = $this->nodeSearch->getPlugin()->execute();
       $this->assertEqual($set[0]['node']->id(), $nodes[$node_rank][1]->id(), 'Search ranking "' . $node_rank . '" order.');
 
@@ -147,14 +147,14 @@ class SearchRankingTest extends SearchTestBase {
 
     // Try with sticky, then promoted. This is a test for issue
     // https://www.drupal.org/node/771596.
-    $node_ranks = array(
+    $node_ranks = [
       'sticky' => 10,
       'promote' => 1,
       'relevance' => 0,
       'recent' => 0,
       'comments' => 0,
       'views' => 0,
-    );
+    ];
     $configuration = $this->nodeSearch->getPlugin()->getConfiguration();
     foreach ($node_ranks as $var => $value) {
       $configuration['rankings'][$var] = $value;
@@ -164,7 +164,7 @@ class SearchRankingTest extends SearchTestBase {
 
     // Do the search and assert the results. The sticky node should show up
     // first, then the promoted node, then all the rest.
-    $this->nodeSearch->getPlugin()->setSearch('rocks', array(), array());
+    $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
     $set = $this->nodeSearch->getPlugin()->execute();
     $this->assertEqual($set[0]['node']->id(), $nodes['sticky'][1]->id(), 'Search ranking for sticky first worked.');
     $this->assertEqual($set[1]['node']->id(), $nodes['promote'][1]->id(), 'Search ranking for promoted second worked.');
@@ -172,14 +172,14 @@ class SearchRankingTest extends SearchTestBase {
     // Try with recent, then comments. This is a test for issues
     // https://www.drupal.org/node/771596 and
     // https://www.drupal.org/node/303574.
-    $node_ranks = array(
+    $node_ranks = [
       'sticky' => 0,
       'promote' => 0,
       'relevance' => 0,
       'recent' => 10,
       'comments' => 1,
       'views' => 0,
-    );
+    ];
     $configuration = $this->nodeSearch->getPlugin()->getConfiguration();
     foreach ($node_ranks as $var => $value) {
       $configuration['rankings'][$var] = $value;
@@ -189,7 +189,7 @@ class SearchRankingTest extends SearchTestBase {
 
     // Do the search and assert the results. The recent node should show up
     // first, then the commented node, then all the rest.
-    $this->nodeSearch->getPlugin()->setSearch('rocks', array(), array());
+    $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
     $set = $this->nodeSearch->getPlugin()->execute();
     $this->assertEqual($set[0]['node']->id(), $nodes['recent'][1]->id(), 'Search ranking for recent first worked.');
     $this->assertEqual($set[1]['node']->id(), $nodes['comments'][1]->id(), 'Search ranking for comments second worked.');
@@ -200,33 +200,33 @@ class SearchRankingTest extends SearchTestBase {
    * Test rankings of HTML tags.
    */
   public function testHTMLRankings() {
-    $full_html_format = FilterFormat::create(array(
+    $full_html_format = FilterFormat::create([
       'format' => 'full_html',
       'name' => 'Full HTML',
-    ));
+    ]);
     $full_html_format->save();
 
     // Test HTML tags with different weights.
-    $sorted_tags = array('h1', 'h2', 'h3', 'h4', 'a', 'h5', 'h6', 'notag');
+    $sorted_tags = ['h1', 'h2', 'h3', 'h4', 'a', 'h5', 'h6', 'notag'];
     $shuffled_tags = $sorted_tags;
 
     // Shuffle tags to ensure HTML tags are ranked properly.
     shuffle($shuffled_tags);
-    $settings = array(
+    $settings = [
       'type' => 'page',
       'title' => 'Simple node',
-    );
-    $nodes = array();
+    ];
+    $nodes = [];
     foreach ($shuffled_tags as $tag) {
       switch ($tag) {
         case 'a':
-          $settings['body'] = array(array('value' => \Drupal::l('Drupal Rocks', new Url('<front>')), 'format' => 'full_html'));
+          $settings['body'] = [['value' => \Drupal::l('Drupal Rocks', new Url('<front>')), 'format' => 'full_html']];
           break;
         case 'notag':
-          $settings['body'] = array(array('value' => 'Drupal Rocks'));
+          $settings['body'] = [['value' => 'Drupal Rocks']];
           break;
         default:
-          $settings['body'] = array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html'));
+          $settings['body'] = [['value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html']];
           break;
       }
       $nodes[$tag] = $this->drupalCreateNode($settings);
@@ -236,7 +236,7 @@ class SearchRankingTest extends SearchTestBase {
     $this->nodeSearch->getPlugin()->updateIndex();
     search_update_totals();
 
-    $this->nodeSearch->getPlugin()->setSearch('rocks', array(), array());
+    $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
     // Do the search and assert the results.
     $set = $this->nodeSearch->getPlugin()->execute();
 
@@ -252,16 +252,16 @@ class SearchRankingTest extends SearchTestBase {
     }
 
     // Test tags with the same weight against the sorted tags.
-    $unsorted_tags = array('u', 'b', 'i', 'strong', 'em');
+    $unsorted_tags = ['u', 'b', 'i', 'strong', 'em'];
     foreach ($unsorted_tags as $tag) {
-      $settings['body'] = array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html'));
+      $settings['body'] = [['value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html']];
       $node = $this->drupalCreateNode($settings);
 
       // Update the search index.
       $this->nodeSearch->getPlugin()->updateIndex();
       search_update_totals();
 
-      $this->nodeSearch->getPlugin()->setSearch('rocks', array(), array());
+      $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
       // Do the search and assert the results.
       $set = $this->nodeSearch->getPlugin()->execute();
 

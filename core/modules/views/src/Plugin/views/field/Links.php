@@ -26,8 +26,8 @@ abstract class Links extends FieldPluginBase {
   public function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['fields'] = array('default' => array());
-    $options['destination'] = array('default' => TRUE);
+    $options['fields'] = ['default' => []];
+    $options['destination'] = ['default' => TRUE];
 
     return $options;
   }
@@ -39,19 +39,19 @@ abstract class Links extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
     // Only show fields that precede this one.
     $field_options = $this->getPreviousFieldLabels();
-    $form['fields'] = array(
+    $form['fields'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Fields'),
       '#description' => $this->t('Fields to be included as links.'),
       '#options' => $field_options,
       '#default_value' => $this->options['fields'],
-    );
-    $form['destination'] = array(
+    ];
+    $form['destination'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Include destination'),
       '#description' => $this->t('Include a "destination" parameter in the link to return the user to the original view upon completing the link action.'),
       '#default_value' => $this->options['destination'],
-    );
+    ];
   }
 
   /**
@@ -61,7 +61,7 @@ abstract class Links extends FieldPluginBase {
    *   The links which are used by the render function.
    */
   protected function getLinks() {
-    $links = array();
+    $links = [];
     foreach ($this->options['fields'] as $field) {
       if (empty($this->view->field[$field]->last_render_text)) {
         continue;
@@ -76,13 +76,13 @@ abstract class Links extends FieldPluginBase {
         $url = $this->view->field[$field]->options['alter']['url'];
       }
       // Make sure that tokens are replaced for this paths as well.
-      $tokens = $this->getRenderTokens(array());
+      $tokens = $this->getRenderTokens([]);
       $path = strip_tags(Html::decodeEntities($this->viewsTokenReplace($path, $tokens)));
 
-      $links[$field] = array(
+      $links[$field] = [
         'url' => $path ? UrlObject::fromUri('internal:/' . $path) : $url,
         'title' => $title,
-      );
+      ];
       if (!empty($this->options['destination'])) {
         $links[$field]['query'] = \Drupal::destination()->getAsArray();
       }

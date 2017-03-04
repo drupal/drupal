@@ -32,7 +32,7 @@ class DummyDestination extends DestinationBase {
   /**
    * {@inheritdoc}
    */
-  public function import(Row $row, array $old_destination_id_values = array()) {
+  public function import(Row $row, array $old_destination_id_values = []) {
     return ['value' => $row->getDestinationProperty('value')];
   }
 

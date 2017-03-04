@@ -24,11 +24,11 @@ class LanguageSelectWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $element['value'] = $element + array(
+    $element['value'] = $element + [
       '#type' => 'language_select',
       '#default_value' => $items[$delta]->value,
       '#languages' => LanguageInterface::STATE_ALL,
-    );
+    ];
 
     return $element;
   }

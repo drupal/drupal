@@ -228,7 +228,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     list($view, $executable) = $this->setupValidMocks();
     $executable->expects($this->once())
       ->method('preview')
-      ->with('page_1', array('arg1', 'arg2'));
+      ->with('page_1', ['arg1', 'arg2']);
 
     $response = $this->viewAjaxController->ajaxView($request);
     $this->assertTrue($response instanceof ViewAjaxResponse);
@@ -249,7 +249,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     list($view, $executable) = $this->setupValidMocks();
     $executable->expects($this->once())
       ->method('preview')
-      ->with('page_1', $this->identicalTo(array('arg1', NULL)));
+      ->with('page_1', $this->identicalTo(['arg1', NULL]));
 
     $response = $this->viewAjaxController->ajaxView($request);
     $this->assertTrue($response instanceof ViewAjaxResponse);
@@ -317,14 +317,14 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     $executable->expects($this->once())
       ->method('preview')
-      ->will($this->returnValue(array('#markup' => 'View result')));
+      ->will($this->returnValue(['#markup' => 'View result']));
 
     $this->executableFactory->expects($this->once())
       ->method('get')
       ->with($view)
       ->will($this->returnValue($executable));
 
-    return array($view, $executable);
+    return [$view, $executable];
   }
 
   /**

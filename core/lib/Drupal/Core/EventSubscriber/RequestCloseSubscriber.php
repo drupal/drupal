@@ -49,7 +49,7 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::TERMINATE][] = array('onTerminate', 100);
+    $events[KernelEvents::TERMINATE][] = ['onTerminate', 100];
 
     return $events;
   }

@@ -24,7 +24,7 @@ class PageCacheTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('test_page_test', 'system_test', 'entity_test');
+  public static $modules = ['test_page_test', 'system_test', 'entity_test'];
 
   /**
    * {@inheritdoc}
@@ -50,24 +50,24 @@ class PageCacheTest extends WebTestBase {
     $config->save();
 
     $path = 'system-test/cache_tags_page';
-    $tags = array('system_test_cache_tags_page');
+    $tags = ['system_test_cache_tags_page'];
     $this->drupalGet($path);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->drupalGet($path);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-    $cid_parts = array(\Drupal::url('system_test.cache_tags_page', array(), array('absolute' => TRUE)), 'html');
+    $cid_parts = [\Drupal::url('system_test.cache_tags_page', [], ['absolute' => TRUE]), 'html'];
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('render')->get($cid);
     sort($cache_entry->tags);
-    $expected_tags = array(
+    $expected_tags = [
       'config:user.role.anonymous',
       'http_response',
       'pre_render',
       'rendered',
       'system_test_cache_tags_page',
-    );
+    ];
     $this->assertIdentical($cache_entry->tags, $expected_tags);
 
     Cache::invalidateTags($tags);
@@ -82,24 +82,24 @@ class PageCacheTest extends WebTestBase {
     $this->setHttpResponseDebugCacheabilityHeaders(FALSE);
 
     $path = 'system-test/cache_tags_page';
-    $tags = array('system_test_cache_tags_page');
+    $tags = ['system_test_cache_tags_page'];
     $this->drupalGet($path);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->drupalGet($path);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-    $cid_parts = array(\Drupal::url('system_test.cache_tags_page', array(), array('absolute' => TRUE)), 'html');
+    $cid_parts = [\Drupal::url('system_test.cache_tags_page', [], ['absolute' => TRUE]), 'html'];
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('render')->get($cid);
     sort($cache_entry->tags);
-    $expected_tags = array(
+    $expected_tags = [
       'config:user.role.anonymous',
       'http_response',
       'pre_render',
       'rendered',
       'system_test_cache_tags_page',
-    );
+    ];
     $this->assertIdentical($cache_entry->tags, $expected_tags);
 
     Cache::invalidateTags($tags);
@@ -190,28 +190,28 @@ class PageCacheTest extends WebTestBase {
     $etag = $this->drupalGetHeader('ETag');
     $last_modified = $this->drupalGetHeader('Last-Modified');
 
-    $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag));
+    $this->drupalGet('', [], ['If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag]);
     $this->assertResponse(304, 'Conditional request returned 304 Not Modified.');
 
-    $this->drupalGet('', array(), array('If-Modified-Since: ' . gmdate(DATE_RFC822, strtotime($last_modified)), 'If-None-Match: ' . $etag));
+    $this->drupalGet('', [], ['If-Modified-Since: ' . gmdate(DATE_RFC822, strtotime($last_modified)), 'If-None-Match: ' . $etag]);
     $this->assertResponse(304, 'Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.');
 
-    $this->drupalGet('', array(), array('If-Modified-Since: ' . gmdate(DATE_RFC850, strtotime($last_modified)), 'If-None-Match: ' . $etag));
+    $this->drupalGet('', [], ['If-Modified-Since: ' . gmdate(DATE_RFC850, strtotime($last_modified)), 'If-None-Match: ' . $etag]);
     $this->assertResponse(304, 'Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.');
 
-    $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified));
+    $this->drupalGet('', [], ['If-Modified-Since: ' . $last_modified]);
     // Verify the page is not printed twice when the cache is warm.
     $this->assertNoPattern('#<html.*<html#');
     $this->assertResponse(200, 'Conditional request without If-None-Match returned 200 OK.');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
 
-    $this->drupalGet('', array(), array('If-Modified-Since: ' . gmdate(DateTimePlus::RFC7231, strtotime($last_modified) + 1), 'If-None-Match: ' . $etag));
+    $this->drupalGet('', [], ['If-Modified-Since: ' . gmdate(DateTimePlus::RFC7231, strtotime($last_modified) + 1), 'If-None-Match: ' . $etag]);
     $this->assertResponse(200, 'Conditional request with new a If-Modified-Since date newer than Last-Modified returned 200 OK.');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
 
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
-    $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag));
+    $this->drupalGet('', [], ['If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag]);
     $this->assertResponse(200, 'Conditional request returned 200 OK for authenticated user.');
     $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Absence of Page was not cached.');
   }
@@ -226,7 +226,7 @@ class PageCacheTest extends WebTestBase {
     $config->save();
 
     // Fill the cache.
-    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
+    $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'bar']]);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
     $this->assertEqual(strtolower($this->drupalGetHeader('Vary')), 'cookie,accept-encoding', 'Vary header was sent.');
     // Symfony's Response logic determines a specific order for the subvalues
@@ -237,7 +237,7 @@ class PageCacheTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
     // Check cache.
-    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
+    $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'bar']]);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $this->assertEqual(strtolower($this->drupalGetHeader('Vary')), 'cookie,accept-encoding', 'Vary: Cookie header was sent.');
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public', 'Cache-Control header was sent.');
@@ -245,15 +245,15 @@ class PageCacheTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
 
     // Check replacing default headers.
-    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Expires', 'value' => 'Fri, 19 Nov 2008 05:00:00 GMT')));
+    $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Expires', 'value' => 'Fri, 19 Nov 2008 05:00:00 GMT']]);
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Fri, 19 Nov 2008 05:00:00 GMT', 'Default header was replaced.');
-    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Vary', 'value' => 'User-Agent')));
+    $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Vary', 'value' => 'User-Agent']]);
     $this->assertEqual(strtolower($this->drupalGetHeader('Vary')), 'user-agent,accept-encoding', 'Default header was replaced.');
 
     // Check that authenticated users bypass the cache.
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
-    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
+    $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'bar']]);
     $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Caching was bypassed.');
     $this->assertTrue(strpos(strtolower($this->drupalGetHeader('Vary')), 'cookie') === FALSE, 'Vary: Cookie header was not sent.');
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, private', 'Cache-Control header was sent.');
@@ -349,16 +349,16 @@ class PageCacheTest extends WebTestBase {
       $this->drupalGet($content_url);
       $this->assertResponse($code);
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-      $entity_values = array(
+      $entity_values = [
         'name' => $this->randomMachineName(),
         'user_id' => 1,
-        'field_test_text' => array(
-          0 => array(
+        'field_test_text' => [
+          0 => [
             'value' => $this->randomString(),
             'format' => 'plain_text',
-          )
-        ),
-      );
+          ]
+        ],
+      ];
       $entity = EntityTest::create($entity_values);
       $entity->save();
       // Saving an entity clears 4xx cache tag.
@@ -389,10 +389,10 @@ class PageCacheTest extends WebTestBase {
     }
 
     // Disable 403 and 404 caching.
-    $settings['settings']['cache_ttl_4xx'] = (object) array(
+    $settings['settings']['cache_ttl_4xx'] = (object) [
       'value' => 0,
       'required' => TRUE,
-    );
+    ];
     $this->writeSettings($settings);
     \Drupal::service('cache.render')->deleteAll();
 
@@ -413,10 +413,10 @@ class PageCacheTest extends WebTestBase {
     $config->set('cache.page.max_age', 300);
     $config->save();
 
-    $settings['settings']['omit_vary_cookie'] = (object) array(
+    $settings['settings']['omit_vary_cookie'] = (object) [
       'value' => TRUE,
       'required' => TRUE,
-    );
+    ];
     $this->writeSettings($settings);
 
     // Fill the cache.

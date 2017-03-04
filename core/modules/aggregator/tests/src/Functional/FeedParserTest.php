@@ -30,7 +30,7 @@ class FeedParserTest extends AggregatorTestBase {
     $feed = $this->createFeed($this->getRSS091Sample());
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
-    $this->assertResponse(200, format_string('Feed %name exists.', array('%name' => $feed->label())));
+    $this->assertResponse(200, format_string('Feed %name exists.', ['%name' => $feed->label()]));
     $this->assertText('First example feed item title');
     $this->assertLinkByHref('http://example.com/example-turns-one');
     $this->assertText('First example feed item description.');
@@ -53,19 +53,19 @@ class FeedParserTest extends AggregatorTestBase {
     $feed = $this->createFeed($this->getAtomSample());
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
-    $this->assertResponse(200, format_string('Feed %name exists.', array('%name' => $feed->label())));
+    $this->assertResponse(200, format_string('Feed %name exists.', ['%name' => $feed->label()]));
     $this->assertText('Atom-Powered Robots Run Amok');
     $this->assertLinkByHref('http://example.org/2003/12/13/atom03');
     $this->assertText('Some text.');
-    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', db_query('SELECT guid FROM {aggregator_item} WHERE link = :link', array(':link' => 'http://example.org/2003/12/13/atom03'))->fetchField(), 'Atom entry id element is parsed correctly.');
+    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', db_query('SELECT guid FROM {aggregator_item} WHERE link = :link', [':link' => 'http://example.org/2003/12/13/atom03'])->fetchField(), 'Atom entry id element is parsed correctly.');
 
     // Check for second feed entry.
     $this->assertText('We tried to stop them, but we failed.');
     $this->assertLinkByHref('http://example.org/2003/12/14/atom03');
     $this->assertText('Some other text.');
-    $db_guid = db_query('SELECT guid FROM {aggregator_item} WHERE link = :link', array(
+    $db_guid = db_query('SELECT guid FROM {aggregator_item} WHERE link = :link', [
       ':link' => 'http://example.org/2003/12/14/atom03',
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-bbbb-80da344efa6a', $db_guid, 'Atom entry id element is parsed correctly.');
   }
 
@@ -76,7 +76,7 @@ class FeedParserTest extends AggregatorTestBase {
     $feed = $this->createFeed($this->getHtmlEntitiesSample());
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
-    $this->assertResponse(200, format_string('Feed %name exists.', array('%name' => $feed->label())));
+    $this->assertResponse(200, format_string('Feed %name exists.', ['%name' => $feed->label()]));
     $this->assertRaw("Quote&quot; Amp&amp;");
   }
 
@@ -85,12 +85,12 @@ class FeedParserTest extends AggregatorTestBase {
    */
   public function testRedirectFeed() {
     $redirect_url = Url::fromRoute('aggregator_test.redirect')->setAbsolute()->toString();
-    $feed = Feed::create(array('url' => $redirect_url, 'title' => $this->randomMachineName()));
+    $feed = Feed::create(['url' => $redirect_url, 'title' => $this->randomMachineName()]);
     $feed->save();
     $feed->refreshItems();
 
     // Make sure that the feed URL was updated correctly.
-    $this->assertEqual($feed->getUrl(), \Drupal::url('aggregator_test.feed', array(), array('absolute' => TRUE)));
+    $this->assertEqual($feed->getUrl(), \Drupal::url('aggregator_test.feed', [], ['absolute' => TRUE]));
   }
 
   /**
@@ -99,13 +99,13 @@ class FeedParserTest extends AggregatorTestBase {
   public function testInvalidFeed() {
     // Simulate a typo in the URL to force a curl exception.
     $invalid_url = 'http:/www.drupal.org';
-    $feed = Feed::create(array('url' => $invalid_url, 'title' => $this->randomMachineName()));
+    $feed = Feed::create(['url' => $invalid_url, 'title' => $this->randomMachineName()]);
     $feed->save();
 
     // Update the feed. Use the UI to be able to check the message easily.
     $this->drupalGet('admin/config/services/aggregator');
     $this->clickLink(t('Update items'));
-    $this->assertRaw(t('The feed from %title seems to be broken because of error', array('%title' => $feed->label())));
+    $this->assertRaw(t('The feed from %title seems to be broken because of error', ['%title' => $feed->label()]));
   }
 
 }

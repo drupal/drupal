@@ -18,7 +18,7 @@ class FileListingTest extends FileFieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('views', 'file', 'image', 'entity_test');
+  public static $modules = ['views', 'file', 'image', 'entity_test'];
 
   /**
    * An authenticated user.
@@ -30,9 +30,9 @@ class FileListingTest extends FileFieldTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(array('access files overview', 'bypass node access'));
+    $this->adminUser = $this->drupalCreateUser(['access files overview', 'bypass node access']);
     $this->baseUser = $this->drupalCreateUser();
-    $this->createFileField('file', 'node', 'article', array(), array('file_extensions' => 'txt png'));
+    $this->createFileField('file', 'node', 'article', [], ['file_extensions' => 'txt png']);
   }
 
   /**
@@ -70,7 +70,7 @@ class FileListingTest extends FileFieldTestBase {
     $this->drupalLogin($this->adminUser);
 
     for ($i = 0; $i < 5; $i++) {
-      $nodes[] = $this->drupalCreateNode(array('type' => 'article'));
+      $nodes[] = $this->drupalCreateNode(['type' => 'article']);
     }
 
     $this->drupalGet('admin/content/files');
@@ -84,15 +84,15 @@ class FileListingTest extends FileFieldTestBase {
 
     $this->drupalGet('admin/content/files/usage/' . $file->id());
     $this->assertResponse(200);
-    $this->assertTitle(t('File usage information for @file | Drupal', array('@file' => $file->getFilename())));
+    $this->assertTitle(t('File usage information for @file | Drupal', ['@file' => $file->getFilename()]));
 
     foreach ($nodes as &$node) {
       $this->drupalGet('node/' . $node->id() . '/edit');
       $file = $this->getTestFile('image');
 
-      $edit = array(
+      $edit = [
         'files[file_0]' => drupal_realpath($file->getFileUri()),
-      );
+      ];
       $this->drupalPostForm(NULL, $edit, t('Save'));
       $node = Node::load($node->id());
     }
@@ -122,7 +122,7 @@ class FileListingTest extends FileFieldTestBase {
     $usage = $this->sumUsages($file_usage->listUsage($file));
     $this->assertRaw('admin/content/files/usage/' . $file->id() . '">' . $usage);
 
-    $result = $this->xpath("//td[contains(@class, 'views-field-status') and contains(text(), :value)]", array(':value' => t('Temporary')));
+    $result = $this->xpath("//td[contains(@class, 'views-field-status') and contains(text(), :value)]", [':value' => t('Temporary')]);
     $this->assertEqual(1, count($result), 'Unused file marked as temporary.');
 
     // Test file usage page.
@@ -155,7 +155,7 @@ class FileListingTest extends FileFieldTestBase {
     // Create a bundle and attach a File field to the bundle.
     $bundle = $this->randomMachineName();
     entity_test_create_bundle($bundle, NULL, 'entity_test_constraints');
-    $this->createFileField('field_test_file', 'entity_test_constraints', $bundle, array(), array('file_extensions' => 'txt png'));
+    $this->createFileField('field_test_file', 'entity_test_constraints', $bundle, [], ['file_extensions' => 'txt png']);
 
     // Create file to attach to entity.
     $file = File::create([
@@ -169,18 +169,18 @@ class FileListingTest extends FileFieldTestBase {
 
     // Create entity and attach the created file.
     $entity_name = $this->randomMachineName();
-    $entity = EntityTestConstraints::create(array(
+    $entity = EntityTestConstraints::create([
       'uid' => 1,
       'name' => $entity_name,
       'type' => $bundle,
-      'field_test_file' => array(
+      'field_test_file' => [
         'target_id' => $file->id(),
-      ),
-    ));
+      ],
+    ]);
     $entity->save();
 
     // Create node entity and attach the created file.
-    $node = $this->drupalCreateNode(array('type' => 'article', 'file' => $file));
+    $node = $this->drupalCreateNode(['type' => 'article', 'file' => $file]);
     $node->save();
 
     // Load the file usage page for the created and attached file.

@@ -90,7 +90,7 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = array('onKernelRequestLanguage', 255);
+    $events[KernelEvents::REQUEST][] = ['onKernelRequestLanguage', 255];
 
     return $events;
   }

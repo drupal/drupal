@@ -21,7 +21,7 @@ function nyan_cat_init(Extension $theme) {
  * Implements hook_theme().
  */
 function nyan_cat_theme($existing, $type, $theme, $path) {
-  $templates = drupal_find_theme_functions($existing, array($theme));
+  $templates = drupal_find_theme_functions($existing, [$theme]);
   $templates += drupal_find_theme_templates($existing, '.nyan-cat.html', $path);
   return $templates;
 }

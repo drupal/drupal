@@ -19,13 +19,13 @@ class PathAliasTest extends PathTestBase {
    *
    * @var array
    */
-  public static $modules = array('path');
+  public static $modules = ['path'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create test user and log in.
-    $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content', 'administer url aliases', 'create url aliases'));
+    $web_user = $this->drupalCreateUser(['create page content', 'edit own page content', 'administer url aliases', 'create url aliases']);
     $this->drupalLogin($web_user);
   }
 
@@ -37,7 +37,7 @@ class PathAliasTest extends PathTestBase {
     $node1 = $this->drupalCreateNode();
 
     // Create alias.
-    $edit = array();
+    $edit = [];
     $edit['source'] = '/node/' . $node1->id();
     $edit['alias'] = '/' . $this->randomMachineName(8);
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
@@ -51,7 +51,7 @@ class PathAliasTest extends PathTestBase {
     // created.
     \Drupal::cache('data')->deleteAll();
     // Make sure the path is not converted to the alias.
-    $this->drupalGet(trim($edit['source'], '/'), array('alias' => TRUE));
+    $this->drupalGet(trim($edit['source'], '/'), ['alias' => TRUE]);
     $this->assertTrue(\Drupal::cache('data')->get('preload-paths:' . $edit['source']), 'Cache entry was created.');
 
     // Visit the alias for the node and confirm a cache entry is created.
@@ -70,7 +70,7 @@ class PathAliasTest extends PathTestBase {
     $node1 = $this->drupalCreateNode();
 
     // Create alias.
-    $edit = array();
+    $edit = [];
     $edit['source'] = '/node/' . $node1->id();
     $edit['alias'] = '/' . $this->getRandomGenerator()->word(8);
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
@@ -129,7 +129,7 @@ class PathAliasTest extends PathTestBase {
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     // Confirm no duplicate was created.
-    $this->assertRaw(t('The alias %alias is already in use in this language.', array('%alias' => $edit['alias'])), 'Attempt to move alias was rejected.');
+    $this->assertRaw(t('The alias %alias is already in use in this language.', ['%alias' => $edit['alias']]), 'Attempt to move alias was rejected.');
 
     $edit_upper = $edit;
     $edit_upper['alias'] = Unicode::strtoupper($edit['alias']);
@@ -142,8 +142,8 @@ class PathAliasTest extends PathTestBase {
     // Delete alias.
     $this->drupalGet('admin/config/search/path/edit/' . $pid);
     $this->clickLink(t('Delete'));
-    $this->assertRaw(t('Are you sure you want to delete path alias %name?', array('%name' => $edit['alias'])));
-    $this->drupalPostForm(NULL, array(), t('Confirm'));
+    $this->assertRaw(t('Are you sure you want to delete path alias %name?', ['%name' => $edit['alias']]));
+    $this->drupalPostForm(NULL, [], t('Confirm'));
 
     // Confirm that the alias no longer works.
     $this->drupalGet($edit['alias']);
@@ -151,7 +151,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertResponse(404);
 
     // Create a really long alias.
-    $edit = array();
+    $edit = [];
     $edit['source'] = '/node/' . $node1->id();
     $alias = '/' . $this->randomMachineName(128);
     $edit['alias'] = $alias;
@@ -166,7 +166,7 @@ class PathAliasTest extends PathTestBase {
     $node3 = $this->drupalCreateNode();
 
     // Create absolute path alias.
-    $edit = array();
+    $edit = [];
     $edit['source'] = '/node/' . $node3->id();
     $node3_alias = '/' . $this->randomMachineName(8);
     $edit['alias'] = $node3_alias;
@@ -176,7 +176,7 @@ class PathAliasTest extends PathTestBase {
     $node4 = $this->drupalCreateNode();
 
     // Create alias with trailing slash.
-    $edit = array();
+    $edit = [];
     $edit['source'] = '/node/' . $node4->id();
     $node4_alias = '/' . $this->randomMachineName(8);
     $edit['alias'] = $node4_alias . '/';
@@ -205,12 +205,12 @@ class PathAliasTest extends PathTestBase {
     $edit['alias'] = $node4_alias;
     $edit['source'] = '/node/' . $node3->id();
     $this->drupalPostForm('admin/config/search/path/edit/' . $pid, $edit, t('Save'));
-    $this->assertRaw(t('The alias %alias is already in use in this language.', array('%alias' => $edit['alias'])));
+    $this->assertRaw(t('The alias %alias is already in use in this language.', ['%alias' => $edit['alias']]));
 
     // Create an alias without a starting slash.
     $node5 = $this->drupalCreateNode();
 
-    $edit = array();
+    $edit = [];
     $edit['source'] = 'node/' . $node5->id();
     $node5_alias = $this->randomMachineName(8);
     $edit['alias'] = $node5_alias . '/';
@@ -229,7 +229,7 @@ class PathAliasTest extends PathTestBase {
     $node1 = $this->drupalCreateNode();
 
     // Create alias.
-    $edit = array();
+    $edit = [];
     $edit['path[0][alias]'] = '/' . $this->randomMachineName(8);
     $this->drupalPostForm('node/' . $node1->id() . '/edit', $edit, t('Save'));
 
@@ -284,7 +284,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertText(t('The alias is already in use.'), 'Attempt to moved alias was rejected.');
 
     // Delete alias.
-    $this->drupalPostForm('node/' . $node1->id() . '/edit', array('path[0][alias]' => ''), t('Save'));
+    $this->drupalPostForm('node/' . $node1->id() . '/edit', ['path[0][alias]' => ''], t('Save'));
 
     // Confirm that the alias no longer works.
     $this->drupalGet($edit['path[0][alias]']);
@@ -295,7 +295,7 @@ class PathAliasTest extends PathTestBase {
     $node3 = $this->drupalCreateNode();
 
     // Set its path alias to an absolute path.
-    $edit = array('path[0][alias]' => '/' . $this->randomMachineName(8));
+    $edit = ['path[0][alias]' => '/' . $this->randomMachineName(8)];
     $this->drupalPostForm('node/' . $node3->id() . '/edit', $edit, t('Save'));
 
     // Confirm that the alias was converted to a relative path.
@@ -307,7 +307,7 @@ class PathAliasTest extends PathTestBase {
     $node4 = $this->drupalCreateNode();
 
     // Set its path alias to have a trailing slash.
-    $edit = array('path[0][alias]' => '/' . $this->randomMachineName(8) . '/');
+    $edit = ['path[0][alias]' => '/' . $this->randomMachineName(8) . '/'];
     $this->drupalPostForm('node/' . $node4->id() . '/edit', $edit, t('Save'));
 
     // Confirm that the alias was converted to a relative path.
@@ -319,7 +319,7 @@ class PathAliasTest extends PathTestBase {
     $node5 = $this->drupalCreateNode();
 
     // Set a path alias.
-    $edit = array('path[0][alias]' => '/' . $this->randomMachineName(8));
+    $edit = ['path[0][alias]' => '/' . $this->randomMachineName(8)];
     $this->drupalPostForm('node/' . $node5->id() . '/edit', $edit, t('Save'));
 
     // Delete the node and check that the path alias is also deleted.
@@ -338,7 +338,7 @@ class PathAliasTest extends PathTestBase {
    *   Integer representing the path ID.
    */
   function getPID($alias) {
-    return db_query("SELECT pid FROM {url_alias} WHERE alias = :alias", array(':alias' => $alias))->fetchField();
+    return db_query("SELECT pid FROM {url_alias} WHERE alias = :alias", [':alias' => $alias])->fetchField();
   }
 
   /**
@@ -347,7 +347,7 @@ class PathAliasTest extends PathTestBase {
   function testDuplicateNodeAlias() {
     // Create one node with a random alias.
     $node_one = $this->drupalCreateNode();
-    $edit = array();
+    $edit = [];
     $edit['path[0][alias]'] = '/' . $this->randomMachineName();
     $this->drupalPostForm('node/' . $node_one->id() . '/edit', $edit, t('Save'));
 

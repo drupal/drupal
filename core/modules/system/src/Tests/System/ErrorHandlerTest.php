@@ -17,36 +17,36 @@ class ErrorHandlerTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('error_test');
+  public static $modules = ['error_test'];
 
   /**
    * Test the error handler.
    */
   function testErrorHandler() {
     $config = $this->config('system.logging');
-    $error_notice = array(
+    $error_notice = [
       '%type' => 'Notice',
       '@message' => 'Undefined variable: bananas',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
-    );
-    $error_warning = array(
+    ];
+    $error_warning = [
       '%type' => 'Warning',
       '@message' => 'Division by zero',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
-    );
-    $error_user_notice = array(
+    ];
+    $error_user_notice = [
       '%type' => 'User warning',
       '@message' => 'Drupal & awesome',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
-    );
-    $fatal_error = array(
+    ];
+    $fatal_error = [
       '%type' => 'Recoverable fatal error',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
       '@message' => 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 62 and defined',
-    );
+    ];
     if (version_compare(PHP_VERSION, '7.0.0-dev') >= 0) {
       // In PHP 7, instead of a recoverable fatal error we get a TypeError.
       $fatal_error['%type'] = 'TypeError';
@@ -125,27 +125,27 @@ class ErrorHandlerTest extends WebTestBase {
     // Ensure the test error log is empty before these tests.
     $this->assertNoErrorsLogged();
 
-    $error_exception = array(
+    $error_exception = [
       '%type' => 'Exception',
       '@message' => 'Drupal & awesome',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerException()',
       '%line' => 56,
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
-    );
-    $error_pdo_exception = array(
+    ];
+    $error_pdo_exception = [
       '%type' => 'DatabaseExceptionWrapper',
       '@message' => 'SELECT * FROM bananas_are_awesome',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPDOException()',
       '%line' => 64,
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
-    );
-    $error_renderer_exception = array(
+    ];
+    $error_renderer_exception = [
       '%type' => 'Exception',
       '@message' => 'This is an exception that occurs during rendering',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
       '%line' => 82,
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
-    );
+    ];
 
     $this->drupalGet('error-test/trigger-exception');
     $this->assertTrue(strpos($this->drupalGetHeader(':status'), '500 Service unavailable (with message)'), 'Received expected HTTP status line.');
@@ -158,7 +158,7 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertText($error_pdo_exception['%type'], format_string('Found %type in error page.', $error_pdo_exception));
     $this->assertText($error_pdo_exception['@message'], format_string('Found @message in error page.', $error_pdo_exception));
     $error_details = format_string('in %function (line ', $error_pdo_exception);
-    $this->assertRaw($error_details, format_string("Found '@message' in error page.", array('@message' => $error_details)));
+    $this->assertRaw($error_details, format_string("Found '@message' in error page.", ['@message' => $error_details]));
 
     $this->drupalGet('error-test/trigger-renderer-exception');
     $this->assertTrue(strpos($this->drupalGetHeader(':status'), '500 Service unavailable (with message)'), 'Received expected HTTP status line.');
@@ -185,7 +185,7 @@ class ErrorHandlerTest extends WebTestBase {
    */
   function assertErrorMessage(array $error) {
     $message = new FormattableMarkup('%type: @message in %function (line ', $error);
-    $this->assertRaw($message, format_string('Found error message: @message.', array('@message' => $message)));
+    $this->assertRaw($message, format_string('Found error message: @message.', ['@message' => $message]));
   }
 
   /**
@@ -193,7 +193,7 @@ class ErrorHandlerTest extends WebTestBase {
    */
   function assertNoErrorMessage(array $error) {
     $message = new FormattableMarkup('%type: @message in %function (line ', $error);
-    $this->assertNoRaw($message, format_string('Did not find error message: @message.', array('@message' => $message)));
+    $this->assertNoRaw($message, format_string('Did not find error message: @message.', ['@message' => $message]));
   }
 
   /**

@@ -14,8 +14,8 @@ class ExtractTest extends MigrateProcessTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $configuration['index'] = array('foo');
-    $this->plugin = new Extract($configuration, 'map', array());
+    $configuration['index'] = ['foo'];
+    $this->plugin = new Extract($configuration, 'map', []);
     parent::setUp();
   }
 
@@ -23,7 +23,7 @@ class ExtractTest extends MigrateProcessTestCase {
    * Tests successful extraction.
    */
   public function testExtract() {
-    $value = $this->plugin->transform(array('foo' => 'bar'), $this->migrateExecutable, $this->row, 'destinationproperty');
+    $value = $this->plugin->transform(['foo' => 'bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
     $this->assertSame($value, 'bar');
   }
 
@@ -44,7 +44,7 @@ class ExtractTest extends MigrateProcessTestCase {
    * @expectedExceptionMessage Array index missing, extraction failed.
    */
   public function testExtractFail() {
-    $this->plugin->transform(array('bar' => 'foo'), $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform(['bar' => 'foo'], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 
   /**

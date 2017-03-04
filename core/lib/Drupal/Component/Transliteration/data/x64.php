@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'chan', 'ge', 'lou', 'zong', 'geng', 'jiao', 'gou', 'qin', 'rong', 'que', 'chou', 'chuai', 'zhan', 'sun', 'sun', 'bo',
   0x10 => 'chu', 'rong', 'bang', 'cuo', 'sao', 'ke', 'yao', 'dao', 'zhi', 'nu', 'la', 'jian', 'sou', 'qiu', 'gao', 'xian',
   0x20 => 'shuo', 'sang', 'jin', 'mie', 'e', 'chui', 'nuo', 'shan', 'ta', 'zha', 'tang', 'pan', 'ban', 'da', 'li', 'tao',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'huan', 'jie', 'qin', 'kuai', 'dan', 'xie', 'ka', 'pi', 'bai', 'ao', 'ju', 'ye', 'e', 'meng', 'sou', 'mi',
   0xE0 => 'ji', 'tai', 'zhuo', 'dao', 'xing', 'lan', 'ca', 'ju', 'ye', 'ru', 'ye', 'ye', 'ni', 'wo', 'ji', 'bin',
   0xF0 => 'ning', 'ge', 'zhi', 'zhi', 'kuo', 'mo', 'jian', 'xie', 'lie', 'tan', 'bai', 'sou', 'lu', 'lue', 'rao', 'ti',
-);
+];

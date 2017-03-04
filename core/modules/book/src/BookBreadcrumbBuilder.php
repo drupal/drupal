@@ -56,10 +56,10 @@ class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(RouteMatchInterface $route_match) {
-    $book_nids = array();
+    $book_nids = [];
     $breadcrumb = new Breadcrumb();
 
-    $links = array(Link::createFromRoute($this->t('Home'), '<front>'));
+    $links = [Link::createFromRoute($this->t('Home'), '<front>')];
     $book = $route_match->getParameter('node')->book;
     $depth = 1;
     // We skip the current node.
@@ -76,7 +76,7 @@ class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
           $breadcrumb->addCacheableDependency($access);
           if ($access->isAllowed()) {
             $breadcrumb->addCacheableDependency($parent_book);
-            $links[] = Link::createFromRoute($parent_book->label(), 'entity.node.canonical', array('node' => $parent_book->id()));
+            $links[] = Link::createFromRoute($parent_book->label(), 'entity.node.canonical', ['node' => $parent_book->id()]);
           }
         }
         $depth++;

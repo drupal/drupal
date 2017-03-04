@@ -19,9 +19,9 @@ class NodeTypeDeleteConfirm extends EntityDeleteForm {
       ->count()
       ->execute();
     if ($num_nodes) {
-      $caption = '<p>' . $this->formatPlural($num_nodes, '%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', '%type is used by @count pieces of content on your site. You may not remove %type until you have removed all of the %type content.', array('%type' => $this->entity->label())) . '</p>';
+      $caption = '<p>' . $this->formatPlural($num_nodes, '%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', '%type is used by @count pieces of content on your site. You may not remove %type until you have removed all of the %type content.', ['%type' => $this->entity->label()]) . '</p>';
       $form['#title'] = $this->getQuestion();
-      $form['description'] = array('#markup' => $caption);
+      $form['description'] = ['#markup' => $caption];
       return $form;
     }
 

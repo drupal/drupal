@@ -47,12 +47,12 @@ class BooleanFieldTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalLogin($this->drupalCreateUser(array(
+    $this->drupalLogin($this->drupalCreateUser([
       'view test entity',
       'administer entity_test content',
       'administer entity_test form display',
       'administer entity_test fields',
-    )));
+    ]));
   }
 
   /**
@@ -65,36 +65,36 @@ class BooleanFieldTest extends WebTestBase {
 
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $this->fieldStorage = FieldStorageConfig::create(array(
+    $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'boolean',
-    ));
+    ]);
     $this->fieldStorage->save();
-    $this->field = FieldConfig::create(array(
+    $this->field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'label' => $label,
       'required' => TRUE,
-      'settings' => array(
+      'settings' => [
         'on_label' => $on,
         'off_label' => $off,
-      ),
-    ));
+      ],
+    ]);
     $this->field->save();
 
     // Create a form display for the default form mode.
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($field_name, array(
+      ->setComponent($field_name, [
         'type' => 'boolean_checkbox',
-      ))
+      ])
       ->save();
     // Create a display for the full view mode.
     entity_get_display('entity_test', 'entity_test', 'full')
-      ->setComponent($field_name, array(
+      ->setComponent($field_name, [
         'type' => 'boolean',
-      ))
+      ])
       ->save();
 
     // Display creation form.
@@ -104,13 +104,13 @@ class BooleanFieldTest extends WebTestBase {
     $this->assertNoRaw($on, 'Does not use the "On" label.');
 
     // Submit and ensure it is accepted.
-    $edit = array(
+    $edit = [
       "{$field_name}[value]" => 1,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
+    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
     // Verify that boolean value is displayed.
     $entity = EntityTest::load($id);
@@ -121,12 +121,12 @@ class BooleanFieldTest extends WebTestBase {
 
     // Test with "On" label option.
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($field_name, array(
+      ->setComponent($field_name, [
         'type' => 'boolean_checkbox',
-        'settings' => array(
+        'settings' => [
           'display_label' => FALSE,
-        )
-      ))
+        ]
+      ])
       ->save();
 
     $this->drupalGet('entity_test/add');
@@ -136,9 +136,9 @@ class BooleanFieldTest extends WebTestBase {
 
     // Test if we can change the on label.
     $on = $this->randomMachineName();
-    $edit = array(
+    $edit = [
       'settings[on_label]' => $on,
-    );
+    ];
     $this->drupalPostForm('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name, $edit, t('Save settings'));
     // Check if we see the updated labels in the creation form.
     $this->drupalGet('entity_test/add');
@@ -150,7 +150,7 @@ class BooleanFieldTest extends WebTestBase {
     $this->drupalGet($fieldEditUrl);
 
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostAjaxForm(NULL, array(), $field_name . "_settings_edit");
+    $this->drupalPostAjaxForm(NULL, [], $field_name . "_settings_edit");
 
     $this->assertText(
       'Use field label instead of the "On label" as label',
@@ -158,7 +158,7 @@ class BooleanFieldTest extends WebTestBase {
     );
 
     // Enable setting.
-    $edit = array('fields[' . $field_name . '][settings_edit_form][settings][display_label]' => 1);
+    $edit = ['fields[' . $field_name . '][settings_edit_form][settings][display_label]' => 1];
     $this->drupalPostAjaxForm(NULL, $edit, $field_name . "_plugin_settings_update");
     $this->drupalPostForm(NULL, NULL, 'Save');
 
@@ -167,7 +167,7 @@ class BooleanFieldTest extends WebTestBase {
     $this->drupalGet($fieldEditUrl);
     $this->assertText('Use field label: Yes', 'Checking the display settings checkbox updated the value.');
 
-    $this->drupalPostAjaxForm(NULL, array(), $field_name . "_settings_edit");
+    $this->drupalPostAjaxForm(NULL, [], $field_name . "_settings_edit");
     $this->assertText(
       'Use field label instead of the "On label" as label',
       t('Display setting checkbox is available')

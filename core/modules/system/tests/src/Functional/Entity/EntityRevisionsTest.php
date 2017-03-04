@@ -19,7 +19,7 @@ class EntityRevisionsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'language');
+  public static $modules = ['entity_test', 'language'];
 
   /**
    * A user with permission to administer entity_test content.
@@ -32,10 +32,10 @@ class EntityRevisionsTest extends BrowserTestBase {
     parent::setUp();
 
     // Create and log in user.
-    $this->webUser = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser([
       'administer entity_test content',
       'view test entity',
-    ));
+    ]);
     $this->drupalLogin($this->webUser);
 
     // Enable an additional language.
@@ -64,17 +64,17 @@ class EntityRevisionsTest extends BrowserTestBase {
     // Create initial entity.
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
-      ->create(array(
+      ->create([
         'name' => 'foo',
         'user_id' => $this->webUser->id(),
-      ));
+      ]);
     $entity->field_test_text->value = 'bar';
     $entity->save();
 
-    $names = array();
-    $texts = array();
-    $created = array();
-    $revision_ids = array();
+    $names = [];
+    $texts = [];
+    $created = [];
+    $revision_ids = [];
 
     // Create three revisions.
     $revision_count = 3;
@@ -93,9 +93,9 @@ class EntityRevisionsTest extends BrowserTestBase {
       $revision_ids[] = $entity->revision_id->value;
 
       // Check that the fields and properties contain new content.
-      $this->assertTrue($entity->revision_id->value > $legacy_revision_id, format_string('%entity_type: Revision ID changed.', array('%entity_type' => $entity_type)));
-      $this->assertNotEqual($entity->name->value, $legacy_name, format_string('%entity_type: Name changed.', array('%entity_type' => $entity_type)));
-      $this->assertNotEqual($entity->field_test_text->value, $legacy_text, format_string('%entity_type: Text changed.', array('%entity_type' => $entity_type)));
+      $this->assertTrue($entity->revision_id->value > $legacy_revision_id, format_string('%entity_type: Revision ID changed.', ['%entity_type' => $entity_type]));
+      $this->assertNotEqual($entity->name->value, $legacy_name, format_string('%entity_type: Name changed.', ['%entity_type' => $entity_type]));
+      $this->assertNotEqual($entity->field_test_text->value, $legacy_text, format_string('%entity_type: Text changed.', ['%entity_type' => $entity_type]));
     }
 
     $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
@@ -104,13 +104,13 @@ class EntityRevisionsTest extends BrowserTestBase {
       $entity_revision = $storage->loadRevision($revision_ids[$i]);
 
       // Check if properties and fields contain the revision specific content.
-      $this->assertEqual($entity_revision->revision_id->value, $revision_ids[$i], format_string('%entity_type: Revision ID matches.', array('%entity_type' => $entity_type)));
-      $this->assertEqual($entity_revision->name->value, $names[$i], format_string('%entity_type: Name matches.', array('%entity_type' => $entity_type)));
-      $this->assertEqual($entity_revision->field_test_text->value, $texts[$i], format_string('%entity_type: Text matches.', array('%entity_type' => $entity_type)));
+      $this->assertEqual($entity_revision->revision_id->value, $revision_ids[$i], format_string('%entity_type: Revision ID matches.', ['%entity_type' => $entity_type]));
+      $this->assertEqual($entity_revision->name->value, $names[$i], format_string('%entity_type: Name matches.', ['%entity_type' => $entity_type]));
+      $this->assertEqual($entity_revision->field_test_text->value, $texts[$i], format_string('%entity_type: Text matches.', ['%entity_type' => $entity_type]));
 
       // Check non-revisioned values are loaded.
-      $this->assertTrue(isset($entity_revision->created->value), format_string('%entity_type: Non-revisioned field is loaded.', array('%entity_type' => $entity_type)));
-      $this->assertEqual($entity_revision->created->value, $created[2], format_string('%entity_type: Non-revisioned field value is the same between revisions.', array('%entity_type' => $entity_type)));
+      $this->assertTrue(isset($entity_revision->created->value), format_string('%entity_type: Non-revisioned field is loaded.', ['%entity_type' => $entity_type]));
+      $this->assertEqual($entity_revision->created->value, $created[2], format_string('%entity_type: Non-revisioned field value is the same between revisions.', ['%entity_type' => $entity_type]));
     }
 
     // Confirm the correct revision text appears in the edit form.
@@ -118,8 +118,8 @@ class EntityRevisionsTest extends BrowserTestBase {
       ->getStorage($entity_type)
       ->load($entity->id->value);
     $this->drupalGet($entity_type . '/manage/' . $entity->id->value . '/edit');
-    $this->assertFieldById('edit-name-0-value', $entity->name->value, format_string('%entity_type: Name matches in UI.', array('%entity_type' => $entity_type)));
-    $this->assertFieldById('edit-field-test-text-0-value', $entity->field_test_text->value, format_string('%entity_type: Text matches in UI.', array('%entity_type' => $entity_type)));
+    $this->assertFieldById('edit-name-0-value', $entity->name->value, format_string('%entity_type: Name matches in UI.', ['%entity_type' => $entity_type]));
+    $this->assertFieldById('edit-field-test-text-0-value', $entity->field_test_text->value, format_string('%entity_type: Text matches in UI.', ['%entity_type' => $entity_type]));
   }
 
   /**

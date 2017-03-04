@@ -30,16 +30,16 @@ class Actions extends Container {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
-      '#process' => array(
+    return [
+      '#process' => [
         // @todo Move this to #pre_render.
-        array($class, 'preRenderActionsDropbutton'),
-        array($class, 'processActions'),
-        array($class, 'processContainer'),
-      ),
+        [$class, 'preRenderActionsDropbutton'],
+        [$class, 'processActions'],
+        [$class, 'processContainer'],
+      ],
       '#weight' => 100,
-      '#theme_wrappers' => array('container'),
-    );
+      '#theme_wrappers' => ['container'],
+    ];
   }
 
   /**
@@ -86,23 +86,23 @@ class Actions extends Container {
    *   into new #type 'dropbutton' elements.
    */
   public static function preRenderActionsDropbutton(&$element, FormStateInterface $form_state, &$complete_form) {
-    $dropbuttons = array();
+    $dropbuttons = [];
     foreach (Element::children($element, TRUE) as $key) {
       if (isset($element[$key]['#dropbutton'])) {
         $dropbutton = $element[$key]['#dropbutton'];
         // If there is no dropbutton for this button group yet, create one.
         if (!isset($dropbuttons[$dropbutton])) {
-          $dropbuttons[$dropbutton] = array(
+          $dropbuttons[$dropbutton] = [
             '#type' => 'dropbutton',
-          );
+          ];
         }
         // Add this button to the corresponding dropbutton.
         // @todo Change #type 'dropbutton' to be based on item-list.html.twig
         //   instead of links.html.twig to avoid this preemptive rendering.
         $button = \Drupal::service('renderer')->renderPlain($element[$key]);
-        $dropbuttons[$dropbutton]['#links'][$key] = array(
+        $dropbuttons[$dropbutton]['#links'][$key] = [
           'title' => $button,
-        );
+        ];
       }
     }
     // @todo For now, all dropbuttons appear first. Consider to invent a more

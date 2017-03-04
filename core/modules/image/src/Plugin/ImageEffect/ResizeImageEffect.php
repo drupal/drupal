@@ -22,7 +22,7 @@ class ResizeImageEffect extends ConfigurableImageEffectBase {
    */
   public function applyEffect(ImageInterface $image) {
     if (!$image->resize($this->configuration['width'], $this->configuration['height'])) {
-      $this->logger->error('Image resize failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()));
+      $this->logger->error('Image resize failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()]);
       return FALSE;
     }
     return TRUE;
@@ -41,10 +41,10 @@ class ResizeImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function getSummary() {
-    $summary = array(
+    $summary = [
       '#theme' => 'image_resize_summary',
       '#data' => $this->configuration,
-    );
+    ];
     $summary += parent::getSummary();
 
     return $summary;
@@ -54,32 +54,32 @@ class ResizeImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'width' => NULL,
       'height' => NULL,
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['width'] = array(
+    $form['width'] = [
       '#type' => 'number',
       '#title' => t('Width'),
       '#default_value' => $this->configuration['width'],
       '#field_suffix' => ' ' . t('pixels'),
       '#required' => TRUE,
       '#min' => 1,
-    );
-    $form['height'] = array(
+    ];
+    $form['height'] = [
       '#type' => 'number',
       '#title' => t('Height'),
       '#default_value' => $this->configuration['height'],
       '#field_suffix' => ' ' . t('pixels'),
       '#required' => TRUE,
       '#min' => 1,
-    );
+    ];
     return $form;
   }
 

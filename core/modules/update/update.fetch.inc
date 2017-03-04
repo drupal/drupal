@@ -18,9 +18,9 @@ function _update_cron_notify() {
   $update_config = \Drupal::config('update.settings');
   module_load_install('update');
   $status = update_requirements('runtime');
-  $params = array();
+  $params = [];
   $notify_all = ($update_config->get('notification.threshold') == 'all');
-  foreach (array('core', 'contrib') as $report_type) {
+  foreach (['core', 'contrib'] as $report_type) {
     $type = 'update_' . $report_type;
     if (isset($status[$type]['severity'])
         && ($status[$type]['severity'] == REQUIREMENT_ERROR || ($notify_all && $status[$type]['reason'] == UPDATE_NOT_CURRENT))) {

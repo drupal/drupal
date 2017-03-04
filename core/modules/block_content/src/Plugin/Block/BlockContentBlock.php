@@ -105,11 +105,11 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'status' => TRUE,
       'info' => '',
       'view_mode' => 'full',
-    );
+    ];
   }
 
   /**
@@ -122,14 +122,14 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     $block = $this->entityManager->loadEntityByUuid('block_content', $uuid);
     $options = $this->entityManager->getViewModeOptionsByBundle('block_content', $block->bundle());
 
-    $form['view_mode'] = array(
+    $form['view_mode'] = [
       '#type' => 'select',
       '#options' => $options,
       '#title' => $this->t('View mode'),
       '#description' => $this->t('Output the block in this view mode.'),
       '#default_value' => $this->configuration['view_mode'],
       '#access' => (count($options) > 1),
-    );
+    ];
     $form['title']['#description'] = $this->t('The title of the block as shown to the user.');
     return $form;
   }
@@ -161,13 +161,13 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
       return $this->entityManager->getViewBuilder($block->getEntityTypeId())->view($block, $this->configuration['view_mode']);
     }
     else {
-      return array(
-        '#markup' => $this->t('Block with uuid %uuid does not exist. <a href=":url">Add custom block</a>.', array(
+      return [
+        '#markup' => $this->t('Block with uuid %uuid does not exist. <a href=":url">Add custom block</a>.', [
           '%uuid' => $this->getDerivativeId(),
           ':url' => $this->urlGenerator->generate('block_content.add_page')
-        )),
+        ]),
         '#access' => $this->account->hasPermission('administer blocks')
-      );
+      ];
     }
   }
 

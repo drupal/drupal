@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'chwik', 'chwit', 'chwip', 'chwih', 'chyu', 'chyug', 'chyukk', 'chyugs', 'chyun', 'chyunj', 'chyunh', 'chyud', 'chyul', 'chyulg', 'chyulm', 'chyulb',
   0x10 => 'chyuls', 'chyult', 'chyulp', 'chyulh', 'chyum', 'chyub', 'chyubs', 'chyus', 'chyuss', 'chyung', 'chyuj', 'chyuch', 'chyuk', 'chyut', 'chyup', 'chyuh',
   0x20 => 'cheu', 'cheug', 'cheukk', 'cheugs', 'cheun', 'cheunj', 'cheunh', 'cheud', 'cheul', 'cheulg', 'cheulm', 'cheulb', 'cheuls', 'cheult', 'cheulp', 'cheulh',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'kyael', 'kyaelg', 'kyaelm', 'kyaelb', 'kyaels', 'kyaelt', 'kyaelp', 'kyaelh', 'kyaem', 'kyaeb', 'kyaebs', 'kyaes', 'kyaess', 'kyaeng', 'kyaej', 'kyaech',
   0xE0 => 'kyaek', 'kyaet', 'kyaep', 'kyaeh', 'keo', 'keog', 'keokk', 'keogs', 'keon', 'keonj', 'keonh', 'keod', 'keol', 'keolg', 'keolm', 'keolb',
   0xF0 => 'keols', 'keolt', 'keolp', 'keolh', 'keom', 'keob', 'keobs', 'keos', 'keoss', 'keong', 'keoj', 'keoch', 'keok', 'keot', 'keop', 'keoh',
-);
+];

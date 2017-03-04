@@ -21,7 +21,7 @@ abstract class LockBackendAbstract implements LockBackendInterface {
    *
    * @var array
    */
-  protected $locks = array();
+  protected $locks = [];
 
   /**
    * {@inheritdoc}

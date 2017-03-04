@@ -43,7 +43,7 @@ abstract class SystemConfigFormTestBase extends WebTestBase {
    */
   public function testConfigForm() {
     // Programmatically submit the given values.
-    $values = array();
+    $values = [];
     foreach ($this->values as $form_key => $data) {
       $values[$form_key] = $data['#value'];
     }
@@ -53,10 +53,10 @@ abstract class SystemConfigFormTestBase extends WebTestBase {
     // Check that the form returns an error when expected, and vice versa.
     $errors = $form_state->getErrors();
     $valid_form = empty($errors);
-    $args = array(
+    $args = [
       '%values' => print_r($values, TRUE),
       '%errors' => $valid_form ? t('None') : implode(' ', $errors),
-    );
+    ];
     $this->assertTrue($valid_form, format_string('Input values: %values<br/>Validation handler errors: %errors', $args));
 
     foreach ($this->values as $data) {

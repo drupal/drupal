@@ -31,14 +31,14 @@ function comment_test_comment_links_alter(array &$links, CommentInterface &$enti
     return;
   }
 
-  $links['comment_test'] = array(
+  $links['comment_test'] = [
     '#theme' => 'links__comment__comment_test',
-    '#attributes' => array('class' => array('links', 'inline')),
-    '#links' => array(
-      'comment-report' => array(
+    '#attributes' => ['class' => ['links', 'inline']],
+    '#links' => [
+      'comment-report' => [
         'title' => t('Report'),
         'url' => Url::fromRoute('comment_test.report', ['comment' => $entity->id()], ['query' => ['token' => \Drupal::getContainer()->get('csrf_token')->get("comment/{$entity->id()}/report")]]),
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 }

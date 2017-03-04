@@ -18,12 +18,12 @@ class StyleGridTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_grid');
+  public static $testViews = ['test_grid'];
 
   /**
    * Keeps track of which alignments have been tested.
    */
-  protected $alignmentsTested = array();
+  protected $alignmentsTested = [];
 
   /**
    * {@inheritdoc}
@@ -38,7 +38,7 @@ class StyleGridTest extends PluginTestBase {
    */
   public function testGrid() {
     $view = Views::getView('test_grid');
-    foreach (array('horizontal', 'vertical') as $alignment) {
+    foreach (['horizontal', 'vertical'] as $alignment) {
       $this->assertGrid($view, $alignment, 5);
       $this->assertGrid($view, $alignment, 4);
       $this->assertGrid($view, $alignment, 3);
@@ -73,7 +73,7 @@ class StyleGridTest extends PluginTestBase {
     $output = \Drupal::service('renderer')->renderRoot($output);
     $this->setRawContent($output);
     if (!in_array($alignment, $this->alignmentsTested)) {
-      $result = $this->xpath('//div[contains(@class, "views-view-grid") and contains(@class, :alignment) and contains(@class, :columns)]', array(':alignment' => $alignment, ':columns' => 'cols-' . $columns));
+      $result = $this->xpath('//div[contains(@class, "views-view-grid") and contains(@class, :alignment) and contains(@class, :columns)]', [':alignment' => $alignment, ':columns' => 'cols-' . $columns]);
       $this->assertTrue(count($result), ucfirst($alignment) . " grid markup detected.");
       $this->alignmentsTested[] = $alignment;
     }
@@ -86,10 +86,10 @@ class StyleGridTest extends PluginTestBase {
       case 1: $width = '100'; break;
     }
     // Ensure last column exists.
-    $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, :columns) and starts-with(@style, :width)]', array(':columns' => 'col-' . $columns, ':width' => 'width: ' . $width));
+    $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, :columns) and starts-with(@style, :width)]', [':columns' => 'col-' . $columns, ':width' => 'width: ' . $width]);
     $this->assertTrue(count($result), ucfirst($alignment) . " $columns column grid: last column exists and automatic width calculated correctly.");
     // Ensure no extra columns were generated.
-    $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, :columns)]', array(':columns' => 'col-' . ($columns + 1)));
+    $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, :columns)]', [':columns' => 'col-' . ($columns + 1)]);
     $this->assertFalse(count($result), ucfirst($alignment) . " $columns column grid: no extraneous columns exist.");
     // Ensure tokens are being replaced in custom row/column classes.
     $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, "name-John")]');

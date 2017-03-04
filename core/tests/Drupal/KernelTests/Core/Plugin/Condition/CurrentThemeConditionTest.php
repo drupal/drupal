@@ -15,24 +15,24 @@ class CurrentThemeConditionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('system', 'theme_test');
+  public static $modules = ['system', 'theme_test'];
 
   /**
    * Tests the current theme condition.
    */
   public function testCurrentTheme() {
-    \Drupal::service('theme_handler')->install(array('test_theme'));
+    \Drupal::service('theme_handler')->install(['test_theme']);
 
     $manager = \Drupal::service('plugin.manager.condition');
     /** @var $condition \Drupal\Core\Condition\ConditionInterface */
     $condition = $manager->createInstance('current_theme');
-    $condition->setConfiguration(array('theme' => 'test_theme'));
+    $condition->setConfiguration(['theme' => 'test_theme']);
     /** @var $condition_negated \Drupal\Core\Condition\ConditionInterface */
     $condition_negated = $manager->createInstance('current_theme');
-    $condition_negated->setConfiguration(array('theme' => 'test_theme', 'negate' => TRUE));
+    $condition_negated->setConfiguration(['theme' => 'test_theme', 'negate' => TRUE]);
 
-    $this->assertEqual($condition->summary(), SafeMarkup::format('The current theme is @theme', array('@theme' => 'test_theme')));
-    $this->assertEqual($condition_negated->summary(), SafeMarkup::format('The current theme is not @theme', array('@theme' => 'test_theme')));
+    $this->assertEqual($condition->summary(), SafeMarkup::format('The current theme is @theme', ['@theme' => 'test_theme']));
+    $this->assertEqual($condition_negated->summary(), SafeMarkup::format('The current theme is not @theme', ['@theme' => 'test_theme']));
 
     // The expected theme has not been set up yet.
     $this->assertFalse($condition->execute());

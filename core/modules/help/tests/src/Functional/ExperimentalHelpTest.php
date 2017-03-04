@@ -19,7 +19,7 @@ class ExperimentalHelpTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('help', 'experimental_module_test', 'help_page_test');
+  public static $modules = ['help', 'experimental_module_test', 'help_page_test'];
 
   /**
    * The admin user.

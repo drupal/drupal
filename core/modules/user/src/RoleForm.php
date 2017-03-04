@@ -15,7 +15,7 @@ class RoleForm extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Role name'),
       '#default_value' => $entity->label(),
@@ -23,22 +23,22 @@ class RoleForm extends EntityForm {
       '#required' => TRUE,
       '#maxlength' => 64,
       '#description' => $this->t('The name for this role. Example: "Moderator", "Editorial board", "Site architect".'),
-    );
-    $form['id'] = array(
+    ];
+    $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $entity->id(),
       '#required' => TRUE,
       '#disabled' => !$entity->isNew(),
       '#size' => 30,
       '#maxlength' => 64,
-      '#machine_name' => array(
+      '#machine_name' => [
         'exists' => ['\Drupal\user\Entity\Role', 'load'],
-      ),
-    );
-    $form['weight'] = array(
+      ],
+    ];
+    $form['weight'] = [
       '#type' => 'value',
       '#value' => $entity->getWeight(),
-    );
+    ];
 
     return parent::form($form, $form_state, $entity);
   }
@@ -55,12 +55,12 @@ class RoleForm extends EntityForm {
 
     $edit_link = $this->entity->link($this->t('Edit'));
     if ($status == SAVED_UPDATED) {
-      drupal_set_message($this->t('Role %label has been updated.', array('%label' => $entity->label())));
-      $this->logger('user')->notice('Role %label has been updated.', array('%label' => $entity->label(), 'link' => $edit_link));
+      drupal_set_message($this->t('Role %label has been updated.', ['%label' => $entity->label()]));
+      $this->logger('user')->notice('Role %label has been updated.', ['%label' => $entity->label(), 'link' => $edit_link]);
     }
     else {
-      drupal_set_message($this->t('Role %label has been added.', array('%label' => $entity->label())));
-      $this->logger('user')->notice('Role %label has been added.', array('%label' => $entity->label(), 'link' => $edit_link));
+      drupal_set_message($this->t('Role %label has been added.', ['%label' => $entity->label()]));
+      $this->logger('user')->notice('Role %label has been added.', ['%label' => $entity->label(), 'link' => $edit_link]);
     }
     $form_state->setRedirect('entity.user_role.collection');
   }

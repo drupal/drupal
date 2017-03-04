@@ -16,10 +16,10 @@ class InsertLobTest extends DatabaseTestBase {
     $data = "This is\000a test.";
     $this->assertTrue(strlen($data) === 15, 'Test data contains a NULL.');
     $id = db_insert('test_one_blob')
-      ->fields(array('blob1' => $data))
+      ->fields(['blob1' => $data])
       ->execute();
-    $r = db_query('SELECT * FROM {test_one_blob} WHERE id = :id', array(':id' => $id))->fetchAssoc();
-    $this->assertTrue($r['blob1'] === $data, format_string('Can insert a blob: id @id, @data.', array('@id' => $id, '@data' => serialize($r))));
+    $r = db_query('SELECT * FROM {test_one_blob} WHERE id = :id', [':id' => $id])->fetchAssoc();
+    $this->assertTrue($r['blob1'] === $data, format_string('Can insert a blob: id @id, @data.', ['@id' => $id, '@data' => serialize($r)]));
   }
 
   /**
@@ -27,12 +27,12 @@ class InsertLobTest extends DatabaseTestBase {
    */
   function testInsertMultipleBlob() {
     $id = db_insert('test_two_blobs')
-      ->fields(array(
+      ->fields([
         'blob1' => 'This is',
         'blob2' => 'a test',
-      ))
+      ])
       ->execute();
-    $r = db_query('SELECT * FROM {test_two_blobs} WHERE id = :id', array(':id' => $id))->fetchAssoc();
+    $r = db_query('SELECT * FROM {test_two_blobs} WHERE id = :id', [':id' => $id])->fetchAssoc();
     $this->assertTrue($r['blob1'] === 'This is' && $r['blob2'] === 'a test', 'Can insert multiple blobs per row.');
   }
 

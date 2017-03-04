@@ -24,14 +24,14 @@ class DisplayEntityReferenceTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_display_entity_reference');
+  public static $testViews = ['test_display_entity_reference'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'field', 'views_ui');
+  public static $modules = ['entity_test', 'field', 'views_ui'];
 
   /**
    * The used field name in the test.
@@ -67,7 +67,7 @@ class DisplayEntityReferenceTest extends PluginTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalLogin($this->drupalCreateUser(array('administer views')));
+    $this->drupalLogin($this->drupalCreateUser(['administer views']));
 
     // Create the text field.
     $this->fieldName = 'field_test_entity_ref_display';

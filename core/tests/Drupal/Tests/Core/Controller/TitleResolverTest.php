@@ -55,8 +55,8 @@ class TitleResolverTest extends UnitTestCase {
    */
   public function testStaticTitle() {
     $request = new Request();
-    $route = new Route('/test-route', array('_title' => 'static title'));
-    $this->assertEquals(new TranslatableMarkup('static title', array(), array(), $this->translationManager), $this->titleResolver->getTitle($request, $route));
+    $route = new Route('/test-route', ['_title' => 'static title']);
+    $this->assertEquals(new TranslatableMarkup('static title', [], [], $this->translationManager), $this->titleResolver->getTitle($request, $route));
   }
 
   /**
@@ -66,8 +66,8 @@ class TitleResolverTest extends UnitTestCase {
    */
   public function testStaticTitleWithContext() {
     $request = new Request();
-    $route = new Route('/test-route', array('_title' => 'static title', '_title_context' => 'context'));
-    $this->assertEquals(new TranslatableMarkup('static title', array(), array('context' => 'context'), $this->translationManager), $this->titleResolver->getTitle($request, $route));
+    $route = new Route('/test-route', ['_title' => 'static title', '_title_context' => 'context']);
+    $this->assertEquals(new TranslatableMarkup('static title', [], ['context' => 'context'], $this->translationManager), $this->titleResolver->getTitle($request, $route));
   }
 
   /**
@@ -78,20 +78,20 @@ class TitleResolverTest extends UnitTestCase {
    * @dataProvider providerTestStaticTitleWithParameter
    */
   public function testStaticTitleWithParameter($title, $expected_title) {
-    $raw_variables = new ParameterBag(array('test' => 'value', 'test2' => 'value2'));
+    $raw_variables = new ParameterBag(['test' => 'value', 'test2' => 'value2']);
     $request = new Request();
     $request->attributes->set('_raw_variables', $raw_variables);
 
-    $route = new Route('/test-route', array('_title' => $title));
+    $route = new Route('/test-route', ['_title' => $title]);
     $this->assertEquals($expected_title, $this->titleResolver->getTitle($request, $route));
   }
 
   public function providerTestStaticTitleWithParameter() {
     $translation_manager = $this->getMock('\Drupal\Core\StringTranslation\TranslationInterface');
-    return array(
-      array('static title @test', new TranslatableMarkup('static title @test', ['@test' => 'value', '%test' => 'value', '@test2' => 'value2', '%test2' => 'value2'], array(), $translation_manager)),
-      array('static title %test', new TranslatableMarkup('static title %test', ['@test' => 'value', '%test' => 'value', '@test2' => 'value2', '%test2' => 'value2'], array(), $translation_manager)),
-    );
+    return [
+      ['static title @test', new TranslatableMarkup('static title @test', ['@test' => 'value', '%test' => 'value', '@test2' => 'value2', '%test2' => 'value2'], [], $translation_manager)],
+      ['static title %test', new TranslatableMarkup('static title %test', ['@test' => 'value', '%test' => 'value', '@test2' => 'value2', '%test2' => 'value2'], [], $translation_manager)],
+    ];
   }
 
   /**
@@ -101,9 +101,9 @@ class TitleResolverTest extends UnitTestCase {
    */
   public function testDynamicTitle() {
     $request = new Request();
-    $route = new Route('/test-route', array('_title' => 'static title', '_title_callback' => 'Drupal\Tests\Core\Controller\TitleCallback::example'));
+    $route = new Route('/test-route', ['_title' => 'static title', '_title_callback' => 'Drupal\Tests\Core\Controller\TitleCallback::example']);
 
-    $callable = array(new TitleCallback(), 'example');
+    $callable = [new TitleCallback(), 'example'];
     $this->controllerResolver->expects($this->once())
       ->method('getControllerFromDefinition')
       ->with('Drupal\Tests\Core\Controller\TitleCallback::example')
@@ -111,7 +111,7 @@ class TitleResolverTest extends UnitTestCase {
     $this->controllerResolver->expects($this->once())
       ->method('getArguments')
       ->with($request, $callable)
-      ->will($this->returnValue(array('example')));
+      ->will($this->returnValue(['example']));
 
     $this->assertEquals('test example', $this->titleResolver->getTitle($request, $route));
   }

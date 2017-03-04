@@ -47,7 +47,7 @@ abstract class StylePluginBase extends PluginBase {
   /**
    * Store all available tokens row rows.
    */
-  protected $rowTokens = array();
+  protected $rowTokens = [];
 
   /**
    * Does the style plugin allows to use style plugins.
@@ -122,9 +122,9 @@ abstract class StylePluginBase extends PluginBase {
       $this->view->rowPlugin = $display->getPlugin('row');
     }
 
-    $this->options += array(
-      'grouping' => array(),
-    );
+    $this->options += [
+      'grouping' => [],
+    ];
 
   }
 
@@ -230,7 +230,7 @@ abstract class StylePluginBase extends PluginBase {
   public function tokenizeValue($value, $row_index) {
     if (strpos($value, '{{') !== FALSE) {
       // Row tokens might be empty, for example for node row style.
-      $tokens = isset($this->rowTokens[$row_index]) ? $this->rowTokens[$row_index] : array();
+      $tokens = isset($this->rowTokens[$row_index]) ? $this->rowTokens[$row_index] : [];
       if (!empty($this->view->build_info['substitutions'])) {
         $tokens += $this->view->build_info['substitutions'];
       }
@@ -257,12 +257,12 @@ abstract class StylePluginBase extends PluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['grouping'] = array('default' => array());
+    $options['grouping'] = ['default' => []];
     if ($this->usesRowClass()) {
-      $options['row_class'] = array('default' => '');
-      $options['default_row_class'] = array('default' => TRUE);
+      $options['row_class'] = ['default' => ''];
+      $options['default_row_class'] = ['default' => TRUE];
     }
-    $options['uses_fields'] = array('default' => FALSE);
+    $options['uses_fields'] = ['default' => FALSE];
 
     return $options;
   }
@@ -277,7 +277,7 @@ abstract class StylePluginBase extends PluginBase {
     // to FALSE.
     // @TODO: Document "usesGrouping" in docs.php when docs.php is written.
     if ($this->usesFields() && $this->usesGrouping()) {
-      $options = array('' => $this->t('- None -'));
+      $options = ['' => $this->t('- None -')];
       $field_labels = $this->displayHandler->getFieldLabels(TRUE);
       $options += $field_labels;
       // If there are no fields, we can't group on them.
@@ -286,7 +286,7 @@ abstract class StylePluginBase extends PluginBase {
         // select form.
         if (is_string($this->options['grouping'])) {
           $grouping = $this->options['grouping'];
-          $this->options['grouping'] = array();
+          $this->options['grouping'] = [];
           $this->options['grouping'][0]['field'] = $grouping;
         }
         if (isset($this->options['group_rendered']) && is_string($this->options['group_rendered'])) {
@@ -297,67 +297,67 @@ abstract class StylePluginBase extends PluginBase {
         $c = count($this->options['grouping']);
         // Add a form for every grouping, plus one.
         for ($i = 0; $i <= $c; $i++) {
-          $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : array();
-          $grouping += array('field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE);
-          $form['grouping'][$i]['field'] = array(
+          $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : [];
+          $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE];
+          $form['grouping'][$i]['field'] = [
             '#type' => 'select',
-            '#title' => $this->t('Grouping field Nr.@number', array('@number' => $i + 1)),
+            '#title' => $this->t('Grouping field Nr.@number', ['@number' => $i + 1]),
             '#options' => $options,
             '#default_value' => $grouping['field'],
             '#description' => $this->t('You may optionally specify a field by which to group the records. Leave blank to not group.'),
-          );
-          $form['grouping'][$i]['rendered'] = array(
+          ];
+          $form['grouping'][$i]['rendered'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('Use rendered output to group rows'),
             '#default_value' => $grouping['rendered'],
             '#description' => $this->t('If enabled the rendered output of the grouping field is used to group the rows.'),
-            '#states' => array(
-              'invisible' => array(
-                ':input[name="style_options[grouping][' . $i . '][field]"]' => array('value' => ''),
-              ),
-            ),
-          );
-          $form['grouping'][$i]['rendered_strip'] = array(
+            '#states' => [
+              'invisible' => [
+                ':input[name="style_options[grouping][' . $i . '][field]"]' => ['value' => ''],
+              ],
+            ],
+          ];
+          $form['grouping'][$i]['rendered_strip'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('Remove tags from rendered output'),
             '#default_value' => $grouping['rendered_strip'],
-            '#states' => array(
-              'invisible' => array(
-                ':input[name="style_options[grouping][' . $i . '][field]"]' => array('value' => ''),
-              ),
-            ),
-          );
+            '#states' => [
+              'invisible' => [
+                ':input[name="style_options[grouping][' . $i . '][field]"]' => ['value' => ''],
+              ],
+            ],
+          ];
         }
       }
     }
 
     if ($this->usesRowClass()) {
-      $form['row_class'] = array(
+      $form['row_class'] = [
         '#title' => $this->t('Row class'),
         '#description' => $this->t('The class to provide on each row.'),
         '#type' => 'textfield',
         '#default_value' => $this->options['row_class'],
-      );
+      ];
 
       if ($this->usesFields()) {
         $form['row_class']['#description'] .= ' ' . $this->t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
       }
 
-      $form['default_row_class'] = array(
+      $form['default_row_class'] = [
         '#title' => $this->t('Add views row classes'),
-        '#description' => $this->t('Add the default row classes like @classes to the output. You can use this to quickly reduce the amount of markup the view provides by default, at the cost of making it more difficult to apply CSS.', array('@classes' => 'views-row')),
+        '#description' => $this->t('Add the default row classes like @classes to the output. You can use this to quickly reduce the amount of markup the view provides by default, at the cost of making it more difficult to apply CSS.', ['@classes' => 'views-row']),
         '#type' => 'checkbox',
         '#default_value' => $this->options['default_row_class'],
-      );
+      ];
     }
 
     if (!$this->usesFields() || !empty($this->options['uses_fields'])) {
-      $form['uses_fields'] = array(
+      $form['uses_fields'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Force using fields'),
         '#description' => $this->t('If neither the row nor the style plugin supports fields, this field allows to enable them, so you can for example use groupby.'),
         '#default_value' => $this->options['uses_fields'],
-      );
+      ];
     }
   }
 
@@ -366,12 +366,12 @@ abstract class StylePluginBase extends PluginBase {
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Don't run validation on style plugins without the grouping setting.
-    if ($form_state->hasValue(array('style_options', 'grouping'))) {
+    if ($form_state->hasValue(['style_options', 'grouping'])) {
       // Don't save grouping if no field is specified.
-      $groupings = $form_state->getValue(array('style_options', 'grouping'));
+      $groupings = $form_state->getValue(['style_options', 'grouping']);
       foreach ($groupings as $index => $grouping) {
         if (empty($grouping['field'])) {
-          $form_state->unsetValue(array('style_options', 'grouping', $index));
+          $form_state->unsetValue(['style_options', 'grouping', $index]);
         }
       }
     }
@@ -442,12 +442,12 @@ abstract class StylePluginBase extends PluginBase {
    * @return array
    *   The render array containing the single group theme output.
    */
-  protected function renderRowGroup(array $rows = array()) {
-    return array(
+  protected function renderRowGroup(array $rows = []) {
+    return [
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
       '#rows' => $rows,
-    );
+    ];
   }
 
   /**
@@ -486,7 +486,7 @@ abstract class StylePluginBase extends PluginBase {
    *   Rendered output of given grouping sets.
    */
   public function renderGroupingSets($sets) {
-    $output = array();
+    $output = [];
     $theme_functions = $this->view->buildThemeFunctions($this->groupingTheme);
     foreach ($sets as $set) {
       $level = isset($set['level']) ? $set['level'] : 0;
@@ -494,12 +494,12 @@ abstract class StylePluginBase extends PluginBase {
       $row = reset($set['rows']);
       // Render as a grouping set.
       if (is_array($row) && isset($row['group'])) {
-        $single_output = array(
+        $single_output = [
           '#theme' => $theme_functions,
           '#view' => $this->view,
           '#grouping' => $this->options['grouping'][$level],
           '#rows' => $set['rows'],
-        );
+        ];
       }
       // Render as a record set.
       else {
@@ -562,17 +562,17 @@ abstract class StylePluginBase extends PluginBase {
    *   )
    *   @endcode
    */
-  public function renderGrouping($records, $groupings = array(), $group_rendered = NULL) {
+  public function renderGrouping($records, $groupings = [], $group_rendered = NULL) {
     // This is for backward compatibility, when $groupings was a string
     // containing the ID of a single field.
     if (is_string($groupings)) {
       $rendered = $group_rendered === NULL ? TRUE : $group_rendered;
-      $groupings = array(array('field' => $groupings, 'rendered' => $rendered));
+      $groupings = [['field' => $groupings, 'rendered' => $rendered]];
     }
 
     // Make sure fields are rendered
     $this->renderFields($this->view->result);
-    $sets = array();
+    $sets = [];
     if ($groupings) {
       foreach ($records as $index => $row) {
         // Iterate through configured grouping fields to determine the
@@ -613,7 +613,7 @@ abstract class StylePluginBase extends PluginBase {
           if (empty($set[$grouping])) {
             $set[$grouping]['group'] = $group_content;
             $set[$grouping]['level'] = $level;
-            $set[$grouping]['rows'] = array();
+            $set[$grouping]['rows'] = [];
           }
 
           // Move the set reference into the row set of the group we just determined.
@@ -625,17 +625,17 @@ abstract class StylePluginBase extends PluginBase {
     }
     else {
       // Create a single group with an empty grouping field.
-      $sets[''] = array(
+      $sets[''] = [
         'group' => '',
         'rows' => $records,
-      );
+      ];
     }
 
     // If this parameter isn't explicitly set, modify the output to be fully
     // backward compatible to code before Views 7.x-3.0-rc2.
     // @TODO Remove this as soon as possible e.g. October 2020
     if ($group_rendered === NULL) {
-      $old_style_sets = array();
+      $old_style_sets = [];
       foreach ($sets as $group) {
         $old_style_sets[$group['group']] = $group['rows'];
       }
@@ -806,7 +806,7 @@ abstract class StylePluginBase extends PluginBase {
     if ($this->usesRowPlugin()) {
       $plugin = $this->displayHandler->getPlugin('row');
       if (empty($plugin)) {
-        $errors[] = $this->t('Style @style requires a row style but the row plugin is invalid.', array('@style' => $this->definition['title']));
+        $errors[] = $this->t('Style @style requires a row style but the row plugin is invalid.', ['@style' => $this->definition['title']]);
       }
       else {
         $result = $plugin->validate();

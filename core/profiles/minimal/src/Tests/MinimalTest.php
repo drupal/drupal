@@ -24,7 +24,7 @@ class MinimalTest extends WebTestBase {
 
     // Create a user to test tools and navigation blocks for logged in users
     // with appropriate permissions.
-    $user = $this->drupalCreateUser(array('access administration pages', 'administer content types'));
+    $user = $this->drupalCreateUser(['access administration pages', 'administer content types']);
     $this->drupalLogin($user);
     $this->drupalGet('');
     $this->assertText(t('Tools'));

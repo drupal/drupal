@@ -33,11 +33,11 @@ class MigrateCommentStubTest extends MigrateDrupalTestBase {
     $storage = \Drupal::entityManager()->getStorage('user');
     // Insert a row for the anonymous user.
     $storage
-      ->create(array(
+      ->create([
         'uid' => 0,
         'status' => 0,
         'name' => '',
-      ))
+      ])
       ->save();
     // Need at least one node type and comment type present.
     NodeType::create([

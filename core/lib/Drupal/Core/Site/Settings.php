@@ -17,7 +17,7 @@ final class Settings {
    *
    * @var array
    */
-  private $storage = array();
+  private $storage = [];
 
   /**
    * Singleton instance.
@@ -114,9 +114,9 @@ final class Settings {
   public static function initialize($app_root, $site_path, &$class_loader) {
     // Export these settings.php variables to the global namespace.
     global $config_directories, $config;
-    $settings = array();
-    $config = array();
-    $databases = array();
+    $settings = [];
+    $config = [];
+    $databases = [];
 
     if (is_readable($app_root . '/' . $site_path . '/settings.php')) {
       require $app_root . '/' . $site_path . '/settings.php';

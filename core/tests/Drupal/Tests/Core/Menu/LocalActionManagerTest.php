@@ -134,8 +134,8 @@ class LocalActionManagerTest extends UnitTestCase {
 
     $this->controllerResolver->expects($this->once())
       ->method('getArguments')
-      ->with($this->request, array($local_action, 'getTitle'))
-      ->will($this->returnValue(array('test')));
+      ->with($this->request, [$local_action, 'getTitle'])
+      ->will($this->returnValue(['test']));
 
     $this->localActionManager->getTitle($local_action);
   }
@@ -149,7 +149,7 @@ class LocalActionManagerTest extends UnitTestCase {
     $this->discovery->expects($this->any())
       ->method('getDefinitions')
       ->will($this->returnValue($plugin_definitions));
-    $map = array();
+    $map = [];
     foreach ($plugin_definitions as $plugin_id => $plugin_definition) {
       $plugin = $this->getMock('Drupal\Core\Menu\LocalActionInterface');
       $plugin->expects($this->any())
@@ -157,23 +157,23 @@ class LocalActionManagerTest extends UnitTestCase {
         ->will($this->returnValue($plugin_definition['route_name']));
       $plugin->expects($this->any())
         ->method('getRouteParameters')
-        ->will($this->returnValue(isset($plugin_definition['route_parameters']) ? $plugin_definition['route_parameters'] : array()));
+        ->will($this->returnValue(isset($plugin_definition['route_parameters']) ? $plugin_definition['route_parameters'] : []));
       $plugin->expects($this->any())
         ->method('getTitle')
         ->will($this->returnValue($plugin_definition['title']));
       $this->controllerResolver->expects($this->any())
         ->method('getArguments')
-        ->with($this->request, array($plugin, 'getTitle'))
-        ->will($this->returnValue(array()));
+        ->with($this->request, [$plugin, 'getTitle'])
+        ->will($this->returnValue([]));
 
       $plugin->expects($this->any())
         ->method('getWeight')
         ->will($this->returnValue($plugin_definition['weight']));
       $this->controllerResolver->expects($this->any())
         ->method('getArguments')
-        ->with($this->request, array($plugin, 'getTitle'))
-        ->will($this->returnValue(array()));
-      $map[] = array($plugin_id, array(), $plugin);
+        ->with($this->request, [$plugin, 'getTitle'])
+        ->will($this->returnValue([]));
+      $map[] = [$plugin_id, [], $plugin];
     }
     $this->factory->expects($this->any())
       ->method('createInstance')
@@ -184,199 +184,199 @@ class LocalActionManagerTest extends UnitTestCase {
 
   public function getActionsForRouteProvider() {
     // Single available and single expected plugins.
-    $data[] = array(
+    $data[] = [
       'test_route',
-      array(
-        'plugin_id_1' => array(
-          'appears_on' => array(
+      [
+        'plugin_id_1' => [
+          'appears_on' => [
             'test_route',
-          ),
+          ],
           'route_name' => 'test_route_2',
           'title' => 'Plugin ID 1',
           'weight' => 0,
-        ),
-      ),
-      array(
-        '#cache' => array(
-          'contexts' => array('route'),
-        ),
-        'plugin_id_1' => array(
+        ],
+      ],
+      [
+        '#cache' => [
+          'contexts' => ['route'],
+        ],
+        'plugin_id_1' => [
           '#theme' => 'menu_local_action',
-          '#link' => array(
+          '#link' => [
             'title' => 'Plugin ID 1',
             'url' => Url::fromRoute('test_route_2'),
             'localized_options' => '',
-          ),
+          ],
           '#access' => AccessResult::forbidden(),
           '#weight' => 0,
-          '#cache' => array(
-            'contexts' => array(),
-            'tags' => array(),
+          '#cache' => [
+            'contexts' => [],
+            'tags' => [],
             'max-age' => 0,
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
     // Multiple available and single expected plugins.
-    $data[] = array(
+    $data[] = [
       'test_route',
-      array(
-        'plugin_id_1' => array(
-          'appears_on' => array(
+      [
+        'plugin_id_1' => [
+          'appears_on' => [
             'test_route',
-          ),
+          ],
           'route_name' => 'test_route_2',
           'title' => 'Plugin ID 1',
           'weight' => 0,
-        ),
-        'plugin_id_2' => array(
-          'appears_on' => array(
+        ],
+        'plugin_id_2' => [
+          'appears_on' => [
             'test_route2',
-          ),
+          ],
           'route_name' => 'test_route_3',
           'title' => 'Plugin ID 2',
           'weight' => 0,
-        ),
-      ),
-      array(
-        '#cache' => array(
-          'contexts' => array('route'),
-        ),
-        'plugin_id_1' => array(
+        ],
+      ],
+      [
+        '#cache' => [
+          'contexts' => ['route'],
+        ],
+        'plugin_id_1' => [
           '#theme' => 'menu_local_action',
-          '#link' => array(
+          '#link' => [
             'title' => 'Plugin ID 1',
             'url' => Url::fromRoute('test_route_2'),
             'localized_options' => '',
-          ),
+          ],
           '#access' => AccessResult::forbidden(),
           '#weight' => 0,
-          '#cache' => array(
-            'contexts' => array(),
-            'tags' => array(),
+          '#cache' => [
+            'contexts' => [],
+            'tags' => [],
             'max-age' => 0,
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
     // Multiple available and multiple expected plugins and specified weight.
-    $data[] = array(
+    $data[] = [
       'test_route',
-      array(
-        'plugin_id_1' => array(
-          'appears_on' => array(
+      [
+        'plugin_id_1' => [
+          'appears_on' => [
             'test_route',
-          ),
+          ],
           'route_name' => 'test_route_2',
           'title' => 'Plugin ID 1',
           'weight' => 1,
-        ),
-        'plugin_id_2' => array(
-          'appears_on' => array(
+        ],
+        'plugin_id_2' => [
+          'appears_on' => [
             'test_route',
-          ),
+          ],
           'route_name' => 'test_route_3',
           'title' => 'Plugin ID 2',
           'weight' => 0,
-        ),
-      ),
-      array(
-        '#cache' => array(
-          'contexts' => array('route'),
-        ),
-        'plugin_id_1' => array(
+        ],
+      ],
+      [
+        '#cache' => [
+          'contexts' => ['route'],
+        ],
+        'plugin_id_1' => [
           '#theme' => 'menu_local_action',
-          '#link' => array(
+          '#link' => [
             'title' => 'Plugin ID 1',
             'url' => Url::fromRoute('test_route_2'),
             'localized_options' => '',
-          ),
+          ],
           '#access' => AccessResult::forbidden(),
           '#weight' => 1,
-          '#cache' => array(
-            'contexts' => array(),
-            'tags' => array(),
+          '#cache' => [
+            'contexts' => [],
+            'tags' => [],
             'max-age' => 0,
-          ),
-        ),
-        'plugin_id_2' => array(
+          ],
+        ],
+        'plugin_id_2' => [
           '#theme' => 'menu_local_action',
-          '#link' => array(
+          '#link' => [
             'title' => 'Plugin ID 2',
             'url' => Url::fromRoute('test_route_3'),
             'localized_options' => '',
-          ),
+          ],
           '#access' => AccessResult::forbidden(),
           '#weight' => 0,
-          '#cache' => array(
-            'contexts' => array(),
-            'tags' => array(),
+          '#cache' => [
+            'contexts' => [],
+            'tags' => [],
             'max-age' => 0,
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
     // Two plugins with the same route name but different route parameters.
-    $data[] = array(
+    $data[] = [
       'test_route',
-      array(
-        'plugin_id_1' => array(
-          'appears_on' => array(
+      [
+        'plugin_id_1' => [
+          'appears_on' => [
             'test_route',
-          ),
+          ],
           'route_name' => 'test_route_2',
-          'route_parameters' => array('test1'),
+          'route_parameters' => ['test1'],
           'title' => 'Plugin ID 1',
           'weight' => 1,
-        ),
-        'plugin_id_2' => array(
-          'appears_on' => array(
+        ],
+        'plugin_id_2' => [
+          'appears_on' => [
             'test_route',
-          ),
+          ],
           'route_name' => 'test_route_2',
-          'route_parameters' => array('test2'),
+          'route_parameters' => ['test2'],
           'title' => 'Plugin ID 2',
           'weight' => 0,
-        ),
-      ),
-      array(
-        '#cache' => array(
-          'contexts' => array('route'),
-        ),
-        'plugin_id_1' => array(
+        ],
+      ],
+      [
+        '#cache' => [
+          'contexts' => ['route'],
+        ],
+        'plugin_id_1' => [
           '#theme' => 'menu_local_action',
-          '#link' => array(
+          '#link' => [
             'title' => 'Plugin ID 1',
             'url' => Url::fromRoute('test_route_2', ['test1']),
             'localized_options' => '',
-          ),
+          ],
           '#access' => AccessResult::forbidden(),
           '#weight' => 1,
-          '#cache' => array(
-            'contexts' => array(),
-            'tags' => array(),
+          '#cache' => [
+            'contexts' => [],
+            'tags' => [],
             'max-age' => 0,
-          ),
-        ),
-        'plugin_id_2' => array(
+          ],
+        ],
+        'plugin_id_2' => [
           '#theme' => 'menu_local_action',
-          '#link' => array(
+          '#link' => [
             'title' => 'Plugin ID 2',
             'url' => Url::fromRoute('test_route_2', ['test2']),
             'localized_options' => '',
-          ),
+          ],
           '#access' => AccessResult::forbidden(),
           '#weight' => 0,
-          '#cache' => array(
-            'contexts' => array(),
-            'tags' => array(),
+          '#cache' => [
+            'contexts' => [],
+            'tags' => [],
             'max-age' => 0,
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
     return $data;
   }
@@ -397,7 +397,7 @@ class TestLocalActionManager extends LocalActionManager {
     $this->routeMatch = $route_match;
     $this->moduleHandler = $module_handler;
     $this->alterInfo('menu_local_actions');
-    $this->setCacheBackend($cache_backend, 'local_action_plugins', array('local_action'));
+    $this->setCacheBackend($cache_backend, 'local_action_plugins', ['local_action']);
   }
 
 }

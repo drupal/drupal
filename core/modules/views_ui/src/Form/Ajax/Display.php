@@ -60,15 +60,15 @@ class Display extends ViewsFormBase {
 
     $executable = $view->getExecutable();
     if (!$executable->setDisplay($display_id)) {
-      $form['markup'] = array('#markup' => $this->t('Invalid display id @display', array('@display' => $display_id)));
+      $form['markup'] = ['#markup' => $this->t('Invalid display id @display', ['@display' => $display_id])];
       return $form;
     }
 
     // Get form from the handler.
-    $form['options'] = array(
-      '#theme_wrappers' => array('container'),
-      '#attributes' => array('class' => array('scroll'), 'data-drupal-views-scroll' => TRUE),
-    );
+    $form['options'] = [
+      '#theme_wrappers' => ['container'],
+      '#attributes' => ['class' => ['scroll'], 'data-drupal-views-scroll' => TRUE],
+    ];
     $executable->display_handler->buildOptionsForm($form['options'], $form_state);
 
     // The handler options form sets $form['#title'], which we need on the entire

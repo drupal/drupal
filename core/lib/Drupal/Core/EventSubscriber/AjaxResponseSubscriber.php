@@ -110,8 +110,8 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::RESPONSE][] = array('onResponse', -100);
-    $events[KernelEvents::REQUEST][] = array('onRequest', 50);
+    $events[KernelEvents::RESPONSE][] = ['onResponse', -100];
+    $events[KernelEvents::REQUEST][] = ['onRequest', 50];
 
     return $events;
   }

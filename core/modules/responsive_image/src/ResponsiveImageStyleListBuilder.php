@@ -33,11 +33,11 @@ class ResponsiveImageStyleListBuilder extends ConfigEntityListBuilder {
    */
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
-    $operations['duplicate'] = array(
+    $operations['duplicate'] = [
       'title' => t('Duplicate'),
       'weight' => 15,
       'url' => $entity->urlInfo('duplicate-form'),
-    );
+    ];
     return $operations;
   }
 

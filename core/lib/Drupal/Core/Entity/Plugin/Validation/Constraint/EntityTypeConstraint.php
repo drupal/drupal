@@ -40,7 +40,7 @@ class EntityTypeConstraint extends Constraint {
    * {@inheritdoc}
    */
   public function getRequiredOptions() {
-    return array('type');
+    return ['type'];
   }
 
 }

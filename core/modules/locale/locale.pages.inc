@@ -29,7 +29,7 @@ function locale_translation_manual_status() {
   if (batch_get()) {
     return batch_process('admin/reports/translations');
   }
-  return new RedirectResponse(\Drupal::url('locale.translate_status', array(), array('absolute' => TRUE)));
+  return new RedirectResponse(\Drupal::url('locale.translate_status', [], ['absolute' => TRUE]));
 }
 
 /**
@@ -72,5 +72,5 @@ function template_preprocess_locale_translation_last_check(array &$variables) {
   $last = $variables['last'];
   $variables['last_checked'] = ($last != NULL);
   $variables['time'] = \Drupal::service('date.formatter')->formatTimeDiffSince($last);
-  $variables['link'] = \Drupal::l(t('Check manually'), new Url('locale.check_translation', array(), array('query' => \Drupal::destination()->getAsArray())));
+  $variables['link'] = \Drupal::l(t('Check manually'), new Url('locale.check_translation', [], ['query' => \Drupal::destination()->getAsArray()]));
 }

@@ -86,7 +86,7 @@ interface MenuTreeStorageInterface {
    * @return array
    *   An array of menu link definitions keyed by ID and ordered by depth.
    */
-  public function loadByRoute($route_name, array $route_parameters = array(), $menu_name = NULL);
+  public function loadByRoute($route_name, array $route_parameters = [], $menu_name = NULL);
 
   /**
    * Saves a plugin definition to the storage.

@@ -90,10 +90,10 @@ class UnmetDependenciesException extends ConfigException {
    */
   public static function create($extension, array $config_objects) {
     $message = new FormattableMarkup('Configuration objects provided by %extension have unmet dependencies: %config_names',
-      array(
+      [
         '%config_names' => static::formatConfigObjectList($config_objects),
         '%extension' => $extension
-      )
+      ]
     );
     $e = new static($message);
     $e->configObjects = $config_objects;

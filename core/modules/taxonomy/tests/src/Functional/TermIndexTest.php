@@ -17,7 +17,7 @@ class TermIndexTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('views');
+  public static $modules = ['views'];
 
   /**
    * Vocabulary for testing.
@@ -50,37 +50,37 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
 
     $this->fieldName1 = Unicode::strtolower($this->randomMachineName());
-    $handler_settings = array(
-      'target_bundles' => array(
+    $handler_settings = [
+      'target_bundles' => [
         $this->vocabulary->id() => $this->vocabulary->id(),
-       ),
+       ],
       'auto_create' => TRUE,
-    );
+    ];
     $this->createEntityReferenceField('node', 'article', $this->fieldName1, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->fieldName1, array(
+      ->setComponent($this->fieldName1, [
         'type' => 'options_select',
-      ))
+      ])
       ->save();
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->fieldName1, array(
+      ->setComponent($this->fieldName1, [
         'type' => 'entity_reference_label',
-      ))
+      ])
       ->save();
 
     $this->fieldName2 = Unicode::strtolower($this->randomMachineName());
     $this->createEntityReferenceField('node', 'article', $this->fieldName2, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->fieldName2, array(
+      ->setComponent($this->fieldName2, [
         'type' => 'options_select',
-      ))
+      ])
       ->save();
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->fieldName2, array(
+      ->setComponent($this->fieldName2, [
         'type' => 'entity_reference_label',
-      ))
+      ])
       ->save();
   }
 
@@ -94,7 +94,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $term_2 = $this->createTerm($this->vocabulary);
 
     // Post an article.
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit['body[0][value]'] = $this->randomMachineName();
     $edit["{$this->fieldName1}[]"] = $term_1->id();
@@ -103,10 +103,10 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Check that the term is indexed, and only once.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_1->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed once.');
 
     // Update the article to change one term.
@@ -114,15 +114,15 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that both terms are indexed.
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_1->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed.');
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_2->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
@@ -130,19 +130,19 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that only one term is indexed.
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_1->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(0, $index_count, 'Term 1 is not indexed.');
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_2->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
 
     // Redo the above tests without interface.
-    $node_storage->resetCache(array($node->id()));
+    $node_storage->resetCache([$node->id()]);
     $node = $node_storage->load($node->id());
     $node->title = $this->randomMachineName();
 
@@ -150,47 +150,47 @@ class TermIndexTest extends TaxonomyTestBase {
     $node->save();
 
     // Check that the index was not changed.
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_1->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(0, $index_count, 'Term 1 is not indexed.');
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_2->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
 
     // Update the article to change one term.
-    $node->{$this->fieldName1} = array(array('target_id' => $term_1->id()));
+    $node->{$this->fieldName1} = [['target_id' => $term_1->id()]];
     $node->save();
 
     // Check that both terms are indexed.
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_1->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed.');
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_2->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
-    $node->{$this->fieldName2} = array(array('target_id' => $term_1->id()));
+    $node->{$this->fieldName2} = [['target_id' => $term_1->id()]];
     $node->save();
 
     // Check that only one term is indexed.
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_1->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed once.');
-    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', [
       ':nid' => $node->id(),
       ':tid' => $term_2->id(),
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual(0, $index_count, 'Term 2 is not indexed.');
   }
 
@@ -201,7 +201,7 @@ class TermIndexTest extends TaxonomyTestBase {
     // Create two taxonomy terms and set term2 as the parent of term1.
     $term1 = $this->createTerm($this->vocabulary);
     $term2 = $this->createTerm($this->vocabulary);
-    $term1->parent = array($term2->id());
+    $term1->parent = [$term2->id()];
     $term1->save();
 
     // Verify that the page breadcrumbs include a link to the parent term.

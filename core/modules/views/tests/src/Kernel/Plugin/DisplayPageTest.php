@@ -22,14 +22,14 @@ class DisplayPageTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_page_display', 'test_page_display_route', 'test_page_display_menu');
+  public static $testViews = ['test_page_display', 'test_page_display_route', 'test_page_display_menu'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'field');
+  public static $modules = ['system', 'user', 'field'];
 
   /**
    * The router dumper to get all routes.

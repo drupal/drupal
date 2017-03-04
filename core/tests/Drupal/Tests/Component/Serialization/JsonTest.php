@@ -48,9 +48,9 @@ class JsonTest extends UnitTestCase {
 
     // Characters that must be escaped.
     // We check for unescaped " separately.
-    $this->htmlUnsafe = array('<', '>', '\'', '&');
+    $this->htmlUnsafe = ['<', '>', '\'', '&'];
     // The following are the encoded forms of: < > ' & "
-    $this->htmlUnsafeEscaped = array('\u003C', '\u003E', '\u0027', '\u0026', '\u0022');
+    $this->htmlUnsafeEscaped = ['\u003C', '\u003E', '\u0027', '\u0026', '\u0022'];
   }
 
   /**
@@ -100,7 +100,7 @@ class JsonTest extends UnitTestCase {
   public function testStructuredReversibility() {
     // Verify reversibility for structured data. Also verify that necessary
     // characters are escaped.
-    $source = array(TRUE, FALSE, 0, 1, '0', '1', $this->string, array('key1' => $this->string, 'key2' => array('nested' => TRUE)));
+    $source = [TRUE, FALSE, 0, 1, '0', '1', $this->string, ['key1' => $this->string, 'key2' => ['nested' => TRUE]]];
     $json = Json::encode($source);
     foreach ($this->htmlUnsafe as $char) {
       $this->assertTrue(strpos($json, $char) === FALSE, sprintf('A JSON encoded string does not contain %s.', $char));

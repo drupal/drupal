@@ -17,14 +17,14 @@ class MiniPagerTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_mini_pager');
+  public static $testViews = ['test_mini_pager'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   /**
    * Nodes used by the test.
@@ -36,7 +36,7 @@ class MiniPagerTest extends PluginTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     // Create a bunch of test nodes.
     for ($i = 0; $i < 20; $i++) {
       $this->nodes[] = $this->drupalCreateNode();
@@ -55,7 +55,7 @@ class MiniPagerTest extends PluginTestBase {
     $this->assertText($this->nodes[1]->label());
     $this->assertText($this->nodes[2]->label());
 
-    $this->drupalGet('test_mini_pager', array('query' => array('page' => 1)));
+    $this->drupalGet('test_mini_pager', ['query' => ['page' => 1]]);
     $this->assertText('‹‹ test', 'The previous link appears.');
     $this->assertText('Page 2', 'The current page info shows the second page.');
     $this->assertText('›› test', 'The next link appears.');
@@ -63,7 +63,7 @@ class MiniPagerTest extends PluginTestBase {
     $this->assertText($this->nodes[4]->label());
     $this->assertText($this->nodes[5]->label());
 
-    $this->drupalGet('test_mini_pager', array('query' => array('page' => 6)));
+    $this->drupalGet('test_mini_pager', ['query' => ['page' => 6]]);
     $this->assertNoText('›› test', 'The next link appears on the last page.');
     $this->assertText('Page 7', 'The current page info shows the last page.');
     $this->assertText('‹‹ test', 'The previous link does not appear on the last page.');
@@ -77,9 +77,9 @@ class MiniPagerTest extends PluginTestBase {
     $this->assertIdentical($view->get_total_rows, TRUE, 'The query was set to calculate the total number of rows.');
     $this->assertEqual(count($this->nodes), $view->total_rows, 'The total row count is equal to the number of nodes.');
 
-    $this->drupalGet('test_mini_pager_total', array('query' => array('page' => 1)));
+    $this->drupalGet('test_mini_pager_total', ['query' => ['page' => 1]]);
     $this->assertText('of ' . count($this->nodes), 'The first page shows the total row count.');
-    $this->drupalGet('test_mini_pager_total', array('query' => array('page' => 6)));
+    $this->drupalGet('test_mini_pager_total', ['query' => ['page' => 6]]);
     $this->assertText('of ' . count($this->nodes), 'The last page shows the total row count.');
 
     // Test a mini pager with just one item per page.
@@ -88,13 +88,13 @@ class MiniPagerTest extends PluginTestBase {
     $this->assertText('Page 1');
     $this->assertText($this->nodes[0]->label());
 
-    $this->drupalGet('test_mini_pager_one', array('query' => array('page' => 1)));
+    $this->drupalGet('test_mini_pager_one', ['query' => ['page' => 1]]);
     $this->assertText('‹‹');
     $this->assertText('Page 2');
     $this->assertText('››');
     $this->assertText($this->nodes[1]->label());
 
-    $this->drupalGet('test_mini_pager_one', array('query' => array('page' => 19)));
+    $this->drupalGet('test_mini_pager_one', ['query' => ['page' => 19]]);
     $this->assertNoText('››');
     $this->assertText('Page 20');
     $this->assertText('‹‹');

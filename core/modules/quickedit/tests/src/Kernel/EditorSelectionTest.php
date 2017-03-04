@@ -53,13 +53,13 @@ class EditorSelectionTest extends QuickEditTestBase {
     $this->createFieldWithStorage(
       $field_name, 'string', 1, 'Simple text field',
       // Instance settings.
-      array(),
+      [],
       // Widget type & settings.
       'string_textfield',
-      array('size' => 42),
+      ['size' => 42],
       // 'default' formatter type & settings.
       'string',
-      array()
+      []
     );
 
     // Create an entity with values for this text field.
@@ -84,7 +84,7 @@ class EditorSelectionTest extends QuickEditTestBase {
    */
   public function testTextWysiwyg() {
     // Enable edit_test module so that the 'wysiwyg' editor becomes available.
-    $this->enableModules(array('quickedit_test'));
+    $this->enableModules(['quickedit_test']);
     $this->editorManager = $this->container->get('plugin.manager.quickedit.editor');
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
 
@@ -92,13 +92,13 @@ class EditorSelectionTest extends QuickEditTestBase {
     $this->createFieldWithStorage(
       $field_name, 'text', 1, 'Long text field',
       // Instance settings.
-      array(),
+      [],
       // Widget type & settings.
       'text_textarea',
-      array('size' => 42),
+      ['size' => 42],
       // 'default' formatter type & settings.
       'text_default',
-      array()
+      []
     );
 
     // Create an entity with values for this text field.
@@ -129,13 +129,13 @@ class EditorSelectionTest extends QuickEditTestBase {
     $this->createFieldWithStorage(
       $field_name, 'integer', 1, 'Simple number field',
       // Instance settings.
-      array(),
+      [],
       // Widget type & settings.
       'number',
-      array(),
+      [],
       // 'default' formatter type & settings.
       'number_integer',
-      array()
+      []
     );
 
     // Create an entity with values for this text field.

@@ -28,7 +28,7 @@ class Rss extends StylePluginBase {
   protected $usesRowPlugin = TRUE;
 
   public function attachTo(array &$build, $display_id, Url $feed_url, $title) {
-    $url_options = array();
+    $url_options = [];
     $input = $this->view->getExposedInput();
     if ($input) {
       $url_options['query'] = $input;
@@ -45,18 +45,18 @@ class Rss extends StylePluginBase {
     ];
 
     // Attach a link to the RSS feed, which is an alternate representation.
-    $build['#attached']['html_head_link'][][] = array(
+    $build['#attached']['html_head_link'][][] = [
       'rel' => 'alternate',
       'type' => 'application/rss+xml',
       'title' => $title,
       'href' => $url,
-    );
+    ];
   }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['description'] = array('default' => '');
+    $options['description'] = ['default' => ''];
 
     return $options;
   }
@@ -64,13 +64,13 @@ class Rss extends StylePluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['description'] = array(
+    $form['description'] = [
       '#type' => 'textfield',
       '#title' => $this->t('RSS description'),
       '#default_value' => $this->options['description'],
       '#description' => $this->t('This will appear in the RSS feed itself.'),
       '#maxlength' => 1024,
-    );
+    ];
   }
 
   /**
@@ -80,7 +80,7 @@ class Rss extends StylePluginBase {
    *   A render array.
    */
   protected function getChannelElements() {
-    return array();
+    return [];
   }
 
   /**
@@ -101,13 +101,13 @@ class Rss extends StylePluginBase {
   public function render() {
     if (empty($this->view->rowPlugin)) {
       debug('Drupal\views\Plugin\views\style\Rss: Missing row plugin');
-      return array();
+      return [];
     }
     $rows = [];
 
     // This will be filled in by the row plugin and is used later on in the
     // theming output.
-    $this->namespaces = array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/');
+    $this->namespaces = ['xmlns:dc' => 'http://purl.org/dc/elements/1.1/'];
 
     // Fetch any additional elements for the channel and merge in their
     // namespaces.
@@ -123,12 +123,12 @@ class Rss extends StylePluginBase {
       $rows[] = $this->view->rowPlugin->render($row);
     }
 
-    $build = array(
+    $build = [
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
       '#options' => $this->options,
       '#rows' => $rows,
-    );
+    ];
     unset($this->view->row_index);
     return $build;
   }

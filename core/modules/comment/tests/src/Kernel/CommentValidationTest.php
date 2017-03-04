@@ -19,14 +19,14 @@ class CommentValidationTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'node');
+  public static $modules = ['comment', 'node'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('comment', array('comment_entity_statistics'));
+    $this->installSchema('comment', ['comment_entity_statistics']);
   }
 
   /**
@@ -34,54 +34,54 @@ class CommentValidationTest extends EntityKernelTestBase {
    */
   public function testValidation() {
     // Add a user.
-    $user = User::create(array('name' => 'test', 'status' => TRUE));
+    $user = User::create(['name' => 'test', 'status' => TRUE]);
     $user->save();
 
     // Add comment type.
-    $this->entityManager->getStorage('comment_type')->create(array(
+    $this->entityManager->getStorage('comment_type')->create([
       'id' => 'comment',
       'label' => 'comment',
       'target_entity_type_id' => 'node',
-    ))->save();
+    ])->save();
 
     // Add comment field to content.
-    $this->entityManager->getStorage('field_storage_config')->create(array(
+    $this->entityManager->getStorage('field_storage_config')->create([
       'entity_type' => 'node',
       'field_name' => 'comment',
       'type' => 'comment',
-      'settings' => array(
+      'settings' => [
         'comment_type' => 'comment',
-      )
-    ))->save();
+      ]
+    ])->save();
 
     // Create a page node type.
-    $this->entityManager->getStorage('node_type')->create(array(
+    $this->entityManager->getStorage('node_type')->create([
       'type' => 'page',
       'name' => 'page',
-    ))->save();
+    ])->save();
 
     // Add comment field to page content.
     /** @var \Drupal\field\FieldConfigInterface $field */
-    $field = $this->entityManager->getStorage('field_config')->create(array(
+    $field = $this->entityManager->getStorage('field_config')->create([
       'field_name' => 'comment',
       'entity_type' => 'node',
       'bundle' => 'page',
       'label' => 'Comment settings',
-    ));
+    ]);
     $field->save();
 
-    $node = $this->entityManager->getStorage('node')->create(array(
+    $node = $this->entityManager->getStorage('node')->create([
       'type' => 'page',
       'title' => 'test',
-    ));
+    ]);
     $node->save();
 
-    $comment = $this->entityManager->getStorage('comment')->create(array(
+    $comment = $this->entityManager->getStorage('comment')->create([
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
       'comment_body' => $this->randomMachineName(),
-    ));
+    ]);
 
     $violations = $comment->validate();
     $this->assertEqual(count($violations), 0, 'No violations when validating a default comment.');
@@ -101,7 +101,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     $violations = $comment->validate();
     $this->assertEqual(count($violations), 1, "Violation found on author name collision");
     $this->assertEqual($violations[0]->getPropertyPath(), "name");
-    $this->assertEqual($violations[0]->getMessage(), t('The name you used (%name) belongs to a registered user.', array('%name' => 'test')));
+    $this->assertEqual($violations[0]->getMessage(), t('The name you used (%name) belongs to a registered user.', ['%name' => 'test']));
 
     // Make the name valid.
     $comment->set('name', 'valid unused name');
@@ -141,39 +141,39 @@ class CommentValidationTest extends EntityKernelTestBase {
     \Drupal::entityManager()->getStorage('node')->resetCache([$node->id()]);
     $node = Node::load($node->id());
     // Create a new comment with the new field.
-    $comment = $this->entityManager->getStorage('comment')->create(array(
+    $comment = $this->entityManager->getStorage('comment')->create([
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
       'comment_body' => $this->randomMachineName(),
       'uid' => 0,
       'name' => '',
-    ));
+    ]);
     $violations = $comment->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when name is required, but empty and UID is anonymous.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'name');
     $this->assertEqual($violations[0]->getMessage(), t('You have to specify a valid author.'));
 
     // Test creating a default comment with a given user id works.
-    $comment = $this->entityManager->getStorage('comment')->create(array(
+    $comment = $this->entityManager->getStorage('comment')->create([
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
       'comment_body' => $this->randomMachineName(),
       'uid' => $user->id(),
-    ));
+    ]);
     $violations = $comment->validate();
     $this->assertEqual(count($violations), 0, 'No violations when validating a default comment with an author.');
 
     // Test specifying a wrong author name does not work.
-    $comment = $this->entityManager->getStorage('comment')->create(array(
+    $comment = $this->entityManager->getStorage('comment')->create([
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
       'comment_body' => $this->randomMachineName(),
       'uid' => $user->id(),
       'name' => 'not-test',
-    ));
+    ]);
     $violations = $comment->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when author name and comment author do not match.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'name');
@@ -195,7 +195,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     $this->assertEqual(count($violations), 1, "Violation found when $field_name is too long.");
     $this->assertEqual($violations[0]->getPropertyPath(), "$field_name.0.value");
     $field_label = $comment->get($field_name)->getFieldDefinition()->getLabel();
-    $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', array('%name' => $field_label, '@max' => $length)));
+    $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', ['%name' => $field_label, '@max' => $length]));
   }
 
 }

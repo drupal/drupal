@@ -19,9 +19,9 @@ class ContentModerationStateStorageSchema extends SqlContentEntityStorageSchema 
     // Creates an index to ensure that the lookup in
     // \Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList::getModerationState()
     // is performant.
-    $schema['content_moderation_state_field_data']['indexes'] += array(
-      'content_moderation_state__lookup' => array('content_entity_type_id', 'content_entity_id', 'content_entity_revision_id'),
-    );
+    $schema['content_moderation_state_field_data']['indexes'] += [
+      'content_moderation_state__lookup' => ['content_entity_type_id', 'content_entity_id', 'content_entity_revision_id'],
+    ];
 
     return $schema;
   }

@@ -34,7 +34,7 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('entity_reference_label', $component['type']);
     $this->assertIdentical(20, $component['weight']);
     // Test the Id map.
-    $this->assertIdentical(array('node', 'article', 'default', 'tags'), $this->getMigration('d6_vocabulary_entity_display')->getIdMap()->lookupDestinationID(array(4, 'article')));
+    $this->assertIdentical(['node', 'article', 'default', 'tags'], $this->getMigration('d6_vocabulary_entity_display')->getIdMap()->lookupDestinationID([4, 'article']));
   }
 
 }

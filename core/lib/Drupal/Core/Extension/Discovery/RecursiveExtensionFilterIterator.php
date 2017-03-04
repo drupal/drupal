@@ -38,11 +38,11 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
    *
    * @var array
    */
-  protected $whitelist = array(
+  protected $whitelist = [
     'profiles',
     'modules',
     'themes',
-  );
+  ];
 
   /**
    * List of directory names to skip when recursing.
@@ -53,7 +53,7 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
    *
    * @var array
    */
-  protected $blacklist = array(
+  protected $blacklist = [
     // Object-oriented code subdirectories.
     'src',
     'lib',
@@ -72,7 +72,7 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
     'fixtures',
     // @todo ./tests/Drupal should be ./tests/src/Drupal
     'Drupal',
-  );
+  ];
 
   /**
    * Whether to include test directories when recursing.

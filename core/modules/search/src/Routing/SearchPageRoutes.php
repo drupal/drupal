@@ -45,70 +45,70 @@ class SearchPageRoutes implements ContainerInjectionInterface {
    *   An array of route objects.
    */
   public function routes() {
-    $routes = array();
+    $routes = [];
     // @todo Decide if /search should continue to redirect to /search/$default,
     //   or just perform the appropriate search.
     if ($default_page = $this->searchPageRepository->getDefaultSearchPage()) {
       $routes['search.view'] = new Route(
         '/search',
-        array(
+        [
           '_controller' => 'Drupal\search\Controller\SearchController::redirectSearchPage',
           '_title' => 'Search',
           'entity' => $default_page,
-        ),
-        array(
+        ],
+        [
           '_entity_access' => 'entity.view',
           '_permission' => 'search content',
-        ),
-        array(
-          'parameters' => array(
-            'entity' => array(
+        ],
+        [
+          'parameters' => [
+            'entity' => [
               'type' => 'entity:search_page',
-            ),
-          ),
-        )
+            ],
+          ],
+        ]
       );
     }
     $active_pages = $this->searchPageRepository->getActiveSearchPages();
     foreach ($active_pages as $entity_id => $entity) {
       $routes["search.view_$entity_id"] = new Route(
         '/search/' . $entity->getPath(),
-        array(
+        [
           '_controller' => 'Drupal\search\Controller\SearchController::view',
           '_title' => 'Search',
           'entity' => $entity_id,
-        ),
-        array(
+        ],
+        [
           '_entity_access' => 'entity.view',
           '_permission' => 'search content',
-        ),
-        array(
-          'parameters' => array(
-            'entity' => array(
+        ],
+        [
+          'parameters' => [
+            'entity' => [
               'type' => 'entity:search_page',
-            ),
-          ),
-        )
+            ],
+          ],
+        ]
       );
 
       $routes["search.help_$entity_id"] = new Route(
         '/search/' . $entity->getPath() . '/help',
-        array(
+        [
           '_controller' => 'Drupal\search\Controller\SearchController::searchHelp',
           '_title' => 'Search help',
           'entity' => $entity_id,
-        ),
-        array(
+        ],
+        [
           '_entity_access' => 'entity.view',
           '_permission' => 'search content',
-        ),
-        array(
-          'parameters' => array(
-            'entity' => array(
+        ],
+        [
+          'parameters' => [
+            'entity' => [
               'type' => 'entity:search_page',
-            ),
-          ),
-        )
+            ],
+          ],
+        ]
       );
     }
     return $routes;

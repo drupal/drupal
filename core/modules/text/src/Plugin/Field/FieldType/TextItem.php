@@ -23,30 +23,30 @@ class TextItem extends TextItemBase {
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return array(
+    return [
       'max_length' => 255,
-    ) + parent::defaultStorageSettings();
+    ] + parent::defaultStorageSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'value' => array(
+    return [
+      'columns' => [
+        'value' => [
           'type' => 'varchar',
           'length' => $field_definition->getSetting('max_length'),
-        ),
-        'format' => array(
+        ],
+        'format' => [
           'type' => 'varchar',
           'length' => 255,
-        ),
-      ),
-      'indexes' => array(
-        'format' => array('format'),
-      ),
-    );
+        ],
+      ],
+      'indexes' => [
+        'format' => ['format'],
+      ],
+    ];
   }
 
   /**
@@ -57,14 +57,14 @@ class TextItem extends TextItemBase {
     $constraints = parent::getConstraints();
 
     if ($max_length = $this->getSetting('max_length')) {
-      $constraints[] = $constraint_manager->create('ComplexData', array(
-        'value' => array(
-          'Length' => array(
+      $constraints[] = $constraint_manager->create('ComplexData', [
+        'value' => [
+          'Length' => [
             'max' => $max_length,
-            'maxMessage' => t('%name: the text may not be longer than @max characters.', array('%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length)),
-          )
-        ),
-      ));
+            'maxMessage' => t('%name: the text may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
+          ]
+        ],
+      ]);
     }
 
     return $constraints;
@@ -74,9 +74,9 @@ class TextItem extends TextItemBase {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $element = array();
+    $element = [];
 
-    $element['max_length'] = array(
+    $element['max_length'] = [
       '#type' => 'number',
       '#title' => t('Maximum length'),
       '#default_value' => $this->getSetting('max_length'),
@@ -84,7 +84,7 @@ class TextItem extends TextItemBase {
       '#description' => t('The maximum length of the field in characters.'),
       '#min' => 1,
       '#disabled' => $has_data,
-    );
+    ];
     $element += parent::storageSettingsForm($form, $form_state, $has_data);
 
     return $element;

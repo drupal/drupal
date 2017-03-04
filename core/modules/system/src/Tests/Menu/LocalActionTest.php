@@ -68,9 +68,9 @@ class LocalActionTest extends WebTestBase {
    *   A list of expected action link titles, keyed by the hrefs.
    */
   protected function assertLocalAction(array $actions) {
-    $elements = $this->xpath('//a[contains(@class, :class)]', array(
+    $elements = $this->xpath('//a[contains(@class, :class)]', [
       ':class' => 'button-action',
-    ));
+    ]);
     $index = 0;
     foreach ($actions as $action) {
       /** @var \Drupal\Core\Url $url */

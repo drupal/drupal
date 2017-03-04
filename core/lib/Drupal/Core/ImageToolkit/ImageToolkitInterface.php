@@ -169,6 +169,6 @@ interface ImageToolkitInterface extends ContainerFactoryPluginInterface, PluginI
    * @return bool
    *   TRUE if the operation was performed successfully, FALSE otherwise.
    */
-  public function apply($operation, array $arguments = array());
+  public function apply($operation, array $arguments = []);
 
 }

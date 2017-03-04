@@ -182,7 +182,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
    *   The language code.
    */
   protected function setUpNoTranslation($config_name, $key, $source, $langcode) {
-    $this->localeConfigManager->updateConfigTranslations(array($config_name), array($langcode));
+    $this->localeConfigManager->updateConfigTranslations([$config_name], [$langcode]);
     $this->assertNoConfigOverride($config_name, $key, $source, $langcode);
     $this->assertNoTranslation($config_name, $langcode);
   }
@@ -222,7 +222,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
       ->save();
     $this->configFactory->reset($config_name);
     $this->localeConfigManager->reset();
-    $this->localeConfigManager->updateConfigTranslations(array($config_name), array($langcode));
+    $this->localeConfigManager->updateConfigTranslations([$config_name], [$langcode]);
 
     if ($is_active) {
       $this->assertActiveConfig($config_name, $key, $translation, $langcode);
@@ -291,7 +291,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
       ->setString($translation)
       ->save();
     $this->localeConfigManager->reset();
-    $this->localeConfigManager->updateConfigTranslations(array($config_name), array($langcode));
+    $this->localeConfigManager->updateConfigTranslations([$config_name], [$langcode]);
     $this->configFactory->reset($config_name);
 
     if ($is_active) {
@@ -356,7 +356,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
       ->getStringTranslation($config_name, $langcode, $source_value, '')
       ->delete();
     $this->localeConfigManager->reset();
-    $this->localeConfigManager->updateConfigTranslations(array($config_name), array($langcode));
+    $this->localeConfigManager->updateConfigTranslations([$config_name], [$langcode]);
     $this->configFactory->reset($config_name);
 
     $this->assertNoConfigOverride($config_name, $key, $source_value, $langcode);

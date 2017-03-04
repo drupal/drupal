@@ -19,7 +19,7 @@ class LanguageConfigSchemaTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'menu_link_content');
+  public static $modules = ['language', 'menu_link_content'];
 
   /**
    * A user with administrative permissions.
@@ -35,7 +35,7 @@ class LanguageConfigSchemaTest extends BrowserTestBase {
     parent::setUp();
 
     // Create user.
-    $this->adminUser = $this->drupalCreateUser(array('administer languages'));
+    $this->adminUser = $this->drupalCreateUser(['administer languages']);
     $this->drupalLogin($this->adminUser);
   }
 

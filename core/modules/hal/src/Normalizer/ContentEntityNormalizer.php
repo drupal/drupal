@@ -53,28 +53,28 @@ class ContentEntityNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function normalize($entity, $format = NULL, array $context = array()) {
-    $context += array(
+  public function normalize($entity, $format = NULL, array $context = []) {
+    $context += [
       'account' => NULL,
       'included_fields' => NULL,
-    );
+    ];
 
     // Create the array of normalized fields, starting with the URI.
     /** @var $entity \Drupal\Core\Entity\ContentEntityInterface */
-    $normalized = array(
-      '_links' => array(
-        'self' => array(
+    $normalized = [
+      '_links' => [
+        'self' => [
           'href' => $this->getEntityUri($entity),
-        ),
-        'type' => array(
+        ],
+        'type' => [
           'href' => $this->linkManager->getTypeUri($entity->getEntityTypeId(), $entity->bundle(), $context),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     // If the fields to use were specified, only output those field values.
     if (isset($context['included_fields'])) {
-      $fields = array();
+      $fields = [];
       foreach ($context['included_fields'] as $field_name) {
         $fields[] = $entity->get($field_name);
       }
@@ -115,7 +115,7 @@ class ContentEntityNormalizer extends NormalizerBase {
    *
    * @throws \Symfony\Component\Serializer\Exception\UnexpectedValueException
    */
-  public function denormalize($data, $class, $format = NULL, array $context = array()) {
+  public function denormalize($data, $class, $format = NULL, array $context = []) {
     // Get type, necessary for determining which bundle to create.
     if (!isset($data['_links']['type'])) {
       throw new UnexpectedValueException('The type link relation must be specified.');
@@ -126,7 +126,7 @@ class ContentEntityNormalizer extends NormalizerBase {
     $entity_type = $this->getEntityTypeDefinition($typed_data_ids['entity_type']);
     $default_langcode_key = $entity_type->getKey('default_langcode');
     $langcode_key = $entity_type->getKey('langcode');
-    $values = array();
+    $values = [];
 
     // Figure out the language to use.
     if (isset($data[$default_langcode_key])) {
@@ -154,7 +154,7 @@ class ContentEntityNormalizer extends NormalizerBase {
     // Remove links from data array.
     unset($data['_links']);
     // Get embedded resources and remove from data array.
-    $embedded = array();
+    $embedded = [];
     if (isset($data['_embedded'])) {
       $embedded = $data['_embedded'];
       unset($data['_embedded']);
@@ -207,12 +207,12 @@ class ContentEntityNormalizer extends NormalizerBase {
    * @return array
    *   The typed data IDs.
    */
-  protected function getTypedDataIds($types, $context = array()) {
+  protected function getTypedDataIds($types, $context = []) {
     // The 'type' can potentially contain an array of type objects. By default,
     // Drupal only uses a single type in serializing, but allows for multiple
     // types when deserializing.
     if (isset($types['href'])) {
-      $types = array($types);
+      $types = [$types];
     }
 
     if (empty($types)) {

@@ -43,11 +43,11 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    * @see \Drupal\Tests\edit\Unit\quickedit\Access\EditEntityFieldAccessCheckTest::testAccess()
    */
   public function providerTestAccess() {
-    $data = array();
-    $data[] = array(TRUE, TRUE, AccessResult::allowed());
-    $data[] = array(FALSE, TRUE, AccessResult::neutral());
-    $data[] = array(TRUE, FALSE, AccessResult::neutral());
-    $data[] = array(FALSE, FALSE, AccessResult::neutral());
+    $data = [];
+    $data[] = [TRUE, TRUE, AccessResult::allowed()];
+    $data[] = [FALSE, TRUE, AccessResult::neutral()];
+    $data[] = [TRUE, FALSE, AccessResult::neutral()];
+    $data[] = [FALSE, FALSE, AccessResult::neutral()];
 
     return $data;
   }
@@ -108,15 +108,15 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    * Provides test data for testAccessForbidden.
    */
   public function providerTestAccessForbidden() {
-    $data = array();
+    $data = [];
     // Tests the access method without a field_name.
-    $data[] = array(NULL, LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    $data[] = [NULL, LanguageInterface::LANGCODE_NOT_SPECIFIED];
     // Tests the access method with a non-existent field.
-    $data[] = array('not_valid', LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    $data[] = ['not_valid', LanguageInterface::LANGCODE_NOT_SPECIFIED];
     // Tests the access method without a langcode.
-    $data[] = array('valid', NULL);
+    $data[] = ['valid', NULL];
     // Tests the access method with an invalid langcode.
-    $data[] = array('valid', 'xx-lolspeak');
+    $data[] = ['valid', 'xx-lolspeak'];
     return $data;
   }
 
@@ -132,16 +132,16 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
 
     $entity->expects($this->any())
       ->method('hasTranslation')
-      ->will($this->returnValueMap(array(
-        array(LanguageInterface::LANGCODE_NOT_SPECIFIED, TRUE),
-        array('xx-lolspeak', FALSE),
-      )));
+      ->will($this->returnValueMap([
+        [LanguageInterface::LANGCODE_NOT_SPECIFIED, TRUE],
+        ['xx-lolspeak', FALSE],
+      ]));
     $entity->expects($this->any())
       ->method('hasField')
-      ->will($this->returnValueMap(array(
-        array('valid', TRUE),
-        array('not_valid', FALSE),
-      )));
+      ->will($this->returnValueMap([
+        ['valid', TRUE],
+        ['not_valid', FALSE],
+      ]));
 
     return $entity;
   }

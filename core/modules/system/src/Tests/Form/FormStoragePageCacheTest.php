@@ -14,7 +14,7 @@ class FormStoragePageCacheTest extends WebTestBase {
   /**
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = ['form_test'];
 
   /**
    * {@inheritdoc}

@@ -68,7 +68,7 @@ class NodeNewComments extends NumericField {
 
     $this->additional_fields['entity_id'] = 'nid';
     $this->additional_fields['type'] = 'type';
-    $this->additional_fields['comment_count'] = array('table' => 'comment_entity_statistics', 'field' => 'comment_count');
+    $this->additional_fields['comment_count'] = ['table' => 'comment_entity_statistics', 'field' => 'comment_count'];
   }
 
   /**
@@ -77,7 +77,7 @@ class NodeNewComments extends NumericField {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['link_to_comment'] = array('default' => TRUE);
+    $options['link_to_comment'] = ['default' => TRUE];
 
     return $options;
   }
@@ -86,12 +86,12 @@ class NodeNewComments extends NumericField {
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $form['link_to_comment'] = array(
+    $form['link_to_comment'] = [
       '#title' => $this->t('Link this field to new comments'),
       '#description' => $this->t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_comment'],
-    );
+    ];
 
     parent::buildOptionsForm($form, $form_state);
   }
@@ -114,14 +114,14 @@ class NodeNewComments extends NumericField {
       return;
     }
 
-    $nids = array();
-    $ids = array();
+    $nids = [];
+    $ids = [];
     foreach ($values as $id => $result) {
       $nids[] = $result->{$this->aliases['nid']};
       $values[$id]->{$this->field_alias} = 0;
       // Create a reference so we can find this record in the values again.
       if (empty($ids[$result->{$this->aliases['nid']}])) {
-        $ids[$result->{$this->aliases['nid']}] = array();
+        $ids[$result->{$this->aliases['nid']}] = [];
       }
       $ids[$result->{$this->aliases['nid']}][] = $id;
     }
@@ -129,13 +129,13 @@ class NodeNewComments extends NumericField {
     if ($nids) {
       $result = $this->database->query("SELECT n.nid, COUNT(c.cid) as num_comments FROM {node} n INNER JOIN {comment_field_data} c ON n.nid = c.entity_id AND c.entity_type = 'node' AND c.default_langcode = 1
         LEFT JOIN {history} h ON h.nid = n.nid AND h.uid = :h_uid WHERE n.nid IN ( :nids[] )
-        AND c.changed > GREATEST(COALESCE(h.timestamp, :timestamp1), :timestamp2) AND c.status = :status GROUP BY n.nid", array(
+        AND c.changed > GREATEST(COALESCE(h.timestamp, :timestamp1), :timestamp2) AND c.status = :status GROUP BY n.nid", [
         ':status' => CommentInterface::PUBLISHED,
         ':h_uid' => $user->id(),
         ':nids[]' => $nids,
         ':timestamp1' => HISTORY_READ_LIMIT,
         ':timestamp2' => HISTORY_READ_LIMIT,
-      ));
+      ]);
       foreach ($result as $node) {
         foreach ($ids[$node->nid] as $id) {
           $values[$id]->{$this->field_alias} = $node->num_comments;
@@ -181,7 +181,7 @@ class NodeNewComments extends NumericField {
         ->getNewCommentPageNumber($this->getValue($values, 'comment_count'), $this->getValue($values), $node, $comment_field_name);
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['url'] = $node->urlInfo();
-      $this->options['alter']['query'] = $page_number ? array('page' => $page_number) : NULL;
+      $this->options['alter']['query'] = $page_number ? ['page' => $page_number] : NULL;
       $this->options['alter']['fragment'] = 'new';
     }
 

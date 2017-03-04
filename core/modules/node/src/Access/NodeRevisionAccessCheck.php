@@ -35,7 +35,7 @@ class NodeRevisionAccessCheck implements AccessInterface {
    *
    * @var array
    */
-  protected $access = array();
+  protected $access = [];
 
   /**
    * Constructs a new NodeRevisionAccessCheck.
@@ -90,17 +90,17 @@ class NodeRevisionAccessCheck implements AccessInterface {
    *   TRUE if the operation may be performed, FALSE otherwise.
    */
   public function checkAccess(NodeInterface $node, AccountInterface $account, $op = 'view') {
-    $map = array(
+    $map = [
       'view' => 'view all revisions',
       'update' => 'revert all revisions',
       'delete' => 'delete all revisions',
-    );
+    ];
     $bundle = $node->bundle();
-    $type_map = array(
+    $type_map = [
       'view' => "view $bundle revisions",
       'update' => "revert $bundle revisions",
       'delete' => "delete $bundle revisions",
-    );
+    ];
 
     if (!$node || !isset($map[$op]) || !isset($type_map[$op])) {
       // If there was no node to check against, or the $op was not one of the

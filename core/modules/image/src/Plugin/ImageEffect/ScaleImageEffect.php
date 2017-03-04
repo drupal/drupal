@@ -22,7 +22,7 @@ class ScaleImageEffect extends ResizeImageEffect {
    */
   public function applyEffect(ImageInterface $image) {
     if (!$image->scale($this->configuration['width'], $this->configuration['height'], $this->configuration['upscale'])) {
-      $this->logger->error('Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()));
+      $this->logger->error('Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()]);
       return FALSE;
     }
     return TRUE;
@@ -41,10 +41,10 @@ class ScaleImageEffect extends ResizeImageEffect {
    * {@inheritdoc}
    */
   public function getSummary() {
-    $summary = array(
+    $summary = [
       '#theme' => 'image_scale_summary',
       '#data' => $this->configuration,
-    );
+    ];
     $summary += parent::getSummary();
 
     return $summary;
@@ -54,9 +54,9 @@ class ScaleImageEffect extends ResizeImageEffect {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return parent::defaultConfiguration() + array(
+    return parent::defaultConfiguration() + [
       'upscale' => FALSE,
-    );
+    ];
   }
 
   /**
@@ -66,12 +66,12 @@ class ScaleImageEffect extends ResizeImageEffect {
     $form = parent::buildConfigurationForm($form, $form_state);
     $form['width']['#required'] = FALSE;
     $form['height']['#required'] = FALSE;
-    $form['upscale'] = array(
+    $form['upscale'] = [
       '#type' => 'checkbox',
       '#default_value' => $this->configuration['upscale'],
       '#title' => t('Allow Upscaling'),
       '#description' => t('Let scale make images larger than their original size.'),
-    );
+    ];
     return $form;
   }
 

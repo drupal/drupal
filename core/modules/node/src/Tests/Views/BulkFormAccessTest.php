@@ -22,14 +22,14 @@ class BulkFormAccessTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_test_views', 'node_access_test');
+  public static $modules = ['node_test_views', 'node_access_test'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_node_bulk_form');
+  public static $testViews = ['test_node_bulk_form'];
 
   /**
    * The node access control handler.
@@ -45,7 +45,7 @@ class BulkFormAccessTest extends NodeTestBase {
     parent::setUp();
 
     // Create Article node type.
-    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     $this->accessHandler = \Drupal::entityManager()->getAccessControlHandler('node');
 
@@ -65,15 +65,15 @@ class BulkFormAccessTest extends NodeTestBase {
     // Create an account who will be the author of a private node.
     $author = $this->drupalCreateUser();
     // Create a private node (author may view, edit and delete, others may not).
-    $node = $this->drupalCreateNode(array(
+    $node = $this->drupalCreateNode([
       'type' => 'article',
-      'private' => array(array(
+      'private' => [[
         'value' => TRUE,
-      )),
+      ]],
       'uid' => $author->id(),
-    ));
+    ]);
     // Create an account that may view the private node, but not edit it.
-    $account = $this->drupalCreateUser(array('node test view'));
+    $account = $this->drupalCreateUser(['node test view']);
     $this->drupalLogin($account);
 
     // Ensure the node is published.
@@ -83,10 +83,10 @@ class BulkFormAccessTest extends NodeTestBase {
     $this->assertEqual(FALSE, $this->accessHandler->access($node, 'update', $account), 'The node may not be edited.');
 
     // Test editing the node using the bulk form.
-    $edit = array(
+    $edit = [
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpublish_action',
-    );
+    ];
     $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
     $this->assertRaw(SafeMarkup::format('No access to execute %action on the @entity_type_label %entity_label.', [
       '%action' => 'Unpublish content',
@@ -100,7 +100,7 @@ class BulkFormAccessTest extends NodeTestBase {
 
     // Create an account that may view the private node, but can update the
     // status.
-    $account = $this->drupalCreateUser(array('administer nodes', 'node test view'));
+    $account = $this->drupalCreateUser(['administer nodes', 'node test view']);
     $this->drupalLogin($account);
 
     // Ensure the node is published.
@@ -111,10 +111,10 @@ class BulkFormAccessTest extends NodeTestBase {
     $this->assertEqual(TRUE, $node->status->access('edit', $account), 'The node status can be edited.');
 
     // Test editing the node using the bulk form.
-    $edit = array(
+    $edit = [
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpublish_action',
-    );
+    ];
     $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
     // Test that the action message isn't shown.
     $this->assertNoRaw(SafeMarkup::format('%action was applied to 1 item.', [
@@ -132,25 +132,25 @@ class BulkFormAccessTest extends NodeTestBase {
     // Create an account who will be the author of a private node.
     $author = $this->drupalCreateUser();
     // Create a private node (author may view, edit and delete, others may not).
-    $private_node = $this->drupalCreateNode(array(
+    $private_node = $this->drupalCreateNode([
       'type' => 'article',
-      'private' => array(array(
+      'private' => [[
         'value' => TRUE,
-      )),
+      ]],
       'uid' => $author->id(),
-    ));
+    ]);
     // Create an account that may view the private node, but not delete it.
-    $account = $this->drupalCreateUser(array('access content', 'administer nodes', 'delete own article content', 'node test view'));
+    $account = $this->drupalCreateUser(['access content', 'administer nodes', 'delete own article content', 'node test view']);
     // Create a node that may be deleted too, to ensure the delete confirmation
     // page is shown later. In node_access_test.module, nodes may only be
     // deleted by the author.
-    $own_node = $this->drupalCreateNode(array(
+    $own_node = $this->drupalCreateNode([
       'type' => 'article',
-      'private' => array(array(
+      'private' => [[
         'value' => TRUE,
-      )),
+      ]],
       'uid' => $account->id(),
-    ));
+    ]);
     $this->drupalLogin($account);
 
     // Ensure that the private node can not be deleted.
@@ -159,13 +159,13 @@ class BulkFormAccessTest extends NodeTestBase {
     $this->assertEqual(TRUE, $this->accessHandler->access($own_node, 'delete', $account), 'The own node may be deleted.');
 
     // Try to delete the node using the bulk form.
-    $edit = array(
+    $edit = [
       'node_bulk_form[0]' => TRUE,
       'node_bulk_form[1]' => TRUE,
       'action' => 'node_delete_action',
-    );
+    ];
     $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
-    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     // Ensure the private node still exists.
     $private_node = Node::load($private_node->id());
     $this->assertNotNull($private_node, 'The private node has not been deleted.');

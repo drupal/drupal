@@ -20,7 +20,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test', 'system', 'user');
+  public static $modules = ['block', 'block_test', 'system', 'user'];
 
   /**
    * The block being tested.
@@ -56,11 +56,11 @@ class BlockViewBuilderTest extends KernelTestBase {
     \Drupal::state()->set('block_test.content', 'Llamas &gt; unicorns!');
 
     // Create a block with only required values.
-    $this->block = $this->controller->create(array(
+    $this->block = $this->controller->create([
       'id' => 'test_block',
       'theme' => 'stark',
       'plugin' => 'test_cache',
-    ));
+    ]);
     $this->block->save();
 
     $this->container->get('cache.render')->deleteAll();
@@ -74,17 +74,17 @@ class BlockViewBuilderTest extends KernelTestBase {
   public function testBasicRendering() {
     \Drupal::state()->set('block_test.content', '');
 
-    $entity = $this->controller->create(array(
+    $entity = $this->controller->create([
       'id' => 'test_block1',
       'theme' => 'stark',
       'plugin' => 'test_html',
-    ));
+    ]);
     $entity->save();
 
     // Test the rendering of a block.
     $entity = Block::load('test_block1');
     $output = entity_view($entity, 'block');
-    $expected = array();
+    $expected = [];
     $expected[] = '<div id="block-test-block1">';
     $expected[] = '  ';
     $expected[] = '    ';
@@ -98,17 +98,17 @@ class BlockViewBuilderTest extends KernelTestBase {
     Html::resetSeenIds();
 
     // Test the rendering of a block with a given title.
-    $entity = $this->controller->create(array(
+    $entity = $this->controller->create([
       'id' => 'test_block2',
       'theme' => 'stark',
       'plugin' => 'test_html',
-      'settings' => array(
+      'settings' => [
         'label' => 'Powered by Bananas',
-      ),
-    ));
+      ],
+    ]);
     $entity->save();
     $output = entity_view($entity, 'block');
-    $expected = array();
+    $expected = [];
     $expected[] = '<div id="block-test-block2">';
     $expected[] = '  ';
     $expected[] = '      <h2>Powered by Bananas</h2>';
@@ -128,11 +128,11 @@ class BlockViewBuilderTest extends KernelTestBase {
     $this->verifyRenderCacheHandling();
 
     // Create an empty block.
-    $this->block = $this->controller->create(array(
+    $this->block = $this->controller->create([
       'id' => 'test_block',
       'theme' => 'stark',
       'plugin' => 'test_cache',
-    ));
+    ]);
     $this->block->save();
     \Drupal::state()->set('block_test.content', NULL);
 

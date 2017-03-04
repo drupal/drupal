@@ -63,10 +63,10 @@ function block_post_update_disable_blocks_with_missing_contexts() {
     $message = t('Encountered an unknown context mapping key coming probably from a contributed or custom module: One or more mappings could not be updated. Please manually review your visibility settings for the following blocks, which are disabled now:');
     $message .= '<ul>';
     foreach ($blocks as $disabled_block_id => $disabled_block) {
-      $message .= '<li>' . t('@label (Visibility: @plugin_ids)', array(
+      $message .= '<li>' . t('@label (Visibility: @plugin_ids)', [
           '@label' => $disabled_block->get('settings')['label'],
           '@plugin_ids' => implode(', ', array_intersect_key($condition_plugin_id_label_map, array_flip(array_keys($block_update_8001[$disabled_block_id]['missing_context_ids']))))
-        )) . '</li>';
+        ]) . '</li>';
     }
     $message .= '</ul>';
 

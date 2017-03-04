@@ -17,7 +17,7 @@ class UserSaveStatusTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'field');
+  public static $modules = ['system', 'user', 'field'];
 
   protected function setUp() {
     parent::setUp();
@@ -29,10 +29,10 @@ class UserSaveStatusTest extends KernelTestBase {
    */
   function testUserSaveStatus() {
     // Create a new user.
-    $values = array(
+    $values = [
       'uid' => 1,
       'name' => $this->randomMachineName(),
-    );
+    ];
     $user = User::create($values);
 
     // Test SAVED_NEW.

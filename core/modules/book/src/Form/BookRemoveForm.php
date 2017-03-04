@@ -65,7 +65,7 @@ class BookRemoveForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    $title = array('%title' => $this->node->label());
+    $title = ['%title' => $this->node->label()];
     if ($this->node->book['has_children']) {
       return $this->t('%title has associated child pages, which will be relocated automatically to maintain their connection to the book. To recreate the hierarchy (as it was before removing this page), %title may be added again using the Outline tab, and each of its former child pages will need to be relocated manually.', $title);
     }
@@ -85,7 +85,7 @@ class BookRemoveForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to remove %title from the book hierarchy?', array('%title' => $this->node->label()));
+    return $this->t('Are you sure you want to remove %title from the book hierarchy?', ['%title' => $this->node->label()]);
   }
 
   /**

@@ -17,7 +17,7 @@ class InvalidUpdateHookTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('update_test_invalid_hook', 'update_script_test', 'dblog');
+  public static $modules = ['update_test_invalid_hook', 'update_script_test', 'dblog'];
 
   /**
    * URL for the upgrade script.
@@ -38,7 +38,7 @@ class InvalidUpdateHookTest extends WebTestBase {
     require_once \Drupal::root() . '/core/includes/update.inc';
 
     $this->updateUrl = $GLOBALS['base_url'] . '/update.php';
-    $this->updateUser = $this->drupalCreateUser(array('administer software updates'));
+    $this->updateUser = $this->drupalCreateUser(['administer software updates']);
   }
 
   function testInvalidUpdateHook() {

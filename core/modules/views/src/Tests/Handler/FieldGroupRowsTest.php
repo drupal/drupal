@@ -22,14 +22,14 @@ class FieldGroupRowsTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_group_rows', 'test_ungroup_rows');
+  public static $testViews = ['test_group_rows', 'test_ungroup_rows'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node', 'field_test');
+  public static $modules = ['node', 'field_test'];
 
   /**
    * Field that will be created to test the group/ungroup rows functionality
@@ -42,22 +42,22 @@ class FieldGroupRowsTest extends HandlerTestBase {
     parent::setUp();
 
     // Create content type with unlimited text field.
-    $node_type = $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $node_type = $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create the unlimited text field.
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
         'field_name' => $this->fieldName,
         'entity_type' => 'node',
         'type' => 'text',
         'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      ));
+      ]);
     $field_storage->save();
 
     // Create an instance of the text field on the content type.
-    $field = array(
+    $field = [
       'field_storage' => $field_storage,
       'bundle' => $node_type->id(),
-    );
+    ];
     FieldConfig::create($field)->save();
   }
 
@@ -68,10 +68,10 @@ class FieldGroupRowsTest extends HandlerTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
-    $edit = array(
+    $edit = [
       'title' => $this->randomMachineName(),
-      $this->fieldName => array('a', 'b', 'c'),
-    );
+      $this->fieldName => ['a', 'b', 'c'],
+    ];
     $this->drupalCreateNode($edit);
 
     $view = Views::getView('test_group_rows');

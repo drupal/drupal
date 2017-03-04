@@ -49,7 +49,7 @@ class OptimizedPhpArrayDumper extends Dumper {
   /**
    * {@inheritdoc}
    */
-  public function dump(array $options = array()) {
+  public function dump(array $options = []) {
     return serialize($this->getArray());
   }
 
@@ -60,7 +60,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   A PHP array representation of the service container.
    */
   public function getArray() {
-    $definition = array();
+    $definition = [];
     $this->aliases = $this->getAliases();
     $definition['aliases'] = $this->getAliases();
     $definition['parameters'] = $this->getParameters();
@@ -77,7 +77,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   The aliases.
    */
   protected function getAliases() {
-    $alias_definitions = array();
+    $alias_definitions = [];
 
     $aliases = $this->container->getAliases();
     foreach ($aliases as $alias => $id) {
@@ -99,7 +99,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    */
   protected function getParameters() {
     if (!$this->container->getParameterBag()->all()) {
-      return array();
+      return [];
     }
 
     $parameters = $this->container->getParameterBag()->all();
@@ -115,10 +115,10 @@ class OptimizedPhpArrayDumper extends Dumper {
    */
   protected function getServiceDefinitions() {
     if (!$this->container->getDefinitions()) {
-      return array();
+      return [];
     }
 
-    $services = array();
+    $services = [];
     foreach ($this->container->getDefinitions() as $id => $definition) {
       // Only store public service definitions, references to shared private
       // services are handled in ::getReferenceCall().
@@ -143,7 +143,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   An array of prepared parameters.
    */
   protected function prepareParameters(array $parameters, $escape = TRUE) {
-    $filtered = array();
+    $filtered = [];
     foreach ($parameters as $key => $value) {
       if (is_array($value)) {
         $value = $this->prepareParameters($value, $escape);
@@ -168,7 +168,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   The escaped parameters.
    */
   protected function escape(array $parameters) {
-    $args = array();
+    $args = [];
 
     foreach ($parameters as $key => $value) {
       if (is_array($value)) {
@@ -199,7 +199,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   scope different from SCOPE_CONTAINER and SCOPE_PROTOTYPE.
    */
   protected function getServiceDefinition(Definition $definition) {
-    $service = array();
+    $service = [];
     if ($definition->getClass()) {
       $service['class'] = $definition->getClass();
     }
@@ -279,11 +279,11 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   The PHP array representation of the method calls.
    */
   protected function dumpMethodCalls(array $calls) {
-    $code = array();
+    $code = [];
 
     foreach ($calls as $key => $call) {
       $method = $call[0];
-      $arguments = array();
+      $arguments = [];
       if (!empty($call[1])) {
         $arguments = $this->dumpCollection($call[1]);
       }
@@ -309,7 +309,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   The collection in a suitable format.
    */
   protected function dumpCollection($collection, &$resolve = FALSE) {
-    $code = array();
+    $code = [];
 
     foreach ($collection as $key => $value) {
       if (is_array($value)) {
@@ -332,11 +332,11 @@ class OptimizedPhpArrayDumper extends Dumper {
       return $collection;
     }
 
-    return (object) array(
+    return (object) [
       'type' => 'collection',
       'value' => $code,
       'resolve' => $resolve,
-    );
+    ];
   }
 
   /**
@@ -351,7 +351,7 @@ class OptimizedPhpArrayDumper extends Dumper {
   protected function dumpCallable($callable) {
     if (is_array($callable)) {
       $callable[0] = $this->dumpValue($callable[0]);
-      $callable = array($callable[0], $callable[1]);
+      $callable = [$callable[0], $callable[1]];
     }
 
     return $callable;
@@ -377,12 +377,12 @@ class OptimizedPhpArrayDumper extends Dumper {
       $hash = Crypt::hashBase64(serialize($service_definition));
       $id = 'private__' . $hash;
     }
-    return (object) array(
+    return (object) [
       'type' => 'private_service',
       'id' => $id,
       'value' => $service_definition,
       'shared' => $shared,
-    );
+    ];
   }
 
   /**
@@ -399,7 +399,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    */
   protected function dumpValue($value) {
     if (is_array($value)) {
-      $code = array();
+      $code = [];
       foreach ($value as $k => $v) {
         $code[$k] = $this->dumpValue($v);
       }
@@ -482,11 +482,11 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   A suitable representation of the service reference.
    */
   protected function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
-    return (object) array(
+    return (object) [
       'type' => 'service',
       'id' => $id,
       'invalidBehavior' => $invalid_behavior,
-    );
+    ];
   }
 
   /**
@@ -499,10 +499,10 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   A suitable representation of the parameter reference.
    */
   protected function getParameterCall($name) {
-    return (object) array(
+    return (object) [
       'type' => 'parameter',
       'name' => $name,
-    );
+    ];
   }
 
   /**

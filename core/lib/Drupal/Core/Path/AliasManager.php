@@ -52,14 +52,14 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
    *
    * @var array
    */
-  protected $lookupMap = array();
+  protected $lookupMap = [];
 
   /**
    * Holds an array of aliases for which no path was found.
    *
    * @var array
    */
-  protected $noPath = array();
+  protected $noPath = [];
 
   /**
    * Holds the array of whitelisted path aliases.
@@ -73,14 +73,14 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
    *
    * @var array
    */
-  protected $noAlias = array();
+  protected $noAlias = [];
 
   /**
    * Whether preloaded path lookups has already been loaded.
    *
    * @var array
    */
-  protected $langcodePreloaded = array();
+  protected $langcodePreloaded = [];
 
   /**
    * Holds an array of previously looked up paths for the current request path.
@@ -132,7 +132,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
     if ($this->cacheNeedsWriting && !empty($this->cacheKey)) {
       // Start with the preloaded path lookups, so that cached entries for other
       // languages will not be lost.
-      $path_lookups = $this->preloadedPathLookups ?: array();
+      $path_lookups = $this->preloadedPathLookups ?: [];
       foreach ($this->lookupMap as $langcode => $lookups) {
         $path_lookups[$langcode] = array_keys($lookups);
         if (!empty($this->noAlias[$langcode])) {
@@ -202,12 +202,12 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
     // paths for the page from cache.
     if (empty($this->langcodePreloaded[$langcode])) {
       $this->langcodePreloaded[$langcode] = TRUE;
-      $this->lookupMap[$langcode] = array();
+      $this->lookupMap[$langcode] = [];
 
       // Load the cached paths that should be used for preloading. This only
       // happens if a cache key has been set.
       if ($this->preloadedPathLookups === FALSE) {
-        $this->preloadedPathLookups = array();
+        $this->preloadedPathLookups = [];
         if ($this->cacheKey) {
           if ($cached = $this->cache->get($this->cacheKey)) {
             $this->preloadedPathLookups = $cached->data;
@@ -258,12 +258,12 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
       }
     }
     else {
-      $this->lookupMap = array();
+      $this->lookupMap = [];
     }
-    $this->noPath = array();
-    $this->noAlias = array();
-    $this->langcodePreloaded = array();
-    $this->preloadedPathLookups = array();
+    $this->noPath = [];
+    $this->noAlias = [];
+    $this->langcodePreloaded = [];
+    $this->preloadedPathLookups = [];
     $this->cache->delete($this->cacheKey);
     $this->pathAliasWhitelistRebuild($source);
   }

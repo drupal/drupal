@@ -21,7 +21,7 @@ class Score extends SortPluginBase {
     // Our filter stores it as $handler->search_score -- and we also
     // need to check its relationship to make sure that we're using the same
     // one or obviously this won't work.
-    foreach (array('filter', 'argument') as $type) {
+    foreach (['filter', 'argument'] as $type) {
       foreach ($this->view->{$type} as $handler) {
         if (isset($handler->search_score) && $handler->relationship == $this->relationship) {
           $this->query->addOrderBy(NULL, NULL, $this->options['order'], $handler->search_score);

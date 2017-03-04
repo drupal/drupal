@@ -16,7 +16,7 @@ class BasicTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view', 'test_simple_argument');
+  public static $testViews = ['test_view', 'test_simple_argument'];
 
   /**
    * Tests a trivial result set.
@@ -30,10 +30,10 @@ class BasicTest extends ViewsKernelTestBase {
 
     // Verify the result.
     $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
-    $this->assertIdenticalResultset($view, $this->dataSet(), array(
+    $this->assertIdenticalResultset($view, $this->dataSet(), [
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
-    ));
+    ]);
   }
 
   /**
@@ -44,55 +44,55 @@ class BasicTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Add a filter.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'operator' => '<',
-        'value' => array(
+        'value' => [
           'value' => '28',
           'min' => '',
           'max' => '',
-        ),
+        ],
         'group' => '0',
         'exposed' => FALSE,
-        'expose' => array(
+        'expose' => [
           'operator' => FALSE,
           'label' => '',
-        ),
+        ],
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
-      ),
-    ));
+      ],
+    ]);
 
     // Execute the view.
     $this->executeView($view);
 
     // Build the expected result.
-    $dataset = array(
-      array(
+    $dataset = [
+      [
         'id' => 1,
         'name' => 'John',
         'age' => 25,
-      ),
-      array(
+      ],
+      [
         'id' => 2,
         'name' => 'George',
         'age' => 27,
-      ),
-      array(
+      ],
+      [
         'id' => 4,
         'name' => 'Paul',
         'age' => 26,
-      ),
-    );
+      ],
+    ];
 
     // Verify the result.
     $this->assertEqual(3, count($view->result), 'The number of returned rows match.');
-    $this->assertIdenticalResultSet($view, $dataset, array(
+    $this->assertIdenticalResultSet($view, $dataset, [
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
-    ));
+    ]);
   }
 
   /**
@@ -101,24 +101,24 @@ class BasicTest extends ViewsKernelTestBase {
   public function testSimpleArgument() {
     // Execute with a view
     $view = Views::getView('test_simple_argument');
-    $view->setArguments(array(27));
+    $view->setArguments([27]);
     $this->executeView($view);
 
     // Build the expected result.
-    $dataset = array(
-      array(
+    $dataset = [
+      [
         'id' => 2,
         'name' => 'George',
         'age' => 27,
-      ),
-    );
+      ],
+    ];
 
     // Verify the result.
     $this->assertEqual(1, count($view->result), 'The number of returned rows match.');
-    $this->assertIdenticalResultSet($view, $dataset, array(
+    $this->assertIdenticalResultSet($view, $dataset, [
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
-    ));
+    ]);
 
     // Test "show all" if no argument is present.
     $view = Views::getView('test_simple_argument');
@@ -128,10 +128,10 @@ class BasicTest extends ViewsKernelTestBase {
     $dataset = $this->dataSet();
 
     $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
-    $this->assertIdenticalResultSet($view, $dataset, array(
+    $this->assertIdenticalResultSet($view, $dataset, [
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
-    ));
+    ]);
   }
 
 }

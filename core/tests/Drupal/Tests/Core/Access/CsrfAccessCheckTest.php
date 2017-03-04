@@ -56,9 +56,9 @@ class CsrfAccessCheckTest extends UnitTestCase {
 
     $this->routeMatch->expects($this->once())
       ->method('getRawParameters')
-      ->will($this->returnValue(array('node' => 42)));
+      ->will($this->returnValue(['node' => 42]));
 
-    $route = new Route('/test-path/{node}', array(), array('_csrf_token' => 'TRUE'));
+    $route = new Route('/test-path/{node}', [], ['_csrf_token' => 'TRUE']);
     $request = Request::create('/test-path/42?token=test_query');
 
     $this->assertEquals(AccessResult::allowed()->setCacheMaxAge(0), $this->accessCheck->access($route, $request, $this->routeMatch));
@@ -75,9 +75,9 @@ class CsrfAccessCheckTest extends UnitTestCase {
 
     $this->routeMatch->expects($this->once())
       ->method('getRawParameters')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
 
-    $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'));
+    $route = new Route('/test-path', [], ['_csrf_token' => 'TRUE']);
     $request = Request::create('/test-path?token=test_query');
 
     $this->assertEquals(AccessResult::forbidden("'csrf_token' URL query argument is invalid.")->setCacheMaxAge(0), $this->accessCheck->access($route, $request, $this->routeMatch));
@@ -94,9 +94,9 @@ class CsrfAccessCheckTest extends UnitTestCase {
 
     $this->routeMatch->expects($this->once())
       ->method('getRawParameters')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
 
-    $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'));
+    $route = new Route('/test-path', [], ['_csrf_token' => 'TRUE']);
     $request = Request::create('/test-path');
     $this->assertEquals(AccessResult::forbidden("'csrf_token' URL query argument is missing.")->setCacheMaxAge(0), $this->accessCheck->access($route, $request, $this->routeMatch));
   }

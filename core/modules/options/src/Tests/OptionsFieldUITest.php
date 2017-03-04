@@ -18,7 +18,7 @@ class OptionsFieldUITest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'options', 'field_test', 'taxonomy', 'field_ui');
+  public static $modules = ['node', 'options', 'field_test', 'taxonomy', 'field_ui'];
 
   /**
    * The name of the created content type.
@@ -70,15 +70,15 @@ class OptionsFieldUITest extends FieldTestBase {
 
     // Flat list of textual values.
     $string = "Zero\nOne";
-    $array = array('0' => 'Zero', '1' => 'One');
+    $array = ['0' => 'Zero', '1' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Unkeyed lists are accepted.');
     // Explicit integer keys.
     $string = "0|Zero\n2|Two";
-    $array = array('0' => 'Zero', '2' => 'Two');
+    $array = ['0' => 'Zero', '2' => 'Two'];
     $this->assertAllowedValuesInput($string, $array, 'Integer keys are accepted.');
     // Check that values can be added and removed.
     $string = "0|Zero\n1|One";
-    $array = array('0' => 'Zero', '1' => 'One');
+    $array = ['0' => 'Zero', '1' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Values can be added and removed.');
     // Non-integer keys.
     $this->assertAllowedValuesInput("1.1|One", 'keys must be integers', 'Non integer keys are rejected.');
@@ -87,10 +87,10 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->assertAllowedValuesInput("Zero\n1|One", 'invalid input', 'Mixed lists are rejected.');
 
     // Create a node with actual data for the field.
-    $settings = array(
+    $settings = [
       'type' => $this->type,
-      $this->fieldName => array(array('value' => 1)),
-    );
+      $this->fieldName => [['value' => 1]],
+    ];
     $node = $this->drupalCreateNode($settings);
 
     // Check that a flat list of values is rejected once the field has data.
@@ -98,22 +98,22 @@ class OptionsFieldUITest extends FieldTestBase {
 
     // Check that values can be added but values in use cannot be removed.
     $string = "0|Zero\n1|One\n2|Two";
-    $array = array('0' => 'Zero', '1' => 'One', '2' => 'Two');
+    $array = ['0' => 'Zero', '1' => 'One', '2' => 'Two'];
     $this->assertAllowedValuesInput($string, $array, 'Values can be added.');
     $string = "0|Zero\n1|One";
-    $array = array('0' => 'Zero', '1' => 'One');
+    $array = ['0' => 'Zero', '1' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
     $this->assertAllowedValuesInput("0|Zero", 'some values are being removed while currently in use', 'Values in use cannot be removed.');
 
     // Delete the node, remove the value.
     $node->delete();
     $string = "0|Zero";
-    $array = array('0' => 'Zero');
+    $array = ['0' => 'Zero'];
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
 
     // Check that the same key can only be used once.
     $string = "0|Zero\n0|One";
-    $array = array('0' => 'One');
+    $array = ['0' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Same value cannot be used multiple times.');
   }
 
@@ -126,15 +126,15 @@ class OptionsFieldUITest extends FieldTestBase {
 
     // Flat list of textual values.
     $string = "Zero\nOne";
-    $array = array('0' => 'Zero', '1' => 'One');
+    $array = ['0' => 'Zero', '1' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Unkeyed lists are accepted.');
     // Explicit numeric keys.
     $string = "0|Zero\n.5|Point five";
-    $array = array('0' => 'Zero', '0.5' => 'Point five');
+    $array = ['0' => 'Zero', '0.5' => 'Point five'];
     $this->assertAllowedValuesInput($string, $array, 'Integer keys are accepted.');
     // Check that values can be added and removed.
     $string = "0|Zero\n.5|Point five\n1.0|One";
-    $array = array('0' => 'Zero', '0.5' => 'Point five', '1' => 'One');
+    $array = ['0' => 'Zero', '0.5' => 'Point five', '1' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Values can be added and removed.');
     // Non-numeric keys.
     $this->assertAllowedValuesInput("abc|abc\n", 'each key must be a valid integer or decimal', 'Non numeric keys are rejected.');
@@ -142,10 +142,10 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->assertAllowedValuesInput("Zero\n1|One\n", 'invalid input', 'Mixed lists are rejected.');
 
     // Create a node with actual data for the field.
-    $settings = array(
+    $settings = [
       'type' => $this->type,
-      $this->fieldName => array(array('value' => .5)),
-    );
+      $this->fieldName => [['value' => .5]],
+    ];
     $node = $this->drupalCreateNode($settings);
 
     // Check that a flat list of values is rejected once the field has data.
@@ -153,27 +153,27 @@ class OptionsFieldUITest extends FieldTestBase {
 
     // Check that values can be added but values in use cannot be removed.
     $string = "0|Zero\n.5|Point five\n2|Two";
-    $array = array('0' => 'Zero', '0.5' => 'Point five', '2' => 'Two');
+    $array = ['0' => 'Zero', '0.5' => 'Point five', '2' => 'Two'];
     $this->assertAllowedValuesInput($string, $array, 'Values can be added.');
     $string = "0|Zero\n.5|Point five";
-    $array = array('0' => 'Zero', '0.5' => 'Point five');
+    $array = ['0' => 'Zero', '0.5' => 'Point five'];
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
     $this->assertAllowedValuesInput("0|Zero", 'some values are being removed while currently in use', 'Values in use cannot be removed.');
 
     // Delete the node, remove the value.
     $node->delete();
     $string = "0|Zero";
-    $array = array('0' => 'Zero');
+    $array = ['0' => 'Zero'];
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
 
     // Check that the same key can only be used once.
     $string = "0.5|Point five\n0.5|Half";
-    $array = array('0.5' => 'Half');
+    $array = ['0.5' => 'Half'];
     $this->assertAllowedValuesInput($string, $array, 'Same value cannot be used multiple times.');
 
     // Check that different forms of the same float value cannot be used.
     $string = "0|Zero\n.5|Point five\n0.5|Half";
-    $array = array('0' => 'Zero', '0.5' => 'Half');
+    $array = ['0' => 'Zero', '0.5' => 'Half'];
     $this->assertAllowedValuesInput($string, $array, 'Different forms of the same value cannot be used.');
   }
 
@@ -186,59 +186,59 @@ class OptionsFieldUITest extends FieldTestBase {
 
     // Flat list of textual values.
     $string = "Zero\nOne";
-    $array = array('Zero' => 'Zero', 'One' => 'One');
+    $array = ['Zero' => 'Zero', 'One' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Unkeyed lists are accepted.');
     // Explicit keys.
     $string = "zero|Zero\none|One";
-    $array = array('zero' => 'Zero', 'one' => 'One');
+    $array = ['zero' => 'Zero', 'one' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Explicit keys are accepted.');
     // Check that values can be added and removed.
     $string = "zero|Zero\ntwo|Two";
-    $array = array('zero' => 'Zero', 'two' => 'Two');
+    $array = ['zero' => 'Zero', 'two' => 'Two'];
     $this->assertAllowedValuesInput($string, $array, 'Values can be added and removed.');
     // Mixed list of keyed and unkeyed values.
     $string = "zero|Zero\nOne\n";
-    $array = array('zero' => 'Zero', 'One' => 'One');
+    $array = ['zero' => 'Zero', 'One' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Mixed lists are accepted.');
     // Overly long keys.
     $this->assertAllowedValuesInput("zero|Zero\n" . $this->randomMachineName(256) . "|One", 'each key must be a string at most 255 characters long', 'Overly long keys are rejected.');
 
     // Create a node with actual data for the field.
-    $settings = array(
+    $settings = [
       'type' => $this->type,
-      $this->fieldName => array(array('value' => 'One')),
-    );
+      $this->fieldName => [['value' => 'One']],
+    ];
     $node = $this->drupalCreateNode($settings);
 
     // Check that flat lists of values are still accepted once the field has
     // data.
     $string = "Zero\nOne";
-    $array = array('Zero' => 'Zero', 'One' => 'One');
+    $array = ['Zero' => 'Zero', 'One' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Unkeyed lists are still accepted once the field has data.');
 
     // Check that values can be added but values in use cannot be removed.
     $string = "Zero\nOne\nTwo";
-    $array = array('Zero' => 'Zero', 'One' => 'One', 'Two' => 'Two');
+    $array = ['Zero' => 'Zero', 'One' => 'One', 'Two' => 'Two'];
     $this->assertAllowedValuesInput($string, $array, 'Values can be added.');
     $string = "Zero\nOne";
-    $array = array('Zero' => 'Zero', 'One' => 'One');
+    $array = ['Zero' => 'Zero', 'One' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
     $this->assertAllowedValuesInput("Zero", 'some values are being removed while currently in use', 'Values in use cannot be removed.');
 
     // Delete the node, remove the value.
     $node->delete();
     $string = "Zero";
-    $array = array('Zero' => 'Zero');
+    $array = ['Zero' => 'Zero'];
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
 
     // Check that string values with dots can be used.
     $string = "Zero\nexample.com|Example";
-    $array = array('Zero' => 'Zero', 'example.com' => 'Example');
+    $array = ['Zero' => 'Zero', 'example.com' => 'Example'];
     $this->assertAllowedValuesInput($string, $array, 'String value with dot is supported.');
 
     // Check that the same key can only be used once.
     $string = "zero|Zero\nzero|One";
-    $array = array('zero' => 'One');
+    $array = ['zero' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Same value cannot be used multiple times.');
   }
 
@@ -251,7 +251,7 @@ class OptionsFieldUITest extends FieldTestBase {
 
     // Explicit keys.
     $string = "zero |Zero\none | One";
-    $array = array('zero' => 'Zero', 'one' => 'One');
+    $array = ['zero' => 'Zero', 'one' => 'One'];
     $this->assertAllowedValuesInput($string, $array, 'Explicit keys are accepted and trimmed.');
   }
 
@@ -263,11 +263,11 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   protected function createOptionsField($type) {
     // Create a field.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'type' => $type,
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
@@ -292,7 +292,7 @@ class OptionsFieldUITest extends FieldTestBase {
    *   Message to display.
    */
   function assertAllowedValuesInput($input_string, $result, $message) {
-    $edit = array('settings[allowed_values]' => $input_string);
+    $edit = ['settings[allowed_values]' => $input_string];
     $this->drupalPostForm($this->adminPath, $edit, t('Save field settings'));
     $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
 
@@ -311,32 +311,32 @@ class OptionsFieldUITest extends FieldTestBase {
   function testNodeDisplay() {
     $this->fieldName = strtolower($this->randomMachineName());
     $this->createOptionsField('list_integer');
-    $node = $this->drupalCreateNode(array('type' => $this->type));
+    $node = $this->drupalCreateNode(['type' => $this->type]);
 
     $on = $this->randomMachineName();
     $off = $this->randomMachineName();
-    $edit = array(
+    $edit = [
       'settings[allowed_values]' =>
         "1|$on
         0|$off",
-    );
+    ];
 
     $this->drupalPostForm($this->adminPath, $edit, t('Save field settings'));
-    $this->assertText(format_string('Updated field @field_name field settings.', array('@field_name' => $this->fieldName)), "The 'On' and 'Off' form fields work for boolean fields.");
+    $this->assertText(format_string('Updated field @field_name field settings.', ['@field_name' => $this->fieldName]), "The 'On' and 'Off' form fields work for boolean fields.");
 
     // Select a default value.
-    $edit = array(
+    $edit = [
       $this->fieldName => '1',
-    );
+    ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 
     // Check the node page and see if the values are correct.
-    $file_formatters = array('list_default', 'list_key');
+    $file_formatters = ['list_default', 'list_key'];
     foreach ($file_formatters as $formatter) {
-      $edit = array(
+      $edit = [
         "fields[$this->fieldName][type]" => $formatter,
         "fields[$this->fieldName][region]" => 'content',
-      );
+      ];
       $this->drupalPostForm('admin/structure/types/manage/' . $this->typeName . '/display', $edit, t('Save'));
       $this->drupalGet('node/' . $node->id());
 

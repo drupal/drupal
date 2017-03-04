@@ -20,20 +20,20 @@ class FileTransferTest extends BrowserTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->testConnection = TestFileTransfer::factory(\Drupal::root(), array('hostname' => $this->hostname, 'username' => $this->username, 'password' => $this->password, 'port' => $this->port));
+    $this->testConnection = TestFileTransfer::factory(\Drupal::root(), ['hostname' => $this->hostname, 'username' => $this->username, 'password' => $this->password, 'port' => $this->port]);
   }
 
   function _getFakeModuleFiles() {
-    $files = array(
+    $files = [
       'fake.module',
       'fake.info.yml',
-      'theme' => array(
+      'theme' => [
         'fake.html.twig'
-      ),
-      'inc' => array(
+      ],
+      'inc' => [
         'fake.inc'
-      )
-    );
+      ]
+    ];
     return $files;
   }
 
@@ -41,7 +41,7 @@ class FileTransferTest extends BrowserTestBase {
     $location = 'temporary://fake';
     if (is_dir($location)) {
       $ret = 0;
-      $output = array();
+      $output = [];
       exec('rm -Rf ' . escapeshellarg($location), $output, $ret);
       if ($ret != 0) {
         throw new Exception('Error removing fake module directory.');
@@ -53,7 +53,7 @@ class FileTransferTest extends BrowserTestBase {
     return $location;
   }
 
-  function _writeDirectory($base, $files = array()) {
+  function _writeDirectory($base, $files = []) {
     mkdir($base);
     foreach ($files as $key => $file) {
       if (is_array($file)) {

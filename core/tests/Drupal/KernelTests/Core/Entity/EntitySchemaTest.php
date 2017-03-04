@@ -23,7 +23,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('user', array('users_data'));
+    $this->installSchema('user', ['users_data']);
     $this->database = $this->container->get('database');
   }
 
@@ -80,33 +80,33 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $this->entityManager->onFieldStorageDefinitionCreate($storage_definitions['custom_base_field']);
     $this->entityManager->onFieldStorageDefinitionCreate($storage_definitions['custom_bundle_field']);
     $schema_handler = $this->database->schema();
-    $tables = array('entity_test', 'entity_test_revision', 'entity_test_field_data', 'entity_test_field_revision');
-    $dedicated_tables = array('entity_test__custom_bundle_field', 'entity_test_revision__custom_bundle_field');
+    $tables = ['entity_test', 'entity_test_revision', 'entity_test_field_data', 'entity_test_field_revision'];
+    $dedicated_tables = ['entity_test__custom_bundle_field', 'entity_test_revision__custom_bundle_field'];
 
     // Initially only the base table and the dedicated field data table should
     // exist.
     foreach ($tables as $index => $table) {
-      $this->assertEqual($schema_handler->tableExists($table), !$index, SafeMarkup::format('Entity schema correct for the @table table.', array('@table' => $table)));
+      $this->assertEqual($schema_handler->tableExists($table), !$index, SafeMarkup::format('Entity schema correct for the @table table.', ['@table' => $table]));
     }
-    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), SafeMarkup::format('Field schema correct for the @table table.', array('@table' => $table)));
+    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), SafeMarkup::format('Field schema correct for the @table table.', ['@table' => $table]));
 
     // Update the entity type definition and check that the entity schema now
     // supports translations and revisions.
     $this->updateEntityType(TRUE);
     foreach ($tables as $table) {
-      $this->assertTrue($schema_handler->tableExists($table), SafeMarkup::format('Entity schema correct for the @table table.', array('@table' => $table)));
+      $this->assertTrue($schema_handler->tableExists($table), SafeMarkup::format('Entity schema correct for the @table table.', ['@table' => $table]));
     }
     foreach ($dedicated_tables as $table) {
-      $this->assertTrue($schema_handler->tableExists($table), SafeMarkup::format('Field schema correct for the @table table.', array('@table' => $table)));
+      $this->assertTrue($schema_handler->tableExists($table), SafeMarkup::format('Field schema correct for the @table table.', ['@table' => $table]));
     }
 
     // Revert changes and check that the entity schema now does not support
     // neither translations nor revisions.
     $this->updateEntityType(FALSE);
     foreach ($tables as $index => $table) {
-      $this->assertEqual($schema_handler->tableExists($table), !$index, SafeMarkup::format('Entity schema correct for the @table table.', array('@table' => $table)));
+      $this->assertEqual($schema_handler->tableExists($table), !$index, SafeMarkup::format('Entity schema correct for the @table table.', ['@table' => $table]));
     }
-    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), SafeMarkup::format('Field schema correct for the @table table.', array('@table' => $table)));
+    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), SafeMarkup::format('Field schema correct for the @table table.', ['@table' => $table]));
   }
 
   /**
@@ -167,7 +167,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $this->assertNotEqual($entity_type_id_count, 0, 'There are storage definitions provided by the entity_test module in the schema.');
 
     // Uninstall the entity_test module.
-    $this->container->get('module_installer')->uninstall(array('entity_test'));
+    $this->container->get('module_installer')->uninstall(['entity_test']);
 
     // Get a list of all the entities in the schema.
     $key_value_store = \Drupal::keyValue('entity.storage_schema.sql');

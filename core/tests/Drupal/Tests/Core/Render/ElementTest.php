@@ -25,11 +25,11 @@ class ElementTest extends UnitTestCase {
    * Tests the properties() method.
    */
   public function testProperties() {
-    $element = array(
+    $element = [
       '#property1' => 'property1',
       '#property2' => 'property2',
       'property3' => 'property3'
-    );
+    ];
 
     $properties = Element::properties($element);
 
@@ -51,51 +51,51 @@ class ElementTest extends UnitTestCase {
    * Tests the children() method.
    */
   public function testChildren() {
-    $element = array(
-      'child2' => array('#weight' => 10),
-      'child1' => array('#weight' => 0),
-      'child3' => array('#weight' => 20),
+    $element = [
+      'child2' => ['#weight' => 10],
+      'child1' => ['#weight' => 0],
+      'child3' => ['#weight' => 20],
       '#property' => 'property',
-    );
+    ];
 
-    $expected = array('child2', 'child1', 'child3');
+    $expected = ['child2', 'child1', 'child3'];
     $element_copy = $element;
     $this->assertSame($expected, Element::children($element_copy));
 
     // If #sorted is already set, no sorting should happen.
     $element_copy = $element;
     $element_copy['#sorted'] = TRUE;
-    $expected = array('child2', 'child1', 'child3');
+    $expected = ['child2', 'child1', 'child3'];
     $this->assertSame($expected, Element::children($element_copy, TRUE));
 
     // Test with weight sorting, #sorted property should be added.
-    $expected = array('child1', 'child2', 'child3');
+    $expected = ['child1', 'child2', 'child3'];
     $element_copy = $element;
     $this->assertSame($expected, Element::children($element_copy, TRUE));
     $this->assertArrayHasKey('#sorted', $element_copy);
     $this->assertTrue($element_copy['#sorted']);
 
     // The order should stay the same if no weights present.
-    $element_no_weight = array(
-      'child2' => array(),
-      'child1' => array(),
-      'child3' => array(),
+    $element_no_weight = [
+      'child2' => [],
+      'child1' => [],
+      'child3' => [],
       '#property' => 'property',
-    );
+    ];
 
-    $expected = array('child2', 'child1', 'child3');
+    $expected = ['child2', 'child1', 'child3'];
     $this->assertSame($expected, Element::children($element_no_weight, TRUE));
 
     // The order of children with same weight should be preserved.
-    $element_mixed_weight = array(
-      'child5' => array('#weight' => 10),
-      'child3' => array('#weight' => -10),
-      'child1' => array(),
-      'child4' => array('#weight' => 10),
-      'child2' => array(),
-    );
+    $element_mixed_weight = [
+      'child5' => ['#weight' => 10],
+      'child3' => ['#weight' => -10],
+      'child1' => [],
+      'child4' => ['#weight' => 10],
+      'child2' => [],
+    ];
 
-    $expected = array('child3', 'child1', 'child2', 'child5', 'child4');
+    $expected = ['child3', 'child1', 'child2', 'child5', 'child4'];
     $this->assertSame($expected, Element::children($element_mixed_weight, TRUE));
   }
 
@@ -106,9 +106,9 @@ class ElementTest extends UnitTestCase {
    * @expectedExceptionMessage "foo" is an invalid render array key
    */
   public function testInvalidChildren() {
-    $element = array(
+    $element = [
       'foo' => 'bar',
-    );
+    ];
     Element::children($element);
   }
 
@@ -116,10 +116,10 @@ class ElementTest extends UnitTestCase {
    * Tests the children() method with an ignored key/value pair.
    */
   public function testIgnoredChildren() {
-    $element = array(
+    $element = [
       'foo' => NULL,
-    );
-    $this->assertSame(array(), Element::children($element));
+    ];
+    $this->assertSame([], Element::children($element));
   }
 
   /**
@@ -142,17 +142,17 @@ class ElementTest extends UnitTestCase {
    * @return array
    */
   public function providerVisibleChildren() {
-    return array(
-      array(array('#property1' => '', '#property2' => array()), array()),
-      array(array('#property1' => '', 'child1' => array()), array('child1')),
-      array(array('#property1' => '', 'child1' => array(), 'child2' => array('#access' => TRUE)), array('child1', 'child2')),
-      array(array('#property1' => '', 'child1' => array(), 'child2' => array('#access' => FALSE)), array('child1')),
-      'access_result_object_allowed' => array(array('#property1' => '', 'child1' => array(), 'child2' => array('#access' => AccessResult::allowed())), array('child1', 'child2')),
-      'access_result_object_forbidden' => array(array('#property1' => '', 'child1' => array(), 'child2' => array('#access' => AccessResult::forbidden())), array('child1')),
-      array(array('#property1' => '', 'child1' => array(), 'child2' => array('#type' => 'textfield')), array('child1', 'child2')),
-      array(array('#property1' => '', 'child1' => array(), 'child2' => array('#type' => 'value')), array('child1')),
-      array(array('#property1' => '', 'child1' => array(), 'child2' => array('#type' => 'hidden')), array('child1')),
-    );
+    return [
+      [['#property1' => '', '#property2' => []], []],
+      [['#property1' => '', 'child1' => []], ['child1']],
+      [['#property1' => '', 'child1' => [], 'child2' => ['#access' => TRUE]], ['child1', 'child2']],
+      [['#property1' => '', 'child1' => [], 'child2' => ['#access' => FALSE]], ['child1']],
+      'access_result_object_allowed' => [['#property1' => '', 'child1' => [], 'child2' => ['#access' => AccessResult::allowed()]], ['child1', 'child2']],
+      'access_result_object_forbidden' => [['#property1' => '', 'child1' => [], 'child2' => ['#access' => AccessResult::forbidden()]], ['child1']],
+      [['#property1' => '', 'child1' => [], 'child2' => ['#type' => 'textfield']], ['child1', 'child2']],
+      [['#property1' => '', 'child1' => [], 'child2' => ['#type' => 'value']], ['child1']],
+      [['#property1' => '', 'child1' => [], 'child2' => ['#type' => 'hidden']], ['child1']],
+    ];
   }
 
   /**
@@ -169,12 +169,12 @@ class ElementTest extends UnitTestCase {
    * Data provider for testSetAttributes().
    */
   public function providerTestSetAttributes() {
-    $base = array('#id' => 'id', '#class' => array());
-    return array(
-      array($base, array(), $base),
-      array($base, array('id', 'class'), $base + array('#attributes' => array('id' => 'id', 'class' => array()))),
-      array($base + array('#attributes' => array('id' => 'id-not-overwritten')), array('id', 'class'), $base + array('#attributes' => array('id' => 'id-not-overwritten', 'class' => array()))),
-    );
+    $base = ['#id' => 'id', '#class' => []];
+    return [
+      [$base, [], $base],
+      [$base, ['id', 'class'], $base + ['#attributes' => ['id' => 'id', 'class' => []]]],
+      [$base + ['#attributes' => ['id' => 'id-not-overwritten']], ['id', 'class'], $base + ['#attributes' => ['id' => 'id-not-overwritten', 'class' => []]]],
+    ];
   }
 
   /**

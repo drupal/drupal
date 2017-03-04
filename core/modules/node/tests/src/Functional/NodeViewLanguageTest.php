@@ -16,7 +16,7 @@ class NodeViewLanguageTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'datetime', 'language');
+  public static $modules = ['node', 'datetime', 'language'];
 
   /**
    * Tests the language extra field display.
@@ -31,7 +31,7 @@ class NodeViewLanguageTest extends NodeTestBase {
       ->save();
 
     // Create a node in Spanish.
-    $node = $this->drupalCreateNode(array('langcode' => 'es'));
+    $node = $this->drupalCreateNode(['langcode' => 'es']);
 
     $this->drupalGet($node->urlInfo());
     $this->assertText('Spanish', 'The language field is displayed properly.');

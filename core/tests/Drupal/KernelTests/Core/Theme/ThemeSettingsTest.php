@@ -18,7 +18,7 @@ class ThemeSettingsTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /**
    * List of discovered themes.
@@ -30,7 +30,7 @@ class ThemeSettingsTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
     // Theme settings rely on System module's system.theme.global configuration.
-    $this->installConfig(array('system'));
+    $this->installConfig(['system']);
 
     if (!isset($this->availableThemes)) {
       $discovery = new ExtensionDiscovery(\Drupal::root());
@@ -45,7 +45,7 @@ class ThemeSettingsTest extends KernelTestBase {
     $name = 'test_basetheme';
     $path = $this->availableThemes[$name]->getPath();
     $this->assertTrue(file_exists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml"));
-    $this->container->get('theme_handler')->install(array($name));
+    $this->container->get('theme_handler')->install([$name]);
     $this->assertIdentical(theme_get_setting('base', $name), 'only');
   }
 
@@ -56,7 +56,7 @@ class ThemeSettingsTest extends KernelTestBase {
     $name = 'stark';
     $path = $this->availableThemes[$name]->getPath();
     $this->assertFalse(file_exists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml"));
-    $this->container->get('theme_handler')->install(array($name));
+    $this->container->get('theme_handler')->install([$name]);
     $this->assertNotNull(theme_get_setting('features.favicon', $name));
   }
 

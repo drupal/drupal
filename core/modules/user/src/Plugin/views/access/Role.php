@@ -99,31 +99,31 @@ class Role extends AccessPluginBase implements CacheableDependencyInterface {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['role'] = array('default' => array());
+    $options['role'] = ['default' => []];
 
     return $options;
   }
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $form['role'] = array(
+    $form['role'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Role'),
       '#default_value' => $this->options['role'],
       '#options' => array_map('\Drupal\Component\Utility\Html::escape', user_role_names()),
       '#description' => $this->t('Only the checked roles will be able to access this display.'),
-    );
+    ];
   }
 
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
-    $role = $form_state->getValue(array('access_options', 'role'));
+    $role = $form_state->getValue(['access_options', 'role']);
     $role = array_filter($role);
 
     if (!$role) {
       $form_state->setError($form['role'], $this->t('You must select at least one role if type is "by role"'));
     }
 
-    $form_state->setValue(array('access_options', 'role'), $role);
+    $form_state->setValue(['access_options', 'role'], $role);
   }
 
   /**

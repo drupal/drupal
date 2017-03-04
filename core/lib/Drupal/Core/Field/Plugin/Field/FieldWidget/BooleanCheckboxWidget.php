@@ -24,21 +24,21 @@ class BooleanCheckboxWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'display_label' => TRUE,
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element['display_label'] = array(
+    $element['display_label'] = [
       '#type' => 'checkbox',
       '#title' => t('Use field label instead of the "On label" as label'),
       '#default_value' => $this->getSetting('display_label'),
       '#weight' => -1,
-    );
+    ];
     return $element;
   }
 
@@ -46,10 +46,10 @@ class BooleanCheckboxWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = [];
 
     $display_label = $this->getSetting('display_label');
-    $summary[] = t('Use field label: @display_label', array('@display_label' => ($display_label ? t('Yes') : 'No')));
+    $summary[] = t('Use field label: @display_label', ['@display_label' => ($display_label ? t('Yes') : 'No')]);
 
     return $summary;
   }
@@ -58,10 +58,10 @@ class BooleanCheckboxWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $element['value'] = $element + array(
+    $element['value'] = $element + [
       '#type' => 'checkbox',
       '#default_value' => !empty($items[0]->value),
-    );
+    ];
 
     // Override the title from the incoming $element.
     if ($this->getSetting('display_label')) {

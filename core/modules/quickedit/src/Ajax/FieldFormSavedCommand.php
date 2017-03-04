@@ -27,7 +27,7 @@ class FieldFormSavedCommand extends BaseCommand {
    *   The same re-rendered edited field, but in different view modes, for other
    *   instances of the same field on the user's page. Keyed by view mode.
    */
-  public function __construct($data, $other_view_modes = array()) {
+  public function __construct($data, $other_view_modes = []) {
     parent::__construct('quickeditFieldFormSaved', $data);
 
     $this->other_view_modes = $other_view_modes;
@@ -37,11 +37,11 @@ class FieldFormSavedCommand extends BaseCommand {
    * {@inheritdoc}
    */
   public function render() {
-    return array(
+    return [
       'command' => $this->command,
       'data' => $this->data,
       'other_view_modes' => $this->other_view_modes,
-    );
+    ];
   }
 
 }

@@ -18,7 +18,7 @@ class LegacyTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'datetime');
+  public static $modules = ['node', 'datetime'];
 
   protected function setUp() {
     parent::setUp();
@@ -31,18 +31,18 @@ class LegacyTest extends TaxonomyTestBase {
     $vocabulary->save();
     $field_name = 'field_' . $vocabulary->id();
 
-    $handler_settings = array(
-      'target_bundles' => array(
+    $handler_settings = [
+      'target_bundles' => [
         $vocabulary->id() => $vocabulary->id(),
-      ),
+      ],
       'auto_create' => TRUE,
-    );
+    ];
     $this->createEntityReferenceField('node', 'article', $field_name, 'Tags', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($field_name, array(
+      ->setComponent($field_name, [
         'type' => 'entity_reference_autocomplete_tags',
-      ))
+      ])
       ->save();
 
     $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'administer nodes', 'bypass node access']));
@@ -54,7 +54,7 @@ class LegacyTest extends TaxonomyTestBase {
   function testTaxonomyLegacyNode() {
     // Posts an article with a taxonomy term and a date prior to 1970.
     $date = new DrupalDateTime('1969-01-01 00:00:00');
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit['created[0][value][date]'] = $date->format('Y-m-d');
     $edit['created[0][value][time]'] = $date->format('H:i:s');

@@ -50,18 +50,18 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
    *   A structured list of search results
    */
   public function execute() {
-    $results = array();
+    $results = [];
     if (!$this->isSearchExecutable()) {
       return $results;
     }
-    return array(
-      array(
+    return [
+      [
         'link' => Url::fromRoute('test_page_test.test_page')->toString(),
         'type' => 'Dummy result type',
         'title' => 'Dummy title',
         'snippet' => SafeMarkup::format("Dummy search snippet to display. Keywords: @keywords\n\nConditions: @search_parameters", ['@keywords' => $this->keywords, '@search_parameters' => print_r($this->searchParameters, TRUE)]),
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -72,15 +72,15 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
     $output['prefix']['#markup'] = '<h2>Test page text is here</h2> <ol class="search-results">';
 
     foreach ($results as $entry) {
-      $output[] = array(
+      $output[] = [
         '#theme' => 'search_result',
         '#result' => $entry,
         '#plugin_id' => 'search_extra_type_search',
-      );
+      ];
     }
-    $pager = array(
+    $pager = [
       '#type' => 'pager',
-    );
+    ];
     $output['suffix']['#markup'] = '</ol>' . drupal_render($pager);
 
     return $output;
@@ -91,21 +91,21 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     // Output form for defining rank factor weights.
-    $form['extra_type_settings'] = array(
+    $form['extra_type_settings'] = [
       '#type' => 'fieldset',
       '#title' => t('Extra type settings'),
       '#tree' => TRUE,
-    );
+    ];
 
-    $form['extra_type_settings']['boost'] = array(
+    $form['extra_type_settings']['boost'] = [
       '#type' => 'select',
       '#title' => t('Boost method'),
-      '#options' => array(
+      '#options' => [
         'bi' => t('Bistromathic'),
         'ii' => t('Infinite Improbability'),
-      ),
+      ],
       '#default_value' => $this->configuration['boost'],
-    );
+    ];
     return $form;
   }
 
@@ -113,16 +113,16 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['boost'] = $form_state->getValue(array('extra_type_settings', 'boost'));
+    $this->configuration['boost'] = $form_state->getValue(['extra_type_settings', 'boost']);
   }
 
   /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'boost' => 'bi',
-    );
+    ];
   }
 
 }

@@ -53,21 +53,21 @@ class MachineNameControllerTest extends UnitTestCase {
    *     - The expected content of the JSONresponse.
    */
   public function providerTestMachineNameController() {
-    $valid_data = array(
-      array(array('text' => 'Bob', 'langcode' => 'en'), '"Bob"'),
-      array(array('text' => 'Bob', 'langcode' => 'en', 'lowercase' => TRUE), '"bob"'),
-      array(array('text' => 'Bob', 'langcode' => 'en', 'replace' => 'Alice', 'replace_pattern' => 'Bob'), '"Alice"'),
-      array(array('text' => 'Bob', 'langcode' => 'en', 'replace' => 'Alice', 'replace_pattern' => 'Tom'), '"Bob"'),
-      array(array('text' => 'Äwesome', 'langcode' => 'en', 'lowercase' => TRUE), '"awesome"'),
-      array(array('text' => 'Äwesome', 'langcode' => 'de', 'lowercase' => TRUE), '"aewesome"'),
+    $valid_data = [
+      [['text' => 'Bob', 'langcode' => 'en'], '"Bob"'],
+      [['text' => 'Bob', 'langcode' => 'en', 'lowercase' => TRUE], '"bob"'],
+      [['text' => 'Bob', 'langcode' => 'en', 'replace' => 'Alice', 'replace_pattern' => 'Bob'], '"Alice"'],
+      [['text' => 'Bob', 'langcode' => 'en', 'replace' => 'Alice', 'replace_pattern' => 'Tom'], '"Bob"'],
+      [['text' => 'Äwesome', 'langcode' => 'en', 'lowercase' => TRUE], '"awesome"'],
+      [['text' => 'Äwesome', 'langcode' => 'de', 'lowercase' => TRUE], '"aewesome"'],
       // Tests special characters replacement in the input text.
-      array(array('text' => 'B?!"@\/-ob@e', 'langcode' => 'en', 'lowercase' => TRUE, 'replace' => '_', 'replace_pattern' => '[^a-z0-9_.]+'), '"b_ob_e"'),
+      [['text' => 'B?!"@\/-ob@e', 'langcode' => 'en', 'lowercase' => TRUE, 'replace' => '_', 'replace_pattern' => '[^a-z0-9_.]+'], '"b_ob_e"'],
       // Tests @ character in the replace_pattern regex.
-      array(array('text' => 'Bob@e\0', 'langcode' => 'en', 'lowercase' => TRUE, 'replace' => '_', 'replace_pattern' => '[^a-z0-9_.@]+'), '"bob@e_0"'),
+      [['text' => 'Bob@e\0', 'langcode' => 'en', 'lowercase' => TRUE, 'replace' => '_', 'replace_pattern' => '[^a-z0-9_.@]+'], '"bob@e_0"'],
       // Tests null byte in the replace_pattern regex.
-      array(array('text' => 'Bob', 'langcode' => 'en', 'lowercase' => TRUE, 'replace' => 'fail()', 'replace_pattern' => ".*@e\0"), '"bob"'),
-      array(array('text' => 'Bob@e', 'langcode' => 'en', 'lowercase' => TRUE, 'replace' => 'fail()', 'replace_pattern' => ".*@e\0"), '"fail()"'),
-    );
+      [['text' => 'Bob', 'langcode' => 'en', 'lowercase' => TRUE, 'replace' => 'fail()', 'replace_pattern' => ".*@e\0"], '"bob"'],
+      [['text' => 'Bob@e', 'langcode' => 'en', 'lowercase' => TRUE, 'replace' => 'fail()', 'replace_pattern' => ".*@e\0"], '"fail()"'],
+    ];
 
     $valid_data = array_map(function ($data) {
       if (isset($data[0]['replace_pattern'])) {

@@ -71,7 +71,7 @@ class LanguageConfigOverride extends StorableConfigBase {
    * {@inheritdoc}
    */
   public function delete() {
-    $this->data = array();
+    $this->data = [];
     $this->storage->delete($this->name);
     Cache::invalidateTags($this->getCacheTags());
     $this->isNew = TRUE;

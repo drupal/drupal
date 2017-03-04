@@ -29,7 +29,7 @@ class InstallerRedirectTraitTest extends KernelTestBase {
    *   - Whether or not there exists a sessions table in the database.
    */
   public function providerShouldRedirectToInstaller() {
-    return array(
+    return [
       [TRUE, DatabaseNotFoundException::class, FALSE, FALSE],
       [TRUE, DatabaseNotFoundException::class, TRUE, FALSE],
       [TRUE, DatabaseNotFoundException::class, FALSE, TRUE],
@@ -59,7 +59,7 @@ class InstallerRedirectTraitTest extends KernelTestBase {
       [FALSE, \Exception::class, FALSE, TRUE],
       [FALSE, \Exception::class, TRUE, TRUE],
       [FALSE, \Exception::class, TRUE, TRUE, FALSE],
-    );
+    ];
   }
 
   /**
@@ -73,7 +73,7 @@ class InstallerRedirectTraitTest extends KernelTestBase {
     catch (\Exception $e) {
       // Mock the trait.
       $trait = $this->getMockBuilder(InstallerRedirectTrait::class)
-        ->setMethods(array('isCli'))
+        ->setMethods(['isCli'])
         ->getMockForTrait();
 
       // Make sure that the method thinks we are not using the cli.
@@ -95,14 +95,14 @@ class InstallerRedirectTraitTest extends KernelTestBase {
         // Mock the database connection.
         $connection = $this->getMockBuilder(Connection::class)
           ->disableOriginalConstructor()
-          ->setMethods(array('schema'))
+          ->setMethods(['schema'])
           ->getMockForAbstractClass();
 
         if ($connection_info) {
           // Mock the database schema class.
           $schema = $this->getMockBuilder(Schema::class)
             ->disableOriginalConstructor()
-            ->setMethods(array('tableExists'))
+            ->setMethods(['tableExists'])
             ->getMockForAbstractClass();
 
           $schema->expects($this->any())

@@ -26,22 +26,22 @@ class TestFieldDefaultFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'test_formatter_setting' => 'dummy test string',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element['test_formatter_setting'] = array(
+    $element['test_formatter_setting'] = [
       '#title' => t('Setting'),
       '#type' => 'textfield',
       '#size' => 20,
       '#default_value' => $this->getSetting('test_formatter_setting'),
       '#required' => TRUE,
-    );
+    ];
     return $element;
   }
 
@@ -49,8 +49,8 @@ class TestFieldDefaultFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
-    $summary[] = t('@setting: @value', array('@setting' => 'test_formatter_setting', '@value' => $this->getSetting('test_formatter_setting')));
+    $summary = [];
+    $summary[] = t('@setting: @value', ['@setting' => 'test_formatter_setting', '@value' => $this->getSetting('test_formatter_setting')]);
     return $summary;
   }
 
@@ -58,10 +58,10 @@ class TestFieldDefaultFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = array('#markup' => $this->getSetting('test_formatter_setting') . '|' . $item->value);
+      $elements[$delta] = ['#markup' => $this->getSetting('test_formatter_setting') . '|' . $item->value];
     }
 
     return $elements;

@@ -35,9 +35,9 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
    *
    * @var array
    */
-  protected $migrationConfiguration = array(
+  protected $migrationConfiguration = [
     'id' => 'test',
-  );
+  ];
 
   /**
    * The php.ini memory_limit value.

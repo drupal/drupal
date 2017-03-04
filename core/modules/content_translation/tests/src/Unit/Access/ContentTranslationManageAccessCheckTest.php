@@ -69,18 +69,18 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     $language_manager->expects($this->at(0))
       ->method('getLanguage')
       ->with($this->equalTo($source))
-      ->will($this->returnValue(new Language(array('id' => 'en'))));
+      ->will($this->returnValue(new Language(['id' => 'en'])));
     $language_manager->expects($this->at(1))
       ->method('getLanguages')
-      ->will($this->returnValue(array('en' => array(), 'it' => array())));
+      ->will($this->returnValue(['en' => [], 'it' => []]));
     $language_manager->expects($this->at(2))
       ->method('getLanguage')
       ->with($this->equalTo($source))
-      ->will($this->returnValue(new Language(array('id' => 'en'))));
+      ->will($this->returnValue(new Language(['id' => 'en'])));
     $language_manager->expects($this->at(3))
       ->method('getLanguage')
       ->with($this->equalTo($target))
-      ->will($this->returnValue(new Language(array('id' => 'it'))));
+      ->will($this->returnValue(new Language(['id' => 'it'])));
 
     // Set the mock entity. We need to use ContentEntityBase for mocking due to
     // issues with phpunit and multiple interfaces.
@@ -92,7 +92,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     $entity->expects($this->once())
       ->method('getTranslationLanguages')
       ->with()
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
     $entity->expects($this->once())
       ->method('getCacheContexts')
       ->willReturn([]);
@@ -101,10 +101,10 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
       ->willReturn(Cache::PERMANENT);
     $entity->expects($this->once())
       ->method('getCacheTags')
-      ->will($this->returnValue(array('node:1337')));
+      ->will($this->returnValue(['node:1337']));
     $entity->expects($this->once())
       ->method('getCacheContexts')
-      ->willReturn(array());
+      ->willReturn([]);
 
     // Set the route requirements.
     $route = new Route('test_route');

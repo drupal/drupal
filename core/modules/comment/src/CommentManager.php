@@ -90,11 +90,11 @@ class CommentManager implements CommentManagerInterface {
   public function getFields($entity_type_id) {
     $entity_type = $this->entityManager->getDefinition($entity_type_id);
     if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
-      return array();
+      return [];
     }
 
     $map = $this->entityManager->getFieldMapByFieldType('comment');
-    return isset($map[$entity_type_id]) ? $map[$entity_type_id] : array();
+    return isset($map[$entity_type_id]) ? $map[$entity_type_id] : [];
   }
 
   /**
@@ -103,28 +103,28 @@ class CommentManager implements CommentManagerInterface {
   public function addBodyField($comment_type_id) {
     if (!FieldConfig::loadByName('comment', $comment_type_id, 'comment_body')) {
       // Attaches the body field by default.
-      $field = $this->entityManager->getStorage('field_config')->create(array(
+      $field = $this->entityManager->getStorage('field_config')->create([
         'label' => 'Comment',
         'bundle' => $comment_type_id,
         'required' => TRUE,
         'field_storage' => FieldStorageConfig::loadByName('comment', 'comment_body'),
-      ));
+      ]);
       $field->save();
 
       // Assign widget settings for the 'default' form mode.
       entity_get_form_display('comment', $comment_type_id, 'default')
-        ->setComponent('comment_body', array(
+        ->setComponent('comment_body', [
           'type' => 'text_textarea',
-        ))
+        ])
         ->save();
 
       // Assign display settings for the 'default' view mode.
       entity_get_display('comment', $comment_type_id, 'default')
-        ->setComponent('comment_body', array(
+        ->setComponent('comment_body', [
           'label' => 'hidden',
           'type' => 'text_default',
           'weight' => 0,
-        ))
+        ])
         ->save();
     }
   }
@@ -151,24 +151,24 @@ class CommentManager implements CommentManagerInterface {
           'entity' => $entity->id(),
           'field_name' => $field_name,
         ];
-        $destination = array('destination' => $this->url('comment.reply', $comment_reply_parameters, array('fragment' => 'comment-form')));
+        $destination = ['destination' => $this->url('comment.reply', $comment_reply_parameters, ['fragment' => 'comment-form'])];
       }
       else {
-        $destination = array('destination' => $entity->url('canonical', array('fragment' => 'comment-form')));
+        $destination = ['destination' => $entity->url('canonical', ['fragment' => 'comment-form'])];
       }
 
       if ($this->userConfig->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
         // Users can register themselves.
-        return $this->t('<a href=":login">Log in</a> or <a href=":register">register</a> to post comments', array(
-          ':login' => $this->urlGenerator->generateFromRoute('user.login', array(), array('query' => $destination)),
-          ':register' => $this->urlGenerator->generateFromRoute('user.register', array(), array('query' => $destination)),
-        ));
+        return $this->t('<a href=":login">Log in</a> or <a href=":register">register</a> to post comments', [
+          ':login' => $this->urlGenerator->generateFromRoute('user.login', [], ['query' => $destination]),
+          ':register' => $this->urlGenerator->generateFromRoute('user.register', [], ['query' => $destination]),
+        ]);
       }
       else {
         // Only admins can add new users, no public registration.
-        return $this->t('<a href=":login">Log in</a> to post comments', array(
-          ':login' => $this->urlGenerator->generateFromRoute('user.login', array(), array('query' => $destination)),
-        ));
+        return $this->t('<a href=":login">Log in</a> to post comments', [
+          ':login' => $this->urlGenerator->generateFromRoute('user.login', [], ['query' => $destination]),
+        ]);
       }
     }
     return '';

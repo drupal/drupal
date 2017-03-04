@@ -20,7 +20,7 @@ class HWLDFWordAccumulator {
    */
   const NBSP = '&#160;';
 
-  protected $lines = array();
+  protected $lines = [];
 
   protected $line = '';
 

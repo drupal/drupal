@@ -43,7 +43,7 @@ class ReferenceAccessConstraintValidator extends ConstraintValidator {
       // referenced entity.
       if ($check_permission && !$referenced_entity->access('view')) {
         $type = $value->getFieldDefinition()->getSetting('target_type');
-        $this->context->addViolation($constraint->message, array('%type' => $type, '%id' => $id));
+        $this->context->addViolation($constraint->message, ['%type' => $type, '%id' => $id]);
       }
     }
   }

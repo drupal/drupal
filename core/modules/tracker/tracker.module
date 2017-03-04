@@ -19,11 +19,11 @@ function tracker_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.tracker':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Activity Tracker module displays the most recently added and updated content on your site, and allows you to follow new content created by each user. This module has no configuration options. For more information, see the <a href=":tracker">online documentation for the Activity Tracker module</a>.', array(':tracker' => 'https://www.drupal.org/documentation/modules/tracker')) . '</p>';
+      $output .= '<p>' . t('The Activity Tracker module displays the most recently added and updated content on your site, and allows you to follow new content created by each user. This module has no configuration options. For more information, see the <a href=":tracker">online documentation for the Activity Tracker module</a>.', [':tracker' => 'https://www.drupal.org/documentation/modules/tracker']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Tracking new and updated site content') . '</dt>';
-      $output .= '<dd>' . t('The <a href=":recent">Recent content</a> page shows new and updated content in reverse chronological order, listing the content type, title, author\'s name, number of comments, and time of last update. Content is considered updated when changes occur in the text, or when new comments are added. The <em>My recent content</em> tab limits the list to the currently logged-in user.', array(':recent' => \Drupal::url('tracker.page'))) . '</dd>';
+      $output .= '<dd>' . t('The <a href=":recent">Recent content</a> page shows new and updated content in reverse chronological order, listing the content type, title, author\'s name, number of comments, and time of last update. Content is considered updated when changes occur in the text, or when new comments are added. The <em>My recent content</em> tab limits the list to the currently logged-in user.', [':recent' => \Drupal::url('tracker.page')]) . '</dd>';
       $output .= '<dt>' . t('Tracking user-specific content') . '</dt>';
       $output .= '<dd>' . t("To follow a specific user's new and updated content, select the <em>Activity</em> tab from the user's profile page.") . '</dd>';
       $output .= '</dl>';
@@ -70,21 +70,21 @@ function tracker_cron() {
 
       // Insert the node-level data.
       db_insert('tracker_node')
-        ->fields(array(
+        ->fields([
           'nid' => $nid,
           'published' => $node->isPublished(),
           'changed' => $changed,
-        ))
+        ])
         ->execute();
 
       // Insert the user-level data for the node's author.
       db_insert('tracker_user')
-        ->fields(array(
+        ->fields([
           'nid' => $nid,
           'published' => $node->isPublished(),
           'changed' => $changed,
           'uid' => $node->getOwnerId(),
-        ))
+        ])
         ->execute();
 
       // Insert the user-level data for the commenters (except if a commenter
@@ -103,12 +103,12 @@ function tracker_cron() {
       if ($result) {
         $query = db_insert('tracker_user');
         foreach ($result as $row) {
-          $query->fields(array(
+          $query->fields([
             'uid' => $row['uid'],
             'nid' => $nid,
             'published' => CommentInterface::PUBLISHED,
             'changed' => $changed,
-          ));
+          ]);
         }
         $query->execute();
       }
@@ -123,7 +123,7 @@ function tracker_cron() {
       // Prepare a starting point for the next run.
       $state->set('tracker.index_nid', $last_nid - 1);
 
-      \Drupal::logger('tracker')->notice('Indexed %count content items for tracking.', array('%count' => $count));
+      \Drupal::logger('tracker')->notice('Indexed %count content items for tracking.', ['%count' => $count]);
     }
     else {
       // If all nodes have been indexed, set to zero to skip future cron runs.
@@ -242,7 +242,7 @@ function tracker_comment_delete(CommentInterface $comment) {
 function _tracker_add($nid, $uid, $changed) {
   // @todo This should be actually filtering on the desired language and just
   //   fall back to the default language.
-  $node = db_query('SELECT nid, status, uid, changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC, status DESC', array(':nid' => $nid))->fetchObject();
+  $node = db_query('SELECT nid, status, uid, changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC, status DESC', [':nid' => $nid])->fetchObject();
 
   // Adding a comment can only increase the changed timestamp, so our
   // calculation here is simple.
@@ -251,30 +251,30 @@ function _tracker_add($nid, $uid, $changed) {
   // Update the node-level data.
   db_merge('tracker_node')
     ->key('nid', $nid)
-    ->fields(array(
+    ->fields([
       'changed' => $changed,
       'published' => $node->status,
-    ))
+    ])
     ->execute();
 
   // Create or update the user-level data, first for the user posting.
   db_merge('tracker_user')
-    ->keys(array(
+    ->keys([
       'nid' => $nid,
       'uid' => $uid,
-    ))
-    ->fields(array(
+    ])
+    ->fields([
       'changed' => $changed,
       'published' => $node->status,
-    ))
+    ])
     ->execute();
   // Update the times for all the other users tracking the post.
   db_update('tracker_user')
     ->condition('nid', $nid)
-    ->fields(array(
+    ->fields([
       'changed' => $changed,
       'published' => $node->status,
-    ))
+    ])
     ->execute();
 }
 
@@ -293,7 +293,7 @@ function _tracker_add($nid, $uid, $changed) {
  */
 function _tracker_calculate_changed($node) {
   $changed = $node->getChangedTime();
-  $latest_comment = \Drupal::service('comment.statistics')->read(array($node), 'node', FALSE);
+  $latest_comment = \Drupal::service('comment.statistics')->read([$node], 'node', FALSE);
   if ($latest_comment && $latest_comment->last_comment_timestamp > $changed) {
     $changed = $latest_comment->last_comment_timestamp;
   }
@@ -343,7 +343,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
     // and the node itself.
     // We only need to do this if the removed item has a timestamp that equals
     // or exceeds the listed changed timestamp for the node.
-    $tracker_node = db_query('SELECT nid, changed FROM {tracker_node} WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
+    $tracker_node = db_query('SELECT nid, changed FROM {tracker_node} WHERE nid = :nid', [':nid' => $nid])->fetchObject();
     if ($tracker_node && $changed >= $tracker_node->changed) {
       // If we're here, the item being removed is *possibly* the item that
       // established the node's changed timestamp.
@@ -354,17 +354,17 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
       // And then we push the out the new changed timestamp to our denormalized
       // tables.
       db_update('tracker_node')
-        ->fields(array(
+        ->fields([
           'changed' => $changed,
           'published' => $node->isPublished(),
-        ))
+        ])
         ->condition('nid', $nid)
         ->execute();
       db_update('tracker_node')
-        ->fields(array(
+        ->fields([
           'changed' => $changed,
           'published' => $node->isPublished(),
-        ))
+        ])
         ->condition('nid', $nid)
         ->execute();
     }

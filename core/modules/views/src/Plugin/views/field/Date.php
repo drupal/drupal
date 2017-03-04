@@ -71,9 +71,9 @@ class Date extends FieldPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['date_format'] = array('default' => 'small');
-    $options['custom_date_format'] = array('default' => '');
-    $options['timezone'] = array('default' => '');
+    $options['date_format'] = ['default' => 'small'];
+    $options['custom_date_format'] = ['default' => ''];
+    $options['timezone'] = ['default' => ''];
 
     return $options;
   }
@@ -83,15 +83,15 @@ class Date extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
 
-    $date_formats = array();
+    $date_formats = [];
     foreach ($this->dateFormatStorage->loadMultiple() as $machine_name => $value) {
-      $date_formats[$machine_name] = $this->t('@name format: @date', array('@name' => $value->label(), '@date' => $this->dateFormatter->format(REQUEST_TIME, $machine_name)));
+      $date_formats[$machine_name] = $this->t('@name format: @date', ['@name' => $value->label(), '@date' => $this->dateFormatter->format(REQUEST_TIME, $machine_name)]);
     }
 
-    $form['date_format'] = array(
+    $form['date_format'] = [
       '#type' => 'select',
       '#title' => $this->t('Date format'),
-      '#options' => $date_formats + array(
+      '#options' => $date_formats + [
         'custom' => $this->t('Custom'),
         'raw time ago' => $this->t('Time ago'),
         'time ago' => $this->t('Time ago (with "ago" appended)'),
@@ -100,32 +100,32 @@ class Date extends FieldPluginBase {
         'raw time span' => $this->t('Time span (future dates have "-" prepended)'),
         'inverse time span' => $this->t('Time span (past dates have "-" prepended)'),
         'time span' => $this->t('Time span (with "ago/hence" appended)'),
-      ),
+      ],
       '#default_value' => isset($this->options['date_format']) ? $this->options['date_format'] : 'small',
-    );
-    $form['custom_date_format'] = array(
+    ];
+    $form['custom_date_format'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom date format'),
       '#description' => $this->t('If "Custom", see <a href="http://us.php.net/manual/en/function.date.php" target="_blank">the PHP docs</a> for date formats. Otherwise, enter the number of different time units to display, which defaults to 2.'),
       '#default_value' => isset($this->options['custom_date_format']) ? $this->options['custom_date_format'] : '',
-    );
+    ];
     // Setup #states for all possible date_formats on the custom_date_format form element.
-    foreach (array('custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span') as $custom_date_possible) {
-      $form['custom_date_format']['#states']['visible'][] = array(
-        ':input[name="options[date_format]"]' => array('value' => $custom_date_possible),
-      );
+    foreach (['custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span'] as $custom_date_possible) {
+      $form['custom_date_format']['#states']['visible'][] = [
+        ':input[name="options[date_format]"]' => ['value' => $custom_date_possible],
+      ];
     }
-    $form['timezone'] = array(
+    $form['timezone'] = [
       '#type' => 'select',
       '#title' => $this->t('Timezone'),
       '#description' => $this->t('Timezone to be used for date output.'),
-      '#options' => array('' => $this->t('- Default site/user timezone -')) + system_time_zones(FALSE),
+      '#options' => ['' => $this->t('- Default site/user timezone -')] + system_time_zones(FALSE),
       '#default_value' => $this->options['timezone'],
-    );
-    foreach (array_merge(array('custom'), array_keys($date_formats)) as $timezone_date_formats) {
-      $form['timezone']['#states']['visible'][] = array(
-        ':input[name="options[date_format]"]' => array('value' => $timezone_date_formats),
-      );
+    ];
+    foreach (array_merge(['custom'], array_keys($date_formats)) as $timezone_date_formats) {
+      $form['timezone']['#states']['visible'][] = [
+        ':input[name="options[date_format]"]' => ['value' => $timezone_date_formats],
+      ];
     }
 
     parent::buildOptionsForm($form, $form_state);
@@ -137,7 +137,7 @@ class Date extends FieldPluginBase {
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
     $format = $this->options['date_format'];
-    if (in_array($format, array('custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span'))) {
+    if (in_array($format, ['custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span'])) {
       $custom_format = $this->options['custom_date_format'];
     }
 
@@ -146,26 +146,26 @@ class Date extends FieldPluginBase {
       $time_diff = REQUEST_TIME - $value; // will be positive for a datetime in the past (ago), and negative for a datetime in the future (hence)
       switch ($format) {
         case 'raw time ago':
-          return $this->dateFormatter->formatTimeDiffSince($value, array('granularity' => is_numeric($custom_format) ? $custom_format : 2));
+          return $this->dateFormatter->formatTimeDiffSince($value, ['granularity' => is_numeric($custom_format) ? $custom_format : 2]);
 
         case 'time ago':
-          return $this->t('%time ago', array('%time' => $this->dateFormatter->formatTimeDiffSince($value, array('granularity' => is_numeric($custom_format) ? $custom_format : 2))));
+          return $this->t('%time ago', ['%time' => $this->dateFormatter->formatTimeDiffSince($value, ['granularity' => is_numeric($custom_format) ? $custom_format : 2])]);
 
         case 'raw time hence':
-          return $this->dateFormatter->formatTimeDiffUntil($value, array('granularity' => is_numeric($custom_format) ? $custom_format : 2));
+          return $this->dateFormatter->formatTimeDiffUntil($value, ['granularity' => is_numeric($custom_format) ? $custom_format : 2]);
 
         case 'time hence':
-          return $this->t('%time hence', array('%time' => $this->dateFormatter->formatTimeDiffUntil($value, array('granularity' => is_numeric($custom_format) ? $custom_format : 2))));
+          return $this->t('%time hence', ['%time' => $this->dateFormatter->formatTimeDiffUntil($value, ['granularity' => is_numeric($custom_format) ? $custom_format : 2])]);
 
         case 'raw time span':
-          return ($time_diff < 0 ? '-' : '') . $this->dateFormatter->formatTimeDiffSince($value, array('strict' => FALSE, 'granularity' => is_numeric($custom_format) ? $custom_format : 2));
+          return ($time_diff < 0 ? '-' : '') . $this->dateFormatter->formatTimeDiffSince($value, ['strict' => FALSE, 'granularity' => is_numeric($custom_format) ? $custom_format : 2]);
 
         case 'inverse time span':
-          return ($time_diff > 0 ? '-' : '') . $this->dateFormatter->formatTimeDiffSince($value, array('strict' => FALSE, 'granularity' => is_numeric($custom_format) ? $custom_format : 2));
+          return ($time_diff > 0 ? '-' : '') . $this->dateFormatter->formatTimeDiffSince($value, ['strict' => FALSE, 'granularity' => is_numeric($custom_format) ? $custom_format : 2]);
 
         case 'time span':
-          $time = $this->dateFormatter->formatTimeDiffSince($value, array('strict' => FALSE, 'granularity' => is_numeric($custom_format) ? $custom_format : 2));
-          return ($time_diff < 0) ? $this->t('%time hence', array('%time' => $time)) : $this->t('%time ago', array('%time' => $time));
+          $time = $this->dateFormatter->formatTimeDiffSince($value, ['strict' => FALSE, 'granularity' => is_numeric($custom_format) ? $custom_format : 2]);
+          return ($time_diff < 0) ? $this->t('%time hence', ['%time' => $time]) : $this->t('%time ago', ['%time' => $time]);
 
         case 'custom':
           if ($custom_format == 'r') {

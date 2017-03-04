@@ -17,16 +17,16 @@ class DefaultWizardDeriver extends DeriverBase {
   public function getDerivativeDefinitions($base_plugin_definition) {
     $views_data = Views::viewsData();
     $base_tables = array_keys($views_data->fetchBaseTables());
-    $this->derivatives = array();
+    $this->derivatives = [];
     foreach ($base_tables as $table) {
       $views_info = $views_data->get($table);
       if (empty($views_info['table']['wizard_id'])) {
-        $this->derivatives[$table] = array(
+        $this->derivatives[$table] = [
           'id' => 'standard',
           'base_table' => $table,
           'title' => $views_info['table']['base']['title'],
           'class' => 'Drupal\views\Plugin\views\wizard\Standard'
-        );
+        ];
       }
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);

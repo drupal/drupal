@@ -17,7 +17,7 @@ class UserRoleDeleteTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'field');
+  public static $modules = ['system', 'user', 'field'];
 
   protected function setUp() {
     parent::setUp();
@@ -32,15 +32,15 @@ class UserRoleDeleteTest extends KernelTestBase {
   public function testRoleDeleteUserRoleReferenceDelete() {
     // Create two test roles.
     $role_storage = $this->container->get('entity.manager')->getStorage('user_role');
-    $role_storage->create(array('id' => 'test_role_one'))->save();
-    $role_storage->create(array('id' => 'test_role_two'))->save();
+    $role_storage->create(['id' => 'test_role_one'])->save();
+    $role_storage->create(['id' => 'test_role_two'])->save();
 
     // Create user and assign both test roles.
-    $values = array(
+    $values = [
       'uid' => 1,
       'name' => $this->randomString(),
-      'roles' => array('test_role_one', 'test_role_two'),
-    );
+      'roles' => ['test_role_one', 'test_role_two'],
+    ];
     $user = User::create($values);
     $user->save();
 
@@ -60,7 +60,7 @@ class UserRoleDeleteTest extends KernelTestBase {
     $this->assertTrue($user->hasRole('test_role_two'));
 
     // Create new role with same name.
-    $role_storage->create(array('id' => 'test_role_one'))->save();
+    $role_storage->create(['id' => 'test_role_one'])->save();
 
     // Load user again from the database.
     $user = User::load($user->id());

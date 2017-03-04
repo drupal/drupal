@@ -20,7 +20,7 @@ class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'system', 'user', 'views_ui');
+  public static $modules = ['language', 'system', 'user', 'views_ui'];
 
   /**
    * Contains thw wizard plugin manager.
@@ -32,9 +32,9 @@ class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
-    $this->installConfig(array('language'));
+    $this->installConfig(['language']);
 
-    $this->wizard = $this->container->get('plugin.manager.views.wizard')->createInstance('standard:views_test_data', array());
+    $this->wizard = $this->container->get('plugin.manager.views.wizard')->createInstance('standard:views_test_data', []);
   }
 
   /**
@@ -43,7 +43,7 @@ class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
    * @see \Drupal\views\Plugin\views\wizard\WizardPluginBase
    */
   public function testCreateView() {
-    $form = array();
+    $form = [];
     $form_state = new FormState();
     $form = $this->wizard->buildForm($form, $form_state);
     $random_id = strtolower($this->randomMachineName());

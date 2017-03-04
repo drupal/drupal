@@ -28,27 +28,27 @@ use Drupal\Core\Render\Element;
  */
 function template_preprocess_menu_local_task(&$variables) {
   $link = $variables['element']['#link'];
-  $link += array(
-    'localized_options' => array(),
-  );
+  $link += [
+    'localized_options' => [],
+  ];
   $link_text = $link['title'];
 
   if (!empty($variables['element']['#active'])) {
     $variables['is_active'] = TRUE;
 
     // Add text to indicate active tab for non-visual users.
-    $active = SafeMarkup::format('<span class="visually-hidden">@label</span>', array('@label' => t('(active tab)')));
-    $link_text = t('@local-task-title@active', array('@local-task-title' => $link_text, '@active' => $active));
+    $active = SafeMarkup::format('<span class="visually-hidden">@label</span>', ['@label' => t('(active tab)')]);
+    $link_text = t('@local-task-title@active', ['@local-task-title' => $link_text, '@active' => $active]);
   }
 
   $link['localized_options']['set_active_class'] = TRUE;
 
-  $variables['link'] = array(
+  $variables['link'] = [
     '#type' => 'link',
     '#title' => $link_text,
     '#url' => $link['url'],
     '#options' => $link['localized_options'],
-  );
+  ];
 }
 
 /**
@@ -64,32 +64,32 @@ function template_preprocess_menu_local_task(&$variables) {
  */
 function template_preprocess_menu_local_action(&$variables) {
   $link = $variables['element']['#link'];
-  $link += array(
-    'localized_options' => array(),
-  );
+  $link += [
+    'localized_options' => [],
+  ];
   $link['localized_options']['attributes']['class'][] = 'button';
   $link['localized_options']['attributes']['class'][] = 'button-action';
   $link['localized_options']['set_active_class'] = TRUE;
 
-  $variables['link'] = array(
+  $variables['link'] = [
     '#type' => 'link',
     '#title' => $link['title'],
     '#options' => $link['localized_options'],
     '#url' => $link['url'],
-  );
+  ];
 }
 
 /**
  * Returns an array containing the names of system-defined (default) menus.
  */
 function menu_list_system_menus() {
-  return array(
+  return [
     'tools' => 'Tools',
     'admin' => 'Administration',
     'account' => 'User account menu',
     'main' => 'Main navigation',
     'footer' => 'Footer menu',
-  );
+  ];
 }
 
 /**
@@ -144,12 +144,12 @@ function menu_secondary_local_tasks() {
  * Returns a renderable element for the primary and secondary tabs.
  */
 function menu_local_tabs() {
-  $build = array(
+  $build = [
     '#theme' => 'menu_local_tasks',
     '#primary' => menu_primary_local_tasks(),
     '#secondary' => menu_secondary_local_tasks(),
-  );
-  return !empty($build['#primary']) || !empty($build['#secondary']) ? $build : array();
+  ];
+  return !empty($build['#primary']) || !empty($build['#secondary']) ? $build : [];
 }
 
 /**

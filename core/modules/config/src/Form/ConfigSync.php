@@ -171,20 +171,20 @@ class ConfigSync extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Import all'),
-    );
+    ];
     $source_list = $this->syncStorage->listAll();
     $storage_comparer = new StorageComparer($this->syncStorage, $this->activeStorage, $this->configManager);
     if (empty($source_list) || !$storage_comparer->createChangelist()->hasChanges()) {
-      $form['no_changes'] = array(
+      $form['no_changes'] = [
         '#type' => 'table',
-        '#header' => array($this->t('Name'), $this->t('Operations')),
-        '#rows' => array(),
+        '#header' => [$this->t('Name'), $this->t('Operations')],
+        '#rows' => [],
         '#empty' => $this->t('There are no configuration changes to import.'),
-      );
+      ];
       $form['actions']['#access'] = FALSE;
       return $form;
     }
@@ -198,7 +198,7 @@ class ConfigSync extends FormBase {
     if ($this->snapshotStorage->exists('core.extension')) {
       $snapshot_comparer = new StorageComparer($this->activeStorage, $this->snapshotStorage, $this->configManager);
       if (!$form_state->getUserInput() && $snapshot_comparer->createChangelist()->hasChanges()) {
-        $change_list = array();
+        $change_list = [];
         foreach ($snapshot_comparer->getAllCollectionNames() as $collection) {
           foreach ($snapshot_comparer->getChangelist(NULL, $collection) as $config_names) {
             if (empty($config_names)) {
@@ -231,11 +231,11 @@ class ConfigSync extends FormBase {
 
     foreach ($storage_comparer->getAllCollectionNames() as $collection) {
       if ($collection != StorageInterface::DEFAULT_COLLECTION) {
-        $form[$collection]['collection_heading'] = array(
+        $form[$collection]['collection_heading'] = [
           '#type' => 'html_tag',
           '#tag' => 'h2',
-          '#value' => $this->t('@collection configuration collection', array('@collection' => $collection)),
-        );
+          '#value' => $this->t('@collection configuration collection', ['@collection' => $collection]),
+        ];
       }
       foreach ($storage_comparer->getChangelist(NULL, $collection) as $config_change_type => $config_names) {
         if (empty($config_names)) {
@@ -244,10 +244,10 @@ class ConfigSync extends FormBase {
 
         // @todo A table caption would be more appropriate, but does not have the
         //   visual importance of a heading.
-        $form[$collection][$config_change_type]['heading'] = array(
+        $form[$collection][$config_change_type]['heading'] = [
           '#type' => 'html_tag',
           '#tag' => 'h3',
-        );
+        ];
         switch ($config_change_type) {
           case 'create':
             $form[$collection][$config_change_type]['heading']['#value'] = $this->formatPlural(count($config_names), '@count new', '@count new');
@@ -265,19 +265,19 @@ class ConfigSync extends FormBase {
             $form[$collection][$config_change_type]['heading']['#value'] = $this->formatPlural(count($config_names), '@count renamed', '@count renamed');
             break;
         }
-        $form[$collection][$config_change_type]['list'] = array(
+        $form[$collection][$config_change_type]['list'] = [
           '#type' => 'table',
-          '#header' => array($this->t('Name'), $this->t('Operations')),
-        );
+          '#header' => [$this->t('Name'), $this->t('Operations')],
+        ];
 
         foreach ($config_names as $config_name) {
           if ($config_change_type == 'rename') {
             $names = $storage_comparer->extractRenameNames($config_name);
-            $route_options = array('source_name' => $names['old_name'], 'target_name' => $names['new_name']);
-            $config_name = $this->t('@source_name to @target_name', array('@source_name' => $names['old_name'], '@target_name' => $names['new_name']));
+            $route_options = ['source_name' => $names['old_name'], 'target_name' => $names['new_name']];
+            $config_name = $this->t('@source_name to @target_name', ['@source_name' => $names['old_name'], '@target_name' => $names['new_name']]);
           }
           else {
-            $route_options = array('source_name' => $config_name);
+            $route_options = ['source_name' => $config_name];
           }
           if ($collection != StorageInterface::DEFAULT_COLLECTION) {
             $route_name = 'config.diff_collection';
@@ -286,26 +286,26 @@ class ConfigSync extends FormBase {
           else {
             $route_name = 'config.diff';
           }
-          $links['view_diff'] = array(
+          $links['view_diff'] = [
             'title' => $this->t('View differences'),
             'url' => Url::fromRoute($route_name, $route_options),
-            'attributes' => array(
-              'class' => array('use-ajax'),
+            'attributes' => [
+              'class' => ['use-ajax'],
               'data-dialog-type' => 'modal',
-              'data-dialog-options' => json_encode(array(
+              'data-dialog-options' => json_encode([
                 'width' => 700
-              )),
-            ),
-          );
-          $form[$collection][$config_change_type]['list']['#rows'][] = array(
+              ]),
+            ],
+          ];
+          $form[$collection][$config_change_type]['list']['#rows'][] = [
             'name' => $config_name,
-            'operations' => array(
-              'data' => array(
+            'operations' => [
+              'data' => [
                 '#type' => 'operations',
                 '#links' => $links,
-              ),
-            ),
-          );
+              ],
+            ],
+          ];
         }
       }
     }
@@ -333,17 +333,17 @@ class ConfigSync extends FormBase {
     else {
       try {
         $sync_steps = $config_importer->initialize();
-        $batch = array(
-          'operations' => array(),
-          'finished' => array(get_class($this), 'finishBatch'),
+        $batch = [
+          'operations' => [],
+          'finished' => [get_class($this), 'finishBatch'],
           'title' => t('Synchronizing configuration'),
           'init_message' => t('Starting configuration synchronization.'),
           'progress_message' => t('Completed step @current of @total.'),
           'error_message' => t('Configuration synchronization has encountered an error.'),
           'file' => __DIR__ . '/../../config.admin.inc',
-        );
+        ];
         foreach ($sync_steps as $sync_step) {
-          $batch['operations'][] = array(array(get_class($this), 'processBatch'), array($config_importer, $sync_step));
+          $batch['operations'][] = [[get_class($this), 'processBatch'], [$config_importer, $sync_step]];
         }
 
         batch_set($batch);
@@ -377,7 +377,7 @@ class ConfigSync extends FormBase {
     $config_importer->doSyncStep($sync_step, $context);
     if ($errors = $config_importer->getErrors()) {
       if (!isset($context['results']['errors'])) {
-        $context['results']['errors'] = array();
+        $context['results']['errors'] = [];
       }
       $context['results']['errors'] += $errors;
     }
@@ -406,7 +406,7 @@ class ConfigSync extends FormBase {
       // An error occurred.
       // $operations contains the operations that remained unprocessed.
       $error_operation = reset($operations);
-      $message = \Drupal::translation()->translate('An error occurred while processing %error_operation with arguments: @arguments', array('%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)));
+      $message = \Drupal::translation()->translate('An error occurred while processing %error_operation with arguments: @arguments', ['%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)]);
       drupal_set_message($message, 'error');
     }
   }

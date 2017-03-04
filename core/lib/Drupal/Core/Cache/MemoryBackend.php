@@ -17,7 +17,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   /**
    * Array to store cache objects.
    */
-  protected $cache = array();
+  protected $cache = [];
 
   /**
    * {@inheritdoc}
@@ -35,7 +35,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
-    $ret = array();
+    $ret = [];
 
     $items = array_intersect_key($this->cache, array_flip($cids));
 
@@ -92,26 +92,26 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   /**
    * {@inheritdoc}
    */
-  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
     assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($tags)', 'Cache Tags must be strings.');
     $tags = array_unique($tags);
     // Sort the cache tags so that they are stored consistently in the database.
     sort($tags);
-    $this->cache[$cid] = (object) array(
+    $this->cache[$cid] = (object) [
       'cid' => $cid,
       'data' => serialize($data),
       'created' => $this->getRequestTime(),
       'expire' => $expire,
       'tags' => $tags,
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setMultiple(array $items = array()) {
+  public function setMultiple(array $items = []) {
     foreach ($items as $cid => $item) {
-      $this->set($cid, $item['data'], isset($item['expire']) ? $item['expire'] : CacheBackendInterface::CACHE_PERMANENT, isset($item['tags']) ? $item['tags'] : array());
+      $this->set($cid, $item['data'], isset($item['expire']) ? $item['expire'] : CacheBackendInterface::CACHE_PERMANENT, isset($item['tags']) ? $item['tags'] : []);
     }
   }
 
@@ -133,7 +133,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    * {@inheritdoc}
    */
   public function deleteAll() {
-    $this->cache = array();
+    $this->cache = [];
   }
 
   /**

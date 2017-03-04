@@ -54,11 +54,11 @@ class SettingsCommand implements CommandInterface {
    */
   public function render() {
 
-    return array(
+    return [
       'command' => 'settings',
       'settings' => $this->settings,
       'merge' => $this->merge,
-    );
+    ];
   }
 
 }

@@ -14,7 +14,7 @@ trait TestSetupTrait {
    *
    * @var string[]
    */
-  protected static $configSchemaCheckerExclusions = array(
+  protected static $configSchemaCheckerExclusions = [
     // Following are used to test lack of or partial schema. Where partial
     // schema is provided, that is explicitly tested in specific tests.
     'config_schema_test.noschema',
@@ -23,7 +23,7 @@ trait TestSetupTrait {
     'config_schema_test.no_schema_data_types',
     // Used to test application of schema to filtering of configuration.
     'config_test.dynamic.system',
-  );
+  ];
 
   /**
    * The dependency injection container used in the test.
@@ -172,9 +172,9 @@ trait TestSetupTrait {
       foreach ($connection_info as $target => $value) {
         // Replace the full table prefix definition to ensure that no table
         // prefixes of the test runner leak into the test.
-        $connection_info[$target]['prefix'] = array(
+        $connection_info[$target]['prefix'] = [
           'default' => $value['prefix']['default'] . $this->databasePrefix,
-        );
+        ];
       }
       Database::addConnectionInfo('default', 'default', $connection_info['default']);
     }

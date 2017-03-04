@@ -43,12 +43,12 @@ class SelectOrderedTest extends DatabaseTestBase {
     $result = $query->execute();
 
     $num_records = 0;
-    $expected = array(
-      array('Ringo', 28, 'Drummer'),
-      array('John', 25, 'Singer'),
-      array('George', 27, 'Singer'),
-      array('Paul', 26, 'Songwriter'),
-    );
+    $expected = [
+      ['Ringo', 28, 'Drummer'],
+      ['John', 25, 'Singer'],
+      ['George', 27, 'Singer'],
+      ['Paul', 26, 'Songwriter'],
+    ];
     $results = $result->fetchAll(\PDO::FETCH_NUM);
     foreach ($expected as $k => $record) {
       $num_records++;

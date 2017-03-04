@@ -17,21 +17,21 @@ class DisplayFeedTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_display_feed', 'test_attached_disabled', 'test_feed_icon');
+  public static $testViews = ['test_display_feed', 'test_attached_disabled', 'test_feed_icon'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('block', 'node', 'views');
+  public static $modules = ['block', 'node', 'views'];
 
   protected function setUp() {
     parent::setUp();
 
     $this->enableViewsTestModule();
 
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
   }
 
@@ -101,13 +101,13 @@ class DisplayFeedTest extends PluginTestBase {
 
     // Verify a title with HTML entities is properly escaped.
     $node_title = 'This "cool" & "neat" article\'s title';
-    $this->drupalCreateNode(array(
+    $this->drupalCreateNode([
       'title' => $node_title,
       'body' => [0 => [
         'value' => 'A paragraph',
         'format' => filter_default_format(),
       ]],
-    ));
+    ]);
 
     $this->drupalGet('test-feed-display-fields.xml');
     $result = $this->xpath('//title/a');

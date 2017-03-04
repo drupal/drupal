@@ -20,7 +20,7 @@ class SimpleTestInstallBatchTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('simpletest', 'simpletest_test', 'entity_test');
+  public static $modules = ['simpletest', 'simpletest_test', 'entity_test'];
 
   /**
    * Tests loading entities created in a batch in simpletest_test_install().

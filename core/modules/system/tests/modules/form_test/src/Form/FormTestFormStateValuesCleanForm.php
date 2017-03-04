@@ -24,13 +24,13 @@ class FormTestFormStateValuesCleanForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Build an example form containing multiple submit and button elements; not
     // only on the top-level.
-    $form = array('#tree' => TRUE);
-    $form['foo'] = array('#type' => 'submit', '#value' => t('Submit'));
-    $form['bar'] = array('#type' => 'submit', '#value' => t('Submit'));
-    $form['beer'] = array('#type' => 'value', '#value' => 1000);
-    $form['baz']['foo'] = array('#type' => 'button', '#value' => t('Submit'));
-    $form['baz']['baz'] = array('#type' => 'submit', '#value' => t('Submit'));
-    $form['baz']['beer'] = array('#type' => 'value', '#value' => 2000);
+    $form = ['#tree' => TRUE];
+    $form['foo'] = ['#type' => 'submit', '#value' => t('Submit')];
+    $form['bar'] = ['#type' => 'submit', '#value' => t('Submit')];
+    $form['beer'] = ['#type' => 'value', '#value' => 1000];
+    $form['baz']['foo'] = ['#type' => 'button', '#value' => t('Submit')];
+    $form['baz']['baz'] = ['#type' => 'submit', '#value' => t('Submit')];
+    $form['baz']['beer'] = ['#type' => 'value', '#value' => 2000];
 
     // Add an arbitrary element and manually set it to be cleaned.
     // Using $form_state->addCleanValueKey('wine'); didn't work here.

@@ -18,7 +18,7 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter_permission');
+  public static $testViews = ['test_filter_permission'];
 
   protected $columnMap;
 
@@ -31,64 +31,64 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
   public function testFilterPermission() {
     $this->setupPermissionTestData();
 
-    $column_map = array('uid' => 'uid');
+    $column_map = ['uid' => 'uid'];
     $view = Views::getView('test_filter_permission');
 
     // Filter by a non existing permission.
     $view->initHandlers();
-    $view->filter['permission']->value = array('non_existent_permission');
+    $view->filter['permission']->value = ['non_existent_permission'];
     $this->executeView($view);
     $this->assertEqual(count($view->result), 4, 'A non existent permission is not filtered so everything is the result.');
-    $expected[] = array('uid' => 1);
-    $expected[] = array('uid' => 2);
-    $expected[] = array('uid' => 3);
-    $expected[] = array('uid' => 4);
+    $expected[] = ['uid' => 1];
+    $expected[] = ['uid' => 2];
+    $expected[] = ['uid' => 3];
+    $expected[] = ['uid' => 4];
     $this->assertIdenticalResultset($view, $expected, $column_map);
     $view->destroy();
 
     // Filter by a permission.
     $view->initHandlers();
-    $view->filter['permission']->value = array('administer permissions');
+    $view->filter['permission']->value = ['administer permissions'];
     $this->executeView($view);
     $this->assertEqual(count($view->result), 2);
-    $expected = array();
-    $expected[] = array('uid' => 3);
-    $expected[] = array('uid' => 4);
+    $expected = [];
+    $expected[] = ['uid' => 3];
+    $expected[] = ['uid' => 4];
     $this->assertIdenticalResultset($view, $expected, $column_map);
     $view->destroy();
 
     // Filter by not a permission.
     $view->initHandlers();
     $view->filter['permission']->operator = 'not';
-    $view->filter['permission']->value = array('administer users');
+    $view->filter['permission']->value = ['administer users'];
     $this->executeView($view);
     $this->assertEqual(count($view->result), 3);
-    $expected = array();
-    $expected[] = array('uid' => 1);
-    $expected[] = array('uid' => 2);
-    $expected[] = array('uid' => 3);
+    $expected = [];
+    $expected[] = ['uid' => 1];
+    $expected[] = ['uid' => 2];
+    $expected[] = ['uid' => 3];
     $this->assertIdenticalResultset($view, $expected, $column_map);
     $view->destroy();
 
     // Filter by not multiple permissions, that are present in multiple roles.
     $view->initHandlers();
     $view->filter['permission']->operator = 'not';
-    $view->filter['permission']->value = array('administer users', 'administer permissions');
+    $view->filter['permission']->value = ['administer users', 'administer permissions'];
     $this->executeView($view);
     $this->assertEqual(count($view->result), 2);
-    $expected = array();
-    $expected[] = array('uid' => 1);
-    $expected[] = array('uid' => 2);
+    $expected = [];
+    $expected[] = ['uid' => 1];
+    $expected[] = ['uid' => 2];
     $this->assertIdenticalResultset($view, $expected, $column_map);
     $view->destroy();
 
     // Filter by another permission of a role with multiple permissions.
     $view->initHandlers();
-    $view->filter['permission']->value = array('administer users');
+    $view->filter['permission']->value = ['administer users'];
     $this->executeView($view);
     $this->assertEqual(count($view->result), 1);
-    $expected = array();
-    $expected[] = array('uid' => 4);
+    $expected = [];
+    $expected[] = ['uid' => 4];
     $this->assertIdenticalResultset($view, $expected, $column_map);
     $view->destroy();
 
@@ -103,7 +103,7 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
     foreach ($permissions as $name => $permission) {
       $permission_by_module[$permission['provider']][$name] = $permission;
     }
-    foreach (array('system' => 'System', 'user' => 'User') as $module => $title) {
+    foreach (['system' => 'System', 'user' => 'User'] as $module => $title) {
       $expected = array_map(function ($permission) {
         return Html::escape(strip_tags($permission['title']));
       }, $permission_by_module[$module]);

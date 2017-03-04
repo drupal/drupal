@@ -9,9 +9,9 @@
  * Implements hook_hook_info().
  */
 function module_handler_test_hook_info() {
-  return array(
-    'hook' => array('group' => 'hook'),
-  );
+  return [
+    'hook' => ['group' => 'hook'],
+  ];
 }
 
 function module_handler_test_hook($arg) { return $arg; }

@@ -28,7 +28,7 @@ class ContentTranslationMetadataFieldsTest extends ContentTranslationTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'node');
+  public static $modules = ['language', 'content_translation', 'node'];
 
   /**
    * The profile to install as a basis for testing.

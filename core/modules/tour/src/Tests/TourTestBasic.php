@@ -22,7 +22,7 @@ abstract class TourTestBasic extends TourTestBase {
    * );
    * @endcode
    */
-  protected $tips = array();
+  protected $tips = [];
 
   /**
    * An admin user with administrative permissions for tour.
@@ -37,14 +37,14 @@ abstract class TourTestBasic extends TourTestBase {
    * @var array
    *   A list of permissions.
    */
-  protected $permissions = array('access tour');
+  protected $permissions = ['access tour'];
 
   protected function setUp() {
     parent::setUp();
 
     // Make sure we are using distinct default and administrative themes for
     // the duration of these tests.
-    $this->container->get('theme_handler')->install(array('bartik', 'seven'));
+    $this->container->get('theme_handler')->install(['bartik', 'seven']);
     $this->config('system.theme')
       ->set('default', 'bartik')
       ->set('admin', 'seven')

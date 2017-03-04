@@ -28,16 +28,16 @@ class ViewsMenuLinkForm extends MenuLinkDefaultForm {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
 
     // Put the title field first.
-    $form['title'] = array(
+    $form['title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Title'),
       // @todo Ensure that the view is not loaded with a localized title.
       //   https://www.drupal.org/node/2309507
       '#default_value' => $this->menuLink->getTitle(),
       '#weight' => -10,
-    );
+    ];
 
-    $form['description'] = array(
+    $form['description'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Description'),
       '#description' => $this->t('Shown when hovering over the menu link.'),
@@ -45,7 +45,7 @@ class ViewsMenuLinkForm extends MenuLinkDefaultForm {
       //   https://www.drupal.org/node/2309507
       '#default_value' => $this->menuLink->getDescription(),
       '#weight' => -5,
-    );
+    ];
 
     $form += parent::buildConfigurationForm($form, $form_state);
 
@@ -56,10 +56,10 @@ class ViewsMenuLinkForm extends MenuLinkDefaultForm {
     $id = $view->storage->id();
     $label = $view->storage->label();
     if ($this->moduleHandler->moduleExists('views_ui')) {
-      $message = $this->t('This link is provided by the Views module. The path can be changed by editing the view <a href=":url">@label</a>', array(':url' => \Drupal::url('entity.view.edit_form', array('view' => $id)), '@label' => $label));
+      $message = $this->t('This link is provided by the Views module. The path can be changed by editing the view <a href=":url">@label</a>', [':url' => \Drupal::url('entity.view.edit_form', ['view' => $id]), '@label' => $label]);
     }
     else {
-      $message = $this->t('This link is provided by the Views module from view %label.', array('%label' => $label));
+      $message = $this->t('This link is provided by the Views module from view %label.', ['%label' => $label]);
     }
     $form['info']['#title'] = $message;
     return $form;

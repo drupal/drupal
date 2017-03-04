@@ -17,7 +17,7 @@ class OtherInstallationProfileTestsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('simpletest');
+  public static $modules = ['simpletest'];
 
   /**
    * Use the Minimal profile.
@@ -43,7 +43,7 @@ class OtherInstallationProfileTestsTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(array('administer unit tests'));
+    $this->adminUser = $this->drupalCreateUser(['administer unit tests']);
     $this->drupalLogin($this->adminUser);
   }
 

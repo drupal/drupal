@@ -65,20 +65,20 @@ class Select extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
       '#multiple' => FALSE,
-      '#process' => array(
-        array($class, 'processSelect'),
-        array($class, 'processAjaxForm'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderSelect'),
-      ),
+      '#process' => [
+        [$class, 'processSelect'],
+        [$class, 'processAjaxForm'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderSelect'],
+      ],
       '#theme' => 'select',
-      '#theme_wrappers' => array('form_element'),
-      '#options' => array(),
-    );
+      '#theme_wrappers' => ['form_element'],
+      '#options' => [],
+    ];
   }
 
   /**
@@ -118,14 +118,14 @@ class Select extends FormElement {
       // make a choice. Also, if there's a value for #empty_value or
       // #empty_option, then add an option that represents emptiness.
       if (($required && !isset($element['#default_value'])) || isset($element['#empty_value']) || isset($element['#empty_option'])) {
-        $element += array(
+        $element += [
           '#empty_value' => '',
           '#empty_option' => $required ? t('- Select -') : t('- None -'),
-        );
+        ];
         // The empty option is prepended to #options and purposively not merged
         // to prevent another option in #options mistakenly using the same value
         // as #empty_value.
-        $empty_option = array($element['#empty_value'] => $element['#empty_option']);
+        $empty_option = [$element['#empty_value'] => $element['#empty_option']];
         $element['#options'] = $empty_option + $element['#options'];
       }
     }
@@ -142,10 +142,10 @@ class Select extends FormElement {
         // unselected. A disabled multi-select always submits NULL, and the
         // default value should be used.
         if (empty($element['#disabled'])) {
-          return (is_array($input)) ? array_combine($input, $input) : array();
+          return (is_array($input)) ? array_combine($input, $input) : [];
         }
         else {
-          return (isset($element['#default_value']) && is_array($element['#default_value'])) ? $element['#default_value'] : array();
+          return (isset($element['#default_value']) && is_array($element['#default_value'])) ? $element['#default_value'] : [];
         }
       }
       // Non-multiple select elements may have an empty option prepended to them
@@ -167,8 +167,8 @@ class Select extends FormElement {
    * Prepares a select render element.
    */
   public static function preRenderSelect($element) {
-    Element::setAttributes($element, array('id', 'name', 'size'));
-    static::setAttributes($element, array('form-select'));
+    Element::setAttributes($element, ['id', 'name', 'size']);
+    static::setAttributes($element, ['form-select']);
     return $element;
   }
 

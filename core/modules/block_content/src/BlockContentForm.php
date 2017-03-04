@@ -27,7 +27,7 @@ class BlockContentForm extends ContentEntityForm {
     $form = parent::form($form, $form_state);
 
     if ($this->operation == 'edit') {
-      $form['#title'] = $this->t('Edit custom block %label', array('%label' => $block->label()));
+      $form['#title'] = $this->t('Edit custom block %label', ['%label' => $block->label()]);
     }
     // Override the default CSS class name, since the user-defined custom block
     // type name in 'TYPE-block-form' potentially clashes with third-party class
@@ -45,10 +45,10 @@ class BlockContentForm extends ContentEntityForm {
 
     $insert = $block->isNew();
     $block->save();
-    $context = array('@type' => $block->bundle(), '%info' => $block->label());
+    $context = ['@type' => $block->bundle(), '%info' => $block->label()];
     $logger = $this->logger('block_content');
     $block_type = $this->getBundleEntity();
-    $t_args = array('@type' => $block_type->label(), '%info' => $block->label());
+    $t_args = ['@type' => $block_type->label(), '%info' => $block->label()];
 
     if ($insert) {
       $logger->notice('@type: added %info.', $context);
@@ -68,10 +68,10 @@ class BlockContentForm extends ContentEntityForm {
         }
         $form_state->setRedirect(
           'block.admin_add',
-          array(
+          [
             'plugin_id' => 'block_content:' . $block->uuid(),
             'theme' => $theme,
-          )
+          ]
         );
       }
       else {

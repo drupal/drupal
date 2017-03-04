@@ -25,7 +25,7 @@ class UserBulkForm extends BulkForm {
       foreach ($this->view->result as $row_index => $result) {
         $account = $result->_entity;
         if ($account instanceof UserInterface) {
-          $form[$this->options['id']][$row_index]['#title'] = $this->t('Update the user %name', array('%name' => $account->label()));
+          $form[$this->options['id']][$row_index]['#title'] = $this->t('Update the user %name', ['%name' => $account->label()]);
         }
       }
     }

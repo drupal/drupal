@@ -249,7 +249,7 @@ function check_url($uri) {
  */
 function format_size($size, $langcode = NULL) {
   if ($size < Bytes::KILOBYTE) {
-    return \Drupal::translation()->formatPlural($size, '1 byte', '@count bytes', array(), array('langcode' => $langcode));
+    return \Drupal::translation()->formatPlural($size, '1 byte', '@count bytes', [], ['langcode' => $langcode]);
   }
   else {
     $size = $size / Bytes::KILOBYTE; // Convert bytes to kilobytes.
@@ -352,7 +352,7 @@ function date_iso8601($date) {
  *   A ; separated string ready for insertion in a HTTP header. No escaping is
  *   performed for HTML entities, so this string is not safe to be printed.
  */
-function drupal_http_header_attributes(array $attributes = array()) {
+function drupal_http_header_attributes(array $attributes = []) {
   foreach ($attributes as $attribute => &$data) {
     if (is_array($data)) {
       $data = implode(' ', $data);
@@ -433,18 +433,18 @@ function drupal_clear_css_cache() {
  * @see hook_js_alter()
  */
 function drupal_js_defaults($data = NULL) {
-  return array(
+  return [
     'type' => 'file',
     'group' => JS_DEFAULT,
     'weight' => 0,
     'scope' => 'header',
     'cache' => TRUE,
     'preprocess' => TRUE,
-    'attributes' => array(),
+    'attributes' => [],
     'version' => NULL,
     'data' => $data,
-    'browsers' => array(),
-  );
+    'browsers' => [],
+  ];
 }
 
 /**
@@ -704,12 +704,12 @@ function drupal_process_states(&$elements) {
  */
 function drupal_attach_tabledrag(&$element, array $options) {
   // Add default values to elements.
-  $options = $options + array(
+  $options = $options + [
     'subgroup' => NULL,
     'source' => NULL,
     'hidden' => TRUE,
     'limit' => 0
-  );
+  ];
 
   $group = $options['group'];
 
@@ -719,14 +719,14 @@ function drupal_attach_tabledrag(&$element, array $options) {
   // If a subgroup or source isn't set, assume it is the same as the group.
   $target = isset($options['subgroup']) ? $options['subgroup'] : $group;
   $source = isset($options['source']) ? $options['source'] : $target;
-  $element['#attached']['drupalSettings']['tableDrag'][$options['table_id']][$group][$tabledrag_id] = array(
+  $element['#attached']['drupalSettings']['tableDrag'][$options['table_id']][$group][$tabledrag_id] = [
     'target' => $target,
     'source' => $source,
     'relationship' => $options['relationship'],
     'action' => $options['action'],
     'hidden' => $options['hidden'],
     'limit' => $options['limit'],
-  );
+  ];
 
   $element['#attached']['library'][] = 'core/drupal.tabledrag';
 }
@@ -827,7 +827,7 @@ function drupal_pre_render_link($element) {
  * properties of the parent are used.
  */
 function drupal_pre_render_links($element) {
-  $element += array('#links' => array(), '#attached' => array());
+  $element += ['#links' => [], '#attached' => []];
   foreach (Element::children($element) as $key) {
     $child = &$element[$key];
     // If the child has links which have not been printed yet and the user has
@@ -1115,7 +1115,7 @@ function drupal_flush_all_caches() {
   // Rebuild and reboot a new kernel. A simple DrupalKernel reboot is not
   // sufficient, since the list of enabled modules might have been adjusted
   // above due to changed code.
-  $files = array();
+  $files = [];
   foreach ($module_data as $name => $extension) {
     if ($extension->status) {
       $files[$name] = $extension;
@@ -1217,7 +1217,7 @@ function drupal_check_incompatibility($v, $current_version) {
  *   validation system.
  */
 function archiver_get_extensions() {
-  $valid_extensions = array();
+  $valid_extensions = [];
   foreach (\Drupal::service('plugin.manager.archiver')->getDefinitions() as $archive) {
     foreach ($archive['extensions'] as $extension) {
       foreach (explode('.', $extension) as $part) {
@@ -1246,9 +1246,9 @@ function archiver_get_archiver($file) {
   // Archivers can only work on local paths
   $filepath = drupal_realpath($file);
   if (!is_file($filepath)) {
-    throw new Exception(t('Archivers can only operate on local files: %file not supported', array('%file' => $file)));
+    throw new Exception(t('Archivers can only operate on local files: %file not supported', ['%file' => $file]));
   }
-  return \Drupal::service('plugin.manager.archiver')->getInstance(array('filepath' => $filepath));
+  return \Drupal::service('plugin.manager.archiver')->getInstance(['filepath' => $filepath]);
 }
 
 /**
@@ -1270,7 +1270,7 @@ function drupal_get_updaters() {
   if (!isset($updaters)) {
     $updaters = \Drupal::moduleHandler()->invokeAll('updater_info');
     \Drupal::moduleHandler()->alter('updater_info', $updaters);
-    uasort($updaters, array(SortArray::class, 'sortByWeightElement'));
+    uasort($updaters, [SortArray::class, 'sortByWeightElement']);
   }
   return $updaters;
 }
@@ -1290,7 +1290,7 @@ function drupal_get_filetransfer_info() {
   if (!isset($info)) {
     $info = \Drupal::moduleHandler()->invokeAll('filetransfer_info');
     \Drupal::moduleHandler()->alter('filetransfer_info', $info);
-    uasort($info, array(SortArray::class, 'sortByWeightElement'));
+    uasort($info, [SortArray::class, 'sortByWeightElement']);
   }
   return $info;
 }

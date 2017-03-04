@@ -111,7 +111,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    *
    * @var array
    */
-  protected $data = array();
+  protected $data = [];
 
   /**
    * Constructs a new ConfigSingleImportForm.
@@ -198,10 +198,10 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $type = $definition->getLowercaseLabel();
     }
 
-    $args = array(
+    $args = [
       '%name' => $name,
       '@type' => strtolower($type),
-    );
+    ];
     if ($this->configExists) {
       $question = $this->t('Are you sure you want to update the %name @type?', $args);
     }
@@ -220,7 +220,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       return parent::buildForm($form, $form_state);
     }
 
-    $entity_types = array();
+    $entity_types = [];
     foreach ($this->entityManager->getDefinitions() as $entity_type => $definition) {
       if ($definition->entityClassImplements(ConfigEntityInterface::class)) {
         $entity_types[$entity_type] = $definition->getLabel();
@@ -228,49 +228,49 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     }
     // Sort the entity types by label, then add the simple config to the top.
     uasort($entity_types, 'strnatcasecmp');
-    $config_types = array(
+    $config_types = [
       'system.simple' => $this->t('Simple configuration'),
-    ) + $entity_types;
-    $form['config_type'] = array(
+    ] + $entity_types;
+    $form['config_type'] = [
       '#title' => $this->t('Configuration type'),
       '#type' => 'select',
       '#options' => $config_types,
       '#required' => TRUE,
-    );
-    $form['config_name'] = array(
+    ];
+    $form['config_name'] = [
       '#title' => $this->t('Configuration name'),
       '#description' => $this->t('Enter the name of the configuration file without the <em>.yml</em> extension. (e.g. <em>system.site</em>)'),
       '#type' => 'textfield',
-      '#states' => array(
-        'required' => array(
-          ':input[name="config_type"]' => array('value' => 'system.simple'),
-        ),
-        'visible' => array(
-          ':input[name="config_type"]' => array('value' => 'system.simple'),
-        ),
-      ),
-    );
-    $form['import'] = array(
+      '#states' => [
+        'required' => [
+          ':input[name="config_type"]' => ['value' => 'system.simple'],
+        ],
+        'visible' => [
+          ':input[name="config_type"]' => ['value' => 'system.simple'],
+        ],
+      ],
+    ];
+    $form['import'] = [
       '#title' => $this->t('Paste your configuration here'),
       '#type' => 'textarea',
       '#rows' => 24,
       '#required' => TRUE,
-    );
-    $form['advanced'] = array(
+    ];
+    $form['advanced'] = [
       '#type' => 'details',
       '#title' => $this->t('Advanced'),
-    );
-    $form['advanced']['custom_entity_id'] = array(
+    ];
+    $form['advanced']['custom_entity_id'] = [
       '#title' => $this->t('Custom Entity ID'),
       '#type' => 'textfield',
       '#description' => $this->t('Specify a custom entity ID. This will override the entity ID in the configuration above.'),
-    );
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    ];
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Import'),
       '#button_type' => 'primary',
-    );
+    ];
     return $form;
   }
 
@@ -305,7 +305,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $entity_storage = $this->entityManager->getStorage($form_state->getValue('config_type'));
       // If an entity ID was not specified, set an error.
       if (!isset($data[$id_key])) {
-        $form_state->setErrorByName('import', $this->t('Missing ID key "@id_key" for this @entity_type import.', array('@id_key' => $id_key, '@entity_type' => $definition->getLabel())));
+        $form_state->setErrorByName('import', $this->t('Missing ID key "@id_key" for this @entity_type import.', ['@id_key' => $id_key, '@entity_type' => $definition->getLabel()]));
         return;
       }
 
@@ -323,7 +323,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
         }
       }
       // If there is no entity with a matching ID, check for a UUID match.
-      elseif (isset($data['uuid']) && $entity_storage->loadByProperties(array('uuid' => $data['uuid']))) {
+      elseif (isset($data['uuid']) && $entity_storage->loadByProperties(['uuid' => $data['uuid']])) {
         $form_state->setErrorByName('import', $this->t('An entity with this UUID already exists but the machine name does not match.'));
       }
     }

@@ -74,7 +74,7 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
   /**
    * {@inheritdoc}
    */
-  public function getFallbackPluginId($plugin_id, array $configuration = array()) {
+  public function getFallbackPluginId($plugin_id, array $configuration = []) {
     return 'broken';
   }
 

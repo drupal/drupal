@@ -116,10 +116,10 @@ ENDPO;
 
       // Activate a module, to make sure that config is not overridden by module
       // installation.
-      $edit = array(
+      $edit = [
         'modules[views][enable]' => TRUE,
         'modules[filter][enable]' => TRUE,
-      );
+      ];
       $this->drupalPostForm('admin/modules', $edit, t('Install'));
 
       // Verify the strings from the translation are still as expected.
@@ -149,7 +149,7 @@ ENDPO;
 
     foreach ($test_samples as $sample) {
       foreach ($langcodes as $langcode) {
-        $edit = array();
+        $edit = [];
         $edit['langcode'] = $langcode;
         $edit['translation'] = 'translated';
         $edit['string'] = $sample;

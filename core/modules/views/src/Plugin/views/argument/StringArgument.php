@@ -31,23 +31,23 @@ class StringArgument extends ArgumentPluginBase {
 
       // Ensure defaults for these, during summaries and stuff:
       $this->operator = 'or';
-      $this->value = array();
+      $this->value = [];
     }
   }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['glossary'] = array('default' => FALSE);
-    $options['limit'] = array('default' => 0);
-    $options['case'] = array('default' => 'none');
-    $options['path_case'] = array('default' => 'none');
-    $options['transform_dash'] = array('default' => FALSE);
-    $options['break_phrase'] = array('default' => FALSE);
+    $options['glossary'] = ['default' => FALSE];
+    $options['limit'] = ['default' => 0];
+    $options['case'] = ['default' => 'none'];
+    $options['path_case'] = ['default' => 'none'];
+    $options['transform_dash'] = ['default' => FALSE];
+    $options['break_phrase'] = ['default' => FALSE];
 
     if (!empty($this->definition['many to one'])) {
-      $options['add_table'] = array('default' => FALSE);
-      $options['require_value'] = array('default' => FALSE);
+      $options['add_table'] = ['default' => FALSE];
+      $options['require_value'] = ['default' => FALSE];
     }
 
     return $options;
@@ -56,89 +56,89 @@ class StringArgument extends ArgumentPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['glossary'] = array(
+    $form['glossary'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Glossary mode'),
       '#description' => $this->t('Glossary mode applies a limit to the number of characters used in the filter value, which allows the summary view to act as a glossary.'),
       '#default_value' => $this->options['glossary'],
       '#group' => 'options][more',
-    );
+    ];
 
-    $form['limit'] = array(
+    $form['limit'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Character limit'),
       '#description' => $this->t('How many characters of the filter value to filter against. If set to 1, all fields starting with the first letter in the filter value would be matched.'),
       '#default_value' => $this->options['limit'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[glossary]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[glossary]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#group' => 'options][more',
-    );
+    ];
 
-    $form['case'] = array(
+    $form['case'] = [
       '#type' => 'select',
       '#title' => $this->t('Case'),
       '#description' => $this->t('When printing the title and summary, how to transform the case of the filter value.'),
-      '#options' => array(
+      '#options' => [
         'none' => $this->t('No transform'),
         'upper' => $this->t('Upper case'),
         'lower' => $this->t('Lower case'),
         'ucfirst' => $this->t('Capitalize first letter'),
         'ucwords' => $this->t('Capitalize each word'),
-      ),
+      ],
       '#default_value' => $this->options['case'],
       '#group' => 'options][more',
-    );
+    ];
 
-    $form['path_case'] = array(
+    $form['path_case'] = [
       '#type' => 'select',
       '#title' => $this->t('Case in path'),
       '#description' => $this->t('When printing URL paths, how to transform the case of the filter value. Do not use this unless with Postgres as it uses case sensitive comparisons.'),
-      '#options' => array(
+      '#options' => [
         'none' => $this->t('No transform'),
         'upper' => $this->t('Upper case'),
         'lower' => $this->t('Lower case'),
         'ucfirst' => $this->t('Capitalize first letter'),
         'ucwords' => $this->t('Capitalize each word'),
-      ),
+      ],
       '#default_value' => $this->options['path_case'],
       '#group' => 'options][more',
-    );
+    ];
 
-    $form['transform_dash'] = array(
+    $form['transform_dash'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Transform spaces to dashes in URL'),
       '#default_value' => $this->options['transform_dash'],
       '#group' => 'options][more',
-    );
+    ];
 
     if (!empty($this->definition['many to one'])) {
-      $form['add_table'] = array(
+      $form['add_table'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Allow multiple filter values to work together'),
         '#description' => $this->t('If selected, multiple instances of this filter can work together, as though multiple values were supplied to the same filter. This setting is not compatible with the "Reduce duplicates" setting.'),
         '#default_value' => !empty($this->options['add_table']),
         '#group' => 'options][more',
-      );
+      ];
 
-      $form['require_value'] = array(
+      $form['require_value'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Do not display items with no value in summary'),
         '#default_value' => !empty($this->options['require_value']),
         '#group' => 'options][more',
-      );
+      ];
     }
 
     // allow + for or, , for and
-    $form['break_phrase'] = array(
+    $form['break_phrase'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow multiple values'),
       '#description' => $this->t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
       '#default_value' => !empty($this->options['break_phrase']),
       '#group' => 'options][more',
-    );
+    ];
   }
 
   /**
@@ -206,7 +206,7 @@ class StringArgument extends ArgumentPluginBase {
       $this->unpackArgumentValue();
     }
     else {
-      $this->value = array($argument);
+      $this->value = [$argument];
       $this->operator = 'or';
     }
 
@@ -253,9 +253,9 @@ class StringArgument extends ArgumentPluginBase {
       else {
         $field .= ' = ' . $placeholder;
       }
-      $placeholders = array(
+      $placeholders = [
         $placeholder => $argument,
-      );
+      ];
       $this->query->addWhereExpression(0, $field, $placeholders);
     }
     else {
@@ -275,7 +275,7 @@ class StringArgument extends ArgumentPluginBase {
    * {@inheritdoc}
    */
   public function getSortName() {
-    return $this->t('Alphabetical', array(), array('context' => 'Sort order'));
+    return $this->t('Alphabetical', [], ['context' => 'Sort order']);
   }
 
   function title() {
@@ -294,7 +294,7 @@ class StringArgument extends ArgumentPluginBase {
       $this->unpackArgumentValue();
     }
     else {
-      $this->value = array($this->argument);
+      $this->value = [$this->argument];
       $this->operator = 'or';
     }
 
@@ -302,7 +302,7 @@ class StringArgument extends ArgumentPluginBase {
       return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : $this->t('Uncategorized');
     }
 
-    if ($this->value === array(-1)) {
+    if ($this->value === [-1]) {
       return !empty($this->definition['invalid input']) ? $this->definition['invalid input'] : $this->t('Invalid input');
     }
 

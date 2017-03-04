@@ -14,23 +14,23 @@ class PathLanguageUiTest extends PathTestBase {
    *
    * @var array
    */
-  public static $modules = array('path', 'locale', 'locale_test');
+  public static $modules = ['path', 'locale', 'locale_test'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create and log in user.
-    $web_user = $this->drupalCreateUser(array('edit any page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'access administration pages'));
+    $web_user = $this->drupalCreateUser(['edit any page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'access administration pages']);
     $this->drupalLogin($web_user);
 
     // Enable French language.
-    $edit = array();
+    $edit = [];
     $edit['predefined_langcode'] = 'fr';
 
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
-    $edit = array('language_interface[enabled][language-url]' => 1);
+    $edit = ['language_interface[enabled][language-url]' => 1];
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
   }
 
@@ -39,7 +39,7 @@ class PathLanguageUiTest extends PathTestBase {
    */
   function testLanguageNeutralUrl() {
     $name = $this->randomMachineName(8);
-    $edit = array();
+    $edit = [];
     $edit['source'] = '/admin/config/search/path';
     $edit['alias'] = '/' . $name;
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
@@ -53,7 +53,7 @@ class PathLanguageUiTest extends PathTestBase {
    */
   function testDefaultLanguageUrl() {
     $name = $this->randomMachineName(8);
-    $edit = array();
+    $edit = [];
     $edit['source'] = '/admin/config/search/path';
     $edit['alias'] = '/' . $name;
     $edit['langcode'] = 'en';
@@ -68,7 +68,7 @@ class PathLanguageUiTest extends PathTestBase {
    */
   function testNonDefaultUrl() {
     $name = $this->randomMachineName(8);
-    $edit = array();
+    $edit = [];
     $edit['source'] = '/admin/config/search/path';
     $edit['alias'] = '/' . $name;
     $edit['langcode'] = 'fr';

@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'ttyels', 'ttyelt', 'ttyelp', 'ttyelh', 'ttyem', 'ttyeb', 'ttyebs', 'ttyes', 'ttyess', 'ttyeng', 'ttyej', 'ttyech', 'ttyek', 'ttyet', 'ttyep', 'ttyeh',
   0x10 => 'tto', 'ttog', 'ttokk', 'ttogs', 'tton', 'ttonj', 'ttonh', 'ttod', 'ttol', 'ttolg', 'ttolm', 'ttolb', 'ttols', 'ttolt', 'ttolp', 'ttolh',
   0x20 => 'ttom', 'ttob', 'ttobs', 'ttos', 'ttoss', 'ttong', 'ttoj', 'ttoch', 'ttok', 'ttot', 'ttop', 'ttoh', 'ttwa', 'ttwag', 'ttwakk', 'ttwags',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'ttwok', 'ttwot', 'ttwop', 'ttwoh', 'ttwe', 'ttweg', 'ttwekk', 'ttwegs', 'ttwen', 'ttwenj', 'ttwenh', 'ttwed', 'ttwel', 'ttwelg', 'ttwelm', 'ttwelb',
   0xE0 => 'ttwels', 'ttwelt', 'ttwelp', 'ttwelh', 'ttwem', 'ttweb', 'ttwebs', 'ttwes', 'ttwess', 'ttweng', 'ttwej', 'ttwech', 'ttwek', 'ttwet', 'ttwep', 'ttweh',
   0xF0 => 'ttwi', 'ttwig', 'ttwikk', 'ttwigs', 'ttwin', 'ttwinj', 'ttwinh', 'ttwid', 'ttwil', 'ttwilg', 'ttwilm', 'ttwilb', 'ttwils', 'ttwilt', 'ttwilp', 'ttwilh',
-);
+];

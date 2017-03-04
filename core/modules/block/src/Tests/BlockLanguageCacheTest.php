@@ -18,25 +18,25 @@ class BlockLanguageCacheTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'language', 'menu_ui');
+  public static $modules = ['block', 'language', 'menu_ui'];
 
   /**
    * List of langcodes.
    *
    * @var array
    */
-  protected $langcodes = array();
+  protected $langcodes = [];
 
   protected function setUp() {
     parent::setUp();
 
     // Create test languages.
-    $this->langcodes = array(ConfigurableLanguage::load('en'));
+    $this->langcodes = [ConfigurableLanguage::load('en')];
     for ($i = 1; $i < 3; ++$i) {
-      $language = ConfigurableLanguage::create(array(
+      $language = ConfigurableLanguage::create([
         'id' => 'l' . $i,
         'label' => $this->randomString(),
-      ));
+      ]);
       $language->save();
       $this->langcodes[$i] = $language;
     }
@@ -47,16 +47,16 @@ class BlockLanguageCacheTest extends WebTestBase {
    */
   public function testBlockLinks() {
     // Create admin user to be able to access block admin.
-    $admin_user = $this->drupalCreateUser(array(
+    $admin_user = $this->drupalCreateUser([
       'administer blocks',
       'access administration pages',
       'administer menu',
-    ));
+    ]);
     $this->drupalLogin($admin_user);
 
     // Create the block cache for all languages.
     foreach ($this->langcodes as $langcode) {
-      $this->drupalGet('admin/structure/block', array('language' => $langcode));
+      $this->drupalGet('admin/structure/block', ['language' => $langcode]);
       $this->clickLinkPartialName('Place block');
     }
 
@@ -64,11 +64,11 @@ class BlockLanguageCacheTest extends WebTestBase {
     $edit['label'] = $this->randomMachineName();
     $edit['id'] = Unicode::strtolower($edit['label']);
     $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));
-    $this->assertText(t('Menu @label has been added.', array('@label' => $edit['label'])));
+    $this->assertText(t('Menu @label has been added.', ['@label' => $edit['label']]));
 
     // Check that the block is listed for all languages.
     foreach ($this->langcodes as $langcode) {
-      $this->drupalGet('admin/structure/block', array('language' => $langcode));
+      $this->drupalGet('admin/structure/block', ['language' => $langcode]);
       $this->clickLinkPartialName('Place block');
       $this->assertText($edit['label']);
     }

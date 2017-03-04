@@ -14,22 +14,22 @@ class NodeIntegrationTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_node_view');
+  public static $testViews = ['test_node_view'];
 
   /**
    * Tests basic node view with a node type argument.
    */
   public function testNodeViewTypeArgument() {
     // Create two content types with three nodes each.
-    $types = array();
-    $all_nids = array();
+    $types = [];
+    $all_nids = [];
     for ($i = 0; $i < 2; $i++) {
       $type = $this->drupalCreateContentType(['name' => '<em>' . $this->randomMachineName() . '</em>']);
       $types[] = $type;
 
       for ($j = 0; $j < 5; $j++) {
         // Ensure the right order of the nodes.
-        $node = $this->drupalCreateNode(array('type' => $type->id(), 'created' => REQUEST_TIME - ($i * 5 + $j)));
+        $node = $this->drupalCreateNode(['type' => $type->id(), 'created' => REQUEST_TIME - ($i * 5 + $j)]);
         $nodes[$type->id()][$node->id()] = $node;
         $all_nids[] = $node->id();
       }
@@ -55,9 +55,9 @@ class NodeIntegrationTest extends NodeTestBase {
    * @param array $expected_nids
    *   An array of node IDs.
    */
-  protected function assertNids(array $expected_nids = array()) {
+  protected function assertNids(array $expected_nids = []) {
     $result = $this->xpath('//span[@class="field-content"]');
-    $nids = array();
+    $nids = [];
     foreach ($result as $element) {
       $nids[] = (int) $element;
     }

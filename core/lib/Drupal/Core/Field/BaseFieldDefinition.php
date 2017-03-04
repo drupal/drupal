@@ -42,7 +42,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   /**
    * @var array
    */
-  protected $indexes = array();
+  protected $indexes = [];
 
   /**
    * Creates a new field definition.
@@ -54,7 +54,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *   A new field definition object.
    */
   public static function create($type) {
-    $field_definition = new static(array());
+    $field_definition = new static([]);
     $field_definition->type = $type;
     $field_definition->itemDefinition = FieldItemDataDefinition::create($field_definition);
     // Create a definition for the items, and initialize it with the default
@@ -414,7 +414,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   public function setDisplayConfigurable($display_context, $configurable) {
     // If no explicit display options have been specified, default to 'hidden'.
     if (empty($this->definition['display'][$display_context])) {
-      $this->definition['display'][$display_context]['options'] = array('region' => 'hidden');
+      $this->definition['display'][$display_context]['options'] = ['region' => 'hidden'];
     }
     $this->definition['display'][$display_context]['configurable'] = $configurable;
     return $this;
@@ -463,9 +463,9 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     if (isset($value) && !is_array($value)) {
       $properties = $this->getPropertyNames();
       $property = reset($properties);
-      $value = array(
-        array($property => $value),
-      );
+      $value = [
+        [$property => $value],
+      ];
     }
     // Allow the field type to process default values.
     $field_item_list_class = $this->getClass();
@@ -482,10 +482,10 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     // Unless the value is an empty array, we may need to transform it.
     if (!is_array($value) || !empty($value)) {
       if (!is_array($value)) {
-        $value = array(array($this->getMainPropertyName() => $value));
+        $value = [[$this->getMainPropertyName() => $value]];
       }
       elseif (is_array($value) && !is_numeric(array_keys($value)[0])) {
-        $value = array(0 => $value);
+        $value = [0 => $value];
       }
     }
     $this->definition['default_value'] = $value;
@@ -633,12 +633,12 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
       $class = $definition['class'];
       $schema = $class::schema($this);
       // Fill in default values.
-      $schema += array(
-        'columns' => array(),
-        'unique keys' => array(),
-        'indexes' => array(),
-        'foreign keys' => array(),
-      );
+      $schema += [
+        'columns' => [],
+        'unique keys' => [],
+        'indexes' => [],
+        'foreign keys' => [],
+      ];
 
       // Merge custom indexes with those specified by the field type. Custom
       // indexes prevail.

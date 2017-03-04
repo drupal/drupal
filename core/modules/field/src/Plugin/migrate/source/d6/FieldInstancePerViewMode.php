@@ -18,7 +18,7 @@ class FieldInstancePerViewMode extends ViewModeBase {
    * {@inheritdoc}
    */
   protected function initializeIterator() {
-    $rows = array();
+    $rows = [];
     $result = $this->prepareQuery()->execute();
     while ($field_row = $result->fetchAssoc()) {
       // These are added to every view mode row.
@@ -52,18 +52,18 @@ class FieldInstancePerViewMode extends ViewModeBase {
    */
   public function query() {
     $query = $this->select('content_node_field_instance', 'cnfi')
-      ->fields('cnfi', array(
+      ->fields('cnfi', [
         'field_name',
         'type_name',
         'weight',
         'label',
         'display_settings',
         'widget_settings',
-      ))
-      ->fields('cnf', array(
+      ])
+      ->fields('cnf', [
         'type',
         'module',
-      ));
+      ]);
     $query->join('content_node_field', 'cnf', 'cnfi.field_name = cnf.field_name');
     $query->orderBy('cnfi.weight');
 
@@ -74,7 +74,7 @@ class FieldInstancePerViewMode extends ViewModeBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'field_name' => $this->t('The machine name of field.'),
       'type_name' => $this->t('Content type where this field is used.'),
       'weight' => $this->t('Weight.'),
@@ -85,7 +85,7 @@ class FieldInstancePerViewMode extends ViewModeBase {
       'description' => $this->t('A description of field.'),
       'widget_module' => $this->t('Module that implements widget.'),
       'widget_active' => $this->t('Status of widget'),
-    );
+    ];
   }
 
   /**

@@ -85,7 +85,7 @@ function hook_field_storage_config_update_forbid(\Drupal\field\FieldStorageConfi
     $prior_allowed_values = $prior_field_storage->getSetting('allowed_values');
     $lost_keys = array_keys(array_diff_key($prior_allowed_values, $allowed_values));
     if (_options_values_in_use($field_storage->getTargetEntityTypeId(), $field_storage->getName(), $lost_keys)) {
-      throw new \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException(t('A list field (@field_name) with existing data cannot have its keys changed.', array('@field_name' => $field_storage->getName())));
+      throw new \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException(t('A list field (@field_name) with existing data cannot have its keys changed.', ['@field_name' => $field_storage->getName()]));
     }
   }
 }
@@ -257,7 +257,7 @@ function hook_field_formatter_info_alter(array &$info) {
  * @ingroup field_info
  */
 function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mode) {
-  $weights = array();
+  $weights = [];
 
   foreach (my_module_entity_additions($entity_type, $bundle, $context, $context_mode) as $addition) {
     $weights[] = $addition['weight'];

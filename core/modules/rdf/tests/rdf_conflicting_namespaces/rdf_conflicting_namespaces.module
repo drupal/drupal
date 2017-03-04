@@ -9,7 +9,7 @@
  * Implements hook_rdf_namespaces().
  */
 function rdf_conflicting_namespaces_rdf_namespaces() {
-  return array(
+  return [
     'dc' => 'http://purl.org/conflicting/namespace',
-  );
+  ];
 }

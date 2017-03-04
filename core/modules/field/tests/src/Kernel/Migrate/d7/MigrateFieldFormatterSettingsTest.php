@@ -96,40 +96,40 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
     // an "unsupported operand types" fatal).
     Database::getConnection('default', 'migrate')
       ->update('field_config_instance')
-      ->fields(array(
-        'data' => serialize(array (
+      ->fields([
+        'data' => serialize( [
           'label' => 'Body',
           'widget' =>
-            array (
+             [
               'type' => 'text_textarea_with_summary',
               'settings' =>
-                array (
+                 [
                   'rows' => 20,
                   'summary_rows' => 5,
-                ),
+                ],
               'weight' => -4,
               'module' => 'text',
-            ),
+            ],
           'settings' =>
-            array (
+             [
               'display_summary' => TRUE,
               'text_processing' => 1,
               'user_register_form' => FALSE,
-            ),
+            ],
           'display' =>
-            array (
+             [
               'default' =>
-                array (
+                 [
                   'label' => 'hidden',
                   'type' => 'text_default',
                   'settings' =>
-                    array (
-                    ),
+                     [
+                    ],
                   'module' => 'text',
                   'weight' => 0,
-                ),
+                ],
               'teaser' =>
-                array (
+                 [
                   'label' => 'hidden',
                   'type' => 'text_summary_or_trimmed',
                   // settings is always expected to be an array. Making it NULL
@@ -137,12 +137,12 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
                   'settings' => NULL,
                   'module' => 'text',
                   'weight' => 0,
-                ),
-            ),
+                ],
+            ],
           'required' => FALSE,
           'description' => '',
-        )),
-      ))
+        ]),
+      ])
       ->condition('entity_type', 'node')
       ->condition('bundle', 'article')
       ->condition('field_name', 'body')

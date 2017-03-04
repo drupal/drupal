@@ -16,7 +16,7 @@ class TwigRegistryLoaderTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('twig_theme_test', 'block');
+  public static $modules = ['twig_theme_test', 'block'];
 
   /**
    * @var \Drupal\Core\Template\TwigEnvironment
@@ -25,7 +25,7 @@ class TwigRegistryLoaderTest extends BrowserTestBase {
 
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->install(array('test_theme_twig_registry_loader', 'test_theme_twig_registry_loader_theme', 'test_theme_twig_registry_loader_subtheme'));
+    \Drupal::service('theme_handler')->install(['test_theme_twig_registry_loader', 'test_theme_twig_registry_loader_theme', 'test_theme_twig_registry_loader_subtheme']);
     $this->twig = \Drupal::service('twig');
   }
 

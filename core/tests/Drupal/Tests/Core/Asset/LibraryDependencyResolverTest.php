@@ -37,7 +37,7 @@ class LibraryDependencyResolverTest extends UnitTestCase {
    *
    * @var array
    */
-  protected $libraryData = array(
+  protected $libraryData = [
     'no_deps_a' => ['js' => [], 'css' => []],
     'no_deps_b' => ['js' => [], 'css' => []],
     'no_deps_c' => ['js' => [], 'css' => []],
@@ -47,7 +47,7 @@ class LibraryDependencyResolverTest extends UnitTestCase {
     'nested_deps_a' => ['js' => [], 'css' => [], 'dependencies' => ['test/deps_a']],
     'nested_deps_b' => ['js' => [], 'css' => [], 'dependencies' => ['test/nested_deps_a']],
     'nested_deps_c' => ['js' => [], 'css' => [], 'dependencies' => ['test/nested_deps_b']],
-  );
+  ];
 
   /**
    * {@inheritdoc}

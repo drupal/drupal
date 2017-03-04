@@ -410,10 +410,10 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       $attributes = $item[0];
       $should_add_header = isset($item[1]) ? $item[1] : FALSE;
 
-      $element = array(
+      $element = [
         '#tag' => 'link',
         '#attributes' => $attributes,
-      );
+      ];
       $href = $attributes['href'];
       $attached['html_head'][] = [$element, 'html_head_link:' . $attributes['rel'] . ':' . $href];
 

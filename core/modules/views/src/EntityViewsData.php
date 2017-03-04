@@ -161,28 +161,28 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
 
     if ($label_key = $this->entityType->getKey('label')) {
       if ($data_table) {
-        $data[$views_base_table]['table']['base']['defaults'] = array(
+        $data[$views_base_table]['table']['base']['defaults'] = [
           'field' => $label_key,
           'table' => $data_table,
-        );
+        ];
       }
       else {
-        $data[$views_base_table]['table']['base']['defaults'] = array(
+        $data[$views_base_table]['table']['base']['defaults'] = [
           'field' => $label_key,
-        );
+        ];
       }
     }
 
     // Entity types must implement a list_builder in order to use Views'
     // entity operations field.
     if ($this->entityType->hasListBuilderClass()) {
-      $data[$base_table]['operations'] = array(
-        'field' => array(
+      $data[$base_table]['operations'] = [
+        'field' => [
           'title' => $this->t('Operations links'),
           'help' => $this->t('Provides links to perform entity operations.'),
           'id' => 'entity_operations',
-        ),
-      );
+        ],
+      ];
     }
 
     if ($this->entityType->hasViewBuilderClass()) {
@@ -215,26 +215,26 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         $views_revision_base_table = $revision_data_table;
       }
       $data[$views_revision_base_table]['table']['entity revision'] = TRUE;
-      $data[$views_revision_base_table]['table']['base'] = array(
+      $data[$views_revision_base_table]['table']['base'] = [
         'field' => $revision_field,
-        'title' => $this->t('@entity_type revisions', array('@entity_type' => $this->entityType->getLabel())),
-      );
+        'title' => $this->t('@entity_type revisions', ['@entity_type' => $this->entityType->getLabel()]),
+      ];
       // Join the revision table to the base table.
-      $data[$views_revision_base_table]['table']['join'][$views_base_table] = array(
+      $data[$views_revision_base_table]['table']['join'][$views_base_table] = [
         'left_field' => $revision_field,
         'field' => $revision_field,
         'type' => 'INNER',
-      );
+      ];
 
       if ($revision_data_table) {
         $data[$revision_data_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
         $data[$revision_data_table]['table']['entity revision'] = TRUE;
 
-        $data[$revision_table]['table']['join'][$revision_data_table] = array(
+        $data[$revision_table]['table']['join'][$revision_data_table] = [
           'left_field' => $revision_field,
           'field' => $revision_field,
           'type' => 'INNER',
-        );
+        ];
       }
     }
 
@@ -404,7 +404,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    *   The modified views data field definition.
    */
   protected function mapSingleFieldViewsData($table, $field_name, $field_type, $column_name, $column_type, $first, FieldDefinitionInterface $field_definition) {
-    $views_field = array();
+    $views_field = [];
 
     // Provide a nicer, less verbose label for the first column within a field.
     // @todo Introduce concept of the "main" column for a field, rather than

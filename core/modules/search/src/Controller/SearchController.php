@@ -72,7 +72,7 @@ class SearchController extends ControllerBase {
    *   The search form and search results build array.
    */
   public function view(Request $request, SearchPageInterface $entity) {
-    $build = array();
+    $build = [];
     $plugin = $entity->getPlugin();
 
     // Build the form first, because it may redirect during the submit,
@@ -89,12 +89,12 @@ class SearchController extends ControllerBase {
     // Build search results, if keywords or other search parameters are in the
     // GET parameters. Note that we need to try the search if 'keys' is in
     // there at all, vs. being empty, due to advanced search.
-    $results = array();
+    $results = [];
     if ($request->query->has('keys')) {
       if ($plugin->isSearchExecutable()) {
         // Log the search.
         if ($this->config('search.settings')->get('logging')) {
-          $this->logger->notice('Searched %type for %keys.', array('%keys' => $keys, '%type' => $entity->label()));
+          $this->logger->notice('Searched %type for %keys.', ['%keys' => $keys, '%type' => $entity->label()]);
         }
 
         // Collect the search results.
@@ -108,22 +108,22 @@ class SearchController extends ControllerBase {
     }
 
     if (count($results)) {
-      $build['search_results_title'] = array(
+      $build['search_results_title'] = [
         '#markup' => '<h2>' . $this->t('Search results') . '</h2>',
-      );
+      ];
     }
 
-    $build['search_results'] = array(
-      '#theme' => array('item_list__search_results__' . $plugin->getPluginId(), 'item_list__search_results'),
+    $build['search_results'] = [
+      '#theme' => ['item_list__search_results__' . $plugin->getPluginId(), 'item_list__search_results'],
       '#items' => $results,
-      '#empty' => array(
+      '#empty' => [
         '#markup' => '<h3>' . $this->t('Your search yielded no results.') . '</h3>',
-      ),
+      ],
       '#list_type' => 'ol',
-      '#context' => array(
+      '#context' => [
         'plugin' => $plugin->getPluginId(),
-      ),
-    );
+      ],
+    ];
 
     $this->renderer->addCacheableDependency($build, $entity);
     if ($plugin instanceof CacheableDependencyInterface) {
@@ -138,9 +138,9 @@ class SearchController extends ControllerBase {
       $build['search_results']['#cache']['tags'][] = 'search_index:' . $plugin->getType();
     }
 
-    $build['pager'] = array(
+    $build['pager'] = [
       '#type' => 'pager',
-    );
+    ];
 
     return $build;
   }
@@ -157,7 +157,7 @@ class SearchController extends ControllerBase {
    *   The search help page.
    */
   public function searchHelp(SearchPageInterface $entity) {
-    $build = array();
+    $build = [];
 
     $build['search_help'] = $entity->getPlugin()->getHelp();
 
@@ -189,7 +189,7 @@ class SearchController extends ControllerBase {
    *   The title for the search page edit form.
    */
   public function editTitle(SearchPageInterface $search_page) {
-    return $this->t('Edit %label search page', array('%label' => $search_page->label()));
+    return $this->t('Edit %label search page', ['%label' => $search_page->label()]);
   }
 
   /**
@@ -207,10 +207,10 @@ class SearchController extends ControllerBase {
     $search_page->$op()->save();
 
     if ($op == 'enable') {
-      drupal_set_message($this->t('The %label search page has been enabled.', array('%label' => $search_page->label())));
+      drupal_set_message($this->t('The %label search page has been enabled.', ['%label' => $search_page->label()]));
     }
     elseif ($op == 'disable') {
-      drupal_set_message($this->t('The %label search page has been disabled.', array('%label' => $search_page->label())));
+      drupal_set_message($this->t('The %label search page has been disabled.', ['%label' => $search_page->label()]));
     }
 
     $url = $search_page->urlInfo('collection');
@@ -230,7 +230,7 @@ class SearchController extends ControllerBase {
     // Set the default page to this search page.
     $this->searchPageRepository->setDefaultSearchPage($search_page);
 
-    drupal_set_message($this->t('The default search page is now %label. Be sure to check the ordering of your search pages.', array('%label' => $search_page->label())));
+    drupal_set_message($this->t('The default search page is now %label. Be sure to check the ordering of your search pages.', ['%label' => $search_page->label()]));
     return $this->redirect('entity.search_page.collection');
   }
 

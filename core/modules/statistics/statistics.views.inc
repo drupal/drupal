@@ -11,66 +11,66 @@
 function statistics_views_data() {
   $data['node_counter']['table']['group']  = t('Content statistics');
 
-  $data['node_counter']['table']['join'] = array(
-    'node_field_data' => array(
+  $data['node_counter']['table']['join'] = [
+    'node_field_data' => [
       'left_field' => 'nid',
       'field' => 'nid',
-    ),
-  );
+    ],
+  ];
 
-  $data['node_counter']['totalcount'] = array(
+  $data['node_counter']['totalcount'] = [
     'title' => t('Total views'),
     'help' => t('The total number of times the node has been viewed.'),
-    'field' => array(
+    'field' => [
       'id' => 'statistics_numeric',
       'click sortable' => TRUE,
-     ),
-    'filter' => array(
+     ],
+    'filter' => [
       'id' => 'numeric',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'numeric',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['node_counter']['daycount'] = array(
+  $data['node_counter']['daycount'] = [
     'title' => t('Views today'),
     'help' => t('The total number of times the node has been viewed today.'),
-    'field' => array(
+    'field' => [
       'id' => 'statistics_numeric',
       'click sortable' => TRUE,
-     ),
-    'filter' => array(
+     ],
+    'filter' => [
       'id' => 'numeric',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'numeric',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['node_counter']['timestamp'] = array(
+  $data['node_counter']['timestamp'] = [
     'title' => t('Most recent view'),
     'help' => t('The most recent time the node has been viewed.'),
-    'field' => array(
+    'field' => [
       'id' => 'node_counter_timestamp',
       'click sortable' => TRUE,
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'date',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'date',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
   return $data;
 }

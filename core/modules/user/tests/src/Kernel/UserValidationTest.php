@@ -21,7 +21,7 @@ class UserValidationTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'user', 'system');
+  public static $modules = ['field', 'user', 'system'];
 
   /**
    * {@inheritdoc}
@@ -29,10 +29,10 @@ class UserValidationTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('user');
-    $this->installSchema('system', array('sequences'));
+    $this->installSchema('system', ['sequences']);
 
     // Make sure that the default roles exist.
-    $this->installConfig(array('user'));
+    $this->installConfig(['user']);
 
   }
 
@@ -40,25 +40,25 @@ class UserValidationTest extends KernelTestBase {
    * Tests user name validation.
    */
   function testUsernames() {
-    $test_cases = array( // '<username>' => array('<description>', 'assert<testName>'),
-      'foo'                    => array('Valid username', 'assertNull'),
-      'FOO'                    => array('Valid username', 'assertNull'),
-      'Foo O\'Bar'             => array('Valid username', 'assertNull'),
-      'foo@bar'                => array('Valid username', 'assertNull'),
-      'foo@example.com'        => array('Valid username', 'assertNull'),
-      'foo@-example.com'       => array('Valid username', 'assertNull'), // invalid domains are allowed in usernames
-      'þòøÇßªř€'               => array('Valid username', 'assertNull'),
-      'foo+bar'                => array('Valid username', 'assertNull'), // '+' symbol is allowed
-      'ᚠᛇᚻ᛫ᛒᛦᚦ'                => array('Valid UTF8 username', 'assertNull'), // runes
-      ' foo'                   => array('Invalid username that starts with a space', 'assertNotNull'),
-      'foo '                   => array('Invalid username that ends with a space', 'assertNotNull'),
-      'foo  bar'               => array('Invalid username that contains 2 spaces \'&nbsp;&nbsp;\'', 'assertNotNull'),
-      ''                       => array('Invalid empty username', 'assertNotNull'),
-      'foo/'                   => array('Invalid username containing invalid chars', 'assertNotNull'),
-      'foo' . chr(0) . 'bar'   => array('Invalid username containing chr(0)', 'assertNotNull'), // NULL
-      'foo' . chr(13) . 'bar'  => array('Invalid username containing chr(13)', 'assertNotNull'), // CR
-      str_repeat('x', USERNAME_MAX_LENGTH + 1) => array('Invalid excessively long username', 'assertNotNull'),
-    );
+    $test_cases = [ // '<username>' => array('<description>', 'assert<testName>'),
+      'foo'                    => ['Valid username', 'assertNull'],
+      'FOO'                    => ['Valid username', 'assertNull'],
+      'Foo O\'Bar'             => ['Valid username', 'assertNull'],
+      'foo@bar'                => ['Valid username', 'assertNull'],
+      'foo@example.com'        => ['Valid username', 'assertNull'],
+      'foo@-example.com'       => ['Valid username', 'assertNull'], // invalid domains are allowed in usernames
+      'þòøÇßªř€'               => ['Valid username', 'assertNull'],
+      'foo+bar'                => ['Valid username', 'assertNull'], // '+' symbol is allowed
+      'ᚠᛇᚻ᛫ᛒᛦᚦ'                => ['Valid UTF8 username', 'assertNull'], // runes
+      ' foo'                   => ['Invalid username that starts with a space', 'assertNotNull'],
+      'foo '                   => ['Invalid username that ends with a space', 'assertNotNull'],
+      'foo  bar'               => ['Invalid username that contains 2 spaces \'&nbsp;&nbsp;\'', 'assertNotNull'],
+      ''                       => ['Invalid empty username', 'assertNotNull'],
+      'foo/'                   => ['Invalid username containing invalid chars', 'assertNotNull'],
+      'foo' . chr(0) . 'bar'   => ['Invalid username containing chr(0)', 'assertNotNull'], // NULL
+      'foo' . chr(13) . 'bar'  => ['Invalid username containing chr(13)', 'assertNotNull'], // CR
+      str_repeat('x', USERNAME_MAX_LENGTH + 1) => ['Invalid excessively long username', 'assertNotNull'],
+    ];
     foreach ($test_cases as $name => $test_case) {
       list($description, $test) = $test_case;
       $result = user_validate_name($name);
@@ -70,10 +70,10 @@ class UserValidationTest extends KernelTestBase {
    * Runs entity validation checks.
    */
   function testValidation() {
-    $user = User::create(array(
+    $user = User::create([
       'name' => 'test',
       'mail' => 'test@example.com',
-    ));
+    ]);
     $violations = $user->validate();
     $this->assertEqual(count($violations), 0, 'No violations when validating a default user.');
 
@@ -84,7 +84,7 @@ class UserValidationTest extends KernelTestBase {
     $violations = $user->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when name is too long.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'name');
-    $this->assertEqual($violations[0]->getMessage(), t('The username %name is too long: it must be %max characters or less.', array('%name' => $name, '%max' => 60)));
+    $this->assertEqual($violations[0]->getMessage(), t('The username %name is too long: it must be %max characters or less.', ['%name' => $name, '%max' => 60]));
 
     // Create a second test user to provoke a name collision.
     $user2 = User::create([
@@ -96,7 +96,7 @@ class UserValidationTest extends KernelTestBase {
     $violations = $user->validate();
     $this->assertEqual(count($violations), 1, 'Violation found on name collision.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'name');
-    $this->assertEqual($violations[0]->getMessage(), t('The username %name is already taken.', array('%name' => 'existing')));
+    $this->assertEqual($violations[0]->getMessage(), t('The username %name is already taken.', ['%name' => 'existing']));
 
     // Make the name valid.
     $user->set('name', $this->randomMachineName());
@@ -116,7 +116,7 @@ class UserValidationTest extends KernelTestBase {
     //   https://www.drupal.org/node/2023465.
     $this->assertEqual(count($violations), 2, 'Violations found when email is too long');
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: the email address can not be longer than @max characters.', array('%name' => $user->get('mail')->getFieldDefinition()->getLabel(), '@max' => Email::EMAIL_MAX_LENGTH)));
+    $this->assertEqual($violations[0]->getMessage(), t('%name: the email address can not be longer than @max characters.', ['%name' => $user->get('mail')->getFieldDefinition()->getLabel(), '@max' => Email::EMAIL_MAX_LENGTH]));
     $this->assertEqual($violations[1]->getPropertyPath(), 'mail.0.value');
     $this->assertEqual($violations[1]->getMessage(), t('This value is not a valid email address.'));
 
@@ -125,12 +125,12 @@ class UserValidationTest extends KernelTestBase {
     $violations = $user->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when email already exists.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail');
-    $this->assertEqual($violations[0]->getMessage(), t('The email address %mail is already taken.', array('%mail' => 'existing@example.com')));
+    $this->assertEqual($violations[0]->getMessage(), t('The email address %mail is already taken.', ['%mail' => 'existing@example.com']));
     $user->set('mail', NULL);
     $violations = $user->validate();
     $this->assertEqual(count($violations), 1, 'Email addresses may not be removed');
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail');
-    $this->assertEqual($violations[0]->getMessage(), t('@name field is required.', array('@name' => $user->getFieldDefinition('mail')->getLabel())));
+    $this->assertEqual($violations[0]->getMessage(), t('@name field is required.', ['@name' => $user->getFieldDefinition('mail')->getLabel()]));
     $user->set('mail', 'someone@example.com');
 
     $user->set('timezone', $this->randomString(33));
@@ -157,14 +157,14 @@ class UserValidationTest extends KernelTestBase {
     $this->assertAllowedValuesViolation($user, 'preferred_admin_langcode');
     $user->set('preferred_admin_langcode', NULL);
 
-    Role::create(array('id' => 'role1'))->save();
-    Role::create(array('id' => 'role2'))->save();
+    Role::create(['id' => 'role1'])->save();
+    Role::create(['id' => 'role2'])->save();
 
     // Test cardinality of user roles.
     $user = User::create([
       'name' => 'role_test',
       'mail' => 'test@example.com',
-      'roles' => array('role1', 'role2'),
+      'roles' => ['role1', 'role2'],
     ]);
     $violations = $user->validate();
     $this->assertEqual(count($violations), 0);
@@ -173,7 +173,7 @@ class UserValidationTest extends KernelTestBase {
     $violations = $user->validate();
     $this->assertEqual(count($violations), 1);
     $this->assertEqual($violations[0]->getPropertyPath(), 'roles.1.target_id');
-    $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%entity_type: %name) does not exist.', array('%entity_type' => 'user_role', '%name' => 'unknown_role')));
+    $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%entity_type: %name) does not exist.', ['%entity_type' => 'user_role', '%name' => 'unknown_role']));
   }
 
   /**
@@ -195,7 +195,7 @@ class UserValidationTest extends KernelTestBase {
     $this->assertEqual(count($violations), $count, "Violation found when $field_name is too long.");
     $this->assertEqual($violations[$expected_index]->getPropertyPath(), "$field_name.0.value");
     $field_label = $entity->get($field_name)->getFieldDefinition()->getLabel();
-    $this->assertEqual($violations[$expected_index]->getMessage(), t('%name: may not be longer than @max characters.', array('%name' => $field_label, '@max' => $length)));
+    $this->assertEqual($violations[$expected_index]->getMessage(), t('%name: may not be longer than @max characters.', ['%name' => $field_label, '@max' => $length]));
   }
 
   /**

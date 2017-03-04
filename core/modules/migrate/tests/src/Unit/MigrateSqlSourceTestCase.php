@@ -33,7 +33,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
    *
    * @var array
    */
-  protected $databaseContents = array();
+  protected $databaseContents = [];
 
   /**
    * The plugin class under test.
@@ -60,7 +60,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
    *
    * @var array
    */
-  protected $expectedResults = array();
+  protected $expectedResults = [];
 
   /**
    * Expected count of source rows.
@@ -112,7 +112,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
 
     // Setup the plugin.
     $plugin_class = static::PLUGIN_CLASS;
-    $plugin = new $plugin_class($this->migrationConfiguration['source'], $this->migrationConfiguration['source']['plugin'], array(), $migration, $state, $entity_manager);
+    $plugin = new $plugin_class($this->migrationConfiguration['source'], $this->migrationConfiguration['source']['plugin'], [], $migration, $state, $entity_manager);
 
     // Do some reflection to set the database and moduleHandler.
     $plugin_reflection = new \ReflectionClass($plugin);
@@ -122,7 +122,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
     $module_handler_property->setAccessible(TRUE);
 
     // Set the database and the module handler onto our plugin.
-    $database_property->setValue($plugin, $this->getDatabase($this->databaseContents + array('test_map' => array())));
+    $database_property->setValue($plugin, $this->getDatabase($this->databaseContents + ['test_map' => []]));
     $module_handler_property->setValue($plugin, $module_handler);
 
     $plugin->setStringTranslation($this->getStringTranslationStub());

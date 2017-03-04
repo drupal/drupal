@@ -62,7 +62,7 @@ class Node extends FieldableEntity {
   public function query() {
     // Select node in its last revision.
     $query = $this->select('node_revision', 'nr')
-      ->fields('n', array(
+      ->fields('n', [
         'nid',
         'type',
         'language',
@@ -74,13 +74,13 @@ class Node extends FieldableEntity {
         'sticky',
         'tnid',
         'translate',
-      ))
-      ->fields('nr', array(
+      ])
+      ->fields('nr', [
         'vid',
         'title',
         'log',
         'timestamp',
-      ));
+      ]);
     $query->addField('n', 'uid', 'node_uid');
     $query->addField('nr', 'uid', 'revision_uid');
     $query->innerJoin('node', 'n', static::JOIN);
@@ -122,7 +122,7 @@ class Node extends FieldableEntity {
    * {@inheritdoc}
    */
   public function fields() {
-    $fields = array(
+    $fields = [
       'nid' => $this->t('Node ID'),
       'type' => $this->t('Type'),
       'title' => $this->t('Title'),
@@ -137,7 +137,7 @@ class Node extends FieldableEntity {
       'language' => $this->t('Language (fr, en, ...)'),
       'tnid' => $this->t('The translation set id for this node'),
       'timestamp' => $this->t('The timestamp the latest revision of this node was created.'),
-    );
+    ];
     return $fields;
   }
 

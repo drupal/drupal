@@ -12,38 +12,38 @@ use Drupal\Core\Url;
  */
 function toolbar_test_toolbar() {
 
-  $items['testing'] = array(
+  $items['testing'] = [
     '#type' => 'toolbar_item',
-    'tab' => array(
+    'tab' => [
       '#type' => 'link',
       '#title' => t('Test tab'),
       '#url' => Url::fromRoute('<front>'),
-      '#options' => array(
-        'attributes' => array(
+      '#options' => [
+        'attributes' => [
           'id' => 'toolbar-tab-testing',
           'title' => t('Test tab'),
-        ),
-      ),
-    ),
-    'tray' => array(
+        ],
+      ],
+    ],
+    'tray' => [
       '#heading' => t('Test tray'),
-      '#wrapper_attributes' => array(
+      '#wrapper_attributes' => [
         'id' => 'toolbar-tray-testing',
-      ),
-      'content' => array(
+      ],
+      'content' => [
         '#theme' => 'item_list',
-        '#items' => array(
-          \Drupal::l(t('link 1'), new Url('<front>', [], array('attributes' => array('title' => 'Test link 1 title')))),
-          \Drupal::l(t('link 2'), new Url('<front>', [], array('attributes' => array('title' => 'Test link 2 title')))),
-          \Drupal::l(t('link 3'), new Url('<front>', [], array('attributes' => array('title' => 'Test link 3 title')))),
-        ),
-        '#attributes' => array(
-          'class' => array('toolbar-menu'),
-        ),
-      ),
-    ),
+        '#items' => [
+          \Drupal::l(t('link 1'), new Url('<front>', [], ['attributes' => ['title' => 'Test link 1 title']])),
+          \Drupal::l(t('link 2'), new Url('<front>', [], ['attributes' => ['title' => 'Test link 2 title']])),
+          \Drupal::l(t('link 3'), new Url('<front>', [], ['attributes' => ['title' => 'Test link 3 title']])),
+        ],
+        '#attributes' => [
+          'class' => ['toolbar-menu'],
+        ],
+      ],
+    ],
     '#weight' => 50,
-  );
+  ];
 
   return $items;
 }

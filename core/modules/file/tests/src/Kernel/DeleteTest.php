@@ -19,7 +19,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     // Check that deletion removes the file and database record.
     $this->assertTrue(is_file($file->getFileUri()), 'File exists.');
     $file->delete();
-    $this->assertFileHooksCalled(array('delete'));
+    $this->assertFileHooksCalled(['delete']);
     $this->assertFalse(file_exists($file->getFileUri()), 'Test file has actually been deleted.');
     $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
   }
@@ -35,7 +35,7 @@ class DeleteTest extends FileManagedUnitTestBase {
 
     $file_usage->delete($file, 'testing', 'test', 1);
     $usage = $file_usage->listUsage($file);
-    $this->assertEqual($usage['testing']['test'], array(1 => 1), 'Test file is still in use.');
+    $this->assertEqual($usage['testing']['test'], [1 => 1], 'Test file is still in use.');
     $this->assertTrue(file_exists($file->getFileUri()), 'File still exists on the disk.');
     $this->assertTrue(File::load($file->id()), 'File still exists in the database.');
 
@@ -44,7 +44,7 @@ class DeleteTest extends FileManagedUnitTestBase {
 
     $file_usage->delete($file, 'testing', 'test', 1);
     $usage = $file_usage->listUsage($file);
-    $this->assertFileHooksCalled(array('load', 'update'));
+    $this->assertFileHooksCalled(['load', 'update']);
     $this->assertTrue(empty($usage), 'File usage data was removed.');
     $this->assertTrue(file_exists($file->getFileUri()), 'File still exists on the disk.');
     $file = File::load($file->id());
@@ -56,15 +56,15 @@ class DeleteTest extends FileManagedUnitTestBase {
     // of the file is older than the system.file.temporary_maximum_age
     // configuration value.
     db_update('file_managed')
-      ->fields(array(
+      ->fields([
         'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
-      ))
+      ])
       ->condition('fid', $file->id())
       ->execute();
     \Drupal::service('cron')->run();
 
     // file_cron() loads
-    $this->assertFileHooksCalled(array('delete'));
+    $this->assertFileHooksCalled(['delete']);
     $this->assertFalse(file_exists($file->getFileUri()), 'File has been deleted after its last usage was removed.');
     $this->assertFalse(File::load($file->id()), 'File was removed from the database.');
   }

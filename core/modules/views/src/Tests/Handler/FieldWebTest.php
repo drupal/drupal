@@ -25,7 +25,7 @@ class FieldWebTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view', 'test_field_classes', 'test_field_output', 'test_click_sort');
+  public static $testViews = ['test_view', 'test_field_classes', 'test_field_output', 'test_click_sort'];
 
   /**
    * {@inheritdoc}
@@ -37,9 +37,9 @@ class FieldWebTest extends HandlerTestBase {
    *
    * @var array
    */
-  protected $columnMap = array(
+  protected $columnMap = [
     'views_test_data_name' => 'name',
-  );
+  ];
 
   protected function setUp() {
     parent::setUp();
@@ -97,7 +97,7 @@ class FieldWebTest extends HandlerTestBase {
    */
   protected function clickSortLoadIdsFromOutput() {
     $fields = $this->xpath("//td[contains(@class, 'views-field-id')]");
-    $ids = array();
+    $ids = [];
     foreach ($fields as $field) {
       $ids[] = (int) $field[0];
     }
@@ -174,14 +174,14 @@ class FieldWebTest extends HandlerTestBase {
    *   format and return values see the SimpleXML documentation,
    *   http://php.net/manual/function.simplexml-element-xpath.php.
    */
-  protected function xpathContent($content, $xpath, array $arguments = array()) {
+  protected function xpathContent($content, $xpath, array $arguments = []) {
     if ($elements = $this->parseContent($content)) {
       $xpath = $this->buildXPathQuery($xpath, $arguments);
       $result = $elements->xpath($xpath);
       // Some combinations of PHP / libxml versions return an empty array
       // instead of the documented FALSE. Forcefully convert any falsish values
       // to an empty array to allow foreach(...) constructions.
-      return $result ? $result : array();
+      return $result ? $result : [];
     }
     else {
       return FALSE;
@@ -224,7 +224,7 @@ class FieldWebTest extends HandlerTestBase {
 
     // Some generic test code adapted from the UrlTest class, which tests
     // mostly the different options for the path.
-    foreach (array(FALSE, TRUE) as $absolute) {
+    foreach ([FALSE, TRUE] as $absolute) {
       $alter = &$id_field->options['alter'];
       $alter['path'] = 'node/123';
 
@@ -258,7 +258,7 @@ class FieldWebTest extends HandlerTestBase {
 
       // @todo The route-based URL generator strips out NULL attributes.
       // $expected_result = \Drupal::url('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute]);
-      $expected_result = Url::fromUserInput('/node/123', array('query' => array('foo' => NULL), 'fragment' => 'bar', 'absolute' => $absolute))->toString();
+      $expected_result = Url::fromUserInput('/node/123', ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute])->toString();
       $alter['path'] = 'node/123?foo#bar';
       $result = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
         return $id_field->theme($row);
@@ -345,7 +345,7 @@ class FieldWebTest extends HandlerTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
       return $id_field->theme($row);
     });
-    $elements = $this->xpathContent($output, '//a[contains(@class, :class)]', array(':class' => $class));
+    $elements = $this->xpathContent($output, '//a[contains(@class, :class)]', [':class' => $class]);
     $this->assertTrue($elements);
     // @fixme link_class, alt, rel cannot be unset, which should be fixed.
     $id_field->options['alter']['link_class'] = '';
@@ -355,7 +355,7 @@ class FieldWebTest extends HandlerTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
       return $id_field->theme($row);
     });
-    $elements = $this->xpathContent($output, '//a[contains(@title, :alt)]', array(':alt' => $rel));
+    $elements = $this->xpathContent($output, '//a[contains(@title, :alt)]', [':alt' => $rel]);
     $this->assertTrue($elements);
     $id_field->options['alter']['alt'] = '';
 
@@ -364,7 +364,7 @@ class FieldWebTest extends HandlerTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
       return $id_field->theme($row);
     });
-    $elements = $this->xpathContent($output, '//a[contains(@rel, :rel)]', array(':rel' => $rel));
+    $elements = $this->xpathContent($output, '//a[contains(@rel, :rel)]', [':rel' => $rel]);
     $this->assertTrue($elements);
     $id_field->options['alter']['rel'] = '';
 
@@ -373,7 +373,7 @@ class FieldWebTest extends HandlerTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($id_field, $row) {
       return $id_field->theme($row);
     });
-    $elements = $this->xpathContent($output, '//a[contains(@target, :target)]', array(':target' => $target));
+    $elements = $this->xpathContent($output, '//a[contains(@target, :target)]', [':target' => $target]);
     $this->assertTrue($elements);
     unset($id_field->options['alter']['target']);
   }
@@ -395,81 +395,81 @@ class FieldWebTest extends HandlerTestBase {
     $id_field->options['label'] = $this->randomMachineName();
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertFalse($this->xpathContent($output, '//div[contains(@class, :class)]', array(':class' => 'field-content')));
-    $this->assertFalse($this->xpathContent($output, '//div[contains(@class, :class)]', array(':class' => 'field__label')));
+    $this->assertFalse($this->xpathContent($output, '//div[contains(@class, :class)]', [':class' => 'field-content']));
+    $this->assertFalse($this->xpathContent($output, '//div[contains(@class, :class)]', [':class' => 'field__label']));
 
     $id_field->options['element_default_classes'] = TRUE;
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
     // Per default the label and the element of the field are spans.
-    $this->assertTrue($this->xpathContent($output, '//span[contains(@class, :class)]', array(':class' => 'field-content')));
-    $this->assertTrue($this->xpathContent($output, '//span[contains(@class, :class)]', array(':class' => 'views-label')));
-    $this->assertTrue($this->xpathContent($output, '//div[contains(@class, :class)]', array(':class' => 'views-field')));
+    $this->assertTrue($this->xpathContent($output, '//span[contains(@class, :class)]', [':class' => 'field-content']));
+    $this->assertTrue($this->xpathContent($output, '//span[contains(@class, :class)]', [':class' => 'views-label']));
+    $this->assertTrue($this->xpathContent($output, '//div[contains(@class, :class)]', [':class' => 'views-field']));
 
     // Tests the element wrapper classes/element.
     $random_class = $this->randomMachineName();
 
     // Set some common wrapper element types and see whether they appear with and without a custom class set.
-    foreach (array('h1', 'span', 'p', 'div') as $element_type) {
+    foreach (['h1', 'span', 'p', 'div'] as $element_type) {
       $id_field->options['element_wrapper_type'] = $element_type;
 
       // Set a custom wrapper element css class.
       $id_field->options['element_wrapper_class'] = $random_class;
       $output = $view->preview();
       $output = $renderer->renderRoot($output);
-      $this->assertTrue($this->xpathContent($output, "//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
+      $this->assertTrue($this->xpathContent($output, "//{$element_type}[contains(@class, :class)]", [':class' => $random_class]));
 
       // Set no custom css class.
       $id_field->options['element_wrapper_class'] = '';
       $output = $view->preview();
       $output = $renderer->renderRoot($output);
-      $this->assertFalse($this->xpathContent($output, "//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
+      $this->assertFalse($this->xpathContent($output, "//{$element_type}[contains(@class, :class)]", [':class' => $random_class]));
       $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]/{$element_type}"));
     }
 
     // Tests the label class/element.
 
     // Set some common label element types and see whether they appear with and without a custom class set.
-    foreach (array('h1', 'span', 'p', 'div') as $element_type) {
+    foreach (['h1', 'span', 'p', 'div'] as $element_type) {
       $id_field->options['element_label_type'] = $element_type;
 
       // Set a custom label element css class.
       $id_field->options['element_label_class'] = $random_class;
       $output = $view->preview();
       $output = $renderer->renderRoot($output);
-      $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
+      $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]//{$element_type}[contains(@class, :class)]", [':class' => $random_class]));
 
       // Set no custom css class.
       $id_field->options['element_label_class'] = '';
       $output = $view->preview();
       $output = $renderer->renderRoot($output);
-      $this->assertFalse($this->xpathContent($output, "//li[contains(@class, views-row)]//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
+      $this->assertFalse($this->xpathContent($output, "//li[contains(@class, views-row)]//{$element_type}[contains(@class, :class)]", [':class' => $random_class]));
       $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]//{$element_type}"));
     }
 
     // Tests the element classes/element.
 
     // Set some common element element types and see whether they appear with and without a custom class set.
-    foreach (array('h1', 'span', 'p', 'div') as $element_type) {
+    foreach (['h1', 'span', 'p', 'div'] as $element_type) {
       $id_field->options['element_type'] = $element_type;
 
       // Set a custom label element css class.
       $id_field->options['element_class'] = $random_class;
       $output = $view->preview();
       $output = $renderer->renderRoot($output);
-      $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]//div[contains(@class, views-field)]//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
+      $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]//div[contains(@class, views-field)]//{$element_type}[contains(@class, :class)]", [':class' => $random_class]));
 
       // Set no custom css class.
       $id_field->options['element_class'] = '';
       $output = $view->preview();
       $output = $renderer->renderRoot($output);
-      $this->assertFalse($this->xpathContent($output, "//li[contains(@class, views-row)]//div[contains(@class, views-field)]//{$element_type}[contains(@class, :class)]", array(':class' => $random_class)));
+      $this->assertFalse($this->xpathContent($output, "//li[contains(@class, views-row)]//div[contains(@class, views-field)]//{$element_type}[contains(@class, :class)]", [':class' => $random_class]));
       $this->assertTrue($this->xpathContent($output, "//li[contains(@class, views-row)]//div[contains(@class, views-field)]//{$element_type}"));
     }
 
     // Tests the available html elements.
     $element_types = $id_field->getElements();
-    $expected_elements = array(
+    $expected_elements = [
       '',
       0,
       'div',
@@ -484,7 +484,7 @@ class FieldWebTest extends HandlerTestBase {
       'strong',
       'em',
       'marquee'
-    );
+    ];
 
     $this->assertEqual(array_keys($element_types), $expected_elements);
   }
@@ -560,14 +560,14 @@ class FieldWebTest extends HandlerTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
       return $name_field->advancedRender($row);
     });
-    $this->assertSubString($output, $trimmed_name, format_string('Make sure the trimmed output (@trimmed) appears in the rendered output (@output).', array('@trimmed' => $trimmed_name, '@output' => $output)));
-    $this->assertNotSubString($output, $row->views_test_data_name, format_string("Make sure the untrimmed value (@untrimmed) shouldn't appear in the rendered output (@output).", array('@untrimmed' => $row->views_test_data_name, '@output' => $output)));
+    $this->assertSubString($output, $trimmed_name, format_string('Make sure the trimmed output (@trimmed) appears in the rendered output (@output).', ['@trimmed' => $trimmed_name, '@output' => $output]));
+    $this->assertNotSubString($output, $row->views_test_data_name, format_string("Make sure the untrimmed value (@untrimmed) shouldn't appear in the rendered output (@output).", ['@untrimmed' => $row->views_test_data_name, '@output' => $output]));
 
     $name_field->options['alter']['max_length'] = 9;
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
       return $name_field->advancedRender($row);
     });
-    $this->assertSubString($output, $trimmed_name, format_string('Make sure the untrimmed (@untrimmed) output appears in the rendered output  (@output).', array('@trimmed' => $trimmed_name, '@output' => $output)));
+    $this->assertSubString($output, $trimmed_name, format_string('Make sure the untrimmed (@untrimmed) output appears in the rendered output  (@output).', ['@trimmed' => $trimmed_name, '@output' => $output]));
 
     // Take word_boundary into account for the tests.
     $name_field->options['alter']['max_length'] = 5;
@@ -575,34 +575,34 @@ class FieldWebTest extends HandlerTestBase {
     $random_text_2 = $this->randomMachineName(2);
     $random_text_4 = $this->randomMachineName(4);
     $random_text_8 = $this->randomMachineName(8);
-    $tuples = array(
+    $tuples = [
       // Create one string which doesn't fit at all into the limit.
-      array(
+      [
         'value' => $random_text_8,
         'trimmed_value' => '',
         'trimmed' => TRUE
-      ),
+      ],
       // Create one string with two words which doesn't fit both into the limit.
-      array(
+      [
         'value' => $random_text_8 . ' ' . $random_text_8,
         'trimmed_value' => '',
         'trimmed' => TRUE
-      ),
+      ],
       // Create one string which contains of two words, of which only the first
       // fits into the limit.
-      array(
+      [
         'value' => $random_text_4 . ' ' . $random_text_8,
         'trimmed_value' => $random_text_4,
         'trimmed' => TRUE
-      ),
+      ],
       // Create one string which contains of two words, of which both fits into
       // the limit.
-      array(
+      [
         'value' => $random_text_2 . ' ' . $random_text_2,
         'trimmed_value' => $random_text_2 . ' ' . $random_text_2,
         'trimmed' => FALSE
-      )
-    );
+      ]
+    ];
 
     foreach ($tuples as $tuple) {
       $row->views_test_data_name = $tuple['value'];
@@ -611,10 +611,10 @@ class FieldWebTest extends HandlerTestBase {
       });
 
       if ($tuple['trimmed']) {
-        $this->assertNotSubString($output, $tuple['value'], format_string('The untrimmed value (@untrimmed) should not appear in the trimmed output (@output).', array('@untrimmed' => $tuple['value'], '@output' => $output)));
+        $this->assertNotSubString($output, $tuple['value'], format_string('The untrimmed value (@untrimmed) should not appear in the trimmed output (@output).', ['@untrimmed' => $tuple['value'], '@output' => $output]));
       }
       if (!empty($tuple['trimmed_value'])) {
-        $this->assertSubString($output, $tuple['trimmed_value'], format_string('The trimmed value (@trimmed) should appear in the trimmed output (@output).', array('@trimmed' => $tuple['trimmed_value'], '@output' => $output)));
+        $this->assertSubString($output, $tuple['trimmed_value'], format_string('The trimmed value (@trimmed) should appear in the trimmed output (@output).', ['@trimmed' => $tuple['trimmed_value'], '@output' => $output]));
       }
     }
 
@@ -629,14 +629,14 @@ class FieldWebTest extends HandlerTestBase {
       return $name_field->advancedRender($row);
     });
     $this->assertSubString($output, $more_text, 'Make sure a read more text is displayed if the output got trimmed');
-    $this->assertTrue($this->xpathContent($output, '//a[contains(@href, :path)]', array(':path' => $more_path)), 'Make sure the read more link points to the right destination.');
+    $this->assertTrue($this->xpathContent($output, '//a[contains(@href, :path)]', [':path' => $more_path]), 'Make sure the read more link points to the right destination.');
 
     $name_field->options['alter']['more_link'] = FALSE;
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
       return $name_field->advancedRender($row);
     });
     $this->assertNotSubString($output, $more_text, 'Make sure no read more text appears.');
-    $this->assertFalse($this->xpathContent($output, '//a[contains(@href, :path)]', array(':path' => $more_path)), 'Make sure no read more link appears.');
+    $this->assertFalse($this->xpathContent($output, '//a[contains(@href, :path)]', [':path' => $more_path]), 'Make sure no read more link appears.');
 
     // Check for the ellipses.
     $row->views_test_data_name = $this->randomMachineName(8);

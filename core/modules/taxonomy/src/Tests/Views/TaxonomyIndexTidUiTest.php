@@ -24,7 +24,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter_taxonomy_index_tid', 'test_taxonomy_term_name');
+  public static $testViews = ['test_filter_taxonomy_index_tid', 'test_taxonomy_term_name'];
 
   /**
    * Modules to enable.
@@ -71,7 +71,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
         $term->save();
       }
     }
-    ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['taxonomy_test_views']);
 
     Vocabulary::create([
       'vid' => 'empty_vocabulary',

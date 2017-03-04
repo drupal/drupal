@@ -61,7 +61,7 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
       $this->namespaceSuffix = str_replace('/', '\\', $subdir);
     }
     $this->rootNamespacesIterator = $root_namespaces;
-    $plugin_namespaces = array();
+    $plugin_namespaces = [];
     parent::__construct($plugin_namespaces, $plugin_definition_annotation_name, $annotation_namespaces);
   }
 
@@ -113,7 +113,7 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
    * {@inheritdoc}
    */
   protected function getPluginNamespaces() {
-    $plugin_namespaces = array();
+    $plugin_namespaces = [];
     if ($this->namespaceSuffix) {
       foreach ($this->rootNamespacesIterator as $namespace => $dirs) {
         // Append the namespace suffix to the base namespace, to obtain the

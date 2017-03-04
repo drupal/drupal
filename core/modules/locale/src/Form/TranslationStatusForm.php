@@ -65,10 +65,10 @@ class TranslationStatusForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $languages = locale_translatable_language_list();
     $status = locale_translation_get_status();
-    $options = array();
-    $languages_update = array();
-    $languages_not_found = array();
-    $projects_update = array();
+    $options = [];
+    $languages_update = [];
+    $languages_not_found = [];
+    $projects_update = [];
     // Prepare information about projects which have available translation
     // updates.
     if ($languages && $status) {
@@ -77,24 +77,24 @@ class TranslationStatusForm extends FormBase {
       // Build data options for the select table.
       foreach ($updates as $langcode => $update) {
         $title = $languages[$langcode]->getName();
-        $locale_translation_update_info = array('#theme' => 'locale_translation_update_info');
-        foreach (array('updates', 'not_found') as $update_status) {
+        $locale_translation_update_info = ['#theme' => 'locale_translation_update_info'];
+        foreach (['updates', 'not_found'] as $update_status) {
           if (isset($update[$update_status])) {
             $locale_translation_update_info['#' . $update_status] = $update[$update_status];
           }
         }
-        $options[$langcode] = array(
-          'title' => array(
-            'data' => array(
+        $options[$langcode] = [
+          'title' => [
+            'data' => [
               '#title' => $title,
               '#plain_text' => $title,
-            ),
-          ),
-          'status' => array(
-            'class' => array('description', 'priority-low'),
+            ],
+          ],
+          'status' => [
+            'class' => ['description', 'priority-low'],
             'data' => $locale_translation_update_info,
-          ),
-        );
+          ],
+        ];
         if (!empty($update['not_found'])) {
           $languages_not_found[$langcode] = $langcode;
         }
@@ -110,43 +110,43 @@ class TranslationStatusForm extends FormBase {
     }
 
     $last_checked = $this->state->get('locale.translation_last_checked');
-    $form['last_checked'] = array(
+    $form['last_checked'] = [
       '#theme' => 'locale_translation_last_check',
       '#last' => $last_checked,
-    );
+    ];
 
-    $header = array(
-      'title' => array(
+    $header = [
+      'title' => [
         'data' => $this->t('Language'),
-        'class' => array('title'),
-      ),
-      'status' => array(
+        'class' => ['title'],
+      ],
+      'status' => [
         'data' => $this->t('Status'),
-        'class' => array('status', 'priority-low'),
-      ),
-    );
+        'class' => ['status', 'priority-low'],
+      ],
+    ];
 
     if (!$languages) {
-      $empty = $this->t('No translatable languages available. <a href=":add_language">Add a language</a> first.', array(
+      $empty = $this->t('No translatable languages available. <a href=":add_language">Add a language</a> first.', [
         ':add_language' => $this->url('entity.configurable_language.collection'),
-      ));
+      ]);
     }
     elseif ($status) {
       $empty = $this->t('All translations up to date.');
     }
     else {
-      $empty = $this->t('No translation status available. <a href=":check">Check manually</a>.', array(
+      $empty = $this->t('No translation status available. <a href=":check">Check manually</a>.', [
         ':check' => $this->url('locale.check_translation'),
-      ));
+      ]);
     }
 
     // The projects which require an update. Used by the _submit callback.
-    $form['projects_update'] = array(
+    $form['projects_update'] = [
       '#type' => 'value',
       '#value' => $projects_update,
-    );
+    ];
 
-    $form['langcodes'] = array(
+    $form['langcodes'] = [
       '#type' => 'tableselect',
       '#header' => $header,
       '#options' => $options,
@@ -156,17 +156,17 @@ class TranslationStatusForm extends FormBase {
       '#multiple' => TRUE,
       '#required' => TRUE,
       '#not_found' => $languages_not_found,
-      '#after_build' => array('locale_translation_language_table'),
-    );
+      '#after_build' => ['locale_translation_language_table'],
+    ];
 
     $form['#attached']['library'][] = 'locale/drupal.locale.admin';
 
-    $form['actions'] = array('#type' => 'actions');
+    $form['actions'] = ['#type' => 'actions'];
     if ($languages_update) {
-      $form['actions']['submit'] = array(
+      $form['actions']['submit'] = [
         '#type' => 'submit',
         '#value' => $this->t('Update translations'),
-      );
+      ];
     }
 
     return $form;
@@ -183,7 +183,7 @@ class TranslationStatusForm extends FormBase {
    *   translation update status.
    */
   protected function prepareUpdateData(array $status) {
-    $updates = array();
+    $updates = [];
 
     // @todo Calling locale_translation_build_projects() is an expensive way to
     //   get a module name. In follow-up issue
@@ -196,22 +196,22 @@ class TranslationStatusForm extends FormBase {
       foreach ($project as $langcode => $project_info) {
         // No translation file found for this project-language combination.
         if (empty($project_info->type)) {
-          $updates[$langcode]['not_found'][] = array(
+          $updates[$langcode]['not_found'][] = [
             'name' => $project_info->name == 'drupal' ? $this->t('Drupal core') : $project_data[$project_info->name]->info['name'],
             'version' => $project_info->version,
             'info' => $this->createInfoString($project_info),
-          );
+          ];
         }
         // Translation update found for this project-language combination.
         elseif ($project_info->type == LOCALE_TRANSLATION_LOCAL || $project_info->type == LOCALE_TRANSLATION_REMOTE) {
           $local = isset($project_info->files[LOCALE_TRANSLATION_LOCAL]) ? $project_info->files[LOCALE_TRANSLATION_LOCAL] : NULL;
           $remote = isset($project_info->files[LOCALE_TRANSLATION_REMOTE]) ? $project_info->files[LOCALE_TRANSLATION_REMOTE] : NULL;
           $recent = _locale_translation_source_compare($local, $remote) == LOCALE_TRANSLATION_SOURCE_COMPARE_LT ? $remote : $local;
-          $updates[$langcode]['updates'][] = array(
+          $updates[$langcode]['updates'][] = [
             'name' => $project_info->name == 'drupal' ? $this->t('Drupal core') : $project_data[$project_info->name]->info['name'],
             'version' => $project_info->version,
             'timestamp' => $recent->timestamp,
-          );
+          ];
         }
       }
     }
@@ -238,13 +238,13 @@ class TranslationStatusForm extends FormBase {
     $local_path = isset($project_info->files['local']->uri) ? $project_info->files['local']->uri : FALSE;
 
     if (locale_translation_use_remote_source() && $remote_path && $local_path) {
-      return $this->t('File not found at %remote_path nor at %local_path', array(
+      return $this->t('File not found at %remote_path nor at %local_path', [
         '%remote_path' => $remote_path,
         '%local_path' => $local_path,
-      ));
+      ]);
     }
     elseif ($local_path) {
-      return $this->t('File not found at %local_path', array('%local_path' => $local_path));
+      return $this->t('File not found at %local_path', ['%local_path' => $local_path]);
     }
     return $this->t('Translation file location could not be determined.');
   }
@@ -279,7 +279,7 @@ class TranslationStatusForm extends FormBase {
     $last_checked = $this->state->get('locale.translation_last_checked');
     if ($last_checked < REQUEST_TIME - LOCALE_TRANSLATION_STATUS_TTL) {
       locale_translation_clear_status();
-      $batch = locale_translation_batch_update_build(array(), $langcodes, $options);
+      $batch = locale_translation_batch_update_build([], $langcodes, $options);
       batch_set($batch);
     }
     else {

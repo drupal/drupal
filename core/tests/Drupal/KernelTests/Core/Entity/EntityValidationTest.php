@@ -16,7 +16,7 @@ class EntityValidationTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter', 'text');
+  public static $modules = ['filter', 'text'];
 
   /**
    * @var string
@@ -44,7 +44,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     entity_test_install();
 
     // Install required default configuration for filter module.
-    $this->installConfig(array('system', 'filter'));
+    $this->installConfig(['system', 'filter']);
   }
 
   /**
@@ -123,13 +123,13 @@ class EntityValidationTest extends EntityKernelTestBase {
     $test_entity->id->value = -1;
     $violations = $test_entity->validate();
     $this->assertEqual($violations->count(), 1, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: The integer must be larger or equal to %min.', array('%name' => 'ID', '%min' => 0)));
+    $this->assertEqual($violations[0]->getMessage(), t('%name: The integer must be larger or equal to %min.', ['%name' => 'ID', '%min' => 0]));
 
     $test_entity = clone $entity;
     $test_entity->uuid->value = $this->randomString(129);
     $violations = $test_entity->validate();
     $this->assertEqual($violations->count(), 1, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', array('%name' => 'UUID', '@max' => 128)));
+    $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', ['%name' => 'UUID', '@max' => 128]));
 
     $test_entity = clone $entity;
     $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
@@ -137,7 +137,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     $violations = $test_entity->validate();
     // This should fail on AllowedValues and Length constraints.
     $this->assertEqual($violations->count(), 2, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('This value is too long. It should have %limit characters or less.', array('%limit' => '12')));
+    $this->assertEqual($violations[0]->getMessage(), t('This value is too long. It should have %limit characters or less.', ['%limit' => '12']));
     $this->assertEqual($violations[1]->getMessage(), t('The value you selected is not a valid choice.'));
 
     $test_entity = clone $entity;
@@ -150,7 +150,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     $test_entity->name->value = $this->randomString(33);
     $violations = $test_entity->validate();
     $this->assertEqual($violations->count(), 1, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', array('%name' => 'Name', '@max' => 32)));
+    $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', ['%name' => 'Name', '@max' => 32]));
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];
@@ -162,7 +162,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     $test_entity->set('user_id', 9999);
     $violations = $test_entity->validate();
     $this->assertEqual($violations->count(), 1, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%type: %id) does not exist.', array('%type' => 'user', '%id' => 9999)));
+    $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%type: %id) does not exist.', ['%type' => 'user', '%id' => 9999]));
 
     $test_entity = clone $entity;
     $test_entity->field_test_text->format = $this->randomString(33);

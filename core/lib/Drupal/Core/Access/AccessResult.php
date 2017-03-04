@@ -261,7 +261,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    * @return $this
    */
   public function cachePerPermissions() {
-    $this->addCacheContexts(array('user.permissions'));
+    $this->addCacheContexts(['user.permissions']);
     return $this;
   }
 
@@ -271,7 +271,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    * @return $this
    */
   public function cachePerUser() {
-    $this->addCacheContexts(array('user'));
+    $this->addCacheContexts(['user']);
     return $this;
   }
 

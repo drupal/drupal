@@ -12,7 +12,7 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 class TaxonomyLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   protected function setUp() {
-    $this->directoryList = array('taxonomy' => 'core/modules/taxonomy');
+    $this->directoryList = ['taxonomy' => 'core/modules/taxonomy'];
     parent::setUp();
   }
 
@@ -21,10 +21,10 @@ class TaxonomyLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getTaxonomyPageRoutes
    */
-  public function testTaxonomyPageLocalTasks($route, $subtask = array()) {
-    $tasks = array(
-      0 => array('entity.taxonomy_term.canonical', 'entity.taxonomy_term.edit_form'),
-    );
+  public function testTaxonomyPageLocalTasks($route, $subtask = []) {
+    $tasks = [
+      0 => ['entity.taxonomy_term.canonical', 'entity.taxonomy_term.edit_form'],
+    ];
     if ($subtask) $tasks[] = $subtask;
     $this->assertLocalTasks($route, $tasks);
   }
@@ -33,10 +33,10 @@ class TaxonomyLocalTasksTest extends LocalTaskIntegrationTestBase {
    * Provides a list of routes to test.
    */
   public function getTaxonomyPageRoutes() {
-    return array(
-      array('entity.taxonomy_term.canonical'),
-      array('entity.taxonomy_term.edit_form'),
-    );
+    return [
+      ['entity.taxonomy_term.canonical'],
+      ['entity.taxonomy_term.edit_form'],
+    ];
   }
 
 }

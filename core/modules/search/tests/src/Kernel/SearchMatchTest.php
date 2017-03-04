@@ -55,11 +55,11 @@ class SearchMatchTest extends KernelTestBase {
       search_index(static::SEARCH_TYPE_2, $i + 7, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText2($i));
     }
     // No getText builder function for Japanese text; just a simple array.
-    foreach (array(
+    foreach ([
       13 => '以呂波耳・ほへとち。リヌルヲ。',
       14 => 'ドルーパルが大好きよ！',
       15 => 'コーヒーとケーキ',
-    ) as $i => $jpn) {
+    ] as $i => $jpn) {
       search_index(static::SEARCH_TYPE_JPN, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $jpn);
     }
     search_update_totals();
@@ -108,106 +108,106 @@ class SearchMatchTest extends KernelTestBase {
     // is good, and
     //   dolore OR ut = (dolore) OR (ut)
     // is bad. This is a design limitation to avoid full table scans.
-    $queries = array(
+    $queries = [
       // Simple AND queries.
-      'ipsum' => array(1),
-      'enim' => array(4, 5, 6),
-      'xxxxx' => array(),
-      'enim minim' => array(5, 6),
-      'enim xxxxx' => array(),
-      'dolore eu' => array(7),
-      'dolore xx' => array(),
-      'ut minim' => array(5),
-      'xx minim' => array(),
-      'enim veniam am minim ut' => array(5),
+      'ipsum' => [1],
+      'enim' => [4, 5, 6],
+      'xxxxx' => [],
+      'enim minim' => [5, 6],
+      'enim xxxxx' => [],
+      'dolore eu' => [7],
+      'dolore xx' => [],
+      'ut minim' => [5],
+      'xx minim' => [],
+      'enim veniam am minim ut' => [5],
       // Simple OR and AND/OR queries.
-      'dolore OR ipsum' => array(1, 2, 7),
-      'dolore OR xxxxx' => array(2, 7),
-      'dolore OR ipsum OR enim' => array(1, 2, 4, 5, 6, 7),
-      'ipsum OR dolore sit OR cillum' => array(2, 7),
-      'minim dolore OR ipsum' => array(7),
-      'dolore OR ipsum veniam' => array(7),
-      'minim dolore OR ipsum OR enim' => array(5, 6, 7),
-      'dolore xx OR yy' => array(),
-      'xxxxx dolore OR ipsum' => array(),
+      'dolore OR ipsum' => [1, 2, 7],
+      'dolore OR xxxxx' => [2, 7],
+      'dolore OR ipsum OR enim' => [1, 2, 4, 5, 6, 7],
+      'ipsum OR dolore sit OR cillum' => [2, 7],
+      'minim dolore OR ipsum' => [7],
+      'dolore OR ipsum veniam' => [7],
+      'minim dolore OR ipsum OR enim' => [5, 6, 7],
+      'dolore xx OR yy' => [],
+      'xxxxx dolore OR ipsum' => [],
       // Sequence of OR queries.
-      'minim' => array(5, 6, 7),
-      'minim OR xxxx' => array(5, 6, 7),
-      'minim OR xxxx OR minim' => array(5, 6, 7),
-      'minim OR xxxx minim' => array(5, 6, 7),
-      'minim OR xxxx minim OR yyyy' => array(5, 6, 7),
-      'minim OR xxxx minim OR cillum' => array(6, 7, 5),
-      'minim OR xxxx minim OR xxxx' => array(5, 6, 7),
+      'minim' => [5, 6, 7],
+      'minim OR xxxx' => [5, 6, 7],
+      'minim OR xxxx OR minim' => [5, 6, 7],
+      'minim OR xxxx minim' => [5, 6, 7],
+      'minim OR xxxx minim OR yyyy' => [5, 6, 7],
+      'minim OR xxxx minim OR cillum' => [6, 7, 5],
+      'minim OR xxxx minim OR xxxx' => [5, 6, 7],
       // Negative queries.
-      'dolore -sit' => array(7),
-      'dolore -eu' => array(2),
-      'dolore -xxxxx' => array(2, 7),
-      'dolore -xx' => array(2, 7),
+      'dolore -sit' => [7],
+      'dolore -eu' => [2],
+      'dolore -xxxxx' => [2, 7],
+      'dolore -xx' => [2, 7],
       // Phrase queries.
-      '"dolore sit"' => array(2),
-      '"sit dolore"' => array(),
-      '"am minim veniam es"' => array(6, 7),
-      '"minim am veniam es"' => array(),
+      '"dolore sit"' => [2],
+      '"sit dolore"' => [],
+      '"am minim veniam es"' => [6, 7],
+      '"minim am veniam es"' => [],
       // Mixed queries.
-      '"am minim veniam es" OR dolore' => array(2, 6, 7),
-      '"minim am veniam es" OR "dolore sit"' => array(2),
-      '"minim am veniam es" OR "sit dolore"' => array(),
-      '"am minim veniam es" -eu' => array(6),
-      '"am minim veniam" -"cillum dolore"' => array(5, 6),
-      '"am minim veniam" -"dolore cillum"' => array(5, 6, 7),
-      'xxxxx "minim am veniam es" OR dolore' => array(),
-      'xx "minim am veniam es" OR dolore' => array()
-    );
+      '"am minim veniam es" OR dolore' => [2, 6, 7],
+      '"minim am veniam es" OR "dolore sit"' => [2],
+      '"minim am veniam es" OR "sit dolore"' => [],
+      '"am minim veniam es" -eu' => [6],
+      '"am minim veniam" -"cillum dolore"' => [5, 6],
+      '"am minim veniam" -"dolore cillum"' => [5, 6, 7],
+      'xxxxx "minim am veniam es" OR dolore' => [],
+      'xx "minim am veniam es" OR dolore' => []
+    ];
     foreach ($queries as $query => $results) {
       $result = db_select('search_index', 'i')
         ->extend('Drupal\search\SearchQuery')
         ->searchExpression($query, static::SEARCH_TYPE)
         ->execute();
 
-      $set = $result ? $result->fetchAll() : array();
+      $set = $result ? $result->fetchAll() : [];
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
     }
 
     // These queries are run against the second index type, SEARCH_TYPE_2.
-    $queries = array(
+    $queries = [
       // Simple AND queries.
-      'ipsum' => array(),
-      'enim' => array(),
-      'enim minim' => array(),
-      'dear' => array(8),
-      'germany' => array(11, 12),
-    );
+      'ipsum' => [],
+      'enim' => [],
+      'enim minim' => [],
+      'dear' => [8],
+      'germany' => [11, 12],
+    ];
     foreach ($queries as $query => $results) {
       $result = db_select('search_index', 'i')
         ->extend('Drupal\search\SearchQuery')
         ->searchExpression($query, static::SEARCH_TYPE_2)
         ->execute();
 
-      $set = $result ? $result->fetchAll() : array();
+      $set = $result ? $result->fetchAll() : [];
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
     }
 
     // These queries are run against the third index type, SEARCH_TYPE_JPN.
-    $queries = array(
+    $queries = [
       // Simple AND queries.
-      '呂波耳' => array(13),
-      '以呂波耳' => array(13),
-      'ほへと　ヌルヲ' => array(13),
-      'とちリ' => array(),
-      'ドルーパル' => array(14),
-      'パルが大' => array(14),
-      'コーヒー' => array(15),
-      'ヒーキ' => array(),
-    );
+      '呂波耳' => [13],
+      '以呂波耳' => [13],
+      'ほへと　ヌルヲ' => [13],
+      'とちリ' => [],
+      'ドルーパル' => [14],
+      'パルが大' => [14],
+      'コーヒー' => [15],
+      'ヒーキ' => [],
+    ];
     foreach ($queries as $query => $results) {
       $result = db_select('search_index', 'i')
         ->extend('Drupal\search\SearchQuery')
         ->searchExpression($query, static::SEARCH_TYPE_JPN)
         ->execute();
 
-      $set = $result ? $result->fetchAll() : array();
+      $set = $result ? $result->fetchAll() : [];
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
     }
@@ -220,7 +220,7 @@ class SearchMatchTest extends KernelTestBase {
    */
   function _testQueryMatching($query, $set, $results) {
     // Get result IDs.
-    $found = array();
+    $found = [];
     foreach ($set as $item) {
       $found[] = $item->sid;
     }
@@ -238,7 +238,7 @@ class SearchMatchTest extends KernelTestBase {
    */
   function _testQueryScores($query, $set, $results) {
     // Get result scores.
-    $scores = array();
+    $scores = [];
     foreach ($set as $item) {
       $scores[] = $item->calculated_score;
     }

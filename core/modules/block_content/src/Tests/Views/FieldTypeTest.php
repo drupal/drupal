@@ -16,18 +16,18 @@ class FieldTypeTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_field_type');
+  public static $testViews = ['test_field_type'];
 
   public function testFieldType() {
     $block_content = $this->createBlockContent();
-    $expected_result[] = array(
+    $expected_result[] = [
       'id' => $block_content->id(),
       'type' => $block_content->bundle(),
-    );
-    $column_map = array(
+    ];
+    $column_map = [
       'id' => 'id',
       'type:target_id' => 'type',
-    );
+    ];
 
     $view = Views::getView('test_field_type');
     $this->executeView($view);

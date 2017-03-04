@@ -104,11 +104,11 @@ class FormSubmitter implements FormSubmitterInterface {
         // Some previous submit handler has set a batch. To ensure correct
         // execution order, store the call in a special 'control' batch set.
         // See _batch_next_set().
-        $batch['sets'][] = array('form_submit' => $callback);
+        $batch['sets'][] = ['form_submit' => $callback];
         $batch['has_form_submits'] = TRUE;
       }
       else {
-        call_user_func_array($form_state->prepareCallback($callback), array(&$form, &$form_state));
+        call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
       }
     }
   }

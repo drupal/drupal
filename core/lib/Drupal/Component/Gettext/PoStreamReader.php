@@ -39,7 +39,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    *
    * @var array
    */
-  private $_current_item = array();
+  private $_current_item = [];
 
   /**
    * Current plural index for plural translations.
@@ -261,14 +261,14 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
       $this->_line_number++;
 
       // Initialize common values for error logging.
-      $log_vars = array(
+      $log_vars = [
         '%uri' => $this->getURI(),
         '%line' => $this->_line_number,
-      );
+      ];
 
       // Trim away the linefeed. \\n might appear at the end of the string if
       // another line continuing the same string follows. We can remove that.
-      $line = trim(strtr($line, array("\\\n" => "")));
+      $line = trim(strtr($line, ["\\\n" => ""]));
 
       if (!strncmp('#', $line, 1)) {
         // Lines starting with '#' are comments.
@@ -282,7 +282,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
           $this->setItemFromArray($this->_current_item);
 
           // Start a new entry for the comment.
-          $this->_current_item = array();
+          $this->_current_item = [];
           $this->_current_item['#'][] = substr($line, 1);
 
           $this->_context = 'COMMENT';
@@ -319,7 +319,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         if (is_string($this->_current_item['msgid'])) {
           // The first value was stored as string. Now we know the context is
           // plural, it is converted to array.
-          $this->_current_item['msgid'] = array($this->_current_item['msgid']);
+          $this->_current_item['msgid'] = [$this->_current_item['msgid']];
         }
         $this->_current_item['msgid'][] = $quoted;
 
@@ -334,7 +334,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
           $this->setItemFromArray($this->_current_item);
 
           // Start a new context for the msgid.
-          $this->_current_item = array();
+          $this->_current_item = [];
         }
         elseif ($this->_context == 'MSGID') {
           // We are currently already in the context, meaning we passed an id with no data.
@@ -363,7 +363,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         if (($this->_context == 'MSGSTR') || ($this->_context == 'MSGSTR_ARR')) {
           // We are currently in string context, save current item.
           $this->setItemFromArray($this->_current_item);
-          $this->_current_item = array();
+          $this->_current_item = [];
         }
         elseif (!empty($this->_current_item['msgctxt'])) {
           // A context cannot apply to another context.
@@ -421,7 +421,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
           return FALSE;
         }
         if (!isset($this->_current_item['msgstr']) || !is_array($this->_current_item['msgstr'])) {
-          $this->_current_item['msgstr'] = array();
+          $this->_current_item['msgstr'] = [];
         }
 
         $this->_current_item['msgstr'][$this->_current_plural_index] = $quoted;
@@ -500,7 +500,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
     // Empty line read or EOF of PO stream, close out the last entry.
     if (($this->_context == 'MSGSTR') || ($this->_context == 'MSGSTR_ARR')) {
       $this->setItemFromArray($this->_current_item);
-      $this->_current_item = array();
+      $this->_current_item = [];
     }
     elseif ($this->_context != 'COMMENT') {
       $this->_errors[] = SafeMarkup::format('The translation stream %uri ended unexpectedly at line %line.', $log_vars);

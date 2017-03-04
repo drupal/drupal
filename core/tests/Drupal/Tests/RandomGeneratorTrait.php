@@ -36,7 +36,7 @@ trait RandomGeneratorTrait {
    */
   public function randomString($length = 8) {
     if ($length < 4) {
-      return $this->getRandomGenerator()->string($length, TRUE, array($this, 'randomStringValidate'));
+      return $this->getRandomGenerator()->string($length, TRUE, [$this, 'randomStringValidate']);
     }
 
     // To prevent the introduction of random test failures, ensure that the
@@ -45,7 +45,7 @@ trait RandomGeneratorTrait {
     $replacement_pos = floor($length / 2);
     // Remove 2 from the length to account for the ampersand and greater than
     // characters.
-    $string = $this->getRandomGenerator()->string($length - 2, TRUE, array($this, 'randomStringValidate'));
+    $string = $this->getRandomGenerator()->string($length - 2, TRUE, [$this, 'randomStringValidate']);
     return substr_replace($string, '>&', $replacement_pos, 0);
   }
 

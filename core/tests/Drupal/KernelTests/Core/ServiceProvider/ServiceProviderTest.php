@@ -16,7 +16,7 @@ class ServiceProviderTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('file', 'service_provider_test', 'system');
+  public static $modules = ['file', 'service_provider_test', 'system'];
 
   /**
    * Tests that services provided by module service providers get registered to the DIC.
@@ -32,11 +32,11 @@ class ServiceProviderTest extends KernelTestBase {
    */
   function testServiceProviderRegistrationDynamic() {
     // Uninstall the module and ensure the service provider's service is not registered.
-    \Drupal::service('module_installer')->uninstall(array('service_provider_test'));
+    \Drupal::service('module_installer')->uninstall(['service_provider_test']);
     $this->assertFalse(\Drupal::hasService('service_provider_test_class'), 'The service_provider_test_class service does not exist in the DIC.');
 
     // Install the module and ensure the service provider's service is registered.
-    \Drupal::service('module_installer')->install(array('service_provider_test'));
+    \Drupal::service('module_installer')->install(['service_provider_test']);
     $this->assertTrue(\Drupal::hasService('service_provider_test_class'), 'The service_provider_test_class service exists in the DIC.');
   }
 

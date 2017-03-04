@@ -17,15 +17,15 @@ use Drupal\Core\Form\FormStateInterface;
 class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
 
   public function operatorOptions($which = 'title') {
-    return array(
+    return [
       'or' => $this->t('Is one of'),
-    );
+    ];
   }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['depth'] = array('default' => 0);
+    $options['depth'] = ['default' => 0];
 
     return $options;
   }
@@ -33,12 +33,12 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
   public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildExtraOptionsForm($form, $form_state);
 
-    $form['depth'] = array(
+    $form['depth'] = [
       '#type' => 'weight',
       '#title' => $this->t('Depth'),
       '#default_value' => $this->options['depth'],
       '#description' => $this->t('The depth will match nodes tagged with terms in the hierarchy. For example, if you have the term "fruit" and a child term "apple", with a depth of 1 (or higher) then filtering for the term "fruit" will get nodes that are tagged with "apple" as well as "fruit". If negative, the reverse is true; searching for "apple" will also pick up nodes tagged with "fruit" if depth is -1 (or lower).'),
-    );
+    ];
   }
 
   public function query() {

@@ -26,18 +26,18 @@ class LinkSeparateFormatter extends LinkFormatter {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'trim_length' => 80,
       'rel' => '',
       'target' => '',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $element = array();
+    $element = [];
     $entity = $items->getEntity();
     $settings = $this->getSettings();
 
@@ -67,12 +67,12 @@ class LinkSeparateFormatter extends LinkFormatter {
         $url_title = Unicode::truncate($url_title, $settings['trim_length'], FALSE, TRUE);
       }
 
-      $element[$delta] = array(
+      $element[$delta] = [
         '#theme' => 'link_formatter_link_separate',
         '#title' => $link_title,
         '#url_title' => $url_title,
         '#url' => $url,
-      );
+      ];
 
       if (!empty($item->_attributes)) {
         // Set our RDFa attributes on the <a> element that is being built.

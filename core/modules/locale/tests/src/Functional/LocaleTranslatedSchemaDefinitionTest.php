@@ -17,7 +17,7 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'locale', 'node');
+  public static $modules = ['language', 'locale', 'node'];
 
   /**
    * {@inheritdoc}
@@ -40,15 +40,15 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
     /** @var \Drupal\locale\StringDatabaseStorage $stringStorage */
     $stringStorage = \Drupal::service('locale.storage');
 
-    $source = $stringStorage->createString(array(
+    $source = $stringStorage->createString([
       'source' => 'Revision ID',
-    ))->save();
+    ])->save();
 
-    $stringStorage->createTranslation(array(
+    $stringStorage->createTranslation([
       'lid' => $source->lid,
       'language' => 'fr',
       'translation' => 'Translated Revision ID',
-    ))->save();
+    ])->save();
 
     // Ensure that the field is translated when access through the API.
     $this->assertEqual('Translated Revision ID', \Drupal::entityManager()->getBaseFieldDefinitions('node')['vid']->getLabel());
@@ -62,10 +62,10 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
    */
   function testTranslatedUpdate() {
     // Visit the update page to collect any strings that may be translatable.
-    $user = $this->drupalCreateUser(array('administer software updates'));
+    $user = $this->drupalCreateUser(['administer software updates']);
     $this->drupalLogin($user);
     $update_url = $GLOBALS['base_url'] . '/update.php';
-    $this->drupalGet($update_url, array('external' => TRUE));
+    $this->drupalGet($update_url, ['external' => TRUE]);
 
     /** @var \Drupal\locale\StringDatabaseStorage $stringStorage */
     $stringStorage = \Drupal::service('locale.storage');
@@ -73,17 +73,17 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
 
     // Translate all source strings found.
     foreach ($sources as $source) {
-      $stringStorage->createTranslation(array(
+      $stringStorage->createTranslation([
         'lid' => $source->lid,
         'language' => 'fr',
         'translation' => $this->randomMachineName(100),
-      ))->save();
+      ])->save();
     }
 
     // Ensure that there are no updates just due to translations. Check for
     // markup and a link instead of specific text because text may be
     // translated.
-    $this->drupalGet($update_url . '/selection', array('external' => TRUE));
+    $this->drupalGet($update_url . '/selection', ['external' => TRUE]);
     $this->assertRaw('messages--status', 'No pending updates.');
     $this->assertNoLinkByHref('fr/update.php/run', 'No link to run updates.');
   }

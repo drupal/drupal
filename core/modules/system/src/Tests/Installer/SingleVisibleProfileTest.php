@@ -29,12 +29,12 @@ class SingleVisibleProfileTest extends InstallerTestBase {
   protected $info;
 
   protected function setUp() {
-    $this->info = array(
+    $this->info = [
       'type' => 'profile',
       'core' => \Drupal::CORE_COMPATIBILITY,
       'name' => 'Override standard',
       'hidden' => TRUE,
-    );
+    ];
     // File API functions are not available yet.
     $path = $this->siteDirectory . '/profiles/standard';
     mkdir($path, 0777, TRUE);

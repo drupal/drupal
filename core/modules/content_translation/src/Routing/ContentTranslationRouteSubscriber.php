@@ -58,104 +58,104 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
 
       $route = new Route(
         $path,
-        array(
+        [
           '_controller' => '\Drupal\content_translation\Controller\ContentTranslationController::overview',
           'entity_type_id' => $entity_type_id,
-        ),
-        array(
+        ],
+        [
           '_entity_access' => $entity_type_id . '.view',
           '_access_content_translation_overview' => $entity_type_id,
-        ),
-        array(
-          'parameters' => array(
-            $entity_type_id => array(
+        ],
+        [
+          'parameters' => [
+            $entity_type_id => [
               'type' => 'entity:' . $entity_type_id,
-            ),
-          ),
+            ],
+          ],
           '_admin_route' => $is_admin,
-        )
+        ]
       );
       $route_name = "entity.$entity_type_id.content_translation_overview";
       $collection->add($route_name, $route);
 
       $route = new Route(
         $path . '/add/{source}/{target}',
-        array(
+        [
           '_controller' => '\Drupal\content_translation\Controller\ContentTranslationController::add',
           'source' => NULL,
           'target' => NULL,
           '_title' => 'Add',
           'entity_type_id' => $entity_type_id,
 
-        ),
-        array(
+        ],
+        [
           '_entity_access' => $entity_type_id . '.view',
           '_access_content_translation_manage' => 'create',
-        ),
-        array(
-          'parameters' => array(
-            'source' => array(
+        ],
+        [
+          'parameters' => [
+            'source' => [
               'type' => 'language',
-            ),
-            'target' => array(
+            ],
+            'target' => [
               'type' => 'language',
-            ),
-            $entity_type_id => array(
+            ],
+            $entity_type_id => [
               'type' => 'entity:' . $entity_type_id,
-            ),
-          ),
+            ],
+          ],
           '_admin_route' => $is_admin,
-        )
+        ]
       );
       $collection->add("entity.$entity_type_id.content_translation_add", $route);
 
       $route = new Route(
         $path . '/edit/{language}',
-        array(
+        [
           '_controller' => '\Drupal\content_translation\Controller\ContentTranslationController::edit',
           'language' => NULL,
           '_title' => 'Edit',
           'entity_type_id' => $entity_type_id,
-        ),
-        array(
+        ],
+        [
           '_access_content_translation_manage' => 'update',
-        ),
-        array(
-          'parameters' => array(
-            'language' => array(
+        ],
+        [
+          'parameters' => [
+            'language' => [
               'type' => 'language',
-            ),
-            $entity_type_id => array(
+            ],
+            $entity_type_id => [
               'type' => 'entity:' . $entity_type_id,
-            ),
-          ),
+            ],
+          ],
           '_admin_route' => $is_admin,
-        )
+        ]
       );
       $collection->add("entity.$entity_type_id.content_translation_edit", $route);
 
       $route = new Route(
         $path . '/delete/{language}',
-        array(
+        [
           '_entity_form' => $entity_type_id . '.content_translation_deletion',
           'language' => NULL,
           '_title' => 'Delete',
           'entity_type_id' => $entity_type_id,
-        ),
-        array(
+        ],
+        [
           '_access_content_translation_manage' => 'delete',
-        ),
-        array(
-          'parameters' => array(
-            'language' => array(
+        ],
+        [
+          'parameters' => [
+            'language' => [
               'type' => 'language',
-            ),
-            $entity_type_id => array(
+            ],
+            $entity_type_id => [
               'type' => 'entity:' . $entity_type_id,
-            ),
-          ),
+            ],
+          ],
           '_admin_route' => $is_admin,
-        )
+        ]
       );
       $collection->add("entity.$entity_type_id.content_translation_delete", $route);
     }
@@ -168,7 +168,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
     $events = parent::getSubscribedEvents();
     // Should run after AdminRouteSubscriber so the routes can inherit admin
     // status of the edit routes on entities. Therefore priority -210.
-    $events[RoutingEvents::ALTER] = array('onAlterRoutes', -210);
+    $events[RoutingEvents::ALTER] = ['onAlterRoutes', -210];
     return $events;
   }
 

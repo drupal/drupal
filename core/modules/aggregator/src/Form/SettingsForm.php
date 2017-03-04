@@ -21,25 +21,25 @@ class SettingsForm extends ConfigFormBase {
    *
    * @var \Drupal\aggregator\Plugin\AggregatorPluginManager[]
    */
-  protected $managers = array();
+  protected $managers = [];
 
   /**
    * The instantiated plugin instances that have configuration forms.
    *
    * @var \Drupal\Core\Plugin\PluginFormInterface[]
    */
-  protected $configurableInstances = array();
+  protected $configurableInstances = [];
 
   /**
    * The aggregator plugin definitions.
    *
    * @var array
    */
-  protected $definitions = array(
-    'fetcher' => array(),
-    'parser' => array(),
-    'processor' => array(),
-  );
+  protected $definitions = [
+    'fetcher' => [],
+    'parser' => [],
+    'processor' => [],
+  ];
 
   /**
    * Constructs a \Drupal\aggregator\SettingsForm object.
@@ -58,15 +58,15 @@ class SettingsForm extends ConfigFormBase {
   public function __construct(ConfigFactoryInterface $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager, TranslationInterface $string_translation) {
     parent::__construct($config_factory);
     $this->stringTranslation = $string_translation;
-    $this->managers = array(
+    $this->managers = [
       'fetcher' => $fetcher_manager,
       'parser' => $parser_manager,
       'processor' => $processor_manager,
-    );
+    ];
     // Get all available fetcher, parser and processor definitions.
-    foreach (array('fetcher', 'parser', 'processor') as $type) {
+    foreach (['fetcher', 'parser', 'processor'] as $type) {
       foreach ($this->managers[$type]->getDefinitions() as $id => $definition) {
-        $this->definitions[$type][$id] = SafeMarkup::format('@title <span class="description">@description</span>', array('@title' => $definition['title'], '@description' => $definition['description']));
+        $this->definitions[$type][$id] = SafeMarkup::format('@title <span class="description">@description</span>', ['@title' => $definition['title'], '@description' => $definition['description']]);
       }
     }
   }
@@ -105,56 +105,56 @@ class SettingsForm extends ConfigFormBase {
     $config = $this->config('aggregator.settings');
 
     // Global aggregator settings.
-    $form['aggregator_allowed_html_tags'] = array(
+    $form['aggregator_allowed_html_tags'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Allowed HTML tags'),
       '#size' => 80,
       '#maxlength' => 255,
       '#default_value' => $config->get('items.allowed_html'),
       '#description' => $this->t('A space-separated list of HTML tags allowed in the content of feed items. Disallowed tags are stripped from the content.'),
-    );
+    ];
 
     // Only show basic configuration if there are actually options.
-    $basic_conf = array();
+    $basic_conf = [];
     if (count($this->definitions['fetcher']) > 1) {
-      $basic_conf['aggregator_fetcher'] = array(
+      $basic_conf['aggregator_fetcher'] = [
         '#type' => 'radios',
         '#title' => $this->t('Fetcher'),
         '#description' => $this->t('Fetchers download data from an external source. Choose a fetcher suitable for the external source you would like to download from.'),
         '#options' => $this->definitions['fetcher'],
         '#default_value' => $config->get('fetcher'),
-      );
+      ];
     }
     if (count($this->definitions['parser']) > 1) {
-      $basic_conf['aggregator_parser'] = array(
+      $basic_conf['aggregator_parser'] = [
         '#type' => 'radios',
         '#title' => $this->t('Parser'),
         '#description' => $this->t('Parsers transform downloaded data into standard structures. Choose a parser suitable for the type of feeds you would like to aggregate.'),
         '#options' => $this->definitions['parser'],
         '#default_value' => $config->get('parser'),
-      );
+      ];
     }
     if (count($this->definitions['processor']) > 1) {
-      $basic_conf['aggregator_processors'] = array(
+      $basic_conf['aggregator_processors'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t('Processors'),
         '#description' => $this->t('Processors act on parsed feed data, for example they store feed items. Choose the processors suitable for your task.'),
         '#options' => $this->definitions['processor'],
         '#default_value' => $config->get('processors'),
-      );
+      ];
     }
     if (count($basic_conf)) {
-      $form['basic_conf'] = array(
+      $form['basic_conf'] = [
         '#type' => 'details',
         '#title' => $this->t('Basic configuration'),
         '#description' => $this->t('For most aggregation tasks, the default settings are fine.'),
         '#open' => TRUE,
-      );
+      ];
       $form['basic_conf'] += $basic_conf;
     }
 
     // Call buildConfigurationForm() on the active fetcher and parser.
-    foreach (array('fetcher', 'parser') as $type) {
+    foreach (['fetcher', 'parser'] as $type) {
       $active = $config->get($type);
       if (array_key_exists($active, $this->definitions[$type])) {
         $instance = $this->managers[$type]->createInstance($active);
@@ -169,7 +169,7 @@ class SettingsForm extends ConfigFormBase {
     }
 
     // Implementing processor plugins will expect an array at $form['processors'].
-    $form['processors'] = array();
+    $form['processors'] = [];
     // Call buildConfigurationForm() for each active processor.
     foreach ($this->definitions['processor'] as $id => $definition) {
       if (in_array($id, $config->get('processors'))) {

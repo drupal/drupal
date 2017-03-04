@@ -26,7 +26,7 @@ class Views {
    *
    * @var array
    */
-  protected static $plugins = array(
+  protected static $plugins = [
     'access' => 'plugin',
     'area' => 'handler',
     'argument' => 'handler',
@@ -46,7 +46,7 @@ class Views {
     'sort' => 'handler',
     'style' => 'plugin',
     'wizard' => 'plugin',
-  );
+  ];
 
   /**
    * Returns the views data service.
@@ -139,9 +139,9 @@ class Views {
    * @return
    *   A keyed array of in the form of 'base_table' => 'Description'.
    */
-  public static function fetchPluginNames($type, $key = NULL, array $base = array()) {
+  public static function fetchPluginNames($type, $key = NULL, array $base = []) {
     $definitions = static::pluginManager($type)->getDefinitions();
-    $plugins = array();
+    $plugins = [];
 
     foreach ($definitions as $id => $plugin) {
       // Skip plugins that don't conform to our key, if they have one.
@@ -169,7 +169,7 @@ class Views {
    *   An array of plugin definitions for all types.
    */
   public static function getPluginDefinitions() {
-    $plugins = array();
+    $plugins = [];
     foreach (ViewExecutable::getPluginTypes() as $plugin_type) {
       $plugins[$plugin_type] = static::pluginManager($plugin_type)->getDefinitions();
     }
@@ -218,7 +218,7 @@ class Views {
       ->condition("display.*.display_plugin", $plugin_ids, 'IN')
       ->execute();
 
-    $result = array();
+    $result = [];
     foreach (\Drupal::entityTypeManager()->getStorage('view')->loadMultiple($entity_ids) as $view) {
       // Check each display to see if it meets the criteria and is enabled.
 
@@ -309,7 +309,7 @@ class Views {
         $views = call_user_func("static::get{$filter}Views");
         break;
       default:
-        return array();
+        return [];
     }
 
     // Prepare exclude view strings for comparison.
@@ -327,7 +327,7 @@ class Views {
       list($exclude_view_name, $exclude_view_display) = explode(':', "$exclude_view:");
     }
 
-    $options = array();
+    $options = [];
     foreach ($views as $view) {
       $id = $view->id();
       // Return only views.
@@ -339,10 +339,10 @@ class Views {
         foreach ($view->get('display') as $display_id => $display) {
           if (!($id == $exclude_view_name && $display_id == $exclude_view_display)) {
             if ($optgroup) {
-              $options[$id][$id . ':' . $display['id']] = t('@view : @display', array('@view' => $id, '@display' => $display['id']));
+              $options[$id][$id . ':' . $display['id']] = t('@view : @display', ['@view' => $id, '@display' => $display['id']]);
             }
             else {
-              $options[$id . ':' . $display['id']] = t('View: @view - Display: @display', array('@view' => $id, '@display' => $display['id']));
+              $options[$id . ':' . $display['id']] = t('View: @view - Display: @display', ['@view' => $id, '@display' => $display['id']]);
             }
           }
         }
@@ -368,7 +368,7 @@ class Views {
    */
   public static function pluginList() {
     $plugin_data = static::getPluginDefinitions();
-    $plugins = array();
+    $plugins = [];
     foreach (static::getEnabledViews() as $view) {
       foreach ($view->get('display') as $display) {
         foreach ($plugin_data as $type => $info) {
@@ -389,12 +389,12 @@ class Views {
           $key = $type . ':' . $name;
           // Add info for this plugin.
           if (!isset($plugins[$key])) {
-            $plugins[$key] = array(
+            $plugins[$key] = [
               'type' => $type,
               'title' => $info[$name]['title'],
               'provider' => $info[$name]['provider'],
-              'views' => array(),
-            );
+              'views' => [],
+            ];
           }
 
           // Add this view to the list for this plugin.
@@ -423,8 +423,8 @@ class Views {
     // Statically cache this so translation only occurs once per request for all
     // of these values.
     if (!isset(static::$handlerTypes)) {
-      static::$handlerTypes = array(
-        'field' => array(
+      static::$handlerTypes = [
+        'field' => [
           // title
           'title' => static::t('Fields'),
           // Lowercase title for mid-sentence.
@@ -434,60 +434,60 @@ class Views {
           // Singular lowercase title for mid sentence
           'lstitle' => static::t('field'),
           'plural' => 'fields',
-        ),
-        'argument' => array(
+        ],
+        'argument' => [
           'title' => static::t('Contextual filters'),
           'ltitle' => static::t('contextual filters'),
           'stitle' => static::t('Contextual filter'),
           'lstitle' => static::t('contextual filter'),
           'plural' => 'arguments',
-        ),
-        'sort' => array(
+        ],
+        'sort' => [
           'title' => static::t('Sort criteria'),
           'ltitle' => static::t('sort criteria'),
           'stitle' => static::t('Sort criterion'),
           'lstitle' => static::t('sort criterion'),
           'plural' => 'sorts',
-        ),
-        'filter' => array(
+        ],
+        'filter' => [
           'title' => static::t('Filter criteria'),
           'ltitle' => static::t('filter criteria'),
           'stitle' => static::t('Filter criterion'),
           'lstitle' => static::t('filter criterion'),
           'plural' => 'filters',
-        ),
-        'relationship' => array(
+        ],
+        'relationship' => [
           'title' => static::t('Relationships'),
           'ltitle' => static::t('relationships'),
           'stitle' => static::t('Relationship'),
           'lstitle' => static::t('Relationship'),
           'plural' => 'relationships',
-        ),
-        'header' => array(
+        ],
+        'header' => [
           'title' => static::t('Header'),
           'ltitle' => static::t('header'),
           'stitle' => static::t('Header'),
           'lstitle' => static::t('Header'),
           'plural' => 'header',
           'type' => 'area',
-        ),
-        'footer' => array(
+        ],
+        'footer' => [
           'title' => static::t('Footer'),
           'ltitle' => static::t('footer'),
           'stitle' => static::t('Footer'),
           'lstitle' => static::t('Footer'),
           'plural' => 'footer',
           'type' => 'area',
-        ),
-        'empty' => array(
+        ],
+        'empty' => [
           'title' => static::t('No results behavior'),
           'ltitle' => static::t('no results behavior'),
           'stitle' => static::t('No results behavior'),
           'lstitle' => static::t('No results behavior'),
           'plural' => 'empty',
           'type' => 'area',
-        ),
-      );
+        ],
+      ];
     }
 
     return static::$handlerTypes;
@@ -508,7 +508,7 @@ class Views {
       return array_keys(static::$plugins);
     }
 
-    if (!in_array($type, array('plugin', 'handler'))) {
+    if (!in_array($type, ['plugin', 'handler'])) {
       throw new \Exception('Invalid plugin type used. Valid types are "plugin" or "handler".');
     }
 
@@ -522,7 +522,7 @@ class Views {
    *
    * See the t() documentation for details.
    */
-  protected static function t($string, array $args = array(), array $options = array()) {
+  protected static function t($string, array $args = [], array $options = []) {
     if (empty(static::$translationManager)) {
       static::$translationManager = \Drupal::service('string_translation');
     }

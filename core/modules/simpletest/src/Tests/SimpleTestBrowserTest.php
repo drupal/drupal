@@ -18,12 +18,12 @@ class SimpleTestBrowserTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('simpletest', 'test_page_test');
+  public static $modules = ['simpletest', 'test_page_test'];
 
   protected function setUp() {
     parent::setUp();
     // Create and log in an admin user.
-    $this->drupalLogin($this->drupalCreateUser(array('administer unit tests')));
+    $this->drupalLogin($this->drupalCreateUser(['administer unit tests']));
   }
 
   /**
@@ -33,9 +33,9 @@ class SimpleTestBrowserTest extends WebTestBase {
     // Retrieve the test page and check its title and headers.
     $this->drupalGet('test-page');
     $this->assertTrue($this->drupalGetHeader('Date'), 'An HTTP header was received.');
-    $this->assertTitle(t('Test page | @site-name', array(
+    $this->assertTitle(t('Test page | @site-name', [
       '@site-name' => $this->config('system.site')->get('name'),
-    )));
+    ]));
     $this->assertNoTitle('Foo');
 
     $old_user_id = $this->container->get('current_user')->id();
@@ -57,13 +57,13 @@ class SimpleTestBrowserTest extends WebTestBase {
 
     // Test the maximum redirection option.
     $this->maximumRedirects = 1;
-    $edit = array(
+    $edit = [
       'name' => $user->getUsername(),
       'pass' => $user->pass_raw
-    );
-    $this->drupalPostForm('user/login', $edit, t('Log in'), array(
-      'query' => array('destination' => 'user/logout'),
-    ));
+    ];
+    $this->drupalPostForm('user/login', $edit, t('Log in'), [
+      'query' => ['destination' => 'user/logout'],
+    ]);
     $headers = $this->drupalGetHeaders(TRUE);
     $this->assertEqual(count($headers), 2, 'Simpletest stopped following redirects after the first one.');
 
@@ -73,7 +73,7 @@ class SimpleTestBrowserTest extends WebTestBase {
     // @see drupal_valid_test_ua()
     // Not using File API; a potential error must trigger a PHP warning.
     unlink($this->siteDirectory . '/.htkey');
-    $this->drupalGet(Url::fromUri('base:core/install.php', array('external' => TRUE, 'absolute' => TRUE))->toString());
+    $this->drupalGet(Url::fromUri('base:core/install.php', ['external' => TRUE, 'absolute' => TRUE])->toString());
     $this->assertResponse(403, 'Cannot access install.php.');
   }
 
@@ -92,7 +92,7 @@ class SimpleTestBrowserTest extends WebTestBase {
     // Generate a valid simpletest User-Agent to pass validation.
     $this->assertTrue(preg_match('/test\d+/', $this->databasePrefix, $matches), 'Database prefix contains test prefix.');
     $test_ua = drupal_generate_test_ua($matches[0]);
-    $this->additionalCurlOptions = array(CURLOPT_USERAGENT => $test_ua);
+    $this->additionalCurlOptions = [CURLOPT_USERAGENT => $test_ua];
 
     // Test pages only available for testing.
     $this->drupalGet($HTTP_path);
@@ -101,7 +101,7 @@ class SimpleTestBrowserTest extends WebTestBase {
     $this->assertResponse(200, 'Requesting https.php with a legitimate simpletest User-Agent returns OK.');
 
     // Now slightly modify the HMAC on the header, which should not validate.
-    $this->additionalCurlOptions = array(CURLOPT_USERAGENT => $test_ua . 'X');
+    $this->additionalCurlOptions = [CURLOPT_USERAGENT => $test_ua . 'X'];
     $this->drupalGet($HTTP_path);
     $this->assertResponse(403, 'Requesting http.php with a bad simpletest User-Agent fails.');
     $this->drupalGet($https_path);
@@ -109,7 +109,7 @@ class SimpleTestBrowserTest extends WebTestBase {
 
     // Use a real User-Agent and verify that the special files http.php and
     // https.php can't be accessed.
-    $this->additionalCurlOptions = array(CURLOPT_USERAGENT => 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12');
+    $this->additionalCurlOptions = [CURLOPT_USERAGENT => 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12'];
     $this->drupalGet($HTTP_path);
     $this->assertResponse(403, 'Requesting http.php with a normal User-Agent fails.');
     $this->drupalGet($https_path);
@@ -126,20 +126,20 @@ class SimpleTestBrowserTest extends WebTestBase {
     // to be created. However this scenario is covered by the testception of
     // \Drupal\simpletest\Tests\SimpleTestTest.
 
-    $tests = array(
+    $tests = [
       // A KernelTestBase test.
       'Drupal\KernelTests\KernelTestBaseTest',
       // A PHPUnit unit test.
       'Drupal\Tests\action\Unit\Menu\ActionLocalTasksTest',
       // A PHPUnit functional test.
       ThroughUITest::class,
-    );
+    ];
 
     foreach ($tests as $test) {
       $this->drupalGet('admin/config/development/testing');
-      $edit = array(
+      $edit = [
         "tests[$test]" => TRUE,
-      );
+      ];
       $this->drupalPostForm(NULL, $edit, t('Run tests'));
       $this->assertText('0 fails, 0 exceptions');
     }

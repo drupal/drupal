@@ -17,7 +17,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('menu_ui', 'block', 'test_page_test');
+  public static $modules = ['menu_ui', 'block', 'test_page_test'];
 
   /**
    * Tests cache tags presence and invalidation of the Menu entity.
@@ -29,23 +29,23 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $url = Url::fromRoute('test_page_test.test_page');
 
     // Create a Llama menu, add a link to it and place the corresponding block.
-    $menu = Menu::create(array(
+    $menu = Menu::create([
       'id' => 'llama',
       'label' => 'Llama',
       'description' => 'Description text',
-    ));
+    ]);
     $menu->save();
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
     $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
     // Move a link into the new menu.
-    $menu_link = $menu_link_manager->updateDefinition('test_page_test.test_page', array('menu_name' => 'llama', 'parent' => ''));
-    $block = $this->drupalPlaceBlock('system_menu_block:llama', array('label' => 'Llama', 'provider' => 'system', 'region' => 'footer'));
+    $menu_link = $menu_link_manager->updateDefinition('test_page_test.test_page', ['menu_name' => 'llama', 'parent' => '']);
+    $block = $this->drupalPlaceBlock('system_menu_block:llama', ['label' => 'Llama', 'provider' => 'system', 'region' => 'footer']);
 
     // Prime the page cache.
     $this->verifyPageCache($url, 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $expected_tags = array(
+    $expected_tags = [
       'http_response',
       'rendered',
       'block_view',
@@ -55,7 +55,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
       // The cache contexts associated with the (in)accessible menu links are
       // bubbled.
       'config:user.role.anonymous',
-    );
+    ];
     $this->verifyPageCache($url, 'HIT', $expected_tags);
 
     // Verify that after modifying the menu, there is a cache miss.
@@ -68,7 +68,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($url, 'HIT');
 
     // Verify that after modifying the menu link weight, there is a cache miss.
-    $menu_link_manager->updateDefinition('test_page_test.test_page', array('weight' => -10));
+    $menu_link_manager->updateDefinition('test_page_test.test_page', ['weight' => -10]);
     $this->pass('Test modification of menu link.', 'Debug');
     $this->verifyPageCache($url, 'MISS');
 
@@ -77,7 +77,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
 
     // Verify that after adding a menu link, there is a cache miss.
     $this->pass('Test addition of menu link.', 'Debug');
-    $menu_link_2 = MenuLinkContent::create(array(
+    $menu_link_2 = MenuLinkContent::create([
       'id' => '',
       'parent' => '',
       'title' => 'Alpaca',
@@ -86,7 +86,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
         'uri' => 'internal:/',
       ]],
       'bundle' => 'menu_name',
-    ));
+    ]);
     $menu_link_2->save();
     $this->verifyPageCache($url, 'MISS');
 

@@ -17,10 +17,10 @@ class EntityBlock extends EntityConfigBase {
    */
   protected function getEntityId(Row $row) {
     // Try to find the block by its plugin ID and theme.
-    $properties = array(
+    $properties = [
       'plugin' => $row->getDestinationProperty('plugin'),
       'theme' => $row->getDestinationProperty('theme'),
-    );
+    ];
     $blocks = array_keys($this->storage->loadByProperties($properties));
     return reset($blocks);
   }

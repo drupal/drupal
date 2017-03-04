@@ -19,23 +19,23 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
    * @covers ::discoverServiceProviders
    */
   public function testDiscoverServiceCustom() {
-    new Settings(array(
-      'container_yamls' => array(
+    new Settings([
+      'container_yamls' => [
         __DIR__ . '/fixtures/custom.yml'
-      ),
-    ));
+      ],
+    ]);
 
     $kernel = new DrupalKernel('prod', new ClassLoader());
     $kernel->discoverServiceProviders();
 
-    $expect = array(
-      'app' => array(
+    $expect = [
+      'app' => [
         'core' => 'core/core.services.yml',
-      ),
-      'site' => array(
+      ],
+      'site' => [
         __DIR__ . '/fixtures/custom.yml',
-      ),
-    );
+      ],
+    ];
 
     $this->assertAttributeSame($expect, 'serviceYamls', $kernel);
   }

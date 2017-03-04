@@ -51,14 +51,14 @@ class EntityNormalizerTest extends UnitTestCase {
     $list_item_1 = $this->getMock('Drupal\Core\TypedData\TypedDataInterface');
     $list_item_2 = $this->getMock('Drupal\Core\TypedData\TypedDataInterface');
 
-    $definitions = array(
+    $definitions = [
       'field_1' => $list_item_1,
       'field_2' => $list_item_2,
-    );
+    ];
 
     $content_entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
-      ->setMethods(array('getFields'))
+      ->setMethods(['getFields'])
       ->getMockForAbstractClass();
     $content_entity->expects($this->once())
       ->method('getFields')
@@ -66,7 +66,7 @@ class EntityNormalizerTest extends UnitTestCase {
 
     $serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')
       ->disableOriginalConstructor()
-      ->setMethods(array('normalize'))
+      ->setMethods(['normalize'])
       ->getMock();
     $serializer->expects($this->at(0))
       ->method('normalize')
@@ -88,7 +88,7 @@ class EntityNormalizerTest extends UnitTestCase {
    * @expectedException \Symfony\Component\Serializer\Exception\UnexpectedValueException
    */
   public function testDenormalizeWithNoEntityType() {
-    $this->entityNormalizer->denormalize(array(), 'Drupal\Core\Entity\ContentEntityBase');
+    $this->entityNormalizer->denormalize([], 'Drupal\Core\Entity\ContentEntityBase');
   }
 
   /**
@@ -180,9 +180,9 @@ class EntityNormalizerTest extends UnitTestCase {
 
     $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     // Create should only be called with the bundle property at first.
-    $expected_test_data = array(
+    $expected_test_data = [
       'test_type' => 'test_bundle',
-    );
+    ];
 
     $storage->expects($this->once())
       ->method('create')
@@ -198,7 +198,7 @@ class EntityNormalizerTest extends UnitTestCase {
     // item.
     $serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')
       ->disableOriginalConstructor()
-      ->setMethods(array('denormalize'))
+      ->setMethods(['denormalize'])
       ->getMock();
     $serializer->expects($this->at(0))
       ->method('denormalize')
@@ -297,10 +297,10 @@ class EntityNormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    */
   public function testDenormalizeWithNoBundle() {
-    $test_data = array(
+    $test_data = [
       'key_1' => 'value_1',
       'key_2' => 'value_2',
-    );
+    ];
 
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->once())
@@ -329,7 +329,7 @@ class EntityNormalizerTest extends UnitTestCase {
     $this->entityManager->expects($this->never())
       ->method('getBaseFieldDefinitions');
 
-    $this->assertNotNull($this->entityNormalizer->denormalize($test_data, 'Drupal\Core\Entity\ContentEntityBase', NULL, array('entity_type' => 'test')));
+    $this->assertNotNull($this->entityNormalizer->denormalize($test_data, 'Drupal\Core\Entity\ContentEntityBase', NULL, ['entity_type' => 'test']));
   }
 
 }

@@ -17,7 +17,7 @@ class ProcessingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('batch_test', 'test_page_test');
+  public static $modules = ['batch_test', 'test_page_test'];
 
   /**
    * Tests batches triggered outside of form submission.
@@ -47,14 +47,14 @@ class ProcessingTest extends WebTestBase {
    */
   function testBatchForm() {
     // Batch 0: no operation.
-    $edit = array('batch' => 'batch_0');
+    $edit = ['batch' => 'batch_0'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
     $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertBatchMessages($this->_resultMessages('batch_0'), 'Batch with no operation performed successfully.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
 
     // Batch 1: several simple operations.
-    $edit = array('batch' => 'batch_1');
+    $edit = ['batch' => 'batch_1'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
     $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch with simple operations performed successfully.');
@@ -62,7 +62,7 @@ class ProcessingTest extends WebTestBase {
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
 
     // Batch 2: one multistep operation.
-    $edit = array('batch' => 'batch_2');
+    $edit = ['batch' => 'batch_2'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
     $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch with multistep operation performed successfully.');
@@ -70,7 +70,7 @@ class ProcessingTest extends WebTestBase {
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
 
     // Batch 3: simple + multistep combined.
-    $edit = array('batch' => 'batch_3');
+    $edit = ['batch' => 'batch_3'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
     $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertBatchMessages($this->_resultMessages('batch_3'), 'Batch with simple and multistep operations performed successfully.');
@@ -78,7 +78,7 @@ class ProcessingTest extends WebTestBase {
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
 
     // Batch 4: nested batch.
-    $edit = array('batch' => 'batch_4');
+    $edit = ['batch' => 'batch_4'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
     $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertBatchMessages($this->_resultMessages('batch_4'), 'Nested batch performed successfully.');
@@ -95,14 +95,14 @@ class ProcessingTest extends WebTestBase {
     $this->assertText('step 1', 'Form is displayed in step 1.');
 
     // First step triggers batch 1.
-    $this->drupalPostForm(NULL, array(), 'Submit');
+    $this->drupalPostForm(NULL, [], 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 1 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
     $this->assertText('step 2', 'Form is displayed in step 2.');
     $this->assertNoEscaped('<', 'No escaped markup is present.');
 
     // Second step triggers batch 2.
-    $this->drupalPostForm(NULL, array(), 'Submit');
+    $this->drupalPostForm(NULL, [], 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch for step 2 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_2'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -111,7 +111,7 @@ class ProcessingTest extends WebTestBase {
     // Extra query arguments will trigger logic that will add them to the
     // redirect URL. Make sure they are persisted.
     $this->drupalGet('batch-test/multistep', ['query' => ['big_tree' => 'small_axe']]);
-    $this->drupalPostForm(NULL, array(), 'Submit');
+    $this->drupalPostForm(NULL, [], 'Submit');
     $this->assertText('step 2', 'Form is displayed in step 2.');
     $this->assertTrue(strpos($this->getUrl(), 'batch-test/multistep?big_tree=small_axe'), 'Query argument was persisted and another extra argument was added.');
   }
@@ -123,7 +123,7 @@ class ProcessingTest extends WebTestBase {
     // Batches 1, 2 and 3 are triggered in sequence by different submit
     // handlers. Each submit handler modify the submitted 'value'.
     $value = rand(0, 255);
-    $edit = array('value' => $value);
+    $edit = ['value' => $value];
     $this->drupalPostForm('batch-test/chained', $edit, 'Submit');
     // Check that result messages are present and in the correct order.
     $this->assertBatchMessages($this->_resultMessages('chained'), 'Batches defined in separate submit handlers performed successfully.');
@@ -159,7 +159,7 @@ class ProcessingTest extends WebTestBase {
     // form.
     $value = rand(0, 255);
     $this->drupalGet('batch-test/nested-programmatic/' . $value);
-    $this->assertEqual(batch_test_stack(), array('mock form submitted with value = ' . $value), '\Drupal::formBuilder()->submitForm() ran successfully within a batch operation.');
+    $this->assertEqual(batch_test_stack(), ['mock form submitted with value = ' . $value], '\Drupal::formBuilder()->submitForm() ran successfully within a batch operation.');
   }
 
   /**
@@ -196,7 +196,7 @@ class ProcessingTest extends WebTestBase {
    * Returns expected execution stacks for the test batches.
    */
   function _resultStack($id, $value = 0) {
-    $stack = array();
+    $stack = [];
     switch ($id) {
       case 'batch_1':
         for ($i = 1; $i <= 10; $i++) {
@@ -263,7 +263,7 @@ class ProcessingTest extends WebTestBase {
    * Returns expected result messages for the test batches.
    */
   function _resultMessages($id) {
-    $messages = array();
+    $messages = [];
 
     switch ($id) {
       case 'batch_0':

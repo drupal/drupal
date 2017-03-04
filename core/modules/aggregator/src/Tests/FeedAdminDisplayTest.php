@@ -14,7 +14,7 @@ class FeedAdminDisplayTest extends AggregatorTestBase {
    */
   public function testFeedUpdateFields() {
     // Create scheduled feed.
-    $scheduled_feed = $this->createFeed(NULL, array('refresh' => '900'));
+    $scheduled_feed = $this->createFeed(NULL, ['refresh' => '900']);
 
     $this->drupalGet('admin/config/services/aggregator');
     $this->assertResponse(200, 'Aggregator feed overview page exists.');
@@ -40,7 +40,7 @@ class FeedAdminDisplayTest extends AggregatorTestBase {
     $this->deleteFeed($scheduled_feed);
 
     // Create non-scheduled feed.
-    $non_scheduled_feed = $this->createFeed(NULL, array('refresh' => '0'));
+    $non_scheduled_feed = $this->createFeed(NULL, ['refresh' => '0']);
 
     $this->drupalGet('admin/config/services/aggregator');
     // The non scheduled feed shows that it has not been updated yet.

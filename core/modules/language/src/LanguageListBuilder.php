@@ -71,11 +71,11 @@ class LanguageListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function load() {
-    $entities = $this->storage->loadByProperties(array('locked' => FALSE));
+    $entities = $this->storage->loadByProperties(['locked' => FALSE]);
 
     // Sort the entities using the entity class's sort() method.
     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
-    uasort($entities, array($this->entityType->getClass(), 'sort'));
+    uasort($entities, [$this->entityType->getClass(), 'sort']);
     return $entities;
   }
 
@@ -90,10 +90,10 @@ class LanguageListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header = array(
+    $header = [
         'label' => t('Name'),
         'default' => t('Default'),
-      ) + parent::buildHeader();
+      ] + parent::buildHeader();
     return $header;
   }
 
@@ -102,14 +102,14 @@ class LanguageListBuilder extends DraggableListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $entity->label();
-    $row['default'] = array(
+    $row['default'] = [
       '#type' => 'radio',
-      '#parents' => array('site_default_language'),
-      '#title' => t('Set @title as default', array('@title' => $entity->label())),
+      '#parents' => ['site_default_language'],
+      '#title' => t('Set @title as default', ['@title' => $entity->label()]),
       '#title_display' => 'invisible',
       '#return_value' => $entity->id(),
       '#id' => 'edit-site-default-language-' . $entity->id(),
-    );
+    ];
     // Mark the right language as default in the form.
     if ($entity->id() == $this->languageManager->getDefaultLanguage()->getId()) {
       $row['default']['#default_value'] = $entity->id();
@@ -157,7 +157,7 @@ class LanguageListBuilder extends DraggableListBuilder {
     drupal_set_message(t('Configuration saved.'));
     // Force the redirection to the page with the language we have just
     // selected as default.
-    $form_state->setRedirectUrl($this->entities[$new_id]->urlInfo('collection', array('language' => $this->entities[$new_id])));
+    $form_state->setRedirectUrl($this->entities[$new_id]->urlInfo('collection', ['language' => $this->entities[$new_id]]));
   }
 
 }

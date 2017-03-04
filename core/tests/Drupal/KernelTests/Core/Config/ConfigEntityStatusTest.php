@@ -16,15 +16,15 @@ class ConfigEntityStatusTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test');
+  public static $modules = ['config_test'];
 
   /**
    * Tests the enabling/disabling of entities.
    */
   function testCRUD() {
-    $entity = entity_create('config_test', array(
+    $entity = entity_create('config_test', [
       'id' => strtolower($this->randomMachineName()),
-    ));
+    ]);
     $this->assertTrue($entity->status(), 'Default status is enabled.');
     $entity->save();
     $this->assertTrue($entity->status(), 'Status is enabled after saving.');

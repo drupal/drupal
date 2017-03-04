@@ -34,7 +34,7 @@ class MigrateVocabularyEntityFormDisplayTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('options_select', $component['type']);
     $this->assertIdentical(20, $component['weight']);
     // Test the Id map.
-    $this->assertIdentical(array('node', 'article', 'default', 'tags'), $this->getMigration('d6_vocabulary_entity_form_display')->getIdMap()->lookupDestinationID(array(4, 'article')));
+    $this->assertIdentical(['node', 'article', 'default', 'tags'], $this->getMigration('d6_vocabulary_entity_form_display')->getIdMap()->lookupDestinationID([4, 'article']));
 
     // Test the term widget tags setting.
     $entity_form_display = EntityFormDisplay::load('node.story.default');

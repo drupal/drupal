@@ -17,7 +17,7 @@ class ServiceDestructionTest extends KernelTestBase {
    */
   public function testDestructionUsed() {
     // Enable the test module to add it to the container.
-    $this->enableModules(array('service_provider_test'));
+    $this->enableModules(['service_provider_test']);
 
     $request = $this->container->get('request_stack')->getCurrentRequest();
     $kernel = $this->container->get('kernel');
@@ -39,7 +39,7 @@ class ServiceDestructionTest extends KernelTestBase {
    */
   public function testDestructionUnused() {
     // Enable the test module to add it to the container.
-    $this->enableModules(array('service_provider_test'));
+    $this->enableModules(['service_provider_test']);
 
     $request = $this->container->get('request_stack')->getCurrentRequest();
     $kernel = $this->container->get('kernel');

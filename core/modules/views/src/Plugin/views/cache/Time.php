@@ -76,64 +76,64 @@ class Time extends CachePluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['results_lifespan'] = array('default' => 3600);
-    $options['results_lifespan_custom'] = array('default' => 0);
-    $options['output_lifespan'] = array('default' => 3600);
-    $options['output_lifespan_custom'] = array('default' => 0);
+    $options['results_lifespan'] = ['default' => 3600];
+    $options['results_lifespan_custom'] = ['default' => 0];
+    $options['output_lifespan'] = ['default' => 3600];
+    $options['output_lifespan_custom'] = ['default' => 0];
 
     return $options;
   }
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $options = array(60, 300, 1800, 3600, 21600, 518400);
-    $options = array_map(array($this->dateFormatter, 'formatInterval'), array_combine($options, $options));
-    $options = array(0 => $this->t('Never cache')) + $options + array('custom' => $this->t('Custom'));
+    $options = [60, 300, 1800, 3600, 21600, 518400];
+    $options = array_map([$this->dateFormatter, 'formatInterval'], array_combine($options, $options));
+    $options = [0 => $this->t('Never cache')] + $options + ['custom' => $this->t('Custom')];
 
-    $form['results_lifespan'] = array(
+    $form['results_lifespan'] = [
       '#type' => 'select',
       '#title' => $this->t('Query results'),
       '#description' => $this->t('The length of time raw query results should be cached.'),
       '#options' => $options,
       '#default_value' => $this->options['results_lifespan'],
-    );
-    $form['results_lifespan_custom'] = array(
+    ];
+    $form['results_lifespan_custom'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Seconds'),
       '#size' => '25',
       '#maxlength' => '30',
       '#description' => $this->t('Length of time in seconds raw query results should be cached.'),
       '#default_value' => $this->options['results_lifespan_custom'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="cache_options[results_lifespan]"]' => array('value' => 'custom'),
-        ),
-      ),
-    );
-    $form['output_lifespan'] = array(
+      '#states' => [
+        'visible' => [
+          ':input[name="cache_options[results_lifespan]"]' => ['value' => 'custom'],
+        ],
+      ],
+    ];
+    $form['output_lifespan'] = [
       '#type' => 'select',
       '#title' => $this->t('Rendered output'),
       '#description' => $this->t('The length of time rendered HTML output should be cached.'),
       '#options' => $options,
       '#default_value' => $this->options['output_lifespan'],
-    );
-    $form['output_lifespan_custom'] = array(
+    ];
+    $form['output_lifespan_custom'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Seconds'),
       '#size' => '25',
       '#maxlength' => '30',
       '#description' => $this->t('Length of time in seconds rendered HTML output should be cached.'),
       '#default_value' => $this->options['output_lifespan_custom'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="cache_options[output_lifespan]"]' => array('value' => 'custom'),
-        ),
-      ),
-    );
+      '#states' => [
+        'visible' => [
+          ':input[name="cache_options[output_lifespan]"]' => ['value' => 'custom'],
+        ],
+      ],
+    ];
   }
 
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
-    $custom_fields = array('output_lifespan', 'results_lifespan');
+    $custom_fields = ['output_lifespan', 'results_lifespan'];
     foreach ($custom_fields as $field) {
       $cache_options = $form_state->getValue('cache_options');
       if ($cache_options[$field] == 'custom' && !is_numeric($cache_options[$field . '_custom'])) {

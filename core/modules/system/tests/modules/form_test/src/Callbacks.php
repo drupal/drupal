@@ -38,7 +38,7 @@ class Callbacks {
 
     if ($triggered) {
       // Output the element's value from $form_state.
-      drupal_set_message(t('@label value: @value', array('@label' => $element['#title'], '@value' => $form_state->getValue('name'))));
+      drupal_set_message(t('@label value: @value', ['@label' => $element['#title'], '@value' => $form_state->getValue('name')]));
 
       // Trigger a form validation error to see our changes.
       $form_state->setErrorByName('');

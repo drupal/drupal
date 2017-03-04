@@ -20,7 +20,7 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
    *
    * @var array
    */
-  protected $checkIds = array();
+  protected $checkIds = [];
 
   /**
    * Array of access check objects keyed by service id.
@@ -34,12 +34,12 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
    *
    * @var array
    */
-  protected $checkMethods = array();
+  protected $checkMethods = [];
 
   /**
    * Array of access checks which only will be run on the incoming request.
    */
-  protected $checksNeedsRequest = array();
+  protected $checksNeedsRequest = [];
 
   /**
    * An array to map static requirement keys to service IDs.
@@ -58,7 +58,7 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
   /**
    * {@inheritdoc}
    */
-  public function addCheckService($service_id, $service_method, array $applies_checks = array(), $needs_incoming_request = FALSE) {
+  public function addCheckService($service_id, $service_method, array $applies_checks = [], $needs_incoming_request = FALSE) {
     $this->checkIds[] = $service_id;
     $this->checkMethods[$service_id] = $service_method;
     if ($needs_incoming_request) {
@@ -102,7 +102,7 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
       if (!($check instanceof AccessInterface)) {
         throw new AccessException('All access checks must implement AccessInterface.');
       }
-      if (!is_callable(array($check, $this->checkMethods[$service_id]))) {
+      if (!is_callable([$check, $this->checkMethods[$service_id]])) {
         throw new AccessException(sprintf('Access check method %s in service %s must be callable.', $this->checkMethods[$service_id], $service_id));
       }
 
@@ -122,7 +122,7 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
    *   route.
    */
   protected function applies(Route $route) {
-    $checks = array();
+    $checks = [];
 
     // Iterate through map requirements from appliesTo() on access checkers.
     // Only iterate through all checkIds if this is not used.
@@ -151,7 +151,7 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
     }
 
     // Set them here, so we can use the isset() check above.
-    $this->dynamicRequirementMap = array();
+    $this->dynamicRequirementMap = [];
 
     foreach ($this->checkIds as $service_id) {
       if (empty($this->checks[$service_id])) {

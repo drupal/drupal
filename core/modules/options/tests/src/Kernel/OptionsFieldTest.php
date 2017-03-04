@@ -19,7 +19,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('options');
+  public static $modules = ['options'];
 
   /**
    * Test that allowed values can be updated.
@@ -81,9 +81,9 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
       'required' => TRUE,
     ])->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->fieldName, array(
+      ->setComponent($this->fieldName, [
         'type' => 'options_buttons',
-      ))
+      ])
       ->save();
     $entity = EntityTest::create();
     $form = \Drupal::service('entity.form_builder')->getForm($entity);

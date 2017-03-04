@@ -12,24 +12,24 @@ use Drupal\views\Views;
  */
 class FilterInOperatorTest extends ViewsKernelTestBase {
 
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Map column names.
    *
    * @var array
    */
-  protected $columnMap = array(
+  protected $columnMap = [
     'views_test_data_name' => 'name',
     'views_test_data_age' => 'age',
-  );
+  ];
 
   function viewsData() {
     $data = parent::viewsData();
@@ -42,28 +42,28 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Add a in_operator ordering.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'age',
         'field' => 'age',
         'table' => 'views_test_data',
-        'value' => array(26, 30),
+        'value' => [26, 30],
         'operator' => 'in',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
 
-    $expected_result = array(
-      array(
+    $expected_result = [
+      [
         'name' => 'Paul',
         'age' => 26,
-      ),
-      array(
+      ],
+      [
         'name' => 'Meredith',
         'age' => 30,
-      ),
-    );
+      ],
+    ];
 
     $this->assertEqual(2, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
@@ -72,32 +72,32 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Add a in_operator ordering.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'age',
         'field' => 'age',
         'table' => 'views_test_data',
-        'value' => array(26, 30),
+        'value' => [26, 30],
         'operator' => 'not in',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
 
-    $expected_result = array(
-      array(
+    $expected_result = [
+      [
         'name' => 'John',
         'age' => 25,
-      ),
-      array(
+      ],
+      [
         'name' => 'George',
         'age' => 27,
-      ),
-      array(
+      ],
+      [
         'name' => 'Ringo',
         'age' => 28,
-      ),
-    );
+      ],
+    ];
 
     $this->assertEqual(3, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
@@ -114,16 +114,16 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
 
     $this->executeView($view);
 
-    $expected_result = array(
-      array(
+    $expected_result = [
+      [
         'name' => 'Paul',
         'age' => 26,
-      ),
-      array(
+      ],
+      [
         'name' => 'Meredith',
         'age' => 30,
-      ),
-    );
+      ],
+    ];
 
     $this->assertEqual(2, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
@@ -140,58 +140,58 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
 
     $this->executeView($view);
 
-    $expected_result = array(
-      array(
+    $expected_result = [
+      [
         'name' => 'John',
         'age' => 25,
-      ),
-      array(
+      ],
+      [
         'name' => 'George',
         'age' => 27,
-      ),
-      array(
+      ],
+      [
         'name' => 'Ringo',
         'age' => 28,
-      ),
-    );
+      ],
+    ];
 
     $this->assertEqual(3, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
   protected function getGroupedExposedFilters() {
-    $filters = array(
-      'age' => array(
+    $filters = [
+      'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'exposed' => TRUE,
-        'expose' => array(
+        'expose' => [
           'operator' => 'age_op',
           'label' => 'age',
           'identifier' => 'age',
-        ),
+        ],
         'is_grouped' => TRUE,
-        'group_info' => array(
+        'group_info' => [
           'label' => 'age',
           'identifier' => 'age',
           'default_group' => 'All',
-          'group_items' => array(
-            1 => array(
+          'group_items' => [
+            1 => [
               'title' => 'Age is one of 26, 30',
               'operator' => 'in',
-              'value' => array(26, 30),
-            ),
-            2 => array(
+              'value' => [26, 30],
+            ],
+            2 => [
               'title' => 'Age is not one of 26, 30',
               'operator' => 'not in',
-              'value' => array(26, 30),
-            ),
-          ),
-        ),
-      ),
-    );
+              'value' => [26, 30],
+            ],
+          ],
+        ],
+      ],
+    ];
     return $filters;
   }
 

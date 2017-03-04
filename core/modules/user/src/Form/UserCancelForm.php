@@ -31,7 +31,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     if ($this->entity->id() == $this->currentUser()->id()) {
       return $this->t('Are you sure you want to cancel your account?');
     }
-    return $this->t('Are you sure you want to cancel the account %name?', array('%name' => $this->entity->label()));
+    return $this->t('Are you sure you want to cancel the account %name?', ['%name' => $this->entity->label()]);
   }
 
   /**
@@ -74,43 +74,43 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
 
     // Display account cancellation method selection, if allowed.
     $admin_access = $user->hasPermission('administer users');
-    $form['user_cancel_method'] = array(
+    $form['user_cancel_method'] = [
       '#type' => 'radios',
       '#title' => ($this->entity->id() == $user->id() ? $this->t('When cancelling your account') : $this->t('When cancelling the account')),
       '#access' => $admin_access || $user->hasPermission('select account cancellation method'),
-    );
+    ];
     $form['user_cancel_method'] += $this->cancelMethods;
 
     // Allow user administrators to skip the account cancellation confirmation
     // mail (by default), as long as they do not attempt to cancel their own
     // account.
     $override_access = $admin_access && ($this->entity->id() != $user->id());
-    $form['user_cancel_confirm'] = array(
+    $form['user_cancel_confirm'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Require email confirmation to cancel account'),
       '#default_value' => !$override_access,
       '#access' => $override_access,
       '#description' => $this->t('When enabled, the user must confirm the account cancellation via email.'),
-    );
+    ];
     // Also allow to send account canceled notification mail, if enabled.
     $default_notify = $this->config('user.settings')->get('notify.status_canceled');
-    $form['user_cancel_notify'] = array(
+    $form['user_cancel_notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is canceled'),
       '#default_value' => ($override_access ? FALSE : $default_notify),
       '#access' => $override_access && $default_notify,
       '#description' => $this->t('When enabled, the user will receive an email notification after the account has been canceled.'),
-    );
+    ];
 
     // Always provide entity id in the same form key as in the entity edit form.
-    $form['uid'] = array('#type' => 'value', '#value' => $this->entity->id());
+    $form['uid'] = ['#type' => 'value', '#value' => $this->entity->id()];
 
     // Store the user permissions so that it can be altered in hook_form_alter()
     // if desired.
-    $form['access'] = array(
+    $form['access'] = [
       '#type' => 'value',
       '#value' => $user->hasPermission('administer users'),
-    );
+    ];
 
     $form = parent::buildForm($form, $form_state);
 
@@ -138,11 +138,11 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       $this->entity->save();
       _user_mail_notify('cancel_confirm', $this->entity);
       drupal_set_message($this->t('A confirmation request to cancel your account has been sent to your email address.'));
-      $this->logger('user')->notice('Sent account cancellation request to %name %email.', array('%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>'));
+      $this->logger('user')->notice('Sent account cancellation request to %name %email.', ['%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>']);
 
       $form_state->setRedirect(
         'entity.user.canonical',
-        array('user' => $this->entity->id())
+        ['user' => $this->entity->id()]
       );
     }
   }

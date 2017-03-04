@@ -20,22 +20,22 @@ class Equality extends FilterPluginBase {
    * Provide simple equality operator
    */
   public function operatorOptions() {
-    return array(
+    return [
       '=' => $this->t('Is equal to'),
       '!=' => $this->t('Is not equal to'),
-    );
+    ];
   }
 
   /**
    * Provide a simple textfield for equality
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
-    $form['value'] = array(
+    $form['value'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Value'),
       '#size' => 30,
       '#default_value' => $this->value,
-    );
+    ];
 
     if ($exposed = $form_state->get('exposed')) {
       $identifier = $this->options['expose']['identifier'];

@@ -84,10 +84,10 @@ class ContentEntityFormCorrectUserInputMappingOnFieldDeltaElementsTest extends B
     $this->drupalGet($this->entityTypeId . '/manage/' . $entity->id() . '/edit');
 
     // Rearrange the field items.
-    $edit = array(
+    $edit = [
       "$this->fieldName[0][_weight]" => 0,
       "$this->fieldName[1][_weight]" => -1,
-    );
+    ];
     // Executing an ajax call is important before saving as it will trigger
     // form state caching and so if for any reasons the form is rebuilt with
     // the entity built based on the user submitted values with already

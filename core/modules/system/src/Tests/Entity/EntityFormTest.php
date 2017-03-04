@@ -17,11 +17,11 @@ class EntityFormTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'language');
+  public static $modules = ['entity_test', 'language'];
 
   protected function setUp() {
     parent::setUp();
-    $web_user = $this->drupalCreateUser(array('administer entity_test content', 'view test entity'));
+    $web_user = $this->drupalCreateUser(['administer entity_test content', 'view test entity']);
     $this->drupalLogin($web_user);
 
     // Add a language.
@@ -69,28 +69,28 @@ class EntityFormTest extends WebTestBase {
     $name1 = $this->randomMachineName(8);
     $name2 = $this->randomMachineName(10);
 
-    $edit = array(
+    $edit = [
       'name[0][value]' => $name1,
       'field_test_text[0][value]' => $this->randomMachineName(16),
-    );
+    ];
 
     $this->drupalPostForm($entity_type . '/add', $edit, t('Save'));
     $entity = $this->loadEntityByName($entity_type, $name1);
-    $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', array('%entity_type' => $entity_type)));
+    $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', ['%entity_type' => $entity_type]));
 
     $edit['name[0][value]'] = $name2;
     $this->drupalPostForm($entity_type . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $entity = $this->loadEntityByName($entity_type, $name1);
-    $this->assertFalse($entity, format_string('%entity_type: The entity has been modified.', array('%entity_type' => $entity_type)));
+    $this->assertFalse($entity, format_string('%entity_type: The entity has been modified.', ['%entity_type' => $entity_type]));
     $entity = $this->loadEntityByName($entity_type, $name2);
-    $this->assertTrue($entity, format_string('%entity_type: Modified entity found in the database.', array('%entity_type' => $entity_type)));
-    $this->assertNotEqual($entity->name->value, $name1, format_string('%entity_type: The entity name has been modified.', array('%entity_type' => $entity_type)));
+    $this->assertTrue($entity, format_string('%entity_type: Modified entity found in the database.', ['%entity_type' => $entity_type]));
+    $this->assertNotEqual($entity->name->value, $name1, format_string('%entity_type: The entity name has been modified.', ['%entity_type' => $entity_type]));
 
     $this->drupalGet($entity_type . '/manage/' . $entity->id() . '/edit');
     $this->clickLink(t('Delete'));
-    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     $entity = $this->loadEntityByName($entity_type, $name2);
-    $this->assertFalse($entity, format_string('%entity_type: Entity not found in the database.', array('%entity_type' => $entity_type)));
+    $this->assertFalse($entity, format_string('%entity_type: Entity not found in the database.', ['%entity_type' => $entity_type]));
   }
 
   /**
@@ -104,33 +104,33 @@ class EntityFormTest extends WebTestBase {
     $name1_ro = $this->randomMachineName(9);
     $name2_ro = $this->randomMachineName(11);
 
-    $edit = array(
+    $edit = [
       'name[0][value]' => $name1,
       'field_test_text[0][value]' => $this->randomMachineName(16),
-    );
+    ];
 
     $this->drupalPostForm($entity_type_id . '/add', $edit, t('Save'));
     $entity = $this->loadEntityByName($entity_type_id, $name1);
-    $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', array('%entity_type' => $entity_type_id)));
+    $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', ['%entity_type' => $entity_type_id]));
 
     // Add a translation to the newly created entity without using the Content
     // translation module.
     $entity->addTranslation('ro', ['name' => $name1_ro])->save();
     $translated_entity = $this->loadEntityByName($entity_type_id, $name1)->getTranslation('ro');
-    $this->assertEqual($translated_entity->name->value, $name1_ro, format_string('%entity_type: The translation has been added.', array('%entity_type' => $entity_type_id)));
+    $this->assertEqual($translated_entity->name->value, $name1_ro, format_string('%entity_type: The translation has been added.', ['%entity_type' => $entity_type_id]));
 
     $edit['name[0][value]'] = $name2_ro;
     $this->drupalPostForm('ro/' . $entity_type_id . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $translated_entity = $this->loadEntityByName($entity_type_id, $name1)->getTranslation('ro');
-    $this->assertTrue($translated_entity, format_string('%entity_type: Modified translation found in the database.', array('%entity_type' => $entity_type_id)));
-    $this->assertEqual($translated_entity->name->value, $name2_ro, format_string('%entity_type: The name of the translation has been modified.', array('%entity_type' => $entity_type_id)));
+    $this->assertTrue($translated_entity, format_string('%entity_type: Modified translation found in the database.', ['%entity_type' => $entity_type_id]));
+    $this->assertEqual($translated_entity->name->value, $name2_ro, format_string('%entity_type: The name of the translation has been modified.', ['%entity_type' => $entity_type_id]));
 
     $this->drupalGet('ro/' . $entity_type_id . '/manage/' . $entity->id() . '/edit');
     $this->clickLink(t('Delete'));
-    $this->drupalPostForm(NULL, array(), t('Delete Romanian translation'));
+    $this->drupalPostForm(NULL, [], t('Delete Romanian translation'));
     $entity = $this->loadEntityByName($entity_type_id, $name1);
-    $this->assertNotNull($entity, format_string('%entity_type: The original entity still exists.', array('%entity_type' => $entity_type_id)));
-    $this->assertFalse($entity->hasTranslation('ro'), format_string('%entity_type: Entity translation does not exist anymore.', array('%entity_type' => $entity_type_id)));
+    $this->assertNotNull($entity, format_string('%entity_type: The original entity still exists.', ['%entity_type' => $entity_type_id]));
+    $this->assertFalse($entity->hasTranslation('ro'), format_string('%entity_type: Entity translation does not exist anymore.', ['%entity_type' => $entity_type_id]));
   }
 
   /**
@@ -141,7 +141,7 @@ class EntityFormTest extends WebTestBase {
     // correctly picked up.
     $entity_storage = $this->container->get('entity.manager')->getStorage($entity_type);
     $entity_storage->resetCache();
-    $entities = $entity_storage->loadByProperties(array('name' => $name));
+    $entities = $entity_storage->loadByProperties(['name' => $name]);
     return $entities ? current($entities) : NULL;
   }
 

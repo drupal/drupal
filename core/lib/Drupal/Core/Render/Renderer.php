@@ -383,9 +383,9 @@ class Renderer implements RendererInterface {
     }
 
     // Defaults for bubbleable rendering metadata.
-    $elements['#cache']['tags'] = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : array();
+    $elements['#cache']['tags'] = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : [];
     $elements['#cache']['max-age'] = isset($elements['#cache']['max-age']) ? $elements['#cache']['max-age'] : Cache::PERMANENT;
-    $elements['#attached'] = isset($elements['#attached']) ? $elements['#attached'] : array();
+    $elements['#attached'] = isset($elements['#attached']) ? $elements['#attached'] : [];
 
     // Allow #pre_render to abort rendering.
     if (!empty($elements['#printed'])) {
@@ -415,11 +415,11 @@ class Renderer implements RendererInterface {
     $theme_is_implemented = isset($elements['#theme']);
     // Check the elements for insecure HTML and pass through sanitization.
     if (isset($elements)) {
-      $markup_keys = array(
+      $markup_keys = [
         '#description',
         '#field_prefix',
         '#field_suffix',
-      );
+      ];
       foreach ($markup_keys as $key) {
         if (!empty($elements[$key]) && is_scalar($elements[$key])) {
           $elements[$key] = $this->xssFilterAdminIfUnsafe($elements[$key]);

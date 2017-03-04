@@ -79,14 +79,14 @@ class BlockContentController extends ControllerBase {
       return $this->addForm($type, $request);
     }
     if (count($types) === 0) {
-      return array(
+      return [
         '#markup' => $this->t('You have not created any block types yet. Go to the <a href=":url">block type creation page</a> to add a new block type.', [
           ':url' => Url::fromRoute('block_content.type_add')->toString(),
         ]),
-      );
+      ];
     }
 
-    return array('#theme' => 'block_content_add_list', '#content' => $types);
+    return ['#theme' => 'block_content_add_list', '#content' => $types];
   }
 
   /**
@@ -101,9 +101,9 @@ class BlockContentController extends ControllerBase {
    *   A form array as expected by drupal_render().
    */
   public function addForm(BlockContentTypeInterface $block_content_type, Request $request) {
-    $block = $this->blockContentStorage->create(array(
+    $block = $this->blockContentStorage->create([
       'type' => $block_content_type->id()
-    ));
+    ]);
     if (($theme = $request->query->get('theme')) && in_array($theme, array_keys($this->themeHandler->listInfo()))) {
       // We have navigated to this page from the block library and will keep track
       // of the theme for redirecting the user to the configuration page for the
@@ -123,7 +123,7 @@ class BlockContentController extends ControllerBase {
    *   The page title.
    */
   public function getAddFormTitle(BlockContentTypeInterface $block_content_type) {
-    return $this->t('Add %type custom block', array('%type' => $block_content_type->label()));
+    return $this->t('Add %type custom block', ['%type' => $block_content_type->label()]);
   }
 
 }

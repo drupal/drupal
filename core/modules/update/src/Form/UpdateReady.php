@@ -91,23 +91,23 @@ class UpdateReady extends FormBase {
       return $form;
     }
 
-    $form['backup'] = array(
+    $form['backup'] = [
       '#prefix' => '<strong>',
-      '#markup' => $this->t('Back up your database and site before you continue. <a href=":backup_url">Learn how</a>.', array(':backup_url' => 'https://www.drupal.org/node/22281')),
+      '#markup' => $this->t('Back up your database and site before you continue. <a href=":backup_url">Learn how</a>.', [':backup_url' => 'https://www.drupal.org/node/22281']),
       '#suffix' => '</strong>',
-    );
+    ];
 
-    $form['maintenance_mode'] = array(
+    $form['maintenance_mode'] = [
       '#title' => $this->t('Perform updates with site in maintenance mode (strongly recommended)'),
       '#type' => 'checkbox',
       '#default_value' => TRUE,
-    );
+    ];
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Continue'),
-    );
+    ];
 
     return $form;
   }
@@ -126,7 +126,7 @@ class UpdateReady extends FormBase {
       // Make sure the Updater registry is loaded.
       drupal_get_updaters();
 
-      $updates = array();
+      $updates = [];
       $directory = _update_manager_extract_directory();
 
       $projects = $_SESSION['update_manager_update_projects'];
@@ -137,11 +137,11 @@ class UpdateReady extends FormBase {
         $project_location = $directory . '/' . $project;
         $updater = Updater::factory($project_location, $this->root);
         $project_real_location = drupal_realpath($project_location);
-        $updates[] = array(
+        $updates[] = [
           'project' => $project,
           'updater_name' => get_class($updater),
           'local_url' => $project_real_location,
-        );
+        ];
       }
 
       // If the owner of the last directory we extracted is the same as the
@@ -164,7 +164,7 @@ class UpdateReady extends FormBase {
         // The page title must be passed here to ensure it is initially used
         // when authorize.php loads for the first time with the FTP/SSH
         // credentials form.
-        system_authorized_init('update_authorize_run_update', __DIR__ . '/../../update.authorize.inc', array($updates), $this->t('Update manager'));
+        system_authorized_init('update_authorize_run_update', __DIR__ . '/../../update.authorize.inc', [$updates], $this->t('Update manager'));
         $form_state->setRedirectUrl(system_authorized_get_url());
       }
     }

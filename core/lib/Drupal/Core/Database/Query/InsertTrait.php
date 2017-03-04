@@ -21,14 +21,14 @@ trait InsertTrait {
    *
    * @var array
    */
-  protected $insertFields = array();
+  protected $insertFields = [];
 
   /**
    * An array of fields that should be set to their database-defined defaults.
    *
    * @var array
    */
-  protected $defaultFields = array();
+  protected $defaultFields = [];
 
   /**
    * A nested array of values to insert.
@@ -45,7 +45,7 @@ trait InsertTrait {
    *
    * @var array
    */
-  protected $insertValues = array();
+  protected $insertValues = [];
 
   /**
    * Adds a set of field->value pairs to be inserted.
@@ -67,7 +67,7 @@ trait InsertTrait {
    * @return $this
    *   The called object.
    */
-  public function fields(array $fields, array $values = array()) {
+  public function fields(array $fields, array $values = []) {
     if (empty($this->insertFields)) {
       if (empty($values)) {
         if (!is_numeric(key($fields))) {
@@ -150,10 +150,10 @@ trait InsertTrait {
    */
   protected function getInsertPlaceholderFragment(array $nested_insert_values, array $default_fields) {
     $max_placeholder = 0;
-    $values = array();
+    $values = [];
     if ($nested_insert_values) {
       foreach ($nested_insert_values as $insert_values) {
-        $placeholders = array();
+        $placeholders = [];
 
         // Default fields aren't really placeholders, but this is the most convenient
         // way to handle them.

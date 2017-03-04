@@ -42,11 +42,11 @@ class WysiwygEditor extends InPlaceEditorBase {
    * {@inheritdoc}
    */
   public function getAttachments() {
-    return array(
-      'library' => array(
+    return [
+      'library' => [
         'quickedit_test/not-existing-wysiwyg',
-      ),
-    );
+      ],
+    ];
   }
 
 }

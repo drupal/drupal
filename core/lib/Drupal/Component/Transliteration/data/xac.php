@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'ga', 'gag', 'gakk', 'gags', 'gan', 'ganj', 'ganh', 'gad', 'gal', 'galg', 'galm', 'galb', 'gals', 'galt', 'galp', 'galh',
   0x10 => 'gam', 'gab', 'gabs', 'gas', 'gass', 'gang', 'gaj', 'gach', 'gak', 'gat', 'gap', 'gah', 'gae', 'gaeg', 'gaekk', 'gaegs',
   0x20 => 'gaen', 'gaenj', 'gaenh', 'gaed', 'gael', 'gaelg', 'gaelm', 'gaelb', 'gaels', 'gaelt', 'gaelp', 'gaelh', 'gaem', 'gaeb', 'gaebs', 'gaes',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'gyels', 'gyelt', 'gyelp', 'gyelh', 'gyem', 'gyeb', 'gyebs', 'gyes', 'gyess', 'gyeng', 'gyej', 'gyech', 'gyek', 'gyet', 'gyep', 'gyeh',
   0xE0 => 'go', 'gog', 'gokk', 'gogs', 'gon', 'gonj', 'gonh', 'god', 'gol', 'golg', 'golm', 'golb', 'gols', 'golt', 'golp', 'golh',
   0xF0 => 'gom', 'gob', 'gobs', 'gos', 'goss', 'gong', 'goj', 'goch', 'gok', 'got', 'gop', 'goh', 'gwa', 'gwag', 'gwakk', 'gwags',
-);
+];

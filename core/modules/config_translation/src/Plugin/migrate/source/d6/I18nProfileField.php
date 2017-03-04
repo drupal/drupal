@@ -31,12 +31,12 @@ class I18nProfileField extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'fid' => $this->t('Profile field ID.'),
       'lid' => $this->t('Locales target language ID.'),
       'language' => $this->t('Language for this field.'),
       'translation' => $this->t('Translation of either the title or explanation.'),
-    );
+    ];
   }
 
   /**

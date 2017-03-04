@@ -25,80 +25,80 @@ class FilterTestFormatForm extends FormBase {
     // form elements.
     $form['#tree'] = TRUE;
 
-    $form['all_formats'] = array(
+    $form['all_formats'] = [
       '#type' => 'details',
       '#title' => 'All text formats',
-    );
-    $form['all_formats']['no_default'] = array(
+    ];
+    $form['all_formats']['no_default'] = [
       '#type' => 'text_format',
       '#title' => 'No default value',
-    );
-    $form['all_formats']['default'] = array(
+    ];
+    $form['all_formats']['default'] = [
       '#type' => 'text_format',
       '#title' => 'Default value',
       '#format' => 'filter_test',
-    );
-    $form['all_formats']['default_missing'] = array(
+    ];
+    $form['all_formats']['default_missing'] = [
       '#type' => 'text_format',
       '#title' => 'Missing default value',
       '#format' => 'missing_format',
-    );
+    ];
 
-    $form['restricted_formats'] = array(
+    $form['restricted_formats'] = [
       '#type' => 'details',
       '#title' => 'Restricted text format list',
-    );
-    $form['restricted_formats']['no_default'] = array(
+    ];
+    $form['restricted_formats']['no_default'] = [
       '#type' => 'text_format',
       '#title' => 'No default value',
-      '#allowed_formats' => array('full_html', 'filter_test'),
-    );
-    $form['restricted_formats']['default'] = array(
+      '#allowed_formats' => ['full_html', 'filter_test'],
+    ];
+    $form['restricted_formats']['default'] = [
       '#type' => 'text_format',
       '#title' => 'Default value',
       '#format' => 'full_html',
-      '#allowed_formats' => array('full_html', 'filter_test'),
-    );
-    $form['restricted_formats']['default_missing'] = array(
+      '#allowed_formats' => ['full_html', 'filter_test'],
+    ];
+    $form['restricted_formats']['default_missing'] = [
       '#type' => 'text_format',
       '#title' => 'Missing default value',
       '#format' => 'missing_format',
-      '#allowed_formats' => array('full_html', 'filter_test'),
-    );
-    $form['restricted_formats']['default_disallowed'] = array(
+      '#allowed_formats' => ['full_html', 'filter_test'],
+    ];
+    $form['restricted_formats']['default_disallowed'] = [
       '#type' => 'text_format',
       '#title' => 'Disallowed default value',
       '#format' => 'filtered_html',
-      '#allowed_formats' => array('full_html', 'filter_test'),
-    );
+      '#allowed_formats' => ['full_html', 'filter_test'],
+    ];
 
-    $form['single_format'] = array(
+    $form['single_format'] = [
       '#type' => 'details',
       '#title' => 'Single text format',
-    );
-    $form['single_format']['no_default'] = array(
+    ];
+    $form['single_format']['no_default'] = [
       '#type' => 'text_format',
       '#title' => 'No default value',
-      '#allowed_formats' => array('filter_test'),
-    );
-    $form['single_format']['default'] = array(
+      '#allowed_formats' => ['filter_test'],
+    ];
+    $form['single_format']['default'] = [
       '#type' => 'text_format',
       '#title' => 'Default value',
       '#format' => 'filter_test',
-      '#allowed_formats' => array('filter_test'),
-    );
-    $form['single_format']['default_missing'] = array(
+      '#allowed_formats' => ['filter_test'],
+    ];
+    $form['single_format']['default_missing'] = [
       '#type' => 'text_format',
       '#title' => 'Missing default value',
       '#format' => 'missing_format',
-      '#allowed_formats' => array('filter_test'),
-    );
-    $form['single_format']['default_disallowed'] = array(
+      '#allowed_formats' => ['filter_test'],
+    ];
+    $form['single_format']['default_disallowed'] = [
       '#type' => 'text_format',
       '#title' => 'Disallowed default value',
       '#format' => 'full_html',
-      '#allowed_formats' => array('filter_test'),
-    );
+      '#allowed_formats' => ['filter_test'],
+    ];
 
     return $form;
   }

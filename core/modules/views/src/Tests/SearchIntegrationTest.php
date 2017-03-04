@@ -16,14 +16,14 @@ class SearchIntegrationTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'search');
+  public static $modules = ['node', 'search'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_search');
+  public static $testViews = ['test_search'];
 
   /**
    * Tests search integration.
@@ -36,7 +36,7 @@ class SearchIntegrationTest extends ViewTestBase {
     // "sandwich", and one containing "cola is good with pizza". Make the
     // second node link to the first.
     $node['title'] = 'pizza';
-    $node['body'] = array(array('value' => 'pizza'));
+    $node['body'] = [['value' => 'pizza']];
     $node['type'] = $type->id();
     $this->drupalCreateNode($node);
 
@@ -44,11 +44,11 @@ class SearchIntegrationTest extends ViewTestBase {
     $node_url = $this->getUrl();
 
     $node['title'] = 'sandwich';
-    $node['body'] = array(array('value' => 'sandwich with a <a href="' . $node_url . '">link to first node</a>'));
+    $node['body'] = [['value' => 'sandwich with a <a href="' . $node_url . '">link to first node</a>']];
     $this->drupalCreateNode($node);
 
     $node['title'] = 'cola';
-    $node['body'] = array(array('value' => 'cola is good with pizza'));
+    $node['body'] = [['value' => 'cola is good with pizza']];
     $node['type'] = $type->id();
     $this->drupalCreateNode($node);
 
@@ -141,8 +141,8 @@ class SearchIntegrationTest extends ViewTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertOneLink($label) {
-    $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
-    $message = SafeMarkup::format('Link with label %label found once.', array('%label' => $label));
+    $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
+    $message = SafeMarkup::format('Link with label %label found once.', ['%label' => $label]);
     return $this->assert(isset($links[0]) && !isset($links[1]), $message);
   }
 

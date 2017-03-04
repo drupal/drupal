@@ -18,15 +18,15 @@ function config_translation_help($route_name, RouteMatchInterface $route_match) 
     case 'help.page.config_translation':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Configuration Translation module allows you to translate configuration text; for example, the site name, vocabularies, menus, or date formats. Together with the modules <a href=":language">Language</a>, <a href=":content-translation">Content Translation</a>, and <a href=":locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see the <a href=":doc_url">online documentation for the Configuration Translation module</a>.', array(':doc_url' => 'https://www.drupal.org/documentation/modules/config_translation', ':config' => \Drupal::url('help.page', array('name' => 'config')), ':language' => \Drupal::url('help.page', array('name' => 'language')), ':locale' => \Drupal::url('help.page', array('name' => 'locale')), ':content-translation' => (\Drupal::moduleHandler()->moduleExists('content_translation')) ? \Drupal::url('help.page', array('name' => 'content_translation')) : '#')) . '</p>';
+      $output .= '<p>' . t('The Configuration Translation module allows you to translate configuration text; for example, the site name, vocabularies, menus, or date formats. Together with the modules <a href=":language">Language</a>, <a href=":content-translation">Content Translation</a>, and <a href=":locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see the <a href=":doc_url">online documentation for the Configuration Translation module</a>.', [':doc_url' => 'https://www.drupal.org/documentation/modules/config_translation', ':config' => \Drupal::url('help.page', ['name' => 'config']), ':language' => \Drupal::url('help.page', ['name' => 'language']), ':locale' => \Drupal::url('help.page', ['name' => 'locale']), ':content-translation' => (\Drupal::moduleHandler()->moduleExists('content_translation')) ? \Drupal::url('help.page', ['name' => 'content_translation']) : '#']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling translation') . '</dt>';
-      $output .= '<dd>' . t('In order to translate configuration, the website must have at least two <a href=":url">languages</a>.', array(':url' => \Drupal::url('entity.configurable_language.collection'))) . '</dd>';
+      $output .= '<dd>' . t('In order to translate configuration, the website must have at least two <a href=":url">languages</a>.', [':url' => \Drupal::url('entity.configurable_language.collection')]) . '</dd>';
       $output .= '<dt>' . t('Translating configuration text') . '</dt>';
-      $output .= '<dd>' . t('Users with the <em>Translate user edited configuration</em> permission can access the configuration translation overview, and manage translations for specific languages. The <a href=":translation-page">Configuration translation</a> page shows a list of all configuration text that can be translated, either as individual items or as lists. After you click on <em>Translate</em>, you are provided with a list of all languages. You can <em>add</em> or <em>edit</em> a translation for a specific language. Users with specific configuration permissions can also <em>edit</em> the text for the site\'s default language. For some configuration text items (for example for the site information), the specific translation pages can also be accessed directly from their configuration pages.', array(':translation-page' => \Drupal::url('config_translation.mapper_list'))) . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>Translate user edited configuration</em> permission can access the configuration translation overview, and manage translations for specific languages. The <a href=":translation-page">Configuration translation</a> page shows a list of all configuration text that can be translated, either as individual items or as lists. After you click on <em>Translate</em>, you are provided with a list of all languages. You can <em>add</em> or <em>edit</em> a translation for a specific language. Users with specific configuration permissions can also <em>edit</em> the text for the site\'s default language. For some configuration text items (for example for the site information), the specific translation pages can also be accessed directly from their configuration pages.', [':translation-page' => \Drupal::url('config_translation.mapper_list')]) . '</dd>';
       $output .= '<dt>' . t('Translating date formats') . '</dt>';
-      $output .= '<dd>' . t('You can choose to translate date formats on the <a href=":translation-page">Configuration translation</a> page. This allows you not only to translate the label text, but also to set a language-specific <em>PHP date format</em>.', array(':translation-page' => \Drupal::url('config_translation.mapper_list'))) . '</dd>';
+      $output .= '<dd>' . t('You can choose to translate date formats on the <a href=":translation-page">Configuration translation</a> page. This allows you not only to translate the label text, but also to set a language-specific <em>PHP date format</em>.', [':translation-page' => \Drupal::url('config_translation.mapper_list')]) . '</dd>';
       $output .= '</dl>';
       return $output;
 
@@ -40,12 +40,12 @@ function config_translation_help($route_name, RouteMatchInterface $route_match) 
  * Implements hook_theme().
  */
 function config_translation_theme() {
-  return array(
-    'config_translation_manage_form_element' => array(
+  return [
+    'config_translation_manage_form_element' => [
       'render element' => 'element',
       'template' => 'config_translation_manage_form_element',
-    ),
-  );
+    ],
+  ];
 }
 
 /**
@@ -110,13 +110,13 @@ function config_translation_config_translation_info(&$info) {
     foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
       // Make sure entity type has field UI enabled and has a base route.
       if ($entity_type->get('field_ui_base_route')) {
-        $info[$entity_type_id . '_fields'] = array(
+        $info[$entity_type_id . '_fields'] = [
           'base_route_name' => "entity.field_config.{$entity_type_id}_field_edit_form",
           'entity_type' => 'field_config',
           'class' => '\Drupal\config_translation\ConfigFieldMapper',
           'base_entity_type' => $entity_type_id,
           'weight' => 10,
-        );
+        ];
       }
     }
   }
@@ -138,14 +138,14 @@ function config_translation_config_translation_info(&$info) {
 
     // Use the entity type as the plugin ID.
     $base_route_name = "entity.$entity_type_id.edit_form";
-    $info[$entity_type_id] = array(
+    $info[$entity_type_id] = [
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
       'base_route_name' => $base_route_name,
       'title' => $entity_type->getLowercaseLabel(),
-      'names' => array(),
+      'names' => [],
       'entity_type' => $entity_type_id,
       'weight' => 10,
-    );
+    ];
   }
 }
 
@@ -153,7 +153,7 @@ function config_translation_config_translation_info(&$info) {
  * Implements hook_entity_operation().
  */
 function config_translation_entity_operation(EntityInterface $entity) {
-  $operations = array();
+  $operations = [];
   $entity_type = $entity->getEntityType();
   if ($entity_type->entityClassImplements(ConfigEntityInterface::class) &&
     $entity->hasLinkTemplate('config-translation-overview') &&
@@ -164,11 +164,11 @@ function config_translation_entity_operation(EntityInterface $entity) {
       $link_template = "config-translation-overview.{$entity->getTargetEntityTypeId()}";
     }
 
-    $operations['translate'] = array(
+    $operations['translate'] = [
       'title' => t('Translate'),
       'weight' => 50,
       'url' => $entity->urlInfo($link_template),
-    );
+    ];
   }
 
   return $operations;
@@ -178,7 +178,7 @@ function config_translation_entity_operation(EntityInterface $entity) {
  * Implements hook_config_schema_info_alter().
  */
 function config_translation_config_schema_info_alter(&$definitions) {
-  $map = array(
+  $map = [
     'label' => '\Drupal\config_translation\FormElement\Textfield',
     'text' => '\Drupal\config_translation\FormElement\Textarea',
     'date_format' => '\Drupal\config_translation\FormElement\DateFormat',
@@ -186,7 +186,7 @@ function config_translation_config_schema_info_alter(&$definitions) {
     'mapping' => '\Drupal\config_translation\FormElement\ListElement',
     'sequence' => '\Drupal\config_translation\FormElement\ListElement',
     'plural_label' => '\Drupal\config_translation\FormElement\PluralVariants',
-  );
+  ];
 
   // Enhance the text and date type definitions with classes to generate proper
   // form elements in ConfigTranslationFormBase. Other translatable types will

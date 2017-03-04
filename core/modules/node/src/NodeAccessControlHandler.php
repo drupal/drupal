@@ -73,7 +73,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   /**
    * {@inheritdoc}
    */
-  public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = array(), $return_as_object = FALSE) {
+  public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = [], $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
 
     if ($account->hasPermission('bypass node access')) {
@@ -121,13 +121,13 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   protected function checkFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
     // Only users with the administer nodes permission can edit administrative
     // fields.
-    $administrative_fields = array('uid', 'status', 'created', 'promote', 'sticky');
+    $administrative_fields = ['uid', 'status', 'created', 'promote', 'sticky'];
     if ($operation == 'edit' && in_array($field_definition->getName(), $administrative_fields, TRUE)) {
       return AccessResult::allowedIfHasPermission($account, 'administer nodes');
     }
 
     // No user can change read only fields.
-    $read_only_fields = array('revision_timestamp', 'revision_uid');
+    $read_only_fields = ['revision_timestamp', 'revision_uid'];
     if ($operation == 'edit' && in_array($field_definition->getName(), $read_only_fields, TRUE)) {
       return AccessResult::forbidden();
     }
@@ -147,12 +147,12 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
    * {@inheritdoc}
    */
   public function acquireGrants(NodeInterface $node) {
-    $grants = $this->moduleHandler->invokeAll('node_access_records', array($node));
+    $grants = $this->moduleHandler->invokeAll('node_access_records', [$node]);
     // Let modules alter the grants.
     $this->moduleHandler->alter('node_access_records', $grants, $node);
     // If no grants are set and the node is published, then use the default grant.
     if (empty($grants) && $node->isPublished()) {
-      $grants[] = array('realm' => 'all', 'gid' => 0, 'grant_view' => 1, 'grant_update' => 0, 'grant_delete' => 0);
+      $grants[] = ['realm' => 'all', 'gid' => 0, 'grant_view' => 1, 'grant_update' => 0, 'grant_delete' => 0];
     }
     return $grants;
   }

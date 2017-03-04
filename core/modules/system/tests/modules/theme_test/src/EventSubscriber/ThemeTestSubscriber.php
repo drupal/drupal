@@ -63,11 +63,11 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
       // theme_test_request_listener_page_callback() to test that even when the
       // theme system is initialized this early, it is still capable of
       // returning output and theming the page as a whole.
-      $more_link = array(
+      $more_link = [
         '#type' => 'more_link',
         '#url' => Url::fromRoute('user.page'),
-        '#attributes' => array('title' => 'Themed output generated in a KernelEvents::REQUEST listener'),
-      );
+        '#attributes' => ['title' => 'Themed output generated in a KernelEvents::REQUEST listener'],
+      ];
       $GLOBALS['theme_test_output'] = $this->renderer->renderPlain($more_link);
     }
   }
@@ -77,9 +77,9 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    */
   public function onView(GetResponseEvent $event) {
     $current_route = $this->currentRouteMatch->getRouteName();
-    $entity_autcomplete_route = array(
+    $entity_autcomplete_route = [
       'system.entity_autocomplete',
-    );
+    ];
 
     if (in_array($current_route, $entity_autcomplete_route)) {
       if ($this->container->initialized('theme.registry')) {
@@ -92,8 +92,8 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = array('onRequest');
-    $events[KernelEvents::VIEW][] = array('onView', -1000);
+    $events[KernelEvents::REQUEST][] = ['onRequest'];
+    $events[KernelEvents::VIEW][] = ['onView', -1000];
     return $events;
   }
 

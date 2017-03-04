@@ -94,7 +94,7 @@ class DbLogController extends ControllerBase {
    *   An array of log level classes.
    */
   public static function getLogLevelClassMap() {
-    return array(
+    return [
       RfcLogLevel::DEBUG => 'dblog-debug',
       RfcLogLevel::INFO => 'dblog-info',
       RfcLogLevel::NOTICE => 'dblog-notice',
@@ -103,7 +103,7 @@ class DbLogController extends ControllerBase {
       RfcLogLevel::CRITICAL => 'dblog-critical',
       RfcLogLevel::ALERT => 'dblog-alert',
       RfcLogLevel::EMERGENCY => 'dblog-emergency',
-    );
+    ];
   }
 
   /**
@@ -121,7 +121,7 @@ class DbLogController extends ControllerBase {
   public function overview() {
 
     $filter = $this->buildFilterQuery();
-    $rows = array();
+    $rows = [];
 
     $classes = static::getLogLevelClassMap();
 
@@ -129,32 +129,32 @@ class DbLogController extends ControllerBase {
 
     $build['dblog_filter_form'] = $this->formBuilder->getForm('Drupal\dblog\Form\DblogFilterForm');
 
-    $header = array(
+    $header = [
       // Icon column.
       '',
-      array(
+      [
         'data' => $this->t('Type'),
         'field' => 'w.type',
-        'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
-      array(
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM]],
+      [
         'data' => $this->t('Date'),
         'field' => 'w.wid',
         'sort' => 'desc',
-        'class' => array(RESPONSIVE_PRIORITY_LOW)),
+        'class' => [RESPONSIVE_PRIORITY_LOW]],
       $this->t('Message'),
-      array(
+      [
         'data' => $this->t('User'),
         'field' => 'ufd.name',
-        'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
-      array(
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM]],
+      [
         'data' => $this->t('Operations'),
-        'class' => array(RESPONSIVE_PRIORITY_LOW)),
-    );
+        'class' => [RESPONSIVE_PRIORITY_LOW]],
+    ];
 
     $query = $this->database->select('watchdog', 'w')
       ->extend('\Drupal\Core\Database\Query\PagerSelectExtender')
       ->extend('\Drupal\Core\Database\Query\TableSortExtender');
-    $query->fields('w', array(
+    $query->fields('w', [
       'wid',
       'uid',
       'severity',
@@ -163,7 +163,7 @@ class DbLogController extends ControllerBase {
       'message',
       'variables',
       'link',
-    ));
+    ]);
     $query->leftJoin('users_field_data', 'ufd', 'w.uid = ufd.uid');
 
     if (!empty($filter['where'])) {
@@ -181,45 +181,45 @@ class DbLogController extends ControllerBase {
         $log_text = Unicode::truncate($title, 56, TRUE, TRUE);
         // The link generator will escape any unsafe HTML entities in the final
         // text.
-        $message = $this->l($log_text, new Url('dblog.event', array('event_id' => $dblog->wid), array(
-          'attributes' => array(
+        $message = $this->l($log_text, new Url('dblog.event', ['event_id' => $dblog->wid], [
+          'attributes' => [
             // Provide a title for the link for useful hover hints. The
             // Attribute object will escape any unsafe HTML entities in the
             // final text.
             'title' => $title,
-          ),
-        )));
+          ],
+        ]));
       }
-      $username = array(
+      $username = [
         '#theme' => 'username',
         '#account' => $this->userStorage->load($dblog->uid),
-      );
-      $rows[] = array(
-        'data' => array(
+      ];
+      $rows[] = [
+        'data' => [
           // Cells.
-          array('class' => array('icon')),
+          ['class' => ['icon']],
           $this->t($dblog->type),
           $this->dateFormatter->format($dblog->timestamp, 'short'),
           $message,
-          array('data' => $username),
-          array('data' => array('#markup' => $dblog->link)),
-        ),
+          ['data' => $username],
+          ['data' => ['#markup' => $dblog->link]],
+        ],
         // Attributes for table row.
-        'class' => array(Html::getClass('dblog-' . $dblog->type), $classes[$dblog->severity]),
-      );
+        'class' => [Html::getClass('dblog-' . $dblog->type), $classes[$dblog->severity]],
+      ];
     }
 
-    $build['dblog_table'] = array(
+    $build['dblog_table'] = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#attributes' => array('id' => 'admin-dblog', 'class' => array('admin-dblog')),
+      '#attributes' => ['id' => 'admin-dblog', 'class' => ['admin-dblog']],
       '#empty' => $this->t('No log messages available.'),
-      '#attached' => array(
-        'library' => array('dblog/drupal.dblog'),
-      ),
-    );
-    $build['dblog_pager'] = array('#type' => 'pager');
+      '#attached' => [
+        'library' => ['dblog/drupal.dblog'],
+      ],
+    ];
+    $build['dblog_pager'] = ['#type' => 'pager'];
 
     return $build;
 
@@ -236,60 +236,60 @@ class DbLogController extends ControllerBase {
    *   format expected by drupal_render();
    */
   public function eventDetails($event_id) {
-    $build = array();
-    if ($dblog = $this->database->query('SELECT w.*, u.uid FROM {watchdog} w LEFT JOIN {users} u ON u.uid = w.uid WHERE w.wid = :id', array(':id' => $event_id))->fetchObject()) {
+    $build = [];
+    if ($dblog = $this->database->query('SELECT w.*, u.uid FROM {watchdog} w LEFT JOIN {users} u ON u.uid = w.uid WHERE w.wid = :id', [':id' => $event_id])->fetchObject()) {
       $severity = RfcLogLevel::getLevels();
       $message = $this->formatMessage($dblog);
-      $username = array(
+      $username = [
         '#theme' => 'username',
         '#account' => $dblog->uid ? $this->userStorage->load($dblog->uid) : User::getAnonymousUser(),
-      );
-      $rows = array(
-        array(
-          array('data' => $this->t('Type'), 'header' => TRUE),
+      ];
+      $rows = [
+        [
+          ['data' => $this->t('Type'), 'header' => TRUE],
           $this->t($dblog->type),
-        ),
-        array(
-          array('data' => $this->t('Date'), 'header' => TRUE),
+        ],
+        [
+          ['data' => $this->t('Date'), 'header' => TRUE],
           $this->dateFormatter->format($dblog->timestamp, 'long'),
-        ),
-        array(
-          array('data' => $this->t('User'), 'header' => TRUE),
-          array('data' => $username),
-        ),
-        array(
-          array('data' => $this->t('Location'), 'header' => TRUE),
+        ],
+        [
+          ['data' => $this->t('User'), 'header' => TRUE],
+          ['data' => $username],
+        ],
+        [
+          ['data' => $this->t('Location'), 'header' => TRUE],
           $this->l($dblog->location, $dblog->location ? Url::fromUri($dblog->location) : Url::fromRoute('<none>')),
-        ),
-        array(
-          array('data' => $this->t('Referrer'), 'header' => TRUE),
+        ],
+        [
+          ['data' => $this->t('Referrer'), 'header' => TRUE],
           $this->l($dblog->referer, $dblog->referer ? Url::fromUri($dblog->referer) : Url::fromRoute('<none>')),
-        ),
-        array(
-          array('data' => $this->t('Message'), 'header' => TRUE),
+        ],
+        [
+          ['data' => $this->t('Message'), 'header' => TRUE],
           $message,
-        ),
-        array(
-          array('data' => $this->t('Severity'), 'header' => TRUE),
+        ],
+        [
+          ['data' => $this->t('Severity'), 'header' => TRUE],
           $severity[$dblog->severity],
-        ),
-        array(
-          array('data' => $this->t('Hostname'), 'header' => TRUE),
+        ],
+        [
+          ['data' => $this->t('Hostname'), 'header' => TRUE],
           $dblog->hostname,
-        ),
-        array(
-          array('data' => $this->t('Operations'), 'header' => TRUE),
-          array('data' => array('#markup' => $dblog->link)),
-        ),
-      );
-      $build['dblog_table'] = array(
+        ],
+        [
+          ['data' => $this->t('Operations'), 'header' => TRUE],
+          ['data' => ['#markup' => $dblog->link]],
+        ],
+      ];
+      $build['dblog_table'] = [
         '#type' => 'table',
         '#rows' => $rows,
-        '#attributes' => array('class' => array('dblog-event')),
-        '#attached' => array(
-          'library' => array('dblog/drupal.dblog'),
-        ),
-      );
+        '#attributes' => ['class' => ['dblog-event']],
+        '#attached' => [
+          'library' => ['dblog/drupal.dblog'],
+        ],
+      ];
     }
 
     return $build;
@@ -311,9 +311,9 @@ class DbLogController extends ControllerBase {
     $filters = dblog_filters();
 
     // Build query.
-    $where = $args = array();
+    $where = $args = [];
     foreach ($_SESSION['dblog_overview_filter'] as $key => $filter) {
-      $filter_where = array();
+      $filter_where = [];
       foreach ($filter as $value) {
         $filter_where[] = $filters[$key]['where'];
         $args[] = $value;
@@ -324,10 +324,10 @@ class DbLogController extends ControllerBase {
     }
     $where = !empty($where) ? implode(' AND ', $where) : '';
 
-    return array(
+    return [
       'where' => $where,
       'args' => $args,
-    );
+    ];
   }
 
   /**
@@ -378,10 +378,10 @@ class DbLogController extends ControllerBase {
    *   A build array in the format expected by drupal_render().
    */
   public function topLogMessages($type) {
-    $header = array(
-      array('data' => $this->t('Count'), 'field' => 'count', 'sort' => 'desc'),
-      array('data' => $this->t('Message'), 'field' => 'message'),
-    );
+    $header = [
+      ['data' => $this->t('Count'), 'field' => 'count', 'sort' => 'desc'],
+      ['data' => $this->t('Message'), 'field' => 'message'],
+    ];
 
     $count_query = $this->database->select('watchdog');
     $count_query->addExpression('COUNT(DISTINCT(message))');
@@ -392,7 +392,7 @@ class DbLogController extends ControllerBase {
       ->extend('\Drupal\Core\Database\Query\TableSortExtender');
     $query->addExpression('COUNT(wid)', 'count');
     $query = $query
-      ->fields('w', array('message', 'variables'))
+      ->fields('w', ['message', 'variables'])
       ->condition('w.type', $type)
       ->groupBy('message')
       ->groupBy('variables')
@@ -401,23 +401,23 @@ class DbLogController extends ControllerBase {
     $query->setCountQuery($count_query);
     $result = $query->execute();
 
-    $rows = array();
+    $rows = [];
     foreach ($result as $dblog) {
       if ($message = $this->formatMessage($dblog)) {
-        $rows[] = array($dblog->count, $message);
+        $rows[] = [$dblog->count, $message];
       }
     }
 
-    $build['dblog_top_table']  = array(
+    $build['dblog_top_table']  = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => $this->t('No log messages available.'),
-      '#attached' => array(
-        'library' => array('dblog/drupal.dblog'),
-      ),
-    );
-    $build['dblog_top_pager'] = array('#type' => 'pager');
+      '#attached' => [
+        'library' => ['dblog/drupal.dblog'],
+      ],
+    ];
+    $build['dblog_top_pager'] = ['#type' => 'pager'];
 
     return $build;
   }

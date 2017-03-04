@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'dwaen', 'dwaenj', 'dwaenh', 'dwaed', 'dwael', 'dwaelg', 'dwaelm', 'dwaelb', 'dwaels', 'dwaelt', 'dwaelp', 'dwaelh', 'dwaem', 'dwaeb', 'dwaebs', 'dwaes',
   0x10 => 'dwaess', 'dwaeng', 'dwaej', 'dwaech', 'dwaek', 'dwaet', 'dwaep', 'dwaeh', 'doe', 'doeg', 'doekk', 'doegs', 'doen', 'doenj', 'doenh', 'doed',
   0x20 => 'doel', 'doelg', 'doelm', 'doelb', 'doels', 'doelt', 'doelp', 'doelh', 'doem', 'doeb', 'doebs', 'does', 'doess', 'doeng', 'doej', 'doech',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'dyum', 'dyub', 'dyubs', 'dyus', 'dyuss', 'dyung', 'dyuj', 'dyuch', 'dyuk', 'dyut', 'dyup', 'dyuh', 'deu', 'deug', 'deukk', 'deugs',
   0xE0 => 'deun', 'deunj', 'deunh', 'deud', 'deul', 'deulg', 'deulm', 'deulb', 'deuls', 'deult', 'deulp', 'deulh', 'deum', 'deub', 'deubs', 'deus',
   0xF0 => 'deuss', 'deung', 'deuj', 'deuch', 'deuk', 'deut', 'deup', 'deuh', 'dui', 'duig', 'duikk', 'duigs', 'duin', 'duinj', 'duinh', 'duid',
-);
+];

@@ -98,27 +98,27 @@ class CronForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['description'] = array(
+    $form['description'] = [
       '#markup' => '<p>' . t('Cron takes care of running periodic tasks like checking for updates and indexing content for search.') . '</p>',
-    );
-    $form['run'] = array(
+    ];
+    $form['run'] = [
       '#type' => 'submit',
       '#value' => t('Run cron'),
-    );
-    $status = '<p>' . $this->t('Last run: %time ago.', array('%time' => $this->dateFormatter->formatTimeDiffSince($this->state->get('system.cron_last')))) . '</p>';
-    $form['status'] = array(
+    ];
+    $status = '<p>' . $this->t('Last run: %time ago.', ['%time' => $this->dateFormatter->formatTimeDiffSince($this->state->get('system.cron_last'))]) . '</p>';
+    $form['status'] = [
       '#markup' => $status,
-    );
+    ];
 
-    $cron_url = $this->url('system.cron', array('key' => $this->state->get('system.cron_key')), array('absolute' => TRUE));
-    $form['cron_url'] = array(
-      '#markup' => '<p>' . t('To run cron from outside the site, go to <a href=":cron">@cron</a>', array(':cron' => $cron_url, '@cron' => $cron_url)) . '</p>',
-    );
+    $cron_url = $this->url('system.cron', ['key' => $this->state->get('system.cron_key')], ['absolute' => TRUE]);
+    $form['cron_url'] = [
+      '#markup' => '<p>' . t('To run cron from outside the site, go to <a href=":cron">@cron</a>', [':cron' => $cron_url, '@cron' => $cron_url]) . '</p>',
+    ];
 
     if (!$this->moduleHandler->moduleExists('automated_cron')) {
-      $form['automated_cron'] = array(
+      $form['automated_cron'] = [
         '#markup' => $this->t('Enable the <em>Automated Cron</em> module to allow cron execution at the end of a server response.'),
-      );
+      ];
     }
 
     $form['cron'] = [
@@ -127,12 +127,12 @@ class CronForm extends FormBase {
       '#open' => TRUE,
     ];
 
-    $form['cron']['logging'] = array(
+    $form['cron']['logging'] = [
       '#type' => 'checkbox',
       '#title' => t('Detailed cron logging'),
       '#default_value' => $this->config('system.cron')->get('logging'),
       '#description' => 'Run times of individual cron jobs will be written to watchdog',
-    );
+    ];
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = [

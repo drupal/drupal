@@ -94,26 +94,26 @@ class EditorImageDialog extends FormBase {
     $existing_file = isset($image_element['data-entity-uuid']) ? \Drupal::entityManager()->loadEntityByUuid('file', $image_element['data-entity-uuid']) : NULL;
     $fid = $existing_file ? $existing_file->id() : NULL;
 
-    $form['fid'] = array(
+    $form['fid'] = [
       '#title' => $this->t('Image'),
       '#type' => 'managed_file',
       '#upload_location' => $image_upload['scheme'] . '://' . $image_upload['directory'],
-      '#default_value' => $fid ? array($fid) : NULL,
-      '#upload_validators' => array(
-        'file_validate_extensions' => array('gif png jpg jpeg'),
-        'file_validate_size' => array($max_filesize),
-        'file_validate_image_resolution' => array($max_dimensions),
-      ),
+      '#default_value' => $fid ? [$fid] : NULL,
+      '#upload_validators' => [
+        'file_validate_extensions' => ['gif png jpg jpeg'],
+        'file_validate_size' => [$max_filesize],
+        'file_validate_image_resolution' => [$max_dimensions],
+      ],
       '#required' => TRUE,
-    );
+    ];
 
-    $form['attributes']['src'] = array(
+    $form['attributes']['src'] = [
       '#title' => $this->t('URL'),
       '#type' => 'textfield',
       '#default_value' => isset($image_element['src']) ? $image_element['src'] : '',
       '#maxlength' => 2048,
       '#required' => TRUE,
-    );
+    ];
 
     // If the editor has image uploads enabled, show a managed_file form item,
     // otherwise show a (file URL) text form item.
@@ -137,7 +137,7 @@ class EditorImageDialog extends FormBase {
     if ($alt === '' && !empty($image_element['src'])) {
       $alt = '""';
     }
-    $form['attributes']['alt'] = array(
+    $form['attributes']['alt'] = [
       '#title' => $this->t('Alternative text'),
       '#placeholder' => $this->t('Short description for the visually impaired'),
       '#type' => 'textfield',
@@ -145,51 +145,51 @@ class EditorImageDialog extends FormBase {
       '#required_error' => $this->t('Alternative text is required.<br />(Only in rare cases should this be left empty. To create empty alternative text, enter <code>""</code> — two double quotes without any content).'),
       '#default_value' => $alt,
       '#maxlength' => 2048,
-    );
+    ];
 
     // When Drupal core's filter_align is being used, the text editor may
     // offer the ability to change the alignment.
     if (isset($image_element['data-align']) && $editor->getFilterFormat()->filters('filter_align')->status) {
-      $form['align'] = array(
+      $form['align'] = [
         '#title' => $this->t('Align'),
         '#type' => 'radios',
-        '#options' => array(
+        '#options' => [
           'none' => $this->t('None'),
           'left' => $this->t('Left'),
           'center' => $this->t('Center'),
           'right' => $this->t('Right'),
-        ),
+        ],
         '#default_value' => $image_element['data-align'] === '' ? 'none' : $image_element['data-align'],
-        '#wrapper_attributes' => array('class' => array('container-inline')),
-        '#attributes' => array('class' => array('container-inline')),
-        '#parents' => array('attributes', 'data-align'),
-      );
+        '#wrapper_attributes' => ['class' => ['container-inline']],
+        '#attributes' => ['class' => ['container-inline']],
+        '#parents' => ['attributes', 'data-align'],
+      ];
     }
 
     // When Drupal core's filter_caption is being used, the text editor may
     // offer the ability to in-place edit the image's caption: show a toggle.
     if (isset($image_element['hasCaption']) && $editor->getFilterFormat()->filters('filter_caption')->status) {
-      $form['caption'] = array(
+      $form['caption'] = [
         '#title' => $this->t('Caption'),
         '#type' => 'checkbox',
         '#default_value' => $image_element['hasCaption'] === 'true',
-        '#parents' => array('attributes', 'hasCaption'),
-      );
+        '#parents' => ['attributes', 'hasCaption'],
+      ];
     }
 
-    $form['actions'] = array(
+    $form['actions'] = [
       '#type' => 'actions',
-    );
-    $form['actions']['save_modal'] = array(
+    ];
+    $form['actions']['save_modal'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
       // No regular submit-handler. This form only works via JavaScript.
-      '#submit' => array(),
-      '#ajax' => array(
+      '#submit' => [],
+      '#ajax' => [
         'callback' => '::submitForm',
         'event' => 'click',
-      ),
-    );
+      ],
+    ];
 
     return $form;
   }
@@ -202,22 +202,22 @@ class EditorImageDialog extends FormBase {
 
     // Convert any uploaded files from the FID values to data-entity-uuid
     // attributes and set data-entity-type to 'file'.
-    $fid = $form_state->getValue(array('fid', 0));
+    $fid = $form_state->getValue(['fid', 0]);
     if (!empty($fid)) {
       $file = $this->fileStorage->load($fid);
       $file_url = file_create_url($file->getFileUri());
       // Transform absolute image URLs to relative image URLs: prevent problems
       // on multisite set-ups and prevent mixed content errors.
       $file_url = file_url_transform_relative($file_url);
-      $form_state->setValue(array('attributes', 'src'), $file_url);
-      $form_state->setValue(array('attributes', 'data-entity-uuid'), $file->uuid());
-      $form_state->setValue(array('attributes', 'data-entity-type'), 'file');
+      $form_state->setValue(['attributes', 'src'], $file_url);
+      $form_state->setValue(['attributes', 'data-entity-uuid'], $file->uuid());
+      $form_state->setValue(['attributes', 'data-entity-type'], 'file');
     }
 
     // When the alt attribute is set to two double quotes, transform it to the
     // empty string: two double quotes signify "empty alt attribute". See above.
-    if (trim($form_state->getValue(array('attributes', 'alt'))) === '""') {
-      $form_state->setValue(array('attributes', 'alt'), '');
+    if (trim($form_state->getValue(['attributes', 'alt'])) === '""') {
+      $form_state->setValue(['attributes', 'alt'], '');
     }
 
     if ($form_state->getErrors()) {

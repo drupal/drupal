@@ -26,20 +26,20 @@ class AjaxFormsTestLazyLoadForm extends FormBase {
     // command to ensure that the 'currentPath' setting is not part
     // of the Ajax response.
     $form['#attached']['drupalSettings']['test'] = 'currentPathUpdate';
-    $form['add_files'] = array(
+    $form['add_files'] = [
       '#title' => $this->t('Add files'),
       '#type' => 'checkbox',
       '#default_value' => FALSE,
-    );
-    $form['submit'] = array(
+    ];
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
-      '#ajax' => array(
+      '#ajax' => [
         'wrapper' => 'ajax-forms-test-lazy-load-ajax-wrapper',
         'callback' => 'ajax_forms_test_lazy_load_form_ajax',
-      ),
+      ],
       '#prefix' => '<div id="ajax-forms-test-lazy-load-ajax-wrapper"></div>',
-    );
+    ];
 
     return $form;
   }

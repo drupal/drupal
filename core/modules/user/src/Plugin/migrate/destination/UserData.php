@@ -56,7 +56,7 @@ class UserData extends DestinationBase implements ContainerFactoryPluginInterfac
   /**
    * {@inheritdoc}
    */
-  public function import(Row $row, array $old_destination_id_values = array()) {
+  public function import(Row $row, array $old_destination_id_values = []) {
     $uid = $row->getDestinationProperty('uid');
     $module = $row->getDestinationProperty('module');
     $key = $row->getDestinationProperty('key');

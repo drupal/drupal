@@ -47,24 +47,24 @@ class Textfield extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
       '#size' => 60,
       '#maxlength' => 128,
       '#autocomplete_route_name' => FALSE,
-      '#process' => array(
-        array($class, 'processAutocomplete'),
-        array($class, 'processAjaxForm'),
-        array($class, 'processPattern'),
-        array($class, 'processGroup'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderTextfield'),
-        array($class, 'preRenderGroup'),
-      ),
+      '#process' => [
+        [$class, 'processAutocomplete'],
+        [$class, 'processAjaxForm'],
+        [$class, 'processPattern'],
+        [$class, 'processGroup'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderTextfield'],
+        [$class, 'preRenderGroup'],
+      ],
       '#theme' => 'input__textfield',
-      '#theme_wrappers' => array('form_element'),
-    );
+      '#theme_wrappers' => ['form_element'],
+    ];
   }
 
   /**
@@ -77,7 +77,7 @@ class Textfield extends FormElement {
       if (!is_scalar($input)) {
         $input = '';
       }
-      return str_replace(array("\r", "\n"), '', $input);
+      return str_replace(["\r", "\n"], '', $input);
     }
     return NULL;
   }
@@ -95,8 +95,8 @@ class Textfield extends FormElement {
    */
   public static function preRenderTextfield($element) {
     $element['#attributes']['type'] = 'text';
-    Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-    static::setAttributes($element, array('form-text'));
+    Element::setAttributes($element, ['id', 'name', 'value', 'size', 'maxlength', 'placeholder']);
+    static::setAttributes($element, ['form-text']);
 
     return $element;
   }

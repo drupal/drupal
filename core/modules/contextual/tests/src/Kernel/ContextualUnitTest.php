@@ -17,7 +17,7 @@ class ContextualUnitTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('contextual');
+  public static $modules = ['contextual'];
 
   /**
    * Provides testcases for testContextualLinksToId() and
@@ -27,82 +27,82 @@ class ContextualUnitTest extends KernelTestBase {
     // - one group.
     // - one dynamic path argument.
     // - no metadata.
-    $tests[] = array(
-      'links' => array(
-        'node' => array(
-          'route_parameters' => array(
+    $tests[] = [
+      'links' => [
+        'node' => [
+          'route_parameters' => [
             'node' => '14031991',
-          ),
-          'metadata' => array('langcode' => 'en'),
-        ),
-      ),
+          ],
+          'metadata' => ['langcode' => 'en'],
+        ],
+      ],
       'id' => 'node:node=14031991:langcode=en',
-    );
+    ];
 
     // Test branch conditions:
     // - one group.
     // - multiple dynamic path arguments.
     // - no metadata.
-    $tests[] = array(
-      'links' => array(
-        'foo' => array(
-          'route_parameters' => array(
+    $tests[] = [
+      'links' => [
+        'foo' => [
+          'route_parameters' => [
             'bar',
             'key' => 'baz',
             'qux',
-          ),
-          'metadata' => array('langcode' => 'en'),
-        ),
-      ),
+          ],
+          'metadata' => ['langcode' => 'en'],
+        ],
+      ],
       'id' => 'foo:0=bar&key=baz&1=qux:langcode=en',
-    );
+    ];
 
     // Test branch conditions:
     // - one group.
     // - one dynamic path argument.
     // - metadata.
-    $tests[] = array(
-      'links' => array(
-        'views_ui_edit' => array(
-          'route_parameters' => array(
+    $tests[] = [
+      'links' => [
+        'views_ui_edit' => [
+          'route_parameters' => [
             'view' => 'frontpage'
-          ),
-          'metadata' => array(
+          ],
+          'metadata' => [
             'location' => 'page',
             'display' => 'page_1',
             'langcode' => 'en',
-          ),
-        ),
-      ),
+          ],
+        ],
+      ],
       'id' => 'views_ui_edit:view=frontpage:location=page&display=page_1&langcode=en',
-    );
+    ];
 
     // Test branch conditions:
     // - multiple groups.
     // - multiple dynamic path arguments.
-    $tests[] = array(
-      'links' => array(
-        'node' => array(
-          'route_parameters' => array(
+    $tests[] = [
+      'links' => [
+        'node' => [
+          'route_parameters' => [
             'node' => '14031991',
-          ),
-          'metadata' => array('langcode' => 'en'),
-        ),
-        'foo' => array(
-          'route_parameters' => array(
+          ],
+          'metadata' => ['langcode' => 'en'],
+        ],
+        'foo' => [
+          'route_parameters' => [
             'bar',
             'key' => 'baz',
             'qux',
-          ),
-          'metadata' => array('langcode' => 'en'),
-        ),
-        'edge' => array(
-          'route_parameters' => array('20011988'),
-          'metadata' => array('langcode' => 'en'),
-        ),
-      ),
+          ],
+          'metadata' => ['langcode' => 'en'],
+        ],
+        'edge' => [
+          'route_parameters' => ['20011988'],
+          'metadata' => ['langcode' => 'en'],
+        ],
+      ],
       'id' => 'node:node=14031991:langcode=en|foo:0=bar&key=baz&1=qux:langcode=en|edge:0=20011988:langcode=en',
-    );
+    ];
 
     return $tests;
   }

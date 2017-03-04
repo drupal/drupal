@@ -26,7 +26,7 @@ class Schema extends DatabaseSchema {
    * @see \Drupal\Core\Database\Driver\pgsql\Schema::queryTableInformation()
    * @var array
    */
-  protected $tableInformation = array();
+  protected $tableInformation = [];
 
   /**
    * The maximum allowed length for index, primary key and constraint names.
@@ -108,10 +108,10 @@ class Schema extends DatabaseSchema {
     }
 
     if (!isset($this->tableInformation[$key])) {
-      $table_information = (object) array(
-        'blob_fields' => array(),
-        'sequences' => array(),
-      );
+      $table_information = (object) [
+        'blob_fields' => [],
+        'sequences' => [],
+      ];
       $this->connection->addSavepoint();
 
       try {
@@ -215,11 +215,11 @@ EOD;
     $this->connection->addSavepoint();
 
     try {
-      $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = 'c' AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", array(
+      $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = 'c' AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", [
         ':schema' => $schema,
         ':table' => $table_name,
         ':column' => $field,
-      ));
+      ]);
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
@@ -244,12 +244,12 @@ EOD;
    *   An array of SQL statements to create the table.
    */
   protected function createTableSql($name, $table) {
-    $sql_fields = array();
+    $sql_fields = [];
     foreach ($table['fields'] as $field_name => $field) {
       $sql_fields[] = $this->createFieldSql($field_name, $this->processField($field));
     }
 
-    $sql_keys = array();
+    $sql_keys = [];
     if (isset($table['primary key']) && is_array($table['primary key'])) {
       $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, '', 'pkey') . ' PRIMARY KEY (' . $this->createPrimaryKeySql($table['primary key']) . ')';
     }
@@ -309,7 +309,7 @@ EOD;
       unset($spec['not null']);
     }
 
-    if (in_array($spec['pgsql_type'], array('varchar', 'character')) && isset($spec['length'])) {
+    if (in_array($spec['pgsql_type'], ['varchar', 'character']) && isset($spec['length'])) {
       $sql .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
@@ -391,7 +391,7 @@ EOD;
     // it much easier for modules (such as schema.module) to map
     // database types back into schema types.
     // $map does not use drupal_static as its value never changes.
-    static $map = array(
+    static $map = [
       'varchar_ascii:normal' => 'varchar',
 
       'varchar:normal' => 'varchar',
@@ -425,12 +425,12 @@ EOD;
       'serial:medium' => 'serial',
       'serial:big' => 'bigserial',
       'serial:normal' => 'serial',
-      );
+      ];
     return $map;
   }
 
   protected function _createKeySql($fields) {
-    $return = array();
+    $return = [];
     foreach ($fields as $field) {
       if (is_array($field)) {
         $return[] = 'substr(' . $field[0] . ', 1, ' . $field[1] . ')';
@@ -450,7 +450,7 @@ EOD;
    * key length defined in the schema is ignored.
    */
   protected function createPrimaryKeySql($fields) {
-    $return = array();
+    $return = [];
     foreach ($fields as $field) {
       if (is_array($field)) {
         $return[] = '"' . $field[0] . '"';
@@ -468,24 +468,24 @@ EOD;
   public function tableExists($table) {
     $prefixInfo = $this->getPrefixInfo($table, TRUE);
 
-    return (bool) $this->connection->query("SELECT 1 FROM pg_tables WHERE schemaname = :schema AND tablename = :table", array(':schema' => $prefixInfo['schema'], ':table' => $prefixInfo['table']))->fetchField();
+    return (bool) $this->connection->query("SELECT 1 FROM pg_tables WHERE schemaname = :schema AND tablename = :table", [':schema' => $prefixInfo['schema'], ':table' => $prefixInfo['table']])->fetchField();
   }
 
   function renameTable($table, $new_name) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot rename @table to @table_new: table @table doesn't exist.", array('@table' => $table, '@table_new' => $new_name)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot rename @table to @table_new: table @table doesn't exist.", ['@table' => $table, '@table_new' => $new_name]));
     }
     if ($this->tableExists($new_name)) {
-      throw new SchemaObjectExistsException(t("Cannot rename @table to @table_new: table @table_new already exists.", array('@table' => $table, '@table_new' => $new_name)));
+      throw new SchemaObjectExistsException(t("Cannot rename @table to @table_new: table @table_new already exists.", ['@table' => $table, '@table_new' => $new_name]));
     }
 
     // Get the schema and tablename for the old table.
     $old_full_name = $this->connection->prefixTables('{' . $table . '}');
-    list($old_schema, $old_table_name) = strpos($old_full_name, '.') ? explode('.', $old_full_name) : array('public', $old_full_name);
+    list($old_schema, $old_table_name) = strpos($old_full_name, '.') ? explode('.', $old_full_name) : ['public', $old_full_name];
 
     // Index names and constraint names are global in PostgreSQL, so we need to
     // rename them when renaming the table.
-    $indexes = $this->connection->query('SELECT indexname FROM pg_indexes WHERE schemaname = :schema AND tablename = :table', array(':schema' => $old_schema, ':table' => $old_table_name));
+    $indexes = $this->connection->query('SELECT indexname FROM pg_indexes WHERE schemaname = :schema AND tablename = :table', [':schema' => $old_schema, ':table' => $old_table_name]);
 
     foreach ($indexes as $index) {
       // Get the index type by suffix, e.g. idx/key/pkey
@@ -535,12 +535,12 @@ EOD;
     return TRUE;
   }
 
-  public function addField($table, $field, $spec, $new_keys = array()) {
+  public function addField($table, $field, $spec, $new_keys = []) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add field @table.@field: table doesn't exist.", array('@field' => $field, '@table' => $table)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add field @table.@field: table doesn't exist.", ['@field' => $field, '@table' => $table]));
     }
     if ($this->fieldExists($table, $field)) {
-      throw new SchemaObjectExistsException(t("Cannot add field @table.@field: field already exists.", array('@field' => $field, '@table' => $table)));
+      throw new SchemaObjectExistsException(t("Cannot add field @table.@field: field already exists.", ['@field' => $field, '@table' => $table]));
     }
 
     $fixnull = FALSE;
@@ -553,7 +553,7 @@ EOD;
     $this->connection->query($query);
     if (isset($spec['initial'])) {
       $this->connection->update($table)
-        ->fields(array($field => $spec['initial']))
+        ->fields([$field => $spec['initial']])
         ->execute();
     }
     if (isset($spec['initial_from_field'])) {
@@ -586,7 +586,7 @@ EOD;
 
   public function fieldSetDefault($table, $field, $default) {
     if (!$this->fieldExists($table, $field)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field @table.@field: field doesn't exist.", array('@table' => $table, '@field' => $field)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field @table.@field: field doesn't exist.", ['@table' => $table, '@field' => $field]));
     }
 
     $default = $this->escapeDefaultValue($default);
@@ -596,7 +596,7 @@ EOD;
 
   public function fieldSetNoDefault($table, $field) {
     if (!$this->fieldExists($table, $field)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot remove default value of field @table.@field: field doesn't exist.", array('@table' => $table, '@field' => $field)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot remove default value of field @table.@field: field doesn't exist.", ['@table' => $table, '@field' => $field]));
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
@@ -644,10 +644,10 @@ EOD;
 
   public function addPrimaryKey($table, $fields) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add primary key to table @table: table doesn't exist.", array('@table' => $table)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add primary key to table @table: table doesn't exist.", ['@table' => $table]));
     }
     if ($this->constraintExists($table, 'pkey')) {
-      throw new SchemaObjectExistsException(t("Cannot add primary key to table @table: primary key already exists.", array('@table' => $table)));
+      throw new SchemaObjectExistsException(t("Cannot add primary key to table @table: primary key already exists.", ['@table' => $table]));
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $this->ensureIdentifiersLength($table, '', 'pkey') . ' PRIMARY KEY (' . $this->createPrimaryKeySql($fields) . ')');
@@ -666,10 +666,10 @@ EOD;
 
   function addUniqueKey($table, $name, $fields) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add unique key @name to table @table: table doesn't exist.", array('@table' => $table, '@name' => $name)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add unique key @name to table @table: table doesn't exist.", ['@table' => $table, '@name' => $name]));
     }
     if ($this->constraintExists($table, $name . '__key')) {
-      throw new SchemaObjectExistsException(t("Cannot add unique key @name to table @table: unique key already exists.", array('@table' => $table, '@name' => $name)));
+      throw new SchemaObjectExistsException(t("Cannot add unique key @name to table @table: unique key already exists.", ['@table' => $table, '@name' => $name]));
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $this->ensureIdentifiersLength($table, $name, 'key') . ' UNIQUE (' . implode(',', $fields) . ')');
@@ -691,10 +691,10 @@ EOD;
    */
   public function addIndex($table, $name, $fields, array $spec) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add index @name to table @table: table doesn't exist.", array('@table' => $table, '@name' => $name)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add index @name to table @table: table doesn't exist.", ['@table' => $table, '@name' => $name]));
     }
     if ($this->indexExists($table, $name)) {
-      throw new SchemaObjectExistsException(t("Cannot add index @name to table @table: index already exists.", array('@table' => $table, '@name' => $name)));
+      throw new SchemaObjectExistsException(t("Cannot add index @name to table @table: index already exists.", ['@table' => $table, '@name' => $name]));
     }
 
     $this->connection->query($this->_createIndexSql($table, $name, $fields));
@@ -711,12 +711,12 @@ EOD;
     return TRUE;
   }
 
-  public function changeField($table, $field, $field_new, $spec, $new_keys = array()) {
+  public function changeField($table, $field, $field_new, $spec, $new_keys = []) {
     if (!$this->fieldExists($table, $field)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot change the definition of field @table.@name: field doesn't exist.", array('@table' => $table, '@name' => $field)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot change the definition of field @table.@name: field doesn't exist.", ['@table' => $table, '@name' => $field]));
     }
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
-      throw new SchemaObjectExistsException(t("Cannot rename field @table.@name to @name_new: target field already exists.", array('@table' => $table, '@name' => $field, '@name_new' => $field_new)));
+      throw new SchemaObjectExistsException(t("Cannot rename field @table.@name to @name_new: target field already exists.", ['@table' => $table, '@name' => $field, '@name_new' => $field_new]));
     }
 
     $spec = $this->processField($spec);
@@ -724,14 +724,14 @@ EOD;
     // Type 'serial' is known to PostgreSQL, but only during table creation,
     // not when altering. Because of that, we create it here as an 'int'. After
     // we create it we manually re-apply the sequence.
-    if (in_array($spec['pgsql_type'], array('serial', 'bigserial'))) {
+    if (in_array($spec['pgsql_type'], ['serial', 'bigserial'])) {
       $field_def = 'int';
     }
     else {
       $field_def = $spec['pgsql_type'];
     }
 
-    if (in_array($spec['pgsql_type'], array('varchar', 'character', 'text')) && isset($spec['length'])) {
+    if (in_array($spec['pgsql_type'], ['varchar', 'character', 'text']) && isset($spec['length'])) {
       $field_def .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
@@ -782,7 +782,7 @@ EOD;
       $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" ' . $nullaction);
     }
 
-    if (in_array($spec['pgsql_type'], array('serial', 'bigserial'))) {
+    if (in_array($spec['pgsql_type'], ['serial', 'bigserial'])) {
       // Type "serial" is known to PostgreSQL, but *only* during table creation,
       // not when altering. Because of that, the sequence needs to be created
       // and initialized by hand.
@@ -852,10 +852,10 @@ EOD;
     $info = $this->getPrefixInfo($table);
     // Don't use {} around pg_class, pg_attribute tables.
     if (isset($column)) {
-      return $this->connection->query('SELECT col_description(oid, attnum) FROM pg_class, pg_attribute WHERE attrelid = oid AND relname = ? AND attname = ?', array($info['table'], $column))->fetchField();
+      return $this->connection->query('SELECT col_description(oid, attnum) FROM pg_class, pg_attribute WHERE attrelid = oid AND relname = ? AND attname = ?', [$info['table'], $column])->fetchField();
     }
     else {
-      return $this->connection->query('SELECT obj_description(oid, ?) FROM pg_class WHERE relname = ?', array('pg_class', $info['table']))->fetchField();
+      return $this->connection->query('SELECT obj_description(oid, ?) FROM pg_class WHERE relname = ?', ['pg_class', $info['table']])->fetchField();
     }
   }
 
@@ -872,7 +872,7 @@ EOD;
   protected function hashBase64($data) {
     $hash = base64_encode(hash('sha256', $data, TRUE));
     // Modify the hash so it's safe to use in PostgreSQL identifiers.
-    return strtr($hash, array('+' => '_', '/' => '_', '=' => ''));
+    return strtr($hash, ['+' => '_', '/' => '_', '=' => '']);
   }
 
 }

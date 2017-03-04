@@ -30,7 +30,7 @@ class UploadInstance extends DrupalSqlBase {
     $max_filesize = $this->variableGet('upload_uploadsize_default', 1);
     $max_filesize = $max_filesize ? $max_filesize . 'MB' : '';
     $file_extensions = $this->variableGet('upload_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp');
-    $return = array();
+    $return = [];
     $values = $this->select('variable', 'v')
       ->fields('v', ['name', 'value'])
       ->condition('v.name', $variables, 'IN')
@@ -55,22 +55,22 @@ class UploadInstance extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function getIds() {
-    return array(
-      'node_type' => array(
+    return [
+      'node_type' => [
         'type' => 'string',
-      ),
-    );
+      ],
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'node_type' => $this->t('Node type'),
       'max_filesize' => $this->t('Max filesize'),
       'file_extensions' => $this->t('File extensions'),
-    );
+    ];
   }
 
   /**

@@ -15,7 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class FieldWidgetConstraintValidatorTest extends KernelTestBase {
 
-  public static $modules = array('entity_test', 'field', 'user', 'system');
+  public static $modules = ['entity_test', 'field', 'user', 'system'];
 
   /**
    * {@inheritdoc}
@@ -37,9 +37,9 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     $entity_type = 'entity_test_constraint_violation';
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
-      ->create(array('id' => 1, 'revision_id' => 1));
+      ->create(['id' => 1, 'revision_id' => 1]);
     $display = entity_get_form_display($entity_type, $entity_type, 'default');
-    $form = array();
+    $form = [];
     $form_state = new FormState();
     $display->buildForm($entity, $form, $form_state);
 

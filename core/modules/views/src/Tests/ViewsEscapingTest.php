@@ -14,7 +14,7 @@ class ViewsEscapingTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_page_display', 'test_field_header');
+  public static $testViews = ['test_page_display', 'test_field_header'];
 
   /**
    * Used by WebTestBase::setup()
@@ -25,7 +25,7 @@ class ViewsEscapingTest extends ViewTestBase {
    *
    * @see \Drupal\simpletest\WebTestBase::setup()
    */
-  public static $modules = array('views', 'theme_test');
+  public static $modules = ['views', 'theme_test'];
 
   /**
    * {@inheritdoc}
@@ -47,7 +47,7 @@ class ViewsEscapingTest extends ViewTestBase {
     $this->assertNoEscaped('<');
 
     // Install theme to test with template system.
-    \Drupal::service('theme_handler')->install(array('views_test_theme'));
+    \Drupal::service('theme_handler')->install(['views_test_theme']);
 
     // Make base theme default then test for hook invocations.
     $this->config('system.theme')

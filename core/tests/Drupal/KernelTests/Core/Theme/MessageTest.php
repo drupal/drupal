@@ -14,7 +14,7 @@ class MessageTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /**
    * Tests setting messages output.
@@ -26,9 +26,9 @@ class MessageTest extends KernelTestBase {
 
     drupal_set_message('An error occurred', 'error');
     drupal_set_message('But then something nice happened');
-    $messages = array(
+    $messages = [
       '#type' => 'status_messages',
-    );
+    ];
     $this->render($messages);
     $this->assertRaw('messages messages--error');
     $this->assertRaw('messages messages--status');

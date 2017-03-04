@@ -19,7 +19,7 @@ class MenuTest extends WizardTestBase {
     $this->drupalPlaceBlock('system_menu_block:main');
 
     // Create a view with a page display and a menu link in the Main Menu.
-    $view = array();
+    $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));
     $view['description'] = $this->randomMachineName(16);
@@ -44,9 +44,9 @@ class MenuTest extends WizardTestBase {
     /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
     $link = $menu_link_manager->createInstance('views_view:views.' . $view['id'] . '.page_1');
     $url = $link->getUrlObject();
-    $this->assertEqual($url->getRouteName(), 'view.' . $view['id'] . '.page_1', SafeMarkup::format('Found a link to %path in the main menu', array('%path' => $view['page[path]'])));
+    $this->assertEqual($url->getRouteName(), 'view.' . $view['id'] . '.page_1', SafeMarkup::format('Found a link to %path in the main menu', ['%path' => $view['page[path]']]));
     $metadata = $link->getMetaData();
-    $this->assertEqual(array('view_id' => $view['id'], 'display_id' => 'page_1'), $metadata);
+    $this->assertEqual(['view_id' => $view['id'], 'display_id' => 'page_1'], $metadata);
   }
 
 }

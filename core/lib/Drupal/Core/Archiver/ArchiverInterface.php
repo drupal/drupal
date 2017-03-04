@@ -47,7 +47,7 @@ interface ArchiverInterface {
    * @return \Drupal\Core\Archiver\ArchiverInterface
    *   The called object.
    */
-  public function extract($path, array $files = array());
+  public function extract($path, array $files = []);
 
   /**
    * Lists all files in the archive.

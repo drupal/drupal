@@ -28,7 +28,7 @@ class RowEntityTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_entity_row');
+  public static $testViews = ['test_entity_row'];
 
   /**
    * {@inheritdoc}
@@ -37,7 +37,7 @@ class RowEntityTest extends ViewsKernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('taxonomy_term');
-    $this->installConfig(array('taxonomy'));
+    $this->installConfig(['taxonomy']);
     \Drupal::service('router.builder')->rebuild();
   }
 
@@ -57,7 +57,7 @@ class RowEntityTest extends ViewsKernelTestBase {
     $this->assertText($term->getName(), 'The rendered entity appears as row in the view.');
 
     // Tests the available view mode options.
-    $form = array();
+    $form = [];
     $form_state = new FormState();
     $form_state->set('view', $view->storage);
     $view->rowPlugin->buildOptionsForm($form, $form_state);

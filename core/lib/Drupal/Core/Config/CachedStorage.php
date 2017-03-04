@@ -34,7 +34,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    *
    * @var array
    */
-  protected $findByPrefixCache = array();
+  protected $findByPrefixCache = [];
 
   /**
    * Constructs a new CachedStorage.
@@ -80,7 +80,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    * {@inheritdoc}
    */
   public function readMultiple(array $names) {
-    $data_to_return = array();
+    $data_to_return = [];
 
     $cache_keys_map = $this->getCacheKeys($names);
     $cache_keys = array_values($cache_keys_map);
@@ -95,11 +95,11 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
       $list = $this->storage->readMultiple($names_to_get);
       // Cache configuration objects that were loaded from the storage, cache
       // missing configuration objects as an explicit FALSE.
-      $items = array();
+      $items = [];
       foreach ($names_to_get as $name) {
         $data = isset($list[$name]) ? $list[$name] : FALSE;
         $data_to_return[$name] = $data;
-        $items[$cache_keys_map[$name]] = array('data' => $data);
+        $items[$cache_keys_map[$name]] = ['data' => $data];
       }
 
       $this->cache->setMultiple($items);
@@ -125,7 +125,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
       // While not all written data is read back, setting the cache instead of
       // just deleting it avoids cache rebuild stampedes.
       $this->cache->set($this->getCacheKey($name), $data);
-      $this->findByPrefixCache = array();
+      $this->findByPrefixCache = [];
       return TRUE;
     }
     return FALSE;
@@ -139,7 +139,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     // rebuilding the cache before the storage is gone.
     if ($this->storage->delete($name)) {
       $this->cache->delete($this->getCacheKey($name));
-      $this->findByPrefixCache = array();
+      $this->findByPrefixCache = [];
       return TRUE;
     }
     return FALSE;
@@ -154,7 +154,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     if ($this->storage->rename($name, $new_name)) {
       $this->cache->delete($this->getCacheKey($name));
       $this->cache->delete($this->getCacheKey($new_name));
-      $this->findByPrefixCache = array();
+      $this->findByPrefixCache = [];
       return TRUE;
     }
     return FALSE;
@@ -227,7 +227,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    * Clears the static list cache.
    */
   public function resetListCache() {
-    $this->findByPrefixCache = array();
+    $this->findByPrefixCache = [];
   }
 
   /**

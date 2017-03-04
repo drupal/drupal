@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'nyok', 'nyot', 'nyop', 'nyoh', 'nu', 'nug', 'nukk', 'nugs', 'nun', 'nunj', 'nunh', 'nud', 'nul', 'nulg', 'nulm', 'nulb',
   0x10 => 'nuls', 'nult', 'nulp', 'nulh', 'num', 'nub', 'nubs', 'nus', 'nuss', 'nung', 'nuj', 'nuch', 'nuk', 'nut', 'nup', 'nuh',
   0x20 => 'nwo', 'nwog', 'nwokk', 'nwogs', 'nwon', 'nwonj', 'nwonh', 'nwod', 'nwol', 'nwolg', 'nwolm', 'nwolb', 'nwols', 'nwolt', 'nwolp', 'nwolh',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'nil', 'nilg', 'nilm', 'nilb', 'nils', 'nilt', 'nilp', 'nilh', 'nim', 'nib', 'nibs', 'nis', 'niss', 'ning', 'nij', 'nich',
   0xE0 => 'nik', 'nit', 'nip', 'nih', 'da', 'dag', 'dakk', 'dags', 'dan', 'danj', 'danh', 'dad', 'dal', 'dalg', 'dalm', 'dalb',
   0xF0 => 'dals', 'dalt', 'dalp', 'dalh', 'dam', 'dab', 'dabs', 'das', 'dass', 'dang', 'daj', 'dach', 'dak', 'dat', 'dap', 'dah',
-);
+];

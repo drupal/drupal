@@ -12,7 +12,7 @@ class MigrateEntity implements ContainerDeriverInterface {
    *
    * @var array
    */
-  protected $derivatives = array();
+  protected $derivatives = [];
 
   /**
    * The entity definitions
@@ -59,12 +59,12 @@ class MigrateEntity implements ContainerDeriverInterface {
       $class = is_subclass_of($entity_info->getClass(), 'Drupal\Core\Config\Entity\ConfigEntityInterface') ?
         'Drupal\migrate\Plugin\migrate\destination\EntityConfigBase' :
         'Drupal\migrate\Plugin\migrate\destination\EntityContentBase';
-      $this->derivatives[$entity_type] = array(
+      $this->derivatives[$entity_type] = [
         'id' => "entity:$entity_type",
         'class' => $class,
         'requirements_met' => 1,
         'provider' => $entity_info->getProvider(),
-      );
+      ];
     }
     return $this->derivatives;
   }

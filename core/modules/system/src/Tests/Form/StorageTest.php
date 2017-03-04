@@ -23,7 +23,7 @@ class StorageTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test', 'dblog');
+  public static $modules = ['form_test', 'dblog'];
 
   protected function setUp() {
     parent::setUp();
@@ -38,7 +38,7 @@ class StorageTest extends WebTestBase {
     $this->drupalGet('form_test/form-storage');
     $this->assertText('Form constructions: 1');
 
-    $edit = array('title' => 'new', 'value' => 'value_is_set');
+    $edit = ['title' => 'new', 'value' => 'value_is_set'];
 
     // Use form rebuilding triggered by a submit button.
     $this->drupalPostForm(NULL, $edit, 'Continue submit');
@@ -47,7 +47,7 @@ class StorageTest extends WebTestBase {
 
     // Reset the form to the values of the storage, using a form rebuild
     // triggered by button of type button.
-    $this->drupalPostForm(NULL, array('title' => 'changed'), 'Reset');
+    $this->drupalPostForm(NULL, ['title' => 'changed'], 'Reset');
     $this->assertFieldByName('title', 'new', 'Values have been reset.');
     // After rebuilding, the form has been cached.
     $this->assertText('Form constructions: 4');
@@ -61,10 +61,10 @@ class StorageTest extends WebTestBase {
    * Tests using the form after calling $form_state->setCached().
    */
   function testFormCached() {
-    $this->drupalGet('form_test/form-storage', array('query' => array('cache' => 1)));
+    $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1]]);
     $this->assertText('Form constructions: 1');
 
-    $edit = array('title' => 'new', 'value' => 'value_is_set');
+    $edit = ['title' => 'new', 'value' => 'value_is_set'];
 
     // Use form rebuilding triggered by a submit button.
     $this->drupalPostForm(NULL, $edit, 'Continue submit');
@@ -75,7 +75,7 @@ class StorageTest extends WebTestBase {
 
     // Reset the form to the values of the storage, using a form rebuild
     // triggered by button of type button.
-    $this->drupalPostForm(NULL, array('title' => 'changed'), 'Reset');
+    $this->drupalPostForm(NULL, ['title' => 'changed'], 'Reset');
     $this->assertFieldByName('title', 'new', 'Values have been reset.');
     $this->assertText('Form constructions: 4');
 
@@ -88,7 +88,7 @@ class StorageTest extends WebTestBase {
    * Tests validation when form storage is used.
    */
   function testValidation() {
-    $this->drupalPostForm('form_test/form-storage', array('title' => '', 'value' => 'value_is_set'), 'Continue submit');
+    $this->drupalPostForm('form_test/form-storage', ['title' => '', 'value' => 'value_is_set'], 'Continue submit');
     $this->assertPattern('/value_is_set/', 'The input values have been kept.');
   }
 
@@ -104,26 +104,26 @@ class StorageTest extends WebTestBase {
    */
   function testCachedFormStorageValidation() {
     // Request the form with 'cache' query parameter to enable form caching.
-    $this->drupalGet('form_test/form-storage', array('query' => array('cache' => 1)));
+    $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1]]);
 
     // Skip step 1 of the multi-step form, since the first step copies over
     // 'title' into form storage, but we want to verify that changes in the form
     // storage are updated in the cache during form validation.
-    $edit = array('title' => 'foo');
+    $edit = ['title' => 'foo'];
     $this->drupalPostForm(NULL, $edit, 'Continue submit');
 
     // In step 2, trigger a validation error for the required 'title' field, and
     // post the special 'change_title' value for the 'value' field, which
     // conditionally invokes the #element_validate handler to update the form
     // storage.
-    $edit = array('title' => '', 'value' => 'change_title');
+    $edit = ['title' => '', 'value' => 'change_title'];
     $this->drupalPostForm(NULL, $edit, 'Save');
 
     // At this point, the form storage should contain updated values, but we do
     // not see them, because the form has not been rebuilt yet due to the
     // validation error. Post again and verify that the rebuilt form contains
     // the values of the updated form storage.
-    $this->drupalPostForm(NULL, array('title' => 'foo', 'value' => 'bar'), 'Save');
+    $this->drupalPostForm(NULL, ['title' => 'foo', 'value' => 'bar'], 'Save');
     $this->assertText("The thing has been changed.", 'The altered form storage value was updated in cache and taken over.');
   }
 

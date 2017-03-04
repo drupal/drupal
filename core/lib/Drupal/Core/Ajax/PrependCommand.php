@@ -23,13 +23,13 @@ class PrependCommand extends InsertCommand {
    */
   public function render() {
 
-    return array(
+    return [
       'command' => 'insert',
       'method' => 'prepend',
       'selector' => $this->selector,
       'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
-    );
+    ];
   }
 
 }

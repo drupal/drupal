@@ -35,14 +35,14 @@ class Range extends Number {
   public function getInfo() {
     $info = parent::getInfo();
     $class = get_class($this);
-    return array(
+    return [
       '#min' => 0,
       '#max' => 100,
-      '#pre_render' => array(
-        array($class, 'preRenderRange'),
-      ),
+      '#pre_render' => [
+        [$class, 'preRenderRange'],
+      ],
       '#theme' => 'input__range',
-    ) + $info;
+    ] + $info;
   }
 
   /**
@@ -58,8 +58,8 @@ class Range extends Number {
    */
   public static function preRenderRange($element) {
     $element['#attributes']['type'] = 'range';
-    Element::setAttributes($element, array('id', 'name', 'value', 'step', 'min', 'max'));
-    static::setAttributes($element, array('form-range'));
+    Element::setAttributes($element, ['id', 'name', 'value', 'step', 'min', 'max']);
+    static::setAttributes($element, ['form-range']);
 
     return $element;
   }

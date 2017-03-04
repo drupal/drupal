@@ -12,10 +12,10 @@ function serialization_requirements($phase) {
   $requirements = [];
 
   if ($phase == 'runtime') {
-    $requirements['serialization_as_strings'] = array(
+    $requirements['serialization_as_strings'] = [
       'title' => t('Serialized data types'),
       'severity' => REQUIREMENT_INFO,
-    );
+    ];
 
     if (\Drupal::config('serialization.settings')->get('bc_primitives_as_strings')) {
       $requirements['serialization_as_strings']['value'] = t('Enabled');

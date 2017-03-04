@@ -22,7 +22,7 @@ class SearchCommentTest extends SearchTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter', 'node', 'comment');
+  public static $modules = ['filter', 'node', 'comment'];
 
   /**
    * Test subject for comments.
@@ -55,17 +55,17 @@ class SearchCommentTest extends SearchTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $full_html_format = FilterFormat::create(array(
+    $full_html_format = FilterFormat::create([
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
-      'filters' => array(),
-    ));
+      'filters' => [],
+    ]);
     $full_html_format->save();
 
     // Create and log in an administrative user having access to the Full HTML
     // text format.
-    $permissions = array(
+    $permissions = [
       'administer filters',
       $full_html_format->getPermissionName(),
       'administer permissions',
@@ -73,7 +73,7 @@ class SearchCommentTest extends SearchTestBase {
       'post comments',
       'skip comment approval',
       'access comments',
-    );
+    ];
     $this->adminUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->adminUser);
     // Add a comment field.
@@ -86,15 +86,15 @@ class SearchCommentTest extends SearchTestBase {
   function testSearchResultsComment() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create basic_html format that escapes all HTML.
-    $basic_html_format = FilterFormat::create(array(
+    $basic_html_format = FilterFormat::create([
       'format' => 'basic_html',
       'name' => 'Basic HTML',
       'weight' => 1,
-      'filters' => array(
-        'filter_html_escape' => array('status' => 1),
-      ),
-      'roles' => array(RoleInterface::AUTHENTICATED_ID),
-    ));
+      'filters' => [
+        'filter_html_escape' => ['status' => 1],
+      ],
+      'roles' => [RoleInterface::AUTHENTICATED_ID],
+    ]);
     $basic_html_format->save();
 
     $comment_body = 'Test comment body';
@@ -105,17 +105,17 @@ class SearchCommentTest extends SearchTestBase {
     $field->save();
 
     // Allow anonymous users to search content.
-    $edit = array(
+    $edit = [
       RoleInterface::ANONYMOUS_ID . '[search content]' => 1,
       RoleInterface::ANONYMOUS_ID . '[access comments]' => 1,
       RoleInterface::ANONYMOUS_ID . '[post comments]' => 1,
-    );
+    ];
     $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
 
     // Create a node.
-    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $node = $this->drupalCreateNode(['type' => 'article']);
     // Post a comment using 'Full HTML' text format.
-    $edit_comment = array();
+    $edit_comment = [];
     $edit_comment['subject[0][value]'] = 'Test comment subject';
     $edit_comment['comment_body[0][value]'] = '<h1>' . $comment_body . '</h1>';
     $full_html_format_id = 'full_html';
@@ -125,7 +125,7 @@ class SearchCommentTest extends SearchTestBase {
     // Post a comment with an evil script tag in the comment subject and a
     // script tag nearby a keyword in the comment body. Use the 'FULL HTML' text
     // format so the script tag stored.
-    $edit_comment2 = array();
+    $edit_comment2 = [];
     $edit_comment2['subject[0][value]'] = "<script>alert('subjectkeyword');</script>";
     $edit_comment2['comment_body[0][value]'] = "nearbykeyword<script>alert('somethinggeneric');</script>";
     $edit_comment2['comment_body[0][format]'] = $full_html_format_id;
@@ -133,7 +133,7 @@ class SearchCommentTest extends SearchTestBase {
 
     // Post a comment with a keyword inside an evil script tag in the comment
     // body. Use the 'FULL HTML' text format so the script tag is stored.
-    $edit_comment3 = array();
+    $edit_comment3 = [];
     $edit_comment3['subject[0][value]'] = 'asubject';
     $edit_comment3['comment_body[0][value]'] = "<script>alert('insidekeyword');</script>";
     $edit_comment3['comment_body[0][format]'] = $full_html_format_id;
@@ -144,19 +144,19 @@ class SearchCommentTest extends SearchTestBase {
     $this->cronRun();
 
     // Search for the comment subject.
-    $edit = array(
+    $edit = [
       'keys' => "'" . $edit_comment['subject[0][value]'] . "'",
-    );
+    ];
     $this->drupalPostForm('search/node', $edit, t('Search'));
-    $node_storage->resetCache(array($node->id()));
+    $node_storage->resetCache([$node->id()]);
     $node2 = $node_storage->load($node->id());
     $this->assertText($node2->label(), 'Node found in search results.');
     $this->assertText($edit_comment['subject[0][value]'], 'Comment subject found in search results.');
 
     // Search for the comment body.
-    $edit = array(
+    $edit = [
       'keys' => "'" . $comment_body . "'",
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Search'));
     $this->assertText($node2->label(), 'Node found in search results.');
 
@@ -166,9 +166,9 @@ class SearchCommentTest extends SearchTestBase {
     $this->assertNoEscaped($edit_comment['comment_body[0][value]'], 'HTML in comment body is not escaped.');
 
     // Search for the evil script comment subject.
-    $edit = array(
+    $edit = [
       'keys' => 'subjectkeyword',
-    );
+    ];
     $this->drupalPostForm('search/node', $edit, t('Search'));
 
     // Verify the evil comment subject is escaped in search results.
@@ -226,10 +226,10 @@ class SearchCommentTest extends SearchTestBase {
     $field = FieldConfig::loadByName('node', 'article', 'comment');
     $field->setSetting('preview', DRUPAL_OPTIONAL);
     $field->save();
-    $this->node = $this->drupalCreateNode(array('type' => 'article'));
+    $this->node = $this->drupalCreateNode(['type' => 'article']);
 
     // Post a comment using 'Full HTML' text format.
-    $edit_comment = array();
+    $edit_comment = [];
     $edit_comment['subject[0][value]'] = $this->commentSubject;
     $edit_comment['comment_body[0][value]'] = '<h1>' . $comment_body . '</h1>';
     $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', $edit_comment, t('Save'));
@@ -277,10 +277,10 @@ class SearchCommentTest extends SearchTestBase {
    * Set permissions for role.
    */
   function setRolePermissions($rid, $access_comments = FALSE, $search_content = TRUE) {
-    $permissions = array(
+    $permissions = [
       'access comments' => $access_comments,
       'search content' => $search_content,
-    );
+    ];
     user_role_change_permissions($rid, $permissions);
   }
 
@@ -293,9 +293,9 @@ class SearchCommentTest extends SearchTestBase {
     $this->cronRun();
 
     // Search for the comment subject.
-    $edit = array(
+    $edit = [
       'keys' => "'" . $this->commentSubject . "'",
-    );
+    ];
     $this->drupalPostForm('search/node', $edit, t('Search'));
 
     if ($assume_access) {
@@ -314,19 +314,19 @@ class SearchCommentTest extends SearchTestBase {
    */
   function testAddNewComment() {
     // Create a node with a short body.
-    $settings = array(
+    $settings = [
       'type' => 'article',
       'title' => 'short title',
-      'body' => array(array('value' => 'short body text')),
-    );
+      'body' => [['value' => 'short body text']],
+    ];
 
-    $user = $this->drupalCreateUser(array(
+    $user = $this->drupalCreateUser([
       'search content',
       'create article content',
       'access content',
       'post comments',
       'access comments',
-    ));
+    ]);
     $this->drupalLogin($user);
 
     $node = $this->drupalCreateNode($settings);
@@ -341,12 +341,12 @@ class SearchCommentTest extends SearchTestBase {
 
     // Search for 'comment'. Should be no results.
     $this->drupalLogin($user);
-    $this->drupalPostForm('search/node', array('keys' => 'comment'), t('Search'));
+    $this->drupalPostForm('search/node', ['keys' => 'comment'], t('Search'));
     $this->assertText(t('Your search yielded no results'));
 
     // Search for the node title. Should be found, and 'Add new comment' should
     // not be part of the search snippet.
-    $this->drupalPostForm('search/node', array('keys' => 'short'), t('Search'));
+    $this->drupalPostForm('search/node', ['keys' => 'short'], t('Search'));
     $this->assertText($node->label(), 'Search for keyword worked');
     $this->assertNoText(t('Add new comment'));
   }

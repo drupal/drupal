@@ -29,22 +29,22 @@ class TestFieldWidgetMultiple extends WidgetBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'test_widget_setting_multiple' => 'dummy test string',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element['test_widget_setting_multiple'] = array(
+    $element['test_widget_setting_multiple'] = [
       '#type' => 'textfield',
       '#title' => t('Field test field widget setting'),
       '#description' => t('A dummy form element to simulate field widget setting.'),
       '#default_value' => $this->getSetting('test_widget_setting_multiple'),
       '#required' => FALSE,
-    );
+    ];
     return $element;
   }
 
@@ -52,8 +52,8 @@ class TestFieldWidgetMultiple extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
-    $summary[] = t('@setting: @value', array('@setting' => 'test_widget_setting_multiple', '@value' => $this->getSetting('test_widget_setting_multiple')));
+    $summary = [];
+    $summary[] = t('@setting: @value', ['@setting' => 'test_widget_setting_multiple', '@value' => $this->getSetting('test_widget_setting_multiple')]);
     return $summary;
   }
 
@@ -61,15 +61,15 @@ class TestFieldWidgetMultiple extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $values = array();
+    $values = [];
     foreach ($items as $item) {
       $values[] = $item->value;
     }
-    $element += array(
+    $element += [
       '#type' => 'textfield',
       '#default_value' => implode(', ', $values),
-      '#element_validate' => array(array(get_class($this), 'multipleValidate')),
-    );
+      '#element_validate' => [[get_class($this), 'multipleValidate']],
+    ];
     return $element;
   }
 
@@ -85,9 +85,9 @@ class TestFieldWidgetMultiple extends WidgetBase {
    */
   public static function multipleValidate($element, FormStateInterface $form_state) {
     $values = array_map('trim', explode(',', $element['#value']));
-    $items = array();
+    $items = [];
     foreach ($values as $value) {
-      $items[] = array('value' => $value);
+      $items[] = ['value' => $value];
     }
     $form_state->setValueForElement($element, $items);
   }

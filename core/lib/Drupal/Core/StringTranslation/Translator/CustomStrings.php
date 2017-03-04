@@ -37,7 +37,7 @@ class CustomStrings extends StaticTranslation {
    * {@inheritdoc}
    */
   protected function getLanguage($langcode) {
-    return $this->settings->get('locale_custom_strings_' . $langcode, array());
+    return $this->settings->get('locale_custom_strings_' . $langcode, []);
   }
 
 }

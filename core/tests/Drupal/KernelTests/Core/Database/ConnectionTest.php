@@ -168,9 +168,9 @@ class ConnectionTest extends DatabaseTestBase {
     $stmt->execute();
     foreach ($stmt->fetchAllAssoc('word') as $word => $row) {
       $expected = '"' . $word . '"';
-      $this->assertIdentical($db->escapeTable($word), $expected, format_string('The reserved word %word was correctly escaped when used as a table name.', array('%word' => $word)));
-      $this->assertIdentical($db->escapeField($word), $expected, format_string('The reserved word %word was correctly escaped when used as a column name.', array('%word' => $word)));
-      $this->assertIdentical($db->escapeAlias($word), $expected, format_string('The reserved word %word was correctly escaped when used as an alias.', array('%word' => $word)));
+      $this->assertIdentical($db->escapeTable($word), $expected, format_string('The reserved word %word was correctly escaped when used as a table name.', ['%word' => $word]));
+      $this->assertIdentical($db->escapeField($word), $expected, format_string('The reserved word %word was correctly escaped when used as a column name.', ['%word' => $word]));
+      $this->assertIdentical($db->escapeAlias($word), $expected, format_string('The reserved word %word was correctly escaped when used as an alias.', ['%word' => $word]));
     }
   }
 

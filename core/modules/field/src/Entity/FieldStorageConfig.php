@@ -370,7 +370,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
 
     // See if any module forbids the update by throwing an exception. This
     // invokes hook_field_storage_config_update_forbid().
-    $module_handler->invokeAll('field_storage_config_update_forbid', array($this, $this->original));
+    $module_handler->invokeAll('field_storage_config_update_forbid', [$this, $this->original]);
 
     // Notify the entity manager. A listener can reject the definition
     // update as invalid by raising an exception, which stops execution before
@@ -407,7 +407,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
 
     // Keep the field definitions in the state storage so we can use them later
     // during field_purge_batch().
-    $deleted_storages = $state->get('field.storage.deleted') ?: array();
+    $deleted_storages = $state->get('field.storage.deleted') ?: [];
     foreach ($field_storages as $field_storage) {
       if (!$field_storage->deleted) {
         $config = $field_storage->toArray();
@@ -444,12 +444,12 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
       $class = $this->getFieldItemClass();
       $schema = $class::schema($this);
       // Fill in default values for optional entries.
-      $schema += array(
-        'columns' => array(),
-        'unique keys' => array(),
-        'indexes' => array(),
-        'foreign keys' => array(),
-      );
+      $schema += [
+        'columns' => [],
+        'unique keys' => [],
+        'indexes' => [],
+        'foreign keys' => [],
+      ];
 
       // Merge custom indexes with those specified by the field type. Custom
       // indexes prevail.
@@ -499,7 +499,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
         return $map[$this->getTargetEntityTypeId()][$this->getName()]['bundles'];
       }
     }
-    return array();
+    return [];
   }
 
   /**
@@ -719,7 +719,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * {@inheritdoc}
    */
   public function getConstraints() {
-    return array();
+    return [];
   }
 
   /**

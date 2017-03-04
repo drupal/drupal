@@ -9,11 +9,11 @@
  * Implements hook_theme().
  */
 function theme_suggestions_test_theme() {
-  $items['theme_suggestions_test_include'] = array(
+  $items['theme_suggestions_test_include'] = [
     'file' => 'theme_suggestions_test.inc',
-    'variables' => array(),
+    'variables' => [],
     'function' => 'theme_theme_suggestions_test_include',
-  );
+  ];
   return $items;
 }
 

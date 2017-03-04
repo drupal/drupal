@@ -42,11 +42,11 @@ class EntityOperationsUnitTest extends UnitTestCase {
     $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
     $this->languageManager = $this->getMock('\Drupal\Core\Language\LanguageManagerInterface');
 
-    $configuration = array();
+    $configuration = [];
     $plugin_id = $this->randomMachineName();
-    $plugin_definition = array(
+    $plugin_definition = [
       'title' => $this->randomMachineName(),
-    );
+    ];
     $this->plugin = new EntityOperations($configuration, $plugin_id, $plugin_definition, $this->entityManager, $this->languageManager);
 
     $redirect_service = $this->getMock('Drupal\Core\Routing\RedirectDestinationInterface');
@@ -93,11 +93,11 @@ class EntityOperationsUnitTest extends UnitTestCase {
       ->method('getEntityTypeId')
       ->will($this->returnValue($entity_type_id));
 
-    $operations = array(
-      'foo' => array(
+    $operations = [
+      'foo' => [
         'title' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $list_builder = $this->getMock('\Drupal\Core\Entity\EntityListBuilderInterface');
     $list_builder->expects($this->once())
       ->method('getOperations')
@@ -114,10 +114,10 @@ class EntityOperationsUnitTest extends UnitTestCase {
     $result = new ResultRow();
     $result->_entity = $entity;
 
-    $expected_build = array(
+    $expected_build = [
       '#type' => 'operations',
       '#links' => $operations
-    );
+    ];
     $expected_build['#links']['foo']['query'] = ['destination' => 'foobar'];
     $build = $this->plugin->render($result);
     $this->assertSame($expected_build, $build);
@@ -135,11 +135,11 @@ class EntityOperationsUnitTest extends UnitTestCase {
       ->method('getEntityTypeId')
       ->will($this->returnValue($entity_type_id));
 
-    $operations = array(
-      'foo' => array(
+    $operations = [
+      'foo' => [
         'title' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $list_builder = $this->getMock('\Drupal\Core\Entity\EntityListBuilderInterface');
     $list_builder->expects($this->once())
       ->method('getOperations')
@@ -156,10 +156,10 @@ class EntityOperationsUnitTest extends UnitTestCase {
     $result = new ResultRow();
     $result->_entity = $entity;
 
-    $expected_build = array(
+    $expected_build = [
       '#type' => 'operations',
       '#links' => $operations
-    );
+    ];
     $build = $this->plugin->render($result);
     $this->assertSame($expected_build, $build);
   }

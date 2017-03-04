@@ -19,7 +19,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'image');
+  public static $modules = ['rdf', 'image'];
 
   /**
    * The name of the image field used in the test.
@@ -52,11 +52,11 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
 
     // Set the RDF mapping for the new field.
     rdf_get_mapping('node', 'article')
-      ->setFieldMapping($this->fieldName, array(
-        'properties' => array('og:image'),
+      ->setFieldMapping($this->fieldName, [
+        'properties' => ['og:image'],
         'mapping_type' => 'rel',
-      ))
-      ->setBundleMapping(array('types' => array()))
+      ])
+      ->setBundleMapping(['types' => []])
       ->save();
 
     // Get the test image that simpletest provides.
@@ -73,10 +73,10 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
    */
   function testNodeTeaser() {
     // Set the display options for the teaser.
-    $display_options = array(
+    $display_options = [
       'type' => 'image',
-      'settings' => array('image_style' => 'medium', 'image_link' => 'content'),
-    );
+      'settings' => ['image_style' => 'medium', 'image_link' => 'content'],
+    ];
     $display = entity_get_display('node', 'article', 'teaser');
     $display->setComponent($this->fieldName, $display_options)
       ->save();
@@ -96,17 +96,17 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
     $image_uri = ImageStyle::load('medium')->buildUrl($this->file->getFileUri());
 
     // Test relations from node to image.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => $image_uri,
-    );
+    ];
     $this->assertTrue($graph->hasProperty($node_uri, 'http://ogp.me/ns#image', $expected_value), 'Node to file relation found in RDF output (og:image).');
 
     // Test image type.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => 'http://xmlns.com/foaf/0.1/Image',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($image_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'Image type found in RDF output (foaf:Image).');
   }
 

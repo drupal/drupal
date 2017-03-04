@@ -63,33 +63,33 @@ class OpmlFeedAdd extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $intervals = array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200);
-    $period = array_map(array(\Drupal::service('date.formatter'), 'formatInterval'), array_combine($intervals, $intervals));
+    $intervals = [900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200];
+    $period = array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($intervals, $intervals));
 
-    $form['upload'] = array(
+    $form['upload'] = [
       '#type' => 'file',
       '#title' => $this->t('OPML File'),
       '#description' => $this->t('Upload an OPML file containing a list of feeds to be imported.'),
-    );
-    $form['remote'] = array(
+    ];
+    $form['remote'] = [
       '#type' => 'url',
       '#title' => $this->t('OPML Remote URL'),
       '#maxlength' => 1024,
       '#description' => $this->t('Enter the URL of an OPML file. This file will be downloaded and processed only once on submission of the form.'),
-    );
-    $form['refresh'] = array(
+    ];
+    $form['refresh'] = [
       '#type' => 'select',
       '#title' => $this->t('Update interval'),
       '#default_value' => 3600,
       '#options' => $period,
-      '#description' => $this->t('The length of time between feed updates. Requires a correctly configured <a href=":cron">cron maintenance task</a>.', array(':cron' => $this->url('system.status'))),
-    );
+      '#description' => $this->t('The length of time between feed updates. Requires a correctly configured <a href=":cron">cron maintenance task</a>.', [':cron' => $this->url('system.status')]),
+    ];
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Import'),
-    );
+    ];
 
     return $form;
   }
@@ -109,7 +109,7 @@ class OpmlFeedAdd extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $validators = array('file_validate_extensions' => array('opml xml'));
+    $validators = ['file_validate_extensions' => ['opml xml']];
     if ($file = file_save_upload('upload', $validators, FALSE, 0)) {
       $data = file_get_contents($file->getFileUri());
     }
@@ -120,8 +120,8 @@ class OpmlFeedAdd extends FormBase {
         $data = (string) $response->getBody();
       }
       catch (RequestException $e) {
-        $this->logger('aggregator')->warning('Failed to download OPML file due to "%error".', array('%error' => $e->getMessage()));
-        drupal_set_message($this->t('Failed to download OPML file due to "%error".', array('%error' => $e->getMessage())));
+        $this->logger('aggregator')->warning('Failed to download OPML file due to "%error".', ['%error' => $e->getMessage()]);
+        drupal_set_message($this->t('Failed to download OPML file due to "%error".', ['%error' => $e->getMessage()]));
         return;
       }
     }
@@ -136,7 +136,7 @@ class OpmlFeedAdd extends FormBase {
     foreach ($feeds as $feed) {
       // Ensure URL is valid.
       if (!UrlHelper::isValid($feed['url'], TRUE)) {
-        drupal_set_message($this->t('The URL %url is invalid.', array('%url' => $feed['url'])), 'warning');
+        drupal_set_message($this->t('The URL %url is invalid.', ['%url' => $feed['url']]), 'warning');
         continue;
       }
 
@@ -151,20 +151,20 @@ class OpmlFeedAdd extends FormBase {
       $result = $this->feedStorage->loadMultiple($ids);
       foreach ($result as $old) {
         if (strcasecmp($old->label(), $feed['title']) == 0) {
-          drupal_set_message($this->t('A feed named %title already exists.', array('%title' => $old->label())), 'warning');
+          drupal_set_message($this->t('A feed named %title already exists.', ['%title' => $old->label()]), 'warning');
           continue 2;
         }
         if (strcasecmp($old->getUrl(), $feed['url']) == 0) {
-          drupal_set_message($this->t('A feed with the URL %url already exists.', array('%url' => $old->getUrl())), 'warning');
+          drupal_set_message($this->t('A feed with the URL %url already exists.', ['%url' => $old->getUrl()]), 'warning');
           continue 2;
         }
       }
 
-      $new_feed = $this->feedStorage->create(array(
+      $new_feed = $this->feedStorage->create([
         'title' => $feed['title'],
         'url' => $feed['url'],
         'refresh' => $form_state->getValue('refresh'),
-      ));
+      ]);
       $new_feed->save();
     }
 
@@ -189,7 +189,7 @@ class OpmlFeedAdd extends FormBase {
    * @todo Move this to a parser in https://www.drupal.org/node/1963540.
    */
   protected function parseOpml($opml) {
-    $feeds = array();
+    $feeds = [];
     $xml_parser = xml_parser_create();
     xml_parser_set_option($xml_parser, XML_OPTION_TARGET_ENCODING, 'utf-8');
     if (xml_parse_into_struct($xml_parser, $opml, $values)) {
@@ -197,7 +197,7 @@ class OpmlFeedAdd extends FormBase {
         if ($entry['tag'] == 'OUTLINE' && isset($entry['attributes'])) {
           $item = $entry['attributes'];
           if (!empty($item['XMLURL']) && !empty($item['TEXT'])) {
-            $feeds[] = array('title' => $item['TEXT'], 'url' => $item['XMLURL']);
+            $feeds[] = ['title' => $item['TEXT'], 'url' => $item['XMLURL']];
           }
         }
       }

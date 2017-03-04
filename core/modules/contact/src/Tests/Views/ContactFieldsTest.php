@@ -19,7 +19,7 @@ class ContactFieldsTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'text', 'contact');
+  public static $modules = ['field', 'text', 'contact'];
 
   /**
    * Contains the field storage definition for contact used for this test.
@@ -31,11 +31,11 @@ class ContactFieldsTest extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->fieldStorage = FieldStorageConfig::create(array(
+    $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => strtolower($this->randomMachineName()),
       'entity_type' => 'contact_message',
       'type' => 'text'
-    ));
+    ]);
     $this->fieldStorage->save();
 
     ContactForm::create([

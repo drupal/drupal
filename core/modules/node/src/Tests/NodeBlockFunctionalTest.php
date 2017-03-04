@@ -35,14 +35,14 @@ class NodeBlockFunctionalTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'views');
+  public static $modules = ['block', 'views'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create users and test node.
-    $this->adminUser = $this->drupalCreateUser(array('administer content types', 'administer nodes', 'administer blocks', 'access content overview'));
-    $this->webUser = $this->drupalCreateUser(array('access content', 'create article content'));
+    $this->adminUser = $this->drupalCreateUser(['administer content types', 'administer nodes', 'administer blocks', 'access content overview']);
+    $this->webUser = $this->drupalCreateUser(['access content', 'create article content']);
   }
 
   /**
@@ -52,34 +52,34 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Disallow anonymous users to view content.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access content' => FALSE,
-    ));
+    ]);
 
     // Enable the recent content block with two items.
-    $block = $this->drupalPlaceBlock('views_block:content_recent-block_1', array('id' => 'test_block', 'items_per_page' => 2));
+    $block = $this->drupalPlaceBlock('views_block:content_recent-block_1', ['id' => 'test_block', 'items_per_page' => 2]);
 
     // Test that block is not visible without nodes.
     $this->drupalGet('');
     $this->assertText(t('No content available.'), 'Block with "No content available." found.');
 
     // Add some test nodes.
-    $default_settings = array('uid' => $this->webUser->id(), 'type' => 'article');
+    $default_settings = ['uid' => $this->webUser->id(), 'type' => 'article'];
     $node1 = $this->drupalCreateNode($default_settings);
     $node2 = $this->drupalCreateNode($default_settings);
     $node3 = $this->drupalCreateNode($default_settings);
 
     // Change the changed time for node so that we can test ordering.
     db_update('node_field_data')
-      ->fields(array(
+      ->fields([
         'changed' => $node1->getChangedTime() + 100,
-      ))
+      ])
       ->condition('nid', $node2->id())
       ->execute();
     db_update('node_field_data')
-      ->fields(array(
+      ->fields([
         'changed' => $node1->getChangedTime() + 200,
-      ))
+      ])
       ->condition('nid', $node3->id())
       ->execute();
 
@@ -131,7 +131,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertTrue(isset($visibility['node_type']['bundles']['article']), 'Visibility settings were saved to configuration');
 
     // Create a page node.
-    $node5 = $this->drupalCreateNode(array('uid' => $this->adminUser->id(), 'type' => 'page'));
+    $node5 = $this->drupalCreateNode(['uid' => $this->adminUser->id(), 'type' => 'page']);
 
     $this->drupalLogout();
     $this->drupalLogin($this->webUser);

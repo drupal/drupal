@@ -62,7 +62,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    */
   public function __construct($count, $singular, $plural, array $args = [], array $options = [], TranslationInterface $string_translation = NULL) {
     $this->count = $count;
-    $translatable_string = implode(static::DELIMITER, array($singular, $plural));
+    $translatable_string = implode(static::DELIMITER, [$singular, $plural]);
     parent::__construct($translatable_string, $args, $options, $string_translation);
   }
 
@@ -161,7 +161,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    * {@inheritdoc}
    */
   public function __sleep() {
-    return array_merge(parent::__sleep(), array('count'));
+    return array_merge(parent::__sleep(), ['count']);
   }
 
 }

@@ -15,13 +15,13 @@ function breakpoint_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.breakpoint':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Breakpoint module keeps track of the height, width, and resolution breakpoints where a responsive design needs to change in order to respond to different devices being used to view the site. This module does not have a user interface. For more information, see the <a href=":docs">online documentation for the Breakpoint module</a>.', array(':docs' => 'https://www.drupal.org/documentation/modules/breakpoint')) . '</p>';
+      $output .= '<p>' . t('The Breakpoint module keeps track of the height, width, and resolution breakpoints where a responsive design needs to change in order to respond to different devices being used to view the site. This module does not have a user interface. For more information, see the <a href=":docs">online documentation for the Breakpoint module</a>.', [':docs' => 'https://www.drupal.org/documentation/modules/breakpoint']) . '</p>';
       $output .= '<h4>' . t('Terminology') . '</h4>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Breakpoint') . '</dt>';
       $output .= '<dd>' . t('A breakpoint separates the height or width of viewports (screens, printers, and other media output types) into steps. For instance, a width breakpoint of 40em creates two steps: one for widths up to 40em and one for widths above 40em. Breakpoints can be used to define when layouts should shift from one form to another, when images should be resized, and other changes that need to respond to changes in viewport height or width.') . '</dd>';
       $output .= '<dt>' . t('Media query') . '</dt>';
-      $output .= '<dd>' . t('<a href=":w3">Media  queries</a> are a formal way to encode breakpoints. For instance, a width breakpoint at 40em would be written as the media query "(min-width: 40em)". Breakpoints are really just media queries with some additional meta-data, such as a name and multiplier information.', array(':w3' => 'http://www.w3.org/TR/css3-mediaqueries/')) . '</dd>';
+      $output .= '<dd>' . t('<a href=":w3">Media  queries</a> are a formal way to encode breakpoints. For instance, a width breakpoint at 40em would be written as the media query "(min-width: 40em)". Breakpoints are really just media queries with some additional meta-data, such as a name and multiplier information.', [':w3' => 'http://www.w3.org/TR/css3-mediaqueries/']) . '</dd>';
       $output .= '<dt>' . t('Resolution multiplier') . '</dt>';
       $output .= '<dd>' . t('Resolution multipliers are a measure of the viewport\'s device resolution, defined to be the ratio between the physical pixel size of the active device and the <a href="http://en.wikipedia.org/wiki/Device_independent_pixel">device-independent pixel</a> size. The Breakpoint module defines multipliers of 1, 1.5, and 2; when defining breakpoints, modules and themes can define which multipliers apply to each breakpoint.') . '</dd>';
       $output .= '<dt>' . t('Breakpoint group') . '</dt>';

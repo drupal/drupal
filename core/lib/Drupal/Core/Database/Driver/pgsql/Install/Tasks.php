@@ -20,22 +20,22 @@ class Tasks extends InstallTasks {
    * Constructs a \Drupal\Core\Database\Driver\pgsql\Install\Tasks object.
    */
   public function __construct() {
-    $this->tasks[] = array(
+    $this->tasks[] = [
       'function' => 'checkEncoding',
-      'arguments' => array(),
-    );
-    $this->tasks[] = array(
+      'arguments' => [],
+    ];
+    $this->tasks[] = [
       'function' => 'checkBinaryOutput',
-      'arguments' => array(),
-    );
-    $this->tasks[] = array(
+      'arguments' => [],
+    ];
+    $this->tasks[] = [
       'function' => 'checkStandardConformingStrings',
-      'arguments' => array(),
-    );
-    $this->tasks[] = array(
+      'arguments' => [],
+    ];
+    $this->tasks[] = [
       'function' => 'initializeDatabase',
-      'arguments' => array(),
-    );
+      'arguments' => [],
+    ];
   }
 
   /**
@@ -94,13 +94,13 @@ class Tasks extends InstallTasks {
         catch (DatabaseNotFoundException $e) {
           // Still no dice; probably a permission issue. Raise the error to the
           // installer.
-          $this->fail(t('Database %database not found. The server reports the following message when attempting to create the database: %error.', array('%database' => $database, '%error' => $e->getMessage())));
+          $this->fail(t('Database %database not found. The server reports the following message when attempting to create the database: %error.', ['%database' => $database, '%error' => $e->getMessage()]));
         }
       }
       else {
         // Database connection failed for some other reason than the database
         // not existing.
-        $this->fail(t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage())));
+        $this->fail(t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', ['%error' => $e->getMessage()]));
         return FALSE;
       }
     }
@@ -116,10 +116,10 @@ class Tasks extends InstallTasks {
         $this->pass(t('Database is encoded in UTF-8'));
       }
       else {
-        $this->fail(t('The %driver database must use %encoding encoding to work with Drupal. Recreate the database with %encoding encoding. See <a href="INSTALL.pgsql.txt">INSTALL.pgsql.txt</a> for more details.', array(
+        $this->fail(t('The %driver database must use %encoding encoding to work with Drupal. Recreate the database with %encoding encoding. See <a href="INSTALL.pgsql.txt">INSTALL.pgsql.txt</a> for more details.', [
           '%encoding' => 'UTF8',
           '%driver' => $this->name(),
-        )));
+        ]));
       }
     }
     catch (\Exception $e) {
@@ -161,12 +161,12 @@ class Tasks extends InstallTasks {
         // Recheck, if it fails, finally just rely on the end user to do the
         // right thing.
         if (!$this->checkBinaryOutputSuccess()) {
-          $replacements = array(
+          $replacements = [
             '%setting' => 'bytea_output',
             '%current_value' => 'hex',
             '%needed_value' => 'escape',
             '@query' => $query,
-          );
+          ];
           $this->fail(t("The %setting setting is currently set to '%current_value', but needs to be '%needed_value'. Change this by running the following query: <code>@query</code>", $replacements));
         }
       }
@@ -214,12 +214,12 @@ class Tasks extends InstallTasks {
       // Recheck, if it fails, finally just rely on the end user to do the
       // right thing.
       if (!$this->checkStandardConformingStringsSuccess()) {
-        $replacements = array(
+        $replacements = [
           '%setting' => 'standard_conforming_strings',
           '%current_value' => 'off',
           '%needed_value' => 'on',
           '@query' => $query,
-        );
+        ];
         $this->fail(t("The %setting setting is currently set to '%current_value', but needs to be '%needed_value'. Change this by running the following query: <code>@query</code>", $replacements));
       }
     }

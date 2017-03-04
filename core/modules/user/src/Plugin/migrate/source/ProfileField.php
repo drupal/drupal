@@ -70,7 +70,7 @@ class ProfileField extends DrupalSqlBase {
       // D6 profile checkboxes values are always 0 or 1 (with no labels), so we
       // need to create two label-less options that will get 0 and 1 for their
       // keys.
-      $row->setSourceProperty('options', array(NULL, NULL));
+      $row->setSourceProperty('options', [NULL, NULL]);
     }
 
     return parent::prepareRow($row);
@@ -80,7 +80,7 @@ class ProfileField extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'fid' => $this->t('Primary Key: Unique profile field ID.'),
       'title' => $this->t('Title of the field shown to the end user.'),
       'name' => $this->t('Internal name of the field used in the form HTML and URLs.'),
@@ -94,7 +94,7 @@ class ProfileField extends DrupalSqlBase {
       'visibility' => $this->t('The level of visibility for the field. (0 = hidden, 1 = private, 2 = public on profile but not member list pages, 3 = public on profile and list pages)'),
       'autocomplete' => $this->t('Whether form auto-completion is enabled. (0 = disabled, 1 = enabled)'),
       'options' => $this->t('List of options to be used in a list selection field.'),
-    );
+    ];
   }
 
   /**

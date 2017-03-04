@@ -21,59 +21,59 @@ class GraphTest extends UnitTestCase {
     //       |     |     |
     //       |     |     |
     //       +---> 4 <-- 7      8 ---> 9
-    $graph = $this->normalizeGraph(array(
-      1 => array(2),
-      2 => array(3, 4),
-      3 => array(),
-      4 => array(3),
-      5 => array(6),
-      7 => array(4, 5),
-      8 => array(9),
-      9 => array(),
-    ));
+    $graph = $this->normalizeGraph([
+      1 => [2],
+      2 => [3, 4],
+      3 => [],
+      4 => [3],
+      5 => [6],
+      7 => [4, 5],
+      8 => [9],
+      9 => [],
+    ]);
     $graph_object = new Graph($graph);
     $graph = $graph_object->searchAndSort();
 
-    $expected_paths = array(
-      1 => array(2, 3, 4),
-      2 => array(3, 4),
-      3 => array(),
-      4 => array(3),
-      5 => array(6),
-      7 => array(4, 3, 5, 6),
-      8 => array(9),
-      9 => array(),
-    );
+    $expected_paths = [
+      1 => [2, 3, 4],
+      2 => [3, 4],
+      3 => [],
+      4 => [3],
+      5 => [6],
+      7 => [4, 3, 5, 6],
+      8 => [9],
+      9 => [],
+    ];
     $this->assertPaths($graph, $expected_paths);
 
-    $expected_reverse_paths = array(
-      1 => array(),
-      2 => array(1),
-      3 => array(2, 1, 4, 7),
-      4 => array(2, 1, 7),
-      5 => array(7),
-      7 => array(),
-      8 => array(),
-      9 => array(8),
-    );
+    $expected_reverse_paths = [
+      1 => [],
+      2 => [1],
+      3 => [2, 1, 4, 7],
+      4 => [2, 1, 7],
+      5 => [7],
+      7 => [],
+      8 => [],
+      9 => [8],
+    ];
     $this->assertReversePaths($graph, $expected_reverse_paths);
 
     // Assert that DFS didn't created "missing" vertexes automatically.
     $this->assertFalse(isset($graph[6]), 'Vertex 6 has not been created');
 
-    $expected_components = array(
-      array(1, 2, 3, 4, 5, 7),
-      array(8, 9),
-    );
+    $expected_components = [
+      [1, 2, 3, 4, 5, 7],
+      [8, 9],
+    ];
     $this->assertComponents($graph, $expected_components);
 
-    $expected_weights = array(
-      array(1, 2, 3),
-      array(2, 4, 3),
-      array(7, 4, 3),
-      array(7, 5),
-      array(8, 9),
-    );
+    $expected_weights = [
+      [1, 2, 3],
+      [2, 4, 3],
+      [7, 4, 3],
+      [7, 5],
+      [8, 9],
+    ];
     $this->assertWeights($graph, $expected_weights);
   }
 
@@ -87,10 +87,10 @@ class GraphTest extends UnitTestCase {
    *   The normalized version of a graph.
    */
   protected function normalizeGraph($graph) {
-    $normalized_graph = array();
+    $normalized_graph = [];
     foreach ($graph as $vertex => $edges) {
       // Create vertex even if it hasn't any edges.
-      $normalized_graph[$vertex] = array();
+      $normalized_graph[$vertex] = [];
       foreach ($edges as $edge) {
         $normalized_graph[$vertex]['edges'][$edge] = TRUE;
       }
@@ -110,7 +110,7 @@ class GraphTest extends UnitTestCase {
     foreach ($expected_paths as $vertex => $paths) {
       // Build an array with keys = $paths and values = TRUE.
       $expected = array_fill_keys($paths, TRUE);
-      $result = isset($graph[$vertex]['paths']) ? $graph[$vertex]['paths'] : array();
+      $result = isset($graph[$vertex]['paths']) ? $graph[$vertex]['paths'] : [];
       $this->assertEquals($expected, $result, sprintf('Expected paths for vertex %s: %s, got %s', $vertex, $this->displayArray($expected, TRUE), $this->displayArray($result, TRUE)));
     }
   }
@@ -128,7 +128,7 @@ class GraphTest extends UnitTestCase {
     foreach ($expected_reverse_paths as $vertex => $paths) {
       // Build an array with keys = $paths and values = TRUE.
       $expected = array_fill_keys($paths, TRUE);
-      $result = isset($graph[$vertex]['reverse_paths']) ? $graph[$vertex]['reverse_paths'] : array();
+      $result = isset($graph[$vertex]['reverse_paths']) ? $graph[$vertex]['reverse_paths'] : [];
       $this->assertEquals($expected, $result, sprintf('Expected reverse paths for vertex %s: %s, got %s', $vertex, $this->displayArray($expected, TRUE), $this->displayArray($result, TRUE)));
     }
   }
@@ -144,14 +144,14 @@ class GraphTest extends UnitTestCase {
   protected function assertComponents($graph, $expected_components) {
     $unassigned_vertices = array_fill_keys(array_keys($graph), TRUE);
     foreach ($expected_components as $component) {
-      $result_components = array();
+      $result_components = [];
       foreach ($component as $vertex) {
         $result_components[] = $graph[$vertex]['component'];
         unset($unassigned_vertices[$vertex]);
       }
       $this->assertEquals(1, count(array_unique($result_components)), sprintf('Expected one unique component for vertices %s, got %s', $this->displayArray($component), $this->displayArray($result_components)));
     }
-    $this->assertEquals(array(), $unassigned_vertices, sprintf('Vertices not assigned to a component: %s', $this->displayArray($unassigned_vertices, TRUE)));
+    $this->assertEquals([], $unassigned_vertices, sprintf('Vertices not assigned to a component: %s', $this->displayArray($unassigned_vertices, TRUE)));
   }
 
   /**

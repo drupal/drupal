@@ -41,8 +41,8 @@ use Drupal\Core\Url;
  *   array('dynamic_content', 'section') for this parameter.
  */
 function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_parents) {
-  $seen_ids = &drupal_static(__FUNCTION__ . ':seen_ids', array());
-  $seen_buttons = &drupal_static(__FUNCTION__ . ':seen_buttons', array());
+  $seen_ids = &drupal_static(__FUNCTION__ . ':seen_ids', []);
+  $seen_buttons = &drupal_static(__FUNCTION__ . ':seen_buttons', []);
 
   // Add the AJAX behavior to the triggering element.
   $triggering_element = &$wrapping_element[$trigger_key];
@@ -60,28 +60,28 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
   // should be displayed next to the triggering element on the form.
   $button_key = $trigger_key . '_trigger_update';
   $element_info = \Drupal::service('element_info');
-  $wrapping_element[$button_key] = array(
+  $wrapping_element[$button_key] = [
     '#type' => 'submit',
     // Hide this button when JavaScript is enabled.
-    '#attributes' => array('class' => array('js-hide')),
-    '#submit' => array('views_ui_nojs_submit'),
+    '#attributes' => ['class' => ['js-hide']],
+    '#submit' => ['views_ui_nojs_submit'],
     // Add a process function to limit this button's validation errors to the
     // triggering element only. We have to do this in #process since until the
     // form API has added the #parents property to the triggering element for
     // us, we don't have any (easy) way to find out where its submitted values
     // will eventually appear in $form_state->getValues().
-    '#process' => array_merge(array('views_ui_add_limited_validation'), $element_info->getInfoProperty('submit', '#process', array())),
+    '#process' => array_merge(['views_ui_add_limited_validation'], $element_info->getInfoProperty('submit', '#process', [])),
     // Add an after-build function that inserts a wrapper around the region of
     // the form that needs to be refreshed by AJAX (so that the AJAX system can
     // detect and dynamically update it). This is done in #after_build because
     // it's a convenient place where we have automatic access to the complete
     // form array, but also to minimize the chance that the HTML we add will
     // get clobbered by code that runs after we have added it.
-    '#after_build' => array_merge($element_info->getInfoProperty('submit', '#after_build', array()), array('views_ui_add_ajax_wrapper')),
-  );
+    '#after_build' => array_merge($element_info->getInfoProperty('submit', '#after_build', []), ['views_ui_add_ajax_wrapper']),
+  ];
   // Copy #weight and #access from the triggering element to the button, so
   // that the two elements will be displayed together.
-  foreach (array('#weight', '#access') as $property) {
+  foreach (['#weight', '#access'] as $property) {
     if (isset($triggering_element[$property])) {
       $wrapping_element[$button_key][$property] = $triggering_element[$property];
     }
@@ -92,25 +92,25 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
   // key and it may be a TranslatableMarkup.
   $button_title = !empty($triggering_element['#title']) ? (string) $triggering_element['#title'] : $trigger_key;
   if (empty($seen_buttons[$button_title])) {
-    $wrapping_element[$button_key]['#value'] = t('Update "@title" choice', array(
+    $wrapping_element[$button_key]['#value'] = t('Update "@title" choice', [
       '@title' => $button_title,
-    ));
+    ]);
     $seen_buttons[$button_title] = 1;
   }
   else {
-    $wrapping_element[$button_key]['#value'] = t('Update "@title" choice (@number)', array(
+    $wrapping_element[$button_key]['#value'] = t('Update "@title" choice (@number)', [
       '@title' => $button_title,
       '@number' => ++$seen_buttons[$button_title],
-    ));
+    ]);
   }
 
   // Attach custom data to the triggering element and submit button, so we can
   // use it in both the process function and AJAX callback.
-  $ajax_data = array(
+  $ajax_data = [
     'wrapper' => $triggering_element['#ajax']['wrapper'],
     'trigger_key' => $trigger_key,
     'refresh_parents' => $refresh_parents,
-  );
+  ];
   $seen_ids[$triggering_element['#ajax']['wrapper']] = TRUE;
   $triggering_element['#views_ui_ajax_data'] = $ajax_data;
   $wrapping_element[$button_key]['#views_ui_ajax_data'] = $ajax_data;
@@ -132,7 +132,7 @@ function views_ui_add_limited_validation($element, FormStateInterface $form_stat
   // Limit this button's validation to the AJAX triggering element, so it can
   // update the form for that change without requiring that the rest of the
   // form be filled out properly yet.
-  $element['#limit_validation_errors'] = array($ajax_triggering_element['#parents']);
+  $element['#limit_validation_errors'] = [$ajax_triggering_element['#parents']];
 
   // If we are in the process of a form submission and this is the button that
   // was clicked, the form API workflow in \Drupal::formBuilder()->doBuildForm()
@@ -165,10 +165,10 @@ function views_ui_add_ajax_wrapper($element, FormStateInterface $form_state) {
   // The HTML ID that AJAX expects was also stored in a property on the
   // element, so use that information to insert the wrapper <div> here.
   $id = $element['#views_ui_ajax_data']['wrapper'];
-  $refresh_element += array(
+  $refresh_element += [
     '#prefix' => '',
     '#suffix' => '',
-  );
+  ];
   $refresh_element['#prefix'] = '<div id="' . $id . '" class="views-ui-ajax-wrapper">' . $refresh_element['#prefix'];
   $refresh_element['#suffix'] .= '</div>';
 
@@ -213,16 +213,16 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
 
   // @todo Move this to a separate function if it's needed on any forms that
   // don't have the display dropdown.
-  $form['override'] = array(
+  $form['override'] = [
     '#prefix' => '<div class="views-override clearfix form--inline views-offset-top" data-drupal-views-offset="top">',
     '#suffix' => '</div>',
     '#weight' => -1000,
     '#tree' => TRUE,
-  );
+  ];
 
   // Add the "2 of 3" progress indicator.
   if ($form_progress = $view->getFormProgress()) {
-    $form['progress']['#markup'] = '<div id="views-progress-indicator" class="views-progress-indicator">' . t('@current of @total', array('@current' => $form_progress['current'], '@total' => $form_progress['total'])) . '</div>';
+    $form['progress']['#markup'] = '<div id="views-progress-indicator" class="views-progress-indicator">' . t('@current of @total', ['@current' => $form_progress['current'], '@total' => $form_progress['total']]) . '</div>';
     $form['progress']['#weight'] = -1001;
   }
 
@@ -247,17 +247,17 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
   }
 
   $display_dropdown['default'] = ($section_overrides ? t('All displays (except overridden)') : t('All displays'));
-  $display_dropdown[$display_id] = t('This @display_type (override)', array('@display_type' => $current_display->getPluginId()));
+  $display_dropdown[$display_id] = t('This @display_type (override)', ['@display_type' => $current_display->getPluginId()]);
   // Only display the revert option if we are in a overridden section.
   if (!$section_defaulted) {
     $display_dropdown['default_revert'] = t('Revert to default');
   }
 
-  $form['override']['dropdown'] = array(
+  $form['override']['dropdown'] = [
     '#type' => 'select',
     '#title' => t('For'), // @TODO: Translators may need more context than this.
     '#options' => $display_dropdown,
-  );
+  ];
   if ($current_display->isDefaulted($section)) {
     $form['override']['dropdown']['#default_value'] = 'defaults';
   }

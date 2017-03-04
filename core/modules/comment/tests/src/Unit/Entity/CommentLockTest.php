@@ -26,7 +26,7 @@ class CommentLockTest extends UnitTestCase {
     $request_stack = new RequestStack();
     $request_stack->push(Request::create('/'));
     $container->set('request_stack', $request_stack);
-    $container->setParameter('cache_bins', array('cache.test' => 'test'));
+    $container->setParameter('cache_bins', ['cache.test' => 'test']);
     $lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
     $cid = 2;
     $lock_name = "comment:$cid:.00/";
@@ -84,7 +84,7 @@ class CommentLockTest extends UnitTestCase {
     $comment->expects($this->at(1))
       ->method('get')
       ->with('status')
-      ->will($this->returnValue((object) array('value' => NULL)));
+      ->will($this->returnValue((object) ['value' => NULL]));
     $storage = $this->getMock('Drupal\comment\CommentStorageInterface');
 
     // preSave() should acquire the lock. (This is what's really being tested.)

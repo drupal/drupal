@@ -161,7 +161,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       if (!($table instanceof SelectInterface) && $table == $base_table) {
         // Set the subquery.
         $subquery = $this->database->select('node_access', 'na')
-          ->fields('na', array('nid'));
+          ->fields('na', ['nid']);
 
         // If any grant exists for the specified user, then user has access to the
         // node for the specified operation.
@@ -202,13 +202,13 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     if ($delete) {
       $query = $this->database->delete('node_access')->condition('nid', $node->id());
       if ($realm) {
-        $query->condition('realm', array($realm, 'all'), 'IN');
+        $query->condition('realm', [$realm, 'all'], 'IN');
       }
       $query->execute();
     }
     // Only perform work when node_access modules are active.
     if (!empty($grants) && count($this->moduleHandler->getImplementations('node_grants'))) {
-      $query = $this->database->insert('node_access')->fields(array('nid', 'langcode', 'fallback', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete'));
+      $query = $this->database->insert('node_access')->fields(['nid', 'langcode', 'fallback', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete']);
       // If we have defined a granted langcode, use it. But if not, add a grant
       // for every language this node is translated to.
       foreach ($grants as $grant) {
@@ -216,7 +216,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
           continue;
         }
         if (isset($grant['langcode'])) {
-          $grant_languages = array($grant['langcode'] => $this->languageManager->getLanguage($grant['langcode']));
+          $grant_languages = [$grant['langcode'] => $this->languageManager->getLanguage($grant['langcode'])];
         }
         else {
           $grant_languages = $node->getTranslationLanguages(TRUE);
@@ -253,14 +253,14 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function writeDefault() {
     $this->database->insert('node_access')
-      ->fields(array(
+      ->fields([
           'nid' => 0,
           'realm' => 'all',
           'gid' => 0,
           'grant_view' => 1,
           'grant_update' => 0,
           'grant_delete' => 0,
-        ))
+        ])
       ->execute();
   }
 

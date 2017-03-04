@@ -19,12 +19,12 @@ class ImageButton extends Submit {
     $info = parent::getInfo();
     unset($info['name']);
 
-    return array(
+    return [
       '#return_value' => TRUE,
       '#has_garbage_value' => TRUE,
       '#src' => NULL,
-      '#theme_wrappers' => array('input__image_button'),
-    ) + $info;
+      '#theme_wrappers' => ['input__image_button'],
+    ] + $info;
   }
 
   /**
@@ -68,7 +68,7 @@ class ImageButton extends Submit {
    */
   public static function preRenderButton($element) {
     $element['#attributes']['type'] = 'image';
-    Element::setAttributes($element, array('id', 'name', 'value'));
+    Element::setAttributes($element, ['id', 'name', 'value']);
 
     $element['#attributes']['src'] = file_url_transform_relative(file_create_url($element['#src']));
     if (!empty($element['#title'])) {

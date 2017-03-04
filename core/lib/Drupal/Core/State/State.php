@@ -56,7 +56,7 @@ class State extends CacheCollector implements StateInterface {
    * {@inheritdoc}
    */
   public function getMultiple(array $keys) {
-    $values = array();
+    $values = [];
     foreach ($keys as $key) {
       $values[$key] = $this->get($key);
     }
@@ -86,7 +86,7 @@ class State extends CacheCollector implements StateInterface {
    */
   public function delete($key) {
     parent::delete($key);
-    $this->deleteMultiple(array($key));
+    $this->deleteMultiple([$key]);
   }
 
   /**

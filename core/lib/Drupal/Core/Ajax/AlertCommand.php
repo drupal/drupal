@@ -31,10 +31,10 @@ class AlertCommand implements CommandInterface {
    */
   public function render() {
 
-    return array(
+    return [
       'command' => 'alert',
       'text' => $this->text,
-    );
+    ];
   }
 
 }

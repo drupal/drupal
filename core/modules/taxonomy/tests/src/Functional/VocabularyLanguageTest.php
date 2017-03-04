@@ -13,7 +13,7 @@ use Drupal\language\Entity\ContentLanguageSettings;
  */
 class VocabularyLanguageTest extends TaxonomyTestBase {
 
-  public static $modules = array('language');
+  public static $modules = ['language'];
 
   protected function setUp() {
     parent::setUp();
@@ -22,15 +22,15 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));
 
     // Add some custom languages.
-    ConfigurableLanguage::create(array(
+    ConfigurableLanguage::create([
       'id' => 'aa',
       'label' => $this->randomMachineName(),
-    ))->save();
+    ])->save();
 
-    ConfigurableLanguage::create(array(
+    ConfigurableLanguage::create([
       'id' => 'bb',
       'label' => $this->randomMachineName(),
-    ))->save();
+    ])->save();
   }
 
   /**
@@ -70,12 +70,12 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
   function testVocabularyDefaultLanguageForTerms() {
     // Add a new vocabulary and check that the default language settings are for
     // the terms are saved.
-    $edit = array(
+    $edit = [
       'name' => $this->randomMachineName(),
       'vid' => Unicode::strtolower($this->randomMachineName()),
       'default_language[langcode]' => 'bb',
       'default_language[language_alterable]' => TRUE,
-    );
+    ];
     $vid = $edit['vid'];
     $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
 
@@ -93,10 +93,10 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->assertFieldChecked('edit-default-language-language-alterable', 'Show language selection option is checked.');
 
     // Edit the vocabulary and check that the new settings are updated.
-    $edit = array(
+    $edit = [
       'default_language[langcode]' => 'aa',
       'default_language[language_alterable]' => FALSE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vid, $edit, t('Save'));
 
     // And check again the settings and also the interface.
@@ -109,11 +109,11 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->assertNoFieldChecked('edit-default-language-language-alterable', 'Show language selection option is not checked.');
 
     // Check that language settings are changed after editing vocabulary.
-    $edit = array(
+    $edit = [
       'name' => $this->randomMachineName(),
       'default_language[langcode]' => 'authors_default',
       'default_language[language_alterable]' => FALSE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vid, $edit, t('Save'));
 
     // Check that we have the new settings.

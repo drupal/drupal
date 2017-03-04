@@ -73,21 +73,21 @@ class UrlTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $map = array();
-    $map[] = array('view.frontpage.page_1', array(), array(), FALSE, '/node');
-    $map[] = array('node_view', array('node' => '1'), array(), FALSE, '/node/1');
-    $map[] = array('node_edit', array('node' => '2'), array(), FALSE, '/node/2/edit');
+    $map = [];
+    $map[] = ['view.frontpage.page_1', [], [], FALSE, '/node'];
+    $map[] = ['node_view', ['node' => '1'], [], FALSE, '/node/1'];
+    $map[] = ['node_edit', ['node' => '2'], [], FALSE, '/node/2/edit'];
     $this->map = $map;
 
-    $alias_map = array(
+    $alias_map = [
       // Set up one proper alias that can be resolved to a system path.
-      array('node-alias-test', NULL, FALSE, 'node'),
+      ['node-alias-test', NULL, FALSE, 'node'],
       // Passing in anything else should return the same string.
-      array('node', NULL, FALSE, 'node'),
-      array('node/1', NULL, FALSE, 'node/1'),
-      array('node/2/edit', NULL, FALSE, 'node/2/edit'),
-      array('non-existent', NULL, FALSE, 'non-existent'),
-    );
+      ['node', NULL, FALSE, 'node'],
+      ['node/1', NULL, FALSE, 'node/1'],
+      ['node/2/edit', NULL, FALSE, 'node/2/edit'],
+      ['non-existent', NULL, FALSE, 'non-existent'],
+    ];
 
     // $this->map has $collect_bubbleable_metadata = FALSE; also generate the
     // $collect_bubbleable_metadata = TRUE case for ::generateFromRoute().
@@ -143,7 +143,7 @@ class UrlTest extends UnitTestCase {
         '_raw_variables' => new ParameterBag(['node' => '2']),
       ]);
 
-    $urls = array();
+    $urls = [];
     foreach ($this->map as $index => $values) {
       $path = array_pop($values);
       $url = Url::createFromRequest(Request::create("$path"));
@@ -258,13 +258,13 @@ class UrlTest extends UnitTestCase {
    * @covers ::createFromRequest
    */
   public function testCreateFromRequest() {
-    $attributes = array(
-      '_raw_variables' => new ParameterBag(array(
+    $attributes = [
+      '_raw_variables' => new ParameterBag([
         'color' => 'chartreuse',
-      )),
+      ]),
       RouteObjectInterface::ROUTE_NAME => 'the_route_name',
-    );
-    $request = new Request(array(), array(), $attributes);
+    ];
+    $request = new Request([], [], $attributes);
 
     $this->router->expects($this->once())
       ->method('matchRequest')
@@ -272,7 +272,7 @@ class UrlTest extends UnitTestCase {
       ->will($this->returnValue($attributes));
 
     $url = Url::createFromRequest($request);
-    $expected = new Url('the_route_name', array('color' => 'chartreuse'));
+    $expected = new Url('the_route_name', ['color' => 'chartreuse']);
     $this->assertEquals($expected, $url);
   }
 
@@ -533,9 +533,9 @@ class UrlTest extends UnitTestCase {
    * @dataProvider accessProvider
    */
   public function testRenderAccess($access) {
-    $element = array(
+    $element = [
       '#url' => Url::fromRoute('entity.node.canonical', ['node' => 3]),
-    );
+    ];
     $this->container->set('current_user', $this->getMock('Drupal\Core\Session\AccountInterface'));
     $this->container->set('access_manager', $this->getMockAccessManager($access));
     $this->assertEquals($access, TestUrl::renderAccess($element));
@@ -853,10 +853,10 @@ class UrlTest extends UnitTestCase {
    * Data provider for the access test methods.
    */
   public function accessProvider() {
-    return array(
-      array(TRUE),
-      array(FALSE),
-    );
+    return [
+      [TRUE],
+      [FALSE],
+    ];
   }
 
 }

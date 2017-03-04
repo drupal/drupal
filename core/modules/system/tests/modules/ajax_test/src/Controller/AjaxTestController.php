@@ -22,22 +22,22 @@ class AjaxTestController {
    */
   public static function dialogContents() {
     // This is a regular render array; the keys do not have special meaning.
-    $content = array(
+    $content = [
       '#title' => '<em>AJAX Dialog & contents</em>',
-      'content' => array(
+      'content' => [
         '#markup' => 'Example message',
-      ),
-      'cancel' => array(
+      ],
+      'cancel' => [
         '#type' => 'link',
         '#title' => 'Cancel',
         '#url' => Url::fromRoute('<front>'),
-        '#attributes' => array(
+        '#attributes' => [
           // This is a special class to which JavaScript assigns dialog closing
           // behavior.
-          'class' => array('dialog-cancel'),
-        ),
-      ),
-    );
+          'class' => ['dialog-cancel'],
+        ],
+      ],
+    ];
 
     return $content;
   }
@@ -111,88 +111,88 @@ class AjaxTestController {
   public function dialog() {
     // Add two wrapper elements for testing non-modal dialogs. Modal dialogs use
     // the global drupal-modal wrapper by default.
-    $build['dialog_wrappers'] = array('#markup' => '<div id="ajax-test-dialog-wrapper-1"></div><div id="ajax-test-dialog-wrapper-2"></div>');
+    $build['dialog_wrappers'] = ['#markup' => '<div id="ajax-test-dialog-wrapper-1"></div><div id="ajax-test-dialog-wrapper-2"></div>'];
 
     // Dialog behavior applied to a button.
     $build['form'] = \Drupal::formBuilder()->getForm('Drupal\ajax_test\Form\AjaxTestDialogForm');
 
     // Dialog behavior applied to a #type => 'link'.
-    $build['link'] = array(
+    $build['link'] = [
       '#type' => 'link',
       '#title' => 'Link 1 (modal)',
       '#url' => Url::fromRoute('ajax_test.dialog_contents'),
-      '#attributes' => array(
-        'class' => array('use-ajax'),
+      '#attributes' => [
+        'class' => ['use-ajax'],
         'data-dialog-type' => 'modal',
-      ),
-    );
+      ],
+    ];
 
     // Dialog behavior applied to links rendered by links.html.twig.
-    $build['links'] = array(
+    $build['links'] = [
       '#theme' => 'links',
-      '#links' => array(
-        'link2' => array(
+      '#links' => [
+        'link2' => [
           'title' => 'Link 2 (modal)',
           'url' => Url::fromRoute('ajax_test.dialog_contents'),
-          'attributes' => array(
-            'class' => array('use-ajax'),
+          'attributes' => [
+            'class' => ['use-ajax'],
             'data-dialog-type' => 'modal',
-            'data-dialog-options' => json_encode(array(
+            'data-dialog-options' => json_encode([
               'width' => 400,
-            ))
-          ),
-        ),
-        'link3' => array(
+            ])
+          ],
+        ],
+        'link3' => [
           'title' => 'Link 3 (non-modal)',
           'url' => Url::fromRoute('ajax_test.dialog_contents'),
-          'attributes' => array(
-            'class' => array('use-ajax'),
+          'attributes' => [
+            'class' => ['use-ajax'],
             'data-dialog-type' => 'dialog',
-            'data-dialog-options' => json_encode(array(
+            'data-dialog-options' => json_encode([
               'target' => 'ajax-test-dialog-wrapper-1',
               'width' => 800,
-            ))
-          ),
-        ),
-        'link4' => array(
+            ])
+          ],
+        ],
+        'link4' => [
           'title' => 'Link 4 (close non-modal if open)',
           'url' => Url::fromRoute('ajax_test.dialog_close'),
-          'attributes' => array(
-            'class' => array('use-ajax'),
+          'attributes' => [
+            'class' => ['use-ajax'],
             'data-dialog-type' => 'modal',
-          ),
-        ),
-        'link5' => array(
+          ],
+        ],
+        'link5' => [
           'title' => 'Link 5 (form)',
           'url' => Url::fromRoute('ajax_test.dialog_form'),
-          'attributes' => array(
-            'class' => array('use-ajax'),
+          'attributes' => [
+            'class' => ['use-ajax'],
             'data-dialog-type' => 'modal',
-          ),
-        ),
-        'link6' => array(
+          ],
+        ],
+        'link6' => [
           'title' => 'Link 6 (entity form)',
           'url' => Url::fromRoute('contact.form_add'),
-          'attributes' => array(
-            'class' => array('use-ajax'),
+          'attributes' => [
+            'class' => ['use-ajax'],
             'data-dialog-type' => 'modal',
-            'data-dialog-options' => json_encode(array(
+            'data-dialog-options' => json_encode([
               'width' => 800,
               'height' => 500,
-            ))
-          ),
-        ),
-        'link7' => array(
+            ])
+          ],
+        ],
+        'link7' => [
           'title' => 'Link 7 (non-modal, no target)',
           'url' => Url::fromRoute('ajax_test.dialog_contents'),
-          'attributes' => array(
-            'class' => array('use-ajax'),
+          'attributes' => [
+            'class' => ['use-ajax'],
             'data-dialog-type' => 'dialog',
-            'data-dialog-options' => json_encode(array(
+            'data-dialog-options' => json_encode([
               'width' => 800,
-            ))
-          ),
-        ),
+            ])
+          ],
+        ],
         'link8' => [
           'title' => 'Link 8 (ajax)',
           'url' => Url::fromRoute('ajax_test.admin.theme'),
@@ -204,8 +204,8 @@ class AjaxTestController {
             ]),
           ],
         ],
-      ),
-    );
+      ],
+    ];
 
     return $build;
   }

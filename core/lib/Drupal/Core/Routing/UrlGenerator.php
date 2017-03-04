@@ -124,7 +124,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPathFromRoute($name, $parameters = array()) {
+  public function getPathFromRoute($name, $parameters = []) {
     $route = $this->getRoute($name);
     $name = $this->getRouteDebugMessage($name);
     $this->processRoute($name, $route, $parameters);
@@ -241,7 +241,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    *   The URL path corresponding to the route, without the base path, not URL
    *   encoded.
    */
-  protected function getInternalPathFromRoute($name, SymfonyRoute $route, $parameters = array(), &$query_params = array()) {
+  protected function getInternalPathFromRoute($name, SymfonyRoute $route, $parameters = [], &$query_params = []) {
     // The Route has a cache of its own and is not recompiled as long as it does
     // not get modified.
     $compiledRoute = $route->compile();
@@ -252,7 +252,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH) {
+  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH) {
     $options['absolute'] = is_bool($referenceType) ? $referenceType : $referenceType === self::ABSOLUTE_URL;
     return $this->generateFromRoute($name, $parameters, $options);
   }
@@ -260,10 +260,10 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateFromRoute($name, $parameters = array(), $options = array(), $collect_bubbleable_metadata = FALSE) {
-    $options += array('prefix' => '');
+  public function generateFromRoute($name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
+    $options += ['prefix' => ''];
     if (!isset($options['query']) || !is_array($options['query'])) {
-      $options['query'] = array();
+      $options['query'] = [];
     }
 
     $route = $this->getRoute($name);
@@ -284,7 +284,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     }
 
     $options += $route->getOption('default_url_options') ?: [];
-    $options += array('prefix' => '', 'path_processing' => TRUE);
+    $options += ['prefix' => '', 'path_processing' => TRUE];
 
     $name = $this->getRouteDebugMessage($name);
     $this->processRoute($name, $route, $parameters, $generated_url);
@@ -306,7 +306,7 @@ class UrlGenerator implements UrlGeneratorInterface {
       // so we need to encode them as they are not used for this purpose here
       // otherwise we would generate a URI that, when followed by a user agent
       // (e.g. browser), does not match this route
-      $path = strtr($path, array('/../' => '/%2E%2E/', '/./' => '/%2E/'));
+      $path = strtr($path, ['/../' => '/%2E%2E/', '/./' => '/%2E/']);
       if ('/..' === substr($path, -3)) {
         $path = substr($path, 0, -2) . '%2E%2E';
       }
@@ -377,7 +377,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * Passes the path to a processor manager to allow alterations.
    */
-  protected function processPath($path, &$options = array(), BubbleableMetadata $bubbleable_metadata = NULL) {
+  protected function processPath($path, &$options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
     $actual_path = $path === '/' ? $path : rtrim($path, '/');
     return $this->pathProcessor->processOutbound($actual_path, $options, $this->requestStack->getCurrentRequest(), $bubbleable_metadata);
   }
@@ -433,7 +433,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRouteDebugMessage($name, array $parameters = array()) {
+  public function getRouteDebugMessage($name, array $parameters = []) {
     if (is_scalar($name)) {
       return $name;
     }

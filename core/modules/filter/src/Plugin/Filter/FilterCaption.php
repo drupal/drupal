@@ -40,7 +40,7 @@ class FilterCaption extends FilterBase {
         // Sanitize caption: decode HTML encoding, limit allowed HTML tags; only
         // allow inline tags that are allowed by default, plus <br>.
         $caption = Html::decodeEntities($caption);
-        $caption = FilteredMarkup::create(Xss::filter($caption, array('a', 'em', 'strong', 'cite', 'code', 'br')));
+        $caption = FilteredMarkup::create(Xss::filter($caption, ['a', 'em', 'strong', 'cite', 'code', 'br']));
 
         // The caption must be non-empty.
         if (Unicode::strlen($caption) === 0) {
@@ -54,7 +54,7 @@ class FilterCaption extends FilterBase {
         $classes = $node->getAttribute('class');
         $node->removeAttribute('class');
         $node = ($node->parentNode->tagName === 'a') ? $node->parentNode : $node;
-        $filter_caption = array(
+        $filter_caption = [
           '#theme' => 'filter_caption',
           // We pass the unsanitized string because this is a text format
           // filter, and after filtering, we always assume the output is safe.
@@ -63,7 +63,7 @@ class FilterCaption extends FilterBase {
           '#tag' => $tag,
           '#caption' => $caption,
           '#classes' => $classes,
-        );
+        ];
         $altered_html = drupal_render($filter_caption);
 
         // Load the altered HTML into a new DOMDocument and retrieve the element.
@@ -82,11 +82,11 @@ class FilterCaption extends FilterBase {
       }
 
       $result->setProcessedText(Html::serialize($dom))
-        ->addAttachments(array(
-          'library' => array(
+        ->addAttachments([
+          'library' => [
             'filter/caption',
-          ),
-        ));
+          ],
+        ]);
     }
 
     return $result;

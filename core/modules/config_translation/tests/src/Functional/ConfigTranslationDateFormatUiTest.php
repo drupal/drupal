@@ -12,11 +12,11 @@ use Drupal\Tests\BrowserTestBase;
  */
 class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
 
-  public static $modules = array(
+  public static $modules = [
     'language',
     'config_translation',
     'system'
-  );
+  ];
 
   protected function setUp() {
     parent::setUp();
@@ -27,10 +27,10 @@ class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
 
-    $user = $this->drupalCreateUser(array(
+    $user = $this->drupalCreateUser([
       'administer site configuration',
       'translate configuration',
-    ));
+    ]);
     $this->drupalLogin($user);
   }
 

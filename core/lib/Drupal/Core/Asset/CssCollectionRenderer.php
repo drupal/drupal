@@ -74,7 +74,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
    * {@inheritdoc}
    */
   public function render(array $css_assets) {
-    $elements = array();
+    $elements = [];
 
     // A dummy query-string is added to filenames, to gain control over
     // browser-caching. The string changes on every update or full cache
@@ -83,22 +83,22 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
     $query_string = $this->state->get('system.css_js_query_string') ?: '0';
 
     // Defaults for LINK and STYLE elements.
-    $link_element_defaults = array(
+    $link_element_defaults = [
       '#type' => 'html_tag',
       '#tag' => 'link',
-      '#attributes' => array(
+      '#attributes' => [
         'rel' => 'stylesheet',
-      ),
-    );
-    $style_element_defaults = array(
+      ],
+    ];
+    $style_element_defaults = [
       '#type' => 'html_tag',
       '#tag' => 'style',
-    );
+    ];
 
     // For filthy IE hack.
     $current_ie_group_keys = NULL;
     $get_ie_group_key = function ($css_asset) {
-      return array($css_asset['type'], $css_asset['preprocess'], $css_asset['group'], $css_asset['media'], $css_asset['browsers']);
+      return [$css_asset['type'], $css_asset['preprocess'], $css_asset['group'], $css_asset['media'], $css_asset['browsers']];
     };
 
     // Loop through all CSS assets, by key, to allow for the special IE
@@ -151,7 +151,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
             // The file CSS asset can be aggregated, but hasn't been: combine
             // multiple items into as few STYLE tags as possible.
             else {
-              $import = array();
+              $import = [];
               // Start with the current CSS asset, iterate over subsequent CSS
               // assets and find which ones have the same 'type', 'group',
               // 'preprocess', 'media' and 'browsers' properties.

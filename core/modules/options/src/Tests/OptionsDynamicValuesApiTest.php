@@ -21,12 +21,12 @@ class OptionsDynamicValuesApiTest extends OptionsDynamicValuesTestBase {
 
     $values = options_allowed_values($this->fieldStorage, $this->entity);
 
-    $expected_values = array(
+    $expected_values = [
       $this->entity->label(),
       $this->entity->url(),
       $this->entity->uuid(),
       $this->entity->bundle(),
-    );
+    ];
     $expected_values = array_combine($expected_values, $expected_values);
     $this->assertEqual($expected_values, $values);
   }

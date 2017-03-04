@@ -23,16 +23,16 @@ class DateTimeCustomFormatter extends DateTimeFormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'date_format' => DATETIME_DATETIME_STORAGE_FORMAT,
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     foreach ($items as $delta => $item) {
       $output = '';
@@ -76,12 +76,12 @@ class DateTimeCustomFormatter extends DateTimeFormatterBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
 
-    $form['date_format'] = array(
+    $form['date_format'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Date/time format'),
       '#description' => $this->t('See <a href="http://php.net/manual/function.date.php" target="_blank">the documentation for PHP date formats</a>.'),
       '#default_value' => $this->getSetting('date_format'),
-    );
+    ];
 
     return $form;
   }

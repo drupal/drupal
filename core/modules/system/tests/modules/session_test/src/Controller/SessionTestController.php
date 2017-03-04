@@ -21,7 +21,7 @@ class SessionTestController extends ControllerBase {
   public function get() {
     return empty($_SESSION['session_test_value'])
       ? []
-      : ['#markup' => $this->t('The current value of the stored session variable is: %val', array('%val' => $_SESSION['session_test_value']))];
+      : ['#markup' => $this->t('The current value of the stored session variable is: %val', ['%val' => $_SESSION['session_test_value']])];
   }
 
   /**
@@ -37,7 +37,7 @@ class SessionTestController extends ControllerBase {
     $value = $request->getSession()->get("session_test_key");
     return empty($value)
       ? []
-      : ['#markup' => $this->t('The current value of the stored session variable is: %val', array('%val' => $value))];
+      : ['#markup' => $this->t('The current value of the stored session variable is: %val', ['%val' => $value])];
   }
 
   /**
@@ -84,7 +84,7 @@ class SessionTestController extends ControllerBase {
   public function set($test_value) {
     $_SESSION['session_test_value'] = $test_value;
 
-    return ['#markup' => $this->t('The current value of the stored session variable has been set to %val', array('%val' => $test_value))];
+    return ['#markup' => $this->t('The current value of the stored session variable has been set to %val', ['%val' => $test_value])];
   }
 
   /**
@@ -100,7 +100,7 @@ class SessionTestController extends ControllerBase {
   public function noSet($test_value) {
     \Drupal::service('session_handler.write_safe')->setSessionWritable(FALSE);
     $this->set($test_value);
-    return ['#markup' => $this->t('session saving was disabled, and then %val was set', array('%val' => $test_value))];
+    return ['#markup' => $this->t('session saving was disabled, and then %val was set', ['%val' => $test_value])];
   }
 
   /**

@@ -28,7 +28,7 @@ function history_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.history':
       $output  = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The History module keeps track of which content a user has read. It marks content as <em>new</em> or <em>updated</em> depending on the last time the user viewed it. History records that are older than one month are removed during cron, which means that content older than one month is always considered <em>read</em>. The History module does not have a user interface but it provides a filter to <a href=":views-help">Views</a> to show new or updated content. For more information, see the <a href=":url">online documentation for the History module</a>.', array(':views-help' => (\Drupal::moduleHandler()->moduleExists('views')) ? \Drupal::url('help.page', array ('name' => 'views')) : '#', ':url' => 'https://www.drupal.org/documentation/modules/history')) . '</p>';
+      $output .= '<p>' . t('The History module keeps track of which content a user has read. It marks content as <em>new</em> or <em>updated</em> depending on the last time the user viewed it. History records that are older than one month are removed during cron, which means that content older than one month is always considered <em>read</em>. The History module does not have a user interface but it provides a filter to <a href=":views-help">Views</a> to show new or updated content. For more information, see the <a href=":url">online documentation for the History module</a>.', [':views-help' => (\Drupal::moduleHandler()->moduleExists('views')) ? \Drupal::url('help.page',  ['name' => 'views']) : '#', ':url' => 'https://www.drupal.org/documentation/modules/history']) . '</p>';
       return $output;
   }
 }
@@ -44,7 +44,7 @@ function history_help($route_name, RouteMatchInterface $route_match) {
  *   of when the last view occurred; otherwise, zero.
  */
 function history_read($nid) {
-  $history = history_read_multiple(array($nid));
+  $history = history_read_multiple([$nid]);
   return $history[$nid];
 }
 
@@ -60,11 +60,11 @@ function history_read($nid) {
  *   otherwise, zero.
  */
 function history_read_multiple($nids) {
-  $history = &drupal_static(__FUNCTION__, array());
+  $history = &drupal_static(__FUNCTION__, []);
 
-  $return = array();
+  $return = [];
 
-  $nodes_to_read = array();
+  $nodes_to_read = [];
   foreach ($nids as $nid) {
     if (isset($history[$nid])) {
       $return[$nid] = $history[$nid];
@@ -79,10 +79,10 @@ function history_read_multiple($nids) {
     return $return;
   }
 
-  $result = db_query('SELECT nid, timestamp FROM {history} WHERE uid = :uid AND nid IN ( :nids[] )', array(
+  $result = db_query('SELECT nid, timestamp FROM {history} WHERE uid = :uid AND nid IN ( :nids[] )', [
     ':uid' => \Drupal::currentUser()->id(),
     ':nids[]' => array_keys($nodes_to_read),
-  ));
+  ]);
   foreach ($result as $row) {
     $nodes_to_read[$row->nid] = (int) $row->timestamp;
   }
@@ -108,14 +108,14 @@ function history_write($nid, $account = NULL) {
 
   if ($account->isAuthenticated()) {
     db_merge('history')
-      ->keys(array(
+      ->keys([
         'uid' => $account->id(),
         'nid' => $nid,
-      ))
-      ->fields(array('timestamp' => REQUEST_TIME))
+      ])
+      ->fields(['timestamp' => REQUEST_TIME])
       ->execute();
     // Update static cache.
-    $history = &drupal_static('history_read_multiple', array());
+    $history = &drupal_static('history_read_multiple', []);
     $history[$nid] = REQUEST_TIME;
   }
 }

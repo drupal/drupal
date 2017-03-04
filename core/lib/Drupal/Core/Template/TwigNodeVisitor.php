@@ -35,7 +35,7 @@ class TwigNodeVisitor extends \Twig_BaseNodeVisitor {
       $class = get_class($node);
       $line = $node->getLine();
       return new $class(
-        new \Twig_Node_Expression_Function('render_var', new \Twig_Node(array($node->getNode('expr'))), $line),
+        new \Twig_Node_Expression_Function('render_var', new \Twig_Node([$node->getNode('expr')]), $line),
         $line
       );
     }

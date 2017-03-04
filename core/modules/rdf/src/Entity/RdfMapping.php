@@ -59,20 +59,20 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
    *
    * @var array
    */
-  protected $types = array();
+  protected $types = [];
 
   /**
    * The mappings for fields on this bundle.
    *
    * @var array
    */
-  protected $fieldMappings = array();
+  protected $fieldMappings = [];
 
   /**
    * {@inheritdoc}
    */
   public function getPreparedBundleMapping() {
-    return array('types' => $this->types);
+    return ['types' => $this->types];
   }
 
   /**
@@ -80,9 +80,9 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
    */
   public function getBundleMapping() {
     if (!empty($this->types)) {
-      return array('types' => $this->types);
+      return ['types' => $this->types];
     }
-    return array();
+    return [];
   }
 
   /**
@@ -100,16 +100,16 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
    * {@inheritdoc}
    */
   public function getPreparedFieldMapping($field_name) {
-    $field_mapping = array(
+    $field_mapping = [
       'properties' => NULL,
       'datatype' => NULL,
       'datatype_callback' => NULL,
       'mapping_type' => NULL,
-    );
+    ];
     if (isset($this->fieldMappings[$field_name])) {
       $field_mapping = array_merge($field_mapping, $this->fieldMappings[$field_name]);
     }
-    return empty($field_mapping['properties']) ? array() : $field_mapping;
+    return empty($field_mapping['properties']) ? [] : $field_mapping;
   }
 
   /**
@@ -119,13 +119,13 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
     if (isset($this->fieldMappings[$field_name])) {
       return $this->fieldMappings[$field_name];
     }
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setFieldMapping($field_name, array $mapping = array()) {
+  public function setFieldMapping($field_name, array $mapping = []) {
     $this->fieldMappings[$field_name] = $mapping;
     return $this;
   }

@@ -17,7 +17,7 @@ class FolderTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('image');
+  public static $modules = ['image'];
 
   function testFolderSetup() {
     $directory = file_default_scheme() . '://styles';

@@ -19,7 +19,7 @@ class StatisticsLoggingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'statistics', 'block', 'locale');
+  public static $modules = ['node', 'statistics', 'block', 'locale'];
 
   /**
    * User with permissions to create and edit pages.
@@ -47,10 +47,10 @@ class StatisticsLoggingTest extends WebTestBase {
 
     // Create Basic page node type.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     }
 
-    $this->authUser = $this->drupalCreateUser(array(
+    $this->authUser = $this->drupalCreateUser([
       // For node creation.
       'access content',
       'create page content',
@@ -58,21 +58,21 @@ class StatisticsLoggingTest extends WebTestBase {
       // For language negotiation administration.
       'administer languages',
       'access administration pages',
-    ));
+    ]);
 
     // Ensure we have a node page to access.
-    $this->node = $this->drupalCreateNode(array('title' => $this->randomMachineName(255), 'uid' => $this->authUser->id()));
+    $this->node = $this->drupalCreateNode(['title' => $this->randomMachineName(255), 'uid' => $this->authUser->id()]);
 
     // Add a custom language and enable path-based language negotiation.
     $this->drupalLogin($this->authUser);
-    $this->language = array(
+    $this->language = [
       'predefined_langcode' => 'custom',
       'langcode' => 'xx',
       'label' => $this->randomMachineName(16),
       'direction' => 'ltr',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $this->language, t('Add custom language'));
-    $this->drupalPostForm('admin/config/regional/language/detection', array('language_interface[enabled][language-url]' => 1), t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', ['language_interface[enabled][language-url]' => 1], t('Save settings'));
     $this->drupalLogout();
 
     // Enable access logging.
@@ -121,8 +121,8 @@ class StatisticsLoggingTest extends WebTestBase {
 
     // Manually call statistics.php to simulate ajax data collection behavior.
     global $base_root;
-    $post = array('nid' => $this->node->id());
-    $this->client->post($base_root . $stats_path, array('form_params' => $post));
+    $post = ['nid' => $this->node->id()];
+    $this->client->post($base_root . $stats_path, ['form_params' => $post]);
     $node_counter = statistics_get($this->node->id());
     $this->assertIdentical($node_counter['totalcount'], '1');
   }

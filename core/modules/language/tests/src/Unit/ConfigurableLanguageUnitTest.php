@@ -21,11 +21,11 @@ class ConfigurableLanguageUnitTest extends UnitTestCase {
     // Direction of language writing, an integer. Usually either
     // ConfigurableLanguage::DIRECTION_LTR or
     // ConfigurableLanguage::DIRECTION_RTL.
-    $configurableLanguage = new ConfigurableLanguage(array('direction' => ConfigurableLanguage::DIRECTION_LTR), 'configurable_language');
+    $configurableLanguage = new ConfigurableLanguage(['direction' => ConfigurableLanguage::DIRECTION_LTR], 'configurable_language');
     $this->assertEquals(ConfigurableLanguage::DIRECTION_LTR, $configurableLanguage->getDirection());
 
     // Test direction again, setting direction to RTL.
-    $configurableLanguage = new ConfigurableLanguage(array('direction' => ConfigurableLanguage::DIRECTION_RTL), 'configurable_language');
+    $configurableLanguage = new ConfigurableLanguage(['direction' => ConfigurableLanguage::DIRECTION_RTL], 'configurable_language');
     $this->assertEquals(ConfigurableLanguage::DIRECTION_RTL, $configurableLanguage->getDirection());
   }
 
@@ -36,7 +36,7 @@ class ConfigurableLanguageUnitTest extends UnitTestCase {
   public function testWeight() {
     // The weight, an integer. Used to order languages with larger positive
     // weights sinking items toward the bottom of lists.
-    $configurableLanguage = new ConfigurableLanguage(array('weight' => -5), 'configurable_language');
+    $configurableLanguage = new ConfigurableLanguage(['weight' => -5], 'configurable_language');
     $this->assertEquals($configurableLanguage->getWeight(), -5);
     $this->assertEquals($configurableLanguage->setWeight(13)->getWeight(), 13);
   }

@@ -15,7 +15,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateBlockContentBodyFieldTest extends MigrateDrupal7TestBase {
 
-  public static $modules = array('block', 'block_content', 'filter', 'text');
+  public static $modules = ['block', 'block_content', 'filter', 'text'];
 
   /**
    * {@inheritdoc}

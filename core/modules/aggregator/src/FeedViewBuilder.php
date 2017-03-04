@@ -68,65 +68,65 @@ class FeedViewBuilder extends EntityViewBuilder {
 
         if ($view_mode == 'full') {
           // Also add the pager.
-          $build[$id]['pager'] = array('#type' => 'pager');
+          $build[$id]['pager'] = ['#type' => 'pager'];
         }
       }
 
       if ($display->getComponent('description')) {
-        $build[$id]['description'] = array(
+        $build[$id]['description'] = [
           '#markup' => $entity->getDescription(),
           '#allowed_tags' => _aggregator_allowed_tags(),
           '#prefix' => '<div class="feed-description">',
           '#suffix' => '</div>',
-        );
+        ];
       }
 
       if ($display->getComponent('image')) {
-        $image_link = array();
+        $image_link = [];
         // Render the image as link if it is available.
         $image = $entity->getImage();
         $label = $entity->label();
         $link_href = $entity->getWebsiteUrl();
         if ($image && $label && $link_href) {
-          $link_title = array(
+          $link_title = [
             '#theme' => 'image',
             '#uri' => $image,
             '#alt' => $label,
-          );
-          $image_link = array(
+          ];
+          $image_link = [
             '#type' => 'link',
             '#title' => $link_title,
             '#url' => Url::fromUri($link_href),
-            '#options' => array(
-              'attributes' => array('class' => array('feed-image')),
-            ),
-          );
+            '#options' => [
+              'attributes' => ['class' => ['feed-image']],
+            ],
+          ];
         }
         $build[$id]['image'] = $image_link;
       }
 
       if ($display->getComponent('feed_icon')) {
-        $build[$id]['feed_icon'] = array(
+        $build[$id]['feed_icon'] = [
           '#theme' => 'feed_icon',
           '#url' => $entity->getUrl(),
-          '#title' => t('@title feed', array('@title' => $entity->label())),
-        );
+          '#title' => t('@title feed', ['@title' => $entity->label()]),
+        ];
       }
 
       if ($display->getComponent('more_link')) {
         $title_stripped = strip_tags($entity->label());
-        $build[$id]['more_link'] = array(
+        $build[$id]['more_link'] = [
           '#type' => 'link',
-          '#title' => t('More<span class="visually-hidden"> posts about @title</span>', array(
+          '#title' => t('More<span class="visually-hidden"> posts about @title</span>', [
             '@title' => $title_stripped,
-          )),
+          ]),
           '#url' => Url::fromRoute('entity.aggregator_feed.canonical', ['aggregator_feed' => $entity->id()]),
-          '#options' => array(
-            'attributes' => array(
+          '#options' => [
+            'attributes' => [
               'title' => $title_stripped,
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
       }
 
     }

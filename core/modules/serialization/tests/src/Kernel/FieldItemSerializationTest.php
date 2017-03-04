@@ -17,7 +17,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('serialization', 'system', 'field', 'entity_test', 'text', 'filter', 'user', 'field_normalization_test');
+  public static $modules = ['serialization', 'system', 'field', 'entity_test', 'text', 'filter', 'user', 'field_normalization_test'];
 
   /**
    * The class name of the test class.
@@ -54,14 +54,14 @@ class FieldItemSerializationTest extends NormalizerTestBase {
     parent::setUp();
 
     // Auto-create a field for testing default field values.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'entity_type' => 'entity_test_mulrev',
       'field_name' => 'field_test_text_default',
       'type' => 'text',
       'cardinality' => 1,
       'translatable' => FALSE,
-    ))->save();
-    FieldConfig::create(array(
+    ])->save();
+    FieldConfig::create([
       'entity_type' => 'entity_test_mulrev',
       'field_name' => 'field_test_text_default',
       'bundle' => 'entity_test_mulrev',
@@ -72,26 +72,26 @@ class FieldItemSerializationTest extends NormalizerTestBase {
           'format' => 'full_html',
         ],
       ],
-      'widget' => array(
+      'widget' => [
         'type' => 'text_textfield',
         'weight' => 0,
-      ),
-    ))->save();
+      ],
+    ])->save();
 
     // Create a test entity to serialize.
-    $this->values = array(
+    $this->values = [
       'name' => $this->randomMachineName(),
-      'field_test_text' => array(
+      'field_test_text' => [
         'value' => $this->randomMachineName(),
         'format' => 'full_html',
-      ),
-    );
+      ],
+    ];
     $this->entity = EntityTestMulRev::create($this->values);
     $this->entity->save();
 
     $this->serializer = $this->container->get('serializer');
 
-    $this->installConfig(array('field'));
+    $this->installConfig(['field']);
   }
 
   /**

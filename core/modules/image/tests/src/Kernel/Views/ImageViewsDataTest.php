@@ -19,7 +19,7 @@ class ImageViewsDataTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('image', 'file', 'views', 'entity_test', 'user', 'field');
+  public static $modules = ['image', 'file', 'views', 'entity_test', 'user', 'field'];
 
   /**
    * Tests views data generated for image field relationship.
@@ -29,16 +29,16 @@ class ImageViewsDataTest extends ViewsKernelTestBase {
    */
   public function testRelationshipViewsData() {
     // Create image field to entity_test.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_base_image',
       'type' => 'image',
-    ))->save();
-    FieldConfig::create(array(
+    ])->save();
+    FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_base_image',
       'bundle' => 'entity_test',
-    ))->save();
+    ])->save();
     // Check the generated views data.
     $views_data = Views::viewsData()->get('entity_test__field_base_image');
     $relationship = $views_data['field_base_image_target_id']['relationship'];
@@ -59,16 +59,16 @@ class ImageViewsDataTest extends ViewsKernelTestBase {
     $this->assertEqual($relationship['join_extra'][0], ['field' => 'deleted', 'value' => 0, 'numeric' => TRUE]);
 
     // Create image field to entity_test_mul.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'entity_type' => 'entity_test_mul',
       'field_name' => 'field_data_image',
       'type' => 'image',
-    ))->save();
-    FieldConfig::create(array(
+    ])->save();
+    FieldConfig::create([
       'entity_type' => 'entity_test_mul',
       'field_name' => 'field_data_image',
       'bundle' => 'entity_test_mul',
-    ))->save();
+    ])->save();
     // Check the generated views data.
     $views_data = Views::viewsData()->get('entity_test_mul__field_data_image');
     $relationship = $views_data['field_data_image_target_id']['relationship'];

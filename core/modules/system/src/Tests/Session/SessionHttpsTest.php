@@ -33,7 +33,7 @@ class SessionHttpsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('session_test');
+  public static $modules = ['session_test'];
 
   protected function setUp() {
     parent::setUp();
@@ -50,7 +50,7 @@ class SessionHttpsTest extends WebTestBase {
   }
 
   public function testHttpsSession() {
-    $user = $this->drupalCreateUser(array('access administration pages'));
+    $user = $this->drupalCreateUser(['access administration pages']);
 
     // Test HTTPS session handling by altering the form action to submit the
     // login form through https.php, which creates a mock HTTPS request.
@@ -58,7 +58,7 @@ class SessionHttpsTest extends WebTestBase {
 
     // Test a second concurrent session.
     $this->curlClose();
-    $this->curlCookies = array();
+    $this->curlCookies = [];
     $this->loginHttps($user);
 
     // Check secure cookie on secure page.
@@ -80,7 +80,7 @@ class SessionHttpsTest extends WebTestBase {
 
     // Verify that empty SID cannot be used on the non-secure site.
     $this->curlClose();
-    $this->curlCookies = array($this->insecureSessionName . '=');
+    $this->curlCookies = [$this->insecureSessionName . '='];
     $this->drupalGet($this->httpUrl('admin/config'));
     $this->assertResponse(403);
 
@@ -88,7 +88,7 @@ class SessionHttpsTest extends WebTestBase {
     // login form through http.php, which creates a mock HTTP request on HTTPS
     // test environments.
     $this->curlClose();
-    $this->curlCookies = array();
+    $this->curlCookies = [];
     $this->loginHttp($user);
     $this->drupalGet($this->httpUrl('admin/config'));
     $this->assertResponse(200);
@@ -97,12 +97,12 @@ class SessionHttpsTest extends WebTestBase {
 
     // Verify that empty secure SID cannot be used on the secure site.
     $this->curlClose();
-    $this->curlCookies = array($this->secureSessionName . '=');
+    $this->curlCookies = [$this->secureSessionName . '='];
     $this->drupalGet($this->httpsUrl('admin/config'));
     $this->assertResponse(403);
 
     // Clear browser cookie jar.
-    $this->cookies = array();
+    $this->cookies = [];
   }
 
   /**
@@ -117,7 +117,7 @@ class SessionHttpsTest extends WebTestBase {
     // creates a mock HTTP request on HTTPS test environments.
     $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpUrl('user/login');
-    $edit = array('name' => $account->getUsername(), 'pass' => $account->pass_raw);
+    $edit = ['name' => $account->getUsername(), 'pass' => $account->pass_raw];
 
     // When posting directly to the HTTP or HTTPS mock front controller, the
     // location header on the returned response is an absolute URL. That URL
@@ -148,7 +148,7 @@ class SessionHttpsTest extends WebTestBase {
     // creates a mock HTTPS request on HTTP test environments.
     $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpsUrl('user/login');
-    $edit = array('name' => $account->getUsername(), 'pass' => $account->pass_raw);
+    $edit = ['name' => $account->getUsername(), 'pass' => $account->pass_raw];
 
     // When posting directly to the HTTP or HTTPS mock front controller, the
     // location header on the returned response is an absolute URL. That URL
@@ -168,7 +168,7 @@ class SessionHttpsTest extends WebTestBase {
     // necessary to manually collect the session cookie and add it to the
     // curlCookies property such that it will be used on subsequent requests via
     // the HTTPS mock.
-    $this->curlCookies = array($this->secureSessionName . '=' . $this->cookies[$this->secureSessionName]['value']);
+    $this->curlCookies = [$this->secureSessionName . '=' . $this->cookies[$this->secureSessionName]['value']];
 
     // Follow the location header.
     $path = $this->getPathFromLocationHeader(TRUE);
@@ -215,9 +215,9 @@ class SessionHttpsTest extends WebTestBase {
    *   has the given insecure and secure session IDs.
    */
   protected function assertSessionIds($sid, $assertion_text) {
-    $args = array(
+    $args = [
       ':sid' => Crypt::hashBase64($sid),
-    );
+    ];
     return $this->assertTrue(db_query('SELECT timestamp FROM {sessions} WHERE sid = :sid', $args)->fetchField(), $assertion_text);
   }
 

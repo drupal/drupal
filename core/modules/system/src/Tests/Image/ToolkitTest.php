@@ -18,7 +18,7 @@ class ToolkitTest extends ToolkitTestBase {
     $this->assertTrue(isset($toolkits['test']), 'The working toolkit was returned.');
     $this->assertTrue(isset($toolkits['test:derived_toolkit']), 'The derived toolkit was returned.');
     $this->assertFalse(isset($toolkits['broken']), 'The toolkit marked unavailable was not returned');
-    $this->assertToolkitOperationsCalled(array());
+    $this->assertToolkitOperationsCalled([]);
   }
 
   /**
@@ -28,7 +28,7 @@ class ToolkitTest extends ToolkitTestBase {
     $image = $this->getImage();
     $this->assertTrue(is_object($image), 'Returned an object.');
     $this->assertEqual($image->getToolkitId(), 'test', 'Image had toolkit set.');
-    $this->assertToolkitOperationsCalled(array('parseFile'));
+    $this->assertToolkitOperationsCalled(['parseFile']);
   }
 
   /**
@@ -36,18 +36,18 @@ class ToolkitTest extends ToolkitTestBase {
    */
   function testSave() {
     $this->assertFalse($this->image->save(), 'Function returned the expected value.');
-    $this->assertToolkitOperationsCalled(array('save'));
+    $this->assertToolkitOperationsCalled(['save']);
   }
 
   /**
    * Test the image_apply() function.
    */
   function testApply() {
-    $data = array('p1' => 1, 'p2' => TRUE, 'p3' => 'text');
+    $data = ['p1' => 1, 'p2' => TRUE, 'p3' => 'text'];
     $this->assertTrue($this->image->apply('my_operation', $data), 'Function returned the expected value.');
 
     // Check that apply was called and with the correct parameters.
-    $this->assertToolkitOperationsCalled(array('apply'));
+    $this->assertToolkitOperationsCalled(['apply']);
     $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['apply'][0][0], 'my_operation', "'my_operation' was passed correctly as operation");
     $this->assertEqual($calls['apply'][0][1]['p1'], 1, 'integer parameter p1 was passed correctly');
@@ -62,10 +62,10 @@ class ToolkitTest extends ToolkitTestBase {
     $this->assertTrue($this->image->apply('my_operation'), 'Function returned the expected value.');
 
     // Check that apply was called and with the correct parameters.
-    $this->assertToolkitOperationsCalled(array('apply'));
+    $this->assertToolkitOperationsCalled(['apply']);
     $calls = $this->imageTestGetAllCalls();
     $this->assertEqual($calls['apply'][0][0], 'my_operation', "'my_operation' was passed correctly as operation");
-    $this->assertEqual($calls['apply'][0][1], array(), 'passing no parameters was handled correctly');
+    $this->assertEqual($calls['apply'][0][1], [], 'passing no parameters was handled correctly');
   }
 
   /**

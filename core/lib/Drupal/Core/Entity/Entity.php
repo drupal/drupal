@@ -190,7 +190,7 @@ abstract class Entity implements EntityInterface {
 
     if (isset($link_templates[$rel])) {
       $route_parameters = $this->urlRouteParameters($rel);
-      $route_name = "entity.{$this->entityTypeId}." . str_replace(array('-', 'drupal:'), array('_', ''), $rel);
+      $route_name = "entity.{$this->entityTypeId}." . str_replace(['-', 'drupal:'], ['_', ''], $rel);
       $uri = new Url($route_name, $route_parameters);
     }
     else {
@@ -275,7 +275,7 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function url($rel = 'canonical', $options = array()) {
+  public function url($rel = 'canonical', $options = []) {
     // While self::toUrl() will throw an exception if the entity has no id,
     // the expected result for a URL is always a string.
     if ($this->id() === NULL || !$this->hasLinkTemplate($rel)) {
@@ -353,7 +353,7 @@ abstract class Entity implements EntityInterface {
     }
     // Make sure we return a proper language object.
     $langcode = !empty($this->langcode) ? $this->langcode : LanguageInterface::LANGCODE_NOT_SPECIFIED;
-    $language = new Language(array('id' => $langcode));
+    $language = new Language(['id' => $langcode]);
     return $language;
   }
 
@@ -369,7 +369,7 @@ abstract class Entity implements EntityInterface {
    */
   public function delete() {
     if (!$this->isNew()) {
-      $this->entityManager()->getStorage($this->entityTypeId)->delete(array($this->id() => $this));
+      $this->entityManager()->getStorage($this->entityTypeId)->delete([$this->id() => $this]);
     }
   }
 
@@ -452,7 +452,7 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function referencedEntities() {
-    return array();
+    return [];
   }
 
   /**
@@ -510,7 +510,7 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(array $values = array()) {
+  public static function create(array $values = []) {
     $entity_manager = \Drupal::entityManager();
     return $entity_manager->getStorage($entity_manager->getEntityTypeFromClass(get_called_class()))->create($values);
   }
@@ -585,7 +585,7 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function toArray() {
-    return array();
+    return [];
   }
 
   /**

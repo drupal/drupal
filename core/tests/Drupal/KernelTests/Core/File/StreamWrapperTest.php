@@ -19,7 +19,7 @@ class StreamWrapperTest extends FileTestBase {
    *
    * @var array
    */
-  public static $modules = array('file_test');
+  public static $modules = ['file_test'];
 
   /**
    * A stream wrapper scheme to register for the test.
@@ -119,7 +119,7 @@ class StreamWrapperTest extends FileTestBase {
     $this->assertEqual(-1 /*EOF*/, @stream_set_write_buffer($handle, 512), 'Unable to set write buffer using a local stream wrapper.');
 
     // This will test stream_cast().
-    $read = array($handle);
+    $read = [$handle];
     $write = NULL;
     $except = NULL;
     $this->assertEqual(1, stream_select($read, $write, $except, 0), 'Able to cast a stream via stream_select.');

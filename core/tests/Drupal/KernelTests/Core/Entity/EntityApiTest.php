@@ -49,15 +49,15 @@ class EntityApiTest extends EntityKernelTestBase {
     // Create some test entities.
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
-      ->create(array('name' => 'test', 'user_id' => $user1->id()));
+      ->create(['name' => 'test', 'user_id' => $user1->id()]);
     $entity->save();
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
-      ->create(array('name' => 'test2', 'user_id' => $user1->id()));
+      ->create(['name' => 'test2', 'user_id' => $user1->id()]);
     $entity->save();
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
-      ->create(array('name' => 'test', 'user_id' => NULL));
+      ->create(['name' => 'test', 'user_id' => NULL]);
     $entity->save();
 
     /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
@@ -65,32 +65,32 @@ class EntityApiTest extends EntityKernelTestBase {
       ->getStorage($entity_type);
 
     $entities = array_values($storage->loadByProperties(['name' => 'test']));
-    $this->assertEqual($entities[0]->name->value, 'test', format_string('%entity_type: Created and loaded entity', array('%entity_type' => $entity_type)));
-    $this->assertEqual($entities[1]->name->value, 'test', format_string('%entity_type: Created and loaded entity', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entities[0]->name->value, 'test', format_string('%entity_type: Created and loaded entity', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entities[1]->name->value, 'test', format_string('%entity_type: Created and loaded entity', ['%entity_type' => $entity_type]));
 
     // Test loading a single entity.
     $loaded_entity = $storage->load($entity->id());
-    $this->assertEqual($loaded_entity->id(), $entity->id(), format_string('%entity_type: Loaded a single entity by id.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($loaded_entity->id(), $entity->id(), format_string('%entity_type: Loaded a single entity by id.', ['%entity_type' => $entity_type]));
 
     // Test deleting an entity.
     $entities = array_values($storage->loadByProperties(['name' => 'test2']));
     $entities[0]->delete();
     $entities = array_values($storage->loadByProperties(['name' => 'test2']));
-    $this->assertEqual($entities, array(), format_string('%entity_type: Entity deleted.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entities, [], format_string('%entity_type: Entity deleted.', ['%entity_type' => $entity_type]));
 
     // Test updating an entity.
     $entities = array_values($storage->loadByProperties(['name' => 'test']));
     $entities[0]->name->value = 'test3';
     $entities[0]->save();
     $entity = $storage->load($entities[0]->id());
-    $this->assertEqual($entity->name->value, 'test3', format_string('%entity_type: Entity updated.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->name->value, 'test3', format_string('%entity_type: Entity updated.', ['%entity_type' => $entity_type]));
 
     // Try deleting multiple test entities by deleting all.
     $ids = array_keys($storage->loadMultiple());
     entity_delete_multiple($entity_type, $ids);
 
     $all = $storage->loadMultiple();
-    $this->assertTrue(empty($all), format_string('%entity_type: Deleted all entities.', array('%entity_type' => $entity_type)));
+    $this->assertTrue(empty($all), format_string('%entity_type: Deleted all entities.', ['%entity_type' => $entity_type]));
 
     // Verify that all data got deleted.
     $definition = \Drupal::entityManager()->getDefinition($entity_type);
@@ -103,11 +103,11 @@ class EntityApiTest extends EntityKernelTestBase {
     }
 
     // Test deleting a list of entities not indexed by entity id.
-    $entities = array();
-    $entity = entity_create($entity_type, array('name' => 'test', 'user_id' => $user1->id()));
+    $entities = [];
+    $entity = entity_create($entity_type, ['name' => 'test', 'user_id' => $user1->id()]);
     $entity->save();
     $entities['test'] = $entity;
-    $entity = entity_create($entity_type, array('name' => 'test2', 'user_id' => $user1->id()));
+    $entity = entity_create($entity_type, ['name' => 'test2', 'user_id' => $user1->id()]);
     $entity->save();
     $entities['test2'] = $entity;
     $controller = \Drupal::entityManager()->getStorage($entity_type);
@@ -115,7 +115,7 @@ class EntityApiTest extends EntityKernelTestBase {
 
     // Verify that entities got deleted.
     $all = $storage->loadMultiple();
-    $this->assertTrue(empty($all), format_string('%entity_type: Deleted all entities.', array('%entity_type' => $entity_type)));
+    $this->assertTrue(empty($all), format_string('%entity_type: Deleted all entities.', ['%entity_type' => $entity_type]));
 
     // Verify that all data got deleted from the tables.
     $definition = \Drupal::entityManager()->getDefinition($entity_type);
@@ -132,7 +132,7 @@ class EntityApiTest extends EntityKernelTestBase {
    * Tests that exceptions are thrown when saving or deleting an entity.
    */
   public function testEntityStorageExceptionHandling() {
-    $entity = EntityTest::create(array('name' => 'test'));
+    $entity = EntityTest::create(['name' => 'test']);
     try {
       $GLOBALS['entity_test_throw_exception'] = TRUE;
       $entity->save();
@@ -142,7 +142,7 @@ class EntityApiTest extends EntityKernelTestBase {
       $this->assertEqual($e->getcode(), 1, 'Entity presave EntityStorageException caught.');
     }
 
-    $entity = EntityTest::create(array('name' => 'test2'));
+    $entity = EntityTest::create(['name' => 'test2']);
     try {
       unset($GLOBALS['entity_test_throw_exception']);
       $entity->save();
@@ -152,7 +152,7 @@ class EntityApiTest extends EntityKernelTestBase {
       $this->assertNotEqual($e->getCode(), 1, 'Entity presave EntityStorageException caught.');
     }
 
-    $entity = EntityTest::create(array('name' => 'test3'));
+    $entity = EntityTest::create(['name' => 'test3']);
     $entity->save();
     try {
       $GLOBALS['entity_test_throw_exception'] = TRUE;
@@ -164,7 +164,7 @@ class EntityApiTest extends EntityKernelTestBase {
     }
 
     unset($GLOBALS['entity_test_throw_exception']);
-    $entity = EntityTest::create(array('name' => 'test4'));
+    $entity = EntityTest::create(['name' => 'test4']);
     $entity->save();
     try {
       $entity->delete();

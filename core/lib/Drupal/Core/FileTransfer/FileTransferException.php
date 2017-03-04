@@ -24,7 +24,7 @@ class FileTransferException extends \RuntimeException {
    * @param array $arguments
    *   Arguments to be used in this exception.
    */
-  function __construct($message, $code = 0, $arguments = array()) {
+  function __construct($message, $code = 0, $arguments = []) {
     parent::__construct($message, $code);
     $this->arguments = $arguments;
   }

@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'nyaess', 'nyaeng', 'nyaej', 'nyaech', 'nyaek', 'nyaet', 'nyaep', 'nyaeh', 'neo', 'neog', 'neokk', 'neogs', 'neon', 'neonj', 'neonh', 'neod',
   0x10 => 'neol', 'neolg', 'neolm', 'neolb', 'neols', 'neolt', 'neolp', 'neolh', 'neom', 'neob', 'neobs', 'neos', 'neoss', 'neong', 'neoj', 'neoch',
   0x20 => 'neok', 'neot', 'neop', 'neoh', 'ne', 'neg', 'nekk', 'negs', 'nen', 'nenj', 'nenh', 'ned', 'nel', 'nelg', 'nelm', 'nelb',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'noen', 'noenj', 'noenh', 'noed', 'noel', 'noelg', 'noelm', 'noelb', 'noels', 'noelt', 'noelp', 'noelh', 'noem', 'noeb', 'noebs', 'noes',
   0xE0 => 'noess', 'noeng', 'noej', 'noech', 'noek', 'noet', 'noep', 'noeh', 'nyo', 'nyog', 'nyokk', 'nyogs', 'nyon', 'nyonj', 'nyonh', 'nyod',
   0xF0 => 'nyol', 'nyolg', 'nyolm', 'nyolb', 'nyols', 'nyolt', 'nyolp', 'nyolh', 'nyom', 'nyob', 'nyobs', 'nyos', 'nyoss', 'nyong', 'nyoj', 'nyoch',
-);
+];

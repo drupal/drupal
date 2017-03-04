@@ -24,10 +24,10 @@ class UuidItem extends StringItem {
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return array(
+    return [
       'max_length' => 128,
       'is_ascii' => TRUE,
-    ) + parent::defaultStorageSettings();
+    ] + parent::defaultStorageSettings();
   }
 
   /**
@@ -36,7 +36,7 @@ class UuidItem extends StringItem {
   public function applyDefaultValue($notify = TRUE) {
     // Default to one field item with a generated UUID.
     $uuid = \Drupal::service('uuid');
-    $this->setValue(array('value' => $uuid->generate()), $notify);
+    $this->setValue(['value' => $uuid->generate()], $notify);
     return $this;
   }
 
@@ -45,7 +45,7 @@ class UuidItem extends StringItem {
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = parent::schema($field_definition);
-    $schema['unique keys']['value'] = array('value');
+    $schema['unique keys']['value'] = ['value'];
     return $schema;
   }
 

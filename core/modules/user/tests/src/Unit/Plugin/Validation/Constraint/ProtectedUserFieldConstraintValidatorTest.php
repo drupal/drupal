@@ -53,7 +53,7 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
     if ($expected_violation) {
       $context->expects($this->once())
         ->method('addViolation')
-        ->with($constraint->message, array('%name' => $name));
+        ->with($constraint->message, ['%name' => $name]);
     }
     else {
       $context->expects($this->never())

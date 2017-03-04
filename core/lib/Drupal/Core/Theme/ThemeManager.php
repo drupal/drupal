@@ -171,7 +171,7 @@ class ThemeManager implements ThemeManagerInterface {
         // Only log a message when not trying theme suggestions ($hook being an
         // array).
         if (!isset($candidate)) {
-          \Drupal::logger('theme')->warning('Theme hook %hook not found.', array('%hook' => $hook));
+          \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $hook]);
         }
         // There is no theme implementation for the hook passed. Return FALSE so
         // the function calling
@@ -188,7 +188,7 @@ class ThemeManager implements ThemeManagerInterface {
     // the arguments expected by the theme function.
     if (isset($variables['#theme']) || isset($variables['#theme_wrappers'])) {
       $element = $variables;
-      $variables = array();
+      $variables = [];
       if (isset($info['variables'])) {
         foreach (array_keys($info['variables']) as $name) {
           if (isset($element["#$name"]) || array_key_exists("#$name", $element)) {
@@ -208,12 +208,12 @@ class ThemeManager implements ThemeManagerInterface {
       $variables += $info['variables'];
     }
     elseif (!empty($info['render element'])) {
-      $variables += array($info['render element'] => array());
+      $variables += [$info['render element'] => []];
     }
     // Supply original caller info.
-    $variables += array(
+    $variables += [
       'theme_hook_original' => $original_hook,
-    );
+    ];
 
     // Set base hook for later use. For example if '#theme' => 'node__article'
     // is called, we run hook_theme_suggestions_node_alter() rather than
@@ -227,7 +227,7 @@ class ThemeManager implements ThemeManagerInterface {
     }
 
     // Invoke hook_theme_suggestions_HOOK().
-    $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, array($variables));
+    $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
     // If the theme implementation was invoked with a direct theme suggestion
     // like '#theme' => 'node__article', add it to the suggestions array before
     // invoking suggestion alter hooks.
@@ -237,10 +237,10 @@ class ThemeManager implements ThemeManagerInterface {
 
     // Invoke hook_theme_suggestions_alter() and
     // hook_theme_suggestions_HOOK_alter().
-    $hooks = array(
+    $hooks = [
       'theme_suggestions',
       'theme_suggestions_' . $base_theme_hook,
-    );
+    ];
     $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
     $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
 
@@ -347,14 +347,14 @@ class ThemeManager implements ThemeManagerInterface {
       // intuitive, is reasonably safe, and allows us to save on the overhead of
       // adding some new variable to track that.
       if (!isset($variables['directory'])) {
-        $default_template_variables = array();
+        $default_template_variables = [];
         template_preprocess($default_template_variables, $hook, $info);
         $variables += $default_template_variables;
       }
       if (!isset($default_attributes)) {
         $default_attributes = new Attribute();
       }
-      foreach (array('attributes', 'title_attributes', 'content_attributes') as $key) {
+      foreach (['attributes', 'title_attributes', 'content_attributes'] as $key) {
         if (isset($variables[$key]) && !($variables[$key] instanceof Attribute)) {
           if ($variables[$key]) {
             $variables[$key] = new Attribute($variables[$key]);
@@ -427,13 +427,13 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    $theme_keys = array();
+    $theme_keys = [];
     foreach ($theme->getBaseThemes() as $base) {
       $theme_keys[] = $base->getName();
     }
 
     $theme_keys[] = $theme->getName();
-    $functions = array();
+    $functions = [];
     foreach ($theme_keys as $theme_key) {
       $function = $theme_key . '_' . $type . '_alter';
       if (function_exists($function)) {

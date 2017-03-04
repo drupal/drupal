@@ -26,7 +26,7 @@ class EfqTest extends TaxonomyTestBase {
    * Tests that a basic taxonomy entity query works.
    */
   function testTaxonomyEfq() {
-    $terms = array();
+    $terms = [];
     for ($i = 0; $i < 5; $i++) {
       $term = $this->createTerm($this->vocabulary);
       $terms[$term->id()] = $term;
@@ -35,17 +35,17 @@ class EfqTest extends TaxonomyTestBase {
     sort($result);
     $this->assertEqual(array_keys($terms), $result, 'Taxonomy terms were retrieved by entity query.');
     $tid = reset($result);
-    $ids = (object) array(
+    $ids = (object) [
       'entity_type' => 'taxonomy_term',
       'entity_id' => $tid,
       'bundle' => $this->vocabulary->id(),
-    );
+    ];
     $term = _field_create_entity_from_ids($ids);
     $this->assertEqual($term->id(), $tid, 'Taxonomy term can be created based on the IDs.');
 
     // Create a second vocabulary and five more terms.
     $vocabulary2 = $this->createVocabulary();
-    $terms2 = array();
+    $terms2 = [];
     for ($i = 0; $i < 5; $i++) {
       $term = $this->createTerm($vocabulary2);
       $terms2[$term->id()] = $term;
@@ -55,13 +55,13 @@ class EfqTest extends TaxonomyTestBase {
       ->condition('vid', $vocabulary2->id())
       ->execute();
     sort($result);
-    $this->assertEqual(array_keys($terms2), $result, format_string('Taxonomy terms from the %name vocabulary were retrieved by entity query.', array('%name' => $vocabulary2->label())));
+    $this->assertEqual(array_keys($terms2), $result, format_string('Taxonomy terms from the %name vocabulary were retrieved by entity query.', ['%name' => $vocabulary2->label()]));
     $tid = reset($result);
-    $ids = (object) array(
+    $ids = (object) [
       'entity_type' => 'taxonomy_term',
       'entity_id' => $tid,
       'bundle' => $vocabulary2->id(),
-    );
+    ];
     $term = _field_create_entity_from_ids($ids);
     $this->assertEqual($term->id(), $tid, 'Taxonomy term can be created based on the IDs.');
   }

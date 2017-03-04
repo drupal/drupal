@@ -30,13 +30,13 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    *
    * @var \Drupal\Core\TypedData\TypedDataInterface[]
    */
-  protected $list = array();
+  protected $list = [];
 
   /**
    * {@inheritdoc}
    */
   public function getValue() {
-    $values = array();
+    $values = [];
     foreach ($this->list as $delta => $item) {
       $values[$delta] = $item->getValue();
     }
@@ -50,8 +50,8 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    *   An array of values of the field items, or NULL to unset the field.
    */
   public function setValue($values, $notify = TRUE) {
-    if (!isset($values) || $values === array()) {
-      $this->list = array();
+    if (!isset($values) || $values === []) {
+      $this->list = [];
     }
     else {
       // Only arrays with numeric keys are supported.
@@ -82,7 +82,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * {@inheritdoc}
    */
   public function getString() {
-    $strings = array();
+    $strings = [];
     foreach ($this->list as $item) {
       $strings[] = $item->getString();
     }

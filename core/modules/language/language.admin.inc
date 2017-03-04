@@ -19,33 +19,33 @@ use Drupal\Core\Template\Attribute;
  */
 function template_preprocess_language_negotiation_configure_form(&$variables) {
   $form =& $variables['form'];
-  $variables['language_types'] = array();
+  $variables['language_types'] = [];
 
   foreach ($form['#language_types'] as $type) {
-    $header = array(
+    $header = [
       t('Detection method'),
       t('Description'),
       t('Enabled'),
       t('Weight'),
-    );
+    ];
 
     // If there is at least one operation enabled show the operation column.
     if ($form[$type]['#show_operations']) {
       $header[] = t('Operations');
     }
 
-    $table = array(
+    $table = [
       '#type' => 'table',
       '#header' => $header,
-      '#attributes' => array('id' => 'language-negotiation-methods-' . $type),
-      '#tabledrag' => array(
-        array(
+      '#attributes' => ['id' => 'language-negotiation-methods-' . $type],
+      '#tabledrag' => [
+        [
           'action' => 'order',
           'relationship' => 'sibling',
           'group' => 'language-method-weight-' . $type,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     foreach ($form[$type]['title'] as $id => $element) {
       // Do not take form control structures.
@@ -53,11 +53,11 @@ function template_preprocess_language_negotiation_configure_form(&$variables) {
         $table[$id]['#attributes']['class'][] = 'draggable';
         $table[$id]['#weight'] = $element['#weight'];
 
-        $table[$id]['title'] = array(
+        $table[$id]['title'] = [
           '#prefix' => '<strong>',
           $form[$type]['title'][$id],
           '#suffix' => '</strong>',
-        );
+        ];
         $table[$id]['description'] = $form[$type]['description'][$id];
         $table[$id]['enabled'] = $form[$type]['enabled'][$id];
         $table[$id]['weight'] = $form[$type]['weight'][$id];
@@ -77,7 +77,7 @@ function template_preprocess_language_negotiation_configure_form(&$variables) {
     $configurable = isset($form[$type]['configurable']) ? $form[$type]['configurable'] : NULL;
     unset($form[$type]['configurable']);
 
-    $variables['language_types'][] = array(
+    $variables['language_types'][] = [
       'type' => $type,
       'title' => $form[$type]['#title'],
       'description' => $form[$type]['#description'],
@@ -85,7 +85,7 @@ function template_preprocess_language_negotiation_configure_form(&$variables) {
       'table' => $table,
       'children' => $form[$type],
       'attributes' => new Attribute(),
-    );
+    ];
     // Prevent the type from rendering with the remaining form child elements.
     unset($form[$type]);
   }
@@ -107,42 +107,42 @@ function template_preprocess_language_content_settings_table(&$variables) {
   // Add a render element representing the bundle language settings table.
   $element = $variables['element'];
 
-  $header = array(
-    array(
+  $header = [
+    [
       'data' => $element['#bundle_label'],
-      'class' => array('bundle'),
-    ),
-    array(
+      'class' => ['bundle'],
+    ],
+    [
       'data' => t('Configuration'),
-      'class' => array('operations'),
-    ),
-  );
+      'class' => ['operations'],
+    ],
+  ];
 
-  $rows = array();
+  $rows = [];
   foreach (Element::children($element) as $bundle) {
-    $rows[$bundle] = array(
-      'data' => array(
-        array(
-          'data' => array(
+    $rows[$bundle] = [
+      'data' => [
+        [
+          'data' => [
             '#prefix' => '<label>',
             '#suffix' => '</label>',
             '#plain_text' => $element[$bundle]['settings']['#label'],
-          ),
-          'class' => array('bundle'),
-        ),
-        array(
+          ],
+          'class' => ['bundle'],
+        ],
+        [
           'data' => $element[$bundle]['settings'],
-          'class' => array('operations'),
-        ),
-      ),
-      'class' => array('bundle-settings'),
-    );
+          'class' => ['operations'],
+        ],
+      ],
+      'class' => ['bundle-settings'],
+    ];
   }
 
   $variables['title'] = $element['#title'];
-  $variables['build'] = array(
+  $variables['build'] = [
     '#header' => $header,
     '#rows' => $rows,
     '#type' => 'table',
-  );
+  ];
 }

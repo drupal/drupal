@@ -116,25 +116,25 @@ class BlockRepositoryTest extends UnitTestCase {
   }
 
   public function providerBlocksConfig() {
-    $blocks_config = array(
-      'block1' => array(
+    $blocks_config = [
+      'block1' => [
         AccessResult::allowed(), 'top', 0
-      ),
+      ],
       // Test a block without access.
-      'block2' => array(
+      'block2' => [
         AccessResult::forbidden(), 'bottom', 0
-      ),
+      ],
       // Test some blocks in the same region with specific weight.
-      'block4' => array(
+      'block4' => [
         AccessResult::allowed(), 'bottom', 5
-      ),
-      'block3' => array(
+      ],
+      'block3' => [
         AccessResult::allowed(), 'bottom', 5
-      ),
-      'block5' => array(
+      ],
+      'block5' => [
         AccessResult::allowed(), 'bottom', -5
-      ),
-    );
+      ],
+    ];
 
     $test_cases = [];
     $test_cases[] = [$blocks_config,

@@ -50,15 +50,15 @@ class FieldUiLocalAction extends DeriverBase implements ContainerDeriverInterfac
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    $this->derivatives = array();
+    $this->derivatives = [];
 
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type->get('field_ui_base_route')) {
-        $this->derivatives["field_storage_config_add_$entity_type_id"] = array(
+        $this->derivatives["field_storage_config_add_$entity_type_id"] = [
           'route_name' => "field_ui.field_storage_config_add_$entity_type_id",
           'title' => $this->t('Add field'),
-          'appears_on' => array("entity.$entity_type_id.field_ui_fields"),
-        );
+          'appears_on' => ["entity.$entity_type_id.field_ui_fields"],
+        ];
       }
     }
 

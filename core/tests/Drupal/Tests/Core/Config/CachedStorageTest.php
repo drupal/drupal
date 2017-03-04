@@ -25,7 +25,7 @@ class CachedStorageTest extends UnitTestCase {
     $prefix = __FUNCTION__;
     $storage = $this->getMock('Drupal\Core\Config\StorageInterface');
 
-    $response = array("$prefix." . $this->randomMachineName(), "$prefix." . $this->randomMachineName());
+    $response = ["$prefix." . $this->randomMachineName(), "$prefix." . $this->randomMachineName()];
     $storage->expects($this->once())
       ->method('listAll')
       ->with($prefix)

@@ -61,7 +61,7 @@ class Term extends ContentEntityBase implements TermInterface {
     parent::postDelete($storage, $entities);
 
     // See if any of the term's children are about to be become orphans.
-    $orphans = array();
+    $orphans = [];
     foreach (array_keys($entities) as $tid) {
       if ($children = $storage->loadChildren($tid)) {
         foreach ($children as $child) {
@@ -92,7 +92,7 @@ class Term extends ContentEntityBase implements TermInterface {
     // Only change the parents if a value is set, keep the existing values if
     // not.
     if (isset($this->parent->target_id)) {
-      $storage->deleteTermHierarchy(array($this->id()));
+      $storage->deleteTermHierarchy([$this->id()]);
       $storage->updateTermHierarchy($this);
     }
   }
@@ -119,30 +119,30 @@ class Term extends ContentEntityBase implements TermInterface {
       ->setTranslatable(TRUE)
       ->setRequired(TRUE)
       ->setSetting('max_length', 255)
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'string',
         'weight' => -5,
-      ))
-      ->setDisplayOptions('form', array(
+      ])
+      ->setDisplayOptions('form', [
         'type' => 'string_textfield',
         'weight' => -5,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['description'] = BaseFieldDefinition::create('text_long')
       ->setLabel(t('Description'))
       ->setTranslatable(TRUE)
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'text_default',
         'weight' => 0,
-      ))
+      ])
       ->setDisplayConfigurable('view', TRUE)
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'text_textfield',
         'weight' => 0,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['weight'] = BaseFieldDefinition::create('integer')

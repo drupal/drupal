@@ -30,12 +30,12 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    * Tests that subscriber does not act when reverse proxy is not set.
    */
   public function testNoProxy() {
-    $settings = new Settings(array());
+    $settings = new Settings([]);
     $this->assertEquals(0, $settings->get('reverse_proxy'));
 
     $middleware = new ReverseProxyMiddleware($this->mockHttpKernel, $settings);
     // Mock a request object.
-    $request = $this->getMock('Symfony\Component\HttpFoundation\Request', array('setTrustedHeaderName', 'setTrustedProxies'));
+    $request = $this->getMock('Symfony\Component\HttpFoundation\Request', ['setTrustedHeaderName', 'setTrustedProxies']);
     // setTrustedHeaderName() should never fire.
     $request->expects($this->never())
       ->method('setTrustedHeaderName');
@@ -50,7 +50,7 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    */
   public function testReverseProxyEnabled($provided_settings) {
     // Enable reverse proxy and add test values.
-    $settings = new Settings(array('reverse_proxy' => 1) + $provided_settings);
+    $settings = new Settings(['reverse_proxy' => 1] + $provided_settings);
     $this->trustedHeadersAreSet($settings);
   }
 
@@ -58,18 +58,18 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    * Data provider for testReverseProxyEnabled.
    */
   public function reverseProxyEnabledProvider() {
-    return array(
-      array(
-        array(
+    return [
+      [
+        [
           'reverse_proxy_header' => 'X_FORWARDED_FOR_CUSTOMIZED',
           'reverse_proxy_proto_header' => 'X_FORWARDED_PROTO_CUSTOMIZED',
           'reverse_proxy_host_header' => 'X_FORWARDED_HOST_CUSTOMIZED',
           'reverse_proxy_port_header' => 'X_FORWARDED_PORT_CUSTOMIZED',
           'reverse_proxy_forwarded_header' => 'FORWARDED_CUSTOMIZED',
-          'reverse_proxy_addresses' => array('127.0.0.2', '127.0.0.3'),
-        ),
-      ),
-    );
+          'reverse_proxy_addresses' => ['127.0.0.2', '127.0.0.3'],
+        ],
+      ],
+    ];
   }
 
   /**

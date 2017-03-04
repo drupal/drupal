@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'wek', 'wet', 'wep', 'weh', 'wi', 'wig', 'wikk', 'wigs', 'win', 'winj', 'winh', 'wid', 'wil', 'wilg', 'wilm', 'wilb',
   0x10 => 'wils', 'wilt', 'wilp', 'wilh', 'wim', 'wib', 'wibs', 'wis', 'wiss', 'wing', 'wij', 'wich', 'wik', 'wit', 'wip', 'wih',
   0x20 => 'yu', 'yug', 'yukk', 'yugs', 'yun', 'yunj', 'yunh', 'yud', 'yul', 'yulg', 'yulm', 'yulb', 'yuls', 'yult', 'yulp', 'yulh',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'jyal', 'jyalg', 'jyalm', 'jyalb', 'jyals', 'jyalt', 'jyalp', 'jyalh', 'jyam', 'jyab', 'jyabs', 'jyas', 'jyass', 'jyang', 'jyaj', 'jyach',
   0xE0 => 'jyak', 'jyat', 'jyap', 'jyah', 'jyae', 'jyaeg', 'jyaekk', 'jyaegs', 'jyaen', 'jyaenj', 'jyaenh', 'jyaed', 'jyael', 'jyaelg', 'jyaelm', 'jyaelb',
   0xF0 => 'jyaels', 'jyaelt', 'jyaelp', 'jyaelh', 'jyaem', 'jyaeb', 'jyaebs', 'jyaes', 'jyaess', 'jyaeng', 'jyaej', 'jyaech', 'jyaek', 'jyaet', 'jyaep', 'jyaeh',
-);
+];

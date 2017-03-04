@@ -21,17 +21,17 @@ function contact_help($route_name, RouteMatchInterface $route_match) {
       $contact_page = \Drupal::url('entity.contact_form.collection');
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Contact module allows visitors to contact registered users on your site, using the personal contact form, and also allows you to set up site-wide contact forms. For more information, see the <a href=":contact">online documentation for the Contact module</a>.', array(':contact' => 'https://www.drupal.org/documentation/modules/contact')) . '</p>';
+      $output .= '<p>' . t('The Contact module allows visitors to contact registered users on your site, using the personal contact form, and also allows you to set up site-wide contact forms. For more information, see the <a href=":contact">online documentation for the Contact module</a>.', [':contact' => 'https://www.drupal.org/documentation/modules/contact']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Using the personal contact form') . '</dt>';
       $output .= '<dd>' . t("Site visitors can email registered users on your site by using the personal contact form, without knowing or learning the email address of the recipient. When a site visitor is viewing a user profile, the viewer will see a <em>Contact</em> tab or link, which leads to the personal contact form. The personal contact link is not shown when you are viewing your own profile, and users must have both <em>View user information</em> (to see user profiles) and <em>Use users' personal contact forms</em> permission to see the link. The user whose profile is being viewed must also have their personal contact form enabled (this is a user account setting); viewers with <em>Administer users</em> permission can bypass this setting.") . '</dd>';
       $output .= '<dt>' . t('Configuring contact forms') . '</dt>';
-      $output .= '<dd>' . t('On the <a href=":contact_admin">Contact forms page</a>, you can configure the fields and display of the personal contact form, and you can set up one or more site-wide contact forms. Each site-wide contact form has a machine name, a label, and one or more defined recipients; when a site visitor submits the form, the field values are sent to those recipients.', array(':contact_admin' => $contact_page)) . '</dd>';
+      $output .= '<dd>' . t('On the <a href=":contact_admin">Contact forms page</a>, you can configure the fields and display of the personal contact form, and you can set up one or more site-wide contact forms. Each site-wide contact form has a machine name, a label, and one or more defined recipients; when a site visitor submits the form, the field values are sent to those recipients.', [':contact_admin' => $contact_page]) . '</dd>';
       $output .= '<dt>' . t('Linking to contact forms') . '</dt>';
-      $output .= '<dd>' . t('One site-wide contact form can be designated as the default contact form. If you choose to designate a default form, the <em>Contact</em> menu link in the <em>Footer</em> menu will link to it. You can modify this link from the <a href=":menu-settings">Menus page</a> if you have the Menu UI module installed. You can also create links to other contact forms; the URL for each form you have set up has format <em>contact/machine_name_of_form</em>.', array(':menu-settings' => $menu_page)) . '</p>';
+      $output .= '<dd>' . t('One site-wide contact form can be designated as the default contact form. If you choose to designate a default form, the <em>Contact</em> menu link in the <em>Footer</em> menu will link to it. You can modify this link from the <a href=":menu-settings">Menus page</a> if you have the Menu UI module installed. You can also create links to other contact forms; the URL for each form you have set up has format <em>contact/machine_name_of_form</em>.', [':menu-settings' => $menu_page]) . '</p>';
       $output .= '<dt>' . t('Adding content to contact forms') . '</dt>';
-      $output .= '<dd>' . t('From the <a href=":contact_admin">Contact forms page</a>, you can configure the fields to be shown on contact forms, including their labels and help text. If you would like other content (such as text or images) to appear on a contact form, use a block. You can create and edit blocks on the <a href=":blocks">Block layout page</a>, if the Block module is installed.', array(':blocks' => $block_page, ':contact_admin' => $contact_page)) . '</dd>';
+      $output .= '<dd>' . t('From the <a href=":contact_admin">Contact forms page</a>, you can configure the fields to be shown on contact forms, including their labels and help text. If you would like other content (such as text or images) to appear on a contact form, use a block. You can create and edit blocks on the <a href=":blocks">Block layout page</a>, if the Block module is installed.', [':blocks' => $block_page, ':contact_admin' => $contact_page]) . '</dd>';
       $output .= '</dl>';
       return $output;
 
@@ -50,42 +50,42 @@ function contact_entity_type_alter(array &$entity_types) {
  * Implements hook_entity_extra_field_info().
  */
 function contact_entity_extra_field_info() {
-  $fields = array();
+  $fields = [];
   foreach (array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo('contact_message')) as $bundle) {
-    $fields['contact_message'][$bundle]['form']['name'] = array(
+    $fields['contact_message'][$bundle]['form']['name'] = [
       'label' => t('Sender name'),
       'description' => t('Text'),
       'weight' => -50,
-    );
-    $fields['contact_message'][$bundle]['form']['mail'] = array(
+    ];
+    $fields['contact_message'][$bundle]['form']['mail'] = [
       'label' => t('Sender email'),
       'description' => t('Email'),
       'weight' => -40,
-    );
+    ];
     if ($bundle == 'personal') {
-      $fields['contact_message'][$bundle]['form']['recipient'] = array(
+      $fields['contact_message'][$bundle]['form']['recipient'] = [
         'label' => t('Recipient username'),
         'description' => t('User'),
         'weight' => -30,
-      );
+      ];
     }
-    $fields['contact_message'][$bundle]['form']['preview'] = array(
+    $fields['contact_message'][$bundle]['form']['preview'] = [
       'label' => t('Preview sender message'),
       'description' => t('Preview'),
       'weight' => 40,
-    );
-    $fields['contact_message'][$bundle]['form']['copy'] = array(
+    ];
+    $fields['contact_message'][$bundle]['form']['copy'] = [
       'label' => t('Send copy to sender'),
       'description' => t('Option'),
       'weight' => 50,
-    );
+    ];
   }
 
-  $fields['user']['user']['form']['contact'] = array(
+  $fields['user']['user']['form']['contact'] = [
     'label' => t('Contact settings'),
     'description' => t('Contact module form element.'),
     'weight' => 5,
-  );
+  ];
   return $fields;
 }
 
@@ -118,21 +118,21 @@ function contact_mail($key, &$message, $params) {
   $sender = $params['sender'];
   $language = \Drupal::languageManager()->getLanguage($message['langcode']);
 
-  $variables = array(
+  $variables = [
     '@site-name' => \Drupal::config('system.site')->get('name'),
     '@subject' => $contact_message->getSubject(),
     '@form' => !empty($params['contact_form']) ? $params['contact_form']->label() : NULL,
     '@form-url' => \Drupal::url('<current>', [], ['absolute' => TRUE, 'language' => $language]),
     '@sender-name' => $sender->getDisplayName(),
-  );
+  ];
   if ($sender->isAuthenticated()) {
-    $variables['@sender-url'] = $sender->url('canonical', array('absolute' => TRUE, 'language' => $language));
+    $variables['@sender-url'] = $sender->url('canonical', ['absolute' => TRUE, 'language' => $language]);
   }
   else {
     $variables['@sender-url'] = $params['sender']->getEmail();
   }
 
-  $options = array('langcode' => $language->getId());
+  $options = ['langcode' => $language->getId()];
 
   switch ($key) {
     case 'page_mail':
@@ -150,10 +150,10 @@ function contact_mail($key, &$message, $params) {
 
     case 'user_mail':
     case 'user_copy':
-      $variables += array(
+      $variables += [
         '@recipient-name' => $params['recipient']->getDisplayName(),
-        '@recipient-edit-url' => $params['recipient']->url('edit-form', array('absolute' => TRUE, 'language' => $language)),
-      );
+        '@recipient-edit-url' => $params['recipient']->url('edit-form', ['absolute' => TRUE, 'language' => $language]),
+      ];
       $message['subject'] .= t('[@site-name] @subject', $variables, $options);
       $message['body'][] = t('Hello @recipient-name,', $variables, $options);
       $message['body'][] = t("@sender-name (@sender-url) has sent you a message via your contact form at @site-name.", $variables, $options);
@@ -172,22 +172,22 @@ function contact_mail($key, &$message, $params) {
  * @see \Drupal\user\ProfileForm::form()
  */
 function contact_form_user_form_alter(&$form, FormStateInterface $form_state) {
-  $form['contact'] = array(
+  $form['contact'] = [
     '#type' => 'details',
     '#title' => t('Contact settings'),
     '#open' => TRUE,
     '#weight' => 5,
-  );
+  ];
   $account = $form_state->getFormObject()->getEntity();
   if (!\Drupal::currentUser()->isAnonymous() && $account->id()) {
     $account_data = \Drupal::service('user.data')->get('contact', $account->id(), 'enabled');
   }
-  $form['contact']['contact'] = array(
+  $form['contact']['contact'] = [
     '#type' => 'checkbox',
     '#title' => t('Personal contact form'),
     '#default_value' => isset($account_data) ? $account_data : \Drupal::config('contact.settings')->get('user_default_enabled'),
     '#description' => t('Allow other users to contact you via a personal contact form which keeps your email address hidden. Note that some privileged users such as site administrators are still able to contact you even if you choose to disable this feature.'),
-  );
+  ];
   $form['actions']['submit']['#submit'][] = 'contact_user_profile_form_submit';
 }
 
@@ -209,18 +209,18 @@ function contact_user_profile_form_submit($form, FormStateInterface $form_state)
  * @see \Drupal\user\AccountSettingsForm
  */
 function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form_state) {
-  $form['contact'] = array(
+  $form['contact'] = [
     '#type' => 'details',
     '#title' => t('Contact settings'),
     '#open' => TRUE,
     '#weight' => 0,
-  );
-  $form['contact']['contact_default_status'] = array(
+  ];
+  $form['contact']['contact_default_status'] = [
     '#type' => 'checkbox',
     '#title' => t('Enable the personal contact form by default for new users'),
     '#description' => t('Changing this setting will not affect existing users.'),
     '#default_value' => \Drupal::configFactory()->getEditable('contact.settings')->get('user_default_enabled'),
-  );
+  ];
   // Add submit handler to save contact configuration.
   $form['#submit'][] = 'contact_form_user_admin_settings_submit';
 }

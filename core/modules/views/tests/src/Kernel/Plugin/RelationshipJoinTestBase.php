@@ -18,7 +18,7 @@ abstract class RelationshipJoinTestBase extends PluginKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'field');
+  public static $modules = ['system', 'user', 'field'];
 
   /**
    * @var \Drupal\user\Entity\User
@@ -30,7 +30,7 @@ abstract class RelationshipJoinTestBase extends PluginKernelTestBase {
    */
   protected function setUpFixtures() {
     $this->installEntitySchema('user');
-    $this->installConfig(array('user'));
+    $this->installConfig(['user']);
     parent::setUpFixtures();
 
     // Create a record for uid 1.
@@ -48,13 +48,13 @@ abstract class RelationshipJoinTestBase extends PluginKernelTestBase {
   protected function schemaDefinition() {
     $schema = parent::schemaDefinition();
 
-    $schema['views_test_data']['fields']['uid'] = array(
+    $schema['views_test_data']['fields']['uid'] = [
       'description' => "The {users_field_data}.uid of the author of the beatle entry.",
       'type' => 'int',
       'unsigned' => TRUE,
       'not null' => TRUE,
       'default' => 0
-    );
+    ];
 
     return $schema;
   }
@@ -66,15 +66,15 @@ abstract class RelationshipJoinTestBase extends PluginKernelTestBase {
    */
   protected function viewsData() {
     $data = parent::viewsData();
-    $data['views_test_data']['uid'] = array(
+    $data['views_test_data']['uid'] = [
       'title' => t('UID'),
       'help' => t('The test data UID'),
-      'relationship' => array(
+      'relationship' => [
         'id' => 'standard',
         'base' => 'users_field_data',
         'base field' => 'uid'
-      )
-    );
+      ]
+    ];
 
     return $data;
   }

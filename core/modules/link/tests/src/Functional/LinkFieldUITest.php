@@ -60,7 +60,7 @@ class LinkFieldUITest extends BrowserTestBase {
     // generate warnings.
     // @todo Mess with the formatter settings a bit here.
     $this->drupalGet("$type_path/display");
-    $this->assertText(t('Link text trimmed to @limit characters', array('@limit' => 80)));
+    $this->assertText(t('Link text trimmed to @limit characters', ['@limit' => 80]));
 
     // Test the help text displays when the link field allows both internal and
     // external links.
@@ -81,7 +81,7 @@ class LinkFieldUITest extends BrowserTestBase {
     $label = $this->randomMachineName();
     $field_name = Unicode::strtolower($label);
     $field_edit = ['settings[link_type]' => LinkItemInterface::LINK_EXTERNAL];
-    $this->fieldUIAddNewField($type_path, $field_name, $label, 'link', array(), $field_edit);
+    $this->fieldUIAddNewField($type_path, $field_name, $label, 'link', [], $field_edit);
 
     // Test the help text displays when link allows only external links.
     $this->drupalLogin($this->drupalCreateUser(['create ' . $type->id() . ' content']));

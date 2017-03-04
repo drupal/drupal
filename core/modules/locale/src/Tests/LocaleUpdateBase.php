@@ -45,7 +45,7 @@ abstract class LocaleUpdateBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale', 'locale_test');
+  public static $modules = ['locale', 'locale_test'];
 
   /**
    * {@inheritdoc}
@@ -85,10 +85,10 @@ abstract class LocaleUpdateBase extends WebTestBase {
    *   The language code of the language to add.
    */
   protected function addLanguage($langcode) {
-    $edit = array('predefined_langcode' => $langcode);
+    $edit = ['predefined_langcode' => $langcode];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->container->get('language_manager')->reset();
-    $this->assertTrue(\Drupal::languageManager()->getLanguage($langcode), SafeMarkup::format('Language %langcode added.', array('%langcode' => $langcode)));
+    $this->assertTrue(\Drupal::languageManager()->getLanguage($langcode), SafeMarkup::format('Language %langcode added.', ['%langcode' => $langcode]));
   }
 
   /**
@@ -105,7 +105,7 @@ abstract class LocaleUpdateBase extends WebTestBase {
    *   singular strings are supported, no plurals. No double quotes are allowed
    *   in source and translations strings.
    */
-  protected function makePoFile($path, $filename, $timestamp = NULL, array $translations = array()) {
+  protected function makePoFile($path, $filename, $timestamp = NULL, array $translations = []) {
     $timestamp = $timestamp ? $timestamp : REQUEST_TIME;
     $path = 'public://' . $path;
     $text = '';
@@ -184,9 +184,9 @@ EOF;
     $config->set('translation.default_filename', '%project-%version.%language._po')->save();
 
     // Setting up sets of translations for the translation files.
-    $translations_one = array('January' => 'Januar_1', 'February' => 'Februar_1', 'March' => 'Marz_1');
-    $translations_two = array('February' => 'Februar_2', 'March' => 'Marz_2', 'April' => 'April_2');
-    $translations_three = array('April' => 'April_3', 'May' => 'Mai_3', 'June' => 'Juni_3');
+    $translations_one = ['January' => 'Januar_1', 'February' => 'Februar_1', 'March' => 'Marz_1'];
+    $translations_two = ['February' => 'Februar_2', 'March' => 'Marz_2', 'April' => 'April_2'];
+    $translations_three = ['April' => 'April_3', 'May' => 'Mai_3', 'June' => 'Juni_3'];
 
     // Add a number of files to the local file system to serve as remote
     // translation server and match the project definitions set in
@@ -212,71 +212,71 @@ EOF;
     // Add non customized translations to the database.
     $langcode = 'de';
     $context = '';
-    $non_customized_translations = array(
+    $non_customized_translations = [
       'March' => 'Marz',
       'June' => 'Juni',
-    );
+    ];
     foreach ($non_customized_translations as $source => $translation) {
-      $string = $this->container->get('locale.storage')->createString(array(
+      $string = $this->container->get('locale.storage')->createString([
         'source' => $source,
         'context' => $context,
-      ))
+      ])
         ->save();
-      $this->container->get('locale.storage')->createTranslation(array(
+      $this->container->get('locale.storage')->createTranslation([
         'lid' => $string->getId(),
         'language' => $langcode,
         'translation' => $translation,
         'customized' => LOCALE_NOT_CUSTOMIZED,
-      ))->save();
+      ])->save();
     }
 
     // Add customized translations to the database.
-    $customized_translations = array(
+    $customized_translations = [
       'January' => 'Januar_customized',
       'February' => 'Februar_customized',
       'May' => 'Mai_customized',
-    );
+    ];
     foreach ($customized_translations as $source => $translation) {
-      $string = $this->container->get('locale.storage')->createString(array(
+      $string = $this->container->get('locale.storage')->createString([
         'source' => $source,
         'context' => $context,
-      ))
+      ])
         ->save();
-      $this->container->get('locale.storage')->createTranslation(array(
+      $this->container->get('locale.storage')->createTranslation([
         'lid' => $string->getId(),
         'language' => $langcode,
         'translation' => $translation,
         'customized' => LOCALE_CUSTOMIZED,
-      ))->save();
+      ])->save();
     }
 
     // Add a state of current translations in locale_files.
-    $default = array(
+    $default = [
       'langcode' => $langcode,
       'uri' => '',
       'timestamp' => $this->timestampMedium,
       'last_checked' => $this->timestampMedium,
-    );
-    $data[] = array(
+    ];
+    $data[] = [
       'project' => 'contrib_module_one',
       'filename' => 'contrib_module_one-8.x-1.1.de._po',
       'version' => '8.x-1.1',
-    );
-    $data[] = array(
+    ];
+    $data[] = [
       'project' => 'contrib_module_two',
       'filename' => 'contrib_module_two-8.x-2.0-beta4.de._po',
       'version' => '8.x-2.0-beta4',
-    );
-    $data[] = array(
+    ];
+    $data[] = [
       'project' => 'contrib_module_three',
       'filename' => 'contrib_module_three-8.x-1.0.de._po',
       'version' => '8.x-1.0',
-    );
-    $data[] = array(
+    ];
+    $data[] = [
       'project' => 'custom_module_one',
       'filename' => 'custom_module_one.de.po',
       'version' => '',
-    );
+    ];
     foreach ($data as $file) {
       $file = array_merge($default, $file);
       db_insert('locale_file')->fields($file)->execute();
@@ -297,9 +297,9 @@ EOF;
    *   (optional) A message to display with the assertion.
    */
   protected function assertTranslation($source, $translation, $langcode, $message = '') {
-    $db_translation = db_query('SELECT translation FROM {locales_target} lt INNER JOIN {locales_source} ls ON ls.lid = lt.lid WHERE ls.source = :source AND lt.language = :langcode', array(':source' => $source, ':langcode' => $langcode))->fetchField();
+    $db_translation = db_query('SELECT translation FROM {locales_target} lt INNER JOIN {locales_source} ls ON ls.lid = lt.lid WHERE ls.source = :source AND lt.language = :langcode', [':source' => $source, ':langcode' => $langcode])->fetchField();
     $db_translation = $db_translation == FALSE ? '' : $db_translation;
-    $this->assertEqual($translation, $db_translation, $message ? $message : format_string('Correct translation of %source (%language)', array('%source' => $source, '%language' => $langcode)));
+    $this->assertEqual($translation, $db_translation, $message ? $message : format_string('Correct translation of %source (%language)', ['%source' => $source, '%language' => $langcode]));
   }
 
 }

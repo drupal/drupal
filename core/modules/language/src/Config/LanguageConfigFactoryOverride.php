@@ -88,7 +88,7 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
       $storage = $this->getStorage($this->language->getId());
       return $storage->readMultiple($names);
     }
-    return array();
+    return [];
   }
 
   /**

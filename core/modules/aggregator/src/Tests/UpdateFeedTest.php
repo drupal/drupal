@@ -12,7 +12,7 @@ class UpdateFeedTest extends AggregatorTestBase {
    * Creates a feed and attempts to update it.
    */
   public function testUpdateFeed() {
-    $remaining_fields = array('title[0][value]', 'url[0][value]', '');
+    $remaining_fields = ['title[0][value]', 'url[0][value]', ''];
     foreach ($remaining_fields as $same_field) {
       $feed = $this->createFeed();
 
@@ -24,10 +24,10 @@ class UpdateFeedTest extends AggregatorTestBase {
         $edit[$same_field] = $feed->{$same_field}->value;
       }
       $this->drupalPostForm('aggregator/sources/' . $feed->id() . '/configure', $edit, t('Save'));
-      $this->assertText(t('The feed @name has been updated.', array('@name' => $edit['title[0][value]'])), format_string('The feed %name has been updated.', array('%name' => $edit['title[0][value]'])));
+      $this->assertText(t('The feed @name has been updated.', ['@name' => $edit['title[0][value]']]), format_string('The feed %name has been updated.', ['%name' => $edit['title[0][value]']]));
 
       // Verify that the creation message contains a link to a feed.
-      $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'aggregator/sources/'));
+      $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'aggregator/sources/']);
       $this->assert(isset($view_link), 'The message area contains a link to a feed');
 
       // Check feed data.

@@ -66,16 +66,16 @@ class MailManagerTest extends UnitTestCase {
    *
    * @var array
    */
-  protected $definitions = array(
-    'php_mail' => array(
+  protected $definitions = [
+    'php_mail' => [
       'id' => 'php_mail',
       'class' => 'Drupal\Core\Mail\Plugin\Mail\PhpMail',
-    ),
-    'test_mail_collector' => array(
+    ],
+    'test_mail_collector' => [
       'id' => 'test_mail_collector',
       'class' => 'Drupal\Core\Mail\Plugin\Mail\TestMailCollector',
-    ),
-  );
+    ],
+  ];
 
   /**
    * {@inheritdoc}
@@ -97,13 +97,13 @@ class MailManagerTest extends UnitTestCase {
   /**
    * Sets up the mail manager for testing.
    */
-  protected function setUpMailManager($interface = array()) {
+  protected function setUpMailManager($interface = []) {
     // Use the provided config for system.mail.interface settings.
-    $this->configFactory = $this->getConfigFactoryStub(array(
-      'system.mail' => array(
+    $this->configFactory = $this->getConfigFactoryStub([
+      'system.mail' => [
         'interface' => $interface,
-      ),
-    ));
+      ],
+    ]);
     $logger_factory = $this->getMock('\Drupal\Core\Logger\LoggerChannelFactoryInterface');
     $string_translation = $this->getStringTranslationStub();
     $this->renderer = $this->getMock(RendererInterface::class);
@@ -118,19 +118,19 @@ class MailManagerTest extends UnitTestCase {
    * @covers ::getInstance
    */
   public function testGetInstance() {
-    $interface = array(
+    $interface = [
       'default' => 'php_mail',
       'default' => 'test_mail_collector',
-    );
+    ];
     $this->setUpMailManager($interface);
 
     // Test that an unmatched message_id returns the default plugin instance.
-    $options = array('module' => 'foo', 'key' => 'bar');
+    $options = ['module' => 'foo', 'key' => 'bar'];
     $instance = $this->mailManager->getInstance($options);
     $this->assertInstanceOf('Drupal\Core\Mail\Plugin\Mail\PhpMail', $instance);
 
     // Test that a matching message_id returns the specified plugin instance.
-    $options = array('module' => 'example', 'key' => 'testkey');
+    $options = ['module' => 'example', 'key' => 'testkey'];
     $instance = $this->mailManager->getInstance($options);
     $this->assertInstanceOf('Drupal\Core\Mail\Plugin\Mail\TestMailCollector', $instance);
   }
@@ -142,10 +142,10 @@ class MailManagerTest extends UnitTestCase {
    * @covers ::mail
    */
   public function testMailInRenderContext() {
-    $interface = array(
+    $interface = [
       'default' => 'php_mail',
       'example_testkey' => 'test_mail_collector',
-    );
+    ];
     $this->setUpMailManager($interface);
 
     $this->renderer->expects($this->exactly(1))
@@ -176,9 +176,9 @@ class TestMailManager extends MailManager {
   /**
    * {@inheritdoc}
    */
-  public function doMail($module, $key, $to, $langcode, $params = array(), $reply = NULL, $send = TRUE) {
+  public function doMail($module, $key, $to, $langcode, $params = [], $reply = NULL, $send = TRUE) {
     // Build a simplified message array and return it.
-    $message = array(
+    $message = [
       'id' => $module . '_' . $key,
       'module' => $module,
       'key' => $key,
@@ -189,8 +189,8 @@ class TestMailManager extends MailManager {
       'params' => $params,
       'send' => TRUE,
       'subject' => '',
-      'body' => array(),
-    );
+      'body' => [],
+    ];
 
     return $message;
   }

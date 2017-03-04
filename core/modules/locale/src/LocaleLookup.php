@@ -99,7 +99,7 @@ class LocaleLookup extends CacheCollector {
 
     $this->cache = $cache;
     $this->lock = $lock;
-    $this->tags = array('locale');
+    $this->tags = ['locale'];
     $this->requestStack = $request_stack;
   }
 
@@ -123,7 +123,7 @@ class LocaleLookup extends CacheCollector {
       // cache misses that need to be written into the cache. Prevent that by
       // resetting that list. All that happens in such a case are a few uncached
       // translation lookups.
-      $this->keysToPersist = array();
+      $this->keysToPersist = [];
     }
     return $this->cid;
   }
@@ -132,11 +132,11 @@ class LocaleLookup extends CacheCollector {
    * {@inheritdoc}
    */
   protected function resolveCacheMiss($offset) {
-    $translation = $this->stringStorage->findTranslation(array(
+    $translation = $this->stringStorage->findTranslation([
       'language' => $this->langcode,
       'source' => $offset,
       'context' => $this->context,
-    ));
+    ]);
 
     if ($translation) {
       $value = !empty($translation->translation) ? $translation->translation : TRUE;
@@ -144,25 +144,25 @@ class LocaleLookup extends CacheCollector {
     else {
       // We don't have the source string, update the {locales_source} table to
       // indicate the string is not translated.
-      $this->stringStorage->createString(array(
+      $this->stringStorage->createString([
         'source' => $offset,
         'context' => $this->context,
         'version' => \Drupal::VERSION,
-      ))->addLocation('path', $this->requestStack->getCurrentRequest()->getRequestUri())->save();
+      ])->addLocation('path', $this->requestStack->getCurrentRequest()->getRequestUri())->save();
       $value = TRUE;
     }
 
     // If there is no translation available for the current language then use
     // language fallback to try other translations.
     if ($value === TRUE) {
-      $fallbacks = $this->languageManager->getFallbackCandidates(array('langcode' => $this->langcode, 'operation' => 'locale_lookup', 'data' => $offset));
+      $fallbacks = $this->languageManager->getFallbackCandidates(['langcode' => $this->langcode, 'operation' => 'locale_lookup', 'data' => $offset]);
       if (!empty($fallbacks)) {
         foreach ($fallbacks as $langcode) {
-          $translation = $this->stringStorage->findTranslation(array(
+          $translation = $this->stringStorage->findTranslation([
             'language' => $langcode,
             'source' => $offset,
             'context' => $this->context,
-          ));
+          ]);
 
           if ($translation && !empty($translation->translation)) {
             $value = $translation->translation;

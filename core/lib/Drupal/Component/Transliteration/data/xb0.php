@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'kkwem', 'kkweb', 'kkwebs', 'kkwes', 'kkwess', 'kkweng', 'kkwej', 'kkwech', 'kkwek', 'kkwet', 'kkwep', 'kkweh', 'kkwi', 'kkwig', 'kkwikk', 'kkwigs',
   0x10 => 'kkwin', 'kkwinj', 'kkwinh', 'kkwid', 'kkwil', 'kkwilg', 'kkwilm', 'kkwilb', 'kkwils', 'kkwilt', 'kkwilp', 'kkwilh', 'kkwim', 'kkwib', 'kkwibs', 'kkwis',
   0x20 => 'kkwiss', 'kkwing', 'kkwij', 'kkwich', 'kkwik', 'kkwit', 'kkwip', 'kkwih', 'kkyu', 'kkyug', 'kkyukk', 'kkyugs', 'kkyun', 'kkyunj', 'kkyunh', 'kkyud',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'nya', 'nyag', 'nyakk', 'nyags', 'nyan', 'nyanj', 'nyanh', 'nyad', 'nyal', 'nyalg', 'nyalm', 'nyalb', 'nyals', 'nyalt', 'nyalp', 'nyalh',
   0xE0 => 'nyam', 'nyab', 'nyabs', 'nyas', 'nyass', 'nyang', 'nyaj', 'nyach', 'nyak', 'nyat', 'nyap', 'nyah', 'nyae', 'nyaeg', 'nyaekk', 'nyaegs',
   0xF0 => 'nyaen', 'nyaenj', 'nyaenh', 'nyaed', 'nyael', 'nyaelg', 'nyaelm', 'nyaelb', 'nyaels', 'nyaelt', 'nyaelp', 'nyaelh', 'nyaem', 'nyaeb', 'nyaebs', 'nyaes',
-);
+];

@@ -9,15 +9,15 @@
  * Implements hook_requirements().
  */
 function requirements1_test_requirements($phase) {
-  $requirements = array();
+  $requirements = [];
 
   // Always fails requirements.
   if ('install' == $phase) {
-    $requirements['requirements1_test'] = array(
+    $requirements['requirements1_test'] = [
       'title' => t('Requirements 1 Test'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('Requirements 1 Test failed requirements.'),
-    );
+    ];
   }
 
   return $requirements;

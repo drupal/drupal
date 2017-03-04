@@ -66,7 +66,7 @@ function field_test_memorize($key = NULL, $value = NULL) {
 
   if (!isset($key)) {
     $return = $memorize;
-    $memorize = array();
+    $memorize = [];
     return $return;
   }
   if (is_array($memorize)) {
@@ -88,11 +88,11 @@ function field_test_field_storage_config_create(FieldStorageConfigInterface $fie
 function field_test_entity_display_build_alter(&$output, $context) {
   $display_options = $context['display']->getComponent('test_field');
   if (isset($display_options['settings']['alter'])) {
-    $output['test_field'][] = array('#markup' => 'field_test_entity_display_build_alter');
+    $output['test_field'][] = ['#markup' => 'field_test_entity_display_build_alter'];
   }
 
   if (isset($output['test_field'])) {
-    $output['test_field'][] = array('#markup' => 'entity language is ' . $context['entity']->language()->getId());
+    $output['test_field'][] = ['#markup' => 'entity language is ' . $context['entity']->language()->getId()];
   }
 }
 

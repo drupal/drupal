@@ -26,11 +26,11 @@ class Messages extends AreaPluginBase {
    */
   public function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
-      return array(
+      return [
         '#type' => 'status_messages',
-      );
+      ];
     }
-    return array();
+    return [];
   }
 
 }

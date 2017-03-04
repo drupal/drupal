@@ -29,7 +29,7 @@ class PhpStorageFactory {
    *   An instantiated storage for the specified name.
    */
   static function get($name) {
-    $configuration = array();
+    $configuration = [];
     $overrides = Settings::get('php_storage');
     if (isset($overrides[$name])) {
       $configuration = $overrides[$name];

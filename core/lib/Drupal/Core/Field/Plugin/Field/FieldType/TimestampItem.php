@@ -44,13 +44,13 @@ class TimestampItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'value' => array(
+    return [
+      'columns' => [
+        'value' => [
           'type' => 'int',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
 }

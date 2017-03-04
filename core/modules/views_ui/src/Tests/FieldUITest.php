@@ -18,7 +18,7 @@ class FieldUITest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Tests the UI of field handlers.
@@ -31,7 +31,7 @@ class FieldUITest extends UITestBase {
 
     // Hides the field and check whether the hidden label is appended.
     $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
-    $this->drupalPostForm($edit_handler_url, array('options[exclude]' => TRUE), t('Apply'));
+    $this->drupalPostForm($edit_handler_url, ['options[exclude]' => TRUE], t('Apply'));
 
     $this->assertText('Views test: Name [' . t('hidden') . ']');
 
@@ -62,9 +62,9 @@ class FieldUITest extends UITestBase {
     $this->assertNoLinkByHref($edit_groupby_url, 0, 'No aggregation link found.');
 
     // Enable aggregation on the view.
-    $edit = array(
+    $edit = [
       'group_by' => TRUE,
-    );
+    ];
     $this->drupalPostForm('/admin/structure/views/nojs/display/test_view/default/group_by', $edit, t('Apply'));
 
     $this->assertLinkByHref($edit_groupby_url, 0, 'Aggregation link found.');
@@ -81,7 +81,7 @@ class FieldUITest extends UITestBase {
   public function testFieldLabel() {
     // Create a view with unformatted style and make sure the fields have no
     // labels by default.
-    $view = array();
+    $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));
     $view['description'] = $this->randomMachineName(16);

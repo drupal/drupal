@@ -18,7 +18,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('shortcut');
+  public static $modules = ['shortcut'];
 
   /**
    * {@inheritdoc}
@@ -39,12 +39,12 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
    */
   protected function createEntity() {
     // Create a "Llama" shortcut.
-    $shortcut = Shortcut::create(array(
+    $shortcut = Shortcut::create([
       'shortcut_set' => 'default',
       'title' => t('Llama'),
       'weight' => 0,
       'link' => [['uri' => 'internal:/admin']],
-    ));
+    ]);
     $shortcut->save();
 
     return $shortcut;

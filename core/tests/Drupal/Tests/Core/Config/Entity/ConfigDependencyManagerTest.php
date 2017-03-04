@@ -19,11 +19,11 @@ class ConfigDependencyManagerTest extends UnitTestCase {
 
   public function testNoConfigEntities() {
     $dep_manger = new ConfigDependencyManager();
-    $dep_manger->setData(array(
-      'simple.config' => array(
+    $dep_manger->setData([
+      'simple.config' => [
         'key' => 'value',
-      ),
-    ));
+      ],
+    ]);
     $this->assertEmpty($dep_manger->getDependentEntities('config', 'config_test.dynamic.entity_id:745b0ce0-aece-42dd-a800-ade5b8455e84'));
 
     // Configuration is always dependent on its provider.

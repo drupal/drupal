@@ -49,7 +49,7 @@ class DefaultFactory implements FactoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function createInstance($plugin_id, array $configuration = array()) {
+  public function createInstance($plugin_id, array $configuration = []) {
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
     return new $plugin_class($configuration, $plugin_id, $plugin_definition);

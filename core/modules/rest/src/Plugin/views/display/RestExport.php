@@ -266,21 +266,21 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
     // Hide some settings, as they aren't useful for pure data output.
     unset($options['show_admin_links'], $options['analyze-theme']);
 
-    $categories['path'] = array(
+    $categories['path'] = [
       'title' => $this->t('Path settings'),
       'column' => 'second',
-      'build' => array(
+      'build' => [
         '#weight' => -10,
-      ),
-    );
+      ],
+    ];
 
     $options['path']['category'] = 'path';
     $options['path']['title'] = $this->t('Path');
-    $options['auth'] = array(
+    $options['auth'] = [
       'category' => 'path',
       'title' => $this->t('Authentication'),
       'value' => views_ui_truncate($auth, 24),
-    );
+    ];
 
     // Remove css/exposed form settings, as they are not used for the data
     // display.
@@ -296,13 +296,13 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
     parent::buildOptionsForm($form, $form_state);
     if ($form_state->get('section') === 'auth') {
       $form['#title'] .= $this->t('The supported authentication methods for this view');
-      $form['auth'] = array(
+      $form['auth'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t('Authentication methods'),
         '#description' => $this->t('These are the supported authentication providers for this view. When this view is requested, the client will be forced to authenticate with one of the selected providers. Make sure you set the appropriate requirements at the <em>Access</em> section since the Authentication System will fallback to the anonymous user if it fails to authenticate. For example: require Access: Role | Authenticated User.'),
         '#options' => $this->getAuthOptions(),
         '#default_value' => $this->getOption('auth'),
-      );
+      ];
     }
   }
 
@@ -406,7 +406,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
    * {@inheritdoc}
    */
   public function render() {
-    $build = array();
+    $build = [];
     $build['#markup'] = $this->renderer->executeInRenderContext(new RenderContext(), function() {
       return $this->view->style_plugin->render();
     });

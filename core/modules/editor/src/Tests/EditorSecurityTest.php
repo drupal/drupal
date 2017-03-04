@@ -40,7 +40,7 @@ class EditorSecurityTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter', 'editor', 'editor_test', 'node');
+  public static $modules = ['filter', 'editor', 'editor_test', 'node'];
 
   /**
    * User with access to Restricted HTML text format without text editor.
@@ -83,74 +83,74 @@ class EditorSecurityTest extends WebTestBase {
     // With text formats 2, 3 and 5, we also associate a text editor that does
     // not guarantee XSS safety. "restricted" means the text format has XSS
     // filters on output, "unrestricted" means the opposite.
-    $format = FilterFormat::create(array(
+    $format = FilterFormat::create([
       'format' => 'restricted_without_editor',
       'name' => 'Restricted HTML, without text editor',
       'weight' => 0,
-      'filters' => array(
+      'filters' => [
         // A filter of the FilterInterface::TYPE_HTML_RESTRICTOR type.
-        'filter_html' => array(
+        'filter_html' => [
           'status' => 1,
-          'settings' => array(
+          'settings' => [
             'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a>',
-          )
-        ),
-      ),
-    ));
+          ]
+        ],
+      ],
+    ]);
     $format->save();
-    $format = FilterFormat::create(array(
+    $format = FilterFormat::create([
       'format' => 'restricted_with_editor',
       'name' => 'Restricted HTML, with text editor',
       'weight' => 1,
-      'filters' => array(
+      'filters' => [
         // A filter of the FilterInterface::TYPE_HTML_RESTRICTOR type.
-        'filter_html' => array(
+        'filter_html' => [
           'status' => 1,
-          'settings' => array(
+          'settings' => [
             'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a>',
-          )
-        ),
-      ),
-    ));
+          ]
+        ],
+      ],
+    ]);
     $format->save();
     $editor = Editor::create([
       'format' => 'restricted_with_editor',
       'editor' => 'unicorn',
     ]);
     $editor->save();
-    $format = FilterFormat::create(array(
+    $format = FilterFormat::create([
       'format' => 'restricted_plus_dangerous_tag_with_editor',
       'name' => 'Restricted HTML, dangerous tag allowed, with text editor',
       'weight' => 1,
-      'filters' => array(
+      'filters' => [
         // A filter of the FilterInterface::TYPE_HTML_RESTRICTOR type.
-        'filter_html' => array(
+        'filter_html' => [
           'status' => 1,
-          'settings' => array(
+          'settings' => [
             'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a> <embed>',
-          )
-        ),
-      ),
-    ));
+          ]
+        ],
+      ],
+    ]);
     $format->save();
     $editor = Editor::create([
       'format' => 'restricted_plus_dangerous_tag_with_editor',
       'editor' => 'unicorn',
     ]);
     $editor->save();
-    $format = FilterFormat::create(array(
+    $format = FilterFormat::create([
       'format' => 'unrestricted_without_editor',
       'name' => 'Unrestricted HTML, without text editor',
       'weight' => 0,
-      'filters' => array(),
-    ));
+      'filters' => [],
+    ]);
     $format->save();
-    $format = FilterFormat::create(array(
+    $format = FilterFormat::create([
       'format' => 'unrestricted_with_editor',
       'name' => 'Unrestricted HTML, with text editor',
       'weight' => 1,
-      'filters' => array(),
-    ));
+      'filters' => [],
+    ]);
     $format->save();
     $editor = Editor::create([
       'format' => 'unrestricted_with_editor',
@@ -160,10 +160,10 @@ class EditorSecurityTest extends WebTestBase {
 
 
     // Create node type.
-    $this->drupalCreateContentType(array(
+    $this->drupalCreateContentType([
       'type' => 'article',
       'name' => 'Article',
-    ));
+    ]);
 
     // Create 4 users, each with access to different text formats/editors:
     //   - "untrusted": restricted_without_editor
@@ -172,22 +172,22 @@ class EditorSecurityTest extends WebTestBase {
     //   - "privileged": restricted_without_editor, restricted_with_editor,
     //     restricted_plus_dangerous_tag_with_editor,
     //     unrestricted_without_editor and unrestricted_with_editor
-    $this->untrustedUser = $this->drupalCreateUser(array(
+    $this->untrustedUser = $this->drupalCreateUser([
       'create article content',
       'edit any article content',
       'use text format restricted_without_editor',
-    ));
-    $this->normalUser = $this->drupalCreateUser(array(
+    ]);
+    $this->normalUser = $this->drupalCreateUser([
       'create article content',
       'edit any article content',
       'use text format restricted_with_editor',
-    ));
-    $this->trustedUser = $this->drupalCreateUser(array(
+    ]);
+    $this->trustedUser = $this->drupalCreateUser([
       'create article content',
       'edit any article content',
       'use text format restricted_plus_dangerous_tag_with_editor',
-    ));
-    $this->privilegedUser = $this->drupalCreateUser(array(
+    ]);
+    $this->privilegedUser = $this->drupalCreateUser([
       'create article content',
       'edit any article content',
       'use text format restricted_without_editor',
@@ -195,25 +195,25 @@ class EditorSecurityTest extends WebTestBase {
       'use text format restricted_plus_dangerous_tag_with_editor',
       'use text format unrestricted_without_editor',
       'use text format unrestricted_with_editor',
-    ));
+    ]);
 
     // Create an "article" node for each possible text format, with the same
     // sample content, to do our tests on.
-    $samples = array(
-      array('author' => $this->untrustedUser->id(), 'format' => 'restricted_without_editor'),
-      array('author' => $this->normalUser->id(), 'format' => 'restricted_with_editor'),
-      array('author' => $this->trustedUser->id(), 'format' => 'restricted_plus_dangerous_tag_with_editor'),
-      array('author' => $this->privilegedUser->id(), 'format' => 'unrestricted_without_editor'),
-      array('author' => $this->privilegedUser->id(), 'format' => 'unrestricted_with_editor'),
-    );
+    $samples = [
+      ['author' => $this->untrustedUser->id(), 'format' => 'restricted_without_editor'],
+      ['author' => $this->normalUser->id(), 'format' => 'restricted_with_editor'],
+      ['author' => $this->trustedUser->id(), 'format' => 'restricted_plus_dangerous_tag_with_editor'],
+      ['author' => $this->privilegedUser->id(), 'format' => 'unrestricted_without_editor'],
+      ['author' => $this->privilegedUser->id(), 'format' => 'unrestricted_with_editor'],
+    ];
     foreach ($samples as $sample) {
-      $this->drupalCreateNode(array(
+      $this->drupalCreateNode([
         'type' => 'article',
-        'body' => array(
-          array('value' => self::$sampleContent, 'format' => $sample['format'])
-        ),
+        'body' => [
+          ['value' => self::$sampleContent, 'format' => $sample['format']]
+        ],
         'uid' => $sample['author']
-      ));
+      ]);
     }
   }
 
@@ -223,64 +223,64 @@ class EditorSecurityTest extends WebTestBase {
    * Tests 8 scenarios. Tests only with a text editor that is not XSS-safe.
    */
   function testInitialSecurity() {
-    $expected = array(
-      array(
+    $expected = [
+      [
         'node_id' => 1,
         'format' => 'restricted_without_editor',
         // No text editor => no XSS filtering.
         'value' => self::$sampleContent,
-        'users' => array(
+        'users' => [
           $this->untrustedUser,
           $this->privilegedUser,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'node_id' => 2,
         'format' => 'restricted_with_editor',
         // Text editor => XSS filtering.
         'value' => self::$sampleContentSecured,
-        'users' => array(
+        'users' => [
           $this->normalUser,
           $this->privilegedUser,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'node_id' => 3,
         'format' => 'restricted_plus_dangerous_tag_with_editor',
         // Text editor => XSS filtering.
         'value' => self::$sampleContentSecuredEmbedAllowed,
-        'users' => array(
+        'users' => [
           $this->trustedUser,
           $this->privilegedUser,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'node_id' => 4,
         'format' => 'unrestricted_without_editor',
         // No text editor => no XSS filtering.
         'value' => self::$sampleContent,
-        'users' => array(
+        'users' => [
           $this->privilegedUser,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'node_id' => 5,
         'format' => 'unrestricted_with_editor',
         // Text editor, no security filter => no XSS filtering.
         'value' => self::$sampleContent,
-        'users' => array(
+        'users' => [
           $this->privilegedUser,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     // Log in as each user that may edit the content, and assert the value.
     foreach ($expected as $case) {
       foreach ($case['users'] as $account) {
-        $this->pass(format_string('Scenario: sample %sample_id, %format.', array(
+        $this->pass(format_string('Scenario: sample %sample_id, %format.', [
           '%sample_id' => $case['node_id'],
           '%format' => $case['format'],
-        )));
+        ]));
         $this->drupalLogin($account);
         $this->drupalGet('node/' . $case['node_id'] . '/edit');
         $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
@@ -303,25 +303,25 @@ class EditorSecurityTest extends WebTestBase {
    * <script> tag would be executed. Unless we apply appropriate filtering.
    */
   function testSwitchingSecurity() {
-    $expected = array(
-      array(
+    $expected = [
+      [
         'node_id' => 1,
         'value' => self::$sampleContent, // No text editor => no XSS filtering.
         'format' => 'restricted_without_editor',
-        'switch_to' => array(
+        'switch_to' => [
           'restricted_with_editor' => self::$sampleContentSecured,
           // Intersection of restrictions => most strict XSS filtering.
           'restricted_plus_dangerous_tag_with_editor' => self::$sampleContentSecured,
           // No text editor => no XSS filtering.
           'unrestricted_without_editor' => FALSE,
           'unrestricted_with_editor' => self::$sampleContentSecured,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'node_id' => 2,
         'value' => self::$sampleContentSecured, // Text editor => XSS filtering.
         'format' => 'restricted_with_editor',
-        'switch_to' => array(
+        'switch_to' => [
           // No text editor => no XSS filtering.
           'restricted_without_editor' => FALSE,
           // Intersection of restrictions => most strict XSS filtering.
@@ -329,13 +329,13 @@ class EditorSecurityTest extends WebTestBase {
           // No text editor => no XSS filtering.
           'unrestricted_without_editor' => FALSE,
           'unrestricted_with_editor' => self::$sampleContentSecured,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'node_id' => 3,
         'value' => self::$sampleContentSecuredEmbedAllowed, // Text editor => XSS filtering.
         'format' => 'restricted_plus_dangerous_tag_with_editor',
-        'switch_to' => array(
+        'switch_to' => [
           // No text editor => no XSS filtering.
           'restricted_without_editor' => FALSE,
           // Intersection of restrictions => most strict XSS filtering.
@@ -344,13 +344,13 @@ class EditorSecurityTest extends WebTestBase {
           'unrestricted_without_editor' => FALSE,
           // Intersection of restrictions => most strict XSS filtering.
           'unrestricted_with_editor' => self::$sampleContentSecured,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'node_id' => 4,
         'value' => self::$sampleContent, // No text editor => no XSS filtering.
         'format' => 'unrestricted_without_editor',
-        'switch_to' => array(
+        'switch_to' => [
           // No text editor => no XSS filtering.
           'restricted_without_editor' => FALSE,
           'restricted_with_editor' => self::$sampleContentSecured,
@@ -360,13 +360,13 @@ class EditorSecurityTest extends WebTestBase {
           // filters: resulting content when viewed was already vulnerable, so
           // it must be intentional.
           'unrestricted_with_editor' => FALSE,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'node_id' => 5,
         'value' => self::$sampleContentSecured, // Text editor => XSS filtering.
         'format' => 'unrestricted_with_editor',
-        'switch_to' => array(
+        'switch_to' => [
           // From editor, no security filters to security filters, no editor: no
           // risk.
           'restricted_without_editor' => FALSE,
@@ -377,9 +377,9 @@ class EditorSecurityTest extends WebTestBase {
           // filters: resulting content when viewed was already vulnerable, so
           // it must be intentional.
           'unrestricted_without_editor' => FALSE,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     // Log in as the privileged user, and for every sample, do the following:
     //  - switch to every other text format/editor
@@ -395,15 +395,15 @@ class EditorSecurityTest extends WebTestBase {
 
       // Switch to every other text format/editor and verify the results.
       foreach ($case['switch_to'] as $format => $expected_filtered_value) {
-        $this->pass(format_string('Scenario: sample %sample_id, switch from %original_format to %format.', array(
+        $this->pass(format_string('Scenario: sample %sample_id, switch from %original_format to %format.', [
           '%sample_id' => $case['node_id'],
           '%original_format' => $case['format'],
           '%format' => $format,
-        )));
-        $post = array(
+        ]));
+        $post = [
           'value' => self::$sampleContent,
           'original_format_id' => $case['format'],
-        );
+        ];
         $response = $this->drupalPostWithFormat('editor/filter_xss/' . $format, 'json', $post);
         $this->assertResponse(200);
         $json = Json::decode($response);

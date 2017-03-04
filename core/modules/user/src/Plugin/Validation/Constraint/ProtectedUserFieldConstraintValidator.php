@@ -86,7 +86,7 @@ class ProtectedUserFieldConstraintValidator extends ConstraintValidator implemen
         $changed = $items->getValue() != $account_unchanged->get($field->getName())->getValue();
       }
       if ($changed && (!$account->checkExistingPassword($account_unchanged))) {
-        $this->context->addViolation($constraint->message, array('%name' => $field->getLabel()));
+        $this->context->addViolation($constraint->message, ['%name' => $field->getLabel()]);
       }
     }
   }

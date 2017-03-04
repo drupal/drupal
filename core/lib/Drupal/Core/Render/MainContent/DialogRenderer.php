@@ -50,7 +50,7 @@ class DialogRenderer implements MainContentRendererInterface {
     $title = isset($main_content['#title']) ? $main_content['#title'] : $this->titleResolver->getTitle($request, $route_match->getRouteObject());
 
     // Determine the dialog options and the target for the OpenDialogCommand.
-    $options = $request->request->get('dialogOptions', array());
+    $options = $request->request->get('dialogOptions', []);
     $target = $this->determineTargetSelector($options, $route_match);
 
     $response->addCommand(new OpenDialogCommand($target, $title, $content, $options));

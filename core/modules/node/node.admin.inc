@@ -33,10 +33,10 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
   // We use batch processing to prevent timeout when updating a large number
   // of nodes.
   if (count($nodes) > 10) {
-    $batch = array(
-      'operations' => array(
-        array('_node_mass_update_batch_process', array($nodes, $updates, $langcode, $load, $revisions))
-      ),
+    $batch = [
+      'operations' => [
+        ['_node_mass_update_batch_process', [$nodes, $updates, $langcode, $load, $revisions]]
+      ],
       'finished' => '_node_mass_update_batch_finished',
       'title' => t('Processing'),
       // We use a single multi-pass operation, so the default
@@ -46,7 +46,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
       // The operations do not live in the .module file, so we need to
       // tell the batch engine which file to load before calling them.
       'file' => drupal_get_path('module', 'node') . '/node.admin.inc',
-    );
+    ];
     batch_set($batch);
   }
   else {
@@ -81,7 +81,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
  * @see node_mass_update()
  */
 function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode = NULL) {
-  $langcodes = isset($langcode) ? array($langcode) : array_keys($node->getTranslationLanguages());
+  $langcodes = isset($langcode) ? [$langcode] : array_keys($node->getTranslationLanguages());
   // For efficiency manually save the original node before applying any changes.
   $node->original = clone $node;
   foreach ($langcodes as $langcode) {
@@ -169,10 +169,10 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
   else {
     drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
     $message = \Drupal::translation()->formatPlural(count($results), '1 item successfully processed:', '@count items successfully processed:');
-    $item_list = array(
+    $item_list = [
       '#theme' => 'item_list',
       '#items' => $results,
-    );
+    ];
     $message .= drupal_render($item_list);
     drupal_set_message($message);
   }

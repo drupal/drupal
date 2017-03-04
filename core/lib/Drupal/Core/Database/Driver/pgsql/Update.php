@@ -13,7 +13,7 @@ class Update extends QueryUpdate {
 
   public function execute() {
     $max_placeholder = 0;
-    $blobs = array();
+    $blobs = [];
     $blob_count = 0;
 
     // Because we filter $fields the same way here and in __toString(), the
@@ -75,7 +75,7 @@ class Update extends QueryUpdate {
 
     $this->connection->addSavepoint();
     try {
-      $result = $this->connection->query($stmt, array(), $options);
+      $result = $this->connection->query($stmt, [], $options);
       $this->connection->releaseSavepoint();
       return $result;
     }

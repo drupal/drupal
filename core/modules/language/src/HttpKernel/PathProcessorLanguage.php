@@ -102,7 +102,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     if (!isset($this->multilingual)) {
       $this->multilingual = $this->languageManager->isMultilingual();
     }
@@ -131,7 +131,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
    */
   protected function initProcessors($scope) {
     $interface = '\Drupal\Core\PathProcessor\\' . Unicode::ucfirst($scope) . 'PathProcessorInterface';
-    $this->processors[$scope] = array();
+    $this->processors[$scope] = [];
     $weights = [];
     foreach ($this->languageManager->getLanguageTypes() as $type) {
       foreach ($this->negotiator->getNegotiationMethods($type) as $method_id => $method) {
@@ -174,7 +174,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
    * Resets the collected processors instances.
    */
   public function reset() {
-    $this->processors = array();
+    $this->processors = [];
   }
 
 }

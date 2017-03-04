@@ -21,7 +21,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'views');
+  public static $modules = ['taxonomy', 'views'];
 
   /**
    * An user with permissions to administer taxonomy.
@@ -51,23 +51,23 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
 
     $this->fieldName1 = Unicode::strtolower($this->randomMachineName());
 
-    $handler_settings = array(
-      'target_bundles' => array(
+    $handler_settings = [
+      'target_bundles' => [
         $this->vocabulary->id() => $this->vocabulary->id(),
-      ),
+      ],
       'auto_create' => TRUE,
-    );
+    ];
     $this->createEntityReferenceField('node', 'article', $this->fieldName1, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->fieldName1, array(
+      ->setComponent($this->fieldName1, [
         'type' => 'options_select',
-      ))
+      ])
       ->save();
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->fieldName1, array(
+      ->setComponent($this->fieldName1, [
         'type' => 'entity_reference_label',
-      ))
+      ])
       ->save();
   }
 
@@ -79,7 +79,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $term = $this->createTerm();
 
     // Post an article.
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $original_title = $this->randomMachineName();
     $edit['body[0][value]'] = $this->randomMachineName();
     $edit["{$this->fieldName1}[]"] = $term->id();
@@ -90,7 +90,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $this->assertText($term->label());
     $this->assertText($node->label());
 
-    \Drupal::service('module_installer')->install(array('language', 'content_translation'));
+    \Drupal::service('module_installer')->install(['language', 'content_translation']);
     $language = ConfigurableLanguage::createFromLangcode('ur');
     $language->save();
     // Enable translation for the article content type and ensure the change is

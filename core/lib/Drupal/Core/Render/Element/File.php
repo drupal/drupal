@@ -24,19 +24,19 @@ class File extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
       '#multiple' => FALSE,
-      '#process' => array(
-        array($class, 'processFile'),
-      ),
+      '#process' => [
+        [$class, 'processFile'],
+      ],
       '#size' => 60,
-      '#pre_render' => array(
-        array($class, 'preRenderFile'),
-      ),
+      '#pre_render' => [
+        [$class, 'preRenderFile'],
+      ],
       '#theme' => 'input__file',
-      '#theme_wrappers' => array('form_element'),
-    );
+      '#theme_wrappers' => ['form_element'],
+    ];
   }
 
   /**
@@ -44,7 +44,7 @@ class File extends FormElement {
    */
   public static function processFile(&$element, FormStateInterface $form_state, &$complete_form) {
     if ($element['#multiple']) {
-      $element['#attributes'] = array('multiple' => 'multiple');
+      $element['#attributes'] = ['multiple' => 'multiple'];
       $element['#name'] .= '[]';
     }
     return $element;
@@ -66,8 +66,8 @@ class File extends FormElement {
    */
   public static function preRenderFile($element) {
     $element['#attributes']['type'] = 'file';
-    Element::setAttributes($element, array('id', 'name', 'size'));
-    static::setAttributes($element, array('js-form-file', 'form-file'));
+    Element::setAttributes($element, ['id', 'name', 'size']);
+    static::setAttributes($element, ['js-form-file', 'form-file']);
 
     return $element;
   }

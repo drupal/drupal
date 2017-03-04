@@ -52,10 +52,10 @@ class ViewsExposedForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Don't show the form when batch operations are in progress.
     if ($batch = batch_get() && isset($batch['current_set'])) {
-      return array(
+      return [
         // Set the theme callback to be nothing to avoid errors in template_preprocess_views_exposed_form().
         '#theme' => '',
-      );
+      ];
     }
 
     // Make sure that we validate because this form might be submitted
@@ -74,7 +74,7 @@ class ViewsExposedForm extends FormBase {
       return $cache;
     }
 
-    $form['#info'] = array();
+    $form['#info'] = [];
 
     // Go through each handler and let it generate its exposed widget.
     foreach ($view->display_handler->handlers as $type => $value) {
@@ -100,16 +100,16 @@ class ViewsExposedForm extends FormBase {
       }
     }
 
-    $form['actions'] = array(
+    $form['actions'] = [
       '#type' => 'actions'
-    );
-    $form['actions']['submit'] = array(
+    ];
+    $form['actions']['submit'] = [
       // Prevent from showing up in \Drupal::request()->query.
       '#name' => '',
       '#type' => 'submit',
       '#value' => $this->t('Apply'),
       '#id' => Html::getUniqueId('edit-submit-' . $view->storage->id()),
-    );
+    ];
 
     $form['#action'] = $view->hasUrl() ? $view->getUrl()->toString() : Url::fromRoute('<current>')->toString();
     $form['#theme'] = $view->buildThemeFunctions('views_exposed_form');
@@ -131,7 +131,7 @@ class ViewsExposedForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->get('view');
 
-    foreach (array('field', 'filter') as $type) {
+    foreach (['field', 'filter'] as $type) {
       /** @var \Drupal\views\Plugin\views\ViewsHandlerInterface[] $handlers */
       $handlers = &$view->$type;
       foreach ($handlers as $key => $handler) {
@@ -148,9 +148,9 @@ class ViewsExposedForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Form input keys that will not be included in $view->exposed_raw_data.
-    $exclude = array('submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', 'reset');
+    $exclude = ['submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', 'reset'];
     $values = $form_state->getValues();
-    foreach (array('field', 'filter') as $type) {
+    foreach (['field', 'filter'] as $type) {
       /** @var \Drupal\views\Plugin\views\ViewsHandlerInterface[] $handlers */
       $handlers = &$form_state->get('view')->$type;
       foreach ($handlers as $key => $info) {
@@ -169,7 +169,7 @@ class ViewsExposedForm extends FormBase {
     $view->exposed_data = $values;
     $view->exposed_raw_input = [];
 
-    $exclude = array('submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', 'reset');
+    $exclude = ['submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', 'reset'];
     /** @var \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase $exposed_form_plugin */
     $exposed_form_plugin = $view->display_handler->getPlugin('exposed_form');
     $exposed_form_plugin->exposedFormSubmit($form, $form_state, $exclude);

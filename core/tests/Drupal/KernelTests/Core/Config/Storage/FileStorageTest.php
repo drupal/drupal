@@ -33,7 +33,7 @@ class FileStorageTest extends ConfigStorageTestBase {
 
     // FileStorage::listAll() requires other configuration data to exist.
     $this->storage->write('system.performance', $this->config('system.performance')->get());
-    $this->storage->write('core.extension', array('module' => array()));
+    $this->storage->write('core.extension', ['module' => []]);
   }
 
   protected function read($name) {
@@ -57,10 +57,10 @@ class FileStorageTest extends ConfigStorageTestBase {
    * Tests the FileStorage::listAll method with a relative and absolute path.
    */
   public function testlistAll() {
-    $expected_files = array(
+    $expected_files = [
       'core.extension',
       'system.performance',
-    );
+    ];
 
     $config_files = $this->storage->listAll();
     $this->assertIdentical($config_files, $expected_files, 'Relative path, two config files found.');

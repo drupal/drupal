@@ -19,14 +19,14 @@ class ViewsHooksTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * An array of available views hooks to test.
    *
    * @var array
    */
-  protected static $hooks = array (
+  protected static $hooks =  [
     'views_data' => 'all',
     'views_data_alter' => 'alter',
     'views_query_substitutions' => 'view',
@@ -41,7 +41,7 @@ class ViewsHooksTest extends ViewsKernelTestBase {
     'views_post_render' => 'view',
     'views_query_alter'  => 'view',
     'views_invalidate_cache' => 'all',
-  );
+  ];
 
   /**
    * The module handler to use for invoking hooks.
@@ -65,28 +65,28 @@ class ViewsHooksTest extends ViewsKernelTestBase {
 
     // Test each hook is found in the implementations array and is invoked.
     foreach (static::$hooks as $hook => $type) {
-      $this->assertTrue($this->moduleHandler->implementsHook('views_test_data', $hook), format_string('The hook @hook was registered.', array('@hook' => $hook)));
+      $this->assertTrue($this->moduleHandler->implementsHook('views_test_data', $hook), format_string('The hook @hook was registered.', ['@hook' => $hook]));
 
       if ($hook == 'views_post_render') {
-        $this->moduleHandler->invoke('views_test_data', $hook, array($view, &$view->display_handler->output, $view->display_handler->getPlugin('cache')));
+        $this->moduleHandler->invoke('views_test_data', $hook, [$view, &$view->display_handler->output, $view->display_handler->getPlugin('cache')]);
         continue;
       }
 
       switch ($type) {
         case 'view':
-          $this->moduleHandler->invoke('views_test_data', $hook, array($view));
+          $this->moduleHandler->invoke('views_test_data', $hook, [$view]);
           break;
 
         case 'alter':
-          $data = array();
-          $this->moduleHandler->invoke('views_test_data', $hook, array($data));
+          $data = [];
+          $this->moduleHandler->invoke('views_test_data', $hook, [$data]);
           break;
 
         default:
           $this->moduleHandler->invoke('views_test_data', $hook);
       }
 
-      $this->assertTrue($this->container->get('state')->get('views_hook_test_' . $hook), format_string('The %hook hook was invoked.', array('%hook' => $hook)));
+      $this->assertTrue($this->container->get('state')->get('views_hook_test_' . $hook), format_string('The %hook hook was invoked.', ['%hook' => $hook]));
       // Reset the module implementations cache, so we ensure that the
       // .views.inc file is loaded actively.
       $this->moduleHandler->resetImplementations();

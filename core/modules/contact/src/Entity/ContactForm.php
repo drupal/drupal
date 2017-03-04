@@ -73,7 +73,7 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    *
    * @var array
    */
-  protected $recipients = array();
+  protected $recipients = [];
 
   /**
    * The path to redirect to on form submission.

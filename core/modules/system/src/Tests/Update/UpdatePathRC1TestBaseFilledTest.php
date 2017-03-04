@@ -29,13 +29,13 @@ class UpdatePathRC1TestBaseFilledTest extends UpdatePathRC1TestBaseTest {
 
     $spanish = \Drupal::languageManager()->getLanguage('es');
 
-    $expected_node_data = array(
+    $expected_node_data = [
       [1, 'article', 'en', 'Test Article - New title'],
       [2, 'book', 'en', 'Book page'],
       [3, 'forum', 'en', 'Forum topic'],
       [4, 'page', 'en', 'Test page'],
       [8, 'test_content_type', 'en', 'Test title'],
-    );
+    ];
     foreach ($expected_node_data as $node_data) {
       $id = $node_data[0];
       $type = $node_data[1];

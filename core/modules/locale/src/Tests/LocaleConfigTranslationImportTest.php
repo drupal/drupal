@@ -18,13 +18,13 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'locale_test_translate');
+  public static $modules = ['language', 'locale_test_translate'];
 
   /**
    * Test update changes configuration translations if enabled after language.
    */
   public function testConfigTranslationImport() {
-    $admin_user = $this->drupalCreateUser(array('administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions'));
+    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions']);
     $this->drupalLogin($admin_user);
 
     // Add a language. The Afrikaans translation file of locale_test_translate
@@ -32,7 +32,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
     ConfigurableLanguage::createFromLangcode('af')->save();
 
     // Enable locale module.
-    $this->container->get('module_installer')->install(array('locale'));
+    $this->container->get('module_installer')->install(['locale']);
     $this->resetAll();
 
     // Enable import of translations. By default this is disabled for automated
@@ -42,9 +42,9 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
       ->save();
 
     // Add translation permissions now that the locale module has been enabled.
-    $edit = array(
+    $edit = [
       'authenticated[translate interface]' => 'translate interface',
-    );
+    ];
     $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
 
     // Check and update the translation status. This will import the Afrikaans
@@ -57,7 +57,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
     $status['drupal']['af']->type = 'current';
     \Drupal::state()->set('locale.translation_status', $status);
 
-    $this->drupalPostForm('admin/reports/translations', array(), t('Update translations'));
+    $this->drupalPostForm('admin/reports/translations', [], t('Update translations'));
 
     // Check if configuration translations have been imported.
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'system.maintenance');
@@ -77,7 +77,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
     // import. Test that this override is in place.
     $this->assertFalse($this->config('locale.settings')->get('translation.import_enabled'), 'Translations imports are disabled by default in the Testing profile.');
 
-    $admin_user = $this->drupalCreateUser(array('administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions', 'translate configuration'));
+    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions', 'translate configuration']);
     $this->drupalLogin($admin_user);
 
     // Enable import of translations. By default this is disabled for automated
@@ -90,7 +90,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'af'], t('Add language'));
 
     // Add the system branding block to the page.
-    $this->drupalPlaceBlock('system_branding_block', array('region' => 'header', 'id' => 'site-branding'));
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site-branding']);
     $this->drupalPostForm('admin/config/system/site-information', ['site_slogan' => 'Test site slogan'], 'Save configuration');
     $this->drupalPostForm('admin/config/system/site-information/translate/af/edit', ['translation[config_names][system.site][slogan]' => 'Test site slogan in Afrikaans'], 'Save translation');
 
@@ -135,7 +135,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
     $this->container->get('module_installer')->install(['locale']);
     $this->resetAll();
 
-    $admin_user = $this->drupalCreateUser(array('administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions', 'translate interface'));
+    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions', 'translate interface']);
     $this->drupalLogin($admin_user);
 
     // Enable import of translations. By default this is disabled for automated
@@ -153,7 +153,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
     // Remove the string from translation to simulate a Locale removal. Note
     // that is no current way of doing this in the UI.
     $locale_storage = \Drupal::service('locale.storage');
-    $string = $locale_storage->findString(array('source' => 'Locale can translate'));
+    $string = $locale_storage->findString(['source' => 'Locale can translate']);
     \Drupal::service('locale.storage')->delete($string);
     // Force a rebuild of config translations.
     $count = Locale::config()->updateConfigTranslations(['locale_test_translate.settings'], ['af']);
@@ -172,7 +172,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
     $this->container->get('module_installer')->install(['locale']);
     $this->resetAll();
 
-    $admin_user = $this->drupalCreateUser(array('administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions', 'translate interface'));
+    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'administer permissions', 'translate interface']);
     $this->drupalLogin($admin_user);
 
     // Enable import of translations. By default this is disabled for automated
@@ -198,18 +198,18 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
     $this->assertEqual($expected, $override->get());
 
     // Set the translated string to empty.
-    $search = array(
+    $search = [
       'string' => 'Locale can translate',
       'langcode' => 'af',
       'translation' => 'all',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textareas = $this->xpath('//textarea');
     $textarea = current($textareas);
     $lid = (string) $textarea[0]['name'];
-    $edit = array(
+    $edit = [
       $lid => '',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');

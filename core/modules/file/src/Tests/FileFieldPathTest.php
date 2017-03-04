@@ -26,7 +26,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded to the correct location.
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     /** @var \Drupal\file\FileInterface $node_file */
     $node_file = $node->{$field_name}->entity;
@@ -36,36 +36,36 @@ class FileFieldPathTest extends FileFieldTestBase {
       $date_formatter->format(REQUEST_TIME, 'custom', 'Y') . '-' .
       $date_formatter->format(REQUEST_TIME, 'custom', 'm') . '/' .
       $test_file->getFilename();
-    $this->assertPathMatch($expected_filename, $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path.', array('%file' => $node_file->getFileUri())));
+    $this->assertPathMatch($expected_filename, $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path.', ['%file' => $node_file->getFileUri()]));
 
     // Change the path to contain multiple subdirectories.
-    $this->updateFileField($field_name, $type_name, array('file_directory' => 'foo/bar/baz'));
+    $this->updateFileField($field_name, $type_name, ['file_directory' => 'foo/bar/baz']);
 
     // Upload a new file into the subdirectories.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded into the subdirectory.
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
-    $this->assertPathMatch('public://foo/bar/baz/' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path.', array('%file' => $node_file->getFileUri())));
+    $this->assertPathMatch('public://foo/bar/baz/' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path.', ['%file' => $node_file->getFileUri()]));
 
     // Check the path when used with tokens.
     // Change the path to contain multiple token directories.
-    $this->updateFileField($field_name, $type_name, array('file_directory' => '[current-user:uid]/[current-user:name]'));
+    $this->updateFileField($field_name, $type_name, ['file_directory' => '[current-user:uid]/[current-user:name]']);
 
     // Upload a new file into the token subdirectories.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the file was uploaded into the subdirectory.
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
     // Do token replacement using the same user which uploaded the file, not
     // the user running the test case.
-    $data = array('user' => $this->adminUser);
+    $data = ['user' => $this->adminUser];
     $subdirectory = \Drupal::token()->replace('[user:uid]/[user:name]', $data);
-    $this->assertPathMatch('public://' . $subdirectory . '/' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path with token replacements.', array('%file' => $node_file->getFileUri())));
+    $this->assertPathMatch('public://' . $subdirectory . '/' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path with token replacements.', ['%file' => $node_file->getFileUri()]));
   }
 
   /**

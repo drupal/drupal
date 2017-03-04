@@ -13,31 +13,31 @@ class VariableTest extends MigrateSqlSourceTestCase {
 
   const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\Variable';
 
-  protected $migrationConfiguration = array(
+  protected $migrationConfiguration = [
     'id' => 'test',
-    'highWaterProperty' => array('field' => 'test'),
-    'source' => array(
+    'highWaterProperty' => ['field' => 'test'],
+    'source' => [
       'plugin' => 'd6_variable',
-      'variables' => array(
+      'variables' => [
         'foo',
         'bar',
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 
-  protected $expectedResults = array(
-    array(
+  protected $expectedResults = [
+    [
       'id' => 'foo',
       'foo' => 1,
       'bar' => FALSE,
-    ),
-  );
+    ],
+  ];
 
-  protected $databaseContents = array(
-    'variable' => array(
-      array('name' => 'foo', 'value' => 'i:1;'),
-      array('name' => 'bar', 'value' => 'b:0;'),
-    ),
-  );
+  protected $databaseContents = [
+    'variable' => [
+      ['name' => 'foo', 'value' => 'i:1;'],
+      ['name' => 'bar', 'value' => 'b:0;'],
+    ],
+  ];
 
 }

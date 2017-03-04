@@ -33,7 +33,7 @@ function config_translation_test_entity_type_alter(array &$entity_types) {
 function config_translation_test_config_translation_info_alter(&$info) {
   if (\Drupal::state()->get('config_translation_test_config_translation_info_alter')) {
     // Limit account settings config files to only one of them.
-    $info['entity.user.admin_form']['names'] = array('user.settings');
+    $info['entity.user.admin_form']['names'] = ['user.settings'];
 
     // Add one more config file to the site information page.
     $info['system.site_information_settings']['names'][] = 'system.rss';

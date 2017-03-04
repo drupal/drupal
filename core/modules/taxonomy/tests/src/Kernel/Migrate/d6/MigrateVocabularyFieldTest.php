@@ -39,7 +39,7 @@ class MigrateVocabularyFieldTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('taxonomy_term', $settings['target_type'], "Target type is correct.");
     $this->assertIdentical(1, $field_storage->getCardinality(), "Field cardinality in 1.");
 
-    $this->assertIdentical(array('node', 'tags'), $this->getMigration('d6_vocabulary_field')->getIdMap()->lookupDestinationID(array(4)), "Test IdMap");
+    $this->assertIdentical(['node', 'tags'], $this->getMigration('d6_vocabulary_field')->getIdMap()->lookupDestinationID([4]), "Test IdMap");
   }
 
 }

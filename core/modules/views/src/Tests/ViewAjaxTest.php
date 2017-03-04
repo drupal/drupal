@@ -17,7 +17,7 @@ class ViewAjaxTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_ajax_view');
+  public static $testViews = ['test_ajax_view'];
 
   protected function setUp() {
     parent::setUp();
@@ -38,14 +38,14 @@ class ViewAjaxTest extends ViewTestBase {
     $this->assertEqual($drupal_settings['views']['ajaxViews'][$view_entry]['view_name'], 'test_ajax_view', 'The view\'s ajaxViews array entry has the correct \'view_name\' key.');
     $this->assertEqual($drupal_settings['views']['ajaxViews'][$view_entry]['view_display_id'], 'page_1', 'The view\'s ajaxViews array entry has the correct \'view_display_id\' key.');
 
-    $data = array();
+    $data = [];
     $data['view_name'] = 'test_ajax_view';
     $data['view_display_id'] = 'test_ajax_view';
 
-    $post = array(
+    $post = [
       'view_name' => 'test_ajax_view',
       'view_display_id' => 'page_1',
-    );
+    ];
     $post += $this->getAjaxPageStatePostData();
     $response = $this->drupalPost('views/ajax', '', $post, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
     $data = Json::decode($response);

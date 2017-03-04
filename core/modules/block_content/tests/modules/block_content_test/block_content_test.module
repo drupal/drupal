@@ -15,9 +15,9 @@ use Drupal\block_content\Entity\BlockContent;
  */
 function block_content_test_block_content_view(array &$build, BlockContent $block_content, $view_mode) {
   // Add extra content.
-  $build['extra_content'] = array(
+  $build['extra_content'] = [
     '#markup' => '<blink>Yowser</blink>',
-  );
+  ];
 }
 
 /**

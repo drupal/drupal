@@ -24,11 +24,11 @@ function simpletest_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.simpletest':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Testing module provides a framework for running automated tests. It can be used to verify a working state of Drupal before and after any code changes, or as a means for developers to write and execute tests for their modules. For more information, see the <a href=":simpletest">online documentation for the Testing module</a>.', array(':simpletest' => 'https://www.drupal.org/documentation/modules/simpletest')) . '</p>';
+      $output .= '<p>' . t('The Testing module provides a framework for running automated tests. It can be used to verify a working state of Drupal before and after any code changes, or as a means for developers to write and execute tests for their modules. For more information, see the <a href=":simpletest">online documentation for the Testing module</a>.', [':simpletest' => 'https://www.drupal.org/documentation/modules/simpletest']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Running tests') . '</dt>';
-      $output .= '<dd><p>' . t('Visit the <a href=":admin-simpletest">Testing page</a> to display a list of available tests. For comprehensive testing, select <em>all</em> tests, or individually select tests for more targeted testing. Note that it might take several minutes for all tests to complete.', array(':admin-simpletest' => \Drupal::url('simpletest.test_form'))) . '</p>';
+      $output .= '<dd><p>' . t('Visit the <a href=":admin-simpletest">Testing page</a> to display a list of available tests. For comprehensive testing, select <em>all</em> tests, or individually select tests for more targeted testing. Note that it might take several minutes for all tests to complete.', [':admin-simpletest' => \Drupal::url('simpletest.test_form')]) . '</p>';
       $output .= '<p>' . t('After the tests run, a message will be displayed next to each test group indicating whether tests within it passed, failed, or had exceptions. A pass means that the test returned the expected results, while fail means that it did not. An exception normally indicates an error outside of the test, such as a PHP warning or notice. If there were failures or exceptions, the results will be expanded to show details, and the tests that had failures or exceptions will be indicated in red or pink rows. You can then use these results to refine your code and tests, until all tests pass.') . '</p></dd>';
       $output .= '</dl>';
       return $output;
@@ -43,11 +43,11 @@ function simpletest_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_theme().
  */
 function simpletest_theme() {
-  return array(
-    'simpletest_result_summary' => array(
-      'variables' => array('label' => NULL, 'items' => array(), 'pass' => 0, 'fail' => 0, 'exception' => 0, 'debug' => 0),
-    ),
-  );
+  return [
+    'simpletest_result_summary' => [
+      'variables' => ['label' => NULL, 'items' => [], 'pass' => 0, 'fail' => 0, 'exception' => 0, 'debug' => 0],
+    ],
+  ];
 }
 
 /**
@@ -138,7 +138,7 @@ function simpletest_run_tests($test_list) {
   }
 
   $test_id = db_insert('simpletest_test_id')
-    ->useDefaults(array('test_id'))
+    ->useDefaults(['test_id'])
     ->execute();
 
   // Clear out the previous verbose files.
@@ -148,16 +148,16 @@ function simpletest_run_tests($test_list) {
   $first_test = reset($test_list);
   $info = TestDiscovery::getTestInfo($first_test);
 
-  $batch = array(
+  $batch = [
     'title' => t('Running tests'),
-    'operations' => array(
-      array('_simpletest_batch_operation', array($test_list, $test_id)),
-    ),
+    'operations' => [
+      ['_simpletest_batch_operation', [$test_list, $test_id]],
+    ],
     'finished' => '_simpletest_batch_finished',
     'progress_message' => '',
-    'library' => array('simpletest/drupal.simpletest'),
-    'init_message' => t('Processing test @num of @max - %test.', array('%test' => $info['name'], '@num' => '1', '@max' => count($test_list))),
-  );
+    'library' => ['simpletest/drupal.simpletest'],
+    'init_message' => t('Processing test @num of @max - %test.', ['%test' => $info['name'], '@num' => '1', '@max' => count($test_list)]),
+  ];
   batch_set($batch);
 
   \Drupal::moduleHandler()->invokeAll('test_group_started');
@@ -237,12 +237,12 @@ function simpletest_summarize_phpunit_result($results) {
   $summaries = [];
   foreach ($results as $result) {
     if (!isset($summaries[$result['test_class']])) {
-      $summaries[$result['test_class']] = array(
+      $summaries[$result['test_class']] = [
         '#pass' => 0,
         '#fail' => 0,
         '#exception' => 0,
         '#debug' => 0,
-      );
+      ];
     }
 
     switch ($result['status']) {
@@ -322,13 +322,13 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
   }
   $phpunit_bin = simpletest_phpunit_command();
 
-  $command = array(
+  $command = [
     $phpunit_bin,
     '--log-junit',
     escapeshellarg($phpunit_file),
     '--printer',
     escapeshellarg(SimpletestUiPrinter::class),
-  );
+  ];
 
   // Optimized for running a single test.
   if (count($unescaped_test_classnames) == 1) {
@@ -342,10 +342,10 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
     }, $unescaped_test_classnames);
 
     $filter_string = implode("|", $escaped_test_classnames);
-    $command = array_merge($command, array(
+    $command = array_merge($command, [
       '--filter',
       escapeshellarg($filter_string),
-    ));
+    ]);
   }
 
   // Need to change directories before running the command so that we can use
@@ -401,7 +401,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
     // First iteration: initialize working values.
     $test_list = $test_list_init;
     $context['sandbox']['max'] = count($test_list);
-    $test_results = array('#pass' => 0, '#fail' => 0, '#exception' => 0, '#debug' => 0);
+    $test_results = ['#pass' => 0, '#fail' => 0, '#exception' => 0, '#debug' => 0];
   }
   else {
     // Nth iteration: get the current values where we last stored them.
@@ -420,7 +420,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   else {
     $test = new $test_class($test_id);
     $test->run();
-    \Drupal::moduleHandler()->invokeAll('test_finished', array($test->results));
+    \Drupal::moduleHandler()->invokeAll('test_finished', [$test->results]);
     $test_results[$test_class] = $test->results;
   }
   $size = count($test_list);
@@ -431,25 +431,25 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
     $test_results[$key] += $value;
   }
   $test_results[$test_class]['#name'] = $info['name'];
-  $items = array();
+  $items = [];
   foreach (Element::children($test_results) as $class) {
-    $class_test_result = $test_results[$class] + array(
+    $class_test_result = $test_results[$class] + [
       '#theme' => 'simpletest_result_summary',
       '#label' => t($test_results[$class]['#name'] . ':'),
-    );
+    ];
     array_unshift($items, drupal_render($class_test_result));
   }
-  $context['message'] = t('Processed test @num of @max - %test.', array('%test' => $info['name'], '@num' => $max - $size, '@max' => $max));
-  $overall_results = $test_results + array(
+  $context['message'] = t('Processed test @num of @max - %test.', ['%test' => $info['name'], '@num' => $max - $size, '@max' => $max]);
+  $overall_results = $test_results + [
     '#theme' => 'simpletest_result_summary',
     '#label' => t('Overall results:'),
-  );
+  ];
   $context['message'] .= drupal_render($overall_results);
 
-  $item_list = array(
+  $item_list = [
     '#theme' => 'item_list',
     '#items' => $items,
-  );
+  ];
   $context['message'] .= drupal_render($item_list);
 
   // Save working values for the next iteration.
@@ -467,7 +467,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
  */
 function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
   if ($success) {
-    drupal_set_message(t('The test run finished in @elapsed.', array('@elapsed' => $elapsed)));
+    drupal_set_message(t('The test run finished in @elapsed.', ['@elapsed' => $elapsed]));
   }
   else {
     // Use the test_id passed as a parameter to _simpletest_batch_operation().
@@ -496,16 +496,16 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  */
 function simpletest_last_test_get($test_id) {
   $last_prefix = TestDatabase::getConnection()
-    ->queryRange('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', 0, 1, array(
+    ->queryRange('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', 0, 1, [
       ':test_id' => $test_id,
-    ))
+    ])
     ->fetchField();
   $last_test_class = TestDatabase::getConnection()
-    ->queryRange('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', 0, 1, array(
+    ->queryRange('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', 0, 1, [
       ':test_id' => $test_id,
-    ))
+    ])
     ->fetchField();
-  return array($last_prefix, $last_test_class);
+  return [$last_prefix, $last_test_class];
 }
 
 /**
@@ -533,10 +533,10 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
       if (preg_match('/\[.*?\] (.*?): (.*?) in (.*) on line (\d+)/', $line, $match)) {
         // Parse PHP fatal errors for example: PHP Fatal error: Call to
         // undefined function break_me() in /path/to/file.php on line 17
-        $caller = array(
+        $caller = [
           'line' => $match[4],
           'file' => $match[3],
-        );
+        ];
         TestBase::insertAssert($test_id, $test_class, FALSE, $match[2], $match[1], $caller);
       }
       else {
@@ -692,7 +692,7 @@ function simpletest_clean_temporary_directories() {
     foreach ($files as $file) {
       if ($file[0] != '.') {
         $path = DRUPAL_ROOT . '/sites/simpletest/' . $file;
-        file_unmanaged_delete_recursive($path, array('Drupal\simpletest\TestBase', 'filePreDeleteCallback'));
+        file_unmanaged_delete_recursive($path, ['Drupal\simpletest\TestBase', 'filePreDeleteCallback']);
         $count++;
       }
     }
@@ -719,7 +719,7 @@ function simpletest_clean_results_table($test_id = NULL) {
   if (\Drupal::config('simpletest.settings')->get('clear_results')) {
     $connection = TestDatabase::getConnection();
     if ($test_id) {
-      $count = $connection->query('SELECT COUNT(test_id) FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id))->fetchField();
+      $count = $connection->query('SELECT COUNT(test_id) FROM {simpletest_test_id} WHERE test_id = :test_id', [':test_id' => $test_id])->fetchField();
 
       $connection->delete('simpletest')
         ->condition('test_id', $test_id)
@@ -771,7 +771,7 @@ function simpletest_phpunit_xml_to_rows($test_id, $phpunit_xml_file) {
   if (!$contents) {
     return;
   }
-  $records = array();
+  $records = [];
   $testcases = simpletest_phpunit_find_testcases(new SimpleXMLElement($contents));
   foreach ($testcases as $testcase) {
     $records[] = simpletest_phpunit_testcase_to_row($test_id, $testcase);
@@ -791,7 +791,7 @@ function simpletest_phpunit_xml_to_rows($test_id, $phpunit_xml_file) {
  *   A list of all test cases.
  */
 function simpletest_phpunit_find_testcases(\SimpleXMLElement $element, \SimpleXMLElement $parent = NULL) {
-  $testcases = array();
+  $testcases = [];
 
   if (!isset($parent)) {
     $parent = $element;
@@ -845,7 +845,7 @@ function simpletest_phpunit_testcase_to_row($test_id, \SimpleXMLElement $testcas
 
   $attributes = $testcase->attributes();
 
-  $record = array(
+  $record = [
     'test_id' => $test_id,
     'test_class' => (string) $attributes->class,
     'status' => $pass ? 'pass' : 'fail',
@@ -855,6 +855,6 @@ function simpletest_phpunit_testcase_to_row($test_id, \SimpleXMLElement $testcas
     'function' => $attributes->class . '->' . $attributes->name . '()',
     'line' => $attributes->line ?: 0,
     'file' => $attributes->file,
-  );
+  ];
   return $record;
 }

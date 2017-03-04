@@ -27,26 +27,26 @@ function contextual_toolbar() {
     return $items;
   }
 
-  $items['contextual'] += array(
+  $items['contextual'] += [
     '#type' => 'toolbar_item',
-    'tab' => array(
+    'tab' => [
       '#type' => 'html_tag',
       '#tag' => 'button',
       '#value' => t('Edit'),
-      '#attributes' => array(
-        'class' => array('toolbar-icon', 'toolbar-icon-edit'),
+      '#attributes' => [
+        'class' => ['toolbar-icon', 'toolbar-icon-edit'],
         'aria-pressed' => 'false',
-      ),
-    ),
-    '#wrapper_attributes' => array(
-      'class' => array('hidden', 'contextual-toolbar-tab'),
-    ),
-    '#attached' => array(
-      'library' => array(
+      ],
+    ],
+    '#wrapper_attributes' => [
+      'class' => ['hidden', 'contextual-toolbar-tab'],
+    ],
+    '#attached' => [
+      'library' => [
         'contextual/drupal.contextual-toolbar',
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 
   return $items;
 }
@@ -75,7 +75,7 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.contextual':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Contextual links module gives users with the <em>Use contextual links</em> permission quick access to tasks associated with certain areas of pages on your site. For example, a menu displayed as a block has links to edit the menu and configure the block. For more information, see the <a href=":contextual">online documentation for the Contextual Links module</a>.', array(':contextual' => 'https://www.drupal.org/documentation/modules/contextual')) . '</p>';
+      $output .= '<p>' . t('The Contextual links module gives users with the <em>Use contextual links</em> permission quick access to tasks associated with certain areas of pages on your site. For example, a menu displayed as a block has links to edit the menu and configure the block. For more information, see the <a href=":contextual">online documentation for the Contextual Links module</a>.', [':contextual' => 'https://www.drupal.org/documentation/modules/contextual']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Displaying contextual links') . '</dt>';
@@ -88,8 +88,8 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
         '#alt' => t('contextual links button')
       ];
       $sample_picture = \Drupal::service('renderer')->render($sample_picture);
-      $output .= '<li>' . t('Hovering over the area of interest will temporarily make the contextual links button visible (which looks like a pencil in most themes, and is normally displayed in the upper right corner of the area). The icon typically looks like this: @picture', array('@picture' => $sample_picture)) . '</li>';
-      $output .= '<li>' . t('If you have the <a href=":toolbar">Toolbar module</a> enabled, clicking the contextual links button in the toolbar (which looks like a pencil) will make all contextual links buttons on the page visible. Clicking this button again will toggle them to invisible.', array(':toolbar' => (\Drupal::moduleHandler()->moduleExists('toolbar')) ? \Drupal::url('help.page', array('name' => 'toolbar')) : '#')) . '</li>';
+      $output .= '<li>' . t('Hovering over the area of interest will temporarily make the contextual links button visible (which looks like a pencil in most themes, and is normally displayed in the upper right corner of the area). The icon typically looks like this: @picture', ['@picture' => $sample_picture]) . '</li>';
+      $output .= '<li>' . t('If you have the <a href=":toolbar">Toolbar module</a> enabled, clicking the contextual links button in the toolbar (which looks like a pencil) will make all contextual links buttons on the page visible. Clicking this button again will toggle them to invisible.', [':toolbar' => (\Drupal::moduleHandler()->moduleExists('toolbar')) ? \Drupal::url('help.page', ['name' => 'toolbar']) : '#']) . '</li>';
       $output .= '</ol>';
       $output .= t('Once the contextual links button for the area of interest is visible, click the button to display the links.');
       $output .= '</dd>';
@@ -132,10 +132,10 @@ function contextual_preprocess(&$variables, $hook, $info) {
     // users, contextual_page_attachments() only adds the asset library for
     // users with the 'access contextual links' permission, thus preventing
     // unnecessary HTTP requests for users without that permission.
-    $variables['title_suffix']['contextual_links'] = array(
+    $variables['title_suffix']['contextual_links'] = [
       '#type' => 'contextual_links_placeholder',
       '#id' => _contextual_links_to_id($element['#contextual_links']),
-    );
+    ];
   }
 }
 
@@ -172,7 +172,7 @@ function contextual_contextual_links_view_alter(&$element, $items) {
  *   use in a data- attribute.
  */
 function _contextual_links_to_id($contextual_links) {
-  $ids = array();
+  $ids = [];
   $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId();
   foreach ($contextual_links as $group => $args) {
     $route_parameters = UrlHelper::buildQuery($args['route_parameters']);
@@ -199,17 +199,17 @@ function _contextual_links_to_id($contextual_links) {
  *   The value for a #contextual_links property.
  */
 function _contextual_id_to_links($id) {
-  $contextual_links = array();
+  $contextual_links = [];
   $contexts = explode('|', $id);
   foreach ($contexts as $context) {
     list($group, $route_parameters_raw, $metadata_raw) = explode(':', $context);
     parse_str($route_parameters_raw, $route_parameters);
-    $metadata = array();
+    $metadata = [];
     parse_str($metadata_raw, $metadata);
-    $contextual_links[$group] = array(
+    $contextual_links[$group] = [
       'route_parameters' => $route_parameters,
       'metadata' => $metadata,
-    );
+    ];
   }
   return $contextual_links;
 }

@@ -31,46 +31,46 @@ abstract class RouteMatchTestBase extends UnitTestCase {
    * Provide sets of parameters and expected parameters for parameter tests.
    */
   public function routeMatchProvider() {
-    $base_data = array(
-      array(
+    $base_data = [
+      [
         new Route(
           '/test-route/{param_without_leading_underscore}/{_param_with_leading_underscore}',
-          array(
+          [
             'default_without_leading_underscore' => NULL,
             '_default_with_leading_underscore' => NULL,
-          )
+          ]
         ),
-        array(
+        [
           'param_without_leading_underscore' => 'value',
           '_param_with_leading_underscore' => 'value',
           'default_without_leading_underscore' => 'value',
           '_default_with_leading_underscore' => 'value',
           'foo' => 'value',
-        ),
+        ],
         // Parameters should be filtered to only those defined by the route.
         // Specifically:
         // - Path parameters, regardless of name.
         // - Defaults that are not path parameters only if they do not start with
         //   an underscore.
-        array(
+        [
           'param_without_leading_underscore' => 'value',
           '_param_with_leading_underscore' => 'value',
           'default_without_leading_underscore' => 'value',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
-    $data = array();
+    $data = [];
     foreach ($base_data as $entry) {
       $route = $entry[0];
       $params = $entry[1];
       $expected_params = $entry[2];
-      $data[] = array(
+      $data[] = [
         $this->getRouteMatch('test_route', $route, $params, $params),
         $route,
         $params,
         $expected_params,
-      );
+      ];
     }
 
     return $data;

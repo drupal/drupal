@@ -48,22 +48,22 @@ class PoHeaderTest extends UnitTestCase {
    *   value.
    */
   public function providerTestPluralsFormula() {
-    return array(
-      array(
+    return [
+      [
         'nplurals=1; plural=0;',
-        array('default' => 0),
-      ),
-      array(
+        ['default' => 0],
+      ],
+      [
         'nplurals=2; plural=(n > 1);',
-        array(0 => 0, 1 => 0, 'default' => 1),
-      ),
-      array(
+        [0 => 0, 1 => 0, 'default' => 1],
+      ],
+      [
         'nplurals=2; plural=(n!=1);',
-        array(1 => 0, 'default' => 1),
-      ),
-      array(
+        [1 => 0, 'default' => 1],
+      ],
+      [
         'nplurals=2; plural=(((n==1)||((n%10)==1))?(0):1);',
-        array(
+        [
           1 => 0,
           11 => 0,
           21 => 0,
@@ -85,11 +85,11 @@ class PoHeaderTest extends UnitTestCase {
           181 => 0,
           191 => 0,
           'default' => 1,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));',
-        array(
+        [
           1 => 0,
           2 => 1,
           3 => 1,
@@ -163,21 +163,21 @@ class PoHeaderTest extends UnitTestCase {
           193 => 1,
           194 => 1,
           'default' => 2,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'nplurals=3; plural=((n==1)?(0):(((n>=2)&&(n<=4))?(1):2));',
-        array(
+        [
           1 => 0,
           2 => 1,
           3 => 1,
           4 => 1,
           'default' => 2,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'nplurals=3; plural=((n==1)?(0):(((n==0)||(((n%100)>0)&&((n%100)<20)))?(1):2));',
-        array(
+        [
           0 => 1,
           1 => 0,
           2 => 1,
@@ -218,11 +218,11 @@ class PoHeaderTest extends UnitTestCase {
           118 => 1,
           119 => 1,
           'default' => 2,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'nplurals=3; plural=((n==1)?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));',
-        array(
+        [
           1 => 0,
           2 => 1,
           3 => 1,
@@ -279,10 +279,10 @@ class PoHeaderTest extends UnitTestCase {
           193 => 1,
           194 => 1,
           'default' => 2,
-        ),),
-      array(
+        ],],
+      [
         'nplurals=4; plural=(((n==1)||(n==11))?(0):(((n==2)||(n==12))?(1):(((n>2)&&(n<20))?(2):3)));',
-        array(
+        [
           1 => 0,
           2 => 1,
           3 => 2,
@@ -303,11 +303,11 @@ class PoHeaderTest extends UnitTestCase {
           18 => 2,
           19 => 2,
           'default' => 3,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'nplurals=4; plural=(((n%100)==1)?(0):(((n%100)==2)?(1):((((n%100)==3)||((n%100)==4))?(2):3)));',
-        array(
+        [
           1 => 0,
           2 => 1,
           3 => 2,
@@ -317,11 +317,11 @@ class PoHeaderTest extends UnitTestCase {
           103 => 2,
           104 => 2,
           'default' => 3,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'nplurals=5; plural=((n==1)?(0):((n==2)?(1):((n<7)?(2):((n<11)?(3):4))));',
-        array(
+        [
           0 => 2,
           1 => 0,
           2 => 1,
@@ -334,11 +334,11 @@ class PoHeaderTest extends UnitTestCase {
           9 => 3,
           10 => 3,
           'default' => 4,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'nplurals=6; plural=((n==1)?(0):((n==0)?(1):((n==2)?(2):((((n%100)>=3)&&((n%100)<=10))?(3):((((n%100)>=11)&&((n%100)<=99))?(4):5)))));',
-        array(
+        [
           0 => 1,
           1 => 0,
           2 => 2,
@@ -362,9 +362,9 @@ class PoHeaderTest extends UnitTestCase {
           109 => 3,
           110 => 3,
           'default' => 4,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
 }

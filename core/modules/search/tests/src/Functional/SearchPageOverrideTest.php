@@ -17,7 +17,7 @@ class SearchPageOverrideTest extends SearchTestBase {
    *
    * @var array
    */
-  public static $modules = array('search_extra_type');
+  public static $modules = ['search_extra_type'];
 
   /**
    * A user with permission to administer search.
@@ -30,13 +30,13 @@ class SearchPageOverrideTest extends SearchTestBase {
     parent::setUp();
 
     // Log in as a user that can create and search content.
-    $this->searchUser = $this->drupalCreateUser(array('search content', 'administer search'));
+    $this->searchUser = $this->drupalCreateUser(['search content', 'administer search']);
     $this->drupalLogin($this->searchUser);
   }
 
   function testSearchPageHook() {
     $keys = 'bike shed ' . $this->randomMachineName();
-    $this->drupalGet("search/dummy_path", array('query' => array('keys' => $keys)));
+    $this->drupalGet("search/dummy_path", ['query' => ['keys' => $keys]]);
     $this->assertText('Dummy search snippet', 'Dummy search snippet is shown');
     $this->assertText('Test page text is here', 'Page override is working');
   }

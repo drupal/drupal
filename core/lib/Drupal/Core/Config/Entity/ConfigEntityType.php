@@ -64,9 +64,9 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
     // Always add a default 'uuid' key.
     $this->entity_keys['uuid'] = 'uuid';
     $this->entity_keys['langcode'] = 'langcode';
-    $this->handlers += array(
+    $this->handlers += [
       'storage' => 'Drupal\Core\Config\Entity\ConfigEntityStorage',
-    );
+    ];
     $this->lookup_keys[] = 'uuid';
   }
 

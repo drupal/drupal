@@ -40,25 +40,25 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.responsive_image':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Responsive Image module provides an image formatter that allows browsers to select which image file to display based on media queries or which image file types the browser supports, using the HTML 5 picture and source elements and/or the sizes, srcset and type attributes. For more information, see the <a href=":responsive_image">online documentation for the Responsive Image module</a>.', array( ':responsive_image' => 'https://www.drupal.org/documentation/modules/responsive_image')) . '</p>';
+      $output .= '<p>' . t('The Responsive Image module provides an image formatter that allows browsers to select which image file to display based on media queries or which image file types the browser supports, using the HTML 5 picture and source elements and/or the sizes, srcset and type attributes. For more information, see the <a href=":responsive_image">online documentation for the Responsive Image module</a>.', [ ':responsive_image' => 'https://www.drupal.org/documentation/modules/responsive_image']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Defining responsive image styles') . '</dt>';
-      $output .= '<dd>' . t('By creating responsive image styles you define which options the browser has in selecting which image file to display. In most cases this means providing different image sizes based on the viewport size. On the <a href=":responsive_image_style">Responsive image styles</a> page, click <em>Add responsive image style</em> to create a new style. First choose a label, a fallback image style and a breakpoint group and click Save.', array(':responsive_image_style' => \Drupal::url('entity.responsive_image_style.collection'))) . '</dd>';
+      $output .= '<dd>' . t('By creating responsive image styles you define which options the browser has in selecting which image file to display. In most cases this means providing different image sizes based on the viewport size. On the <a href=":responsive_image_style">Responsive image styles</a> page, click <em>Add responsive image style</em> to create a new style. First choose a label, a fallback image style and a breakpoint group and click Save.', [':responsive_image_style' => \Drupal::url('entity.responsive_image_style.collection')]) . '</dd>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Fallback image style') . '</dt>';
       $output .= '<dd>' . t('The fallback image style is typically the smallest size image you expect to appear in this space. Because the responsive images module uses the Picturefill library so that responsive images can work in older browsers, the fallback image should only appear on a site if an error occurs.') . '</dd>';
       $output .= '<dt>' . t('Breakpoint groups: viewport sizing vs art direction') . '</dt>';
-      $output .= '<dd>' . t('The breakpoint group typically only needs a single breakpoint with an empty media query in order to do <em>viewport sizing.</em> Multiple breakpoints are used for changing the crop or aspect ratio of images at different viewport sizes, which is often referred to as <em>art direction.</em> Once you select a breakpoint group, you can choose which breakpoints to use for the responsive image style. By default, the option <em>do not use this breakpoint</em> is selected for each breakpoint. See the <a href=":breakpoint_help">help page of the Breakpoint module</a> for more information.', array(':breakpoint_help' => \Drupal::url('help.page', array('name' => 'breakpoint')))) . '</dd>';
+      $output .= '<dd>' . t('The breakpoint group typically only needs a single breakpoint with an empty media query in order to do <em>viewport sizing.</em> Multiple breakpoints are used for changing the crop or aspect ratio of images at different viewport sizes, which is often referred to as <em>art direction.</em> Once you select a breakpoint group, you can choose which breakpoints to use for the responsive image style. By default, the option <em>do not use this breakpoint</em> is selected for each breakpoint. See the <a href=":breakpoint_help">help page of the Breakpoint module</a> for more information.', [':breakpoint_help' => \Drupal::url('help.page', ['name' => 'breakpoint'])]) . '</dd>';
       $output .= '<dt>' . t('Breakpoint settings: sizes vs image styles') . '</dt>';
       $output .= '<dd>' . t('While you have the option to provide only one image style per breakpoint, the sizes option allows you to provide more options to browsers as to which image file it can display, even when using multiple breakpoints for art direction. Breakpoints are defined in the configuration files of the theme.') . '</dd>';
       $output .= '<dt>' . t('Sizes field') . '</dt>';
       $output .= '<dd>' . t('Once the sizes option is selected, you can let the browser know the size of this image in relation to the site layout, using the <em>Sizes</em> field. For a hero image that always fills the entire screen, you could simply enter 100vw, which means 100% of the viewport width. For an image that fills 90% of the screen for small viewports, but only fills 40% of the screen when the viewport is larger than 40em (typically 640px), you could enter "(min-width: 40em) 40vw, 90vw" in the Sizes field. The last item in the comma-separated list is the smallest viewport size: other items in the comma-separated list should have a media condition paired with an image width. <em>Media conditions</em> are similar to a media query, often a min-width paired with a viewport width using em or px units: e.g. (min-width: 640px) or (min-width: 40em). This is paired with the <em>image width</em> at that viewport size using px, em or vw units. The vw unit is viewport width and is used instead of a percentage because the percentage always refers to the width of the entire viewport.') . '</dd>';
       $output .= '<dt>' . t('Image styles for sizes') . '</dt>';
-      $output .= '<dd>' . t('Below the Sizes field you can choose multiple image styles so the browser can choose the best image file size to fill the space defined in the Sizes field. Typically you will want to use image styles that resize your image to have options that range from the smallest px width possible for the space the image will appear in to the largest px width possible, with a variety of widths in between. You may want to provide image styles with widths that are 1.5x to 2x the space available in the layout to account for high resolution screens. Image styles can be defined on the <a href=":image_styles">Image styles page</a> that is provided by the <a href=":image_help">Image module</a>.', array(':image_styles' => \Drupal::url('entity.image_style.collection'), ':image_help' => \Drupal::url('help.page', array('name' => 'image')))) . '</dd>';
+      $output .= '<dd>' . t('Below the Sizes field you can choose multiple image styles so the browser can choose the best image file size to fill the space defined in the Sizes field. Typically you will want to use image styles that resize your image to have options that range from the smallest px width possible for the space the image will appear in to the largest px width possible, with a variety of widths in between. You may want to provide image styles with widths that are 1.5x to 2x the space available in the layout to account for high resolution screens. Image styles can be defined on the <a href=":image_styles">Image styles page</a> that is provided by the <a href=":image_help">Image module</a>.', [':image_styles' => \Drupal::url('entity.image_style.collection'), ':image_help' => \Drupal::url('help.page', ['name' => 'image'])]) . '</dd>';
       $output .= '</dl></dd>';
       $output .= '<dt>' . t('Using responsive image styles in Image fields') . '</dt>';
-      $output .= '<dd>' . t('After defining responsive image styles, you can use them in the display settings for your Image fields, so that the site displays responsive images using the HTML5 picture tag. Open the Manage display page for the entity type (content type, taxonomy vocabulary, etc.) that the Image field is attached to. Choose the format <em>Responsive image</em>, click the Edit icon, and select one of the responsive image styles that you have created. For general information on how to manage fields and their display see the <a href=":field_ui">Field UI module help page</a>. For background information about entities and fields see the <a href=":field_help">Field module help page</a>.', array(':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? \Drupal::url('help.page', array('name' => 'field_ui')) : '#', ':field_help' => \Drupal::url('help.page', array('name' => 'field')))) . '</dd>';
+      $output .= '<dd>' . t('After defining responsive image styles, you can use them in the display settings for your Image fields, so that the site displays responsive images using the HTML5 picture tag. Open the Manage display page for the entity type (content type, taxonomy vocabulary, etc.) that the Image field is attached to. Choose the format <em>Responsive image</em>, click the Edit icon, and select one of the responsive image styles that you have created. For general information on how to manage fields and their display see the <a href=":field_ui">Field UI module help page</a>. For background information about entities and fields see the <a href=":field_help">Field module help page</a>.', [':field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? \Drupal::url('help.page', ['name' => 'field_ui']) : '#', ':field_help' => \Drupal::url('help.page', ['name' => 'field'])]) . '</dd>';
       $output .= '</dl>';
       return $output;
 
@@ -71,25 +71,25 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_theme().
  */
 function responsive_image_theme() {
-  return array(
-    'responsive_image' => array(
-      'variables' => array(
+  return [
+    'responsive_image' => [
+      'variables' => [
         'uri' => NULL,
-        'attributes' => array(),
-        'responsive_image_style_id' => array(),
+        'attributes' => [],
+        'responsive_image_style_id' => [],
         'height' => NULL,
         'width' => NULL,
-      ),
-    ),
-    'responsive_image_formatter' => array(
-      'variables' => array(
+      ],
+    ],
+    'responsive_image_formatter' => [
+      'variables' => [
         'item' => NULL,
         'item_attributes' => NULL,
         'url' => NULL,
         'responsive_image_style_id' => NULL,
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 }
 
 /**
@@ -110,18 +110,18 @@ function template_preprocess_responsive_image_formatter(&$variables) {
   // provided in the responsive image formatter.
   $responsive_image_style = ResponsiveImageStyle::load($variables['responsive_image_style_id']);
   if ($responsive_image_style) {
-    $variables['responsive_image'] = array(
+    $variables['responsive_image'] = [
       '#type' => 'responsive_image',
       '#responsive_image_style_id' => $variables['responsive_image_style_id'],
-    );
+    ];
   }
   else {
-    $variables['responsive_image'] = array(
+    $variables['responsive_image'] = [
       '#theme' => 'image',
-    );
+    ];
   }
   $item = $variables['item'];
-  $attributes = array();
+  $attributes = [];
   // Do not output an empty 'title' attribute.
   if (Unicode::strlen($item->title) != 0) {
     $attributes['title'] = $item->title;
@@ -138,7 +138,7 @@ function template_preprocess_responsive_image_formatter(&$variables) {
     $variables['responsive_image']['#uri'] = $item->uri;
   }
 
-  foreach (array('width', 'height') as $key) {
+  foreach (['width', 'height'] as $key) {
     $variables['responsive_image']["#$key"] = $item->$key;
   }
   $variables['responsive_image']['#attributes'] = $attributes;
@@ -201,10 +201,10 @@ function template_preprocess_responsive_image(&$variables) {
         $variables['attributes'][$attribute] = $value;
       }
     }
-    $variables['img_element'] = array(
+    $variables['img_element'] = [
       '#theme' => 'image',
       '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
-    );
+    ];
   }
   else {
     $variables['output_image_tag'] = FALSE;
@@ -212,10 +212,10 @@ function template_preprocess_responsive_image(&$variables) {
     // double downloads in browsers that don't support the picture tag (might,
     // because when picturefill kicks in, it cancels the download and triggers
     // the download for the correct image).
-    $variables['img_element'] = array(
+    $variables['img_element'] = [
       '#theme' => 'image',
       '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
-    );
+    ];
   }
 
   if (isset($variables['attributes'])) {
@@ -405,9 +405,9 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
     $height = $variables['height'];
   }
   $extension = pathinfo($variables['uri'], PATHINFO_EXTENSION);
-  $sizes = array();
-  $srcset = array();
-  $derivative_mime_types = array();
+  $sizes = [];
+  $srcset = [];
+  $derivative_mime_types = [];
   foreach ($multipliers as $multiplier => $image_style_mapping) {
     switch ($image_style_mapping['image_mapping_type']) {
       // Create a <source> tag with the 'sizes' attribute.
@@ -415,7 +415,7 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
         // Loop through the image styles for this breakpoint and multiplier.
         foreach ($image_style_mapping['image_mapping']['sizes_image_styles'] as $image_style_name) {
           // Get the dimensions.
-          $dimensions = responsive_image_get_image_dimensions($image_style_name, array('width' => $width, 'height' => $height), $variables['uri']);
+          $dimensions = responsive_image_get_image_dimensions($image_style_name, ['width' => $width, 'height' => $height], $variables['uri']);
           // Get MIME type.
           $derivative_mime_type = responsive_image_get_mime_type($image_style_name, $extension);
           $derivative_mime_types[] = $derivative_mime_type;
@@ -451,9 +451,9 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
   }
   // Sort the srcset from small to large image width or multiplier.
   ksort($srcset);
-  $source_attributes = new Attribute(array(
+  $source_attributes = new Attribute([
     'srcset' => implode(', ', array_unique($srcset)),
-  ));
+  ]);
   $media_query = trim($breakpoint->getMediaQuery());
   if (!empty($media_query)) {
     $source_attributes->setAttribute('media', $media_query);
@@ -486,10 +486,10 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
 function responsive_image_get_image_dimensions($image_style_name, array $dimensions, $uri) {
   // Determine the dimensions of the styled image.
   if ($image_style_name == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
-    $dimensions = array(
+    $dimensions = [
       'width' => 1,
       'height' => 1,
-    );
+    ];
   }
   elseif ($entity = ImageStyle::load($image_style_name)) {
     $entity->transformDimensions($dimensions, $uri);

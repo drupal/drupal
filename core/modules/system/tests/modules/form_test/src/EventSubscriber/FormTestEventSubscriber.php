@@ -39,8 +39,8 @@ class FormTestEventSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = array('onKernelRequest');
-    $events[KernelEvents::RESPONSE][] = array('onKernelResponse');
+    $events[KernelEvents::REQUEST][] = ['onKernelRequest'];
+    $events[KernelEvents::RESPONSE][] = ['onKernelResponse'];
     return $events;
   }
 

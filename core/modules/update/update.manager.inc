@@ -48,11 +48,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 function update_manager_download_batch_finished($success, $results) {
   if (!empty($results['errors'])) {
-    $item_list = array(
+    $item_list = [
       '#theme' => 'item_list',
       '#title' => t('Downloading updates failed:'),
       '#items' => $results['errors'],
-    );
+    ];
     drupal_set_message(drupal_render($item_list), 'error');
   }
   elseif ($success) {
@@ -91,23 +91,23 @@ function _update_manager_check_backends(&$form, $operation) {
   }
 
   // Otherwise, show the available backends.
-  $form['available_backends'] = array(
+  $form['available_backends'] = [
     '#prefix' => '<p>',
     '#suffix' => '</p>',
-  );
+  ];
 
   $available_backends = drupal_get_filetransfer_info();
   if (empty($available_backends)) {
     if ($operation == 'update') {
-      $form['available_backends']['#markup'] = t('Your server does not support updating modules and themes from this interface. Instead, update modules and themes by uploading the new versions directly to the server, as described in the <a href=":handbook_url">handbook</a>.', array(':handbook_url' => 'https://www.drupal.org/getting-started/install-contrib'));
+      $form['available_backends']['#markup'] = t('Your server does not support updating modules and themes from this interface. Instead, update modules and themes by uploading the new versions directly to the server, as described in the <a href=":handbook_url">handbook</a>.', [':handbook_url' => 'https://www.drupal.org/getting-started/install-contrib']);
     }
     else {
-      $form['available_backends']['#markup'] = t('Your server does not support installing modules and themes from this interface. Instead, install modules and themes by uploading them directly to the server, as described in the <a href=":handbook_url">handbook</a>.', array(':handbook_url' => 'https://www.drupal.org/getting-started/install-contrib'));
+      $form['available_backends']['#markup'] = t('Your server does not support installing modules and themes from this interface. Instead, install modules and themes by uploading them directly to the server, as described in the <a href=":handbook_url">handbook</a>.', [':handbook_url' => 'https://www.drupal.org/getting-started/install-contrib']);
     }
     return FALSE;
   }
 
-  $backend_names = array();
+  $backend_names = [];
   foreach ($available_backends as $backend) {
     $backend_names[] = $backend['title'];
   }
@@ -116,20 +116,20 @@ function _update_manager_check_backends(&$form, $operation) {
       count($available_backends),
       'Updating modules and themes requires <strong>@backends access</strong> to your server. See the <a href=":handbook_url">handbook</a> for other update methods.',
       'Updating modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See the <a href=":handbook_url">handbook</a> for other update methods.',
-      array(
+      [
         '@backends' => implode(', ', $backend_names),
         ':handbook_url' => 'https://www.drupal.org/getting-started/install-contrib',
-      ));
+      ]);
   }
   else {
     $form['available_backends']['#markup'] = \Drupal::translation()->formatPlural(
       count($available_backends),
       'Installing modules and themes requires <strong>@backends access</strong> to your server. See the <a href=":handbook_url">handbook</a> for other installation methods.',
       'Installing modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See the <a href=":handbook_url">handbook</a> for other installation methods.',
-      array(
+      [
         '@backends' => implode(', ', $backend_names),
         ':handbook_url' => 'https://www.drupal.org/getting-started/install-contrib',
-      ));
+      ]);
   }
   return TRUE;
 }
@@ -150,7 +150,7 @@ function _update_manager_check_backends(&$form, $operation) {
 function update_manager_archive_extract($file, $directory) {
   $archiver = archiver_get_archiver($file);
   if (!$archiver) {
-    throw new Exception(t('Cannot extract %file, not a valid archive.', array ('%file' => $file)));
+    throw new Exception(t('Cannot extract %file, not a valid archive.',  ['%file' => $file]));
   }
 
   // Remove the directory if it exists, otherwise it might contain a mixture of
@@ -189,7 +189,7 @@ function update_manager_archive_extract($file, $directory) {
  *   are no errors, it will be an empty array.
  */
 function update_manager_archive_verify($project, $archive_file, $directory) {
-  return \Drupal::moduleHandler()->invokeAll('verify_update_archive', array($project, $archive_file, $directory));
+  return \Drupal::moduleHandler()->invokeAll('verify_update_archive', [$project, $archive_file, $directory]);
 }
 
 /**
@@ -205,7 +205,7 @@ function update_manager_archive_verify($project, $archive_file, $directory) {
  */
 function update_manager_file_get($url) {
   $parsed_url = parse_url($url);
-  $remote_schemes = array('http', 'https', 'ftp', 'ftps', 'smb', 'nfs');
+  $remote_schemes = ['http', 'https', 'ftp', 'ftps', 'smb', 'nfs'];
   if (!isset($parsed_url['scheme']) || !in_array($parsed_url['scheme'], $remote_schemes)) {
     // This is a local file, just return the path.
     return drupal_realpath($url);
@@ -245,14 +245,14 @@ function update_manager_batch_project_get($project, $url, &$context) {
   // This is here to show the user that we are in the process of downloading.
   if (!isset($context['sandbox']['started'])) {
     $context['sandbox']['started'] = TRUE;
-    $context['message'] = t('Downloading %project', array('%project' => $project));
+    $context['message'] = t('Downloading %project', ['%project' => $project]);
     $context['finished'] = 0;
     return;
   }
 
   // Actually try to download the file.
   if (!($local_cache = update_manager_file_get($url))) {
-    $context['results']['errors'][$project] = t('Failed to download %project from %url', array('%project' => $project, '%url' => $url));
+    $context['results']['errors'][$project] = t('Failed to download %project from %url', ['%project' => $project, '%url' => $url]);
     return;
   }
 

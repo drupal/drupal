@@ -38,11 +38,11 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
 
     $this->secret = $this->randomMachineName();
 
-    $this->settings = array(
+    $this->settings = [
       'directory' => $this->directory,
       'bin' => 'test',
       'secret' => $this->secret,
-    );
+    ];
   }
 
   /**
@@ -90,7 +90,7 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
 
     // Ensure the root directory for the bin has a .htaccess file denying web
     // access.
-    $this->assertSame(file_get_contents($expected_root_directory . '/.htaccess'), call_user_func(array($this->storageClass, 'htaccessLines')));
+    $this->assertSame(file_get_contents($expected_root_directory . '/.htaccess'), call_user_func([$this->storageClass, 'htaccessLines']));
 
     // Ensure that if the file is replaced with an untrusted one (due to another
     // script's file upload vulnerability), it does not get loaded. Since mtime

@@ -18,7 +18,7 @@ class TestObjectItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('field_test');
+  public static $modules = ['field_test'];
 
   /**
    * {@inheritdoc}
@@ -27,11 +27,11 @@ class TestObjectItemTest extends FieldKernelTestBase {
     parent::setUp();
 
     // Create a 'test_field' field and storage for validation.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => 'field_test',
       'entity_type' => 'entity_test',
       'type' => 'test_object_field',
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_test',

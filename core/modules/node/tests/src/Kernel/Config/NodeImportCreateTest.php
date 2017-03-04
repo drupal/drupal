@@ -18,7 +18,7 @@ class NodeImportCreateTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field', 'text', 'system', 'user');
+  public static $modules = ['node', 'field', 'text', 'system', 'user'];
 
   /**
    * Set the default field storage backend for fields created during tests.
@@ -28,7 +28,7 @@ class NodeImportCreateTest extends KernelTestBase {
     $this->installEntitySchema('user');
 
     // Set default storage backend.
-    $this->installConfig(array('field'));
+    $this->installConfig(['field']);
   }
 
   /**
@@ -42,7 +42,7 @@ class NodeImportCreateTest extends KernelTestBase {
 
     // Enable node_test_config module and check that the content type
     // shipped in the module's default config is created.
-    $this->container->get('module_installer')->install(array('node_test_config'));
+    $this->container->get('module_installer')->install(['node_test_config']);
     $node_type = NodeType::load($node_type_id);
     $this->assertTrue($node_type, 'The default content type was created.');
   }

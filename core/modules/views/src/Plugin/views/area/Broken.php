@@ -19,7 +19,7 @@ class Broken extends AreaPluginBase {
    */
   public function render($empty = FALSE) {
     // Simply render nothing by returning an empty render array.
-    return array();
+    return [];
   }
 
 }

@@ -49,7 +49,7 @@ class AccessTest extends KernelTestBase {
 
     $this->installEntitySchema('file');
     $this->installEntitySchema('user');
-    $this->installSchema('file', array('file_usage'));
+    $this->installSchema('file', ['file_usage']);
     $this->installSchema('system', 'sequences');
 
     $this->user1 = User::create([
@@ -64,11 +64,11 @@ class AccessTest extends KernelTestBase {
     ]);
     $this->user2->save();
 
-    $this->file = File::create(array(
+    $this->file = File::create([
       'uid' => $this->user1->id(),
       'filename' => 'druplicon.txt',
       'filemime' => 'text/plain',
-    ));
+    ]);
   }
 
   /**

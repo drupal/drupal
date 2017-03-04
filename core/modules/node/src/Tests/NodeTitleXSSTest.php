@@ -16,18 +16,18 @@ class NodeTitleXSSTest extends NodeTestBase {
    */
   function testNodeTitleXSS() {
     // Prepare a user to do the stuff.
-    $web_user = $this->drupalCreateUser(array('create page content', 'edit any page content'));
+    $web_user = $this->drupalCreateUser(['create page content', 'edit any page content']);
     $this->drupalLogin($web_user);
 
     $xss = '<script>alert("xss")</script>';
     $title = $xss . $this->randomMachineName();
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $title;
 
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
     $this->assertNoRaw($xss, 'Harmful tags are escaped when previewing a node.');
 
-    $settings = array('title' => $title);
+    $settings = ['title' => $title];
     $node = $this->drupalCreateNode($settings);
 
     $this->drupalGet('node/' . $node->id());

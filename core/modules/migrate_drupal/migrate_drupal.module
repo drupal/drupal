@@ -20,7 +20,7 @@ function migrate_drupal_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.migrate_drupal':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Migrate Drupal module provides a framework based on the <a href=":migrate">Migrate module</a> to facilitate migration from a Drupal (6, 7, or 8) site to your website. It does not provide a user interface. For more information, see the <a href=":migrate_drupal">online documentation for the Migrate Drupal module</a>.', array(':migrate' => \Drupal::url('help.page', array('name' => 'migrate')), ':migrate_drupal' => 'https://www.drupal.org/documentation/modules/migrate_drupal')) . '</p>';
+      $output .= '<p>' . t('The Migrate Drupal module provides a framework based on the <a href=":migrate">Migrate module</a> to facilitate migration from a Drupal (6, 7, or 8) site to your website. It does not provide a user interface. For more information, see the <a href=":migrate_drupal">online documentation for the Migrate Drupal module</a>.', [':migrate' => \Drupal::url('help.page', ['name' => 'migrate']), ':migrate_drupal' => 'https://www.drupal.org/documentation/modules/migrate_drupal']) . '</p>';
       return $output;
   }
 }

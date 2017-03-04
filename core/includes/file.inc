@@ -367,7 +367,7 @@ function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALS
     return drupal_chmod($htaccess_path, 0444);
   }
   else {
-    $variables = array('%directory' => $directory, '@htaccess' => $htaccess_lines);
+    $variables = ['%directory' => $directory, '@htaccess' => $htaccess_lines];
     \Drupal::logger('security')->error("Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <pre><code>@htaccess</code></pre>", $variables);
     return FALSE;
   }
@@ -456,7 +456,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   $real_destination = drupal_realpath($destination) ?: $destination;
   // Perform the copy operation.
   if (!@copy($real_source, $real_destination)) {
-    \Drupal::logger('file')->error('The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination));
+    \Drupal::logger('file')->error('The specified file %file could not be copied to %destination.', ['%file' => $source, '%destination' => $destination]);
     return FALSE;
   }
   // Set the permissions on the new file.
@@ -501,12 +501,12 @@ function file_unmanaged_prepare($source, &$destination = NULL, $replace = FILE_E
   // Assert that the source file actually exists.
   if (!file_exists($source)) {
     // @todo Replace drupal_set_message() calls with exceptions instead.
-    drupal_set_message(t('The specified file %file could not be moved/copied because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $original_source)), 'error');
+    drupal_set_message(t('The specified file %file could not be moved/copied because no file by that name exists. Please check that you supplied the correct filename.', ['%file' => $original_source]), 'error');
     if (($realpath = drupal_realpath($original_source)) !== FALSE) {
-      $logger->notice('File %file (%realpath) could not be moved/copied because it does not exist.', array('%file' => $original_source, '%realpath' => $realpath));
+      $logger->notice('File %file (%realpath) could not be moved/copied because it does not exist.', ['%file' => $original_source, '%realpath' => $realpath]);
     }
     else {
-      $logger->notice('File %file could not be moved/copied because it does not exist.', array('%file' => $original_source));
+      $logger->notice('File %file could not be moved/copied because it does not exist.', ['%file' => $original_source]);
     }
     return FALSE;
   }
@@ -527,8 +527,8 @@ function file_unmanaged_prepare($source, &$destination = NULL, $replace = FILE_E
     $dirname = drupal_dirname($destination);
     if (!file_prepare_directory($dirname)) {
       // The destination is not valid.
-      $logger->notice('File %file could not be moved/copied because the destination directory %destination is not configured correctly.', array('%file' => $original_source, '%destination' => $dirname));
-      drupal_set_message(t('The specified file %file could not be moved/copied because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions. More information is available in the system log.', array('%file' => $original_source)), 'error');
+      $logger->notice('File %file could not be moved/copied because the destination directory %destination is not configured correctly.', ['%file' => $original_source, '%destination' => $dirname]);
+      drupal_set_message(t('The specified file %file could not be moved/copied because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions. More information is available in the system log.', ['%file' => $original_source]), 'error');
       return FALSE;
     }
   }
@@ -536,8 +536,8 @@ function file_unmanaged_prepare($source, &$destination = NULL, $replace = FILE_E
   // Determine whether we can perform this operation based on overwrite rules.
   $destination = file_destination($destination, $replace);
   if ($destination === FALSE) {
-    drupal_set_message(t('The file %file could not be moved/copied because a file by that name already exists in the destination directory.', array('%file' => $original_source)), 'error');
-    $logger->notice('File %file could not be moved/copied because a file by that name already exists in the destination directory (%destination)', array('%file' => $original_source, '%destination' => $destination));
+    drupal_set_message(t('The file %file could not be moved/copied because a file by that name already exists in the destination directory.', ['%file' => $original_source]), 'error');
+    $logger->notice('File %file could not be moved/copied because a file by that name already exists in the destination directory (%destination)', ['%file' => $original_source, '%destination' => $destination]);
     return FALSE;
   }
 
@@ -545,8 +545,8 @@ function file_unmanaged_prepare($source, &$destination = NULL, $replace = FILE_E
   $real_source = drupal_realpath($source);
   $real_destination = drupal_realpath($destination);
   if ($source == $destination || ($real_source !== FALSE) && ($real_source == $real_destination)) {
-    drupal_set_message(t('The specified file %file was not moved/copied because it would overwrite itself.', array('%file' => $source)), 'error');
-    $logger->notice('File %file could not be moved/copied because it would overwrite itself.', array('%file' => $source));
+    drupal_set_message(t('The specified file %file was not moved/copied because it would overwrite itself.', ['%file' => $source]), 'error');
+    $logger->notice('File %file could not be moved/copied because it would overwrite itself.', ['%file' => $source]);
     return FALSE;
   }
   // Make sure the .htaccess files are present.
@@ -652,7 +652,7 @@ function file_unmanaged_move($source, $destination = NULL, $replace = FILE_EXIST
     // implemented. It's not necessary to use drupal_unlink() as the Windows
     // issue has already been resolved above.
     if (!@copy($real_source, $real_destination) || !@unlink($real_source)) {
-      \Drupal::logger('file')->error('The specified file %file could not be moved to %destination.', array('%file' => $source, '%destination' => $destination));
+      \Drupal::logger('file')->error('The specified file %file could not be moved to %destination.', ['%file' => $source, '%destination' => $destination]);
       return FALSE;
     }
   }
@@ -721,7 +721,7 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
     $filename = $new_filename . '.' . $final_extension;
 
     if ($alerts && $original != $filename) {
-      drupal_set_message(t('For security reasons, your upload has been renamed to %filename.', array('%filename' => $filename)));
+      drupal_set_message(t('For security reasons, your upload has been renamed to %filename.', ['%filename' => $filename]));
     }
   }
 
@@ -762,7 +762,7 @@ function file_create_filename($basename, $directory) {
   $basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
   if (substr(PHP_OS, 0, 3) == 'WIN') {
     // These characters are not allowed in Windows filenames
-    $basename = str_replace(array(':', '*', '?', '"', '<', '>', '|'), '_', $basename);
+    $basename = str_replace([':', '*', '?', '"', '<', '>', '|'], '_', $basename);
   }
 
   // A URI or path may already have a trailing slash or look like "public://".
@@ -810,7 +810,7 @@ function file_create_filename($basename, $directory) {
  * @see \Drupal\file\FileUsage\FileUsageBase::delete()
  */
 function file_delete($fid) {
-  return file_delete_multiple(array($fid));
+  return file_delete_multiple([$fid]);
 }
 
 /**
@@ -852,18 +852,18 @@ function file_unmanaged_delete($path) {
   }
   $logger = \Drupal::logger('file');
   if (is_dir($path)) {
-    $logger->error('%path is a directory and cannot be removed using file_unmanaged_delete().', array('%path' => $path));
+    $logger->error('%path is a directory and cannot be removed using file_unmanaged_delete().', ['%path' => $path]);
     return FALSE;
   }
   // Return TRUE for non-existent file, but log that nothing was actually
   // deleted, as the current state is the intended result.
   if (!file_exists($path)) {
-    $logger->notice('The file %path was not deleted because it does not exist.', array('%path' => $path));
+    $logger->notice('The file %path was not deleted because it does not exist.', ['%path' => $path]);
     return TRUE;
   }
   // We cannot handle anything other than files and directories. Log an error
   // for everything else (sockets, symbolic links, etc).
-  $logger->error('The file %path is not of a recognized type so it was not deleted.', array('%path' => $path));
+  $logger->error('The file %path is not of a recognized type so it was not deleted.', ['%path' => $path]);
   return FALSE;
 }
 
@@ -999,14 +999,14 @@ function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EX
  *   An associative array (keyed on the chosen key) of objects with 'uri',
  *   'filename', and 'name' properties corresponding to the matched files.
  */
-function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
+function file_scan_directory($dir, $mask, $options = [], $depth = 0) {
   // Merge in defaults.
-  $options += array(
+  $options += [
     'callback' => 0,
     'recurse' => TRUE,
     'key' => 'uri',
     'min_depth' => 0,
-  );
+  ];
   // Normalize $dir only once.
   if ($depth == 0) {
     $dir = file_stream_wrapper_uri_normalize($dir);
@@ -1025,8 +1025,8 @@ function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
     $default_nomask = '/^' . implode('|', $ignore_directories) . '$/';
   }
 
-  $options['key'] = in_array($options['key'], array('uri', 'filename', 'name')) ? $options['key'] : 'uri';
-  $files = array();
+  $options['key'] = in_array($options['key'], ['uri', 'filename', 'name']) ? $options['key'] : 'uri';
+  $files = [];
   // Avoid warnings when opendir does not have the permissions to open a
   // directory.
   if (is_dir($dir)) {
@@ -1067,7 +1067,7 @@ function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
       closedir($handle);
     }
     else {
-      \Drupal::logger('file')->error('@dir can not be opened', array('@dir' => $dir));
+      \Drupal::logger('file')->error('@dir can not be opened', ['@dir' => $dir]);
     }
   }
 

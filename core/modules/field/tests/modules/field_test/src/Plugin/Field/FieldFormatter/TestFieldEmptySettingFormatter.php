@@ -24,22 +24,22 @@ class TestFieldEmptySettingFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'field_empty_setting' => '',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element['field_empty_setting'] = array(
+    $element['field_empty_setting'] = [
       '#title' => t('Setting'),
       '#type' => 'textfield',
       '#size' => 20,
       '#default_value' => $this->getSetting('field_empty_setting'),
       '#required' => TRUE,
-    );
+    ];
     return $element;
   }
 
@@ -47,7 +47,7 @@ class TestFieldEmptySettingFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = [];
     $setting = $this->getSetting('field_empty_setting');
     if (!empty($setting)) {
       $summary[] = t('Default empty setting now has a value.');
@@ -59,11 +59,11 @@ class TestFieldEmptySettingFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     if (!empty($items)) {
       foreach ($items as $delta => $item) {
-        $elements[$delta] = array('#markup' => $this->getSetting('field_empty_setting'));
+        $elements[$delta] = ['#markup' => $this->getSetting('field_empty_setting')];
       }
     }
 

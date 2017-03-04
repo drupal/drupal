@@ -22,7 +22,7 @@ class HandlerAllTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'aggregator',
     'book',
     'block',
@@ -40,13 +40,13 @@ class HandlerAllTest extends HandlerTestBase {
     'statistics',
     'taxonomy',
     'user',
-  );
+  ];
 
   /**
    * Tests most of the handlers.
    */
   public function testHandlers() {
-    $this->drupalCreateContentType(array('type' => 'article'));
+    $this->drupalCreateContentType(['type' => 'article']);
     $this->addDefaultCommentField('node', 'article');
 
     $object_types = array_keys(ViewExecutable::getHandlerTypes());
@@ -55,7 +55,7 @@ class HandlerAllTest extends HandlerTestBase {
         continue;
       }
 
-      $view = View::create(array('base_table' => $base_table));
+      $view = View::create(['base_table' => $base_table]);
       $view = $view->getExecutable();
 
       // @todo The groupwise relationship is currently broken.
@@ -66,18 +66,18 @@ class HandlerAllTest extends HandlerTestBase {
       foreach ($info as $field => $field_info) {
         // Table is a reserved key for the metainformation.
         if ($field != 'table' && !in_array("$base_table:$field", $exclude)) {
-          $item = array(
+          $item = [
             'table' => $base_table,
             'field' => $field,
-          );
+          ];
           foreach ($object_types as $type) {
             if (isset($field_info[$type]['id'])) {
-              $options = array();
+              $options = [];
               if ($type == 'filter') {
                 $handler = $this->container->get("plugin.manager.views.$type")->getHandler($item);
                 // Set the value to use for the filter based on the filter type.
                 if ($handler instanceof InOperator) {
-                  $options['value'] = array(1);
+                  $options['value'] = [1];
                 }
                 else {
                   $options['value'] = 1;
@@ -102,10 +102,10 @@ class HandlerAllTest extends HandlerTestBase {
           foreach ($view->{$type} as $handler) {
             $this->assertTrue($handler instanceof HandlerBase, format_string(
               '@type handler of class %class is an instance of HandlerBase',
-              array(
+              [
                 '@type' => $type,
                 '%class' => get_class($handler),
-              )));
+              ]));
           }
         }
       }

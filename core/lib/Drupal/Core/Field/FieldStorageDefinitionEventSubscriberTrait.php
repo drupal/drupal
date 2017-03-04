@@ -22,7 +22,7 @@ trait FieldStorageDefinitionEventSubscriberTrait {
    * @see \Symfony\Component\EventDispatcher\EventSubscriberInterface::getSubscribedEvents()
    */
   public static function getFieldStorageDefinitionEvents() {
-    $event = array('onFieldStorageDefinitionEvent', 100);
+    $event = ['onFieldStorageDefinitionEvent', 100];
     $events[FieldStorageDefinitionEvents::CREATE][] = $event;
     $events[FieldStorageDefinitionEvents::UPDATE][] = $event;
     $events[FieldStorageDefinitionEvents::DELETE][] = $event;

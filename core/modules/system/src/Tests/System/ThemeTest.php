@@ -30,9 +30,9 @@ class ThemeTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
-    $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer themes', 'bypass node access', 'administer blocks'));
+    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'view the administration theme', 'administer themes', 'bypass node access', 'administer blocks']);
     $this->drupalLogin($this->adminUser);
     $this->node = $this->drupalCreateNode();
     $this->drupalPlaceBlock('local_tasks_block');
@@ -53,50 +53,50 @@ class ThemeTest extends WebTestBase {
 
     // Specify a filesystem path to be used for the logo.
     $file = current($this->drupalGetTestFiles('image'));
-    $file_relative = strtr($file->uri, array('public:/' => PublicStream::basePath()));
+    $file_relative = strtr($file->uri, ['public:/' => PublicStream::basePath()]);
     $default_theme_path = 'core/themes/classy';
 
-    $supported_paths = array(
+    $supported_paths = [
       // Raw stream wrapper URI.
-      $file->uri => array(
+      $file->uri => [
         'form' => file_uri_target($file->uri),
         'src' => file_url_transform_relative(file_create_url($file->uri)),
-      ),
+      ],
       // Relative path within the public filesystem.
-      file_uri_target($file->uri) => array(
+      file_uri_target($file->uri) => [
         'form' => file_uri_target($file->uri),
         'src' => file_url_transform_relative(file_create_url($file->uri)),
-      ),
+      ],
       // Relative path to a public file.
-      $file_relative => array(
+      $file_relative => [
         'form' => $file_relative,
         'src' => file_url_transform_relative(file_create_url($file->uri)),
-      ),
+      ],
       // Relative path to an arbitrary file.
-      'core/misc/druplicon.png' => array(
+      'core/misc/druplicon.png' => [
         'form' => 'core/misc/druplicon.png',
         'src' => base_path() . 'core/misc/druplicon.png',
-      ),
+      ],
       // Relative path to a file in a theme.
-      $default_theme_path . '/logo.svg' => array(
+      $default_theme_path . '/logo.svg' => [
         'form' => $default_theme_path . '/logo.svg',
         'src' => base_path() . $default_theme_path . '/logo.svg',
-      ),
-    );
+      ],
+    ];
     foreach ($supported_paths as $input => $expected) {
-      $edit = array(
+      $edit = [
         'default_logo' => FALSE,
         'logo_path' => $input,
-      );
+      ];
       $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
       $this->assertNoText('The custom logo path is invalid.');
       $this->assertFieldByName('logo_path', $expected['form']);
 
       // Verify logo path examples.
-      $elements = $this->xpath('//div[contains(@class, :item)]/div[@class=:description]/code', array(
+      $elements = $this->xpath('//div[contains(@class, :item)]/div[@class=:description]/code', [
         ':item' => 'js-form-item-logo-path',
         ':description' => 'description',
-      ));
+      ]);
       // Expected default values (if all else fails).
       $implicit_public_file = 'logo.svg';
       $explicit_file = 'public://logo.svg';
@@ -105,7 +105,7 @@ class ThemeTest extends WebTestBase {
       if (file_uri_scheme($input) == 'public') {
         $implicit_public_file = file_uri_target($input);
         $explicit_file = $input;
-        $local_file = strtr($input, array('public:/' => PublicStream::basePath()));
+        $local_file = strtr($input, ['public:/' => PublicStream::basePath()]);
       }
       // Adjust for fully qualified stream wrapper URI elsewhere.
       elseif (file_uri_scheme($input) !== FALSE) {
@@ -125,13 +125,13 @@ class ThemeTest extends WebTestBase {
       // branding block.
       $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
       $this->drupalGet('');
-      $elements = $this->xpath('//header//a[@rel=:rel]/img', array(
+      $elements = $this->xpath('//header//a[@rel=:rel]/img', [
           ':rel' => 'home',
-        )
+        ]
       );
       $this->assertEqual((string) $elements[0]['src'], $expected['src']);
     }
-    $unsupported_paths = array(
+    $unsupported_paths = [
       // Stream wrapper URI to non-existing file.
       'public://whatever.png',
       'private://whatever.png',
@@ -153,23 +153,23 @@ class ThemeTest extends WebTestBase {
       '/core/misc/whatever.png',
       // Absolute paths to any local file (even if it exists).
       drupal_realpath($file->uri),
-    );
+    ];
     $this->drupalGet('admin/appearance/settings');
     foreach ($unsupported_paths as $path) {
-      $edit = array(
+      $edit = [
         'default_logo' => FALSE,
         'logo_path' => $path,
-      );
+      ];
       $this->drupalPostForm(NULL, $edit, t('Save configuration'));
       $this->assertText('The custom logo path is invalid.');
     }
 
     // Upload a file to use for the logo.
-    $edit = array(
+    $edit = [
       'default_logo' => FALSE,
       'logo_path' => '',
       'files[logo_upload]' => drupal_realpath($file->uri),
-    );
+    ];
     $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
 
     $fields = $this->xpath($this->constructFieldXpath('name', 'logo_path'));
@@ -177,13 +177,13 @@ class ThemeTest extends WebTestBase {
 
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     $this->drupalGet('');
-    $elements = $this->xpath('//header//a[@rel=:rel]/img', array(
+    $elements = $this->xpath('//header//a[@rel=:rel]/img', [
         ':rel' => 'home',
-      )
+      ]
     );
     $this->assertEqual($elements[0]['src'], file_url_transform_relative(file_create_url($uploaded_filename)));
 
-    $this->container->get('theme_handler')->install(array('bartik'));
+    $this->container->get('theme_handler')->install(['bartik']);
 
     // Ensure only valid themes are listed in the local tasks.
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header']);
@@ -242,13 +242,13 @@ class ThemeTest extends WebTestBase {
    * Test the administration theme functionality.
    */
   function testAdministrationTheme() {
-    $this->container->get('theme_handler')->install(array('seven'));
+    $this->container->get('theme_handler')->install(['seven']);
 
     // Install an administration theme and show it on the node admin pages.
-    $edit = array(
+    $edit = [
       'admin_theme' => 'seven',
       'use_admin_theme' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin/config');
@@ -264,9 +264,9 @@ class ThemeTest extends WebTestBase {
     $this->assertRaw('core/themes/seven', 'Administration theme used on the edit content page.');
 
     // Disable the admin theme on the node admin pages.
-    $edit = array(
+    $edit = [
       'use_admin_theme' => FALSE,
-    );
+    ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin/config');
@@ -284,10 +284,10 @@ class ThemeTest extends WebTestBase {
     $this->assertRaw('core/themes/classy', 'Site default theme used on the add content page.');
 
     // Reset to the default theme settings.
-    $edit = array(
+    $edit = [
       'admin_theme' => '0',
       'use_admin_theme' => FALSE,
-    );
+    ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin');
@@ -304,11 +304,11 @@ class ThemeTest extends WebTestBase {
     /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
     $theme_handler = \Drupal::service('theme_handler');
     // First, install Stark and set it as the default theme programmatically.
-    $theme_handler->install(array('stark'));
+    $theme_handler->install(['stark']);
     $this->config('system.theme')->set('default', 'stark')->save();
 
     // Install Bartik and set it as the default theme.
-    $theme_handler->install(array('bartik'));
+    $theme_handler->install(['bartik']);
     $this->drupalGet('admin/appearance');
     $this->clickLink(t('Set as default'));
     $this->assertEqual($this->config('system.theme')->get('default'), 'bartik');
@@ -332,13 +332,13 @@ class ThemeTest extends WebTestBase {
    */
   function testInvalidTheme() {
     // theme_page_test_system_info_alter() un-hides all hidden themes.
-    $this->container->get('module_installer')->install(array('theme_page_test'));
+    $this->container->get('module_installer')->install(['theme_page_test']);
     // Clear the system_list() and theme listing cache to pick up the change.
     $this->container->get('theme_handler')->reset();
     $this->drupalGet('admin/appearance');
-    $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => 'not_real_test_basetheme')));
-    $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => 'test_invalid_basetheme')));
-    $this->assertText(t('This theme requires the theme engine @theme_engine to operate correctly.', array('@theme_engine' => 'not_real_engine')));
+    $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', ['@base_theme' => 'not_real_test_basetheme']));
+    $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', ['@base_theme' => 'test_invalid_basetheme']));
+    $this->assertText(t('This theme requires the theme engine @theme_engine to operate correctly.', ['@theme_engine' => 'not_real_engine']));
     // Check for the error text of a theme with the wrong core version.
     $this->assertText("This theme is not compatible with Drupal 8.x. Check that the .info.yml file contains the correct 'core' value.");
     // Check for the error text of a theme without a content region.
@@ -350,13 +350,13 @@ class ThemeTest extends WebTestBase {
    */
   function testUninstallingThemes() {
     // Install Bartik and set it as the default theme.
-    \Drupal::service('theme_handler')->install(array('bartik'));
+    \Drupal::service('theme_handler')->install(['bartik']);
     // Set up seven as the admin theme.
-    \Drupal::service('theme_handler')->install(array('seven'));
-    $edit = array(
+    \Drupal::service('theme_handler')->install(['seven']);
+    $edit = [
       'admin_theme' => 'seven',
       'use_admin_theme' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
     $this->drupalGet('admin/appearance');
     $this->clickLink(t('Set as default'));
@@ -370,12 +370,12 @@ class ThemeTest extends WebTestBase {
     $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
 
     // Install Stark and set it as the default theme.
-    \Drupal::service('theme_handler')->install(array('stark'));
+    \Drupal::service('theme_handler')->install(['stark']);
 
-    $edit = array(
+    $edit = [
       'admin_theme' => 'stark',
       'use_admin_theme' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
     // Check that seven can be uninstalled now.

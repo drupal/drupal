@@ -38,10 +38,10 @@ class BaseCommand implements CommandInterface {
    * {@inheritdoc}
    */
   public function render() {
-    return array(
+    return [
       'command' => $this->command,
       'data' => $this->data,
-    );
+    ];
   }
 
 }

@@ -25,7 +25,7 @@ class ConfigEntityUnitTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test');
+  public static $modules = ['config_test'];
 
   /**
    * The config_test entity storage.
@@ -57,19 +57,19 @@ class ConfigEntityUnitTest extends KernelTestBase {
     // Create three entities, two with the same style.
     $style = $this->randomMachineName(8);
     for ($i = 0; $i < 2; $i++) {
-      $entity = $this->storage->create(array(
+      $entity = $this->storage->create([
         'id' => $this->randomMachineName(),
         'label' => $this->randomString(),
         'style' => $style,
-      ));
+      ]);
       $entity->save();
     }
-    $entity = $this->storage->create(array(
+    $entity = $this->storage->create([
       'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
       // Use a different length for the entity to ensure uniqueness.
       'style' => $this->randomMachineName(9),
-    ));
+    ]);
     $entity->save();
 
     // Ensure that the configuration entity can be loaded by UUID.
@@ -85,7 +85,7 @@ class ConfigEntityUnitTest extends KernelTestBase {
     $entities = $this->storage->loadByProperties();
     $this->assertEqual(count($entities), 3, 'Three entities are loaded when no properties are specified.');
 
-    $entities = $this->storage->loadByProperties(array('style' => $style));
+    $entities = $this->storage->loadByProperties(['style' => $style]);
     $this->assertEqual(count($entities), 2, 'Two entities are loaded when the style property is specified.');
 
     // Assert that both returned entities have a matching style property.
@@ -94,11 +94,11 @@ class ConfigEntityUnitTest extends KernelTestBase {
     }
 
     // Test that schema type enforcement can be overridden by trusting the data.
-    $entity = $this->storage->create(array(
+    $entity = $this->storage->create([
       'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
       'style' => 999
-    ));
+    ]);
     $entity->save();
     $this->assertIdentical('999', $entity->style);
     $entity->style = 999;

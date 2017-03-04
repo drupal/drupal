@@ -112,7 +112,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    *
    * @var array
    */
-  protected $filters = array();
+  protected $filters = [];
 
   /**
    * Holds the collection of filters that are attached to this format.
@@ -146,7 +146,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    * {@inheritdoc}
    */
   public function getPluginCollections() {
-    return array('filters' => $this->filters());
+    return ['filters' => $this->filters()];
   }
 
   /**
@@ -182,7 +182,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
     parent::disable();
 
     // Allow modules to react on text format deletion.
-    \Drupal::moduleHandler()->invokeAll('filter_format_disable', array($this));
+    \Drupal::moduleHandler()->invokeAll('filter_format_disable', [$this]);
 
     // Clear the filter cache whenever a text format is disabled.
     filter_formats_reset();
@@ -222,7 +222,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       if (($roles = $this->get('roles')) && $permission = $this->getPermissionName()) {
         foreach (user_roles() as $rid => $name) {
           $enabled = in_array($rid, $roles, TRUE);
-          user_role_change_permissions($rid, array($permission => $enabled));
+          user_role_change_permissions($rid, [$permission => $enabled]);
         }
       }
     }
@@ -252,7 +252,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    * {@inheritdoc}
    */
   public function getFilterTypes() {
-    $filter_types = array();
+    $filter_types = [];
 
     $filters = $this->filters();
     foreach ($filters as $filter) {
@@ -386,7 +386,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       // whitelisting filters were used, then effectively nothing is allowed.
       if (isset($restrictions['allowed'])) {
         if (count($restrictions['allowed']) === 1 && array_key_exists('*', $restrictions['allowed']) && !isset($restrictions['forbidden_tags'])) {
-          $restrictions['allowed'] = array();
+          $restrictions['allowed'] = [];
         }
       }
 

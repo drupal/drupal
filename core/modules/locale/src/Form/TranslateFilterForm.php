@@ -25,24 +25,24 @@ class TranslateFilterForm extends TranslateFormBase {
 
     $form['#attached']['library'][] = 'locale/drupal.locale.admin';
 
-    $form['filters'] = array(
+    $form['filters'] = [
       '#type' => 'details',
       '#title' => $this->t('Filter translatable strings'),
       '#open' => TRUE,
-    );
+    ];
     foreach ($filters as $key => $filter) {
       // Special case for 'string' filter.
       if ($key == 'string') {
-        $form['filters']['status']['string'] = array(
+        $form['filters']['status']['string'] = [
           '#type' => 'search',
           '#title' => $filter['title'],
           '#description' => $filter['description'],
           '#default_value' => $filter_values[$key],
-        );
+        ];
       }
       else {
         $empty_option = isset($filter['options'][$filter['default']]) ? $filter['options'][$filter['default']] : '- None -';
-        $form['filters']['status'][$key] = array(
+        $form['filters']['status'][$key] = [
           '#title' => $filter['title'],
           '#type' => 'select',
           '#empty_value' => $filter['default'],
@@ -50,27 +50,27 @@ class TranslateFilterForm extends TranslateFormBase {
           '#size' => 0,
           '#options' => $filter['options'],
           '#default_value' => $filter_values[$key],
-        );
+        ];
         if (isset($filter['states'])) {
           $form['filters']['status'][$key]['#states'] = $filter['states'];
         }
       }
     }
 
-    $form['filters']['actions'] = array(
+    $form['filters']['actions'] = [
       '#type' => 'actions',
-      '#attributes' => array('class' => array('container-inline')),
-    );
-    $form['filters']['actions']['submit'] = array(
+      '#attributes' => ['class' => ['container-inline']],
+    ];
+    $form['filters']['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Filter'),
-    );
+    ];
     if (!empty($_SESSION['locale_translate_filter'])) {
-      $form['filters']['actions']['reset'] = array(
+      $form['filters']['actions']['reset'] = [
         '#type' => 'submit',
         '#value' => $this->t('Reset'),
-        '#submit' => array('::resetForm'),
-      );
+        '#submit' => ['::resetForm'],
+      ];
     }
 
     return $form;
@@ -93,7 +93,7 @@ class TranslateFilterForm extends TranslateFormBase {
    * Provides a submit handler for the reset button.
    */
   public function resetForm(array &$form, FormStateInterface $form_state) {
-    $_SESSION['locale_translate_filter'] = array();
+    $_SESSION['locale_translate_filter'] = [];
     $form_state->setRedirect('locale.translate_page');
   }
 

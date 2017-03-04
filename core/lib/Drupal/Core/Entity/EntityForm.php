@@ -204,9 +204,9 @@ class EntityForm extends FormBase implements EntityFormInterface {
 
     $count = 0;
     foreach (Element::children($element) as $action) {
-      $element[$action] += array(
+      $element[$action] += [
         '#weight' => ++$count * 5,
-      );
+      ];
     }
 
     if (!empty($element)) {
@@ -226,11 +226,11 @@ class EntityForm extends FormBase implements EntityFormInterface {
     // @todo Consider renaming the action key from submit to save. The impacts
     //   are hard to predict. For example, see
     //   \Drupal\language\Element\LanguageConfiguration::processLanguageConfiguration().
-    $actions['submit'] = array(
+    $actions['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
-      '#submit' => array('::submitForm', '::save'),
-    );
+      '#submit' => ['::submitForm', '::save'],
+    ];
 
     if (!$this->entity->isNew() && $this->entity->hasLinkTemplate('delete-form')) {
       $route_info = $this->entity->urlInfo('delete-form');
@@ -239,14 +239,14 @@ class EntityForm extends FormBase implements EntityFormInterface {
         $query['destination'] = $this->getRequest()->query->get('destination');
         $route_info->setOption('query', $query);
       }
-      $actions['delete'] = array(
+      $actions['delete'] = [
         '#type' => 'link',
         '#title' => $this->t('Delete'),
         '#access' => $this->entity->access('delete'),
-        '#attributes' => array(
-          'class' => array('button', 'button--danger'),
-        ),
-      );
+        '#attributes' => [
+          'class' => ['button', 'button--danger'],
+        ],
+      ];
       $actions['delete']['#url'] = $route_info;
     }
 
@@ -294,7 +294,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
     // properties.
     if (isset($form['#entity_builders'])) {
       foreach ($form['#entity_builders'] as $function) {
-        call_user_func_array($form_state->prepareCallback($function), array($entity->getEntityTypeId(), $entity, &$form, &$form_state));
+        call_user_func_array($form_state->prepareCallback($function), [$entity->getEntityTypeId(), $entity, &$form, &$form_state]);
       }
     }
 
@@ -391,7 +391,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
       if (function_exists($function)) {
         // Ensure we pass an updated translation object and form display at
         // each invocation, since they depend on form state which is alterable.
-        $args = array($this->entity, $this->operation, &$form_state);
+        $args = [$this->entity, $this->operation, &$form_state];
         call_user_func_array($function, $args);
       }
     }

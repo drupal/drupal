@@ -63,7 +63,7 @@ class StorageComparer implements StorageComparerInterface {
    *
    * @var array
    */
-  protected $sourceNames = array();
+  protected $sourceNames = [];
 
   /**
    * Sorted list of all the configuration object names in the target storage.
@@ -72,7 +72,7 @@ class StorageComparer implements StorageComparerInterface {
    *
    * @var array
    */
-  protected $targetNames = array();
+  protected $targetNames = [];
 
   /**
    * A memory cache backend to statically cache source configuration data.
@@ -149,12 +149,12 @@ class StorageComparer implements StorageComparerInterface {
    * {@inheritdoc}
    */
   public function getEmptyChangelist() {
-    return array(
-      'create' => array(),
-      'update' => array(),
-      'delete' => array(),
-      'rename' => array(),
-    );
+    return [
+      'create' => [],
+      'update' => [],
+      'delete' => [],
+      'rename' => [],
+    ];
   }
 
   /**
@@ -254,7 +254,7 @@ class StorageComparer implements StorageComparerInterface {
    *   The storage collection to operate on.
    */
   protected function addChangelistUpdate($collection) {
-    $recreates = array();
+    $recreates = [];
     foreach (array_intersect($this->sourceNames[$collection], $this->targetNames[$collection]) as $name) {
       $source_data = $this->getSourceStorage($collection)->read($name);
       $target_data = $this->getTargetStorage($collection)->read($name);
@@ -266,7 +266,7 @@ class StorageComparer implements StorageComparerInterface {
           $recreates[] = $name;
         }
         else {
-          $this->addChangeList($collection, 'update', array($name));
+          $this->addChangeList($collection, 'update', [$name]);
         }
       }
     }
@@ -298,7 +298,7 @@ class StorageComparer implements StorageComparerInterface {
       return;
     }
 
-    $create_uuids = array();
+    $create_uuids = [];
     foreach ($this->sourceNames[$collection] as $name) {
       $data = $this->getSourceStorage($collection)->read($name);
       if (isset($data['uuid']) && in_array($name, $create_list)) {
@@ -309,7 +309,7 @@ class StorageComparer implements StorageComparerInterface {
       return;
     }
 
-    $renames = array();
+    $renames = [];
 
     // Renames should be ordered so that dependencies are renamed last. This
     // ensures that if there is logic in the configuration entity class to keep
@@ -357,15 +357,15 @@ class StorageComparer implements StorageComparerInterface {
   public function moveRenameToUpdate($rename, $collection = StorageInterface::DEFAULT_COLLECTION) {
     $names = $this->extractRenameNames($rename);
     $this->removeFromChangelist($collection, 'rename', $rename);
-    $this->addChangeList($collection, 'update', array($names['new_name']), $this->sourceNames[$collection]);
+    $this->addChangeList($collection, 'update', [$names['new_name']], $this->sourceNames[$collection]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function reset() {
-    $this->changelist = array(StorageInterface::DEFAULT_COLLECTION => $this->getEmptyChangelist());
-    $this->sourceNames = $this->targetNames = array();
+    $this->changelist = [StorageInterface::DEFAULT_COLLECTION => $this->getEmptyChangelist()];
+    $this->sourceNames = $this->targetNames = [];
     // Reset the static configuration data caches.
     $this->sourceCacheStorage->deleteAll();
     $this->targetCacheStorage->deleteAll();
@@ -377,7 +377,7 @@ class StorageComparer implements StorageComparerInterface {
    */
   public function hasChanges() {
     foreach ($this->getAllCollectionNames() as $collection) {
-      foreach (array('delete', 'create', 'update', 'rename') as $op) {
+      foreach (['delete', 'create', 'update', 'rename'] as $op) {
         if (!empty($this->changelist[$collection][$op])) {
           return TRUE;
         }
@@ -442,10 +442,10 @@ class StorageComparer implements StorageComparerInterface {
    */
   public function extractRenameNames($name) {
     $names = explode('::', $name, 2);
-    return array(
+    return [
       'old_name' => $names[0],
       'new_name' => $names[1],
-    );
+    ];
   }
 
   /**

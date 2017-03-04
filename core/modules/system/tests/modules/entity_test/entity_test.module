@@ -54,7 +54,7 @@ const ENTITY_TEST_TYPES_ROUTING = 3;
  *   List with entity_types.
  */
 function entity_test_entity_types($filter = NULL) {
-  $types = array();
+  $types = [];
   if ($filter === NULL || $filter === ENTITY_TEST_TYPES_ROUTING) {
     $types[] = 'entity_test';
   }
@@ -168,7 +168,7 @@ function entity_test_entity_base_field_info_alter(&$fields, EntityTypeInterface 
  */
 function entity_test_entity_field_storage_info(EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'entity_test_update') {
-    return \Drupal::state()->get('entity_test_update.additional_field_storage_definitions', array());
+    return \Drupal::state()->get('entity_test_update.additional_field_storage_definitions', []);
   }
 }
 
@@ -185,8 +185,8 @@ function entity_test_entity_field_storage_info(EntityTypeInterface $entity_type)
  *   'entity_test'.
  */
 function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity_test') {
-  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
-  $bundles += array($bundle => array('label' => $text ? $text : $bundle));
+  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: [$entity_type => ['label' => 'Entity Test Bundle']];
+  $bundles += [$bundle => ['label' => $text ? $text : $bundle]];
   \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
   \Drupal::entityManager()->onBundleCreate($bundle, $entity_type);
@@ -202,7 +202,7 @@ function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity
  *   'entity_test'.
  */
 function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
-  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
+  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: [$entity_type => ['label' => 'Entity Test Bundle']];
   unset($bundles[$bundle]);
   \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
@@ -213,11 +213,11 @@ function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
  * Implements hook_entity_bundle_info().
  */
 function entity_test_entity_bundle_info() {
-  $bundles = array();
+  $bundles = [];
   $entity_types = \Drupal::entityManager()->getDefinitions();
   foreach ($entity_types as $entity_type_id => $entity_type) {
     if ($entity_type->getProvider() == 'entity_test' && $entity_type_id != 'entity_test_with_bundle') {
-      $bundles[$entity_type_id] = \Drupal::state()->get($entity_type_id . '.bundles') ?: array($entity_type_id => array('label' => 'Entity Test Bundle'));
+      $bundles[$entity_type_id] = \Drupal::state()->get($entity_type_id . '.bundles') ?: [$entity_type_id => ['label' => 'Entity Test Bundle']];
     }
   }
   return $bundles;
@@ -230,18 +230,18 @@ function entity_test_entity_view_mode_info_alter(&$view_modes) {
   $entity_info = \Drupal::entityManager()->getDefinitions();
   foreach ($entity_info as $entity_type => $info) {
     if ($entity_info[$entity_type]->getProvider() == 'entity_test' && !isset($view_modes[$entity_type])) {
-      $view_modes[$entity_type] = array(
-        'full' => array(
+      $view_modes[$entity_type] = [
+        'full' => [
           'label' => t('Full object'),
           'status' => TRUE,
           'cache' => TRUE,
-        ),
-        'teaser' => array(
+        ],
+        'teaser' => [
           'label' => t('Teaser'),
           'status' => TRUE,
           'cache' => TRUE,
-        ),
-      );
+        ],
+      ];
     }
   }
 }
@@ -253,12 +253,12 @@ function entity_test_entity_form_mode_info_alter(&$form_modes) {
   $entity_info = \Drupal::entityManager()->getDefinitions();
   foreach ($entity_info as $entity_type => $info) {
     if ($entity_info[$entity_type]->getProvider() == 'entity_test') {
-      $form_modes[$entity_type] = array(
-        'compact' => array(
+      $form_modes[$entity_type] = [
+        'compact' => [
           'label' => t('Compact version'),
           'status' => TRUE,
-        ),
-      );
+        ],
+      ];
     }
   }
 }
@@ -267,24 +267,24 @@ function entity_test_entity_form_mode_info_alter(&$form_modes) {
  * Implements hook_entity_extra_field_info().
  */
 function entity_test_entity_extra_field_info() {
-  $extra['entity_test']['bundle_with_extra_fields'] = array(
-    'display' => array(
+  $extra['entity_test']['bundle_with_extra_fields'] = [
+    'display' => [
       // Note: those extra fields do not currently display anything, they are
       // just used in \Drupal\Tests\field_ui\Kernel\EntityDisplayTest to test
       // the behavior of entity display objects.
-      'display_extra_field' => array(
+      'display_extra_field' => [
         'label' => t('Display extra field'),
         'description' => t('An extra field on the display side.'),
         'weight' => 5,
         'visible' => TRUE,
-      ),
-      'display_extra_field_hidden' => array(
+      ],
+      'display_extra_field_hidden' => [
         'label' => t('Display extra field (hidden)'),
         'description' => t('An extra field on the display side, hidden by default.'),
         'visible' => FALSE,
-      ),
-    )
-  );
+      ],
+    ]
+  ];
 
   return $extra;
 }
@@ -676,16 +676,16 @@ function entity_test_field_default_value(FieldableEntityInterface $entity, Field
   // that they are correctly passed.
   $string = $definition->getName() . '_' . $entity->language()->getId();
   // Return a "default value" with multiple items.
-  return array(
-    array(
+  return [
+    [
       'shape' => "shape:0:$string",
       'color' => "color:0:$string",
-    ),
-    array(
+    ],
+    [
       'shape' => "shape:1:$string",
       'color' => "color:1:$string",
-    ),
-  );
+    ],
+  ];
 }
 
 /**
@@ -715,7 +715,7 @@ function entity_test_entity_prepare_view($entity_type, array $entities, array $d
       // Add a dummy field item attribute on field_test_text if it exists.
       if ($entity->hasField('field_test_text') && $displays[$entity->bundle()]->getComponent('field_test_text')) {
         foreach ($entity->get('field_test_text') as $item) {
-          $item->_attributes += array('data-field-item-attr' => 'foobar');
+          $item->_attributes += ['data-field-item-attr' => 'foobar'];
         }
       }
 
@@ -724,7 +724,7 @@ function entity_test_entity_prepare_view($entity_type, array $entities, array $d
       foreach ($fields as $field) {
         if ($field->getType() === 'daterange') {
           $item = $entity->get($field->getName());
-          $item->_attributes += array('data-field-item-attr' => 'foobar');
+          $item->_attributes += ['data-field-item-attr' => 'foobar'];
         }
       }
     }

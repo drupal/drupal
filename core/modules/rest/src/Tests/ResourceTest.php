@@ -19,7 +19,7 @@ class ResourceTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'entity_test', 'rest_test');
+  public static $modules = ['hal', 'rest', 'entity_test', 'rest_test'];
 
   /**
    * The entity.

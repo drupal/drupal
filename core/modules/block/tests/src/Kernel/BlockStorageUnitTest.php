@@ -21,7 +21,7 @@ class BlockStorageUnitTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test', 'system');
+  public static $modules = ['block', 'block_test', 'system'];
 
   /**
    * The block storage.
@@ -56,7 +56,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   protected function createTests() {
     // Attempt to create a block without a plugin.
     try {
-      $entity = $this->controller->create(array());
+      $entity = $this->controller->create([]);
       $entity->getPlugin();
       $this->fail('A block without a plugin was created with no exception thrown.');
     }
@@ -65,12 +65,12 @@ class BlockStorageUnitTest extends KernelTestBase {
     }
 
     // Create a block with only required values.
-    $entity = $this->controller->create(array(
+    $entity = $this->controller->create([
       'id' => 'test_block',
       'theme' => 'stark',
       'region' => 'content',
       'plugin' => 'test_html',
-    ));
+    ]);
     $entity->save();
 
     $this->assertTrue($entity instanceof Block, 'The newly created entity is a Block.');
@@ -81,24 +81,24 @@ class BlockStorageUnitTest extends KernelTestBase {
     unset($actual_properties['uuid']);
 
     // Ensure that default values are filled in.
-    $expected_properties = array(
+    $expected_properties = [
       'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
       'status' => TRUE,
-      'dependencies' => array('module' => array('block_test'), 'theme' => array('stark')),
+      'dependencies' => ['module' => ['block_test'], 'theme' => ['stark']],
       'id' => 'test_block',
       'theme' => 'stark',
       'region' => 'content',
       'weight' => NULL,
       'provider' => NULL,
       'plugin' => 'test_html',
-      'settings' => array(
+      'settings' => [
         'id' => 'test_html',
         'label' => '',
         'provider' => 'block_test',
         'label_display' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
-      ),
-      'visibility' => array(),
-    );
+      ],
+      'visibility' => [],
+    ];
 
     $this->assertIdentical($actual_properties, $expected_properties);
 
@@ -148,7 +148,7 @@ class BlockStorageUnitTest extends KernelTestBase {
     $this->assertTrue(empty($entities), 'There are no blocks initially.');
 
     // Install the block_test.module, so that its default config is installed.
-    $this->installConfig(array('block_test'));
+    $this->installConfig(['block_test']);
 
     $entities = $this->controller->loadMultiple();
     $entity = reset($entities);

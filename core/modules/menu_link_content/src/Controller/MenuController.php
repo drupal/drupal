@@ -20,12 +20,12 @@ class MenuController extends ControllerBase {
    *   Returns the menu link creation form.
    */
   public function addLink(MenuInterface $menu) {
-    $menu_link = $this->entityManager()->getStorage('menu_link_content')->create(array(
+    $menu_link = $this->entityManager()->getStorage('menu_link_content')->create([
       'id' => '',
       'parent' => '',
       'menu_name' => $menu->id(),
       'bundle' => 'menu_link_content',
-    ));
+    ]);
     return $this->entityFormBuilder()->getForm($menu_link);
   }
 

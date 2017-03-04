@@ -41,7 +41,7 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Cacheab
    * {@inheritdoc}
    */
   public function getRouteParameters(RouteMatchInterface $route_match) {
-    $parameters = isset($this->pluginDefinition['route_parameters']) ? $this->pluginDefinition['route_parameters'] : array();
+    $parameters = isset($this->pluginDefinition['route_parameters']) ? $this->pluginDefinition['route_parameters'] : [];
     $route = $this->routeProvider()->getRouteByName($this->getRouteName());
     $variables = $route->compile()->getVariables();
 

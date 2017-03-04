@@ -24,10 +24,10 @@ class FileStorageTest extends PhpStorageTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->standardSettings = array(
+    $this->standardSettings = [
       'directory' => $this->directory,
       'bin' => 'test',
-    );
+    ];
   }
 
   /**

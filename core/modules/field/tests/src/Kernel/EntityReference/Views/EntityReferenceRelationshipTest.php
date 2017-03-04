@@ -26,13 +26,13 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array(
+  public static $testViews = [
     'test_entity_reference_entity_test_view',
     'test_entity_reference_entity_test_view_long',
     'test_entity_reference_reverse_entity_test_view',
     'test_entity_reference_entity_test_mul_view',
     'test_entity_reference_reverse_entity_test_mul_view',
-    );
+    ];
 
   /**
    * Modules to install.
@@ -46,7 +46,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected $entities = array();
+  protected $entities = [];
 
   /**
    * {@inheritdoc}
@@ -71,7 +71,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     // @see \Drupal\Core\Entity\Sql\DefaultTableMapping::generateFieldTableName()
     $this->createEntityReferenceField('entity_test_mul_changed', 'entity_test_mul_changed', 'field_test_data_with_a_long_name', 'field_test_data_with_a_long_name', 'entity_test');
 
-    ViewTestData::createTestViews(get_class($this), array('entity_reference_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['entity_reference_test_views']);
   }
 
   /**

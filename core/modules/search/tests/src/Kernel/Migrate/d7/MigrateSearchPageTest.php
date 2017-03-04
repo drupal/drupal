@@ -18,7 +18,7 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
    *
    * {@inheritdoc}
    */
-  public static $modules = array('node', 'search');
+  public static $modules = ['node', 'search'];
 
   /**
    * {@inheritdoc}
@@ -37,20 +37,20 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
     $search_page = SearchPage::load($id);
     $this->assertIdentical($id, $search_page->id());
     $configuration = $search_page->getPlugin()->getConfiguration();
-    $expected_rankings = array(
+    $expected_rankings = [
       'comments' => 0,
       'promote' => 0,
       'relevance' => 2,
       'sticky' => 0,
       'views' => 0,
-    );
+    ];
     $this->assertIdentical($expected_rankings, $configuration['rankings']);
     $this->assertIdentical('node', $search_page->getPath());
 
     // Test that we can re-import using the EntitySearchPage destination.
     Database::getConnection('default', 'migrate')
       ->update('variable')
-      ->fields(array('value' => serialize(4)))
+      ->fields(['value' => serialize(4)])
       ->condition('name', 'node_rank_comments')
       ->execute();
 

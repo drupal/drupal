@@ -55,9 +55,9 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
     // Do not allow unauthenticated comment authors to use a name that is
     // taken by a registered user.
     if (isset($author_name) && $author_name !== '' && $owner_id === 0) {
-      $users = $this->userStorage->loadByProperties(array('name' => $author_name));
+      $users = $this->userStorage->loadByProperties(['name' => $author_name]);
       if (!empty($users)) {
-        $this->context->buildViolation($constraint->messageNameTaken, array('%name' => $author_name))
+        $this->context->buildViolation($constraint->messageNameTaken, ['%name' => $author_name])
           ->atPath('name')
           ->addViolation();
       }

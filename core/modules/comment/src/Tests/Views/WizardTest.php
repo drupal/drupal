@@ -21,7 +21,7 @@ class WizardTest extends WizardTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'comment');
+  public static $modules = ['node', 'comment'];
 
 
   /**
@@ -29,7 +29,7 @@ class WizardTest extends WizardTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => t('Basic page')]);
     // Add comment field to page node type.
     $this->addDefaultCommentField('node', 'page');
   }
@@ -38,7 +38,7 @@ class WizardTest extends WizardTestBase {
    * Tests adding a view of comments.
    */
   public function testCommentWizard() {
-    $view = array();
+    $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));
     $view['show[wizard_key]'] = 'comment';
@@ -48,7 +48,7 @@ class WizardTest extends WizardTestBase {
     // Just triggering the saving should automatically choose a proper row
     // plugin.
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
-    $this->assertUrl('admin/structure/views/view/' . $view['id'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
+    $this->assertUrl('admin/structure/views/view/' . $view['id'], [], 'Make sure the view saving was successful and the browser got redirected to the edit page.');
 
     // If we update the type first we should get a selection of comment valid
     // row plugins as the select field.
@@ -59,19 +59,19 @@ class WizardTest extends WizardTestBase {
     // Check for available options of the row plugin.
     $xpath = $this->constructFieldXpath('name', 'page[style][row_plugin]');
     $fields = $this->xpath($xpath);
-    $options = array();
+    $options = [];
     foreach ($fields as $field) {
       $items = $this->getAllOptions($field);
       foreach ($items as $item) {
         $options[] = $item->attributes()->value;
       }
     }
-    $expected_options = array('entity:comment', 'fields');
+    $expected_options = ['entity:comment', 'fields'];
     $this->assertEqual($options, $expected_options);
 
     $view['id'] = strtolower($this->randomMachineName(16));
     $this->drupalPostForm(NULL, $view, t('Save and edit'));
-    $this->assertUrl('admin/structure/views/view/' . $view['id'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
+    $this->assertUrl('admin/structure/views/view/' . $view['id'], [], 'Make sure the view saving was successful and the browser got redirected to the edit page.');
 
     $user = $this->drupalCreateUser(['access comments']);
     $this->drupalLogin($user);

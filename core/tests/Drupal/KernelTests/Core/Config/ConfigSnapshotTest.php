@@ -17,7 +17,7 @@ class ConfigSnapshotTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test', 'system');
+  public static $modules = ['config_test', 'system'];
 
   /**
    * {@inheritdoc}
@@ -50,7 +50,7 @@ class ConfigSnapshotTest extends KernelTestBase {
     $this->assertFalse($active_snapshot_comparer->createChangelist()->hasChanges());
 
     // Install the default config.
-    $this->installConfig(array('config_test'));
+    $this->installConfig(['config_test']);
     // Although we have imported config this has not affected the snapshot.
     $this->assertTrue($active_snapshot_comparer->reset()->hasChanges());
 

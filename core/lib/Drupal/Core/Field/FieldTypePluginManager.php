@@ -61,7 +61,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    * @return \Drupal\Core\Field\FieldItemInterface
    *   The instantiated object.
    */
-  public function createInstance($field_type, array $configuration = array()) {
+  public function createInstance($field_type, array $configuration = []) {
     $configuration['data_definition'] = $configuration['field_definition']->getItemDefinition();
     return $this->typedDataManager->createInstance("field_item:$field_type", $configuration);
   }
@@ -106,7 +106,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
       $plugin_class = DefaultFactory::getPluginClass($type, $plugin_definition);
       return $plugin_class::defaultStorageSettings();
     }
-    return array();
+    return [];
   }
 
   /**
@@ -118,7 +118,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
       $plugin_class = DefaultFactory::getPluginClass($type, $plugin_definition);
       return $plugin_class::defaultFieldSettings();
     }
-    return array();
+    return [];
   }
 
   /**

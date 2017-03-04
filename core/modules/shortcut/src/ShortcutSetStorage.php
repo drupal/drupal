@@ -73,7 +73,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
   public function assignUser(ShortcutSetInterface $shortcut_set, $account) {
     db_merge('shortcut_set_users')
       ->key('uid', $account->id())
-      ->fields(array('set_name' => $shortcut_set->id()))
+      ->fields(['set_name' => $shortcut_set->id()])
       ->execute();
     drupal_static_reset('shortcut_current_displayed_set');
   }
@@ -93,7 +93,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    */
   public function getAssignedToUser($account) {
     $query = db_select('shortcut_set_users', 'ssu');
-    $query->fields('ssu', array('set_name'));
+    $query->fields('ssu', ['set_name']);
     $query->condition('ssu.uid', $account->id());
     return $query->execute()->fetchField();
   }
@@ -102,7 +102,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    * {@inheritdoc}
    */
   public function countAssignedUsers(ShortcutSetInterface $shortcut_set) {
-    return db_query('SELECT COUNT(*) FROM {shortcut_set_users} WHERE set_name = :name', array(':name' => $shortcut_set->id()))->fetchField();
+    return db_query('SELECT COUNT(*) FROM {shortcut_set_users} WHERE set_name = :name', [':name' => $shortcut_set->id()])->fetchField();
   }
 
   /**
@@ -113,7 +113,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
     // have one, we allow the last module which returns a valid result to take
     // precedence. If no module returns a valid set, fall back on the site-wide
     // default, which is the lowest-numbered shortcut set.
-    $suggestions = array_reverse($this->moduleHandler->invokeAll('shortcut_default_set', array($account)));
+    $suggestions = array_reverse($this->moduleHandler->invokeAll('shortcut_default_set', [$account]));
     $suggestions[] = 'default';
     $shortcut_set = NULL;
     foreach ($suggestions as $name) {

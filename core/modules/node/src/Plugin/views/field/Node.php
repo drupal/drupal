@@ -28,7 +28,7 @@ class Node extends FieldPluginBase {
 
     // Don't add the additional fields to groupby
     if (!empty($this->options['link_to_node'])) {
-      $this->additional_fields['nid'] = array('table' => 'node_field_data', 'field' => 'nid');
+      $this->additional_fields['nid'] = ['table' => 'node_field_data', 'field' => 'nid'];
     }
   }
 
@@ -37,7 +37,7 @@ class Node extends FieldPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['link_to_node'] = array('default' => isset($this->definition['link_to_node default']) ? $this->definition['link_to_node default'] : FALSE);
+    $options['link_to_node'] = ['default' => isset($this->definition['link_to_node default']) ? $this->definition['link_to_node default'] : FALSE];
     return $options;
   }
 
@@ -45,12 +45,12 @@ class Node extends FieldPluginBase {
    * Provide link to node option
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $form['link_to_node'] = array(
+    $form['link_to_node'] = [
       '#title' => $this->t('Link this field to the original piece of content'),
       '#description' => $this->t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_node']),
-    );
+    ];
 
     parent::buildOptionsForm($form, $form_state);
   }

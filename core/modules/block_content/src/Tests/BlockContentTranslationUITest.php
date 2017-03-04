@@ -19,13 +19,13 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'language',
     'content_translation',
     'block',
     'field_ui',
     'block_content'
-  );
+  ];
 
   /**
    * {@inheritdoc}
@@ -57,11 +57,11 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
    */
   protected function setupBundle() {
     // Create the basic bundle since it is provided by standard.
-    $bundle = BlockContentType::create(array(
+    $bundle = BlockContentType::create([
       'id' => $this->bundle,
       'label' => $this->bundle,
       'revision' => FALSE
-    ));
+    ]);
     $bundle->save();
   }
 
@@ -69,12 +69,12 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   public function getTranslatorPermissions() {
-    return array_merge(parent::getTranslatorPermissions(), array(
+    return array_merge(parent::getTranslatorPermissions(), [
       'translate any entity',
       'access administration pages',
       'administer blocks',
       'administer block_content fields'
-    ));
+    ]);
   }
 
   /**
@@ -93,11 +93,11 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
   protected function createBlockContent($title = FALSE, $bundle = FALSE) {
     $title = $title ?: $this->randomMachineName();
     $bundle = $bundle ?: $this->bundle;
-    $block_content = BlockContent::create(array(
+    $block_content = BlockContent::create([
       'info' => $title,
       'type' => $bundle,
       'langcode' => 'en'
-    ));
+    ]);
     $block_content->save();
     return $block_content;
   }
@@ -106,7 +106,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getNewEntityValues($langcode) {
-    return array('info' => Unicode::strtolower($this->randomMachineName())) + parent::getNewEntityValues($langcode);
+    return ['info' => Unicode::strtolower($this->randomMachineName())] + parent::getNewEntityValues($langcode);
   }
 
   /**
@@ -135,7 +135,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
     $values = $this->getNewEntityValues($default_langcode);
     $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    $entity = $storage->create(array('type' => 'basic') + $values);
+    $entity = $storage->create(['type' => 'basic'] + $values);
     $entity->save();
     $entity->addTranslation('it', $values);
 
@@ -159,11 +159,11 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
   public function testDisabledBundle() {
     // Create a bundle that does not have translation enabled.
     $disabled_bundle = $this->randomMachineName();
-    $bundle = BlockContentType::create(array(
+    $bundle = BlockContentType::create([
       'id' => $disabled_bundle,
       'label' => $disabled_bundle,
       'revision' => FALSE
-    ));
+    ]);
     $bundle->save();
 
     // Create a block content for each bundle.
@@ -171,7 +171,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
     $disabled_block_content = $this->createBlockContent(FALSE, $bundle->id());
 
     // Make sure that only a single row was inserted into the block table.
-    $rows = db_query('SELECT * FROM {block_content_field_data} WHERE id = :id', array(':id' => $enabled_block_content->id()))->fetchAll();
+    $rows = db_query('SELECT * FROM {block_content_field_data} WHERE id = :id', [':id' => $enabled_block_content->id()])->fetchAll();
     $this->assertEqual(1, count($rows));
   }
 
@@ -188,15 +188,15 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
     foreach ($this->langcodes as $langcode) {
       // We only want to test the title for non-english translations.
       if ($langcode != 'en') {
-        $options = array('language' => $languages[$langcode]);
+        $options = ['language' => $languages[$langcode]];
         $url = $entity->urlInfo('edit-form', $options);
         $this->drupalGet($url);
 
-        $title = t('<em>Edit @type</em> @title [%language translation]', array(
+        $title = t('<em>Edit @type</em> @title [%language translation]', [
           '@type' => $entity->bundle(),
           '@title' => $entity->getTranslation($langcode)->label(),
           '%language' => $languages[$langcode]->getName(),
-        ));
+        ]);
         $this->assertRaw($title);
       }
     }

@@ -24,9 +24,9 @@ trait MigrateDefaultLanguageTrait {
     // default language is migrated.
     $value = 'O:8:"stdClass":11:{s:8:"language";s:2:"' . $langcode . '";s:4:"name";s:6:"French";s:6:"native";s:6:"French";s:9:"direction";s:1:"0";s:7:"enabled";i:1;s:7:"plurals";s:1:"0";s:7:"formula";s:0:"";s:6:"domain";s:0:"";s:6:"prefix";s:0:"";s:6:"weight";s:1:"0";s:10:"javascript";s:0:"";}';
     $this->sourceDatabase->update('variable')
-      ->fields(array(
+      ->fields([
         'value' => $value
-      ))
+      ])
       ->condition('name', 'language_default' )
       ->execute();
 

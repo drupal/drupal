@@ -49,7 +49,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     $return = _user_mail_notify($op, $this->createUser());
     $this->assertTrue($return, '_user_mail_notify() returns TRUE.');
     foreach ($mail_keys as $key) {
-      $filter = array('key' => $key);
+      $filter = ['key' => $key];
       $this->assertNotEmpty($this->getMails($filter), "Mails with $key exists.");
     }
     $this->assertCount(count($mail_keys), $this->getMails(), 'The expected number of emails sent.');

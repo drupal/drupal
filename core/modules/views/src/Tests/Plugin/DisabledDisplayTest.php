@@ -15,14 +15,14 @@ class DisabledDisplayTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_disabled_display');
+  public static $testViews = ['test_disabled_display'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('block', 'node', 'views');
+  public static $modules = ['block', 'node', 'views'];
 
   protected function setUp() {
     parent::setUp();
@@ -31,7 +31,7 @@ class DisabledDisplayTest extends PluginTestBase {
 
     $this->drupalPlaceBlock('page_title_block');
 
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
   }
 
@@ -44,7 +44,7 @@ class DisabledDisplayTest extends PluginTestBase {
    */
   public function testDisabledDisplays() {
     // The displays defined in this view.
-    $display_ids = array('attachment_1', 'block_1', 'embed_1', 'feed_1', 'page_2');
+    $display_ids = ['attachment_1', 'block_1', 'embed_1', 'feed_1', 'page_2'];
 
     $this->drupalCreateContentType(['type' => 'page']);
     $this->drupalCreateNode();

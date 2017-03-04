@@ -100,7 +100,7 @@ abstract class WebTestBase extends TestBase {
    *
    * @var array
    */
-  protected $cookies = array();
+  protected $cookies = [];
 
   /**
    * Indicates that headers should be dumped if verbose output is enabled.
@@ -133,7 +133,7 @@ abstract class WebTestBase extends TestBase {
    * \Drupal\simpletest\WebTestBase itself never sets this but always obeys what
    * is set.
    */
-  protected $additionalCurlOptions = array();
+  protected $additionalCurlOptions = [];
 
   /**
    * The original batch, before it was changed for testing purposes.
@@ -154,7 +154,7 @@ abstract class WebTestBase extends TestBase {
    *
    * @var array
    */
-  protected $originalShutdownCallbacks = array();
+  protected $originalShutdownCallbacks = [];
 
   /**
    * The current session ID, if available.
@@ -191,7 +191,7 @@ abstract class WebTestBase extends TestBase {
    *
    * @var array
    */
-  protected $curlCookies = array();
+  protected $curlCookies = [];
 
   /**
    * An array of custom translations suitable for drupal_rewrite_settings().
@@ -259,7 +259,7 @@ abstract class WebTestBase extends TestBase {
 
     $render_controller = $this->container->get('entity.manager')->getViewBuilder($entity->getEntityTypeId());
     if ($reset) {
-      $render_controller->resetCache(array($entity->id()));
+      $render_controller->resetCache([$entity->id()]);
     }
     $build = $render_controller->view($entity, $view_mode, $langcode);
     $ensure_fully_built($build);
@@ -275,7 +275,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function assertBlockAppears(Block $block) {
     $result = $this->findBlockInstance($block);
-    $this->assertTrue(!empty($result), format_string('Ensure the block @id appears on the page', array('@id' => $block->id())));
+    $this->assertTrue(!empty($result), format_string('Ensure the block @id appears on the page', ['@id' => $block->id()]));
   }
 
   /**
@@ -286,7 +286,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function assertNoBlockAppears(Block $block) {
     $result = $this->findBlockInstance($block);
-    $this->assertFalse(!empty($result), format_string('Ensure the block @id does not appear on the page', array('@id' => $block->id())));
+    $this->assertFalse(!empty($result), format_string('Ensure the block @id does not appear on the page', ['@id' => $block->id()]));
   }
 
   /**
@@ -299,7 +299,7 @@ abstract class WebTestBase extends TestBase {
    *   The result from the xpath query.
    */
   protected function findBlockInstance(Block $block) {
-    return $this->xpath('//div[@id = :id]', array(':id' => 'block-' . $block->id()));
+    return $this->xpath('//div[@id = :id]', [':id' => 'block-' . $block->id()]);
   }
 
   /**
@@ -334,17 +334,17 @@ abstract class WebTestBase extends TestBase {
       $this->drupalLogout();
     }
 
-    $edit = array(
+    $edit = [
       'name' => $account->getUsername(),
       'pass' => $account->pass_raw
-    );
+    ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
 
     // @see WebTestBase::drupalUserIsLoggedIn()
     if (isset($this->sessionId)) {
       $account->session_id = $this->sessionId;
     }
-    $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', array('%name' => $account->getUsername())), 'User login');
+    $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', ['%name' => $account->getUsername()]), 'User login');
     if ($pass) {
       $this->loggedInUser = $account;
       $this->container->get('current_user')->setAccount($account);
@@ -377,7 +377,7 @@ abstract class WebTestBase extends TestBase {
     // Make a request to the logout page, and redirect to the user page, the
     // idea being if you were properly logged out you should be seeing a login
     // screen.
-    $this->drupalGet('user/logout', array('query' => array('destination' => 'user/login')));
+    $this->drupalGet('user/logout', ['query' => ['destination' => 'user/login']]);
     $this->assertResponse(200, 'User was logged out.');
     $pass = $this->assertField('name', 'Username field found.', 'Logout');
     $pass = $pass && $this->assertField('pass', 'Password field found.', 'Logout');
@@ -469,36 +469,36 @@ abstract class WebTestBase extends TestBase {
       unset($connection_info['default']['host']);
       unset($connection_info['default']['port']);
     }
-    $parameters = array(
+    $parameters = [
       'interactive' => FALSE,
-      'parameters' => array(
+      'parameters' => [
         'profile' => $this->profile,
         'langcode' => 'en',
-      ),
-      'forms' => array(
-        'install_settings_form' => array(
+      ],
+      'forms' => [
+        'install_settings_form' => [
           'driver' => $driver,
           $driver => $connection_info['default'],
-        ),
-        'install_configure_form' => array(
+        ],
+        'install_configure_form' => [
           'site_name' => 'Drupal',
           'site_mail' => 'simpletest@example.com',
-          'account' => array(
+          'account' => [
             'name' => $this->rootUser->name,
             'mail' => $this->rootUser->getEmail(),
-            'pass' => array(
+            'pass' => [
               'pass1' => $this->rootUser->pass_raw,
               'pass2' => $this->rootUser->pass_raw,
-            ),
-          ),
+            ],
+          ],
           // \Drupal\Core\Render\Element\Checkboxes::valueCallback() requires
           // NULL instead of FALSE values for programmatic form submissions to
           // disable a checkbox.
           'enable_update_status_module' => NULL,
           'enable_update_status_emails' => NULL,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     // If we only have one db driver available, we cannot set the driver.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
@@ -574,7 +574,7 @@ abstract class WebTestBase extends TestBase {
     // If $values is empty, then the test expects all custom translations to be
     // cleared.
     if (empty($values)) {
-      $this->customTranslations[$langcode] = array();
+      $this->customTranslations[$langcode] = [];
     }
     // Otherwise, $values are expected to be merged into previously passed
     // values, while retaining keys that are not explicitly set.
@@ -594,17 +594,17 @@ abstract class WebTestBase extends TestBase {
    * calling this method.
    */
   protected function writeCustomTranslations() {
-    $settings = array();
+    $settings = [];
     foreach ($this->customTranslations as $langcode => $values) {
       $settings_key = 'locale_custom_strings_' . $langcode;
 
       // Update in-memory settings directly.
       $this->settingsSet($settings_key, $values);
 
-      $settings['settings'][$settings_key] = (object) array(
+      $settings['settings'][$settings_key] = (object) [
         'value' => $values,
         'required' => TRUE,
-      );
+      ];
     }
     // Only rewrite settings if there are any translation changes to write.
     if (!empty($settings)) {
@@ -630,13 +630,13 @@ abstract class WebTestBase extends TestBase {
 
     // Ensure that internal logged in variable and cURL options are reset.
     $this->loggedInUser = FALSE;
-    $this->additionalCurlOptions = array();
+    $this->additionalCurlOptions = [];
 
     // Close the CURL handler and reset the cookies array used for upgrade
     // testing so test classes containing multiple tests are not polluted.
     $this->curlClose();
-    $this->curlCookies = array();
-    $this->cookies = array();
+    $this->curlCookies = [];
+    $this->cookies = [];
   }
 
   /**
@@ -659,7 +659,7 @@ abstract class WebTestBase extends TestBase {
         $this->cookieFile = $this->publicFilesDirectory . '/cookie.jar';
       }
 
-      $curl_options = array(
+      $curl_options = [
         CURLOPT_COOKIEJAR => $this->cookieFile,
         CURLOPT_URL => $base_url,
         CURLOPT_FOLLOWLOCATION => FALSE,
@@ -668,11 +668,11 @@ abstract class WebTestBase extends TestBase {
         CURLOPT_SSL_VERIFYPEER => FALSE,
         // Required to make the tests run on HTTPS.
         CURLOPT_SSL_VERIFYHOST => FALSE,
-        CURLOPT_HEADERFUNCTION => array(&$this, 'curlHeaderCallback'),
+        CURLOPT_HEADERFUNCTION => [&$this, 'curlHeaderCallback'],
         CURLOPT_USERAGENT => $this->databasePrefix,
         // Disable support for the @ prefix for uploading files.
         CURLOPT_SAFE_UPLOAD => TRUE,
-      );
+      ];
       if (isset($this->httpAuthCredentials)) {
         $curl_options[CURLOPT_HTTPAUTH] = $this->httpAuthMethod;
         $curl_options[CURLOPT_USERPWD] = $this->httpAuthCredentials;
@@ -731,7 +731,7 @@ abstract class WebTestBase extends TestBase {
       $curl_options[CURLOPT_HTTPHEADER][] = 'Expect:';
     }
 
-    $cookies = array();
+    $cookies = [];
     if (!empty($this->curlCookies)) {
       $cookies = $this->curlCookies;
     }
@@ -744,9 +744,9 @@ abstract class WebTestBase extends TestBase {
 
     // Merge additional cookies in.
     if (!empty($cookies)) {
-      $curl_options += array(
+      $curl_options += [
         CURLOPT_COOKIE => '',
-      );
+      ];
       // Ensure any existing cookie data string ends with the correct separator.
       if (!empty($curl_options[CURLOPT_COOKIE])) {
         $curl_options[CURLOPT_COOKIE] = rtrim($curl_options[CURLOPT_COOKIE], '; ') . '; ';
@@ -759,7 +759,7 @@ abstract class WebTestBase extends TestBase {
     if (!$redirect) {
       // Reset headers, the session ID and the redirect counter.
       $this->sessionId = NULL;
-      $this->headers = array();
+      $this->headers = [];
       $this->redirectCount = 0;
     }
 
@@ -771,10 +771,10 @@ abstract class WebTestBase extends TestBase {
     // to prevent fragments being sent to the web server as part
     // of the request.
     // TODO: Remove this for Drupal 8, since fixed in curl 7.20.0.
-    if (in_array($status, array(300, 301, 302, 303, 305, 307)) && $this->redirectCount < $this->maximumRedirects) {
+    if (in_array($status, [300, 301, 302, 303, 305, 307]) && $this->redirectCount < $this->maximumRedirects) {
       if ($this->drupalGetHeader('location')) {
         $this->redirectCount++;
-        $curl_options = array();
+        $curl_options = [];
         $curl_options[CURLOPT_URL] = $this->drupalGetHeader('location');
         $curl_options[CURLOPT_HTTPGET] = TRUE;
         return $this->curlExec($curl_options, TRUE);
@@ -784,12 +784,12 @@ abstract class WebTestBase extends TestBase {
     $this->setRawContent($content);
     $this->url = isset($original_url) ? $original_url : curl_getinfo($this->curlHandle, CURLINFO_EFFECTIVE_URL);
 
-    $message_vars = array(
+    $message_vars = [
       '@method' => !empty($curl_options[CURLOPT_NOBODY]) ? 'HEAD' : (empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST'),
       '@url' => isset($original_url) ? $original_url : $url,
       '@status' => $status,
       '@length' => format_size(strlen($this->getRawContent()))
-    );
+    ];
     $message = SafeMarkup::format('@method @url returned @status (@length).', $message_vars);
     $this->assertTrue($this->getRawContent() !== FALSE, $message, 'Browser');
     return $this->getRawContent();
@@ -823,7 +823,7 @@ abstract class WebTestBase extends TestBase {
     if (preg_match('/^X-Drupal-Assertion-[0-9]+: (.*)$/', $header, $matches)) {
       // Call \Drupal\simpletest\WebTestBase::error() with the parameters from
       // the header.
-      call_user_func_array(array(&$this, 'error'), unserialize(urldecode($matches[1])));
+      call_user_func_array([&$this, 'error'], unserialize(urldecode($matches[1])));
     }
 
     // Save cookies.
@@ -831,7 +831,7 @@ abstract class WebTestBase extends TestBase {
       $name = $matches[1];
       $parts = array_map('trim', explode(';', $matches[2]));
       $value = array_shift($parts);
-      $this->cookies[$name] = array('value' => $value, 'secure' => in_array('secure', $parts));
+      $this->cookies[$name] = ['value' => $value, 'secure' => in_array('secure', $parts)];
       if ($name === $this->getSessionName()) {
         if ($value != 'deleted') {
           $this->sessionId = $value;
@@ -885,11 +885,11 @@ abstract class WebTestBase extends TestBase {
    * @return string
    *   The retrieved HTML string, also available as $this->getRawContent()
    */
-  protected function drupalGet($path, array $options = array(), array $headers = array()) {
+  protected function drupalGet($path, array $options = [], array $headers = []) {
     // We re-using a CURL connection here. If that connection still has certain
     // options set, it might change the GET into a POST. Make sure we clear out
     // previous options.
-    $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => $this->buildUrl($path, $options), CURLOPT_NOBODY => FALSE, CURLOPT_HTTPHEADER => $headers));
+    $out = $this->curlExec([CURLOPT_HTTPGET => TRUE, CURLOPT_URL => $this->buildUrl($path, $options), CURLOPT_NOBODY => FALSE, CURLOPT_HTTPHEADER => $headers]);
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
 
@@ -928,7 +928,7 @@ abstract class WebTestBase extends TestBase {
    * @return array
    *   Decoded json.
    */
-  protected function drupalGetJSON($path, array $options = array(), array $headers = array()) {
+  protected function drupalGetJSON($path, array $options = [], array $headers = []) {
     return Json::decode($this->drupalGetWithFormat($path, 'json', $options, $headers));
   }
 
@@ -965,7 +965,7 @@ abstract class WebTestBase extends TestBase {
    * @return array
    *   Decoded JSON.
    */
-  protected function drupalGetAjax($path, array $options = array(), array $headers = array()) {
+  protected function drupalGetAjax($path, array $options = [], array $headers = []) {
     if (!isset($options['query'][MainContentViewSubscriber::WRAPPER_FORMAT])) {
       $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] = 'drupal_ajax';
     }
@@ -985,7 +985,7 @@ abstract class WebTestBase extends TestBase {
    * @return string
    *   The retrieved content.
    */
-  protected function drupalGetXHR($path, array $options = array(), array $headers = array()) {
+  protected function drupalGetXHR($path, array $options = [], array $headers = []) {
     $headers[] = 'X-Requested-With: XMLHttpRequest';
     return $this->drupalGet($path, $options, $headers);
   }
@@ -1074,7 +1074,7 @@ abstract class WebTestBase extends TestBase {
    *   POST data, so it must already be urlencoded and contain a leading "&"
    *   (e.g., "&extra_var1=hello+world&extra_var2=you%26me").
    */
-  protected function drupalPostForm($path, $edit, $submit, array $options = array(), array $headers = array(), $form_html_id = NULL, $extra_post = NULL) {
+  protected function drupalPostForm($path, $edit, $submit, array $options = [], array $headers = [], $form_html_id = NULL, $extra_post = NULL) {
     if (is_object($submit)) {
       // Cast MarkupInterface objects to string.
       $submit = (string) $submit;
@@ -1100,8 +1100,8 @@ abstract class WebTestBase extends TestBase {
       foreach ($forms as $form) {
         // We try to set the fields of this form as specified in $edit.
         $edit = $edit_save;
-        $post = array();
-        $upload = array();
+        $post = [];
+        $upload = [];
         $submit_matches = $this->handleForm($post, $edit, $upload, $ajax ? NULL : $submit, $form);
         $action = isset($form['action']) ? $this->getAbsoluteUrl((string) $form['action']) : $this->getUrl();
         if ($ajax) {
@@ -1141,7 +1141,7 @@ abstract class WebTestBase extends TestBase {
           else {
             $post = $this->serializePostValues($post) . $extra_post;
           }
-          $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post, CURLOPT_HTTPHEADER => $headers));
+          $out = $this->curlExec([CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post, CURLOPT_HTTPHEADER => $headers]);
           // Ensure that any changes to variables in the other thread are picked
           // up.
           $this->refreshVariables();
@@ -1169,12 +1169,12 @@ abstract class WebTestBase extends TestBase {
       }
       // We have not found a form which contained all fields of $edit.
       foreach ($edit as $name => $value) {
-        $this->fail(SafeMarkup::format('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
+        $this->fail(SafeMarkup::format('Failed to set field @name to @value', ['@name' => $name, '@value' => $value]));
       }
       if (!$ajax && isset($submit)) {
-        $this->assertTrue($submit_matches, format_string('Found the @submit button', array('@submit' => $submit)));
+        $this->assertTrue($submit_matches, format_string('Found the @submit button', ['@submit' => $submit]));
       }
-      $this->fail(format_string('Found the requested form fields at @path', array('@path' => ($path instanceof Url) ? $path->toString() : $path)));
+      $this->fail(format_string('Found the requested form fields at @path', ['@path' => ($path instanceof Url) ? $path->toString() : $path]));
     }
   }
 
@@ -1220,7 +1220,7 @@ abstract class WebTestBase extends TestBase {
    * @see drupalProcessAjaxResponse()
    * @see ajax.js
    */
-  protected function drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
+  protected function drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path = NULL, array $options = [], array $headers = [], $form_html_id = NULL, $ajax_settings = NULL) {
 
     // Get the content of the initial page prior to calling drupalPostForm(),
     // since drupalPostForm() replaces $this->content.
@@ -1257,7 +1257,7 @@ abstract class WebTestBase extends TestBase {
     }
 
     // Add extra information to the POST data as ajax.js does.
-    $extra_post = array();
+    $extra_post = [];
     if (isset($ajax_settings['submit'])) {
       foreach ($ajax_settings['submit'] as $key => $value) {
         $extra_post[$key] = $value;
@@ -1295,7 +1295,7 @@ abstract class WebTestBase extends TestBase {
     $ajax_path = $this->container->get('unrouted_url_assembler')->assemble('base://' . $ajax_path, $options);
 
     // Submit the POST request.
-    $return = Json::decode($this->drupalPostForm(NULL, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers, $form_html_id, $extra_post));
+    $return = Json::decode($this->drupalPostForm(NULL, $edit, ['path' => $ajax_path, 'triggering_element' => $triggering_element], $options, $headers, $form_html_id, $extra_post));
     if ($this->assertAjaxHeader) {
       $this->assertIdentical($this->drupalGetHeader('X-Drupal-Ajax-Token'), '1', 'Ajax response header found.');
     }
@@ -1341,9 +1341,9 @@ abstract class WebTestBase extends TestBase {
 
     // ajax.js applies some defaults to the settings object, so do the same
     // for what's used by this function.
-    $ajax_settings += array(
+    $ajax_settings += [
       'method' => 'replaceWith',
-    );
+    ];
     // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
     // them.
     $dom = new \DOMDocument();
@@ -1370,7 +1370,7 @@ abstract class WebTestBase extends TestBase {
           // @todo Ajax commands can target any jQuery selector, but these are
           //   hard to fully emulate with XPath. For now, just handle 'head'
           //   and 'body', since these are used by the Ajax renderer.
-          elseif (in_array($command['selector'], array('head', 'body'))) {
+          elseif (in_array($command['selector'], ['head', 'body'])) {
             $wrapperNode = $xpath->query('//' . $command['selector'])->item(0);
           }
           if ($wrapperNode) {
@@ -1464,16 +1464,16 @@ abstract class WebTestBase extends TestBase {
    * @see WebTestBase::getAjaxPageStatePostData()
    * @see WebTestBase::curlExec()
    */
-  protected function drupalPost($path, $accept, array $post, $options = array()) {
-    return $this->curlExec(array(
+  protected function drupalPost($path, $accept, array $post, $options = []) {
+    return $this->curlExec([
       CURLOPT_URL => $this->buildUrl($path, $options),
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $this->serializePostValues($post),
-      CURLOPT_HTTPHEADER => array(
+      CURLOPT_HTTPHEADER => [
         'Accept: ' . $accept,
         'Content-Type: application/x-www-form-urlencoded',
-      ),
-    ));
+      ],
+    ]);
   }
 
   /**
@@ -1510,7 +1510,7 @@ abstract class WebTestBase extends TestBase {
    *   The Ajax page state POST data.
    */
   protected function getAjaxPageStatePostData() {
-    $post = array();
+    $post = [];
     $drupal_settings = $this->drupalSettings;
     if (isset($drupal_settings['ajaxPageState']['theme'])) {
       $post['ajax_page_state[theme]'] = $drupal_settings['ajaxPageState']['theme'];
@@ -1537,7 +1537,7 @@ abstract class WebTestBase extends TestBase {
    * @return string
    *   The serialized result.
    */
-  protected function serializePostValues($post = array()) {
+  protected function serializePostValues($post = []) {
     foreach ($post as $key => $value) {
       $post[$key] = urlencode($key) . '=' . urlencode($value);
     }
@@ -1554,7 +1554,7 @@ abstract class WebTestBase extends TestBase {
    *   The flattened $edit array suitable for WebTestBase::drupalPostForm().
    */
   protected function translatePostValues(array $values) {
-    $edit = array();
+    $edit = [];
     // The easiest and most straightforward way to translate values suitable for
     // WebTestBase::drupalPostForm() is to actually build the POST data string
     // and convert the resulting key/value pairs back into a flat array.
@@ -1604,10 +1604,10 @@ abstract class WebTestBase extends TestBase {
    * @return
    *   The retrieved headers, also available as $this->getRawContent()
    */
-  protected function drupalHead($path, array $options = array(), array $headers = array()) {
+  protected function drupalHead($path, array $options = [], array $headers = []) {
     $options['absolute'] = TRUE;
     $url = $this->buildUrl($path, $options);
-    $out = $this->curlExec(array(CURLOPT_NOBODY => TRUE, CURLOPT_URL => $url, CURLOPT_HTTPHEADER => $headers));
+    $out = $this->curlExec([CURLOPT_NOBODY => TRUE, CURLOPT_URL => $url, CURLOPT_HTTPHEADER => $headers]);
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
 
@@ -1838,13 +1838,13 @@ abstract class WebTestBase extends TestBase {
     // Cast MarkupInterface objects to string.
     $label = (string) $label;
     $url_before = $this->getUrl();
-    $urls = $this->xpath($pattern, array(':label' => $label));
+    $urls = $this->xpath($pattern, [':label' => $label]);
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
-      $this->pass(SafeMarkup::format('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');
+      $this->pass(SafeMarkup::format('Clicked link %label (@url_target) from @url_before', ['%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before]), 'Browser');
       return $this->drupalGet($url_target);
     }
-    $this->fail(SafeMarkup::format('Link %label does not exist on @url_before', array('%label' => $label, '@url_before' => $url_before)), 'Browser');
+    $this->fail(SafeMarkup::format('Link %label does not exist on @url_before', ['%label' => $label, '@url_before' => $url_before]), 'Browser');
     return FALSE;
   }
 
@@ -1921,7 +1921,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function drupalGetHeaders($all_requests = FALSE) {
     $request = 0;
-    $headers = array($request => array());
+    $headers = [$request => []];
     foreach ($this->headers as $header) {
       $header = trim($header);
       if ($header === '') {
@@ -2032,7 +2032,7 @@ abstract class WebTestBase extends TestBase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertUrl($path, array $options = array(), $message = '', $group = 'Other') {
+  protected function assertUrl($path, array $options = [], $message = '', $group = 'Other') {
     if ($path instanceof Url) {
       $url_obj = $path;
     }
@@ -2047,10 +2047,10 @@ abstract class WebTestBase extends TestBase {
     }
     $url = $url_obj->setAbsolute()->toString();
     if (!$message) {
-      $message = SafeMarkup::format('Expected @url matches current URL (@current_url).', array(
+      $message = SafeMarkup::format('Expected @url matches current URL (@current_url).', [
         '@url' => var_export($url, TRUE),
         '@current_url' => $this->getUrl(),
-      ));
+      ]);
     }
     // Paths in query strings can be encoded or decoded with no functional
     // difference, decode them for comparison purposes.
@@ -2082,7 +2082,7 @@ abstract class WebTestBase extends TestBase {
   protected function assertResponse($code, $message = '', $group = 'Browser') {
     $curl_code = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
-    return $this->assertTrue($match, $message ? $message : SafeMarkup::format('HTTP response expected @code, actual @curl_code', array('@code' => $code, '@curl_code' => $curl_code)), $group);
+    return $this->assertTrue($match, $message ? $message : SafeMarkup::format('HTTP response expected @code, actual @curl_code', ['@code' => $code, '@curl_code' => $curl_code]), $group);
   }
 
   /**
@@ -2108,7 +2108,7 @@ abstract class WebTestBase extends TestBase {
   protected function assertNoResponse($code, $message = '', $group = 'Browser') {
     $curl_code = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
-    return $this->assertFalse($match, $message ? $message : SafeMarkup::format('HTTP response not expected @code, actual @curl_code', array('@code' => $code, '@curl_code' => $curl_code)), $group);
+    return $this->assertFalse($match, $message ? $message : SafeMarkup::format('HTTP response not expected @code, actual @curl_code', ['@code' => $code, '@curl_code' => $curl_code]), $group);
   }
 
   /**
@@ -2122,7 +2122,7 @@ abstract class WebTestBase extends TestBase {
    * @return string
    *   An absolute URL string.
    */
-  protected function buildUrl($path, array $options = array()) {
+  protected function buildUrl($path, array $options = []) {
     if ($path instanceof Url) {
       $url_options = $path->getOptions();
       $options = $url_options + $options;

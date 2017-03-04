@@ -73,6 +73,6 @@ class Filter extends Plugin {
    *
    * @var array (optional)
    */
-  public $settings = array();
+  public $settings = [];
 
 }

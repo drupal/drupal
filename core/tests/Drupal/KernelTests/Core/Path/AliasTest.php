@@ -29,10 +29,10 @@ class AliasTest extends PathUnitTestBase {
     foreach ($aliases as $idx => $alias) {
       $aliasStorage->save($alias['source'], $alias['alias'], $alias['langcode']);
 
-      $result = $connection->query('SELECT * FROM {url_alias} WHERE source = :source AND alias= :alias AND langcode = :langcode', array(':source' => $alias['source'], ':alias' => $alias['alias'], ':langcode' => $alias['langcode']));
+      $result = $connection->query('SELECT * FROM {url_alias} WHERE source = :source AND alias= :alias AND langcode = :langcode', [':source' => $alias['source'], ':alias' => $alias['alias'], ':langcode' => $alias['langcode']]);
       $rows = $result->fetchAll();
 
-      $this->assertEqual(count($rows), 1, format_string('Created an entry for %alias.', array('%alias' => $alias['alias'])));
+      $this->assertEqual(count($rows), 1, format_string('Created an entry for %alias.', ['%alias' => $alias['alias']]));
 
       //Cache the pid for further tests.
       $aliases[$idx]['pid'] = $rows[0]->pid;
@@ -41,12 +41,12 @@ class AliasTest extends PathUnitTestBase {
     //Load a few aliases
     foreach ($aliases as $alias) {
       $pid = $alias['pid'];
-      $loadedAlias = $aliasStorage->load(array('pid' => $pid));
-      $this->assertEqual($loadedAlias, $alias, format_string('Loaded the expected path with pid %pid.', array('%pid' => $pid)));
+      $loadedAlias = $aliasStorage->load(['pid' => $pid]);
+      $this->assertEqual($loadedAlias, $alias, format_string('Loaded the expected path with pid %pid.', ['%pid' => $pid]));
     }
 
     // Load alias by source path.
-    $loadedAlias = $aliasStorage->load(array('source' => '/node/1'));
+    $loadedAlias = $aliasStorage->load(['source' => '/node/1']);
     $this->assertEqual($loadedAlias['alias'], '/alias_for_node_1_und', 'The last created alias loaded by default.');
 
     //Update a few aliases
@@ -55,21 +55,21 @@ class AliasTest extends PathUnitTestBase {
 
       $this->assertEqual($alias['alias'], $fields['original']['alias']);
 
-      $result = $connection->query('SELECT pid FROM {url_alias} WHERE source = :source AND alias= :alias AND langcode = :langcode', array(':source' => $alias['source'], ':alias' => $alias['alias'] . '_updated', ':langcode' => $alias['langcode']));
+      $result = $connection->query('SELECT pid FROM {url_alias} WHERE source = :source AND alias= :alias AND langcode = :langcode', [':source' => $alias['source'], ':alias' => $alias['alias'] . '_updated', ':langcode' => $alias['langcode']]);
       $pid = $result->fetchField();
 
-      $this->assertEqual($pid, $alias['pid'], format_string('Updated entry for pid %pid.', array('%pid' => $pid)));
+      $this->assertEqual($pid, $alias['pid'], format_string('Updated entry for pid %pid.', ['%pid' => $pid]));
     }
 
     //Delete a few aliases
     foreach ($aliases as $alias) {
       $pid = $alias['pid'];
-      $aliasStorage->delete(array('pid' => $pid));
+      $aliasStorage->delete(['pid' => $pid]);
 
-      $result = $connection->query('SELECT * FROM {url_alias} WHERE pid = :pid', array(':pid' => $pid));
+      $result = $connection->query('SELECT * FROM {url_alias} WHERE pid = :pid', [':pid' => $pid]);
       $rows = $result->fetchAll();
 
-      $this->assertEqual(count($rows), 0, format_string('Deleted entry with pid %pid.', array('%pid' => $pid)));
+      $this->assertEqual(count($rows), 0, format_string('Deleted entry with pid %pid.', ['%pid' => $pid]));
     }
   }
 
@@ -84,21 +84,21 @@ class AliasTest extends PathUnitTestBase {
 
     // Test the situation where the source is the same for multiple aliases.
     // Start with a language-neutral alias, which we will override.
-    $path = array(
+    $path = [
       'source' => "/user/1",
       'alias' => '/foo',
-    );
+    ];
 
     $aliasStorage->save($path['source'], $path['alias']);
     $this->assertEqual($aliasManager->getAliasByPath($path['source']), $path['alias'], 'Basic alias lookup works.');
     $this->assertEqual($aliasManager->getPathByAlias($path['alias']), $path['source'], 'Basic source lookup works.');
 
     // Create a language specific alias for the default language (English).
-    $path = array(
+    $path = [
       'source' => "/user/1",
       'alias' => "/users/Dries",
       'langcode' => 'en',
-    );
+    ];
     $aliasStorage->save($path['source'], $path['alias'], $path['langcode']);
     // Hook that clears cache is not executed with unit tests.
     \Drupal::service('path.alias_manager')->cacheClear();
@@ -106,19 +106,19 @@ class AliasTest extends PathUnitTestBase {
     $this->assertEqual($aliasManager->getPathByAlias($path['alias']), $path['source'], 'English source overrides language-neutral source.');
 
     // Create a language-neutral alias for the same path, again.
-    $path = array(
+    $path = [
       'source' => "/user/1",
       'alias' => '/bar',
-    );
+    ];
     $aliasStorage->save($path['source'], $path['alias']);
     $this->assertEqual($aliasManager->getAliasByPath($path['source']), "/users/Dries", 'English alias still returned after entering a language-neutral alias.');
 
     // Create a language-specific (xx-lolspeak) alias for the same path.
-    $path = array(
+    $path = [
       'source' => "/user/1",
       'alias' => '/LOL',
       'langcode' => 'xx-lolspeak',
-    );
+    ];
     $aliasStorage->save($path['source'], $path['alias'], $path['langcode']);
     $this->assertEqual($aliasManager->getAliasByPath($path['source']), "/users/Dries", 'English alias still returned after entering a LOLspeak alias.');
     // The LOLspeak alias should be returned if we really want LOLspeak.
@@ -126,11 +126,11 @@ class AliasTest extends PathUnitTestBase {
 
     // Create a new alias for this path in English, which should override the
     // previous alias for "user/1".
-    $path = array(
+    $path = [
       'source' => "/user/1",
       'alias' => '/users/my-new-path',
       'langcode' => 'en',
-    );
+    ];
     $aliasStorage->save($path['source'], $path['alias'], $path['langcode']);
     // Hook that clears cache is not executed with unit tests.
     $aliasManager->cacheClear();
@@ -139,7 +139,7 @@ class AliasTest extends PathUnitTestBase {
 
     // Remove the English aliases, which should cause a fallback to the most
     // recently created language-neutral alias, 'bar'.
-    $aliasStorage->delete(array('langcode' => 'en'));
+    $aliasStorage->delete(['langcode' => 'en']);
     // Hook that clears cache is not executed with unit tests.
     $aliasManager->cacheClear();
     $this->assertEqual($aliasManager->getAliasByPath($path['source']), '/bar', 'Path lookup falls back to recently created language-neutral alias.');
@@ -190,7 +190,7 @@ class AliasTest extends PathUnitTestBase {
     $this->assertNull($whitelist->get($this->randomMachineName()));
 
     // Remove the user alias again, whitelist entry should be removed.
-    $aliasStorage->delete(array('source' => '/user/1'));
+    $aliasStorage->delete(['source' => '/user/1']);
     $aliasManager->cacheClear();
     $this->assertNull($whitelist->get('user'));
     $this->assertTrue($whitelist->get('admin'));

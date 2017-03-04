@@ -23,16 +23,16 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'format_type' => 'medium',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     foreach ($items as $delta => $item) {
       $output = '';
@@ -56,7 +56,7 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
       }
 
       // Display the date using theme datetime.
-      $elements[$delta] = array(
+      $elements[$delta] = [
         '#cache' => [
           'contexts' => [
             'timezone',
@@ -65,10 +65,10 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
         '#theme' => 'time',
         '#text' => $output,
         '#html' => FALSE,
-        '#attributes' => array(
+        '#attributes' => [
           'datetime' => $iso_date,
-        ),
-      );
+        ],
+      ];
       if (!empty($item->_attributes)) {
         $elements[$delta]['#attributes'] += $item->_attributes;
         // Unset field item attributes since they have been included in the
@@ -104,13 +104,13 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
       $options[$type] = $type_info->label() . ' (' . $format . ')';
     }
 
-    $form['format_type'] = array(
+    $form['format_type'] = [
       '#type' => 'select',
       '#title' => t('Date format'),
       '#description' => t("Choose a format for displaying the date. Be sure to set a format appropriate for the field, i.e. omitting time for a field that only has a date."),
       '#options' => $options,
       '#default_value' => $this->getSetting('format_type'),
-    );
+    ];
 
     return $form;
   }
@@ -122,7 +122,7 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
     $summary = parent::settingsSummary();
 
     $date = new DrupalDateTime();
-    $summary[] = t('Format: @display', array('@display' => $this->formatDate($date, $this->getFormatSettings())));
+    $summary[] = t('Format: @display', ['@display' => $this->formatDate($date, $this->getFormatSettings())]);
 
     return $summary;
   }

@@ -95,13 +95,13 @@ class ResourceRoutes extends RouteSubscriberBase {
 
         // Check that authentication providers are defined.
         if (empty($rest_resource_config->getAuthenticationProviders($method))) {
-          $this->logger->error('At least one authentication provider must be defined for resource @id', array(':id' => $rest_resource_config->id()));
+          $this->logger->error('At least one authentication provider must be defined for resource @id', [':id' => $rest_resource_config->id()]);
           continue;
         }
 
         // Check that formats are defined.
         if (empty($rest_resource_config->getFormats($method))) {
-          $this->logger->error('At least one format must be defined for resource @id', array(':id' => $rest_resource_config->id()));
+          $this->logger->error('At least one format must be defined for resource @id', [':id' => $rest_resource_config->id()]);
           continue;
         }
 

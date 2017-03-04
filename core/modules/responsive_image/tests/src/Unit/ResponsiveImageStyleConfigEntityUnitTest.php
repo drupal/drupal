@@ -101,7 +101,7 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
     $this->breakpointManager->expects($this->any())
       ->method('getGroupProviders')
       ->with('test_group')
-      ->willReturn(array('bartik' => 'theme', 'toolbar' => 'module'));
+      ->willReturn(['bartik' => 'theme', 'toolbar' => 'module']);
 
     $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertEquals(['toolbar'], $dependencies['module']);
@@ -114,49 +114,49 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
    * @covers ::hasImageStyleMappings
    */
   public function testHasImageStyleMappings() {
-    $entity = new ResponsiveImageStyle(array());
+    $entity = new ResponsiveImageStyle([]);
     $this->assertFalse($entity->hasImageStyleMappings());
-    $entity->addImageStyleMapping('test_breakpoint', '1x', array(
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
         'image_mapping_type' => 'image_style',
         'image_mapping' => '',
-    ));
+    ]);
     $this->assertFalse($entity->hasImageStyleMappings());
     $entity->removeImageStyleMappings();
-    $entity->addImageStyleMapping('test_breakpoint', '1x', array(
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
         'image_mapping_type' => 'sizes',
-        'image_mapping' => array(
+        'image_mapping' => [
           'sizes' => '(min-width:700px) 700px, 100vw',
-          'sizes_image_styles' => array(),
-        ),
-    ));
+          'sizes_image_styles' => [],
+        ],
+    ]);
     $this->assertFalse($entity->hasImageStyleMappings());
     $entity->removeImageStyleMappings();
-    $entity->addImageStyleMapping('test_breakpoint', '1x', array(
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
         'image_mapping_type' => 'sizes',
-        'image_mapping' => array(
+        'image_mapping' => [
           'sizes' => '',
-          'sizes_image_styles' => array(
+          'sizes_image_styles' => [
             'large' => 'large',
-          ),
-        ),
-    ));
+          ],
+        ],
+    ]);
     $this->assertFalse($entity->hasImageStyleMappings());
     $entity->removeImageStyleMappings();
-    $entity->addImageStyleMapping('test_breakpoint', '1x', array(
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
         'image_mapping_type' => 'image_style',
         'image_mapping' => 'large',
-    ));
+    ]);
     $this->assertTrue($entity->hasImageStyleMappings());
     $entity->removeImageStyleMappings();
-    $entity->addImageStyleMapping('test_breakpoint', '1x', array(
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
         'image_mapping_type' => 'sizes',
-        'image_mapping' => array(
+        'image_mapping' => [
           'sizes' => '(min-width:700px) 700px, 100vw',
-          'sizes_image_styles' => array(
+          'sizes_image_styles' => [
             'large' => 'large',
-          ),
-        ),
-    ));
+          ],
+        ],
+    ]);
     $this->assertTrue($entity->hasImageStyleMappings());
   }
 
@@ -165,17 +165,17 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
    * @covers ::getImageStyleMapping
    */
   public function testGetImageStyleMapping() {
-    $entity = new ResponsiveImageStyle(array(''));
-    $entity->addImageStyleMapping('test_breakpoint', '1x', array(
+    $entity = new ResponsiveImageStyle(['']);
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'large',
-    ));
-    $expected = array(
+    ]);
+    $expected = [
       'breakpoint_id' => 'test_breakpoint',
       'multiplier' => '1x',
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'large',
-    );
+    ];
     $this->assertEquals($expected, $entity->getImageStyleMapping('test_breakpoint', '1x'));
     $this->assertNull($entity->getImageStyleMapping('test_unknown_breakpoint', '1x'));
   }
@@ -185,90 +185,90 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
    * @covers ::getKeyedImageStyleMappings
    */
   public function testGetKeyedImageStyleMappings() {
-    $entity = new ResponsiveImageStyle(array(''));
-    $entity->addImageStyleMapping('test_breakpoint', '1x', array(
+    $entity = new ResponsiveImageStyle(['']);
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'large',
-    ));
-    $entity->addImageStyleMapping('test_breakpoint', '2x', array(
+    ]);
+    $entity->addImageStyleMapping('test_breakpoint', '2x', [
       'image_mapping_type' => 'sizes',
-      'image_mapping' => array(
+      'image_mapping' => [
         'sizes' => '(min-width:700px) 700px, 100vw',
-        'sizes_image_styles' => array(
+        'sizes_image_styles' => [
           'large' => 'large',
-        ),
-      ),
-    ));
-    $entity->addImageStyleMapping('test_breakpoint2', '1x', array(
+        ],
+      ],
+    ]);
+    $entity->addImageStyleMapping('test_breakpoint2', '1x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'thumbnail',
-    ));
-    $entity->addImageStyleMapping('test_breakpoint2', '2x', array(
+    ]);
+    $entity->addImageStyleMapping('test_breakpoint2', '2x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => '_original image_',
-    ));
+    ]);
 
-    $expected = array(
-      'test_breakpoint' => array(
-        '1x' => array(
+    $expected = [
+      'test_breakpoint' => [
+        '1x' => [
           'breakpoint_id' => 'test_breakpoint',
           'multiplier' => '1x',
           'image_mapping_type' => 'image_style',
           'image_mapping' => 'large',
-        ),
-        '2x' => array(
+        ],
+        '2x' => [
           'breakpoint_id' => 'test_breakpoint',
           'multiplier' => '2x',
           'image_mapping_type' => 'sizes',
-          'image_mapping' => array(
+          'image_mapping' => [
             'sizes' => '(min-width:700px) 700px, 100vw',
-            'sizes_image_styles' => array(
+            'sizes_image_styles' => [
               'large' => 'large',
-            ),
-          ),
-        ),
-      ),
-      'test_breakpoint2' => array(
-        '1x' => array(
+            ],
+          ],
+        ],
+      ],
+      'test_breakpoint2' => [
+        '1x' => [
           'breakpoint_id' => 'test_breakpoint2',
           'multiplier' => '1x',
           'image_mapping_type' => 'image_style',
           'image_mapping' => 'thumbnail',
-        ),
-        '2x' => array(
+        ],
+        '2x' => [
           'breakpoint_id' => 'test_breakpoint2',
           'multiplier' => '2x',
           'image_mapping_type' => 'image_style',
           'image_mapping' => '_original image_',
-        ),
-      )
-    );
+        ],
+      ]
+    ];
     $this->assertEquals($expected, $entity->getKeyedImageStyleMappings());
 
     // Add another mapping to ensure keyed mapping static cache is rebuilt.
-    $entity->addImageStyleMapping('test_breakpoint2', '2x', array(
+    $entity->addImageStyleMapping('test_breakpoint2', '2x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'medium',
-    ));
-    $expected['test_breakpoint2']['2x'] = array(
+    ]);
+    $expected['test_breakpoint2']['2x'] = [
       'breakpoint_id' => 'test_breakpoint2',
       'multiplier' => '2x',
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'medium',
-    );
+    ];
     $this->assertEquals($expected, $entity->getKeyedImageStyleMappings());
 
     // Overwrite a mapping to ensure keyed mapping static cache is rebuilt.
-    $entity->addImageStyleMapping('test_breakpoint2', '2x', array(
+    $entity->addImageStyleMapping('test_breakpoint2', '2x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'large',
-    ));
-    $expected['test_breakpoint2']['2x'] = array(
+    ]);
+    $expected['test_breakpoint2']['2x'] = [
       'breakpoint_id' => 'test_breakpoint2',
       'multiplier' => '2x',
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'large',
-    );
+    ];
     $this->assertEquals($expected, $entity->getKeyedImageStyleMappings());
   }
 
@@ -277,50 +277,50 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
    * @covers ::getImageStyleMappings
    */
   public function testGetImageStyleMappings() {
-    $entity = new ResponsiveImageStyle(array(''));
-    $entity->addImageStyleMapping('test_breakpoint', '1x', array(
+    $entity = new ResponsiveImageStyle(['']);
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'large',
-    ));
-    $entity->addImageStyleMapping('test_breakpoint', '2x', array(
+    ]);
+    $entity->addImageStyleMapping('test_breakpoint', '2x', [
       'image_mapping_type' => 'sizes',
-      'image_mapping' => array(
+      'image_mapping' => [
         'sizes' => '(min-width:700px) 700px, 100vw',
-        'sizes_image_styles' => array(
+        'sizes_image_styles' => [
           'large' => 'large',
-        ),
-      ),
-    ));
-    $entity->addImageStyleMapping('test_breakpoint2', '1x', array(
+        ],
+      ],
+    ]);
+    $entity->addImageStyleMapping('test_breakpoint2', '1x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'thumbnail',
-    ));
+    ]);
 
-    $expected = array(
-      array(
+    $expected = [
+      [
         'breakpoint_id' => 'test_breakpoint',
         'multiplier' => '1x',
         'image_mapping_type' => 'image_style',
         'image_mapping' => 'large',
-      ),
-      array(
+      ],
+      [
         'breakpoint_id' => 'test_breakpoint',
         'multiplier' => '2x',
         'image_mapping_type' => 'sizes',
-        'image_mapping' => array(
+        'image_mapping' => [
           'sizes' => '(min-width:700px) 700px, 100vw',
-          'sizes_image_styles' => array(
+          'sizes_image_styles' => [
             'large' => 'large',
-          ),
-        ),
-      ),
-      array(
+          ],
+        ],
+      ],
+      [
         'breakpoint_id' => 'test_breakpoint2',
         'multiplier' => '1x',
         'image_mapping_type' => 'image_style',
         'image_mapping' => 'thumbnail',
-      ),
-    );
+      ],
+    ];
     $this->assertEquals($expected, $entity->getImageStyleMappings());
   }
 
@@ -329,24 +329,24 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
    * @covers ::removeImageStyleMappings
    */
   public function testRemoveImageStyleMappings() {
-    $entity = new ResponsiveImageStyle(array(''));
-    $entity->addImageStyleMapping('test_breakpoint', '1x', array(
+    $entity = new ResponsiveImageStyle(['']);
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'large',
-    ));
-    $entity->addImageStyleMapping('test_breakpoint', '2x', array(
+    ]);
+    $entity->addImageStyleMapping('test_breakpoint', '2x', [
       'image_mapping_type' => 'sizes',
-      'image_mapping' => array(
+      'image_mapping' => [
         'sizes' => '(min-width:700px) 700px, 100vw',
-        'sizes_image_styles' => array(
+        'sizes_image_styles' => [
           'large' => 'large',
-        ),
-      ),
-    ));
-    $entity->addImageStyleMapping('test_breakpoint2', '1x', array(
+        ],
+      ],
+    ]);
+    $entity->addImageStyleMapping('test_breakpoint2', '1x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'thumbnail',
-    ));
+    ]);
 
     $this->assertTrue($entity->hasImageStyleMappings());
     $entity->removeImageStyleMappings();
@@ -360,24 +360,24 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
    * @covers ::getBreakpointGroup
    */
   public function testSetBreakpointGroup() {
-    $entity = new ResponsiveImageStyle(array('breakpoint_group' => 'test_group'));
-    $entity->addImageStyleMapping('test_breakpoint', '1x', array(
+    $entity = new ResponsiveImageStyle(['breakpoint_group' => 'test_group']);
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'large',
-    ));
-    $entity->addImageStyleMapping('test_breakpoint', '2x', array(
+    ]);
+    $entity->addImageStyleMapping('test_breakpoint', '2x', [
       'image_mapping_type' => 'sizes',
-      'image_mapping' => array(
+      'image_mapping' => [
         'sizes' => '(min-width:700px) 700px, 100vw',
-        'sizes_image_styles' => array(
+        'sizes_image_styles' => [
           'large' => 'large',
-        ),
-      ),
-    ));
-    $entity->addImageStyleMapping('test_breakpoint2', '1x', array(
+        ],
+      ],
+    ]);
+    $entity->addImageStyleMapping('test_breakpoint2', '1x', [
       'image_mapping_type' => 'image_style',
       'image_mapping' => 'thumbnail',
-    ));
+    ]);
 
     // Ensure that setting to same group does not remove mappings.
     $entity->setBreakpointGroup('test_group');

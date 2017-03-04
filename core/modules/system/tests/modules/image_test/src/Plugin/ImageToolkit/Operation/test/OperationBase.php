@@ -13,7 +13,7 @@ abstract class OperationBase extends ImageToolkitOperationBase {
    * {@inheritdoc}
    */
   public function arguments() {
-    return array();
+    return [];
   }
 
   /**

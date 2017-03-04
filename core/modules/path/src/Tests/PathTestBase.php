@@ -17,15 +17,15 @@ abstract class PathTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'path');
+  public static $modules = ['node', 'path'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+      $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
+      $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     }
   }
 

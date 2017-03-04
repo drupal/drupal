@@ -60,12 +60,12 @@ class NegotiationBrowserForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form = array();
+    $form = [];
 
     // Initialize a language list to the ones available, including English.
     $languages = $this->languageManager->getLanguages();
 
-    $existing_languages = array();
+    $existing_languages = [];
     foreach ($languages as $langcode => $language) {
       $existing_languages[$langcode] = $language->getName();
     }
@@ -77,10 +77,10 @@ class NegotiationBrowserForm extends ConfigFormBase {
       $language_options = $this->languageManager->getStandardLanguageListWithoutConfigured();
     }
     else {
-      $language_options = array(
+      $language_options = [
         (string) $this->t('Existing languages') => $existing_languages,
         (string) $this->t('Languages not yet added') => $this->languageManager->getStandardLanguageListWithoutConfigured(),
-      );
+      ];
     }
 
     $form['mappings'] = [
@@ -96,24 +96,24 @@ class NegotiationBrowserForm extends ConfigFormBase {
 
     $mappings = $this->language_get_browser_drupal_langcode_mappings();
     foreach ($mappings as $browser_langcode => $drupal_langcode) {
-      $form['mappings'][$browser_langcode] = array(
-        'browser_langcode' => array(
+      $form['mappings'][$browser_langcode] = [
+        'browser_langcode' => [
           '#title' => $this->t('Browser language code'),
           '#title_display' => 'invisible',
           '#type' => 'textfield',
           '#default_value' => $browser_langcode,
           '#size' => 20,
           '#required' => TRUE,
-        ),
-        'drupal_langcode' => array(
+        ],
+        'drupal_langcode' => [
           '#title' => $this->t('Site language'),
           '#title_display' => 'invisible',
           '#type' => 'select',
           '#options' => $language_options,
           '#default_value' => $drupal_langcode,
           '#required' => TRUE,
-        ),
-      );
+        ],
+      ];
       // Operations column.
       $form['mappings'][$browser_langcode]['operations'] = [
         '#type' => 'operations',
@@ -126,22 +126,22 @@ class NegotiationBrowserForm extends ConfigFormBase {
     }
 
     // Add empty row.
-    $form['new_mapping'] = array(
+    $form['new_mapping'] = [
       '#type' => 'details',
       '#title' => $this->t('Add a new mapping'),
       '#tree' => TRUE,
-    );
-    $form['new_mapping']['browser_langcode'] = array(
+    ];
+    $form['new_mapping']['browser_langcode'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Browser language code'),
-      '#description' => $this->t('Use language codes as <a href=":w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array(':w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
+      '#description' => $this->t('Use language codes as <a href=":w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', [':w3ctags' => 'http://www.w3.org/International/articles/language-tags/']),
       '#size' => 20,
-    );
-    $form['new_mapping']['drupal_langcode'] = array(
+    ];
+    $form['new_mapping']['drupal_langcode'] = [
       '#type' => 'select',
       '#title' => $this->t('Site language'),
       '#options' => $language_options,
-    );
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -151,7 +151,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Array to check if all browser language codes are unique.
-    $unique_values = array();
+    $unique_values = [];
 
     // Check all mappings.
     if ($form_state->hasValue('mappings')) {
@@ -207,7 +207,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
   protected function language_get_browser_drupal_langcode_mappings() {
     $config = $this->config('language.mappings');
     if ($config->isNew()) {
-      return array();
+      return [];
     }
     return $config->get('map');
   }

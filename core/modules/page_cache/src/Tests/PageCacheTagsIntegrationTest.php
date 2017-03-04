@@ -39,32 +39,32 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
   function testPageCacheTags() {
     // Create two nodes.
     $author_1 = $this->drupalCreateUser();
-    $node_1 = $this->drupalCreateNode(array(
+    $node_1 = $this->drupalCreateNode([
       'uid' => $author_1->id(),
       'title' => 'Node 1',
-      'body' => array(
-        0 => array('value' => 'Body 1', 'format' => 'basic_html'),
-      ),
+      'body' => [
+        0 => ['value' => 'Body 1', 'format' => 'basic_html'],
+      ],
       'promote' => NodeInterface::PROMOTED,
-    ));
+    ]);
     $author_2 = $this->drupalCreateUser();
-    $node_2 = $this->drupalCreateNode(array(
+    $node_2 = $this->drupalCreateNode([
       'uid' => $author_2->id(),
       'title' => 'Node 2',
-      'body' => array(
-        0 => array('value' => 'Body 2', 'format' => 'full_html'),
-      ),
+      'body' => [
+        0 => ['value' => 'Body 2', 'format' => 'full_html'],
+      ],
       'promote' => NodeInterface::PROMOTED,
-    ));
+    ]);
 
     // Place a block, but only make it visible on full node page 2.
-    $block = $this->drupalPlaceBlock('views_block:comments_recent-block_1', array(
-      'visibility' => array(
-        'request_path' => array(
+    $block = $this->drupalPlaceBlock('views_block:comments_recent-block_1', [
+      'visibility' => [
+        'request_path' => [
           'pages' => '/node/' . $node_2->id(),
-        ),
-      ),
-    ));
+        ],
+      ],
+    ]);
 
     $cache_contexts = [
       'languages:' . LanguageInterface::TYPE_INTERFACE,
@@ -79,7 +79,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
     ];
 
     // Full node page 1.
-    $this->assertPageCacheContextsAndTags($node_1->urlInfo(), $cache_contexts, array(
+    $this->assertPageCacheContextsAndTags($node_1->urlInfo(), $cache_contexts, [
       'http_response',
       'rendered',
       'block_view',
@@ -114,13 +114,13 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       // FinishResponseSubscriber adds this cache tag to responses that have the
       // 'user.permissions' cache context for anonymous users.
       'config:user.role.anonymous',
-    ));
+    ]);
 
     // Render the view block adds the languages cache context.
     $cache_contexts[] = 'languages:' . LanguageInterface::TYPE_CONTENT;
 
     // Full node page 2.
-    $this->assertPageCacheContextsAndTags($node_2->urlInfo(), $cache_contexts, array(
+    $this->assertPageCacheContextsAndTags($node_2->urlInfo(), $cache_contexts, [
       'http_response',
       'rendered',
       'block_view',
@@ -158,7 +158,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       // 'user.permissions' cache context for anonymous users.
       'config:user.role.anonymous',
       'user:0',
-    ));
+    ]);
   }
 
 }

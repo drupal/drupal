@@ -66,7 +66,7 @@ class PathRootsSubscriberTest extends UnitTestCase {
 
     $this->state->expects($this->once())
       ->method('set')
-      ->with('router.path_roots', array('test', 'test2', 'test1'));
+      ->with('router.path_roots', ['test', 'test2', 'test1']);
 
     $this->pathRootsSubscriber->onRouteFinished();
   }

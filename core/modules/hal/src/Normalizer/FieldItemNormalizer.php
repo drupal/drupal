@@ -20,7 +20,7 @@ class FieldItemNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function normalize($field_item, $format = NULL, array $context = array()) {
+  public function normalize($field_item, $format = NULL, array $context = []) {
     $values = [];
     // We normalize each individual property, so each can do their own casting,
     // if needed.
@@ -38,15 +38,15 @@ class FieldItemNormalizer extends NormalizerBase {
     // FieldNormalizer. This is necessary for the EntityReferenceItemNormalizer
     // to be able to place values in the '_links' array.
     $field = $field_item->getParent();
-    return array(
-      $field->getName() => array($values),
-    );
+    return [
+      $field->getName() => [$values],
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = array()) {
+  public function denormalize($data, $class, $format = NULL, array $context = []) {
     if (!isset($context['target_instance'])) {
       throw new InvalidArgumentException('$context[\'target_instance\'] must be set to denormalize with the FieldItemNormalizer');
     }

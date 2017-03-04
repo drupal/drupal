@@ -68,24 +68,24 @@ class NodeViewController extends EntityViewController {
       // metadata if we have to check access.
       if ($this->currentUser->isAuthenticated() || $url->access($this->currentUser)) {
         // Set the node path as the canonical URL to prevent duplicate content.
-        $build['#attached']['html_head_link'][] = array(
-          array(
+        $build['#attached']['html_head_link'][] = [
+          [
             'rel' => $rel,
             'href' => $url->toString(),
-          ),
+          ],
           TRUE,
-        );
+        ];
       }
 
       if ($rel == 'canonical') {
         // Set the non-aliased canonical path as a default shortlink.
-        $build['#attached']['html_head_link'][] = array(
-          array(
+        $build['#attached']['html_head_link'][] = [
+          [
             'rel' => 'shortlink',
             'href' => $url->setOption('alias', TRUE)->toString(),
-          ),
+          ],
           TRUE,
-        );
+        ];
       }
     }
 

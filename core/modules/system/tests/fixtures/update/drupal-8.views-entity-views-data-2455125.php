@@ -18,15 +18,15 @@ $views_configs[] = Yaml::decode(file_get_contents(__DIR__ . '/drupal-8.views-ent
 
 foreach ($views_configs as $views_config) {
   $connection->insert('config')
-    ->fields(array(
+    ->fields([
       'collection',
       'name',
       'data',
-    ))
-    ->values(array(
+    ])
+    ->values([
       'collection' => '',
       'name' => 'views.view.' . $views_config['id'],
       'data' => serialize($views_config),
-    ))
+    ])
     ->execute();
 }

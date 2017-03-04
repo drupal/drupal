@@ -37,21 +37,21 @@ class Button extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
       '#name' => 'op',
       '#is_button' => TRUE,
       '#executes_submit_callback' => FALSE,
       '#limit_validation_errors' => FALSE,
-      '#process' => array(
-        array($class, 'processButton'),
-        array($class, 'processAjaxForm'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderButton'),
-      ),
-      '#theme_wrappers' => array('input__submit'),
-    );
+      '#process' => [
+        [$class, 'processButton'],
+        [$class, 'processAjaxForm'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderButton'],
+      ],
+      '#theme_wrappers' => ['input__submit'],
+    ];
   }
 
   /**
@@ -81,7 +81,7 @@ class Button extends FormElement {
    */
   public static function preRenderButton($element) {
     $element['#attributes']['type'] = 'submit';
-    Element::setAttributes($element, array('id', 'name', 'value'));
+    Element::setAttributes($element, ['id', 'name', 'value']);
 
     $element['#attributes']['class'][] = 'button';
     if (!empty($element['#button_type'])) {

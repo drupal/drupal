@@ -61,19 +61,19 @@ class DatabaseStorage extends StorageBase {
    * {@inheritdoc}
    */
   public function has($key) {
-    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key', array(
+    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key', [
       ':collection' => $this->collection,
       ':key' => $key,
-    ))->fetchField();
+    ])->fetchField();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getMultiple(array $keys) {
-    $values = array();
+    $values = [];
     try {
-      $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN ( :keys[] ) AND collection = :collection', array(':keys[]' => $keys, ':collection' => $this->collection))->fetchAllAssoc('name');
+      $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN ( :keys[] ) AND collection = :collection', [':keys[]' => $keys, ':collection' => $this->collection])->fetchAllAssoc('name');
       foreach ($keys as $key) {
         if (isset($result[$key])) {
           $values[$key] = $this->serializer->decode($result[$key]->value);
@@ -92,8 +92,8 @@ class DatabaseStorage extends StorageBase {
    * {@inheritdoc}
    */
   public function getAll() {
-    $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection', array(':collection' => $this->collection));
-    $values = array();
+    $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection', [':collection' => $this->collection]);
+    $values = [];
 
     foreach ($result as $item) {
       if ($item) {
@@ -108,11 +108,11 @@ class DatabaseStorage extends StorageBase {
    */
   public function set($key, $value) {
     $this->connection->merge($this->table)
-      ->keys(array(
+      ->keys([
         'name' => $key,
         'collection' => $this->collection,
-      ))
-      ->fields(array('value' => $this->serializer->encode($value)))
+      ])
+      ->fields(['value' => $this->serializer->encode($value)])
       ->execute();
   }
 
@@ -121,11 +121,11 @@ class DatabaseStorage extends StorageBase {
    */
   public function setIfNotExists($key, $value) {
     $result = $this->connection->merge($this->table)
-      ->insertFields(array(
+      ->insertFields([
         'collection' => $this->collection,
         'name' => $key,
         'value' => $this->serializer->encode($value),
-      ))
+      ])
       ->condition('collection', $this->collection)
       ->condition('name', $key)
       ->execute();
@@ -137,7 +137,7 @@ class DatabaseStorage extends StorageBase {
    */
   public function rename($key, $new_key) {
     $this->connection->update($this->table)
-      ->fields(array('name' => $new_key))
+      ->fields(['name' => $new_key])
       ->condition('collection', $this->collection)
       ->condition('name', $key)
       ->execute();

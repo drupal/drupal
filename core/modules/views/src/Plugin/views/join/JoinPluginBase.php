@@ -191,7 +191,7 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
    *
    * @see \Drupal\views\Plugin\views\join\JoinPluginBase::initJoin()
    */
-  public $configuration = array();
+  public $configuration = [];
 
   /**
    * How all the extras will be combined. Either AND or OR.
@@ -223,10 +223,10 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     // Merge in some default values.
-    $configuration += array(
+    $configuration += [
       'type' => 'LEFT',
       'extra_operator' => 'AND'
-    );
+    ];
     $this->configuration = $configuration;
 
     if (!empty($configuration['table'])) {
@@ -270,17 +270,17 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
     }
 
     $condition = "$left_field = $table[alias].$this->field";
-    $arguments = array();
+    $arguments = [];
 
     // Tack on the extra.
     if (isset($this->extra)) {
       if (is_array($this->extra)) {
-        $extras = array();
+        $extras = [];
         foreach ($this->extra as $info) {
           // Do not require 'value' to be set; allow for field syntax instead.
-          $info += array(
+          $info += [
             'value' => NULL,
-          );
+          ];
           // Figure out the table name. Remember, only use aliases provided
           // if at all possible.
           $join_table = '';

@@ -24,13 +24,13 @@ class FormatterPluginManagerTest extends FieldKernelTestBase {
       // Set a name that will make isApplicable() return TRUE.
       ->setName('field_test_field');
 
-    $formatter_options = array(
+    $formatter_options = [
       'field_definition' => $base_field_definition,
       'view_mode' => 'default',
-      'configuration' => array(
+      'configuration' => [
         'type' => 'field_test_applicable',
-      ),
-    );
+      ],
+    ];
 
     $instance = $formatter_plugin_manager->getInstance($formatter_options);
     $this->assertEqual($instance->getPluginId(), 'field_test_applicable');

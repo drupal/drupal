@@ -16,7 +16,7 @@ class PluginInstanceTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected $pluginTypes = array(
+  protected $pluginTypes = [
     'access',
     'area',
     'argument',
@@ -36,7 +36,7 @@ class PluginInstanceTest extends ViewsKernelTestBase {
     'sort',
     'style',
     'wizard',
-  );
+  ];
 
   /**
    * An array of plugin definitions, keyed by plugin type.
@@ -60,8 +60,8 @@ class PluginInstanceTest extends ViewsKernelTestBase {
 
     // Check all plugin types.
     foreach ($this->pluginTypes as $type) {
-      $this->assertTrue(array_key_exists($type, $this->definitions), format_string('Key for plugin type @type found.', array('@type' => $type)));
-      $this->assertTrue(is_array($this->definitions[$type]) && !empty($this->definitions[$type]), format_string('Plugin type @type has an array of plugins.', array('@type' => $type)));
+      $this->assertTrue(array_key_exists($type, $this->definitions), format_string('Key for plugin type @type found.', ['@type' => $type]));
+      $this->assertTrue(is_array($this->definitions[$type]) && !empty($this->definitions[$type]), format_string('Plugin type @type has an array of plugins.', ['@type' => $type]));
     }
 
     // Tests that the plugin list has not missed any types.
@@ -87,7 +87,7 @@ class PluginInstanceTest extends ViewsKernelTestBase {
           // good to check they can be created but for throwing any notices for
           // method signatures etc. too.
           $instance = $manager->createInstance($id);
-          $this->assertTrue($instance instanceof $definition['class'], format_string('Instance of @type:@id created', array('@type' => $type, '@id' => $id)));
+          $this->assertTrue($instance instanceof $definition['class'], format_string('Instance of @type:@id created', ['@type' => $type, '@id' => $id]));
         }
       }
     }

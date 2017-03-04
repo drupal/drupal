@@ -148,17 +148,17 @@ class ConfigManager implements ConfigManagerInterface {
     $target_data = explode("\n", Yaml::encode($target_storage->read($target_name)));
 
     // Check for new or removed files.
-    if ($source_data === array('false')) {
+    if ($source_data === ['false']) {
       // Added file.
       // Cast the result of t() to a string, as the diff engine doesn't know
       // about objects.
-      $source_data = array((string) $this->t('File added'));
+      $source_data = [(string) $this->t('File added')];
     }
-    if ($target_data === array('false')) {
+    if ($target_data === ['false']) {
       // Deleted file.
       // Cast the result of t() to a string, as the diff engine doesn't know
       // about objects.
-      $target_data = array((string) $this->t('File removed'));
+      $target_data = [(string) $this->t('File removed')];
     }
 
     return new Diff($source_data, $target_data);
@@ -251,7 +251,7 @@ class ConfigManager implements ConfigManagerInterface {
     if (!$dependency_manager) {
       $dependency_manager = $this->getConfigDependencyManager();
     }
-    $dependencies = array();
+    $dependencies = [];
     foreach ($names as $name) {
       $dependencies = array_merge($dependencies, $dependency_manager->getDependentEntities($type, $name));
     }
@@ -263,7 +263,7 @@ class ConfigManager implements ConfigManagerInterface {
    */
   public function findConfigEntityDependentsAsEntities($type, array $names, ConfigDependencyManager $dependency_manager = NULL) {
     $dependencies = $this->findConfigEntityDependents($type, $names, $dependency_manager);
-    $entities = array();
+    $entities = [];
     $definitions = $this->entityManager->getDefinitions();
     foreach ($dependencies as $config_name => $dependency) {
       // Group by entity type to efficient load entities using
@@ -278,7 +278,7 @@ class ConfigManager implements ConfigManagerInterface {
         $entities[$entity_type_id][] = $id;
       }
     }
-    $entities_to_return = array();
+    $entities_to_return = [];
     foreach ($entities as $entity_type_id => $entities_to_load) {
       $storage = $this->entityManager->getStorage($entity_type_id);
       // Remove the keys since there are potential ID clashes from different
@@ -411,12 +411,12 @@ class ConfigManager implements ConfigManagerInterface {
       return FALSE;
     }
 
-    $affected_dependencies = array(
-      'config' => array(),
-      'content' => array(),
-      'module' => array(),
-      'theme' => array(),
-    );
+    $affected_dependencies = [
+      'config' => [],
+      'content' => [],
+      'module' => [],
+      'theme' => [],
+    ];
 
     // Work out if any of the entity's dependencies are going to be affected.
     if (isset($entity_dependencies[$type])) {
@@ -465,8 +465,8 @@ class ConfigManager implements ConfigManagerInterface {
    * {@inheritdoc}
    */
   public function findMissingContentDependencies() {
-    $content_dependencies = array();
-    $missing_dependencies = array();
+    $content_dependencies = [];
+    $missing_dependencies = [];
     foreach ($this->activeStorage->readMultiple($this->activeStorage->listAll()) as $config_data) {
       if (isset($config_data['dependencies']['content'])) {
         $content_dependencies = array_merge($content_dependencies, $config_data['dependencies']['content']);
@@ -479,11 +479,11 @@ class ConfigManager implements ConfigManagerInterface {
       // Format of the dependency is entity_type:bundle:uuid.
       list($entity_type, $bundle, $uuid) = explode(':', $content_dependency, 3);
       if (!$this->entityManager->loadEntityByUuid($entity_type, $uuid)) {
-        $missing_dependencies[$uuid] = array(
+        $missing_dependencies[$uuid] = [
           'entity_type' => $entity_type,
           'bundle' => $bundle,
           'uuid' => $uuid,
-        );
+        ];
       }
     }
     return $missing_dependencies;

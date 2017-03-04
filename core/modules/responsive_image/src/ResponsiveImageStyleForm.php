@@ -51,32 +51,32 @@ class ResponsiveImageStyleForm extends EntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     if ($this->operation == 'duplicate') {
-      $form['#title'] = $this->t('<em>Duplicate responsive image style</em> @label', array('@label' => $this->entity->label()));
+      $form['#title'] = $this->t('<em>Duplicate responsive image style</em> @label', ['@label' => $this->entity->label()]);
       $this->entity = $this->entity->createDuplicate();
     }
     if ($this->operation == 'edit') {
-      $form['#title'] = $this->t('<em>Edit responsive image style</em> @label', array('@label' => $this->entity->label()));
+      $form['#title'] = $this->t('<em>Edit responsive image style</em> @label', ['@label' => $this->entity->label()]);
     }
 
     /** @var \Drupal\responsive_image\ResponsiveImageStyleInterface $responsive_image_style */
     $responsive_image_style = $this->entity;
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $responsive_image_style->label(),
       '#description' => $this->t("Example: 'Hero image' or 'Author image'."),
       '#required' => TRUE,
-    );
-    $form['id'] = array(
+    ];
+    $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $responsive_image_style->id(),
-      '#machine_name' => array(
+      '#machine_name' => [
         'exists' => '\Drupal\responsive_image\Entity\ResponsiveImageStyle::load',
-        'source' => array('label'),
-      ),
+        'source' => ['label'],
+      ],
       '#disabled' => (bool) $responsive_image_style->id() && $this->operation != 'duplicate',
-    );
+    ];
 
     $image_styles = image_style_options(TRUE);
     $image_styles[RESPONSIVE_IMAGE_ORIGINAL_IMAGE] = $this->t('- None (original image) -');
@@ -89,25 +89,25 @@ class ResponsiveImageStyleForm extends EntityForm {
       $description = $this->t('Select a breakpoint group from the installed themes and modules.');
     }
 
-    $form['breakpoint_group'] = array(
+    $form['breakpoint_group'] = [
       '#type' => 'select',
       '#title' => $this->t('Breakpoint group'),
       '#default_value' => $responsive_image_style->getBreakpointGroup() ?: 'responsive_image',
       '#options' => $this->breakpointManager->getGroups(),
       '#required' => TRUE,
       '#description' => $description,
-      '#ajax' => array(
+      '#ajax' => [
         'callback' => '::breakpointMappingFormAjax',
         'wrapper' => 'responsive-image-style-breakpoints-wrapper',
-      ),
-    );
+      ],
+    ];
 
-    $form['keyed_styles'] = array(
+    $form['keyed_styles'] = [
       '#type' => 'container',
-      '#attributes' => array(
+      '#attributes' => [
         'id' => 'responsive-image-style-breakpoints-wrapper',
-      ),
-    );
+      ],
+    ];
 
     // By default, breakpoints are ordered from smallest weight to largest:
     // the smallest weight is expected to have the smallest breakpoint width,
@@ -119,69 +119,69 @@ class ResponsiveImageStyleForm extends EntityForm {
     foreach ($breakpoints as $breakpoint_id => $breakpoint) {
       foreach ($breakpoint->getMultipliers() as $multiplier) {
         $label = $multiplier . ' ' . $breakpoint->getLabel() . ' [' . $breakpoint->getMediaQuery() . ']';
-        $form['keyed_styles'][$breakpoint_id][$multiplier] = array(
+        $form['keyed_styles'][$breakpoint_id][$multiplier] = [
           '#type' => 'details',
           '#title' => $label,
-        );
+        ];
         $image_style_mapping = $responsive_image_style->getImageStyleMapping($breakpoint_id, $multiplier);
         if (\Drupal::moduleHandler()->moduleExists('help')) {
-          $description = $this->t('See the <a href=":responsive_image_help">Responsive Image help page</a> for information on the sizes attribute.', array(':responsive_image_help' => \Drupal::url('help.page', array('name' => 'responsive_image'))));
+          $description = $this->t('See the <a href=":responsive_image_help">Responsive Image help page</a> for information on the sizes attribute.', [':responsive_image_help' => \Drupal::url('help.page', ['name' => 'responsive_image'])]);
         }
         else {
           $description = $this->t('Enable the Help module for more information on the sizes attribute.');
         }
-        $form['keyed_styles'][$breakpoint_id][$multiplier]['image_mapping_type'] = array(
+        $form['keyed_styles'][$breakpoint_id][$multiplier]['image_mapping_type'] = [
           '#title' => $this->t('Type'),
           '#type' => 'radios',
-          '#options' => array(
+          '#options' => [
             'sizes' => $this->t('Select multiple image styles and use the sizes attribute.'),
             'image_style' => $this->t('Select a single image style.'),
             '_none' => $this->t('Do not use this breakpoint.'),
-          ),
+          ],
           '#default_value' => isset($image_style_mapping['image_mapping_type']) ? $image_style_mapping['image_mapping_type'] : '_none',
           '#description' => $description,
-        );
-        $form['keyed_styles'][$breakpoint_id][$multiplier]['image_style'] = array(
+        ];
+        $form['keyed_styles'][$breakpoint_id][$multiplier]['image_style'] = [
           '#type' => 'select',
           '#title' => $this->t('Image style'),
           '#options' => $image_styles,
           '#default_value' => isset($image_style_mapping['image_mapping']) && is_string($image_style_mapping['image_mapping']) ? $image_style_mapping['image_mapping'] : '',
           '#description' => $this->t('Select an image style for this breakpoint.'),
-          '#states' => array(
-            'visible' => array(
-              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => array('value' => 'image_style'),
-            ),
-          ),
-        );
-        $form['keyed_styles'][$breakpoint_id][$multiplier]['sizes'] = array(
+          '#states' => [
+            'visible' => [
+              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => ['value' => 'image_style'],
+            ],
+          ],
+        ];
+        $form['keyed_styles'][$breakpoint_id][$multiplier]['sizes'] = [
           '#type' => 'textfield',
           '#title' => $this->t('Sizes'),
           '#default_value' => isset($image_style_mapping['image_mapping']['sizes']) ? $image_style_mapping['image_mapping']['sizes'] : '100vw',
           '#description' => $this->t('Enter the value for the sizes attribute, for example: %example_sizes.', ['%example_sizes' => '(min-width:700px) 700px, 100vw']),
-          '#states' => array(
-            'visible' => array(
-              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => array('value' => 'sizes'),
-            ),
-            'required' => array(
-              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => array('value' => 'sizes'),
-            ),
-          ),
-        );
-        $form['keyed_styles'][$breakpoint_id][$multiplier]['sizes_image_styles'] = array(
+          '#states' => [
+            'visible' => [
+              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => ['value' => 'sizes'],
+            ],
+            'required' => [
+              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => ['value' => 'sizes'],
+            ],
+          ],
+        ];
+        $form['keyed_styles'][$breakpoint_id][$multiplier]['sizes_image_styles'] = [
           '#title' => $this->t('Image styles'),
           '#type' => 'checkboxes',
-          '#options' => array_diff_key($image_styles, array('' => '')),
+          '#options' => array_diff_key($image_styles, ['' => '']),
           '#description' => $this->t('Select image styles with widths that range from the smallest amount of space this image will take up in the layout to the largest, bearing in mind that high resolution screens will need images 1.5x to 2x larger.'),
-          '#default_value' => isset($image_style_mapping['image_mapping']['sizes_image_styles']) ? $image_style_mapping['image_mapping']['sizes_image_styles'] : array(),
-          '#states' => array(
-            'visible' => array(
-              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => array('value' => 'sizes'),
-            ),
-            'required' => array(
-              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => array('value' => 'sizes'),
-            ),
-          ),
-        );
+          '#default_value' => isset($image_style_mapping['image_mapping']['sizes_image_styles']) ? $image_style_mapping['image_mapping']['sizes_image_styles'] : [],
+          '#states' => [
+            'visible' => [
+              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => ['value' => 'sizes'],
+            ],
+            'required' => [
+              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => ['value' => 'sizes'],
+            ],
+          ],
+        ];
 
         // Expand the details if "do not use this breakpoint" was not selected.
         if ($form['keyed_styles'][$breakpoint_id][$multiplier]['image_mapping_type']['#default_value'] != '_none') {
@@ -190,14 +190,14 @@ class ResponsiveImageStyleForm extends EntityForm {
       }
     }
 
-    $form['fallback_image_style'] = array(
+    $form['fallback_image_style'] = [
       '#title' => $this->t('Fallback image style'),
       '#type' => 'select',
       '#default_value' => $responsive_image_style->getFallbackImageStyle(),
       '#options' => $image_styles,
       '#required' => TRUE,
       '#description' => t('Select the smallest image style you expect to appear in this space. The fallback image style should only appear on the site if an error occurs.'),
-    );
+    ];
 
     $form['#tree'] = TRUE;
 
@@ -252,20 +252,20 @@ class ResponsiveImageStyleForm extends EntityForm {
       foreach ($form_state->getValue('keyed_styles') as $breakpoint_id => $multipliers) {
         foreach ($multipliers as $multiplier => $image_style_mapping) {
           if ($image_style_mapping['image_mapping_type'] === 'sizes') {
-            $mapping = array(
+            $mapping = [
               'image_mapping_type' => 'sizes',
-              'image_mapping' => array(
+              'image_mapping' => [
                 'sizes' => $image_style_mapping['sizes'],
                 'sizes_image_styles' => array_keys(array_filter($image_style_mapping['sizes_image_styles'])),
-              )
-            );
+              ]
+            ];
             $responsive_image_style->addImageStyleMapping($breakpoint_id, $multiplier, $mapping);
           }
           elseif ($image_style_mapping['image_mapping_type'] === 'image_style') {
-            $mapping = array(
+            $mapping = [
               'image_mapping_type' => 'image_style',
               'image_mapping' => $image_style_mapping['image_style'],
-            );
+            ];
             $responsive_image_style->addImageStyleMapping($breakpoint_id, $multiplier, $mapping);
           }
         }
@@ -273,15 +273,15 @@ class ResponsiveImageStyleForm extends EntityForm {
     }
     $responsive_image_style->save();
 
-    $this->logger('responsive_image')->notice('Responsive image style @label saved.', array('@label' => $responsive_image_style->label()));
-    drupal_set_message($this->t('Responsive image style %label saved.', array('%label' => $responsive_image_style->label())));
+    $this->logger('responsive_image')->notice('Responsive image style @label saved.', ['@label' => $responsive_image_style->label()]);
+    drupal_set_message($this->t('Responsive image style %label saved.', ['%label' => $responsive_image_style->label()]));
 
     // Redirect to edit form after creating a new responsive image style or
     // after selecting another breakpoint group.
     if (!$responsive_image_style->hasImageStyleMappings()) {
       $form_state->setRedirect(
         'entity.responsive_image_style.edit_form',
-        array('responsive_image_style' => $responsive_image_style->id())
+        ['responsive_image_style' => $responsive_image_style->id()]
       );
     }
     else {

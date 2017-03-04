@@ -54,7 +54,7 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
     $this->manager = $manager;
     $this->instanceId = $instance_id;
     // This is still needed by the parent LazyPluginCollection class.
-    $this->instanceIDs = array($instance_id => $instance_id);
+    $this->instanceIDs = [$instance_id => $instance_id];
     $this->configuration = $configuration;
   }
 

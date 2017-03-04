@@ -20,7 +20,7 @@ class RegisterAccessChecksPass implements CompilerPassInterface {
     // Add services tagged 'access_check' to the access_manager service.
     $access_manager = $container->getDefinition('access_manager.check_provider');
     foreach ($container->findTaggedServiceIds('access_check') as $id => $attributes) {
-      $applies = array();
+      $applies = [];
       $method = 'access';
       $needs_incoming_request = FALSE;
       foreach ($attributes as $attribute) {
@@ -34,7 +34,7 @@ class RegisterAccessChecksPass implements CompilerPassInterface {
           $needs_incoming_request = TRUE;
         }
       }
-      $access_manager->addMethodCall('addCheckService', array($id, $method, $applies, $needs_incoming_request));
+      $access_manager->addMethodCall('addCheckService', [$id, $method, $applies, $needs_incoming_request]);
     }
   }
 

@@ -87,16 +87,16 @@ class CryptTest extends UnitTestCase {
    * @return array Test data.
    */
   public function providerTestHashBase64() {
-    return array(
-      array(
+    return [
+      [
         'data' => 'The SHA (Secure Hash Algorithm) is one of a number of cryptographic hash functions. A cryptographic hash is like a signature for a text or a data file. SHA-256 algorithm generates an almost-unique, fixed size 256-bit (32-byte) hash. Hash is a one way function – it cannot be decrypted back. This makes it suitable for password validation, challenge hash authentication, anti-tamper, digital signatures.',
         'expectedHash' => '034rT6smZAVRxpq8O98cFFNLIVx_Ph1EwLZQKcmRR_s',
-      ),
-      array(
+      ],
+      [
         'data' => 'SHA-256 is one of the successor hash functions to SHA-1, and is one of the strongest hash functions available.',
         'expected_hash' => 'yuqkDDYqprL71k4xIb6K6D7n76xldO4jseRhEkEE6SI',
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -105,13 +105,13 @@ class CryptTest extends UnitTestCase {
    * @return array Test data.
    */
   public function providerTestHmacBase64() {
-    return array(
-      array(
+    return [
+      [
         'data' => 'Calculates a base-64 encoded, URL-safe sha-256 hmac.',
         'key' => 'secret-key',
         'expected_hmac' => '2AaH63zwjhekWZlEpAiufyfhAHIzbQhl9Hd9oCi3_c8',
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -120,33 +120,33 @@ class CryptTest extends UnitTestCase {
    * @return array Test data.
    */
   public function providerTestHmacBase64Invalid() {
-    return array(
-      array(new \stdClass(), new \stdClass()),
-      array(new \stdClass(), 'string'),
-      array(new \stdClass(), 1),
-      array(new \stdClass(), 0),
-      array(NULL, new \stdClass()),
-      array('string', new \stdClass()),
-      array(1, new \stdClass()),
-      array(0, new \stdClass()),
-      array(array(), array()),
-      array(array(), NULL),
-      array(array(), 'string'),
-      array(array(), 1),
-      array(array(), 0),
-      array(NULL, array()),
-      array(1, array()),
-      array(0, array()),
-      array('string', array()),
-      array(array(), NULL),
-      array(NULL, NULL),
-      array(NULL, 'string'),
-      array(NULL, 1),
-      array(NULL, 0),
-      array(1, NULL),
-      array(0, NULL),
-      array('string', NULL),
-    );
+    return [
+      [new \stdClass(), new \stdClass()],
+      [new \stdClass(), 'string'],
+      [new \stdClass(), 1],
+      [new \stdClass(), 0],
+      [NULL, new \stdClass()],
+      ['string', new \stdClass()],
+      [1, new \stdClass()],
+      [0, new \stdClass()],
+      [[], []],
+      [[], NULL],
+      [[], 'string'],
+      [[], 1],
+      [[], 0],
+      [NULL, []],
+      [1, []],
+      [0, []],
+      ['string', []],
+      [[], NULL],
+      [NULL, NULL],
+      [NULL, 'string'],
+      [NULL, 1],
+      [NULL, 0],
+      [1, NULL],
+      [0, NULL],
+      ['string', NULL],
+    ];
   }
 
 }

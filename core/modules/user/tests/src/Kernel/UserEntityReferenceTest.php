@@ -36,16 +36,16 @@ class UserEntityReferenceTest extends EntityKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->role1 = Role::create(array(
+    $this->role1 = Role::create([
       'id' => strtolower($this->randomMachineName(8)),
       'label' => $this->randomMachineName(8),
-    ));
+    ]);
     $this->role1->save();
 
-    $this->role2 = Role::create(array(
+    $this->role2 = Role::create([
       'id' => strtolower($this->randomMachineName(8)),
       'label' => $this->randomMachineName(8),
-    ));
+    ]);
     $this->role2->save();
 
     $this->createEntityReferenceField('user', 'user', 'user_reference', 'User reference', 'user');
@@ -57,23 +57,23 @@ class UserEntityReferenceTest extends EntityKernelTestBase {
   function testUserSelectionByRole() {
     $field_definition = FieldConfig::loadByName('user', 'user', 'user_reference');
     $handler_settings = $field_definition->getSetting('handler_settings');
-    $handler_settings['filter']['role'] = array(
+    $handler_settings['filter']['role'] = [
       $this->role1->id() => $this->role1->id(),
       $this->role2->id() => 0,
-    );
+    ];
     $handler_settings['filter']['type'] = 'role';
     $field_definition->setSetting('handler_settings', $handler_settings);
     $field_definition->save();
 
-    $user1 = $this->createUser(array('name' => 'aabb'));
+    $user1 = $this->createUser(['name' => 'aabb']);
     $user1->addRole($this->role1->id());
     $user1->save();
 
-    $user2 = $this->createUser(array('name' => 'aabbb'));
+    $user2 = $this->createUser(['name' => 'aabbb']);
     $user2->addRole($this->role1->id());
     $user2->save();
 
-    $user3 = $this->createUser(array('name' => 'aabbbb'));
+    $user3 = $this->createUser(['name' => 'aabbbb']);
     $user3->addRole($this->role2->id());
     $user3->save();
 
@@ -83,7 +83,7 @@ class UserEntityReferenceTest extends EntityKernelTestBase {
 
     $matches = $autocomplete->getMatches('user', 'default', $field_definition->getSetting('handler_settings'), 'aabb');
     $this->assertEqual(count($matches), 2);
-    $users = array();
+    $users = [];
     foreach ($matches as $match) {
       $users[] = $match['label'];
     }

@@ -19,10 +19,10 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
   protected function setUp() {
     parent::setUp();
     // Set up permissions for anonymous attacker user.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'create article content' => TRUE,
       'access content' => TRUE,
-    ));
+    ]);
   }
 
   /**
@@ -36,17 +36,17 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->drupalLogout();
     $this->drupalGet('node/add/article');
     $this->assertResponse(200, 'Loaded the article node form.');
-    $this->assertText(strip_tags(t('Create @name', array('@name' => $bundle_label))));
+    $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
-    $edit = array(
+    $edit = [
       'title[0][value]' => $node_title,
       'body[0][value]' => 'Test article',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertResponse(200);
-    $t_args = array('@type' => $bundle_label, '%title' => $node_title);
+    $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
-    $matches = array();
+    $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
       $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
@@ -61,28 +61,28 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
   public function testAnonymousNodeWithFile() {
     $bundle_label = 'Article';
     $node_title = 'Test page';
-    $this->createFileField('field_image', 'node', 'article', array(), array('file_extensions' => 'txt png'));
+    $this->createFileField('field_image', 'node', 'article', [], ['file_extensions' => 'txt png']);
 
     // Load the node form.
     $this->drupalLogout();
     $this->drupalGet('node/add/article');
     $this->assertResponse(200, 'Loaded the article node form.');
-    $this->assertText(strip_tags(t('Create @name', array('@name' => $bundle_label))));
+    $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     // Generate an image file.
     $image = $this->getTestFile('image');
 
     // Submit the form.
-    $edit = array(
+    $edit = [
       'title[0][value]' => $node_title,
       'body[0][value]' => 'Test article',
       'files[field_image_0]' => $this->container->get('file_system')->realpath($image->getFileUri()),
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertResponse(200);
-    $t_args = array('@type' => $bundle_label, '%title' => $node_title);
+    $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
-    $matches = array();
+    $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
       $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
@@ -104,11 +104,11 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
    * Tests file submission for an authenticated user with a missing node title.
    */
   public function testAuthenticatedNodeWithFileWithoutTitle() {
-    $admin_user = $this->drupalCreateUser(array(
+    $admin_user = $this->drupalCreateUser([
       'bypass node access',
       'access content overview',
       'administer nodes',
-    ));
+    ]);
     $this->drupalLogin($admin_user);
     $this->doTestNodeWithFileWithoutTitle();
   }
@@ -119,21 +119,21 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
   protected function doTestNodeWithFileWithoutTitle() {
     $bundle_label = 'Article';
     $node_title = 'Test page';
-    $this->createFileField('field_image', 'node', 'article', array(), array('file_extensions' => 'txt png'));
+    $this->createFileField('field_image', 'node', 'article', [], ['file_extensions' => 'txt png']);
 
     // Load the node form.
     $this->drupalGet('node/add/article');
     $this->assertResponse(200, 'Loaded the article node form.');
-    $this->assertText(strip_tags(t('Create @name', array('@name' => $bundle_label))));
+    $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     // Generate an image file.
     $image = $this->getTestFile('image');
 
     // Submit the form but exclude the title field.
-    $edit = array(
+    $edit = [
       'body[0][value]' => 'Test article',
       'files[field_image_0]' => $this->container->get('file_system')->realpath($image->getFileUri()),
-    );
+    ];
     if (!$this->loggedInUser) {
       $label = 'Save';
     }
@@ -142,21 +142,21 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     }
     $this->drupalPostForm(NULL, $edit, $label);
     $this->assertResponse(200);
-    $t_args = array('@type' => $bundle_label, '%title' => $node_title);
+    $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertNoText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
     $this->assertText('Title field is required.');
 
     // Submit the form again but this time with the missing title field. This
     // should still work.
-    $edit = array(
+    $edit = [
       'title[0][value]' => $node_title,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, $label);
 
     // Confirm the final submission actually worked.
-    $t_args = array('@type' => $bundle_label, '%title' => $node_title);
+    $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
-    $matches = array();
+    $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
       $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');

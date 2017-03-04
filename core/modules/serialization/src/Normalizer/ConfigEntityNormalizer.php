@@ -12,12 +12,12 @@ class ConfigEntityNormalizer extends EntityNormalizer {
    *
    * @var array
    */
-  protected $supportedInterfaceOrClass = array('Drupal\Core\Config\Entity\ConfigEntityInterface');
+  protected $supportedInterfaceOrClass = ['Drupal\Core\Config\Entity\ConfigEntityInterface'];
 
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = array()) {
+  public function normalize($object, $format = NULL, array $context = []) {
     return $object->toArray();
   }
 

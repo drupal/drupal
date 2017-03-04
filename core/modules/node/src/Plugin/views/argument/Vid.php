@@ -66,10 +66,10 @@ class Vid extends NumericArgument {
    * Override the behavior of title(). Get the title of the revision.
    */
   public function titleQuery() {
-    $titles = array();
+    $titles = [];
 
-    $results = $this->database->query('SELECT nr.vid, nr.nid, npr.title FROM {node_revision} nr WHERE nr.vid IN ( :vids[] )', array(':vids[]' => $this->value))->fetchAllAssoc('vid', PDO::FETCH_ASSOC);
-    $nids = array();
+    $results = $this->database->query('SELECT nr.vid, nr.nid, npr.title FROM {node_revision} nr WHERE nr.vid IN ( :vids[] )', [':vids[]' => $this->value])->fetchAllAssoc('vid', PDO::FETCH_ASSOC);
+    $nids = [];
     foreach ($results as $result) {
       $nids[] = $result['nid'];
     }

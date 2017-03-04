@@ -26,7 +26,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     // Change replace_pattern to avoid undesired dots.
     $form['id']['#machine_name']['replace_pattern'] = '[^a-z0-9_]+';
     $definition = $this->entityManager->getDefinition($this->targetEntityTypeId);
-    $form['#title'] = $this->t('Add new %label @entity-type', array('%label' => $definition->getLabel(), '@entity-type' => $this->entityType->getLowercaseLabel()));
+    $form['#title'] = $this->t('Add new %label @entity-type', ['%label' => $definition->getLabel(), '@entity-type' => $this->entityType->getLowercaseLabel()]);
     return $form;
   }
 

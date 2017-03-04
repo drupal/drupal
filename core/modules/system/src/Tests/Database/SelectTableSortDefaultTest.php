@@ -16,17 +16,17 @@ class SelectTableSortDefaultTest extends DatabaseWebTestBase {
    * because the pager depends on GET parameters.
    */
   function testTableSortQuery() {
-    $sorts = array(
-      array('field' => t('Task ID'), 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'),
-      array('field' => t('Task ID'), 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'),
-      array('field' => t('Task'), 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'),
-      array('field' => t('Task'), 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'),
+    $sorts = [
+      ['field' => t('Task ID'), 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'],
+      ['field' => t('Task ID'), 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'],
+      ['field' => t('Task'), 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'],
+      ['field' => t('Task'), 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'],
       // more elements here
 
-    );
+    ];
 
     foreach ($sorts as $sort) {
-      $this->drupalGet('database_test/tablesort/', array('query' => array('order' => $sort['field'], 'sort' => $sort['sort'])));
+      $this->drupalGet('database_test/tablesort/', ['query' => ['order' => $sort['field'], 'sort' => $sort['sort']]]);
       $data = json_decode($this->getRawContent());
 
       $first = array_shift($data->tasks);
@@ -44,24 +44,24 @@ class SelectTableSortDefaultTest extends DatabaseWebTestBase {
    * header happens first.
    */
   function testTableSortQueryFirst() {
-    $sorts = array(
-      array('field' => t('Task ID'), 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'),
-      array('field' => t('Task ID'), 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'),
-      array('field' => t('Task'), 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'),
-      array('field' => t('Task'), 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'),
+    $sorts = [
+      ['field' => t('Task ID'), 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'],
+      ['field' => t('Task ID'), 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'],
+      ['field' => t('Task'), 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'],
+      ['field' => t('Task'), 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'],
       // more elements here
 
-    );
+    ];
 
     foreach ($sorts as $sort) {
-      $this->drupalGet('database_test/tablesort_first/', array('query' => array('order' => $sort['field'], 'sort' => $sort['sort'])));
+      $this->drupalGet('database_test/tablesort_first/', ['query' => ['order' => $sort['field'], 'sort' => $sort['sort']]]);
       $data = json_decode($this->getRawContent());
 
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);
 
-      $this->assertEqual($first->task, $sort['first'], format_string('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
-      $this->assertEqual($last->task, $sort['last'], format_string('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
+      $this->assertEqual($first->task, $sort['first'], format_string('Items appear in the correct order sorting by @field @sort.', ['@field' => $sort['field'], '@sort' => $sort['sort']]));
+      $this->assertEqual($last->task, $sort['last'], format_string('Items appear in the correct order sorting by @field @sort.', ['@field' => $sort['field'], '@sort' => $sort['sort']]));
     }
   }
 

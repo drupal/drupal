@@ -32,10 +32,10 @@ class ReplaceTitleCommand implements CommandInterface {
    * {@inheritdoc}
    */
   public function render() {
-    return array(
+    return [
       'command' => 'viewsReplaceTitle',
       'selector' => $this->title,
-    );
+    ];
   }
 
 }

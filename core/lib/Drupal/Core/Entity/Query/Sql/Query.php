@@ -31,7 +31,7 @@ class Query extends QueryBase implements QueryInterface {
    *
    * @var array
    */
-  protected $sqlFields = array();
+  protected $sqlFields = [];
 
   /**
    * An array of strings added as to the group by, keyed by the string to avoid
@@ -39,7 +39,7 @@ class Query extends QueryBase implements QueryInterface {
    *
    * @var array
    */
-  protected $sqlGroupBy = array();
+  protected $sqlGroupBy = [];
 
   /**
    * @var \Drupal\Core\Database\Connection
@@ -101,23 +101,23 @@ class Query extends QueryBase implements QueryInterface {
     if ($this->entityType->getDataTable()) {
       $simple_query = FALSE;
     }
-    $this->sqlQuery = $this->connection->select($base_table, 'base_table', array('conjunction' => $this->conjunction));
+    $this->sqlQuery = $this->connection->select($base_table, 'base_table', ['conjunction' => $this->conjunction]);
     $this->sqlQuery->addMetaData('entity_type', $this->entityTypeId);
     $id_field = $this->entityType->getKey('id');
     // Add the key field for fetchAllKeyed().
     if (!$revision_field = $this->entityType->getKey('revision')) {
       // When there is no revision support, the key field is the entity key.
-      $this->sqlFields["base_table.$id_field"] = array('base_table', $id_field);
+      $this->sqlFields["base_table.$id_field"] = ['base_table', $id_field];
       // Now add the value column for fetchAllKeyed(). This is always the
       // entity id.
-      $this->sqlFields["base_table.$id_field" . '_1'] = array('base_table', $id_field);
+      $this->sqlFields["base_table.$id_field" . '_1'] = ['base_table', $id_field];
     }
     else {
       // When there is revision support, the key field is the revision key.
-      $this->sqlFields["base_table.$revision_field"] = array('base_table', $revision_field);
+      $this->sqlFields["base_table.$revision_field"] = ['base_table', $revision_field];
       // Now add the value column for fetchAllKeyed(). This is always the
       // entity id.
-      $this->sqlFields["base_table.$id_field"] = array('base_table', $id_field);
+      $this->sqlFields["base_table.$id_field"] = ['base_table', $id_field];
     }
     if ($this->accessCheck) {
       $this->sqlQuery->addTag($this->entityTypeId . '_access');
@@ -164,12 +164,12 @@ class Query extends QueryBase implements QueryInterface {
    */
   protected function addSort() {
     if ($this->count) {
-      $this->sort = array();
+      $this->sort = [];
     }
     // Gather the SQL field aliases first to make sure every field table
     // necessary is added. This might change whether the query is simple or
     // not. See below for more on simple queries.
-    $sort = array();
+    $sort = [];
     if ($this->sort) {
       foreach ($this->sort as $key => $data) {
         $sort[$key] = $this->getSqlField($data['field'], $data['langcode']);
@@ -291,8 +291,8 @@ class Query extends QueryBase implements QueryInterface {
    */
   public function __clone() {
     parent::__clone();
-    $this->sqlFields = array();
-    $this->sqlGroupBy = array();
+    $this->sqlFields = [];
+    $this->sqlGroupBy = [];
   }
 
   /**

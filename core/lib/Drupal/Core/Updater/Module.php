@@ -49,7 +49,7 @@ class Module extends Updater implements UpdaterInterface {
   public function isInstalled() {
     // Check if the module exists in the file system, regardless of whether it
     // is enabled or not.
-    $modules = \Drupal::state()->get('system.module.files', array());
+    $modules = \Drupal::state()->get('system.module.files', []);
     return isset($modules[$this->name]);
   }
 
@@ -84,12 +84,12 @@ class Module extends Updater implements UpdaterInterface {
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
 
     if (!self::canUpdate($this->name)) {
-      return array();
+      return [];
     }
     module_load_include('install', $this->name);
 
     if (!$updates = drupal_get_schema_versions($this->name)) {
-      return array();
+      return [];
     }
     $modules_with_updates = update_get_update_list();
     if ($updates = $modules_with_updates[$this->name]) {
@@ -97,7 +97,7 @@ class Module extends Updater implements UpdaterInterface {
         return $updates['pending'];
       }
     }
-    return array();
+    return [];
   }
 
   /**

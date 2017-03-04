@@ -52,7 +52,7 @@ class Nid extends NumericArgument {
    * Override the behavior of title(). Get the title of the node.
    */
   public function titleQuery() {
-    $titles = array();
+    $titles = [];
 
     $nodes = $this->nodeStorage->loadMultiple($this->value);
     foreach ($nodes as $node) {

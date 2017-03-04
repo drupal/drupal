@@ -15,11 +15,11 @@ use Drupal\Core\Render\BubbleableMetadata;
  * Implements hook_token_info().
  */
 function comment_token_info() {
-  $type = array(
+  $type = [
     'name' => t('Comments'),
     'description' => t('Tokens for comments posted on the site.'),
     'needs-data' => 'comment',
-  );
+  ];
 
   $tokens = [];
   // Provide a integration for each entity type except comment.
@@ -45,76 +45,76 @@ function comment_token_info() {
   }
 
   // Core comment tokens
-  $comment['cid'] = array(
+  $comment['cid'] = [
     'name' => t("Comment ID"),
     'description' => t("The unique ID of the comment."),
-  );
-  $comment['hostname'] = array(
+  ];
+  $comment['hostname'] = [
     'name' => t("IP Address"),
     'description' => t("The IP address of the computer the comment was posted from."),
-  );
-  $comment['mail'] = array(
+  ];
+  $comment['mail'] = [
     'name' => t("Email address"),
     'description' => t("The email address left by the comment author."),
-  );
-  $comment['homepage'] = array(
+  ];
+  $comment['homepage'] = [
     'name' => t("Home page"),
     'description' => t("The home page URL left by the comment author."),
-  );
-  $comment['title'] = array(
+  ];
+  $comment['title'] = [
     'name' => t("Title"),
     'description' => t("The title of the comment."),
-  );
-  $comment['body'] = array(
+  ];
+  $comment['body'] = [
     'name' => t("Content"),
     'description' => t("The formatted content of the comment itself."),
-  );
-  $comment['langcode'] = array(
+  ];
+  $comment['langcode'] = [
     'name' => t('Language code'),
     'description' => t('The language code of the language the comment is written in.'),
-  );
-  $comment['url'] = array(
+  ];
+  $comment['url'] = [
     'name' => t("URL"),
     'description' => t("The URL of the comment."),
-  );
-  $comment['edit-url'] = array(
+  ];
+  $comment['edit-url'] = [
     'name' => t("Edit URL"),
     'description' => t("The URL of the comment's edit page."),
-  );
+  ];
 
   // Chained tokens for comments
-  $comment['created'] = array(
+  $comment['created'] = [
     'name' => t("Date created"),
     'description' => t("The date the comment was posted."),
     'type' => 'date',
-  );
-  $comment['changed'] = array(
+  ];
+  $comment['changed'] = [
     'name' => t("Date changed"),
     'description' => t("The date the comment was most recently updated."),
     'type' => 'date',
-  );
-  $comment['parent'] = array(
+  ];
+  $comment['parent'] = [
     'name' => t("Parent"),
     'description' => t("The comment's parent, if comment threading is active."),
     'type' => 'comment',
-  );
-  $comment['entity'] = array(
+  ];
+  $comment['entity'] = [
     'name' => t("Entity"),
     'description' => t("The entity the comment was posted to."),
     'type' => 'entity',
-  );
-  $comment['author'] = array(
+  ];
+  $comment['author'] = [
     'name' => t("Author"),
     'description' => t("The author name of the comment."),
     'type' => 'user',
-  );
+  ];
 
-  return array(
-    'types' => array('comment' => $type),
-    'tokens' => array(
+  return [
+    'types' => ['comment' => $type],
+    'tokens' => [
       'comment' => $comment,
-    ) + $tokens,
-  );
+    ] + $tokens,
+  ];
 }
 
 /**
@@ -123,7 +123,7 @@ function comment_token_info() {
 function comment_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
-  $url_options = array('absolute' => TRUE);
+  $url_options = ['absolute' => TRUE];
   if (isset($options['langcode'])) {
     $url_options['language'] = \Drupal::languageManager()->getLanguage($options['langcode']);
     $langcode = $options['langcode'];
@@ -131,7 +131,7 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
   else {
     $langcode = NULL;
   }
-  $replacements = array();
+  $replacements = [];
 
   if ($type == 'comment' && !empty($data['comment'])) {
     /** @var \Drupal\comment\CommentInterface $comment */
@@ -230,23 +230,23 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
     // Chained token relationships.
     if ($entity_tokens = $token_service->findwithPrefix($tokens, 'entity')) {
       $entity = $comment->getCommentedEntity();
-      $replacements += $token_service->generate($comment->getCommentedEntityTypeId(), $entity_tokens, array($comment->getCommentedEntityTypeId() => $entity), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate($comment->getCommentedEntityTypeId(), $entity_tokens, [$comment->getCommentedEntityTypeId() => $entity], $options, $bubbleable_metadata);
     }
 
     if ($date_tokens = $token_service->findwithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $date_tokens, array('date' => $comment->getCreatedTime()), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('date', $date_tokens, ['date' => $comment->getCreatedTime()], $options, $bubbleable_metadata);
     }
 
     if ($date_tokens = $token_service->findwithPrefix($tokens, 'changed')) {
-      $replacements += $token_service->generate('date', $date_tokens, array('date' => $comment->getChangedTime()), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('date', $date_tokens, ['date' => $comment->getChangedTime()], $options, $bubbleable_metadata);
     }
 
     if (($parent_tokens = $token_service->findwithPrefix($tokens, 'parent')) && $parent = $comment->getParentComment()) {
-      $replacements += $token_service->generate('comment', $parent_tokens, array('comment' => $parent), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('comment', $parent_tokens, ['comment' => $parent], $options, $bubbleable_metadata);
     }
 
     if (($author_tokens = $token_service->findwithPrefix($tokens, 'author')) && $account = $comment->getOwner()) {
-      $replacements += $token_service->generate('user', $author_tokens, array('user' => $account), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('user', $author_tokens, ['user' => $account], $options, $bubbleable_metadata);
     }
   }
   // Replacement tokens for any content entities that have comment field.

@@ -124,12 +124,12 @@ class NegotiationConfigureForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $configurable = $this->languageTypes->get('configurable');
 
-    $form = array(
+    $form = [
       '#theme' => 'language_negotiation_configure_form',
       '#language_types_info' => $this->languageManager->getDefinedLanguageTypesInfo(),
       '#language_negotiation_info' => $this->negotiator->getNegotiationMethods(),
-    );
-    $form['#language_types'] = array();
+    ];
+    $form['#language_types'] = [];
 
     foreach ($form['#language_types_info'] as $type => $info) {
       // Show locked language types only if they are configurable.
@@ -142,12 +142,12 @@ class NegotiationConfigureForm extends ConfigFormBase {
       $this->configureFormTable($form, $type);
     }
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
       '#value' => $this->t('Save settings'),
-    );
+    ];
 
     return $form;
   }
@@ -159,17 +159,17 @@ class NegotiationConfigureForm extends ConfigFormBase {
     $configurable_types = $form['#language_types'];
 
     $stored_values = $this->languageTypes->get('configurable');
-    $customized = array();
-    $method_weights_type = array();
+    $customized = [];
+    $method_weights_type = [];
 
     foreach ($configurable_types as $type) {
       $customized[$type] = in_array($type, $stored_values);
-      $method_weights = array();
-      $enabled_methods = $form_state->getValue(array($type, 'enabled'));
+      $method_weights = [];
+      $enabled_methods = $form_state->getValue([$type, 'enabled']);
       $enabled_methods[LanguageNegotiationSelected::METHOD_ID] = TRUE;
-      $method_weights_input = $form_state->getValue(array($type, 'weight'));
-      if ($form_state->hasValue(array($type, 'configurable'))) {
-        $customized[$type] = !$form_state->isValueEmpty(array($type, 'configurable'));
+      $method_weights_input = $form_state->getValue([$type, 'weight']);
+      if ($form_state->hasValue([$type, 'configurable'])) {
+        $customized[$type] = !$form_state->isValueEmpty([$type, 'configurable']);
       }
 
       foreach ($method_weights_input as $method_id => $weight) {
@@ -216,33 +216,33 @@ class NegotiationConfigureForm extends ConfigFormBase {
   protected function configureFormTable(array &$form, $type)  {
     $info = $form['#language_types_info'][$type];
 
-    $table_form = array(
-      '#title' => $this->t('@type language detection', array('@type' => $info['name'])),
+    $table_form = [
+      '#title' => $this->t('@type language detection', ['@type' => $info['name']]),
       '#tree' => TRUE,
       '#description' => $info['description'],
-      '#language_negotiation_info' => array(),
+      '#language_negotiation_info' => [],
       '#show_operations' => FALSE,
-      'weight' => array('#tree' => TRUE),
-    );
+      'weight' => ['#tree' => TRUE],
+    ];
     // Only show configurability checkbox for the unlocked language types.
     if (empty($info['locked'])) {
       $configurable = $this->languageTypes->get('configurable');
-      $table_form['configurable'] = array(
+      $table_form['configurable'] = [
         '#type' => 'checkbox',
-        '#title' => $this->t('Customize %language_name language detection to differ from Interface text language detection settings', array('%language_name' => $info['name'])),
+        '#title' => $this->t('Customize %language_name language detection to differ from Interface text language detection settings', ['%language_name' => $info['name']]),
         '#default_value' => in_array($type, $configurable),
-        '#attributes' => array('class' => array('language-customization-checkbox')),
-        '#attached' => array(
-          'library' => array(
+        '#attributes' => ['class' => ['language-customization-checkbox']],
+        '#attached' => [
+          'library' => [
             'language/drupal.language.admin'
-          ),
-        ),
-      );
+          ],
+        ],
+      ];
     }
 
     $negotiation_info = $form['#language_negotiation_info'];
-    $enabled_methods = $this->languageTypes->get('negotiation.' . $type . '.enabled') ?: array();
-    $methods_weight = $this->languageTypes->get('negotiation.' . $type . '.method_weights') ?: array();
+    $enabled_methods = $this->languageTypes->get('negotiation.' . $type . '.enabled') ?: [];
+    $methods_weight = $this->languageTypes->get('negotiation.' . $type . '.method_weights') ?: [];
 
     // Add missing data to the methods lists.
     foreach ($negotiation_info as $method_id => $method) {
@@ -272,44 +272,44 @@ class NegotiationConfigureForm extends ConfigFormBase {
         $table_form['#language_negotiation_info'][$method_id] = $method;
         $method_name = $method['name'];
 
-        $table_form['weight'][$method_id] = array(
+        $table_form['weight'][$method_id] = [
           '#type' => 'weight',
-          '#title' => $this->t('Weight for @title language detection method', array('@title' => Unicode::strtolower($method_name))),
+          '#title' => $this->t('Weight for @title language detection method', ['@title' => Unicode::strtolower($method_name)]),
           '#title_display' => 'invisible',
           '#default_value' => $weight,
-          '#attributes' => array('class' => array("language-method-weight-$type")),
+          '#attributes' => ['class' => ["language-method-weight-$type"]],
           '#delta' => 20,
-        );
+        ];
 
-        $table_form['title'][$method_id] = array('#plain_text' => $method_name);
+        $table_form['title'][$method_id] = ['#plain_text' => $method_name];
 
-        $table_form['enabled'][$method_id] = array(
+        $table_form['enabled'][$method_id] = [
           '#type' => 'checkbox',
-          '#title' => $this->t('Enable @title language detection method', array('@title' => Unicode::strtolower($method_name))),
+          '#title' => $this->t('Enable @title language detection method', ['@title' => Unicode::strtolower($method_name)]),
           '#title_display' => 'invisible',
           '#default_value' => $enabled,
-        );
+        ];
         if ($method_id === LanguageNegotiationSelected::METHOD_ID) {
           $table_form['enabled'][$method_id]['#default_value'] = TRUE;
-          $table_form['enabled'][$method_id]['#attributes'] = array('disabled' => 'disabled');
+          $table_form['enabled'][$method_id]['#attributes'] = ['disabled' => 'disabled'];
         }
 
-        $table_form['description'][$method_id] = array('#markup' => $method['description']);
+        $table_form['description'][$method_id] = ['#markup' => $method['description']];
 
-        $config_op = array();
+        $config_op = [];
         if (isset($method['config_route_name'])) {
-          $config_op['configure'] = array(
+          $config_op['configure'] = [
             'title' => $this->t('Configure'),
             'url' => Url::fromRoute($method['config_route_name']),
-          );
+          ];
           // If there is at least one operation enabled show the operation
           // column.
           $table_form['#show_operations'] = TRUE;
         }
-        $table_form['operation'][$method_id] = array(
+        $table_form['operation'][$method_id] = [
          '#type' => 'operations',
          '#links' => $config_op,
-        );
+        ];
       }
     }
     $form[$type] = $table_form;
@@ -324,7 +324,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
    */
   protected function disableLanguageSwitcher(array $language_types) {
     $theme = $this->themeHandler->getDefault();
-    $blocks = $this->blockStorage->loadByProperties(array('theme' => $theme));
+    $blocks = $this->blockStorage->loadByProperties(['theme' => $theme]);
     foreach ($language_types as $language_type) {
       foreach ($blocks as $block) {
         if ($block->getPluginId() == 'language_block:' . $language_type) {

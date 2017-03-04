@@ -31,22 +31,22 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return array(
+    return [
       'comment_type' => '',
-    ) + parent::defaultStorageSettings();
+    ] + parent::defaultStorageSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function defaultFieldSettings() {
-    return array(
+    return [
       'default_mode' => CommentManagerInterface::COMMENT_MODE_THREADED,
       'per_page' => 50,
       'form_location' => CommentItemInterface::FORM_BELOW,
       'anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
       'preview' => DRUPAL_OPTIONAL,
-    ) + parent::defaultFieldSettings();
+    ] + parent::defaultFieldSettings();
   }
 
   /**
@@ -82,36 +82,36 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'status' => array(
+    return [
+      'columns' => [
+        'status' => [
           'description' => 'Whether comments are allowed on this entity: 0 = no, 1 = closed (read only), 2 = open (read/write).',
           'type' => 'int',
           'default' => 0,
-        ),
-      ),
-      'indexes' => array(),
-      'foreign keys' => array(),
-    );
+        ],
+      ],
+      'indexes' => [],
+      'foreign keys' => [],
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
-    $element = array();
+    $element = [];
 
     $settings = $this->getSettings();
 
     $anonymous_user = new AnonymousUserSession();
 
-    $element['default_mode'] = array(
+    $element['default_mode'] = [
       '#type' => 'checkbox',
       '#title' => t('Threading'),
       '#default_value' => $settings['default_mode'],
       '#description' => t('Show comment replies in a threaded list.'),
-    );
-    $element['per_page'] = array(
+    ];
+    $element['per_page'] = [
       '#type' => 'number',
       '#title' => t('Comments per page'),
       '#default_value' => $settings['per_page'],
@@ -119,33 +119,33 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       '#min' => 10,
       '#max' => 1000,
       '#step' => 10,
-    );
-    $element['anonymous'] = array(
+    ];
+    $element['anonymous'] = [
       '#type' => 'select',
       '#title' => t('Anonymous commenting'),
       '#default_value' => $settings['anonymous'],
-      '#options' => array(
+      '#options' => [
         COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
         COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
         COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information'),
-      ),
+      ],
       '#access' => $anonymous_user->hasPermission('post comments'),
-    );
-    $element['form_location'] = array(
+    ];
+    $element['form_location'] = [
       '#type' => 'checkbox',
       '#title' => t('Show reply form on the same page as comments'),
       '#default_value' => $settings['form_location'],
-    );
-    $element['preview'] = array(
+    ];
+    $element['preview'] = [
       '#type' => 'radios',
       '#title' => t('Preview comment'),
       '#default_value' => $settings['preview'],
-      '#options' => array(
+      '#options' => [
         DRUPAL_DISABLED => t('Disabled'),
         DRUPAL_OPTIONAL => t('Optional'),
         DRUPAL_REQUIRED => t('Required'),
-      ),
-    );
+      ],
+    ];
 
     return $element;
   }
@@ -171,27 +171,27 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $element = array();
+    $element = [];
 
     // @todo Inject entity storage once typed-data supports container injection.
     //   See https://www.drupal.org/node/2053415 for more details.
     $comment_types = CommentType::loadMultiple();
-    $options = array();
+    $options = [];
     $entity_type = $this->getEntity()->getEntityTypeId();
     foreach ($comment_types as $comment_type) {
       if ($comment_type->getTargetEntityTypeId() == $entity_type) {
         $options[$comment_type->id()] = $comment_type->label();
       }
     }
-    $element['comment_type'] = array(
+    $element['comment_type'] = [
       '#type' => 'select',
       '#title' => t('Comment type'),
       '#options' => $options,
       '#required' => TRUE,
-      '#description' => $this->t('Select the Comment type to use for this comment field. Manage the comment types from the <a href=":url">administration overview page</a>.', array(':url' => $this->url('entity.comment_type.collection'))),
+      '#description' => $this->t('Select the Comment type to use for this comment field. Manage the comment types from the <a href=":url">administration overview page</a>.', [':url' => $this->url('entity.comment_type.collection')]),
       '#default_value' => $this->getSetting('comment_type'),
       '#disabled' => $has_data,
-    );
+    ];
     return $element;
   }
 

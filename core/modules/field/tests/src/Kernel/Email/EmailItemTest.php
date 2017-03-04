@@ -20,11 +20,11 @@ class EmailItemTest extends FieldKernelTestBase {
     parent::setUp();
 
     // Create an email field storage and field for validation.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => 'field_email',
       'entity_type' => 'entity_test',
       'type' => 'email',
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_email',
@@ -33,9 +33,9 @@ class EmailItemTest extends FieldKernelTestBase {
 
     // Create a form display for the default form mode.
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent('field_email', array(
+      ->setComponent('field_email', [
         'type' => 'email_default',
-      ))
+      ])
       ->save();
   }
 

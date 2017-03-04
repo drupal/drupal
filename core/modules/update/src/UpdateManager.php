@@ -91,7 +91,7 @@ class UpdateManager implements UpdateManagerInterface {
     $this->keyValueStore = $key_value_expirable_factory->get('update');
     $this->themeHandler = $theme_handler;
     $this->availableReleasesTempStore = $key_value_expirable_factory->get('update_available_releases');
-    $this->projects = array();
+    $this->projects = [];
   }
 
   /**
@@ -151,11 +151,11 @@ class UpdateManager implements UpdateManagerInterface {
    * {@inheritdoc}
    */
   public function projectStorage($key) {
-    $projects = array();
+    $projects = [];
 
     // On certain paths, we should clear the data and recompute the projects for
     // update status of the site to avoid presenting stale information.
-    $route_names = array(
+    $route_names = [
       'update.theme_update',
       'system.modules_list',
       'system.theme_install',
@@ -169,12 +169,12 @@ class UpdateManager implements UpdateManagerInterface {
       'update.manual_status',
       'update.confirmation_page',
       'system.themes_page',
-    );
+    ];
     if (in_array(\Drupal::routeMatch()->getRouteName(), $route_names)) {
       $this->keyValueStore->delete($key);
     }
     else {
-      $projects = $this->keyValueStore->get($key, array());
+      $projects = $this->keyValueStore->get($key, []);
     }
     return $projects;
   }
@@ -198,10 +198,10 @@ class UpdateManager implements UpdateManagerInterface {
       if ($item = $this->updateProcessor->claimQueueItem()) {
         if ($this->updateProcessor->processFetchTask($item->data)) {
           $context['results']['updated']++;
-          $context['message'] = $this->t('Checked available update data for %title.', array('%title' => $item->data['info']['name']));
+          $context['message'] = $this->t('Checked available update data for %title.', ['%title' => $item->data['info']['name']]);
         }
         else {
-          $context['message'] = $this->t('Failed to check available update data for %title.', array('%title' => $item->data['info']['name']));
+          $context['message'] = $this->t('Failed to check available update data for %title.', ['%title' => $item->data['info']['name']]);
           $context['results']['failures']++;
         }
         $context['sandbox']['progress']++;

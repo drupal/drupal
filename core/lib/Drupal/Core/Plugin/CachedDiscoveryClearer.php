@@ -14,7 +14,7 @@ class CachedDiscoveryClearer implements CachedDiscoveryClearerInterface {
    *
    * @var \Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface[]
    */
-  protected $cachedDiscoveries = array();
+  protected $cachedDiscoveries = [];
 
   /**
    * {@inheritdoc}

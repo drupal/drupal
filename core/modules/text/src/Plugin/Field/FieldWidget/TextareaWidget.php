@@ -46,7 +46,7 @@ class TextareaWidget extends StringTextareaWidget {
    * {@inheritdoc}
    */
   public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
-    if ($violation->arrayPropertyPath == array('format') && isset($element['format']['#access']) && !$element['format']['#access']) {
+    if ($violation->arrayPropertyPath == ['format'] && isset($element['format']['#access']) && !$element['format']['#access']) {
       // Ignore validation errors for formats if formats may not be changed,
       // i.e. when existing formats become invalid. See filter_process_format().
       return FALSE;

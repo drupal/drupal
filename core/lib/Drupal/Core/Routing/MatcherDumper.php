@@ -84,10 +84,10 @@ class MatcherDumper implements MatcherDumperInterface {
    * @param array $options
    *   An array of options.
    */
-  public function dump(array $options = array()) {
+  public function dump(array $options = []) {
     // Convert all of the routes into database records.
     // Accumulate the menu masks on top of any we found before.
-    $masks = array_flip($this->state->get('routing.menu_masks.' . $this->tableName, array()));
+    $masks = array_flip($this->state->get('routing.menu_masks.' . $this->tableName, []));
     // Delete any old records first, then insert the new ones. That avoids
     // stale data. The transaction makes it atomic to avoid unstable router
     // states due to random failures.
@@ -106,15 +106,15 @@ class MatcherDumper implements MatcherDumperInterface {
       // Split the routes into chunks to avoid big INSERT queries.
       $route_chunks = array_chunk($this->routes->all(), 50, TRUE);
       foreach ($route_chunks as $routes) {
-        $insert = $this->connection->insert($this->tableName)->fields(array(
+        $insert = $this->connection->insert($this->tableName)->fields([
           'name',
           'fit',
           'path',
           'pattern_outline',
           'number_parts',
           'route',
-        ));
-        $names = array();
+        ]);
+        $names = [];
         foreach ($routes as $name => $route) {
           /** @var \Symfony\Component\Routing\Route $route */
           $route->setOption('compiler_class', '\Drupal\Core\Routing\RouteCompiler');
@@ -126,14 +126,14 @@ class MatcherDumper implements MatcherDumperInterface {
           // patterns we need to check in the RouteProvider.
           $masks[$compiled->getFit()] = 1;
           $names[] = $name;
-          $values = array(
+          $values = [
             'name' => $name,
             'fit' => $compiled->getFit(),
             'path' => $route->getPath(),
             'pattern_outline' => $compiled->getPatternOutline(),
             'number_parts' => $compiled->getNumParts(),
             'route' => serialize($route),
-          );
+          ];
           $insert->values($values);
         }
 

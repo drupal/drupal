@@ -64,13 +64,13 @@ class UpdateManagerUpdate extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('update', 'inc', 'update.manager');
 
-    $last_markup = array(
+    $last_markup = [
       '#theme' => 'update_last_check',
       '#last' => $this->state->get('update.last_check') ?: 0,
-    );
-    $form['last_check'] = array(
+    ];
+    $form['last_check'] = [
       '#markup' => drupal_render($last_markup),
-    );
+    ];
 
     if (!_update_manager_check_backends($form, 'update')) {
       return $form;
@@ -78,9 +78,9 @@ class UpdateManagerUpdate extends FormBase {
 
     $available = update_get_available(TRUE);
     if (empty($available)) {
-      $form['message'] = array(
+      $form['message'] = [
         '#markup' => $this->t('There was a problem getting update information. Try again later.'),
-      );
+      ];
       return $form;
     }
 
@@ -91,11 +91,11 @@ class UpdateManagerUpdate extends FormBase {
     // manual updates, such as core). Then, each subarray is an array of
     // projects of that type, indexed by project short name, and containing an
     // array of data for cells in that project's row in the appropriate table.
-    $projects = array();
+    $projects = [];
 
     // This stores the actual download link we're going to update from for each
     // project in the form, regardless of if it's enabled or disabled.
-    $form['project_downloads'] = array('#tree' => TRUE);
+    $form['project_downloads'] = ['#tree' => TRUE];
     $this->moduleHandler->loadInclude('update', 'inc', 'update.compare');
     $project_data = update_calculate_project_data($available);
     foreach ($project_data as $name => $project) {
@@ -134,25 +134,25 @@ class UpdateManagerUpdate extends FormBase {
         $recommended_version .= '<div title="{{ major_update_warning_title }}" class="update-major-version-warning">{{ major_update_warning_text }}</div>';
       }
 
-      $recommended_version = array(
+      $recommended_version = [
         '#type' => 'inline_template',
         '#template' => $recommended_version,
-        '#context' => array(
+        '#context' => [
           'release_version' => $recommended_release['version'],
           'release_link' => $recommended_release['release_link'],
-          'project_title' => $this->t('Release notes for @project_title', array('@project_title' => $project['title'])),
+          'project_title' => $this->t('Release notes for @project_title', ['@project_title' => $project['title']]),
           'major_update_warning_title' => $this->t('Major upgrade warning'),
           'major_update_warning_text' => $this->t('This update is a major version update which means that it may not be backwards compatible with your currently running version. It is recommended that you read the release notes and proceed at your own risk.'),
           'release_notes' => $this->t('Release notes'),
-        ),
-      );
+        ],
+      ];
 
       // Create an entry for this project.
-      $entry = array(
+      $entry = [
         'title' => $project_name,
         'installed_version' => $project['existing_version'],
-        'recommended_version' => array('data' => $recommended_version),
-      );
+        'recommended_version' => ['data' => $recommended_version],
+      ];
 
       switch ($project['status']) {
         case UPDATE_NOT_SECURE:
@@ -181,11 +181,11 @@ class UpdateManagerUpdate extends FormBase {
       }
 
       // Use the project title for the tableselect checkboxes.
-      $entry['title'] = array('data' => array(
+      $entry['title'] = ['data' => [
         '#title' => $entry['title'],
         '#markup' => $entry['title'],
-      ));
-      $entry['#attributes'] = array('class' => array('update-' . $type));
+      ]];
+      $entry['#attributes'] = ['class' => ['update-' . $type]];
 
       // Drupal core needs to be upgraded manually.
       $needs_manual = $project['project_type'] == 'core';
@@ -198,15 +198,15 @@ class UpdateManagerUpdate extends FormBase {
         unset($entry['#weight']);
         $attributes = $entry['#attributes'];
         unset($entry['#attributes']);
-        $entry = array(
+        $entry = [
           'data' => $entry,
-        ) + $attributes;
+        ] + $attributes;
       }
       else {
-        $form['project_downloads'][$name] = array(
+        $form['project_downloads'][$name] = [
           '#type' => 'value',
           '#value' => $recommended_release['download_link'],
-        );
+        ];
       }
 
       // Based on what kind of project this is, save the entry into the
@@ -230,62 +230,62 @@ class UpdateManagerUpdate extends FormBase {
     }
 
     if (empty($projects)) {
-      $form['message'] = array(
+      $form['message'] = [
         '#markup' => $this->t('All of your projects are up to date.'),
-      );
+      ];
       return $form;
     }
 
-    $headers = array(
-      'title' => array(
+    $headers = [
+      'title' => [
         'data' => $this->t('Name'),
-        'class' => array('update-project-name'),
-      ),
+        'class' => ['update-project-name'],
+      ],
       'installed_version' => $this->t('Installed version'),
       'recommended_version' => $this->t('Recommended version'),
-    );
+    ];
 
     if (!empty($projects['enabled'])) {
-      $form['projects'] = array(
+      $form['projects'] = [
         '#type' => 'tableselect',
         '#header' => $headers,
         '#options' => $projects['enabled'],
-      );
+      ];
       if (!empty($projects['disabled'])) {
         $form['projects']['#prefix'] = '<h2>' . $this->t('Enabled') . '</h2>';
       }
     }
 
     if (!empty($projects['disabled'])) {
-      $form['disabled_projects'] = array(
+      $form['disabled_projects'] = [
         '#type' => 'tableselect',
         '#header' => $headers,
         '#options' => $projects['disabled'],
         '#weight' => 1,
         '#prefix' => '<h2>' . $this->t('Disabled') . '</h2>',
-      );
+      ];
     }
 
     // If either table has been printed yet, we need a submit button and to
     // validate the checkboxes.
     if (!empty($projects['enabled']) || !empty($projects['disabled'])) {
-      $form['actions'] = array('#type' => 'actions');
-      $form['actions']['submit'] = array(
+      $form['actions'] = ['#type' => 'actions'];
+      $form['actions']['submit'] = [
         '#type' => 'submit',
         '#value' => $this->t('Download these updates'),
-      );
+      ];
     }
 
     if (!empty($projects['manual'])) {
       $prefix = '<h2>' . $this->t('Manual updates required') . '</h2>';
       $prefix .= '<p>' . $this->t('Updates of Drupal core are not supported at this time.') . '</p>';
-      $form['manual_updates'] = array(
+      $form['manual_updates'] = [
         '#type' => 'table',
         '#header' => $headers,
         '#rows' => $projects['manual'],
         '#prefix' => $prefix,
         '#weight' => 120,
-      );
+      ];
     }
 
     return $form;
@@ -311,29 +311,29 @@ class UpdateManagerUpdate extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('update', 'inc', 'update.manager');
-    $projects = array();
-    foreach (array('projects', 'disabled_projects') as $type) {
+    $projects = [];
+    foreach (['projects', 'disabled_projects'] as $type) {
       if (!$form_state->isValueEmpty($type)) {
         $projects = array_merge($projects, array_keys(array_filter($form_state->getValue($type))));
       }
     }
-    $operations = array();
+    $operations = [];
     foreach ($projects as $project) {
-      $operations[] = array(
+      $operations[] = [
         'update_manager_batch_project_get',
-        array(
+        [
           $project,
-          $form_state->getValue(array('project_downloads', $project)),
-        ),
-      );
+          $form_state->getValue(['project_downloads', $project]),
+        ],
+      ];
     }
-    $batch = array(
+    $batch = [
       'title' => $this->t('Downloading updates'),
       'init_message' => $this->t('Preparing to download selected updates'),
       'operations' => $operations,
       'finished' => 'update_manager_download_batch_finished',
       'file' => drupal_get_path('module', 'update') . '/update.manager.inc',
-    );
+    ];
     batch_set($batch);
   }
 

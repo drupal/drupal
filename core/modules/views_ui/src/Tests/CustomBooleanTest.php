@@ -18,7 +18,7 @@ class CustomBooleanTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * \Drupal\views\Tests\ViewTestBase::viewsData().
@@ -47,15 +47,15 @@ class CustomBooleanTest extends UITestBase {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
-    $view->displayHandlers->get('default')->overrideOption('fields', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('fields', [
+      'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'plugin_id' => 'boolean',
-      ),
-    ));
+      ],
+    ]);
     $view->save();
 
     $this->executeView($view);
@@ -64,35 +64,35 @@ class CustomBooleanTest extends UITestBase {
     $custom_false = 'Nay';
 
     // Set up some custom value mappings for different types.
-    $custom_values = array(
-      'plain' => array(
+    $custom_values = [
+      'plain' => [
         'true' => $custom_true,
         'false' => $custom_false,
         'test' => 'assertTrue',
-      ),
-      'allowed tag' => array(
+      ],
+      'allowed tag' => [
         'true' => '<p>' . $custom_true . '</p>',
         'false' => '<p>' . $custom_false . '</p>',
         'test' => 'assertTrue',
-      ),
-      'disallowed tag' => array(
+      ],
+      'disallowed tag' => [
         'true' => '<script>' . $custom_true . '</script>',
         'false' => '<script>' . $custom_false . '</script>',
         'test' => 'assertFalse',
-      ),
-    );
+      ],
+    ];
 
     // Run the same tests on each type.
     foreach ($custom_values as $type => $values) {
-      $options = array(
+      $options = [
         'options[type]' => 'custom',
         'options[type_custom_true]' => $values['true'],
         'options[type_custom_false]' => $values['false'],
-      );
+      ];
       $this->drupalPostForm('admin/structure/views/nojs/handler/test_view/default/field/age', $options, 'Apply');
 
       // Save the view.
-      $this->drupalPostForm('admin/structure/views/view/test_view', array(), 'Save');
+      $this->drupalPostForm('admin/structure/views/view/test_view', [], 'Save');
 
       $view = Views::getView('test_view');
       $output = $view->preview();
@@ -136,35 +136,35 @@ class CustomBooleanTest extends UITestBase {
     $custom_false = 'Nay';
 
     // Set up some custom value mappings for different types.
-    $custom_values = array(
-      'plain' => array(
+    $custom_values = [
+      'plain' => [
         'true' => $custom_true,
         'false' => $custom_false,
         'test' => 'assertTrue',
-      ),
-      'allowed tag' => array(
+      ],
+      'allowed tag' => [
         'true' => '<p>' . $custom_true . '</p>',
         'false' => '<p>' . $custom_false . '</p>',
         'test' => 'assertTrue',
-      ),
-      'disallowed tag' => array(
+      ],
+      'disallowed tag' => [
         'true' => '<script>' . $custom_true . '</script>',
         'false' => '<script>' . $custom_false . '</script>',
         'test' => 'assertFalse',
-      ),
-    );
+      ],
+    ];
 
     // Run the same tests on each type.
     foreach ($custom_values as $type => $values) {
-      $options = array(
+      $options = [
         'options[type]' => 'custom',
         'options[type_custom_true]' => $values['true'],
         'options[type_custom_false]' => $values['false'],
-      );
+      ];
       $this->drupalPostForm('admin/structure/views/nojs/handler/test_view/default/field/age', $options, 'Apply');
 
       // Save the view.
-      $this->drupalPostForm('admin/structure/views/view/test_view', array(), 'Save');
+      $this->drupalPostForm('admin/structure/views/view/test_view', [], 'Save');
 
       $view = Views::getView('test_view');
       $output = $view->preview();

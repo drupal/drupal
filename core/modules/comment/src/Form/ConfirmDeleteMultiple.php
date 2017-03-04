@@ -81,25 +81,25 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $edit = $form_state->getUserInput();
 
-    $form['comments'] = array(
+    $form['comments'] = [
       '#prefix' => '<ul>',
       '#suffix' => '</ul>',
       '#tree' => TRUE,
-    );
+    ];
     // array_filter() returns only elements with actual values.
     $comment_counter = 0;
     $this->comments = $this->commentStorage->loadMultiple(array_keys(array_filter($edit['comments'])));
     foreach ($this->comments as $comment) {
       $cid = $comment->id();
-      $form['comments'][$cid] = array(
+      $form['comments'][$cid] = [
         '#type' => 'hidden',
         '#value' => $cid,
         '#prefix' => '<li>',
         '#suffix' => Html::escape($comment->label()) . '</li>'
-      );
+      ];
       $comment_counter++;
     }
-    $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
+    $form['operation'] = ['#type' => 'hidden', '#value' => 'delete'];
 
     if (!$comment_counter) {
       drupal_set_message($this->t('There do not appear to be any comments to delete, or your selected comment was deleted by another administrator.'));
@@ -116,7 +116,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
     if ($form_state->getValue('confirm')) {
       $this->commentStorage->delete($this->comments);
       $count = count($form_state->getValue('comments'));
-      $this->logger('comment')->notice('Deleted @count comments.', array('@count' => $count));
+      $this->logger('comment')->notice('Deleted @count comments.', ['@count' => $count]);
       drupal_set_message($this->formatPlural($count, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
     $form_state->setRedirectUrl($this->getCancelUrl());

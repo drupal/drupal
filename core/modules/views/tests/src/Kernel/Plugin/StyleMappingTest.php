@@ -11,14 +11,14 @@ use Drupal\views\Views;
  */
 class StyleMappingTest extends StyleTestBase {
 
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_style_mapping');
+  public static $testViews = ['test_style_mapping'];
 
   /**
    * Verifies that the fields were mapped correctly.
@@ -68,7 +68,7 @@ class StyleMappingTest extends StyleTestBase {
         // separated by ':'.
         $expected_result = $name . ':' . $data_set[$count][$field_id];
         $actual_result = (string) $field;
-        $this->assertIdentical($expected_result, $actual_result, format_string('The fields were mapped successfully: %name => %field_id', array('%name' => $name, '%field_id' => $field_id)));
+        $this->assertIdentical($expected_result, $actual_result, format_string('The fields were mapped successfully: %name => %field_id', ['%name' => $name, '%field_id' => $field_id]));
       }
 
       $count++;

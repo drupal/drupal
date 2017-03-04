@@ -58,11 +58,11 @@ class ContentTranslationEnableTest extends WebTestBase {
 
     // Create a node type and check the content translation settings are now
     // available for nodes.
-    $edit = array(
+    $edit = [
       'name' => 'foo',
       'title_label' => 'title for foo',
       'type' => 'foo',
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
     $this->drupalGet('admin/config/regional/content-language');
     $this->assertRaw('entity_types[node]');

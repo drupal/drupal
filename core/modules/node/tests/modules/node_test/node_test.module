@@ -21,23 +21,23 @@ use Drupal\node\NodeInterface;
 function node_test_node_view(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if ($view_mode == 'rss') {
     // Add RSS elements and namespaces when building the RSS feed.
-    $node->rss_elements[] = array(
+    $node->rss_elements[] = [
       'key' => 'testElement',
-      'value' => t('Value of testElement RSS element for node @nid.', array('@nid' => $node->id())),
-    );
+      'value' => t('Value of testElement RSS element for node @nid.', ['@nid' => $node->id()]),
+    ];
 
     // Add content that should be displayed only in the RSS feed.
-    $build['extra_feed_content'] = array(
-      '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node @nid.', array('@nid' => $node->id())) . '</p>',
+    $build['extra_feed_content'] = [
+      '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node @nid.', ['@nid' => $node->id()]) . '</p>',
       '#weight' => 10,
-    );
+    ];
   }
 
   if ($view_mode != 'rss') {
     // Add content that should NOT be displayed in the RSS feed.
-    $build['extra_non_feed_content'] = array(
-      '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node @nid.', array('@nid' => $node->id())) . '</p>',
-    );
+    $build['extra_non_feed_content'] = [
+      '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node @nid.', ['@nid' => $node->id()]) . '</p>',
+    ];
   }
 }
 
@@ -57,11 +57,11 @@ function node_test_node_grants(AccountInterface $account, $op) {
   // Give everyone full grants so we don't break other node tests.
   // Our node access tests asserts three realms of access.
   // See testGrantAlter().
-  return array(
-    'test_article_realm' => array(1),
-    'test_page_realm' => array(1),
-    'test_alter_realm' => array(2),
-  );
+  return [
+    'test_article_realm' => [1],
+    'test_page_realm' => [1],
+    'test_alter_realm' => [2],
+  ];
 }
 
 /**
@@ -72,28 +72,28 @@ function node_test_node_access_records(NodeInterface $node) {
   if (!empty($node->disable_node_access)) {
     return;
   }
-  $grants = array();
+  $grants = [];
   if ($node->getType() == 'article') {
     // Create grant in arbitrary article_realm for article nodes.
-    $grants[] = array(
+    $grants[] = [
       'realm' => 'test_article_realm',
       'gid' => 1,
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
       'priority' => 0,
-    );
+    ];
   }
   elseif ($node->getType() == 'page') {
     // Create grant in arbitrary page_realm for page nodes.
-    $grants[] = array(
+    $grants[] = [
       'realm' => 'test_page_realm',
       'gid' => 1,
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
       'priority' => 0,
-    );
+    ];
   }
   return $grants;
 }
@@ -118,7 +118,7 @@ function node_test_node_access_records_alter(&$grants, NodeInterface $node) {
  */
 function node_test_node_grants_alter(&$grants, AccountInterface $account, $op) {
   // Return an empty array of grants to prove that we can alter by reference.
-  $grants = array();
+  $grants = [];
 }
 
 /**

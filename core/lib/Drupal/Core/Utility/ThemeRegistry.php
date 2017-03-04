@@ -46,7 +46,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
    * @param bool $modules_loaded
    *   Whether all modules have already been loaded.
    */
-  function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, $tags = array(), $modules_loaded = FALSE) {
+  function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, $tags = [], $modules_loaded = FALSE) {
     $this->cid = $cid;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -136,7 +136,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
       return;
     }
     // @todo: Is the custom implementation necessary?
-    $data = array();
+    $data = [];
     foreach ($this->keysToPersist as $offset => $persist) {
       if ($persist) {
         $data[$offset] = $this->storage[$offset];

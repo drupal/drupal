@@ -31,7 +31,7 @@ class MockLayoutBlockDeriver implements DeriverInterface {
     // key from the returned definitions.
     unset($base_plugin_definition['deriver']);
 
-    $derivatives = array(
+    $derivatives = [
       // Adding a NULL key signifies that the base plugin may also be used in
       // addition to the derivatives. In this case, we allow the administrator
       // to add a generic layout block to the page.
@@ -40,10 +40,10 @@ class MockLayoutBlockDeriver implements DeriverInterface {
       // We also allow them to add a customized one. Here, we just mock the
       // customized one, but in a real implementation, this would be fetched
       // from some \Drupal::config() object.
-      'foo' => array(
+      'foo' => [
         'label' => t('Layout Foo'),
-      ) + $base_plugin_definition,
-    );
+      ] + $base_plugin_definition,
+    ];
 
     return $derivatives;
   }

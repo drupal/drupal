@@ -36,18 +36,18 @@ class NullBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {}
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {}
 
   /**
    * {@inheritdoc}
    */
-  public function setMultiple(array $items = array()) {}
+  public function setMultiple(array $items = []) {}
 
   /**
    * {@inheritdoc}

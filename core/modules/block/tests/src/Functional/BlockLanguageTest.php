@@ -23,19 +23,19 @@ class BlockLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'block', 'content_translation');
+  public static $modules = ['language', 'block', 'content_translation'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create a new user, allow him to manage the blocks and the languages.
-    $this->adminUser = $this->drupalCreateUser(array('administer blocks', 'administer languages'));
+    $this->adminUser = $this->drupalCreateUser(['administer blocks', 'administer languages']);
     $this->drupalLogin($this->adminUser);
 
     // Add predefined language.
-    $edit = array(
+    $edit = [
       'predefined_langcode' => 'fr',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('French', 'Language added successfully.');
   }
@@ -52,17 +52,17 @@ class BlockLanguageTest extends BrowserTestBase {
     $this->assertNoField('visibility[language][context_mapping][language]', 'Language type field is not visible.');
 
     // Enable a standard block and set the visibility setting for one language.
-    $edit = array(
+    $edit = [
       'visibility[language][langcodes][en]' => TRUE,
       'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
-    );
+    ];
     $this->drupalPostForm('admin/structure/block/add/system_powered_by_block' . '/' . $default_theme, $edit, t('Save block'));
 
     // Change the default language.
-    $edit = array(
+    $edit = [
       'site_default_language' => 'fr',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Check that a page has a block.
@@ -79,16 +79,16 @@ class BlockLanguageTest extends BrowserTestBase {
    */
   public function testLanguageBlockVisibilityLanguageDelete() {
     // Enable a standard block and set the visibility setting for one language.
-    $edit = array(
-      'visibility' => array(
-        'language' => array(
-          'langcodes' => array(
+    $edit = [
+      'visibility' => [
+        'language' => [
+          'langcodes' => [
             'fr' => 'fr',
-          ),
+          ],
           'context_mapping' => ['language' => '@language.current_language_context:language_interface'],
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     $block = $this->drupalPlaceBlock('system_powered_by_block', $edit);
 
     // Check that we have the language in config after saving the setting.
@@ -96,7 +96,7 @@ class BlockLanguageTest extends BrowserTestBase {
     $this->assertEqual('fr', $visibility['language']['langcodes']['fr'], 'Language is set in the block configuration.');
 
     // Delete the language.
-    $this->drupalPostForm('admin/config/regional/language/delete/fr', array(), t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/fr', [], t('Delete'));
 
     // Check that the language is no longer stored in the configuration after
     // it is deleted.

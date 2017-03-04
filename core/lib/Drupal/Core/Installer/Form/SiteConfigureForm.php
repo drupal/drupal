@@ -132,7 +132,7 @@ class SiteConfigureForm extends ConfigFormBase {
     // successfully.)
     $post_params = $this->getRequest()->request->all();
     if (empty($post_params) && (!drupal_verify_install_file($this->root . '/' . $settings_file, FILE_EXIST | FILE_READABLE | FILE_NOT_WRITABLE) || !drupal_verify_install_file($this->root . '/' . $settings_dir, FILE_NOT_WRITABLE, 'dir'))) {
-      drupal_set_message(t('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, consult the <a href=":handbook_url">online handbook</a>.', array('%dir' => $settings_dir, '%file' => $settings_file, ':handbook_url' => 'https://www.drupal.org/server-permissions')), 'warning');
+      drupal_set_message(t('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, consult the <a href=":handbook_url">online handbook</a>.', ['%dir' => $settings_dir, '%file' => $settings_file, ':handbook_url' => 'https://www.drupal.org/server-permissions']), 'warning');
     }
 
     $form['#attached']['library'][] = 'system/drupal.system';
@@ -142,55 +142,55 @@ class SiteConfigureForm extends ConfigFormBase {
     // work during installation.
     $form['#attached']['drupalSettings']['copyFieldValue']['edit-site-mail'] = ['edit-account-mail'];
 
-    $form['site_information'] = array(
+    $form['site_information'] = [
       '#type' => 'fieldgroup',
       '#title' => $this->t('Site information'),
-    );
-    $form['site_information']['site_name'] = array(
+    ];
+    $form['site_information']['site_name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Site name'),
       '#required' => TRUE,
       '#weight' => -20,
-    );
-    $form['site_information']['site_mail'] = array(
+    ];
+    $form['site_information']['site_mail'] = [
       '#type' => 'email',
       '#title' => $this->t('Site email address'),
       '#default_value' => ini_get('sendmail_from'),
       '#description' => $this->t("Automated emails, such as registration information, will be sent from this address. Use an address ending in your site's domain to help prevent these emails from being flagged as spam."),
       '#required' => TRUE,
       '#weight' => -15,
-    );
+    ];
 
-    $form['admin_account'] = array(
+    $form['admin_account'] = [
       '#type' => 'fieldgroup',
       '#title' => $this->t('Site maintenance account'),
-    );
-    $form['admin_account']['account']['name'] = array(
+    ];
+    $form['admin_account']['account']['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Username'),
       '#maxlength' => USERNAME_MAX_LENGTH,
       '#description' => $this->t("Several special characters are allowed, including space, period (.), hyphen (-), apostrophe ('), underscore (_), and the @ sign."),
       '#required' => TRUE,
-      '#attributes' => array('class' => array('username')),
-    );
-    $form['admin_account']['account']['pass'] = array(
+      '#attributes' => ['class' => ['username']],
+    ];
+    $form['admin_account']['account']['pass'] = [
       '#type' => 'password_confirm',
       '#required' => TRUE,
       '#size' => 25,
-    );
+    ];
     $form['admin_account']['account']['#tree'] = TRUE;
-    $form['admin_account']['account']['mail'] = array(
+    $form['admin_account']['account']['mail'] = [
       '#type' => 'email',
       '#title' => $this->t('Email address'),
       '#required' => TRUE,
-    );
+    ];
 
-    $form['regional_settings'] = array(
+    $form['regional_settings'] = [
       '#type' => 'fieldgroup',
       '#title' => $this->t('Regional settings'),
-    );
+    ];
     $countries = $this->countryManager->getList();
-    $form['regional_settings']['site_default_country'] = array(
+    $form['regional_settings']['site_default_country'] = [
       '#type' => 'select',
       '#title' => $this->t('Default country'),
       '#empty_value' => '',
@@ -198,8 +198,8 @@ class SiteConfigureForm extends ConfigFormBase {
       '#options' => $countries,
       '#description' => $this->t('Select the default country for the site.'),
       '#weight' => 0,
-    );
-    $form['regional_settings']['date_default_timezone'] = array(
+    ];
+    $form['regional_settings']['date_default_timezone'] = [
       '#type' => 'select',
       '#title' => $this->t('Default time zone'),
       // Use system timezone if set, but avoid throwing a warning in PHP >=5.4
@@ -207,37 +207,37 @@ class SiteConfigureForm extends ConfigFormBase {
       '#options' => system_time_zones(),
       '#description' => $this->t('By default, dates in this site will be displayed in the chosen time zone.'),
       '#weight' => 5,
-      '#attributes' => array('class' => array('timezone-detect')),
-    );
+      '#attributes' => ['class' => ['timezone-detect']],
+    ];
 
-    $form['update_notifications'] = array(
+    $form['update_notifications'] = [
       '#type' => 'fieldgroup',
       '#title' => $this->t('Update notifications'),
-      '#description' => $this->t('The system will notify you when updates and important security releases are available for installed components. Anonymous information about your site is sent to <a href=":drupal">Drupal.org</a>.', array(':drupal' => 'https://www.drupal.org')),
-    );
-    $form['update_notifications']['enable_update_status_module'] = array(
+      '#description' => $this->t('The system will notify you when updates and important security releases are available for installed components. Anonymous information about your site is sent to <a href=":drupal">Drupal.org</a>.', [':drupal' => 'https://www.drupal.org']),
+    ];
+    $form['update_notifications']['enable_update_status_module'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Check for updates automatically'),
       '#default_value' => 1,
-    );
-    $form['update_notifications']['enable_update_status_emails'] = array(
+    ];
+    $form['update_notifications']['enable_update_status_emails'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Receive email notifications'),
       '#default_value' => 1,
-      '#states' => array(
-        'visible' => array(
-          'input[name="enable_update_status_module"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
+      '#states' => [
+        'visible' => [
+          'input[name="enable_update_status_module"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save and continue'),
       '#weight' => 15,
       '#button_type' => 'primary',
-    );
+    ];
 
     return $form;
   }
@@ -246,7 +246,7 @@ class SiteConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($error = user_validate_name($form_state->getValue(array('account', 'name')))) {
+    if ($error = user_validate_name($form_state->getValue(['account', 'name']))) {
       $form_state->setErrorByName('account][name', $error);
     }
   }
@@ -270,7 +270,7 @@ class SiteConfigureForm extends ConfigFormBase {
     // Enable update.module if this option was selected.
     $update_status_module = $form_state->getValue('enable_update_status_module');
     if ($update_status_module) {
-      $this->moduleInstaller->install(array('file', 'update'), FALSE);
+      $this->moduleInstaller->install(['file', 'update'], FALSE);
 
       // Add the site maintenance account's email address to the list of
       // addresses to be notified when updates are available, if selected.
@@ -278,7 +278,7 @@ class SiteConfigureForm extends ConfigFormBase {
       if ($email_update_status_emails) {
         // Reset the configuration factory so it is updated with the new module.
         $this->resetConfigFactory();
-        $this->config('update.settings')->set('notification.emails', array($account_values['mail']))->save(TRUE);
+        $this->config('update.settings')->set('notification.emails', [$account_values['mail']])->save(TRUE);
       }
     }
 

@@ -17,7 +17,7 @@ class FrontPageTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'system_test', 'views');
+  public static $modules = ['node', 'system_test', 'views'];
 
   /**
    * The path to a node that is created for testing.
@@ -30,12 +30,12 @@ class FrontPageTest extends WebTestBase {
     parent::setUp();
 
     // Create admin user, log in admin user, and create one node.
-    $this->drupalLogin ($this->drupalCreateUser(array(
+    $this->drupalLogin ($this->drupalCreateUser([
       'access content',
       'administer site configuration',
-    )));
-    $this->drupalCreateContentType(array('type' => 'page'));
-    $this->nodePath = "node/" . $this->drupalCreateNode(array('promote' => 1))->id();
+    ]));
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->nodePath = "node/" . $this->drupalCreateNode(['promote' => 1])->id();
 
     // Configure 'node' as front page.
     $this->config('system.site')->set('page.front', '/node')->save();
@@ -48,10 +48,10 @@ class FrontPageTest extends WebTestBase {
    */
   public function testDrupalFrontPage() {
     // Create a promoted node to test the <title> tag on the front page view.
-    $settings = array(
+    $settings = [
       'title' => $this->randomMachineName(8),
       'promote' => 1,
-    );
+    ];
     $this->drupalCreateNode($settings);
     $this->drupalGet('');
     $this->assertTitle('Home | Drupal');
@@ -63,9 +63,9 @@ class FrontPageTest extends WebTestBase {
     $this->assertNoText(t('On front page.'), 'Path is not the front page.');
 
     // Change the front page to an invalid path.
-    $edit = array('site_frontpage' => '/kittens');
+    $edit = ['site_frontpage' => '/kittens'];
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
-    $this->assertText(t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $edit['site_frontpage'])));
+    $this->assertText(t("The path '@path' is either invalid or you do not have access to it.", ['@path' => $edit['site_frontpage']]));
 
     // Change the front page to a path without a starting slash.
     $edit = ['site_frontpage' => $this->nodePath];

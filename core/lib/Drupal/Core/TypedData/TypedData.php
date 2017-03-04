@@ -121,7 +121,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    */
   public function getConstraints() {
     $constraint_manager = $this->getTypedDataManager()->getValidationConstraintManager();
-    $constraints = array();
+    $constraints = [];
     foreach ($this->definition->getConstraints() as $name => $options) {
       $constraints[] = $constraint_manager->create($name, $options);
     }

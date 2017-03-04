@@ -19,12 +19,12 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  */
 class FilterAPITest extends EntityKernelTestBase {
 
-  public static $modules = array('system', 'filter', 'filter_test', 'user');
+  public static $modules = ['system', 'filter', 'filter_test', 'user'];
 
   protected function setUp() {
     parent::setUp();
 
-    $this->installConfig(array('system', 'filter', 'filter_test'));
+    $this->installConfig(['system', 'filter', 'filter_test']);
   }
 
   /**
@@ -32,24 +32,24 @@ class FilterAPITest extends EntityKernelTestBase {
    */
   function testCheckMarkupFilterOrder() {
     // Create crazy HTML format.
-    $crazy_format = FilterFormat::create(array(
+    $crazy_format = FilterFormat::create([
       'format' => 'crazy',
       'name' => 'Crazy',
       'weight' => 1,
-      'filters' => array(
-        'filter_html_escape' => array(
+      'filters' => [
+        'filter_html_escape' => [
           'weight' => 10,
           'status' => 1,
-        ),
-        'filter_html' => array(
+        ],
+        'filter_html' => [
           'weight' => -10,
           'status' => 1,
-          'settings' => array(
+          'settings' => [
             'allowed_html' => '<p>',
-          ),
-        ),
-      )
-    ));
+          ],
+        ],
+      ]
+    ]);
     $crazy_format->save();
 
     $text = "<p>Llamas are <not> awesome!</p>";
@@ -66,14 +66,14 @@ class FilterAPITest extends EntityKernelTestBase {
     $expected_filtered_text = "Text with evil content and a URL: <a href=\"https://www.drupal.org\">https://www.drupal.org</a>!";
     $expected_filter_text_without_html_generators = "Text with evil content and a URL: https://www.drupal.org!";
 
-    $actual_filtered_text = check_markup($text, 'filtered_html', '', array());
+    $actual_filtered_text = check_markup($text, 'filtered_html', '', []);
     $this->verbose("Actual:<pre>$actual_filtered_text</pre>Expected:<pre>$expected_filtered_text</pre>");
     $this->assertEqual(
       $actual_filtered_text,
       $expected_filtered_text,
       'Expected filter result.'
     );
-    $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', array(FilterInterface::TYPE_MARKUP_LANGUAGE));
+    $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_MARKUP_LANGUAGE]);
     $this->verbose("Actual:<pre>$actual_filtered_text_without_html_generators</pre>Expected:<pre>$expected_filter_text_without_html_generators</pre>");
     $this->assertEqual(
       $actual_filtered_text_without_html_generators,
@@ -84,7 +84,7 @@ class FilterAPITest extends EntityKernelTestBase {
     // this check focuses on the ability to filter multiple filter types at once.
     // Drupal core only ships with these two types of filters, so this is the
     // most extensive test possible.
-    $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', array(FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE));
+    $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE]);
     $this->verbose("Actual:<pre>$actual_filtered_text_without_html_generators</pre>Expected:<pre>$expected_filter_text_without_html_generators</pre>");
     $this->assertEqual(
       $actual_filtered_text_without_html_generators,
@@ -103,20 +103,20 @@ class FilterAPITest extends EntityKernelTestBase {
     $filtered_html_format = FilterFormat::load('filtered_html');
     $this->assertIdentical(
       $filtered_html_format->getHtmlRestrictions(),
-      array(
-        'allowed' => array(
+      [
+        'allowed' => [
           'p' => FALSE,
           'br' => FALSE,
           'strong' => FALSE,
-          'a' => array('href' => TRUE, 'hreflang' => TRUE),
-          '*' => array('style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => array('ltr' => TRUE, 'rtl' => TRUE)),
-        ),
-      ),
+          'a' => ['href' => TRUE, 'hreflang' => TRUE],
+          '*' => ['style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]],
+        ],
+      ],
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the filtered_html format.'
     );
     $this->assertIdentical(
       $filtered_html_format->getFilterTypes(),
-      array(FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE),
+      [FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE],
       'FilterFormatInterface::getFilterTypes() works as expected for the filtered_html format.'
     );
 
@@ -129,113 +129,113 @@ class FilterAPITest extends EntityKernelTestBase {
     );
     $this->assertIdentical(
       $full_html_format->getFilterTypes(),
-      array(),
+      [],
       'FilterFormatInterface::getFilterTypes() works as expected for the full_html format.'
     );
 
     // Test on stupid_filtered_html, where nothing is allowed.
-    $stupid_filtered_html_format = FilterFormat::create(array(
+    $stupid_filtered_html_format = FilterFormat::create([
       'format' => 'stupid_filtered_html',
       'name' => 'Stupid Filtered HTML',
-      'filters' => array(
-        'filter_html' => array(
+      'filters' => [
+        'filter_html' => [
           'status' => 1,
-          'settings' => array(
+          'settings' => [
             'allowed_html' => '', // Nothing is allowed.
-          ),
-        ),
-      ),
-    ));
+          ],
+        ],
+      ],
+    ]);
     $stupid_filtered_html_format->save();
     $this->assertIdentical(
       $stupid_filtered_html_format->getHtmlRestrictions(),
-      array('allowed' => array()), // No tag is allowed.
+      ['allowed' => []], // No tag is allowed.
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the stupid_filtered_html format.'
     );
     $this->assertIdentical(
       $stupid_filtered_html_format->getFilterTypes(),
-      array(FilterInterface::TYPE_HTML_RESTRICTOR),
+      [FilterInterface::TYPE_HTML_RESTRICTOR],
       'FilterFormatInterface::getFilterTypes() works as expected for the stupid_filtered_html format.'
     );
 
     // Test on very_restricted_html, where there's two different filters of the
     // FilterInterface::TYPE_HTML_RESTRICTOR type, each restricting in different ways.
-    $very_restricted_html_format = FilterFormat::create(array(
+    $very_restricted_html_format = FilterFormat::create([
       'format' => 'very_restricted_html',
       'name' => 'Very Restricted HTML',
-      'filters' => array(
-        'filter_html' => array(
+      'filters' => [
+        'filter_html' => [
           'status' => 1,
-          'settings' => array(
+          'settings' => [
             'allowed_html' => '<p> <br> <a href> <strong>',
-          ),
-        ),
-        'filter_test_restrict_tags_and_attributes' => array(
+          ],
+        ],
+        'filter_test_restrict_tags_and_attributes' => [
           'status' => 1,
-          'settings' => array(
-            'restrictions' => array(
-              'allowed' => array(
+          'settings' => [
+            'restrictions' => [
+              'allowed' => [
                 'p' => TRUE,
                 'br' => FALSE,
-                'a' => array('href' => TRUE),
+                'a' => ['href' => TRUE],
                 'em' => TRUE,
-              ),
-            )
-          ),
-        ),
-      )
-    ));
+              ],
+            ]
+          ],
+        ],
+      ]
+    ]);
     $very_restricted_html_format->save();
     $this->assertIdentical(
       $very_restricted_html_format->getHtmlRestrictions(),
-      array(
-        'allowed' => array(
+      [
+        'allowed' => [
           'p' => FALSE,
           'br' => FALSE,
-          'a' => array('href' => TRUE),
-          '*' => array('style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => array('ltr' => TRUE, 'rtl' => TRUE)),
-        ),
-      ),
+          'a' => ['href' => TRUE],
+          '*' => ['style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]],
+        ],
+      ],
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the very_restricted_html format.'
     );
     $this->assertIdentical(
       $very_restricted_html_format->getFilterTypes(),
-      array(FilterInterface::TYPE_HTML_RESTRICTOR),
+      [FilterInterface::TYPE_HTML_RESTRICTOR],
       'FilterFormatInterface::getFilterTypes() works as expected for the very_restricted_html format.'
     );
 
     // Test on nonsensical_restricted_html, where the allowed attribute values
     // contain asterisks, which do not have any meaning, but which we also
     // cannot prevent because configuration can be modified outside of forms.
-    $nonsensical_restricted_html = FilterFormat::create(array(
+    $nonsensical_restricted_html = FilterFormat::create([
       'format' => 'nonsensical_restricted_html',
       'name' => 'Nonsensical Restricted HTML',
-      'filters' => array(
-        'filter_html' => array(
+      'filters' => [
+        'filter_html' => [
           'status' => 1,
-          'settings' => array(
+          'settings' => [
             'allowed_html' => '<a> <b class> <c class="*"> <d class="foo bar-* *">',
-          ),
-        ),
-      )
-    ));
+          ],
+        ],
+      ]
+    ]);
     $nonsensical_restricted_html->save();
     $this->assertIdentical(
       $nonsensical_restricted_html->getHtmlRestrictions(),
-      array(
-        'allowed' => array(
+      [
+        'allowed' => [
           'a' => FALSE,
-          'b' => array('class' => TRUE),
-          'c' => array('class' => TRUE),
-          'd' => array('class' => array('foo' => TRUE, 'bar-*' => TRUE)),
-          '*' => array('style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => array('ltr' => TRUE, 'rtl' => TRUE)),
-        ),
-      ),
+          'b' => ['class' => TRUE],
+          'c' => ['class' => TRUE],
+          'd' => ['class' => ['foo' => TRUE, 'bar-*' => TRUE]],
+          '*' => ['style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]],
+        ],
+      ],
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the nonsensical_restricted_html format.'
     );
     $this->assertIdentical(
       $very_restricted_html_format->getFilterTypes(),
-      array(FilterInterface::TYPE_HTML_RESTRICTOR),
+      [FilterInterface::TYPE_HTML_RESTRICTOR],
       'FilterFormatInterface::getFilterTypes() works as expected for the very_restricted_html format.'
     );
   }
@@ -250,57 +250,57 @@ class FilterAPITest extends EntityKernelTestBase {
    * This test focuses solely on those advanced features.
    */
   function testProcessedTextElement() {
-    FilterFormat::create(array(
+    FilterFormat::create([
       'format' => 'element_test',
       'name' => 'processed_text element test format',
-      'filters' => array(
-        'filter_test_assets' => array(
+      'filters' => [
+        'filter_test_assets' => [
           'weight' => -1,
           'status' => TRUE,
-        ),
-        'filter_test_cache_tags' => array(
+        ],
+        'filter_test_cache_tags' => [
           'weight' => 0,
           'status' => TRUE,
-        ),
-        'filter_test_cache_contexts' => array(
+        ],
+        'filter_test_cache_contexts' => [
           'weight' => 0,
           'status' => TRUE,
-        ),
-        'filter_test_cache_merge' => array(
+        ],
+        'filter_test_cache_merge' => [
           'weight' => 0,
           'status' => TRUE,
-        ),
-        'filter_test_placeholders' => array(
+        ],
+        'filter_test_placeholders' => [
           'weight' => 1,
           'status' => TRUE,
-        ),
+        ],
         // Run the HTML corrector filter last, because it has the potential to
         // break the placeholders added by the filter_test_placeholders filter.
-        'filter_htmlcorrector' => array(
+        'filter_htmlcorrector' => [
           'weight' => 10,
           'status' => TRUE,
-        ),
-      ),
-    ))->save();
+        ],
+      ],
+    ])->save();
 
-    $build = array(
+    $build = [
       '#type' => 'processed_text',
       '#text' => '<p>Hello, world!</p>',
       '#format' => 'element_test',
-    );
+    ];
     drupal_render_root($build);
 
     // Verify the attachments and cacheability metadata.
-    $expected_attachments = array(
+    $expected_attachments = [
       // The assets attached by the filter_test_assets filter.
-      'library' => array(
+      'library' => [
         'filter/caption',
-      ),
+      ],
       // The placeholders attached that still need to be processed.
       'placeholders' => [],
-    );
+    ];
     $this->assertEqual($expected_attachments, $build['#attached'], 'Expected attachments present');
-    $expected_cache_tags = array(
+    $expected_cache_tags = [
       // The cache tag set by the processed_text element itself.
       'config:filter.format.element_test',
       // The cache tags set by the filter_test_cache_tags filter.
@@ -308,7 +308,7 @@ class FilterAPITest extends EntityKernelTestBase {
       'foo:baz',
       // The cache tags set by the filter_test_cache_merge filter.
       'merge:tag',
-    );
+    ];
     $this->assertEqual($expected_cache_tags, $build['#cache']['tags'], 'Expected cache tags present.');
     $expected_cache_contexts = [
       // The cache context set by the filter_test_cache_contexts filter.
@@ -333,20 +333,20 @@ class FilterAPITest extends EntityKernelTestBase {
 
     $this->assertTrue($data instanceof OptionsProviderInterface, 'Typed data object implements \Drupal\Core\TypedData\OptionsProviderInterface');
 
-    $filtered_html_user = $this->createUser(array('uid' => 2), array(
+    $filtered_html_user = $this->createUser(['uid' => 2], [
       FilterFormat::load('filtered_html')->getPermissionName(),
-    ));
+    ]);
 
     // Test with anonymous user.
     $user = new AnonymousUserSession();
     \Drupal::currentUser()->setAccount($user);
 
-    $expected_available_options = array(
+    $expected_available_options = [
       'filtered_html' => 'Filtered HTML',
       'full_html' => 'Full HTML',
       'filter_test' => 'Test format',
       'plain_text' => 'Plain text',
-    );
+    ];
 
     $available_values = $data->getPossibleValues();
     $this->assertEqual($available_values, array_keys($expected_available_options));
@@ -354,9 +354,9 @@ class FilterAPITest extends EntityKernelTestBase {
     $this->assertEqual($available_options, $expected_available_options);
 
     $allowed_values = $data->getSettableValues($user);
-    $this->assertEqual($allowed_values, array('plain_text'));
+    $this->assertEqual($allowed_values, ['plain_text']);
     $allowed_options = $data->getSettableOptions($user);
-    $this->assertEqual($allowed_options, array('plain_text' => 'Plain text'));
+    $this->assertEqual($allowed_options, ['plain_text' => 'Plain text']);
 
     $data->setValue('foo');
     $violations = $data->validate();
@@ -383,12 +383,12 @@ class FilterAPITest extends EntityKernelTestBase {
     $this->assertEqual(count($violations), 0, "No validation violation for accessible format 'filtered_html' found.");
 
     $allowed_values = $data->getSettableValues($filtered_html_user);
-    $this->assertEqual($allowed_values, array('filtered_html', 'plain_text'));
+    $this->assertEqual($allowed_values, ['filtered_html', 'plain_text']);
     $allowed_options = $data->getSettableOptions($filtered_html_user);
-    $expected_allowed_options = array(
+    $expected_allowed_options = [
       'filtered_html' => 'Filtered HTML',
       'plain_text' => 'Plain text',
-    );
+    ];
     $this->assertEqual($allowed_options, $expected_allowed_options);
   }
 
@@ -397,43 +397,43 @@ class FilterAPITest extends EntityKernelTestBase {
    */
   public function testFilterFormatPreSave() {
     /** @var \Drupal\filter\FilterFormatInterface $crazy_format */
-    $crazy_format = FilterFormat::create(array(
+    $crazy_format = FilterFormat::create([
       'format' => 'crazy',
       'name' => 'Crazy',
       'weight' => 1,
-      'filters' => array(
-        'filter_html_escape' => array(
+      'filters' => [
+        'filter_html_escape' => [
           'weight' => 10,
           'status' => 1,
-        ),
-        'filter_html' => array(
+        ],
+        'filter_html' => [
           'weight' => -10,
           'status' => 1,
-          'settings' => array(
+          'settings' => [
             'allowed_html' => '<p>',
-          ),
-        ),
-      )
-    ));
+          ],
+        ],
+      ]
+    ]);
     $crazy_format->save();
     // Use config to directly load the configuration and check that only enabled
     // or customized plugins are saved to configuration.
     $filters = $this->config('filter.format.crazy')->get('filters');
-    $this->assertEqual(array('filter_html_escape', 'filter_html'), array_keys($filters));
+    $this->assertEqual(['filter_html_escape', 'filter_html'], array_keys($filters));
 
     // Disable a plugin to ensure that disabled plugins with custom settings are
     // stored in configuration.
-    $crazy_format->setFilterConfig('filter_html_escape', array('status' => FALSE));
+    $crazy_format->setFilterConfig('filter_html_escape', ['status' => FALSE]);
     $crazy_format->save();
     $filters = $this->config('filter.format.crazy')->get('filters');
-    $this->assertEqual(array('filter_html_escape', 'filter_html'), array_keys($filters));
+    $this->assertEqual(['filter_html_escape', 'filter_html'], array_keys($filters));
 
     // Set the settings as per default to ensure that disable plugins in this
     // state are not stored in configuration.
-    $crazy_format->setFilterConfig('filter_html_escape', array('weight' => -10));
+    $crazy_format->setFilterConfig('filter_html_escape', ['weight' => -10]);
     $crazy_format->save();
     $filters = $this->config('filter.format.crazy')->get('filters');
-    $this->assertEqual(array('filter_html'), array_keys($filters));
+    $this->assertEqual(['filter_html'], array_keys($filters));
   }
 
   /**
@@ -452,7 +452,7 @@ class FilterAPITest extends EntityKernelTestBase {
         break;
       }
     }
-    $this->assertTrue($filter_format_violation_found, format_string('Validation violation for invalid value "%invalid_value" found', array('%invalid_value' => $invalid_value)));
+    $this->assertTrue($filter_format_violation_found, format_string('Validation violation for invalid value "%invalid_value" found', ['%invalid_value' => $invalid_value]));
   }
 
   /**
@@ -467,7 +467,7 @@ class FilterAPITest extends EntityKernelTestBase {
    * @see filter_system_info_alter()
    */
   public function testDependencyRemoval() {
-    $this->installSchema('user', array('users_data'));
+    $this->installSchema('user', ['users_data']);
     $filter_format = FilterFormat::load('filtered_html');
 
     // Disable the filter_test_restrict_tags_and_attributes filter plugin but
@@ -493,7 +493,7 @@ class FilterAPITest extends EntityKernelTestBase {
     $this->assertEqual(['module' => ['filter_test']], $filter_format->getDependencies());
 
     // Uninstall the module.
-    \Drupal::service('module_installer')->uninstall(array('filter_test'));
+    \Drupal::service('module_installer')->uninstall(['filter_test']);
 
     // Verify the filter format still exists but the dependency and filter is
     // gone.

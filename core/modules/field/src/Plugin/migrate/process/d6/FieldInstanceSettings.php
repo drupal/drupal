@@ -20,7 +20,7 @@ class FieldInstanceSettings extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     list($widget_type, $widget_settings, $field_settings) = $value;
-    $settings = array();
+    $settings = [];
     switch ($widget_type) {
       case 'number':
         $settings['min'] = $field_settings['min'];
@@ -33,7 +33,7 @@ class FieldInstanceSettings extends ProcessPluginBase {
         // $settings['url'] = $widget_settings['default_value'][0]['url'];
         // D6 has optional, required, value and none. D8 only has disabled (0)
         // optional (1) and required (2).
-        $map = array('disabled' => 0, 'optional' => 1, 'required' => 2);
+        $map = ['disabled' => 0, 'optional' => 1, 'required' => 2];
         $settings['title'] = $map[$field_settings['title']];
         break;
 

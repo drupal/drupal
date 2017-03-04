@@ -44,7 +44,7 @@ class UserAuth implements UserAuthInterface {
     $uid = FALSE;
 
     if (!empty($username) && strlen($password) > 0) {
-      $account_search = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $username));
+      $account_search = $this->entityManager->getStorage('user')->loadByProperties(['name' => $username]);
 
       if ($account = reset($account_search)) {
         if ($this->passwordChecker->check($password, $account->getPassword())) {

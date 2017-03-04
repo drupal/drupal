@@ -16,7 +16,7 @@ class TwigDebugMarkupTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('theme_test', 'node');
+  public static $modules = ['theme_test', 'node'];
 
   /**
    * Tests debug markup added to Twig template output.
@@ -25,9 +25,9 @@ class TwigDebugMarkupTest extends WebTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $extension = twig_extension();
-    \Drupal::service('theme_handler')->install(array('test_theme'));
+    \Drupal::service('theme_handler')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     // Enable debug, rebuild the service container, and clear all caches.
     $parameters = $this->container->getParameter('twig.config');
     $parameters['debug'] = TRUE;
@@ -62,7 +62,7 @@ class TwigDebugMarkupTest extends WebTestBase {
     // Create another node and make sure the template suggestions shown in the
     // debug markup are correct.
     $node3 = $this->drupalCreateNode();
-    $build = array('#theme' => 'node__foo__bar');
+    $build = ['#theme' => 'node__foo__bar'];
     $build += node_view($node3);
     $output = $renderer->renderRoot($build);
     $this->assertTrue(strpos($output, "THEME HOOK: 'node__foo__bar'") !== FALSE, 'Theme call information found.');

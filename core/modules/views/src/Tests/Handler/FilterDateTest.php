@@ -16,27 +16,27 @@ class FilterDateTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter_date_between');
+  public static $testViews = ['test_filter_date_between'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node', 'views_ui');
+  public static $modules = ['node', 'views_ui'];
 
   protected function setUp() {
     parent::setUp();
     // Add some basic test nodes.
-    $this->nodes = array();
-    $this->nodes[] = $this->drupalCreateNode(array('created' => 100000));
-    $this->nodes[] = $this->drupalCreateNode(array('created' => 200000));
-    $this->nodes[] = $this->drupalCreateNode(array('created' => 300000));
-    $this->nodes[] = $this->drupalCreateNode(array('created' => time() + 86400));
+    $this->nodes = [];
+    $this->nodes[] = $this->drupalCreateNode(['created' => 100000]);
+    $this->nodes[] = $this->drupalCreateNode(['created' => 200000]);
+    $this->nodes[] = $this->drupalCreateNode(['created' => 300000]);
+    $this->nodes[] = $this->drupalCreateNode(['created' => time() + 86400]);
 
-    $this->map = array(
+    $this->map = [
       'nid' => 'nid',
-    );
+    ];
   }
 
   /**
@@ -60,9 +60,9 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->value['type'] = 'offset';
     $view->filter['created']->value['value'] = '+1 hour';
     $view->executeDisplay('default');
-    $expected_result = array(
-      array('nid' => $this->nodes[3]->id()),
-    );
+    $expected_result = [
+      ['nid' => $this->nodes[3]->id()],
+    ];
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
 
@@ -73,9 +73,9 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->value['max'] = '+2 days';
     $view->filter['created']->value['min'] = '+1 hour';
     $view->executeDisplay('default');
-    $expected_result = array(
-      array('nid' => $this->nodes[3]->id()),
-    );
+    $expected_result = [
+      ['nid' => $this->nodes[3]->id()],
+    ];
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
   }
 
@@ -91,9 +91,9 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:i:s');
     $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
     $view->executeDisplay('default');
-    $expected_result = array(
-      array('nid' => $this->nodes[1]->id()),
-    );
+    $expected_result = [
+      ['nid' => $this->nodes[1]->id()],
+    ];
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
 
@@ -102,10 +102,10 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->operator = 'between';
     $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
     $view->executeDisplay('default');
-    $expected_result = array(
-      array('nid' => $this->nodes[0]->id()),
-      array('nid' => $this->nodes[1]->id()),
-    );
+    $expected_result = [
+      ['nid' => $this->nodes[0]->id()],
+      ['nid' => $this->nodes[1]->id()],
+    ];
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
 
@@ -116,10 +116,10 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
 
     $view->executeDisplay('default');
-    $expected_result = array(
-      array('nid' => $this->nodes[2]->id()),
-      array('nid' => $this->nodes[3]->id()),
-    );
+    $expected_result = [
+      ['nid' => $this->nodes[2]->id()],
+      ['nid' => $this->nodes[3]->id()],
+    ];
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
 
@@ -128,10 +128,10 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->operator = 'not between';
     $view->filter['created']->value['max'] = format_date(200000, 'custom', 'Y-m-d H:i:s');
     $view->executeDisplay('default');
-    $expected_result = array(
-      array('nid' => $this->nodes[2]->id()),
-      array('nid' => $this->nodes[3]->id()),
-    );
+    $expected_result = [
+      ['nid' => $this->nodes[2]->id()],
+      ['nid' => $this->nodes[3]->id()],
+    ];
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
   }
 
@@ -140,12 +140,12 @@ class FilterDateTest extends HandlerTestBase {
    */
   protected function _testUiValidation() {
 
-    $this->drupalLogin($this->drupalCreateUser(array('administer views', 'administer site configuration')));
+    $this->drupalLogin($this->drupalCreateUser(['administer views', 'administer site configuration']));
 
     $this->drupalGet('admin/structure/views/view/test_filter_date_between/edit');
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
 
-    $edit = array();
+    $edit = [];
     // Generate a definitive wrong value, which should be checked by validation.
     $edit['options[value][value]'] = $this->randomString() . '-------';
     $this->drupalPostForm(NULL, $edit, t('Apply'));

@@ -38,19 +38,19 @@ trait BlockCreationTrait {
    * @todo
    *   Add support for creating custom block instances.
    */
-  protected function placeBlock($plugin_id, array $settings = array()) {
+  protected function placeBlock($plugin_id, array $settings = []) {
     $config = \Drupal::configFactory();
-    $settings += array(
+    $settings += [
       'plugin' => $plugin_id,
       'region' => 'sidebar_first',
       'id' => strtolower($this->randomMachineName(8)),
       'theme' => $config->get('system.theme')->get('default'),
       'label' => $this->randomMachineName(8),
-      'visibility' => array(),
+      'visibility' => [],
       'weight' => 0,
-    );
+    ];
     $values = [];
-    foreach (array('region', 'id', 'theme', 'plugin', 'weight', 'visibility') as $key) {
+    foreach (['region', 'id', 'theme', 'plugin', 'weight', 'visibility'] as $key) {
       $values[$key] = $settings[$key];
       // Remove extra values that do not belong in the settings array.
       unset($settings[$key]);

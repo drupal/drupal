@@ -33,14 +33,14 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
     }
 
     for ($page = 0; $page <= $num_pages; ++$page) {
-      $this->drupalGet('database_test/pager_query_even/' . $limit, array('query' => array('page' => $page)));
+      $this->drupalGet('database_test/pager_query_even/' . $limit, ['query' => ['page' => $page]]);
       $data = json_decode($this->getRawContent());
 
       if ($page == $num_pages) {
         $correct_number = $count - ($limit * $page);
       }
 
-      $this->assertEqual(count($data->names), $correct_number, format_string('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
+      $this->assertEqual(count($data->names), $correct_number, format_string('Correct number of records returned by pager: @number', ['@number' => $correct_number]));
     }
   }
 
@@ -67,14 +67,14 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
     }
 
     for ($page = 0; $page <= $num_pages; ++$page) {
-      $this->drupalGet('database_test/pager_query_odd/' . $limit, array('query' => array('page' => $page)));
+      $this->drupalGet('database_test/pager_query_odd/' . $limit, ['query' => ['page' => $page]]);
       $data = json_decode($this->getRawContent());
 
       if ($page == $num_pages) {
         $correct_number = $count - ($limit * $page);
       }
 
-      $this->assertEqual(count($data->names), $correct_number, format_string('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
+      $this->assertEqual(count($data->names), $correct_number, format_string('Correct number of records returned by pager: @number', ['@number' => $correct_number]));
     }
   }
 
@@ -87,7 +87,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
     $query = db_select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query
-      ->fields('t', array('age'))
+      ->fields('t', ['age'])
       ->orderBy('age')
       ->limit(5);
 
@@ -97,7 +97,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
     $ages = $outer_query
       ->execute()
       ->fetchCol();
-    $this->assertEqual($ages, array(25, 26, 27, 28), 'Inner pager query returned the correct ages.');
+    $this->assertEqual($ages, [25, 26, 27, 28], 'Inner pager query returned the correct ages.');
   }
 
   /**
@@ -109,16 +109,16 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
     $query = db_select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query
-      ->fields('t', array('name'))
+      ->fields('t', ['name'])
       ->orderBy('name')
       ->groupBy('name')
-      ->having('MAX(age) > :count', array(':count' => 26))
+      ->having('MAX(age) > :count', [':count' => 26])
       ->limit(5);
 
     $ages = $query
       ->execute()
       ->fetchCol();
-    $this->assertEqual($ages, array('George', 'Ringo'), 'Pager query with having expression returned the correct ages.');
+    $this->assertEqual($ages, ['George', 'Ringo'], 'Pager query with having expression returned the correct ages.');
   }
 
   /**
@@ -127,15 +127,15 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
   function testElementNumbers() {
 
     $request = Request::createFromGlobals();
-    $request->query->replace(array(
+    $request->query->replace([
       'page' => '3, 2, 1, 0',
-    ));
+    ]);
     \Drupal::getContainer()->get('request_stack')->push($request);
 
     $name = db_select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->element(2)
-      ->fields('t', array('name'))
+      ->fields('t', ['name'])
       ->orderBy('age')
       ->limit(1)
       ->execute()
@@ -147,7 +147,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
     $name = db_select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->element(1)
-      ->fields('t', array('name'))
+      ->fields('t', ['name'])
       ->orderBy('age')
       ->limit(1)
       ->execute()
@@ -156,7 +156,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
 
     $name = db_select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-      ->fields('t', array('name'))
+      ->fields('t', ['name'])
       ->orderBy('age')
       ->limit(1)
       ->execute()

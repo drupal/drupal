@@ -57,22 +57,22 @@ class MenuLinkEditForm extends FormBase {
    *   The plugin instance to use for this form.
    */
   public function buildForm(array $form, FormStateInterface $form_state, MenuLinkInterface $menu_link_plugin = NULL) {
-    $form['menu_link_id'] = array(
+    $form['menu_link_id'] = [
       '#type' => 'value',
       '#value' => $menu_link_plugin->getPluginId(),
-    );
+    ];
     $class_name = $menu_link_plugin->getFormClass();
     $form['#plugin_form'] = $this->classResolver->getInstanceFromDefinition($class_name);
     $form['#plugin_form']->setMenuLinkInstance($menu_link_plugin);
 
     $form += $form['#plugin_form']->buildConfigurationForm($form, $form_state);
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
       '#button_type' => 'primary',
-    );
+    ];
     return $form;
   }
 
@@ -92,7 +92,7 @@ class MenuLinkEditForm extends FormBase {
     drupal_set_message($this->t('The menu link has been saved.'));
     $form_state->setRedirect(
       'entity.menu.edit_form',
-      array('menu' => $link->getMenuName())
+      ['menu' => $link->getMenuName()]
     );
   }
 

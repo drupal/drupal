@@ -21,9 +21,9 @@ class ShortcutsBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    return array(
+    return [
       shortcut_renderable_links(shortcut_current_displayed_set()),
-    );
+    ];
   }
 
   /**

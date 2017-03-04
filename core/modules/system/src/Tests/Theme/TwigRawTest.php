@@ -16,16 +16,16 @@ class TwigRawTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('twig_theme_test');
+  public static $modules = ['twig_theme_test'];
 
   /**
    * Tests the raw filter inside an autoescape tag.
    */
   public function testAutoescapeRaw() {
-    $test = array(
+    $test = [
       '#theme' => 'twig_raw_test',
       '#script' => '<script>alert("This alert is real because I will put it through the raw filter!");</script>',
-    );
+    ];
     $rendered = \Drupal::service('renderer')->renderRoot($test);
     $this->setRawContent($rendered);
     $this->assertRaw('<script>alert("This alert is real because I will put it through the raw filter!");</script>');

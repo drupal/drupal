@@ -48,14 +48,14 @@ class Subquery extends JoinPluginBase {
 
     // Add our join condition, using a subquery on the left instead of a field.
     $condition = "($this->left_query) = $table[alias].$this->field";
-    $arguments = array();
+    $arguments = [];
 
     // Tack on the extra.
     // This is just copied verbatim from the parent class, which itself has a
     //   bug: https://www.drupal.org/node/1118100.
     if (isset($this->extra)) {
       if (is_array($this->extra)) {
-        $extras = array();
+        $extras = [];
         foreach ($this->extra as $info) {
           // Figure out the table name. Remember, only use aliases provided
           // if at all possible.

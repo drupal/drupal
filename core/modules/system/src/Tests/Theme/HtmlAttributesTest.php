@@ -16,7 +16,7 @@ class HtmlAttributesTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('theme_test');
+  public static $modules = ['theme_test'];
 
   /**
    * Tests that attributes in the 'html' and 'body' elements can be altered.

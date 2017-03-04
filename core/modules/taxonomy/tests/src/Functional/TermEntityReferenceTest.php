@@ -37,41 +37,41 @@ class TermEntityReferenceTest extends TaxonomyTestBase {
 
     // Create an entity reference field.
     $field_name = 'taxonomy_' . $vocabulary->id();
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
-      'settings' => array(
+      'settings' => [
         'target_type' => 'taxonomy_term',
-      ),
+      ],
       'type' => 'entity_reference',
       'cardinality' => 1,
-    ));
+    ]);
     $field_storage->save();
-    $field = FieldConfig::create(array(
+    $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'entity_type' => 'entity_test',
       'bundle' => 'test_bundle',
-      'settings' => array(
+      'settings' => [
         'handler' => 'default',
-        'handler_settings' => array(
+        'handler_settings' => [
           // Restrict selection of terms to a single vocabulary.
-          'target_bundles' => array(
+          'target_bundles' => [
             $vocabulary->id() => $vocabulary->id(),
-          ),
-        ),
-      ),
-    ));
+          ],
+        ],
+      ],
+    ]);
     $field->save();
 
     $handler = $this->container->get('plugin.manager.entity_reference_selection')->getSelectionHandler($field);
     $result = $handler->getReferenceableEntities();
 
-    $expected_result = array(
-      $vocabulary->id() => array(
+    $expected_result = [
+      $vocabulary->id() => [
         $term->id() => $term->getName(),
-      ),
-    );
+      ],
+    ];
 
     $this->assertIdentical($result, $expected_result, 'Terms selection restricted to a single vocabulary.');
   }

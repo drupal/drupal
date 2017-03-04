@@ -20,31 +20,31 @@ class NodeFieldMultilingualTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'language');
+  public static $modules = ['node', 'language'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create Basic page node type.
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Setup users.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages', 'create page content', 'edit own page content'));
+    $admin_user = $this->drupalCreateUser(['administer languages', 'administer content types', 'access administration pages', 'create page content', 'edit own page content']);
     $this->drupalLogin($admin_user);
 
     // Add a new language.
     ConfigurableLanguage::createFromLangcode('it')->save();
 
     // Enable URL language detection and selection.
-    $edit = array('language_interface[enabled][language-url]' => '1');
+    $edit = ['language_interface[enabled][language-url]' => '1'];
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Set "Basic page" content type to use multilingual support.
-    $edit = array(
+    $edit = [
       'language_configuration[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
+    $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']), 'Basic page content type has been updated.');
 
     // Make node body translatable.
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
@@ -64,7 +64,7 @@ class NodeFieldMultilingualTest extends WebTestBase {
     $body_value = $this->randomMachineName(16);
 
     // Create node to edit.
-    $edit = array();
+    $edit = [];
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
@@ -77,17 +77,17 @@ class NodeFieldMultilingualTest extends WebTestBase {
     // Change node language.
     $langcode = 'it';
     $this->drupalGet("node/{$node->id()}/edit");
-    $edit = array(
+    $edit = [
       $title_key => $this->randomMachineName(8),
       'langcode[0][value]' => $langcode,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE);
     $this->assertTrue($node, 'Node found in database.');
     $this->assertTrue($node->language()->getId() == $langcode && $node->body->value == $body_value, 'Field language correctly changed.');
 
     // Enable content language URL detection.
-    $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_CONTENT, array(LanguageNegotiationUrl::METHOD_ID => 0));
+    $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_CONTENT, [LanguageNegotiationUrl::METHOD_ID => 0]);
 
     // Test multilingual field language fallback logic.
     $this->drupalGet("it/node/{$node->id()}");
@@ -108,7 +108,7 @@ class NodeFieldMultilingualTest extends WebTestBase {
     $body_value = $this->randomMachineName(16);
 
     // Create node to edit.
-    $edit = array();
+    $edit = [];
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
@@ -119,10 +119,10 @@ class NodeFieldMultilingualTest extends WebTestBase {
 
     // Check if node body is showed.
     $this->drupalGet('node/' . $node->id());
-    $body = $this->xpath('//article[contains(concat(" ", normalize-space(@class), " "), :node-class)]//div[contains(concat(" ", normalize-space(@class), " "), :content-class)]/descendant::p', array(
+    $body = $this->xpath('//article[contains(concat(" ", normalize-space(@class), " "), :node-class)]//div[contains(concat(" ", normalize-space(@class), " "), :content-class)]/descendant::p', [
       ':node-class' => ' node ',
       ':content-class' => 'node__content',
-    ));
+    ]);
     $this->assertEqual(current($body), $node->body->value, 'Node body found.');
   }
 

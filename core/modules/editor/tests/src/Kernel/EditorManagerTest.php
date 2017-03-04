@@ -18,7 +18,7 @@ class EditorManagerTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'filter', 'editor');
+  public static $modules = ['system', 'user', 'filter', 'editor'];
 
   /**
    * The manager for text editor plugins.
@@ -33,19 +33,19 @@ class EditorManagerTest extends KernelTestBase {
     // Install the Filter module.
 
     // Add text formats.
-    $filtered_html_format = FilterFormat::create(array(
+    $filtered_html_format = FilterFormat::create([
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,
-      'filters' => array(),
-    ));
+      'filters' => [],
+    ]);
     $filtered_html_format->save();
-    $full_html_format = FilterFormat::create(array(
+    $full_html_format = FilterFormat::create([
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
-      'filters' => array(),
-    ));
+      'filters' => [],
+    ]);
     $full_html_format->save();
   }
 
@@ -59,13 +59,13 @@ class EditorManagerTest extends KernelTestBase {
     // - listOptions() should return an empty list of options
     // - getAttachments() should return an empty #attachments array (and not
     //   a JS settings structure that is empty)
-    $this->assertIdentical(array(), $this->editorManager->listOptions(), 'When no text editor is enabled, the manager works correctly.');
-    $this->assertIdentical(array(), $this->editorManager->getAttachments(array()), 'No attachments when no text editor is enabled and retrieving attachments for zero text formats.');
-    $this->assertIdentical(array(), $this->editorManager->getAttachments(array('filtered_html', 'full_html')), 'No attachments when no text editor is enabled and retrieving attachments for multiple text formats.');
+    $this->assertIdentical([], $this->editorManager->listOptions(), 'When no text editor is enabled, the manager works correctly.');
+    $this->assertIdentical([], $this->editorManager->getAttachments([]), 'No attachments when no text editor is enabled and retrieving attachments for zero text formats.');
+    $this->assertIdentical([], $this->editorManager->getAttachments(['filtered_html', 'full_html']), 'No attachments when no text editor is enabled and retrieving attachments for multiple text formats.');
 
     // Enable the Text Editor Test module, which has the Unicorn Editor and
     // clear the editor manager's cache so it is picked up.
-    $this->enableModules(array('editor_test'));
+    $this->enableModules(['editor_test']);
     $this->editorManager = $this->container->get('plugin.manager.editor');
     $this->editorManager->clearCachedDefinitions();
 
@@ -80,11 +80,11 @@ class EditorManagerTest extends KernelTestBase {
       'editor' => 'unicorn',
     ]);
     $editor->save();
-    $this->assertIdentical(array(), $this->editorManager->getAttachments(array()), 'No attachments when one text editor is enabled and retrieving attachments for zero text formats.');
-    $expected = array(
-      'library' => array(
+    $this->assertIdentical([], $this->editorManager->getAttachments([]), 'No attachments when one text editor is enabled and retrieving attachments for zero text formats.');
+    $expected = [
+      'library' => [
         0 => 'editor_test/unicorn',
-      ),
+      ],
       'drupalSettings' => [
         'editor' => [
           'formats' => [
@@ -98,14 +98,14 @@ class EditorManagerTest extends KernelTestBase {
           ],
         ],
       ],
-    );
-    $this->assertIdentical($expected, $this->editorManager->getAttachments(array('filtered_html', 'full_html')), 'Correct attachments when one text editor is enabled and retrieving attachments for multiple text formats.');
+    ];
+    $this->assertIdentical($expected, $this->editorManager->getAttachments(['filtered_html', 'full_html']), 'Correct attachments when one text editor is enabled and retrieving attachments for multiple text formats.');
 
     // Case 4: a text editor available associated, but now with its JS settings
     // being altered via hook_editor_js_settings_alter().
     \Drupal::state()->set('editor_test_js_settings_alter_enabled', TRUE);
     $expected['drupalSettings']['editor']['formats']['full_html']['editorSettings']['ponyModeEnabled'] = FALSE;
-    $this->assertIdentical($expected, $this->editorManager->getAttachments(array('filtered_html', 'full_html')), 'hook_editor_js_settings_alter() works correctly.');
+    $this->assertIdentical($expected, $this->editorManager->getAttachments(['filtered_html', 'full_html']), 'hook_editor_js_settings_alter() works correctly.');
   }
 
 }

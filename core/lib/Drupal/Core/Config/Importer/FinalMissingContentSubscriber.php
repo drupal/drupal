@@ -33,7 +33,7 @@ class FinalMissingContentSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents() {
     // This should always be the final event as it will mark all content
     // dependencies as resolved.
-    $events[ConfigEvents::IMPORT_MISSING_CONTENT][] = array('onMissingContent', -1024);
+    $events[ConfigEvents::IMPORT_MISSING_CONTENT][] = ['onMissingContent', -1024];
     return $events;
   }
 

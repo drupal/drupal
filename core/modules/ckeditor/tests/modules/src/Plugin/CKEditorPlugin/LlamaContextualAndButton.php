@@ -39,11 +39,11 @@ class LlamaContextualAndButton extends Llama implements CKEditorPluginContextual
    * {@inheritdoc}
    */
   function getButtons() {
-    return array(
-      'Llama' => array(
+    return [
+      'Llama' => [
         'label' => t('Insert Llama'),
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -58,17 +58,17 @@ class LlamaContextualAndButton extends Llama implements CKEditorPluginContextual
    */
   function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
     // Defaults.
-    $config = array('ultra_llama_mode' => FALSE);
+    $config = ['ultra_llama_mode' => FALSE];
     $settings = $editor->getSettings();
     if (isset($settings['plugins']['llama_contextual_and_button'])) {
       $config = $settings['plugins']['llama_contextual_and_button'];
     }
 
-    $form['ultra_llama_mode'] = array(
+    $form['ultra_llama_mode'] = [
       '#title' => t('Ultra llama mode'),
       '#type' => 'checkbox',
       '#default_value' => $config['ultra_llama_mode'],
-    );
+    ];
 
     return $form;
   }

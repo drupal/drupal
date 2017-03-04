@@ -71,12 +71,12 @@ class ConfirmFormHelperTest extends UnitTestCase {
    */
   public function testCancelLinkRouteWithUrl() {
     $cancel_route = new Url(
-      'foo_bar.baz', array(
+      'foo_bar.baz', [
         'baz' => 'banana',
-      ),
-      array(
+      ],
+      [
         'absolute' => TRUE,
-      )
+      ]
     );
     $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
     $form->expects($this->any())
@@ -95,7 +95,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
    * @dataProvider providerTestCancelLinkDestination
    */
   public function testCancelLinkDestination($destination) {
-    $query = array('destination' => $destination);
+    $query = ['destination' => $destination];
     $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
 
     $path_validator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');

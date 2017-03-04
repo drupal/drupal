@@ -37,7 +37,7 @@ class PathItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array();
+    return [];
   }
 
   /**
@@ -62,7 +62,7 @@ class PathItem extends FieldItemBase {
     else {
       // Delete old alias if user erased it.
       if ($this->pid && !$this->alias) {
-        \Drupal::service('path.alias_storage')->delete(array('pid' => $this->pid));
+        \Drupal::service('path.alias_storage')->delete(['pid' => $this->pid]);
       }
       // Only save a non-empty alias.
       elseif ($this->alias) {

@@ -75,20 +75,20 @@ class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInt
     $processors = $this->config('aggregator.settings')->get('processors');
     $info = $this->getPluginDefinition();
 
-    $form['processors'][$info['id']] = array(
+    $form['processors'][$info['id']] = [
       '#type' => 'details',
       '#title' => t('Test processor settings'),
       '#description' => $info['description'],
       '#open' => in_array($info['id'], $processors),
-    );
+    ];
     // Add some dummy settings to verify settingsForm is called.
-    $form['processors'][$info['id']]['dummy_length'] = array(
+    $form['processors'][$info['id']]['dummy_length'] = [
       '#title' => t('Dummy length setting'),
       '#type' => 'number',
       '#min' => 1,
       '#max' => 1000,
       '#default_value' => $this->configuration['items']['dummy_length'],
-    );
+    ];
     return $form;
   }
 

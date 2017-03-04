@@ -16,7 +16,7 @@ class ElementTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = ['form_test'];
 
   /**
    * Tests placeholder text for elements that support placeholders.
@@ -25,19 +25,19 @@ class ElementTest extends WebTestBase {
     $this->drupalGet('form-test/placeholder-text');
     $expected = 'placeholder-text';
     // Test to make sure non-textarea elements have the proper placeholder text.
-    foreach (array('textfield', 'tel', 'url', 'password', 'email', 'number') as $type) {
-      $element = $this->xpath('//input[@id=:id and @placeholder=:expected]', array(
+    foreach (['textfield', 'tel', 'url', 'password', 'email', 'number'] as $type) {
+      $element = $this->xpath('//input[@id=:id and @placeholder=:expected]', [
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
-      ));
-      $this->assertTrue(!empty($element), format_string('Placeholder text placed in @type.', array('@type' => $type)));
+      ]);
+      $this->assertTrue(!empty($element), format_string('Placeholder text placed in @type.', ['@type' => $type]));
     }
 
     // Test to make sure textarea has the proper placeholder text.
-    $element = $this->xpath('//textarea[@id=:id and @placeholder=:expected]', array(
+    $element = $this->xpath('//textarea[@id=:id and @placeholder=:expected]', [
       ':id' => 'edit-textarea',
       ':expected' => $expected,
-    ));
+    ]);
     $this->assertTrue(!empty($element), 'Placeholder text placed in textarea.');
   }
 
@@ -48,9 +48,9 @@ class ElementTest extends WebTestBase {
     $this->drupalGet('form-test/checkboxes-radios');
 
     // Verify that all options appear in their defined order.
-    foreach (array('checkbox', 'radio') as $type) {
-      $elements = $this->xpath('//input[@type=:type]', array(':type' => $type));
-      $expected_values = array('0', 'foo', '1', 'bar', '>');
+    foreach (['checkbox', 'radio'] as $type) {
+      $elements = $this->xpath('//input[@type=:type]', [':type' => $type]);
+      $expected_values = ['0', 'foo', '1', 'bar', '>'];
       foreach ($elements as $element) {
         $expected = array_shift($expected_values);
         $this->assertIdentical((string) $element['value'], $expected);
@@ -68,23 +68,23 @@ class ElementTest extends WebTestBase {
 
     // Verify that all options appear in their defined order, taking a custom
     // #weight into account.
-    foreach (array('checkbox', 'radio') as $type) {
-      $elements = $this->xpath('//input[@type=:type]', array(':type' => $type));
-      $expected_values = array('0', 'foo', 'bar', '>', '1');
+    foreach (['checkbox', 'radio'] as $type) {
+      $elements = $this->xpath('//input[@type=:type]', [':type' => $type]);
+      $expected_values = ['0', 'foo', 'bar', '>', '1'];
       foreach ($elements as $element) {
         $expected = array_shift($expected_values);
         $this->assertIdentical((string) $element['value'], $expected);
       }
     }
     // Verify that custom #description properties are output.
-    foreach (array('checkboxes', 'radios') as $type) {
-      $elements = $this->xpath('//input[@id=:id]/following-sibling::div[@class=:class]', array(
+    foreach (['checkboxes', 'radios'] as $type) {
+      $elements = $this->xpath('//input[@id=:id]/following-sibling::div[@class=:class]', [
         ':id' => 'edit-' . $type . '-foo',
         ':class' => 'description',
-      ));
-      $this->assertTrue(count($elements), format_string('Custom %type option description found.', array(
+      ]);
+      $this->assertTrue(count($elements), format_string('Custom %type option description found.', [
         '%type' => $type,
-      )));
+      ]));
     }
   }
 
@@ -95,11 +95,11 @@ class ElementTest extends WebTestBase {
     $this->drupalGet('form-test/checkboxes-radios');
 
     // Verify that wrapper id is different from element id.
-    foreach (array('checkboxes', 'radios') as $type) {
-      $element_ids = $this->xpath('//div[@id=:id]', array(':id' => 'edit-' . $type));
-      $wrapper_ids = $this->xpath('//fieldset[@id=:id]', array(':id' => 'edit-' . $type . '--wrapper'));
-      $this->assertTrue(count($element_ids) == 1, format_string('A single element id found for type %type', array('%type' => $type)));
-      $this->assertTrue(count($wrapper_ids) == 1, format_string('A single wrapper id found for type %type', array('%type' => $type)));
+    foreach (['checkboxes', 'radios'] as $type) {
+      $element_ids = $this->xpath('//div[@id=:id]', [':id' => 'edit-' . $type]);
+      $wrapper_ids = $this->xpath('//fieldset[@id=:id]', [':id' => 'edit-' . $type . '--wrapper']);
+      $this->assertTrue(count($element_ids) == 1, format_string('A single element id found for type %type', ['%type' => $type]));
+      $this->assertTrue(count($wrapper_ids) == 1, format_string('A single wrapper id found for type %type', ['%type' => $type]));
     }
   }
 
@@ -162,7 +162,7 @@ class ElementTest extends WebTestBase {
     $result = $this->xpath('//input[@id="edit-autocomplete-2" and contains(@data-autocomplete-path, "form-test/autocomplete-2/value")]');
     $this->assertEqual(count($result), 0, 'Ensure that the user does not have access to the autocompletion');
 
-    $user = $this->drupalCreateUser(array('access autocomplete test'));
+    $user = $this->drupalCreateUser(['access autocomplete test']);
     $this->drupalLogin($user);
     $this->drupalGet('form-test/autocomplete');
 

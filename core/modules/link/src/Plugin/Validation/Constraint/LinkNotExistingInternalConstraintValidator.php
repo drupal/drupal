@@ -44,7 +44,7 @@ class LinkNotExistingInternalConstraintValidator extends ConstraintValidator {
           $allowed = FALSE;
         }
         if (!$allowed) {
-          $this->context->addViolation($constraint->message, array('@uri' => $value->uri));
+          $this->context->addViolation($constraint->message, ['@uri' => $value->uri]);
         }
       }
     }

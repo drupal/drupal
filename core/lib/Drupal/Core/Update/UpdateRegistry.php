@@ -187,7 +187,7 @@ class UpdateRegistry {
       list($module, $update) = explode("_{$this->updateType}_", $function);
       // The description for an update comes from its Doxygen.
       $func = new \ReflectionFunction($function);
-      $description = trim(str_replace(array("\n", '*', '/'), '', $func->getDocComment()), ' ');
+      $description = trim(str_replace(["\n", '*', '/'], '', $func->getDocComment()), ' ');
       $ret[$module]['pending'][$update] = $description;
       if (!isset($ret[$module]['start'])) {
         $ret[$module]['start'] = $update;

@@ -17,7 +17,7 @@ class UserCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('user');
+  public static $modules = ['user'];
 
   /**
    * {@inheritdoc}

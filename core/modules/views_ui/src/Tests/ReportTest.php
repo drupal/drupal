@@ -15,7 +15,7 @@ class ReportTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('views', 'views_ui');
+  public static $modules = ['views', 'views_ui'];
 
   /**
    * Stores an admin user used by the different tests.
@@ -26,7 +26,7 @@ class ReportTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(array('administer views'));
+    $this->adminUser = $this->drupalCreateUser(['administer views']);
   }
 
   /**

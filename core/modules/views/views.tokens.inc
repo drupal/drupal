@@ -11,56 +11,56 @@ use Drupal\Core\Render\BubbleableMetadata;
  * Implements hook_token_info().
  */
 function views_token_info() {
-  $info['types']['view'] = array(
+  $info['types']['view'] = [
     'name' => t('View', [], ['context' => 'View entity type']),
     'description' => t('Tokens related to views.'),
     'needs-data' => 'view',
-  );
-  $info['tokens']['view']['label'] = array(
+  ];
+  $info['tokens']['view']['label'] = [
     'name' => t('Label'),
     'description' => t('The label of the view.'),
-  );
-  $info['tokens']['view']['description'] = array(
+  ];
+  $info['tokens']['view']['description'] = [
     'name' => t('Description'),
     'description' => t('The description of the view.'),
-  );
-  $info['tokens']['view']['id'] = array(
+  ];
+  $info['tokens']['view']['id'] = [
     'name' => t('ID'),
     'description' => t('The machine-readable ID of the view.'),
-  );
-  $info['tokens']['view']['title'] = array(
+  ];
+  $info['tokens']['view']['title'] = [
     'name' => t('Title'),
     'description' => t('The title of current display of the view.'),
-  );
-  $info['tokens']['view']['url'] = array(
+  ];
+  $info['tokens']['view']['url'] = [
     'name' => t('URL'),
     'description' => t('The URL of the view.'),
     'type' => 'url',
-  );
-  $info['tokens']['view']['base-table'] = array(
+  ];
+  $info['tokens']['view']['base-table'] = [
     'name' => t('Base table'),
     'description' => t('The base table used for this view.'),
-  );
-  $info['tokens']['view']['base-field'] = array(
+  ];
+  $info['tokens']['view']['base-field'] = [
     'name' => t('Base field'),
     'description' => t('The base field used for this view.'),
-  );
-  $info['tokens']['view']['total-rows'] = array(
+  ];
+  $info['tokens']['view']['total-rows'] = [
     'name' => t('Total rows'),
     'description' => t('The total amount of results returned from the view. The current display will be used.'),
-  );
-  $info['tokens']['view']['items-per-page'] = array(
+  ];
+  $info['tokens']['view']['items-per-page'] = [
     'name' => t('Items per page'),
     'description' => t('The number of items per page.'),
-  );
-  $info['tokens']['view']['current-page'] = array(
+  ];
+  $info['tokens']['view']['current-page'] = [
     'name' => t('Current page'),
     'description' => t('The current page of results the view is on.'),
-  );
-  $info['tokens']['view']['page-count'] = array(
+  ];
+  $info['tokens']['view']['page-count'] = [
     'name' => t('Page count'),
     'description' => t('The total page count.'),
-  );
+  ];
 
   return $info;
 }
@@ -69,11 +69,11 @@ function views_token_info() {
  * Implements hook_tokens().
  */
 function views_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
-  $url_options = array('absolute' => TRUE);
+  $url_options = ['absolute' => TRUE];
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
   }
-  $replacements = array();
+  $replacements = [];
 
   if ($type == 'view' && !empty($data['view'])) {
     /** @var \Drupal\views\ViewExecutable $view */

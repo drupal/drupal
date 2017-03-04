@@ -36,7 +36,7 @@ class FileModuleTestForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $tree = TRUE, $extended = TRUE, $multiple = FALSE, $default_fids = NULL) {
     $form['#tree'] = (bool) $tree;
 
-    $form['nested']['file'] = array(
+    $form['nested']['file'] = [
       '#type' => 'managed_file',
       '#title' => $this->t('Managed <em>@type</em>', ['@type' => 'file & butter']),
       '#upload_location' => 'public://test',
@@ -44,21 +44,21 @@ class FileModuleTestForm extends FormBase {
       '#extended' => (bool) $extended,
       '#size' => 13,
       '#multiple' => (bool) $multiple,
-    );
+    ];
     if ($default_fids) {
       $default_fids = explode(',', $default_fids);
-      $form['nested']['file']['#default_value'] = $extended ? array('fids' => $default_fids) : $default_fids;
+      $form['nested']['file']['#default_value'] = $extended ? ['fids' => $default_fids] : $default_fids;
     }
 
-    $form['textfield'] = array(
+    $form['textfield'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Type a value and ensure it stays'),
-    );
+    ];
 
-    $form['submit'] = array(
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
-    );
+    ];
 
     return $form;
   }
@@ -68,7 +68,7 @@ class FileModuleTestForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form['#tree']) {
-      $uploads = $form_state->getValue(array('nested', 'file'));
+      $uploads = $form_state->getValue(['nested', 'file']);
     }
     else {
       $uploads = $form_state->getValue('file');
@@ -78,12 +78,12 @@ class FileModuleTestForm extends FormBase {
       $uploads = $uploads['fids'];
     }
 
-    $fids = array();
+    $fids = [];
     foreach ($uploads as $fid) {
       $fids[] = $fid;
     }
 
-    drupal_set_message($this->t('The file ids are %fids.', array('%fids' => implode(',', $fids))));
+    drupal_set_message($this->t('The file ids are %fids.', ['%fids' => implode(',', $fids)]));
   }
 
 }

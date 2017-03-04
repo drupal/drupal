@@ -19,7 +19,7 @@ class StackKernelIntegrationTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('httpkernel_test', 'system');
+  public static $modules = ['httpkernel_test', 'system'];
 
   /**
    * {@inheritdoc}

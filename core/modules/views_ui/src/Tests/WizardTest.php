@@ -18,7 +18,7 @@ class WizardTest extends WizardTestBase {
    * Tests filling in the wizard with really long strings.
    */
   public function testWizardFieldLength() {
-    $view = array();
+    $view = [];
     $view['label'] = $this->randomMachineName(256);
     $view['id'] = strtolower($this->randomMachineName(129));
     $view['page[create]'] = TRUE;
@@ -54,7 +54,7 @@ class WizardTest extends WizardTestBase {
     $view['rest_export[path]'] = $this->randomMachineName(254);
 
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
-    $this->assertUrl('admin/structure/views/view/' . $view['id'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
+    $this->assertUrl('admin/structure/views/view/' . $view['id'], [], 'Make sure the view saving was successful and the browser got redirected to the edit page.');
     // Assert that the page title is correctly truncated.
     $this->assertText(views_ui_truncate($view['page[title]'], 32));
   }

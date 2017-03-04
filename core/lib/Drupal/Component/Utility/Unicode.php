@@ -125,7 +125,7 @@ EOD;
    *   The new status of multibyte support.
    */
   public static function setStatus($status) {
-    if (!in_array($status, array(static::STATUS_SINGLEBYTE, static::STATUS_MULTIBYTE, static::STATUS_ERROR))) {
+    if (!in_array($status, [static::STATUS_SINGLEBYTE, static::STATUS_MULTIBYTE, static::STATUS_ERROR])) {
       throw new \InvalidArgumentException('Invalid status value for unicode support.');
     }
     static::$status = $status;
@@ -189,7 +189,7 @@ EOD;
    *   The name of the encoding, or FALSE if no byte order mark was present.
    */
   public static function encodingFromBOM($data) {
-    static $bomMap = array(
+    static $bomMap = [
       "\xEF\xBB\xBF" => 'UTF-8',
       "\xFE\xFF" => 'UTF-16BE',
       "\xFF\xFE" => 'UTF-16LE',
@@ -200,7 +200,7 @@ EOD;
       "\x2B\x2F\x76\x2B" => 'UTF-7',
       "\x2B\x2F\x76\x2F" => 'UTF-7',
       "\x2B\x2F\x76\x38\x2D" => 'UTF-7',
-    );
+    ];
 
     foreach ($bomMap as $bom => $encoding) {
       if (strpos($data, $bom) === 0) {
@@ -542,7 +542,7 @@ EOD;
     }
 
     if ($wordsafe) {
-      $matches = array();
+      $matches = [];
       // Find the last word boundary, if there is one within $min_wordsafe_length
       // to $max_length characters. preg_match() is always greedy, so it will
       // find the longest string possible.

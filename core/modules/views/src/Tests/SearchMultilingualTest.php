@@ -17,14 +17,14 @@ class SearchMultilingualTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'search', 'language', 'content_translation');
+  public static $modules = ['node', 'search', 'language', 'content_translation'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_search');
+  public static $testViews = ['test_search'];
 
   /**
    * Tests search with multilingual nodes.
@@ -32,7 +32,7 @@ class SearchMultilingualTest extends ViewTestBase {
   public function testMultilingualSearchFilter() {
     // Create a user with admin for languages, content, and content types, plus
     // the ability to access content and searches.
-    $user = $this->drupalCreateUser(array('administer nodes', 'administer content types', 'administer languages', 'administer content translation', 'access content', 'search content'));
+    $user = $this->drupalCreateUser(['administer nodes', 'administer content types', 'administer languages', 'administer content translation', 'access content', 'search content']);
     $this->drupalLogin($user);
 
     // Add Spanish language programmatically.
@@ -40,24 +40,24 @@ class SearchMultilingualTest extends ViewTestBase {
 
     // Create a content type and make it translatable.
     $type = $this->drupalCreateContentType();
-    $edit = array(
+    $edit = [
       'language_configuration[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/manage/' . $type->id(), $edit, t('Save content type'));
-    $edit = array(
+    $edit = [
       'entity_types[node]' => TRUE,
       'settings[node][' . $type->id() . '][translatable]' => TRUE,
       'settings[node][' . $type->id() . '][fields][title]' => TRUE,
       'settings[node][' . $type->id() . '][fields][body]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
     \Drupal::entityManager()->clearCachedDefinitions();
 
     // Add a node in English, with title "sandwich".
-    $values = array(
+    $values = [
       'title' => 'sandwich',
       'type' => $type->id(),
-    );
+    ];
     $node = $this->drupalCreateNode($values);
 
     // "Translate" this node into Spanish, with title "pizza".

@@ -22,20 +22,20 @@ class ArgumentDefaultTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array(
+  public static $testViews = [
     'test_view',
     'test_argument_default_fixed',
     'test_argument_default_current_user',
     'test_argument_default_node',
     'test_argument_default_query_param',
-    );
+    ];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node', 'views_ui', 'block');
+  public static $modules = ['node', 'views_ui', 'block'];
 
   protected function setUp() {
     parent::setUp();
@@ -52,13 +52,13 @@ class ArgumentDefaultTest extends PluginTestBase {
     $view = Views::getView('test_view');
 
     // Add a new argument and set the test plugin for the argument_default.
-    $options = array(
+    $options = [
       'default_argument_type' => 'argument_default_test',
-      'default_argument_options' => array(
+      'default_argument_options' => [
         'value' => 'John'
-      ),
+      ],
       'default_action' => 'default'
-    );
+    ];
     $id = $view->addHandler('default', 'argument', 'views_test_data', 'name', $options);
     $view->initHandlers();
     $plugin = $view->argument[$id]->getPlugin('argument_default');
@@ -70,15 +70,15 @@ class ArgumentDefaultTest extends PluginTestBase {
     // just returns John.
     $this->executeView($view);
     $this->assertEqual($view->argument[$id]->getValue(), 'John', 'The correct argument value is used.');
-    $expected_result = array(array('name' => 'John'));
-    $this->assertIdenticalResultset($view, $expected_result, array('views_test_data_name' => 'name'));
+    $expected_result = [['name' => 'John']];
+    $this->assertIdenticalResultset($view, $expected_result, ['views_test_data_name' => 'name']);
 
     // Pass in value as argument to be sure that not the default value is used.
     $view->destroy();
-    $this->executeView($view, array('George'));
+    $this->executeView($view, ['George']);
     $this->assertEqual($view->argument[$id]->getValue(), 'George', 'The correct argument value is used.');
-    $expected_result = array(array('name' => 'George'));
-    $this->assertIdenticalResultset($view, $expected_result, array('views_test_data_name' => 'name'));
+    $expected_result = [['name' => 'George']];
+    $this->assertIdenticalResultset($view, $expected_result, ['views_test_data_name' => 'name']);
   }
 
 
@@ -86,24 +86,24 @@ class ArgumentDefaultTest extends PluginTestBase {
    * Tests the use of a default argument plugin that provides no options.
    */
   public function testArgumentDefaultNoOptions() {
-    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer views', 'administer site configuration']);
     $this->drupalLogin($admin_user);
 
     // The current_user plugin has no options form, and should pass validation.
     $argument_type = 'current_user';
-    $edit = array(
+    $edit = [
       'options[default_argument_type]' => $argument_type,
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_argument_default_current_user/default/argument/uid', $edit, t('Apply'));
 
     // Note, the undefined index error has two spaces after it.
-    $error = array(
+    $error = [
       '%type' => 'Notice',
       '@message' => 'Undefined index:  ' . $argument_type,
       '%function' => 'views_handler_argument->validateOptionsForm()',
-    );
+    ];
     $message = t('%type: @message in %function', $error);
-    $this->assertNoRaw($message, format_string('Did not find error message: @message.', array('@message' => $message)));
+    $this->assertNoRaw($message, format_string('Did not find error message: @message.', ['@message' => $message]));
   }
 
   /**
@@ -122,7 +122,7 @@ class ArgumentDefaultTest extends PluginTestBase {
 
     // Make sure that a normal argument provided is used
     $random_string = $this->randomMachineName();
-    $view->executeDisplay('default', array($random_string));
+    $view->executeDisplay('default', [$random_string]);
 
     $this->assertEqual($view->args[0], $random_string, 'Provided argument should be used.');
   }
@@ -137,13 +137,13 @@ class ArgumentDefaultTest extends PluginTestBase {
    */
   public function testArgumentDefaultNode() {
     // Create a user that has permission to place a view block.
-    $permissions = array(
+    $permissions = [
       'administer views',
       'administer blocks',
       'bypass node access',
       'access user profiles',
       'view all revisions',
-      );
+      ];
     $views_admin = $this->drupalCreateUser($permissions);
     $this->drupalLogin($views_admin);
 

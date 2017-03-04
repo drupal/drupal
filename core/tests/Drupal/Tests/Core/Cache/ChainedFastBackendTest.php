@@ -40,7 +40,7 @@ class ChainedFastBackendTest extends UnitTestCase {
     $consistent_cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $timestamp_cid = ChainedFastBackend::LAST_WRITE_TIMESTAMP_PREFIX . 'cache_foo';
     // Use the request time because that is what we will be comparing against.
-    $timestamp_item = (object) array('cid' => $timestamp_cid, 'data' => (int) $_SERVER['REQUEST_TIME'] - 60);
+    $timestamp_item = (object) ['cid' => $timestamp_cid, 'data' => (int) $_SERVER['REQUEST_TIME'] - 60];
     $consistent_cache->expects($this->once())
       ->method('get')->with($timestamp_cid)
       ->will($this->returnValue($timestamp_item));
@@ -62,17 +62,17 @@ class ChainedFastBackendTest extends UnitTestCase {
    * Tests a fast cache miss gets data from the consistent cache backend.
    */
   public function testFallThroughToConsistentCache() {
-    $timestamp_item = (object) array(
+    $timestamp_item = (object) [
       'cid' => ChainedFastBackend::LAST_WRITE_TIMESTAMP_PREFIX . 'cache_foo',
       'data' => time() + 60, // Time travel is easy.
-    );
-    $cache_item = (object) array(
+    ];
+    $cache_item = (object) [
       'cid' => 'foo',
       'data' => 'baz',
       'created' => time(),
       'expire' => time() + 3600,
       'tags' => ['tag'],
-    );
+    ];
 
     $consistent_cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $fast_cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
@@ -86,14 +86,14 @@ class ChainedFastBackendTest extends UnitTestCase {
     // We should get a call for the cache item on the consistent backend.
     $consistent_cache->expects($this->once())
       ->method('getMultiple')
-      ->with(array($cache_item->cid))
-      ->will($this->returnValue(array($cache_item->cid => $cache_item)));
+      ->with([$cache_item->cid])
+      ->will($this->returnValue([$cache_item->cid => $cache_item]));
 
     // We should get a call for the cache item on the fast backend.
     $fast_cache->expects($this->once())
       ->method('getMultiple')
-      ->with(array($cache_item->cid))
-      ->will($this->returnValue(array($cache_item->cid => $cache_item)));
+      ->with([$cache_item->cid])
+      ->will($this->returnValue([$cache_item->cid => $cache_item]));
 
     // We should get a call to set the cache item on the fast backend.
     $fast_cache->expects($this->once())

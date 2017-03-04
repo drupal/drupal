@@ -21,10 +21,10 @@
  */
 function hook_path_insert($path) {
   db_insert('mytable')
-    ->fields(array(
+    ->fields([
       'alias' => $path['alias'],
       'pid' => $path['pid'],
-    ))
+    ])
     ->execute();
 }
 
@@ -40,7 +40,7 @@ function hook_path_insert($path) {
 function hook_path_update($path) {
   if ($path['alias'] != $path['original']['alias']) {
     db_update('mytable')
-      ->fields(array('alias' => $path['alias']))
+      ->fields(['alias' => $path['alias']])
       ->condition('pid', $path['pid'])
       ->execute();
   }

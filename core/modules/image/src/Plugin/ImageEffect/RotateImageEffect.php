@@ -29,7 +29,7 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
     }
 
     if (!$image->rotate($this->configuration['degrees'], $this->configuration['bgcolor'])) {
-      $this->logger->error('Image rotate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()));
+      $this->logger->error('Image rotate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()]);
       return FALSE;
     }
     return TRUE;
@@ -56,10 +56,10 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function getSummary() {
-    $summary = array(
+    $summary = [
       '#theme' => 'image_rotate_summary',
       '#data' => $this->configuration,
-    );
+    ];
     $summary += parent::getSummary();
 
     return $summary;
@@ -69,39 +69,39 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'degrees' => 0,
       'bgcolor' => NULL,
       'random' => FALSE,
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['degrees'] = array(
+    $form['degrees'] = [
       '#type' => 'number',
       '#default_value' => $this->configuration['degrees'],
       '#title' => t('Rotation angle'),
       '#description' => t('The number of degrees the image should be rotated. Positive numbers are clockwise, negative are counter-clockwise.'),
       '#field_suffix' => '°',
       '#required' => TRUE,
-    );
-    $form['bgcolor'] = array(
+    ];
+    $form['bgcolor'] = [
       '#type' => 'textfield',
       '#default_value' => $this->configuration['bgcolor'],
       '#title' => t('Background color'),
       '#description' => t('The background color to use for exposed areas of the image. Use web-style hex colors (#FFFFFF for white, #000000 for black). Leave blank for transparency on image types that support it.'),
       '#size' => 7,
       '#maxlength' => 7,
-    );
-    $form['random'] = array(
+    ];
+    $form['random'] = [
       '#type' => 'checkbox',
       '#default_value' => $this->configuration['random'],
       '#title' => t('Randomize'),
       '#description' => t('Randomize the rotation angle for each image. The angle specified above is used as a maximum.'),
-    );
+    ];
     return $form;
   }
 

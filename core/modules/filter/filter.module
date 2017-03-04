@@ -21,11 +21,11 @@ function filter_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.filter':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Filter module allows administrators to configure text formats. Text formats change how HTML tags and other text will be <em>processed and displayed</em> in the site. They are used to transform text, and also help to defend your web site against potentially damaging input from malicious users. Visual text editors can be associated with text formats by using the <a href=":editor_help">Text Editor module</a>. For more information, see the <a href=":filter_do">online documentation for the Filter module</a>.', array(':filter_do' => 'https://www.drupal.org/documentation/modules/filter/', ':editor_help' => (\Drupal::moduleHandler()->moduleExists('editor')) ? \Drupal::url('help.page', array('name' => 'editor')) : '#')) . '</p>';
+      $output .= '<p>' . t('The Filter module allows administrators to configure text formats. Text formats change how HTML tags and other text will be <em>processed and displayed</em> in the site. They are used to transform text, and also help to defend your web site against potentially damaging input from malicious users. Visual text editors can be associated with text formats by using the <a href=":editor_help">Text Editor module</a>. For more information, see the <a href=":filter_do">online documentation for the Filter module</a>.', [':filter_do' => 'https://www.drupal.org/documentation/modules/filter/', ':editor_help' => (\Drupal::moduleHandler()->moduleExists('editor')) ? \Drupal::url('help.page', ['name' => 'editor']) : '#']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing text formats') . '</dt>';
-      $output .= '<dd>' . t('You can create and edit text formats on the <a href=":formats">Text formats page</a> (if the Text Editor module is enabled, this page is named Text formats and editors). One text format is included by default: Plain text (which removes all HTML tags). Additional text formats may be created during installation. You can create a text format by clicking "<a href=":add_format">Add text format</a>".', array(':formats' => \Drupal::url('filter.admin_overview'), ':add_format' => \Drupal::url('filter.format_add'))) . '</dd>';
+      $output .= '<dd>' . t('You can create and edit text formats on the <a href=":formats">Text formats page</a> (if the Text Editor module is enabled, this page is named Text formats and editors). One text format is included by default: Plain text (which removes all HTML tags). Additional text formats may be created during installation. You can create a text format by clicking "<a href=":add_format">Add text format</a>".', [':formats' => \Drupal::url('filter.admin_overview'), ':add_format' => \Drupal::url('filter.format_add')]) . '</dd>';
       $output .= '<dt>' . t('Assigning roles to text formats') . '</dt>';
       $output .= '<dd>' . t('You can define which users will be able to use each text format by selecting roles. To ensure security, anonymous and untrusted users should only have access to text formats that restrict them to either plain text or a safe set of HTML tags. This is because HTML tags can allow embedding malicious links or scripts in text. More trusted registered users may be granted permission to use less restrictive text formats in order to create rich text. <strong>Improper text format configuration is a security risk.</strong>') . '</dd>';
       $output .= '<dt>' . t('Selecting filters') . '</dt>';
@@ -39,7 +39,7 @@ function filter_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'filter.admin_overview':
-      $output = '<p>' . t('Text formats define how text is filtered for output and how HTML tags and other text is displayed, replaced, or removed. <strong>Improper text format configuration is a security risk.</strong> Learn more on the <a href=":filter_help">Filter module help page</a>.', array(':filter_help' => \Drupal::url('help.page', array('name' => 'filter')))) . '</p>';
+      $output = '<p>' . t('Text formats define how text is filtered for output and how HTML tags and other text is displayed, replaced, or removed. <strong>Improper text format configuration is a security risk.</strong> Learn more on the <a href=":filter_help">Filter module help page</a>.', [':filter_help' => \Drupal::url('help.page', ['name' => 'filter'])]) . '</p>';
       $output .= '<p>' . t('Text formats are presented on content editing pages in the order defined on this page. The first format available to a user will be selected by default.') . '</p>';
       return $output;
 
@@ -53,29 +53,29 @@ function filter_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_theme().
  */
 function filter_theme() {
-  return array(
-    'filter_tips' => array(
-      'variables' => array('tips' => NULL, 'long' => FALSE),
-    ),
-    'text_format_wrapper' => array(
-      'variables' => array(
+  return [
+    'filter_tips' => [
+      'variables' => ['tips' => NULL, 'long' => FALSE],
+    ],
+    'text_format_wrapper' => [
+      'variables' => [
         'children' => NULL,
         'description' => NULL,
-        'attributes' => array(),
-      ),
-    ),
-    'filter_guidelines' => array(
-      'variables' => array('format' => NULL),
-    ),
-    'filter_caption' => array(
-      'variables' => array(
+        'attributes' => [],
+      ],
+    ],
+    'filter_guidelines' => [
+      'variables' => ['format' => NULL],
+    ],
+    'filter_caption' => [
+      'variables' => [
         'node' => NULL,
         'tag' => NULL,
         'caption' => NULL,
         'classes' => NULL,
-      ),
-    )
-  );
+      ],
+    ]
+  ];
 }
 
 /**
@@ -93,7 +93,7 @@ function filter_theme() {
  * @see filter_formats_reset()
  */
 function filter_formats(AccountInterface $account = NULL) {
-  $formats = &drupal_static(__FUNCTION__, array());
+  $formats = &drupal_static(__FUNCTION__, []);
 
   // All available formats are cached for performance.
   if (!isset($formats['all'])) {
@@ -102,7 +102,7 @@ function filter_formats(AccountInterface $account = NULL) {
       $formats['all'] = $cache->data;
     }
     else {
-      $formats['all'] = \Drupal::entityManager()->getStorage('filter_format')->loadByProperties(array('status' => TRUE));
+      $formats['all'] = \Drupal::entityManager()->getStorage('filter_format')->loadByProperties(['status' => TRUE]);
       uasort($formats['all'], 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
       \Drupal::cache()->set("filter_formats:{$language_interface->getId()}", $formats['all'], Cache::PERMANENT, \Drupal::entityManager()->getDefinition('filter_format')->getListCacheTags());
     }
@@ -116,7 +116,7 @@ function filter_formats(AccountInterface $account = NULL) {
   // Build a list of user-specific formats.
   $account_id = $account->id();
   if (!isset($formats['user'][$account_id])) {
-    $formats['user'][$account_id] = array();
+    $formats['user'][$account_id] = [];
     foreach ($formats['all'] as $format) {
       if ($format->access('use', $account)) {
         $formats['user'][$account_id][$format->id()] = $format;
@@ -152,7 +152,7 @@ function filter_get_roles_by_format(FilterFormatInterface $format) {
   }
   // Do not list any roles if the permission does not exist.
   $permission = $format->getPermissionName();
-  return !empty($permission) ? user_role_names(FALSE, $permission) : array();
+  return !empty($permission) ? user_role_names(FALSE, $permission) : [];
 }
 
 /**
@@ -166,7 +166,7 @@ function filter_get_roles_by_format(FilterFormatInterface $format) {
  *   the text format ID and ordered by weight.
  */
 function filter_get_formats_by_role($rid) {
-  $formats = array();
+  $formats = [];
   foreach (filter_formats() as $format) {
     $roles = filter_get_roles_by_format($format);
     if (isset($roles[$rid])) {
@@ -291,14 +291,14 @@ function filter_fallback_format() {
  *
  * @ingroup sanitization
  */
-function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to_skip = array()) {
-  $build = array(
+function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to_skip = []) {
+  $build = [
     '#type' => 'processed_text',
     '#text' => $text,
     '#format' => $format_id,
     '#filter_types_to_skip' => $filter_types_to_skip,
     '#langcode' => $langcode,
-  );
+  ];
   return \Drupal::service('renderer')->renderPlain($build);
 }
 
@@ -337,11 +337,11 @@ function filter_form_access_denied($element) {
 function _filter_tips($format_id, $long = FALSE) {
   $formats = filter_formats(\Drupal::currentUser());
 
-  $tips = array();
+  $tips = [];
 
   // If only listing one format, extract it from the $formats array.
   if ($format_id != -1) {
-    $formats = array($formats[$format_id]);
+    $formats = [$formats[$format_id]];
   }
 
   foreach ($formats as $format) {
@@ -349,10 +349,10 @@ function _filter_tips($format_id, $long = FALSE) {
       if ($filter->status) {
         $tip = $filter->tips($long);
         if (isset($tip)) {
-          $tips[$format->label()][$name] = array(
-            'tip' => array('#markup' => $tip),
+          $tips[$format->label()][$name] = [
+            'tip' => ['#markup' => $tip],
             'id' => $name,
-          );
+          ];
         }
       }
     }
@@ -372,10 +372,10 @@ function _filter_tips($format_id, $long = FALSE) {
  */
 function template_preprocess_filter_guidelines(&$variables) {
   $format = $variables['format'];
-  $variables['tips'] = array(
+  $variables['tips'] = [
     '#theme' => 'filter_tips',
     '#tips' => _filter_tips($format->id(), FALSE),
-  );
+  ];
 }
 
 /**
@@ -431,11 +431,11 @@ function template_preprocess_filter_tips(&$variables) {
       $tiplist[$tip_key]['attributes'] = new Attribute();
     }
 
-    $variables['tips'][$name] = array(
+    $variables['tips'][$name] = [
       'attributes' => new Attribute(),
       'name' => $name,
       'list' => $tiplist,
-    );
+    ];
   }
 
   $variables['multiple'] = count($tips) > 1;
@@ -470,7 +470,7 @@ function _filter_url($text, $filter) {
   // callback function to process matches of the regexp. The callback function
   // is to return the replacement for the match. The array is used and
   // matching/replacement done below inside some loops.
-  $tasks = array();
+  $tasks = [];
 
   // Prepare protocols pattern for absolute URLs.
   // \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() will replace
@@ -643,12 +643,12 @@ function _filter_url_parse_partial_links($match) {
  *   cached $comments are reset.
  */
 function _filter_url_escape_comments($match, $escape = NULL) {
-  static $mode, $comments = array();
+  static $mode, $comments = [];
 
   if (isset($escape)) {
     $mode = $escape;
     if ($escape) {
-      $comments = array();
+      $comments = [];
     }
     return;
   }

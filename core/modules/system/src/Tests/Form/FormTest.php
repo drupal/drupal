@@ -25,19 +25,19 @@ class FormTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter', 'form_test', 'file', 'datetime');
+  public static $modules = ['filter', 'form_test', 'file', 'datetime'];
 
   protected function setUp() {
     parent::setUp();
 
-    $filtered_html_format = FilterFormat::create(array(
+    $filtered_html_format = FilterFormat::create([
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
-    ));
+    ]);
     $filtered_html_format->save();
 
     $filtered_html_permission = $filtered_html_format->getPermissionName();
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array($filtered_html_permission));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [$filtered_html_permission]);
   }
 
   /**
@@ -51,47 +51,47 @@ class FormTest extends WebTestBase {
   function testRequiredFields() {
     // Originates from https://www.drupal.org/node/117748.
     // Sets of empty strings and arrays.
-    $empty_strings = array('""' => "", '"\n"' => "\n", '" "' => " ", '"\t"' => "\t", '" \n\t "' => " \n\t ", '"\n\n\n\n\n"' => "\n\n\n\n\n");
-    $empty_arrays = array('array()' => array());
-    $empty_checkbox = array(NULL);
+    $empty_strings = ['""' => "", '"\n"' => "\n", '" "' => " ", '"\t"' => "\t", '" \n\t "' => " \n\t ", '"\n\n\n\n\n"' => "\n\n\n\n\n"];
+    $empty_arrays = ['array()' => []];
+    $empty_checkbox = [NULL];
 
-    $elements['textfield']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'textfield');
+    $elements['textfield']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'textfield'];
     $elements['textfield']['empty_values'] = $empty_strings;
 
-    $elements['telephone']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'tel');
+    $elements['telephone']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'tel'];
     $elements['telephone']['empty_values'] = $empty_strings;
 
-    $elements['url']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'url');
+    $elements['url']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'url'];
     $elements['url']['empty_values'] = $empty_strings;
 
-    $elements['search']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'search');
+    $elements['search']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'search'];
     $elements['search']['empty_values'] = $empty_strings;
 
-    $elements['password']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'password');
+    $elements['password']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'password'];
     $elements['password']['empty_values'] = $empty_strings;
 
-    $elements['password_confirm']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'password_confirm');
+    $elements['password_confirm']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'password_confirm'];
     // Provide empty values for both password fields.
     foreach ($empty_strings as $key => $value) {
-      $elements['password_confirm']['empty_values'][$key] = array('pass1' => $value, 'pass2' => $value);
+      $elements['password_confirm']['empty_values'][$key] = ['pass1' => $value, 'pass2' => $value];
     }
 
-    $elements['textarea']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'textarea');
+    $elements['textarea']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'textarea'];
     $elements['textarea']['empty_values'] = $empty_strings;
 
-    $elements['radios']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'radios', '#options' => array('' => t('None'), $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()));
+    $elements['radios']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'radios', '#options' => ['' => t('None'), $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
     $elements['radios']['empty_values'] = $empty_arrays;
 
-    $elements['checkbox']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'checkbox', '#required' => TRUE);
+    $elements['checkbox']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'checkbox', '#required' => TRUE];
     $elements['checkbox']['empty_values'] = $empty_checkbox;
 
-    $elements['checkboxes']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'checkboxes', '#options' => array($this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()));
+    $elements['checkboxes']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'checkboxes', '#options' => [$this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
     $elements['checkboxes']['empty_values'] = $empty_arrays;
 
-    $elements['select']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'select', '#options' => array('' => t('None'), $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()));
+    $elements['select']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'select', '#options' => ['' => t('None'), $this->randomMachineName(), $this->randomMachineName(), $this->randomMachineName()]];
     $elements['select']['empty_values'] = $empty_strings;
 
-    $elements['file']['element'] = array('#title' => $this->randomMachineName(), '#type' => 'file');
+    $elements['file']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'file'];
     $elements['file']['empty_values'] = $empty_strings;
 
     // Regular expression to find the expected marker on required elements.
@@ -99,11 +99,11 @@ class FormTest extends WebTestBase {
     // Go through all the elements and all the empty values for them.
     foreach ($elements as $type => $data) {
       foreach ($data['empty_values'] as $key => $empty) {
-        foreach (array(TRUE, FALSE) as $required) {
+        foreach ([TRUE, FALSE] as $required) {
           $form_id = $this->randomMachineName();
-          $form = array();
+          $form = [];
           $form_state = new FormState();
-          $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
+          $form['op'] = ['#type' => 'submit', '#value' => t('Submit')];
           $element = $data['element']['#title'];
           $form[$element] = $data['element'];
           $form[$element]['#required'] = $required;
@@ -167,13 +167,13 @@ class FormTest extends WebTestBase {
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestValidateRequiredForm');
 
     // Attempt to submit the form with no required fields set.
-    $edit = array();
+    $edit = [];
     $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
 
     // The only error messages that should appear are the relevant 'required'
     // messages for each field.
-    $expected = array();
-    foreach (array('textfield', 'checkboxes', 'select', 'radios') as $key) {
+    $expected = [];
+    foreach (['textfield', 'checkboxes', 'select', 'radios'] as $key) {
       if (isset($form[$key]['#required_error'])) {
         $expected[] = $form[$key]['#required_error'];
       }
@@ -181,7 +181,7 @@ class FormTest extends WebTestBase {
         $expected[] = $form[$key]['#form_test_required_error'];
       }
       else {
-        $expected[] = t('@name field is required.', array('@name' => $form[$key]['#title']));
+        $expected[] = t('@name field is required.', ['@name' => $form[$key]['#title']]);
       }
     }
 
@@ -191,7 +191,7 @@ class FormTest extends WebTestBase {
       $expected_key = array_search($error[0], $expected);
       // If the error message is not one of the expected messages, fail.
       if ($expected_key === FALSE) {
-        $this->fail(format_string("Unexpected error message: @error", array('@error' => $error[0])));
+        $this->fail(format_string("Unexpected error message: @error", ['@error' => $error[0]]));
       }
       // Remove the expected message from the list once it is found.
       else {
@@ -201,7 +201,7 @@ class FormTest extends WebTestBase {
 
     // Fail if any expected messages were not found.
     foreach ($expected as $not_found) {
-      $this->fail(format_string("Found error message: @error", array('@error' => $not_found)));
+      $this->fail(format_string("Found error message: @error", ['@error' => $not_found]));
     }
 
     // Verify that input elements are still empty.
@@ -218,12 +218,12 @@ class FormTest extends WebTestBase {
 
     // Submit again with required fields set and verify that there are no
     // error messages.
-    $edit = array(
+    $edit = [
       'textfield' => $this->randomString(),
       'checkboxes[foo]' => TRUE,
       'select' => 'foo',
       'radios' => 'bar',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
     $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed when all required fields are filled.');
     $this->assertRaw("The form_test_validate_required_form form was submitted successfully.", 'Validation form submitted successfully.');
@@ -240,13 +240,13 @@ class FormTest extends WebTestBase {
     $this->drupalLogin($account);
     // Submit again with required fields set but an invalid form token and
     // verify that all the values are retained.
-    $edit = array(
+    $edit = [
       'textfield' => $this->randomString(),
       'checkboxes[bar]' => TRUE,
       'select' => 'bar',
       'radios' => 'foo',
       'form_token' => 'invalid token',
-    );
+    ];
     $this->drupalPostForm(Url::fromRoute('form_test.validate_required'), $edit, 'Submit');
     $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
     $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
@@ -258,11 +258,11 @@ class FormTest extends WebTestBase {
     $this->assertFieldChecked('edit-radios-foo');
 
     // Check another form that has a textarea input.
-    $edit = array(
+    $edit = [
       'textfield' => $this->randomString(),
       'textarea' => $this->randomString() . "\n",
       'form_token' => 'invalid token',
-    );
+    ];
     $this->drupalPostForm(Url::fromRoute('form_test.required'), $edit, 'Submit');
     $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
     $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
@@ -270,20 +270,20 @@ class FormTest extends WebTestBase {
     $this->assertFieldByName('textarea', $edit['textarea']);
 
     // Check another form that has a number input.
-    $edit = array(
+    $edit = [
       'integer_step' => mt_rand(1, 100),
       'form_token' => 'invalid token',
-    );
+    ];
     $this->drupalPostForm(Url::fromRoute('form_test.number'), $edit, 'Submit');
     $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
     $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
     $this->assertFieldByName('integer_step', $edit['integer_step']);
 
     // Check a form with a Url field
-    $edit = array(
+    $edit = [
       'url' => $this->randomString(),
       'form_token' => 'invalid token',
-    );
+    ];
     $this->drupalPostForm(Url::fromRoute('form_test.url'), $edit, 'Submit');
     $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
     $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
@@ -314,7 +314,7 @@ class FormTest extends WebTestBase {
    */
   function testRequiredTextfieldNoTitle() {
     // Attempt to submit the form with no required field set.
-    $edit = array();
+    $edit = [];
     $this->drupalPostForm('form-test/validate-required-no-title', $edit, 'Submit');
     $this->assertNoRaw("The form_test_validate_required_form_no_title form was submitted successfully.", 'Validation form submitted successfully.');
 
@@ -326,9 +326,9 @@ class FormTest extends WebTestBase {
 
     // Submit again with required fields set and verify that there are no
     // error messages.
-    $edit = array(
+    $edit = [
       'textfield' => $this->randomString(),
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
     $this->assertNoFieldByXpath('//input[contains(@class, "error")]', FALSE, 'No error input form element class found.');
     $this->assertRaw("The form_test_validate_required_form_no_title form was submitted successfully.", 'Validation form submitted successfully.');
@@ -341,26 +341,26 @@ class FormTest extends WebTestBase {
    */
   function testCheckboxProcessing() {
     // First, try to submit without the required checkbox.
-    $edit = array();
+    $edit = [];
     $this->drupalPostForm('form-test/checkbox', $edit, t('Submit'));
-    $this->assertRaw(t('@name field is required.', array('@name' => 'required_checkbox')), 'A required checkbox is actually mandatory');
+    $this->assertRaw(t('@name field is required.', ['@name' => 'required_checkbox']), 'A required checkbox is actually mandatory');
 
     // Now try to submit the form correctly.
-    $values = Json::decode($this->drupalPostForm(NULL, array('required_checkbox' => 1), t('Submit')));
-    $expected_values = array(
+    $values = Json::decode($this->drupalPostForm(NULL, ['required_checkbox' => 1], t('Submit')));
+    $expected_values = [
       'disabled_checkbox_on' => 'disabled_checkbox_on',
       'disabled_checkbox_off' => '',
       'checkbox_on' => 'checkbox_on',
       'checkbox_off' => '',
       'zero_checkbox_on' => '0',
       'zero_checkbox_off' => '',
-    );
+    ];
     foreach ($expected_values as $widget => $expected_value) {
-      $this->assertEqual($values[$widget], $expected_value, format_string('Checkbox %widget returns expected value (expected: %expected, got: %value)', array(
+      $this->assertEqual($values[$widget], $expected_value, format_string('Checkbox %widget returns expected value (expected: %expected, got: %value)', [
         '%widget' => var_export($widget, TRUE),
         '%expected' => var_export($expected_value, TRUE),
         '%value' => var_export($values[$widget], TRUE),
-      )));
+      ]));
     }
   }
 
@@ -376,8 +376,8 @@ class FormTest extends WebTestBase {
     $this->assertNoRaw('<strong>four</strong>');
 
     // Posting without any values should throw validation errors.
-    $this->drupalPostForm(NULL, array(), 'Submit');
-    $no_errors = array(
+    $this->drupalPostForm(NULL, [], 'Submit');
+    $no_errors = [
         'select',
         'select_required',
         'select_optional',
@@ -388,35 +388,35 @@ class FormTest extends WebTestBase {
         'no_default_empty_value_optional',
         'multiple',
         'multiple_no_default',
-    );
+    ];
     foreach ($no_errors as $key) {
-      $this->assertNoText(t('@name field is required.', array('@name' => $form[$key]['#title'])));
+      $this->assertNoText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
     }
 
-    $expected_errors = array(
+    $expected_errors = [
         'no_default',
         'no_default_empty_option',
         'no_default_empty_value',
         'no_default_empty_value_one',
         'multiple_no_default_required',
-    );
+    ];
     foreach ($expected_errors as $key) {
-      $this->assertText(t('@name field is required.', array('@name' => $form[$key]['#title'])));
+      $this->assertText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
     }
 
     // Post values for required fields.
-    $edit = array(
+    $edit = [
       'no_default' => 'three',
       'no_default_empty_option' => 'three',
       'no_default_empty_value' => 'three',
       'no_default_empty_value_one' => 'three',
       'multiple_no_default_required[]' => 'three',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
     $values = Json::decode($this->getRawContent());
 
     // Verify expected values.
-    $expected = array(
+    $expected = [
       'select' => 'one',
       'empty_value' => 'one',
       'empty_value_one' => 'one',
@@ -428,16 +428,16 @@ class FormTest extends WebTestBase {
       'no_default_empty_value' => 'three',
       'no_default_empty_value_one' => 'three',
       'no_default_empty_value_optional' => 0,
-      'multiple' => array('two' => 'two'),
-      'multiple_no_default' => array(),
-      'multiple_no_default_required' => array('three' => 'three'),
-    );
+      'multiple' => ['two' => 'two'],
+      'multiple_no_default' => [],
+      'multiple_no_default_required' => ['three' => 'three'],
+    ];
     foreach ($expected as $key => $value) {
-      $this->assertIdentical($values[$key], $value, format_string('@name: @actual is equal to @expected.', array(
+      $this->assertIdentical($values[$key], $value, format_string('@name: @actual is equal to @expected.', [
         '@name' => $key,
         '@actual' => var_export($values[$key], TRUE),
         '@expected' => var_export($value, TRUE),
-      )));
+      ]));
     }
   }
 
@@ -457,15 +457,15 @@ class FormTest extends WebTestBase {
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestNumberForm');
 
     // Array with all the error messages to be checked.
-    $error_messages = array(
+    $error_messages = [
       'no_number' => '%name must be a number.',
       'too_low' => '%name must be higher than or equal to %min.',
       'too_high' => '%name must be lower than or equal to %max.',
       'step_mismatch' => '%name is not a valid number.',
-    );
+    ];
 
     // The expected errors.
-    $expected = array(
+    $expected = [
       'integer_no_number' => 'no_number',
       'integer_no_step' => 0,
       'integer_no_step_step_error' => 'step_mismatch',
@@ -485,20 +485,20 @@ class FormTest extends WebTestBase {
       'float_step_hard_no_error' => 0,
       'float_step_hard_error' => 'step_mismatch',
       'float_step_any_no_error' => 0,
-    );
+    ];
 
     // First test the number element type, then range.
-    foreach (array('form-test/number', 'form-test/number/range') as $path) {
+    foreach (['form-test/number', 'form-test/number/range'] as $path) {
       // Post form and show errors.
-      $this->drupalPostForm($path, array(), 'Submit');
+      $this->drupalPostForm($path, [], 'Submit');
 
       foreach ($expected as $element => $error) {
         // Create placeholder array.
-        $placeholders = array(
+        $placeholders = [
           '%name' => $form[$element]['#title'],
           '%min' => isset($form[$element]['#min']) ? $form[$element]['#min'] : '0',
           '%max' => isset($form[$element]['#max']) ? $form[$element]['#max'] : '0',
-        );
+        ];
 
         foreach ($error_messages as $id => $message) {
           // Check if the error exists on the page, if the current message ID is
@@ -518,13 +518,13 @@ class FormTest extends WebTestBase {
    * Tests default value handling of #type 'range' elements.
    */
   function testRange() {
-    $values = json_decode($this->drupalPostForm('form-test/range', array(), 'Submit'));
+    $values = json_decode($this->drupalPostForm('form-test/range', [], 'Submit'));
     $this->assertEqual($values->with_default_value, 18);
     $this->assertEqual($values->float, 10.5);
     $this->assertEqual($values->integer, 6);
     $this->assertEqual($values->offset, 6.9);
 
-    $this->drupalPostForm('form-test/range/invalid', array(), 'Submit');
+    $this->drupalPostForm('form-test/range/invalid', [], 'Submit');
     $this->assertFieldByXPath('//input[@type="range" and contains(@class, "error")]', NULL, 'Range element has the error class.');
   }
 
@@ -533,7 +533,7 @@ class FormTest extends WebTestBase {
    */
   function testColorValidation() {
     // Keys are inputs, values are expected results.
-    $values = array(
+    $values = [
       '' => '#000000',
       '#000' => '#000000',
       'AAA' => '#aaaaaa',
@@ -541,25 +541,25 @@ class FormTest extends WebTestBase {
       '#99ccBc' => '#99ccbc',
       '#aabbcc' => '#aabbcc',
       '123456' => '#123456',
-    );
+    ];
 
     // Tests that valid values are properly normalized.
     foreach ($values as $input => $expected) {
-      $edit = array(
+      $edit = [
         'color' => $input,
-      );
+      ];
       $result = json_decode($this->drupalPostForm('form-test/color', $edit, 'Submit'));
       $this->assertEqual($result->color, $expected);
     }
 
     // Tests invalid values are rejected.
-    $values = array('#0008', '#1234', '#fffffg', '#abcdef22', '17', '#uaa');
+    $values = ['#0008', '#1234', '#fffffg', '#abcdef22', '17', '#uaa'];
     foreach ($values as $input) {
-      $edit = array(
+      $edit = [
         'color' => $input,
-      );
+      ];
       $this->drupalPostForm('form-test/color', $edit, 'Submit');
-      $this->assertRaw(t('%name must be a valid color.', array('%name' => 'Color')));
+      $this->assertRaw(t('%name must be a valid color.', ['%name' => 'Color']));
     }
   }
 
@@ -571,11 +571,11 @@ class FormTest extends WebTestBase {
   function testDisabledElements() {
     // Get the raw form in its original state.
     $form_state = new FormState();
-    $form = (new FormTestDisabledElementsForm())->buildForm(array(), $form_state);
+    $form = (new FormTestDisabledElementsForm())->buildForm([], $form_state);
 
     // Build a submission that tries to hijack the form by submitting input for
     // elements that are disabled.
-    $edit = array();
+    $edit = [];
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#test_hijack_value'])) {
         if (is_array($form[$key]['#test_hijack_value'])) {
@@ -591,14 +591,14 @@ class FormTest extends WebTestBase {
 
     // Submit the form with no input, as the browser does for disabled elements,
     // and fetch the $form_state->getValues() that is passed to the submit handler.
-    $this->drupalPostForm('form-test/disabled-elements', array(), t('Submit'));
+    $this->drupalPostForm('form-test/disabled-elements', [], t('Submit'));
     $returned_values['normal'] = Json::decode($this->content);
 
     // Do the same with input, as could happen if JavaScript un-disables an
     // element. drupalPostForm() emulates a browser by not submitting input for
     // disabled elements, so we need to un-disable those elements first.
     $this->drupalGet('form-test/disabled-elements');
-    $disabled_elements = array();
+    $disabled_elements = [];
     foreach ($this->xpath('//*[@disabled]') as $element) {
       $disabled_elements[] = (string) $element['name'];
       unset($element['disabled']);
@@ -608,10 +608,10 @@ class FormTest extends WebTestBase {
     // the disabled container.
     $actual_count = count($disabled_elements);
     $expected_count = 42;
-    $this->assertEqual($actual_count, $expected_count, SafeMarkup::format('Found @actual elements with disabled property (expected @expected).', array(
+    $this->assertEqual($actual_count, $expected_count, SafeMarkup::format('Found @actual elements with disabled property (expected @expected).', [
       '@actual' => count($disabled_elements),
       '@expected' => $expected_count,
-    )));
+    ]));
 
     $this->drupalPostForm(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = Json::decode($this->content);
@@ -640,7 +640,7 @@ class FormTest extends WebTestBase {
           // Checkboxes values are not filtered out.
           $values[$key] = array_filter($values[$key]);
         }
-        $this->assertIdentical($expected_value, $values[$key], format_string('Default value for %type: expected %expected, returned %returned.', array('%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE))));
+        $this->assertIdentical($expected_value, $values[$key], format_string('Default value for %type: expected %expected, returned %returned.', ['%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE)]));
       }
 
       // Recurse children.
@@ -656,24 +656,24 @@ class FormTest extends WebTestBase {
   function testDisabledMarkup() {
     $this->drupalGet('form-test/disabled-elements');
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestDisabledElementsForm');
-    $type_map = array(
+    $type_map = [
       'textarea' => 'textarea',
       'select' => 'select',
       'weight' => 'select',
       'datetime' => 'datetime',
-    );
+    ];
 
     foreach ($form as $name => $item) {
       // Skip special #types.
-      if (!isset($item['#type']) || in_array($item['#type'], array('hidden', 'text_format'))) {
+      if (!isset($item['#type']) || in_array($item['#type'], ['hidden', 'text_format'])) {
         continue;
       }
       // Setup XPath and CSS class depending on #type.
-      if (in_array($item['#type'], array('button', 'submit'))) {
+      if (in_array($item['#type'], ['button', 'submit'])) {
         $path = "//!type[contains(@class, :div-class) and @value=:value]";
         $class = 'is-disabled';
       }
-      elseif (in_array($item['#type'], array('image_button'))) {
+      elseif (in_array($item['#type'], ['image_button'])) {
         $path = "//!type[contains(@class, :div-class) and @value=:value]";
         $class = 'is-disabled';
       }
@@ -687,27 +687,27 @@ class FormTest extends WebTestBase {
       if (isset($type_map[$item['#type']])) {
         $type = $type_map[$item['#type']];
       }
-      $path = strtr($path, array('!type' => $type));
+      $path = strtr($path, ['!type' => $type]);
       // Verify that the element exists.
-      $element = $this->xpath($path, array(
+      $element = $this->xpath($path, [
         ':name' => Html::escape($name),
         ':div-class' => $class,
         ':value' => isset($item['#value']) ? $item['#value'] : '',
-      ));
-      $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', array('%type' => $item['#type'])));
+      ]);
+      $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', ['%type' => $item['#type']]));
     }
 
     // Verify special element #type text-format.
-    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::textarea[@name=:name]', array(
+    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::textarea[@name=:name]', [
       ':name' => 'text_format[value]',
       ':div-class' => 'form-disabled',
-    ));
-    $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', array('%type' => 'text_format[value]')));
-    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::select[@name=:name]', array(
+    ]);
+    $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', ['%type' => 'text_format[value]']));
+    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::select[@name=:name]', [
       ':name' => 'text_format[format]',
       ':div-class' => 'form-disabled',
-    ));
-    $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', array('%type' => 'text_format[format]')));
+    ]);
+    $this->assertTrue(isset($element[0]), format_string('Disabled form element class found for #type %type.', ['%type' => 'text_format[format]']));
   }
 
   /**
@@ -719,7 +719,7 @@ class FormTest extends WebTestBase {
     $this->drupalGet('form-test/input-forgery');
     $checkbox = $this->xpath('//input[@name="checkboxes[two]"]');
     $checkbox[0]['value'] = 'FORGERY';
-    $this->drupalPostForm(NULL, array('checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE), t('Submit'));
+    $this->drupalPostForm(NULL, ['checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE], t('Submit'));
     $this->assertText('An illegal choice has been detected.', 'Input forgery was detected.');
   }
 
@@ -730,19 +730,19 @@ class FormTest extends WebTestBase {
     $this->drupalGet('form-test/required-attribute');
     $expected = 'required';
     // Test to make sure the elements have the proper required attribute.
-    foreach (array('textfield', 'password') as $type) {
-      $element = $this->xpath('//input[@id=:id and @required=:expected]', array(
+    foreach (['textfield', 'password'] as $type) {
+      $element = $this->xpath('//input[@id=:id and @required=:expected]', [
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
-      ));
-      $this->assertTrue(!empty($element), format_string('The @type has the proper required attribute.', array('@type' => $type)));
+      ]);
+      $this->assertTrue(!empty($element), format_string('The @type has the proper required attribute.', ['@type' => $type]));
     }
 
     // Test to make sure textarea has the proper required attribute.
-    $element = $this->xpath('//textarea[@id=:id and @required=:expected]', array(
+    $element = $this->xpath('//textarea[@id=:id and @required=:expected]', [
       ':id' => 'edit-textarea',
       ':expected' => $expected,
-    ));
+    ]);
     $this->assertTrue(!empty($element), 'The textarea has the proper required attribute.');
   }
 

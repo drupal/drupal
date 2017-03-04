@@ -16,12 +16,12 @@ class StatisticsLastCommentName extends SortPluginBase {
 
   public function query() {
     $this->ensureMyTable();
-    $definition = array(
+    $definition = [
       'table' => 'users_field_data',
       'field' => 'uid',
       'left_table' => 'comment_entity_statistics',
       'left_field' => 'last_comment_uid',
-    );
+    ];
     $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $definition);
 
     // @todo this might be safer if we had an ensure_relationship rather than guessing

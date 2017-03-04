@@ -28,7 +28,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
 
     $form['tableselect'] = $element_properties;
 
-    $form['tableselect'] += array(
+    $form['tableselect'] += [
       '#prefix' => '<div id="tableselect-wrapper">',
       '#suffix' => '</div>',
       '#type' => 'tableselect',
@@ -36,16 +36,16 @@ abstract class FormTestTableSelectFormBase extends FormBase {
       '#options' => $options,
       '#multiple' => FALSE,
       '#empty' => t('Empty text.'),
-      '#ajax' => array(
+      '#ajax' => [
         'callback' => 'form_test_tableselect_ajax_callback',
         'wrapper' => 'tableselect-wrapper',
-      ),
-    );
+      ],
+    ];
 
-    $form['submit'] = array(
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => t('Submit'),
-    );
+    ];
 
     return $form;
   }

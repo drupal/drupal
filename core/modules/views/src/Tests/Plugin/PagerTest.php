@@ -20,14 +20,14 @@ class PagerTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_store_pager_settings', 'test_pager_none', 'test_pager_some', 'test_pager_full', 'test_view_pager_full_zero_items_per_page', 'test_view', 'content');
+  public static $testViews = ['test_store_pager_settings', 'test_pager_none', 'test_pager_some', 'test_pager_full', 'test_view_pager_full_zero_items_per_page', 'test_view', 'content'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node', 'views_ui');
+  public static $modules = ['node', 'views_ui'];
 
   /**
    * String translation storage object.
@@ -45,27 +45,27 @@ class PagerTest extends PluginTestBase {
     // Show the master display so the override selection is shown.
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
 
-    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer views', 'administer site configuration']);
     $this->drupalLogin($admin_user);
     // Test behavior described in
     //   https://www.drupal.org/node/652712#comment-2354918.
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
 
-    $edit = array(
+    $edit = [
       'pager[type]' => 'full',
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
-    $edit = array(
+    $edit = [
       'pager_options[items_per_page]' => 20,
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager_options', $edit, t('Apply'));
     $this->assertText('20 items');
 
     // Change type and check whether the type is new type is stored.
-    $edit = array(
+    $edit = [
       'pager[type]' => 'mini',
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     $this->assertText('Mini', 'Changed pager plugin, should change some text');
@@ -78,38 +78,38 @@ class PagerTest extends PluginTestBase {
 
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit');
 
-    $edit = array(
+    $edit = [
       'pager[type]' => 'full',
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager', $edit, t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit');
     $this->assertText('Full');
 
-    $edit = array(
+    $edit = [
       'pager_options[items_per_page]' => 20,
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, t('Apply'));
     $this->assertText('20 items');
 
     // add new display and test the settings again, by override it.
-    $edit = array( );
+    $edit = [ ];
     // Add a display and override the pager settings.
     $this->drupalPostForm('admin/structure/views/view/test_store_pager_settings/edit', $edit, t('Add Page'));
-    $edit = array(
+    $edit = [
       'override[dropdown]' => 'page_1',
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager', $edit, t('Apply'));
 
-    $edit = array(
+    $edit = [
       'pager[type]' => 'mini',
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager', $edit, t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
     $this->assertText('Mini', 'Changed pager plugin, should change some text');
 
-    $edit = array(
+    $edit = [
       'pager_options[items_per_page]' => 10,
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, t('Apply'));
     $this->assertText('10 items', 'The default value has been changed.');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
@@ -128,7 +128,7 @@ class PagerTest extends PluginTestBase {
   public function testNoLimit() {
     // Create 11 nodes and make sure that everyone is returned.
     // We create 11 nodes, because the default pager plugin had 10 items per page.
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
@@ -139,12 +139,12 @@ class PagerTest extends PluginTestBase {
     // Setup and test a offset.
     $view = Views::getView('test_pager_none');
     $view->setDisplay();
-    $pager = array(
+    $pager = [
       'type' => 'none',
-      'options' => array(
+      'options' => [
         'offset' => 3,
-      ),
-    );
+      ],
+    ];
     $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
 
@@ -157,7 +157,7 @@ class PagerTest extends PluginTestBase {
   }
 
   public function testViewTotalRowsWithoutPager() {
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 23; $i++) {
       $this->drupalCreateNode();
     }
@@ -175,7 +175,7 @@ class PagerTest extends PluginTestBase {
   public function testLimit() {
     // Create 11 nodes and make sure that everyone is returned.
     // We create 11 nodes, because the default pager plugin had 10 items per page.
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
@@ -187,13 +187,13 @@ class PagerTest extends PluginTestBase {
     // Setup and test a offset.
     $view = Views::getView('test_pager_some');
     $view->setDisplay();
-    $pager = array(
+    $pager = [
       'type' => 'none',
-      'options' => array(
+      'options' => [
         'offset' => 8,
         'items_per_page' => 5,
-      ),
-    );
+      ],
+    ];
     $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
     $this->assertEqual(count($view->result), 3, 'Make sure that only a certain count of items is returned');
@@ -209,7 +209,7 @@ class PagerTest extends PluginTestBase {
   public function testNormalPager() {
     // Create 11 nodes and make sure that everyone is returned.
     // We create 11 nodes, because the default pager plugin had 10 items per page.
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
@@ -221,13 +221,13 @@ class PagerTest extends PluginTestBase {
     // Setup and test a offset.
     $view = Views::getView('test_pager_full');
     $view->setDisplay();
-    $pager = array(
+    $pager = [
       'type' => 'full',
-      'options' => array(
+      'options' => [
         'offset' => 8,
         'items_per_page' => 5,
-      ),
-    );
+      ],
+    ];
     $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
     $this->assertEqual(count($view->result), 3, 'Make sure that only a certain count of items is returned');
@@ -244,13 +244,13 @@ class PagerTest extends PluginTestBase {
     // Setup and test a offset.
     $view = Views::getView('test_pager_full');
     $view->setDisplay();
-    $pager = array(
+    $pager = [
       'type' => 'full',
-      'options' => array(
+      'options' => [
         'offset' => 0,
         'items_per_page' => 0,
-      ),
-    );
+      ],
+    ];
 
     $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
@@ -268,7 +268,7 @@ class PagerTest extends PluginTestBase {
   public function testRenderNullPager() {
     // Create 11 nodes and make sure that everyone is returned.
     // We create 11 nodes, because the default pager plugin had 10 items per page.
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
@@ -348,10 +348,10 @@ class PagerTest extends PluginTestBase {
     $view->save();
 
     // Enable locale, config_translation and language module.
-    $this->container->get('module_installer')->install(array('locale', 'language', 'config_translation'));
+    $this->container->get('module_installer')->install(['locale', 'language', 'config_translation']);
     $this->resetAll();
 
-    $admin_user = $this->drupalCreateUser(array('access content overview', 'administer nodes', 'bypass node access', 'translate configuration'));
+    $admin_user = $this->drupalCreateUser(['access content overview', 'administer nodes', 'bypass node access', 'translate configuration']);
     $this->drupalLogin($admin_user);
 
     $langcode = 'nl';
@@ -362,29 +362,29 @@ class PagerTest extends PluginTestBase {
     // Add Dutch language programmatically.
     ConfigurableLanguage::createFromLangcode($langcode)->save();
 
-    $edit = array(
+    $edit = [
       'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][first]' => '« Eerste',
       'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][previous]' => '‹ Vorige',
       'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][next]' => 'Volgende ›',
       'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][last]' => 'Laatste »',
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/view/content/translate/nl/edit', $edit, t('Save translation'));
 
     // We create 11 nodes, this will give us 3 pages.
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
 
     // Go to the second page so we see both previous and next buttons.
-    $this->drupalGet('nl/admin/content', array('query' => array('page' => 1)));
+    $this->drupalGet('nl/admin/content', ['query' => ['page' => 1]]);
     // Translation mapping..
-    $labels = array(
+    $labels = [
       '« First' => '« Eerste',
       '‹ Previous' => '‹ Vorige',
       'Next ›' => 'Volgende ›',
       'Last »' => 'Laatste »',
-    );
+    ];
     foreach ($labels as $label => $translation) {
       // Check if we can find the translation.
       $this->assertRaw($translation);
@@ -396,7 +396,7 @@ class PagerTest extends PluginTestBase {
    */
   public function testPagerLocale() {
     // Enable locale and language module.
-    $this->container->get('module_installer')->install(array('locale', 'language'));
+    $this->container->get('module_installer')->install(['locale', 'language']);
     $this->resetAll();
     $langcode = 'nl';
 
@@ -407,31 +407,31 @@ class PagerTest extends PluginTestBase {
     ConfigurableLanguage::createFromLangcode($langcode)->save();
 
     // Labels that need translations.
-    $labels = array(
+    $labels = [
       '« First' => '« Eerste',
       '‹ Previous' => '‹ Vorige',
       'Next ›' => 'Volgende ›',
       'Last »' => 'Laatste »',
-    );
+    ];
     foreach ($labels as $label => $translation) {
       // Create source string.
       $source = $this->localeStorage->createString(
-        array(
+        [
           'source' => $label
-        )
+        ]
       );
       $source->save();
       $this->createTranslation($source, $translation, $langcode);
     }
 
     // We create 11 nodes, this will give us 3 pages.
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
 
     // Go to the second page so we see both previous and next buttons.
-    $this->drupalGet('nl/test_pager_full', array('query' => array('page' => 1)));
+    $this->drupalGet('nl/test_pager_full', ['query' => ['page' => 1]]);
     foreach ($labels as $label => $translation) {
       // Check if we can find the translation.
       $this->assertRaw($translation);
@@ -442,11 +442,11 @@ class PagerTest extends PluginTestBase {
    * Creates single translation for source string.
    */
   protected function createTranslation($source, $translation, $langcode) {
-    $values = array(
+    $values = [
       'lid' => $source->lid,
       'language' => $langcode,
       'translation' => $translation,
-    );
+    ];
     return $this->localeStorage->createTranslation($values)->save();
   }
 

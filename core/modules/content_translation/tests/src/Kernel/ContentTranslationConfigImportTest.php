@@ -25,7 +25,7 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'entity_test', 'language', 'content_translation');
+  public static $modules = ['system', 'user', 'entity_test', 'language', 'content_translation'];
 
   /**
    * {@inheritdoc}
@@ -69,22 +69,22 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
     $this->assertIdentical($storage->exists($config_name), FALSE, $config_name . ' not found.');
 
     // Create new config entity.
-    $data = array(
+    $data = [
       'uuid' => 'a019d89b-c4d9-4ed4-b859-894e4e2e93cf',
       'langcode' => 'en',
       'status' => TRUE,
-      'dependencies' => array(
-        'module' => array('content_translation')
-      ),
+      'dependencies' => [
+        'module' => ['content_translation']
+      ],
       'id' => $config_id,
       'target_entity_type_id' => 'entity_test_mul',
       'target_bundle' => 'entity_test_mul',
       'default_langcode' => 'site_default',
       'language_alterable' => FALSE,
-      'third_party_settings' => array(
-        'content_translation' => array('enabled' => TRUE),
-      ),
-    );
+      'third_party_settings' => [
+        'content_translation' => ['enabled' => TRUE],
+      ],
+    ];
     $sync->write($config_name, $data);
     $this->assertIdentical($sync->exists($config_name), TRUE, $config_name . ' found.');
 

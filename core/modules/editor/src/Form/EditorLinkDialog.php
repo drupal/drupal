@@ -32,7 +32,7 @@ class EditorLinkDialog extends FormBase {
     // The default values are set directly from \Drupal::request()->request,
     // provided by the editor plugin opening the dialog.
     $user_input = $form_state->getUserInput();
-    $input = isset($user_input['editor_object']) ? $user_input['editor_object'] : array();
+    $input = isset($user_input['editor_object']) ? $user_input['editor_object'] : [];
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'editor/drupal.editor.dialog';
@@ -41,26 +41,26 @@ class EditorLinkDialog extends FormBase {
 
     // Everything under the "attributes" key is merged directly into the
     // generated link tag's attributes.
-    $form['attributes']['href'] = array(
+    $form['attributes']['href'] = [
       '#title' => $this->t('URL'),
       '#type' => 'textfield',
       '#default_value' => isset($input['href']) ? $input['href'] : '',
       '#maxlength' => 2048,
-    );
+    ];
 
-    $form['actions'] = array(
+    $form['actions'] = [
       '#type' => 'actions',
-    );
-    $form['actions']['save_modal'] = array(
+    ];
+    $form['actions']['save_modal'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
       // No regular submit-handler. This form only works via JavaScript.
-      '#submit' => array(),
-      '#ajax' => array(
+      '#submit' => [],
+      '#ajax' => [
         'callback' => '::submitForm',
         'event' => 'click',
-      ),
-    );
+      ],
+    ];
 
     return $form;
   }

@@ -77,7 +77,7 @@ class EntityUser extends EntityContentBase {
    * {@inheritdoc}
    * @throws \Drupal\migrate\MigrateException
    */
-  public function import(Row $row, array $old_destination_id_values = array()) {
+  public function import(Row $row, array $old_destination_id_values = []) {
     // Do not overwrite the root account password.
     if ($row->getDestinationProperty('uid') == 1) {
       $row->removeDestinationProperty('pass');
@@ -88,7 +88,7 @@ class EntityUser extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
-  protected function save(ContentEntityInterface $entity, array $old_destination_id_values = array()) {
+  protected function save(ContentEntityInterface $entity, array $old_destination_id_values = []) {
     // Do not overwrite the root account password.
     if ($entity->id() != 1) {
       // Set the pre_hashed password so that the PasswordItem field does not hash

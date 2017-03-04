@@ -26,10 +26,10 @@ class ImageWidget extends FileWidget {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'progress_indicator' => 'throbber',
       'preview_image_style' => 'thumbnail',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
@@ -38,7 +38,7 @@ class ImageWidget extends FileWidget {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
 
-    $element['preview_image_style'] = array(
+    $element['preview_image_style'] = [
       '#title' => t('Preview image style'),
       '#type' => 'select',
       '#options' => image_style_options(FALSE),
@@ -46,7 +46,7 @@ class ImageWidget extends FileWidget {
       '#default_value' => $this->getSetting('preview_image_style'),
       '#description' => t('The preview image will be shown while editing the content.'),
       '#weight' => 15,
-    );
+    ];
 
     return $element;
   }
@@ -64,7 +64,7 @@ class ImageWidget extends FileWidget {
     // their styles in code.
     $image_style_setting = $this->getSetting('preview_image_style');
     if (isset($image_styles[$image_style_setting])) {
-      $preview_image_style = t('Preview image style: @style', array('@style' => $image_styles[$image_style_setting]));
+      $preview_image_style = t('Preview image style: @style', ['@style' => $image_styles[$image_style_setting]]);
     }
     else {
       $preview_image_style = t('No preview');
@@ -84,12 +84,12 @@ class ImageWidget extends FileWidget {
     $elements = parent::formMultipleElements($items, $form, $form_state);
 
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
-    $file_upload_help = array(
+    $file_upload_help = [
       '#theme' => 'file_upload_help',
       '#description' => '',
       '#upload_validators' => $elements[0]['#upload_validators'],
       '#cardinality' => $cardinality,
-    );
+    ];
     if ($cardinality == 1) {
       // If there's only one field, return it as delta 0.
       if (empty($elements[0]['#default_value']['fids'])) {
@@ -114,11 +114,11 @@ class ImageWidget extends FileWidget {
 
     // Add upload resolution validation.
     if ($field_settings['max_resolution'] || $field_settings['min_resolution']) {
-      $element['#upload_validators']['file_validate_image_resolution'] = array($field_settings['max_resolution'], $field_settings['min_resolution']);
+      $element['#upload_validators']['file_validate_image_resolution'] = [$field_settings['max_resolution'], $field_settings['min_resolution']];
     }
 
     // If not using custom extension validation, ensure this is an image.
-    $supported_extensions = array('png', 'gif', 'jpg', 'jpeg');
+    $supported_extensions = ['png', 'gif', 'jpg', 'jpeg'];
     $extensions = isset($element['#upload_validators']['file_validate_extensions'][0]) ? $element['#upload_validators']['file_validate_extensions'][0] : implode(' ', $supported_extensions);
     $extensions = array_intersect(explode(' ', $extensions), $supported_extensions);
     $element['#upload_validators']['file_validate_extensions'][0] = implode(' ', $extensions);
@@ -142,7 +142,7 @@ class ImageWidget extends FileWidget {
     if (!empty($default_image['uuid']) && $entity = \Drupal::entityManager()->loadEntityByUuid('file', $default_image['uuid'])) {
       $default_image['fid'] = $entity->id();
     }
-    $element['#default_image'] = !empty($default_image['fid']) ? $default_image : array();
+    $element['#default_image'] = !empty($default_image['fid']) ? $default_image : [];
 
     return $element;
   }
@@ -163,10 +163,10 @@ class ImageWidget extends FileWidget {
     // Add the image preview.
     if (!empty($element['#files']) && $element['#preview_image_style']) {
       $file = reset($element['#files']);
-      $variables = array(
+      $variables = [
         'style_name' => $element['#preview_image_style'],
         'uri' => $file->getFileUri(),
-      );
+      ];
 
       // Determine image dimensions.
       if (isset($element['#value']['width']) && isset($element['#value']['height'])) {
@@ -184,43 +184,43 @@ class ImageWidget extends FileWidget {
         }
       }
 
-      $element['preview'] = array(
+      $element['preview'] = [
         '#weight' => -10,
         '#theme' => 'image_style',
         '#width' => $variables['width'],
         '#height' => $variables['height'],
         '#style_name' => $variables['style_name'],
         '#uri' => $variables['uri'],
-      );
+      ];
 
       // Store the dimensions in the form so the file doesn't have to be
       // accessed again. This is important for remote files.
-      $element['width'] = array(
+      $element['width'] = [
         '#type' => 'hidden',
         '#value' => $variables['width'],
-      );
-      $element['height'] = array(
+      ];
+      $element['height'] = [
         '#type' => 'hidden',
         '#value' => $variables['height'],
-      );
+      ];
     }
     elseif (!empty($element['#default_image'])) {
       $default_image = $element['#default_image'];
       $file = File::load($default_image['fid']);
       if (!empty($file)) {
-        $element['preview'] = array(
+        $element['preview'] = [
           '#weight' => -10,
           '#theme' => 'image_style',
           '#width' => $default_image['width'],
           '#height' => $default_image['height'],
           '#style_name' => $element['#preview_image_style'],
           '#uri' => $file->getFileUri(),
-        );
+        ];
       }
     }
 
     // Add the additional alt and title fields.
-    $element['alt'] = array(
+    $element['alt'] = [
       '#title' => t('Alternative text'),
       '#type' => 'textfield',
       '#default_value' => isset($item['alt']) ? $item['alt'] : '',
@@ -230,9 +230,9 @@ class ImageWidget extends FileWidget {
       '#weight' => -12,
       '#access' => (bool) $item['fids'] && $element['#alt_field'],
       '#required' => $element['#alt_field_required'],
-      '#element_validate' => $element['#alt_field_required'] == 1 ? array(array(get_called_class(), 'validateRequiredFields')) : array(),
-    );
-    $element['title'] = array(
+      '#element_validate' => $element['#alt_field_required'] == 1 ? [[get_called_class(), 'validateRequiredFields']] : [],
+    ];
+    $element['title'] = [
       '#type' => 'textfield',
       '#title' => t('Title'),
       '#default_value' => isset($item['title']) ? $item['title'] : '',
@@ -241,8 +241,8 @@ class ImageWidget extends FileWidget {
       '#weight' => -11,
       '#access' => (bool) $item['fids'] && $element['#title_field'],
       '#required' => $element['#title_field_required'],
-      '#element_validate' => $element['#title_field_required'] == 1 ? array(array(get_called_class(), 'validateRequiredFields')) : array(),
-    );
+      '#element_validate' => $element['#title_field_required'] == 1 ? [[get_called_class(), 'validateRequiredFields']] : [],
+    ];
 
     return parent::process($element, $form_state, $form);
   }

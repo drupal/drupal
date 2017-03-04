@@ -17,7 +17,7 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   /**
    * {@inheritdoc}
@@ -61,7 +61,7 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    * Each node must have an author.
    */
   protected function getAdditionalCacheTagsForEntity(EntityInterface $node) {
-    return array('user:' . $node->getOwnerId(), 'user_view');
+    return ['user:' . $node->getOwnerId(), 'user_view'];
   }
 
   /**

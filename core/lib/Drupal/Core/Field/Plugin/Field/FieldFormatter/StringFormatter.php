@@ -113,7 +113,7 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
     $url = NULL;
     if ($this->getSetting('link_to_entity')) {
       // For the default revision this falls back to 'canonical'

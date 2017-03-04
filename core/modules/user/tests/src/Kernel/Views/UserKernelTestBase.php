@@ -15,14 +15,14 @@ abstract class UserKernelTestBase extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('user_test_views', 'user', 'system', 'field');
+  public static $modules = ['user_test_views', 'user', 'system', 'field'];
 
   /**
    * Users to use during this test.
    *
    * @var array
    */
-  protected $users = array();
+  protected $users = [];
 
   /**
    * The entity storage for roles.
@@ -41,7 +41,7 @@ abstract class UserKernelTestBase extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
-    ViewTestData::createTestViews(get_class($this), array('user_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['user_test_views']);
 
     $this->installEntitySchema('user');
 
@@ -55,33 +55,33 @@ abstract class UserKernelTestBase extends ViewsKernelTestBase {
    */
   protected function setupPermissionTestData() {
     // Setup a role without any permission.
-    $this->roleStorage->create(array('id' => 'authenticated'))
+    $this->roleStorage->create(['id' => 'authenticated'])
       ->save();
-    $this->roleStorage->create(array('id' => 'no_permission'))
+    $this->roleStorage->create(['id' => 'no_permission'])
       ->save();
     // Setup a role with just one permission.
-    $this->roleStorage->create(array('id' => 'one_permission'))
+    $this->roleStorage->create(['id' => 'one_permission'])
       ->save();
-    user_role_grant_permissions('one_permission', array('administer permissions'));
+    user_role_grant_permissions('one_permission', ['administer permissions']);
     // Setup a role with multiple permissions.
-    $this->roleStorage->create(array('id' => 'multiple_permissions'))
+    $this->roleStorage->create(['id' => 'multiple_permissions'])
       ->save();
-    user_role_grant_permissions('multiple_permissions', array('administer permissions', 'administer users', 'access user profiles'));
+    user_role_grant_permissions('multiple_permissions', ['administer permissions', 'administer users', 'access user profiles']);
 
     // Setup a user without an extra role.
     $this->users[] = $account = $this->userStorage->create(['name' => $this->randomString()]);
     $account->save();
     // Setup a user with just the first role (so no permission beside the
     // ones from the authenticated role).
-    $this->users[] = $account = $this->userStorage->create(array('name' => 'first_role'));
+    $this->users[] = $account = $this->userStorage->create(['name' => 'first_role']);
     $account->addRole('no_permission');
     $account->save();
     // Setup a user with just the second role (so one additional permission).
-    $this->users[] = $account = $this->userStorage->create(array('name' => 'second_role'));
+    $this->users[] = $account = $this->userStorage->create(['name' => 'second_role']);
     $account->addRole('one_permission');
     $account->save();
     // Setup a user with both the second and the third role.
-    $this->users[] = $account = $this->userStorage->create(array('name' => 'second_third_role'));
+    $this->users[] = $account = $this->userStorage->create(['name' => 'second_third_role']);
     $account->addRole('one_permission');
     $account->addRole('multiple_permissions');
     $account->save();

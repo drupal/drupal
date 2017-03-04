@@ -14,7 +14,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy');
+  public static $modules = ['taxonomy'];
 
   /**
    * Vocabulary for testing.
@@ -42,12 +42,12 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     $taxonomy_storage = $this->container->get('entity.manager')->getStorage('taxonomy_term');
 
     // Indent the second term under the first one.
-    $edit = array(
+    $edit = [
       'terms[tid:' . $term2->id() . ':0][term][tid]' => 2,
       'terms[tid:' . $term2->id() . ':0][term][parent]' => 1,
       'terms[tid:' . $term2->id() . ':0][term][depth]' => 1,
       'terms[tid:' . $term2->id() . ':0][weight]' => 1,
-    );
+    ];
 
     // Submit the edited form and check for HTML indentation element presence.
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/overview', $edit, t('Save'));
@@ -58,12 +58,12 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     $this->assertEqual(key($parents), 1, 'Term 1 is the term 2\'s parent');
 
     // Move the second term back out to the root level.
-    $edit = array(
+    $edit = [
       'terms[tid:' . $term2->id() . ':0][term][tid]' => 2,
       'terms[tid:' . $term2->id() . ':0][term][parent]' => 0,
       'terms[tid:' . $term2->id() . ':0][term][depth]' => 0,
       'terms[tid:' . $term2->id() . ':0][weight]' => 1,
-    );
+    ];
 
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid' ) . '/overview', $edit, t('Save'));
     // All terms back at the root level, no indentation should be present.

@@ -18,7 +18,7 @@ class ConfigExportUITest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('config', 'config_test');
+  public static $modules = ['config', 'config_test'];
 
   /**
    * {@inheritdoc}
@@ -27,13 +27,13 @@ class ConfigExportUITest extends WebTestBase {
     parent::setUp();
 
     // Set up an override.
-    $settings['config']['system.maintenance']['message'] = (object) array(
+    $settings['config']['system.maintenance']['message'] = (object) [
       'value' => 'Foo',
       'required' => TRUE,
-    );
+    ];
     $this->writeSettings($settings);
 
-    $this->drupalLogin($this->drupalCreateUser(array('export configuration')));
+    $this->drupalLogin($this->drupalCreateUser(['export configuration']));
   }
 
   /**
@@ -45,7 +45,7 @@ class ConfigExportUITest extends WebTestBase {
     $this->assertFieldById('edit-submit', t('Export'));
 
     // Submit the export form and verify response.
-    $this->drupalPostForm('admin/config/development/configuration/full/export', array(), t('Export'));
+    $this->drupalPostForm('admin/config/development/configuration/full/export', [], t('Export'));
     $this->assertResponse(200, 'User can access the download callback.');
 
     // Test if header contains file name with hostname and timestamp.
@@ -70,7 +70,7 @@ class ConfigExportUITest extends WebTestBase {
     // Prepare the list of config files from active storage, see
     // \Drupal\config\Controller\ConfigController::downloadExport().
     $storage_active = $this->container->get('config.storage');
-    $config_files = array();
+    $config_files = [];
     foreach ($storage_active->listAll() as $config_name) {
       $config_files[] = $config_name . '.yml';
     }
@@ -80,7 +80,7 @@ class ConfigExportUITest extends WebTestBase {
 
     // Ensure the test configuration override is in effect but was not exported.
     $this->assertIdentical(\Drupal::config('system.maintenance')->get('message'), 'Foo');
-    $archiver->extract(file_directory_temp(), array('system.maintenance.yml'));
+    $archiver->extract(file_directory_temp(), ['system.maintenance.yml']);
     $file_contents = file_get_contents(file_directory_temp() . '/' . 'system.maintenance.yml');
     $exported = Yaml::decode($file_contents);
     $this->assertNotIdentical($exported['message'], 'Foo');

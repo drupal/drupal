@@ -27,7 +27,7 @@ class MigrateExternalTranslatedTest extends MigrateTestBase {
   public function setUp() {
     parent::setUp();
     $this->installSchema('system', ['sequences']);
-    $this->installSchema('node', array('node_access'));
+    $this->installSchema('node', ['node_access']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
 

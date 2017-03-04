@@ -14,7 +14,7 @@ class RegressionTest extends DatabaseTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'user');
+  public static $modules = ['node', 'user'];
 
   /**
    * Ensures that non-ASCII UTF-8 data is stored in the database properly.
@@ -23,13 +23,13 @@ class RegressionTest extends DatabaseTestBase {
     // That's a 255 character UTF-8 string.
     $job = str_repeat("é", 255);
     db_insert('test')
-      ->fields(array(
+      ->fields([
         'name' => $this->randomMachineName(),
         'age' => 20,
         'job' => $job,
-      ))->execute();
+      ])->execute();
 
-    $from_database = db_query('SELECT job FROM {test} WHERE job = :job', array(':job' => $job))->fetchField();
+    $from_database = db_query('SELECT job FROM {test} WHERE job = :job', [':job' => $job])->fetchField();
     $this->assertIdentical($job, $from_database, 'The database handles UTF-8 characters cleanly.');
   }
 

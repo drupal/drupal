@@ -61,7 +61,7 @@ abstract class RssPluginBase extends RowPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['view_mode'] = array('default' => 'default');
+    $options['view_mode'] = ['default' => 'default'];
 
     return $options;
   }
@@ -72,12 +72,12 @@ abstract class RssPluginBase extends RowPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['view_mode'] = array(
+    $form['view_mode'] = [
       '#type' => 'select',
       '#title' => $this->t('Display type'),
       '#options' => $this->buildOptionsForm_summary_options(),
       '#default_value' => $this->options['view_mode'],
-    );
+    ];
   }
 
   /**
@@ -85,7 +85,7 @@ abstract class RssPluginBase extends RowPluginBase {
    */
   public function buildOptionsForm_summary_options() {
     $view_modes = $this->entityManager->getViewModes($this->entityTypeId);
-    $options = array();
+    $options = [];
     foreach ($view_modes as $mode => $settings) {
       $options[$mode] = $settings['label'];
     }

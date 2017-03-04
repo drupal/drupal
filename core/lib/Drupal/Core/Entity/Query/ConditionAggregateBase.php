@@ -11,13 +11,13 @@ abstract class ConditionAggregateBase extends ConditionFundamentals implements C
    * {@inheritdoc}
    */
   public function condition($field, $function = NULL, $value = NULL, $operator = NULL, $langcode = NULL) {
-    $this->conditions[] = array(
+    $this->conditions[] = [
       'field' => $field,
       'function' => $function,
       'value' => $value,
       'operator' => $operator,
       'langcode' => $langcode,
-    );
+    ];
 
     return $this;
   }

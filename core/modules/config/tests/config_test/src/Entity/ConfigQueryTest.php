@@ -38,6 +38,6 @@ class ConfigQueryTest extends ConfigTest {
    *
    * @var array
    */
-  public $array = array();
+  public $array = [];
 
 }

@@ -18,14 +18,14 @@ class FieldEntityOperationsTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_entity_operations');
+  public static $testViews = ['test_entity_operations'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node', 'language', 'views_ui');
+  public static $modules = ['node', 'language', 'views_ui'];
 
   function setUp() {
     parent::setUp();
@@ -46,7 +46,7 @@ class FieldEntityOperationsTest extends HandlerTestBase {
 
     // Create some test entities. Every other entity is Hungarian while all
     // have a Spanish translation.
-    $entities = array();
+    $entities = [];
     for ($i = 0; $i < 5; $i++) {
       $entity = Node::create([
         'title' => $this->randomString(),
@@ -60,7 +60,7 @@ class FieldEntityOperationsTest extends HandlerTestBase {
       $entities[$i] = $entity;
     }
 
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer nodes', 'bypass node access'));
+    $admin_user = $this->drupalCreateUser(['access administration pages', 'administer nodes', 'bypass node access']);
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('test-entity-operations');
     /** @var $entity \Drupal\entity_test\Entity\EntityTest */
@@ -72,8 +72,8 @@ class FieldEntityOperationsTest extends HandlerTestBase {
         $this->assertTrue(count($operations) > 0, 'There are operations.');
         foreach ($operations as $operation) {
           $expected_destination = Url::fromUri('internal:/test-entity-operations')->toString();
-          $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[@href=:path and text()=:title]', array(':path' => $operation['url']->toString() . '?destination=' . $expected_destination, ':title' => $operation['title']));
-          $this->assertEqual(count($result), 1, t('Found entity @operation link with destination parameter.', array('@operation' => $operation['title'])));
+          $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[@href=:path and text()=:title]', [':path' => $operation['url']->toString() . '?destination=' . $expected_destination, ':title' => $operation['title']]);
+          $this->assertEqual(count($result), 1, t('Found entity @operation link with destination parameter.', ['@operation' => $operation['title']]));
           // Entities which were created in Hungarian should link to the Hungarian
           // edit form, others to the English one (which has no path prefix here).
           $base_path = \Drupal::request()->getBasePath();

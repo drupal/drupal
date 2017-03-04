@@ -38,21 +38,21 @@ class Number extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
       '#step' => 1,
-      '#process' => array(
-        array($class, 'processAjaxForm'),
-      ),
-      '#element_validate' => array(
-        array($class, 'validateNumber'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderNumber'),
-      ),
+      '#process' => [
+        [$class, 'processAjaxForm'],
+      ],
+      '#element_validate' => [
+        [$class, 'validateNumber'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderNumber'],
+      ],
       '#theme' => 'input__number',
-      '#theme_wrappers' => array('form_element'),
-    );
+      '#theme_wrappers' => ['form_element'],
+    ];
   }
 
   /**
@@ -70,18 +70,18 @@ class Number extends FormElement {
 
     // Ensure the input is numeric.
     if (!is_numeric($value)) {
-      $form_state->setError($element, t('%name must be a number.', array('%name' => $name)));
+      $form_state->setError($element, t('%name must be a number.', ['%name' => $name]));
       return;
     }
 
     // Ensure that the input is greater than the #min property, if set.
     if (isset($element['#min']) && $value < $element['#min']) {
-      $form_state->setError($element, t('%name must be higher than or equal to %min.', array('%name' => $name, '%min' => $element['#min'])));
+      $form_state->setError($element, t('%name must be higher than or equal to %min.', ['%name' => $name, '%min' => $element['#min']]));
     }
 
     // Ensure that the input is less than the #max property, if set.
     if (isset($element['#max']) && $value > $element['#max']) {
-      $form_state->setError($element, t('%name must be lower than or equal to %max.', array('%name' => $name, '%max' => $element['#max'])));
+      $form_state->setError($element, t('%name must be lower than or equal to %max.', ['%name' => $name, '%max' => $element['#max']]));
     }
 
     if (isset($element['#step']) && strtolower($element['#step']) != 'any') {
@@ -90,7 +90,7 @@ class Number extends FormElement {
       $offset = isset($element['#min']) ? $element['#min'] : 0.0;
 
       if (!NumberUtility::validStep($value, $element['#step'], $offset)) {
-        $form_state->setError($element, t('%name is not a valid number.', array('%name' => $name)));
+        $form_state->setError($element, t('%name is not a valid number.', ['%name' => $name]));
       }
     }
   }
@@ -108,8 +108,8 @@ class Number extends FormElement {
    */
   public static function preRenderNumber($element) {
     $element['#attributes']['type'] = 'number';
-    Element::setAttributes($element, array('id', 'name', 'value', 'step', 'min', 'max', 'placeholder', 'size'));
-    static::setAttributes($element, array('form-number'));
+    Element::setAttributes($element, ['id', 'name', 'value', 'step', 'min', 'max', 'placeholder', 'size']);
+    static::setAttributes($element, ['form-number']);
 
     return $element;
   }

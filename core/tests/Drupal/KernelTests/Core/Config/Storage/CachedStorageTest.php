@@ -37,7 +37,7 @@ class CachedStorageTest extends ConfigStorageTestBase {
     $this->storage = new CachedStorage($this->fileStorage, \Drupal::service('cache.config'));
     $this->cache = \Drupal::service('cache_factory')->get('config');
     // ::listAll() verifications require other configuration data to exist.
-    $this->storage->write('system.performance', array());
+    $this->storage->write('system.performance', []);
   }
 
   /**

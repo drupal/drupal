@@ -34,7 +34,7 @@ class ConfigSchemaDiscovery implements DiscoveryInterface {
    * {@inheritdoc}
    */
   public function getDefinitions() {
-    $definitions = array();
+    $definitions = [];
     foreach ($this->schemaStorage->readMultiple($this->schemaStorage->listAll()) as $schema) {
       foreach ($schema as $type => $definition) {
         $definitions[$type] = $definition;

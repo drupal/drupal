@@ -111,11 +111,11 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'language',
     'content_translation',
     'node',
-  );
+  ];
 
   protected function setUp() {
     parent::setUp();
@@ -203,20 +203,20 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    * Adds term reference field for the article content type.
    */
   protected function setUpEntityReferenceField() {
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => $this->referenceFieldName,
       'entity_type' => $this->testEntityTypeName,
       'type' => 'entity_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       'translatable' => $this->translatable,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
+      'settings' => [
+        'allowed_values' => [
+          [
             'target_type' => $this->testEntityTypeName,
-          ),
-        ),
-      ),
-    ))->save();
+          ],
+        ],
+      ],
+    ])->save();
 
     FieldConfig::create([
       'field_name' => $this->referenceFieldName,
@@ -225,14 +225,14 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     ])
       ->save();
     entity_get_form_display($this->testEntityTypeName, $this->referrerType->id(), 'default')
-      ->setComponent($this->referenceFieldName, array(
+      ->setComponent($this->referenceFieldName, [
         'type' => 'entity_reference_autocomplete',
-      ))
+      ])
       ->save();
     entity_get_display($this->testEntityTypeName, $this->referrerType->id(), 'default')
-      ->setComponent($this->referenceFieldName, array(
+      ->setComponent($this->referenceFieldName, [
         'type' => 'entity_reference_label',
-      ))
+      ])
       ->save();
   }
 
@@ -240,14 +240,14 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    * Create content types.
    */
   protected function setUpContentTypes() {
-    $this->referrerType = $this->drupalCreateContentType(array(
+    $this->referrerType = $this->drupalCreateContentType([
         'type' => 'referrer',
         'name' => 'Referrer',
-      ));
-    $this->referencedType = $this->drupalCreateContentType(array(
+      ]);
+    $this->referencedType = $this->drupalCreateContentType([
         'type' => 'referenced_page',
         'name' => 'Referenced Page',
-      ));
+      ]);
   }
 
   /**
@@ -255,19 +255,19 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    */
   protected function createReferencedEntityWithTranslation() {
     /** @var \Drupal\node\Entity\Node $node */
-    $node = entity_create($this->testEntityTypeName, array(
+    $node = entity_create($this->testEntityTypeName, [
       'title' => $this->originalLabel,
       'type' => $this->referencedType->id(),
-      'description' => array(
+      'description' => [
         'value' => $this->randomMachineName(),
         'format' => 'basic_html',
-      ),
+      ],
       'langcode' => $this->baseLangcode,
-    ));
+    ]);
     $node->save();
-    $node->addTranslation($this->translateToLangcode, array(
+    $node->addTranslation($this->translateToLangcode, [
       'title' => $this->translatedLabel,
-    ));
+    ]);
     $node->save();
 
     return $node;
@@ -279,15 +279,15 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    */
   protected function createNotTranslatedReferencedEntity() {
     /** @var \Drupal\node\Entity\Node $node */
-    $node = entity_create($this->testEntityTypeName, array(
+    $node = entity_create($this->testEntityTypeName, [
       'title' => $this->labelOfNotTranslatedReference,
       'type' => $this->referencedType->id(),
-      'description' => array(
+      'description' => [
         'value' => $this->randomMachineName(),
         'format' => 'basic_html',
-      ),
+      ],
       'langcode' => $this->baseLangcode,
-    ));
+    ]);
     $node->save();
 
     return $node;
@@ -298,19 +298,19 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    */
   protected function createReferrerEntity($translatable = TRUE) {
     /** @var \Drupal\node\Entity\Node $node */
-    $node = entity_create($this->testEntityTypeName, array(
+    $node = entity_create($this->testEntityTypeName, [
       'title' => $this->randomMachineName(),
       'type' => $this->referrerType->id(),
-      'description' => array(
+      'description' => [
         'value' => $this->randomMachineName(),
         'format' => 'basic_html',
-      ),
-      $this->referenceFieldName => array(
-        array('target_id' => $this->referencedEntityWithTranslation->id()),
-        array('target_id' => $this->referencedEntityWithoutTranslation->id()),
-      ),
+      ],
+      $this->referenceFieldName => [
+        ['target_id' => $this->referencedEntityWithTranslation->id()],
+        ['target_id' => $this->referencedEntityWithoutTranslation->id()],
+      ],
       'langcode' => $this->baseLangcode,
-    ));
+    ]);
     if ($translatable) {
       $node->addTranslation($this->translateToLangcode, $node->toArray());
     }

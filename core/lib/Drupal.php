@@ -566,7 +566,7 @@ class Drupal {
    *   Instead create a \Drupal\Core\Url object directly, for example using
    *   Url::fromRoute().
    */
-  public static function url($route_name, $route_parameters = array(), $options = array(), $collect_bubbleable_metadata = FALSE) {
+  public static function url($route_name, $route_parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
     return static::getContainer()->get('url_generator')->generateFromRoute($route_name, $route_parameters, $options, $collect_bubbleable_metadata);
   }
 

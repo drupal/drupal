@@ -88,7 +88,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
     // in to many different user accounts.  We have a reasonably high limit
     // since there may be only one apparent IP for all users at an institution.
     if ($this->flood->isAllowed('basic_auth.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
-      $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $username, 'status' => 1));
+      $accounts = $this->entityManager->getStorage('user')->loadByProperties(['name' => $username, 'status' => 1]);
       $account = reset($accounts);
       if ($account) {
         if ($flood_config->get('uid_only')) {
@@ -127,9 +127,9 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
    */
   public function challengeException(Request $request, \Exception $previous) {
     $site_name = $this->configFactory->get('system.site')->get('name');
-    $challenge = SafeMarkup::format('Basic realm="@realm"', array(
+    $challenge = SafeMarkup::format('Basic realm="@realm"', [
       '@realm' => !empty($site_name) ? $site_name : 'Access restricted',
-    ));
+    ]);
     return new UnauthorizedHttpException((string) $challenge, 'No authentication credentials provided.', $previous);
   }
 

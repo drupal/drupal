@@ -16,7 +16,7 @@ class AutocompleteController {
    *   A JSON response.
    */
   public function autocomplete1() {
-    return new JsonResponse(array('key' => 'value'));
+    return new JsonResponse(['key' => 'value']);
   }
 
 }

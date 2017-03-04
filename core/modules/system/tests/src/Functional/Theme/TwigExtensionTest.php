@@ -16,11 +16,11 @@ class TwigExtensionTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('theme_test', 'twig_extension_test');
+  public static $modules = ['theme_test', 'twig_extension_test'];
 
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->install(array('test_theme'));
+    \Drupal::service('theme_handler')->install(['test_theme']);
   }
 
   /**

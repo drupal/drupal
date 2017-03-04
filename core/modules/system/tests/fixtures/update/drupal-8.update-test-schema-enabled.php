@@ -10,20 +10,20 @@ use Drupal\Core\Database\Database;
 $connection = Database::getConnection();
 
 // Create the table.
-$connection->schema()->createTable('update_test_schema_table', array(
-  'fields' => array(
-    'a' => array(
+$connection->schema()->createTable('update_test_schema_table', [
+  'fields' => [
+    'a' => [
       'type' => 'int',
       'not null' => TRUE,
       'size' => 'normal',
-    ),
-    'b' => array(
+    ],
+    'b' => [
       'type' => 'blob',
       'not null' => FALSE,
       'size' => 'normal',
-    ),
-  ),
-));
+    ],
+  ],
+]);
 
 // Set the schema version.
 $connection->merge('key_value')

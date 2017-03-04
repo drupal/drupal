@@ -105,7 +105,7 @@ class BookOutline {
   public function childrenLinks(array $book_link) {
     $flat = $this->bookManager->bookTreeGetFlat($book_link);
 
-    $children = array();
+    $children = [];
 
     if ($book_link['has_children']) {
       // Walk through the array until we find the current page.

@@ -91,13 +91,13 @@ class ConfigNamesMapperTest extends UnitTestCase {
   protected function setUp() {
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
 
-    $this->pluginDefinition = array(
+    $this->pluginDefinition = [
       'class' => '\Drupal\config_translation\ConfigNamesMapper',
       'base_route_name' => 'system.site_information_settings',
       'title' => 'System information',
-      'names' => array('system.site'),
+      'names' => ['system.site'],
       'weight' => 42,
-    );
+    ];
 
     $this->typedConfigManager = $this->getMock('Drupal\Core\Config\TypedConfigManagerInterface');
 
@@ -156,7 +156,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   public function testGetBaseRouteParameters() {
     $result = $this->configNamesMapper->getBaseRouteParameters();
-    $this->assertSame(array(), $result);
+    $this->assertSame([], $result);
   }
 
   /**
@@ -193,7 +193,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   public function testGetOverviewRouteParameters() {
     $result = $this->configNamesMapper->getOverviewRouteParameters();
-    $this->assertSame(array(), $result);
+    $this->assertSame([], $result);
   }
 
   /**
@@ -201,13 +201,13 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   public function testGetOverviewRoute() {
     $expected = new Route('/admin/config/system/site-information/translate',
-      array(
+      [
         '_controller' => '\Drupal\config_translation\Controller\ConfigTranslationController::itemPage',
         'plugin_id' => 'system.site_information_settings',
-      ),
-      array(
+      ],
+      [
         '_config_translation_overview_access' => 'TRUE',
-      )
+      ]
     );
     $result = $this->configNamesMapper->getOverviewRoute();
     $this->assertSame(serialize($expected), serialize($result));
@@ -242,7 +242,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $route_match = new RouteMatch('example', new Route('/test/{langcode}'), ['langcode' => 'xx']);
     $this->configNamesMapper->populateFromRouteMatch($route_match);
 
-    $expected = array('langcode' => 'xx');
+    $expected = ['langcode' => 'xx'];
     $result = $this->configNamesMapper->getAddRouteParameters();
     $this->assertSame($expected, $result);
   }
@@ -252,13 +252,13 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   public function testGetAddRoute() {
     $expected = new Route('/admin/config/system/site-information/translate/{langcode}/add',
-      array(
+      [
         '_form' => '\Drupal\config_translation\Form\ConfigTranslationAddForm',
         'plugin_id' => 'system.site_information_settings',
-      ),
-      array(
+      ],
+      [
         '_config_translation_form_access' => 'TRUE',
-      )
+      ]
     );
     $result = $this->configNamesMapper->getAddRoute();
     $this->assertSame(serialize($expected), serialize($result));
@@ -280,7 +280,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $route_match = new RouteMatch('example', new Route('/test/{langcode}'), ['langcode' => 'xx']);
     $this->configNamesMapper->populateFromRouteMatch($route_match);
 
-    $expected = array('langcode' => 'xx');
+    $expected = ['langcode' => 'xx'];
     $result = $this->configNamesMapper->getEditRouteParameters();
     $this->assertSame($expected, $result);
   }
@@ -290,13 +290,13 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   public function testGetEditRoute() {
     $expected = new Route('/admin/config/system/site-information/translate/{langcode}/edit',
-      array(
+      [
         '_form' => '\Drupal\config_translation\Form\ConfigTranslationEditForm',
         'plugin_id' => 'system.site_information_settings',
-      ),
-      array(
+      ],
+      [
         '_config_translation_form_access' => 'TRUE',
-      )
+      ]
     );
     $result = $this->configNamesMapper->getEditRoute();
     $this->assertSame(serialize($expected), serialize($result));
@@ -318,7 +318,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $route_match = new RouteMatch('example', new Route('/test/{langcode}'), ['langcode' => 'xx']);
     $this->configNamesMapper->populateFromRouteMatch($route_match);
 
-    $expected = array('langcode' => 'xx');    $result = $this->configNamesMapper->getDeleteRouteParameters();
+    $expected = ['langcode' => 'xx'];    $result = $this->configNamesMapper->getDeleteRouteParameters();
     $this->assertSame($expected, $result);
   }
 
@@ -327,13 +327,13 @@ class ConfigNamesMapperTest extends UnitTestCase {
    */
   public function testGetDeleteRoute() {
     $expected = new Route('/admin/config/system/site-information/translate/{langcode}/delete',
-      array(
+      [
         '_form' => '\Drupal\config_translation\Form\ConfigTranslationDeleteForm',
         'plugin_id' => 'system.site_information_settings',
-      ),
-      array(
+      ],
+      [
         '_config_translation_form_access' => 'TRUE',
-      )
+      ]
     );
     $result = $this->configNamesMapper->getDeleteRoute();
     $this->assertSame(serialize($expected), serialize($result));
@@ -403,38 +403,38 @@ class ConfigNamesMapperTest extends UnitTestCase {
   public function testGetLangcode() {
     // Test that the getLangcode() falls back to 'en', if no explicit language
     // code is provided.
-    $config_factory = $this->getConfigFactoryStub(array(
-      'system.site' => array('key' => 'value'),
-    ));
+    $config_factory = $this->getConfigFactoryStub([
+      'system.site' => ['key' => 'value'],
+    ]);
     $this->configNamesMapper->setConfigFactory($config_factory);
     $result = $this->configNamesMapper->getLangcode();
     $this->assertSame('en', $result);
 
     // Test that getLangcode picks up the language code provided by the
     // configuration.
-    $config_factory = $this->getConfigFactoryStub(array(
-      'system.site' => array('langcode' => 'xx'),
-    ));
+    $config_factory = $this->getConfigFactoryStub([
+      'system.site' => ['langcode' => 'xx'],
+    ]);
     $this->configNamesMapper->setConfigFactory($config_factory);
     $result = $this->configNamesMapper->getLangcode();
     $this->assertSame('xx', $result);
 
     // Test that getLangcode() works for multiple configuration names.
     $this->configNamesMapper->addConfigName('system.maintenance');
-    $config_factory = $this->getConfigFactoryStub(array(
-      'system.site' => array('langcode' => 'xx'),
-      'system.maintenance' => array('langcode' => 'xx'),
-    ));
+    $config_factory = $this->getConfigFactoryStub([
+      'system.site' => ['langcode' => 'xx'],
+      'system.maintenance' => ['langcode' => 'xx'],
+    ]);
     $this->configNamesMapper->setConfigFactory($config_factory);
     $result = $this->configNamesMapper->getLangcode();
     $this->assertSame('xx', $result);
 
     // Test that getLangcode() throws an exception when different language codes
     // are given.
-    $config_factory = $this->getConfigFactoryStub(array(
-      'system.site' => array('langcode' => 'xx'),
-      'system.maintenance' => array('langcode' => 'yy'),
-    ));
+    $config_factory = $this->getConfigFactoryStub([
+      'system.site' => ['langcode' => 'xx'],
+      'system.maintenance' => ['langcode' => 'yy'],
+    ]);
     $this->configNamesMapper->setConfigFactory($config_factory);
     try {
       $this->configNamesMapper->getLangcode();
@@ -448,22 +448,22 @@ class ConfigNamesMapperTest extends UnitTestCase {
    * Tests ConfigNamesMapper::getConfigData().
    */
   public function testGetConfigData() {
-    $configs = array(
-      'system.site' => array(
+    $configs = [
+      'system.site' => [
         'name' => 'Drupal',
         'slogan' => 'Come for the software, stay for the community!',
-      ),
-      'system.maintenance' => array(
+      ],
+      'system.maintenance' => [
         'enabled' => FALSE,
         'message' => '@site is currently under maintenance.',
-      ),
-      'system.rss' => array(
-        'items' => array(
+      ],
+      'system.rss' => [
+        'items' => [
           'limit' => 10,
           'view_mode' => 'rss',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     $this->configNamesMapper->setConfigNames(array_keys($configs));
     $config_factory = $this->getConfigFactoryStub($configs);
@@ -489,9 +489,9 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $config_names = range(1, count($mock_return_values));
     $this->configNamesMapper->setConfigNames($config_names);
 
-    $map = array();
+    $map = [];
     foreach ($config_names as $i => $config_name) {
-      $map[] = array($config_name, $mock_return_values[$i]);
+      $map[] = [$config_name, $mock_return_values[$i]];
     }
     $this->typedConfigManager
       ->expects($this->any())
@@ -512,12 +512,12 @@ class ConfigNamesMapperTest extends UnitTestCase {
    *   ConfigNamesMapper::hasSchema() as the second value.
    */
   public function providerTestHasSchema() {
-    return array(
-      array(array(TRUE), TRUE),
-      array(array(FALSE), FALSE),
-      array(array(TRUE, TRUE, TRUE), TRUE),
-      array(array(TRUE, FALSE, TRUE), FALSE),
-    );
+    return [
+      [[TRUE], TRUE],
+      [[FALSE], FALSE],
+      [[TRUE, TRUE, TRUE], TRUE],
+      [[TRUE, FALSE, TRUE], FALSE],
+    ];
   }
 
   /**
@@ -536,9 +536,9 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $config_names = range(1, count($mock_return_values));
     $this->configNamesMapper->setConfigNames($config_names);
 
-    $map = array();
+    $map = [];
     foreach ($config_names as $i => $config_name) {
-      $map[] = isset($mock_return_values[$i]) ? array($config_name, $mock_return_values[$i]) : array();
+      $map[] = isset($mock_return_values[$i]) ? [$config_name, $mock_return_values[$i]] : [];
     }
     $this->configMapperManager
       ->expects($this->any())
@@ -559,14 +559,14 @@ class ConfigNamesMapperTest extends UnitTestCase {
    *   ConfigNamesMapper::hasTranslatable() as the second value.
    */
   public function providerTestHasTranslatable() {
-    return array(
-      array(array(), FALSE),
-      array(array(TRUE), TRUE),
-      array(array(FALSE), FALSE),
-      array(array(TRUE, TRUE, TRUE), TRUE),
-      array(array(FALSE, FALSE, FALSE), FALSE),
-      array(array(TRUE, FALSE, TRUE), TRUE),
-    );
+    return [
+      [[], FALSE],
+      [[TRUE], TRUE],
+      [[FALSE], FALSE],
+      [[TRUE, TRUE, TRUE], TRUE],
+      [[FALSE, FALSE, FALSE], FALSE],
+      [[TRUE, FALSE, TRUE], TRUE],
+    ];
   }
 
   /**
@@ -587,9 +587,9 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $config_names = range(1, count($mock_return_values));
     $this->configNamesMapper->setConfigNames($config_names);
 
-    $map = array();
+    $map = [];
     foreach ($config_names as $i => $config_name) {
-      $map[] = array($config_name, $language->getId(), $mock_return_values[$i]);
+      $map[] = [$config_name, $language->getId(), $mock_return_values[$i]];
     }
     $this->localeConfigManager
       ->expects($this->any())
@@ -610,13 +610,13 @@ class ConfigNamesMapperTest extends UnitTestCase {
    *   ConfigNamesMapper::hasTranslation() as the second value.
    */
   public function providerTestHasTranslation() {
-    return array(
-      array(array(TRUE), TRUE),
-      array(array(FALSE), FALSE),
-      array(array(TRUE, TRUE, TRUE), TRUE),
-      array(array(FALSE, FALSE, TRUE), TRUE),
-      array(array(FALSE, FALSE, FALSE), FALSE),
-    );
+    return [
+      [[TRUE], TRUE],
+      [[FALSE], FALSE],
+      [[TRUE, TRUE, TRUE], TRUE],
+      [[FALSE, FALSE, TRUE], TRUE],
+      [[FALSE, FALSE, FALSE], FALSE],
+    ];
   }
 
   /**
@@ -631,12 +631,12 @@ class ConfigNamesMapperTest extends UnitTestCase {
    * Tests ConfigNamesMapper::hasTranslation().
    */
   public function testGetOperations() {
-    $expected = array(
-      'translate' => array(
+    $expected = [
+      'translate' => [
         'title' => 'Translate',
         'url' => Url::fromRoute('config_translation.item.overview.system.site_information_settings'),
-      ),
-    );
+      ],
+    ];
     $result = $this->configNamesMapper->getOperations();
     $this->assertEquals($expected, $result);
   }

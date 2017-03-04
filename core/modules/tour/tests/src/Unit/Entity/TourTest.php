@@ -29,7 +29,7 @@ class TourTest extends UnitTestCase {
   public function testHasMatchingRoute($routes, $route_name, $route_params, $result) {
     $tour = $this->getMockBuilder('\Drupal\tour\Entity\Tour')
       ->disableOriginalConstructor()
-      ->setMethods(array('getRoutes'))
+      ->setMethods(['getRoutes'])
       ->getMock();
 
     $tour->expects($this->any())
@@ -45,94 +45,94 @@ class TourTest extends UnitTestCase {
    * Provides sample routes for testing.
    */
   public function routeProvider() {
-    return array(
+    return [
       // Simple match.
-      array(
-        array(
-          array('route_name' => 'some.route'),
-        ),
+      [
+        [
+          ['route_name' => 'some.route'],
+        ],
         'some.route',
-        array(),
+        [],
         TRUE,
-      ),
+      ],
       // Simple non-match.
-      array(
-        array(
-          array('route_name' => 'another.route'),
-        ),
+      [
+        [
+          ['route_name' => 'another.route'],
+        ],
         'some.route',
-        array(),
+        [],
         FALSE,
-      ),
+      ],
       // Empty params.
-      array(
-        array(
-          array(
+      [
+        [
+          [
             'route_name' => 'some.route',
-            'route_params' => array('foo' => 'bar'),
-          ),
-        ),
+            'route_params' => ['foo' => 'bar'],
+          ],
+        ],
         'some.route',
-        array(),
+        [],
         FALSE,
-      ),
+      ],
       // Match on params.
-      array(
-        array(
-          array(
+      [
+        [
+          [
             'route_name' => 'some.route',
-            'route_params' => array('foo' => 'bar'),
-          ),
-        ),
+            'route_params' => ['foo' => 'bar'],
+          ],
+        ],
         'some.route',
-        array('foo' => 'bar'),
+        ['foo' => 'bar'],
         TRUE,
-      ),
+      ],
       // Non-matching params.
-      array(
-        array(
-          array(
+      [
+        [
+          [
             'route_name' => 'some.route',
-            'route_params' => array('foo' => 'bar'),
-          ),
-        ),
+            'route_params' => ['foo' => 'bar'],
+          ],
+        ],
         'some.route',
-        array('bar' => 'foo'),
+        ['bar' => 'foo'],
         FALSE,
-      ),
+      ],
       // One matching, one not.
-      array(
-        array(
-          array(
+      [
+        [
+          [
             'route_name' => 'some.route',
-            'route_params' => array('foo' => 'bar'),
-          ),
-          array(
+            'route_params' => ['foo' => 'bar'],
+          ],
+          [
             'route_name' => 'some.route',
-            'route_params' => array('bar' => 'foo'),
-          ),
-        ),
+            'route_params' => ['bar' => 'foo'],
+          ],
+        ],
         'some.route',
-        array('bar' => 'foo'),
+        ['bar' => 'foo'],
         TRUE,
-      ),
+      ],
       // One matching, one not.
-      array(
-        array(
-          array(
+      [
+        [
+          [
             'route_name' => 'some.route',
-            'route_params' => array('foo' => 'bar'),
-          ),
-          array(
+            'route_params' => ['foo' => 'bar'],
+          ],
+          [
             'route_name' => 'some.route',
-            'route_params' => array('foo' => 'baz'),
-          ),
-        ),
+            'route_params' => ['foo' => 'baz'],
+          ],
+        ],
         'some.route',
-        array('foo' => 'baz'),
+        ['foo' => 'baz'],
         TRUE,
-      ),
-    );
+      ],
+    ];
   }
 
 }

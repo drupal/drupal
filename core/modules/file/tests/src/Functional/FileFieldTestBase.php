@@ -18,7 +18,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   *
   * @var array
   */
-  public static $modules = array('node', 'file', 'file_module_test', 'field_ui');
+  public static $modules = ['node', 'file', 'file_module_test', 'field_ui'];
 
   /**
    * An user with administration permissions.
@@ -29,9 +29,9 @@ abstract class FileFieldTestBase extends BrowserTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer permissions', 'administer content types', 'administer node fields', 'administer node display', 'administer nodes', 'bypass node access'));
+    $this->adminUser = $this->drupalCreateUser(['access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer permissions', 'administer content types', 'administer node fields', 'administer node display', 'administer nodes', 'bypass node access']);
     $this->drupalLogin($this->adminUser);
-    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
   }
 
   /**
@@ -73,14 +73,14 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * @param array $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
-  function createFileField($name, $entity_type, $bundle, $storage_settings = array(), $field_settings = array(), $widget_settings = array()) {
-    $field_storage = FieldStorageConfig::create(array(
+  function createFileField($name, $entity_type, $bundle, $storage_settings = [], $field_settings = [], $widget_settings = []) {
+    $field_storage = FieldStorageConfig::create([
       'entity_type' => $entity_type,
       'field_name' => $name,
       'type' => 'file',
       'settings' => $storage_settings,
       'cardinality' => !empty($storage_settings['cardinality']) ? $storage_settings['cardinality'] : 1,
-    ));
+    ]);
     $field_storage->save();
 
     $this->attachFileField($name, $entity_type, $bundle, $field_settings, $widget_settings);
@@ -101,44 +101,44 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * @param array $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
-  function attachFileField($name, $entity_type, $bundle, $field_settings = array(), $widget_settings = array()) {
-    $field = array(
+  function attachFileField($name, $entity_type, $bundle, $field_settings = [], $widget_settings = []) {
+    $field = [
       'field_name' => $name,
       'label' => $name,
       'entity_type' => $entity_type,
       'bundle' => $bundle,
       'required' => !empty($field_settings['required']),
       'settings' => $field_settings,
-    );
+    ];
     FieldConfig::create($field)->save();
 
     entity_get_form_display($entity_type, $bundle, 'default')
-      ->setComponent($name, array(
+      ->setComponent($name, [
         'type' => 'file_generic',
         'settings' => $widget_settings,
-      ))
+      ])
       ->save();
     // Assign display settings.
     entity_get_display($entity_type, $bundle, 'default')
-      ->setComponent($name, array(
+      ->setComponent($name, [
         'label' => 'hidden',
         'type' => 'file_default',
-      ))
+      ])
       ->save();
   }
 
   /**
    * Updates an existing file field with new settings.
    */
-  function updateFileField($name, $type_name, $field_settings = array(), $widget_settings = array()) {
+  function updateFileField($name, $type_name, $field_settings = [], $widget_settings = []) {
     $field = FieldConfig::loadByName('node', $type_name, $name);
     $field->setSettings(array_merge($field->getSettings(), $field_settings));
     $field->save();
 
     entity_get_form_display('node', $type_name, 'default')
-      ->setComponent($name, array(
+      ->setComponent($name, [
         'settings' => $widget_settings,
-      ))
+      ])
       ->save();
   }
 
@@ -160,7 +160,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * @return int
    *   The node id.
    */
-  function uploadNodeFile(FileInterface $file, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = array()) {
+  function uploadNodeFile(FileInterface $file, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
     return $this->uploadNodeFiles([$file], $field_name, $nid_or_type, $new_revision, $extras);
   }
 
@@ -182,16 +182,16 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * @return int
    *   The node id.
    */
-  function uploadNodeFiles(array $files, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = array()) {
-    $edit = array(
+  function uploadNodeFiles(array $files, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
+    $edit = [
       'title[0][value]' => $this->randomMachineName(),
       'revision' => (string) (int) $new_revision,
-    );
+    ];
 
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     if (is_numeric($nid_or_type)) {
       $nid = $nid_or_type;
-      $node_storage->resetCache(array($nid));
+      $node_storage->resetCache([$nid]);
       $node = $node_storage->load($nid);
     }
     else {
@@ -202,7 +202,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       // Save at least one revision to better simulate a real site.
       $node->setNewRevision();
       $node->save();
-      $node_storage->resetCache(array($nid));
+      $node_storage->resetCache([$nid]);
       $node = $node_storage->load($nid);
       $this->assertNotEqual($nid, $node->getRevisionId(), 'Node revision exists.');
     }
@@ -235,11 +235,11 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * Note that if replacing a file, it must first be removed then added again.
    */
   function removeNodeFile($nid, $new_revision = TRUE) {
-    $edit = array(
+    $edit = [
       'revision' => (string) (int) $new_revision,
-    );
+    ];
 
-    $this->drupalPostForm('node/' . $nid . '/edit', array(), t('Remove'));
+    $this->drupalPostForm('node/' . $nid . '/edit', [], t('Remove'));
     $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
   }
 
@@ -247,12 +247,12 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * Replaces a file within a node.
    */
   function replaceNodeFile($file, $field_name, $nid, $new_revision = TRUE) {
-    $edit = array(
+    $edit = [
       'files[' . $field_name . '_0]' => drupal_realpath($file->getFileUri()),
       'revision' => (string) (int) $new_revision,
-    );
+    ];
 
-    $this->drupalPostForm('node/' . $nid . '/edit', array(), t('Remove'));
+    $this->drupalPostForm('node/' . $nid . '/edit', [], t('Remove'));
     $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
   }
 
@@ -268,7 +268,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    *   (optional) A message to display with the assertion.
    */
   public static function assertFileExists($file, $message = NULL) {
-    $message = isset($message) ? $message : format_string('File %file exists on the disk.', array('%file' => $file->getFileUri()));
+    $message = isset($message) ? $message : format_string('File %file exists on the disk.', ['%file' => $file->getFileUri()]);
     $filename = $file instanceof FileInterface ? $file->getFileUri() : $file;
     parent::assertFileExists($filename, $message);
   }
@@ -279,7 +279,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   function assertFileEntryExists($file, $message = NULL) {
     $this->container->get('entity.manager')->getStorage('file')->resetCache();
     $db_file = File::load($file->id());
-    $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
+    $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
     $this->assertEqual($db_file->getFileUri(), $file->getFileUri(), $message);
   }
 
@@ -295,7 +295,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    *   (optional) A message to display with the assertion.
    */
   public static function assertFileNotExists($file, $message = NULL) {
-    $message = isset($message) ? $message : format_string('File %file exists on the disk.', array('%file' => $file->getFileUri()));
+    $message = isset($message) ? $message : format_string('File %file exists on the disk.', ['%file' => $file->getFileUri()]);
     $filename = $file instanceof FileInterface ? $file->getFileUri() : $file;
     parent::assertFileNotExists($filename, $message);
   }
@@ -305,7 +305,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    */
   function assertFileEntryNotExists($file, $message) {
     $this->container->get('entity.manager')->getStorage('file')->resetCache();
-    $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
+    $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
     $this->assertFalse(File::load($file->id()), $message);
   }
 
@@ -313,7 +313,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * Asserts that a file's status is set to permanent in the database.
    */
   function assertFileIsPermanent(FileInterface $file, $message = NULL) {
-    $message = isset($message) ? $message : format_string('File %file is permanent.', array('%file' => $file->getFileUri()));
+    $message = isset($message) ? $message : format_string('File %file is permanent.', ['%file' => $file->getFileUri()]);
     $this->assertTrue($file->isPermanent(), $message);
   }
 

@@ -22,7 +22,7 @@ class BasicAuthTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('basic_auth', 'router_test', 'locale', 'basic_auth_test');
+  public static $modules = ['basic_auth', 'router_test', 'locale', 'basic_auth_test'];
 
   /**
    * Test http basic authentication.
@@ -55,7 +55,7 @@ class BasicAuthTest extends WebTestBase {
     $this->drupalGet('admin');
     $this->assertResponse('403', 'No authentication prompt for routes not explicitly defining authentication providers.');
 
-    $account = $this->drupalCreateUser(array('access administration pages'));
+    $account = $this->drupalCreateUser(['access administration pages']);
 
     $this->basicAuthGet(Url::fromRoute('system.admin'), $account->getUsername(), $account->pass_raw);
     $this->assertNoLink('Log out', 'User is not logged in');
@@ -82,7 +82,7 @@ class BasicAuthTest extends WebTestBase {
       ->set('user_limit', 4000)
       ->save();
 
-    $user = $this->drupalCreateUser(array());
+    $user = $this->drupalCreateUser([]);
     $incorrect_user = clone $user;
     $incorrect_user->pass_raw .= 'incorrect';
     $url = Url::fromRoute('router_test.11');
@@ -107,10 +107,10 @@ class BasicAuthTest extends WebTestBase {
       ->set('user_limit', 2)
       ->save();
 
-    $user = $this->drupalCreateUser(array());
+    $user = $this->drupalCreateUser([]);
     $incorrect_user = clone $user;
     $incorrect_user->pass_raw .= 'incorrect';
-    $user2 = $this->drupalCreateUser(array());
+    $user2 = $this->drupalCreateUser([]);
     $url = Url::fromRoute('router_test.11');
 
     // Try a failed login.

@@ -16,7 +16,7 @@ class EntityListBuilderTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('entity_test');
+  public static $modules = ['entity_test'];
 
   /**
    * {@inheritdoc}
@@ -25,9 +25,9 @@ class EntityListBuilderTest extends BrowserTestBase {
     parent::setUp();
 
     // Create and log in user.
-    $this->webUser = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser([
       'administer entity_test content',
-    ));
+    ]);
     $this->drupalLogin($this->webUser);
   }
 
@@ -37,7 +37,7 @@ class EntityListBuilderTest extends BrowserTestBase {
   public function testPager() {
     // Create 51 test entities.
     for ($i = 1; $i < 52; $i++) {
-      EntityTest::create(array('name' => 'Test entity ' . $i))->save();
+      EntityTest::create(['name' => 'Test entity ' . $i])->save();
     }
 
     // Load the listing page.

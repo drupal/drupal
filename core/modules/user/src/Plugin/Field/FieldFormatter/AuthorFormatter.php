@@ -25,18 +25,18 @@ class AuthorFormatter extends EntityReferenceFormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
       /** @var $referenced_user \Drupal\user\UserInterface */
-      $elements[$delta] = array(
+      $elements[$delta] = [
         '#theme' => 'username',
         '#account' => $entity,
-        '#link_options' => array('attributes' => array('rel' => 'author')),
-        '#cache' => array(
+        '#link_options' => ['attributes' => ['rel' => 'author']],
+        '#cache' => [
           'tags' => $entity->getCacheTags(),
-        ),
-      );
+        ],
+      ];
     }
 
     return $elements;

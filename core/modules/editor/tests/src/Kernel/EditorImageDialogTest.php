@@ -37,8 +37,8 @@ class EditorImageDialogTest extends EntityKernelTestBase {
     parent::setUp();
     $this->installEntitySchema('file');
     $this->installSchema('system', ['key_value_expire']);
-    $this->installSchema('node', array('node_access'));
-    $this->installSchema('file', array('file_usage'));
+    $this->installSchema('node', ['node_access']);
+    $this->installSchema('file', ['file_usage']);
     $this->installConfig(['node']);
 
     // Add text formats.

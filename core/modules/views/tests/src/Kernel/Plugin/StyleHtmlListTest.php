@@ -18,7 +18,7 @@ class StyleHtmlListTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_style_html_list');
+  public static $testViews = ['test_style_html_list'];
 
   /**
    * Make sure that the HTML list style markup is correct.

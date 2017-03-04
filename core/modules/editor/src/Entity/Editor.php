@@ -49,14 +49,14 @@ class Editor extends ConfigEntityBase implements EditorInterface {
    *
    * @var array
    */
-  protected $settings = array();
+  protected $settings = [];
 
   /**
    * The structured array of image upload settings.
    *
    * @var array
    */
-  protected $image_upload = array();
+  protected $image_upload = [];
 
   /**
    * The filter format this text editor is associated with.

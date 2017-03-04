@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'dit', 'dix', 'di', 'dip', 'diex', 'die', 'diep', 'dat', 'dax', 'da', 'dap', 'duox', 'duo', 'dot', 'dox', 'do',
   0x10 => 'dop', 'dex', 'de', 'dep', 'dut', 'dux', 'du', 'dup', 'durx', 'dur', 'tit', 'tix', 'ti', 'tip', 'tiex', 'tie',
   0x20 => 'tiep', 'tat', 'tax', 'ta', 'tap', 'tuot', 'tuox', 'tuo', 'tuop', 'tot', 'tox', 'to', 'top', 'tex', 'te', 'tep',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'lu', 'lup', 'lurx', 'lur', 'lyt', 'lyx', 'ly', 'lyp', 'lyrx', 'lyr', 'git', 'gix', 'gi', 'gip', 'giet', 'giex',
   0xE0 => 'gie', 'giep', 'gat', 'gax', 'ga', 'gap', 'guot', 'guox', 'guo', 'guop', 'got', 'gox', 'go', 'gop', 'get', 'gex',
   0xF0 => 'ge', 'gep', 'gut', 'gux', 'gu', 'gup', 'gurx', 'gur', 'kit', 'kix', 'ki', 'kip', 'kiex', 'kie', 'kiep', 'kat',
-);
+];

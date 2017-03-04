@@ -51,10 +51,10 @@ class CategoryAutocompleteController implements ContainerInjectionInterface {
    */
   public function autocomplete(Request $request) {
     $typed_category = $request->query->get('q');
-    $matches = array();
+    $matches = [];
     foreach ($this->blockManager->getCategories() as $category) {
       if (stripos($category, $typed_category) === 0) {
-        $matches[] = array('value' => $category, 'label' => Html::escape($category));
+        $matches[] = ['value' => $category, 'label' => Html::escape($category)];
       }
     }
     return new JsonResponse($matches);

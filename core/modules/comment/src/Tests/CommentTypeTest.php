@@ -27,11 +27,11 @@ class CommentTypeTest extends CommentTestBase {
    *
    * @var array
    */
-  protected $permissions = array(
+  protected $permissions = [
     'administer comments',
     'administer comment fields',
     'administer comment types',
-  );
+  ];
 
   /**
    * Sets the test up.
@@ -61,12 +61,12 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertResponse(200, 'The new comment type can be accessed at the edit form.');
 
     // Create a comment type via the user interface.
-    $edit = array(
+    $edit = [
       'id' => 'foo',
       'label' => 'title for foo',
       'description' => '',
       'target_entity_type_id' => 'node',
-    );
+    ];
     $this->drupalPostForm('admin/structure/comment/types/add', $edit, t('Save'));
     $comment_type = CommentType::load('foo');
     $this->assertTrue($comment_type, 'The new comment type has been created.');
@@ -81,8 +81,8 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertText(t('Target entity type'));
     // Save the form and ensure the entity-type value is preserved even though
     // the field isn't present.
-    $this->drupalPostForm(NULL, array(), t('Save'));
-    \Drupal::entityManager()->getStorage('comment_type')->resetCache(array('foo'));
+    $this->drupalPostForm(NULL, [], t('Save'));
+    \Drupal::entityManager()->getStorage('comment_type')->resetCache(['foo']);
     $comment_type = CommentType::load('foo');
     $this->assertEqual($comment_type->getTargetEntityTypeId(), 'node');
   }
@@ -98,9 +98,9 @@ class CommentTypeTest extends CommentTestBase {
 
     // Change the comment type name.
     $this->drupalGet('admin/structure/comment');
-    $edit = array(
+    $edit = [
       'label' => 'Bar',
-    );
+    ];
     $this->drupalPostForm('admin/structure/comment/manage/comment', $edit, t('Save'));
 
     $this->drupalGet('admin/structure/comment');
@@ -110,9 +110,9 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertTrue($this->cssSelect('tr#comment-body'), 'Body field exists.');
 
     // Remove the body field.
-    $this->drupalPostForm('admin/structure/comment/manage/comment/fields/comment.comment.comment_body/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/structure/comment/manage/comment/fields/comment.comment.comment_body/delete', [], t('Delete'));
     // Resave the settings for this type.
-    $this->drupalPostForm('admin/structure/comment/manage/comment', array(), t('Save'));
+    $this->drupalPostForm('admin/structure/comment/manage/comment', [], t('Save'));
     // Check that the body field doesn't exist.
     $this->drupalGet('admin/structure/comment/manage/comment/fields');
     $this->assertFalse($this->cssSelect('tr#comment-body'), 'Body field does not exist.');
@@ -124,39 +124,39 @@ class CommentTypeTest extends CommentTestBase {
   public function testCommentTypeDeletion() {
     // Create a comment type programmatically.
     $type = $this->createCommentType('foo');
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     $this->addDefaultCommentField('node', 'page', 'foo', CommentItemInterface::OPEN, 'foo');
     $field_storage = FieldStorageConfig::loadByName('node', 'foo');
 
     $this->drupalLogin($this->adminUser);
 
     // Create a node.
-    $node = Node::create(array(
+    $node = Node::create([
       'type' => 'page',
       'title' => 'foo',
-    ));
+    ]);
     $node->save();
 
     // Add a new comment of this type.
-    $comment = Comment::create(array(
+    $comment = Comment::create([
       'comment_type' => 'foo',
       'entity_type' => 'node',
       'field_name' => 'foo',
       'entity_id' => $node->id(),
-    ));
+    ]);
     $comment->save();
 
     // Attempt to delete the comment type, which should not be allowed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id() . '/delete');
     $this->assertRaw(
-      t('%label is used by 1 comment on your site. You can not remove this comment type until you have removed all of the %label comments.', array('%label' => $type->label())),
+      t('%label is used by 1 comment on your site. You can not remove this comment type until you have removed all of the %label comments.', ['%label' => $type->label()]),
       'The comment type will not be deleted until all comments of that type are removed.'
     );
     $this->assertRaw(
-      t('%label is used by the %field field on your site. You can not remove this comment type until you have removed the field.', array(
+      t('%label is used by the %field field on your site. You can not remove this comment type until you have removed the field.', [
         '%label' => 'foo',
         '%field' => 'node.foo',
-      )),
+      ]),
       'The comment type will not be deleted until all fields of that type are removed.'
     );
     $this->assertNoText(t('This action cannot be undone.'), 'The comment type deletion confirmation form is not available.');
@@ -167,7 +167,7 @@ class CommentTypeTest extends CommentTestBase {
     // Attempt to delete the comment type, which should now be allowed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id() . '/delete');
     $this->assertRaw(
-      t('Are you sure you want to delete the comment type %type?', array('%type' => $type->id())),
+      t('Are you sure you want to delete the comment type %type?', ['%type' => $type->id()]),
       'The comment type is available for deletion.'
     );
     $this->assertText(t('This action cannot be undone.'), 'The comment type deletion confirmation form is available.');
@@ -182,9 +182,9 @@ class CommentTypeTest extends CommentTestBase {
     }
 
     // Delete the comment type.
-    $this->drupalPostForm('admin/structure/comment/manage/' . $type->id() . '/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/structure/comment/manage/' . $type->id() . '/delete', [], t('Delete'));
     $this->assertNull(CommentType::load($type->id()), 'Comment type deleted.');
-    $this->assertRaw(t('The comment type %label has been deleted.', array('%label' => $type->label())));
+    $this->assertRaw(t('The comment type %label has been deleted.', ['%label' => $type->label()]));
   }
 
 }

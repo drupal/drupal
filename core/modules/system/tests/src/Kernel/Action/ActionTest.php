@@ -17,7 +17,7 @@ class ActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('system', 'field', 'user', 'action_test');
+  public static $modules = ['system', 'field', 'user', 'action_test'];
 
   /**
    * The action manager.
@@ -34,7 +34,7 @@ class ActionTest extends KernelTestBase {
 
     $this->actionManager = $this->container->get('plugin.manager.action');
     $this->installEntitySchema('user');
-    $this->installSchema('system', array('sequences'));
+    $this->installSchema('system', ['sequences']);
   }
 
   /**
@@ -59,7 +59,7 @@ class ActionTest extends KernelTestBase {
     // Create a new unsaved user.
     $name = $this->randomMachineName();
     $user_storage = $this->container->get('entity.manager')->getStorage('user');
-    $account = $user_storage->create(array('name' => $name, 'bundle' => 'user'));
+    $account = $user_storage->create(['name' => $name, 'bundle' => 'user']);
     $loaded_accounts = $user_storage->loadMultiple();
     $this->assertEqual(count($loaded_accounts), 0);
 
@@ -76,25 +76,25 @@ class ActionTest extends KernelTestBase {
    */
   public function testDependencies() {
     // Create a new action that depends on a user role.
-    $action = Action::create(array(
+    $action = Action::create([
       'id' => 'user_add_role_action.' . RoleInterface::ANONYMOUS_ID,
       'type' => 'user',
       'label' => t('Add the anonymous role to the selected users'),
-      'configuration' => array(
+      'configuration' => [
         'rid' => RoleInterface::ANONYMOUS_ID,
-      ),
+      ],
       'plugin' => 'user_add_role_action',
-    ));
+    ]);
     $action->save();
 
-    $expected = array(
-      'config' => array(
+    $expected = [
+      'config' => [
         'user.role.' . RoleInterface::ANONYMOUS_ID,
-      ),
-      'module' => array(
+      ],
+      'module' => [
         'user',
-      ),
-    );
+      ],
+    ];
     $this->assertIdentical($expected, $action->calculateDependencies()->getDependencies());
   }
 

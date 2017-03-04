@@ -20,7 +20,7 @@ class FilterUserUIDTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_comment_user_uid');
+  public static $testViews = ['test_comment_user_uid'];
 
   function testCommentUserUIDTest() {
     $view = Views::getView('test_comment_user_uid');
@@ -40,23 +40,23 @@ class FilterUserUIDTest extends CommentTestBase {
     ]);
     $comment->save();
 
-    $options = array(
+    $options = [
       'id' => 'uid_touch',
       'table' => 'node_field_data',
       'field' => 'uid_touch',
-      'value' => array($this->loggedInUser->id()),
-    );
+      'value' => [$this->loggedInUser->id()],
+    ];
     $view->addHandler('default', 'filter', 'node_field_data', 'uid_touch', $options);
-    $this->executeView($view, array($this->account->id()));
-    $result_set = array(
-      array(
+    $this->executeView($view, [$this->account->id()]);
+    $result_set = [
+      [
         'nid' => $this->nodeUserPosted->id(),
-      ),
-      array(
+      ],
+      [
         'nid' => $this->nodeUserCommented->id(),
-      ),
-    );
-    $column_map = array('nid' => 'nid');
+      ],
+    ];
+    $column_map = ['nid' => 'nid'];
     $this->assertIdenticalResultset($view, $result_set, $column_map);
   }
 

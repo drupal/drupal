@@ -15,7 +15,7 @@ class NullArgument extends ArgumentPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['must_not_be'] = array('default' => FALSE);
+    $options['must_not_be'] = ['default' => FALSE];
     return $options;
   }
 
@@ -25,13 +25,13 @@ class NullArgument extends ArgumentPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $form['must_not_be'] = array(
+    $form['must_not_be'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Fail basic validation if any argument is given'),
       '#default_value' => !empty($this->options['must_not_be']),
       '#description' => $this->t('By checking this field, you can use this to make sure views with more arguments than necessary fail validation.'),
       '#group' => 'options][more',
-    );
+    ];
 
     unset($form['exception']);
   }
@@ -42,7 +42,7 @@ class NullArgument extends ArgumentPluginBase {
    */
   protected function defaultActions($which = NULL) {
     if ($which) {
-      if (in_array($which, array('ignore', 'not found', 'empty', 'default'))) {
+      if (in_array($which, ['ignore', 'not found', 'empty', 'default'])) {
         return parent::defaultActions($which);
       }
       return;

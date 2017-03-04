@@ -26,7 +26,7 @@
  * @see \Symfony\Component\Serializer\NormalizerInterface::normalize()
  * @see \Symfony\Component\Serializer\DenormalizerInterface::denormalize()
  */
-function hook_hal_type_uri_alter(&$uri, $context = array()) {
+function hook_hal_type_uri_alter(&$uri, $context = []) {
   if ($context['mymodule'] == TRUE) {
     $base = \Drupal::config('hal.settings')->get('link_domain');
     $uri = str_replace($base, 'http://mymodule.domain', $uri);
@@ -50,7 +50,7 @@ function hook_hal_type_uri_alter(&$uri, $context = array()) {
  * @see \Symfony\Component\Serializer\NormalizerInterface::normalize()
  * @see \Symfony\Component\Serializer\DenormalizerInterface::denormalize()
  */
-function hook_hal_relation_uri_alter(&$uri, $context = array()) {
+function hook_hal_relation_uri_alter(&$uri, $context = []) {
   if ($context['mymodule'] == TRUE) {
     $base = \Drupal::config('hal.settings')->get('link_domain');
     $uri = str_replace($base, 'http://mymodule.domain', $uri);

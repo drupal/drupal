@@ -80,8 +80,8 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
     // Drupal contrib can override this default CSS aggregator to keep the same
     // grouping, optimizing and dumping, but change the strategy that is used to
     // determine when the aggregate should be rebuilt (e.g. mtime, HTTPS …).
-    $map = $this->state->get('drupal_css_cache_files') ?: array();
-    $css_assets = array();
+    $map = $this->state->get('drupal_css_cache_files') ?: [];
+    $css_assets = [];
     foreach ($css_groups as $order => $css_group) {
       // We have to return a single asset, not a group of assets. It is now up
       // to one of the pieces of code in the switch statement below to set the
@@ -155,7 +155,7 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
    *   A hash to uniquely identify the given group of CSS assets.
    */
   protected function generateHash(array $css_group) {
-    $css_data = array();
+    $css_data = [];
     foreach ($css_group['items'] as $css_file) {
       $css_data[] = $css_file['data'];
     }
@@ -181,7 +181,7 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
         file_unmanaged_delete($uri);
       }
     };
-    file_scan_directory('public://css', '/.*/', array('callback' => $delete_stale));
+    file_scan_directory('public://css', '/.*/', ['callback' => $delete_stale]);
   }
 
 }

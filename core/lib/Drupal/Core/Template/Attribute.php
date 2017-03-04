@@ -69,7 +69,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    *
    * @var \Drupal\Core\Template\AttributeValueBase[]
    */
-  protected $storage = array();
+  protected $storage = [];
 
   /**
    * Constructs a \Drupal\Core\Template\Attribute object.
@@ -77,7 +77,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    * @param array $attributes
    *   An associative array of key-value pairs to be converted to attributes.
    */
-  public function __construct($attributes = array()) {
+  public function __construct($attributes = []) {
     foreach ($attributes as $name => $value) {
       $this->offsetSet($name, $value);
     }
@@ -170,7 +170,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   public function addClass() {
     $args = func_get_args();
     if ($args) {
-      $classes = array();
+      $classes = [];
       foreach ($args as $arg) {
         // Merge the values passed in from the classes array.
         // The argument is cast to an array to support comma separated single
@@ -245,7 +245,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
     // With no class attribute, there is no need to remove.
     if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
       $args = func_get_args();
-      $classes = array();
+      $classes = [];
       foreach ($args as $arg) {
         // Merge the values passed in from the classes array.
         // The argument is cast to an array to support comma separated single

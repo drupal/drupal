@@ -26,13 +26,13 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    *
    * @var array
    */
-  protected $defaults = array(
+  protected $defaults = [
     // (required) The name of the menu for this link.
     'menu_name' => 'tools',
     // (required) The name of the route this links to, unless it's external.
     'route_name' => '',
     // Parameters for route variables when generating a link.
-    'route_parameters' => array(),
+    'route_parameters' => [],
     // The external URL if this link has one (required if route_name is empty).
     'url' => '',
     // The static title for the menu link. If this came from a YAML definition
@@ -46,18 +46,18 @@ class MenuLinkManager implements MenuLinkManagerInterface {
     // The weight of the link.
     'weight' => 0,
     // The default link options.
-    'options' => array(),
+    'options' => [],
     'expanded' => 0,
     'enabled' => 1,
     // The name of the module providing this link.
     'provider' => '',
-    'metadata' => array(),
+    'metadata' => [],
     // Default class for local task implementations.
     'class' => 'Drupal\Core\Menu\MenuLinkDefault',
     'form_class' => 'Drupal\Core\Menu\Form\MenuLinkDefaultForm',
     // The plugin ID. Set by the plugin system based on the top-level YAML key.
     'id' => '',
-  );
+  ];
 
   /**
    * The object that discovers plugins managed by this manager.
@@ -231,7 +231,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    *   If the instance cannot be created, such as if the ID is invalid.
    */
-  public function createInstance($plugin_id, array $configuration = array()) {
+  public function createInstance($plugin_id, array $configuration = []) {
     return $this->getFactory()->createInstance($plugin_id, $configuration);
   }
 
@@ -248,7 +248,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    * {@inheritdoc}
    */
   public function deleteLinksInMenu($menu_name) {
-    foreach ($this->treeStorage->loadByProperties(array('menu_name' => $menu_name)) as $plugin_id => $definition) {
+    foreach ($this->treeStorage->loadByProperties(['menu_name' => $menu_name]) as $plugin_id => $definition) {
       $instance = $this->createInstance($plugin_id);
       if ($instance->isDeletable()) {
         $this->deleteInstance($instance, TRUE);
@@ -333,8 +333,8 @@ class MenuLinkManager implements MenuLinkManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function loadLinksByRoute($route_name, array $route_parameters = array(), $menu_name = NULL) {
-    $instances = array();
+  public function loadLinksByRoute($route_name, array $route_parameters = [], $menu_name = NULL) {
+    $instances = [];
     $loaded = $this->treeStorage->loadByRoute($route_name, $route_parameters, $menu_name);
     foreach ($loaded as $plugin_id => $definition) {
       $instances[$plugin_id] = $this->createInstance($plugin_id);

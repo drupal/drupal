@@ -20,7 +20,7 @@ abstract class PluginTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('plugin_test');
+  public static $modules = ['plugin_test'];
 
   protected $testPluginManager;
   protected $testPluginExpectedDefinitions;
@@ -42,7 +42,7 @@ abstract class PluginTestBase extends KernelTestBase {
     //   as derivatives and ReflectionFactory.
     $this->testPluginManager = new TestPluginManager();
     $this->mockBlockManager = new MockBlockManager();
-    $module_handler = new ModuleHandler(\Drupal::root(), array(), new MemoryBackend(), $this->container->get('event_dispatcher'));
+    $module_handler = new ModuleHandler(\Drupal::root(), [], new MemoryBackend(), $this->container->get('event_dispatcher'));
     $this->defaultsTestPluginManager = new DefaultsTestPluginManager($module_handler);
 
     // The expected plugin definitions within each manager. Several tests assert
@@ -50,91 +50,91 @@ abstract class PluginTestBase extends KernelTestBase {
     // necessary API functions.
     // @see TestPluginManager::_construct().
     // @see MockBlockManager::_construct().
-    $this->testPluginExpectedDefinitions = array(
-      'user_login' => array(
+    $this->testPluginExpectedDefinitions = [
+      'user_login' => [
         'label' => 'User login',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock',
-      ),
-    );
-    $this->mockBlockExpectedDefinitions = array(
-      'user_login' => array(
+      ],
+    ];
+    $this->mockBlockExpectedDefinitions = [
+      'user_login' => [
         'id' => 'user_login',
         'label' => 'User login',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock',
-      ),
-      'menu:main_menu' => array(
+      ],
+      'menu:main_menu' => [
         'id' => 'menu',
         'label' => 'Main menu',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
-      ),
-      'menu:navigation' => array(
+      ],
+      'menu:navigation' => [
         'id' => 'menu',
         'label' => 'Navigation',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
-      ),
-      'menu:foo' => array(
+      ],
+      'menu:foo' => [
         'id' => 'menu',
         'label' => 'Base label',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
         'setting' => 'default',
-      ),
-      'layout' => array(
+      ],
+      'layout' => [
         'id' => 'layout',
         'label' => 'Layout',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
-      ),
-      'layout:foo' => array(
+      ],
+      'layout:foo' => [
         'id' => 'layout',
         'label' => 'Layout Foo',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
-      ),
-      'user_name' => array(
+      ],
+      'user_name' => [
         'id' => 'user_name',
         'label' => 'User name',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
-        'context' => array(
+        'context' => [
           'user' => new ContextDefinition('entity:user', 'User'),
-        ),
-      ),
-      'user_name_optional' => array(
+        ],
+      ],
+      'user_name_optional' => [
         'id' => 'user_name_optional',
         'label' => 'User name optional',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
-        'context' => array(
+        'context' => [
           'user' => new ContextDefinition('entity:user', 'User', FALSE),
-        ),
-      ),
-      'string_context' => array(
+        ],
+      ],
+      'string_context' => [
         'id' => 'string_context',
         'label' => 'String typed data',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\TypedDataStringBlock',
-      ),
-      'complex_context' => array(
+      ],
+      'complex_context' => [
         'id' => 'complex_context',
         'label' => 'Complex context',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockComplexContextBlock',
-        'context' => array(
+        'context' => [
           'user' => new ContextDefinition('entity:user', 'User'),
           'node' => new ContextDefinition('entity:node', 'Node'),
-        ),
-      ),
-    );
-    $this->defaultsTestPluginExpectedDefinitions = array(
-      'test_block1' => array(
-        'metadata' => array(
+        ],
+      ],
+    ];
+    $this->defaultsTestPluginExpectedDefinitions = [
+      'test_block1' => [
+        'metadata' => [
           'default' => TRUE,
           'custom' => TRUE,
-        ),
+        ],
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockTestBlock',
-      ),
-      'test_block2' => array(
-        'metadata' => array(
+      ],
+      'test_block2' => [
+        'metadata' => [
           'default' => FALSE,
           'custom' => TRUE,
-        ),
+        ],
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockTestBlock',
-      ),
-    );
+      ],
+    ];
   }
 
 }

@@ -20,7 +20,7 @@ class StringFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'file');
+  public static $modules = ['entity_test', 'file'];
 
   /**
    * A user without any special permissions.
@@ -32,7 +32,7 @@ class StringFieldTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->webUser = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));
+    $this->webUser = $this->drupalCreateUser(['view test entity', 'administer entity_test content']);
     $this->drupalLogin($this->webUser);
   }
 
@@ -52,11 +52,11 @@ class StringFieldTest extends WebTestBase {
   function _testTextfieldWidgets($field_type, $widget_type) {
     // Create a field.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => $field_type
-    ));
+    ]);
     $field_storage->save();
     FieldConfig::create([
       'field_storage' => $field_storage,
@@ -64,12 +64,12 @@ class StringFieldTest extends WebTestBase {
       'label' => $this->randomMachineName() . '_label',
     ])->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($field_name, array(
+      ->setComponent($field_name, [
         'type' => $widget_type,
-        'settings' => array(
+        'settings' => [
           'placeholder' => 'A placeholder on ' . $widget_type,
-        ),
-      ))
+        ],
+      ])
       ->save();
     entity_get_display('entity_test', 'entity_test', 'full')
       ->setComponent($field_name)
@@ -79,17 +79,17 @@ class StringFieldTest extends WebTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget is displayed');
     $this->assertNoFieldByName("{$field_name}[0][format]", '1', 'Format selector is not displayed');
-    $this->assertRaw(format_string('placeholder="A placeholder on @widget_type"', array('@widget_type' => $widget_type)));
+    $this->assertRaw(format_string('placeholder="A placeholder on @widget_type"', ['@widget_type' => $widget_type]));
 
     // Submit with some value.
     $value = $this->randomMachineName();
-    $edit = array(
+    $edit = [
       "{$field_name}[0][value]" => $value,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
 
     // Display the entity.
     $entity = EntityTest::load($id);

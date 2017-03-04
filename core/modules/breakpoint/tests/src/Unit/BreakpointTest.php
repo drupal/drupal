@@ -24,9 +24,9 @@ class BreakpointTest extends UnitTestCase {
    *
    * @var array
    */
-  protected $pluginDefinition = array(
+  protected $pluginDefinition = [
     'id' => 'breakpoint',
-  );
+  ];
 
   /**
    * The breakpoint under test.
@@ -52,7 +52,7 @@ class BreakpointTest extends UnitTestCase {
    * Sets up the breakpoint defaults.
    */
   protected function setupBreakpoint() {
-    $this->breakpoint = new Breakpoint(array(), $this->pluginId, $this->pluginDefinition);
+    $this->breakpoint = new Breakpoint([], $this->pluginId, $this->pluginDefinition);
     $this->breakpoint->setStringTranslation($this->stringTranslation);
   }
 
@@ -62,7 +62,7 @@ class BreakpointTest extends UnitTestCase {
   public function testGetLabel() {
     $this->pluginDefinition['label'] = 'Test label';
     $this->setupBreakpoint();
-    $this->assertEquals(new TranslatableMarkup('Test label', array(), array('context' => 'breakpoint'), $this->stringTranslation), $this->breakpoint->getLabel());
+    $this->assertEquals(new TranslatableMarkup('Test label', [], ['context' => 'breakpoint'], $this->stringTranslation), $this->breakpoint->getLabel());
   }
 
   /**
@@ -88,9 +88,9 @@ class BreakpointTest extends UnitTestCase {
    * @covers ::getMultipliers
    */
   public function testGetMultipliers() {
-    $this->pluginDefinition['multipliers'] = array('1x', '2x');
+    $this->pluginDefinition['multipliers'] = ['1x', '2x'];
     $this->setupBreakpoint();
-    $this->assertSame(array('1x', '2x'), $this->breakpoint->getMultipliers());
+    $this->assertSame(['1x', '2x'], $this->breakpoint->getMultipliers());
   }
 
   /**

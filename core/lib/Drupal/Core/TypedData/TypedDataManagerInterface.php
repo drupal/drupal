@@ -34,7 +34,7 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
-  public function createInstance($data_type, array $configuration = array());
+  public function createInstance($data_type, array $configuration = []);
 
   /**
    * Creates a new typed data object instance.

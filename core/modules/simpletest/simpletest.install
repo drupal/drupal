@@ -16,25 +16,25 @@ const SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT = '128M';
  * Implements hook_requirements().
  */
 function simpletest_requirements($phase) {
-  $requirements = array();
+  $requirements = [];
 
   $has_phpunit = class_exists('\PHPUnit_Framework_TestCase');
   $has_curl = function_exists('curl_init');
   $open_basedir = ini_get('open_basedir');
 
-  $requirements['phpunit'] = array(
+  $requirements['phpunit'] = [
     'title' => t('PHPUnit dependency'),
     'value' => $has_phpunit ? t('Found') : t('Not found'),
-  );
+  ];
   if (!$has_phpunit) {
     $requirements['phpunit']['severity'] = REQUIREMENT_ERROR;
     $requirements['phpunit']['description'] = t("The testing framework requires the PHPUnit package. Please run 'composer install --dev' to ensure it is present.");
   }
 
-  $requirements['curl'] = array(
+  $requirements['curl'] = [
     'title' => t('cURL'),
     'value' => $has_curl ? t('Enabled') : t('Not found'),
-  );
+  ];
   if (!$has_curl) {
     $requirements['curl']['severity'] = REQUIREMENT_ERROR;
     $requirements['curl']['description'] = t('The testing framework requires the <a href="https://secure.php.net/manual/en/curl.setup.php">PHP cURL library</a>. For more information, see the <a href="https://www.drupal.org/requirements/php/curl">online information on installing the PHP cURL extension</a>.');
@@ -43,10 +43,10 @@ function simpletest_requirements($phase) {
   // SimpleTest currently needs 2 cURL options which are incompatible with
   // having PHP's open_basedir restriction set.
   // See https://www.drupal.org/node/674304.
-  $requirements['php_open_basedir'] = array(
+  $requirements['php_open_basedir'] = [
     'title' => t('PHP open_basedir restriction'),
     'value' => $open_basedir ? t('Enabled') : t('Disabled'),
-  );
+  ];
   if ($open_basedir) {
     $requirements['php_open_basedir']['severity'] = REQUIREMENT_ERROR;
     $requirements['php_open_basedir']['description'] = t('The testing framework requires the PHP <a href="http://php.net/manual/ini.core.php#ini.open-basedir">open_basedir</a> restriction to be disabled. Check your webserver configuration or contact your web host.');
@@ -57,29 +57,29 @@ function simpletest_requirements($phase) {
   $memory_limit = ini_get('memory_limit');
   if (!Environment::checkMemoryLimit(SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, $memory_limit)) {
     $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
-    $requirements['php_memory_limit']['description'] = t('The testing framework requires the PHP memory limit to be at least %memory_minimum_limit. The current value is %memory_limit. <a href=":url">Follow these steps to continue</a>.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, ':url' => 'https://www.drupal.org/node/207036'));
+    $requirements['php_memory_limit']['description'] = t('The testing framework requires the PHP memory limit to be at least %memory_minimum_limit. The current value is %memory_limit. <a href=":url">Follow these steps to continue</a>.', ['%memory_limit' => $memory_limit, '%memory_minimum_limit' => SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, ':url' => 'https://www.drupal.org/node/207036']);
   }
 
   $site_directory = 'sites/simpletest';
   if (!drupal_verify_install_file(\Drupal::root() . '/' . $site_directory, FILE_EXIST | FILE_READABLE | FILE_WRITABLE | FILE_EXECUTABLE, 'dir')) {
-    $requirements['simpletest_site_directory'] = array(
+    $requirements['simpletest_site_directory'] = [
       'title' => t('Simpletest site directory'),
       'value' => is_dir(\Drupal::root() . '/' . $site_directory) ? t('Not writable') : t('Missing'),
       'severity' => REQUIREMENT_ERROR,
-      'description' => t('The testing framework requires the %sites-simpletest directory to exist and be writable in order to run tests.', array(
+      'description' => t('The testing framework requires the %sites-simpletest directory to exist and be writable in order to run tests.', [
         '%sites-simpletest' => $site_directory,
-      )),
-    );
+      ]),
+    ];
   }
   elseif (!file_save_htaccess(\Drupal::root() . '/' . $site_directory, FALSE)) {
-    $requirements['simpletest_site_directory'] = array(
+    $requirements['simpletest_site_directory'] = [
       'title' => t('Simpletest site directory'),
       'value' => t('Not protected'),
       'severity' => REQUIREMENT_ERROR,
-      'description' => t('The file %file does not exist and could not be created automatically, which poses a security risk. Ensure that the directory is writable.', array(
+      'description' => t('The file %file does not exist and could not be created automatically, which poses a security risk. Ensure that the directory is writable.', [
         '%file' => $site_directory . '/.htaccess',
-      )),
-    );
+      ]),
+    ];
   }
 
   return $requirements;
@@ -89,91 +89,91 @@ function simpletest_requirements($phase) {
  * Implements hook_schema().
  */
 function simpletest_schema() {
-  $schema['simpletest'] = array(
+  $schema['simpletest'] = [
     'description' => 'Stores simpletest messages',
-    'fields' => array(
-      'message_id'  => array(
+    'fields' => [
+      'message_id'  => [
         'type' => 'serial',
         'not null' => TRUE,
         'description' => 'Primary Key: Unique simpletest message ID.',
-      ),
-      'test_id' => array(
+      ],
+      'test_id' => [
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'description' => 'Test ID, messages belonging to the same ID are reported together',
-      ),
-      'test_class' => array(
+      ],
+      'test_class' => [
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'description' => 'The name of the class that created this message.',
-      ),
-      'status' => array(
+      ],
+      'status' => [
         'type' => 'varchar',
         'length' => 9,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Message status. Core understands pass, fail, exception.',
-      ),
-      'message' => array(
+      ],
+      'message' => [
         'type' => 'text',
         'not null' => TRUE,
         'description' => 'The message itself.',
-      ),
-      'message_group' => array(
+      ],
+      'message_group' => [
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'description' => 'The message group this message belongs to. For example: warning, browser, user.',
-      ),
-      'function' => array(
+      ],
+      'function' => [
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Name of the assertion function or method that created this message.',
-      ),
-      'line' => array(
+      ],
+      'line' => [
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'description' => 'Line number on which the function is called.',
-      ),
-      'file' => array(
+      ],
+      'file' => [
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Name of the file where the function is called.',
-      ),
-    ),
-    'primary key' => array('message_id'),
-    'indexes' => array(
-      'reporter' => array('test_class', 'message_id'),
-    ),
-  );
-  $schema['simpletest_test_id'] = array(
+      ],
+    ],
+    'primary key' => ['message_id'],
+    'indexes' => [
+      'reporter' => ['test_class', 'message_id'],
+    ],
+  ];
+  $schema['simpletest_test_id'] = [
     'description' => 'Stores simpletest test IDs, used to auto-increment the test ID so that a fresh test ID is used.',
-    'fields' => array(
-      'test_id'  => array(
+    'fields' => [
+      'test_id'  => [
         'type' => 'serial',
         'not null' => TRUE,
         'description' => 'Primary Key: Unique simpletest ID used to group test results together. Each time a set of tests
                             are run a new test ID is used.',
-      ),
-      'last_prefix' => array(
+      ],
+      'last_prefix' => [
         'type' => 'varchar',
         'length' => 60,
         'not null' => FALSE,
         'default' => '',
         'description' => 'The last database prefix used during testing.',
-      ),
-    ),
-    'primary key' => array('test_id'),
-  );
+      ],
+    ],
+    'primary key' => ['test_id'],
+  ];
   return $schema;
 }
 

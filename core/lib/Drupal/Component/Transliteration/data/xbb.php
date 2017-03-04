@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'moen', 'moenj', 'moenh', 'moed', 'moel', 'moelg', 'moelm', 'moelb', 'moels', 'moelt', 'moelp', 'moelh', 'moem', 'moeb', 'moebs', 'moes',
   0x10 => 'moess', 'moeng', 'moej', 'moech', 'moek', 'moet', 'moep', 'moeh', 'myo', 'myog', 'myokk', 'myogs', 'myon', 'myonj', 'myonh', 'myod',
   0x20 => 'myol', 'myolg', 'myolm', 'myolb', 'myols', 'myolt', 'myolp', 'myolh', 'myom', 'myob', 'myobs', 'myos', 'myoss', 'myong', 'myoj', 'myoch',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'meum', 'meub', 'meubs', 'meus', 'meuss', 'meung', 'meuj', 'meuch', 'meuk', 'meut', 'meup', 'meuh', 'mui', 'muig', 'muikk', 'muigs',
   0xE0 => 'muin', 'muinj', 'muinh', 'muid', 'muil', 'muilg', 'muilm', 'muilb', 'muils', 'muilt', 'muilp', 'muilh', 'muim', 'muib', 'muibs', 'muis',
   0xF0 => 'muiss', 'muing', 'muij', 'muich', 'muik', 'muit', 'muip', 'muih', 'mi', 'mig', 'mikk', 'migs', 'min', 'minj', 'minh', 'mid',
-);
+];

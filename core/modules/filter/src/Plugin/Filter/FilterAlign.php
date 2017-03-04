@@ -33,9 +33,9 @@ class FilterAlign extends FilterBase {
         $node->removeAttribute('data-align');
 
         // If one of the allowed alignments, add the corresponding class.
-        if (in_array($align, array('left', 'center', 'right'))) {
+        if (in_array($align, ['left', 'center', 'right'])) {
           $classes = $node->getAttribute('class');
-          $classes = (strlen($classes) > 0) ? explode(' ', $classes) : array();
+          $classes = (strlen($classes) > 0) ? explode(' ', $classes) : [];
           $classes[] = 'align-' . $align;
           $node->setAttribute('class', implode(' ', $classes));
         }

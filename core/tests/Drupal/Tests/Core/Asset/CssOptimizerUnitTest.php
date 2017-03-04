@@ -36,24 +36,24 @@ class CssOptimizerUnitTest extends UnitTestCase {
   function providerTestOptimize() {
     $path = 'core/tests/Drupal/Tests/Core/Asset/css_test_files/';
     $absolute_path = dirname(__FILE__) . '/css_test_files/';
-    return array(
+    return [
       // File. Tests:
       // - Stripped comments and white-space.
       // - Retain white-space in selectors. (https://www.drupal.org/node/472820)
       // - Retain pseudo-selectors. (https://www.drupal.org/node/460448)
-      array(
-        array(
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.012,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_without_import.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_without_import.css',
-        ),
+        ],
         file_get_contents($absolute_path . 'css_input_without_import.css.optimized.css'),
-      ),
+      ],
       // File. Tests:
       // - Proper URLs in imported files. (https://www.drupal.org/node/265719)
       // - A background image with relative paths, which must be rewritten.
@@ -61,146 +61,146 @@ class CssOptimizerUnitTest extends UnitTestCase {
       //   file_create_url(). (https://www.drupal.org/node/1961340)
       // - Imported files that are external (protocol-relative URL or not)
       //   should not be expanded. (https://www.drupal.org/node/2014851)
-      array(
-        array(
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_with_import.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_import.css',
-        ),
+        ],
         str_replace('url(images/icon.png)', 'url(' . file_url_transform_relative(file_create_url($path . 'images/icon.png')) . ')', file_get_contents($absolute_path . 'css_input_with_import.css.optimized.css')),
-      ),
+      ],
       // File. Tests:
       // - Retain comment hacks.
-      array(
-        array(
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'comment_hacks.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'comment_hacks.css',
-        ),
+        ],
         file_get_contents($absolute_path . 'comment_hacks.css.optimized.css'),
-      ),
+      ],
       // File in subfolder. Tests:
       // - CSS import path is properly interpreted.
       //   (https://www.drupal.org/node/1198904)
       // - Don't adjust data URIs (https://www.drupal.org/node/2142441)
-      array(
-        array(
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_subfolder/css_input_with_import.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_import.css',
-        ),
+        ],
         str_replace('url(../images/icon.png)', 'url(' . file_url_transform_relative(file_create_url($path . 'images/icon.png')) . ')', file_get_contents($absolute_path . 'css_subfolder/css_input_with_import.css.optimized.css')),
-      ),
+      ],
       // File. Tests:
       // - Any @charaset declaration at the beginning of a file should be
       //   removed without breaking subsequent CSS.
-      array(
-        array(
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'charset_sameline.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'charset_sameline.css',
-        ),
+        ],
         file_get_contents($absolute_path . 'charset.css.optimized.css'),
-      ),
-      array(
-        array(
+      ],
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'charset_newline.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'charset_newline.css',
-        ),
+        ],
         file_get_contents($absolute_path . 'charset.css.optimized.css'),
-      ),
-      array(
-        array(
+      ],
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_with_bom.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_bom.css',
-        ),
+        ],
         '.byte-order-mark-test{content:"☃";}' . "\n",
-      ),
-      array(
-        array(
+      ],
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_with_charset.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_charset.css',
-        ),
+        ],
         '.charset-test{content:"€";}' . "\n",
-      ),
-      array(
-        array(
+      ],
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_with_bom_and_charset.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_bom_and_charset.css',
-        ),
+        ],
         '.byte-order-mark-charset-test{content:"☃";}' . "\n",
-      ),
-      array(
-        array(
+      ],
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'css_input_with_utf16_bom.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'css_input_with_utf16_bom.css',
-        ),
+        ],
         '.utf16-byte-order-mark-test{content:"☃";}' . "\n",
-      ),
-      array(
-        array(
+      ],
+      [
+        [
           'group' => -100,
           'type' => 'file',
           'weight' => 0.013,
           'media' => 'all',
           'preprocess' => TRUE,
           'data' => $path . 'quotes.css',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
           'basename' => 'quotes.css',
-        ),
+        ],
         file_get_contents($absolute_path . 'quotes.css.optimized.css'),
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -229,7 +229,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
   function testTypeFilePreprocessingDisabled() {
     $this->setExpectedException('Exception', 'Only file CSS assets with preprocessing enabled can be optimized.');
 
-    $css_asset = array(
+    $css_asset = [
       'group' => -100,
       'type' => 'file',
       'weight' => 0.012,
@@ -237,9 +237,9 @@ class CssOptimizerUnitTest extends UnitTestCase {
       // Preprocessing disabled.
       'preprocess' => FALSE,
       'data' => 'tests/Drupal/Tests/Core/Asset/foo.css',
-      'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+      'browsers' => ['IE' => TRUE, '!IE' => TRUE],
       'basename' => 'foo.css',
-    );
+    ];
     $this->optimizer->optimize($css_asset);
   }
 
@@ -249,7 +249,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
   function testTypeExternal() {
     $this->setExpectedException('Exception', 'Only file CSS assets can be optimized.');
 
-    $css_asset = array(
+    $css_asset = [
       'group' => -100,
       // Type external.
       'type' => 'external',
@@ -257,8 +257,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
       'media' => 'all',
       'preprocess' => TRUE,
       'data' => 'http://example.com/foo.js',
-      'browsers' => array('IE' => TRUE, '!IE' => TRUE),
-    );
+      'browsers' => ['IE' => TRUE, '!IE' => TRUE],
+    ];
     $this->optimizer->optimize($css_asset);
   }
 

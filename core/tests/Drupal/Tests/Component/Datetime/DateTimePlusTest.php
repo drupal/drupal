@@ -293,21 +293,21 @@ class DateTimePlusTest extends UnitTestCase {
    * @see DateTimePlusTest::testDates()
    */
   public function providerTestDates() {
-    return array(
+    return [
       // String input.
       // Create date object from datetime string.
-      array('2009-03-07 10:30', 'America/Chicago', '2009-03-07T10:30:00-06:00'),
+      ['2009-03-07 10:30', 'America/Chicago', '2009-03-07T10:30:00-06:00'],
       // Same during daylight savings time.
-      array('2009-06-07 10:30', 'America/Chicago', '2009-06-07T10:30:00-05:00'),
+      ['2009-06-07 10:30', 'America/Chicago', '2009-06-07T10:30:00-05:00'],
       // Create date object from date string.
-      array('2009-03-07', 'America/Chicago', '2009-03-07T00:00:00-06:00'),
+      ['2009-03-07', 'America/Chicago', '2009-03-07T00:00:00-06:00'],
       // Same during daylight savings time.
-      array('2009-06-07', 'America/Chicago', '2009-06-07T00:00:00-05:00'),
+      ['2009-06-07', 'America/Chicago', '2009-06-07T00:00:00-05:00'],
       // Create date object from date string.
-      array('2009-03-07 10:30', 'Australia/Canberra', '2009-03-07T10:30:00+11:00'),
+      ['2009-03-07 10:30', 'Australia/Canberra', '2009-03-07T10:30:00+11:00'],
       // Same during daylight savings time.
-      array('2009-06-07 10:30', 'Australia/Canberra', '2009-06-07T10:30:00+10:00'),
-    );
+      ['2009-06-07 10:30', 'Australia/Canberra', '2009-06-07T10:30:00+10:00'],
+    ];
   }
 
   /**
@@ -320,17 +320,17 @@ class DateTimePlusTest extends UnitTestCase {
    * @see DateTimePlusTest::testDates()
    */
   public function providerTestDateArrays() {
-    return array(
+    return [
       // Array input.
       // Create date object from date array, date only.
-      array(array('year' => 2010, 'month' => 2, 'day' => 28), 'America/Chicago', '2010-02-28T00:00:00-06:00'),
+      [['year' => 2010, 'month' => 2, 'day' => 28], 'America/Chicago', '2010-02-28T00:00:00-06:00'],
       // Create date object from date array with hour.
-      array(array('year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 10), 'America/Chicago', '2010-02-28T10:00:00-06:00'),
+      [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 10], 'America/Chicago', '2010-02-28T10:00:00-06:00'],
       // Create date object from date array, date only.
-      array(array('year' => 2010, 'month' => 2, 'day' => 28), 'Europe/Berlin', '2010-02-28T00:00:00+01:00'),
+      [['year' => 2010, 'month' => 2, 'day' => 28], 'Europe/Berlin', '2010-02-28T00:00:00+01:00'],
       // Create date object from date array with hour.
-      array(array('year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 10), 'Europe/Berlin', '2010-02-28T10:00:00+01:00'),
-    );
+      [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 10], 'Europe/Berlin', '2010-02-28T10:00:00+01:00'],
+    ];
   }
 
   /**
@@ -347,16 +347,16 @@ class DateTimePlusTest extends UnitTestCase {
    * @see testDateFormats()
    */
   public function providerTestDateFormat() {
-    return array(
+    return [
       // Create a year-only date.
-      array('2009', NULL, 'Y', 'Y', '2009'),
+      ['2009', NULL, 'Y', 'Y', '2009'],
       // Create a month and year-only date.
-      array('2009-10', NULL, 'Y-m', 'Y-m', '2009-10'),
+      ['2009-10', NULL, 'Y-m', 'Y-m', '2009-10'],
       // Create a time-only date.
-      array('T10:30:00', NULL, '\TH:i:s', 'H:i:s', '10:30:00'),
+      ['T10:30:00', NULL, '\TH:i:s', 'H:i:s', '10:30:00'],
       // Create a time-only date.
-      array('10:30:00', NULL, 'H:i:s', 'H:i:s', '10:30:00'),
-    );
+      ['10:30:00', NULL, 'H:i:s', 'H:i:s', '10:30:00'],
+    ];
   }
 
   /**
@@ -372,20 +372,20 @@ class DateTimePlusTest extends UnitTestCase {
    * @see testInvalidDates
    */
   public function providerTestInvalidDates() {
-    return array(
+    return [
       // Test for invalid month names when we are using a short version
       // of the month.
-      array('23 abc 2012', NULL, 'd M Y', "23 abc 2012 contains an invalid month name and did not produce errors.", \InvalidArgumentException::class),
+      ['23 abc 2012', NULL, 'd M Y', "23 abc 2012 contains an invalid month name and did not produce errors.", \InvalidArgumentException::class],
       // Test for invalid hour.
-      array('0000-00-00T45:30:00', NULL, 'Y-m-d\TH:i:s', "0000-00-00T45:30:00 contains an invalid hour and did not produce errors.", \UnexpectedValueException::class),
+      ['0000-00-00T45:30:00', NULL, 'Y-m-d\TH:i:s', "0000-00-00T45:30:00 contains an invalid hour and did not produce errors.", \UnexpectedValueException::class],
       // Test for invalid day.
-      array('0000-00-99T05:30:00', NULL, 'Y-m-d\TH:i:s', "0000-00-99T05:30:00 contains an invalid day and did not produce errors.", \UnexpectedValueException::class),
+      ['0000-00-99T05:30:00', NULL, 'Y-m-d\TH:i:s', "0000-00-99T05:30:00 contains an invalid day and did not produce errors.", \UnexpectedValueException::class],
       // Test for invalid month.
-      array('0000-75-00T15:30:00', NULL, 'Y-m-d\TH:i:s', "0000-75-00T15:30:00 contains an invalid month and did not produce errors.", \UnexpectedValueException::class),
+      ['0000-75-00T15:30:00', NULL, 'Y-m-d\TH:i:s', "0000-75-00T15:30:00 contains an invalid month and did not produce errors.", \UnexpectedValueException::class],
       // Test for invalid year.
-      array('11-08-01T15:30:00', NULL, 'Y-m-d\TH:i:s', "11-08-01T15:30:00 contains an invalid year and did not produce errors.", \UnexpectedValueException::class),
+      ['11-08-01T15:30:00', NULL, 'Y-m-d\TH:i:s', "11-08-01T15:30:00 contains an invalid year and did not produce errors.", \UnexpectedValueException::class],
 
-    );
+    ];
   }
 
   /**
@@ -399,20 +399,20 @@ class DateTimePlusTest extends UnitTestCase {
    * @see testInvalidDateArrays
    */
   public function providerTestInvalidDateArrays() {
-    return array(
+    return [
       // One year larger than the documented upper limit of checkdate().
-      array(array('year' => 32768, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago', \InvalidArgumentException::class),
+      [['year' => 32768, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
       // One year smaller than the documented lower limit of checkdate().
-      array(array('year' => 0, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago', \InvalidArgumentException::class),
+      [['year' => 0, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
       // Test for invalid month from date array.
-      array(array('year' => 2010, 'month' => 27, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago', \InvalidArgumentException::class),
+      [['year' => 2010, 'month' => 27, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
       // Test for invalid hour from date array.
-      array(array('year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 80, 'minute' => 0, 'second' => 0), 'America/Chicago', \InvalidArgumentException::class),
+      [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 80, 'minute' => 0, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
       // Test for invalid minute from date array.
-      array(array('year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0), 'America/Chicago', \InvalidArgumentException::class),
+      [['year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
       // Regression test for https://www.drupal.org/node/2084455.
-      array(array('hour' => 59, 'minute' => 1, 'second' => 1), 'America/Chicago', \InvalidArgumentException::class),
-    );
+      [['hour' => 59, 'minute' => 1, 'second' => 1], 'America/Chicago', \InvalidArgumentException::class],
+    ];
   }
 
   /**
@@ -434,17 +434,17 @@ class DateTimePlusTest extends UnitTestCase {
     // Detect the system timezone.
     $system_timezone = date_default_timezone_get();
 
-    return array(
+    return [
       // Create a date object with an unspecified timezone, which should
       // end up using the system timezone.
-      array($date_string, NULL, $system_timezone, 'DateTimePlus uses the system timezone when there is no site timezone.'),
+      [$date_string, NULL, $system_timezone, 'DateTimePlus uses the system timezone when there is no site timezone.'],
       // Create a date object with a specified timezone name.
-      array($date_string, 'America/Yellowknife', 'America/Yellowknife', 'DateTimePlus uses the specified timezone if provided.'),
+      [$date_string, 'America/Yellowknife', 'America/Yellowknife', 'DateTimePlus uses the specified timezone if provided.'],
       // Create a date object with a timezone object.
-      array($date_string, new \DateTimeZone('Australia/Canberra'), 'Australia/Canberra', 'DateTimePlus uses the specified timezone if provided.'),
+      [$date_string, new \DateTimeZone('Australia/Canberra'), 'Australia/Canberra', 'DateTimePlus uses the specified timezone if provided.'],
       // Create a date object with another date object.
-      array(new DateTimePlus('now', 'Pacific/Midway'), NULL, 'Pacific/Midway', 'DateTimePlus uses the specified timezone if provided.'),
-    );
+      [new DateTimePlus('now', 'Pacific/Midway'), NULL, 'Pacific/Midway', 'DateTimePlus uses the specified timezone if provided.'],
+    ];
   }
 
   /**
@@ -457,46 +457,46 @@ class DateTimePlusTest extends UnitTestCase {
    * @see testTimestamp()
    */
   public function providerTestTimestamp() {
-    return array(
+    return [
       // Create date object from a unix timestamp and display it in
       // local time.
-      array(
+      [
         'input' => 0,
-        'initial' => array(
+        'initial' => [
           'timezone' => 'UTC',
           'format' => 'c',
           'expected_date' => '1970-01-01T00:00:00+00:00',
           'expected_timezone' => 'UTC',
           'expected_offset' => 0,
-        ),
-        'transform' => array(
+        ],
+        'transform' => [
           'timezone' => 'America/Los_Angeles',
           'format' => 'c',
           'expected_date' => '1969-12-31T16:00:00-08:00',
           'expected_timezone' => 'America/Los_Angeles',
           'expected_offset' => '-28800',
-        ),
-      ),
+        ],
+      ],
       // Create a date using the timestamp of zero, then display its
       // value both in UTC and the local timezone.
-      array(
+      [
         'input' => 0,
-        'initial' => array(
+        'initial' => [
           'timezone' => 'America/Los_Angeles',
           'format' => 'c',
           'expected_date' => '1969-12-31T16:00:00-08:00',
           'expected_timezone' => 'America/Los_Angeles',
           'expected_offset' => '-28800',
-        ),
-        'transform' => array(
+        ],
+        'transform' => [
           'timezone' => 'UTC',
           'format' => 'c',
           'expected_date' => '1970-01-01T00:00:00+00:00',
           'expected_timezone' => 'UTC',
           'expected_offset' => 0,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -509,63 +509,63 @@ class DateTimePlusTest extends UnitTestCase {
    * @see testDateTimestamp()
    */
   public function providerTestDateTimestamp() {
-    return array(
+    return [
       // Create date object from datetime string in UTC, and convert
       // it to a local date.
-      array(
+      [
         'input' => '1970-01-01 00:00:00',
-        'initial' => array(
+        'initial' => [
           'timezone' => 'UTC',
           'format' => 'c',
           'expected_date' => '1970-01-01T00:00:00+00:00',
           'expected_timezone' => 'UTC',
           'expected_offset' => 0,
-        ),
-        'transform' => array(
+        ],
+        'transform' => [
           'timezone' => 'America/Los_Angeles',
           'format' => 'c',
           'expected_date' => '1969-12-31T16:00:00-08:00',
           'expected_timezone' => 'America/Los_Angeles',
           'expected_offset' => '-28800',
-        ),
-      ),
+        ],
+      ],
       // Convert the local time to UTC using string input.
-      array(
+      [
         'input' => '1969-12-31 16:00:00',
-        'initial' => array(
+        'initial' => [
           'timezone' => 'America/Los_Angeles',
           'format' => 'c',
           'expected_date' => '1969-12-31T16:00:00-08:00',
           'expected_timezone' => 'America/Los_Angeles',
           'expected_offset' => '-28800',
-        ),
-        'transform' => array(
+        ],
+        'transform' => [
           'timezone' => 'UTC',
           'format' => 'c',
           'expected_date' => '1970-01-01T00:00:00+00:00',
           'expected_timezone' => 'UTC',
           'expected_offset' => 0,
-        ),
-      ),
+        ],
+      ],
       // Convert the local time to UTC using string input.
-      array(
+      [
         'input' => '1969-12-31 16:00:00',
-        'initial' => array(
+        'initial' => [
           'timezone' => 'Europe/Warsaw',
           'format' => 'c',
           'expected_date' => '1969-12-31T16:00:00+01:00',
           'expected_timezone' => 'Europe/Warsaw',
           'expected_offset' => '+3600',
-        ),
-        'transform' => array(
+        ],
+        'transform' => [
           'timezone' => 'UTC',
           'format' => 'c',
           'expected_date' => '1969-12-31T15:00:00+00:00',
           'expected_timezone' => 'UTC',
           'expected_offset' => 0,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -590,60 +590,60 @@ class DateTimePlusTest extends UnitTestCase {
     $negative_1_hour = new \DateInterval('PT1H');
     $negative_1_hour->invert = 1;
 
-    return array(
+    return [
       // There should be a 19 hour time interval between
       // new years in Sydney and new years in LA in year 2000.
-      array(
+      [
         'input2' => DateTimePlus::createFromFormat('Y-m-d H:i:s', '2000-01-01 00:00:00', new \DateTimeZone('Australia/Sydney')),
         'input1' => DateTimePlus::createFromFormat('Y-m-d H:i:s', '2000-01-01 00:00:00', new \DateTimeZone('America/Los_Angeles')),
         'absolute' => FALSE,
         'expected' => $positive_19_hours,
-      ),
+      ],
       // In 1970 Sydney did not observe daylight savings time
       // So there is only a 18 hour time interval.
-      array(
+      [
         'input2' => DateTimePlus::createFromFormat('Y-m-d H:i:s', '1970-01-01 00:00:00', new \DateTimeZone('Australia/Sydney')),
         'input1' => DateTimePlus::createFromFormat('Y-m-d H:i:s', '1970-01-01 00:00:00', new \DateTimeZone('America/Los_Angeles')),
         'absolute' => FALSE,
         'expected' => $positive_18_hours,
-      ),
-      array(
+      ],
+      [
         'input1' => DateTimePlus::createFromFormat('U', 3600, new \DateTimeZone('America/Los_Angeles')),
         'input2' => DateTimePlus::createFromFormat('U', 0, new \DateTimeZone('UTC')),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
-      ),
-      array(
+      ],
+      [
         'input1' => DateTimePlus::createFromFormat('U', 3600),
         'input2' => DateTimePlus::createFromFormat('U', 0),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
-      ),
-      array(
+      ],
+      [
         'input1' => DateTimePlus::createFromFormat('U', 3600),
         'input2' => \DateTime::createFromFormat('U', 0),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
-      ),
-      array(
+      ],
+      [
         'input1' => DateTimePlus::createFromFormat('U', 3600),
         'input2' => DateTimePlus::createFromFormat('U', 0),
         'absolute' => TRUE,
         'expected' => $positive_1_hour,
-      ),
-      array(
+      ],
+      [
         'input1' => DateTimePlus::createFromFormat('U', 3600),
         'input2' => \DateTime::createFromFormat('U', 0),
         'absolute' => TRUE,
         'expected' => $positive_1_hour,
-      ),
-      array(
+      ],
+      [
         'input1' => DateTimePlus::createFromFormat('U', 0),
         'input2' => DateTimePlus::createFromFormat('U', 0),
         'absolute' => FALSE,
         'expected' => $empty_interval,
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -656,18 +656,18 @@ class DateTimePlusTest extends UnitTestCase {
    * @see DateTimePlusTest::testInvalidDateDiff()
    */
   public function providerTestInvalidDateDiff() {
-    return array(
-      array(
+    return [
+      [
         'input1' => DateTimePlus::createFromFormat('U', 3600),
         'input2' => '1970-01-01 00:00:00',
         'absolute' => FALSE,
-      ),
-      array(
+      ],
+      [
         'input1' => DateTimePlus::createFromFormat('U', 3600),
         'input2' => NULL,
         'absolute' => FALSE,
-      ),
-    );
+      ],
+    ];
   }
 
 }

@@ -17,14 +17,14 @@ class UserLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('user', 'language');
+  public static $modules = ['user', 'language'];
 
   /**
    * Test if user can change their default language.
    */
   function testUserLanguageConfiguration() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
     // User to change their default language.
     $web_user = $this->drupalCreateUser();
 
@@ -34,12 +34,12 @@ class UserLanguageTest extends BrowserTestBase {
     $langcode = 'xx';
     // The English name for the language.
     $name = $this->randomMachineName(16);
-    $edit = array(
+    $edit = [
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->drupalLogout();
 
@@ -52,9 +52,9 @@ class UserLanguageTest extends BrowserTestBase {
     // Ensure custom language is present.
     $this->assertText($name, 'Language present on form.');
     // Switch to our custom language.
-    $edit = array(
+    $edit = [
       'preferred_langcode' => $langcode,
-    );
+    ];
     $this->drupalPostForm($path, $edit, t('Save'));
     // Ensure form was submitted successfully.
     $this->assertText(t('The changes have been saved.'), 'Changes were saved.');

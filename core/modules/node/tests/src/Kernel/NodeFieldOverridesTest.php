@@ -27,14 +27,14 @@ class NodeFieldOverridesTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('user', 'system', 'field', 'node');
+  public static $modules = ['user', 'system', 'field', 'node'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('user'));
+    $this->installConfig(['user']);
     $this->user = $this->createUser();
     \Drupal::service('current_user')->setAccount($this->user);
   }

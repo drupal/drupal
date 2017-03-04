@@ -19,35 +19,35 @@ function menu_test_menu_links_discovered_alter(&$links) {
   $links['menu_test.context']['title'] = \Drupal::config('menu_test.menu_item')->get('title');
 
   // Adds a custom menu link.
-  $links['menu_test.custom'] = array(
+  $links['menu_test.custom'] = [
     'title' => 'Custom link',
     'route_name' => 'menu_test.custom',
     'description' => 'Custom link used to check the integrity of manually added menu links.',
     'parent' => 'menu_test',
-  );
+  ];
 }
 
 /**
  * Implements hook_menu_local_tasks_alter().
  */
 function menu_test_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
-  if (in_array($route_name, array('menu_test.tasks_default'))) {
-    $data['tabs'][0]['foo'] = array(
+  if (in_array($route_name, ['menu_test.tasks_default'])) {
+    $data['tabs'][0]['foo'] = [
       '#theme' => 'menu_local_task',
-      '#link' => array(
+      '#link' => [
         'title' => "Task 1 <script>alert('Welcome to the jungle!')</script>",
-        'url' => Url::fromRoute('menu_test.router_test1', array('bar' => '1')),
-      ),
+        'url' => Url::fromRoute('menu_test.router_test1', ['bar' => '1']),
+      ],
       '#weight' => 10,
-    );
-    $data['tabs'][0]['bar'] = array(
+    ];
+    $data['tabs'][0]['bar'] = [
       '#theme' => 'menu_local_task',
-      '#link' => array(
+      '#link' => [
         'title' => 'Task 2',
-        'url' => Url::fromRoute('menu_test.router_test2', array('bar' => '2')),
-      ),
+        'url' => Url::fromRoute('menu_test.router_test2', ['bar' => '2']),
+      ],
       '#weight' => 20,
-    );
+    ];
   }
   $cacheability->addCacheTags(['kittens:dwarf-cat']);
 }

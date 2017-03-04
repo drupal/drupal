@@ -26,14 +26,14 @@ class ConfigImporterMissingContentTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'entity_test', 'config_test', 'config_import_test');
+  public static $modules = ['system', 'user', 'entity_test', 'config_test', 'config_import_test'];
 
   protected function setUp() {
     parent::setUp();
     $this->installSchema('system', 'sequences');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
-    $this->installConfig(array('config_test'));
+    $this->installConfig(['config_test']);
     // Installing config_test's default configuration pollutes the global
     // variable being used for recording hook invocations by this test already,
     // so it has to be cleared out manually.
@@ -73,9 +73,9 @@ class ConfigImporterMissingContentTest extends KernelTestBase {
     // on two content entities that do not exist.
     $storage = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
-    $entity_one = EntityTest::create(array('name' => 'one'));
-    $entity_two = EntityTest::create(array('name' => 'two'));
-    $entity_three = EntityTest::create(array('name' => 'three'));
+    $entity_one = EntityTest::create(['name' => 'one']);
+    $entity_two = EntityTest::create(['name' => 'two']);
+    $entity_three = EntityTest::create(['name' => 'three']);
     $dynamic_name = 'config_test.dynamic.dotted.default';
     $original_dynamic_data = $storage->read($dynamic_name);
     // Entity one will be resolved by

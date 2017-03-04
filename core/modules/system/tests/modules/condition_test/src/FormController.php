@@ -39,10 +39,10 @@ class FormController implements FormInterface {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = $this->condition->buildConfigurationForm($form, $form_state);
-    $form['actions']['submit'] = array(
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => t('Submit'),
-    );
+    ];
     return $form;
   }
 

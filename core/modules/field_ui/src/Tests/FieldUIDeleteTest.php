@@ -21,14 +21,14 @@ class FieldUIDeleteTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'field_test', 'block', 'field_test_views');
+  public static $modules = ['node', 'field_ui', 'field_test', 'block', 'field_test_views'];
 
   /**
    * Test views to enable
    *
    * @var string[]
    */
-  public static $testViews = array('test_view_field_delete');
+  public static $testViews = ['test_view_field_delete'];
 
   /**
    * {@inheritdoc}
@@ -41,7 +41,7 @@ class FieldUIDeleteTest extends WebTestBase {
     $this->drupalPlaceBlock('page_title_block');
 
     // Create a test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node form display', 'administer node display', 'administer users', 'administer account settings', 'administer user display', 'bypass node access'));
+    $admin_user = $this->drupalCreateUser(['access content', 'administer content types', 'administer node fields', 'administer node form display', 'administer node display', 'administer users', 'administer account settings', 'administer user display', 'bypass node access']);
     $this->drupalLogin($admin_user);
   }
 
@@ -55,7 +55,7 @@ class FieldUIDeleteTest extends WebTestBase {
 
     // Create an additional node type.
     $type_name1 = strtolower($this->randomMachineName(8)) . '_test';
-    $type1 = $this->drupalCreateContentType(array('name' => $type_name1, 'type' => $type_name1));
+    $type1 = $this->drupalCreateContentType(['name' => $type_name1, 'type' => $type_name1]);
     $type_name1 = $type1->id();
 
     // Create a new field.
@@ -64,7 +64,7 @@ class FieldUIDeleteTest extends WebTestBase {
 
     // Create an additional node type.
     $type_name2 = strtolower($this->randomMachineName(8)) . '_test';
-    $type2 = $this->drupalCreateContentType(array('name' => $type_name2, 'type' => $type_name2));
+    $type2 = $this->drupalCreateContentType(['name' => $type_name2, 'type' => $type_name2]);
     $type_name2 = $type2->id();
 
     // Add a field to the second node type.
@@ -72,7 +72,7 @@ class FieldUIDeleteTest extends WebTestBase {
     $this->fieldUIAddExistingField($bundle_path2, $field_name, $field_label);
 
     \Drupal::service('module_installer')->install(['views']);
-    ViewTestData::createTestViews(get_class($this), array('field_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['field_test_views']);
 
     // Check the config dependencies of the first field, the field storage must
     // not be shown as being deleted yet.

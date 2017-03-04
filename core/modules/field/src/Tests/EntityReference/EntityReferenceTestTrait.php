@@ -34,30 +34,30 @@ trait EntityReferenceTestTrait {
    *
    * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase::buildConfigurationForm()
    */
-  protected function createEntityReferenceField($entity_type, $bundle, $field_name, $field_label, $target_entity_type, $selection_handler = 'default', $selection_handler_settings = array(), $cardinality = 1) {
+  protected function createEntityReferenceField($entity_type, $bundle, $field_name, $field_label, $target_entity_type, $selection_handler = 'default', $selection_handler_settings = [], $cardinality = 1) {
     // Look for or add the specified field to the requested entity bundle.
     if (!FieldStorageConfig::loadByName($entity_type, $field_name)) {
-      FieldStorageConfig::create(array(
+      FieldStorageConfig::create([
         'field_name' => $field_name,
         'type' => 'entity_reference',
         'entity_type' => $entity_type,
         'cardinality' => $cardinality,
-        'settings' => array(
+        'settings' => [
           'target_type' => $target_entity_type,
-        ),
-      ))->save();
+        ],
+      ])->save();
     }
     if (!FieldConfig::loadByName($entity_type, $bundle, $field_name)) {
-      FieldConfig::create(array(
+      FieldConfig::create([
         'field_name' => $field_name,
         'entity_type' => $entity_type,
         'bundle' => $bundle,
         'label' => $field_label,
-        'settings' => array(
+        'settings' => [
           'handler' => $selection_handler,
           'handler_settings' => $selection_handler_settings,
-        ),
-      ))->save();
+        ],
+      ])->save();
     }
   }
 

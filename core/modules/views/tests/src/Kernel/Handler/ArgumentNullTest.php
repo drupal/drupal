@@ -17,7 +17,7 @@ class ArgumentNullTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   function viewsData() {
     $data = parent::viewsData();
@@ -32,13 +32,13 @@ class ArgumentNullTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Add a null argument.
-    $view->displayHandlers->get('default')->overrideOption('arguments', array(
-      'null' => array(
+    $view->displayHandlers->get('default')->overrideOption('arguments', [
+      'null' => [
         'id' => 'null',
         'table' => 'views',
         'field' => 'null',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
 
@@ -57,15 +57,15 @@ class ArgumentNullTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Add a argument, which has null as handler.
-    $view->displayHandlers->get('default')->overrideOption('arguments', array(
-      'id' => array(
+    $view->displayHandlers->get('default')->overrideOption('arguments', [
+      'id' => [
         'id' => 'id',
         'table' => 'views_test_data',
         'field' => 'id',
-      ),
-    ));
+      ],
+    ]);
 
-    $this->executeView($view, array(26));
+    $this->executeView($view, [26]);
 
     // The argument should be ignored, so every result should return.
     $this->assertEqual(5, count($view->result));

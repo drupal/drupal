@@ -19,14 +19,14 @@ class AreaTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_example_area', 'test_example_area_access');
+  public static $testViews = ['test_example_area', 'test_example_area_access'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node', 'views_ui');
+  public static $modules = ['node', 'views_ui'];
 
   protected function setUp() {
     parent::setUp();
@@ -36,13 +36,13 @@ class AreaTest extends HandlerTestBase {
 
   protected function viewsData() {
     $data = parent::viewsData();
-    $data['views']['test_example'] = array(
+    $data['views']['test_example'] = [
       'title' => 'Test Example area',
       'help' => 'A area handler which just exists for tests.',
-      'area' => array(
+      'area' => [
         'id' => 'test_example'
-      )
-    );
+      ]
+    ];
 
     return $data;
   }
@@ -52,21 +52,21 @@ class AreaTest extends HandlerTestBase {
    * Tests the generic UI of a area handler.
    */
   public function testUI() {
-    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer views', 'administer site configuration']);
     $this->drupalLogin($admin_user);
 
-    $types = array('header', 'footer', 'empty');
-    $labels = array();
+    $types = ['header', 'footer', 'empty'];
+    $labels = [];
     foreach ($types as $type) {
       $edit_path = 'admin/structure/views/nojs/handler/test_example_area/default/' . $type . '/test_example';
 
       // First setup an empty label.
-      $this->drupalPostForm($edit_path, array(), t('Apply'));
+      $this->drupalPostForm($edit_path, [], t('Apply'));
       $this->assertText('Test Example area');
 
       // Then setup a no empty label.
       $labels[$type] = $this->randomMachineName();
-      $this->drupalPostForm($edit_path, array('options[admin_label]' => $labels[$type]), t('Apply'));
+      $this->drupalPostForm($edit_path, ['options[admin_label]' => $labels[$type]], t('Apply'));
       // Make sure that the new label appears on the site.
       $this->assertText($labels[$type]);
 
@@ -188,7 +188,7 @@ class AreaTest extends HandlerTestBase {
    * Tests global tokens.
    */
   public function testRenderAreaToken() {
-    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer views', 'administer site configuration']);
     $this->drupalLogin($admin_user);
 
     $view = Views::getView('test_example_area');
@@ -204,7 +204,7 @@ class AreaTest extends HandlerTestBase {
 
     // Test the list of available tokens.
     $available = $empty_handler->getAvailableGlobalTokens();
-    foreach (array('site', 'view') as $type) {
+    foreach (['site', 'view'] as $type) {
       $this->assertTrue(!empty($available[$type]) && is_array($available[$type]));
       // Test that each item exists in the list.
       foreach ($available[$type] as $token => $info) {
@@ -230,8 +230,8 @@ class AreaTest extends HandlerTestBase {
     $view->initDisplay('page_1');
 
     // Add the title area handler to the empty area.
-    $view->displayHandlers->get('page_1')->overrideOption('empty', array(
-      'title' => array(
+    $view->displayHandlers->get('page_1')->overrideOption('empty', [
+      'title' => [
         'id' => 'title',
         'table' => 'views',
         'field' => 'title',
@@ -239,8 +239,8 @@ class AreaTest extends HandlerTestBase {
         'empty' => '0',
         'title' => 'Overridden title',
         'plugin_id' => 'title',
-      ),
-    ));
+      ],
+    ]);
 
     $view->storage->enable()->save();
 

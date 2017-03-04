@@ -22,7 +22,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
    *
    * @todo Remove this dependency.
    */
-  public static $modules = array('views');
+  public static $modules = ['views'];
 
   /**
    * Get node "x new comments" metadata from the server for the current user.
@@ -35,7 +35,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
    */
   protected function renderNewCommentsNodeLinks(array $node_ids) {
     // Build POST values.
-    $post = array();
+    $post = [];
     for ($i = 0; $i < count($node_ids); $i++) {
       $post['node_ids[' . $i . ']'] = $node_ids[$i];
     }
@@ -51,15 +51,15 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $post = implode('&', $post);
 
     // Perform HTTP request.
-    return $this->curlExec(array(
-      CURLOPT_URL => \Drupal::url('comment.new_comments_node_links', array(), array('absolute' => TRUE)),
+    return $this->curlExec([
+      CURLOPT_URL => \Drupal::url('comment.new_comments_node_links', [], ['absolute' => TRUE]),
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $post,
-      CURLOPT_HTTPHEADER => array(
+      CURLOPT_HTTPHEADER => [
         'Accept: application/json',
         'Content-Type: application/x-www-form-urlencoded',
-      ),
-    ));
+      ],
+    ]);
   }
 
   /**
@@ -70,7 +70,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // node.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node');
-    $this->assertNoLink(t('@count comments', array('@count' => 0)));
+    $this->assertNoLink(t('@count comments', ['@count' => 0]));
     $this->assertLink(t('Read more'));
     // Verify the data-history-node-last-comment-timestamp attribute, which is
     // used by the drupal.node-new-comments-link library to determine whether
@@ -81,7 +81,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // Create a new comment. This helper function may be run with different
     // comment settings so use $comment->save() to avoid complex setup.
     /** @var \Drupal\comment\CommentInterface $comment */
-    $comment = Comment::create(array(
+    $comment = Comment::create([
       'cid' => NULL,
       'entity_id' => $this->node->id(),
       'entity_type' => 'node',
@@ -92,8 +92,8 @@ class CommentNewIndicatorTest extends CommentTestBase {
       'subject' => $this->randomMachineName(),
       'hostname' => '127.0.0.1',
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'comment_body' => array(LanguageInterface::LANGCODE_NOT_SPECIFIED => array($this->randomMachineName())),
-    ));
+      'comment_body' => [LanguageInterface::LANGCODE_NOT_SPECIFIED => [$this->randomMachineName()]],
+    ]);
     $comment->save();
     $this->drupalLogout();
 
@@ -126,24 +126,24 @@ class CommentNewIndicatorTest extends CommentTestBase {
     ]);
     // Pretend the data was not present in drupalSettings, i.e. test the
     // separate request to the server.
-    $response = $this->renderNewCommentsNodeLinks(array($this->node->id()));
+    $response = $this->renderNewCommentsNodeLinks([$this->node->id()]);
     $this->assertResponse(200);
     $json = Json::decode($response);
-    $expected = array($this->node->id() => array(
+    $expected = [$this->node->id() => [
       'new_comment_count' => 1,
-      'first_new_comment_link' => $this->node->url('canonical', array('fragment' => 'new')),
-    ));
+      'first_new_comment_link' => $this->node->url('canonical', ['fragment' => 'new']),
+    ]];
     $this->assertIdentical($expected, $json);
 
     // Failing to specify node IDs for the endpoint should return a 404.
-    $this->renderNewCommentsNodeLinks(array());
+    $this->renderNewCommentsNodeLinks([]);
     $this->assertResponse(404);
 
     // Accessing the endpoint as the anonymous user should return a 403.
     $this->drupalLogout();
-    $this->renderNewCommentsNodeLinks(array($this->node->id()));
+    $this->renderNewCommentsNodeLinks([$this->node->id()]);
     $this->assertResponse(403);
-    $this->renderNewCommentsNodeLinks(array());
+    $this->renderNewCommentsNodeLinks([]);
     $this->assertResponse(403);
   }
 

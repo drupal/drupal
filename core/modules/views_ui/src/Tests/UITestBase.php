@@ -28,7 +28,7 @@ abstract class UITestBase extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'views_ui', 'block', 'taxonomy');
+  public static $modules = ['node', 'views_ui', 'block', 'taxonomy'];
 
   /**
    * {@inheritdoc}
@@ -38,24 +38,24 @@ abstract class UITestBase extends ViewTestBase {
 
     $this->enableViewsTestModule();
 
-    $this->adminUser = $this->drupalCreateUser(array('administer views'));
+    $this->adminUser = $this->drupalCreateUser(['administer views']);
 
-    $this->fullAdminUser = $this->drupalCreateUser(array('administer views',
+    $this->fullAdminUser = $this->drupalCreateUser(['administer views',
       'administer blocks',
       'bypass node access',
       'access user profiles',
       'view all revisions',
       'administer permissions',
-    ));
+    ]);
     $this->drupalLogin($this->fullAdminUser);
   }
 
   /**
    * A helper method which creates a random view.
    */
-  public function randomView(array $view = array()) {
+  public function randomView(array $view = []) {
     // Create a new view in the UI.
-    $default = array();
+    $default = [];
     $default['label'] = $this->randomMachineName(16);
     $default['id'] = strtolower($this->randomMachineName(16));
     $default['description'] = $this->randomMachineName(16);
@@ -72,7 +72,7 @@ abstract class UITestBase extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function drupalGet($path, array $options = array(), array $headers = array()) {
+  protected function drupalGet($path, array $options = [], array $headers = []) {
     $url = $this->buildUrl($path, $options);
 
     // Ensure that each nojs page is accessible via ajax as well.

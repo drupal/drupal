@@ -22,11 +22,11 @@ class NodeRevision extends Node {
    */
   public function fields() {
     // Use all the node fields plus the vid that identifies the version.
-    return parent::fields() + array(
+    return parent::fields() + [
       'vid' => t('The primary identifier for this version.'),
       'log' => $this->t('Revision Log message'),
       'timestamp' => $this->t('Revision timestamp'),
-    );
+    ];
   }
 
   /**

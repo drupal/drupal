@@ -27,7 +27,7 @@ class CopyTest extends FileManagedUnitTestBase {
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were copied correctly.');
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('copy', 'insert'));
+    $this->assertFileHooksCalled(['copy', 'insert']);
 
     $this->assertDifferentFile($source, $result);
     $this->assertEqual($result->getFileUri(), $desired_uri, 'The copied file entity has the desired filepath.');
@@ -59,7 +59,7 @@ class CopyTest extends FileManagedUnitTestBase {
     $this->assertNotEqual($result->getFileUri(), $source->getFileUri(), 'Returned file path has changed from the original.');
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('copy', 'insert'));
+    $this->assertFileHooksCalled(['copy', 'insert']);
 
     // Load all the affected files to check the changes that actually made it
     // to the database.
@@ -99,7 +99,7 @@ class CopyTest extends FileManagedUnitTestBase {
     $this->assertDifferentFile($source, $result);
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('load', 'copy', 'update'));
+    $this->assertFileHooksCalled(['load', 'copy', 'update']);
 
     // Load all the affected files to check the changes that actually made it
     // to the database.
@@ -136,7 +136,7 @@ class CopyTest extends FileManagedUnitTestBase {
     $this->assertEqual($contents, file_get_contents($target->getFileUri()), 'Contents of file were not altered.');
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array());
+    $this->assertFileHooksCalled([]);
 
     $this->assertFileUnchanged($source, File::load($source->id()));
     $this->assertFileUnchanged($target, File::load($target->id()));

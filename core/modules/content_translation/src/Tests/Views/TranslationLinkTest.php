@@ -20,14 +20,14 @@ class TranslationLinkTest extends ContentTranslationTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_entity_translations_link');
+  public static $testViews = ['test_entity_translations_link'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('content_translation_test_views');
+  public static $modules = ['content_translation_test_views'];
 
   protected function setUp() {
     // @todo Use entity_type once it is has multilingual Views integration.
@@ -45,7 +45,7 @@ class TranslationLinkTest extends ContentTranslationTestBase {
     $user->langcode = Language::LANGCODE_NOT_SPECIFIED;
     $user->save();
 
-    ViewTestData::createTestViews(get_class($this), array('content_translation_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['content_translation_test_views']);
   }
 
   /**

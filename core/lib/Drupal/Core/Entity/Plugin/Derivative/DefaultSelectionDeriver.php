@@ -50,8 +50,8 @@ class DefaultSelectionDeriver extends DeriverBase implements ContainerDeriverInt
   public function getDerivativeDefinitions($base_plugin_definition) {
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
       $this->derivatives[$entity_type_id] = $base_plugin_definition;
-      $this->derivatives[$entity_type_id]['entity_types'] = array($entity_type_id);
-      $this->derivatives[$entity_type_id]['label'] = t('@entity_type selection', array('@entity_type' => $entity_type->getLabel()));
+      $this->derivatives[$entity_type_id]['entity_types'] = [$entity_type_id];
+      $this->derivatives[$entity_type_id]['label'] = t('@entity_type selection', ['@entity_type' => $entity_type->getLabel()]);
       $this->derivatives[$entity_type_id]['base_plugin_label'] = (string) $base_plugin_definition['label'];
 
       // If the entity type doesn't provide a 'label' key in its plugin

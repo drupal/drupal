@@ -14,7 +14,7 @@ class UrlHelper {
    *
    * @var array
    */
-  protected static $allowedProtocols = array('http', 'https');
+  protected static $allowedProtocols = ['http', 'https'];
 
   /**
    * Parses an array into a valid, rawurlencoded query string.
@@ -43,7 +43,7 @@ class UrlHelper {
    * @ingroup php_wrappers
    */
   public static function buildQuery(array $query, $parent = '') {
-    $params = array();
+    $params = [];
 
     foreach ($query as $key => $value) {
       $key = ($parent ? $parent . '[' . rawurlencode($key) . ']' : rawurlencode($key));
@@ -79,7 +79,7 @@ class UrlHelper {
    * @return
    *   An array containing query parameters.
    */
-  public static function filterQueryParameters(array $query, array $exclude = array(), $parent = '') {
+  public static function filterQueryParameters(array $query, array $exclude = [], $parent = '') {
     // If $exclude is empty, there is nothing to filter.
     if (empty($exclude)) {
       return $query;
@@ -88,7 +88,7 @@ class UrlHelper {
       $exclude = array_flip($exclude);
     }
 
-    $params = array();
+    $params = [];
     foreach ($query as $key => $value) {
       $string_key = ($parent ? $parent . '[' . $key . ']' : $key);
       if (isset($exclude[$string_key])) {
@@ -134,11 +134,11 @@ class UrlHelper {
    * @ingroup php_wrappers
    */
   public static function parse($url) {
-    $options = array(
+    $options = [
       'path' => NULL,
-      'query' => array(),
+      'query' => [],
       'fragment' => '',
-    );
+    ];
 
     // External URLs: not using parse_url() here, so we do not have to rebuild
     // the scheme, host, and path without having any use for it.
@@ -294,7 +294,7 @@ class UrlHelper {
    * @param array $protocols
    *   An array of protocols, for example http, https and irc.
    */
-  public static function setAllowedProtocols(array $protocols = array()) {
+  public static function setAllowedProtocols(array $protocols = []) {
     static::$allowedProtocols = $protocols;
   }
 

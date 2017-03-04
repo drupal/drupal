@@ -65,7 +65,7 @@ class EntityConverter implements ParamConverterInterface {
       // If the entity type is translatable, ensure we return the proper
       // translation object for the current context.
       if ($entity instanceof EntityInterface && $entity instanceof TranslatableInterface) {
-        $entity = $this->entityManager->getTranslationFromContext($entity, NULL, array('operation' => 'entity_upcast'));
+        $entity = $this->entityManager->getTranslationFromContext($entity, NULL, ['operation' => 'entity_upcast']);
       }
       return $entity;
     }

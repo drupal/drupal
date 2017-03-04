@@ -425,7 +425,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   collection.
    */
   protected function findPreExistingConfiguration(StorageInterface $storage) {
-    $existing_configuration = array();
+    $existing_configuration = [];
     // Gather information about all the supported collections.
     $collection_info = $this->configManager->getConfigCollectionInfo();
 

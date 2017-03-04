@@ -19,14 +19,14 @@ class BookRelationshipTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_book_view');
+  public static $testViews = ['test_book_view'];
 
   /**
    * Modules to install.
    *
    * @var array
    */
-  public static $modules = array('book_test_views', 'book', 'views');
+  public static $modules = ['book_test_views', 'book', 'views'];
 
   /**
    * A book node.
@@ -50,14 +50,14 @@ class BookRelationshipTest extends ViewTestBase {
 
     // Create users.
     $this->bookAuthor = $this->drupalCreateUser(
-      array(
+      [
         'create new books',
         'create book content',
         'edit own book content',
         'add content to books',
-      )
+      ]
     );
-    ViewTestData::createTestViews(get_class($this), array('book_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['book_test_views']);
   }
 
   /**
@@ -70,7 +70,7 @@ class BookRelationshipTest extends ViewTestBase {
     $this->book = $this->createBookNode('new');
     $book = $this->book;
 
-    $nodes = array();
+    $nodes = [];
     // Node 0.
     $nodes[] = $this->createBookNode($book->id());
     // Node 1.
@@ -110,7 +110,7 @@ class BookRelationshipTest extends ViewTestBase {
     // Used to ensure that when sorted nodes stay in same order.
     static $number = 0;
 
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $number . ' - SimpleTest test node ' . $this->randomMachineName(10);
     $edit['body[0][value]'] = 'SimpleTest test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
     $edit['book[bid]'] = $book_nid;

@@ -16,14 +16,14 @@ class FeedLanguageTest extends AggregatorTestBase {
    *
    * @var array
    */
-  public static $modules = array('language');
+  public static $modules = ['language'];
 
   /**
    * List of langcodes.
    *
    * @var string[]
    */
-  protected $langcodes = array();
+  protected $langcodes = [];
 
   /**
    * {@inheritdoc}
@@ -32,12 +32,12 @@ class FeedLanguageTest extends AggregatorTestBase {
     parent::setUp();
 
     // Create test languages.
-    $this->langcodes = array(ConfigurableLanguage::load('en'));
+    $this->langcodes = [ConfigurableLanguage::load('en')];
     for ($i = 1; $i < 3; ++$i) {
-      $language = ConfigurableLanguage::create(array(
+      $language = ConfigurableLanguage::create([
         'id' => 'l' . $i,
         'label' => $this->randomString(),
-      ));
+      ]);
       $language->save();
       $this->langcodes[$i] = $language->id();
     }
@@ -57,10 +57,10 @@ class FeedLanguageTest extends AggregatorTestBase {
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
 
     /** @var \Drupal\aggregator\FeedInterface[] $feeds */
-    $feeds = array();
+    $feeds = [];
     // Create feeds.
-    $feeds[1] = $this->createFeed(NULL, array('langcode[0][value]' => $this->langcodes[1]));
-    $feeds[2] = $this->createFeed(NULL, array('langcode[0][value]' => $this->langcodes[2]));
+    $feeds[1] = $this->createFeed(NULL, ['langcode[0][value]' => $this->langcodes[1]]);
+    $feeds[2] = $this->createFeed(NULL, ['langcode[0][value]' => $this->langcodes[2]]);
 
     // Make sure that the language has been assigned.
     $this->assertEqual($feeds[1]->language()->getId(), $this->langcodes[1]);
@@ -74,7 +74,7 @@ class FeedLanguageTest extends AggregatorTestBase {
     // the one from the feed.
     foreach ($feeds as $feed) {
       /** @var \Drupal\aggregator\ItemInterface[] $items */
-      $items = entity_load_multiple_by_properties('aggregator_item', array('fid' => $feed->id()));
+      $items = entity_load_multiple_by_properties('aggregator_item', ['fid' => $feed->id()]);
       $this->assertTrue(count($items) > 0, 'Feed items were created.');
       foreach ($items as $item) {
         $this->assertEqual($item->language()->getId(), $feed->language()->getId());

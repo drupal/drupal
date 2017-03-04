@@ -38,19 +38,19 @@ class BaseFieldDefinitionTest extends UnitTestCase {
     $field_type_manager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
 
     $this->fieldType = $this->randomMachineName();
-    $this->fieldTypeDefinition = array(
+    $this->fieldTypeDefinition = [
       'id' => $this->fieldType,
-      'storage_settings' => array(
+      'storage_settings' => [
         'some_setting' => 'value 1'
-      ),
-      'field_settings' => array(
+      ],
+      'field_settings' => [
         'some_instance_setting' => 'value 2',
-      ),
-    );
+      ],
+    ];
 
     $field_type_manager->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue(array($this->fieldType => $this->fieldTypeDefinition)));
+      ->will($this->returnValue([$this->fieldType => $this->fieldTypeDefinition]));
     $field_type_manager->expects($this->any())
       ->method('getDefinition')
       ->with($this->fieldType)
@@ -129,7 +129,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
     $definition->setSetting($setting, $value);
     $this->assertEquals($value, $definition->getSetting($setting));
     $default_settings = $this->fieldTypeDefinition['storage_settings'] + $this->fieldTypeDefinition['field_settings'];
-    $this->assertEquals(array($setting => $value) + $default_settings, $definition->getSettings());
+    $this->assertEquals([$setting => $value] + $default_settings, $definition->getSettings());
   }
 
   /**
@@ -156,10 +156,10 @@ class BaseFieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldDefaultValue() {
     $definition = BaseFieldDefinition::create($this->fieldType);
-    $default_value = array(
+    $default_value = [
       'value' => $this->randomMachineName(),
-    );
-    $expected_default_value = array($default_value);
+    ];
+    $expected_default_value = [$default_value];
     $definition->setDefaultValue($default_value);
     $entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
@@ -186,8 +186,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
     $this->assertEquals($expected_default_value, $definition->getDefaultValue($entity));
 
     // Set default value with an empty array.
-    $definition->setDefaultValue(array());
-    $this->assertEquals(array(), $definition->getDefaultValue($entity));
+    $definition->setDefaultValue([]);
+    $this->assertEquals([], $definition->getDefaultValue($entity));
 
     // Set default value with NULL.
     $definition->setDefaultValue(NULL);

@@ -19,10 +19,10 @@ class TestPluginManager extends PluginManagerBase {
     $this->discovery = new StaticDiscovery();
 
     // A simple plugin: a mock user login block.
-    $this->discovery->setDefinition('user_login', array(
+    $this->discovery->setDefinition('user_login', [
       'label' => 'User login',
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock',
-    ));
+    ]);
 
     // In addition to finding all of the plugins available for a type, a plugin
     // type must also be able to create instances of that plugin. For example, a

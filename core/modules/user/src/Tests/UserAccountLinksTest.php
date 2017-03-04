@@ -16,7 +16,7 @@ class UserAccountLinksTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu_ui', 'block', 'test_page_test');
+  public static $modules = ['menu_ui', 'block', 'test_page_test'];
 
   /**
    * {@inheritdoc}
@@ -33,7 +33,7 @@ class UserAccountLinksTest extends WebTestBase {
    */
   function testSecondaryMenu() {
     // Create a regular user.
-    $user = $this->drupalCreateUser(array());
+    $user = $this->drupalCreateUser([]);
 
     // Log in and get the homepage.
     $this->drupalLogin($user);
@@ -41,18 +41,18 @@ class UserAccountLinksTest extends WebTestBase {
 
     // For a logged-in user, expect the secondary menu to have links for "My
     // account" and "Log out".
-    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
+    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
       ':menu_class' => 'menu',
       ':href' => 'user',
       ':text' => 'My account',
-    ));
+    ]);
     $this->assertEqual(count($link), 1, 'My account link is in secondary menu.');
 
-    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
+    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
       ':menu_class' => 'menu',
       ':href' => 'user/logout',
       ':text' => 'Log out',
-    ));
+    ]);
     $this->assertEqual(count($link), 1, 'Log out link is in secondary menu.');
 
     // Log out and get the homepage.
@@ -60,11 +60,11 @@ class UserAccountLinksTest extends WebTestBase {
     $this->drupalGet('<front>');
 
     // For a logged-out user, expect the secondary menu to have a "Log in" link.
-    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
+    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
       ':menu_class' => 'menu',
       ':href' => 'user/login',
       ':text' => 'Log in',
-    ));
+    ]);
     $this->assertEqual(count($link), 1, 'Log in link is in secondary menu.');
   }
 
@@ -73,22 +73,22 @@ class UserAccountLinksTest extends WebTestBase {
    */
   function testDisabledAccountLink() {
     // Create an admin user and log in.
-    $this->drupalLogin($this->drupalCreateUser(array('access administration pages', 'administer menu')));
+    $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer menu']));
 
     // Verify that the 'My account' link exists before we check for its
     // disappearance.
-    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
+    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
       ':menu_class' => 'menu',
       ':href' => 'user',
       ':text' => 'My account',
-    ));
+    ]);
     $this->assertEqual(count($link), 1, 'My account link is in the secondary menu.');
 
     // Verify that the 'My account' link is enabled. Do not assume the value of
     // auto-increment is 1. Use XPath to obtain input element id and name using
     // the consistent label text.
     $this->drupalGet('admin/structure/menu/manage/account');
-    $label = $this->xpath('//label[contains(.,:text)]/@for', array(':text' => 'Enable My account menu link'));
+    $label = $this->xpath('//label[contains(.,:text)]/@for', [':text' => 'Enable My account menu link']);
     $this->assertFieldChecked((string) $label[0], "The 'My account' link is enabled by default.");
 
     // Disable the 'My account' link.
@@ -99,11 +99,11 @@ class UserAccountLinksTest extends WebTestBase {
     $this->drupalGet('<front>');
 
     // Verify that the 'My account' link does not appear when disabled.
-    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
+    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', [
       ':menu_class' => 'menu',
       ':href' => 'user',
       ':text' => 'My account',
-    ));
+    ]);
     $this->assertEqual(count($link), 0, 'My account link is not in the secondary menu.');
   }
 

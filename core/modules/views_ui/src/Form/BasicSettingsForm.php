@@ -65,7 +65,7 @@ class BasicSettingsForm extends ConfigFormBase {
     $form = parent::buildForm($form, $form_state);
 
     $config = $this->config('views.settings');
-    $options = array();
+    $options = [];
     foreach ($this->themeHandler->listInfo() as $name => $theme) {
       if ($theme->status) {
         $options[$name] = $theme->info['name'];
@@ -74,94 +74,94 @@ class BasicSettingsForm extends ConfigFormBase {
 
     // This is not currently a fieldset but we may want it to be later,
     // so this will make it easier to change if we do.
-    $form['basic'] = array();
+    $form['basic'] = [];
 
-    $form['basic']['ui_show_master_display'] = array(
+    $form['basic']['ui_show_master_display'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Always show the master (default) display'),
       '#default_value' => $config->get('ui.show.master_display'),
-    );
+    ];
 
-    $form['basic']['ui_show_advanced_column'] = array(
+    $form['basic']['ui_show_advanced_column'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Always show advanced display settings'),
       '#default_value' => $config->get('ui.show.advanced_column'),
-    );
+    ];
 
-    $form['basic']['ui_show_display_embed'] = array(
+    $form['basic']['ui_show_display_embed'] = [
       '#type' => 'checkbox',
       '#title' => t('Allow embedded displays'),
       '#description' => t('Embedded displays can be used in code via views_embed_view().'),
       '#default_value' => $config->get('ui.show.display_embed'),
-    );
+    ];
 
-    $form['basic']['ui_exposed_filter_any_label'] = array(
+    $form['basic']['ui_exposed_filter_any_label'] = [
       '#type' => 'select',
       '#title' => $this->t('Label for "Any" value on non-required single-select exposed filters'),
-      '#options' => array('old_any' => '<Any>', 'new_any' => $this->t('- Any -')),
+      '#options' => ['old_any' => '<Any>', 'new_any' => $this->t('- Any -')],
       '#default_value' => $config->get('ui.exposed_filter_any_label'),
-    );
+    ];
 
-    $form['live_preview'] = array(
+    $form['live_preview'] = [
       '#type' => 'details',
       '#title' => $this->t('Live preview settings'),
       '#open' => TRUE,
-    );
+    ];
 
-    $form['live_preview']['ui_always_live_preview'] = array(
+    $form['live_preview']['ui_always_live_preview'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Automatically update preview on changes'),
       '#default_value' => $config->get('ui.always_live_preview'),
-    );
+    ];
 
-    $form['live_preview']['ui_show_preview_information'] = array(
+    $form['live_preview']['ui_show_preview_information'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show information and statistics about the view during live preview'),
       '#default_value' => $config->get('ui.show.preview_information'),
-    );
+    ];
 
-    $form['live_preview']['options'] = array(
+    $form['live_preview']['options'] = [
       '#type' => 'container',
-      '#states' => array(
-        'visible' => array(
-          ':input[name="ui_show_preview_information"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
+      '#states' => [
+        'visible' => [
+          ':input[name="ui_show_preview_information"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
 
-    $form['live_preview']['options']['ui_show_sql_query_enabled'] = array(
+    $form['live_preview']['options']['ui_show_sql_query_enabled'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show the SQL query'),
       '#default_value' => $config->get('ui.show.sql_query.enabled'),
-    );
+    ];
 
-    $form['live_preview']['options']['ui_show_sql_query_where'] = array(
+    $form['live_preview']['options']['ui_show_sql_query_where'] = [
       '#type' => 'radios',
-      '#states' => array(
-        'visible' => array(
-          ':input[name="ui_show_sql_query_enabled"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="ui_show_sql_query_enabled"]' => ['checked' => TRUE],
+        ],
+      ],
       '#title' => t('Show SQL query'),
-      '#options' => array(
+      '#options' => [
         'above' => $this->t('Above the preview'),
         'below' => $this->t('Below the preview'),
-      ),
+      ],
       '#default_value' => $config->get('ui.show.sql_query.where'),
-    );
+    ];
 
-    $form['live_preview']['options']['ui_show_performance_statistics'] = array(
+    $form['live_preview']['options']['ui_show_performance_statistics'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show performance statistics'),
       '#default_value' => $config->get('ui.show.performance_statistics'),
-    );
+    ];
 
-    $form['live_preview']['options']['ui_show_additional_queries'] = array(
+    $form['live_preview']['options']['ui_show_additional_queries'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show other queries run during render during live preview'),
       '#description' => $this->t("Drupal has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."),
       '#default_value' => $config->get('ui.show.additional_queries'),
-    );
+    ];
 
     return $form;
   }

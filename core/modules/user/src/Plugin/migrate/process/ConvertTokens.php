@@ -21,7 +21,7 @@ class ConvertTokens extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $tokens = array(
+    $tokens = [
       '!site' => '[site:name]',
       '!username' => '[user:name]',
       '!mailto' => '[user:mail]',
@@ -32,7 +32,7 @@ class ConvertTokens extends ProcessPluginBase {
       '!uri' => '[site:url]',
       '!date' => '[date:medium]',
       '!password' => '',
-    );
+    ];
 
     // Given that our source is a database column that could hold a NULL
     // value, sometimes that filters down to here. str_replace() cannot

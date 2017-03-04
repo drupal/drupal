@@ -25,7 +25,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'taxonomy', 'quickedit');
+  public static $modules = ['node', 'taxonomy', 'quickedit'];
 
   /**
    * Stores the node used for the tests.
@@ -72,9 +72,9 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array(
+    $this->drupalCreateContentType([
       'type' => 'article',
-    ));
+    ]);
     // Create the vocabulary for the tag field.
     $this->vocabulary = Vocabulary::create([
       'name' => 'quickedit testing tags',
@@ -83,12 +83,12 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
     $this->vocabulary->save();
     $this->fieldName = 'field_' . $this->vocabulary->id();
 
-    $handler_settings = array(
-      'target_bundles' => array(
+    $handler_settings = [
+      'target_bundles' => [
         $this->vocabulary->id() => $this->vocabulary->id(),
-      ),
+      ],
       'auto_create' => TRUE,
-    );
+    ];
     $this->createEntityReferenceField('node', 'article', $this->fieldName, 'Tags', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'article', 'default')
@@ -114,7 +114,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
     $this->term1 = $this->createTerm();
     $this->term2 = $this->createTerm();
 
-    $node = array();
+    $node = [];
     $node['type'] = 'article';
     $node[$this->fieldName][]['target_id'] = $this->term1->id();
     $node[$this->fieldName][]['target_id'] = $this->term2->id();
@@ -130,7 +130,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
     $this->drupalLogin($this->editorUser);
 
     $quickedit_uri = 'quickedit/form/node/' . $this->node->id() . '/' . $this->fieldName . '/' . $this->node->language()->getId() . '/full';
-    $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
+    $post = ['nocssjs' => 'true'] + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost($quickedit_uri, '', $post, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
     $ajax_commands = Json::decode($response);
 
@@ -140,13 +140,13 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
     $this->assertTrue($form_tokens_found, 'Form tokens found in output.');
 
     if ($form_tokens_found) {
-      $post = array(
+      $post = [
         'form_id' => 'quickedit_field_form',
         'form_token' => $token_match[1],
         'form_build_id' => $build_id_match[1],
-        $this->fieldName . '[target_id]' => implode(', ', array($this->term1->getName(), 'new term', $this->term2->getName())),
+        $this->fieldName . '[target_id]' => implode(', ', [$this->term1->getName(), 'new term', $this->term2->getName()]),
         'op' => t('Save'),
-      );
+      ];
 
       // Submit field form and check response. Should render back all the terms.
       $response = $this->drupalPost($quickedit_uri, '', $post, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
@@ -161,7 +161,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
       // Load the form again, which should now get it back from
       // PrivateTempStore.
       $quickedit_uri = 'quickedit/form/node/' . $this->node->id() . '/' . $this->fieldName . '/' . $this->node->language()->getId() . '/full';
-      $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
+      $post = ['nocssjs' => 'true'] + $this->getAjaxPageStatePostData();
       $response = $this->drupalPost($quickedit_uri, '', $post, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
       $ajax_commands = Json::decode($response);
 
@@ -170,15 +170,15 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
       // taxonomy terms, including the one that has just been newly created and
       // which is not yet stored.
       $this->setRawContent($ajax_commands[0]['data']);
-      $expected = array(
+      $expected = [
         $this->term1->getName() . ' (' . $this->term1->id() . ')',
         'new term',
         $this->term2->getName() . ' (' . $this->term2->id() . ')',
-      );
+      ];
       $this->assertFieldByName($this->fieldName . '[target_id]', implode(', ', $expected));
 
       // Save the entity.
-      $post = array('nocssjs' => 'true');
+      $post = ['nocssjs' => 'true'];
       $response = $this->drupalPostWithFormat('quickedit/entity/node/' . $this->node->id(), 'json', $post);
       $this->assertResponse(200);
 

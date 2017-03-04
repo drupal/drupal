@@ -35,16 +35,16 @@ class ShortcutForm extends ContentEntityForm {
     }
 
     if ($status == SAVED_UPDATED) {
-      $message = $this->t('The shortcut %link has been updated.', array('%link' => $view_link));
+      $message = $this->t('The shortcut %link has been updated.', ['%link' => $view_link]);
     }
     else {
-      $message = $this->t('Added a shortcut for %title.', array('%title' => $view_link));
+      $message = $this->t('Added a shortcut for %title.', ['%title' => $view_link]);
     }
     drupal_set_message($message);
 
     $form_state->setRedirect(
       'entity.shortcut_set.customize_form',
-      array('shortcut_set' => $entity->bundle())
+      ['shortcut_set' => $entity->bundle()]
     );
   }
 

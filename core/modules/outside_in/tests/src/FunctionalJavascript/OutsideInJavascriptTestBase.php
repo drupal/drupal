@@ -12,7 +12,7 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function drupalGet($path, array $options = array(), array $headers = array()) {
+  protected function drupalGet($path, array $options = [], array $headers = []) {
     $return = parent::drupalGet($path, $options, $headers);
 
     // After the page loaded we need to additionally wait until the settings

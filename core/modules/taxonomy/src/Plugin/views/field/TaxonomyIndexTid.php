@@ -62,19 +62,19 @@ class TaxonomyIndexTid extends PrerenderList {
 
     // @todo: Wouldn't it be possible to use $this->base_table and no if here?
     if ($view->storage->get('base_table') == 'node_field_revision') {
-      $this->additional_fields['nid'] = array('table' => 'node_field_revision', 'field' => 'nid');
+      $this->additional_fields['nid'] = ['table' => 'node_field_revision', 'field' => 'nid'];
     }
     else {
-      $this->additional_fields['nid'] = array('table' => 'node_field_data', 'field' => 'nid');
+      $this->additional_fields['nid'] = ['table' => 'node_field_data', 'field' => 'nid'];
     }
   }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['link_to_taxonomy'] = array('default' => TRUE);
-    $options['limit'] = array('default' => FALSE);
-    $options['vids'] = array('default' => array());
+    $options['link_to_taxonomy'] = ['default' => TRUE];
+    $options['limit'] = ['default' => FALSE];
+    $options['vids'] = ['default' => []];
 
     return $options;
   }
@@ -83,36 +83,36 @@ class TaxonomyIndexTid extends PrerenderList {
    * Provide "link to term" option.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $form['link_to_taxonomy'] = array(
+    $form['link_to_taxonomy'] = [
       '#title' => $this->t('Link this field to its term page'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_taxonomy']),
-    );
+    ];
 
-    $form['limit'] = array(
+    $form['limit'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Limit terms by vocabulary'),
       '#default_value' => $this->options['limit'],
-    );
+    ];
 
-    $options = array();
+    $options = [];
     $vocabularies = $this->vocabularyStorage->loadMultiple();
     foreach ($vocabularies as $voc) {
       $options[$voc->id()] = $voc->label();
     }
 
-    $form['vids'] = array(
+    $form['vids'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Vocabularies'),
       '#options' => $options,
       '#default_value' => $this->options['vids'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[limit]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[limit]"]' => ['checked' => TRUE],
+        ],
+      ],
 
-    );
+    ];
 
     parent::buildOptionsForm($form, $form_state);
   }
@@ -127,7 +127,7 @@ class TaxonomyIndexTid extends PrerenderList {
   public function preRender(&$values) {
     $vocabularies = $this->vocabularyStorage->loadMultiple();
     $this->field_alias = $this->aliases['nid'];
-    $nids = array();
+    $nids = [];
     foreach ($values as $result) {
       if (!empty($result->{$this->aliases['nid']})) {
         $nids[] = $result->{$this->aliases['nid']};
@@ -137,7 +137,7 @@ class TaxonomyIndexTid extends PrerenderList {
     if ($nids) {
       $vocabs = array_filter($this->options['vids']);
       if (empty($this->options['limit'])) {
-        $vocabs = array();
+        $vocabs = [];
       }
       $result = \Drupal::entityManager()->getStorage('taxonomy_term')->getNodeTerms($nids, $vocabs);
 
@@ -169,7 +169,7 @@ class TaxonomyIndexTid extends PrerenderList {
   }
 
   protected function addSelfTokens(&$tokens, $item) {
-    foreach (array('tid', 'name', 'vocabulary_vid', 'vocabulary') as $token) {
+    foreach (['tid', 'name', 'vocabulary_vid', 'vocabulary'] as $token) {
       $tokens['{{ ' . $this->options['id'] . '__' . $token . ' }}'] = isset($item[$token]) ? $item[$token] : '';
     }
   }

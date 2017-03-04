@@ -40,18 +40,18 @@ class FieldCrudTest extends FieldKernelTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->fieldStorageDefinition = array(
+    $this->fieldStorageDefinition = [
       'field_name' => Unicode::strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-    );
+    ];
     $this->fieldStorage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $this->fieldStorage->save();
-    $this->fieldDefinition = array(
+    $this->fieldDefinition = [
       'field_name' => $this->fieldStorage->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
+    ];
   }
 
   // TODO : test creation with
@@ -223,12 +223,12 @@ class FieldCrudTest extends FieldKernelTestBase {
     FieldConfig::create($another_field_definition)->save();
 
     // Test that the first field is not deleted, and then delete it.
-    $field = current(entity_load_multiple_by_properties('field_config', array('entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE)));
+    $field = current(entity_load_multiple_by_properties('field_config', ['entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE]));
     $this->assertTrue(!empty($field) && empty($field->deleted), 'A new field is not marked for deletion.');
     $field->delete();
 
     // Make sure the field is marked as deleted when it is specifically loaded.
-    $field = current(entity_load_multiple_by_properties('field_config', array('entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE)));
+    $field = current(entity_load_multiple_by_properties('field_config', ['entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE]));
     $this->assertTrue($field->isDeleted(), 'A deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
@@ -276,7 +276,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     $field->save();
     $field_2 = FieldConfig::create($field_definition_2);
     $field_2->save();
-    $this->container->get('entity.manager')->getStorage('field_config')->delete(array($field, $field_2));
+    $this->container->get('entity.manager')->getStorage('field_config')->delete([$field, $field_2]);
     $this->assertFalse(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
   }
 

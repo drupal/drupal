@@ -163,7 +163,7 @@ class SelectTest extends DatabaseTestBase {
    */
   function testSimpleSelectMultipleFields() {
     $record = db_select('test')
-      ->fields('test', array('id', 'name', 'age', 'job'))
+      ->fields('test', ['id', 'name', 'age', 'job'])
       ->condition('age', 27)
       ->execute()->fetchObject();
 
@@ -211,7 +211,7 @@ class SelectTest extends DatabaseTestBase {
     $this->ensureSampleDataNull();
 
     $names = db_select('test_null', 'tn')
-      ->fields('tn', array('name'))
+      ->fields('tn', ['name'])
       ->condition('age', NULL)
       ->execute()->fetchCol();
 
@@ -225,7 +225,7 @@ class SelectTest extends DatabaseTestBase {
     $this->ensureSampleDataNull();
 
     $names = db_select('test_null', 'tn')
-      ->fields('tn', array('name'))
+      ->fields('tn', ['name'])
       ->isNull('age')
       ->execute()->fetchCol();
 
@@ -240,7 +240,7 @@ class SelectTest extends DatabaseTestBase {
     $this->ensureSampleDataNull();
 
     $names = db_select('test_null', 'tn')
-      ->fields('tn', array('name'))
+      ->fields('tn', ['name'])
       ->isNotNull('tn.age')
       ->orderBy('name')
       ->execute()->fetchCol();
@@ -258,11 +258,11 @@ class SelectTest extends DatabaseTestBase {
    */
   function testUnion() {
     $query_1 = db_select('test', 't')
-      ->fields('t', array('name'))
-      ->condition('age', array(27, 28), 'IN');
+      ->fields('t', ['name'])
+      ->condition('age', [27, 28], 'IN');
 
     $query_2 = db_select('test', 't')
-      ->fields('t', array('name'))
+      ->fields('t', ['name'])
       ->condition('age', 28);
 
     $query_1->union($query_2);
@@ -281,11 +281,11 @@ class SelectTest extends DatabaseTestBase {
    */
   function testUnionAll() {
     $query_1 = db_select('test', 't')
-      ->fields('t', array('name'))
-      ->condition('age', array(27, 28), 'IN');
+      ->fields('t', ['name'])
+      ->condition('age', [27, 28], 'IN');
 
     $query_2 = db_select('test', 't')
-      ->fields('t', array('name'))
+      ->fields('t', ['name'])
       ->condition('age', 28);
 
     $query_1->union($query_2, 'ALL');
@@ -305,11 +305,11 @@ class SelectTest extends DatabaseTestBase {
    */
   function testUnionCount() {
     $query_1 = db_select('test', 't')
-      ->fields('t', array('name', 'age'))
-      ->condition('age', array(27, 28), 'IN');
+      ->fields('t', ['name', 'age'])
+      ->condition('age', [27, 28], 'IN');
 
     $query_2 = db_select('test', 't')
-      ->fields('t', array('name', 'age'))
+      ->fields('t', ['name', 'age'])
       ->condition('age', 28);
 
     $query_1->union($query_2, 'ALL');
@@ -328,12 +328,12 @@ class SelectTest extends DatabaseTestBase {
   function testUnionOrder() {
     // This gives George and Ringo.
     $query_1 = db_select('test', 't')
-      ->fields('t', array('name'))
-      ->condition('age', array(27, 28), 'IN');
+      ->fields('t', ['name'])
+      ->condition('age', [27, 28], 'IN');
 
     // This gives Paul.
     $query_2 = db_select('test', 't')
-      ->fields('t', array('name'))
+      ->fields('t', ['name'])
       ->condition('age', 26);
 
     $query_1->union($query_2);
@@ -357,12 +357,12 @@ class SelectTest extends DatabaseTestBase {
   function testUnionOrderLimit() {
     // This gives George and Ringo.
     $query_1 = db_select('test', 't')
-      ->fields('t', array('name'))
-      ->condition('age', array(27, 28), 'IN');
+      ->fields('t', ['name'])
+      ->condition('age', [27, 28], 'IN');
 
     // This gives Paul.
     $query_2 = db_select('test', 't')
-      ->fields('t', array('name'))
+      ->fields('t', ['name'])
       ->condition('age', 26);
 
     $query_1->union($query_2);
@@ -401,13 +401,13 @@ class SelectTest extends DatabaseTestBase {
     // after shuffling it (in other words, nearly impossible).
     $number_of_items = 52;
     while (db_query("SELECT MAX(id) FROM {test}")->fetchField() < $number_of_items) {
-      db_insert('test')->fields(array('name' => $this->randomMachineName()))->execute();
+      db_insert('test')->fields(['name' => $this->randomMachineName()])->execute();
     }
 
     // First select the items in order and make sure we get an ordered list.
     $expected_ids = range(1, $number_of_items);
     $ordered_ids = db_select('test', 't')
-      ->fields('t', array('id'))
+      ->fields('t', ['id'])
       ->range(0, $number_of_items)
       ->orderBy('id')
       ->execute()
@@ -418,7 +418,7 @@ class SelectTest extends DatabaseTestBase {
     // expect this to contain a differently ordered version of the original
     // result.
     $randomized_ids = db_select('test', 't')
-      ->fields('t', array('id'))
+      ->fields('t', ['id'])
       ->range(0, $number_of_items)
       ->orderRandom()
       ->execute()
@@ -431,7 +431,7 @@ class SelectTest extends DatabaseTestBase {
     // Now perform the exact same query again, and make sure the order is
     // different.
     $randomized_ids_second_set = db_select('test', 't')
-      ->fields('t', array('id'))
+      ->fields('t', ['id'])
       ->range(0, $number_of_items)
       ->orderRandom()
       ->execute()
@@ -447,24 +447,24 @@ class SelectTest extends DatabaseTestBase {
    */
   public function testRegexCondition() {
 
-    $test_groups[] = array(
+    $test_groups[] = [
       'regex' => 'hn$',
-      'expected' => array(
+      'expected' => [
         'John',
-      ),
-    );
-    $test_groups[] = array(
+      ],
+    ];
+    $test_groups[] = [
       'regex' => '^Pau',
-      'expected' => array(
+      'expected' => [
         'Paul',
-      ),
-    );
-    $test_groups[] = array(
+      ],
+    ];
+    $test_groups[] = [
       'regex' => 'Ringo|George',
-      'expected' => array(
+      'expected' => [
         'Ringo', 'George',
-      ),
-    );
+      ],
+    ];
 
 
     $database = $this->container->get('database');
@@ -480,25 +480,25 @@ class SelectTest extends DatabaseTestBase {
 
     // Ensure that filter by "#" still works due to the quoting.
     $database->insert('test')
-      ->fields(array(
+      ->fields([
         'name' => 'Pete',
         'age' => 26,
         'job' => '#Drummer',
-      ))
+      ])
       ->execute();
 
-    $test_groups = array();
-    $test_groups[] = array(
+    $test_groups = [];
+    $test_groups[] = [
       'regex' => '#Drummer',
-      'expected' => array(
+      'expected' => [
         'Pete',
-      ),
-    );
-    $test_groups[] = array(
+      ],
+    ];
+    $test_groups[] = [
       'regex' => '#Singer',
-      'expected' => array(
-      ),
-    );
+      'expected' => [
+      ],
+    ];
 
     foreach ($test_groups as $test_group) {
       $query = $database->select('test', 't');
@@ -570,7 +570,7 @@ class SelectTest extends DatabaseTestBase {
     try {
       db_select('test', 't')
         ->fields('t')
-        ->condition('age', array(), 'IN')
+        ->condition('age', [], 'IN')
         ->execute();
 
       $this->fail('Expected exception not thrown');
@@ -582,7 +582,7 @@ class SelectTest extends DatabaseTestBase {
     try {
       db_select('test', 't')
         ->fields('t')
-        ->condition('age', array(), 'NOT IN')
+        ->condition('age', [], 'NOT IN')
         ->execute();
 
       $this->fail('Expected exception not thrown');

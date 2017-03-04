@@ -101,6 +101,7 @@
   <rule ref="Generic.PHP.DisallowShortOpenTag"/>
   <rule ref="Generic.PHP.UpperCaseConstant"/>
   <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+  <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
 
   <!-- PSR-2 sniffs -->
   <rule ref="PSR2.Classes.PropertyDeclaration">

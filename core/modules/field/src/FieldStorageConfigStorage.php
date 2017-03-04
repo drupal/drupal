@@ -94,13 +94,13 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
   /**
    * {@inheritdoc}
    */
-  public function loadByProperties(array $conditions = array()) {
+  public function loadByProperties(array $conditions = []) {
     // Include deleted fields if specified in the $conditions parameters.
     $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
 
     /** @var \Drupal\field\FieldStorageConfigInterface[] $storages */
-    $storages = array();
+    $storages = [];
 
     // Get field storages living in configuration. If we are explicitly looking
     // for deleted storages only, this can be skipped, because they will be
@@ -109,7 +109,7 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
       if (isset($conditions['entity_type']) && isset($conditions['field_name'])) {
         // Optimize for the most frequent case where we do have a specific ID.
         $id = $conditions['entity_type'] . $conditions['field_name'];
-        $storages = $this->loadMultiple(array($id));
+        $storages = $this->loadMultiple([$id]);
       }
       else {
         // No specific ID, we need to examine all existing storages.
@@ -119,14 +119,14 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
 
     // Merge deleted field storages (living in state) if needed.
     if ($include_deleted || !empty($conditions['deleted'])) {
-      $deleted_storages = $this->state->get('field.storage.deleted') ?: array();
+      $deleted_storages = $this->state->get('field.storage.deleted') ?: [];
       foreach ($deleted_storages as $id => $config) {
         $storages[$id] = $this->create($config);
       }
     }
 
     // Collect matching fields.
-    $matches = array();
+    $matches = [];
     foreach ($storages as $field) {
       foreach ($conditions as $key => $value) {
         // Extract the actual value against which the condition is checked.

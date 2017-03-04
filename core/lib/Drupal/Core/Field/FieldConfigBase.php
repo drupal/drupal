@@ -89,7 +89,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var array
    */
-  protected $settings = array();
+  protected $settings = [];
 
   /**
    * Flag indicating whether the field is required.
@@ -139,7 +139,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var array
    */
-  protected $default_value = array();
+  protected $default_value = [];
 
   /**
    * The name of a callback function that returns default values.
@@ -413,9 +413,9 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
       $key = $this->getFieldStorageDefinition()->getPropertyNames()[0];
       // Convert to the multi value format to support fields with a cardinality
       // greater than 1.
-      $value = array(
-        array($key => $value),
-      );
+      $value = [
+        [$key => $value],
+      ];
     }
     $this->default_value = $value;
     return $this;

@@ -18,11 +18,11 @@ class EngineTwigTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('theme_test', 'twig_theme_test');
+  public static $modules = ['theme_test', 'twig_theme_test'];
 
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->install(array('test_theme'));
+    \Drupal::service('theme_handler')->install(['test_theme']);
   }
 
   /**
@@ -45,13 +45,13 @@ class EngineTwigTest extends WebTestBase {
     $this->drupalGet('twig-theme-test/url-generator');
     // Find the absolute URL of the current site.
     $url_generator = $this->container->get('url_generator');
-    $expected = array(
+    $expected = [
       'path (as route) not absolute: ' . $url_generator->generateFromRoute('user.register'),
-      'url (as route) absolute: ' . $url_generator->generateFromRoute('user.register', array(), array('absolute' => TRUE)),
-      'path (as route) not absolute with fragment: ' . $url_generator->generateFromRoute('user.register', array(), array('fragment' => 'bottom')),
-      'url (as route) absolute despite option: ' . $url_generator->generateFromRoute('user.register', array(), array('absolute' => TRUE)),
-      'url (as route) absolute with fragment: ' . $url_generator->generateFromRoute('user.register', array(), array('absolute' => TRUE, 'fragment' => 'bottom')),
-    );
+      'url (as route) absolute: ' . $url_generator->generateFromRoute('user.register', [], ['absolute' => TRUE]),
+      'path (as route) not absolute with fragment: ' . $url_generator->generateFromRoute('user.register', [], ['fragment' => 'bottom']),
+      'url (as route) absolute despite option: ' . $url_generator->generateFromRoute('user.register', [], ['absolute' => TRUE]),
+      'url (as route) absolute with fragment: ' . $url_generator->generateFromRoute('user.register', [], ['absolute' => TRUE, 'fragment' => 'bottom']),
+    ];
 
     // Verify that url() has the ability to bubble cacheability metadata:
     // absolute URLs should bubble the 'url.site' cache context. (This only

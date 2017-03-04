@@ -101,10 +101,10 @@ class OverviewTerms extends FormBase {
     $forward_step = 0;
 
     // An array of the terms to be displayed on this page.
-    $current_page = array();
+    $current_page = [];
 
     $delta = 0;
-    $term_deltas = array();
+    $term_deltas = [];
     $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, TRUE);
     $tree_index = 0;
     do {
@@ -199,93 +199,93 @@ class OverviewTerms extends FormBase {
     $destination = $this->getDestinationArray();
     $row_position = 0;
     // Build the actual form.
-    $form['terms'] = array(
+    $form['terms'] = [
       '#type' => 'table',
-      '#header' => array($this->t('Name'), $this->t('Weight'), $this->t('Operations')),
-      '#empty' => $this->t('No terms available. <a href=":link">Add term</a>.', array(':link' => $this->url('entity.taxonomy_term.add_form', array('taxonomy_vocabulary' => $taxonomy_vocabulary->id())))),
-      '#attributes' => array(
+      '#header' => [$this->t('Name'), $this->t('Weight'), $this->t('Operations')],
+      '#empty' => $this->t('No terms available. <a href=":link">Add term</a>.', [':link' => $this->url('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $taxonomy_vocabulary->id()])]),
+      '#attributes' => [
         'id' => 'taxonomy',
-      ),
-    );
+      ],
+    ];
     foreach ($current_page as $key => $term) {
       /** @var $term \Drupal\Core\Entity\EntityInterface */
       $form['terms'][$key]['#term'] = $term;
-      $indentation = array();
+      $indentation = [];
       if (isset($term->depth) && $term->depth > 0) {
-        $indentation = array(
+        $indentation = [
           '#theme' => 'indentation',
           '#size' => $term->depth,
-        );
+        ];
       }
-      $form['terms'][$key]['term'] = array(
+      $form['terms'][$key]['term'] = [
         '#prefix' => !empty($indentation) ? drupal_render($indentation) : '',
         '#type' => 'link',
         '#title' => $term->getName(),
         '#url' => $term->urlInfo(),
-      );
+      ];
       if ($taxonomy_vocabulary->getHierarchy() != VocabularyInterface::HIERARCHY_MULTIPLE && count($tree) > 1) {
         $parent_fields = TRUE;
-        $form['terms'][$key]['term']['tid'] = array(
+        $form['terms'][$key]['term']['tid'] = [
           '#type' => 'hidden',
           '#value' => $term->id(),
-          '#attributes' => array(
-            'class' => array('term-id'),
-          ),
-        );
-        $form['terms'][$key]['term']['parent'] = array(
+          '#attributes' => [
+            'class' => ['term-id'],
+          ],
+        ];
+        $form['terms'][$key]['term']['parent'] = [
           '#type' => 'hidden',
           // Yes, default_value on a hidden. It needs to be changeable by the
           // javascript.
           '#default_value' => $term->parents[0],
-          '#attributes' => array(
-            'class' => array('term-parent'),
-          ),
-        );
-        $form['terms'][$key]['term']['depth'] = array(
+          '#attributes' => [
+            'class' => ['term-parent'],
+          ],
+        ];
+        $form['terms'][$key]['term']['depth'] = [
           '#type' => 'hidden',
           // Same as above, the depth is modified by javascript, so it's a
           // default_value.
           '#default_value' => $term->depth,
-          '#attributes' => array(
-            'class' => array('term-depth'),
-          ),
-        );
+          '#attributes' => [
+            'class' => ['term-depth'],
+          ],
+        ];
       }
-      $form['terms'][$key]['weight'] = array(
+      $form['terms'][$key]['weight'] = [
         '#type' => 'weight',
         '#delta' => $delta,
         '#title' => $this->t('Weight for added term'),
         '#title_display' => 'invisible',
         '#default_value' => $term->getWeight(),
-        '#attributes' => array(
-          'class' => array('term-weight'),
-        ),
-      );
-      $operations = array(
-        'edit' => array(
+        '#attributes' => [
+          'class' => ['term-weight'],
+        ],
+      ];
+      $operations = [
+        'edit' => [
           'title' => $this->t('Edit'),
           'query' => $destination,
           'url' => $term->urlInfo('edit-form'),
-        ),
-        'delete' => array(
+        ],
+        'delete' => [
           'title' => $this->t('Delete'),
           'query' => $destination,
           'url' => $term->urlInfo('delete-form'),
-        ),
-      );
+        ],
+      ];
       if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($term)->isAllowed()) {
-        $operations['translate'] = array(
+        $operations['translate'] = [
           'title' => $this->t('Translate'),
           'query' => $destination,
           'url' => $term->urlInfo('drupal:content-translation-overview'),
-        );
+        ];
       }
-      $form['terms'][$key]['operations'] = array(
+      $form['terms'][$key]['operations'] = [
         '#type' => 'operations',
         '#links' => $operations,
-      );
+      ];
 
-      $form['terms'][$key]['#attributes']['class'] = array();
+      $form['terms'][$key]['#attributes']['class'] = [];
       if ($parent_fields) {
         $form['terms'][$key]['#attributes']['class'][] = 'draggable';
       }
@@ -314,44 +314,44 @@ class OverviewTerms extends FormBase {
     }
 
     if ($parent_fields) {
-      $form['terms']['#tabledrag'][] = array(
+      $form['terms']['#tabledrag'][] = [
         'action' => 'match',
         'relationship' => 'parent',
         'group' => 'term-parent',
         'subgroup' => 'term-parent',
         'source' => 'term-id',
         'hidden' => FALSE,
-      );
-      $form['terms']['#tabledrag'][] = array(
+      ];
+      $form['terms']['#tabledrag'][] = [
         'action' => 'depth',
         'relationship' => 'group',
         'group' => 'term-depth',
         'hidden' => FALSE,
-      );
+      ];
       $form['terms']['#attached']['library'][] = 'taxonomy/drupal.taxonomy';
       $form['terms']['#attached']['drupalSettings']['taxonomy'] = [
         'backStep' => $back_step,
         'forwardStep' => $forward_step,
       ];
     }
-    $form['terms']['#tabledrag'][] = array(
+    $form['terms']['#tabledrag'][] = [
       'action' => 'order',
       'relationship' => 'sibling',
       'group' => 'term-weight',
-    );
+    ];
 
     if ($taxonomy_vocabulary->getHierarchy() != VocabularyInterface::HIERARCHY_MULTIPLE && count($tree) > 1) {
-      $form['actions'] = array('#type' => 'actions', '#tree' => FALSE);
-      $form['actions']['submit'] = array(
+      $form['actions'] = ['#type' => 'actions', '#tree' => FALSE];
+      $form['actions']['submit'] = [
         '#type' => 'submit',
         '#value' => $this->t('Save'),
         '#button_type' => 'primary',
-      );
-      $form['actions']['reset_alphabetical'] = array(
+      ];
+      $form['actions']['reset_alphabetical'] = [
         '#type' => 'submit',
-        '#submit' => array('::submitReset'),
+        '#submit' => ['::submitReset'],
         '#value' => $this->t('Reset to alphabetical'),
-      );
+      ];
     }
 
     $form['pager_pager'] = ['#type' => 'pager'];
@@ -378,13 +378,13 @@ class OverviewTerms extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Sort term order based on weight.
-    uasort($form_state->getValue('terms'), array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
+    uasort($form_state->getValue('terms'), ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
 
     $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     // Update the current hierarchy type as we go.
     $hierarchy = VocabularyInterface::HIERARCHY_DISABLED;
 
-    $changed_terms = array();
+    $changed_terms = [];
     $tree = $this->storageController->loadTree($vocabulary->id(), 0, NULL, TRUE);
 
     if (empty($tree)) {
@@ -405,7 +405,7 @@ class OverviewTerms extends FormBase {
     }
 
     // Renumber the current page weights and assign any new parents.
-    $level_weights = array();
+    $level_weights = [];
     foreach ($form_state->getValue('terms') as $tid => $values) {
       if (isset($form['terms'][$tid]['#term'])) {
         $term = $form['terms'][$tid]['#term'];

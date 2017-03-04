@@ -18,7 +18,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array(
+  public static $modules = [
     'block',
     'aggregator',
     'book',
@@ -32,7 +32,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
     'taxonomy',
     'user',
     'text',
-  );
+  ];
 
   /**
    * The typed config manager.
@@ -59,7 +59,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
     $this->installEntitySchema('block_content');
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('node');
-    $this->installSchema('book', array('book'));
+    $this->installSchema('book', ['book']);
   }
 
   /**
@@ -68,20 +68,20 @@ class BlockConfigSchemaTest extends KernelTestBase {
   public function testBlockConfigSchema() {
     foreach ($this->blockManager->getDefinitions() as $block_id => $definition) {
       $id = strtolower($this->randomMachineName());
-      $block = Block::create(array(
+      $block = Block::create([
         'id' => $id,
         'theme' => 'classy',
         'weight' => 00,
         'status' => TRUE,
         'region' => 'content',
         'plugin' => $block_id,
-        'settings' => array(
+        'settings' => [
           'label' => $this->randomMachineName(),
           'provider' => 'system',
           'label_display' => FALSE,
-        ),
-        'visibility' => array(),
-      ));
+        ],
+        'visibility' => [],
+      ]);
       $block->save();
 
       $config = $this->config("block.block.$id");

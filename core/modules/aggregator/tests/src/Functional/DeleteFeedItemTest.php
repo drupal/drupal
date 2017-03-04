@@ -13,15 +13,15 @@ class DeleteFeedItemTest extends AggregatorTestBase {
    */
   public function testDeleteFeedItem() {
     // Create a bunch of test feeds.
-    $feed_urls = array();
+    $feed_urls = [];
     // No last-modified, no etag.
-    $feed_urls[] = \Drupal::url('aggregator_test.feed', array(), array('absolute' => TRUE));
+    $feed_urls[] = \Drupal::url('aggregator_test.feed', [], ['absolute' => TRUE]);
     // Last-modified, but no etag.
-    $feed_urls[] = \Drupal::url('aggregator_test.feed', array('use_last_modified' => 1), array('absolute' => TRUE));
+    $feed_urls[] = \Drupal::url('aggregator_test.feed', ['use_last_modified' => 1], ['absolute' => TRUE]);
     // No Last-modified, but etag.
-    $feed_urls[] = \Drupal::url('aggregator_test.feed', array('use_last_modified' => 0, 'use_etag' => 1), array('absolute' => TRUE));
+    $feed_urls[] = \Drupal::url('aggregator_test.feed', ['use_last_modified' => 0, 'use_etag' => 1], ['absolute' => TRUE]);
     // Last-modified and etag.
-    $feed_urls[] = \Drupal::url('aggregator_test.feed', array('use_last_modified' => 1, 'use_etag' => 1), array('absolute' => TRUE));
+    $feed_urls[] = \Drupal::url('aggregator_test.feed', ['use_last_modified' => 1, 'use_etag' => 1], ['absolute' => TRUE]);
 
     foreach ($feed_urls as $feed_url) {
       $feed = $this->createFeed($feed_url);

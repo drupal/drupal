@@ -38,24 +38,24 @@ class HtmlTag extends RenderElement {
    * @see http://www.w3.org/TR/html5/syntax.html#syntax-start-tag
    * @see http://www.w3.org/TR/html5/syntax.html#void-elements
    */
-  static protected $voidElements = array(
+  static protected $voidElements = [
     'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
     'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr',
-  );
+  ];
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
-      '#pre_render' => array(
-        array($class, 'preRenderConditionalComments'),
-        array($class, 'preRenderHtmlTag'),
-      ),
-      '#attributes' => array(),
+    return [
+      '#pre_render' => [
+        [$class, 'preRenderConditionalComments'],
+        [$class, 'preRenderHtmlTag'],
+      ],
+      '#attributes' => [],
       '#value' => NULL,
-    );
+    ];
   }
 
   /**
@@ -132,11 +132,11 @@ class HtmlTag extends RenderElement {
    *   added to '#prefix' and '#suffix'.
    */
   public static function preRenderConditionalComments($element) {
-    $browsers = isset($element['#browsers']) ? $element['#browsers'] : array();
-    $browsers += array(
+    $browsers = isset($element['#browsers']) ? $element['#browsers'] : [];
+    $browsers += [
       'IE' => TRUE,
       '!IE' => TRUE,
-    );
+    ];
 
     // If rendering in all browsers, no need for conditional comments.
     if ($browsers['IE'] === TRUE && $browsers['!IE']) {

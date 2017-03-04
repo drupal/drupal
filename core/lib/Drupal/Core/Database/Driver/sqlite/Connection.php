@@ -41,7 +41,7 @@ class Connection extends DatabaseConnection {
    *
    * @var array
    */
-  protected $attachedDatabases = array();
+  protected $attachedDatabases = [];
 
   /**
    * Whether or not a table has been dropped this request: the destructor will
@@ -82,10 +82,10 @@ class Connection extends DatabaseConnection {
             // In memory database use ':memory:' as database name. According to
             // http://www.sqlite.org/inmemorydb.html it will open a unique
             // database so attaching it twice is not a problem.
-            $this->query('ATTACH DATABASE :database AS :prefix', array(':database' => $connection_options['database'], ':prefix' => $prefix));
+            $this->query('ATTACH DATABASE :database AS :prefix', [':database' => $connection_options['database'], ':prefix' => $prefix]);
           }
           else {
-            $this->query('ATTACH DATABASE :database AS :prefix', array(':database' => $connection_options['database'] . '-' . $prefix, ':prefix' => $prefix));
+            $this->query('ATTACH DATABASE :database AS :prefix', [':database' => $connection_options['database'] . '-' . $prefix, ':prefix' => $prefix]);
           }
         }
 
@@ -101,16 +101,16 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public static function open(array &$connection_options = array()) {
+  public static function open(array &$connection_options = []) {
     // Allow PDO options to be overridden.
-    $connection_options += array(
-      'pdo' => array(),
-    );
-    $connection_options['pdo'] += array(
+    $connection_options += [
+      'pdo' => [],
+    ];
+    $connection_options['pdo'] += [
       \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
       // Convert numeric values to strings when fetching.
       \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
-    );
+    ];
 
     try {
       $pdo = new \PDO('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
@@ -126,37 +126,37 @@ class Connection extends DatabaseConnection {
 
 
     // Create functions needed by SQLite.
-    $pdo->sqliteCreateFunction('if', array(__CLASS__, 'sqlFunctionIf'));
-    $pdo->sqliteCreateFunction('greatest', array(__CLASS__, 'sqlFunctionGreatest'));
+    $pdo->sqliteCreateFunction('if', [__CLASS__, 'sqlFunctionIf']);
+    $pdo->sqliteCreateFunction('greatest', [__CLASS__, 'sqlFunctionGreatest']);
     $pdo->sqliteCreateFunction('pow', 'pow', 2);
     $pdo->sqliteCreateFunction('exp', 'exp', 1);
     $pdo->sqliteCreateFunction('length', 'strlen', 1);
     $pdo->sqliteCreateFunction('md5', 'md5', 1);
-    $pdo->sqliteCreateFunction('concat', array(__CLASS__, 'sqlFunctionConcat'));
-    $pdo->sqliteCreateFunction('concat_ws', array(__CLASS__, 'sqlFunctionConcatWs'));
-    $pdo->sqliteCreateFunction('substring', array(__CLASS__, 'sqlFunctionSubstring'), 3);
-    $pdo->sqliteCreateFunction('substring_index', array(__CLASS__, 'sqlFunctionSubstringIndex'), 3);
-    $pdo->sqliteCreateFunction('rand', array(__CLASS__, 'sqlFunctionRand'));
-    $pdo->sqliteCreateFunction('regexp', array(__CLASS__, 'sqlFunctionRegexp'));
+    $pdo->sqliteCreateFunction('concat', [__CLASS__, 'sqlFunctionConcat']);
+    $pdo->sqliteCreateFunction('concat_ws', [__CLASS__, 'sqlFunctionConcatWs']);
+    $pdo->sqliteCreateFunction('substring', [__CLASS__, 'sqlFunctionSubstring'], 3);
+    $pdo->sqliteCreateFunction('substring_index', [__CLASS__, 'sqlFunctionSubstringIndex'], 3);
+    $pdo->sqliteCreateFunction('rand', [__CLASS__, 'sqlFunctionRand']);
+    $pdo->sqliteCreateFunction('regexp', [__CLASS__, 'sqlFunctionRegexp']);
 
     // SQLite does not support the LIKE BINARY operator, so we overload the
     // non-standard GLOB operator for case-sensitive matching. Another option
     // would have been to override another non-standard operator, MATCH, but
     // that does not support the NOT keyword prefix.
-    $pdo->sqliteCreateFunction('glob', array(__CLASS__, 'sqlFunctionLikeBinary'));
+    $pdo->sqliteCreateFunction('glob', [__CLASS__, 'sqlFunctionLikeBinary']);
 
     // Create a user-space case-insensitive collation with UTF-8 support.
-    $pdo->sqliteCreateCollation('NOCASE_UTF8', array('Drupal\Component\Utility\Unicode', 'strcasecmp'));
+    $pdo->sqliteCreateCollation('NOCASE_UTF8', ['Drupal\Component\Utility\Unicode', 'strcasecmp']);
 
     // Set SQLite init_commands if not already defined. Enable the Write-Ahead
     // Logging (WAL) for SQLite. See https://www.drupal.org/node/2348137 and
     // https://www.sqlite.org/wal.html.
-    $connection_options += array(
-      'init_commands' => array(),
-    );
-    $connection_options['init_commands'] += array(
+    $connection_options += [
+      'init_commands' => [],
+    ];
+    $connection_options['init_commands'] += [
       'wal' => "PRAGMA journal_mode=WAL",
-    );
+    ];
 
     // Execute sqlite init_commands.
     if (isset($connection_options['init_commands'])) {
@@ -179,7 +179,7 @@ class Connection extends DatabaseConnection {
       foreach ($this->attachedDatabases as $prefix) {
         // Check if the database is now empty, ignore the internal SQLite tables.
         try {
-          $count = $this->query('SELECT COUNT(*) FROM ' . $prefix . '.sqlite_master WHERE type = :type AND name NOT LIKE :pattern', array(':type' => 'table', ':pattern' => 'sqlite_%'))->fetchField();
+          $count = $this->query('SELECT COUNT(*) FROM ' . $prefix . '.sqlite_master WHERE type = :type AND name NOT LIKE :pattern', [':type' => 'table', ':pattern' => 'sqlite_%'])->fetchField();
 
           // We can prune the database file if it doesn't have any tables.
           if ($count == 0) {
@@ -325,21 +325,21 @@ class Connection extends DatabaseConnection {
     // Replace the SQL LIKE wildcard meta-characters with the equivalent regular
     // expression meta-characters and escape the delimiter that will be used for
     // matching.
-    $pattern = str_replace(array('%', '_'), array('.*?', '.'), preg_quote($pattern, '/'));
+    $pattern = str_replace(['%', '_'], ['.*?', '.'], preg_quote($pattern, '/'));
     return preg_match('/^' . $pattern . '$/', $subject);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function prepare($statement, array $driver_options = array()) {
+  public function prepare($statement, array $driver_options = []) {
     return new Statement($this->connection, $this, $statement, $driver_options);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function handleQueryException(\PDOException $e, $query, array $args = array(), $options = array()) {
+  protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
     // The database schema might be changed by another process in between the
     // time that the statement was prepared and the time the statement was run
     // (e.g. usually happens when running tests). In this case, we need to
@@ -353,11 +353,11 @@ class Connection extends DatabaseConnection {
     parent::handleQueryException($e, $query, $args, $options);
   }
 
-  public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
+  public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
   }
 
-  public function queryTemporary($query, array $args = array(), array $options = array()) {
+  public function queryTemporary($query, array $args = [], array $options = []) {
     // Generate a new temporary table name and protect it from prefixing.
     // SQLite requires that temporary tables to be non-qualified.
     $tablename = $this->generateTemporaryTableName();
@@ -414,13 +414,13 @@ class Connection extends DatabaseConnection {
     // wait until this transaction commits. Also, the return value needs to be
     // set to RETURN_AFFECTED as if it were a real update() query otherwise it
     // is not possible to get the row count properly.
-    $affected = $this->query('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', array(
+    $affected = $this->query('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', [
       ':existing_id' => $existing_id,
-    ), array('return' => Database::RETURN_AFFECTED));
+    ], ['return' => Database::RETURN_AFFECTED]);
     if (!$affected) {
-      $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', array(
+      $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', [
         ':existing_id' => $existing_id,
-      ));
+      ]);
     }
     // The transaction gets committed when the transaction object gets destroyed
     // because it gets out of scope.

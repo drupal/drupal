@@ -32,7 +32,7 @@ class UpdateTestArchiver implements ArchiverInterface {
   /**
    * {@inheritdoc}
    */
-  public function extract($path, array $files = array()) {
+  public function extract($path, array $files = []) {
     return $this;
   }
 
@@ -40,7 +40,7 @@ class UpdateTestArchiver implements ArchiverInterface {
    * {@inheritdoc}
    */
   public function listContents() {
-    return array();
+    return [];
   }
 
 }

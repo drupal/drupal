@@ -53,11 +53,11 @@ class Rearrange extends ViewsFormBase {
     $types = ViewExecutable::getHandlerTypes();
     $executable = $view->getExecutable();
     if (!$executable->setDisplay($display_id)) {
-      $form['markup'] = array('#markup' => $this->t('Invalid display id @display', array('@display' => $display_id)));
+      $form['markup'] = ['#markup' => $this->t('Invalid display id @display', ['@display' => $display_id])];
       return $form;
     }
     $display = &$executable->displayHandlers->get($display_id);
-    $form['#title'] = $this->t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
+    $form['#title'] = $this->t('Rearrange @type', ['@type' => $types[$type]['ltitle']]);
     $form['#section'] = $display_id . 'rearrange-item';
 
     if ($display->defaultableSections($types[$type]['plural'])) {
@@ -69,31 +69,31 @@ class Rearrange extends ViewsFormBase {
     $count = 0;
 
     // Get relationship labels
-    $relationships = array();
+    $relationships = [];
     foreach ($display->getHandlers('relationship') as $id => $handler) {
       $relationships[$id] = $handler->adminLabel();
     }
 
-    $form['fields'] = array(
+    $form['fields'] = [
       '#type' => 'table',
-      '#header' => array('', $this->t('Weight'), $this->t('Remove')),
+      '#header' => ['', $this->t('Weight'), $this->t('Remove')],
       '#empty' => $this->t('No fields available.'),
-      '#tabledrag' => array(
-        array(
+      '#tabledrag' => [
+        [
           'action' => 'order',
           'relationship' => 'sibling',
           'group' => 'weight',
-        )
-      ),
+        ]
+      ],
       '#tree' => TRUE,
       '#prefix' => '<div class="scroll" data-drupal-views-scroll>',
       '#suffix' => '</div>',
-    );
+    ];
 
     foreach ($display->getOption($types[$type]['plural']) as $id => $field) {
-      $form['fields'][$id] = array();
+      $form['fields'][$id] = [];
 
-      $form['fields'][$id]['#attributes'] = array('class' => array('draggable'), 'id' => 'views-row-' . $id);
+      $form['fields'][$id]['#attributes'] = ['class' => ['draggable'], 'id' => 'views-row-' . $id];
 
       $handler = $display->getHandler($type, $id);
       if ($handler) {
@@ -105,34 +105,34 @@ class Rearrange extends ViewsFormBase {
       }
       else {
         $name = $id;
-        $markup = $this->t('Broken field @id', array('@id' => $id));
+        $markup = $this->t('Broken field @id', ['@id' => $id]);
       }
-      $form['fields'][$id]['name'] = array('#markup' => $markup);
+      $form['fields'][$id]['name'] = ['#markup' => $markup];
 
-      $form['fields'][$id]['weight'] = array(
+      $form['fields'][$id]['weight'] = [
         '#type' => 'textfield',
         '#default_value' => ++$count,
-        '#attributes' => array('class' => array('weight')),
-        '#title' => t('Weight for @title', array('@title' => $name)),
+        '#attributes' => ['class' => ['weight']],
+        '#title' => t('Weight for @title', ['@title' => $name]),
         '#title_display' => 'invisible',
-      );
+      ];
 
-      $form['fields'][$id]['removed'] = array(
+      $form['fields'][$id]['removed'] = [
         '#type' => 'checkbox',
-        '#title' => t('Remove @title', array('@title' => $name)),
+        '#title' => t('Remove @title', ['@title' => $name]),
         '#title_display' => 'invisible',
         '#id' => 'views-removed-' . $id,
-        '#attributes' => array('class' => array('views-remove-checkbox')),
+        '#attributes' => ['class' => ['views-remove-checkbox']],
         '#default_value' => 0,
-        '#suffix' => \Drupal::l(SafeMarkup::format('<span>@text</span>', array('@text' => $this->t('Remove'))),
-          Url::fromRoute('<none>', array(), array('attributes' => array(
+        '#suffix' => \Drupal::l(SafeMarkup::format('<span>@text</span>', ['@text' => $this->t('Remove')]),
+          Url::fromRoute('<none>', [], ['attributes' => [
             'id' => 'views-remove-link-' . $id,
-            'class' => array('views-hidden', 'views-button-remove', 'views-remove-link'),
+            'class' => ['views-hidden', 'views-button-remove', 'views-remove-link'],
             'alt' => $this->t('Remove this item'),
-            'title' => $this->t('Remove this item')),
-          ))
+            'title' => $this->t('Remove this item')],
+          ])
         ),
-      );
+      ];
     }
 
     $view->getStandardButtons($form, $form_state, 'views_ui_rearrange_form');
@@ -152,7 +152,7 @@ class Rearrange extends ViewsFormBase {
     $display = &$view->getExecutable()->displayHandlers->get($display_id);
 
     $old_fields = $display->getOption($types[$type]['plural']);
-    $new_fields = $order = array();
+    $new_fields = $order = [];
 
     // Make an array with the weights
     foreach ($form_state->getValue('fields') as $field => $info) {

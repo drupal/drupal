@@ -45,10 +45,10 @@ abstract class ConfigFactoryOverrideBase implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events[ConfigEvents::COLLECTION_INFO][] = array('addCollections');
-    $events[ConfigEvents::SAVE][] = array('onConfigSave', 20);
-    $events[ConfigEvents::DELETE][] = array('onConfigDelete', 20);
-    $events[ConfigEvents::RENAME][] = array('onConfigRename', 20);
+    $events[ConfigEvents::COLLECTION_INFO][] = ['addCollections'];
+    $events[ConfigEvents::SAVE][] = ['onConfigSave', 20];
+    $events[ConfigEvents::DELETE][] = ['onConfigDelete', 20];
+    $events[ConfigEvents::RENAME][] = ['onConfigRename', 20];
     return $events;
   }
 

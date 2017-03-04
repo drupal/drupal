@@ -75,6 +75,6 @@ interface ContextHandlerInterface {
    * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   Thrown when a context assignment was not satisfied.
    */
-  public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = array());
+  public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = []);
 
 }

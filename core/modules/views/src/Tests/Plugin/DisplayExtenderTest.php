@@ -18,7 +18,7 @@ class DisplayExtenderTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   protected function setUp() {
     parent::setUp();
@@ -30,7 +30,7 @@ class DisplayExtenderTest extends PluginTestBase {
    * Test display extenders.
    */
   public function testDisplayExtenders() {
-    $this->config('views.settings')->set('display_extenders', array('display_extender_test'))->save();
+    $this->config('views.settings')->set('display_extenders', ['display_extender_test'])->save();
     $this->assertEqual(count(Views::getEnabledDisplayExtenders()), 1, 'Make sure that there is only one enabled display extender.');
 
     $view = Views::getView('test_view');

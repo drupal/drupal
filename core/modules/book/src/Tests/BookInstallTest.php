@@ -17,7 +17,7 @@ class BookInstallTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   /**
    * {@inheritdoc}

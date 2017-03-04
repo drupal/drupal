@@ -30,7 +30,7 @@ class CommentTranslationHandler extends ContentTranslationHandler {
    * {@inheritdoc}
    */
   protected function entityFormTitle(EntityInterface $entity) {
-    return t('Edit comment @subject', array('@subject' => $entity->label()));
+    return t('Edit comment @subject', ['@subject' => $entity->label()]);
   }
 
   /**

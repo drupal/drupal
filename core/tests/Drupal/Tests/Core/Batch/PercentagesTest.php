@@ -13,7 +13,7 @@ use Drupal\Tests\UnitTestCase;
  * in all cases.
  */
 class PercentagesTest extends UnitTestCase {
-  protected $testCases = array();
+  protected $testCases = [];
 
   /**
    * @dataProvider providerTestPercentages
@@ -31,39 +31,39 @@ class PercentagesTest extends UnitTestCase {
    */
   public function providerTestPercentages() {
     // Set up an array of test cases.
-    return array(
+    return [
       // array(total, current, expected).
       // 1/2 is 50%.
-      array(2, 1, '50'),
+      [2, 1, '50'],
       // Though we should never encounter a case where the current set is set
       // 0, if we did, we should get 0%.
-      array(3, 0, '0'),
+      [3, 0, '0'],
       // 1/3 is closer to 33% than to 34%.
-      array(3, 1, '33'),
+      [3, 1, '33'],
       // 2/3 is closer to 67% than to 66%.
-      array(3, 2, '67'),
+      [3, 2, '67'],
       // 1/199 should round up to 1%.
-      array(199, 1, '1'),
+      [199, 1, '1'],
       // 198/199 should round down to 99%.
-      array(199, 198, '99'),
+      [199, 198, '99'],
       // 199/200 would have rounded up to 100%, which would give the false
       // impression of being finished, so we add another digit and should get
       // 99.5%.
-      array(200, 199, '99.5'),
+      [200, 199, '99.5'],
       // The same logic holds for 1/200: we should get 0.5%.
-      array(200, 1, '0.5'),
+      [200, 1, '0.5'],
       // Numbers that come out evenly, such as 50/200, should be forced to have
       // extra digits for consistency.
-      array(200, 50, '25.0'),
+      [200, 50, '25.0'],
       // Regardless of number of digits we're using, 100% should always just be
       // 100%.
-      array(200, 200, '100'),
+      [200, 200, '100'],
       // 1998/1999 should similarly round down to 99.9%.
-      array(1999, 1998, '99.9'),
+      [1999, 1998, '99.9'],
       // 1999/2000 should add another digit and go to 99.95%.
-      array(2000, 1999, '99.95'),
+      [2000, 1999, '99.95'],
       // 19999/20000 should add yet another digit and go to 99.995%.
-      array(20000, 19999, '99.995'),
+      [20000, 19999, '99.995'],
       // The next five test cases simulate a batch with a single operation
       // ('total' equals 1) that takes several steps to complete. Within the
       // operation, we imagine that there are 501 items to process, and 100 are
@@ -72,12 +72,12 @@ class PercentagesTest extends UnitTestCase {
       // but for the last pass through, when 500 out of 501 items have been
       // processed, we do not want to round up to 100%, since that would
       // erroneously indicate that the processing is complete.
-      array('total' => 1, 'current' => 100 / 501, '20'),
-      array('total' => 1, 'current' => 200 / 501, '40'),
-      array('total' => 1, 'current' => 300 / 501, '60'),
-      array('total' => 1, 'current' => 400 / 501, '80'),
-      array('total' => 1, 'current' => 500 / 501, '99.8'),
-    );
+      ['total' => 1, 'current' => 100 / 501, '20'],
+      ['total' => 1, 'current' => 200 / 501, '40'],
+      ['total' => 1, 'current' => 300 / 501, '60'],
+      ['total' => 1, 'current' => 400 / 501, '80'],
+      ['total' => 1, 'current' => 500 / 501, '99.8'],
+    ];
   }
 
 }

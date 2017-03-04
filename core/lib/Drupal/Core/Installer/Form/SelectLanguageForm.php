@@ -31,11 +31,11 @@ class SelectLanguageForm extends FormBase {
       $files = $install_state['translations'];
     }
     else {
-      $files = array();
+      $files = [];
     }
     $standard_languages = LanguageManager::getStandardLanguageList();
-    $select_options = array();
-    $browser_options = array();
+    $select_options = [];
+    $browser_options = [];
 
     $form['#title'] = 'Choose language';
 
@@ -57,32 +57,32 @@ class SelectLanguageForm extends FormBase {
     asort($select_options);
     $request = Request::createFromGlobals();
     $browser_langcode = UserAgent::getBestMatchingLangcode($request->server->get('HTTP_ACCEPT_LANGUAGE'), $browser_options);
-    $form['langcode'] = array(
+    $form['langcode'] = [
       '#type' => 'select',
       '#title' => 'Choose language',
       '#title_display' => 'invisible',
       '#options' => $select_options,
       // Use the browser detected language as default or English if nothing found.
       '#default_value' => !empty($browser_langcode) ? $browser_langcode : 'en',
-    );
-    $link_to_english = install_full_redirect_url(array('parameters' => array('langcode' => 'en')));
-    $form['help'] = array(
+    ];
+    $link_to_english = install_full_redirect_url(['parameters' => ['langcode' => 'en']]);
+    $form['help'] = [
       '#type' => 'item',
       // #markup is XSS admin filtered which ensures unsafe protocols will be
       // removed from the url.
       '#markup' => '<p>Translations will be downloaded from the <a href="http://localize.drupal.org">Drupal Translation website</a>. If you do not want this, select <a href="' . $link_to_english . '">English</a>.</p>',
-      '#states' => array(
-        'invisible' => array(
-          'select[name="langcode"]' => array('value' => 'en'),
-        ),
-      ),
-    );
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+      '#states' => [
+        'invisible' => [
+          'select[name="langcode"]' => ['value' => 'en'],
+        ],
+      ],
+    ];
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => 'Save and continue',
       '#button_type' => 'primary',
-    );
+    ];
     return $form;
   }
 

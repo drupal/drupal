@@ -49,14 +49,14 @@ abstract class Mapping extends StylePluginBase {
 
     // Parse the mapping and add a default for each.
     foreach ($this->defineMapping() as $key => $value) {
-      $default = !empty($value['#multiple']) ? array() : '';
-      $options['mapping']['contains'][$key] = array(
+      $default = !empty($value['#multiple']) ? [] : '';
+      $options['mapping']['contains'][$key] = [
         'default' => isset($value['#default_value']) ? $value['#default_value'] : $default,
-      );
+      ];
       if (!empty($value['#toggle'])) {
-        $options['mapping']['contains']["toggle_$key"] = array(
+        $options['mapping']['contains']["toggle_$key"] = [
           'default' => FALSE,
-        );
+        ];
       }
     }
 
@@ -79,19 +79,19 @@ abstract class Mapping extends StylePluginBase {
     $field_labels = $this->displayHandler->getFieldLabels();
 
     // Provide some default values.
-    $defaults = array(
+    $defaults = [
       '#type' => 'select',
       '#required' => FALSE,
       '#multiple' => FALSE,
-    );
+    ];
 
     // For each mapping, add a select element to the form.
     foreach ($options as $key => $value) {
       // If the field is optional, add a 'None' value to the top of the options.
-      $field_options = array();
+      $field_options = [];
       $required = !empty($mapping[$key]['#required']);
       if (!$required && empty($mapping[$key]['#multiple'])) {
-        $field_options = array('' => $this->t('- None -'));
+        $field_options = ['' => $this->t('- None -')];
       }
       $field_options += $field_labels;
 
@@ -104,19 +104,19 @@ abstract class Mapping extends StylePluginBase {
       }
 
       // These values must always be set.
-      $overrides = array(
+      $overrides = [
         '#options' => $field_options,
         '#default_value' => $options[$key],
-      );
+      ];
 
       // Optionally allow the select to be toggleable.
       if (!empty($mapping[$key]['#toggle'])) {
-        $form['mapping']["toggle_$key"] = array(
+        $form['mapping']["toggle_$key"] = [
           '#type' => 'checkbox',
-          '#title' => $this->t('Use a custom %field_name', array('%field_name' => strtolower($mapping[$key]['#title']))),
+          '#title' => $this->t('Use a custom %field_name', ['%field_name' => strtolower($mapping[$key]['#title'])]),
           '#default_value' => $this->options['mapping']["toggle_$key"],
-        );
-        $overrides['#states']['visible'][':input[name="style_options[mapping][' . "toggle_$key" . ']"]'] = array('checked' => TRUE);
+        ];
+        $overrides['#states']['visible'][':input[name="style_options[mapping][' . "toggle_$key" . ']"]'] = ['checked' => TRUE];
       }
 
       $form['mapping'][$key] = $overrides + $mapping[$key] + $defaults;
@@ -129,13 +129,13 @@ abstract class Mapping extends StylePluginBase {
    * Provides the mapping definition as an available variable.
    */
   public function render() {
-    return array(
+    return [
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
       '#options' => $this->options,
       '#rows' => $this->view->result,
       '#mapping' => $this->defineMapping(),
-    );
+    ];
   }
 
 }

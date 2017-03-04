@@ -95,7 +95,7 @@ abstract class PathFormBase extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $pid = NULL) {
     $this->path = $this->buildPath($pid);
-    $form['source'] = array(
+    $form['source'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Existing system path'),
       '#default_value' => $this->path['source'],
@@ -104,8 +104,8 @@ abstract class PathFormBase extends FormBase {
       '#description' => $this->t('Specify the existing path you wish to alias. For example: /node/28, /forum/1, /taxonomy/term/1.'),
       '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
       '#required' => TRUE,
-    );
-    $form['alias'] = array(
+    ];
+    $form['alias'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Path alias'),
       '#default_value' => $this->path['alias'],
@@ -114,17 +114,17 @@ abstract class PathFormBase extends FormBase {
       '#description' => $this->t('Specify an alternative path by which this data can be accessed. For example, type "/about" when writing an about page.'),
       '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
       '#required' => TRUE,
-    );
+    ];
 
     // A hidden value unless language.module is enabled.
     if (\Drupal::moduleHandler()->moduleExists('language')) {
       $languages = \Drupal::languageManager()->getLanguages();
-      $language_options = array();
+      $language_options = [];
       foreach ($languages as $langcode => $language) {
         $language_options[$langcode] = $language->getName();
       }
 
-      $form['langcode'] = array(
+      $form['langcode'] = [
         '#type' => 'select',
         '#title' => $this->t('Language'),
         '#options' => $language_options,
@@ -133,21 +133,21 @@ abstract class PathFormBase extends FormBase {
         '#default_value' => $this->path['langcode'],
         '#weight' => -10,
         '#description' => $this->t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set as <em>- None -</em>.'),
-      );
+      ];
     }
     else {
-      $form['langcode'] = array(
+      $form['langcode'] = [
         '#type' => 'value',
         '#value' => $this->path['langcode']
-      );
+      ];
     }
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
       '#button_type' => 'primary',
-    );
+    ];
 
     return $form;
   }
@@ -193,7 +193,7 @@ abstract class PathFormBase extends FormBase {
 
 
     if (!$this->pathValidator->isValid(trim($source, '/'))) {
-      $form_state->setErrorByName('source', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $source)));
+      $form_state->setErrorByName('source', t("The path '@link_path' is either invalid or you do not have access to it.", ['@link_path' => $source]));
     }
   }
 

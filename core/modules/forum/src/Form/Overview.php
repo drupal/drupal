@@ -80,10 +80,10 @@ class Overview extends OverviewTerms {
     unset($form['actions']['reset_alphabetical']);
 
     // Use the existing taxonomy overview submit handler.
-    $form['terms']['#empty'] = $this->t('No containers or forums available. <a href=":container">Add container</a> or <a href=":forum">Add forum</a>.', array(
+    $form['terms']['#empty'] = $this->t('No containers or forums available. <a href=":container">Add container</a> or <a href=":forum">Add forum</a>.', [
       ':container' => $this->url('forum.add_container'),
       ':forum' => $this->url('forum.add_forum')
-    ));
+    ]);
     return $form;
   }
 

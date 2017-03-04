@@ -21,22 +21,22 @@ class ConnectionTest extends UnitTestCase {
    *   - Expected result from Connection::tablePrefix().
    */
   public function providerPrefixRoundTrip() {
-    return array(
-      array(
-        array('' => 'test_'),
+    return [
+      [
+        ['' => 'test_'],
         'test_',
-      ),
-      array(
-        array(
+      ],
+      [
+        [
           'fooTable' => 'foo_',
           'barTable' => 'bar_',
-        ),
-        array(
+        ],
+        [
           'fooTable' => 'foo_',
           'barTable' => 'bar_',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -46,7 +46,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testPrefixRoundTrip($expected, $prefix_info) {
     $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, array());
+    $connection = new StubConnection($mock_pdo, []);
 
     // setPrefix() is protected, so we make it accessible with reflection.
     $reflection = new \ReflectionClass('Drupal\Tests\Core\Database\Stub\StubConnection');
@@ -54,7 +54,7 @@ class ConnectionTest extends UnitTestCase {
     $set_prefix->setAccessible(TRUE);
 
     // Set the prefix data.
-    $set_prefix->invokeArgs($connection, array($prefix_info));
+    $set_prefix->invokeArgs($connection, [$prefix_info]);
     // Check the round-trip.
     foreach ($expected as $table => $prefix) {
       $this->assertEquals($prefix, $connection->tablePrefix($table));
@@ -71,21 +71,21 @@ class ConnectionTest extends UnitTestCase {
    *   - Query to be prefixed.
    */
   public function providerTestPrefixTables() {
-    return array(
-      array(
+    return [
+      [
         'SELECT * FROM test_table',
         'test_',
         'SELECT * FROM {table}',
-      ),
-      array(
+      ],
+      [
         'SELECT * FROM first_table JOIN second_thingie',
-        array(
+        [
           'table' => 'first_',
           'thingie' => 'second_',
-        ),
+        ],
         'SELECT * FROM {table} JOIN {thingie}',
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -95,7 +95,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testPrefixTables($expected, $prefix_info, $query) {
     $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, array('prefix' => $prefix_info));
+    $connection = new StubConnection($mock_pdo, ['prefix' => $prefix_info]);
     $this->assertEquals($expected, $connection->prefixTables($query));
   }
 
@@ -108,14 +108,14 @@ class ConnectionTest extends UnitTestCase {
    *   - String to escape.
    */
   public function providerEscapeMethods() {
-    return array(
-      array('thing', 'thing'),
-      array('_item', '_item'),
-      array('item_', 'item_'),
-      array('_item_', '_item_'),
-      array('', '!@#$%^&*()-=+'),
-      array('123', '!1@2#3'),
-    );
+    return [
+      ['thing', 'thing'],
+      ['_item', '_item'],
+      ['item_', 'item_'],
+      ['_item_', '_item_'],
+      ['', '!@#$%^&*()-=+'],
+      ['123', '!1@2#3'],
+    ];
   }
 
   /**
@@ -129,7 +129,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testEscapeMethods($expected, $name) {
     $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, array());
+    $connection = new StubConnection($mock_pdo, []);
     $this->assertEquals($expected, $connection->escapeDatabase($name));
     $this->assertEquals($expected, $connection->escapeTable($name));
     $this->assertEquals($expected, $connection->escapeField($name));
@@ -147,23 +147,23 @@ class ConnectionTest extends UnitTestCase {
    *   - Class name without namespace.
    */
   public function providerGetDriverClass() {
-    return array(
-      array(
+    return [
+      [
         'nonexistent_class',
         '\\',
         'nonexistent_class',
-      ),
-      array(
+      ],
+      [
         'Drupal\Tests\Core\Database\Stub\Select',
         NULL,
         'Select',
-      ),
-      array(
+      ],
+      [
         'Drupal\\Tests\\Core\\Database\\Stub\\Driver\\Schema',
         'Drupal\\Tests\\Core\\Database\\Stub\\Driver',
         'Schema',
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -173,7 +173,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testGetDriverClass($expected, $namespace, $class) {
     $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, array('namespace' => $namespace));
+    $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
     // Set the driver using our stub class' public property.
     $this->assertEquals($expected, $connection->getDriverClass($class));
   }
@@ -188,13 +188,13 @@ class ConnectionTest extends UnitTestCase {
    *   - Namespace for connection.
    */
   public function providerSchema() {
-    return array(
-      array(
+    return [
+      [
         'Drupal\\Tests\\Core\\Database\\Stub\\Driver\\Schema',
         'stub',
         'Drupal\\Tests\\Core\\Database\\Stub\\Driver',
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -204,7 +204,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testSchema($expected, $driver, $namespace) {
     $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, array('namespace' => $namespace));
+    $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
     $connection->driver = $driver;
     $this->assertInstanceOf($expected, $connection->schema());
   }
@@ -218,7 +218,7 @@ class ConnectionTest extends UnitTestCase {
     $connection = $this->getMock(
       'Drupal\Tests\Core\Database\Stub\StubConnection',
       NULL,
-      array($mock_pdo, array('namespace' => 'Drupal\\Tests\\Core\\Database\\Stub\\Driver'))
+      [$mock_pdo, ['namespace' => 'Drupal\\Tests\\Core\\Database\\Stub\\Driver']]
     );
     // Generate a schema object in order to verify that we've NULLed it later.
     $this->assertInstanceOf(
@@ -238,20 +238,20 @@ class ConnectionTest extends UnitTestCase {
    *   - Arguments for Connection::makeComment().
    */
   public function providerMakeComments() {
-    return array(
-      array(
+    return [
+      [
         '/*  */ ',
-        array(''),
-      ),
-      array(
+        [''],
+      ],
+      [
         '/* Exploit  *  / DROP TABLE node. -- */ ',
-        array('Exploit * / DROP TABLE node; --'),
-      ),
-      array(
+        ['Exploit * / DROP TABLE node; --'],
+      ],
+      [
         '/* Exploit  *  / DROP TABLE node. --. another comment */ ',
-        array('Exploit * / DROP TABLE node; --', 'another comment'),
-      ),
-    );
+        ['Exploit * / DROP TABLE node; --', 'another comment'],
+      ],
+    ];
   }
 
   /**
@@ -261,7 +261,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testMakeComments($expected, $comment_array) {
     $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, array());
+    $connection = new StubConnection($mock_pdo, []);
     $this->assertEquals($expected, $connection->makeComment($comment_array));
   }
 
@@ -274,11 +274,11 @@ class ConnectionTest extends UnitTestCase {
    *   - Comment to filter.
    */
   public function providerFilterComments() {
-    return array(
-      array('', ''),
-      array('Exploit  *  / DROP TABLE node. --', 'Exploit * / DROP TABLE node; --'),
-      array('Exploit  * / DROP TABLE node. --', 'Exploit */ DROP TABLE node; --'),
-    );
+    return [
+      ['', ''],
+      ['Exploit  *  / DROP TABLE node. --', 'Exploit * / DROP TABLE node; --'],
+      ['Exploit  * / DROP TABLE node. --', 'Exploit */ DROP TABLE node; --'],
+    ];
   }
 
   /**
@@ -288,7 +288,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testFilterComments($expected, $comment) {
     $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, array());
+    $connection = new StubConnection($mock_pdo, []);
 
     // filterComment() is protected, so we make it accessible with reflection.
     $reflection = new \ReflectionClass('Drupal\Tests\Core\Database\Stub\StubConnection');
@@ -297,7 +297,7 @@ class ConnectionTest extends UnitTestCase {
 
     $this->assertEquals(
       $expected,
-      $filter_comment->invokeArgs($connection, array($comment))
+      $filter_comment->invokeArgs($connection, [$comment])
     );
   }
 

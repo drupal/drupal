@@ -80,7 +80,7 @@ class EntityContentBase extends Entity {
   /**
    * {@inheritdoc}
    */
-  public function import(Row $row, array $old_destination_id_values = array()) {
+  public function import(Row $row, array $old_destination_id_values = []) {
     $this->rollbackAction = MigrateIdMapInterface::ROLLBACK_DELETE;
     $entity = $this->getEntity($row, $old_destination_id_values);
     if (!$entity) {
@@ -105,9 +105,9 @@ class EntityContentBase extends Entity {
    * @return array
    *   An array containing the entity ID.
    */
-  protected function save(ContentEntityInterface $entity, array $old_destination_id_values = array()) {
+  protected function save(ContentEntityInterface $entity, array $old_destination_id_values = []) {
     $entity->save();
-    return array($entity->id());
+    return [$entity->id()];
   }
 
   /**

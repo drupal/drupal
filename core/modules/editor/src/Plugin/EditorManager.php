@@ -40,7 +40,7 @@ class EditorManager extends DefaultPluginManager {
    *   An array of translated text editor labels, keyed by ID.
    */
   public function listOptions() {
-    $options = array();
+    $options = [];
     foreach ($this->getDefinitions() as $key => $definition) {
       $options[$key] = $definition['label'];
     }
@@ -59,9 +59,9 @@ class EditorManager extends DefaultPluginManager {
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
    */
   public function getAttachments(array $format_ids) {
-    $attachments = array('library' => array());
+    $attachments = ['library' => []];
 
-    $settings = array();
+    $settings = [];
     foreach ($format_ids as $format_id) {
       $editor = editor_load($format_id);
       if (!$editor) {
@@ -75,20 +75,20 @@ class EditorManager extends DefaultPluginManager {
       $attachments['library'] = array_merge($attachments['library'], $plugin->getLibraries($editor));
 
       // Format-specific JavaScript settings.
-      $settings['editor']['formats'][$format_id] = array(
+      $settings['editor']['formats'][$format_id] = [
         'format' => $format_id,
         'editor' => $editor->getEditor(),
         'editorSettings' => $plugin->getJSSettings($editor),
         'editorSupportsContentFiltering' => $plugin_definition['supports_content_filtering'],
         'isXssSafe' => $plugin_definition['is_xss_safe'],
-      );
+      ];
     }
 
     // Allow other modules to alter all JavaScript settings.
     $this->moduleHandler->alter('editor_js_settings', $settings);
 
     if (empty($attachments['library']) && empty($settings)) {
-      return array();
+      return [];
     }
 
     $attachments['drupalSettings'] = $settings;

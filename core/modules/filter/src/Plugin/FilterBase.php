@@ -41,7 +41,7 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
    *
    * @var array
    */
-  public $settings = array();
+  public $settings = [];
 
   /**
    * {@inheritdoc}
@@ -74,32 +74,32 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
    * {@inheritdoc}
    */
   public function getConfiguration() {
-    return array(
+    return [
       'id' => $this->getPluginId(),
       'provider' => $this->pluginDefinition['provider'],
       'status' => $this->status,
       'weight' => $this->weight,
       'settings' => $this->settings,
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'provider' => $this->pluginDefinition['provider'],
       'status' => FALSE,
       'weight' => $this->pluginDefinition['weight'] ?: 0,
       'settings' => $this->pluginDefinition['settings'],
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    return array();
+    return [];
   }
 
   /**
@@ -130,7 +130,7 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
     // Implementations should work with and return $form. Returning an empty
     // array here allows the text format administration form to identify whether
     // the filter plugin has any settings form elements.
-    return array();
+    return [];
   }
 
   /**

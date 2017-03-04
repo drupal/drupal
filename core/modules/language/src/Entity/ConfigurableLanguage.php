@@ -246,18 +246,18 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
     if (!isset($standard_languages[$langcode])) {
       // Drupal does not know about this language, so we set its values with the
       // best guess. The user will be able to edit afterwards.
-      return static::create(array(
+      return static::create([
         'id' => $langcode,
         'label' => $langcode,
-      ));
+      ]);
     }
     else {
       // A known predefined language, details will be filled in properly.
-      return static::create(array(
+      return static::create([
         'id' => $langcode,
         'label' => $standard_languages[$langcode][0],
         'direction' => isset($standard_languages[$langcode][2]) ? $standard_languages[$langcode][2] : static::DIRECTION_LTR,
-      ));
+      ]);
     }
   }
 

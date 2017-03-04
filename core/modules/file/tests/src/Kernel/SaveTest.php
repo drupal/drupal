@@ -12,20 +12,20 @@ use Drupal\file\Entity\File;
 class SaveTest extends FileManagedUnitTestBase {
   function testFileSave() {
     // Create a new file entity.
-    $file = File::create(array(
+    $file = File::create([
       'uid' => 1,
       'filename' => 'druplicon.txt',
       'uri' => 'public://druplicon.txt',
       'filemime' => 'text/plain',
       'status' => FILE_STATUS_PERMANENT,
-    ));
+    ]);
     file_put_contents($file->getFileUri(), 'hello world');
 
     // Save it, inserting a new record.
     $file->save();
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('insert'));
+    $this->assertFileHooksCalled(['insert']);
 
     $this->assertTrue($file->id() > 0, 'A new file ID is set when saving a new file to the database.', 'File');
     $loaded_file = File::load($file->id());
@@ -41,7 +41,7 @@ class SaveTest extends FileManagedUnitTestBase {
     $file->save();
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('load', 'update'));
+    $this->assertFileHooksCalled(['load', 'update']);
 
     $this->assertEqual($file->id(), $file->id(), 'The file ID of an existing file is not changed when updating the database.', 'File');
     $this->assertTrue($file->getChangedTime() >= $file->getChangedTime(), "Timestamp didn't go backwards.", 'File');
@@ -52,13 +52,13 @@ class SaveTest extends FileManagedUnitTestBase {
 
     // Try to insert a second file with the same name apart from case insensitivity
     // to ensure the 'uri' index allows for filenames with different cases.
-    $uppercase_values = array(
+    $uppercase_values = [
       'uid' => 1,
       'filename' => 'DRUPLICON.txt',
       'uri' => 'public://DRUPLICON.txt',
       'filemime' => 'text/plain',
       'status' => FILE_STATUS_PERMANENT,
-    );
+    ];
     $uppercase_file = File::create($uppercase_values);
     file_put_contents($uppercase_file->getFileUri(), 'hello world');
     $violations = $uppercase_file->validate();
@@ -79,7 +79,7 @@ class SaveTest extends FileManagedUnitTestBase {
       ->execute();
 
     $this->assertEqual(1, count($fids));
-    $this->assertEqual(array($uppercase_file->id() => $uppercase_file->id()), $fids);
+    $this->assertEqual([$uppercase_file->id() => $uppercase_file->id()], $fids);
 
   }
 

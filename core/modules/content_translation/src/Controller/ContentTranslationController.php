@@ -97,7 +97,7 @@ class ContentTranslationController extends ControllerBase {
     $translations = $entity->getTranslationLanguages();
     $field_ui = $this->moduleHandler()->moduleExists('field_ui') && $account->hasPermission('administer ' . $entity_type_id . ' fields');
 
-    $rows = array();
+    $rows = [];
     $show_source_column = FALSE;
 
     if ($this->languageManager()->isMultilingual()) {
@@ -123,41 +123,41 @@ class ContentTranslationController extends ControllerBase {
 
         $add_url = new Url(
           "entity.$entity_type_id.content_translation_add",
-          array(
+          [
             'source' => $original,
             'target' => $language->getId(),
             $entity_type_id => $entity->id(),
-          ),
-          array(
+          ],
+          [
             'language' => $language,
-          )
+          ]
         );
         $edit_url = new Url(
           "entity.$entity_type_id.content_translation_edit",
-          array(
+          [
             'language' => $language->getId(),
             $entity_type_id => $entity->id(),
-          ),
-          array(
+          ],
+          [
             'language' => $language,
-          )
+          ]
         );
         $delete_url = new Url(
           "entity.$entity_type_id.content_translation_delete",
-          array(
+          [
             'language' => $language->getId(),
             $entity_type_id => $entity->id(),
-          ),
-          array(
+          ],
+          [
             'language' => $language,
-          )
+          ]
         );
-        $operations = array(
-          'data' => array(
+        $operations = [
+          'data' => [
             '#type' => 'operations',
-            '#links' => array(),
-          ),
-        );
+            '#links' => [],
+          ],
+        ];
 
         $links = &$operations['data']['#links'];
         if (array_key_exists($langcode, $translations)) {
@@ -167,7 +167,7 @@ class ContentTranslationController extends ControllerBase {
           $source = $metadata->getSource() ?: LanguageInterface::LANGCODE_NOT_SPECIFIED;
           $is_original = $langcode == $original;
           $label = $entity->getTranslation($langcode)->label();
-          $link = isset($links->links[$langcode]['url']) ? $links->links[$langcode] : array('url' => $entity->urlInfo());
+          $link = isset($links->links[$langcode]['url']) ? $links->links[$langcode] : ['url' => $entity->urlInfo()];
           if (!empty($link['url'])) {
             $link['url']->setOption('language', $language);
             $row_title = $this->l($label, $link['url']);
@@ -196,17 +196,17 @@ class ContentTranslationController extends ControllerBase {
           if (isset($links['edit'])) {
             $links['edit']['title'] = $this->t('Edit');
           }
-          $status = array('data' => array(
+          $status = ['data' => [
             '#type' => 'inline_template',
             '#template' => '<span class="status">{% if status %}{{ "Published"|t }}{% else %}{{ "Not published"|t }}{% endif %}</span>{% if outdated %} <span class="marker">{{ "outdated"|t }}</span>{% endif %}',
-            '#context' => array(
+            '#context' => [
               'status' => $metadata->isPublished(),
               'outdated' => $metadata->isOutdated(),
-            ),
-          ));
+            ],
+          ]];
 
           if ($is_original) {
-            $language_name = $this->t('<strong>@language_name (Original language)</strong>', array('@language_name' => $language_name));
+            $language_name = $this->t('<strong>@language_name (Original language)</strong>', ['@language_name' => $language_name]);
             $source_name = $this->t('n/a');
           }
           else {
@@ -217,17 +217,17 @@ class ContentTranslationController extends ControllerBase {
               ->merge(CacheableMetadata::createFromObject($delete_access))
               ->merge(CacheableMetadata::createFromObject($translation_access));
             if ($entity->access('delete') && $entity_type->hasLinkTemplate('delete-form')) {
-              $links['delete'] = array(
+              $links['delete'] = [
                 'title' => $this->t('Delete'),
                 'url' => $entity->urlInfo('delete-form'),
                 'language' => $language,
-              );
+              ];
             }
             elseif ($translation_access->isAllowed()) {
-              $links['delete'] = array(
+              $links['delete'] = [
                 'title' => $this->t('Delete'),
                 'url' => $delete_url,
-              );
+              ];
             }
           }
         }
@@ -241,58 +241,58 @@ class ContentTranslationController extends ControllerBase {
             ->merge(CacheableMetadata::createFromObject($create_translation_access));
           if ($source != $langcode && $create_translation_access->isAllowed()) {
             if ($translatable) {
-              $links['add'] = array(
+              $links['add'] = [
                 'title' => $this->t('Add'),
                 'url' => $add_url,
-              );
+              ];
             }
             elseif ($field_ui) {
               $url = new Url('language.content_settings_page');
 
               // Link directly to the fields tab to make it easier to find the
               // setting to enable translation on fields.
-              $links['nofields'] = array(
+              $links['nofields'] = [
                 'title' => $this->t('No translatable fields'),
                 'url' => $url,
-              );
+              ];
             }
           }
 
           $status = $this->t('Not translated');
         }
         if ($show_source_column) {
-          $rows[] = array(
+          $rows[] = [
             $language_name,
             $row_title,
             $source_name,
             $status,
             $operations,
-          );
+          ];
         }
         else {
-          $rows[] = array($language_name, $row_title, $status, $operations);
+          $rows[] = [$language_name, $row_title, $status, $operations];
         }
       }
     }
     if ($show_source_column) {
-      $header = array(
+      $header = [
         $this->t('Language'),
         $this->t('Translation'),
         $this->t('Source language'),
         $this->t('Status'),
         $this->t('Operations'),
-      );
+      ];
     }
     else {
-      $header = array(
+      $header = [
         $this->t('Language'),
         $this->t('Translation'),
         $this->t('Status'),
         $this->t('Operations'),
-      );
+      ];
     }
 
-    $build['#title'] = $this->t('Translations of %label', array('%label' => $entity->label()));
+    $build['#title'] = $this->t('Translations of %label', ['%label' => $entity->label()]);
 
     // Add metadata to the build render array to let other modules know about
     // which entity this is.
@@ -301,11 +301,11 @@ class ContentTranslationController extends ControllerBase {
       ->addCacheTags($entity->getCacheTags())
       ->applyTo($build);
 
-    $build['content_translation_overview'] = array(
+    $build['content_translation_overview'] = [
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-    );
+    ];
 
     return $build;
   }
@@ -339,7 +339,7 @@ class ContentTranslationController extends ControllerBase {
     //   See https://www.drupal.org/node/2006348.
     $operation = 'default';
 
-    $form_state_additions = array();
+    $form_state_additions = [];
     $form_state_additions['langcode'] = $target->getId();
     $form_state_additions['content_translation']['source'] = $source;
     $form_state_additions['content_translation']['target'] = $target;
@@ -370,7 +370,7 @@ class ContentTranslationController extends ControllerBase {
     //   See https://www.drupal.org/node/2006348.
     $operation = 'default';
 
-    $form_state_additions = array();
+    $form_state_additions = [];
     $form_state_additions['langcode'] = $language->getId();
     $form_state_additions['content_translation']['translation_form'] = TRUE;
 

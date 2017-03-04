@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'byum', 'byub', 'byubs', 'byus', 'byuss', 'byung', 'byuj', 'byuch', 'byuk', 'byut', 'byup', 'byuh', 'beu', 'beug', 'beukk', 'beugs',
   0x10 => 'beun', 'beunj', 'beunh', 'beud', 'beul', 'beulg', 'beulm', 'beulb', 'beuls', 'beult', 'beulp', 'beulh', 'beum', 'beub', 'beubs', 'beus',
   0x20 => 'beuss', 'beung', 'beuj', 'beuch', 'beuk', 'beut', 'beup', 'beuh', 'bui', 'buig', 'buikk', 'buigs', 'buin', 'buinj', 'buinh', 'buid',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'ppeo', 'ppeog', 'ppeokk', 'ppeogs', 'ppeon', 'ppeonj', 'ppeonh', 'ppeod', 'ppeol', 'ppeolg', 'ppeolm', 'ppeolb', 'ppeols', 'ppeolt', 'ppeolp', 'ppeolh',
   0xE0 => 'ppeom', 'ppeob', 'ppeobs', 'ppeos', 'ppeoss', 'ppeong', 'ppeoj', 'ppeoch', 'ppeok', 'ppeot', 'ppeop', 'ppeoh', 'ppe', 'ppeg', 'ppekk', 'ppegs',
   0xF0 => 'ppen', 'ppenj', 'ppenh', 'pped', 'ppel', 'ppelg', 'ppelm', 'ppelb', 'ppels', 'ppelt', 'ppelp', 'ppelh', 'ppem', 'ppeb', 'ppebs', 'ppes',
-);
+];

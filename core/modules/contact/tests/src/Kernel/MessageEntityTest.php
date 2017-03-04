@@ -17,17 +17,17 @@ class MessageEntityTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'system',
     'contact',
     'field',
     'user',
     'contact_test',
-  );
+  ];
 
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('contact', 'contact_test'));
+    $this->installConfig(['contact', 'contact_test']);
   }
 
   /**
@@ -35,7 +35,7 @@ class MessageEntityTest extends EntityKernelTestBase {
    */
   public function testMessageMethods() {
     $message_storage = $this->container->get('entity.manager')->getStorage('contact_message');
-    $message = $message_storage->create(array('contact_form' => 'feedback'));
+    $message = $message_storage->create(['contact_form' => 'feedback']);
 
     // Check for empty values first.
     $this->assertEqual($message->getMessage(), '');

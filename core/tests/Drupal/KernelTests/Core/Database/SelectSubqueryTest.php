@@ -210,18 +210,18 @@ class SelectSubqueryTest extends DatabaseTestBase {
   function testExistsSubquerySelect() {
     // Put George into {test_people}.
     db_insert('test_people')
-      ->fields(array(
+      ->fields([
         'name' => 'George',
         'age' => 27,
         'job' => 'Singer',
-      ))
+      ])
       ->execute();
     // Base query to {test}.
     $query = db_select('test', 't')
-      ->fields('t', array('name'));
+      ->fields('t', ['name']);
     // Subquery to {test_people}.
     $subquery = db_select('test_people', 'tp')
-      ->fields('tp', array('name'))
+      ->fields('tp', ['name'])
       ->where('tp.name = t.name');
     $query->exists($subquery);
     $result = $query->execute();
@@ -240,19 +240,19 @@ class SelectSubqueryTest extends DatabaseTestBase {
   function testNotExistsSubquerySelect() {
     // Put George into {test_people}.
     db_insert('test_people')
-      ->fields(array(
+      ->fields([
         'name' => 'George',
         'age' => 27,
         'job' => 'Singer',
-      ))
+      ])
       ->execute();
 
     // Base query to {test}.
     $query = db_select('test', 't')
-      ->fields('t', array('name'));
+      ->fields('t', ['name']);
     // Subquery to {test_people}.
     $subquery = db_select('test_people', 'tp')
-      ->fields('tp', array('name'))
+      ->fields('tp', ['name'])
       ->where('tp.name = t.name');
     $query->notExists($subquery);
 

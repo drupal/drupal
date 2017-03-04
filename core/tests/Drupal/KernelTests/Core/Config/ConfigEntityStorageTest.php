@@ -18,7 +18,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test');
+  public static $modules = ['config_test'];
 
   /**
    * Tests creating configuration entities with changed UUIDs.
@@ -43,7 +43,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
       $this->fail('Exception thrown when attempting to save a configuration entity with a UUID that does not match the existing UUID.');
     }
     catch (ConfigDuplicateUUIDException $e) {
-      $this->pass(format_string('Exception thrown when attempting to save a configuration entity with a UUID that does not match existing data: %e.', array('%e' => $e)));
+      $this->pass(format_string('Exception thrown when attempting to save a configuration entity with a UUID that does not match existing data: %e.', ['%e' => $e]));
     }
 
     // Ensure that the config entity was not corrupted.

@@ -24,10 +24,10 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
   protected function setUp() {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
-    $value_map = array(
-      array('enabled', TRUE),
-      array('disabled', FALSE),
-    );
+    $value_map = [
+      ['enabled', TRUE],
+      ['disabled', FALSE],
+    ];
 
     $this->moduleHandler->expects($this->any())
       ->method('moduleExists')
@@ -49,7 +49,7 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
    */
   public function testRemoveRoute($route_name, array $requirements, $removed) {
     $collection = new RouteCollection();
-    $route = new Route('', array(), $requirements);
+    $route = new Route('', [], $requirements);
     $collection->add($route_name, $route);
 
     $event = new RouteBuildEvent($collection, 'test');
@@ -68,18 +68,18 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
    * Data provider for testRemoveRoute().
    */
   public function providerTestRemoveRoute() {
-    return array(
-      array('enabled', array('_module_dependencies' => 'enabled'), FALSE),
-      array('disabled', array('_module_dependencies' => 'disabled'), TRUE),
-      array('enabled_or', array('_module_dependencies' => 'disabled,enabled'), FALSE),
-      array('enabled_or', array('_module_dependencies' => 'enabled,disabled'), FALSE),
-      array('disabled_or', array('_module_dependencies' => 'disabled,disabled'), TRUE),
-      array('enabled_and', array('_module_dependencies' => 'enabled+enabled'), FALSE),
-      array('enabled_and', array('_module_dependencies' => 'enabled+disabled'), TRUE),
-      array('enabled_and', array('_module_dependencies' => 'disabled+enabled'), TRUE),
-      array('disabled_and', array('_module_dependencies' => 'disabled+disabled'), TRUE),
-      array('no_dependencies', array(), FALSE),
-    );
+    return [
+      ['enabled', ['_module_dependencies' => 'enabled'], FALSE],
+      ['disabled', ['_module_dependencies' => 'disabled'], TRUE],
+      ['enabled_or', ['_module_dependencies' => 'disabled,enabled'], FALSE],
+      ['enabled_or', ['_module_dependencies' => 'enabled,disabled'], FALSE],
+      ['disabled_or', ['_module_dependencies' => 'disabled,disabled'], TRUE],
+      ['enabled_and', ['_module_dependencies' => 'enabled+enabled'], FALSE],
+      ['enabled_and', ['_module_dependencies' => 'enabled+disabled'], TRUE],
+      ['enabled_and', ['_module_dependencies' => 'disabled+enabled'], TRUE],
+      ['disabled_and', ['_module_dependencies' => 'disabled+disabled'], TRUE],
+      ['no_dependencies', [], FALSE],
+    ];
   }
 
 }

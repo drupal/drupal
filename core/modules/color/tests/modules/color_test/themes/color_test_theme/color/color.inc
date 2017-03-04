@@ -5,29 +5,29 @@
  * Lists available colors and color schemes for the Color test theme.
  */
 
-$info = array(
-  'fields' => array(
+$info = [
+  'fields' => [
     'bg' => t('Main background'),
     'text' => t('Text color'),
-  ),
-  'schemes' => array(
-    'default' => array(
+  ],
+  'schemes' => [
+    'default' => [
       'title' => t('Default'),
-      'colors' => array(
+      'colors' => [
         'bg' => '#ff0000',
         'text' => '#0000ff',
-      ),
-    ),
-    'custom' => array(
+      ],
+    ],
+    'custom' => [
       'title' => t('Custom'),
-      'colors' => array(
+      'colors' => [
         'bg' => '#ff0000',
         'text' => '#3b3b3b',
-      ),
-    ),
-  ),
-  'css' => array(
+      ],
+    ],
+  ],
+  'css' => [
     'css/colors.css',
-  ),
+  ],
   'preview_html' => 'color/preview.html',
-);
+];

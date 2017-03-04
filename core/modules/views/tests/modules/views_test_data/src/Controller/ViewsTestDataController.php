@@ -14,11 +14,11 @@ class ViewsTestDataController {
    * an exposed form.
    */
   public function errorFormPage() {
-    $build = array();
-    $build['view'] = array(
+    $build = [];
+    $build['view'] = [
       '#type' => 'view',
       '#name' => 'test_exposed_form_buttons',
-    );
+    ];
     $build['error_form'] = \Drupal::formBuilder()->getForm('Drupal\views_test_data\Form\ViewsTestDataErrorForm');
 
     return $build;

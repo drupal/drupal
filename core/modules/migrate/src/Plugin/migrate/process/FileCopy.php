@@ -89,11 +89,11 @@ class FileCopy extends ProcessPluginBase implements ContainerFactoryPluginInterf
    *   An instance of the download plugin for handling remote URIs.
    */
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, StreamWrapperManagerInterface $stream_wrappers, FileSystemInterface $file_system, MigrateProcessInterface $download_plugin) {
-    $configuration += array(
+    $configuration += [
       'move' => FALSE,
       'rename' => FALSE,
       'reuse' => FALSE,
-    );
+    ];
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->streamWrapperManager = $stream_wrappers;
     $this->fileSystem = $file_system;

@@ -14,7 +14,7 @@ class CommentTitleTest extends CommentTestBase {
    */
   public function testCommentEmptyTitles() {
     // Installs module that sets comments to an empty string.
-    \Drupal::service('module_installer')->install(array('comment_empty_title_test'));
+    \Drupal::service('module_installer')->install(['comment_empty_title_test']);
 
     // Set comments to have a subject with preview disabled.
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -23,7 +23,7 @@ class CommentTitleTest extends CommentTestBase {
 
     // Create a node.
     $this->drupalLogin($this->webUser);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()));
+    $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()]);
 
     // Post comment #1 and verify that h3's are not rendered.
     $subject_text = $this->randomMachineName();
@@ -49,7 +49,7 @@ class CommentTitleTest extends CommentTestBase {
 
     // Create a node.
     $this->drupalLogin($this->webUser);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()));
+    $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()]);
 
     // Post comment #1 and verify that title is rendered in h3.
     $subject_text = $this->randomMachineName();

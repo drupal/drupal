@@ -18,7 +18,7 @@ class ForumBlockTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('forum', 'block');
+  public static $modules = ['forum', 'block'];
 
   /**
    * A user with various administrative privileges.
@@ -29,14 +29,14 @@ class ForumBlockTest extends BrowserTestBase {
     parent::setUp();
 
     // Create users.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'access administration pages',
       'administer blocks',
       'administer nodes',
       'create forum content',
       'post comments',
       'skip comment approval',
-    ));
+    ]);
   }
 
   /**
@@ -58,7 +58,7 @@ class ForumBlockTest extends BrowserTestBase {
 
     // We expect all 5 forum topics to appear in the "New forum topics" block.
     foreach ($topics as $topic) {
-      $this->assertLink($topic, 0, format_string('Forum topic @topic found in the "New forum topics" block.', array('@topic' => $topic)));
+      $this->assertLink($topic, 0, format_string('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topic]));
     }
 
     // Configure the new forum topics block to only show 2 topics.
@@ -69,11 +69,11 @@ class ForumBlockTest extends BrowserTestBase {
     // We expect only the 2 most recent forum topics to appear in the "New forum
     // topics" block.
     for ($index = 0; $index < 5; $index++) {
-      if (in_array($index, array(3, 4))) {
-        $this->assertLink($topics[$index], 0, format_string('Forum topic @topic found in the "New forum topics" block.', array('@topic' => $topics[$index])));
+      if (in_array($index, [3, 4])) {
+        $this->assertLink($topics[$index], 0, format_string('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
       }
       else {
-        $this->assertNoText($topics[$index], format_string('Forum topic @topic not found in the "New forum topics" block.', array('@topic' => $topics[$index])));
+        $this->assertNoText($topics[$index], format_string('Forum topic @topic not found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
       }
     }
   }
@@ -93,7 +93,7 @@ class ForumBlockTest extends BrowserTestBase {
       // Get the node from the topic title.
       $node = $this->drupalGetNodeByTitle($topics[$index]);
       $date->modify('+1 minute');
-      $comment = Comment::create(array(
+      $comment = Comment::create([
         'entity_id' => $node->id(),
         'field_name' => 'comment_forum',
         'entity_type' => 'node',
@@ -101,7 +101,7 @@ class ForumBlockTest extends BrowserTestBase {
         'subject' => $this->randomString(20),
         'comment_body' => $this->randomString(256),
         'created' => $date->getTimestamp(),
-      ));
+      ]);
       $comment->save();
     }
 
@@ -116,10 +116,10 @@ class ForumBlockTest extends BrowserTestBase {
     $this->drupalGet('<front>');
     for ($index = 0; $index < 10; $index++) {
       if ($index < 5) {
-        $this->assertLink($topics[$index], 0, format_string('Forum topic @topic found in the "Active forum topics" block.', array('@topic' => $topics[$index])));
+        $this->assertLink($topics[$index], 0, format_string('Forum topic @topic found in the "Active forum topics" block.', ['@topic' => $topics[$index]]));
       }
       else {
-        $this->assertNoText($topics[$index], format_string('Forum topic @topic not found in the "Active forum topics" block.', array('@topic' => $topics[$index])));
+        $this->assertNoText($topics[$index], format_string('Forum topic @topic not found in the "Active forum topics" block.', ['@topic' => $topics[$index]]));
       }
     }
 
@@ -132,7 +132,7 @@ class ForumBlockTest extends BrowserTestBase {
     // We expect only the 2 forum topics with most recent comments to appear in
     // the "Active forum topics" block.
     for ($index = 0; $index < 10; $index++) {
-      if (in_array($index, array(3, 4))) {
+      if (in_array($index, [3, 4])) {
         $this->assertLink($topics[$index], 0, 'Forum topic found in the "Active forum topics" block.');
       }
       else {
@@ -148,7 +148,7 @@ class ForumBlockTest extends BrowserTestBase {
    *   The title of the newly generated topic.
    */
   protected function createForumTopics($count = 5) {
-    $topics = array();
+    $topics = [];
     $date = new DrupalDateTime();
     $date->modify('-24 hours');
 
@@ -160,17 +160,17 @@ class ForumBlockTest extends BrowserTestBase {
       // changing the date.
       $date->modify('+1 minute');
 
-      $edit = array(
+      $edit = [
         'title[0][value]' => $title,
         'body[0][value]' => $body,
         // Forum posts are ordered by timestamp, so force a unique timestamp by
         // adding the index.
         'created[0][value][date]' => $date->format('Y-m-d'),
         'created[0][value][time]' => $date->format('H:i:s'),
-      );
+      ];
 
       // Create the forum topic, preselecting the forum ID via a URL parameter.
-      $this->drupalPostForm('node/add/forum', $edit, t('Save and publish'), array('query' => array('forum_id' => 1)));
+      $this->drupalPostForm('node/add/forum', $edit, t('Save and publish'), ['query' => ['forum_id' => 1]]);
       $topics[] = $title;
     }
 

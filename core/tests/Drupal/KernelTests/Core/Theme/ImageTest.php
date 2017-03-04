@@ -17,7 +17,7 @@ class ImageTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /*
    * The images to test with.
@@ -36,10 +36,10 @@ class ImageTest extends KernelTestBase {
     $this->container = \Drupal::service('kernel')->getContainer();
     $this->container->get('request_stack')->push($request);
 
-    $this->testImages = array(
+    $this->testImages = [
       'core/misc/druplicon.png',
       'core/misc/loading.gif',
-    );
+    ];
   }
 
   /**
@@ -48,7 +48,7 @@ class ImageTest extends KernelTestBase {
   function testThemeImageWithSizes() {
     // Test with multipliers.
     $sizes = '(max-width: ' . rand(10, 30) . 'em) 100vw, (max-width: ' . rand(30, 50) . 'em) 50vw, 30vw';
-    $image = array(
+    $image = [
       '#theme' => 'image',
       '#sizes' => $sizes,
       '#uri' => reset($this->testImages),
@@ -56,7 +56,7 @@ class ImageTest extends KernelTestBase {
       '#height' => rand(0, 500) . 'px',
       '#alt' => $this->randomMachineName(),
       '#title' => $this->randomMachineName(),
-    );
+    ];
     $this->render($image);
 
     // Make sure sizes is set.
@@ -68,14 +68,14 @@ class ImageTest extends KernelTestBase {
    */
   function testThemeImageWithSrc() {
 
-    $image = array(
+    $image = [
       '#theme' => 'image',
       '#uri' => reset($this->testImages),
       '#width' => rand(0, 1000) . 'px',
       '#height' => rand(0, 500) . 'px',
       '#alt' => $this->randomMachineName(),
       '#title' => $this->randomMachineName(),
-    );
+    ];
     $this->render($image);
 
     // Make sure the src attribute has the correct value.
@@ -87,23 +87,23 @@ class ImageTest extends KernelTestBase {
    */
   function testThemeImageWithSrcsetMultiplier() {
     // Test with multipliers.
-    $image = array(
+    $image = [
       '#theme' => 'image',
-      '#srcset' => array(
-        array(
+      '#srcset' => [
+        [
           'uri' => $this->testImages[0],
           'multiplier' => '1x',
-        ),
-        array(
+        ],
+        [
           'uri' => $this->testImages[1],
           'multiplier' => '2x',
-        ),
-      ),
+        ],
+      ],
       '#width' => rand(0, 1000) . 'px',
       '#height' => rand(0, 500) . 'px',
       '#alt' => $this->randomMachineName(),
       '#title' => $this->randomMachineName(),
-    );
+    ];
     $this->render($image);
 
     // Make sure the srcset attribute has the correct value.
@@ -115,27 +115,27 @@ class ImageTest extends KernelTestBase {
    */
   function testThemeImageWithSrcsetWidth() {
     // Test with multipliers.
-    $widths = array(
+    $widths = [
       rand(0, 500) . 'w',
       rand(500, 1000) . 'w',
-    );
-    $image = array(
+    ];
+    $image = [
       '#theme' => 'image',
-      '#srcset' => array(
-        array(
+      '#srcset' => [
+        [
           'uri' => $this->testImages[0],
           'width' => $widths[0],
-        ),
-        array(
+        ],
+        [
           'uri' => $this->testImages[1],
           'width' => $widths[1],
-        ),
-      ),
+        ],
+      ],
       '#width' => rand(0, 1000) . 'px',
       '#height' => rand(0, 500) . 'px',
       '#alt' => $this->randomMachineName(),
       '#title' => $this->randomMachineName(),
-    );
+    ];
     $this->render($image);
 
     // Make sure the srcset attribute has the correct value.

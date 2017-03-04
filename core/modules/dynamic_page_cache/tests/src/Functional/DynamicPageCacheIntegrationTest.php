@@ -94,11 +94,11 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
     // Controllers returning render arrays, rendered as anything except a HTML
     // response, are ignored by Dynamic Page Cache (but only because those
     // wrapper formats' responses do not implement CacheableResponseInterface).
-    $this->drupalGet('dynamic-page-cache-test/html', array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax')));
+    $this->drupalGet('dynamic-page-cache-test/html', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
     $this->assertFalse($this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as AJAX response: Dynamic Page Cache is ignoring.');
-    $this->drupalGet('dynamic-page-cache-test/html', array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog')));
+    $this->drupalGet('dynamic-page-cache-test/html', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog']]);
     $this->assertFalse($this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as dialog response: Dynamic Page Cache is ignoring.');
-    $this->drupalGet('dynamic-page-cache-test/html', array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal')));
+    $this->drupalGet('dynamic-page-cache-test/html', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal']]);
     $this->assertFalse($this->drupalGetHeader(DynamicPageCacheSubscriber::HEADER), 'Render array returned, rendered as modal response: Dynamic Page Cache is ignoring.');
 
     // Admin routes are ignored by Dynamic Page Cache.

@@ -29,7 +29,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
    *
    * @var array
    */
-  protected $builders = array();
+  protected $builders = [];
 
   /**
    * Holds the array of breadcrumb builders sorted by priority.
@@ -71,7 +71,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
    */
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
-    $context = array('builder' => NULL);
+    $context = ['builder' => NULL];
     // Call the build method of registered breadcrumb builders,
     // until one of them returns an array.
     foreach ($this->getSortedBuilders() as $builder) {
@@ -107,7 +107,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
       // Sort the builders according to priority.
       krsort($this->builders);
       // Merge nested builders from $this->builders into $this->sortedBuilders.
-      $this->sortedBuilders = array();
+      $this->sortedBuilders = [];
       foreach ($this->builders as $builders) {
         $this->sortedBuilders = array_merge($this->sortedBuilders, $builders);
       }

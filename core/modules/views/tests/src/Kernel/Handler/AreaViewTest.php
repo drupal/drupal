@@ -18,14 +18,14 @@ class AreaViewTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('user');
+  public static $modules = ['user'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_simple_argument', 'test_area_view');
+  public static $testViews = ['test_simple_argument', 'test_area_view'];
 
   /**
    * Tests the view area handler.
@@ -44,7 +44,7 @@ class AreaViewTest extends ViewsKernelTestBase {
     $this->assertTrue(strpos($output, 'js-view-dom-id-' . $view->dom_id) !== FALSE, 'The test view is correctly embedded.');
     $view->destroy();
 
-    $view->setArguments(array(27));
+    $view->setArguments([27]);
     $this->executeView($view);
     $output = $view->render();
     $output = $renderer->renderRoot($output);

@@ -21,13 +21,13 @@ function forum_install() {
 
   if (!\Drupal::service('config.installer')->isSyncing()) {
     // Create a default forum so forum posts can be created.
-    $term = Term::create(array(
+    $term = Term::create([
       'name' => t('General discussion'),
       'description' => '',
-      'parent' => array(0),
+      'parent' => [0],
       'vid' => 'forums',
       'forum_container' => 0,
-    ));
+    ]);
     $term->save();
   }
 }
@@ -61,117 +61,117 @@ function forum_uninstall() {
  * Implements hook_schema().
  */
 function forum_schema() {
-  $schema['forum'] = array(
+  $schema['forum'] = [
     'description' => 'Stores the relationship of nodes to forum terms.',
-    'fields' => array(
-      'nid' => array(
+    'fields' => [
+      'nid' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The {node}.nid of the node.',
-      ),
-      'vid' => array(
+      ],
+      'vid' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'description' => 'Primary Key: The {node}.vid of the node.',
-      ),
-      'tid' => array(
+      ],
+      'tid' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The {taxonomy_term_data}.tid of the forum term assigned to the node.',
-      ),
-    ),
-    'indexes' => array(
-      'forum_topic' => array('nid', 'tid'),
-      'tid' => array('tid'),
-    ),
-    'primary key' => array('vid'),
-    'foreign keys' => array(
-      'forum_node' => array(
+      ],
+    ],
+    'indexes' => [
+      'forum_topic' => ['nid', 'tid'],
+      'tid' => ['tid'],
+    ],
+    'primary key' => ['vid'],
+    'foreign keys' => [
+      'forum_node' => [
         'table' => 'node',
-        'columns' => array(
+        'columns' => [
           'nid' => 'nid',
           'vid' => 'vid',
-        ),
-      ),
-    ),
-  );
+        ],
+      ],
+    ],
+  ];
 
-  $schema['forum_index'] = array(
+  $schema['forum_index'] = [
     'description' => 'Maintains denormalized information about node/term relationships.',
-    'fields' => array(
-      'nid' => array(
+    'fields' => [
+      'nid' => [
         'description' => 'The {node}.nid this record tracks.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'title' => array(
+      ],
+      'title' => [
         'description' => 'The node title.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'tid' => array(
+      ],
+      'tid' => [
          'description' => 'The term ID.',
          'type' => 'int',
          'unsigned' => TRUE,
          'not null' => TRUE,
          'default' => 0,
-      ),
-      'sticky' => array(
+      ],
+      'sticky' => [
         'description' => 'Boolean indicating whether the node is sticky.',
         'type' => 'int',
         'not null' => FALSE,
         'default' => 0,
         'size' => 'tiny',
-      ),
-      'created' => array(
+      ],
+      'created' => [
         'description' => 'The Unix timestamp when the node was created.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'last_comment_timestamp' => array(
+      ],
+      'last_comment_timestamp' => [
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.timestamp.',
-      ),
-      'comment_count' => array(
+      ],
+      'comment_count' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The total number of comments on this node.',
-      ),
-    ),
-    'indexes' => array(
-      'forum_topics' => array('nid', 'tid', 'sticky', 'last_comment_timestamp'),
-      'created' => array('created'),
-      'last_comment_timestamp' => array('last_comment_timestamp'),
-    ),
-    'foreign keys' => array(
-      'tracked_node' => array(
+      ],
+    ],
+    'indexes' => [
+      'forum_topics' => ['nid', 'tid', 'sticky', 'last_comment_timestamp'],
+      'created' => ['created'],
+      'last_comment_timestamp' => ['last_comment_timestamp'],
+    ],
+    'foreign keys' => [
+      'tracked_node' => [
         'table' => 'node',
-        'columns' => array('nid' => 'nid'),
-      ),
-      'term' => array(
+        'columns' => ['nid' => 'nid'],
+      ],
+      'term' => [
         'table' => 'taxonomy_term_data',
-        'columns' => array(
+        'columns' => [
           'tid' => 'tid',
-        ),
-      ),
-    ),
-  );
+        ],
+      ],
+    ],
+  ];
 
   return $schema;
 }

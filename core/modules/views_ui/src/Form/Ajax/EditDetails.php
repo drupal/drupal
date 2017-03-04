@@ -33,33 +33,33 @@ class EditDetails extends ViewsFormBase {
     $form['#title'] = $this->t('Name and description');
     $form['#section'] = 'details';
 
-    $form['details'] = array(
-      '#theme_wrappers' => array('container'),
-      '#attributes' => array('class' => array('scroll'), 'data-drupal-views-scroll' => TRUE),
-    );
-    $form['details']['label'] = array(
+    $form['details'] = [
+      '#theme_wrappers' => ['container'],
+      '#attributes' => ['class' => ['scroll'], 'data-drupal-views-scroll' => TRUE],
+    ];
+    $form['details']['label'] = [
       '#type' => 'textfield',
       '#title' => t('Administrative name'),
       '#default_value' => $view->label(),
-    );
-    $form['details']['langcode'] = array(
+    ];
+    $form['details']['langcode'] = [
       '#type' => 'language_select',
       '#title' => $this->t('View language'),
       '#description' => $this->t('Language of labels and other textual elements in this view.'),
       '#default_value' => $view->get('langcode'),
-    );
-    $form['details']['description'] = array(
+    ];
+    $form['details']['description'] = [
        '#type' => 'textfield',
        '#title' => t('Administrative description'),
        '#default_value' => $view->get('description'),
-     );
-    $form['details']['tag'] = array(
+     ];
+    $form['details']['tag'] = [
       '#type' => 'textfield',
       '#title' => t('Administrative tags'),
       '#description' => t('Enter a comma-separated list of words to describe your view.'),
       '#default_value' => $view->get('tag'),
       '#autocomplete_route_name' => 'views_ui.autocomplete',
-    );
+    ];
 
     $view->getStandardButtons($form, $form_state, 'views_ui_edit_details_form');
     return $form;

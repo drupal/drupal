@@ -17,10 +17,10 @@ class NodeStorageSchema extends SqlContentEntityStorageSchema {
   protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
     $schema = parent::getEntitySchema($entity_type, $reset);
 
-    $schema['node_field_data']['indexes'] += array(
-      'node__frontpage' => array('promote', 'status', 'sticky', 'created'),
-      'node__title_type' => array('title', array('type', 4)),
-    );
+    $schema['node_field_data']['indexes'] += [
+      'node__frontpage' => ['promote', 'status', 'sticky', 'created'],
+      'node__title_type' => ['title', ['type', 4]],
+    ];
 
     return $schema;
   }

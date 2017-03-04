@@ -61,7 +61,7 @@ class Fid extends NumericArgument implements ContainerFactoryPluginInterface {
       ->condition('fid', $this->value, 'IN')
       ->execute();
     $files = $storage->loadMultiple($fids);
-    $titles = array();
+    $titles = [];
     foreach ($files as $file) {
       $titles[] = $file->getFilename();
     }

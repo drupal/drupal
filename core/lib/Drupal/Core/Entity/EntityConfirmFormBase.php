@@ -57,8 +57,8 @@ abstract class EntityConfirmFormBase extends EntityForm implements ConfirmFormIn
     $form['#title'] = $this->getQuestion();
 
     $form['#attributes']['class'][] = 'confirmation';
-    $form['description'] = array('#markup' => $this->getDescription());
-    $form[$this->getFormName()] = array('#type' => 'hidden', '#value' => 1);
+    $form['description'] = ['#markup' => $this->getDescription()];
+    $form[$this->getFormName()] = ['#type' => 'hidden', '#value' => 1];
 
     // By default, render the form using theme_confirm_form().
     if (!isset($form['#theme'])) {
@@ -71,16 +71,16 @@ abstract class EntityConfirmFormBase extends EntityForm implements ConfirmFormIn
    * {@inheritdoc}
    */
   protected function actions(array $form, FormStateInterface $form_state) {
-    return array(
-      'submit' => array(
+    return [
+      'submit' => [
         '#type' => 'submit',
         '#value' => $this->getConfirmText(),
-        '#submit' => array(
-          array($this, 'submitForm'),
-        ),
-      ),
+        '#submit' => [
+          [$this, 'submitForm'],
+        ],
+      ],
       'cancel' => ConfirmFormHelper::buildCancelLink($this, $this->getRequest()),
-    );
+    ];
   }
 
   /**

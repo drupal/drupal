@@ -112,18 +112,18 @@ class StandardProfileTest extends BrowserTestBase {
     $this->baseUri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
 
     // Create two test users.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'administer content types',
       'administer comments',
       'access comments',
       'access content',
-    ));
-    $this->webUser = $this->drupalCreateUser(array(
+    ]);
+    $this->webUser = $this->drupalCreateUser([
       'access comments',
       'post comments',
       'skip comment approval',
       'access content',
-    ));
+    ]);
 
     $this->drupalLogin($this->adminUser);
 
@@ -141,20 +141,20 @@ class StandardProfileTest extends BrowserTestBase {
     $this->image->save();
 
     // Create article.
-    $article_settings = array(
+    $article_settings = [
       'type' => 'article',
       'promote' => NodeInterface::PROMOTED,
-      'field_image' => array(
-        array(
+      'field_image' => [
+        [
           'target_id' => $this->image->id(),
-        ),
-      ),
-      'field_tags' => array(
-        array(
+        ],
+      ],
+      'field_tags' => [
+        [
           'target_id' => $this->term->id(),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     $this->article = $this->drupalCreateNode($article_settings);
     // Create second article to test teaser list.
     $this->drupalCreateNode(['type' => 'article', 'promote' => NodeInterface::PROMOTED]);
@@ -163,24 +163,24 @@ class StandardProfileTest extends BrowserTestBase {
     $this->articleComment = $this->saveComment($this->article->id(), $this->webUser->id(), NULL, 0);
 
     // Create page.
-    $this->page = $this->drupalCreateNode(array('type' => 'page'));
+    $this->page = $this->drupalCreateNode(['type' => 'page']);
 
     // Set URIs.
     // Image.
     $image_file = $this->article->get('field_image')->entity;
     $this->imageUri = ImageStyle::load('large')->buildUrl($image_file->getFileUri());
     // Term.
-    $this->termUri = $this->term->url('canonical', array('absolute' => TRUE));
+    $this->termUri = $this->term->url('canonical', ['absolute' => TRUE]);
     // Article.
-    $this->articleUri = $this->article->url('canonical', array('absolute' => TRUE));
+    $this->articleUri = $this->article->url('canonical', ['absolute' => TRUE]);
     // Page.
-    $this->pageUri = $this->page->url('canonical', array('absolute' => TRUE));
+    $this->pageUri = $this->page->url('canonical', ['absolute' => TRUE]);
     // Author.
-    $this->authorUri = $this->adminUser->url('canonical', array('absolute' => TRUE));
+    $this->authorUri = $this->adminUser->url('canonical', ['absolute' => TRUE]);
     // Comment.
-    $this->articleCommentUri = $this->articleComment->url('canonical', array('absolute' => TRUE));
+    $this->articleCommentUri = $this->articleComment->url('canonical', ['absolute' => TRUE]);
     // Commenter.
-    $this->commenterUri = $this->webUser->url('canonical', array('absolute' => TRUE));
+    $this->commenterUri = $this->webUser->url('canonical', ['absolute' => TRUE]);
 
     $this->drupalLogout();
   }
@@ -211,11 +211,11 @@ class StandardProfileTest extends BrowserTestBase {
     $this->assertEqual(2, count($graph->allOfType('http://schema.org/Article')), 'Two articles found on front page.');
 
     // Test interaction count.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => 'UserComments:1',
       'lang' => 'en',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/interactionCount', $expected_value), "Teaser comment count was found (schema:interactionCount).");
 
     // Test the properties that are common between pages and articles and are
@@ -228,10 +228,10 @@ class StandardProfileTest extends BrowserTestBase {
     //   image, move this to testArticleProperties().
     $image_file = $this->article->get('field_image')->entity;
     $image_uri = ImageStyle::load('medium')->buildUrl($image_file->getFileUri());
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => $image_uri,
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/image', $expected_value), "Teaser image was found (schema:image).");
   }
 
@@ -258,10 +258,10 @@ class StandardProfileTest extends BrowserTestBase {
 
     // @todo Once the image points to the original instead of the processed
     //   image, move this to testArticleProperties().
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => $this->imageUri,
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/image', $expected_value), "Article image was found (schema:image).");
   }
 
@@ -303,10 +303,10 @@ class StandardProfileTest extends BrowserTestBase {
     $this->assertEqual($graph->type($this->authorUri), 'schema:Person', "User type was found (schema:Person) on user page.");
 
     // User name.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $this->adminUser->label(),
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->authorUri, 'http://schema.org/name', $expected_value), "User name was found (schema:name) on user page.");
 
     $this->drupalLogout();
@@ -323,11 +323,11 @@ class StandardProfileTest extends BrowserTestBase {
     $this->assertEqual($graph->type($this->termUri), 'schema:Thing', "Term type was found (schema:Thing) on term page.");
 
     // Term name.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $this->term->getName(),
       'lang' => 'en',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "Term name was found (schema:name) on term page.");
 
     // @todo Add test for term description once it is a field:
@@ -345,47 +345,47 @@ class StandardProfileTest extends BrowserTestBase {
    *   The word to use in the test assertion message.
    */
   protected function assertRdfaCommonNodeProperties($graph, NodeInterface $node, $message_prefix) {
-    $uri = $node->url('canonical', array('absolute' => TRUE));
+    $uri = $node->url('canonical', ['absolute' => TRUE]);
 
     // Title.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $node->get('title')->value,
       'lang' => 'en',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/name', $expected_value), "$message_prefix title was found (schema:name).");
 
     // Created date.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => format_date($node->get('created')->value, 'custom', 'c', 'UTC'),
       'lang' => 'en',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/dateCreated', $expected_value), "$message_prefix created date was found (schema:dateCreated) in teaser.");
 
     // Body.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $node->get('body')->value,
       'lang' => 'en',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/text', $expected_value), "$message_prefix body was found (schema:text) in teaser.");
 
     // Author.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => $this->authorUri,
-    );
+    ];
     $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/author', $expected_value), "$message_prefix author was found (schema:author) in teaser.");
 
     // Author type.
     $this->assertEqual($graph->type($this->authorUri), 'schema:Person', "$message_prefix author type was found (schema:Person).");
 
     // Author name.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $this->adminUser->label(),
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->authorUri, 'http://schema.org/name', $expected_value), "$message_prefix author name was found (schema:name).");
   }
 
@@ -399,10 +399,10 @@ class StandardProfileTest extends BrowserTestBase {
    */
   protected function assertRdfaArticleProperties($graph, $message_prefix) {
     // Tags.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => $this->termUri,
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/about', $expected_value), "$message_prefix tag was found (schema:about).");
 
     // Tag type.
@@ -410,11 +410,11 @@ class StandardProfileTest extends BrowserTestBase {
     //$this->assertEqual($graph->type($this->termUri), 'schema:Thing', 'Tag type was found (schema:Thing).');
 
     // Tag name.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $this->term->getName(),
       'lang' => 'en',
-    );
+    ];
     // @todo Enable with https://www.drupal.org/node/2072791.
     //$this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "$message_prefix name was found (schema:name).");
   }
@@ -427,58 +427,58 @@ class StandardProfileTest extends BrowserTestBase {
    */
   protected function assertRdfaNodeCommentProperties($graph) {
     // Relationship between node and comment.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => $this->articleCommentUri,
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/comment', $expected_value), 'Relationship between node and comment found (schema:comment).');
 
     // Comment type.
     $this->assertEqual($graph->type($this->articleCommentUri), 'schema:Comment', 'Comment type was found (schema:Comment).');
 
     // Comment title.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $this->articleComment->get('subject')->value,
       'lang' => 'en',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/name', $expected_value), 'Article comment title was found (schema:name).');
 
     // Comment created date.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => format_date($this->articleComment->get('created')->value, 'custom', 'c', 'UTC'),
       'lang' => 'en',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/dateCreated', $expected_value), 'Article comment created date was found (schema:dateCreated).');
 
     // Comment body.
     $text = $this->articleComment->get('comment_body')->value;
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       // There is an extra carriage return in the when parsing comments as
       // output by Bartik, so it must be added to the expected value.
       'value' => "$text
 ",
       'lang' => 'en',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/text', $expected_value), 'Article comment body was found (schema:text).');
 
     // Comment uid.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => $this->commenterUri,
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/author', $expected_value), 'Article comment author was found (schema:author).');
 
     // Comment author type.
     $this->assertEqual($graph->type($this->commenterUri), 'schema:Person', 'Comment author type was found (schema:Person).');
 
     // Comment author name.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $this->webUser->getUsername(),
-    );
+    ];
     $this->assertTrue($graph->hasProperty($this->commenterUri, 'http://schema.org/name', $expected_value), 'Comment author name was found (schema:name).');
   }
 
@@ -499,7 +499,7 @@ class StandardProfileTest extends BrowserTestBase {
    *   The saved comment.
    */
   protected function saveComment($nid, $uid, $contact = NULL, $pid = 0) {
-    $values = array(
+    $values = [
       'entity_id' => $nid,
       'entity_type' => 'node',
       'field_name' => 'comment',
@@ -508,7 +508,7 @@ class StandardProfileTest extends BrowserTestBase {
       'subject' => $this->randomMachineName(),
       'comment_body' => $this->randomMachineName(),
       'status' => 1,
-    );
+    ];
     if ($contact) {
       $values += $contact;
     }

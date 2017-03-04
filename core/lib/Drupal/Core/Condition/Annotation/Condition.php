@@ -55,7 +55,7 @@ class Condition extends Plugin {
    *
    * @var \Drupal\Core\Annotation\ContextDefinition[]
    */
-  public $context = array();
+  public $context = [];
 
   /**
    * The category under which the condition should listed in the UI.

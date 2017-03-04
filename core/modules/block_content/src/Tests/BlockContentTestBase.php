@@ -31,16 +31,16 @@ abstract class BlockContentTestBase extends WebTestBase {
    *
    * @var array
    */
-  protected $permissions = array(
+  protected $permissions = [
     'administer blocks'
-  );
+  ];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('block', 'block_content');
+  public static $modules = ['block', 'block_content'];
 
   /**
    * Whether or not to auto-create the basic block type during setup.
@@ -78,11 +78,11 @@ abstract class BlockContentTestBase extends WebTestBase {
    */
   protected function createBlockContent($title = FALSE, $bundle = 'basic', $save = TRUE) {
     $title = $title ?: $this->randomMachineName();
-    $block_content = BlockContent::create(array(
+    $block_content = BlockContent::create([
       'info' => $title,
       'type' => $bundle,
       'langcode' => 'en'
-    ));
+    ]);
     if ($block_content && $save === TRUE) {
       $block_content->save();
     }
@@ -101,11 +101,11 @@ abstract class BlockContentTestBase extends WebTestBase {
    *   Created custom block type.
    */
   protected function createBlockContentType($label, $create_body = FALSE) {
-    $bundle = BlockContentType::create(array(
+    $bundle = BlockContentType::create([
       'id' => $label,
       'label' => $label,
       'revision' => FALSE,
-    ));
+    ]);
     $bundle->save();
     if ($create_body) {
       block_content_add_body_field($bundle->id());

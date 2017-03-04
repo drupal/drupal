@@ -15,7 +15,7 @@ class MenuLinkContentDeleteForm extends ContentEntityDeleteForm {
    */
   public function getCancelUrl() {
     if ($this->moduleHandler->moduleExists('menu_ui')) {
-      return new Url('entity.menu.edit_form', array('menu' => $this->entity->getMenuName()));
+      return new Url('entity.menu.edit_form', ['menu' => $this->entity->getMenuName()]);
     }
     return $this->entity->urlInfo();
   }
@@ -31,7 +31,7 @@ class MenuLinkContentDeleteForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   protected function getDeletionMessage() {
-    return $this->t('The menu link %title has been deleted.', array('%title' => $this->entity->label()));
+    return $this->t('The menu link %title has been deleted.', ['%title' => $this->entity->label()]);
   }
 
 }

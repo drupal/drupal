@@ -28,10 +28,10 @@ class MoveTest extends FileManagedUnitTestBase {
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('move', 'load', 'update'));
+    $this->assertFileHooksCalled(['move', 'load', 'update']);
 
     // Make sure we got the same file back.
-    $this->assertEqual($source->id(), $result->id(), format_string("Source file id's' %fid is unchanged after move.", array('%fid' => $source->id())));
+    $this->assertEqual($source->id(), $result->id(), format_string("Source file id's' %fid is unchanged after move.", ['%fid' => $source->id()]));
 
     // Reload the file from the database and check that the changes were
     // actually saved.
@@ -60,7 +60,7 @@ class MoveTest extends FileManagedUnitTestBase {
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('move', 'load', 'update'));
+    $this->assertFileHooksCalled(['move', 'load', 'update']);
 
     // Compare the returned value to what made it into the database.
     $this->assertFileUnchanged($result, File::load($result->id()));
@@ -95,7 +95,7 @@ class MoveTest extends FileManagedUnitTestBase {
     $this->assertTrue($result, 'File moved successfully.');
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('move', 'update', 'delete', 'load'));
+    $this->assertFileHooksCalled(['move', 'update', 'delete', 'load']);
 
     // Reload the file from the database and check that the changes were
     // actually saved.
@@ -122,7 +122,7 @@ class MoveTest extends FileManagedUnitTestBase {
     $this->assertEqual($contents, file_get_contents($source->getFileUri()), 'Contents of file were not altered.');
 
     // Check that no hooks were called while failing.
-    $this->assertFileHooksCalled(array());
+    $this->assertFileHooksCalled([]);
 
     // Load the file from the database and make sure it is identical to what
     // was returned.
@@ -149,7 +149,7 @@ class MoveTest extends FileManagedUnitTestBase {
     $this->assertEqual($contents, file_get_contents($target->getFileUri()), 'Contents of file were not altered.');
 
     // Check that no hooks were called while failing.
-    $this->assertFileHooksCalled(array());
+    $this->assertFileHooksCalled([]);
 
     // Load the file from the database and make sure it is identical to what
     // was returned.

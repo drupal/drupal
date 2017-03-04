@@ -130,7 +130,7 @@ class DefaultMenuLinkTreeManipulators {
    *   The manipulated menu link tree.
    */
   public function checkNodeAccess(array $tree) {
-    $node_links = array();
+    $node_links = [];
     $this->collectNodeLinks($tree, $node_links);
     if ($node_links) {
       $nids = array_keys($node_links);
@@ -225,7 +225,7 @@ class DefaultMenuLinkTreeManipulators {
    *   The manipulated menu link tree.
    */
   public function generateIndexAndSort(array $tree) {
-    $new_tree = array();
+    $new_tree = [];
     foreach ($tree as $key => $v) {
       if ($tree[$key]->subtree) {
         $tree[$key]->subtree = $this->generateIndexAndSort($tree[$key]->subtree);
@@ -255,7 +255,7 @@ class DefaultMenuLinkTreeManipulators {
       if ($tree[$key]->subtree) {
         $tree += $this->flatten($tree[$key]->subtree);
       }
-      $tree[$key]->subtree = array();
+      $tree[$key]->subtree = [];
     }
     return $tree;
   }

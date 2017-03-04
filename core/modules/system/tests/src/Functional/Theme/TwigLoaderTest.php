@@ -25,10 +25,10 @@ class TwigLoaderTest extends BrowserTestBase {
     $environment = \Drupal::service('twig');
 
     $template = $environment->loadTemplate('kittens');
-    $this->assertEqual($template->render(array()), 'kittens', 'Passing "kittens" to the custom Twig loader returns "kittens".');
+    $this->assertEqual($template->render([]), 'kittens', 'Passing "kittens" to the custom Twig loader returns "kittens".');
 
     $template = $environment->loadTemplate('meow');
-    $this->assertEqual($template->render(array()), 'cats', 'Passing something other than "kittens" to the custom Twig loader returns "cats".');
+    $this->assertEqual($template->render([]), 'cats', 'Passing something other than "kittens" to the custom Twig loader returns "cats".');
   }
 
 }

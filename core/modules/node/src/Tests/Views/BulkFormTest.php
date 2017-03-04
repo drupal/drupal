@@ -19,14 +19,14 @@ class BulkFormTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_test_views', 'language');
+  public static $modules = ['node_test_views', 'language'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_node_bulk_form');
+  public static $testViews = ['test_node_bulk_form'];
 
   /**
    * The test nodes.
@@ -86,7 +86,7 @@ class BulkFormTest extends NodeTestBase {
     $this->assertEqual(count($view->result), 10, 'All created translations are selected.');
 
     // Check the operations are accessible to the logged in user.
-    $this->drupalLogin($this->drupalCreateUser(array('administer nodes', 'access content overview', 'bypass node access')));
+    $this->drupalLogin($this->drupalCreateUser(['administer nodes', 'access content overview', 'bypass node access']));
     $this->drupalGet('test-node-bulk-form');
     $elements = $this->xpath('//select[@id="edit-action"]//option');
     $this->assertIdentical(count($elements), 8, 'All node operations are found.');
@@ -101,10 +101,10 @@ class BulkFormTest extends NodeTestBase {
     $this->assertTrue($node->isPublished(), 'Node is initially published');
     $this->assertTrue($node->getTranslation('en-gb')->isPublished(), 'Node translation is published');
     $this->assertTrue($node->getTranslation('it')->isPublished(), 'Node translation is published');
-    $edit = array(
+    $edit = [
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpublish_action',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
     $node = $this->loadNode($node->id());
     $this->assertFalse($node->isPublished(), 'Node has been unpublished');
@@ -112,10 +112,10 @@ class BulkFormTest extends NodeTestBase {
     $this->assertTrue($node->getTranslation('it')->isPublished(), 'Node translation has not been unpublished');
 
     // Publish action.
-    $edit = array(
+    $edit = [
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_publish_action',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
     $node = $this->loadNode($node->id());
     $this->assertTrue($node->isPublished(), 'Node has been published again');
@@ -124,10 +124,10 @@ class BulkFormTest extends NodeTestBase {
     $this->assertFalse($node->isSticky(), 'Node is not sticky');
     $this->assertFalse($node->getTranslation('en-gb')->isSticky(), 'Node translation is not sticky');
     $this->assertFalse($node->getTranslation('it')->isSticky(), 'Node translation is not sticky');
-    $edit = array(
+    $edit = [
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_make_sticky_action',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
     $node = $this->loadNode($node->id());
     $this->assertTrue($node->isSticky(), 'Node has been made sticky');
@@ -135,10 +135,10 @@ class BulkFormTest extends NodeTestBase {
     $this->assertFalse($node->getTranslation('it')->isSticky(), 'Node translation has not been made sticky');
 
     // Make unsticky action.
-    $edit = array(
+    $edit = [
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_make_unsticky_action',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
     $node = $this->loadNode($node->id());
     $this->assertFalse($node->isSticky(), 'Node is not sticky anymore');
@@ -147,10 +147,10 @@ class BulkFormTest extends NodeTestBase {
     $this->assertFalse($node->isPromoted(), 'Node is not promoted to the front page');
     $this->assertFalse($node->getTranslation('en-gb')->isPromoted(), 'Node translation is not promoted to the front page');
     $this->assertFalse($node->getTranslation('it')->isPromoted(), 'Node translation is not promoted to the front page');
-    $edit = array(
+    $edit = [
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_promote_action',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
     $node = $this->loadNode($node->id());
     $this->assertTrue($node->isPromoted(), 'Node has been promoted to the front page');
@@ -158,17 +158,17 @@ class BulkFormTest extends NodeTestBase {
     $this->assertFalse($node->getTranslation('it')->isPromoted(), 'Node translation has not been promoted to the front page');
 
     // Demote from front page.
-    $edit = array(
+    $edit = [
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpromote_action',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
     $node = $this->loadNode($node->id());
     $this->assertFalse($node->isPromoted(), 'Node has been demoted');
 
     // Select a bunch of translated and untranslated nodes and check that
     // operations are always applied to individual translations.
-    $edit = array(
+    $edit = [
       // Original and all translations.
       'node_bulk_form[0]' => TRUE, // Node 1, English, original.
       'node_bulk_form[1]' => TRUE, // Node 1, British English.
@@ -184,7 +184,7 @@ class BulkFormTest extends NodeTestBase {
       'node_bulk_form[8]' => TRUE, // Node 4, English, untranslated.
       'node_bulk_form[9]' => FALSE, // Node 5, British English, untranslated.
       'action' => 'node_unpublish_action',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
     $node = $this->loadNode(1);
     $this->assertFalse($node->getTranslation('en')->isPublished(), '1: English translation has been unpublished');
@@ -209,7 +209,7 @@ class BulkFormTest extends NodeTestBase {
   public function testBulkDeletion() {
     // Select a bunch of translated and untranslated nodes and check that
     // nodes and individual translations are properly deleted.
-    $edit = array(
+    $edit = [
       // Original and all translations.
       'node_bulk_form[0]' => TRUE, // Node 1, English, original.
       'node_bulk_form[1]' => TRUE, // Node 1, British English.
@@ -225,7 +225,7 @@ class BulkFormTest extends NodeTestBase {
       'node_bulk_form[8]' => TRUE, // Node 4, English, untranslated.
       'node_bulk_form[9]' => FALSE, // Node 5, British English, untranslated.
       'action' => 'node_delete_action',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
 
     $label = $this->loadNode(1)->label();
@@ -239,7 +239,7 @@ class BulkFormTest extends NodeTestBase {
     $this->assertText($label);
     $this->assertNoText("$label (Original translation) - The following content translations will be deleted:");
 
-    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
 
     $node = $this->loadNode(1);
     $this->assertNull($node, '1: Node has been deleted');

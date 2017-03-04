@@ -20,14 +20,14 @@ use Drupal\Core\Render\Element;
 function template_preprocess_image_widget(&$variables) {
   $element = $variables['element'];
 
-  $variables['attributes'] = array('class' => array('image-widget', 'js-form-managed-file', 'form-managed-file', 'clearfix'));
+  $variables['attributes'] = ['class' => ['image-widget', 'js-form-managed-file', 'form-managed-file', 'clearfix']];
 
   if (!empty($element['fids']['#value'])) {
     $file = reset($element['#files']);
     $element['file_' . $file->id()]['filename']['#suffix'] = ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
   }
 
-  $variables['data'] = array();
+  $variables['data'] = [];
   foreach (Element::children($element) as $child) {
     $variables['data'][$child] = $element[$child];
   }
@@ -49,15 +49,15 @@ function template_preprocess_image_widget(&$variables) {
  */
 function template_preprocess_image_formatter(&$variables) {
   if ($variables['image_style']) {
-    $variables['image'] = array(
+    $variables['image'] = [
       '#theme' => 'image_style',
       '#style_name' => $variables['image_style'],
-    );
+    ];
   }
   else {
-    $variables['image'] = array(
+    $variables['image'] = [
       '#theme' => 'image',
-    );
+    ];
   }
   $variables['image']['#attributes'] = $variables['item_attributes'];
 
@@ -75,7 +75,7 @@ function template_preprocess_image_formatter(&$variables) {
     $variables['image']['#uri'] = $item->uri;
   }
 
-  foreach (array('width', 'height', 'alt') as $key) {
+  foreach (['width', 'height', 'alt'] as $key) {
     $variables['image']["#$key"] = $item->$key;
   }
 }

@@ -42,7 +42,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    * {@inheritdoc}
    */
   public function getChangeSummary() {
-    $summary = array();
+    $summary = [];
 
     foreach ($this->getChangeList() as $entity_type_id => $change_list) {
       // Process entity type definition changes.
@@ -259,7 +259,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    */
   protected function getChangeList() {
     $this->entityManager->useCaches(FALSE);
-    $change_list = array();
+    $change_list = [];
 
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
       $original = $this->entityManager->getLastInstalledDefinition($entity_type_id);
@@ -275,7 +275,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
         }
 
         if ($this->entityManager->getStorage($entity_type_id) instanceof DynamicallyFieldableEntityStorageInterface) {
-          $field_changes = array();
+          $field_changes = [];
           $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
           $original_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id);
 

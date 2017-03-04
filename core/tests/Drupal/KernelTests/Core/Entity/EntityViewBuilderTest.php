@@ -23,7 +23,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('user', 'entity_test'));
+    $this->installConfig(['user', 'entity_test']);
 
     // Give anonymous users permission to view test entities.
     Role::load(RoleInterface::ANONYMOUS_ID)
@@ -182,7 +182,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
 
     // Set a weight for the label component.
     entity_get_display('entity_test', 'entity_test', 'full')
-      ->setComponent('label', array('weight' => 20))
+      ->setComponent('label', ['weight' => 20])
       ->save();
 
     // Create and build a test entity.
@@ -204,10 +204,10 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
    *   The created entity.
    */
   protected function createTestEntity($entity_type) {
-    $data = array(
+    $data = [
       'bundle' => $entity_type,
       'name' => $this->randomMachineName(),
-    );
+    ];
     return $this->container->get('entity.manager')->getStorage($entity_type)->create($data);
   }
 

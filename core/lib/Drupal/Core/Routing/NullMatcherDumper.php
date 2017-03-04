@@ -39,7 +39,7 @@ class NullMatcherDumper implements MatcherDumperInterface {
    * @param array $options
    *   An array of options.
    */
-  public function dump(array $options = array()) {
+  public function dump(array $options = []) {
     // The dumper is reused for multiple providers, so reset the queued routes.
     $this->routes = NULL;
   }

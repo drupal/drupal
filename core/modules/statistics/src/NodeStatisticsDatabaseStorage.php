@@ -83,7 +83,7 @@ class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
    * {@inheritdoc}
    */
   public function fetchView($id) {
-    $views = $this->fetchViews(array($id));
+    $views = $this->fetchViews([$id]);
     return reset($views);
   }
 

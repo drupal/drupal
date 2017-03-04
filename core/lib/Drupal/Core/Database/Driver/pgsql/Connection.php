@@ -96,7 +96,7 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public static function open(array &$connection_options = array()) {
+  public static function open(array &$connection_options = []) {
     // Default to TCP connection on port 5432.
     if (empty($connection_options['port'])) {
       $connection_options['port'] = 5432;
@@ -120,10 +120,10 @@ class Connection extends DatabaseConnection {
     $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
 
     // Allow PDO options to be overridden.
-    $connection_options += array(
-      'pdo' => array(),
-    );
-    $connection_options['pdo'] += array(
+    $connection_options += [
+      'pdo' => [],
+    ];
+    $connection_options['pdo'] += [
       \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
       // Prepared statements are most effective for performance when queries
       // are recycled (used several times). However, if they are not re-used,
@@ -134,7 +134,7 @@ class Connection extends DatabaseConnection {
       \PDO::ATTR_EMULATE_PREPARES => TRUE,
       // Convert numeric values to strings when fetching.
       \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
-    );
+    ];
 
     try {
       $pdo = new \PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
@@ -157,7 +157,7 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function query($query, array $args = array(), $options = array()) {
+  public function query($query, array $args = [], $options = []) {
     $options += $this->defaultOptions();
 
     // The PDO PostgreSQL driver has a bug which doesn't type cast booleans
@@ -211,11 +211,11 @@ class Connection extends DatabaseConnection {
     return parent::prepareQuery(preg_replace('/ ([^ ]+) +(I*LIKE|NOT +I*LIKE|~\*) /i', ' ${1}::text ${2} ', $query));
   }
 
-  public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
+  public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $count . ' OFFSET ' . (int) $from, $args, $options);
   }
 
-  public function queryTemporary($query, array $args = array(), array $options = array()) {
+  public function queryTemporary($query, array $args = [], array $options = []) {
     $tablename = $this->generateTemporaryTableName();
     $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} AS ' . $query, $args, $options);
     return $tablename;
@@ -441,7 +441,7 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function upsert($table, array $options = array()) {
+  public function upsert($table, array $options = []) {
     // Use the (faster) native Upsert implementation for PostgreSQL >= 9.5.
     if (version_compare($this->version(), '9.5', '>=')) {
       $class = $this->getDriverClass('NativeUpsert');

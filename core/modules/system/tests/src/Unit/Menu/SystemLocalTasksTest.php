@@ -25,20 +25,20 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->directoryList = array(
+    $this->directoryList = [
       'system' => 'core/modules/system',
-    );
+    ];
 
     $this->themeHandler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
 
     $theme = new Extension($this->root, 'theme', '/core/themes/bartik', 'bartik.info.yml');
     $theme->status = 1;
-    $theme->info = array('name' => 'bartik');
+    $theme->info = ['name' => 'bartik'];
     $this->themeHandler->expects($this->any())
       ->method('listInfo')
-      ->will($this->returnValue(array(
+      ->will($this->returnValue([
         'bartik' => $theme,
-      )));
+      ]));
     $this->themeHandler->expects($this->any())
       ->method('hasUi')
       ->with('bartik')
@@ -59,13 +59,13 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
    * Provides a list of routes to test.
    */
   public function getSystemAdminRoutes() {
-    return array(
-      array('system.admin_content', array(array('system.admin_content'))),
-      array('system.theme_settings_theme', array(
-        array('system.themes_page', 'system.theme_settings'),
-        array('system.theme_settings_global', 'system.theme_settings_theme:bartik'),
-      )),
-    );
+    return [
+      ['system.admin_content', [['system.admin_content']]],
+      ['system.theme_settings_theme', [
+        ['system.themes_page', 'system.theme_settings'],
+        ['system.theme_settings_global', 'system.theme_settings_theme:bartik'],
+      ]],
+    ];
   }
 
 }

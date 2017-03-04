@@ -155,10 +155,10 @@ class Config extends StorableConfigBase {
   protected function setOverriddenData() {
     $this->overriddenData = $this->data;
     if (isset($this->moduleOverrides) && is_array($this->moduleOverrides)) {
-      $this->overriddenData = NestedArray::mergeDeepArray(array($this->overriddenData, $this->moduleOverrides), TRUE);
+      $this->overriddenData = NestedArray::mergeDeepArray([$this->overriddenData, $this->moduleOverrides], TRUE);
     }
     if (isset($this->settingsOverrides) && is_array($this->settingsOverrides)) {
-      $this->overriddenData = NestedArray::mergeDeepArray(array($this->overriddenData, $this->settingsOverrides), TRUE);
+      $this->overriddenData = NestedArray::mergeDeepArray([$this->overriddenData, $this->settingsOverrides], TRUE);
     }
     return $this;
   }
@@ -239,7 +239,7 @@ class Config extends StorableConfigBase {
    *   The configuration object.
    */
   public function delete() {
-    $this->data = array();
+    $this->data = [];
     $this->storage->delete($this->name);
     Cache::invalidateTags($this->getCacheTags());
     $this->isNew = TRUE;
@@ -281,10 +281,10 @@ class Config extends StorableConfigBase {
     if ($apply_overrides) {
       // Apply overrides.
       if (isset($this->moduleOverrides) && is_array($this->moduleOverrides)) {
-        $original_data = NestedArray::mergeDeepArray(array($original_data, $this->moduleOverrides), TRUE);
+        $original_data = NestedArray::mergeDeepArray([$original_data, $this->moduleOverrides], TRUE);
       }
       if (isset($this->settingsOverrides) && is_array($this->settingsOverrides)) {
-        $original_data = NestedArray::mergeDeepArray(array($original_data, $this->settingsOverrides), TRUE);
+        $original_data = NestedArray::mergeDeepArray([$original_data, $this->settingsOverrides], TRUE);
       }
     }
 

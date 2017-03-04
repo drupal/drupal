@@ -1058,7 +1058,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     $form['missing_module_list_title'] = [
       '#type' => 'item',
       '#title' => $this->t('Missing upgrade paths'),
-      '#description' => $this->t('The following items will not be upgraded. For more information see <a href=":migrate">Upgrading from Drupal 6 or 7 to Drupal 8</a>.', array(':migrate' => 'https://www.drupal.org/upgrade/migrate')),
+      '#description' => $this->t('The following items will not be upgraded. For more information see <a href=":migrate">Upgrading from Drupal 6 or 7 to Drupal 8</a>.', [':migrate' => 'https://www.drupal.org/upgrade/migrate']),
     ];
     $form['missing_module_list'] = [
       '#type' => 'table',

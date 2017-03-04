@@ -40,7 +40,7 @@ class NodeType extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'type' => $this->t('Machine name of the node type.'),
       'name' => $this->t('Human name of the node type.'),
       'description' => $this->t('Description of the node type.'),
@@ -53,7 +53,7 @@ class NodeType extends DrupalSqlBase {
       'locked' => $this->t('Flag.'),
       'orig_type' => $this->t('The original type.'),
       'teaser_length' => $this->t('Teaser length'),
-    );
+    ];
   }
 
   /**
@@ -73,9 +73,9 @@ class NodeType extends DrupalSqlBase {
     $row->setSourceProperty('node_preview', $this->nodePreview);
 
     $type = $row->getSourceProperty('type');
-    $source_options = $this->variableGet('node_options_' . $type, array('promote', 'sticky'));
-    $options = array();
-    foreach (array('promote', 'sticky', 'status', 'revision') as $item) {
+    $source_options = $this->variableGet('node_options_' . $type, ['promote', 'sticky']);
+    $options = [];
+    foreach (['promote', 'sticky', 'status', 'revision'] as $item) {
       $options[$item] = in_array($item, $source_options);
     }
     $row->setSourceProperty('options', $options);
@@ -86,7 +86,7 @@ class NodeType extends DrupalSqlBase {
     if ($this->moduleExists('field')) {
       // Find body field for this node type.
       $body = $this->select('field_config_instance', 'fci')
-        ->fields('fci', array('data'))
+        ->fields('fci', ['data'])
         ->condition('entity_type', 'node')
         ->condition('bundle', $row->getSourceProperty('type'))
         ->condition('field_name', 'body')

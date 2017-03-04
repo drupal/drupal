@@ -48,27 +48,27 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'progress_indicator' => 'throbber',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element['progress_indicator'] = array(
+    $element['progress_indicator'] = [
       '#type' => 'radios',
       '#title' => t('Progress indicator'),
-      '#options' => array(
+      '#options' => [
         'throbber' => t('Throbber'),
         'bar' => t('Bar with progress meter'),
-      ),
+      ],
       '#default_value' => $this->getSetting('progress_indicator'),
       '#description' => t('The throbber display does not show the status of uploads but takes up less space. The progress bar is helpful for monitoring progress on large uploads.'),
       '#weight' => 16,
       '#access' => file_progress_implementation(),
-    );
+    ];
     return $element;
   }
 
@@ -76,8 +76,8 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
-    $summary[] = t('Progress indicator: @progress_indicator', array('@progress_indicator' => $this->getSetting('progress_indicator')));
+    $summary = [];
+    $summary[] = t('Progress indicator: @progress_indicator', ['@progress_indicator' => $this->getSetting('progress_indicator')]);
     return $summary;
   }
 
@@ -115,15 +115,15 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     $title = $this->fieldDefinition->getLabel();
     $description = $this->getFilteredDescription();
 
-    $elements = array();
+    $elements = [];
 
     $delta = 0;
     // Add an element for every existing item.
     foreach ($items as $item) {
-      $element = array(
+      $element = [
         '#title' => $title,
         '#description' => $description,
-      );
+      ];
       $element = $this->formSingleElement($items, $delta, $element, $form, $form_state);
 
       if ($element) {
@@ -131,15 +131,15 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
         if ($is_multiple) {
           // We name the element '_weight' to avoid clashing with elements
           // defined by widget.
-          $element['_weight'] = array(
+          $element['_weight'] = [
             '#type' => 'weight',
-            '#title' => t('Weight for row @number', array('@number' => $delta + 1)),
+            '#title' => t('Weight for row @number', ['@number' => $delta + 1]),
             '#title_display' => 'invisible',
             // Note: this 'delta' is the FAPI #type 'weight' element's property.
             '#delta' => $max,
             '#default_value' => $item->_weight ?: $delta,
             '#weight' => 100,
-          );
+          ];
         }
 
         $elements[$delta] = $element;
@@ -155,10 +155,10 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     if ($empty_single_allowed || $empty_multiple_allowed) {
       // Create a new empty item.
       $items->appendItem();
-      $element = array(
+      $element = [
         '#title' => $title,
         '#description' => $description,
-      );
+      ];
       $element = $this->formSingleElement($items, $delta, $element, $form, $form_state);
       if ($element) {
         $element['#required'] = ($element['#required'] && $delta == 0);
@@ -173,8 +173,8 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
       $elements['#type'] = 'details';
       $elements['#open'] = TRUE;
       $elements['#theme'] = 'file_widget_multiple';
-      $elements['#theme_wrappers'] = array('details');
-      $elements['#process'] = array(array(get_class($this), 'processMultiple'));
+      $elements['#theme_wrappers'] = ['details'];
+      $elements['#process'] = [[get_class($this), 'processMultiple']];
       $elements['#title'] = $title;
 
       $elements['#description'] = $description;
@@ -183,19 +183,19 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
       // The field settings include defaults for the field type. However, this
       // widget is a base class for other widgets (e.g., ImageWidget) that may
       // act on field types without these expected settings.
-      $field_settings = $this->getFieldSettings() + array('display_field' => NULL);
+      $field_settings = $this->getFieldSettings() + ['display_field' => NULL];
       $elements['#display_field'] = (bool) $field_settings['display_field'];
 
       // Add some properties that will eventually be added to the file upload
       // field. These are added here so that they may be referenced easily
       // through a hook_form_alter().
       $elements['#file_upload_title'] = t('Add a new file');
-      $elements['#file_upload_description'] = array(
+      $elements['#file_upload_description'] = [
         '#theme' => 'file_upload_help',
         '#description' => '',
         '#upload_validators' => $elements[0]['#upload_validators'],
         '#cardinality' => $cardinality,
-      );
+      ];
     }
 
     return $elements;
@@ -210,28 +210,28 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     // The field settings include defaults for the field type. However, this
     // widget is a base class for other widgets (e.g., ImageWidget) that may act
     // on field types without these expected settings.
-    $field_settings += array(
+    $field_settings += [
       'display_default' => NULL,
       'display_field' => NULL,
       'description_field' => NULL,
-    );
+    ];
 
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
-    $defaults = array(
-      'fids' => array(),
+    $defaults = [
+      'fids' => [],
       'display' => (bool) $field_settings['display_default'],
       'description' => '',
-    );
+    ];
 
     // Essentially we use the managed_file type, extended with some
     // enhancements.
     $element_info = $this->elementInfo->getInfo('managed_file');
-    $element += array(
+    $element += [
       '#type' => 'managed_file',
       '#upload_location' => $items[$delta]->getUploadLocation(),
       '#upload_validators' => $items[$delta]->getUploadValidators(),
-      '#value_callback' => array(get_class($this), 'value'),
-      '#process' => array_merge($element_info['#process'], array(array(get_class($this), 'process'))),
+      '#value_callback' => [get_class($this), 'value'],
+      '#process' => array_merge($element_info['#process'], [[get_class($this), 'process']]),
       '#progress_indicator' => $this->getSetting('progress_indicator'),
       // Allows this field to return an array instead of a single value.
       '#extended' => TRUE,
@@ -242,29 +242,29 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
       '#display_default' => $field_settings['display_default'],
       '#description_field' => $field_settings['description_field'],
       '#cardinality' => $cardinality,
-    );
+    ];
 
     $element['#weight'] = $delta;
 
     // Field stores FID value in a single mode, so we need to transform it for
     // form element to recognize it correctly.
     if (!isset($items[$delta]->fids) && isset($items[$delta]->target_id)) {
-      $items[$delta]->fids = array($items[$delta]->target_id);
+      $items[$delta]->fids = [$items[$delta]->target_id];
     }
     $element['#default_value'] = $items[$delta]->getValue() + $defaults;
 
     $default_fids = $element['#extended'] ? $element['#default_value']['fids'] : $element['#default_value'];
     if (empty($default_fids)) {
-      $file_upload_help = array(
+      $file_upload_help = [
         '#theme' => 'file_upload_help',
         '#description' => $element['#description'],
         '#upload_validators' => $element['#upload_validators'],
         '#cardinality' => $cardinality,
-      );
+      ];
       $element['#description'] = \Drupal::service('renderer')->renderPlain($file_upload_help);
       $element['#multiple'] = $cardinality != 1 ? TRUE : FALSE;
       if ($cardinality != 1 && $cardinality != -1) {
-        $element['#element_validate'] = array(array(get_class($this), 'validateMultipleCount'));
+        $element['#element_validate'] = [[get_class($this), 'validateMultipleCount']];
       }
     }
 
@@ -278,7 +278,7 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     // Since file upload widget now supports uploads of more than one file at a
     // time it always returns an array of fids. We have to translate this to a
     // single fid, as field expects single value.
-    $new_values = array();
+    $new_values = [];
     foreach ($values as &$value) {
       foreach ($value['fids'] as $fid) {
         $new_value = $value;
@@ -324,11 +324,11 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     $return = ManagedFile::valueCallback($element, $input, $form_state);
 
     // Ensure that all the required properties are returned even if empty.
-    $return += array(
-      'fids' => array(),
+    $return += [
+      'fids' => [],
       'display' => 1,
       'description' => '',
-    );
+    ];
 
     return $return;
   }
@@ -353,7 +353,7 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     if ($total_uploaded_count > $field_storage->getCardinality()) {
       $keep = $newly_uploaded_count - $total_uploaded_count + $field_storage->getCardinality();
       $removed_files = array_slice($values['fids'], $keep);
-      $removed_names = array();
+      $removed_names = [];
       foreach ($removed_files as $fid) {
         $file = File::load($fid);
         $removed_names[] = $file->getFilename();
@@ -385,11 +385,11 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
 
     // Add the display field if enabled.
     if ($element['#display_field']) {
-      $element['display'] = array(
+      $element['display'] = [
         '#type' => empty($item['fids']) ? 'hidden' : 'checkbox',
         '#title' => t('Include file in display'),
-        '#attributes' => array('class' => array('file-display')),
-      );
+        '#attributes' => ['class' => ['file-display']],
+      ];
       if (isset($item['display'])) {
         $element['display']['#value'] = $item['display'] ? '1' : '';
       }
@@ -398,33 +398,33 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
       }
     }
     else {
-      $element['display'] = array(
+      $element['display'] = [
         '#type' => 'hidden',
         '#value' => '1',
-      );
+      ];
     }
 
     // Add the description field if enabled.
     if ($element['#description_field'] && $item['fids']) {
       $config = \Drupal::config('file.settings');
-      $element['description'] = array(
+      $element['description'] = [
         '#type' => $config->get('description.type'),
         '#title' => t('Description'),
         '#value' => isset($item['description']) ? $item['description'] : '',
         '#maxlength' => $config->get('description.length'),
         '#description' => t('The description may be used as the label of the link to the file.'),
-      );
+      ];
     }
 
     // Adjust the Ajax settings so that on upload and remove of any individual
     // file, the entire group of file fields is updated together.
     if ($element['#cardinality'] != 1) {
       $parents = array_slice($element['#array_parents'], 0, -1);
-      $new_options = array(
-        'query' => array(
+      $new_options = [
+        'query' => [
           'element_parents' => implode('/', $parents),
-        ),
-      );
+        ],
+      ];
       $field_element = NestedArray::getValue($form, $parents);
       $new_wrapper = $field_element['#id'] . '-ajax-wrapper';
       foreach (Element::children($element) as $key) {
@@ -440,9 +440,9 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     // functionality needed by the field widget. This submit handler, along with
     // the rebuild logic in file_field_widget_form() requires the entire field,
     // not just the individual item, to be valid.
-    foreach (array('upload_button', 'remove_button') as $key) {
-      $element[$key]['#submit'][] = array(get_called_class(), 'submit');
-      $element[$key]['#limit_validation_errors'] = array(array_slice($element['#parents'], 0, -1));
+    foreach (['upload_button', 'remove_button'] as $key) {
+      $element[$key]['#submit'][] = [get_called_class(), 'submit'];
+      $element[$key]['#limit_validation_errors'] = [array_slice($element['#parents'], 0, -1)];
     }
 
     return $element;
@@ -477,22 +477,22 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
     foreach ($element_children as $delta => $key) {
       if ($key != $element['#file_upload_delta']) {
         $description = static::getDescriptionFromElement($element[$key]);
-        $element[$key]['_weight'] = array(
+        $element[$key]['_weight'] = [
           '#type' => 'weight',
-          '#title' => $description ? t('Weight for @title', array('@title' => $description)) : t('Weight for new file'),
+          '#title' => $description ? t('Weight for @title', ['@title' => $description]) : t('Weight for new file'),
           '#title_display' => 'invisible',
           '#delta' => $count,
           '#default_value' => $delta,
-        );
+        ];
       }
       else {
         // The title needs to be assigned to the upload field so that validation
         // errors include the correct widget label.
         $element[$key]['#title'] = $element['#title'];
-        $element[$key]['_weight'] = array(
+        $element[$key]['_weight'] = [
           '#type' => 'hidden',
           '#default_value' => $delta,
-        );
+        ];
       }
     }
 
@@ -559,12 +559,12 @@ class FileWidget extends WidgetBase implements ContainerFactoryPluginInterface {
 
     // If there are more files uploaded via the same widget, we have to separate
     // them, as we display each file in its own widget.
-    $new_values = array();
+    $new_values = [];
     foreach ($submitted_values as $delta => $submitted_value) {
       if (is_array($submitted_value['fids'])) {
         foreach ($submitted_value['fids'] as $fid) {
           $new_value = $submitted_value;
-          $new_value['fids'] = array($fid);
+          $new_value['fids'] = [$fid];
           $new_values[] = $new_value;
         }
       }

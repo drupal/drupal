@@ -95,12 +95,12 @@ class FieldConfigStorage extends FieldConfigStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function loadByProperties(array $conditions = array()) {
+  public function loadByProperties(array $conditions = []) {
     // Include deleted fields if specified in the $conditions parameters.
     $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
 
-    $fields = array();
+    $fields = [];
 
     // Get fields stored in configuration. If we are explicitly looking for
     // deleted fields only, this can be skipped, because they will be
@@ -109,7 +109,7 @@ class FieldConfigStorage extends FieldConfigStorageBase {
       if (isset($conditions['entity_type']) && isset($conditions['bundle']) && isset($conditions['field_name'])) {
         // Optimize for the most frequent case where we do have a specific ID.
         $id = $conditions['entity_type'] . '.' . $conditions['bundle'] . '.' . $conditions['field_name'];
-        $fields = $this->loadMultiple(array($id));
+        $fields = $this->loadMultiple([$id]);
       }
       else {
         // No specific ID, we need to examine all existing fields.
@@ -119,8 +119,8 @@ class FieldConfigStorage extends FieldConfigStorageBase {
 
     // Merge deleted fields (stored in state) if needed.
     if ($include_deleted || !empty($conditions['deleted'])) {
-      $deleted_fields = $this->state->get('field.field.deleted') ?: array();
-      $deleted_storages = $this->state->get('field.storage.deleted') ?: array();
+      $deleted_fields = $this->state->get('field.field.deleted') ?: [];
+      $deleted_storages = $this->state->get('field.storage.deleted') ?: [];
       foreach ($deleted_fields as $id => $config) {
         // If the field storage itself is deleted, inject it directly in the field.
         if (isset($deleted_storages[$config['field_storage_uuid']])) {
@@ -131,7 +131,7 @@ class FieldConfigStorage extends FieldConfigStorageBase {
     }
 
     // Collect matching fields.
-    $matching_fields = array();
+    $matching_fields = [];
     foreach ($fields as $field) {
       // Some conditions are checked against the field storage.
       $field_storage = $field->getFieldStorageDefinition();

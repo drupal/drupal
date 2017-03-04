@@ -28,14 +28,14 @@ function views_help($route_name, RouteMatchInterface $route_match) {
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Views module provides a back end to fetch information from content, user accounts, taxonomy terms, and other entities from the database and present it to the user as a grid, HTML list, table, unformatted list, etc. The resulting displays are known generally as <em>views</em>.') . '</p>';
-      $output .= '<p>' . t('For more information, see the <a href=":views">online documentation for the Views module</a>.', array(':views' => 'https://www.drupal.org/documentation/modules/views')) . '</p>';
-      $output .= '<p>' . t('In order to create and modify your own views using the administration and configuration user interface, you will need to enable either the Views UI module in core or a contributed module that provides a user interface for Views. See the <a href=":views-ui">Views UI module help page</a> for more information.', array(':views-ui' => (\Drupal::moduleHandler()->moduleExists('views_ui')) ? \Drupal::url('help.page', array('name' => 'views_ui')) : '#')) . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":views">online documentation for the Views module</a>.', [':views' => 'https://www.drupal.org/documentation/modules/views']) . '</p>';
+      $output .= '<p>' . t('In order to create and modify your own views using the administration and configuration user interface, you will need to enable either the Views UI module in core or a contributed module that provides a user interface for Views. See the <a href=":views-ui">Views UI module help page</a> for more information.', [':views-ui' => (\Drupal::moduleHandler()->moduleExists('views_ui')) ? \Drupal::url('help.page', ['name' => 'views_ui']) : '#']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Adding functionality to administrative pages') . '</dt>';
       $output .= '<dd>' . t('The Views module adds functionality to some core administration pages. For example, <em>admin/content</em> uses Views to filter and sort content. With Views uninstalled, <em>admin/content</em> is more limited.') . '</dd>';
       $output .= '<dt>' . t('Expanding Views functionality') . '</dt>';
-      $output .= '<dd>' . t('Contributed projects that support the Views module can be found in the <a href=":node">online documentation for Views-related contributed modules</a>.', array(':node' => 'https://www.drupal.org/documentation/modules/views/add-ons')) . '</dd>';
+      $output .= '<dd>' . t('Contributed projects that support the Views module can be found in the <a href=":node">online documentation for Views-related contributed modules</a>.', [':node' => 'https://www.drupal.org/documentation/modules/views/add-ons']) . '</dd>';
       $output .= '<dt>' . t('Improving table accessibility') . '</dt>';
       $output .= '<dd>' . t('Views tables include semantic markup to improve accessibility. Data cells are automatically associated with header cells through id and header attributes. To improve the accessibility of your tables you can add descriptive elements within the Views table settings. The <em>caption</em> element can introduce context for a table, making it easier to understand. The <em>summary</em> element can provide an overview of how the data has been organized and how to navigate the table. Both the caption and summary are visible by default and also implemented according to HTML5 guidelines.') . '</dd>';
       $output .= '<dt>' . t('Working with multilingual views') . '</dt>';
@@ -53,10 +53,10 @@ function views_help($route_name, RouteMatchInterface $route_match) {
 function views_views_pre_render($view) {
   // If using AJAX, send identifying data about this view.
   if ($view->ajaxEnabled() && empty($view->is_attachment) && empty($view->live_preview)) {
-    $view->element['#attached']['drupalSettings']['views'] = array(
+    $view->element['#attached']['drupalSettings']['views'] = [
       'ajax_path' => \Drupal::url('views.ajax'),
-      'ajaxViews' => array(
-        'views_dom_id:' . $view->dom_id => array(
+      'ajaxViews' => [
+        'views_dom_id:' . $view->dom_id => [
           'view_name' => $view->storage->id(),
           'view_display_id' => $view->current_display,
           'view_args' => Html::escape(implode('/', $view->args)),
@@ -66,9 +66,9 @@ function views_views_pre_render($view) {
           // To fit multiple views on a page, the programmer may have
           // overridden the display's pager_element.
           'pager_element' => isset($view->pager) ? $view->pager->getPagerId() : 0,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     $view->element['#attached']['library'][] = 'views/views.ajax';
   }
 
@@ -85,50 +85,50 @@ function views_theme($existing, $type, $theme, $path) {
   \Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
 
   // Some quasi clever array merging here.
-  $base = array(
+  $base = [
     'file' => 'views.theme.inc',
-  );
+  ];
 
   // Our extra version of pager from pager.inc
-  $hooks['views_mini_pager'] = $base + array(
-    'variables' => array('tags' => array(), 'quantity' => 9, 'element' => 0, 'parameters' => array()),
-  );
+  $hooks['views_mini_pager'] = $base + [
+    'variables' => ['tags' => [], 'quantity' => 9, 'element' => 0, 'parameters' => []],
+  ];
 
-  $variables = array(
+  $variables = [
     // For displays, we pass in a dummy array as the first parameter, since
     // $view is an object but the core contextual_preprocess() function only
     // attaches contextual links when the primary theme argument is an array.
-    'display' => array(
-      'view_array' => array(),
+    'display' => [
+      'view_array' => [],
       'view' => NULL,
-      'rows' => array(),
-      'header' => array(),
-      'footer' => array(),
-      'empty' => array(),
-      'exposed' => array(),
-      'more' => array(),
-      'feed_icons' => array(),
-      'pager' => array(),
+      'rows' => [],
+      'header' => [],
+      'footer' => [],
+      'empty' => [],
+      'exposed' => [],
+      'more' => [],
+      'feed_icons' => [],
+      'pager' => [],
       'title' => '',
-      'attachment_before' => array(),
-      'attachment_after' => array(),
-    ),
-    'style' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
-    'row' => array('view' => NULL, 'options' => NULL, 'row' => NULL, 'field_alias' => NULL),
-    'exposed_form' => array('view' => NULL, 'options' => NULL),
-    'pager' => array(
+      'attachment_before' => [],
+      'attachment_after' => [],
+    ],
+    'style' => ['view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL],
+    'row' => ['view' => NULL, 'options' => NULL, 'row' => NULL, 'field_alias' => NULL],
+    'exposed_form' => ['view' => NULL, 'options' => NULL],
+    'pager' => [
       'view' => NULL, 'options' => NULL,
-      'tags' => array(), 'quantity' => 9, 'element' => 0, 'parameters' => array()
-    ),
-  );
+      'tags' => [], 'quantity' => 9, 'element' => 0, 'parameters' => []
+    ],
+  ];
 
   // Default view themes
-  $hooks['views_view_field'] = $base + array(
-    'variables' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
-  );
-  $hooks['views_view_grouping'] = $base + array(
-    'variables' => array('view' => NULL, 'grouping' => NULL, 'grouping_level' => NULL, 'rows' => NULL, 'title' => NULL),
-  );
+  $hooks['views_view_field'] = $base + [
+    'variables' => ['view' => NULL, 'field' => NULL, 'row' => NULL],
+  ];
+  $hooks['views_view_grouping'] = $base + [
+    'variables' => ['view' => NULL, 'grouping' => NULL, 'grouping_level' => NULL, 'rows' => NULL, 'title' => NULL],
+  ];
 
   // Only display, pager, row, and style plugins can provide theme hooks.
   $plugin_types = [
@@ -138,7 +138,7 @@ function views_theme($existing, $type, $theme, $path) {
     'style',
     'exposed_form',
   ];
-  $plugins = array();
+  $plugins = [];
   foreach ($plugin_types as $plugin_type) {
     $plugins[$plugin_type] = Views::pluginManager($plugin_type)->getDefinitions();
   }
@@ -164,9 +164,9 @@ function views_theme($existing, $type, $theme, $path) {
         continue;
       }
 
-      $hooks[$def['theme']] = array(
+      $hooks[$def['theme']] = [
         'variables' => $variables[$type],
-      );
+      ];
 
       // We always use the module directory as base dir.
       $module_dir = drupal_get_path('module', $def['provider']);
@@ -175,7 +175,7 @@ function views_theme($existing, $type, $theme, $path) {
       // For the views module we ensure views.theme.inc is included.
       if ($def['provider'] == 'views') {
         if (!isset($hooks[$def['theme']]['includes'])) {
-          $hooks[$def['theme']]['includes'] = array();
+          $hooks[$def['theme']]['includes'] = [];
         }
         if (!in_array('views.theme.inc', $hooks[$def['theme']]['includes'])) {
           $hooks[$def['theme']]['includes'][] = $module_dir . '/views.theme.inc';
@@ -210,13 +210,13 @@ function views_theme($existing, $type, $theme, $path) {
     }
   }
 
-  $hooks['views_form_views_form'] = $base + array(
+  $hooks['views_form_views_form'] = $base + [
     'render element' => 'form',
-  );
+  ];
 
-  $hooks['views_exposed_form'] = $base + array(
+  $hooks['views_exposed_form'] = $base + [
     'render element' => 'form',
-  );
+  ];
 
   return $hooks;
 }
@@ -378,13 +378,13 @@ function views_add_contextual_links(&$render_element, $location, $display_id, ar
     // set 'contextual_links_locations' to, e.g., {""}.)
 
     if (!isset($plugin['contextual_links_locations'])) {
-      $plugin['contextual_links_locations'] = array('view');
+      $plugin['contextual_links_locations'] = ['view'];
     }
-    elseif ($plugin['contextual_links_locations'] == array() || $plugin['contextual_links_locations'] == array('')) {
-      $plugin['contextual_links_locations'] = array();
+    elseif ($plugin['contextual_links_locations'] == [] || $plugin['contextual_links_locations'] == ['']) {
+      $plugin['contextual_links_locations'] = [];
     }
     else {
-      $plugin += array('contextual_links_locations' => array('view'));
+      $plugin += ['contextual_links_locations' => ['view']];
     }
 
     // On exposed_forms blocks contextual links should always be visible.
@@ -392,7 +392,7 @@ function views_add_contextual_links(&$render_element, $location, $display_id, ar
     $has_links = !empty($plugin['contextual links']) && !empty($plugin['contextual_links_locations']);
     if ($has_links && in_array($location, $plugin['contextual_links_locations'])) {
       foreach ($plugin['contextual links'] as $group => $link) {
-        $args = array();
+        $args = [];
         $valid = TRUE;
         if (!empty($link['route_parameters_names'])) {
           $view_storage = \Drupal::entityManager()
@@ -416,14 +416,14 @@ function views_add_contextual_links(&$render_element, $location, $display_id, ar
         // array.
         if ($valid) {
           $render_element['#views_contextual_links'] = TRUE;
-          $render_element['#contextual_links'][$group] = array(
+          $render_element['#contextual_links'][$group] = [
             'route_parameters' => $args,
-            'metadata' => array(
+            'metadata' => [
               'location' => $location,
               'name' => $view_id,
               'display_id' => $display_id,
-            ),
-          );
+            ],
+          ];
           // If we're setting contextual links on a page, for a page view, for a
           // user that may use contextual links, attach Views' contextual links
           // JavaScript.
@@ -508,23 +508,23 @@ function &views_get_current_view() {
  * Implements hook_hook_info().
  */
 function views_hook_info() {
-  $hooks = array();
+  $hooks = [];
 
-  $hooks += array_fill_keys(array(
+  $hooks += array_fill_keys([
     'views_data',
     'views_data_alter',
     'views_analyze',
     'views_invalidate_cache',
-  ), array('group' => 'views'));
+  ], ['group' => 'views']);
 
   // Register a views_plugins alter hook for all plugin types.
   foreach (ViewExecutable::getPluginTypes() as $type) {
-    $hooks['views_plugins_' . $type . '_alter'] = array(
+    $hooks['views_plugins_' . $type . '_alter'] = [
       'group' => 'views',
-    );
+    ];
   }
 
-  $hooks += array_fill_keys(array(
+  $hooks += array_fill_keys([
     'views_query_substitutions',
     'views_form_substitutions',
     'views_pre_view',
@@ -535,14 +535,14 @@ function views_hook_info() {
     'views_pre_render',
     'views_post_render',
     'views_query_alter',
-  ), array('group' => 'views_execution'));
+  ], ['group' => 'views_execution']);
 
-  $hooks['field_views_data'] = array(
+  $hooks['field_views_data'] = [
     'group' => 'views',
-  );
-  $hooks['field_views_data_alter'] = array(
+  ];
+  $hooks['field_views_data_alter'] = [
     'group' => 'views',
-  );
+  ];
 
   return $hooks;
 }
@@ -605,8 +605,8 @@ function views_disable_view(View $view) {
  */
 function views_pre_render_views_form_views_form($element) {
   // Placeholders and their substitutions (usually rendered form elements).
-  $search = array();
-  $replace = array();
+  $search = [];
+  $replace = [];
 
   // Add in substitutions provided by the form.
   foreach ($element['#substitutions']['#value'] as $substitution) {
@@ -788,7 +788,7 @@ function views_get_view_result($name, $display_id = NULL) {
     return $view->result;
   }
   else {
-    return array();
+    return [];
   }
 }
 

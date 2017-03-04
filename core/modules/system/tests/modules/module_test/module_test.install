@@ -9,18 +9,18 @@
  * Implements hook_schema().
  */
 function module_test_schema() {
-  $schema['module_test'] = array(
+  $schema['module_test'] = [
     'description' => 'Dummy table to test the behavior of hook_schema() during module installation.',
-    'fields' => array(
-      'data' => array(
+    'fields' => [
+      'data' => [
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'description' => 'An example data column for the module.',
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
   return $schema;
 }
 
@@ -30,8 +30,8 @@ function module_test_schema() {
 function module_test_install() {
   $schema = drupal_get_module_schema('module_test', 'module_test');
   db_insert('module_test')
-    ->fields(array(
+    ->fields([
       'data' => $schema['fields']['data']['type'],
-    ))
+    ])
     ->execute();
 }

@@ -44,7 +44,7 @@ class ImageStyleTest extends UnitTestCase {
    * @return \Drupal\image\ImageStyleInterface
    *   The mocked image style.
    */
-  protected function getImageStyleMock($image_effect_id, $image_effect, $stubs = array()) {
+  protected function getImageStyleMock($image_effect_id, $image_effect, $stubs = []) {
     $effectManager = $this->getMockBuilder('\Drupal\image\ImageEffectManager')
       ->disableOriginalConstructor()
       ->getMock();
@@ -52,17 +52,17 @@ class ImageStyleTest extends UnitTestCase {
       ->method('createInstance')
       ->with($image_effect_id)
       ->will($this->returnValue($image_effect));
-    $default_stubs = array(
+    $default_stubs = [
       'getImageEffectPluginManager',
       'fileUriScheme',
       'fileUriTarget',
       'fileDefaultScheme',
-    );
+    ];
     $image_style = $this->getMockBuilder('\Drupal\image\Entity\ImageStyle')
-      ->setConstructorArgs(array(
-        array('effects' => array($image_effect_id => array('id' => $image_effect_id))),
+      ->setConstructorArgs([
+        ['effects' => [$image_effect_id => ['id' => $image_effect_id]]],
         $this->entityTypeId,
-      ))
+      ])
       ->setMethods(array_merge($default_stubs, $stubs))
       ->getMock();
 
@@ -71,13 +71,13 @@ class ImageStyleTest extends UnitTestCase {
       ->will($this->returnValue($effectManager));
     $image_style->expects($this->any())
       ->method('fileUriScheme')
-      ->will($this->returnCallback(array($this, 'fileUriScheme')));
+      ->will($this->returnCallback([$this, 'fileUriScheme']));
     $image_style->expects($this->any())
       ->method('fileUriTarget')
-      ->will($this->returnCallback(array($this, 'fileUriTarget')));
+      ->will($this->returnCallback([$this, 'fileUriTarget']));
     $image_style->expects($this->any())
       ->method('fileDefaultScheme')
-      ->will($this->returnCallback(array($this, 'fileDefaultScheme')));
+      ->will($this->returnCallback([$this, 'fileDefaultScheme']));
 
     return $image_style;
   }
@@ -106,7 +106,7 @@ class ImageStyleTest extends UnitTestCase {
     $image_effect_id = $this->randomMachineName();
     $logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
     $image_effect = $this->getMockBuilder('\Drupal\image\ImageEffectBase')
-      ->setConstructorArgs(array(array(), $image_effect_id, array(), $logger))
+      ->setConstructorArgs([[], $image_effect_id, [], $logger])
       ->getMock();
     $image_effect->expects($this->any())
       ->method('getDerivativeExtension')
@@ -114,7 +114,7 @@ class ImageStyleTest extends UnitTestCase {
 
     $image_style = $this->getImageStyleMock($image_effect_id, $image_effect);
 
-    $extensions = array('jpeg', 'gif', 'png');
+    $extensions = ['jpeg', 'gif', 'png'];
     foreach ($extensions as $extension) {
       $extensionReturned = $image_style->getDerivativeExtension($extension);
       $this->assertEquals($extensionReturned, 'png');
@@ -129,7 +129,7 @@ class ImageStyleTest extends UnitTestCase {
     $image_effect_id = $this->randomMachineName();
     $logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
     $image_effect = $this->getMockBuilder('\Drupal\image\ImageEffectBase')
-      ->setConstructorArgs(array(array(), $image_effect_id, array(), $logger))
+      ->setConstructorArgs([[], $image_effect_id, [], $logger])
       ->getMock();
     $image_effect->expects($this->any())
       ->method('getDerivativeExtension')
@@ -141,7 +141,7 @@ class ImageStyleTest extends UnitTestCase {
     // Image style that doesn't change the extension.
     $image_effect_id = $this->randomMachineName();
     $image_effect = $this->getMockBuilder('\Drupal\image\ImageEffectBase')
-      ->setConstructorArgs(array(array(), $image_effect_id, array(), $logger))
+      ->setConstructorArgs([[], $image_effect_id, [], $logger])
       ->getMock();
     $image_effect->expects($this->any())
       ->method('getDerivativeExtension')
@@ -162,13 +162,13 @@ class ImageStyleTest extends UnitTestCase {
     // Image style that changes the extension.
     $image_effect_id = $this->randomMachineName();
     $image_effect = $this->getMockBuilder('\Drupal\image\ImageEffectBase')
-      ->setConstructorArgs(array(array(), $image_effect_id, array(), $logger))
+      ->setConstructorArgs([[], $image_effect_id, [], $logger])
       ->getMock();
     $image_effect->expects($this->any())
       ->method('getDerivativeExtension')
       ->will($this->returnValue('png'));
 
-    $image_style = $this->getImageStyleMock($image_effect_id, $image_effect, array('getPrivateKey', 'getHashSalt'));
+    $image_style = $this->getImageStyleMock($image_effect_id, $image_effect, ['getPrivateKey', 'getHashSalt']);
     $image_style->expects($this->any())
       ->method('getPrivateKey')
       ->will($this->returnValue($private_key));
@@ -184,13 +184,13 @@ class ImageStyleTest extends UnitTestCase {
     // Image style that doesn't change the extension.
     $image_effect_id = $this->randomMachineName();
     $image_effect = $this->getMockBuilder('\Drupal\image\ImageEffectBase')
-      ->setConstructorArgs(array(array(), $image_effect_id, array(), $logger))
+      ->setConstructorArgs([[], $image_effect_id, [], $logger])
       ->getMock();
     $image_effect->expects($this->any())
       ->method('getDerivativeExtension')
       ->will($this->returnArgument(0));
 
-    $image_style = $this->getImageStyleMock($image_effect_id, $image_effect, array('getPrivateKey', 'getHashSalt'));
+    $image_style = $this->getImageStyleMock($image_effect_id, $image_effect, ['getPrivateKey', 'getHashSalt']);
     $image_style->expects($this->any())
       ->method('getPrivateKey')
       ->will($this->returnValue($private_key));

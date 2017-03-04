@@ -52,11 +52,11 @@ class ContentLanguageSettingsForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $entity_types = $this->entityManager->getDefinitions();
-    $labels = array();
-    $default = array();
+    $labels = [];
+    $default = [];
 
     $bundles = $this->entityManager->getAllBundleInfo();
-    $language_configuration = array();
+    $language_configuration = [];
     foreach ($entity_types as $entity_type_id => $entity_type) {
       if (!$entity_type instanceof ContentEntityTypeInterface || !$entity_type->hasKey('langcode') || !isset($bundles[$entity_type_id])) {
         continue;
@@ -76,65 +76,65 @@ class ContentLanguageSettingsForm extends FormBase {
 
     asort($labels);
 
-    $form = array(
+    $form = [
       '#labels' => $labels,
-      '#attached' => array(
-        'library' => array(
+      '#attached' => [
+        'library' => [
           'language/drupal.language.admin',
-        ),
-      ),
-      '#attributes' => array(
+        ],
+      ],
+      '#attributes' => [
         'class' => 'language-content-settings-form',
-      ),
-    );
+      ],
+    ];
 
-    $form['entity_types'] = array(
+    $form['entity_types'] = [
       '#title' => $this->t('Custom language settings'),
       '#type' => 'checkboxes',
       '#options' => $labels,
       '#default_value' => $default,
-    );
+    ];
 
-    $form['settings'] = array('#tree' => TRUE);
+    $form['settings'] = ['#tree' => TRUE];
 
     foreach ($labels as $entity_type_id => $label) {
       $entity_type = $entity_types[$entity_type_id];
 
-      $form['settings'][$entity_type_id] = array(
+      $form['settings'][$entity_type_id] = [
         '#title' => $label,
         '#type' => 'container',
         '#entity_type' => $entity_type_id,
         '#theme' => 'language_content_settings_table',
         '#bundle_label' => $entity_type->getBundleLabel() ?: $label,
-        '#states' => array(
-          'visible' => array(
-            ':input[name="entity_types[' . $entity_type_id . ']"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            ':input[name="entity_types[' . $entity_type_id . ']"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
       foreach ($bundles[$entity_type_id] as $bundle => $bundle_info) {
-        $form['settings'][$entity_type_id][$bundle]['settings'] = array(
+        $form['settings'][$entity_type_id][$bundle]['settings'] = [
           '#type' => 'item',
           '#label' => $bundle_info['label'],
-          'language' => array(
+          'language' => [
             '#type' => 'language_configuration',
-            '#entity_information' => array(
+            '#entity_information' => [
               'entity_type' => $entity_type_id,
               'bundle' => $bundle,
-            ),
+            ],
             '#default_value' => $language_configuration[$entity_type_id][$bundle],
-          ),
-        );
+          ],
+        ];
       }
     }
 
     $form['actions']['#type'] = 'actions';
-    $form['actions']['submit'] = array(
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save configuration'),
       '#button_type' => 'primary',
-    );
+    ];
 
     return $form;
   }

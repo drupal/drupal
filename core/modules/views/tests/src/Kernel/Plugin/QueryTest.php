@@ -18,7 +18,7 @@ class QueryTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   protected function viewsData() {
     $data = parent::viewsData();

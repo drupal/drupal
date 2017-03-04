@@ -18,21 +18,21 @@ class FilterTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter', 'test_filter_in_operator_ui');
+  public static $testViews = ['test_filter', 'test_filter_in_operator_ui'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('views_ui', 'node');
+  public static $modules = ['views_ui', 'node'];
 
   protected function setUp() {
     parent::setUp();
 
     $this->enableViewsTestModule();
 
-    $this->adminUser = $this->drupalCreateUser(array('administer views'));
+    $this->adminUser = $this->drupalCreateUser(['administer views']);
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
@@ -60,16 +60,16 @@ class FilterTest extends PluginTestBase {
     $view->initDisplay();
 
     // Change the filtering.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'test_filter' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'test_filter' => [
         'id' => 'test_filter',
         'table' => 'views_test_data',
         'field' => 'name',
         'operator' => '=',
         'value' => 'John',
         'group' => 0,
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
 
@@ -90,23 +90,23 @@ class FilterTest extends PluginTestBase {
 
     // Check that we have a single element, as a result of applying the '= John'
     // filter.
-    $this->assertEqual(count($view->result), 1, format_string('Results were returned. @count results.', array('@count' => count($view->result))));
+    $this->assertEqual(count($view->result), 1, format_string('Results were returned. @count results.', ['@count' => count($view->result)]));
 
     $view->destroy();
 
     $view->initDisplay();
 
     // Change the filtering.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'test_filter' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'test_filter' => [
         'id' => 'test_filter',
         'table' => 'views_test_data',
         'field' => 'name',
         'operator' => '<>',
         'value' => 'John',
         'group' => 0,
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
 
@@ -116,15 +116,15 @@ class FilterTest extends PluginTestBase {
 
     // Check if we have the other elements in the dataset, as a result of
     // applying the '<> John' filter.
-    $this->assertEqual(count($view->result), 4, format_string('Results were returned. @count results.', array('@count' => count($view->result))));
+    $this->assertEqual(count($view->result), 4, format_string('Results were returned. @count results.', ['@count' => count($view->result)]));
 
     $view->destroy();
     $view->initDisplay();
 
     // Set the test_enable option to FALSE. The 'where' clause should not be
     // added to the query.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'test_filter' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'test_filter' => [
         'id' => 'test_filter',
         'table' => 'views_test_data',
         'field' => 'name',
@@ -133,14 +133,14 @@ class FilterTest extends PluginTestBase {
         'group' => 0,
         // Disable this option, so nothing should be added to the query.
         'test_enable' => FALSE,
-      ),
-    ));
+      ],
+    ]);
 
     // Execute the view again.
     $this->executeView($view);
 
     // Check if we have all 5 results.
-    $this->assertEqual(count($view->result), 5, format_string('All @count results returned', array('@count' => count($view->displayHandlers))));
+    $this->assertEqual(count($view->result), 5, format_string('All @count results returned', ['@count' => count($view->displayHandlers)]));
   }
 
   /**

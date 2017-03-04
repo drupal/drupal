@@ -62,7 +62,7 @@ class ViewsBlockTest extends UnitTestCase {
     $condition_plugin_manager = $this->getMock('Drupal\Core\Executable\ExecutableManagerInterface');
     $condition_plugin_manager->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
     $container = new ContainerBuilder();
     $container->set('plugin.manager.condition', $condition_plugin_manager);
     \Drupal::setContainer($container);
@@ -136,15 +136,15 @@ class ViewsBlockTest extends UnitTestCase {
    */
   public function testBuild() {
     $output = $this->randomMachineName(100);
-    $build = array('view_build' => $output, '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block', '#pre_rendered' => TRUE);
+    $build = ['view_build' => $output, '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block', '#pre_rendered' => TRUE];
     $this->executable->expects($this->once())
       ->method('buildRenderable')
       ->with('block_1', [])
       ->willReturn($build);
 
     $block_id = 'views_block:test_view-block_1';
-    $config = array();
-    $definition = array();
+    $config = [];
+    $definition = [];
 
     $definition['provider'] = 'views';
     $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
@@ -187,13 +187,13 @@ class ViewsBlockTest extends UnitTestCase {
       ->willReturn($output);
 
     $block_id = 'views_block:test_view-block_1';
-    $config = array();
-    $definition = array();
+    $config = [];
+    $definition = [];
 
     $definition['provider'] = 'views';
     $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
 
-    $this->assertEquals(array(), $plugin->build());
+    $this->assertEquals([], $plugin->build());
   }
 
 }

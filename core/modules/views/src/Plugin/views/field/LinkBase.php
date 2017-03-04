@@ -82,7 +82,7 @@ abstract class LinkBase extends FieldPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['text'] = array('default' => $this->getDefaultLabel());
+    $options['text'] = ['default' => $this->getDefaultLabel()];
     return $options;
   }
 

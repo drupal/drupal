@@ -113,8 +113,8 @@ class MenuLinkContentForm extends ContentEntityForm {
 
     $entity->parent->value = $parent;
     $entity->menu_name->value = $menu_name;
-    $entity->enabled->value = (!$form_state->isValueEmpty(array('enabled', 'value')));
-    $entity->expanded->value = (!$form_state->isValueEmpty(array('expanded', 'value')));
+    $entity->enabled->value = (!$form_state->isValueEmpty(['enabled', 'value']));
+    $entity->expanded->value = (!$form_state->isValueEmpty(['expanded', 'value']));
 
     return $entity;
   }
@@ -131,7 +131,7 @@ class MenuLinkContentForm extends ContentEntityForm {
       drupal_set_message($this->t('The menu link has been saved.'));
       $form_state->setRedirect(
         'entity.menu_link_content.canonical',
-        array('menu_link_content' => $menu_link->id())
+        ['menu_link_content' => $menu_link->id()]
       );
     }
     else {

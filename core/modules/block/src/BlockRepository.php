@@ -48,10 +48,10 @@ class BlockRepository implements BlockRepositoryInterface {
   public function getVisibleBlocksPerRegion(array &$cacheable_metadata = []) {
     $active_theme = $this->themeManager->getActiveTheme();
     // Build an array of the region names in the right order.
-    $empty = array_fill_keys($active_theme->getRegions(), array());
+    $empty = array_fill_keys($active_theme->getRegions(), []);
 
-    $full = array();
-    foreach ($this->blockStorage->loadByProperties(array('theme' => $active_theme->getName())) as $block_id => $block) {
+    $full = [];
+    foreach ($this->blockStorage->loadByProperties(['theme' => $active_theme->getName()]) as $block_id => $block) {
       /** @var \Drupal\block\BlockInterface $block */
       $access = $block->access('view', NULL, TRUE);
       $region = $block->getRegion();

@@ -17,7 +17,7 @@ class LanguageListModuleInstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('language_test');
+  public static $modules = ['language_test'];
 
   /**
    * Tests enabling Language.
@@ -25,9 +25,9 @@ class LanguageListModuleInstallTest extends BrowserTestBase {
   function testModuleInstallLanguageList() {
     // Since LanguageManager::getLanguages() uses static caches we need to do
     // this by enabling the module using the UI.
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
+    $admin_user = $this->drupalCreateUser(['access administration pages', 'administer modules']);
     $this->drupalLogin($admin_user);
-    $edit = array();
+    $edit = [];
     $edit['modules[language][enable]'] = 'language';
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
 

@@ -21,7 +21,7 @@ class UninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('module_test', 'user', 'views', 'node');
+  public static $modules = ['module_test', 'user', 'views', 'node'];
 
   /**
    * Tests the hook_modules_uninstalled() of the user module.
@@ -29,7 +29,7 @@ class UninstallTest extends BrowserTestBase {
   function testUserPermsUninstalled() {
     // Uninstalls the module_test module, so hook_modules_uninstalled()
     // is executed.
-    $this->container->get('module_installer')->uninstall(array('module_test'));
+    $this->container->get('module_installer')->uninstall(['module_test']);
 
     // Are the perms defined by module_test removed?
     $this->assertFalse(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
@@ -39,7 +39,7 @@ class UninstallTest extends BrowserTestBase {
    * Tests the Uninstall page and Uninstall confirmation page.
    */
   function testUninstallPage() {
-    $account = $this->drupalCreateUser(array('administer modules'));
+    $account = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($account);
 
     // Create a node type.
@@ -67,7 +67,7 @@ class UninstallTest extends BrowserTestBase {
     $node->delete();
 
     // Uninstall module_test.
-    $edit = array();
+    $edit = [];
     $edit['uninstall[module_test]'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->assertNoText(\Drupal::translation()->translate('Configuration deletions'), 'No configuration deletions listed on the module install confirmation page.');
@@ -78,14 +78,14 @@ class UninstallTest extends BrowserTestBase {
 
     // Uninstall node testing that the configuration that will be deleted is
     // listed.
-    $node_dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('module', array('node'));
-    $edit = array();
+    $node_dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('module', ['node']);
+    $edit = [];
     $edit['uninstall[node]'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->assertText(\Drupal::translation()->translate('Configuration deletions'), 'Configuration deletions listed on the module install confirmation page.');
     $this->assertNoText(\Drupal::translation()->translate('Configuration updates'), 'No configuration updates listed on the module install confirmation page.');
 
-    $entity_types = array();
+    $entity_types = [];
     foreach ($node_dependencies as $entity) {
       $label = $entity->label() ?: $entity->id();
       $this->assertText($label);
@@ -103,7 +103,7 @@ class UninstallTest extends BrowserTestBase {
     // cleared during the uninstall.
     \Drupal::cache()->set('uninstall_test', 'test_uninstall_page', Cache::PERMANENT);
     $cached = \Drupal::cache()->get('uninstall_test');
-    $this->assertEqual($cached->data, 'test_uninstall_page', SafeMarkup::format('Cache entry found: @bin', array('@bin' => $cached->data)));
+    $this->assertEqual($cached->data, 'test_uninstall_page', SafeMarkup::format('Cache entry found: @bin', ['@bin' => $cached->data]));
 
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
@@ -123,7 +123,7 @@ class UninstallTest extends BrowserTestBase {
     $this->assertTitle(t('Uninstall') . ' | Drupal');
 
     // Make sure the correct error is shown when no modules are selected.
-    $edit = array();
+    $edit = [];
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->assertText(t('No modules selected.'), 'No module is selected to uninstall');
   }
@@ -132,12 +132,12 @@ class UninstallTest extends BrowserTestBase {
    * Tests that a module which fails to install can still be uninstalled.
    */
   public function testFailedInstallStatus() {
-    $account = $this->drupalCreateUser(array('administer modules'));
+    $account = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($account);
 
     $message = 'Exception thrown when installing module_installer_config_test with an invalid configuration file.';
     try {
-      $this->container->get('module_installer')->install(array('module_installer_config_test'));
+      $this->container->get('module_installer')->install(['module_installer_config_test']);
       $this->fail($message);
     }
     catch (EntityMalformedException $e) {

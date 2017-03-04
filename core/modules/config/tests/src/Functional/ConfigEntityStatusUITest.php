@@ -16,7 +16,7 @@ class ConfigEntityStatusUITest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test');
+  public static $modules = ['config_test'];
 
   /**
    * Tests status operations.
@@ -25,10 +25,10 @@ class ConfigEntityStatusUITest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
 
     $id = strtolower($this->randomMachineName());
-    $edit = array(
+    $edit = [
       'id' => $id,
       'label' => $this->randomMachineName(),
-    );
+    ];
     $this->drupalPostForm('admin/structure/config_test/add', $edit, 'Save');
 
     $entity = entity_load('config_test', $id);

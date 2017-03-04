@@ -28,25 +28,25 @@ class AjaxTestDialogForm extends FormBase {
     // In order to use WebTestBase::drupalPostAjaxForm() to POST from a link, we need
     // to have a dummy field we can set in WebTestBase::drupalPostForm() else it won't
     // submit anything.
-    $form['textfield'] = array(
+    $form['textfield'] = [
       '#type' => 'hidden'
-    );
-    $form['button1'] = array(
+    ];
+    $form['button1'] = [
       '#type' => 'submit',
       '#name' => 'button1',
       '#value' => 'Button 1 (modal)',
-      '#ajax' => array(
+      '#ajax' => [
         'callback' => '::modal',
-      ),
-    );
-    $form['button2'] = array(
+      ],
+    ];
+    $form['button2'] = [
       '#type' => 'submit',
       '#name' => 'button2',
       '#value' => 'Button 2 (non-modal)',
-      '#ajax' => array(
+      '#ajax' => [
         'callback' => '::nonModal',
-      ),
-    );
+      ],
+    ];
 
     return $form;
   }

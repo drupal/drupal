@@ -17,19 +17,19 @@ class StatusExtraTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_status_extra');
+  public static $testViews = ['test_status_extra'];
 
   /**
    * Tests the status extra filter.
    */
   public function testStatusExtra() {
-    $node_author = $this->drupalCreateUser(array('view own unpublished content'));
+    $node_author = $this->drupalCreateUser(['view own unpublished content']);
     $node_author_not_unpublished = $this->drupalCreateUser();
     $normal_user = $this->drupalCreateUser();
-    $admin_user = $this->drupalCreateUser(array('bypass node access'));
+    $admin_user = $this->drupalCreateUser(['bypass node access']);
 
     // Create one published and one unpublished node by the admin.
-    $node_published = $this->drupalCreateNode(array('uid' => $admin_user->id()));
+    $node_published = $this->drupalCreateNode(['uid' => $admin_user->id()]);
     $node_unpublished = $this->drupalCreateNode(['uid' => $admin_user->id(), 'status' => NodeInterface::NOT_PUBLISHED]);
 
     // Create one unpublished node by a certain author user.

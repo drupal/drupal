@@ -5,9 +5,9 @@
  * Lists available colors and color schemes for the Bartik theme.
  */
 
-$info = array(
+$info = [
   // Available colors and color labels used in theme.
-  'fields' => array(
+  'fields' => [
     'top' => t('Header background top'),
     'bottom' => t('Header background bottom'),
     'bg' => t('Main background'),
@@ -17,12 +17,12 @@ $info = array(
     'titleslogan' => t('Title and slogan'),
     'text' => t('Text color'),
     'link' => t('Link color'),
-  ),
+  ],
   // Pre-defined color schemes.
-  'schemes' => array(
-    'default' => array(
+  'schemes' => [
+    'default' => [
       'title' => t('Blue Lagoon (default)'),
-      'colors' => array(
+      'colors' => [
         'top' => '#055a8e',
         'bottom' => '#1d84c3',
         'bg' => '#ffffff',
@@ -32,11 +32,11 @@ $info = array(
         'titleslogan' => '#fffeff',
         'text' => '#3b3b3b',
         'link' => '#0071B3',
-      ),
-    ),
-    'firehouse' => array(
+      ],
+    ],
+    'firehouse' => [
       'title' => t('Firehouse'),
-      'colors' => array(
+      'colors' => [
         'top' => '#cd2d2d',
         'bottom' => '#d64e4e',
         'bg' => '#ffffff',
@@ -46,11 +46,11 @@ $info = array(
         'titleslogan' => '#fffeff',
         'text' => '#888888',
         'link' => '#d6121f',
-      ),
-    ),
-    'ice' => array(
+      ],
+    ],
+    'ice' => [
       'title' => t('Ice'),
-      'colors' => array(
+      'colors' => [
         'top' => '#d0d0d0',
         'bottom' => '#c2c4c5',
         'bg' => '#ffffff',
@@ -60,11 +60,11 @@ $info = array(
         'titleslogan' => '#000000',
         'text' => '#4a4a4a',
         'link' => '#019dbf',
-      ),
-    ),
-    'plum' => array(
+      ],
+    ],
+    'plum' => [
       'title' => t('Plum'),
-      'colors' => array(
+      'colors' => [
         'top' => '#4c1c58',
         'bottom' => '#593662',
         'bg' => '#fffdf7',
@@ -74,11 +74,11 @@ $info = array(
         'titleslogan' => '#ffffff',
         'text' => '#301313',
         'link' => '#9d408d',
-      ),
-    ),
-    'slate' => array(
+      ],
+    ],
+    'slate' => [
       'title' => t('Slate'),
-      'colors' => array(
+      'colors' => [
         'top' => '#4a4a4a',
         'bottom' => '#4e4e4e',
         'bg' => '#ffffff',
@@ -88,31 +88,31 @@ $info = array(
         'titleslogan' => '#ffffff',
         'text' => '#3b3b3b',
         'link' => '#0073b6',
-      ),
-    ),
-  ),
+      ],
+    ],
+  ],
 
   // CSS files (excluding @import) to rewrite with new color scheme.
-  'css' => array(
+  'css' => [
     'css/colors.css',
-  ),
+  ],
 
   // Files to copy.
-  'copy' => array(
+  'copy' => [
     'logo.svg',
-  ),
+  ],
 
   // Gradient definitions.
-  'gradients' => array(
-    array(
+  'gradients' => [
+    [
       // (x, y, width, height).
-      'dimension' => array(0, 0, 0, 0),
+      'dimension' => [0, 0, 0, 0],
       // Direction of gradient ('vertical' or 'horizontal').
       'direction' => 'vertical',
       // Keys of colors to use for the gradient.
-      'colors' => array('top', 'bottom'),
-    ),
-  ),
+      'colors' => ['top', 'bottom'],
+    ],
+  ],
 
   // Preview files.
   'preview_library' => 'bartik/color.preview',
@@ -127,4 +127,4 @@ $info = array(
       ],
     ],
   ],
-);
+];

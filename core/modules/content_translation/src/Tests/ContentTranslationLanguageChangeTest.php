@@ -29,7 +29,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
     $this->drupalPlaceBlock('local_tasks_block');
-    $user = $this->drupalCreateUser(array(
+    $user = $this->drupalCreateUser([
       'administer site configuration',
       'administer nodes',
       'create article content',
@@ -41,7 +41,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
       'administer languages',
       'administer content types',
       'administer node fields',
-    ));
+    ]);
     $this->drupalLogin($user);
 
     // Enable translation for article.

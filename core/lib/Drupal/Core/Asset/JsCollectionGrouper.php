@@ -19,7 +19,7 @@ class JsCollectionGrouper implements AssetCollectionGrouperInterface {
    * type and browsers, if needed to accommodate other items in between.
    */
   public function group(array $js_assets) {
-    $groups = array();
+    $groups = [];
     // If a group can contain multiple items, we track the information that must
     // be the same for each item in the group, so that when we iterate the next
     // item, we can determine if it can be put into the current group, or if a
@@ -38,7 +38,7 @@ class JsCollectionGrouper implements AssetCollectionGrouperInterface {
           // Group file items if their 'preprocess' flag is TRUE.
           // Help ensure maximum reuse of aggregate files by only grouping
           // together items that share the same 'group' value.
-          $group_keys = $item['preprocess'] ? array($item['type'], $item['group'], $item['browsers']) : FALSE;
+          $group_keys = $item['preprocess'] ? [$item['type'], $item['group'], $item['browsers']] : FALSE;
           break;
 
         case 'external':
@@ -56,7 +56,7 @@ class JsCollectionGrouper implements AssetCollectionGrouperInterface {
         // unique to the item and should not be carried over to the group.
         $groups[$index] = $item;
         unset($groups[$index]['data'], $groups[$index]['weight']);
-        $groups[$index]['items'] = array();
+        $groups[$index]['items'] = [];
         $current_group_keys = $group_keys ? $group_keys : NULL;
       }
 

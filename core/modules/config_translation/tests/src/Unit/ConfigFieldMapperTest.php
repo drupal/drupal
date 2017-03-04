@@ -42,13 +42,13 @@ class ConfigFieldMapperTest extends UnitTestCase {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $this->entity = $this->getMock('Drupal\field\FieldConfigInterface');
 
-    $definition = array(
+    $definition = [
       'class' => '\Drupal\config_translation\ConfigFieldMapper',
       'base_route_name' => 'entity.field_config.node_field_edit_form',
       'title' => '@label field',
-      'names' => array(),
+      'names' => [],
       'entity_type' => 'field_config',
-    );
+    ];
 
     $locale_config_manager = $this->getMockBuilder('Drupal\locale\LocaleConfigManager')
       ->disableOriginalConstructor()

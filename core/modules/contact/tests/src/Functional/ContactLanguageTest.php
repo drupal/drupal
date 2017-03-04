@@ -20,11 +20,11 @@ class ContactLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'contact',
     'language',
     'contact_test',
-  );
+  ];
 
   /**
    * {@inheritdoc}
@@ -33,10 +33,10 @@ class ContactLanguageTest extends BrowserTestBase {
     parent::setUp();
 
     // Create and log in administrative user.
-    $admin_user = $this->drupalCreateUser(array(
+    $admin_user = $this->drupalCreateUser([
       'access site-wide contact form',
       'administer languages',
-    ));
+    ]);
     $this->drupalLogin($admin_user);
   }
 

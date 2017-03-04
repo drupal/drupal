@@ -16,7 +16,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array(
+  public static $modules = [
     'content_translation',
     'comment',
     'datetime',
@@ -28,7 +28,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     'taxonomy',
     'telephone',
     'text',
-  );
+  ];
 
   /**
    * {@inheritdoc}

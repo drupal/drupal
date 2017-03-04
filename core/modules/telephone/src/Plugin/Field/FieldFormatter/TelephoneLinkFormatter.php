@@ -24,20 +24,20 @@ class TelephoneLinkFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'title' => '',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $elements['title'] = array(
+    $elements['title'] = [
       '#type' => 'textfield',
       '#title' => t('Title to replace basic numeric telephone number display'),
       '#default_value' => $this->getSetting('title'),
-    );
+    ];
 
     return $elements;
   }
@@ -46,11 +46,11 @@ class TelephoneLinkFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = [];
     $settings = $this->getSettings();
 
     if (!empty($settings['title'])) {
-      $summary[] = t('Link using text: @title', array('@title' => $settings['title']));
+      $summary[] = t('Link using text: @title', ['@title' => $settings['title']]);
     }
     else {
       $summary[] = t('Link using provided telephone number.');
@@ -63,23 +63,23 @@ class TelephoneLinkFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $element = array();
+    $element = [];
     $title_setting = $this->getSetting('title');
 
     foreach ($items as $delta => $item) {
       // Render each element as link.
-      $element[$delta] = array(
+      $element[$delta] = [
         '#type' => 'link',
         // Use custom title if available, otherwise use the telephone number
         // itself as title.
         '#title' => $title_setting ?: $item->value,
         // Prepend 'tel:' to the telephone number.
         '#url' => Url::fromUri('tel:' . rawurlencode(preg_replace('/\s+/', '', $item->value))),
-        '#options' => array('external' => TRUE),
-      );
+        '#options' => ['external' => TRUE],
+      ];
 
       if (!empty($item->_attributes)) {
-        $element[$delta]['#options'] += array('attributes' => array());
+        $element[$delta]['#options'] += ['attributes' => []];
         $element[$delta]['#options']['attributes'] += $item->_attributes;
         // Unset field item attributes since they have been included in the
         // formatter output and should not be rendered in the field template.

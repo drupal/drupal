@@ -70,7 +70,7 @@ interface EntityViewBuilderInterface {
    *   comments belongs to, or not passing one, and having the comments node not
    *   be available for loading.
    */
-  public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL);
+  public function viewMultiple(array $entities = [], $view_mode = 'full', $langcode = NULL);
 
   /**
    * Resets the entity render cache.
@@ -122,7 +122,7 @@ interface EntityViewBuilderInterface {
    *
    * @see \Drupal\Core\Entity\EntityViewBuilderInterface::viewFieldItem()
    */
-  public function viewField(FieldItemListInterface $items, $display_options = array());
+  public function viewField(FieldItemListInterface $items, $display_options = []);
 
   /**
    * Builds a renderable array for a single field item.
@@ -138,7 +138,7 @@ interface EntityViewBuilderInterface {
    *
    * @see \Drupal\Core\Entity\EntityViewBuilderInterface::viewField()
    */
-  public function viewFieldItem(FieldItemInterface $item, $display_options = array());
+  public function viewFieldItem(FieldItemInterface $item, $display_options = []);
 
   /**
    * The cache tag associated with this entity view builder.

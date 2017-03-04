@@ -82,10 +82,10 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['id'] = $this->t('Field name');
-    $header['type'] = array(
+    $header['type'] = [
       'data' => $this->t('Field type'),
-      'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
-    );
+      'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+    ];
     $header['usage'] = $this->t('Used in');
     return $header;
   }
@@ -95,17 +95,17 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $field_storage) {
     if ($field_storage->isLocked()) {
-      $row['class'] = array('menu-disabled');
-      $row['data']['id'] = $this->t('@field_name (Locked)', array('@field_name' => $field_storage->getName()));
+      $row['class'] = ['menu-disabled'];
+      $row['data']['id'] = $this->t('@field_name (Locked)', ['@field_name' => $field_storage->getName()]);
     }
     else {
       $row['data']['id'] = $field_storage->getName();
     }
 
     $field_type = $this->fieldTypes[$field_storage->getType()];
-    $row['data']['type'] = $this->t('@type (module: @module)', array('@type' => $field_type['label'], '@module' => $field_type['provider']));
+    $row['data']['type'] = $this->t('@type (module: @module)', ['@type' => $field_type['label'], '@module' => $field_type['provider']]);
 
-    $usage = array();
+    $usage = [];
     foreach ($field_storage->getBundles() as $bundle) {
       $entity_type_id = $field_storage->getTargetEntityTypeId();
       if ($route_info = FieldUI::getOverviewRouteInfo($entity_type_id, $bundle)) {

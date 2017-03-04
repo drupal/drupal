@@ -61,7 +61,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // that it is definitely over a second ago.
     $account->login = REQUEST_TIME - mt_rand(10, 100000);
     db_update('users_field_data')
-      ->fields(array('login' => $account->getLastLoginTime()))
+      ->fields(['login' => $account->getLastLoginTime()])
       ->condition('uid', $account->id())
       ->execute();
   }
@@ -78,11 +78,11 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // Try to reset the password for an invalid account.
     $this->drupalGet('user/password');
 
-    $edit = array('name' => $this->randomMachineName(32));
+    $edit = ['name' => $this->randomMachineName(32)];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
 
-    $this->assertText(t('@name is not recognized as a username or an email address.', array('@name' => $edit['name'])), 'Validation error message shown when trying to request password for invalid account.');
-    $this->assertEqual(count($this->drupalGetMails(array('id' => 'user_password_reset'))), 0, 'No email was sent when requesting a password for an invalid account.');
+    $this->assertText(t('@name is not recognized as a username or an email address.', ['@name' => $edit['name']]), 'Validation error message shown when trying to request password for invalid account.');
+    $this->assertEqual(count($this->drupalGetMails(['id' => 'user_password_reset'])), 0, 'No email was sent when requesting a password for an invalid account.');
 
     // Reset the password by username via the password reset page.
     $edit['name'] = $this->account->getUsername();
@@ -90,7 +90,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
 
     // Verify that the user was sent an email.
     $this->assertMail('to', $this->account->getEmail(), 'Password email sent to user.');
-    $subject = t('Replacement login information for @username at @site', array('@username' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name')));
+    $subject = t('Replacement login information for @username at @site', ['@username' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name')]);
     $this->assertMail('subject', $subject, 'Password reset email subject is correct.');
 
     $resetURL = $this->getResetURL();
@@ -112,19 +112,19 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // Check successful login.
     $this->drupalPostForm(NULL, NULL, t('Log in'));
     $this->assertLink(t('Log out'));
-    $this->assertTitle(t('@name | @site', array('@name' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name'))), 'Logged in using password reset link.');
+    $this->assertTitle(t('@name | @site', ['@name' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
 
     // Make sure the ajax request from uploading a user picture does not
     // invalidate the reset token.
     $image = current($this->drupalGetTestFiles('image'));
-    $edit = array(
+    $edit = [
       'files[user_picture_0]' => drupal_realpath($image->uri),
-    );
+    ];
     $this->drupalPostAjaxForm(NULL, $edit, 'user_picture_0_upload_button');
 
     // Change the forgotten password.
     $password = user_password();
-    $edit = array('pass[pass1]' => $password, 'pass[pass2]' => $password);
+    $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('The changes have been saved.'), 'Forgotten password changed.');
 
@@ -141,10 +141,10 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // Request a new password again, this time using the email address.
     $this->drupalGet('user/password');
     // Count email messages before to compare with after.
-    $before = count($this->drupalGetMails(array('id' => 'user_password_reset')));
-    $edit = array('name' => $this->account->getEmail());
+    $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
+    $edit = ['name' => $this->account->getEmail()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-    $this->assertTrue( count($this->drupalGetMails(array('id' => 'user_password_reset'))) === $before + 1, 'Email sent when requesting password reset using email address.');
+    $this->assertTrue( count($this->drupalGetMails(['id' => 'user_password_reset'])) === $before + 1, 'Email sent when requesting password reset using email address.');
 
     // Visit the user edit page without pass-reset-token and make sure it does
     // not cause an error.
@@ -173,15 +173,15 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // Verify a blocked user can not request a new password.
     $this->drupalGet('user/password');
     // Count email messages before to compare with after.
-    $before = count($this->drupalGetMails(array('id' => 'user_password_reset')));
-    $edit = array('name' => $blocked_account->getUsername());
+    $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
+    $edit = ['name' => $blocked_account->getUsername()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-    $this->assertRaw(t('%name is blocked or has not been activated yet.', array('%name' => $blocked_account->getUsername())), 'Notified user blocked accounts can not request a new password');
-    $this->assertTrue(count($this->drupalGetMails(array('id' => 'user_password_reset'))) === $before, 'No email was sent when requesting password reset for a blocked account');
+    $this->assertRaw(t('%name is blocked or has not been activated yet.', ['%name' => $blocked_account->getUsername()]), 'Notified user blocked accounts can not request a new password');
+    $this->assertTrue(count($this->drupalGetMails(['id' => 'user_password_reset'])) === $before, 'No email was sent when requesting password reset for a blocked account');
 
     // Verify a password reset link is invalidated when the user's email address changes.
     $this->drupalGet('user/password');
-    $edit = array('name' => $this->account->getUsername());
+    $edit = ['name' => $this->account->getUsername()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
     $old_email_reset_link = $this->getResetURL();
     $this->account->setEmail("1" . $this->account->getEmail());
@@ -193,12 +193,12 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // Verify a password reset link will automatically log a user when /login is
     // appended.
     $this->drupalGet('user/password');
-    $edit = array('name' => $this->account->getUsername());
+    $edit = ['name' => $this->account->getUsername()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
     $reset_url = $this->getResetURL();
     $this->drupalGet($reset_url . '/login');
     $this->assertLink(t('Log out'));
-    $this->assertTitle(t('@name | @site', array('@name' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name'))), 'Logged in using password reset link.');
+    $this->assertTitle(t('@name | @site', ['@name' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name')]), 'Logged in using password reset link.');
 
     // Ensure blocked and deleted accounts can't access the user.reset.login
     // route.
@@ -221,7 +221,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // Assume the most recent email.
     $_emails = $this->drupalGetMails();
     $email = end($_emails);
-    $urls = array();
+    $urls = [];
     preg_match('#.+user/reset/.+#', $email['body'], $urls);
 
     return $urls[0];
@@ -264,7 +264,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
 
     // Change the password.
     $password = user_password();
-    $edit = array('pass[pass1]' => $password, 'pass[pass2]' => $password);
+    $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('The changes have been saved.'), 'Password changed.');
 
@@ -282,15 +282,15 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
    */
   public function testUserResetPasswordTextboxFilled() {
     $this->drupalGet('user/login');
-    $edit = array(
+    $edit = [
       'name' => $this->randomMachineName(),
       'pass' => $this->randomMachineName(),
-    );
+    ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->assertRaw(t('Unrecognized username or password. <a href=":password">Forgot your password?</a>',
-      array(':password' => \Drupal::url('user.pass', [], array('query' => array('name' => $edit['name']))))));
+      [':password' => \Drupal::url('user.pass', [], ['query' => ['name' => $edit['name']]])]));
     unset($edit['pass']);
-    $this->drupalGet('user/password', array('query' => array('name' => $edit['name'])));
+    $this->drupalGet('user/password', ['query' => ['name' => $edit['name']]]);
     $this->assertFieldByName('name', $edit['name'], 'User name found.');
     // Ensure the name field value is not cached.
     $this->drupalGet('user/password');
@@ -303,7 +303,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
   function testResetImpersonation() {
     // Create two identical user accounts except for the user name. They must
     // have the same empty password, so we can't use $this->drupalCreateUser().
-    $edit = array();
+    $edit = [];
     $edit['name'] = $this->randomMachineName();
     $edit['mail'] = $edit['name'] . '@example.com';
     $edit['status'] = 1;
@@ -333,7 +333,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->drupalGet($attack_reset_url);
     $this->drupalPostForm(NULL, NULL, t('Log in'));
     $this->assertNoText($user2->getUsername(), 'The invalid password reset page does not show the user name.');
-    $this->assertUrl('user/password', array(), 'The user is redirected to the password reset request page.');
+    $this->assertUrl('user/password', [], 'The user is redirected to the password reset request page.');
     $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
   }
 

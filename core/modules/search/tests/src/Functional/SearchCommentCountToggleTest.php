@@ -26,7 +26,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'comment');
+  public static $modules = ['node', 'comment'];
 
   /**
    * A user with permission to search and post comments.
@@ -46,7 +46,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     parent::setUp();
 
     // Create searching user.
-    $this->searchingUser = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'post comments', 'skip comment approval'));
+    $this->searchingUser = $this->drupalCreateUser(['search content', 'access content', 'access comments', 'post comments', 'skip comment approval']);
 
     // Log in with sufficient privileges.
     $this->drupalLogin($this->searchingUser);
@@ -54,13 +54,13 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     // Add a comment field.
     $this->addDefaultCommentField('node', 'article');
     // Create initial nodes.
-    $node_params = array('type' => 'article', 'body' => array(array('value' => 'SearchCommentToggleTestCase')));
+    $node_params = ['type' => 'article', 'body' => [['value' => 'SearchCommentToggleTestCase']]];
 
     $this->searchableNodes['1 comment'] = $this->drupalCreateNode($node_params);
     $this->searchableNodes['0 comments'] = $this->drupalCreateNode($node_params);
 
     // Create a comment array
-    $edit_comment = array();
+    $edit_comment = [];
     $edit_comment['subject[0][value]'] = $this->randomMachineName();
     $edit_comment['comment_body[0][value]'] = $this->randomMachineName();
 
@@ -81,9 +81,9 @@ class SearchCommentCountToggleTest extends SearchTestBase {
    */
   function testSearchCommentCountToggle() {
     // Search for the nodes by string in the node body.
-    $edit = array(
+    $edit = [
       'keys' => "'SearchCommentToggleTestCase'",
-    );
+    ];
     $this->drupalGet('search/node');
 
     // Test comment count display for nodes with comment status set to Open

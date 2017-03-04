@@ -85,14 +85,14 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
    * {@inheritdoc}
    */
   public function getSummary() {
-    return array(
+    return [
       '#markup' => '',
-      '#effect' => array(
+      '#effect' => [
         'id' => $this->pluginDefinition['id'],
         'label' => $this->label(),
         'description' => $this->pluginDefinition['description'],
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -128,23 +128,23 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
    * {@inheritdoc}
    */
   public function getConfiguration() {
-    return array(
+    return [
       'uuid' => $this->getUuid(),
       'id' => $this->getPluginId(),
       'weight' => $this->getWeight(),
       'data' => $this->configuration,
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
-    $configuration += array(
-      'data' => array(),
+    $configuration += [
+      'data' => [],
       'uuid' => '',
       'weight' => '',
-    );
+    ];
     $this->configuration = $configuration['data'] + $this->defaultConfiguration();
     $this->uuid = $configuration['uuid'];
     $this->weight = $configuration['weight'];
@@ -155,14 +155,14 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    return array();
+    return [];
   }
 
 }

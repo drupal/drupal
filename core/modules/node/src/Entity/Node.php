@@ -366,15 +366,15 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
       ->setSetting('max_length', 255)
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'string',
         'weight' => -5,
-      ))
-      ->setDisplayOptions('form', array(
+      ])
+      ->setDisplayOptions('form', [
         'type' => 'string_textfield',
         'weight' => -5,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
@@ -384,20 +384,20 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setSetting('target_type', 'user')
       ->setDefaultValueCallback('Drupal\node\Entity\Node::getCurrentUserId')
       ->setTranslatable(TRUE)
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'author',
         'weight' => 0,
-      ))
-      ->setDisplayOptions('form', array(
+      ])
+      ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
         'weight' => 5,
-        'settings' => array(
+        'settings' => [
           'match_operator' => 'CONTAINS',
           'size' => '60',
           'placeholder' => '',
-        ),
-      ))
+        ],
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
@@ -405,15 +405,15 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setDescription(t('The time that the node was created.'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'timestamp',
         'weight' => 0,
-      ))
-      ->setDisplayOptions('form', array(
+      ])
+      ->setDisplayOptions('form', [
         'type' => 'datetime_timestamp',
         'weight' => 10,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
@@ -427,13 +427,13 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setDefaultValue(TRUE)
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-        'settings' => array(
+        'settings' => [
           'display_label' => TRUE,
-        ),
+        ],
         'weight' => 15,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['sticky'] = BaseFieldDefinition::create('boolean')
@@ -441,13 +441,13 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setDefaultValue(FALSE)
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-        'settings' => array(
+        'settings' => [
           'display_label' => TRUE,
-        ),
+        ],
         'weight' => 16,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['revision_timestamp'] = BaseFieldDefinition::create('created')
@@ -468,13 +468,13 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setDescription(t('Briefly describe the changes you have made.'))
       ->setRevisionable(TRUE)
       ->setDefaultValue('')
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'string_textarea',
         'weight' => 25,
-        'settings' => array(
+        'settings' => [
           'rows' => 4,
-        ),
-      ));
+        ],
+      ]);
 
     $fields['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Revision translation affected'))
@@ -495,7 +495,7 @@ class Node extends ContentEntityBase implements NodeInterface {
    *   An array of default values.
    */
   public static function getCurrentUserId() {
-    return array(\Drupal::currentUser()->id());
+    return [\Drupal::currentUser()->id()];
   }
 
 }

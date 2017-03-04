@@ -17,7 +17,7 @@ class ProgrammaticTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = ['form_test'];
 
   /**
    * Test the programmatic form submission workflow.
@@ -26,30 +26,30 @@ class ProgrammaticTest extends WebTestBase {
     // Backup the current batch status and reset it to avoid conflicts while
     // processing the dummy form submit handler.
     $current_batch = $batch =& batch_get();
-    $batch = array();
+    $batch = [];
 
     // Test that a programmatic form submission is rejected when a required
     // textfield is omitted and correctly processed when it is provided.
-    $this->submitForm(array(), FALSE);
-    $this->submitForm(array('textfield' => 'test 1'), TRUE);
-    $this->submitForm(array(), FALSE);
-    $this->submitForm(array('textfield' => 'test 2'), TRUE);
+    $this->submitForm([], FALSE);
+    $this->submitForm(['textfield' => 'test 1'], TRUE);
+    $this->submitForm([], FALSE);
+    $this->submitForm(['textfield' => 'test 2'], TRUE);
 
     // Test that a programmatic form submission can turn on and off checkboxes
     // which are, by default, checked.
-    $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => 1, 2 => 2)), TRUE);
-    $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => 1, 2 => NULL)), TRUE);
-    $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => NULL, 2 => 2)), TRUE);
-    $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => NULL, 2 => NULL)), TRUE);
+    $this->submitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => 1, 2 => 2]], TRUE);
+    $this->submitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => 1, 2 => NULL]], TRUE);
+    $this->submitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => NULL, 2 => 2]], TRUE);
+    $this->submitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => NULL, 2 => NULL]], TRUE);
 
     // Test that a programmatic form submission can correctly click a button
     // that limits validation errors based on user input. Since we do not
     // submit any values for "textfield" here and the textfield is required, we
     // only expect form validation to pass when validation is limited to a
     // different field.
-    $this->submitForm(array('op' => 'Submit with limited validation', 'field_to_validate' => 'all'), FALSE);
-    $this->submitForm(array('op' => 'Submit with limited validation', 'field_to_validate' => 'textfield'), FALSE);
-    $this->submitForm(array('op' => 'Submit with limited validation', 'field_to_validate' => 'field_to_validate'), TRUE);
+    $this->submitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'all'], FALSE);
+    $this->submitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'textfield'], FALSE);
+    $this->submitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'field_to_validate'], TRUE);
 
     // Restore the current batch status.
     $batch = $current_batch;
@@ -73,10 +73,10 @@ class ProgrammaticTest extends WebTestBase {
     // Check that the form returns an error when expected, and vice versa.
     $errors = $form_state->getErrors();
     $valid_form = empty($errors);
-    $args = array(
+    $args = [
       '%values' => print_r($values, TRUE),
       '%errors' => $valid_form ? t('None') : implode(' ', $errors),
-    );
+    ];
     $this->assertTrue($valid_input == $valid_form, format_string('Input values: %values<br />Validation handler errors: %errors', $args));
 
     // We check submitted values only if we have a valid input.
@@ -84,7 +84,7 @@ class ProgrammaticTest extends WebTestBase {
       // Fetching the values that were set in the submission handler.
       $stored_values = $form_state->get('programmatic_form_submit');
       foreach ($values as $key => $value) {
-        $this->assertEqual($stored_values[$key], $value, format_string('Submission handler correctly executed: %stored_key is %stored_value', array('%stored_key' => $key, '%stored_value' => print_r($value, TRUE))));
+        $this->assertEqual($stored_values[$key], $value, format_string('Submission handler correctly executed: %stored_key is %stored_value', ['%stored_key' => $key, '%stored_value' => print_r($value, TRUE)]));
       }
     }
   }

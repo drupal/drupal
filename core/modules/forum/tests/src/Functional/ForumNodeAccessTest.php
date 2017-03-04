@@ -17,7 +17,7 @@ class ForumNodeAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block');
+  public static $modules = ['node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block'];
 
   protected function setUp() {
     parent::setUp();
@@ -34,30 +34,30 @@ class ForumNodeAccessTest extends BrowserTestBase {
    */
   function testForumNodeAccess() {
     // Create some users.
-    $access_user = $this->drupalCreateUser(array('node test view'));
+    $access_user = $this->drupalCreateUser(['node test view']);
     $no_access_user = $this->drupalCreateUser();
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules', 'administer blocks', 'create forum content'));
+    $admin_user = $this->drupalCreateUser(['access administration pages', 'administer modules', 'administer blocks', 'create forum content']);
 
     $this->drupalLogin($admin_user);
 
     // Create a private node.
     $private_node_title = $this->randomMachineName(20);
-    $edit = array(
+    $edit = [
       'title[0][value]' => $private_node_title,
       'body[0][value]' => $this->randomMachineName(200),
       'private[0][value]' => TRUE,
-    );
-    $this->drupalPostForm('node/add/forum', $edit, t('Save'), array('query' => array('forum_id' => 1)));
+    ];
+    $this->drupalPostForm('node/add/forum', $edit, t('Save'), ['query' => ['forum_id' => 1]]);
     $private_node = $this->drupalGetNodeByTitle($private_node_title);
     $this->assertTrue(!empty($private_node), 'New private forum node found in database.');
 
     // Create a public node.
     $public_node_title = $this->randomMachineName(20);
-    $edit = array(
+    $edit = [
       'title[0][value]' => $public_node_title,
       'body[0][value]' => $this->randomMachineName(200),
-    );
-    $this->drupalPostForm('node/add/forum', $edit, t('Save'), array('query' => array('forum_id' => 1)));
+    ];
+    $this->drupalPostForm('node/add/forum', $edit, t('Save'), ['query' => ['forum_id' => 1]]);
     $public_node = $this->drupalGetNodeByTitle($public_node_title);
     $this->assertTrue(!empty($public_node), 'New public forum node found in database.');
 

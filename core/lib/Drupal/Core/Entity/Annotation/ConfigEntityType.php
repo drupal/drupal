@@ -31,7 +31,7 @@ class ConfigEntityType extends EntityType {
    * {@inheritdoc}
    */
   public function get() {
-    $this->definition['group_label'] = new TranslatableMarkup('Configuration', array(), array('context' => 'Entity type group'));
+    $this->definition['group_label'] = new TranslatableMarkup('Configuration', [], ['context' => 'Entity type group']);
 
     return parent::get();
   }

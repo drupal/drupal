@@ -21,22 +21,22 @@ class UsageTest extends FileManagedUnitTestBase {
   function testGetUsage() {
     $file = $this->createFile();
     db_insert('file_usage')
-      ->fields(array(
+      ->fields([
         'fid' => $file->id(),
         'module' => 'testing',
         'type' => 'foo',
         'id' => 1,
         'count' => 1
-      ))
+      ])
       ->execute();
     db_insert('file_usage')
-      ->fields(array(
+      ->fields([
         'fid' => $file->id(),
         'module' => 'testing',
         'type' => 'bar',
         'id' => 2,
         'count' => 2
-      ))
+      ])
       ->execute();
 
     $usage = $this->container->get('file.usage')->listUsage($file);
@@ -81,19 +81,19 @@ class UsageTest extends FileManagedUnitTestBase {
     $file = $this->createFile();
     $file_usage = $this->container->get('file.usage');
     db_insert('file_usage')
-      ->fields(array(
+      ->fields([
         'fid' => $file->id(),
         'module' => 'testing',
         'type' => 'bar',
         'id' => 2,
         'count' => 3,
-      ))
+      ])
       ->execute();
 
     // Normal decrement.
     $file_usage->delete($file, 'testing', 'bar', 2);
     $count = db_select('file_usage', 'f')
-      ->fields('f', array('count'))
+      ->fields('f', ['count'])
       ->condition('f.fid', $file->id())
       ->execute()
       ->fetchField();
@@ -102,7 +102,7 @@ class UsageTest extends FileManagedUnitTestBase {
     // Multiple decrement and removal.
     $file_usage->delete($file, 'testing', 'bar', 2, 2);
     $count = db_select('file_usage', 'f')
-      ->fields('f', array('count'))
+      ->fields('f', ['count'])
       ->condition('f.fid', $file->id())
       ->execute()
       ->fetchField();
@@ -111,7 +111,7 @@ class UsageTest extends FileManagedUnitTestBase {
     // Non-existent decrement.
     $file_usage->delete($file, 'testing', 'bar', 2);
     $count = db_select('file_usage', 'f')
-      ->fields('f', array('count'))
+      ->fields('f', ['count'])
       ->condition('f.fid', $file->id())
       ->execute()
       ->fetchField();
@@ -128,10 +128,10 @@ class UsageTest extends FileManagedUnitTestBase {
     // Temporary file that is old.
     $temp_old = file_save_data('');
     db_update('file_managed')
-      ->fields(array(
+      ->fields([
         'status' => 0,
         'changed' => REQUEST_TIME - $this->config('system.file')->get('temporary_maximum_age') - 1,
-      ))
+      ])
       ->condition('fid', $temp_old->id())
       ->execute();
     $this->assertTrue(file_exists($temp_old->getFileUri()), 'Old temp file was created correctly.');
@@ -139,7 +139,7 @@ class UsageTest extends FileManagedUnitTestBase {
     // Temporary file that is new.
     $temp_new = file_save_data('');
     db_update('file_managed')
-      ->fields(array('status' => 0))
+      ->fields(['status' => 0])
       ->condition('fid', $temp_new->id())
       ->execute();
     $this->assertTrue(file_exists($temp_new->getFileUri()), 'New temp file was created correctly.');
@@ -147,7 +147,7 @@ class UsageTest extends FileManagedUnitTestBase {
     // Permanent file that is old.
     $perm_old = file_save_data('');
     db_update('file_managed')
-      ->fields(array('changed' => REQUEST_TIME - $this->config('system.file')->get('temporary_maximum_age') - 1))
+      ->fields(['changed' => REQUEST_TIME - $this->config('system.file')->get('temporary_maximum_age') - 1])
       ->condition('fid', $temp_old->id())
       ->execute();
     $this->assertTrue(file_exists($perm_old->getFileUri()), 'Old permanent file was created correctly.');
@@ -155,7 +155,7 @@ class UsageTest extends FileManagedUnitTestBase {
     // Permanent file that is new.
     $perm_new = file_save_data('');
     $this->assertTrue(file_exists($perm_new->getFileUri()), 'New permanent file was created correctly.');
-    return array($temp_old, $temp_new, $perm_old, $perm_new);
+    return [$temp_old, $temp_new, $perm_old, $perm_new];
   }
 
   /**

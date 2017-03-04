@@ -16,7 +16,7 @@ class ConfigEntityNormalizeTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test');
+  public static $modules = ['config_test'];
 
   protected function setUp() {
     parent::setUp();
@@ -24,15 +24,15 @@ class ConfigEntityNormalizeTest extends KernelTestBase {
   }
 
   public function testNormalize() {
-    $config_entity = entity_create('config_test', array('id' => 'system', 'label' => 'foobar', 'weight' => 1));
+    $config_entity = entity_create('config_test', ['id' => 'system', 'label' => 'foobar', 'weight' => 1]);
     $config_entity->save();
 
     // Modify stored config entity, this is comparable with a schema change.
     $config = $this->config('config_test.dynamic.system');
-    $data = array(
+    $data = [
       'label' => 'foobar',
       'additional_key' => TRUE
-    ) + $config->getRawData();
+    ] + $config->getRawData();
     $config->setData($data)->save();
     $this->assertNotIdentical($config_entity->toArray(), $config->getRawData(), 'Stored config entity is not is equivalent to config schema.');
 

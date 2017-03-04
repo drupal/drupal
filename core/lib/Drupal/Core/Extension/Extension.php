@@ -152,7 +152,7 @@ class Extension implements \Serializable {
     if (!isset($this->splFileInfo)) {
       $this->splFileInfo = new \SplFileInfo($this->pathname);
     }
-    return call_user_func_array(array($this->splFileInfo, $method), $args);
+    return call_user_func_array([$this->splFileInfo, $method], $args);
   }
 
   /**
@@ -163,11 +163,11 @@ class Extension implements \Serializable {
   public function serialize() {
     // Don't serialize the app root, since this could change if the install is
     // moved.
-    $data = array(
+    $data = [
       'type' => $this->type,
       'pathname' => $this->pathname,
       'filename' => $this->filename,
-    );
+    ];
 
     // @todo ThemeHandler::listInfo(), ThemeHandler::rebuildThemeData(), and
     //   system_list() are adding custom properties to the Extension object.

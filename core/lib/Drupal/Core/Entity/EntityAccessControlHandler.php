@@ -18,7 +18,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    *
    * @var array
    */
-  protected $accessCache = array();
+  protected $accessCache = [];
 
   /**
    * The entity type ID of the access control handler instance.
@@ -207,18 +207,18 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    * {@inheritdoc}
    */
   public function resetCache() {
-    $this->accessCache = array();
+    $this->accessCache = [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = array(), $return_as_object = FALSE) {
+  public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = [], $return_as_object = FALSE) {
     $account = $this->prepareUser($account);
-    $context += array(
+    $context += [
       'entity_type_id' => $this->entityTypeId,
       'langcode' => LanguageInterface::LANGCODE_DEFAULT,
-    );
+    ];
 
     $cid = $entity_bundle ? 'create:' . $entity_bundle : 'create';
     if (($access = $this->getCache($cid, 'create', $context['langcode'], $account)) !== NULL) {
@@ -236,8 +236,8 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     // - No modules say to deny access.
     // - At least one module says to grant access.
     $access = array_merge(
-      $this->moduleHandler()->invokeAll('entity_create_access', array($account, $context, $entity_bundle)),
-      $this->moduleHandler()->invokeAll($this->entityTypeId . '_create_access', array($account, $context, $entity_bundle))
+      $this->moduleHandler()->invokeAll('entity_create_access', [$account, $context, $entity_bundle]),
+      $this->moduleHandler()->invokeAll($this->entityTypeId . '_create_access', [$account, $context, $entity_bundle])
     );
 
     $return = $this->processAccessHookResults($access);
@@ -312,19 +312,19 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
 
     // Invoke hook and collect grants/denies for field access from other
     // modules. Our default access flag is masked under the ':default' key.
-    $grants = array(':default' => $default);
+    $grants = [':default' => $default];
     $hook_implementations = $this->moduleHandler()->getImplementations('entity_field_access');
     foreach ($hook_implementations as $module) {
-      $grants = array_merge($grants, array($module => $this->moduleHandler()->invoke($module, 'entity_field_access', array($operation, $field_definition, $account, $items))));
+      $grants = array_merge($grants, [$module => $this->moduleHandler()->invoke($module, 'entity_field_access', [$operation, $field_definition, $account, $items])]);
     }
 
     // Also allow modules to alter the returned grants/denies.
-    $context = array(
+    $context = [
       'operation' => $operation,
       'field_definition' => $field_definition,
       'items' => $items,
       'account' => $account,
-    );
+    ];
     $this->moduleHandler()->alter('entity_field_access', $grants, $context);
 
     $result = $this->processAccessHookResults($grants);

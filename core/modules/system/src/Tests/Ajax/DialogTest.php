@@ -19,72 +19,72 @@ class DialogTest extends AjaxTestBase {
    *
    * @var array
    */
-  public static $modules = array('ajax_test', 'ajax_forms_test', 'contact');
+  public static $modules = ['ajax_test', 'ajax_forms_test', 'contact'];
 
   /**
    * Test sending non-JS and AJAX requests to open and manipulate modals.
    */
   public function testDialog() {
-    $this->drupalLogin($this->drupalCreateUser(array('administer contact forms')));
+    $this->drupalLogin($this->drupalCreateUser(['administer contact forms']));
     // Ensure the elements render without notices or exceptions.
     $this->drupalGet('ajax-test/dialog');
 
     // Set up variables for this test.
     $dialog_renderable = AjaxTestController::dialogContents();
     $dialog_contents = \Drupal::service('renderer')->renderRoot($dialog_renderable);
-    $modal_expected_response = array(
+    $modal_expected_response = [
       'command' => 'openDialog',
       'selector' => '#drupal-modal',
       'settings' => NULL,
       'data' => $dialog_contents,
-      'dialogOptions' => array(
+      'dialogOptions' => [
         'modal' => TRUE,
         'title' => 'AJAX Dialog & contents',
-      ),
-    );
-    $form_expected_response = array(
+      ],
+    ];
+    $form_expected_response = [
       'command' => 'openDialog',
       'selector' => '#drupal-modal',
       'settings' => NULL,
-      'dialogOptions' => array(
+      'dialogOptions' => [
         'modal' => TRUE,
         'title' => 'Ajax Form contents',
-      ),
-    );
-    $entity_form_expected_response = array(
+      ],
+    ];
+    $entity_form_expected_response = [
       'command' => 'openDialog',
       'selector' => '#drupal-modal',
       'settings' => NULL,
-      'dialogOptions' => array(
+      'dialogOptions' => [
         'modal' => TRUE,
         'title' => 'Add contact form',
-      ),
-    );
-    $normal_expected_response = array(
+      ],
+    ];
+    $normal_expected_response = [
       'command' => 'openDialog',
       'selector' => '#ajax-test-dialog-wrapper-1',
       'settings' => NULL,
       'data' => $dialog_contents,
-      'dialogOptions' => array(
+      'dialogOptions' => [
         'modal' => FALSE,
         'title' => 'AJAX Dialog & contents',
-      ),
-    );
-    $no_target_expected_response = array(
+      ],
+    ];
+    $no_target_expected_response = [
       'command' => 'openDialog',
       'selector' => '#drupal-dialog-ajax-testdialog-contents',
       'settings' => NULL,
       'data' => $dialog_contents,
-      'dialogOptions' => array(
+      'dialogOptions' => [
         'modal' => FALSE,
         'title' => 'AJAX Dialog & contents',
-      ),
-    );
-    $close_expected_response = array(
+      ],
+    ];
+    $close_expected_response = [
       'command' => 'closeDialog',
       'selector' => '#ajax-test-dialog-wrapper-1',
       'persist' => FALSE,
-    );
+    ];
 
     // Check that requesting a modal dialog without JS goes to a page.
     $this->drupalGet('ajax-test/dialog-contents');
@@ -95,7 +95,7 @@ class DialogTest extends AjaxTestBase {
     $this->assertRaw($dialog_contents, 'Modal dialog page on XMLHttpRequest present.');
 
     // Emulate going to the JS version of the page and check the JSON response.
-    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-contents', array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal')));
+    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal']]);
     $this->assertEqual($modal_expected_response, $ajax_result[3], 'Modal dialog JSON response matches.');
     // Test the HTML escaping of & character.
     $this->assertEqual($ajax_result[3]['dialogOptions']['title'], 'AJAX Dialog & contents');
@@ -108,26 +108,26 @@ class DialogTest extends AjaxTestBase {
     // Emulate going to the JS version of the page and check the JSON response.
     // This needs to use WebTestBase::drupalPostAjaxForm() so that the correct
     // dialog options are sent.
-    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(
+    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', [
         // We have to mock a form element to make drupalPost submit from a link.
         'textfield' => 'test',
-      ), array(), 'ajax-test/dialog-contents', array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog')), array(), NULL, array(
-      'submit' => array(
+      ], [], 'ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog']], [], NULL, [
+      'submit' => [
         'dialogOptions[target]' => 'ajax-test-dialog-wrapper-1',
-      )
-    ));
+      ]
+    ]);
     $this->assertEqual($normal_expected_response, $ajax_result[3], 'Normal dialog JSON response matches.');
 
     // Emulate going to the JS version of the page and check the JSON response.
     // This needs to use WebTestBase::drupalPostAjaxForm() so that the correct
     // dialog options are sent.
-    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(
+    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', [
         // We have to mock a form element to make drupalPost submit from a link.
         'textfield' => 'test',
-      ), array(), 'ajax-test/dialog-contents', array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog')), array(), NULL, array(
+      ], [], 'ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog']], [], NULL, [
       // Don't send a target.
-      'submit' => array()
-    ));
+      'submit' => []
+    ]);
     // Make sure the selector ID starts with the right string.
     $this->assert(strpos($ajax_result[3]['selector'], $no_target_expected_response['selector']) === 0, 'Selector starts with right string.');
     unset($ajax_result[3]['selector']);
@@ -142,7 +142,7 @@ class DialogTest extends AjaxTestBase {
     // Test submitting via a POST request through the button for modals. This
     // approach more accurately reflects the real responses by Drupal because
     // all of the necessary page variables are emulated.
-    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(), 'button1');
+    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', [], 'button1');
 
     // Check that CSS and JavaScript are "added" to the page dynamically.
     $this->assertTrue(in_array('core/drupal.dialog.ajax', explode(',', $ajax_result[0]['settings']['ajaxPageState']['libraries'])), 'core/drupal.dialog.ajax library is added to the page.');
@@ -159,7 +159,7 @@ class DialogTest extends AjaxTestBase {
     $this->assertNotEqual($ajax_result[4]['dialogOptions']['title'], 'AJAX Dialog &amp; contents');
 
     // Abbreviated test for "normal" dialogs, testing only the difference.
-    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(), 'button2');
+    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', [], 'button2');
     $this->assertEqual($normal_expected_response, $ajax_result[4], 'POST request normal dialog JSON response matches.');
 
     // Check that requesting a form dialog without JS goes to a page.
@@ -170,7 +170,7 @@ class DialogTest extends AjaxTestBase {
     $this->assertTrue(!empty($form), 'Non-JS form page present.');
 
     // Emulate going to the JS version of the form and check the JSON response.
-    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-form', array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal')));
+    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-form', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal']]);
     $expected_ajax_settings = [
       'edit-preview' => [
         'callback' => '::preview',
@@ -202,7 +202,7 @@ class DialogTest extends AjaxTestBase {
     $this->assertTrue(!empty($form), 'Non-JS entity form page present.');
 
     // Emulate going to the JS version of the form and check the JSON response.
-    $ajax_result = $this->drupalGetAjax('admin/structure/contact/add', array('query' => array(MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal')));
+    $ajax_result = $this->drupalGetAjax('admin/structure/contact/add', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal']]);
     $this->setRawContent($ajax_result[3]['data']);
     // Remove the data, the form build id and token will never match.
     unset($ajax_result[3]['data']);

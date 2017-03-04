@@ -65,14 +65,14 @@ class LanguageItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'value' => array(
+    return [
+      'columns' => [
+        'value' => [
           'type' => 'varchar_ascii',
           'length' => 12,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -99,7 +99,7 @@ class LanguageItem extends FieldItemBase {
   public function applyDefaultValue($notify = TRUE) {
     // Default to the site's default language. When language module is enabled,
     // this behavior is configurable, see language_field_info_alter().
-    $this->setValue(array('value' => \Drupal::languageManager()->getDefaultLanguage()->getId()), $notify);
+    $this->setValue(['value' => \Drupal::languageManager()->getDefaultLanguage()->getId()], $notify);
     return $this;
   }
 

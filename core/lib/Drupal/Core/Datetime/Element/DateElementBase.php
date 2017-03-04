@@ -66,7 +66,7 @@ abstract class DateElementBase extends FormElement {
       $min_year = min($value_year, $min_year);
       $max_year = max($value_year, $max_year);
     }
-    return array($min_year, $max_year);
+    return [$min_year, $max_year];
   }
 
 }

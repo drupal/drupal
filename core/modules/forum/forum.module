@@ -24,7 +24,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Forum module lets you create threaded discussion forums with functionality similar to other message board systems. In a forum, users post topics and threads in nested hierarchies, allowing discussions to be categorized and grouped.') . '</p>';
-      $output .= '<p>' . t('The Forum module adds and uses a content type called <em>Forum topic</em>. For background information on content types, see the <a href=":node_help">Node module help page</a>.', array(':node_help' => \Drupal::url('help.page', array('name' => 'node')))) . '</p>';
+      $output .= '<p>' . t('The Forum module adds and uses a content type called <em>Forum topic</em>. For background information on content types, see the <a href=":node_help">Node module help page</a>.', [':node_help' => \Drupal::url('help.page', ['name' => 'node'])]) . '</p>';
       $output .= '<p>' . t('A forum is represented by a hierarchical structure, consisting of:');
       $output .= '<ul>';
       $output .= '<li>' . t('<em>Forums</em> (for example, <em>Recipes for cooking vegetables</em>)') . '</li>';
@@ -33,15 +33,15 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<li>' . t('Optional <em>containers</em>, used to group similar forums. Forums can be placed inside containers, and vice versa.') . '</li>';
       $output .= '</ul>';
       $output .= '</p>';
-      $output .= '<p>' . t('For more information, see the <a href=":forum">online documentation for the Forum module</a>.', array(':forum' => 'https://www.drupal.org/documentation/modules/forum')) . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":forum">online documentation for the Forum module</a>.', [':forum' => 'https://www.drupal.org/documentation/modules/forum']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Setting up the forum structure') . '</dt>';
-      $output .= '<dd>' . t('Visit the <a href=":forums">Forums page</a> to set up containers and forums to hold your discussion topics.', array(':forums' => \Drupal::url('forum.overview'))) . '</dd>';
+      $output .= '<dd>' . t('Visit the <a href=":forums">Forums page</a> to set up containers and forums to hold your discussion topics.', [':forums' => \Drupal::url('forum.overview')]) . '</dd>';
       $output .= '<dt>' . t('Starting a discussion') . '</dt>';
-      $output .= '<dd>' . t('The <a href=":create-topic">Forum topic</a> link on the <a href=":content-add">Add content</a> page creates the first post of a new threaded discussion, or thread.', array(':create-topic' => \Drupal::url('node.add', array('node_type' => 'forum')), ':content-add' => \Drupal::url('node.add_page'))) . '</dd>';
+      $output .= '<dd>' . t('The <a href=":create-topic">Forum topic</a> link on the <a href=":content-add">Add content</a> page creates the first post of a new threaded discussion, or thread.', [':create-topic' => \Drupal::url('node.add', ['node_type' => 'forum']), ':content-add' => \Drupal::url('node.add_page')]) . '</dd>';
       $output .= '<dt>' . t('Navigating in the forum') . '</dt>';
-      $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu item in the Tools menu that links to the <a href=":forums">Forums page</a>.', array(':forums' => \Drupal::url('forum.index'))) . '</dd>';
+      $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu item in the Tools menu that links to the <a href=":forums">Forums page</a>.', [':forums' => \Drupal::url('forum.index')]) . '</dd>';
       $output .= '<dt>' . t('Moving forum topics') . '</dt>';
       $output .= '<dd>' . t('A forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic. When moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') . '</dd>';
       $output .= '<dt>' . t('Locking and disabling comments') . '</dt>';
@@ -51,21 +51,21 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
 
     case 'forum.overview':
       $output = '<p>' . t('Forums contain forum topics. Use containers to group related forums.') . '</p>';
-      $more_help_link = array(
+      $more_help_link = [
         '#type' => 'link',
         '#url' => Url::fromRoute('help.page', ['name' => 'forum']),
         '#title' => t('More help'),
-        '#attributes' => array(
-          'class' => array('icon-help'),
-        ),
-      );
-      $container = array(
+        '#attributes' => [
+          'class' => ['icon-help'],
+        ],
+      ];
+      $container = [
         '#theme' => 'container',
         '#children' => $more_help_link,
-        '#attributes' => array(
-          'class' => array('more-link'),
-        ),
-      );
+        '#attributes' => [
+          'class' => ['more-link'],
+        ],
+      ];
       $output .= \Drupal::service('renderer')->renderPlain($container);
       return $output;
 
@@ -76,7 +76,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('A forum holds related forum topics.') . '</p>';
 
     case 'forum.settings':
-      return '<p>' . t('Adjust the display of your forum topics. Organize the forums on the <a href=":forum-structure">forum structure page</a>.', array(':forum-structure' => \Drupal::url('forum.overview'))) . '</p>';
+      return '<p>' . t('Adjust the display of your forum topics. Organize the forums on the <a href=":forum-structure">forum structure page</a>.', [':forum-structure' => \Drupal::url('forum.overview')]) . '</p>';
   }
 }
 
@@ -84,20 +84,20 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_theme().
  */
 function forum_theme() {
-  return array(
-    'forums' => array(
-      'variables' => array('forums' => array(), 'topics' => array(), 'topics_pager' => array(), 'parents' => NULL, 'term' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL, 'header' => array()),
-    ),
-    'forum_list' => array(
-      'variables' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
-    ),
-    'forum_icon' => array(
-      'variables' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0, 'first_new' => FALSE),
-    ),
-    'forum_submitted' => array(
-      'variables' => array('topic' => NULL),
-    ),
-  );
+  return [
+    'forums' => [
+      'variables' => ['forums' => [], 'topics' => [], 'topics_pager' => [], 'parents' => NULL, 'term' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL, 'header' => []],
+    ],
+    'forum_list' => [
+      'variables' => ['forums' => NULL, 'parents' => NULL, 'tid' => NULL],
+    ],
+    'forum_icon' => [
+      'variables' => ['new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0, 'first_new' => FALSE],
+    ],
+    'forum_submitted' => [
+      'variables' => ['topic' => NULL],
+    ],
+  ];
 }
 
 /**
@@ -158,7 +158,7 @@ function forum_node_presave(EntityInterface $node) {
         $old_tid = \Drupal::service('forum.index_storage')->getOriginalTermId($node);
         if ($old_tid && isset($node->forum_tid) && ($node->forum_tid != $old_tid) && !empty($node->shadow)) {
           // A shadow copy needs to be created. Retain new term and add old term.
-          $node->taxonomy_forums[count($node->taxonomy_forums)] = array('target_id' => $old_tid);
+          $node->taxonomy_forums[count($node->taxonomy_forums)] = ['target_id' => $old_tid];
         }
       }
     }
@@ -241,7 +241,7 @@ function forum_node_predelete(EntityInterface $node) {
  * Implements hook_ENTITY_TYPE_storage_load() for node entities.
  */
 function forum_node_storage_load($nodes) {
-  $node_vids = array();
+  $node_vids = [];
   foreach ($nodes as $node) {
     if (\Drupal::service('forum_manager')->checkNodeType($node)) {
       $node_vids[] = $node->getRevisionId();
@@ -289,10 +289,10 @@ function forum_form_taxonomy_vocabulary_form_alter(&$form, FormStateInterface $f
   $vid = \Drupal::config('forum.settings')->get('vocabulary');
   $vocabulary = $form_state->getFormObject()->getEntity();
   if ($vid == $vocabulary->id()) {
-    $form['help_forum_vocab'] = array(
+    $form['help_forum_vocab'] = [
       '#markup' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
       '#weight' => -1,
-    );
+    ];
     // Forum's vocabulary always has single hierarchy. Forums and containers
     // have only one parent or no parent for root items. By default this value
     // is 0.
@@ -324,13 +324,13 @@ function forum_form_node_form_alter(&$form, FormStateInterface $form_state, $for
     $forum_terms = $node->taxonomy_forums;
     // If editing, give option to leave shadows.
     $shadow = (count($forum_terms) > 1);
-    $form['shadow'] = array(
+    $form['shadow'] = [
       '#type' => 'checkbox',
       '#title' => t('Leave shadow copy'),
       '#default_value' => $shadow,
       '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'),
-    );
-    $form['forum_tid'] = array('#type' => 'value', '#value' => $node->forum_tid);
+    ];
+    $form['forum_tid'] = ['#type' => 'value', '#value' => $node->forum_tid];
   }
 
   if (isset($form['taxonomy_forums'])) {
@@ -361,7 +361,7 @@ function forum_preprocess_block(&$variables) {
  * Implements hook_theme_suggestions_HOOK().
  */
 function forum_theme_suggestions_forums(array $variables) {
-  $suggestions = array();
+  $suggestions = [];
   $tid = $variables['term']->id();
 
   // Provide separate template suggestions based on what's being output. Topic
@@ -408,24 +408,24 @@ function template_preprocess_forums(&$variables) {
   $variables['tid'] = $variables['term']->id();
   if ($variables['forums_defined'] = count($variables['forums']) || count($variables['parents'])) {
     if (!empty($variables['forums'])) {
-      $variables['forums'] = array(
+      $variables['forums'] = [
         '#theme' => 'forum_list',
         '#forums' => $variables['forums'],
         '#parents' => $variables['parents'],
         '#tid' => $variables['tid'],
-      );
+      ];
     }
 
     if ($variables['term'] && empty($variables['term']->forum_container->value) && !empty($variables['topics'])) {
       $forum_topic_list_header = $variables['header'];
 
-      $table = array(
+      $table = [
         '#theme' => 'table__forum_topic_list',
         '#responsive' => FALSE,
-        '#attributes' => array('id' => 'forum-topic-' . $variables['tid']),
-        '#header' => array(),
-        '#rows' => array(),
-      );
+        '#attributes' => ['id' => 'forum-topic-' . $variables['tid']],
+        '#header' => [],
+        '#rows' => [],
+      ];
 
       if (!empty($forum_topic_list_header)) {
         $table['#header'] = $forum_topic_list_header;
@@ -433,14 +433,14 @@ function template_preprocess_forums(&$variables) {
 
       /** @var \Drupal\node\NodeInterface $topic */
       foreach ($variables['topics'] as $id => $topic) {
-        $variables['topics'][$id]->icon = array(
+        $variables['topics'][$id]->icon = [
           '#theme' => 'forum_icon',
           '#new_posts' => $topic->new,
           '#num_posts' => $topic->comment_count,
           '#comment_mode' => $topic->comment_mode,
           '#sticky' => $topic->isSticky(),
           '#first_new' => $topic->first_new,
-        );
+        ];
 
         // We keep the actual tid in forum table, if it's different from the
         // current tid then it means the topic appears in two forums, one of
@@ -455,16 +455,16 @@ function template_preprocess_forums(&$variables) {
           $variables['topics'][$id]->title_link = \Drupal::l($topic->getTitle(), $topic->urlInfo());
           $variables['topics'][$id]->message = '';
         }
-        $forum_submitted = array('#theme' => 'forum_submitted', '#topic' => (object) array(
+        $forum_submitted = ['#theme' => 'forum_submitted', '#topic' => (object) [
           'uid' => $topic->getOwnerId(),
           'name' => $topic->getOwner()->getDisplayName(),
           'created' => $topic->getCreatedTime(),
-        ));
+        ]];
         $variables['topics'][$id]->submitted = drupal_render($forum_submitted);
-        $forum_submitted = array(
+        $forum_submitted = [
           '#theme' => 'forum_submitted',
           '#topic' => isset($topic->last_reply) ? $topic->last_reply : NULL,
-        );
+        ];
         $variables['topics'][$id]->last_reply = drupal_render($forum_submitted);
 
         $variables['topics'][$id]->new_text = '';
@@ -473,28 +473,28 @@ function template_preprocess_forums(&$variables) {
         if ($topic->new_replies) {
           $page_number = \Drupal::entityManager()->getStorage('comment')
             ->getNewCommentPageNumber($topic->comment_count, $topic->new_replies, $topic, 'comment_forum');
-          $query = $page_number ? array('page' => $page_number) : NULL;
-          $variables['topics'][$id]->new_text = \Drupal::translation()->formatPlural($topic->new_replies, '1 new post<span class="visually-hidden"> in topic %title</span>', '@count new posts<span class="visually-hidden"> in topic %title</span>', array('%title' => $variables['topics'][$id]->label()));
+          $query = $page_number ? ['page' => $page_number] : NULL;
+          $variables['topics'][$id]->new_text = \Drupal::translation()->formatPlural($topic->new_replies, '1 new post<span class="visually-hidden"> in topic %title</span>', '@count new posts<span class="visually-hidden"> in topic %title</span>', ['%title' => $variables['topics'][$id]->label()]);
           $variables['topics'][$id]->new_url = \Drupal::url('entity.node.canonical', ['node' => $topic->id()], ['query' => $query, 'fragment' => 'new']);
         }
 
         // Build table rows from topics.
-        $row = array();
-        $row[] = array(
-          'data' => array(
+        $row = [];
+        $row[] = [
+          'data' => [
             $topic->icon,
-            array(
+            [
               '#markup' => '<div class="forum__title"><div>' . $topic->title_link . '</div><div>' . $topic->submitted . '</div></div>',
-            ),
-          ),
-          'class' => array('forum__topic'),
-        );
+            ],
+          ],
+          'class' => ['forum__topic'],
+        ];
 
         if ($topic->moved) {
-          $row[] = array(
+          $row[] = [
             'data' => $topic->message,
             'colspan' => '2',
-          );
+          ];
         }
         else {
           $new_replies = '';
@@ -502,27 +502,27 @@ function template_preprocess_forums(&$variables) {
             $new_replies = '<br /><a href="' . $topic->new_url . '">' . $topic->new_text . '</a>';
           }
 
-          $row[] = array(
+          $row[] = [
             'data' => [
               [
                 '#prefix' => $topic->comment_count,
                 '#markup' => $new_replies,
               ],
             ],
-            'class' => array('forum__replies'),
-          );
-          $row[] = array(
+            'class' => ['forum__replies'],
+          ];
+          $row[] = [
             'data' => $topic->last_reply,
-            'class' => array('forum__last-reply'),
-          );
+            'class' => ['forum__last-reply'],
+          ];
         }
         $table['#rows'][] = $row;
       }
 
       $variables['topics'] = $table;
-      $variables['topics_pager'] = array(
+      $variables['topics_pager'] = [
         '#type' => 'pager',
-      );
+      ];
     }
   }
 }
@@ -545,7 +545,7 @@ function template_preprocess_forum_list(&$variables) {
   $row = 0;
   // Sanitize each forum so that the template can safely print the data.
   foreach ($variables['forums'] as $id => $forum) {
-    $variables['forums'][$id]->description = array('#markup' => $forum->description->value);
+    $variables['forums'][$id]->description = ['#markup' => $forum->description->value];
     $variables['forums'][$id]->link = forum_uri($forum);
     $variables['forums'][$id]->name = $forum->label();
     $variables['forums'][$id]->is_container = !empty($forum->forum_container->value);
@@ -561,20 +561,20 @@ function template_preprocess_forum_list(&$variables) {
     if ($user->isAuthenticated()) {
       $variables['forums'][$id]->new_topics = \Drupal::service('forum_manager')->unreadTopics($forum->id(), $user->id());
       if ($variables['forums'][$id]->new_topics) {
-        $variables['forums'][$id]->new_text = \Drupal::translation()->formatPlural($variables['forums'][$id]->new_topics, '1 new post<span class="visually-hidden"> in forum %title</span>', '@count new posts<span class="visually-hidden"> in forum %title</span>', array('%title' => $variables['forums'][$id]->label()));
+        $variables['forums'][$id]->new_text = \Drupal::translation()->formatPlural($variables['forums'][$id]->new_topics, '1 new post<span class="visually-hidden"> in forum %title</span>', '@count new posts<span class="visually-hidden"> in forum %title</span>', ['%title' => $variables['forums'][$id]->label()]);
         $variables['forums'][$id]->new_url = \Drupal::url('forum.page', ['taxonomy_term' => $forum->id()], ['fragment' => 'new']);
         $variables['forums'][$id]->icon_class = 'new';
         $variables['forums'][$id]->icon_title = t('New posts');
       }
       $variables['forums'][$id]->old_topics = $forum->num_topics - $variables['forums'][$id]->new_topics;
     }
-    $forum_submitted = array('#theme' => 'forum_submitted', '#topic' => $forum->last_post);
+    $forum_submitted = ['#theme' => 'forum_submitted', '#topic' => $forum->last_post];
     $variables['forums'][$id]->last_reply = drupal_render($forum_submitted);
   }
 
-  $variables['pager'] = array(
+  $variables['pager'] = [
    '#type' => 'pager',
-  );
+  ];
 
   // Give meaning to $tid for themers. $tid actually stands for term ID.
   $variables['forum_id'] = $variables['tid'];
@@ -635,7 +635,7 @@ function template_preprocess_forum_icon(&$variables) {
 function template_preprocess_forum_submitted(&$variables) {
   $variables['author'] = '';
   if (isset($variables['topic']->uid)) {
-    $username = array('#theme' => 'username', '#account' => User::load($variables['topic']->uid));
+    $username = ['#theme' => 'username', '#account' => User::load($variables['topic']->uid)];
     $variables['author'] = drupal_render($username);
   }
   $variables['time'] = isset($variables['topic']->created) ? \Drupal::service('date.formatter')->formatTimeDiffSince($variables['topic']->created) : '';

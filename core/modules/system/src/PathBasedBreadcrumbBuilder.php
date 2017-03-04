@@ -122,14 +122,14 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
-    $links = array();
+    $links = [];
 
     // General path-based breadcrumbs. Use the actual request path, prior to
     // resolving path aliases, so the breadcrumb can be defined by simply
     // creating a hierarchy of path aliases.
     $path = trim($this->context->getPathInfo(), '/');
     $path_elements = explode('/', $path);
-    $exclude = array();
+    $exclude = [];
     // Don't show a link to the front-page path.
     $front = $this->config->get('page.front');
     $exclude[$front] = TRUE;
@@ -154,7 +154,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
           if (!isset($title)) {
             // Fallback to using the raw path component as the title if the
             // route is missing a _title or _title_callback attribute.
-            $title = str_replace(array('-', '_'), ' ', Unicode::ucfirst(end($path_elements)));
+            $title = str_replace(['-', '_'], ' ', Unicode::ucfirst(end($path_elements)));
           }
           $url = Url::fromRouteMatch($route_match);
           $links[] = new Link($title, $url);

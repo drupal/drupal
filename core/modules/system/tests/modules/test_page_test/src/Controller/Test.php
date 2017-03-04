@@ -15,7 +15,7 @@ class Test {
    *   A render array as expected by drupal_render()
    */
   public function renderTitle() {
-    $build = array();
+    $build = [];
     $build['#markup'] = 'Hello Drupal';
     $build['#title'] = 'Foo';
 
@@ -29,7 +29,7 @@ class Test {
    *   A render array as expected by drupal_render().
    */
   public function staticTitle() {
-    $build = array();
+    $build = [];
     $build['#markup'] = 'Hello Drupal';
 
     return $build;
@@ -66,9 +66,9 @@ class Test {
    *   A render array as expected by drupal_render()
    */
   public function renderPage() {
-    return array(
+    return [
       '#markup' => 'Content',
-    );
+    ];
   }
 
   /**

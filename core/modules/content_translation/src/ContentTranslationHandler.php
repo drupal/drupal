@@ -110,7 +110,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    * {@inheritdoc}
    */
   public function getFieldDefinitions() {
-    $definitions = array();
+    $definitions = [];
 
     $definitions['content_translation_source'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Translation source'))
@@ -287,7 +287,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $title = $this->entityFormTitle($entity);
       // When editing the original values display just the entity label.
       if ($is_translation) {
-        $t_args = array('%language' => $languages[$form_langcode]->getName(), '%title' => $entity->label(), '@title' => $title);
+        $t_args = ['%language' => $languages[$form_langcode]->getName(), '%title' => $entity->label(), '@title' => $title];
         $title = empty($source_langcode) ? t('@title [%language translation]', $t_args) : t('Create %language translation of %title', $t_args);
       }
       $form['#title'] = $title;
@@ -296,25 +296,25 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // Display source language selector only if we are creating a new
     // translation and there are at least two translations available.
     if ($has_translations && $new_translation) {
-      $form['source_langcode'] = array(
+      $form['source_langcode'] = [
         '#type' => 'details',
-        '#title' => t('Source language: @language', array('@language' => $languages[$source_langcode]->getName())),
+        '#title' => t('Source language: @language', ['@language' => $languages[$source_langcode]->getName()]),
         '#tree' => TRUE,
         '#weight' => -100,
         '#multilingual' => TRUE,
-        'source' => array(
+        'source' => [
           '#title' => t('Select source language'),
           '#title_display' => 'invisible',
           '#type' => 'select',
           '#default_value' => $source_langcode,
-          '#options' => array(),
-        ),
-        'submit' => array(
+          '#options' => [],
+        ],
+        'submit' => [
           '#type' => 'submit',
           '#value' => t('Change'),
-          '#submit' => array(array($this, 'entityFormSourceChange')),
-        ),
-      );
+          '#submit' => [[$this, 'entityFormSourceChange']],
+        ],
+      ];
       foreach ($this->languageManager->getLanguages() as $language) {
         if (isset($translations[$language->getId()])) {
           $form['source_langcode']['source']['#options'][$language->getId()] = $language->getName();
@@ -335,7 +335,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     if (isset($language_widget['widget'][0]['value']) && !$is_translation && $has_translations) {
       $language_select = &$language_widget['widget'][0]['value'];
       if ($language_select['#type'] == 'language_select') {
-        $options = array();
+        $options = [];
         foreach ($this->languageManager->getLanguages() as $language) {
           // Show the current language, and the languages for which no
           // translation already exists.
@@ -354,20 +354,20 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       // Replace the delete button with the delete translation one.
       if (!$new_translation) {
         $weight = 100;
-        foreach (array('delete', 'submit') as $key) {
+        foreach (['delete', 'submit'] as $key) {
           if (isset($form['actions'][$key]['weight'])) {
             $weight = $form['actions'][$key]['weight'];
             break;
           }
         }
         $access = $this->getTranslationAccess($entity, 'delete')->isAllowed() || ($entity->access('delete') && $this->entityType->hasLinkTemplate('delete-form'));
-        $form['actions']['delete_translation'] = array(
+        $form['actions']['delete_translation'] = [
           '#type' => 'submit',
           '#value' => t('Delete translation'),
           '#weight' => $weight,
-          '#submit' => array(array($this, 'entityFormDeleteTranslation')),
+          '#submit' => [[$this, 'entityFormDeleteTranslation']],
           '#access' => $access,
-        );
+        ];
       }
 
       // Always remove the delete button on translation forms.
@@ -377,23 +377,23 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // We need to display the translation tab only when there is at least one
     // translation available or a new one is about to be created.
     if ($new_translation || $has_translations) {
-      $form['content_translation'] = array(
+      $form['content_translation'] = [
         '#type' => 'details',
         '#title' => t('Translation'),
         '#tree' => TRUE,
         '#weight' => 10,
         '#access' => $this->getTranslationAccess($entity, $source_langcode ? 'create' : 'update')->isAllowed(),
         '#multilingual' => TRUE,
-      );
+      ];
 
       if (isset($form['advanced'])) {
-        $form['content_translation'] += array(
+        $form['content_translation'] += [
           '#group' => 'advanced',
           '#weight' => 100,
-          '#attributes' => array(
-            'class' => array('entity-translation-options'),
-          ),
-        );
+          '#attributes' => [
+            'class' => ['entity-translation-options'],
+          ],
+        ];
       }
 
       // A new translation is enabled by default.
@@ -414,30 +414,30 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         t('An unpublished translation will not be visible without translation permissions.') :
         t('Only this translation is published. You must publish at least one more translation to unpublish this one.');
 
-      $form['content_translation']['status'] = array(
+      $form['content_translation']['status'] = [
         '#type' => 'checkbox',
         '#title' => t('This translation is published'),
         '#default_value' => $status,
         '#description' => $description,
         '#disabled' => !$enabled,
-      );
+      ];
 
       $translate = !$new_translation && $metadata->isOutdated();
       if (!$translate) {
-        $form['content_translation']['retranslate'] = array(
+        $form['content_translation']['retranslate'] = [
           '#type' => 'checkbox',
           '#title' => t('Flag other translations as outdated'),
           '#default_value' => FALSE,
           '#description' => t('If you made a significant change, which means the other translations should be updated, you can flag all translations of this content as outdated. This will not change any other property of them, like whether they are published or not.'),
-        );
+        ];
       }
       else {
-        $form['content_translation']['outdated'] = array(
+        $form['content_translation']['outdated'] = [
           '#type' => 'checkbox',
           '#title' => t('This translation needs to be updated'),
           '#default_value' => $translate,
           '#description' => t('When this option is checked, this translation needs to be updated. Uncheck when the translation is up to date again.'),
-        );
+        ];
         $form['content_translation']['#open'] = TRUE;
       }
 
@@ -449,7 +449,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       elseif (($account = $metadata->getAuthor()) && $account->id()) {
         $uid = $account->id();
       }
-      $form['content_translation']['uid'] = array(
+      $form['content_translation']['uid'] = [
         '#type' => 'entity_autocomplete',
         '#title' => t('Authored by'),
         '#target_type' => 'user',
@@ -457,34 +457,34 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         // Validation is done by static::entityFormValidate().
         '#validate_reference' => FALSE,
         '#maxlength' => 60,
-        '#description' => t('Leave blank for %anonymous.', array('%anonymous' => \Drupal::config('user.settings')->get('anonymous'))),
-      );
+        '#description' => t('Leave blank for %anonymous.', ['%anonymous' => \Drupal::config('user.settings')->get('anonymous')]),
+      ];
 
       $date = $new_translation ? REQUEST_TIME : $metadata->getCreatedTime();
-      $form['content_translation']['created'] = array(
+      $form['content_translation']['created'] = [
         '#type' => 'textfield',
         '#title' => t('Authored on'),
         '#maxlength' => 25,
-        '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', array('%time' => format_date(REQUEST_TIME, 'custom', 'Y-m-d H:i:s O'), '%timezone' => format_date(REQUEST_TIME, 'custom', 'O'))),
+        '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', ['%time' => format_date(REQUEST_TIME, 'custom', 'Y-m-d H:i:s O'), '%timezone' => format_date(REQUEST_TIME, 'custom', 'O')]),
         '#default_value' => $new_translation || !$date ? '' : format_date($date, 'custom', 'Y-m-d H:i:s O'),
-      );
+      ];
 
       if (isset($language_widget)) {
         $language_widget['#multilingual'] = TRUE;
       }
 
-      $form['#process'][] = array($this, 'entityFormSharedElements');
+      $form['#process'][] = [$this, 'entityFormSharedElements'];
     }
 
     // Process the submitted values before they are stored.
-    $form['#entity_builders'][] = array($this, 'entityFormEntityBuild');
+    $form['#entity_builders'][] = [$this, 'entityFormEntityBuild'];
 
     // Handle entity validation.
-    $form['#validate'][] = array($this, 'entityFormValidate');
+    $form['#validate'][] = [$this, 'entityFormValidate'];
 
     // Handle entity deletion.
     if (isset($form['actions']['delete'])) {
-      $form['actions']['delete']['#submit'][] = array($this, 'entityFormDelete');
+      $form['actions']['delete']['#submit'][] = [$this, 'entityFormDelete'];
     }
 
     // Handle entity form submission before the entity has been saved.
@@ -506,7 +506,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // @todo Find a more reliable way to determine if a form element concerns a
     //   multilingual value.
     if (!isset($ignored_types)) {
-      $ignored_types = array_flip(array('actions', 'value', 'hidden', 'vertical_tabs', 'token', 'details'));
+      $ignored_types = array_flip(['actions', 'value', 'hidden', 'vertical_tabs', 'token', 'details']);
     }
 
     foreach (Element::children($element) as $key) {
@@ -551,7 +551,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // Elements which can have a #title attribute according to FAPI Reference.
     if (!isset($suffix)) {
       $suffix = ' <span class="translation-entity-all-languages">(' . t('all languages') . ')</span>';
-      $fapi_title_elements = array_flip(array('checkbox', 'checkboxes', 'date', 'details', 'fieldset', 'file', 'item', 'password', 'password_confirm', 'radio', 'radios', 'select', 'text_format', 'textarea', 'textfield', 'weight'));
+      $fapi_title_elements = array_flip(['checkbox', 'checkboxes', 'date', 'details', 'fieldset', 'file', 'item', 'password', 'password_confirm', 'radio', 'radios', 'select', 'text_format', 'textarea', 'textfield', 'weight']);
     }
 
     // Update #title attribute for all elements that are allowed to have a
@@ -587,7 +587,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, FormStateInterface $form_state) {
     $form_object = $form_state->getFormObject();
     $form_langcode = $form_object->getFormLangcode($form_state);
-    $values = &$form_state->getValue('content_translation', array());
+    $values = &$form_state->getValue('content_translation', []);
 
     $metadata = $this->manager->getTranslationMetadata($entity);
     $metadata->setAuthor(!empty($values['uid']) ? User::load($values['uid']) : User::load(0));
@@ -615,7 +615,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $translation = $form_state->getValue('content_translation');
       // Validate the "authored by" field.
       if (!empty($translation['uid']) && !($account = User::load($translation['uid']))) {
-        $form_state->setErrorByName('content_translation][uid', t('The translation authoring username %name does not exist.', array('%name' => $account->getUsername())));
+        $form_state->setErrorByName('content_translation][uid', t('The translation authoring username %name does not exist.', ['%name' => $account->getUsername()]));
       }
       // Validate the "authored on" field.
       if (!empty($translation['created']) && strtotime($translation['created']) === FALSE) {
@@ -656,16 +656,16 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   public function entityFormSourceChange($form, FormStateInterface $form_state) {
     $form_object = $form_state->getFormObject();
     $entity = $form_object->getEntity();
-    $source = $form_state->getValue(array('source_langcode', 'source'));
+    $source = $form_state->getValue(['source_langcode', 'source']);
 
     $entity_type_id = $entity->getEntityTypeId();
-    $form_state->setRedirect("entity.$entity_type_id.content_translation_add", array(
+    $form_state->setRedirect("entity.$entity_type_id.content_translation_add", [
       $entity_type_id => $entity->id(),
       'source' => $source,
       'target' => $form_object->getFormLangcode($form_state),
-    ));
+    ]);
     $languages = $this->languageManager->getLanguages();
-    drupal_set_message(t('Source language set to: %language', array('%language' => $languages[$source]->getName())));
+    drupal_set_message(t('Source language set to: %language', ['%language' => $languages[$source]->getName()]));
   }
 
   /**
@@ -677,7 +677,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $form_object = $form_state->getFormObject()->getEntity();
     $entity = $form_object->getEntity();
     if (count($entity->getTranslationLanguages()) > 1) {
-      drupal_set_message(t('This will delete all the translations of %label.', array('%label' => $entity->label())), 'warning');
+      drupal_set_message(t('This will delete all the translations of %label.', ['%label' => $entity->label()]), 'warning');
     }
   }
 

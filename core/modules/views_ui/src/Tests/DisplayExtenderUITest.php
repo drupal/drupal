@@ -16,13 +16,13 @@ class DisplayExtenderUITest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Tests the display extender UI.
    */
   public function testDisplayExtenderUI() {
-    $this->config('views.settings')->set('display_extenders', array('display_extender_test'))->save();
+    $this->config('views.settings')->set('display_extenders', ['display_extender_test'])->save();
 
     $view = Views::getView('test_view');
     $view_edit_url = "admin/structure/views/view/{$view->storage->id()}/edit";
@@ -32,9 +32,9 @@ class DisplayExtenderUITest extends UITestBase {
     $this->assertLinkByHref($display_option_url, 0, 'Make sure the option defined by the test display extender appears in the UI.');
 
     $random_text = $this->randomMachineName();
-    $this->drupalPostForm($display_option_url, array('test_extender_test_option' => $random_text), t('Apply'));
+    $this->drupalPostForm($display_option_url, ['test_extender_test_option' => $random_text], t('Apply'));
     $this->assertLink($random_text);
-    $this->drupalPostForm(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, [], t('Save'));
     $view = Views::getView($view->storage->id());
     $view->initDisplay();
     $display_extender_options = $view->display_handler->getOption('display_extenders');

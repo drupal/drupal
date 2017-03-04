@@ -2103,39 +2103,39 @@ function hook_mail_alter(&$message) {
 function hook_mail($key, &$message, $params) {
   $account = $params['account'];
   $context = $params['context'];
-  $variables = array(
+  $variables = [
     '%site_name' => \Drupal::config('system.site')->get('name'),
     '%username' => $account->getDisplayName(),
-  );
+  ];
   if ($context['hook'] == 'taxonomy') {
     $entity = $params['entity'];
     $vocabulary = Vocabulary::load($entity->id());
-    $variables += array(
+    $variables += [
       '%term_name' => $entity->name,
       '%term_description' => $entity->description,
       '%term_id' => $entity->id(),
       '%vocabulary_name' => $vocabulary->label(),
       '%vocabulary_description' => $vocabulary->getDescription(),
       '%vocabulary_id' => $vocabulary->id(),
-    );
+    ];
   }
 
   // Node-based variable translation is only available if we have a node.
   if (isset($params['node'])) {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $params['node'];
-    $variables += array(
+    $variables += [
       '%uid' => $node->getOwnerId(),
-      '%url' => $node->url('canonical', array('absolute' => TRUE)),
+      '%url' => $node->url('canonical', ['absolute' => TRUE]),
       '%node_type' => node_get_type_label($node),
       '%title' => $node->getTitle(),
       '%teaser' => $node->teaser,
       '%body' => $node->body,
-    );
+    ];
   }
   $subject = strtr($context['subject'], $variables);
   $body = strtr($context['message'], $variables);
-  $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
+  $message['subject'] .= str_replace(["\r", "\n"], '', $subject);
   $message['body'][] = MailFormatHelper::htmlToText($body);
 }
 

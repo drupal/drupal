@@ -12,24 +12,24 @@ use Drupal\views\Views;
  */
 class FilterNumericTest extends ViewsKernelTestBase {
 
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Map column names.
    *
    * @var array
    */
-  protected $columnMap = array(
+  protected $columnMap = [
     'views_test_data_name' => 'name',
     'views_test_data_age' => 'age',
-  );
+  ];
 
   function viewsData() {
     $data = parent::viewsData();
@@ -44,24 +44,24 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Change the filtering
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => '=',
-        'value' => array('value' => 28),
-      ),
-    ));
+        'value' => ['value' => 28],
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'Ringo',
         'age' => 28,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -78,12 +78,12 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'Ringo',
         'age' => 28,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -92,35 +92,35 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Change the filtering
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => 'between',
-        'value' => array(
+        'value' => [
           'min' => 26,
           'max' => 29,
-        ),
-      ),
-    ));
+        ],
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'George',
         'age' => 27,
-      ),
-      array(
+      ],
+      [
         'name' => 'Ringo',
         'age' => 28,
-      ),
-      array(
+      ],
+      [
         'name' => 'Paul',
         'age' => 26,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
 
     // test not between
@@ -128,31 +128,31 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Change the filtering
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => 'not between',
-        'value' => array(
+        'value' => [
           'min' => 26,
           'max' => 29,
-        ),
-      ),
-    ));
+        ],
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'John',
         'age' => 25,
-      ),
-      array(
+      ],
+      [
         'name' => 'Meredith',
         'age' => 30,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -169,20 +169,20 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'George',
         'age' => 27,
-      ),
-      array(
+      ],
+      [
         'name' => 'Ringo',
         'age' => 28,
-      ),
-      array(
+      ],
+      [
         'name' => 'Paul',
         'age' => 26,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -199,16 +199,16 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'John',
         'age' => 25,
-      ),
-      array(
+      ],
+      [
         'name' => 'Meredith',
         'age' => 30,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -220,26 +220,26 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Filtering by regular expression pattern.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => 'regular_expression',
-        'value' => array(
+        'value' => [
           'value' => '2[8]',
-        ),
-      ),
-    ));
+        ],
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'Ringo',
         'age' => 28,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -259,16 +259,16 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view->save();
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'George',
         'age' => 27,
-      ),
-      array(
+      ],
+      [
         'name' => 'Ringo',
         'age' => 28,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -277,58 +277,58 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Change the filtering
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => 'empty',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-    );
+    $resultset = [
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
 
     $view->destroy();
     $view->setDisplay();
 
     // Change the filtering
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'operator' => 'not empty',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-    array(
+    $resultset = [
+    [
         'name' => 'John',
         'age' => 25,
-      ),
-      array(
+      ],
+      [
         'name' => 'George',
         'age' => 27,
-      ),
-      array(
+      ],
+      [
         'name' => 'Ringo',
         'age' => 28,
-      ),
-      array(
+      ],
+      [
         'name' => 'Paul',
         'age' => 26,
-      ),
-      array(
+      ],
+      [
         'name' => 'Meredith',
         'age' => 30,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -345,8 +345,8 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
-    $resultset = array(
-    );
+    $resultset = [
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -363,28 +363,28 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
-    $resultset = array(
-    array(
+    $resultset = [
+    [
         'name' => 'John',
         'age' => 25,
-      ),
-      array(
+      ],
+      [
         'name' => 'George',
         'age' => 27,
-      ),
-      array(
+      ],
+      [
         'name' => 'Ringo',
         'age' => 28,
-      ),
-      array(
+      ],
+      [
         'name' => 'Paul',
         'age' => 26,
-      ),
-      array(
+      ],
+      [
         'name' => 'Meredith',
         'age' => 30,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -392,20 +392,20 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'id' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'id' => [
         'id' => 'id',
         'table' => 'views_test_data',
         'field' => 'id',
         'relationship' => 'none',
-      ),
-      'age' => array(
+      ],
+      'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
-      ),
-    ));
+      ],
+    ]);
 
     $view->initHandlers();
 
@@ -419,65 +419,65 @@ class FilterNumericTest extends ViewsKernelTestBase {
   }
 
   protected function getGroupedExposedFilters() {
-    $filters = array(
-      'age' => array(
+    $filters = [
+      'age' => [
         'id' => 'age',
         'plugin_id' => 'numeric',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'exposed' => TRUE,
-        'expose' => array(
+        'expose' => [
           'operator' => 'age_op',
           'label' => 'age',
           'identifier' => 'age',
-        ),
+        ],
         'is_grouped' => TRUE,
-        'group_info' => array(
+        'group_info' => [
           'label' => 'age',
           'identifier' => 'age',
           'default_group' => 'All',
-          'group_items' => array(
-            1 => array(
+          'group_items' => [
+            1 => [
               'title' => 'Age is 28',
               'operator' => '=',
-              'value' => array('value' => 28),
-            ),
-            2 => array(
+              'value' => ['value' => 28],
+            ],
+            2 => [
               'title' => 'Age is between 26 and 29',
               'operator' => 'between',
-              'value' => array(
+              'value' => [
                 'min' => 26,
                 'max' => 29,
-              ),
-            ),
-            3 => array(
+              ],
+            ],
+            3 => [
               'title' => 'Age is not between 26 and 29',
               'operator' => 'not between',
-              'value' => array(
+              'value' => [
                 'min' => 26,
                 'max' => 29,
-              ),
-            ),
-            4 => array(
+              ],
+            ],
+            4 => [
               'title' => 'Age is empty',
               'operator' => 'empty',
-            ),
-            5 => array(
+            ],
+            5 => [
               'title' => 'Age is not empty',
               'operator' => 'not empty',
-            ),
-            6 => array(
+            ],
+            6 => [
               'title' => 'Age is regexp 2[7-8]',
               'operator' => 'regular_expression',
-              'value' => array(
+              'value' => [
                 'value' => '2[7-8]',
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
     return $filters;
   }
 

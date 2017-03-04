@@ -15,17 +15,17 @@ class ConfigOverriderLowPriority implements ConfigFactoryOverrideInterface {
    * {@inheritdoc}
    */
   public function loadOverrides($names) {
-    $overrides = array();
+    $overrides = [];
     if (!empty($GLOBALS['config_test_run_module_overrides'])) {
       if (in_array('system.site', $names)) {
-        $overrides = array('system.site' =>
-          array(
+        $overrides = ['system.site' =>
+          [
             'name' => 'Should not apply because of higher priority listener',
             // This override should apply because it is not overridden by the
             // higher priority listener.
             'slogan' => 'Yay for overrides!',
-          )
-        );
+          ]
+        ];
       }
     }
     return $overrides;

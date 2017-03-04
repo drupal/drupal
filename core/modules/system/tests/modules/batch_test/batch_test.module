@@ -20,11 +20,11 @@ function _batch_test_nested_drupal_form_submit_callback($value) {
  * Batch 0: Does nothing.
  */
 function _batch_test_batch_0() {
-  $batch = array(
-    'operations' => array(),
+  $batch = [
+    'operations' => [],
     'finished' => '_batch_test_finished_0',
     'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-  );
+  ];
   return $batch;
 }
 
@@ -38,15 +38,15 @@ function _batch_test_batch_1() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = array();
+  $operations = [];
   for ($i = 1; $i <= $total; $i++) {
-    $operations[] = array('_batch_test_callback_1', array($i, $sleep));
+    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
   }
-  $batch = array(
+  $batch = [
     'operations' => $operations,
     'finished' => '_batch_test_finished_1',
     'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-  );
+  ];
   return $batch;
 }
 
@@ -60,14 +60,14 @@ function _batch_test_batch_2() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = array(
-    array('_batch_test_callback_2', array(1, $total, $sleep)),
-  );
-  $batch = array(
+  $operations = [
+    ['_batch_test_callback_2', [1, $total, $sleep]],
+  ];
+  $batch = [
     'operations' => $operations,
     'finished' => '_batch_test_finished_2',
     'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-  );
+  ];
   return $batch;
 }
 
@@ -85,20 +85,20 @@ function _batch_test_batch_3() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = array();
+  $operations = [];
   for ($i = 1; $i <= round($total / 2); $i++) {
-    $operations[] = array('_batch_test_callback_1', array($i, $sleep));
+    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
   }
-  $operations[] = array('_batch_test_callback_2', array(1, $total / 2, $sleep));
+  $operations[] = ['_batch_test_callback_2', [1, $total / 2, $sleep]];
   for ($i = round($total / 2) + 1; $i <= $total; $i++) {
-    $operations[] = array('_batch_test_callback_1', array($i, $sleep));
+    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
   }
-  $operations[] = array('_batch_test_callback_2', array(6, $total / 2, $sleep));
-  $batch = array(
+  $operations[] = ['_batch_test_callback_2', [6, $total / 2, $sleep]];
+  $batch = [
     'operations' => $operations,
     'finished' => '_batch_test_finished_3',
     'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-  );
+  ];
   return $batch;
 }
 
@@ -115,19 +115,19 @@ function _batch_test_batch_4() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = array();
+  $operations = [];
   for ($i = 1; $i <= round($total / 2); $i++) {
-    $operations[] = array('_batch_test_callback_1', array($i, $sleep));
+    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
   }
-  $operations[] = array('_batch_test_nested_batch_callback', array());
+  $operations[] = ['_batch_test_nested_batch_callback', []];
   for ($i = round($total / 2) + 1; $i <= $total; $i++) {
-    $operations[] = array('_batch_test_callback_1', array($i, $sleep));
+    $operations[] = ['_batch_test_callback_1', [$i, $sleep]];
   }
-  $batch = array(
+  $batch = [
     'operations' => $operations,
     'finished' => '_batch_test_finished_4',
     'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-  );
+  ];
   return $batch;
 }
 
@@ -141,15 +141,15 @@ function _batch_test_batch_5() {
   $total = 10;
   $sleep = (1000000 / $total) * 2;
 
-  $operations = array();
+  $operations = [];
   for ($i = 1; $i <= $total; $i++) {
-    $operations[] = array('_batch_test_callback_5', array($i, $sleep));
+    $operations[] = ['_batch_test_callback_5', [$i, $sleep]];
   }
-  $batch = array(
+  $batch = [
     'operations' => $operations,
     'finished' => '_batch_test_finished_5',
     'file' => drupal_get_path('module', 'batch_test') . '/batch_test.callbacks.inc',
-  );
+  ];
   return $batch;
 }
 

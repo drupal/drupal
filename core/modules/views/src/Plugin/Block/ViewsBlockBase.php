@@ -102,7 +102,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array('views_label' => '');
+    return ['views_label' => ''];
   }
 
   /**
@@ -122,39 +122,39 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     $form['#pre_render'][] = '\Drupal\views\Plugin\views\PluginBase::preRenderAddFieldsetMarkup';
 
     // Allow to override the label on the actual page.
-    $form['views_label_checkbox'] = array(
+    $form['views_label_checkbox'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Override title'),
       '#default_value' => !empty($this->configuration['views_label']),
-    );
+    ];
 
-    $form['views_label_fieldset'] = array(
+    $form['views_label_fieldset'] = [
       '#type' => 'fieldset',
-      '#states' => array(
-        'visible' => array(
-          array(
-            ':input[name="settings[views_label_checkbox]"]' => array('checked' => TRUE),
-          ),
-        ),
-      ),
-    );
+      '#states' => [
+        'visible' => [
+          [
+            ':input[name="settings[views_label_checkbox]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ],
+    ];
 
-    $form['views_label'] = array(
+    $form['views_label'] = [
       '#title' => $this->t('Title'),
       '#type' => 'textfield',
       '#default_value' => $this->configuration['views_label'] ?: $this->view->getTitle(),
-      '#states' => array(
-        'visible' => array(
-          array(
-            ':input[name="settings[views_label_checkbox]"]' => array('checked' => TRUE),
-          ),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          [
+            ':input[name="settings[views_label_checkbox]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ],
       '#fieldset' => 'views_label_fieldset',
-    );
+    ];
 
     if ($this->view->storage->access('edit') && \Drupal::moduleHandler()->moduleExists('views_ui')) {
-      $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore. (Try changing it directly in <a href=":url">@name</a>.)', array(':url' => \Drupal::url('entity.view.edit_display_form', array('view' => $this->view->storage->id(), 'display_id' => $this->displayID)), '@name' => $this->view->storage->label()));
+      $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore. (Try changing it directly in <a href=":url">@name</a>.)', [':url' => \Drupal::url('entity.view.edit_display_form', ['view' => $this->view->storage->id(), 'display_id' => $this->displayID]), '@name' => $this->view->storage->label()]);
     }
     else {
       $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore.');
@@ -194,7 +194,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
       // array, so if the block contains a string of already-rendered markup,
       // convert it to an array.
       if (is_string($output)) {
-        $output = array('#markup' => $output);
+        $output = ['#markup' => $output];
       }
 
       // views_add_contextual_links() needs the following information in

@@ -21,7 +21,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    *
    * @var array
    */
-  protected $options = array();
+  protected $options = [];
 
   /**
    * Constructs a new StringDatabaseStorage class.
@@ -31,7 +31,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    * @param array $options
    *   (optional) Any additional database connection options to use in queries.
    */
-  public function __construct(Connection $connection, array $options = array()) {
+  public function __construct(Connection $connection, array $options = []) {
     $this->connection = $connection;
     $this->options = $options;
   }
@@ -39,15 +39,15 @@ class StringDatabaseStorage implements StringStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function getStrings(array $conditions = array(), array $options = array()) {
+  public function getStrings(array $conditions = [], array $options = []) {
     return $this->dbStringLoad($conditions, $options, 'Drupal\locale\SourceString');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getTranslations(array $conditions = array(), array $options = array()) {
-    return $this->dbStringLoad($conditions, array('translation' => TRUE) + $options, 'Drupal\locale\TranslationString');
+  public function getTranslations(array $conditions = [], array $options = []) {
+    return $this->dbStringLoad($conditions, ['translation' => TRUE] + $options, 'Drupal\locale\TranslationString');
   }
 
   /**
@@ -69,7 +69,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    * {@inheritdoc}
    */
   public function findTranslation(array $conditions) {
-    $values = $this->dbStringSelect($conditions, array('translation' => TRUE))
+    $values = $this->dbStringSelect($conditions, ['translation' => TRUE])
       ->execute()
       ->fetchAssoc();
 
@@ -84,7 +84,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLocations(array $conditions = array()) {
+  public function getLocations(array $conditions = []) {
     $query = $this->connection->select('locales_location', 'l', $this->options)
       ->fields('l');
     foreach ($conditions as $field => $value) {
@@ -142,14 +142,14 @@ class StringDatabaseStorage implements StringStorageInterface {
           // Make sure that the name isn't longer than 255 characters.
           $name = substr($name, 0, 255);
           if (!$lid) {
-            $this->dbDelete('locales_location', array('sid' => $string->getId(), 'type' => $type, 'name' => $name))
+            $this->dbDelete('locales_location', ['sid' => $string->getId(), 'type' => $type, 'name' => $name])
               ->execute();
           }
           elseif ($lid === TRUE) {
             // This is a new location to add, take care not to duplicate.
             $this->connection->merge('locales_location', $this->options)
-              ->keys(array('sid' => $string->getId(), 'type' => $type, 'name' => $name))
-              ->fields(array('version' => \Drupal::VERSION))
+              ->keys(['sid' => $string->getId(), 'type' => $type, 'name' => $name])
+              ->fields(['version' => \Drupal::VERSION])
               ->execute();
             $created = TRUE;
           }
@@ -176,7 +176,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       $string->setVersion($version);
       $this->connection->update('locales_source', $this->options)
         ->condition('lid', $string->getId())
-        ->fields(array('version' => $version))
+        ->fields(['version' => $version])
         ->execute();
     }
   }
@@ -203,11 +203,11 @@ class StringDatabaseStorage implements StringStorageInterface {
    * {@inheritdoc}
    */
   public function deleteStrings($conditions) {
-    $lids = $this->dbStringSelect($conditions, array('fields' => array('lid')))->execute()->fetchCol();
+    $lids = $this->dbStringSelect($conditions, ['fields' => ['lid']])->execute()->fetchCol();
     if ($lids) {
-      $this->dbDelete('locales_target', array('lid' => $lids))->execute();
-      $this->dbDelete('locales_source', array('lid' => $lids))->execute();
-      $this->dbDelete('locales_location', array('sid' => $lids))->execute();
+      $this->dbDelete('locales_target', ['lid' => $lids])->execute();
+      $this->dbDelete('locales_source', ['lid' => $lids])->execute();
+      $this->dbDelete('locales_location', ['sid' => $lids])->execute();
     }
   }
 
@@ -221,18 +221,18 @@ class StringDatabaseStorage implements StringStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function createString($values = array()) {
-    return new SourceString($values + array('storage' => $this));
+  public function createString($values = []) {
+    return new SourceString($values + ['storage' => $this]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createTranslation($values = array()) {
-    return new TranslationString($values + array(
+  public function createTranslation($values = []) {
+    return new TranslationString($values + [
       'storage' => $this,
       'is_new' => TRUE,
-    ));
+    ]);
   }
 
   /**
@@ -250,10 +250,10 @@ class StringDatabaseStorage implements StringStorageInterface {
    *     table fields)
    */
   protected function dbFieldTable($field) {
-    if (in_array($field, array('language', 'translation', 'customized'))) {
+    if (in_array($field, ['language', 'translation', 'customized'])) {
       return 't';
     }
-    elseif (in_array($field, array('type', 'name'))) {
+    elseif (in_array($field, ['type', 'name'])) {
       return 'l';
     }
     else {
@@ -290,16 +290,16 @@ class StringDatabaseStorage implements StringStorageInterface {
    */
   protected function dbStringKeys($string) {
     if ($string->isSource()) {
-      $keys = array('lid');
+      $keys = ['lid'];
     }
     elseif ($string->isTranslation()) {
-      $keys = array('lid', 'language');
+      $keys = ['lid', 'language'];
     }
     if (!empty($keys) && ($values = $string->getValues($keys)) && count($keys) == count($values)) {
       return $values;
     }
     else {
-      return array();
+      return [];
     }
   }
 
@@ -317,7 +317,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   Array of objects of the class requested.
    */
   protected function dbStringLoad(array $conditions, array $options, $class) {
-    $strings = array();
+    $strings = [];
     $result = $this->dbStringSelect($conditions, $options)->execute();
     foreach ($result as $item) {
       /** @var \Drupal\locale\StringInterface $string */
@@ -349,7 +349,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    * @return \Drupal\Core\Database\Query\Select
    *   Query object with all the tables, fields and conditions.
    */
-  protected function dbStringSelect(array $conditions, array $options = array()) {
+  protected function dbStringSelect(array $conditions, array $options = []) {
     // Start building the query with source table and check whether we need to
     // join the target table too.
     $query = $this->connection->select('locales_source', 's', $this->options)
@@ -376,9 +376,9 @@ class StringDatabaseStorage implements StringStorageInterface {
     if ($join) {
       if (isset($conditions['language'])) {
         // If we've got a language condition, we use it for the join.
-        $query->$join('locales_target', 't', "t.lid = s.lid AND t.language = :langcode", array(
+        $query->$join('locales_target', 't', "t.lid = s.lid AND t.language = :langcode", [
           ':langcode' => $conditions['language'],
-        ));
+        ]);
         unset($conditions['language']);
       }
       else {
@@ -387,7 +387,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       }
       if (!empty($options['translation'])) {
         // We cannot just add all fields because 'lid' may get null values.
-        $query->fields('t', array('language', 'translation', 'customized'));
+        $query->fields('t', ['language', 'translation', 'customized']);
       }
     }
 
@@ -396,8 +396,8 @@ class StringDatabaseStorage implements StringStorageInterface {
     // array so we can consistently use IN conditions.
     if (isset($conditions['type']) || isset($conditions['name'])) {
       $subquery = $this->connection->select('locales_location', 'l', $this->options)
-        ->fields('l', array('sid'));
-      foreach (array('type', 'name') as $field) {
+        ->fields('l', ['sid']);
+      foreach (['type', 'name'] as $field) {
         if (isset($conditions[$field])) {
           $subquery->condition('l.' . $field, (array) $conditions[$field], 'IN');
           unset($conditions[$field]);
@@ -463,12 +463,12 @@ class StringDatabaseStorage implements StringStorageInterface {
    */
   protected function dbStringInsert($string) {
     if ($string->isSource()) {
-      $string->setValues(array('context' => '', 'version' => 'none'), FALSE);
-      $fields = $string->getValues(array('source', 'context', 'version'));
+      $string->setValues(['context' => '', 'version' => 'none'], FALSE);
+      $fields = $string->getValues(['source', 'context', 'version']);
     }
     elseif ($string->isTranslation()) {
-      $string->setValues(array('customized' => 0), FALSE);
-      $fields = $string->getValues(array('lid', 'language', 'translation', 'customized'));
+      $string->setValues(['customized' => 0], FALSE);
+      $fields = $string->getValues(['lid', 'language', 'translation', 'customized']);
     }
     if (!empty($fields)) {
       return $this->connection->insert($this->dbStringTable($string), $this->options)
@@ -495,10 +495,10 @@ class StringDatabaseStorage implements StringStorageInterface {
    */
   protected function dbStringUpdate($string) {
     if ($string->isSource()) {
-      $values = $string->getValues(array('source', 'context', 'version'));
+      $values = $string->getValues(['source', 'context', 'version']);
     }
     elseif ($string->isTranslation()) {
-      $values = $string->getValues(array('translation', 'customized'));
+      $values = $string->getValues(['translation', 'customized']);
     }
     if (!empty($values) && $keys = $this->dbStringKeys($string)) {
       return $this->connection->merge($this->dbStringTable($string), $this->options)
@@ -533,7 +533,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   /**
    * Executes an arbitrary SELECT query string with the injected options.
    */
-  protected function dbExecute($query, array $args = array()) {
+  protected function dbExecute($query, array $args = []) {
     return $this->connection->query($query, $args, $this->options);
   }
 

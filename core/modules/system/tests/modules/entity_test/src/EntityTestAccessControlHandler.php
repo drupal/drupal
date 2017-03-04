@@ -45,13 +45,13 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
       // Viewing the label of the 'entity_test_label' entity type is allowed.
       return AccessResult::allowed();
     }
-    elseif (in_array($operation, array('view', 'view label'))) {
+    elseif (in_array($operation, ['view', 'view label'])) {
       if (!$entity->isDefaultTranslation()) {
         return AccessResult::allowedIfHasPermission($account, 'view test entity translations');
       }
       return AccessResult::allowedIfHasPermission($account, 'view test entity');
     }
-    elseif (in_array($operation, array('update', 'delete'))) {
+    elseif (in_array($operation, ['update', 'delete'])) {
       return AccessResult::allowedIfHasPermission($account, 'administer entity_test content');
     }
 

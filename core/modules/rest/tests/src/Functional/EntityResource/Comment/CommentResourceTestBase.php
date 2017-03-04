@@ -87,10 +87,10 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     $this->addDefaultCommentField('entity_test', 'bar', 'comment');
 
     // Create a "Camelids" test entity that the comment will be assigned to.
-    $commented_entity = EntityTest::create(array(
+    $commented_entity = EntityTest::create([
       'name' => 'Camelids',
       'type' => 'bar',
-    ));
+    ]);
     $commented_entity->save();
 
     // Create a "Llama" comment.

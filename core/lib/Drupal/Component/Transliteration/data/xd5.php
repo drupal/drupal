@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'pyuk', 'pyut', 'pyup', 'pyuh', 'peu', 'peug', 'peukk', 'peugs', 'peun', 'peunj', 'peunh', 'peud', 'peul', 'peulg', 'peulm', 'peulb',
   0x10 => 'peuls', 'peult', 'peulp', 'peulh', 'peum', 'peub', 'peubs', 'peus', 'peuss', 'peung', 'peuj', 'peuch', 'peuk', 'peut', 'peup', 'peuh',
   0x20 => 'pui', 'puig', 'puikk', 'puigs', 'puin', 'puinj', 'puinh', 'puid', 'puil', 'puilg', 'puilm', 'puilb', 'puils', 'puilt', 'puilp', 'puilh',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'heol', 'heolg', 'heolm', 'heolb', 'heols', 'heolt', 'heolp', 'heolh', 'heom', 'heob', 'heobs', 'heos', 'heoss', 'heong', 'heoj', 'heoch',
   0xE0 => 'heok', 'heot', 'heop', 'heoh', 'he', 'heg', 'hekk', 'hegs', 'hen', 'henj', 'henh', 'hed', 'hel', 'helg', 'helm', 'helb',
   0xF0 => 'hels', 'helt', 'help', 'helh', 'hem', 'heb', 'hebs', 'hes', 'hess', 'heng', 'hej', 'hech', 'hek', 'het', 'hep', 'heh',
-);
+];

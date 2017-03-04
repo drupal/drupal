@@ -22,17 +22,17 @@ class BlockHiddenRegionTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test', 'search');
+  public static $modules = ['block', 'block_test', 'search'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create administrative user.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'administer blocks',
       'administer themes',
       'search content',
-      )
+      ]
     );
 
     $this->drupalLogin($this->adminUser);
@@ -53,7 +53,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
     $theme = 'block_test_theme';
     // We need to install a non-hidden theme so that there is more than one
     // local task.
-    \Drupal::service('theme_handler')->install(array($theme, 'stark'));
+    \Drupal::service('theme_handler')->install([$theme, 'stark']);
     $this->config('system.theme')
       ->set('default', $theme)
       ->save();

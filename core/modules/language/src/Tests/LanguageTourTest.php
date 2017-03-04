@@ -30,7 +30,7 @@ class LanguageTourTest extends TourTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(array('administer languages', 'access tour'));
+    $this->adminUser = $this->drupalCreateUser(['administer languages', 'access tour']);
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('local_actions_block');
   }

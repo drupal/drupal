@@ -26,7 +26,7 @@ class FieldFormatterSettingsDefaults extends ProcessPluginBase {
     if (isset($value[1])) {
       $module = $row->getSourceProperty('module');
       if ($module === 'date') {
-        $value = array('format_type' => 'fallback');
+        $value = ['format_type' => 'fallback'];
       }
       elseif ($module === 'number') {
         // We have to do the lookup here in the process plugin because for
@@ -35,7 +35,7 @@ class FieldFormatterSettingsDefaults extends ProcessPluginBase {
         return $this->numberSettings($row->getDestinationProperty('options/type'), $value[1]);
       }
       else {
-        $value = array();
+        $value = [];
       }
     }
     return $value;

@@ -12,12 +12,12 @@ use Drupal\Tests\UnitTestCase;
  */
 class TagsTest extends UnitTestCase {
 
-  protected $validTags = array(
+  protected $validTags = [
     'Drupal' => 'Drupal',
     'Drupal with some spaces' => 'Drupal with some spaces',
     '"Legendary Drupal mascot of doom: ""Druplicon"""' => 'Legendary Drupal mascot of doom: "Druplicon"',
     '"Drupal, although it rhymes with sloopal, is as awesome as a troopal!"' => 'Drupal, although it rhymes with sloopal, is as awesome as a troopal!',
-  );
+  ];
 
   /**
    * Explodes a series of tags.

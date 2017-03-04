@@ -61,7 +61,7 @@ class ExtensionDiscovery {
    *
    * @var array
    */
-  protected static $files = array();
+  protected static $files = [];
 
   /**
    * List of installation profile directories to additionally scan.
@@ -198,7 +198,7 @@ class ExtensionDiscovery {
       $include_tests = Settings::get('extension_discovery_scan_tests') || drupal_valid_test_ua();
     }
 
-    $files = array();
+    $files = [];
     foreach ($searchdirs as $dir) {
       // Discover all extensions in the directory, unless we did already.
       if (!isset(static::$files[$this->root][$dir][$include_tests])) {
@@ -227,7 +227,7 @@ class ExtensionDiscovery {
    * @return $this
    */
   public function setProfileDirectoriesFromSettings() {
-    $this->profileDirectories = array();
+    $this->profileDirectories = [];
     $profile = drupal_get_profile();
     // For SimpleTest to be able to test modules packaged together with a
     // distribution we need to include the profile of the parent site (in
@@ -316,8 +316,8 @@ class ExtensionDiscovery {
    *   The sorted list of extensions.
    */
   protected function sort(array $all_files, array $weights) {
-    $origins = array();
-    $profiles = array();
+    $origins = [];
+    $profiles = [];
     foreach ($all_files as $key => $file) {
       // If the extension does not belong to a profile, just apply the weight
       // of the originating directory.
@@ -371,7 +371,7 @@ class ExtensionDiscovery {
    *   The filtered list of extensions, keyed by extension name.
    */
   protected function process(array $all_files) {
-    $files = array();
+    $files = [];
     // Duplicate files found in later search directories take precedence over
     // earlier ones; they replace the extension in the existing $files array.
     foreach ($all_files as $file) {
@@ -397,7 +397,7 @@ class ExtensionDiscovery {
    * @see \Drupal\Core\Extension\Discovery\RecursiveExtensionFilterIterator
    */
   protected function scanDirectory($dir, $include_tests) {
-    $files = array();
+    $files = [];
 
     // In order to scan top-level directories, absolute directory paths have to
     // be used (which also improves performance, since any configured PHP

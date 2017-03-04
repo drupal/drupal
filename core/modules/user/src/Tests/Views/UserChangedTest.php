@@ -17,19 +17,19 @@ class UserChangedTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('views_ui', 'user_test_views');
+  public static $modules = ['views_ui', 'user_test_views'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_user_changed');
+  public static $testViews = ['test_user_changed'];
 
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::createTestViews(get_class($this), array('user_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['user_test_views']);
 
     $this->enableViewsTestModule();
   }
@@ -40,7 +40,7 @@ class UserChangedTest extends ViewTestBase {
   public function testChangedField() {
     $path = 'test_user_changed';
 
-    $options = array();
+    $options = [];
 
     $this->drupalGet($path, $options);
 

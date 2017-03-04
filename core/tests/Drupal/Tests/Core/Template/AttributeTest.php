@@ -20,9 +20,9 @@ class AttributeTest extends UnitTestCase {
    * Tests the constructor of the attribute class.
    */
   public function testConstructor() {
-    $attribute = new Attribute(array('class' => array('example-class')));
+    $attribute = new Attribute(['class' => ['example-class']]);
     $this->assertTrue(isset($attribute['class']));
-    $this->assertEquals(new AttributeArray('class', array('example-class')), $attribute['class']);
+    $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
 
     // Test adding boolean attributes through the constructor.
     $attribute = new Attribute(['selected' => TRUE, 'checked' => FALSE]);
@@ -30,16 +30,16 @@ class AttributeTest extends UnitTestCase {
     $this->assertFalse($attribute['checked']->value());
 
     // Test that non-array values with name "class" are cast to array.
-    $attribute = new Attribute(array('class' => 'example-class'));
+    $attribute = new Attribute(['class' => 'example-class']);
     $this->assertTrue(isset($attribute['class']));
-    $this->assertEquals(new AttributeArray('class', array('example-class')), $attribute['class']);
+    $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
 
     // Test that safe string objects work correctly.
     $safe_string = $this->prophesize(MarkupInterface::class);
     $safe_string->__toString()->willReturn('example-class');
-    $attribute = new Attribute(array('class' => $safe_string->reveal()));
+    $attribute = new Attribute(['class' => $safe_string->reveal()]);
     $this->assertTrue(isset($attribute['class']));
-    $this->assertEquals(new AttributeArray('class', array('example-class')), $attribute['class']);
+    $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
   }
 
   /**
@@ -47,27 +47,27 @@ class AttributeTest extends UnitTestCase {
    */
   public function testSet() {
     $attribute = new Attribute();
-    $attribute['class'] = array('example-class');
+    $attribute['class'] = ['example-class'];
 
     $this->assertTrue(isset($attribute['class']));
-    $this->assertEquals(new AttributeArray('class', array('example-class')), $attribute['class']);
+    $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
   }
 
   /**
    * Tests adding new values to an existing part of the attribute.
    */
   public function testAdd() {
-    $attribute = new Attribute(array('class' => array('example-class')));
+    $attribute = new Attribute(['class' => ['example-class']]);
 
     $attribute['class'][] = 'other-class';
-    $this->assertEquals(new AttributeArray('class', array('example-class', 'other-class')), $attribute['class']);
+    $this->assertEquals(new AttributeArray('class', ['example-class', 'other-class']), $attribute['class']);
   }
 
   /**
    * Tests removing of values.
    */
   public function testRemove() {
-    $attribute = new Attribute(array('class' => array('example-class')));
+    $attribute = new Attribute(['class' => ['example-class']]);
     unset($attribute['class']);
     $this->assertFalse(isset($attribute['class']));
   }
@@ -152,7 +152,7 @@ class AttributeTest extends UnitTestCase {
     $this->assertEmpty($attribute['class']);
 
     // Test various permutations of adding values to empty Attribute objects.
-    foreach (array(NULL, FALSE, '', []) as $value) {
+    foreach ([NULL, FALSE, '', []] as $value) {
       // Single value.
       $attribute->addClass($value);
       $this->assertEmpty((string) $attribute);
@@ -172,22 +172,22 @@ class AttributeTest extends UnitTestCase {
 
     // Add one class on empty attribute.
     $attribute->addClass('banana');
-    $this->assertArrayEquals(array('banana'), $attribute['class']->value());
+    $this->assertArrayEquals(['banana'], $attribute['class']->value());
 
     // Add one class.
     $attribute->addClass('aa');
-    $this->assertArrayEquals(array('banana', 'aa'), $attribute['class']->value());
+    $this->assertArrayEquals(['banana', 'aa'], $attribute['class']->value());
 
     // Add multiple classes.
     $attribute->addClass('xx', 'yy');
-    $this->assertArrayEquals(array('banana', 'aa', 'xx', 'yy'), $attribute['class']->value());
+    $this->assertArrayEquals(['banana', 'aa', 'xx', 'yy'], $attribute['class']->value());
 
     // Add an array of classes.
-    $attribute->addClass(array('red', 'green', 'blue'));
-    $this->assertArrayEquals(array('banana', 'aa', 'xx', 'yy', 'red', 'green', 'blue'), $attribute['class']->value());
+    $attribute->addClass(['red', 'green', 'blue']);
+    $this->assertArrayEquals(['banana', 'aa', 'xx', 'yy', 'red', 'green', 'blue'], $attribute['class']->value());
 
     // Add an array of duplicate classes.
-    $attribute->addClass(array('red', 'green', 'blue'), array('aa', 'aa', 'banana'), 'yy');
+    $attribute->addClass(['red', 'green', 'blue'], ['aa', 'aa', 'banana'], 'yy');
     $this->assertEquals('banana aa xx yy red green blue', (string) $attribute['class']);
   }
 
@@ -197,8 +197,8 @@ class AttributeTest extends UnitTestCase {
    */
   public function testRemoveClasses() {
     // Add duplicate class to ensure that both duplicates are removed.
-    $classes = array('example-class', 'aa', 'xx', 'yy', 'red', 'green', 'blue', 'red');
-    $attribute = new Attribute(array('class' => $classes));
+    $classes = ['example-class', 'aa', 'xx', 'yy', 'red', 'green', 'blue', 'red'];
+    $attribute = new Attribute(['class' => $classes]);
 
     // Remove one class.
     $attribute->removeClass('example-class');
@@ -206,17 +206,17 @@ class AttributeTest extends UnitTestCase {
 
     // Remove multiple classes.
     $attribute->removeClass('xx', 'yy');
-    $this->assertNotContains(array('xx', 'yy'), $attribute['class']->value());
+    $this->assertNotContains(['xx', 'yy'], $attribute['class']->value());
 
     // Remove an array of classes.
-    $attribute->removeClass(array('red', 'green', 'blue'));
-    $this->assertNotContains(array('red', 'green', 'blue'), $attribute['class']->value());
+    $attribute->removeClass(['red', 'green', 'blue']);
+    $this->assertNotContains(['red', 'green', 'blue'], $attribute['class']->value());
 
     // Remove a class that does not exist.
     $attribute->removeClass('gg');
-    $this->assertNotContains(array('gg'), $attribute['class']->value());
+    $this->assertNotContains(['gg'], $attribute['class']->value());
     // Test that the array index remains sequential.
-    $this->assertArrayEquals(array('aa'), $attribute['class']->value());
+    $this->assertArrayEquals(['aa'], $attribute['class']->value());
 
     $attribute->removeClass('aa');
     $this->assertEmpty((string) $attribute);
@@ -244,14 +244,14 @@ class AttributeTest extends UnitTestCase {
    */
   public function testChainAddRemoveClasses() {
     $attribute = new Attribute(
-      array('class' => array('example-class', 'red', 'green', 'blue'))
+      ['class' => ['example-class', 'red', 'green', 'blue']]
     );
 
     $attribute
-      ->removeClass(array('red', 'green', 'pink'))
-      ->addClass(array('apple', 'lime', 'grapefruit'))
-      ->addClass(array('banana'));
-    $expected = array('example-class', 'blue', 'apple', 'lime', 'grapefruit', 'banana');
+      ->removeClass(['red', 'green', 'pink'])
+      ->addClass(['apple', 'lime', 'grapefruit'])
+      ->addClass(['banana']);
+    $expected = ['example-class', 'blue', 'apple', 'lime', 'grapefruit', 'banana'];
     $this->assertArrayEquals($expected, $attribute['class']->value(), 'Attributes chained');
   }
 
@@ -262,10 +262,10 @@ class AttributeTest extends UnitTestCase {
    * @covers ::removeClass
    * @covers ::addClass
    */
-  public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = array()) {
+  public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = []) {
     $loader = new \Twig_Loader_String();
     $twig = new \Twig_Environment($loader);
-    $data = array('attributes' => new Attribute($seed_attributes));
+    $data = ['attributes' => new Attribute($seed_attributes)];
     $result = $twig->render($template, $data);
     $this->assertEquals($expected, $result);
   }
@@ -278,52 +278,52 @@ class AttributeTest extends UnitTestCase {
    *   a resulting string of classes and an optional array of attributes.
    */
   public function providerTestAttributeClassHelpers() {
-    return array(
-      array("{{ attributes.class }}", ''),
-      array("{{ attributes.addClass('everest').class }}", 'everest'),
-      array("{{ attributes.addClass(['k2', 'kangchenjunga']).class }}", 'k2 kangchenjunga'),
-      array("{{ attributes.addClass('lhotse', 'makalu', 'cho-oyu').class }}", 'lhotse makalu cho-oyu'),
-      array(
+    return [
+      ["{{ attributes.class }}", ''],
+      ["{{ attributes.addClass('everest').class }}", 'everest'],
+      ["{{ attributes.addClass(['k2', 'kangchenjunga']).class }}", 'k2 kangchenjunga'],
+      ["{{ attributes.addClass('lhotse', 'makalu', 'cho-oyu').class }}", 'lhotse makalu cho-oyu'],
+      [
         "{{ attributes.addClass('nanga-parbat').class }}",
         'dhaulagiri manaslu nanga-parbat',
-        array('class' => array('dhaulagiri', 'manaslu')),
-      ),
-      array(
+        ['class' => ['dhaulagiri', 'manaslu']],
+      ],
+      [
         "{{ attributes.removeClass('annapurna').class }}",
         'gasherbrum-i',
-        array('class' => array('annapurna', 'gasherbrum-i')),
-      ),
-      array(
+        ['class' => ['annapurna', 'gasherbrum-i']],
+      ],
+      [
         "{{ attributes.removeClass(['broad peak']).class }}",
         'gasherbrum-ii',
-        array('class' => array('broad peak', 'gasherbrum-ii')),
-      ),
-      array(
+        ['class' => ['broad peak', 'gasherbrum-ii']],
+      ],
+      [
         "{{ attributes.removeClass('gyachung-kang', 'shishapangma').class }}",
         '',
-        array('class' => array('shishapangma', 'gyachung-kang')),
-      ),
-      array(
+        ['class' => ['shishapangma', 'gyachung-kang']],
+      ],
+      [
         "{{ attributes.removeClass('nuptse').addClass('annapurna-ii').class }}",
         'himalchuli annapurna-ii',
-        array('class' => array('himalchuli', 'nuptse')),
-      ),
+        ['class' => ['himalchuli', 'nuptse']],
+      ],
       // Test for the removal of an empty class name.
-      array("{{ attributes.addClass('rakaposhi', '').class }}", 'rakaposhi'),
-    );
+      ["{{ attributes.addClass('rakaposhi', '').class }}", 'rakaposhi'],
+    ];
   }
 
   /**
    * Tests iterating on the values of the attribute.
    */
   public function testIterate() {
-    $attribute = new Attribute(array('class' => array('example-class'), 'id' => 'example-id'));
+    $attribute = new Attribute(['class' => ['example-class'], 'id' => 'example-id']);
 
     $counter = 0;
     foreach ($attribute as $key => $value) {
       if ($counter == 0) {
         $this->assertEquals('class', $key);
-        $this->assertEquals(new AttributeArray('class', array('example-class')), $value);
+        $this->assertEquals(new AttributeArray('class', ['example-class']), $value);
       }
       if ($counter == 1) {
         $this->assertEquals('id', $key);
@@ -337,7 +337,7 @@ class AttributeTest extends UnitTestCase {
    * Tests printing of an attribute.
    */
   public function testPrint() {
-    $attribute = new Attribute(array('class' => array('example-class'), 'id' => 'example-id', 'enabled' => TRUE));
+    $attribute = new Attribute(['class' => ['example-class'], 'id' => 'example-id', 'enabled' => TRUE]);
 
     $content = $this->randomMachineName();
     $html = '<div' . (string) $attribute . '>' . $content . '</div>';
@@ -446,9 +446,9 @@ class AttributeTest extends UnitTestCase {
    * Tests the storage method.
    */
   public function testStorage() {
-    $attribute = new Attribute(array('class' => array('example-class')));
+    $attribute = new Attribute(['class' => ['example-class']]);
 
-    $this->assertEquals(array('class' => new AttributeArray('class', array('example-class'))), $attribute->storage());
+    $this->assertEquals(['class' => new AttributeArray('class', ['example-class'])], $attribute->storage());
   }
 
 }

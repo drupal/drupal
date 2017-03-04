@@ -167,7 +167,7 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     }
 
     // Prepend commands to add the assets, preserving their relative order.
-    $resource_commands = array();
+    $resource_commands = [];
     if ($css_assets) {
       $css_render_array = $this->cssCollectionRenderer->render($css_assets);
       $resource_commands[] = new AddCssCommand($this->renderer->renderPlain($css_render_array));

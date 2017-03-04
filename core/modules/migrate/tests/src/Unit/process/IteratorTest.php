@@ -25,9 +25,9 @@ class IteratorTest extends MigrateTestCase {
   /**
    * @var array
    */
-  protected $migrationConfiguration = array(
+  protected $migrationConfiguration = [
     'id' => 'test',
-  );
+  ];
 
   /**
    * Tests the iterator process plugin.
@@ -35,24 +35,24 @@ class IteratorTest extends MigrateTestCase {
   public function testIterator() {
     $migration = $this->getMigration();
     // Set up the properties for the iterator.
-    $configuration = array(
-      'process' => array(
+    $configuration = [
+      'process' => [
         'foo' => 'source_foo',
         'id' => 'source_id',
-      ),
+      ],
       'key' => '@id',
-    );
-    $plugin = new Iterator($configuration, 'iterator', array());
+    ];
+    $plugin = new Iterator($configuration, 'iterator', []);
     // Manually create the plugins. Migration::getProcessPlugins does this
     // normally but the plugin system is not available.
     foreach ($configuration['process'] as $destination => $source) {
-      $iterator_plugins[$destination][] = new Get(array('source' => $source), 'get', array());
+      $iterator_plugins[$destination][] = new Get(['source' => $source], 'get', []);
     }
     $migration->expects($this->at(1))
       ->method('getProcessPlugins')
       ->will($this->returnValue($iterator_plugins));
     // Set up the key plugins.
-    $key_plugin['key'][] = new Get(array('source' => '@id'), 'get', array());
+    $key_plugin['key'][] = new Get(['source' => '@id'], 'get', []);
     $migration->expects($this->at(2))
       ->method('getProcessPlugins')
       ->will($this->returnValue($key_plugin));
@@ -60,12 +60,12 @@ class IteratorTest extends MigrateTestCase {
     $migrate_executable = new MigrateExecutable($migration, $this->getMock('Drupal\migrate\MigrateMessageInterface'), $event_dispatcher);
 
     // The current value of the pipeline.
-    $current_value = array(
-      array(
+    $current_value = [
+      [
         'source_foo' => 'test',
         'source_id' => 42,
-      ),
-    );
+      ],
+    ];
     // This is not used but the interface requires it, so create an empty row.
     $row = new Row();
 

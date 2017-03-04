@@ -9,7 +9,7 @@ class MemoryBackendFactory implements CacheFactoryInterface {
    *
    * @var \Drupal\Core\Cache\MemoryBackend[]
    */
-  protected $bins = array();
+  protected $bins = [];
 
   /**
    * {@inheritdoc}

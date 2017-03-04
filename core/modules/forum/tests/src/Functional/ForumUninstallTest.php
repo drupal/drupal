@@ -21,7 +21,7 @@ class ForumUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('forum');
+  public static $modules = ['forum'];
 
   /**
    * Tests if forum module uninstallation properly deletes the field.
@@ -37,21 +37,21 @@ class ForumUninstallTest extends BrowserTestBase {
       'name' => t('A term'),
       'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
       'description' => '',
-      'parent' => array(0),
+      'parent' => [0],
       'vid' => 'forums',
       'forum_container' => 0,
     ]);
     $term->save();
 
     // Create a forum node.
-    $node = $this->drupalCreateNode(array(
+    $node = $this->drupalCreateNode([
       'title' => 'A forum post',
       'type' => 'forum',
-      'taxonomy_forums' => array(array('target_id' => $term->id())),
-    ));
+      'taxonomy_forums' => [['target_id' => $term->id()]],
+    ]);
 
     // Create at least one comment against the forum node.
-    $comment = Comment::create(array(
+    $comment = Comment::create([
       'entity_id' => $node->nid->value,
       'entity_type' => 'node',
       'field_name' => 'comment_forum',
@@ -60,7 +60,7 @@ class ForumUninstallTest extends BrowserTestBase {
       'status' => CommentInterface::PUBLISHED,
       'subject' => $this->randomMachineName(),
       'hostname' => '127.0.0.1',
-    ));
+    ]);
     $comment->save();
 
     // Attempt to uninstall forum.
@@ -70,7 +70,7 @@ class ForumUninstallTest extends BrowserTestBase {
     $this->assertText('To uninstall Forum, first delete all Forum content');
 
     // Delete the node.
-    $this->drupalPostForm('node/' . $node->id() . '/delete', array(), t('Delete'));
+    $this->drupalPostForm('node/' . $node->id() . '/delete', [], t('Delete'));
 
     // Attempt to uninstall forum.
     $this->drupalGet('admin/modules/uninstall');
@@ -93,9 +93,9 @@ class ForumUninstallTest extends BrowserTestBase {
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is no longer required.
     $this->assertFieldByName('uninstall[forum]');
-    $this->drupalPostForm('admin/modules/uninstall', array(
+    $this->drupalPostForm('admin/modules/uninstall', [
       'uninstall[forum]' => 1,
-    ), t('Uninstall'));
+    ], t('Uninstall'));
     $this->drupalPostForm(NULL, [], t('Uninstall'));
 
     // Check that the field is now deleted.
@@ -104,16 +104,16 @@ class ForumUninstallTest extends BrowserTestBase {
 
     // Check that a node type with a machine name of forum can be created after
     // uninstalling the forum module and the node type is not locked.
-    $edit = array(
+    $edit = [
       'name' => 'Forum',
       'title_label' => 'title for forum',
       'type' => 'forum',
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
     $this->assertTrue((bool) NodeType::load('forum'), 'Node type with machine forum created.');
     $this->drupalGet('admin/structure/types/manage/forum');
     $this->clickLink(t('Delete'));
-    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertResponse(200);
     $this->assertFalse((bool) NodeType::load('forum'), 'Node type with machine forum deleted.');
 
@@ -137,14 +137,14 @@ class ForumUninstallTest extends BrowserTestBase {
 
     // Delete all terms in the Forums vocabulary. Uninstalling the forum module
     // will fail unless this is done.
-    $terms = entity_load_multiple_by_properties('taxonomy_term', array('vid' => 'forums'));
+    $terms = entity_load_multiple_by_properties('taxonomy_term', ['vid' => 'forums']);
     foreach ($terms as $term) {
       $term->delete();
     }
 
     // Ensure that uninstallation succeeds even if the field has already been
     // deleted manually beforehand.
-    $this->container->get('module_installer')->uninstall(array('forum'));
+    $this->container->get('module_installer')->uninstall(['forum']);
   }
 
 }

@@ -14,13 +14,13 @@ class ConfigOverrider implements ConfigFactoryOverrideInterface {
    * {@inheritdoc}
    */
   public function loadOverrides($names) {
-    $overrides = array();
+    $overrides = [];
     if (!empty($GLOBALS['config_test_run_module_overrides'])) {
       if (in_array('system.site', $names)) {
-        $overrides = $overrides + array('system.site' => array('name' => 'ZOMG overridden site name'));
+        $overrides = $overrides + ['system.site' => ['name' => 'ZOMG overridden site name']];
       }
       if (in_array('config_override_test.new', $names)) {
-        $overrides = $overrides + array('config_override_test.new' => array('module' => 'override'));
+        $overrides = $overrides + ['config_override_test.new' => ['module' => 'override']];
       }
     }
     return $overrides;

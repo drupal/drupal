@@ -103,24 +103,24 @@ class MessageForm extends ContentEntityForm {
     $form['#attributes']['class'][] = 'contact-form';
 
     if (!empty($message->preview)) {
-      $form['preview'] = array(
-        '#theme_wrappers' => array('container__preview'),
-        '#attributes' => array('class' => array('preview')),
-      );
+      $form['preview'] = [
+        '#theme_wrappers' => ['container__preview'],
+        '#attributes' => ['class' => ['preview']],
+      ];
       $form['preview']['message'] = $this->entityManager->getViewBuilder('contact_message')->view($message, 'full');
     }
 
-    $form['name'] = array(
+    $form['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Your name'),
       '#maxlength' => 255,
       '#required' => TRUE,
-    );
-    $form['mail'] = array(
+    ];
+    $form['mail'] = [
       '#type' => 'email',
       '#title' => $this->t('Your email address'),
       '#required' => TRUE,
-    );
+    ];
     if ($user->isAnonymous()) {
       $form['#attached']['library'][] = 'core/drupal.form';
       $form['#attributes']['data-user-info-from-browser'] = TRUE;
@@ -141,24 +141,24 @@ class MessageForm extends ContentEntityForm {
 
     // The user contact form has a preset recipient.
     if ($message->isPersonal()) {
-      $form['recipient'] = array(
+      $form['recipient'] = [
         '#type' => 'item',
         '#title' => $this->t('To'),
         '#value' => $message->getPersonalRecipient()->id(),
-        'name' => array(
+        'name' => [
           '#theme' => 'username',
           '#account' => $message->getPersonalRecipient(),
-        ),
-      );
+        ],
+      ];
     }
 
-    $form['copy'] = array(
+    $form['copy'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Send yourself a copy'),
       // Do not allow anonymous users to send themselves a copy, because it can
       // be abused to spam people.
       '#access' => $user->isAuthenticated(),
-    );
+    ];
     return $form;
   }
 
@@ -168,11 +168,11 @@ class MessageForm extends ContentEntityForm {
   public function actions(array $form, FormStateInterface $form_state) {
     $elements = parent::actions($form, $form_state);
     $elements['submit']['#value'] = $this->t('Send message');
-    $elements['preview'] = array(
+    $elements['preview'] = [
       '#type' => 'submit',
       '#value' => $this->t('Preview'),
-      '#submit' => array('::submitForm', '::preview'),
-    );
+      '#submit' => ['::submitForm', '::preview'],
+    ];
     return $elements;
   }
 
@@ -197,10 +197,10 @@ class MessageForm extends ContentEntityForm {
       $interval = $this->config('contact.settings')->get('flood.interval');
 
       if (!$this->flood->isAllowed('contact', $limit, $interval)) {
-        $form_state->setErrorByName('', $this->t('You cannot send more than %limit messages in @interval. Try again later.', array(
+        $form_state->setErrorByName('', $this->t('You cannot send more than %limit messages in @interval. Try again later.', [
           '%limit' => $limit,
           '@interval' => $this->dateFormatter->formatInterval($interval),
-        )));
+        ]));
       }
     }
 

@@ -34,10 +34,10 @@ class Boolean extends FieldPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['type'] = array('default' => 'yes-no');
-    $options['type_custom_true'] = array('default' => '');
-    $options['type_custom_false'] = array('default' => '');
-    $options['not'] = array('default' => FALSE);
+    $options['type'] = ['default' => 'yes-no'];
+    $options['type_custom_true'] = ['default' => ''];
+    $options['type_custom_false'] = ['default' => ''];
+    $options['not'] = ['default' => FALSE];
 
     return $options;
   }
@@ -48,16 +48,16 @@ class Boolean extends FieldPluginBase {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $default_formats = array(
-      'yes-no' => array(t('Yes'), $this->t('No')),
-      'true-false' => array(t('True'), $this->t('False')),
-      'on-off' => array(t('On'), $this->t('Off')),
-      'enabled-disabled' => array(t('Enabled'), $this->t('Disabled')),
-      'boolean' => array(1, 0),
-      'unicode-yes-no' => array('✔', '✖'),
-    );
-    $output_formats = isset($this->definition['output formats']) ? $this->definition['output formats'] : array();
-    $custom_format = array('custom' => array(t('Custom')));
+    $default_formats = [
+      'yes-no' => [t('Yes'), $this->t('No')],
+      'true-false' => [t('True'), $this->t('False')],
+      'on-off' => [t('On'), $this->t('Off')],
+      'enabled-disabled' => [t('Enabled'), $this->t('Disabled')],
+      'boolean' => [1, 0],
+      'unicode-yes-no' => ['✔', '✖'],
+    ];
+    $output_formats = isset($this->definition['output formats']) ? $this->definition['output formats'] : [];
+    $custom_format = ['custom' => [t('Custom')]];
     $this->formats = array_merge($default_formats, $output_formats, $custom_format);
   }
 
@@ -69,38 +69,38 @@ class Boolean extends FieldPluginBase {
       $options[$key] = implode('/', $item);
     }
 
-    $form['type'] = array(
+    $form['type'] = [
       '#type' => 'select',
       '#title' => $this->t('Output format'),
       '#options' => $options,
       '#default_value' => $this->options['type'],
-    );
-    $form['type_custom_true'] = array(
+    ];
+    $form['type_custom_true'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom output for TRUE'),
       '#default_value' => $this->options['type_custom_true'],
-      '#states' => array(
-        'visible' => array(
-          'select[name="options[type]"]' => array('value' => 'custom'),
-        ),
-      ),
-    );
-    $form['type_custom_false'] = array(
+      '#states' => [
+        'visible' => [
+          'select[name="options[type]"]' => ['value' => 'custom'],
+        ],
+      ],
+    ];
+    $form['type_custom_false'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom output for FALSE'),
       '#default_value' => $this->options['type_custom_false'],
-      '#states' => array(
-        'visible' => array(
-          'select[name="options[type]"]' => array('value' => 'custom'),
-        ),
-      ),
-    );
-    $form['not'] = array(
+      '#states' => [
+        'visible' => [
+          'select[name="options[type]"]' => ['value' => 'custom'],
+        ],
+      ],
+    ];
+    $form['not'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Reverse'),
       '#description' => $this->t('If checked, true will be displayed as false.'),
       '#default_value' => $this->options['not'],
-    );
+    ];
     parent::buildOptionsForm($form, $form_state);
   }
 

@@ -17,7 +17,7 @@ use Drupal\user\Entity\User;
  */
 class ContextPluginTest extends KernelTestBase {
 
-  public static $modules = array('system', 'user', 'node', 'field', 'filter', 'text');
+  public static $modules = ['system', 'user', 'node', 'field', 'filter', 'text'];
 
   /**
    * Tests basic context definition and value getters and setters.

@@ -73,7 +73,7 @@ class FieldModuleUninstallValidatorTest extends EntityKernelTestBase {
 
     try {
       $message = 'Module uninstallation fails as the module provides a base field which has content.';
-      $this->getModuleInstaller()->uninstall(array('entity_test_extra'));
+      $this->getModuleInstaller()->uninstall(['entity_test_extra']);
       $this->fail($message);
     }
     catch (ModuleUninstallValidatorException $e) {
@@ -93,7 +93,7 @@ class FieldModuleUninstallValidatorTest extends EntityKernelTestBase {
     ]);
     $entity->save();
     try {
-      $this->getModuleInstaller()->uninstall(array('entity_test_extra'));
+      $this->getModuleInstaller()->uninstall(['entity_test_extra']);
       $this->fail('Module uninstallation fails as the module provides a bundle field which has content.');
     }
     catch (ModuleUninstallValidatorException $e) {

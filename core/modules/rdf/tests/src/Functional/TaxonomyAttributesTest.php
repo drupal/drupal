@@ -16,7 +16,7 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'views');
+  public static $modules = ['rdf', 'views'];
 
   /**
    * Vocabulary created for testing purposes.
@@ -32,10 +32,10 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
 
     // RDF mapping - term bundle.
     rdf_get_mapping('taxonomy_term', $this->vocabulary->id())
-      ->setBundleMapping(array('types' => array('skos:Concept')))
-      ->setFieldMapping('name', array(
-        'properties' => array('rdfs:label', 'skos:prefLabel'),
-      ))
+      ->setBundleMapping(['types' => ['skos:Concept']])
+      ->setFieldMapping('name', [
+        'properties' => ['rdfs:label', 'skos:prefLabel'],
+      ])
       ->save();
   }
 
@@ -54,24 +54,24 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
 
     // Inspects RDF graph output.
     // Term type.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => 'http://www.w3.org/2004/02/skos/core#Concept',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($term_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'Term type found in RDF output (skos:Concept).');
     // Term label.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $term->getName(),
       'lang' => 'en',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($term_uri, 'http://www.w3.org/2000/01/rdf-schema#label', $expected_value), 'Term label found in RDF output (rdfs:label).');
     // Term label.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $term->getName(),
       'lang' => 'en',
-    );
+    ];
     $this->assertTrue($graph->hasProperty($term_uri, 'http://www.w3.org/2004/02/skos/core#prefLabel', $expected_value), 'Term label found in RDF output (skos:prefLabel).');
 
     // @todo Add test for term description once it is a field:

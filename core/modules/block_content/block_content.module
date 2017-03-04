@@ -15,25 +15,25 @@ use Drupal\field\Entity\FieldStorageConfig;
 function block_content_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.block_content':
-      $field_ui = \Drupal::moduleHandler()->moduleExists('field_ui') ? \Drupal::url('help.page', array('name' => 'field_ui')) : '#';
+      $field_ui = \Drupal::moduleHandler()->moduleExists('field_ui') ? \Drupal::url('help.page', ['name' => 'field_ui']) : '#';
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Custom Block module allows you to create and manage custom <em>block types</em> and <em>content-containing blocks</em> from the <a href = ":block-library" >Custom block library<a/> page. Custom block types have fields; see the <a href=":field-help">Field module help</a> for more information. Once created, custom blocks can be placed in regions just like blocks provided by other modules; see the <a href=":blocks">Block module help</a> page for details. For more information, see the <a href=":online-help">online documentation for the Custom Block module</a>.', array(':block-library' => \Drupal::url('entity.block_content.collection'), ':block-content' => \Drupal::url('entity.block_content.collection'), ':field-help' => \Drupal::url('help.page', array('name' => 'field')), ':blocks' => \Drupal::url('help.page', array('name' => 'block')), ':online-help' => 'https://www.drupal.org/documentation/modules/block_content')) . '</p>';
+      $output .= '<p>' . t('The Custom Block module allows you to create and manage custom <em>block types</em> and <em>content-containing blocks</em> from the <a href = ":block-library" >Custom block library<a/> page. Custom block types have fields; see the <a href=":field-help">Field module help</a> for more information. Once created, custom blocks can be placed in regions just like blocks provided by other modules; see the <a href=":blocks">Block module help</a> page for details. For more information, see the <a href=":online-help">online documentation for the Custom Block module</a>.', [':block-library' => \Drupal::url('entity.block_content.collection'), ':block-content' => \Drupal::url('entity.block_content.collection'), ':field-help' => \Drupal::url('help.page', ['name' => 'field']), ':blocks' => \Drupal::url('help.page', ['name' => 'block']), ':online-help' => 'https://www.drupal.org/documentation/modules/block_content']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating and managing custom block types') . '</dt>';
-      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create and edit custom block types with fields and display settings, from the <a href=":types">Block types</a> page in the Custom block library. For more information about managing fields and display settings, see the <a href=":field-ui">Field UI module help</a>.', array(':types' => \Drupal::url('entity.block_content_type.collection'), ':field-ui' => $field_ui)) . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create and edit custom block types with fields and display settings, from the <a href=":types">Block types</a> page in the Custom block library. For more information about managing fields and display settings, see the <a href=":field-ui">Field UI module help</a>.', [':types' => \Drupal::url('entity.block_content_type.collection'), ':field-ui' => $field_ui]) . '</dd>';
       $output .= '<dt>' . t('Creating custom blocks') . '</dt>';
-      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create, edit, and delete custom blocks of each defined custom block type, from the <a href=":block-library">Blocks</a> page in the Custom block library. After creating a block, place it in a region from the <a href=":blocks">Block layout</a> page; see the <a href=":block_help">Block module help</a> for more information about placing blocks.', array(':blocks' => \Drupal::url('block.admin_display'), ':block-library' => \Drupal::url('entity.block_content.collection'), ':block_help' => \Drupal::url('help.page', array('name' => 'block')))) . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create, edit, and delete custom blocks of each defined custom block type, from the <a href=":block-library">Blocks</a> page in the Custom block library. After creating a block, place it in a region from the <a href=":blocks">Block layout</a> page; see the <a href=":block_help">Block module help</a> for more information about placing blocks.', [':blocks' => \Drupal::url('block.admin_display'), ':block-library' => \Drupal::url('entity.block_content.collection'), ':block_help' => \Drupal::url('help.page', ['name' => 'block'])]) . '</dd>';
       $output .= '</dl>';
       return $output;
 
     case 'entity.block_content.collection':
-      $output = '<p>' . t('Blocks in the block library belong to <a href=":types">Custom block types</a>, each with its own fields and display settings. After creating a block, place it in a region from the <a href=":blocks">Block layout</a> page.', array(':types' => \Drupal::url('entity.block_content_type.collection'), ':blocks' => \Drupal::url('block.admin_display'))) . '</p>';
+      $output = '<p>' . t('Blocks in the block library belong to <a href=":types">Custom block types</a>, each with its own fields and display settings. After creating a block, place it in a region from the <a href=":blocks">Block layout</a> page.', [':types' => \Drupal::url('entity.block_content_type.collection'), ':blocks' => \Drupal::url('block.admin_display')]) . '</p>';
       return $output;
 
     case 'entity.block_content_type.collection':
-      $output = '<p>' . t('Each block type has its own fields and display settings. Create blocks of each type on the <a href=":block-library">Blocks</a> page in the custom block library.', array(':block-library' => \Drupal::url('entity.block_content.collection'))) . '</p>';
+      $output = '<p>' . t('Each block type has its own fields and display settings. Create blocks of each type on the <a href=":block-library">Blocks</a> page in the custom block library.', [':block-library' => \Drupal::url('entity.block_content.collection')]) . '</p>';
       return $output;
 
   }
@@ -43,12 +43,12 @@ function block_content_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_theme().
  */
 function block_content_theme($existing, $type, $theme, $path) {
-  return array(
-    'block_content_add_list' => array(
-      'variables' => array('content' => NULL),
+  return [
+    'block_content_add_list' => [
+      'variables' => ['content' => NULL],
       'file' => 'block_content.pages.inc',
-    ),
-  );
+    ],
+  ];
 }
 
 /**
@@ -83,23 +83,23 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
       'field_storage' => FieldStorageConfig::loadByName('block_content', 'body'),
       'bundle' => $block_type_id,
       'label' => $label,
-      'settings' => array('display_summary' => FALSE),
+      'settings' => ['display_summary' => FALSE],
     ]);
     $field->save();
 
     // Assign widget settings for the 'default' form mode.
     entity_get_form_display('block_content', $block_type_id, 'default')
-      ->setComponent('body', array(
+      ->setComponent('body', [
         'type' => 'text_textarea_with_summary',
-      ))
+      ])
       ->save();
 
     // Assign display settings for 'default' view mode.
     entity_get_display('block_content', $block_type_id, 'default')
-      ->setComponent('body', array(
+      ->setComponent('body', [
         'label' => 'hidden',
         'type' => 'text_default',
-      ))
+      ])
       ->save();
   }
 

@@ -27,21 +27,21 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testBootEnvironment() {
     $this->assertRegExp('/^test\d{8}$/', $this->databasePrefix);
     $this->assertStringStartsWith('vfs://root/sites/simpletest/', $this->siteDirectory);
-    $this->assertEquals(array(
-      'root' => array(
-        'sites' => array(
-          'simpletest' => array(
-            substr($this->databasePrefix, 4) => array(
-              'files' => array(
-                'config' => array(
-                  'sync' => array(),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ), vfsStream::inspect(new vfsStreamStructureVisitor())->getStructure());
+    $this->assertEquals([
+      'root' => [
+        'sites' => [
+          'simpletest' => [
+            substr($this->databasePrefix, 4) => [
+              'files' => [
+                'config' => [
+                  'sync' => [],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ], vfsStream::inspect(new vfsStreamStructureVisitor())->getStructure());
   }
 
   /**
@@ -70,15 +70,15 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertArrayHasKey('destroy-me', $GLOBALS);
 
     $database = $this->container->get('database');
-    $database->schema()->createTable('foo', array(
-      'fields' => array(
-        'number' => array(
+    $database->schema()->createTable('foo', [
+      'fields' => [
+        'number' => [
           'type' => 'int',
           'unsigned' => TRUE,
           'not null' => TRUE,
-        ),
-      ),
-    ));
+        ],
+      ],
+    ]);
     $this->assertTrue($database->schema()->tableExists('foo'));
 
     // Ensure that the database tasks have been run during set up. Neither MySQL
@@ -120,7 +120,7 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertSame($request, \Drupal::request());
 
     // Trigger a container rebuild.
-    $this->enableModules(array('system'));
+    $this->enableModules(['system']);
 
     // Verify that this container is identical to the actual container.
     $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', $this->container);
@@ -165,16 +165,16 @@ class KernelTestBaseTest extends KernelTestBase {
     $element_info = $this->container->get('element_info');
     $this->assertSame(['#defaults_loaded' => TRUE], $element_info->getInfo($type));
 
-    $this->enableModules(array('filter'));
+    $this->enableModules(['filter']);
 
     $this->assertNotSame($element_info, $this->container->get('element_info'));
     $this->assertNotEmpty($this->container->get('element_info')->getInfo($type));
 
-    $build = array(
+    $build = [
       '#type' => 'html_tag',
       '#tag' => 'h3',
       '#value' => 'Inner',
-    );
+    ];
     $expected = "<h3>Inner</h3>\n";
 
     $this->assertEquals('core', \Drupal::theme()->getActiveTheme()->getName());
@@ -189,12 +189,12 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::render
    */
   public function testRenderWithTheme() {
-    $this->enableModules(array('system'));
+    $this->enableModules(['system']);
 
-    $build = array(
+    $build = [
       '#type' => 'textfield',
       '#name' => 'test',
-    );
+    ];
     $expected = '/' . preg_quote('<input type="text" name="test"', '/') . '/';
 
     $this->assertArrayNotHasKey('theme', $GLOBALS);
@@ -220,11 +220,11 @@ class KernelTestBaseTest extends KernelTestBase {
       $this->assertTrue(empty($tables), 'All test tables have been removed.');
     }
     else {
-      $result = $connection->query("SELECT name FROM " . $this->databasePrefix . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", array(
+      $result = $connection->query("SELECT name FROM " . $this->databasePrefix . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
         ':type' => 'table',
         ':table_name' => '%',
         ':pattern' => 'sqlite_%',
-      ))->fetchAllKeyed(0, 0);
+      ])->fetchAllKeyed(0, 0);
 
       $this->assertTrue(empty($result), 'All test tables have been removed.');
     }

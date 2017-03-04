@@ -28,7 +28,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    *
    * @var array
    */
-  protected $defaults = array(
+  protected $defaults = [
     // The plugin id. Set by the plugin system based on the top-level YAML key.
     'id' => NULL,
     // The static title for the local action.
@@ -38,14 +38,14 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     // (Required) the route name used to generate a link.
     'route_name' => NULL,
     // Default route parameters for generating links.
-    'route_parameters' => array(),
+    'route_parameters' => [],
     // Associative array of link options.
-    'options' => array(),
+    'options' => [],
     // The route names where this local action appears.
-    'appears_on' => array(),
+    'appears_on' => [],
     // Default class for local action implementations.
     'class' => 'Drupal\Core\Menu\LocalActionDefault',
-  );
+  ];
 
   /**
    * A controller resolver object.
@@ -94,7 +94,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    *
    * @var \Drupal\Core\Menu\LocalActionInterface[]
    */
-  protected $instances = array();
+  protected $instances = [];
 
   /**
    * Constructs a LocalActionManager object.
@@ -130,7 +130,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     $this->moduleHandler = $module_handler;
     $this->account = $account;
     $this->alterInfo('menu_local_actions');
-    $this->setCacheBackend($cache_backend, 'local_action_plugins:' . $language_manager->getCurrentLanguage()->getId(), array('local_action'));
+    $this->setCacheBackend($cache_backend, 'local_action_plugins:' . $language_manager->getCurrentLanguage()->getId(), ['local_action']);
   }
 
   /**
@@ -149,7 +149,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    * {@inheritdoc}
    */
   public function getTitle(LocalActionInterface $local_action) {
-    $controller = array($local_action, 'getTitle');
+    $controller = [$local_action, 'getTitle'];
     $arguments = $this->controllerResolver->getArguments($this->requestStack->getCurrentRequest(), $controller);
     return call_user_func_array($controller, $arguments);
   }
@@ -159,8 +159,8 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    */
   public function getActionsForRoute($route_appears) {
     if (!isset($this->instances[$route_appears])) {
-      $route_names = array();
-      $this->instances[$route_appears] = array();
+      $route_names = [];
+      $this->instances[$route_appears] = [];
       // @todo - optimize this lookup by compiling or caching.
       foreach ($this->getDefinitions() as $plugin_id => $action_info) {
         if (in_array($route_appears, $action_info['appears_on'])) {
@@ -175,23 +175,23 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
         $this->routeProvider->getRoutesByNames($route_names);
       }
     }
-    $links = array();
+    $links = [];
     /** @var $plugin \Drupal\Core\Menu\LocalActionInterface */
     foreach ($this->instances[$route_appears] as $plugin_id => $plugin) {
       $cacheability = new CacheableMetadata();
       $route_name = $plugin->getRouteName();
       $route_parameters = $plugin->getRouteParameters($this->routeMatch);
       $access = $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account, TRUE);
-      $links[$plugin_id] = array(
+      $links[$plugin_id] = [
         '#theme' => 'menu_local_action',
-        '#link' => array(
+        '#link' => [
           'title' => $this->getTitle($plugin),
           'url' => Url::fromRoute($route_name, $route_parameters),
           'localized_options' => $plugin->getOptions($this->routeMatch),
-        ),
+        ],
         '#access' => $access,
         '#weight' => $plugin->getWeight(),
-      );
+      ];
       $cacheability->addCacheableDependency($access)->addCacheableDependency($plugin);
       $cacheability->applyTo($links[$plugin_id]);
     }

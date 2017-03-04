@@ -87,14 +87,14 @@ class ConfigOtherModuleTest extends BrowserTestBase {
   public function testUninstall() {
     $this->installModule('views');
     $storage = $this->container->get('entity_type.manager')->getStorage('view');
-    $storage->resetCache(array('frontpage'));
+    $storage->resetCache(['frontpage']);
     $this->assertTrue($storage->load('frontpage') === NULL, 'After installing Views, frontpage view which is dependant on the Node and Views modules does not exist.');
     $this->installModule('node');
-    $storage->resetCache(array('frontpage'));
+    $storage->resetCache(['frontpage']);
     $this->assertTrue($storage->load('frontpage') !== NULL, 'After installing Node, frontpage view which is dependant on the Node and Views modules exists.');
     $this->uninstallModule('node');
     $storage = $this->container->get('entity_type.manager')->getStorage('view');
-    $storage->resetCache(array('frontpage'));
+    $storage->resetCache(['frontpage']);
     $this->assertTrue($storage->load('frontpage') === NULL, 'After uninstalling Node, frontpage view which is dependant on the Node and Views modules does not exist.');
   }
 
@@ -105,7 +105,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
    *   The module name.
    */
   protected function installModule($module) {
-    $this->container->get('module_installer')->install(array($module));
+    $this->container->get('module_installer')->install([$module]);
     $this->container = \Drupal::getContainer();
   }
 
@@ -116,7 +116,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
    *   The module name.
    */
   protected function uninstallModule($module) {
-    $this->container->get('module_installer')->uninstall(array($module));
+    $this->container->get('module_installer')->uninstall([$module]);
     $this->container = \Drupal::getContainer();
   }
 

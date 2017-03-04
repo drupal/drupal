@@ -22,7 +22,7 @@ class FilterKernelTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'filter');
+  public static $modules = ['system', 'filter'];
 
   /**
    * @var \Drupal\filter\Plugin\FilterInterface[]
@@ -31,10 +31,10 @@ class FilterKernelTest extends KernelTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('system'));
+    $this->installConfig(['system']);
 
     $manager = $this->container->get('plugin.manager.filter');
-    $bag = new FilterPluginCollection($manager, array());
+    $bag = new FilterPluginCollection($manager, []);
     $this->filters = $bag->getAll();
   }
 
@@ -107,11 +107,11 @@ class FilterKernelTest extends KernelTestBase {
       });
     };
 
-    $attached_library = array(
-      'library' => array(
+    $attached_library = [
+      'library' => [
         'filter/caption',
-      ),
-    );
+      ],
+    ];
 
     // No data-caption attribute.
     $input = '<img src="llama.jpg" />';
@@ -190,13 +190,13 @@ class FilterKernelTest extends KernelTestBase {
     // want to make sure that it works well in tandem with the "Limit allowed
     // HTML tags" filter, which it is typically used with.
     $html_filter = $this->filters['filter_html'];
-    $html_filter->setConfiguration(array(
-      'settings' => array(
+    $html_filter->setConfiguration([
+      'settings' => [
         'allowed_html' => '<img src data-align data-caption>',
         'filter_html_help' => 1,
         'filter_html_nofollow' => 0,
-      )
-    ));
+      ]
+    ]);
     $test_with_html_filter = function ($input) use ($filter, $html_filter, $renderer) {
       return $renderer->executeInRenderContext(new RenderContext(), function () use ($input, $filter, $html_filter) {
         // 1. Apply HTML filter's processing step.
@@ -272,11 +272,11 @@ class FilterKernelTest extends KernelTestBase {
       });
     };
 
-    $attached_library = array(
-      'library' => array(
+    $attached_library = [
+      'library' => [
         'filter/caption',
-      ),
-    );
+      ],
+    ];
 
     // Both data-caption and data-align attributes: all 3 allowed values for the
     // data-align attribute.
@@ -322,60 +322,60 @@ class FilterKernelTest extends KernelTestBase {
     // Since the line break filter naturally needs plenty of newlines in test
     // strings and expectations, we're using "\n" instead of regular newlines
     // here.
-    $tests = array(
+    $tests = [
       // Single line breaks should be changed to <br /> tags, while paragraphs
       // separated with double line breaks should be enclosed with <p></p> tags.
-      "aaa\nbbb\n\nccc" => array(
+      "aaa\nbbb\n\nccc" => [
         "<p>aaa<br />\nbbb</p>\n<p>ccc</p>" => TRUE,
-      ),
+      ],
       // Skip contents of certain block tags entirely.
       "<script>aaa\nbbb\n\nccc</script>
 <style>aaa\nbbb\n\nccc</style>
 <pre>aaa\nbbb\n\nccc</pre>
 <object>aaa\nbbb\n\nccc</object>
 <iframe>aaa\nbbb\n\nccc</iframe>
-" => array(
+" => [
         "<script>aaa\nbbb\n\nccc</script>" => TRUE,
         "<style>aaa\nbbb\n\nccc</style>" => TRUE,
         "<pre>aaa\nbbb\n\nccc</pre>" => TRUE,
         "<object>aaa\nbbb\n\nccc</object>" => TRUE,
         "<iframe>aaa\nbbb\n\nccc</iframe>" => TRUE,
-      ),
+      ],
       // Skip comments entirely.
-      "One. <!-- comment --> Two.\n<!--\nThree.\n-->\n" => array(
+      "One. <!-- comment --> Two.\n<!--\nThree.\n-->\n" => [
         '<!-- comment -->' => TRUE,
         "<!--\nThree.\n-->" => TRUE,
-      ),
+      ],
       // Resulting HTML should produce matching paragraph tags.
-      '<p><div>  </div></p>' => array(
+      '<p><div>  </div></p>' => [
         "<p>\n<div>  </div>\n</p>" => TRUE,
-      ),
-      '<div><p>  </p></div>' => array(
+      ],
+      '<div><p>  </p></div>' => [
         "<div>\n</div>" => TRUE,
-      ),
-      '<blockquote><pre>aaa</pre></blockquote>' => array(
+      ],
+      '<blockquote><pre>aaa</pre></blockquote>' => [
         "<blockquote><pre>aaa</pre></blockquote>" => TRUE,
-      ),
-      "<pre>aaa\nbbb\nccc</pre>\nddd\neee" => array(
+      ],
+      "<pre>aaa\nbbb\nccc</pre>\nddd\neee" => [
         "<pre>aaa\nbbb\nccc</pre>" => TRUE,
         "<p>ddd<br />\neee</p>" => TRUE,
-      ),
+      ],
       // Comments remain unchanged and subsequent lines/paragraphs are
       // transformed normally.
-      "aaa<!--comment-->\n\nbbb\n\nccc\n\nddd<!--comment\nwith linebreak-->\n\neee\n\nfff" => array(
+      "aaa<!--comment-->\n\nbbb\n\nccc\n\nddd<!--comment\nwith linebreak-->\n\neee\n\nfff" => [
         "<p>aaa</p>\n<!--comment--><p>\nbbb</p>\n<p>ccc</p>\n<p>ddd</p>" => TRUE,
         "<!--comment\nwith linebreak--><p>\neee</p>\n<p>fff</p>" => TRUE,
-      ),
+      ],
       // Check that a comment in a PRE will result that the text after
       // the comment, but still in PRE, is not transformed.
-      "<pre>aaa\nbbb<!-- comment -->\n\nccc</pre>\nddd" => array(
+      "<pre>aaa\nbbb<!-- comment -->\n\nccc</pre>\nddd" => [
         "<pre>aaa\nbbb<!-- comment -->\n\nccc</pre>" => TRUE,
-      ),
+      ],
       // Bug 810824, paragraphs were appearing around iframe tags.
-      "<iframe>aaa</iframe>\n\n" => array(
+      "<iframe>aaa</iframe>\n\n" => [
         "<p><iframe>aaa</iframe></p>" => FALSE,
-      ),
-    );
+      ],
+    ];
     $this->assertFilteredString($filter, $tests);
 
     // Very long string hitting PCRE limits.
@@ -406,13 +406,13 @@ class FilterKernelTest extends KernelTestBase {
   function testHtmlFilter() {
     // Get FilterHtml object.
     $filter = $this->filters['filter_html'];
-    $filter->setConfiguration(array(
-      'settings' => array(
+    $filter->setConfiguration([
+      'settings' => [
         'allowed_html' => '<a> <p> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <br>',
         'filter_html_help' => 1,
         'filter_html_nofollow' => 0,
-      )
-    ));
+      ]
+    ]);
 
     // HTML filter is not able to secure some tags, these should never be
     // allowed.
@@ -461,25 +461,25 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertNormalized($f, '<a>link</a>', 'HTML filter should remove attributes that are not explicitly allowed.');
 
     // Now whitelist the "llama" attribute on <a>.
-    $filter->setConfiguration(array(
-      'settings' => array(
+    $filter->setConfiguration([
+      'settings' => [
         'allowed_html' => '<a href llama> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <br>',
         'filter_html_help' => 1,
         'filter_html_nofollow' => 0,
-      )
-    ));
+      ]
+    ]);
     $f = (string) $filter->process('<a kitten="cute" llama="awesome">link</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, '<a llama="awesome">link</a>', 'HTML filter keeps explicitly allowed attributes, and removes attributes that are not explicitly allowed.');
 
     // Restrict the whitelisted "llama" attribute on <a> to only allow the value
     // "majestical", or "epic".
-    $filter->setConfiguration(array(
-      'settings' => array(
+    $filter->setConfiguration([
+      'settings' => [
         'allowed_html' => '<a href llama="majestical epic"> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <br>',
         'filter_html_help' => 1,
         'filter_html_nofollow' => 0,
-      )
-    ));
+      ]
+    ]);
     $f = (string) $filter->process('<a kitten="cute" llama="awesome">link</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertIdentical($f, '<a>link</a>', 'HTML filter removes allowed attributes that do not have an explicitly allowed value.');
     $f = (string) $filter->process('<a kitten="cute" llama="majestical">link</a>', Language::LANGCODE_NOT_SPECIFIED);
@@ -496,13 +496,13 @@ class FilterKernelTest extends KernelTestBase {
   function testNoFollowFilter() {
     // Get FilterHtml object.
     $filter = $this->filters['filter_html'];
-    $filter->setConfiguration(array(
-      'settings' => array(
+    $filter->setConfiguration([
+      'settings' => [
         'allowed_html' => '<a href>',
         'filter_html_help' => 1,
         'filter_html_nofollow' => 1,
-      )
-    ));
+      ]
+    ]);
 
     // Test if the rel="nofollow" attribute is added, even if we try to prevent
     // it.
@@ -530,13 +530,13 @@ class FilterKernelTest extends KernelTestBase {
     // Get FilterHtmlEscape object.
     $filter = $this->filters['filter_html_escape'];
 
-    $tests = array(
-      "   One. <!-- \"comment\" --> Two'.\n<p>Three.</p>\n    " => array(
+    $tests = [
+      "   One. <!-- \"comment\" --> Two'.\n<p>Three.</p>\n    " => [
         "One. &lt;!-- &quot;comment&quot; --&gt; Two&#039;.\n&lt;p&gt;Three.&lt;/p&gt;" => TRUE,
         '   One.' => FALSE,
         "</p>\n    " => FALSE,
-      ),
-    );
+      ],
+    ];
     $this->assertFilteredString($filter, $tests);
   }
 
@@ -546,11 +546,11 @@ class FilterKernelTest extends KernelTestBase {
   function testUrlFilter() {
     // Get FilterUrl object.
     $filter = $this->filters['filter_url'];
-    $filter->setConfiguration(array(
-      'settings' => array(
+    $filter->setConfiguration([
+      'settings' => [
         'filter_url_length' => 496,
-      )
-    ));
+      ]
+    ]);
 
     // @todo Possible categories:
     // - absolute, mail, partial
@@ -562,24 +562,24 @@ class FilterKernelTest extends KernelTestBase {
     $email_with_plus_sign = 'one+two@example.com';
 
     // Filter selection/pattern matching.
-    $tests = array(
+    $tests = [
       // HTTP URLs.
       '
 http://example.com or www.example.com
-' => array(
+' => [
         '<a href="http://example.com">http://example.com</a>' => TRUE,
         '<a href="http://www.example.com">www.example.com</a>' => TRUE,
-      ),
+      ],
       // MAILTO URLs.
       '
 person@example.com or mailto:person2@example.com or ' . $email_with_plus_sign . ' or ' . $long_email . ' but not ' . $too_long_email . '
-' => array(
+' => [
         '<a href="mailto:person@example.com">person@example.com</a>' => TRUE,
         '<a href="mailto:person2@example.com">mailto:person2@example.com</a>' => TRUE,
         '<a href="mailto:' . $long_email . '">' . $long_email . '</a>' => TRUE,
         '<a href="mailto:' . $too_long_email . '">' . $too_long_email . '</a>' => FALSE,
         '<a href="mailto:' . $email_with_plus_sign . '">' . $email_with_plus_sign . '</a>' => TRUE,
-      ),
+      ],
       // URI parts and special characters.
       '
 http://trailingslash.com/ or www.trailingslash.com/
@@ -589,7 +589,7 @@ http://example.com/@user/
 ftp://user:pass@ftp.example.com/~home/dir1
 sftp://user@nonstandardport:222/dir
 ssh://192.168.0.100/srv/git/drupal.git
-' => array(
+' => [
         '<a href="http://trailingslash.com/">http://trailingslash.com/</a>' => TRUE,
         '<a href="http://www.trailingslash.com/">www.trailingslash.com/</a>' => TRUE,
         '<a href="http://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">http://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
@@ -599,7 +599,7 @@ ssh://192.168.0.100/srv/git/drupal.git
         '<a href="ftp://user:pass@ftp.example.com/~home/dir1">ftp://user:pass@ftp.example.com/~home/dir1</a>' => TRUE,
         '<a href="sftp://user@nonstandardport:222/dir">sftp://user@nonstandardport:222/dir</a>' => TRUE,
         '<a href="ssh://192.168.0.100/srv/git/drupal.git">ssh://192.168.0.100/srv/git/drupal.git</a>' => TRUE,
-      ),
+      ],
       // International Unicode characters.
       '
 http://пример.испытание/
@@ -609,7 +609,7 @@ http://12345.中国/
 http://例え.テスト/
 http://dréißig-bücher.de/
 http://méxico-mañana.es/
-' => array(
+' => [
         '<a href="http://пример.испытание/">http://пример.испытание/</a>' => TRUE,
         '<a href="http://مثال.إختبار/">http://مثال.إختبار/</a>' => TRUE,
         '<a href="http://例子.測試/">http://例子.測試/</a>' => TRUE,
@@ -617,25 +617,25 @@ http://méxico-mañana.es/
         '<a href="http://例え.テスト/">http://例え.テスト/</a>' => TRUE,
         '<a href="http://dréißig-bücher.de/">http://dréißig-bücher.de/</a>' => TRUE,
         '<a href="http://méxico-mañana.es/">http://méxico-mañana.es/</a>' => TRUE,
-      ),
+      ],
       // Encoding.
       '
 http://ampersand.com/?a=1&b=2
 http://encoded.com/?a=1&amp;b=2
-' => array(
+' => [
         '<a href="http://ampersand.com/?a=1&amp;b=2">http://ampersand.com/?a=1&amp;b=2</a>' => TRUE,
         '<a href="http://encoded.com/?a=1&amp;b=2">http://encoded.com/?a=1&amp;b=2</a>' => TRUE,
-      ),
+      ],
       // Domain name length.
       '
 www.ex.ex or www.example.example or www.toolongdomainexampledomainexampledomainexampledomainexampledomain or
 me@me.tv
-' => array(
+' => [
         '<a href="http://www.ex.ex">www.ex.ex</a>' => TRUE,
         '<a href="http://www.example.example">www.example.example</a>' => TRUE,
         'http://www.toolong' => FALSE,
         '<a href="mailto:me@me.tv">me@me.tv</a>' => TRUE,
-      ),
+      ],
       // Absolute URL protocols.
       // The list to test is found in the beginning of _filter_url() at
       // $protocols = \Drupal::getContainer()->getParameter('filter_protocols').
@@ -650,7 +650,7 @@ sftp://secure.host?,
 webcal://calendar,
 rtsp://127.0.0.1,
 not foo://disallowed.com.
-' => array(
+' => [
         'href="https://example.com"' => TRUE,
         'href="ftp://ftp.example.com"' => TRUE,
         'href="news://example.net"' => TRUE,
@@ -662,12 +662,12 @@ not foo://disallowed.com.
         'href="rtsp://127.0.0.1"' => TRUE,
         'href="foo://disallowed.com"' => FALSE,
         'not foo://disallowed.com.' => TRUE,
-      ),
-    );
+      ],
+    ];
     $this->assertFilteredString($filter, $tests);
 
     // Surrounding text/punctuation.
-    $tests = array(
+    $tests = [
       '
 Partial URL with trailing period www.partial.com.
 Email with trailing comma person@example.com,
@@ -680,7 +680,7 @@ Partial URL with brackets in the URL as well as surrounded brackets (www.foo.com
 Absolute URL with square brackets in the URL as well as surrounded brackets [https://www.drupal.org/?class[]=1]
 Absolute URL with quotes "https://www.drupal.org/sample"
 
-' => array(
+' => [
         'period <a href="http://www.partial.com">www.partial.com</a>.' => TRUE,
         'comma <a href="mailto:person@example.com">person@example.com</a>,' => TRUE,
         'question <a href="http://www.absolute.com">http://www.absolute.com</a>?' => TRUE,
@@ -691,45 +691,45 @@ Absolute URL with quotes "https://www.drupal.org/sample"
         'brackets (<a href="http://www.foo.com/more_(than)_one_(parens)">www.foo.com/more_(than)_one_(parens)</a>).' => TRUE,
         'brackets [<a href="https://www.drupal.org/?class[]=1">https://www.drupal.org/?class[]=1</a>]' => TRUE,
         'quotes "<a href="https://www.drupal.org/sample">https://www.drupal.org/sample</a>"' => TRUE,
-      ),
+      ],
       '
 (www.parenthesis.com/dir?a=1&b=2#a)
-' => array(
+' => [
         '(<a href="http://www.parenthesis.com/dir?a=1&amp;b=2#a">www.parenthesis.com/dir?a=1&amp;b=2#a</a>)' => TRUE,
-      ),
-    );
+      ],
+    ];
     $this->assertFilteredString($filter, $tests);
 
     // Surrounding markup.
-    $tests = array(
+    $tests = [
       '
 <p xmlns="www.namespace.com" />
 <p xmlns="http://namespace.com">
 An <a href="http://example.com" title="Read more at www.example.info...">anchor</a>.
 </p>
-' => array(
+' => [
         '<p xmlns="www.namespace.com" />' => TRUE,
         '<p xmlns="http://namespace.com">' => TRUE,
         'href="http://www.namespace.com"' => FALSE,
         'href="http://namespace.com"' => FALSE,
         'An <a href="http://example.com" title="Read more at www.example.info...">anchor</a>.' => TRUE,
-      ),
+      ],
       '
 Not <a href="foo">www.relative.com</a> or <a href="http://absolute.com">www.absolute.com</a>
 but <strong>http://www.strong.net</strong> or <em>www.emphasis.info</em>
-' => array(
+' => [
         '<a href="foo">www.relative.com</a>' => TRUE,
         'href="http://www.relative.com"' => FALSE,
         '<a href="http://absolute.com">www.absolute.com</a>' => TRUE,
         '<strong><a href="http://www.strong.net">http://www.strong.net</a></strong>' => TRUE,
         '<em><a href="http://www.emphasis.info">www.emphasis.info</a></em>' => TRUE,
-      ),
+      ],
       '
 Test <code>using www.example.com the code tag</code>.
-' => array(
+' => [
         'href' => FALSE,
         'http' => FALSE,
-      ),
+      ],
       '
 Intro.
 <blockquote>
@@ -737,7 +737,7 @@ Quoted text linking to www.example.com, written by person@example.com, originati
 </blockquote>
 
 Outro.
-' => array(
+' => [
         'href="http://www.example.com"' => TRUE,
         'href="mailto:person@example.com"' => TRUE,
         'href="http://origin.example.com"' => TRUE,
@@ -745,18 +745,18 @@ Outro.
         'http://www.example.info' => FALSE,
         'Intro.' => TRUE,
         'Outro.' => TRUE,
-      ),
+      ],
       '
 Unknown tag <x>containing x and www.example.com</x>? And a tag <pooh>beginning with p and containing www.example.pooh with p?</pooh>
-' => array(
+' => [
         'href="http://www.example.com"' => TRUE,
         'href="http://www.example.pooh"' => TRUE,
-      ),
+      ],
       '
 <p>Test &lt;br/&gt;: This is a www.example17.com example <strong>with</strong> various http://www.example18.com tags. *<br/>
  It is important www.example19.com to *<br/>test different URLs and http://www.example20.com in the same paragraph. *<br>
 HTML www.example21.com soup by person@example22.com can litererally http://www.example23.com contain *img*<img> anything. Just a www.example24.com with http://www.example25.com thrown in. www.example26.com from person@example27.com with extra http://www.example28.com.
-' => array(
+' => [
         'href="http://www.example17.com"' => TRUE,
         'href="http://www.example18.com"' => TRUE,
         'href="http://www.example19.com"' => TRUE,
@@ -769,7 +769,7 @@ HTML www.example21.com soup by person@example22.com can litererally http://www.e
         'href="http://www.example26.com"' => TRUE,
         'href="mailto:person@example27.com"' => TRUE,
         'href="http://www.example28.com"' => TRUE,
-      ),
+      ],
       '
 <script>
 <!--
@@ -781,33 +781,33 @@ HTML www.example21.com soup by person@example22.com can litererally http://www.e
   var exampleurl = "http://example.net";
 //--><!]]>
 </script>
-' => array(
+' => [
         'href="http://www.example.com"' => FALSE,
         'href="http://example.net"' => FALSE,
-      ),
+      ],
       '
 <style>body {
   background: url(http://example.com/pixel.gif);
 }</style>
-' => array(
+' => [
         'href' => FALSE,
-      ),
+      ],
       '
 <!-- Skip any URLs like www.example.com in comments -->
-' => array(
+' => [
         'href' => FALSE,
-      ),
+      ],
       '
 <!-- Skip any URLs like
 www.example.com with a newline in comments -->
-' => array(
+' => [
         'href' => FALSE,
-      ),
+      ],
       '
 <!-- Skip any URLs like www.comment.com in comments. <p>Also ignore http://commented.out/markup.</p> -->
-' => array(
+' => [
         'href' => FALSE,
-      ),
+      ],
       '
 <dl>
 <dt>www.example.com</dt>
@@ -816,39 +816,39 @@ www.example.com with a newline in comments -->
 <dt>Check www.example.net</dt>
 <dd>Some text around http://www.example.info by person@example.info?</dd>
 </dl>
-' => array(
+' => [
         'href="http://www.example.com"' => TRUE,
         'href="http://example.com"' => TRUE,
         'href="mailto:person@example.com"' => TRUE,
         'href="http://www.example.net"' => TRUE,
         'href="http://www.example.info"' => TRUE,
         'href="mailto:person@example.info"' => TRUE,
-      ),
+      ],
       '
 <div>www.div.com</div>
 <ul>
 <li>http://listitem.com</li>
 <li class="odd">www.class.listitem.com</li>
 </ul>
-' => array(
+' => [
         '<div><a href="http://www.div.com">www.div.com</a></div>' => TRUE,
         '<li><a href="http://listitem.com">http://listitem.com</a></li>' => TRUE,
         '<li class="odd"><a href="http://www.class.listitem.com">www.class.listitem.com</a></li>' => TRUE,
-      ),
-    );
+      ],
+    ];
     $this->assertFilteredString($filter, $tests);
 
     // URL trimming.
-    $filter->setConfiguration(array(
-      'settings' => array(
+    $filter->setConfiguration([
+      'settings' => [
         'filter_url_length' => 20,
-      )
-    ));
-    $tests = array(
-      'www.trimmed.com/d/ff.ext?a=1&b=2#a1' => array(
+      ]
+    ]);
+    $tests = [
+      'www.trimmed.com/d/ff.ext?a=1&b=2#a1' => [
         '<a href="http://www.trimmed.com/d/ff.ext?a=1&amp;b=2#a1">www.trimmed.com/d/f…</a>' => TRUE,
-      ),
-    );
+      ],
+    ];
     $this->assertFilteredString($filter, $tests);
   }
 
@@ -877,18 +877,18 @@ www.example.com with a newline in comments -->
       foreach ($tasks as $value => $is_expected) {
         // Not using assertIdentical, since combination with strpos() is hard to grok.
         if ($is_expected) {
-          $success = $this->assertTrue(strpos($result, $value) !== FALSE, format_string('@source: @value found. Filtered result: @result.', array(
+          $success = $this->assertTrue(strpos($result, $value) !== FALSE, format_string('@source: @value found. Filtered result: @result.', [
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
             '@result' => var_export($result, TRUE),
-          )));
+          ]));
         }
         else {
-          $success = $this->assertTrue(strpos($result, $value) === FALSE, format_string('@source: @value not found. Filtered result: @result.', array(
+          $success = $this->assertTrue(strpos($result, $value) === FALSE, format_string('@source: @value not found. Filtered result: @result.', [
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
             '@result' => var_export($result, TRUE),
-          )));
+          ]));
         }
         if (!$success) {
           $this->verbose('Source:<pre>' . Html::escape(var_export($source, TRUE)) . '</pre>'
@@ -921,11 +921,11 @@ www.example.com with a newline in comments -->
   function testUrlFilterContent() {
     // Get FilterUrl object.
     $filter = $this->filters['filter_url'];
-    $filter->setConfiguration(array(
-      'settings' => array(
+    $filter->setConfiguration([
+      'settings' => [
         'filter_url_length' => 496,
-      )
-    ));
+      ]
+    ]);
     $path = __DIR__ . '/../..';
 
     $input = file_get_contents($path . '/filter.url-input.txt');
@@ -1067,7 +1067,7 @@ body {color:red}
 
 /*--><!]]>*/
 </style></p>',
-      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '/*<![CDATA[*/'))
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '/*<![CDATA[*/'])
     );
 
     $filtered_data = Html::normalize('<p><style>
@@ -1086,7 +1086,7 @@ body {color:red}
 
 /*--><!]]>*/
 </style></p>',
-      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'))
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'])
     );
 
     $filtered_data = Html::normalize('<p><script>
@@ -1103,7 +1103,7 @@ body {color:red}
 
 //--><!]]>
 </script></p>',
-      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '<!--//--><![CDATA[// ><!--'))
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--//--><![CDATA[// ><!--'])
     );
 
     $filtered_data = Html::normalize('<p><script>
@@ -1120,7 +1120,7 @@ body {color:red}
 
 //--><!]]>
 </script></p>',
-      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', array('@pattern_name' => '// <![CDATA['))
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA['])
     );
 
   }

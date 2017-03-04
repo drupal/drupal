@@ -20,7 +20,7 @@ abstract class FieldTestBase extends BrowserTestBase {
    *   An array of random values, in the format expected for field values.
    */
   function _generateTestFieldValues($cardinality) {
-    $values = array();
+    $values = [];
     for ($i = 0; $i < $cardinality; $i++) {
       // field_test fields treat 0 as 'empty value'.
       $values[$i]['value'] = mt_rand(1, 127);
@@ -58,7 +58,7 @@ abstract class FieldTestBase extends BrowserTestBase {
     $values = $field->getValue();
     $this->assertEqual(count($values), count($expected_values), 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {
-      $this->assertEqual($values[$key][$column], $value, format_string('Value @value was saved correctly.', array('@value' => $value)));
+      $this->assertEqual($values[$key][$column], $value, format_string('Value @value was saved correctly.', ['@value' => $value]));
     }
   }
 

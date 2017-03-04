@@ -151,19 +151,19 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
     // Add the base form ID.
     $form_state->addBuildInfo('base_form_id', $this->getBaseFormId());
 
-    $form = array();
+    $form = [];
 
     $query = $this->requestStack->getCurrentRequest()->query->all();
-    $query = UrlHelper::filterQueryParameters($query, array(), '');
+    $query = UrlHelper::filterQueryParameters($query, [], '');
 
-    $options = array('query' => $query);
+    $options = ['query' => $query];
     $form['#action'] = $view->hasUrl() ? $view->getUrl()->setOptions($options)->toString() : Url::fromRoute('<current>')->setOptions($options)->toString();
     // Tell the preprocessor whether it should hide the header, footer, pager,
     // etc.
-    $form['show_view_elements'] = array(
+    $form['show_view_elements'] = [
       '#type' => 'value',
       '#value' => ($step == 'views_form_views_form') ? TRUE : FALSE,
-    );
+    ];
 
     $form_object = $this->getFormObject($form_state);
     $form += $form_object->buildForm($form, $form_state, $view, $output);

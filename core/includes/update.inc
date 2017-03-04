@@ -17,7 +17,7 @@ use Drupal\Core\Utility\Error;
 function update_fix_compatibility() {
   $extension_config = \Drupal::configFactory()->getEditable('core.extension');
   $save = FALSE;
-  foreach (array('module', 'theme') as $type) {
+  foreach (['module', 'theme'] as $type) {
     foreach ($extension_config->get($type) as $name => $weight) {
       if (update_check_incompatibility($name, $type)) {
         $extension_config->clear("$type.$name");
@@ -68,23 +68,23 @@ function update_check_incompatibility($name, $type = 'module') {
  *   A requirements info array.
  */
 function update_system_schema_requirements() {
-  $requirements = array();
+  $requirements = [];
 
   $system_schema = drupal_get_installed_schema_version('system');
 
   $requirements['minimum schema']['title'] = 'Minimum schema version';
   if ($system_schema >= \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
-    $requirements['minimum schema'] += array(
+    $requirements['minimum schema'] += [
       'value' => 'The installed schema version meets the minimum.',
       'description' => 'Schema version: ' . $system_schema,
-    );
+    ];
   }
   else {
-    $requirements['minimum schema'] += array(
+    $requirements['minimum schema'] += [
       'value' => 'The installed schema version does not meet the minimum.',
       'severity' => REQUIREMENT_ERROR,
       'description' => 'Your system schema version is ' . $system_schema . '. Updating directly from a schema version prior to 8000 is not supported. You must <a href="https://www.drupal.org/node/2179269">migrate your site to Drupal 8</a> first.',
-    );
+    ];
   }
 
   return $requirements;
@@ -95,7 +95,7 @@ function update_system_schema_requirements() {
  */
 function update_check_requirements() {
   // Check requirements of all loaded modules.
-  $requirements = \Drupal::moduleHandler()->invokeAll('requirements', array('update'));
+  $requirements = \Drupal::moduleHandler()->invokeAll('requirements', ['update']);
   $requirements += update_system_schema_requirements();
   return $requirements;
 }
@@ -168,11 +168,11 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 
   // If this update was aborted in a previous step, or has a dependency that
   // was aborted in a previous step, go no further.
-  if (!empty($context['results']['#abort']) && array_intersect($context['results']['#abort'], array_merge($dependency_map, array($function)))) {
+  if (!empty($context['results']['#abort']) && array_intersect($context['results']['#abort'], array_merge($dependency_map, [$function]))) {
     return;
   }
 
-  $ret = array();
+  $ret = [];
   if (function_exists($function)) {
     try {
       $ret['results']['query'] = $function($context['sandbox']);
@@ -187,7 +187,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 
       $variables = Error::decodeException($e);
       unset($variables['backtrace']);
-      $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: @message in %function (line %line of %file).', $variables));
+      $ret['#abort'] = ['success' => FALSE, 'query' => t('%type: @message in %function (line %line of %file).', $variables)];
     }
   }
 
@@ -197,10 +197,10 @@ function update_do_one($module, $number, $dependency_map, &$context) {
   }
 
   if (!isset($context['results'][$module])) {
-    $context['results'][$module] = array();
+    $context['results'][$module] = [];
   }
   if (!isset($context['results'][$module][$number])) {
-    $context['results'][$module][$number] = array();
+    $context['results'][$module][$number] = [];
   }
   $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $ret);
 
@@ -266,7 +266,7 @@ function update_invoke_post_update($function, &$context) {
     unset($context['sandbox']['#finished']);
   }
   if (!isset($context['results'][$module][$name])) {
-    $context['results'][$module][$name] = array();
+    $context['results'][$module][$name] = [];
   }
   $context['results'][$module][$name] = array_merge($context['results'][$module][$name], $ret);
 
@@ -298,7 +298,7 @@ function update_invoke_post_update($function, &$context) {
  */
 function update_get_update_list() {
   // Make sure that the system module is first in the list of updates.
-  $ret = array('system' => array());
+  $ret = ['system' => []];
 
   $modules = drupal_get_installed_schema_version(NULL, FALSE, TRUE);
   foreach ($modules as $module => $schema_version) {
@@ -332,7 +332,7 @@ function update_get_update_list() {
         if ($update > $schema_version) {
           // The description for an update comes from its Doxygen.
           $func = new ReflectionFunction($module . '_update_' . $update);
-          $description = str_replace(array("\n", '*', '/'), '', $func->getDocComment());
+          $description = str_replace(["\n", '*', '/'], '', $func->getDocComment());
           $ret[$module]['pending'][$update] = "$update - $description";
           if (!isset($ret[$module]['start'])) {
             $ret[$module]['start'] = $update;
@@ -400,7 +400,7 @@ function update_resolve_dependencies($starting_updates) {
   // Perform the depth-first search and sort on the results.
   $graph_object = new Graph($graph);
   $graph = $graph_object->searchAndSort();
-  uasort($graph, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
+  uasort($graph, ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
 
   foreach ($graph as $function => &$data) {
     $module = $data['module'];
@@ -416,7 +416,7 @@ function update_resolve_dependencies($starting_updates) {
     }
     elseif (!isset($data['allowed'])) {
       $data['allowed'] = TRUE;
-      $data['missing_dependencies'] = array();
+      $data['missing_dependencies'] = [];
     }
     // Now that we have finished processing this function, remove it from the
     // graph if it was not part of the original list. This ensures that we
@@ -448,9 +448,9 @@ function update_resolve_dependencies($starting_updates) {
 function update_get_update_function_list($starting_updates) {
   // Go through each module and find all updates that we need (including the
   // first update that was requested and any updates that run after it).
-  $update_functions = array();
+  $update_functions = [];
   foreach ($starting_updates as $module => $version) {
-    $update_functions[$module] = array();
+    $update_functions[$module] = [];
     $updates = drupal_get_schema_versions($module);
     if ($updates !== FALSE) {
       $max_version = max($updates);
@@ -512,7 +512,7 @@ function update_get_update_function_list($starting_updates) {
 function update_build_dependency_graph($update_functions) {
   // Initialize an array that will define a directed graph representing the
   // dependencies between update functions.
-  $graph = array();
+  $graph = [];
 
   // Go through each update function and build an initial list of dependencies.
   foreach ($update_functions as $module => $functions) {
@@ -600,7 +600,7 @@ function update_already_performed($module, $number) {
  * @see hook_update_dependencies()
  */
 function update_retrieve_dependencies() {
-  $return = array();
+  $return = [];
   // Get a list of installed modules, arranged so that we invoke their hooks in
   // the same order that \Drupal::moduleHandler()->invokeAll() does.
   foreach (\Drupal::keyValue('system.schema')->getAll() as $module => $schema) {
@@ -675,7 +675,7 @@ function update_replace_permissions($replace) {
   foreach ($role_names as $role_name) {
     $rid = substr($role_name, $cut);
     $config = \Drupal::config("user.role.$rid");
-    $permissions = $config->get('permissions') ?: array();
+    $permissions = $config->get('permissions') ?: [];
     foreach ($replace as $old_permission => $new_permissions) {
       if (($index = array_search($old_permission, $permissions)) !== FALSE) {
         unset($permissions[$index]);
@@ -707,7 +707,7 @@ function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
   // Initialize master language list.
   if (!isset($languages)) {
     // Initialize local language list cache.
-    $languages = array();
+    $languages = [];
 
     // Fill in master language list based on current configuration.
     $default = \Drupal::languageManager()->getDefaultLanguage();
@@ -721,20 +721,20 @@ function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
       foreach ($language_entities as $langcode_config_name) {
         $langcode = substr($langcode_config_name, strlen('language.entity.'));
         $info = \Drupal::config($langcode_config_name)->get();
-        $languages[$langcode] = new Language(array(
+        $languages[$langcode] = new Language([
           'default' => ($info['id'] == $default->getId()),
           'name' => $info['label'],
           'id' => $info['id'],
           'direction' => $info['direction'],
           'locked' => $info['locked'],
           'weight' => $info['weight'],
-        ));
+        ]);
       }
       Language::sort($languages);
     }
     else {
       // No language module, so use the default language only.
-      $languages = array($default->getId() => $default);
+      $languages = [$default->getId() => $default];
       // Add the special languages, they will be filtered later if needed.
       $languages += \Drupal::languageManager()->getDefaultLockedLanguages($default->getWeight());
     }
@@ -743,13 +743,13 @@ function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
   // Filter the full list of languages based on the value of the $all flag. By
   // default we remove the locked languages, but the caller may request for
   // those languages to be added as well.
-  $filtered_languages = array();
+  $filtered_languages = [];
 
   // Add the site's default language if flagged as allowed value.
   if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
     $default = \Drupal::languageManager()->getDefaultLanguage();
     // Rename the default language.
-    $default->setName(t("Site's default language (@lang_name)", array('@lang_name' => $default->getName())));
+    $default->setName(t("Site's default language (@lang_name)", ['@lang_name' => $default->getName()]));
     $filtered_languages[LanguageInterface::LANGCODE_SITE_DEFAULT] = $default;
   }
 

@@ -62,7 +62,7 @@ class FieldStorageConfigEditForm extends EntityForm {
 
     $field_label = $form_state->get('field_config')->label();
     $form['#title'] = $field_label;
-    $form['#prefix'] = '<p>' . $this->t('These settings apply to the %field field everywhere it is used. These settings impact the way that data is stored in the database and cannot be changed once data has been created.', array('%field' => $field_label)) . '</p>';
+    $form['#prefix'] = '<p>' . $this->t('These settings apply to the %field field everywhere it is used. These settings impact the way that data is stored in the database and cannot be changed once data has been created.', ['%field' => $field_label]) . '</p>';
 
     // See if data already exists for this field.
     // If so, prevent changes to the field settings.
@@ -73,17 +73,17 @@ class FieldStorageConfigEditForm extends EntityForm {
     // Add settings provided by the field module. The field module is
     // responsible for not returning settings that cannot be changed if
     // the field already has data.
-    $form['settings'] = array(
+    $form['settings'] = [
       '#weight' => -10,
       '#tree' => TRUE,
-    );
+    ];
     // Create an arbitrary entity object, so that we can have an instantiated
     // FieldItem.
-    $ids = (object) array(
+    $ids = (object) [
       'entity_type' => $form_state->get('entity_type_id'),
       'bundle' => $form_state->get('bundle'),
       'entity_id' => NULL
-    );
+    ];
     $entity = _field_create_entity_from_ids($ids);
     $items = $entity->get($this->entity->getName());
     $item = $items->first() ?: $items->appendItem();
@@ -91,43 +91,43 @@ class FieldStorageConfigEditForm extends EntityForm {
 
     // Build the configurable field values.
     $cardinality = $this->entity->getCardinality();
-    $form['cardinality_container'] = array(
+    $form['cardinality_container'] = [
       // Reset #parents so the additional container does not appear.
-      '#parents' => array(),
+      '#parents' => [],
       '#type' => 'fieldset',
       '#title' => $this->t('Allowed number of values'),
-      '#attributes' => array('class' => array(
+      '#attributes' => ['class' => [
         'container-inline',
         'fieldgroup',
         'form-composite'
-      )),
-    );
-    $form['cardinality_container']['cardinality'] = array(
+      ]],
+    ];
+    $form['cardinality_container']['cardinality'] = [
       '#type' => 'select',
       '#title' => $this->t('Allowed number of values'),
       '#title_display' => 'invisible',
-      '#options' => array(
+      '#options' => [
         'number' => $this->t('Limited'),
         FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED => $this->t('Unlimited'),
-      ),
+      ],
       '#default_value' => ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : 'number',
-    );
-    $form['cardinality_container']['cardinality_number'] = array(
+    ];
+    $form['cardinality_container']['cardinality_number'] = [
       '#type' => 'number',
       '#default_value' => $cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED ? $cardinality : 1,
       '#min' => 1,
       '#title' => $this->t('Limit'),
       '#title_display' => 'invisible',
       '#size' => 2,
-      '#states' => array(
-        'visible' => array(
-         ':input[name="cardinality"]' => array('value' => 'number'),
-        ),
-        'disabled' => array(
-         ':input[name="cardinality"]' => array('value' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED),
-        ),
-      ),
-    );
+      '#states' => [
+        'visible' => [
+         ':input[name="cardinality"]' => ['value' => 'number'],
+        ],
+        'disabled' => [
+         ':input[name="cardinality"]' => ['value' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
+        ],
+      ],
+    ];
 
     return $form;
   }
@@ -190,7 +190,7 @@ class FieldStorageConfigEditForm extends EntityForm {
     $field_label = $form_state->get('field_config')->label();
     try {
       $this->entity->save();
-      drupal_set_message($this->t('Updated field %label field settings.', array('%label' => $field_label)));
+      drupal_set_message($this->t('Updated field %label field settings.', ['%label' => $field_label]));
       $request = $this->getRequest();
       if (($destinations = $request->query->get('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
         $request->query->remove('destinations');
@@ -201,7 +201,7 @@ class FieldStorageConfigEditForm extends EntityForm {
       }
     }
     catch (\Exception $e) {
-      drupal_set_message($this->t('Attempt to update field %label failed: %message.', array('%label' => $field_label, '%message' => $e->getMessage())), 'error');
+      drupal_set_message($this->t('Attempt to update field %label failed: %message.', ['%label' => $field_label, '%message' => $e->getMessage()]), 'error');
     }
   }
 

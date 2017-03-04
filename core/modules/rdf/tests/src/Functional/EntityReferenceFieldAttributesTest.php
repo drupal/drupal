@@ -17,7 +17,7 @@ class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'field_test', 'file', 'image');
+  public static $modules = ['rdf', 'field_test', 'file', 'image'];
 
   /**
    * The name of the taxonomy term reference field used in the test.
@@ -36,38 +36,38 @@ class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(array('bypass node access', 'administer taxonomy'));
+    $web_user = $this->drupalCreateUser(['bypass node access', 'administer taxonomy']);
     $this->drupalLogin($web_user);
     $this->vocabulary = $this->createVocabulary();
 
     // Create the field.
     $this->fieldName = 'field_taxonomy_test';
-    $handler_settings = array(
-      'target_bundles' => array(
+    $handler_settings = [
+      'target_bundles' => [
         $this->vocabulary->id() => $this->vocabulary->id(),
-      ),
+      ],
       'auto_create' => TRUE,
-    );
+    ];
     $this->createEntityReferenceField('node', 'article', $this->fieldName, 'Tags', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->fieldName, array('type' => 'options_select'))
+      ->setComponent($this->fieldName, ['type' => 'options_select'])
       ->save();
     entity_get_display('node', 'article', 'full')
-      ->setComponent($this->fieldName, array('type' => 'entity_reference_label'))
+      ->setComponent($this->fieldName, ['type' => 'entity_reference_label'])
       ->save();
 
     // Set the RDF mapping for the new field.
     rdf_get_mapping('node', 'article')
-      ->setFieldMapping($this->fieldName, array(
-        'properties' => array('dc:subject'),
+      ->setFieldMapping($this->fieldName, [
+        'properties' => ['dc:subject'],
         'mapping_type' => 'rel',
-      ))
+      ])
       ->save();
 
     rdf_get_mapping('taxonomy_term', $this->vocabulary->id())
-      ->setBundleMapping(array('types' => array('skos:Concept')))
-      ->setFieldMapping('name', array('properties' => array('rdfs:label')))
+      ->setBundleMapping(['types' => ['skos:Concept']])
+      ->setFieldMapping('name', ['properties' => ['rdfs:label']])
       ->save();
   }
 
@@ -80,7 +80,7 @@ class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
   function testNodeTeaser() {
     // Set the teaser display to show this field.
     entity_get_display('node', 'article', 'teaser')
-      ->setComponent($this->fieldName, array('type' => 'entity_reference_label'))
+      ->setComponent($this->fieldName, ['type' => 'entity_reference_label'])
       ->save();
 
     // Create a term in each vocabulary.
@@ -90,14 +90,14 @@ class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
     $taxonomy_term_2_uri = $term2->url('canonical', ['absolute' => TRUE]);
 
     // Create the node.
-    $node = $this->drupalCreateNode(array('type' => 'article'));
-    $node->set($this->fieldName, array(
-      array('target_id' => $term1->id()),
-      array('target_id' => $term2->id()),
-    ));
+    $node = $this->drupalCreateNode(['type' => 'article']);
+    $node->set($this->fieldName, [
+      ['target_id' => $term1->id()],
+      ['target_id' => $term2->id()],
+    ]);
 
     // Render the node.
-    $node_render_array = entity_view_multiple(array($node), 'teaser');
+    $node_render_array = entity_view_multiple([$node], 'teaser');
     $html = \Drupal::service('renderer')->renderRoot($node_render_array);
 
     // Parse the teaser.
@@ -108,39 +108,39 @@ class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
 
     // Node relations to taxonomy terms.
     $node_uri = $node->url('canonical', ['absolute' => TRUE]);
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => $taxonomy_term_1_uri,
-    );
+    ];
     $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/subject', $expected_value), 'Node to term relation found in RDF output (dc:subject).');
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => $taxonomy_term_2_uri,
-    );
+    ];
     $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/subject', $expected_value), 'Node to term relation found in RDF output (dc:subject).');
     // Taxonomy terms triples.
     // Term 1.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => 'http://www.w3.org/2004/02/skos/core#Concept',
-    );
+    ];
     // @todo Enable with https://www.drupal.org/node/2072791.
     //$this->assertTrue($graph->hasProperty($taxonomy_term_1_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'Taxonomy term type found in RDF output (skos:Concept).');
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $term1->getName(),
-    );
+    ];
     //$this->assertTrue($graph->hasProperty($taxonomy_term_1_uri, 'http://www.w3.org/2000/01/rdf-schema#label', $expected_value), 'Taxonomy term name found in RDF output (rdfs:label).');
     // Term 2.
-    $expected_value = array(
+    $expected_value = [
       'type' => 'uri',
       'value' => 'http://www.w3.org/2004/02/skos/core#Concept',
-    );
+    ];
     //$this->assertTrue($graph->hasProperty($taxonomy_term_2_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'Taxonomy term type found in RDF output (skos:Concept).');
-    $expected_value = array(
+    $expected_value = [
       'type' => 'literal',
       'value' => $term2->getName(),
-    );
+    ];
     //$this->assertTrue($graph->hasProperty($taxonomy_term_2_uri, 'http://www.w3.org/2000/01/rdf-schema#label', $expected_value), 'Taxonomy term name found in RDF output (rdfs:label).');
   }
 

@@ -44,10 +44,10 @@ class BooleanFormatterSettingsTest extends WebTestBase {
 
     // Create a content type. Use Node because it has Field UI pages that work.
     $type_name = Unicode::strtolower($this->randomMachineName(8)) . '_test';
-    $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
+    $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $this->bundle = $type->id();
 
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node display', 'bypass node access', 'administer nodes'));
+    $admin_user = $this->drupalCreateUser(['access content', 'administer content types', 'administer node fields', 'administer node display', 'bypass node access', 'administer nodes']);
     $this->drupalLogin($admin_user);
 
     $this->fieldName = Unicode::strtolower($this->randomMachineName(8));
@@ -81,14 +81,14 @@ class BooleanFormatterSettingsTest extends WebTestBase {
     // List the options we expect to see on the settings form. Omit the one
     // with the Unicode check/x characters, which does not appear to work
     // well in WebTestBase.
-    $options = array(
+    $options = [
       'Yes / No',
       'True / False',
       'On / Off',
       'Enabled / Disabled',
       '1 / 0',
       'Custom',
-    );
+    ];
 
     // Define what the "default" option should look like, depending on the
     // field settings.
@@ -96,29 +96,29 @@ class BooleanFormatterSettingsTest extends WebTestBase {
 
     // For several different values of the field settings, test that the
     // options, including default, are shown correctly.
-    $settings = array(
-      array('Yes', 'No'),
-      array('On', 'Off'),
-      array('TRUE', 'FALSE'),
-    );
+    $settings = [
+      ['Yes', 'No'],
+      ['On', 'Off'],
+      ['TRUE', 'FALSE'],
+    ];
 
     foreach ($settings as $values) {
       // Set up the field settings.
       $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/fields/node.' . $this->bundle . '.' . $this->fieldName);
-      $this->drupalPostForm(NULL, array(
+      $this->drupalPostForm(NULL, [
         'settings[on_label]' => $values[0],
         'settings[off_label]' => $values[1],
-      ), 'Save settings');
+      ], 'Save settings');
 
       // Open the Manage Display page and trigger the field settings form.
       $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/display');
-      $this->drupalPostAjaxForm(NULL, array(), $this->fieldName . '_settings_edit');
+      $this->drupalPostAjaxForm(NULL, [], $this->fieldName . '_settings_edit');
 
       // Test that the settings options are present in the correct format.
       foreach ($options as $string) {
         $this->assertText($string);
       }
-      $this->assertText(SafeMarkup::format($default, array('@on' => $values[0], '@off' => $values[1])));
+      $this->assertText(SafeMarkup::format($default, ['@on' => $values[0], '@off' => $values[1]]));
     }
 
     foreach ($settings as $values) {

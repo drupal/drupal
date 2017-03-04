@@ -18,7 +18,7 @@ class BulkFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'action_bulk_test');
+  public static $modules = ['node', 'action_bulk_test'];
 
   /**
    * Tests the bulk form.
@@ -31,30 +31,30 @@ class BulkFormTest extends BrowserTestBase {
     $this->drupalGet('test_bulk_form_empty');
     $this->assertText(t('This view is empty.'), 'Empty text found on empty bulk form.');
 
-    $nodes = array();
+    $nodes = [];
     for ($i = 0; $i < 10; $i++) {
       // Ensure nodes are sorted in the same order they are inserted in the
       // array.
       $timestamp = REQUEST_TIME - $i;
-      $nodes[] = $this->drupalCreateNode(array(
+      $nodes[] = $this->drupalCreateNode([
         'sticky' => FALSE,
         'created' => $timestamp,
         'changed' => $timestamp,
-      ));
+      ]);
     }
 
     $this->drupalGet('test_bulk_form');
 
     // Test that the views edit header appears first.
-    $first_form_element = $this->xpath('//form/div[1][@id = :id]', array(':id' => 'edit-header'));
+    $first_form_element = $this->xpath('//form/div[1][@id = :id]', [':id' => 'edit-header']);
     $this->assertTrue($first_form_element, 'The views form edit header appears first.');
 
     $this->assertFieldById('edit-action', NULL, 'The action select field appears.');
 
     // Make sure a checkbox appears on all rows.
-    $edit = array();
+    $edit = [];
     for ($i = 0; $i < 10; $i++) {
-      $this->assertFieldById('edit-node-bulk-form-' . $i, NULL, format_string('The checkbox on row @row appears.', array('@row' => $i)));
+      $this->assertFieldById('edit-node-bulk-form-' . $i, NULL, format_string('The checkbox on row @row appears.', ['@row' => $i]));
       $edit["node_bulk_form[$i]"] = TRUE;
     }
 
@@ -67,12 +67,12 @@ class BulkFormTest extends BrowserTestBase {
     $this->drupalGet('test_bulk_form');
 
     // Set all nodes to sticky and check that.
-    $edit += array('action' => 'node_make_sticky_action');
+    $edit += ['action' => 'node_make_sticky_action'];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
 
     foreach ($nodes as $node) {
       $changed_node = $node_storage->load($node->id());
-      $this->assertTrue($changed_node->isSticky(), format_string('Node @nid got marked as sticky.', array('@nid' => $node->id())));
+      $this->assertTrue($changed_node->isSticky(), format_string('Node @nid got marked as sticky.', ['@nid' => $node->id()]));
     }
 
     $this->assertText('Make content sticky was applied to 10 items.');
@@ -81,18 +81,18 @@ class BulkFormTest extends BrowserTestBase {
     $node = $node_storage->load($nodes[0]->id());
     $this->assertTrue($node->isPublished(), 'The node is published.');
 
-    $edit = array('node_bulk_form[0]' => TRUE, 'action' => 'node_unpublish_action');
+    $edit = ['node_bulk_form[0]' => TRUE, 'action' => 'node_unpublish_action'];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
 
     $this->assertText('Unpublish content was applied to 1 item.');
 
     // Load the node again.
-    $node_storage->resetCache(array($node->id()));
+    $node_storage->resetCache([$node->id()]);
     $node = $node_storage->load($node->id());
     $this->assertFalse($node->isPublished(), 'A single node has been unpublished.');
 
     // The second node should still be published.
-    $node_storage->resetCache(array($nodes[1]->id()));
+    $node_storage->resetCache([$nodes[1]->id()]);
     $node = $node_storage->load($nodes[1]->id());
     $this->assertTrue($node->isPublished(), 'An unchecked node is still published.');
 
@@ -105,7 +105,7 @@ class BulkFormTest extends BrowserTestBase {
     $view->save();
 
     $this->drupalGet('test_bulk_form');
-    $options = $this->xpath('//select[@id=:id]/option', array(':id' => 'edit-action'));
+    $options = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-action']);
     $this->assertEqual(count($options), 2);
     $this->assertOption('edit-action', 'node_make_sticky_action');
     $this->assertOption('edit-action', 'node_make_unsticky_action');
@@ -137,17 +137,17 @@ class BulkFormTest extends BrowserTestBase {
 
     $this->drupalGet('test_bulk_form');
     // Call the node delete action.
-    $edit = array();
+    $edit = [];
     for ($i = 0; $i < 5; $i++) {
       $edit["node_bulk_form[$i]"] = TRUE;
     }
-    $edit += array('action' => 'node_delete_action');
+    $edit += ['action' => 'node_delete_action'];
     $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
     // Make sure we don't show an action message while we are still on the
     // confirmation page.
     $errors = $this->xpath('//div[contains(@class, "messages--status")]');
     $this->assertFalse($errors, 'No action message shown.');
-    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertText(t('Deleted 5 posts.'));
     // Check if we got redirected to the original page.
     $this->assertUrl('test_bulk_form');

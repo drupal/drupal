@@ -121,7 +121,7 @@ class UserController extends ControllerBase {
         /** @var \Drupal\user\UserInterface $reset_link_user */
         if ($reset_link_user = $this->userStorage->load($uid)) {
           drupal_set_message($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href=":logout">log out</a> and try using the link again.',
-            array('%other_user' => $account->getUsername(), '%resetting_user' => $reset_link_user->getUsername(), ':logout' => $this->url('user.logout'))), 'warning');
+            ['%other_user' => $account->getUsername(), '%resetting_user' => $reset_link_user->getUsername(), ':logout' => $this->url('user.logout')]), 'warning');
         }
         else {
           // Invalid one-time link specifies an unknown user.
@@ -254,7 +254,7 @@ class UserController extends ControllerBase {
    *   Returns a redirect to the profile of the currently logged in user.
    */
   public function userPage() {
-    return $this->redirect('entity.user.canonical', array('user' => $this->currentUser()->id()));
+    return $this->redirect('entity.user.canonical', ['user' => $this->currentUser()->id()]);
   }
 
   /**
@@ -305,9 +305,9 @@ class UserController extends ControllerBase {
     if (isset($account_data['cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
       // Validate expiration and hashed password/login.
       if ($timestamp <= $current && $current - $timestamp < $timeout && $user->id() && $timestamp >= $user->getLastLoginTime() && Crypt::hashEquals($hashed_pass, user_pass_rehash($user, $timestamp))) {
-        $edit = array(
+        $edit = [
           'user_cancel_notify' => isset($account_data['cancel_notify']) ? $account_data['cancel_notify'] : $this->config('user.settings')->get('notify.status_canceled'),
-        );
+        ];
         user_cancel($edit, $user->id(), $account_data['cancel_method']);
         // Since user_cancel() is not invoked via Form API, batch processing
         // needs to be invoked manually and should redirect to the front page

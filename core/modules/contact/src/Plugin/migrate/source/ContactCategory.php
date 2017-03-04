@@ -20,14 +20,14 @@ class ContactCategory extends DrupalSqlBase {
    */
   public function query() {
     $query = $this->select('contact', 'c')
-      ->fields('c', array(
+      ->fields('c', [
         'cid',
         'category',
         'recipients',
         'reply',
         'weight',
         'selected',
-      )
+      ]
     );
     $query->orderBy('c.cid');
     return $query;
@@ -45,14 +45,14 @@ class ContactCategory extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'cid' => $this->t('Primary Key: Unique category ID.'),
       'category' => $this->t('Category name.'),
       'recipients' => $this->t('Comma-separated list of recipient email addresses.'),
       'reply' => $this->t('Text of the auto-reply message.'),
       'weight' => $this->t("The category's weight."),
       'selected' => $this->t('Flag to indicate whether or not category is selected by default. (1 = Yes, 0 = No)'),
-    );
+    ];
   }
 
   /**

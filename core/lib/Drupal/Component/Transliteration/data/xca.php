@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'jjael', 'jjaelg', 'jjaelm', 'jjaelb', 'jjaels', 'jjaelt', 'jjaelp', 'jjaelh', 'jjaem', 'jjaeb', 'jjaebs', 'jjaes', 'jjaess', 'jjaeng', 'jjaej', 'jjaech',
   0x10 => 'jjaek', 'jjaet', 'jjaep', 'jjaeh', 'jjya', 'jjyag', 'jjyakk', 'jjyags', 'jjyan', 'jjyanj', 'jjyanh', 'jjyad', 'jjyal', 'jjyalg', 'jjyalm', 'jjyalb',
   0x20 => 'jjyals', 'jjyalt', 'jjyalp', 'jjyalh', 'jjyam', 'jjyab', 'jjyabs', 'jjyas', 'jjyass', 'jjyang', 'jjyaj', 'jjyach', 'jjyak', 'jjyat', 'jjyap', 'jjyah',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'jjoss', 'jjong', 'jjoj', 'jjoch', 'jjok', 'jjot', 'jjop', 'jjoh', 'jjwa', 'jjwag', 'jjwakk', 'jjwags', 'jjwan', 'jjwanj', 'jjwanh', 'jjwad',
   0xE0 => 'jjwal', 'jjwalg', 'jjwalm', 'jjwalb', 'jjwals', 'jjwalt', 'jjwalp', 'jjwalh', 'jjwam', 'jjwab', 'jjwabs', 'jjwas', 'jjwass', 'jjwang', 'jjwaj', 'jjwach',
   0xF0 => 'jjwak', 'jjwat', 'jjwap', 'jjwah', 'jjwae', 'jjwaeg', 'jjwaekk', 'jjwaegs', 'jjwaen', 'jjwaenj', 'jjwaenh', 'jjwaed', 'jjwael', 'jjwaelg', 'jjwaelm', 'jjwaelb',
-);
+];

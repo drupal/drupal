@@ -12,27 +12,27 @@
  *   The form array
  */
 function test_form_id() {
-  $form['test'] = array(
+  $form['test'] = [
     '#type' => 'textfield',
     '#title' => 'Test',
-  );
-  $form['options'] = array(
+  ];
+  $form['options'] = [
     '#type' => 'radios',
-    '#options' => array(
+    '#options' => [
       'foo' => 'foo',
       'bar' => 'bar',
-    ),
-  );
-  $form['value'] = array(
+    ],
+  ];
+  $form['value'] = [
     '#type' => 'value',
     '#value' => 'bananas',
-  );
-  $form['actions'] = array(
+  ];
+  $form['actions'] = [
     '#type' => 'actions',
-  );
-  $form['actions']['submit'] = array(
+  ];
+  $form['actions']['submit'] = [
     '#type' => 'submit',
     '#value' => 'Submit',
-  );
+  ];
   return $form;
 }

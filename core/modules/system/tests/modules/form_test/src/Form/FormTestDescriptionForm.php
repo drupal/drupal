@@ -23,26 +23,26 @@ class FormTestDescriptionForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['form_textfield_test_description_before'] = array(
+    $form['form_textfield_test_description_before'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield test for description before element',
       '#description' => 'Textfield test for description before element',
       '#description_display' => 'before',
-    );
+    ];
 
-    $form['form_textfield_test_description_after'] = array(
+    $form['form_textfield_test_description_after'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield test for description after element',
       '#description' => 'Textfield test for description after element',
       '#description_display' => 'after',
-    );
+    ];
 
-    $form['form_textfield_test_description_invisible'] = array(
+    $form['form_textfield_test_description_invisible'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield test for visually-hidden description',
       '#description' => 'Textfield test for visually-hidden description',
       '#description_display' => 'invisible',
-    );
+    ];
 
     return $form;
   }

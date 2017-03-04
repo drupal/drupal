@@ -207,9 +207,9 @@ class ForumController extends ControllerBase {
    * @return array
    *   A render array.
    */
-  protected function build($forums, TermInterface $term, $topics = array(), $parents = array(), $header = array()) {
+  protected function build($forums, TermInterface $term, $topics = [], $parents = [], $header = []) {
     $config = $this->config('forum.settings');
-    $build = array(
+    $build = [
       '#theme' => 'forums',
       '#forums' => $forums,
       '#topics' => $topics,
@@ -218,9 +218,9 @@ class ForumController extends ControllerBase {
       '#term' => $term,
       '#sortby' => $config->get('topics.order'),
       '#forums_per_page' => $config->get('topics.page_limit'),
-    );
+    ];
     if (empty($term->forum_container->value)) {
-      $build['#attached']['feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->getName());
+      $build['#attached']['feed'][] = ['taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->getName()];
     }
     $this->renderer->addCacheableDependency($build, $config);
 
@@ -252,10 +252,10 @@ class ForumController extends ControllerBase {
    */
   public function addForum() {
     $vid = $this->config('forum.settings')->get('vocabulary');
-    $taxonomy_term = $this->termStorage->create(array(
+    $taxonomy_term = $this->termStorage->create([
       'vid' => $vid,
       'forum_controller' => 0,
-    ));
+    ]);
     return $this->entityFormBuilder()->getForm($taxonomy_term, 'forum');
   }
 
@@ -267,10 +267,10 @@ class ForumController extends ControllerBase {
    */
   public function addContainer() {
     $vid = $this->config('forum.settings')->get('vocabulary');
-    $taxonomy_term = $this->termStorage->create(array(
+    $taxonomy_term = $this->termStorage->create([
       'vid' => $vid,
       'forum_container' => 1,
-    ));
+    ]);
     return $this->entityFormBuilder()->getForm($taxonomy_term, 'container');
   }
 
@@ -325,10 +325,10 @@ class ForumController extends ControllerBase {
         $links['login'] = [
           '#attributes' => ['class' => ['action-links']],
           '#theme' => 'menu_local_action',
-          '#link' => array(
+          '#link' => [
             'title' => $this->t('Log in to post new content in the forum.'),
             'url' => Url::fromRoute('user.login', [], ['query' => $this->getDestinationArray()]),
-          ),
+          ],
         ];
       }
     }

@@ -59,19 +59,19 @@ class ListingEmpty extends AreaPluginBase {
   public function render($empty = FALSE) {
     $account = \Drupal::currentUser();
     if (!$empty || !empty($this->options['empty'])) {
-      $element = array(
+      $element = [
         '#theme' => 'links',
-        '#links' => array(
-          array(
+        '#links' => [
+          [
             'url' => Url::fromRoute('node.add_page'),
             'title' => $this->t('Add content'),
-          ),
-        ),
-        '#access' => $this->accessManager->checkNamedRoute('node.add_page', array(), $account),
-      );
+          ],
+        ],
+        '#access' => $this->accessManager->checkNamedRoute('node.add_page', [], $account),
+      ];
       return $element;
     }
-    return array();
+    return [];
   }
 
 }

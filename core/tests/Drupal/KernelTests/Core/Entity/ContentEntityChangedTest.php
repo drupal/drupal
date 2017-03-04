@@ -59,12 +59,12 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
     $user2 = $this->createUser();
 
     // Create a test entity.
-    $entity = EntityTestMulChanged::create(array(
+    $entity = EntityTestMulChanged::create([
       'name' => $this->randomString(),
       'not_translatable' => $this->randomString(),
       'user_id' => $user1->id(),
       'language' => 'en',
-    ));
+    ]);
     $entity->save();
 
     $this->assertTrue(
@@ -289,11 +289,11 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
     $user2 = $this->createUser();
 
     // Create a test entity.
-    $entity = EntityTestMulRevChanged::create(array(
+    $entity = EntityTestMulRevChanged::create([
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
       'language' => 'en',
-    ));
+    ]);
     $entity->save();
 
     $this->assertTrue(

@@ -77,7 +77,7 @@ trait QueryConditionTrait {
   /**
    * {@inheritdoc}
    */
-  public function where($snippet, $args = array()) {
+  public function where($snippet, $args = []) {
     $this->condition->where($snippet, $args);
     return $this;
   }

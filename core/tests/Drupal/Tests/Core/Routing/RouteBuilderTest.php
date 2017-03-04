@@ -106,7 +106,7 @@ class RouteBuilderTest extends UnitTestCase {
 
     $this->yamlDiscovery->expects($this->any())
       ->method('findAll')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
 
     $this->assertTrue($this->routeBuilder->rebuild());
   }
@@ -149,7 +149,7 @@ class RouteBuilderTest extends UnitTestCase {
 
     $this->yamlDiscovery->expects($this->once())
       ->method('findAll')
-      ->will($this->returnValue(array('test_module' => $routes)));
+      ->will($this->returnValue(['test_module' => $routes]));
 
     $route_collection = $routing_fixtures->sampleRouteCollection();
     $route_build_event = new RouteBuildEvent($route_collection);
@@ -192,14 +192,14 @@ class RouteBuilderTest extends UnitTestCase {
 
     $this->yamlDiscovery->expects($this->once())
       ->method('findAll')
-      ->will($this->returnValue(array(
-        'test_module' => array(
-          'route_callbacks' => array(
+      ->will($this->returnValue([
+        'test_module' => [
+          'route_callbacks' => [
             '\Drupal\Tests\Core\Routing\TestRouteSubscriber::routesFromArray',
             'test_module.route_service:routesFromCollection',
-          ),
-        ),
-      )));
+          ],
+        ],
+      ]));
 
     $container = new ContainerBuilder();
     $container->set('test_module.route_service', new TestRouteSubscriber());
@@ -215,7 +215,7 @@ class RouteBuilderTest extends UnitTestCase {
           list($class, $method) = explode('::', $controller, 2);
           $object = new $class();
         }
-        return array($object, $method);
+        return [$object, $method];
       }));
 
     $route_collection_filled = new RouteCollection();
@@ -263,7 +263,7 @@ class RouteBuilderTest extends UnitTestCase {
 
     $this->yamlDiscovery->expects($this->any())
       ->method('findAll')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
 
     $this->routeBuilder->setRebuildNeeded();
 
@@ -312,9 +312,9 @@ class TestRouteBuilder extends RouteBuilder {
  */
 class TestRouteSubscriber {
   public function routesFromArray() {
-    return array(
+    return [
       'test_route.1' => new Route('/test-route/1'),
-    );
+    ];
   }
   public function routesFromCollection() {
     $collection = new RouteCollection();

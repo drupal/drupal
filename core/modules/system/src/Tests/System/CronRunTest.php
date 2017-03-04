@@ -47,7 +47,7 @@ class CronRunTest extends WebTestBase {
     // Test with a logged in user; anonymous users likely don't cause Drupal to
     // fully bootstrap, because of the internal page cache or an external
     // reverse proxy. Reuse this user for disabling cron later in the test.
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
 
     // Ensure cron does not run when a non-zero cron interval is specified and
@@ -97,7 +97,7 @@ class CronRunTest extends WebTestBase {
    * Make sure the cron UI reads from the state storage.
    */
   function testCronUI() {
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/config/system/cron');
     // Don't use REQUEST to calculate the exact time, because that will
@@ -114,7 +114,7 @@ class CronRunTest extends WebTestBase {
    * Ensure that the manual cron run is working.
    */
   public function testManualCron() {
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/reports/status/run-cron');

@@ -17,7 +17,7 @@ class FeedCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('aggregator');
+  public static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}
@@ -37,13 +37,13 @@ class FeedCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    */
   protected function createEntity() {
     // Create a "Llama" feed.
-    $feed = Feed::create(array(
+    $feed = Feed::create([
       'title' => 'Llama',
       'url' => 'https://www.drupal.org/',
       'refresh' => 900,
       'checked' => 1389919932,
       'description' => 'Drupal.org',
-    ));
+    ]);
     $feed->save();
 
     return $feed;

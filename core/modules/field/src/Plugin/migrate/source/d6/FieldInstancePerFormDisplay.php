@@ -18,7 +18,7 @@ class FieldInstancePerFormDisplay extends DrupalSqlBase {
    * {@inheritdoc}
    */
   protected function initializeIterator() {
-    $rows = array();
+    $rows = [];
     $result = $this->prepareQuery()->execute();
     while ($field_row = $result->fetchAssoc()) {
       $bundle = $field_row['type_name'];
@@ -44,7 +44,7 @@ class FieldInstancePerFormDisplay extends DrupalSqlBase {
    */
   public function query() {
     $query = $this->select('content_node_field_instance', 'cnfi')
-      ->fields('cnfi', array(
+      ->fields('cnfi', [
         'field_name',
         'type_name',
         'weight',
@@ -55,11 +55,11 @@ class FieldInstancePerFormDisplay extends DrupalSqlBase {
         'description',
         'widget_module',
         'widget_active',
-      ))
-      ->fields('cnf', array(
+      ])
+      ->fields('cnf', [
         'type',
         'module',
-      ));
+      ]);
     $query->join('content_node_field', 'cnf', 'cnfi.field_name = cnf.field_name');
     $query->orderBy('cnfi.weight');
 
@@ -70,7 +70,7 @@ class FieldInstancePerFormDisplay extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'field_name' => $this->t('The machine name of field.'),
       'type_name' => $this->t('Content type where this field is used.'),
       'weight' => $this->t('Weight.'),
@@ -81,7 +81,7 @@ class FieldInstancePerFormDisplay extends DrupalSqlBase {
       'description' => $this->t('A description of field.'),
       'widget_module' => $this->t('Module that implements widget.'),
       'widget_active' => $this->t('Status of widget'),
-    );
+    ];
   }
 
   /**

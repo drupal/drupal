@@ -35,12 +35,12 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Load the node and the file.
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $file = File::load($node->{$field_name}->target_id);
 
     // Generate and test sanitized tokens.
-    $tests = array();
+    $tests = [];
     $tests['[file:fid]'] = $file->id();
     $tests['[file:name]'] = Html::escape($file->getFilename());
     $tests['[file:path]'] = Html::escape($file->getFileUri());
@@ -77,8 +77,8 @@ class FileTokenReplaceTest extends FileFieldTestBase {
 
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
-      $output = $token_service->replace($input, array('file' => $file), array('langcode' => $language_interface->getId()), $bubbleable_metadata);
-      $this->assertEqual($output, $expected, format_string('Sanitized file token %token replaced.', array('%token' => $input)));
+      $output = $token_service->replace($input, ['file' => $file], ['langcode' => $language_interface->getId()], $bubbleable_metadata);
+      $this->assertEqual($output, $expected, format_string('Sanitized file token %token replaced.', ['%token' => $input]));
       $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
     }
 
@@ -89,8 +89,8 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:size]'] = format_size($file->getSize());
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('file' => $file), array('langcode' => $language_interface->getId(), 'sanitize' => FALSE));
-      $this->assertEqual($output, $expected, format_string('Unsanitized file token %token replaced.', array('%token' => $input)));
+      $output = $token_service->replace($input, ['file' => $file], ['langcode' => $language_interface->getId(), 'sanitize' => FALSE]);
+      $this->assertEqual($output, $expected, format_string('Unsanitized file token %token replaced.', ['%token' => $input]));
     }
   }
 

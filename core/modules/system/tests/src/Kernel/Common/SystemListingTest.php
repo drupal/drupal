@@ -17,14 +17,14 @@ class SystemListingTest extends KernelTestBase {
   function testDirectoryPrecedence() {
     // Define the module files we will search for, and the directory precedence
     // we expect.
-    $expected_directories = array(
+    $expected_directories = [
       // When both copies of the module are compatible with Drupal core, the
       // copy in the profile directory takes precedence.
-      'drupal_system_listing_compatible_test' => array(
+      'drupal_system_listing_compatible_test' => [
         'core/profiles/testing/modules',
         'core/modules/system/tests/modules',
-      ),
-    );
+      ],
+    ];
 
     // This test relies on two versions of the same module existing in
     // different places in the filesystem. Without that, the test has no
@@ -32,22 +32,22 @@ class SystemListingTest extends KernelTestBase {
     foreach ($expected_directories as $module => $directories) {
       foreach ($directories as $directory) {
         $filename = "$directory/$module/$module.info.yml";
-        $this->assertTrue(file_exists(\Drupal::root() . '/' . $filename), format_string('@filename exists.', array('@filename' => $filename)));
+        $this->assertTrue(file_exists(\Drupal::root() . '/' . $filename), format_string('@filename exists.', ['@filename' => $filename]));
       }
     }
 
     // Now scan the directories and check that the files take precedence as
     // expected.
     $listing = new ExtensionDiscovery(\Drupal::root());
-    $listing->setProfileDirectories(array('core/profiles/testing'));
+    $listing->setProfileDirectories(['core/profiles/testing']);
     $files = $listing->scan('module');
     foreach ($expected_directories as $module => $directories) {
       $expected_directory = array_shift($directories);
       $expected_uri = "$expected_directory/$module/$module.info.yml";
-      $this->assertEqual($files[$module]->getPathname(), $expected_uri, format_string('Module @actual was found at @expected.', array(
+      $this->assertEqual($files[$module]->getPathname(), $expected_uri, format_string('Module @actual was found at @expected.', [
         '@actual' => $files[$module]->getPathname(),
         '@expected' => $expected_uri,
-      )));
+      ]));
     }
   }
 
@@ -56,7 +56,7 @@ class SystemListingTest extends KernelTestBase {
    */
   public function testFileScanIgnoreDirectory() {
     $listing = new ExtensionDiscovery(\Drupal::root(), FALSE);
-    $listing->setProfileDirectories(array('core/profiles/testing'));
+    $listing->setProfileDirectories(['core/profiles/testing']);
     $files = $listing->scan('module');
     $this->assertArrayHasKey('drupal_system_listing_compatible_test', $files);
 
@@ -68,7 +68,7 @@ class SystemListingTest extends KernelTestBase {
 
     $this->setSetting('file_scan_ignore_directories', ['drupal_system_listing_compatible_test']);
     $listing = new ExtensionDiscovery(\Drupal::root(), FALSE);
-    $listing->setProfileDirectories(array('core/profiles/testing'));
+    $listing->setProfileDirectories(['core/profiles/testing']);
     $files = $listing->scan('module');
     $this->assertArrayNotHasKey('drupal_system_listing_compatible_test', $files);
   }

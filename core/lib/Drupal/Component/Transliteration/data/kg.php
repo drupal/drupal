@@ -5,7 +5,7 @@
  * Kyrgyz transliteration data for the PhpTransliteration class.
  */
 
-$overrides['kg'] = array(
+$overrides['kg'] = [
   0x41 => 'E',
   0x416 => 'C',
   0x419 => 'J',
@@ -28,4 +28,4 @@ $overrides['kg'] = array(
   0x4AF => 'w',
   0x4E8 => 'Q',
   0x4E9 => 'q',
-);
+];

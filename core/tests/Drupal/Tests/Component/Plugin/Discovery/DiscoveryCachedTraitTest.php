@@ -21,11 +21,11 @@ class DiscoveryCachedTraitTest extends UnitTestCase {
    *   - Plugin name to query for.
    */
   public function providerGetDefinition() {
-    return array(
+    return [
       ['definition', [], ['plugin_name' => 'definition'], 'plugin_name'],
       ['definition', ['plugin_name' => 'definition'], [], 'plugin_name'],
       [NULL, ['plugin_name' => 'definition'], [], 'bad_plugin_name'],
-    );
+    ];
   }
 
   /**

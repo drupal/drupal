@@ -19,14 +19,14 @@ class FilterEntityBundleTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_entity_type_filter');
+  public static $testViews = ['test_entity_type_filter'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   /**
    * Entity bundle data.
@@ -40,15 +40,15 @@ class FilterEntityBundleTest extends ViewTestBase {
    *
    * @var array
    */
-  protected $entities = array();
+  protected $entities = [];
 
   protected function setUp() {
     parent::setUp(FALSE);
 
-    $this->drupalCreateContentType(array('type' => 'test_bundle'));
-    $this->drupalCreateContentType(array('type' => 'test_bundle_2'));
+    $this->drupalCreateContentType(['type' => 'test_bundle']);
+    $this->drupalCreateContentType(['type' => 'test_bundle_2']);
 
-    ViewTestData::createTestViews(get_class($this), array('views_test_config'));
+    ViewTestData::createTestViews(get_class($this), ['views_test_config']);
 
     $this->entityBundles = $this->container->get('entity_type.bundle.info')->getBundleInfo('node');
 
@@ -92,7 +92,7 @@ class FilterEntityBundleTest extends ViewTestBase {
     $this->assertEqual(count($view->result), $this->entities['count']);
 
     // Test the valueOptions of the filter handler.
-    $expected = array();
+    $expected = [];
 
     foreach ($this->entityBundles as $key => $info) {
       $expected[$key] = $info['label'];
@@ -106,7 +106,7 @@ class FilterEntityBundleTest extends ViewTestBase {
       // Test each bundle type.
       $view->initDisplay();
       $filters = $view->display_handler->getOption('filters');
-      $filters['type']['value'] = array($key => $key);
+      $filters['type']['value'] = [$key => $key];
       $view->display_handler->setOption('filters', $filters);
       $this->executeView($view);
 
@@ -118,7 +118,7 @@ class FilterEntityBundleTest extends ViewTestBase {
     // Test an invalid bundle type to make sure we have no results.
     $view->initDisplay();
     $filters = $view->display_handler->getOption('filters');
-    $filters['type']['value'] = array('type_3' => 'type_3');
+    $filters['type']['value'] = ['type_3' => 'type_3'];
     $view->display_handler->setOption('filters', $filters);
     $this->executeView($view);
 

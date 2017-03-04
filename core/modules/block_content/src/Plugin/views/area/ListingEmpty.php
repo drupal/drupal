@@ -71,19 +71,19 @@ class ListingEmpty extends AreaPluginBase {
   public function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
       /** @var \Drupal\Core\Access\AccessResultInterface|\Drupal\Core\Cache\CacheableDependencyInterface $access_result */
-      $access_result = $this->accessManager->checkNamedRoute('block_content.add_page', array(), $this->currentUser, TRUE);
-      $element = array(
-        '#markup' => $this->t('Add a <a href=":url">custom block</a>.', array(':url' => Url::fromRoute('block_content.add_page')->toString())),
+      $access_result = $this->accessManager->checkNamedRoute('block_content.add_page', [], $this->currentUser, TRUE);
+      $element = [
+        '#markup' => $this->t('Add a <a href=":url">custom block</a>.', [':url' => Url::fromRoute('block_content.add_page')->toString()]),
         '#access' => $access_result->isAllowed(),
         '#cache' => [
           'contexts' => $access_result->getCacheContexts(),
           'tags' => $access_result->getCacheTags(),
           'max-age' => $access_result->getCacheMaxAge(),
         ],
-      );
+      ];
       return $element;
     }
-    return array();
+    return [];
   }
 
 }

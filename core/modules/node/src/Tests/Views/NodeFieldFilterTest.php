@@ -14,14 +14,14 @@ class NodeFieldFilterTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('language');
+  public static $modules = ['language'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_field_filters');
+  public static $testViews = ['test_field_filters'];
 
   /**
    * List of node titles by language.
@@ -35,7 +35,7 @@ class NodeFieldFilterTest extends NodeTestBase {
 
     // Create Page content type.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     }
 
     // Add two new languages.
@@ -43,15 +43,15 @@ class NodeFieldFilterTest extends NodeTestBase {
     ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Set up node titles.
-    $this->nodeTitles = array(
+    $this->nodeTitles = [
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
       'fr' => 'Nouriture en Paris',
-    );
+    ];
 
     // Create node with translations.
     $node = $this->drupalCreateNode(['title' => $this->nodeTitles['en'], 'langcode' => 'en', 'type' => 'page', 'body' => [['value' => $this->nodeTitles['en']]]]);
-    foreach (array('es', 'fr') as $langcode) {
+    foreach (['es', 'fr'] as $langcode) {
       $translation = $node->addTranslation($langcode, ['title' => $this->nodeTitles[$langcode]]);
       $translation->body->value = $this->nodeTitles[$langcode];
     }
@@ -64,19 +64,19 @@ class NodeFieldFilterTest extends NodeTestBase {
   public function testFilters() {
     // Test the title filter page, which filters for title contains 'Comida'.
     // Should show just the Spanish translation, once.
-    $this->assertPageCounts('test-title-filter', array('es' => 1, 'fr' => 0, 'en' => 0), 'Comida title filter');
+    $this->assertPageCounts('test-title-filter', ['es' => 1, 'fr' => 0, 'en' => 0], 'Comida title filter');
 
     // Test the body filter page, which filters for body contains 'Comida'.
     // Should show just the Spanish translation, once.
-    $this->assertPageCounts('test-body-filter', array('es' => 1, 'fr' => 0, 'en' => 0), 'Comida body filter');
+    $this->assertPageCounts('test-body-filter', ['es' => 1, 'fr' => 0, 'en' => 0], 'Comida body filter');
 
     // Test the title Paris filter page, which filters for title contains
     // 'Paris'. Should show each translation once.
-    $this->assertPageCounts('test-title-paris', array('es' => 1, 'fr' => 1, 'en' => 1), 'Paris title filter');
+    $this->assertPageCounts('test-title-paris', ['es' => 1, 'fr' => 1, 'en' => 1], 'Paris title filter');
 
     // Test the body Paris filter page, which filters for body contains
     // 'Paris'. Should show each translation once.
-    $this->assertPageCounts('test-body-paris', array('es' => 1, 'fr' => 1, 'en' => 1), 'Paris body filter');
+    $this->assertPageCounts('test-body-paris', ['es' => 1, 'fr' => 1, 'en' => 1], 'Paris body filter');
   }
 
   /**

@@ -86,33 +86,33 @@ class NodeForm extends ContentEntityForm {
     $node = $this->entity;
 
     if ($this->operation == 'edit') {
-      $form['#title'] = $this->t('<em>Edit @type</em> @title', array('@type' => node_get_type_label($node), '@title' => $node->label()));
+      $form['#title'] = $this->t('<em>Edit @type</em> @title', ['@type' => node_get_type_label($node), '@title' => $node->label()]);
     }
 
     // Changed must be sent to the client, for later overwrite error checking.
-    $form['changed'] = array(
+    $form['changed'] = [
       '#type' => 'hidden',
       '#default_value' => $node->getChangedTime(),
-    );
+    ];
 
     $form = parent::form($form, $form_state);
 
     $form['advanced']['#attributes']['class'][] = 'entity-meta';
 
     // Node author information for administrators.
-    $form['author'] = array(
+    $form['author'] = [
       '#type' => 'details',
       '#title' => t('Authoring information'),
       '#group' => 'advanced',
-      '#attributes' => array(
-        'class' => array('node-form-author'),
-      ),
-      '#attached' => array(
-        'library' => array('node/drupal.node'),
-      ),
+      '#attributes' => [
+        'class' => ['node-form-author'],
+      ],
+      '#attached' => [
+        'library' => ['node/drupal.node'],
+      ],
       '#weight' => 90,
       '#optional' => TRUE,
-    );
+    ];
 
     if (isset($form['uid'])) {
       $form['uid']['#group'] = 'author';
@@ -123,19 +123,19 @@ class NodeForm extends ContentEntityForm {
     }
 
     // Node options for administrators.
-    $form['options'] = array(
+    $form['options'] = [
       '#type' => 'details',
       '#title' => t('Promotion options'),
       '#group' => 'advanced',
-      '#attributes' => array(
-        'class' => array('node-form-options'),
-      ),
-      '#attached' => array(
-        'library' => array('node/drupal.node'),
-      ),
+      '#attributes' => [
+        'class' => ['node-form-options'],
+      ],
+      '#attached' => [
+        'library' => ['node/drupal.node'],
+      ],
       '#weight' => 95,
       '#optional' => TRUE,
-    );
+    ];
 
     if (isset($form['promote'])) {
       $form['promote']['#group'] = 'options';
@@ -236,13 +236,13 @@ class NodeForm extends ContentEntityForm {
       $element['submit']['#access'] = FALSE;
     }
 
-    $element['preview'] = array(
+    $element['preview'] = [
       '#type' => 'submit',
       '#access' => $preview_mode != DRUPAL_DISABLED && ($node->access('create') || $node->access('update')),
       '#value' => t('Preview'),
       '#weight' => 20,
-      '#submit' => array('::submitForm', '::preview'),
-    );
+      '#submit' => ['::submitForm', '::preview'],
+    ];
 
     $element['delete']['#access'] = $node->access('delete');
     $element['delete']['#weight'] = 100;
@@ -285,8 +285,8 @@ class NodeForm extends ContentEntityForm {
     $insert = $node->isNew();
     $node->save();
     $node_link = $node->link($this->t('View'));
-    $context = array('@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link);
-    $t_args = array('@type' => node_get_type_label($node), '%title' => $node->link($node->label()));
+    $context = ['@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link];
+    $t_args = ['@type' => node_get_type_label($node), '%title' => $node->link($node->label())];
 
     if ($insert) {
       $this->logger('content')->notice('@type: added %title.', $context);
@@ -303,7 +303,7 @@ class NodeForm extends ContentEntityForm {
       if ($node->access('view')) {
         $form_state->setRedirect(
           'entity.node.canonical',
-          array('node' => $node->id())
+          ['node' => $node->id()]
         );
       }
       else {

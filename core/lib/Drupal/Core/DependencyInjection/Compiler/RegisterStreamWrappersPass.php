@@ -24,7 +24,7 @@ class RegisterStreamWrappersPass implements CompilerPassInterface {
       $class = $container->getDefinition($id)->getClass();
       $scheme = $attributes[0]['scheme'];
 
-      $stream_wrapper_manager->addMethodCall('addStreamWrapper', array($id, $class, $scheme));
+      $stream_wrapper_manager->addMethodCall('addStreamWrapper', [$id, $class, $scheme]);
     }
   }
 

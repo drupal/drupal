@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'ppwok', 'ppwot', 'ppwop', 'ppwoh', 'ppwe', 'ppweg', 'ppwekk', 'ppwegs', 'ppwen', 'ppwenj', 'ppwenh', 'ppwed', 'ppwel', 'ppwelg', 'ppwelm', 'ppwelb',
   0x10 => 'ppwels', 'ppwelt', 'ppwelp', 'ppwelh', 'ppwem', 'ppweb', 'ppwebs', 'ppwes', 'ppwess', 'ppweng', 'ppwej', 'ppwech', 'ppwek', 'ppwet', 'ppwep', 'ppweh',
   0x20 => 'ppwi', 'ppwig', 'ppwikk', 'ppwigs', 'ppwin', 'ppwinj', 'ppwinh', 'ppwid', 'ppwil', 'ppwilg', 'ppwilm', 'ppwilb', 'ppwils', 'ppwilt', 'ppwilp', 'ppwilh',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'sael', 'saelg', 'saelm', 'saelb', 'saels', 'saelt', 'saelp', 'saelh', 'saem', 'saeb', 'saebs', 'saes', 'saess', 'saeng', 'saej', 'saech',
   0xE0 => 'saek', 'saet', 'saep', 'saeh', 'sya', 'syag', 'syakk', 'syags', 'syan', 'syanj', 'syanh', 'syad', 'syal', 'syalg', 'syalm', 'syalb',
   0xF0 => 'syals', 'syalt', 'syalp', 'syalh', 'syam', 'syab', 'syabs', 'syas', 'syass', 'syang', 'syaj', 'syach', 'syak', 'syat', 'syap', 'syah',
-);
+];

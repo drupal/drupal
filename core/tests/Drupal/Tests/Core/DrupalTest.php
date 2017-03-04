@@ -31,7 +31,7 @@ class DrupalTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
     $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-      ->setMethods(array('get'))
+      ->setMethods(['get'])
       ->getMock();
   }
 
@@ -347,8 +347,8 @@ class DrupalTest extends UnitTestCase {
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    */
   public function testUrl() {
-    $route_parameters = array('test_parameter' => 'test');
-    $options = array('test_option' => 'test');
+    $route_parameters = ['test_parameter' => 'test'];
+    $options = ['test_option' => 'test'];
     $generator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
     $generator->expects($this->once())
       ->method('generateFromRoute')
@@ -376,8 +376,8 @@ class DrupalTest extends UnitTestCase {
    * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    */
   public function testL() {
-    $route_parameters = array('test_parameter' => 'test');
-    $options = array('test_option' => 'test');
+    $route_parameters = ['test_parameter' => 'test'];
+    $options = ['test_option' => 'test'];
     $generator = $this->getMock('Drupal\Core\Utility\LinkGeneratorInterface');
     $url = new Url('test_route', $route_parameters, $options);
     $generator->expects($this->once())

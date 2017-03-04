@@ -86,7 +86,7 @@ interface ConditionInterface {
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
-  public function where($snippet, $args = array());
+  public function where($snippet, $args = []);
 
   /**
    * Sets a condition that the specified field be NULL.

@@ -16,14 +16,14 @@ class ResponseGeneratorTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'node', 'basic_auth');
+  public static $modules = ['hal', 'rest', 'node', 'basic_auth'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     $permissions = $this->entityPermissions('node', 'view');
     $account = $this->drupalCreateUser($permissions);

@@ -71,7 +71,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function load() {
-    $entities = array();
+    $entities = [];
     foreach (parent::load() as $entity) {
       $entities[$entity->getTargetType()][] = $entity;
     }
@@ -82,7 +82,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
-    $build = array();
+    $build = [];
     foreach ($this->load() as $entity_type => $entities) {
       if (!isset($this->entityTypes[$entity_type])) {
         continue;
@@ -93,12 +93,12 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
         continue;
       }
 
-      $table = array(
+      $table = [
         '#prefix' => '<h2>' . $this->entityTypes[$entity_type]->getLabel() . '</h2>',
         '#type' => 'table',
         '#header' => $this->buildHeader(),
-        '#rows' => array(),
-      );
+        '#rows' => [],
+      ];
       foreach ($entities as $entity) {
         if ($row = $this->buildRow($entity)) {
           $table['#rows'][$entity->id()] = $row;
@@ -110,15 +110,15 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
         $table['#weight'] = -10;
       }
 
-      $short_type = str_replace(array('entity_', '_mode'), '', $this->entityTypeId);
-      $table['#rows']['_add_new'][] = array(
-        'data' => array(
+      $short_type = str_replace(['entity_', '_mode'], '', $this->entityTypeId);
+      $table['#rows']['_add_new'][] = [
+        'data' => [
           '#type' => 'link',
           '#url' => Url::fromRoute($short_type == 'view' ? 'entity.entity_view_mode.add_form' : 'entity.entity_form_mode.add_form', ['entity_type_id' => $entity_type]),
-          '#title' => $this->t('Add new %label @entity-type', array('%label' => $this->entityTypes[$entity_type]->getLabel(), '@entity-type' => $this->entityType->getLowercaseLabel())),
-        ),
+          '#title' => $this->t('Add new %label @entity-type', ['%label' => $this->entityTypes[$entity_type]->getLabel(), '@entity-type' => $this->entityType->getLowercaseLabel()]),
+        ],
         'colspan' => count($table['#header']),
-      );
+      ];
       $build[$entity_type] = $table;
     }
     return $build;

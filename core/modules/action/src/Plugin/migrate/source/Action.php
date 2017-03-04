@@ -27,12 +27,12 @@ class Action extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    $fields = array(
+    $fields = [
       'aid' => $this->t('Action ID'),
       'type' => $this->t('Module'),
       'callback' => $this->t('Callback function'),
       'parameters' => $this->t('Action configuration'),
-    );
+    ];
     if ($this->getModuleSchemaVersion('system') >= 7000) {
       $fields['label'] = $this->t('Label of the action');
     }

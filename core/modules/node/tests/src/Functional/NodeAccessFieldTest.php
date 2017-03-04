@@ -17,7 +17,7 @@ class NodeAccessFieldTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_access_test', 'field_ui');
+  public static $modules = ['node_access_test', 'field_ui'];
 
   /**
    * A user with permission to bypass access content.
@@ -46,16 +46,16 @@ class NodeAccessFieldTest extends NodeTestBase {
     node_access_rebuild();
 
     // Create some users.
-    $this->adminUser = $this->drupalCreateUser(array('access content', 'bypass node access'));
-    $this->contentAdminUser = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields'));
+    $this->adminUser = $this->drupalCreateUser(['access content', 'bypass node access']);
+    $this->contentAdminUser = $this->drupalCreateUser(['access content', 'administer content types', 'administer node fields']);
 
     // Add a custom field to the page content type.
     $this->fieldName = Unicode::strtolower($this->randomMachineName() . '_field_name');
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'type' => 'text'
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
@@ -74,9 +74,9 @@ class NodeAccessFieldTest extends NodeTestBase {
    */
   function testNodeAccessAdministerField() {
     // Create a page node.
-    $fieldData = array();
+    $fieldData = [];
     $value = $fieldData[0]['value'] = $this->randomMachineName();
-    $node = $this->drupalCreateNode(array($this->fieldName => $fieldData));
+    $node = $this->drupalCreateNode([$this->fieldName => $fieldData]);
 
     // Log in as the administrator and confirm that the field value is present.
     $this->drupalLogin($this->adminUser);
@@ -89,7 +89,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     $this->assertText('Access denied', 'Access is denied for the content admin.');
 
     // Modify the field default as the content admin.
-    $edit = array();
+    $edit = [];
     $default = 'Sometimes words have two meanings';
     $edit["default_value_input[{$this->fieldName}][0][value]"] = $default;
     $this->drupalPostForm(

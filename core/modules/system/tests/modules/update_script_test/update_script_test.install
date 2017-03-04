@@ -9,27 +9,27 @@
  * Implements hook_requirements().
  */
 function update_script_test_requirements($phase) {
-  $requirements = array();
+  $requirements = [];
 
   if ($phase == 'update') {
     // Set a requirements warning or error when the test requests it.
     $requirement_type = \Drupal::config('update_script_test.settings')->get('requirement_type');
     switch ($requirement_type) {
       case REQUIREMENT_WARNING:
-        $requirements['update_script_test'] = array(
+        $requirements['update_script_test'] = [
           'title' => 'Update script test',
           'value' => 'Warning',
           'description' => 'This is a requirements warning provided by the update_script_test module.',
           'severity' => REQUIREMENT_WARNING,
-        );
+        ];
         break;
       case REQUIREMENT_ERROR:
-        $requirements['update_script_test'] = array(
+        $requirements['update_script_test'] = [
           'title' => 'Update script test',
           'value' => 'Error',
           'description' => 'This is a requirements error provided by the update_script_test module.',
           'severity' => REQUIREMENT_ERROR,
-        );
+        ];
         break;
     }
   }

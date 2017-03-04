@@ -22,14 +22,14 @@ class HandlerFieldFieldTest extends FieldTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('node', 'field_test');
+  public static $modules = ['node', 'field_test'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view_fieldapi');
+  public static $testViews = ['test_view_fieldapi'];
 
   /**
    * Test nodes.
@@ -48,47 +48,47 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $this->setUpFieldStorages(3);
 
     // Setup a field with cardinality > 1.
-    $this->fieldStorages[3] = FieldStorageConfig::create(array(
+    $this->fieldStorages[3] = FieldStorageConfig::create([
       'field_name' => 'field_name_3',
       'entity_type' => 'node',
       'type' => 'string',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ));
+    ]);
     $this->fieldStorages[3]->save();
     // Setup a field that will have no value.
-    $this->fieldStorages[4] = FieldStorageConfig::create(array(
+    $this->fieldStorages[4] = FieldStorageConfig::create([
       'field_name' => 'field_name_4',
       'entity_type' => 'node',
       'type' => 'string',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ));
+    ]);
     $this->fieldStorages[4]->save();
 
     // Setup a text field.
-    $this->fieldStorages[5] = FieldStorageConfig::create(array(
+    $this->fieldStorages[5] = FieldStorageConfig::create([
       'field_name' => 'field_name_5',
       'entity_type' => 'node',
       'type' => 'text',
-    ));
+    ]);
     $this->fieldStorages[5]->save();
 
     // Setup a text field with access control.
     // @see field_test_entity_field_access()
-    $this->fieldStorages[6] = FieldStorageConfig::create(array(
+    $this->fieldStorages[6] = FieldStorageConfig::create([
       'field_name' => 'field_no_view_access',
       'entity_type' => 'node',
       'type' => 'text',
-    ));
+    ]);
     $this->fieldStorages[6]->save();
 
     $this->setUpFields();
 
     // Create some nodes.
-    $this->nodes = array();
+    $this->nodes = [];
     for ($i = 0; $i < 3; $i++) {
-      $edit = array('type' => 'page');
+      $edit = ['type' => 'page'];
 
-      foreach (array(0, 1, 2, 5) as $key) {
+      foreach ([0, 1, 2, 5] as $key) {
         $field_storage = $this->fieldStorages[$key];
         $edit[$field_storage->getName()][0]['value'] = $this->randomMachineName(8);
       }
@@ -98,7 +98,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
         $edit[$this->fieldStorages[3]->getName()][$j]['value'] = $this->randomMachineName(8);
       }
       // Set this field to be empty.
-      $edit[$this->fieldStorages[4]->getName()] = array(array('value' => NULL));
+      $edit[$this->fieldStorages[4]->getName()] = [['value' => NULL]];
 
       $this->nodes[$i] = $this->drupalCreateNode($edit);
     }
@@ -171,9 +171,9 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $view = Views::getView('test_view_fieldapi');
     $this->prepareView($view);
     $view->displayHandlers->get('default')->options['fields'][$this->fieldStorages[5]->getName()]['type'] = 'text_trimmed';
-    $view->displayHandlers->get('default')->options['fields'][$this->fieldStorages[5]->getName()]['settings'] = array(
+    $view->displayHandlers->get('default')->options['fields'][$this->fieldStorages[5]->getName()]['settings'] = [
       'trim_length' => 3,
-    );
+    ];
     $this->executeView($view);
 
     // Make sure that the formatter works as expected.
@@ -196,7 +196,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
-      $items = array();
+      $items = [];
       $pure_items = $this->nodes[$i]->{$field_name}->getValue();
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {
@@ -218,7 +218,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
-      $items = array();
+      $items = [];
       $pure_items = $this->nodes[$i]->{$field_name}->getValue();
       $pure_items = array_splice($pure_items, 1, 3);
       foreach ($pure_items as $j => $item) {
@@ -238,7 +238,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
-      $items = array();
+      $items = [];
       $pure_items = $this->nodes[$i]->{$field_name}->getValue();
       array_splice($pure_items, 0, -3);
       $pure_items = array_reverse($pure_items);
@@ -259,7 +259,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
-      $items = array();
+      $items = [];
       $pure_items = $this->nodes[$i]->{$field_name}->getValue();
       $items[] = $pure_items[0]['value'];
       $items[] = $pure_items[4]['value'];
@@ -277,7 +277,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
-      $items = array();
+      $items = [];
       $pure_items = $this->nodes[$i]->{$field_name}->getValue();
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {

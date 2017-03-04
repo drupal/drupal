@@ -37,9 +37,9 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
     // Make some test doubles.
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $config_factory = $this->getConfigFactoryStub(
-      array(
-        'forum.settings' => array('IAmATestKey' => 'IAmATestValue'),
-      )
+      [
+        'forum.settings' => ['IAmATestKey' => 'IAmATestValue'],
+      ]
     );
     $forum_manager = $this->getMock('Drupal\forum\ForumManagerInterface');
     $translation_manager = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
@@ -48,20 +48,20 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
     $builder = $this->getMockForAbstractClass(
       'Drupal\forum\Breadcrumb\ForumBreadcrumbBuilderBase',
       // Constructor array.
-      array(
+      [
         $entity_manager,
         $config_factory,
         $forum_manager,
         $translation_manager,
-      )
+      ]
     );
 
     // Reflect upon our properties, except for config which is a special case.
-    $property_names = array(
+    $property_names = [
       'entityManager' => $entity_manager,
       'forumManager' => $forum_manager,
       'stringTranslation' => $translation_manager,
-    );
+    ];
     foreach ($property_names as $property_name => $property_value) {
       $this->assertAttributeEquals(
         $property_value, $property_name, $builder
@@ -103,37 +103,37 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
     $vocab_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     $vocab_storage->expects($this->any())
       ->method('load')
-      ->will($this->returnValueMap(array(
-        array('forums', $prophecy->reveal()),
-      )));
+      ->will($this->returnValueMap([
+        ['forums', $prophecy->reveal()],
+      ]));
 
     $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManagerInterface')
       ->disableOriginalConstructor()
       ->getMock();
     $entity_manager->expects($this->any())
       ->method('getStorage')
-      ->will($this->returnValueMap(array(
-        array('taxonomy_vocabulary', $vocab_storage),
-      )));
+      ->will($this->returnValueMap([
+        ['taxonomy_vocabulary', $vocab_storage],
+      ]));
 
     $config_factory = $this->getConfigFactoryStub(
-      array(
-        'forum.settings' => array(
+      [
+        'forum.settings' => [
           'vocabulary' => 'forums',
-        ),
-      )
+        ],
+      ]
     );
 
     // Build a breadcrumb builder to test.
     $breadcrumb_builder = $this->getMockForAbstractClass(
       'Drupal\forum\Breadcrumb\ForumBreadcrumbBuilderBase',
       // Constructor array.
-      array(
+      [
         $entity_manager,
         $config_factory,
         $forum_manager,
         $translation_manager,
-      )
+      ]
     );
 
     // Add a translation manager for t().
@@ -144,10 +144,10 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
     $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
 
     // Expected result set.
-    $expected = array(
+    $expected = [
       Link::createFromRoute('Home', '<front>'),
       Link::createFromRoute('Fora_is_the_plural_of_forum', 'forum.index'),
-    );
+    ];
 
     // And finally, the test.
     $breadcrumb = $breadcrumb_builder->build($route_match);

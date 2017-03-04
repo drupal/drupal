@@ -23,22 +23,22 @@ class EditorFileUsageTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('editor', 'editor_test', 'node', 'file');
+  public static $modules = ['editor', 'editor_test', 'node', 'file'];
 
   protected function setUp() {
     parent::setUp();
     $this->installEntitySchema('file');
-    $this->installSchema('node', array('node_access'));
-    $this->installSchema('file', array('file_usage'));
+    $this->installSchema('node', ['node_access']);
+    $this->installSchema('file', ['file_usage']);
     $this->installConfig(['node']);
 
     // Add text formats.
-    $filtered_html_format = FilterFormat::create(array(
+    $filtered_html_format = FilterFormat::create([
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,
-      'filters' => array(),
-    ));
+      'filters' => [],
+    ]);
     $filtered_html_format->save();
 
     // Set cardinality for body field.
@@ -63,13 +63,13 @@ class EditorFileUsageTest extends EntityKernelTestBase {
    * Tests the configurable text editor manager.
    */
   public function testEditorEntityHooks() {
-    $image_paths = array(
+    $image_paths = [
       0 => 'core/misc/druplicon.png',
       1 => 'core/misc/tree.png',
       2 => 'core/misc/help.png',
-    );
+    ];
 
-    $image_entities = array();
+    $image_entities = [];
     foreach ($image_paths as $key => $image_path) {
       $image = File::create();
       $image->setFileUri($image_path);
@@ -77,12 +77,12 @@ class EditorFileUsageTest extends EntityKernelTestBase {
       $image->save();
 
       $file_usage = $this->container->get('file.usage');
-      $this->assertIdentical(array(), $file_usage->listUsage($image), 'The image ' . $image_paths[$key] . ' has zero usages.');
+      $this->assertIdentical([], $file_usage->listUsage($image), 'The image ' . $image_paths[$key] . ' has zero usages.');
 
       $image_entities[] = $image;
     }
 
-    $body = array();
+    $body = [];
     foreach ($image_entities as $key => $image_entity) {
       // Don't be rude, say hello.
       $body_value = '<p>Hello, world!</p>';
@@ -95,10 +95,10 @@ class EditorFileUsageTest extends EntityKernelTestBase {
       // Test handling of a non-existing UUID.
       $body_value .= '<img src="awesome-llama-' . $key . '.jpg" data-entity-type="file" data-entity-uuid="30aac704-ba2c-40fc-b609-9ed121aa90f4" />';
 
-      $body[] = array(
+      $body[] = [
         'value' => $body_value,
         'format' => 'filtered_html',
-      );
+      ];
     }
 
     // Test editor_entity_insert(): increment.
@@ -111,7 +111,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     ]);
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertIdentical(array('editor' => array('node' => array(1 => '1'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 1 usage.');
+      $this->assertIdentical(['editor' => ['node' => [1 => '1']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 1 usage.');
     }
 
     // Test editor_entity_update(): increment, twice, by creating new revisions.
@@ -121,12 +121,12 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     $node->setNewRevision(TRUE);
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertIdentical(array('editor' => array('node' => array(1 => '3'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
+      $this->assertIdentical(['editor' => ['node' => [1 => '3']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
     }
 
     // Test hook_entity_update(): decrement, by modifying the last revision:
     // remove the data-entity-type attribute from the body field.
-    $original_values = array();
+    $original_values = [];
     for ($i = 0; $i < count($image_entities); $i++) {
       $original_value = $node->body[$i]->value;
       $new_value = str_replace('data-entity-type', 'data-entity-type-modified', $original_value);
@@ -135,7 +135,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertIdentical(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Test editor_entity_update(): increment again by creating a new revision:
@@ -146,7 +146,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertIdentical(array('editor' => array('node' => array(1 => '3'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
+      $this->assertIdentical(['editor' => ['node' => [1 => '3']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
     }
 
     // Test hook_entity_update(): decrement, by modifying the last revision:
@@ -158,7 +158,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertIdentical(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Test hook_entity_update(): increment, by modifying the last revision:
@@ -168,13 +168,13 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertIdentical(array('editor' => array('node' => array(1 => '3'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
+      $this->assertIdentical(['editor' => ['node' => [1 => '3']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 3 usages.');
     }
 
     // Test editor_entity_revision_delete(): decrement, by deleting a revision.
     $this->container->get('entity_type.manager')->getStorage('node')->deleteRevision($second_revision_id);
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertIdentical(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Populate both the body and summary. Because this will be the same
@@ -185,7 +185,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertIdentical(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Empty out the body value, but keep the summary. The number of usages
@@ -196,13 +196,13 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertIdentical(array('editor' => array('node' => array(1 => '2'))), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertIdentical(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Test editor_entity_delete().
     $node->delete();
     foreach ($image_entities as $key => $image_entity) {
-      $this->assertIdentical(array(), $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has zero usages again.');
+      $this->assertIdentical([], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has zero usages again.');
     }
   }
 

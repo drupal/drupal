@@ -25,14 +25,14 @@ class NumericField extends FieldPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['set_precision'] = array('default' => FALSE);
-    $options['precision'] = array('default' => 0);
-    $options['decimal'] = array('default' => '.');
-    $options['separator'] = array('default' => ',');
-    $options['format_plural'] = array('default' => FALSE);
-    $options['format_plural_string'] = array('default' => '1' . LOCALE_PLURAL_DELIMITER . '@count');
-    $options['prefix'] = array('default' => '');
-    $options['suffix'] = array('default' => '');
+    $options['set_precision'] = ['default' => FALSE];
+    $options['precision'] = ['default' => 0];
+    $options['decimal'] = ['default' => '.'];
+    $options['separator'] = ['default' => ','];
+    $options['format_plural'] = ['default' => FALSE];
+    $options['format_plural_string'] = ['default' => '1' . LOCALE_PLURAL_DELIMITER . '@count'];
+    $options['prefix'] = ['default' => ''];
+    $options['suffix'] = ['default' => ''];
 
     return $options;
   }
@@ -42,72 +42,72 @@ class NumericField extends FieldPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     if (!empty($this->definition['float'])) {
-      $form['set_precision'] = array(
+      $form['set_precision'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Round'),
         '#description' => $this->t('If checked, the number will be rounded.'),
         '#default_value' => $this->options['set_precision'],
-      );
-      $form['precision'] = array(
+      ];
+      $form['precision'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Precision'),
         '#default_value' => $this->options['precision'],
         '#description' => $this->t('Specify how many digits to print after the decimal point.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[set_precision]"]' => array('checked' => TRUE),
-          ),
-        ),
+        '#states' => [
+          'visible' => [
+            ':input[name="options[set_precision]"]' => ['checked' => TRUE],
+          ],
+        ],
         '#size' => 2,
-      );
-      $form['decimal'] = array(
+      ];
+      $form['decimal'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Decimal point'),
         '#default_value' => $this->options['decimal'],
         '#description' => $this->t('What single character to use as a decimal point.'),
         '#size' => 2,
-      );
+      ];
     }
-    $form['separator'] = array(
+    $form['separator'] = [
       '#type' => 'select',
       '#title' => $this->t('Thousands marker'),
-      '#options' => array(
+      '#options' => [
         '' => $this->t('- None -'),
         ',' => $this->t('Comma'),
         ' ' => $this->t('Space'),
         '.' => $this->t('Decimal'),
         '\'' => $this->t('Apostrophe'),
-      ),
+      ],
       '#default_value' => $this->options['separator'],
       '#description' => $this->t('What single character to use as the thousands separator.'),
       '#size' => 2,
-    );
-    $form['format_plural'] = array(
+    ];
+    $form['format_plural'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Format plural'),
       '#description' => $this->t('If checked, special handling will be used for plurality.'),
       '#default_value' => $this->options['format_plural'],
-    );
-    $form['format_plural_string'] = array(
+    ];
+    $form['format_plural_string'] = [
       '#type' => 'value',
       '#default_value' => $this->options['format_plural_string'],
-    );
+    ];
 
     $plural_array = explode(LOCALE_PLURAL_DELIMITER, $this->options['format_plural_string']);
     $plurals = $this->getNumberOfPlurals($this->view->storage->get('langcode'));
     for ($i = 0; $i < $plurals; $i++) {
-      $form['format_plural_values'][$i] = array(
+      $form['format_plural_values'][$i] = [
         '#type' => 'textfield',
         // @todo Should use better labels https://www.drupal.org/node/2499639
         '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
         '#default_value' => isset($plural_array[$i]) ? $plural_array[$i] : '',
         '#description' => $this->t('Text to use for this variant, @count will be replaced with the value.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[format_plural]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            ':input[name="options[format_plural]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
     }
     if ($plurals == 2) {
       // Simplify interface text for the most common case.
@@ -116,18 +116,18 @@ class NumericField extends FieldPluginBase {
       $form['format_plural_values'][1]['#description'] = $this->t('Text to use for the plural form, @count will be replaced with the value.');
     }
 
-    $form['prefix'] = array(
+    $form['prefix'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Prefix'),
       '#default_value' => $this->options['prefix'],
       '#description' => $this->t('Text to put before the number, such as currency symbol.'),
-    );
-    $form['suffix'] = array(
+    ];
+    $form['suffix'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Suffix'),
       '#default_value' => $this->options['suffix'],
       '#description' => $this->t('Text to put after the number, such as currency symbol.'),
-    );
+    ];
 
     parent::buildOptionsForm($form, $form_state);
   }

@@ -18,13 +18,13 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public function providerTestBuildQuery() {
-    return array(
-      array(array('a' => ' &#//+%20@۞'), 'a=%20%26%23//%2B%2520%40%DB%9E', 'Value was properly encoded.'),
-      array(array(' &#//+%20@۞' => 'a'), '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', 'Key was properly encoded.'),
-      array(array('a' => '1', 'b' => '2', 'c' => '3'), 'a=1&b=2&c=3', 'Multiple values were properly concatenated.'),
-      array(array('a' => array('b' => '2', 'c' => '3'), 'd' => 'foo'), 'a[b]=2&a[c]=3&d=foo', 'Nested array was properly encoded.'),
-      array(array('foo' => NULL), 'foo', 'Simple parameters are properly added.'),
-    );
+    return [
+      [['a' => ' &#//+%20@۞'], 'a=%20%26%23//%2B%2520%40%DB%9E', 'Value was properly encoded.'],
+      [[' &#//+%20@۞' => 'a'], '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', 'Key was properly encoded.'],
+      [['a' => '1', 'b' => '2', 'c' => '3'], 'a=1&b=2&c=3', 'Multiple values were properly concatenated.'],
+      [['a' => ['b' => '2', 'c' => '3'], 'd' => 'foo'], 'a[b]=2&a[c]=3&d=foo', 'Nested array was properly encoded.'],
+      [['foo' => NULL], 'foo', 'Simple parameters are properly added.'],
+    ];
   }
 
   /**
@@ -50,7 +50,7 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public function providerTestValidAbsoluteData() {
-    $urls = array(
+    $urls = [
       'example.com',
       'www.example.com',
       'ex-ample.com',
@@ -69,7 +69,7 @@ class UrlHelperTest extends UnitTestCase {
       'example.org/~,$\'*;',
       'caf%C3%A9.example.org',
       '[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:80/index.html',
-    );
+    ];
 
     return $this->dataEnhanceWithScheme($urls);
   }
@@ -97,11 +97,11 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public function providerTestInvalidAbsolute() {
-    $data = array(
+    $data = [
       '',
       'ex!ample.com',
       'ex%ample.com',
-    );
+    ];
     return $this->dataEnhanceWithScheme($data);
   }
 
@@ -128,13 +128,13 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public function providerTestValidRelativeData() {
-    $data = array(
+    $data = [
       'paren(the)sis',
       'index.html#pagetop',
       'index.php/node',
       'index.php/node?param=false',
       'login.php?do=login&style=%23#pagetop',
-    );
+    ];
 
     return $this->dataEnhanceWithPrefix($data);
   }
@@ -162,11 +162,11 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public function providerTestInvalidRelativeData() {
-    $data = array(
+    $data = [
       'ex^mple',
       'example<>',
       'ex%ample',
-    );
+    ];
     return $this->dataEnhanceWithPrefix($data);
   }
 
@@ -212,20 +212,20 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public static function providerTestFilterQueryParameters() {
-    return array(
+    return [
       // Test without an exclude filter.
-      array(
-        'query' => array('a' => array('b' => 'c')),
-        'exclude' => array(),
-        'expected' => array('a' => array('b' => 'c')),
-      ),
+      [
+        'query' => ['a' => ['b' => 'c']],
+        'exclude' => [],
+        'expected' => ['a' => ['b' => 'c']],
+      ],
       // Exclude the 'b' element.
-      array(
-        'query' => array('a' => array('b' => 'c', 'd' => 'e')),
-        'exclude' => array('a[b]'),
-        'expected' => array('a' => array('d' => 'e')),
-      ),
-    );
+      [
+        'query' => ['a' => ['b' => 'c', 'd' => 'e']],
+        'exclude' => ['a[b]'],
+        'expected' => ['a' => ['d' => 'e']],
+      ],
+    ];
   }
 
   /**
@@ -250,52 +250,52 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public static function providerTestParse() {
-    return array(
-      array(
+    return [
+      [
         'http://www.example.com/my/path',
-        array(
+        [
           'path' => 'http://www.example.com/my/path',
-          'query' => array(),
+          'query' => [],
           'fragment' => '',
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'http://www.example.com/my/path?destination=home#footer',
-        array(
+        [
           'path' => 'http://www.example.com/my/path',
-          'query' => array(
+          'query' => [
             'destination' => 'home',
-          ),
+          ],
           'fragment' => 'footer',
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'http://',
-        array(
+        [
           'path' => '',
-          'query' => array(),
+          'query' => [],
           'fragment' => '',
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         'https://',
-        array(
+        [
           'path' => '',
-          'query' => array(),
+          'query' => [],
           'fragment' => '',
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         '/my/path?destination=home#footer',
-        array(
+        [
           'path' => '/my/path',
-          'query' => array(
+          'query' => [
             'destination' => 'home',
-          ),
+          ],
           'fragment' => 'footer',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -320,10 +320,10 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public static function providerTestEncodePath() {
-    return array(
-      array('unencoded path with spaces', 'unencoded%20path%20with%20spaces'),
-      array('slashes/should/be/preserved', 'slashes/should/be/preserved'),
-    );
+    return [
+      ['unencoded path with spaces', 'unencoded%20path%20with%20spaces'],
+      ['slashes/should/be/preserved', 'slashes/should/be/preserved'],
+    ];
   }
 
   /**
@@ -348,39 +348,39 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public static function providerTestIsExternal() {
-    return array(
-      array('/internal/path', FALSE),
-      array('https://example.com/external/path', TRUE),
-      array('javascript://fake-external-path', FALSE),
+    return [
+      ['/internal/path', FALSE],
+      ['https://example.com/external/path', TRUE],
+      ['javascript://fake-external-path', FALSE],
       // External URL without an explicit protocol.
-      array('//www.drupal.org/foo/bar?foo=bar&bar=baz&baz#foo', TRUE),
+      ['//www.drupal.org/foo/bar?foo=bar&bar=baz&baz#foo', TRUE],
       // Internal URL starting with a slash.
-      array('/www.drupal.org', FALSE),
+      ['/www.drupal.org', FALSE],
       // Simple external URLs.
-      array('http://example.com', TRUE),
-      array('https://example.com', TRUE),
-      array('http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo', TRUE),
-      array('//drupal.org', TRUE),
+      ['http://example.com', TRUE],
+      ['https://example.com', TRUE],
+      ['http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo', TRUE],
+      ['//drupal.org', TRUE],
       // Some browsers ignore or strip leading control characters.
-      array("\x00//www.example.com", TRUE),
-      array("\x08//www.example.com", TRUE),
-      array("\x1F//www.example.com", TRUE),
-      array("\n//www.example.com", TRUE),
+      ["\x00//www.example.com", TRUE],
+      ["\x08//www.example.com", TRUE],
+      ["\x1F//www.example.com", TRUE],
+      ["\n//www.example.com", TRUE],
       // JSON supports decoding directly from UTF-8 code points.
-      array(json_decode('"\u00AD"') . "//www.example.com", TRUE),
-      array(json_decode('"\u200E"') . "//www.example.com", TRUE),
-      array(json_decode('"\uE0020"') . "//www.example.com", TRUE),
-      array(json_decode('"\uE000"') . "//www.example.com", TRUE),
+      [json_decode('"\u00AD"') . "//www.example.com", TRUE],
+      [json_decode('"\u200E"') . "//www.example.com", TRUE],
+      [json_decode('"\uE0020"') . "//www.example.com", TRUE],
+      [json_decode('"\uE000"') . "//www.example.com", TRUE],
       // Backslashes should be normalized to forward.
-      array('\\\\example.com', TRUE),
+      ['\\\\example.com', TRUE],
       // Local URLs.
-      array('node', FALSE),
-      array('/system/ajax', FALSE),
-      array('?q=foo:bar', FALSE),
-      array('node/edit:me', FALSE),
-      array('/drupal.org', FALSE),
-      array('<front>', FALSE),
-    );
+      ['node', FALSE],
+      ['/system/ajax', FALSE],
+      ['?q=foo:bar', FALSE],
+      ['node/edit:me', FALSE],
+      ['/drupal.org', FALSE],
+      ['<front>', FALSE],
+    ];
   }
 
   /**
@@ -411,15 +411,15 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public static function providerTestFilterBadProtocol() {
-    return array(
-      array('javascript://example.com?foo&bar', '//example.com?foo&amp;bar', array('http', 'https')),
+    return [
+      ['javascript://example.com?foo&bar', '//example.com?foo&amp;bar', ['http', 'https']],
       // Test custom protocols.
-      array('http://example.com?foo&bar', '//example.com?foo&amp;bar', array('https')),
+      ['http://example.com?foo&bar', '//example.com?foo&amp;bar', ['https']],
       // Valid protocol.
-      array('http://example.com?foo&bar', 'http://example.com?foo&amp;bar', array('https', 'http')),
+      ['http://example.com?foo&bar', 'http://example.com?foo&amp;bar', ['https', 'http']],
       // Colon not part of the URL scheme.
-      array('/test:8888?foo&bar', '/test:8888?foo&amp;bar', array('http')),
-    );
+      ['/test:8888?foo&bar', '/test:8888?foo&amp;bar', ['http']],
+    ];
   }
 
   /**
@@ -448,15 +448,15 @@ class UrlHelperTest extends UnitTestCase {
    * @return array
    */
   public static function providerTestStripDangerousProtocols() {
-    return array(
-      array('javascript://example.com', '//example.com', array('http', 'https')),
+    return [
+      ['javascript://example.com', '//example.com', ['http', 'https']],
       // Test custom protocols.
-      array('http://example.com', '//example.com', array('https')),
+      ['http://example.com', '//example.com', ['https']],
       // Valid protocol.
-      array('http://example.com', 'http://example.com', array('https', 'http')),
+      ['http://example.com', 'http://example.com', ['https', 'http']],
       // Colon not part of the URL scheme.
-      array('/test:8888', '/test:8888', array('http')),
-    );
+      ['/test:8888', '/test:8888', ['http']],
+    ];
   }
 
   /**
@@ -469,11 +469,11 @@ class UrlHelperTest extends UnitTestCase {
    *   A list of provider data with schemes.
    */
   protected function dataEnhanceWithScheme(array $urls) {
-    $url_schemes = array('http', 'https', 'ftp');
-    $data = array();
+    $url_schemes = ['http', 'https', 'ftp'];
+    $data = [];
     foreach ($url_schemes as $scheme) {
       foreach ($urls as $url) {
-        $data[] = array($url, $scheme);
+        $data[] = [$url, $scheme];
       }
     }
     return $data;
@@ -489,11 +489,11 @@ class UrlHelperTest extends UnitTestCase {
    *   A list of provider data with prefixes.
    */
   protected function dataEnhanceWithPrefix(array $urls) {
-    $prefixes = array('', '/');
-    $data = array();
+    $prefixes = ['', '/'];
+    $data = [];
     foreach ($prefixes as $prefix) {
       foreach ($urls as $url) {
-        $data[] = array($url, $prefix);
+        $data[] = [$url, $prefix];
       }
     }
     return $data;
@@ -523,31 +523,31 @@ class UrlHelperTest extends UnitTestCase {
    * @see \Drupal\Tests\Component\Utility\UrlHelperTest::testExternalIsLocal()
    */
   public function providerTestExternalIsLocal() {
-    return array(
+    return [
       // Different mixes of trailing slash.
-      array('http://example.com', 'http://example.com', TRUE),
-      array('http://example.com/', 'http://example.com', TRUE),
-      array('http://example.com', 'http://example.com/', TRUE),
-      array('http://example.com/', 'http://example.com/', TRUE),
+      ['http://example.com', 'http://example.com', TRUE],
+      ['http://example.com/', 'http://example.com', TRUE],
+      ['http://example.com', 'http://example.com/', TRUE],
+      ['http://example.com/', 'http://example.com/', TRUE],
       // Sub directory of site.
-      array('http://example.com/foo', 'http://example.com/', TRUE),
-      array('http://example.com/foo/bar', 'http://example.com/foo', TRUE),
-      array('http://example.com/foo/bar', 'http://example.com/foo/', TRUE),
+      ['http://example.com/foo', 'http://example.com/', TRUE],
+      ['http://example.com/foo/bar', 'http://example.com/foo', TRUE],
+      ['http://example.com/foo/bar', 'http://example.com/foo/', TRUE],
       // Different sub-domain.
-      array('http://example.com', 'http://www.example.com/', FALSE),
-      array('http://example.com/', 'http://www.example.com/', FALSE),
-      array('http://example.com/foo', 'http://www.example.com/', FALSE),
+      ['http://example.com', 'http://www.example.com/', FALSE],
+      ['http://example.com/', 'http://www.example.com/', FALSE],
+      ['http://example.com/foo', 'http://www.example.com/', FALSE],
       // Different TLD.
-      array('http://example.com', 'http://example.ca', FALSE),
-      array('http://example.com', 'http://example.ca/', FALSE),
-      array('http://example.com/', 'http://example.ca/', FALSE),
-      array('http://example.com/foo', 'http://example.ca', FALSE),
-      array('http://example.com/foo', 'http://example.ca/', FALSE),
+      ['http://example.com', 'http://example.ca', FALSE],
+      ['http://example.com', 'http://example.ca/', FALSE],
+      ['http://example.com/', 'http://example.ca/', FALSE],
+      ['http://example.com/foo', 'http://example.ca', FALSE],
+      ['http://example.com/foo', 'http://example.ca/', FALSE],
       // Different site path.
-      array('http://example.com/foo', 'http://example.com/bar', FALSE),
-      array('http://example.com', 'http://example.com/bar', FALSE),
-      array('http://example.com/bar', 'http://example.com/bar/', FALSE),
-    );
+      ['http://example.com/foo', 'http://example.com/bar', FALSE],
+      ['http://example.com', 'http://example.com/bar', FALSE],
+      ['http://example.com/bar', 'http://example.com/bar/', FALSE],
+    ];
   }
 
   /**
@@ -572,17 +572,17 @@ class UrlHelperTest extends UnitTestCase {
    * @see \Drupal\Tests\Component\Utility\UrlHelperTest::testExternalIsLocalInvalid()
    */
   public function providerTestExternalIsLocalInvalid() {
-    return array(
-      array('http://example.com/foo', ''),
-      array('http://example.com/foo', 'bar'),
-      array('http://example.com/foo', 'http://'),
+    return [
+      ['http://example.com/foo', ''],
+      ['http://example.com/foo', 'bar'],
+      ['http://example.com/foo', 'http://'],
       // Invalid destination urls.
-      array('', 'http://example.com/foo'),
-      array('bar', 'http://example.com/foo'),
-      array('/bar', 'http://example.com/foo'),
-      array('bar/', 'http://example.com/foo'),
-      array('http://', 'http://example.com/foo'),
-    );
+      ['', 'http://example.com/foo'],
+      ['bar', 'http://example.com/foo'],
+      ['/bar', 'http://example.com/foo'],
+      ['bar/', 'http://example.com/foo'],
+      ['http://', 'http://example.com/foo'],
+    ];
   }
 
 }

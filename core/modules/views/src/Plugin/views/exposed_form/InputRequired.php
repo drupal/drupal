@@ -21,28 +21,28 @@ class InputRequired extends ExposedFormPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['text_input_required'] = array('default' => $this->t('Select any filter and click on Apply to see results'));
-    $options['text_input_required_format'] = array('default' => NULL);
+    $options['text_input_required'] = ['default' => $this->t('Select any filter and click on Apply to see results')];
+    $options['text_input_required_format'] = ['default' => NULL];
     return $options;
   }
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['text_input_required'] = array(
+    $form['text_input_required'] = [
       '#type' => 'text_format',
       '#title' => $this->t('Text on demand'),
       '#description' => $this->t('Text to display instead of results until the user selects and applies an exposed filter.'),
       '#default_value' => $this->options['text_input_required'],
       '#format' => isset($this->options['text_input_required_format']) ? $this->options['text_input_required_format'] : filter_default_format(),
       '#editor' => FALSE,
-    );
+    ];
   }
 
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $exposed_form_options = $form_state->getValue('exposed_form_options');
-    $form_state->setValue(array('exposed_form_options', 'text_input_required_format'), $exposed_form_options['text_input_required']['format']);
-    $form_state->setValue(array('exposed_form_options', 'text_input_required'), $exposed_form_options['text_input_required']['value']);
+    $form_state->setValue(['exposed_form_options', 'text_input_required_format'], $exposed_form_options['text_input_required']['format']);
+    $form_state->setValue(['exposed_form_options', 'text_input_required'], $exposed_form_options['text_input_required']['value']);
     parent::submitOptionsForm($form, $form_state);
   }
 
@@ -72,7 +72,7 @@ class InputRequired extends ExposedFormPluginBase {
     // text to display instead of results until the user selects and applies
     // an exposed filter.
     if (!$this->exposedFilterApplied()) {
-      $options = array(
+      $options = [
         'id' => 'area',
         'table' => 'views',
         'field' => 'area',
@@ -88,14 +88,14 @@ class InputRequired extends ExposedFormPluginBase {
           'value' => $this->options['text_input_required'],
           'format' => $this->options['text_input_required_format'],
         ],
-      );
+      ];
       $handler = Views::handlerManager('area')->getHandler($options);
       $handler->init($this->view, $this->displayHandler, $options);
-      $this->displayHandler->handlers['empty'] = array(
+      $this->displayHandler->handlers['empty'] = [
         'area' => $handler,
-      );
+      ];
       // Override the existing empty result message (if applicable).
-      $this->displayHandler->setOption('empty', array('text' => $options));
+      $this->displayHandler->setOption('empty', ['text' => $options]);
     }
   }
 
@@ -104,7 +104,7 @@ class InputRequired extends ExposedFormPluginBase {
       // We return with no query; this will force the empty text.
       $this->view->built = TRUE;
       $this->view->executed = TRUE;
-      $this->view->result = array();
+      $this->view->result = [];
     }
     else {
       parent::query();

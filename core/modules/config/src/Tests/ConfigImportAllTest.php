@@ -36,7 +36,7 @@ class ConfigImportAllTest extends ModuleTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->webUser = $this->drupalCreateUser(array('synchronize configuration'));
+    $this->webUser = $this->drupalCreateUser(['synchronize configuration']);
     $this->drupalLogin($this->webUser);
   }
 
@@ -124,12 +124,12 @@ class ConfigImportAllTest extends ModuleTestBase {
     }
 
     // Import the configuration thereby re-installing all the modules.
-    $this->drupalPostForm('admin/config/development/configuration', array(), t('Import all'));
+    $this->drupalPostForm('admin/config/development/configuration', [], t('Import all'));
     // Modules have been installed that have services.
     $this->rebuildContainer();
 
     // Check that there are no errors.
-    $this->assertIdentical($this->configImporter()->getErrors(), array());
+    $this->assertIdentical($this->configImporter()->getErrors(), []);
 
     // Check that all modules that were uninstalled are now reinstalled.
     $this->assertModules(array_keys($modules_to_uninstall), TRUE);

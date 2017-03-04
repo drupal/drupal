@@ -493,7 +493,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     }
 
     // Delete test site directory.
-    file_unmanaged_delete_recursive($this->siteDirectory, array($this, 'filePreDeleteCallback'));
+    file_unmanaged_delete_recursive($this->siteDirectory, [$this, 'filePreDeleteCallback']);
   }
 
   /**
@@ -572,7 +572,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * @return string
    *   An absolute URL stsring.
    */
-  protected function buildUrl($path, array $options = array()) {
+  protected function buildUrl($path, array $options = []) {
     if ($path instanceof Url) {
       $url_options = $path->getOptions();
       $options = $url_options + $options;
@@ -620,7 +620,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * @return string
    *   The retrieved HTML string, also available as $this->getRawContent()
    */
-  protected function drupalGet($path, array $options = array(), array $headers = array()) {
+  protected function drupalGet($path, array $options = [], array $headers = []) {
     $options['absolute'] = TRUE;
     $url = $this->buildUrl($path, $options);
 
@@ -715,14 +715,14 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
 
     $this->drupalGet('user/login');
     $this->assertSession()->statusCodeEquals(200);
-    $this->submitForm(array(
+    $this->submitForm([
       'name' => $account->getUsername(),
       'pass' => $account->passRaw,
-    ), t('Log in'));
+    ], t('Log in'));
 
     // @see BrowserTestBase::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie($this->getSessionName());
-    $this->assertTrue($this->drupalUserIsLoggedIn($account), new FormattableMarkup('User %name successfully logged in.', array('%name' => $account->getAccountName())));
+    $this->assertTrue($this->drupalUserIsLoggedIn($account), new FormattableMarkup('User %name successfully logged in.', ['%name' => $account->getAccountName()]));
 
     $this->loggedInUser = $account;
     $this->container->get('current_user')->setAccount($account);
@@ -738,7 +738,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // idea being if you were properly logged out you should be seeing a login
     // screen.
     $assert_session = $this->assertSession();
-    $this->drupalGet('user/logout', array('query' => array('destination' => 'user')));
+    $this->drupalGet('user/logout', ['query' => ['destination' => 'user']]);
     $assert_session->statusCodeEquals(200);
     $assert_session->fieldExists('name');
     $assert_session->fieldExists('pass');
@@ -893,7 +893,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * @param array $options
    *   Options to be forwarded to the url generator.
    */
-  protected function drupalPostForm($path, $edit, $submit, array $options = array()) {
+  protected function drupalPostForm($path, $edit, $submit, array $options = []) {
     if (is_object($submit)) {
       // Cast MarkupInterface objects to string.
       $submit = (string) $submit;
@@ -965,35 +965,35 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     unset($connection_info['default']['namespace']);
     unset($connection_info['default']['pdo']);
     unset($connection_info['default']['init_commands']);
-    $parameters = array(
+    $parameters = [
       'interactive' => FALSE,
-      'parameters' => array(
+      'parameters' => [
         'profile' => $this->profile,
         'langcode' => 'en',
-      ),
-      'forms' => array(
-        'install_settings_form' => array(
+      ],
+      'forms' => [
+        'install_settings_form' => [
           'driver' => $driver,
           $driver => $connection_info['default'],
-        ),
-        'install_configure_form' => array(
+        ],
+        'install_configure_form' => [
           'site_name' => 'Drupal',
           'site_mail' => 'simpletest@example.com',
-          'account' => array(
+          'account' => [
             'name' => $this->rootUser->name,
             'mail' => $this->rootUser->getEmail(),
-            'pass' => array(
+            'pass' => [
               'pass1' => $this->rootUser->pass_raw,
               'pass2' => $this->rootUser->pass_raw,
-            ),
-          ),
+            ],
+          ],
           // form_type_checkboxes_value() requires NULL instead of FALSE values
           // for programmatic form submissions to disable a checkbox.
           'enable_update_status_module' => NULL,
           'enable_update_status_emails' => NULL,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     return $parameters;
   }
 
@@ -1063,10 +1063,10 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     drupal_valid_test_ua($this->databasePrefix);
 
     // Reset settings.
-    new Settings(array(
+    new Settings([
       // For performance, simply use the database prefix as hash salt.
       'hash_salt' => $this->databasePrefix,
-    ));
+    ]);
 
     drupal_set_time_limit($this->timeLimit);
 

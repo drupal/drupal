@@ -29,13 +29,13 @@ class OptionsSelectWidget extends OptionsWidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
-    $element += array(
+    $element += [
       '#type' => 'select',
       '#options' => $this->getOptions($items->getEntity()),
       '#default_value' => $this->getSelectedOptions($items),
       // Do not display a 'multiple' select box if there is only one option.
       '#multiple' => $this->multiple && count($this->options) > 1,
-    );
+    ];
 
     return $element;
   }

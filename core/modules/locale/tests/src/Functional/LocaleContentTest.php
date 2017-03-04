@@ -19,14 +19,14 @@ class LocaleContentTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'locale');
+  public static $modules = ['node', 'locale'];
 
   /**
    * Verifies that machine name fields are always LTR.
    */
   public function testMachineNameLTR() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer languages', 'administer content types', 'access administration pages', 'administer site configuration']);
 
     // Log in as admin.
     $this->drupalLogin($admin_user);
@@ -36,13 +36,13 @@ class LocaleContentTest extends BrowserTestBase {
     $this->assertFieldByXpath('//input[@name="type" and @dir="ltr"]', NULL, 'The machine name field is LTR when no additional language is configured.');
 
     // Install the Arabic language (which is RTL) and configure as the default.
-    $edit = array();
+    $edit = [];
     $edit['predefined_langcode'] = 'ar';
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
-    $edit = array(
+    $edit = [
       'site_default_language' => 'ar',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Verify that the machine name field is still LTR for a new content type.
@@ -58,9 +58,9 @@ class LocaleContentTest extends BrowserTestBase {
     $type2 = $this->drupalCreateContentType();
 
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
+    $admin_user = $this->drupalCreateUser(['administer languages', 'administer content types', 'access administration pages']);
     // User to create a node.
-    $web_user = $this->drupalCreateUser(array("create {$type1->id()} content", "create {$type2->id()} content", "edit any {$type2->id()} content"));
+    $web_user = $this->drupalCreateUser(["create {$type1->id()} content", "create {$type2->id()} content", "edit any {$type2->id()} content"]);
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -68,22 +68,22 @@ class LocaleContentTest extends BrowserTestBase {
     $langcode = 'xx';
     // The English name for the language.
     $name = $this->randomMachineName(16);
-    $edit = array(
+    $edit = [
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Set the content type to use multilingual support.
     $this->drupalGet("admin/structure/types/manage/{$type2->id()}");
     $this->assertText(t('Language settings'), 'Multilingual support widget present on content type configuration form.');
-    $edit = array(
+    $edit = [
       'language_configuration[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm("admin/structure/types/manage/{$type2->id()}", $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type2->label())));
+    $this->assertRaw(t('The content type %type has been updated.', ['%type' => $type2->label()]));
     $this->drupalLogout();
     \Drupal::languageManager()->reset();
 
@@ -103,26 +103,26 @@ class LocaleContentTest extends BrowserTestBase {
     // Create a node.
     $node_title = $this->randomMachineName();
     $node_body = $this->randomMachineName();
-    $edit = array(
+    $edit = [
       'type' => $type2->id(),
       'title' => $node_title,
-      'body' => array(array('value' => $node_body)),
+      'body' => [['value' => $node_body]],
       'langcode' => $langcode,
-    );
+    ];
     $node = $this->drupalCreateNode($edit);
     // Edit the content and ensure correct language is selected.
     $path = 'node/' . $node->id() . '/edit';
     $this->drupalGet($path);
     $this->assertRaw('<option value="' . $langcode . '" selected="selected">' . $name . '</option>', 'Correct language selected.');
     // Ensure we can change the node language.
-    $edit = array(
+    $edit = [
       'langcode[0][value]' => 'en',
-    );
+    ];
     $this->drupalPostForm($path, $edit, t('Save'));
-    $this->assertText(t('@title has been updated.', array('@title' => $node_title)));
+    $this->assertText(t('@title has been updated.', ['@title' => $node_title]));
 
     // Verify that the creation message contains a link to a node.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', array(':href' => 'node/' . $node->id()));
+    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'node/' . $node->id()]);
     $this->assert(isset($view_link), 'The message area contains the link to the edited node');
 
     $this->drupalLogout();
@@ -135,44 +135,44 @@ class LocaleContentTest extends BrowserTestBase {
     $type = $this->drupalCreateContentType();
 
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
+    $admin_user = $this->drupalCreateUser(['administer languages', 'administer content types', 'access administration pages']);
     // User to create a node.
-    $web_user = $this->drupalCreateUser(array("create {$type->id()} content", "edit own {$type->id()} content"));
+    $web_user = $this->drupalCreateUser(["create {$type->id()} content", "edit own {$type->id()} content"]);
 
     // Log in as admin.
     $this->drupalLogin($admin_user);
 
     // Install Arabic language.
-    $edit = array();
+    $edit = [];
     $edit['predefined_langcode'] = 'ar';
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Install Spanish language.
-    $edit = array();
+    $edit = [];
     $edit['predefined_langcode'] = 'es';
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     \Drupal::languageManager()->reset();
 
     // Set the content type to use multilingual support.
     $this->drupalGet("admin/structure/types/manage/{$type->id()}");
-    $edit = array(
+    $edit = [
       'language_configuration[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm("admin/structure/types/manage/{$type->id()}", $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type->label())));
+    $this->assertRaw(t('The content type %type has been updated.', ['%type' => $type->label()]));
     $this->drupalLogout();
 
     // Log in as web user to add new node.
     $this->drupalLogin($web_user);
 
     // Create three nodes: English, Arabic and Spanish.
-    $nodes = array();
-    foreach (array('en', 'es', 'ar') as $langcode) {
-      $nodes[$langcode] = $this->drupalCreateNode(array(
+    $nodes = [];
+    foreach (['en', 'es', 'ar'] as $langcode) {
+      $nodes[$langcode] = $this->drupalCreateNode([
         'langcode' => $langcode,
         'type' => $type->id(),
         'promote' => NodeInterface::PROMOTED,
-      ));
+      ]);
     }
 
     // Check if English node does not have lang tag.

@@ -37,7 +37,7 @@ class TermName extends EntityField {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['convert_spaces'] = array('default' => FALSE);
+    $options['convert_spaces'] = ['default' => FALSE];
     return $options;
   }
 
@@ -45,11 +45,11 @@ class TermName extends EntityField {
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $form['convert_spaces'] = array(
+    $form['convert_spaces'] = [
       '#title' => $this->t('Convert spaces in term names to hyphens'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['convert_spaces']),
-    );
+    ];
 
     parent::buildOptionsForm($form, $form_state);
   }

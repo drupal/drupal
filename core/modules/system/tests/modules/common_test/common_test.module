@@ -114,18 +114,18 @@ function common_test_module_implements_alter(&$implementations, $hook) {
  * Implements hook_theme().
  */
 function common_test_theme() {
-  return array(
-    'common_test_foo' => array(
-      'variables' => array('foo' => 'foo', 'bar' => 'bar'),
-    ),
-    'common_test_render_element' => array(
+  return [
+    'common_test_foo' => [
+      'variables' => ['foo' => 'foo', 'bar' => 'bar'],
+    ],
+    'common_test_render_element' => [
       'render element' => 'foo',
-    ),
-    'common_test_empty' => array(
-      'variables' => array('foo' => 'foo'),
+    ],
+    'common_test_empty' => [
+      'variables' => ['foo' => 'foo'],
       'function' => 'theme_common_test_empty',
-    ),
-  );
+    ],
+  ];
 }
 
 /**

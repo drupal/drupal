@@ -32,20 +32,20 @@ class Password extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
       '#size' => 60,
       '#maxlength' => 128,
-      '#process' => array(
-        array($class, 'processAjaxForm'),
-        array($class, 'processPattern'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderPassword'),
-      ),
+      '#process' => [
+        [$class, 'processAjaxForm'],
+        [$class, 'processPattern'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderPassword'],
+      ],
       '#theme' => 'input__password',
-      '#theme_wrappers' => array('form_element'),
-    );
+      '#theme_wrappers' => ['form_element'],
+    ];
   }
 
   /**
@@ -61,8 +61,8 @@ class Password extends FormElement {
    */
   public static function preRenderPassword($element) {
     $element['#attributes']['type'] = 'password';
-    Element::setAttributes($element, array('id', 'name', 'size', 'maxlength', 'placeholder'));
-    static::setAttributes($element, array('form-text'));
+    Element::setAttributes($element, ['id', 'name', 'size', 'maxlength', 'placeholder']);
+    static::setAttributes($element, ['form-text']);
 
     return $element;
   }

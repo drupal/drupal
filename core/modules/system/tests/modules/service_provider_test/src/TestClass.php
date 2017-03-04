@@ -58,8 +58,8 @@ class TestClass implements EventSubscriberInterface, DestructableInterface, Cont
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = array('onKernelRequestTest');
-    $events[KernelEvents::RESPONSE][] = array('onKernelResponseTest');
+    $events[KernelEvents::REQUEST][] = ['onKernelRequestTest'];
+    $events[KernelEvents::RESPONSE][] = ['onKernelResponseTest'];
     return $events;
   }
 

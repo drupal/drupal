@@ -17,7 +17,7 @@ function views_test_data_schema() {
  */
 function views_test_data_install() {
   // Add the marquee tag to possible html elements to test the field handler.
-  $values = array(
+  $values = [
     'div' => 'DIV',
     'span' => 'SPAN',
     'h1' => 'H1',
@@ -30,6 +30,6 @@ function views_test_data_install() {
     'strong' => 'STRONG',
     'em' => 'EM',
     'marquee' => 'MARQUEE'
-  );
+  ];
   \Drupal::configFactory()->getEditable('views.settings')->set('field_rewrite_elements', $values)->save();
 }

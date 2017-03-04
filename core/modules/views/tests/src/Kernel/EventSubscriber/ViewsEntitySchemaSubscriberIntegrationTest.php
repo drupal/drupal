@@ -79,7 +79,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
 
     // Install every entity type's schema that wasn't installed in the parent
     // method.
-    foreach (array_diff_key($this->entityManager->getDefinitions(), array_flip(array('user', 'entity_test'))) as $entity_type_id => $entity_type) {
+    foreach (array_diff_key($this->entityManager->getDefinitions(), array_flip(['user', 'entity_test'])) as $entity_type_id => $entity_type) {
       $this->installEntitySchema($entity_type_id);
     }
   }

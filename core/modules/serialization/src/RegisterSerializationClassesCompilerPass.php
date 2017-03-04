@@ -46,7 +46,7 @@ class RegisterSerializationClassesCompilerPass implements CompilerPassInterface 
     }
 
     // Find all serialization formats known.
-    $formats = array();
+    $formats = [];
     $format_providers = [];
     foreach ($container->findTaggedServiceIds('encoder') as $service_id => $attributes) {
       $format = $attributes[0]['format'];
@@ -87,7 +87,7 @@ class RegisterSerializationClassesCompilerPass implements CompilerPassInterface 
    *   to low priority.
    */
   protected function sort($services) {
-    $sorted = array();
+    $sorted = [];
     krsort($services);
 
     // Flatten the array.

@@ -17,7 +17,7 @@ class SchemaConfigListenerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('config_test');
+  public static $modules = ['config_test'];
 
   /**
    * {@inheritdoc}

@@ -21,17 +21,17 @@ class FormTestRangeInvalidForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['minmax'] = array(
+    $form['minmax'] = [
       '#type' => 'range',
       '#min' => 10,
       '#max' => 5,
       '#title' => 'Invalid range',
       '#description' => 'Minimum greater than maximum.',
-    );
-    $form['submit'] = array(
+    ];
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => 'Submit',
-    );
+    ];
     return $form;
   }
 

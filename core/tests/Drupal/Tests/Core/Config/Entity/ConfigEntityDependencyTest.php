@@ -13,34 +13,34 @@ use Drupal\Core\Config\Entity\ConfigEntityDependency;
 class ConfigEntityDependencyTest extends UnitTestCase {
 
   public function testEmptyDependencies() {
-    $dep = new ConfigEntityDependency('config_test.dynamic.entity_id', array());
+    $dep = new ConfigEntityDependency('config_test.dynamic.entity_id', []);
 
     $this->assertEquals('config_test.dynamic.entity_id', $dep->getConfigDependencyName());
-    $this->assertEquals(array(), $dep->getDependencies('theme'));
-    $this->assertEquals(array(), $dep->getDependencies('config'));
-    $this->assertEquals(array('config_test'), $dep->getDependencies('module'));
+    $this->assertEquals([], $dep->getDependencies('theme'));
+    $this->assertEquals([], $dep->getDependencies('config'));
+    $this->assertEquals(['config_test'], $dep->getDependencies('module'));
     $this->assertTrue($dep->hasDependency('module', 'config_test'));
     $this->assertFalse($dep->hasDependency('module', 'views'));
   }
 
   public function testWithDependencies() {
-    $values = array(
+    $values = [
       'uuid' => '60db47f4-54fb-4c86-a439-5769fbda4bd1',
-      'dependencies' => array(
-        'module' => array(
+      'dependencies' => [
+        'module' => [
           'node',
           'views'
-        ),
-        'config' => array(
+        ],
+        'config' => [
           'config_test.dynamic.entity_id:745b0ce0-aece-42dd-a800-ade5b8455e84',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     $dep = new ConfigEntityDependency('config_test.dynamic.entity_id', $values);
 
-    $this->assertEquals(array(), $dep->getDependencies('theme'));
-    $this->assertEquals(array('config_test.dynamic.entity_id:745b0ce0-aece-42dd-a800-ade5b8455e84'), $dep->getDependencies('config'));
-    $this->assertEquals(array('node', 'views', 'config_test'), $dep->getDependencies('module'));
+    $this->assertEquals([], $dep->getDependencies('theme'));
+    $this->assertEquals(['config_test.dynamic.entity_id:745b0ce0-aece-42dd-a800-ade5b8455e84'], $dep->getDependencies('config'));
+    $this->assertEquals(['node', 'views', 'config_test'], $dep->getDependencies('module'));
     $this->assertTrue($dep->hasDependency('module', 'config_test'));
     $this->assertTrue($dep->hasDependency('module', 'views'));
     $this->assertTrue($dep->hasDependency('module', 'node'));

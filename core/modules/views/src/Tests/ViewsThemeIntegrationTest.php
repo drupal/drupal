@@ -16,7 +16,7 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_page_display');
+  public static $testViews = ['test_page_display'];
 
 
   /**
@@ -28,7 +28,7 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
    *
    * @see \Drupal\simpletest\WebTestBase::setup()
    */
-  public static $modules = array('views', 'theme_test');
+  public static $modules = ['views', 'theme_test'];
 
   /**
    * {@inheritdoc}
@@ -45,7 +45,7 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
    */
   public function testThemedViewPage() {
 
-    \Drupal::service('theme_handler')->install(array('test_basetheme', 'test_subtheme'));
+    \Drupal::service('theme_handler')->install(['test_basetheme', 'test_subtheme']);
 
     // Make base theme default then test for hook invocations.
     $this->config('system.theme')

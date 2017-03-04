@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'ttwim', 'ttwib', 'ttwibs', 'ttwis', 'ttwiss', 'ttwing', 'ttwij', 'ttwich', 'ttwik', 'ttwit', 'ttwip', 'ttwih', 'ttyu', 'ttyug', 'ttyukk', 'ttyugs',
   0x10 => 'ttyun', 'ttyunj', 'ttyunh', 'ttyud', 'ttyul', 'ttyulg', 'ttyulm', 'ttyulb', 'ttyuls', 'ttyult', 'ttyulp', 'ttyulh', 'ttyum', 'ttyub', 'ttyubs', 'ttyus',
   0x20 => 'ttyuss', 'ttyung', 'ttyuj', 'ttyuch', 'ttyuk', 'ttyut', 'ttyup', 'ttyuh', 'tteu', 'tteug', 'tteukk', 'tteugs', 'tteun', 'tteunj', 'tteunh', 'tteud',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'lyae', 'lyaeg', 'lyaekk', 'lyaegs', 'lyaen', 'lyaenj', 'lyaenh', 'lyaed', 'lyael', 'lyaelg', 'lyaelm', 'lyaelb', 'lyaels', 'lyaelt', 'lyaelp', 'lyaelh',
   0xE0 => 'lyaem', 'lyaeb', 'lyaebs', 'lyaes', 'lyaess', 'lyaeng', 'lyaej', 'lyaech', 'lyaek', 'lyaet', 'lyaep', 'lyaeh', 'leo', 'leog', 'leokk', 'leogs',
   0xF0 => 'leon', 'leonj', 'leonh', 'leod', 'leol', 'leolg', 'leolm', 'leolb', 'leols', 'leolt', 'leolp', 'leolh', 'leom', 'leob', 'leobs', 'leos',
-);
+];

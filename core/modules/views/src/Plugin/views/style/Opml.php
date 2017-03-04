@@ -31,7 +31,7 @@ class Opml extends StylePluginBase {
    */
   public function attachTo(array &$build, $display_id, Url $feed_url, $title) {
     $display = $this->view->displayHandlers->get($display_id);
-    $url_options = array();
+    $url_options = [];
     $input = $this->view->getExposedInput();
     if ($input) {
       $url_options['query'] = $input;
@@ -41,15 +41,15 @@ class Opml extends StylePluginBase {
     $url = $feed_url->setOptions($url_options)->toString();
     if ($display->hasPath()) {
       if (empty($this->preview)) {
-        $build['#attached']['feed'][] = array($url, $title);
+        $build['#attached']['feed'][] = [$url, $title];
       }
     }
     else {
-      $this->view->feedIcons[] = array(
+      $this->view->feedIcons[] = [
         '#theme' => 'feed_icon',
         '#url' => $url,
         '#title' => $title,
-      );
+      ];
     }
   }
 
@@ -61,19 +61,19 @@ class Opml extends StylePluginBase {
       debug('Drupal\views\Plugin\views\style\Opml: Missing row plugin');
       return;
     }
-    $rows = array();
+    $rows = [];
 
     foreach ($this->view->result as $row_index => $row) {
       $this->view->row_index = $row_index;
       $rows[] = $this->view->rowPlugin->render($row);
     }
 
-    $build = array(
+    $build = [
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
       '#options' => $this->options,
       '#rows' => $rows,
-    );
+    ];
     unset($this->view->row_index);
     return $build;
   }

@@ -81,21 +81,21 @@ function hook_options_list_alter(array &$options, array $context) {
  */
 function callback_allowed_values_function(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = TRUE) {
   if (isset($entity) && ($entity->bundle() == 'not_a_programmer')) {
-    $values = array(
+    $values = [
       1 => 'One',
       2 => 'Two',
-    );
+    ];
   }
   else {
-    $values = array(
-      'Group 1' => array(
+    $values = [
+      'Group 1' => [
         0 => 'Zero',
         1 => 'One',
-      ),
-      'Group 2' => array(
+      ],
+      'Group 2' => [
         2 => 'Two',
-      ),
-    );
+      ],
+    ];
   }
 
   return $values;

@@ -23,7 +23,7 @@ class MenuLinkReorderTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu_ui', 'test_page_test', 'node', 'block');
+  public static $modules = ['menu_ui', 'test_page_test', 'node', 'block'];
 
   /**
    * Test creating, editing, deleting menu links via node form widget.
@@ -38,17 +38,17 @@ class MenuLinkReorderTest extends BrowserTestBase {
     $this->assertLink('Home');
 
     // The administrator user that can re-order menu links.
-    $this->administrator = $this->drupalCreateUser(array(
+    $this->administrator = $this->drupalCreateUser([
       'administer site configuration',
       'access administration pages',
       'administer menu',
-    ));
+    ]);
     $this->drupalLogin($this->administrator);
 
     // Change the weight of the link to a non default value.
-    $edit = array(
+    $edit = [
       'links[menu_plugin_id:test_page_test.front_page][weight]' => -10,
-    );
+    ];
     $this->drupalPostForm('admin/structure/menu/manage/main', $edit, t('Save'));
 
     // The link is still there.

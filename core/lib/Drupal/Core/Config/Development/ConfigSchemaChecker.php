@@ -38,14 +38,14 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
    *
    * @var array
    */
-  protected $checked = array();
+  protected $checked = [];
 
   /**
    * An array of config object names that are excluded from schema checking.
    *
    * @var string[]
    */
-  protected $exclude = array();
+  protected $exclude = [];
 
   /**
    * Constructs the ConfigSchemaChecker object.
@@ -55,7 +55,7 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
    * @param string[] $exclude
    *   An array of config object names that are excluded from schema checking.
    */
-  public function __construct(TypedConfigManagerInterface $typed_manager, array $exclude = array()) {
+  public function __construct(TypedConfigManagerInterface $typed_manager, array $exclude = []) {
     $this->typedManager = $typed_manager;
     $this->exclude = $exclude;
   }
@@ -90,7 +90,7 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
       elseif (is_array($errors)) {
         $text_errors = [];
         foreach ($errors as $key => $error) {
-          $text_errors[] = SafeMarkup::format('@key @error', array('@key' => $key, '@error' => $error));
+          $text_errors[] = SafeMarkup::format('@key @error', ['@key' => $key, '@error' => $error]);
         }
         throw new SchemaIncompleteException("Schema errors for $name with the following errors: " . implode(', ', $text_errors));
       }
@@ -101,7 +101,7 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[ConfigEvents::SAVE][] = array('onConfigSave', 255);
+    $events[ConfigEvents::SAVE][] = ['onConfigSave', 255];
     return $events;
   }
 

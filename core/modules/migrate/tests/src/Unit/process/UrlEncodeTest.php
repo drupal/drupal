@@ -28,14 +28,14 @@ class UrlEncodeTest extends MigrateTestCase {
    *   An array of URLs to test.
    */
   public function urlDataProvider() {
-    return array(
-      'A URL with no characters requiring encoding' => array('http://example.com/normal_url.html', 'http://example.com/normal_url.html'),
-      'The definitive use case - encoding spaces in URLs' => array('http://example.com/url with spaces.html', 'http://example.com/url%20with%20spaces.html'),
-      'Definitive use case 2 - spaces in directories' => array('http://example.com/dir with spaces/foo.html', 'http://example.com/dir%20with%20spaces/foo.html'),
-      'Local filespecs without spaces should not be transformed' => array('/tmp/normal.txt', '/tmp/normal.txt'),
-      'Local filespecs with spaces should not be transformed' => array('/tmp/with spaces.txt', '/tmp/with spaces.txt'),
-      'Make sure URL characters (:, ?, &) are not encoded but others are.' => array('https://example.com/?a=b@c&d=e+f%', 'https://example.com/?a%3Db%40c&d%3De%2Bf%25'),
-    );
+    return [
+      'A URL with no characters requiring encoding' => ['http://example.com/normal_url.html', 'http://example.com/normal_url.html'],
+      'The definitive use case - encoding spaces in URLs' => ['http://example.com/url with spaces.html', 'http://example.com/url%20with%20spaces.html'],
+      'Definitive use case 2 - spaces in directories' => ['http://example.com/dir with spaces/foo.html', 'http://example.com/dir%20with%20spaces/foo.html'],
+      'Local filespecs without spaces should not be transformed' => ['/tmp/normal.txt', '/tmp/normal.txt'],
+      'Local filespecs with spaces should not be transformed' => ['/tmp/with spaces.txt', '/tmp/with spaces.txt'],
+      'Make sure URL characters (:, ?, &) are not encoded but others are.' => ['https://example.com/?a=b@c&d=e+f%', 'https://example.com/?a%3Db%40c&d%3De%2Bf%25'],
+    ];
   }
 
   /**

@@ -37,9 +37,9 @@ class StringFieldRdfaTest extends FieldRdfaTestBase {
 
     // Add the mapping.
     $mapping = rdf_get_mapping('entity_test', 'entity_test');
-    $mapping->setFieldMapping($this->fieldName, array(
-      'properties' => array('schema:text'),
-    ))->save();
+    $mapping->setFieldMapping($this->fieldName, [
+      'properties' => ['schema:text'],
+    ])->save();
 
     // Set up test entity.
     $this->entity = EntityTest::create();
@@ -52,7 +52,7 @@ class StringFieldRdfaTest extends FieldRdfaTestBase {
    */
   public function testStringFormatters() {
     // Tests the string formatter.
-    $this->assertFormatterRdfa(array('type' => 'string'), 'http://schema.org/text', array('value' => $this->testValue));
+    $this->assertFormatterRdfa(['type' => 'string'], 'http://schema.org/text', ['value' => $this->testValue]);
   }
 
 }

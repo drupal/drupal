@@ -23,10 +23,10 @@ class IntegerFormatter extends NumericFormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'thousand_separator' => '',
       'prefix_suffix' => TRUE,
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**

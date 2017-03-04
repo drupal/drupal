@@ -17,9 +17,9 @@ class MenuLinkDefaultIntegrationTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'menu_test',
-  );
+  ];
 
   /**
    * Tests moving a static menu link without a specified menu to the root.
@@ -39,7 +39,7 @@ class MenuLinkDefaultIntegrationTest extends KernelTestBase {
     $this->assertEqual($tree['menu_test.parent']->subtree['menu_test.child']->link->getPluginId(), 'menu_test.child');
 
     // Ensure that the menu name is not forgotten.
-    $menu_link_manager->updateDefinition('menu_test.child', array('parent' => ''));
+    $menu_link_manager->updateDefinition('menu_test.child', ['parent' => '']);
     $menu_link = $menu_link_manager->getDefinition('menu_test.child');
 
     $this->assertEqual($menu_link['parent'], '');

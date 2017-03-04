@@ -20,13 +20,13 @@ class CommentUninstallTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'node');
+  public static $modules = ['comment', 'node'];
 
   protected function setUp() {
     parent::setup();
 
     // Create an article content type.
-    $this->drupalCreateContentType(array('type' => 'article', 'name' => t('Article')));
+    $this->drupalCreateContentType(['type' => 'article', 'name' => t('Article')]);
     // Create comment field on article so that adds 'comment_body' field.
     $this->addDefaultCommentField('node', 'article');
   }
@@ -43,7 +43,7 @@ class CommentUninstallTest extends WebTestBase {
 
     // Uninstall the comment module which should trigger an exception.
     try {
-      $this->container->get('module_installer')->uninstall(array('comment'));
+      $this->container->get('module_installer')->uninstall(['comment']);
       $this->fail("Expected an exception when uninstall was attempted.");
     }
     catch (ModuleUninstallValidatorException $e) {
@@ -77,7 +77,7 @@ class CommentUninstallTest extends WebTestBase {
     field_purge_batch(10);
     // Ensure that uninstallation succeeds even if the field has already been
     // deleted manually beforehand.
-    $this->container->get('module_installer')->uninstall(array('comment'));
+    $this->container->get('module_installer')->uninstall(['comment']);
   }
 
 }

@@ -23,7 +23,7 @@ class FileItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('file');
+  public static $modules = ['file'];
 
   /**
    * Created file entity.
@@ -43,20 +43,20 @@ class FileItemTest extends FieldKernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('file');
-    $this->installSchema('file', array('file_usage'));
+    $this->installSchema('file', ['file_usage']);
 
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => 'file_test',
       'entity_type' => 'entity_test',
       'type' => 'file',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ))->save();
+    ])->save();
     $this->directory = $this->getRandomGenerator()->name(8);
     FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'file_test',
       'bundle' => 'entity_test',
-      'settings' => array('file_directory' => $this->directory),
+      'settings' => ['file_directory' => $this->directory],
     ])->save();
     file_put_contents('public://example.txt', $this->randomMachineName());
     $this->file = File::create([
@@ -131,7 +131,7 @@ class FileItemTest extends FieldKernelTestBase {
       'weight' => 1,
     ])->save();
     $entity = EntityTest::create();
-    $entity->file_test = array('entity' => $file3);
+    $entity->file_test = ['entity' => $file3];
     $uri = $file3->getFileUri();
     $output = entity_view($entity, 'default');
     \Drupal::service('renderer')->renderRoot($output);

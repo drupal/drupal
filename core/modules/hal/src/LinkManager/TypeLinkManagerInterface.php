@@ -21,7 +21,7 @@ interface TypeLinkManagerInterface extends ConfigurableLinkManagerInterface {
    * @return string
    *   The corresponding URI for the bundle.
    */
-  public function getTypeUri($entity_type, $bundle, $context = array());
+  public function getTypeUri($entity_type, $bundle, $context = []);
 
   /**
    * Get a bundle's Typed Data IDs based on a URI.
@@ -35,6 +35,6 @@ interface TypeLinkManagerInterface extends ConfigurableLinkManagerInterface {
    *   If the URI matches a bundle, returns an array containing entity_type and
    *   bundle. Otherwise, returns false.
    */
-  public function getTypeInternalIds($type_uri, $context = array());
+  public function getTypeInternalIds($type_uri, $context = []);
 
 }

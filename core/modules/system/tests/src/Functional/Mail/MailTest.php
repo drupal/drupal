@@ -18,7 +18,7 @@ class MailTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('simpletest', 'system_mail_failure_test');
+  public static $modules = ['simpletest', 'system_mail_failure_test'];
 
   /**
    * Assert that the pluggable mail system is functional.
@@ -28,7 +28,7 @@ class MailTest extends BrowserTestBase {
     $this->config('system.mail')->set('interface.default', 'test_php_mail_failure')->save();
 
     // Get the default MailInterface class instance.
-    $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(array('module' => 'default', 'key' => 'default'));
+    $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(['module' => 'default', 'key' => 'default']);
 
     // Assert whether the default mail backend is an instance of the expected
     // class.
@@ -38,7 +38,7 @@ class MailTest extends BrowserTestBase {
     $this->config('system.mail')->set('interface.mymodule_testkey', 'test_mail_collector')->save();
 
     // Get the added MailInterface class instance.
-    $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(array('module' => 'mymodule', 'key' => 'testkey'));
+    $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(['module' => 'mymodule', 'key' => 'testkey']);
 
     // Assert whether the added mail backend is an instance of the expected
     // class.
@@ -56,7 +56,7 @@ class MailTest extends BrowserTestBase {
     // Use the state system collector mail backend.
     $this->config('system.mail')->set('interface.default', 'test_mail_collector')->save();
     // Reset the state variable that holds sent messages.
-    \Drupal::state()->set('system.test_mail_collector', array());
+    \Drupal::state()->set('system.test_mail_collector', []);
 
     // Send a test message that simpletest_mail_alter should cancel.
     \Drupal::service('plugin.manager.mail')->mail('simpletest', 'cancel_test', 'cancel@example.com', $language_interface->getId());
@@ -77,11 +77,11 @@ class MailTest extends BrowserTestBase {
     // Use the state system collector mail backend.
     $this->config('system.mail')->set('interface.default', 'test_mail_collector')->save();
     // Reset the state variable that holds sent messages.
-    \Drupal::state()->set('system.test_mail_collector', array());
+    \Drupal::state()->set('system.test_mail_collector', []);
     // Send an email with a reply-to address specified.
     $from_email = 'Drupal <simpletest@example.com>';
     $reply_email = 'someone_else@example.com';
-    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language, array(), $reply_email);
+    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language, [], $reply_email);
     // Test that the reply-to email is just the email and not the site name
     // and default sender email.
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');

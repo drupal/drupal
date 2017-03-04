@@ -18,7 +18,7 @@ class EntityTestStorageSchema extends SqlContentEntityStorageSchema {
     $schema = parent::getEntitySchema($entity_type, $reset);
 
     if ($entity_type->id() == 'entity_test_update') {
-      $schema[$entity_type->getBaseTable()]['indexes'] += \Drupal::state()->get('entity_test_update.additional_entity_indexes', array());
+      $schema[$entity_type->getBaseTable()]['indexes'] += \Drupal::state()->get('entity_test_update.additional_entity_indexes', []);
     }
     return $schema;
   }

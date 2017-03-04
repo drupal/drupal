@@ -18,21 +18,21 @@ function update_test_1_update_dependencies() {
   // the correct array structure. Therefore, we use updates from the
   // update_test_0 module (which will be installed first) that they will not
   // get in the way of other tests.
-  $dependencies['update_test_0'][8001] = array(
+  $dependencies['update_test_0'][8001] = [
     // Compare to update_test_2_update_dependencies(), where the same
     // update_test_0 module update function is forced to depend on an update
     // function from a different module. This allows us to test that both
     // dependencies are correctly recorded.
     'update_test_1' => 8001,
-  );
-  $dependencies['update_test_0'][8002] = array(
+  ];
+  $dependencies['update_test_0'][8002] = [
     // Compare to update_test_2_update_dependencies(), where the same
     // update_test_0 module update function is forced to depend on a
     // different update function within the same module. This allows us to
     // test that only the dependency on the higher-numbered update function
     // is recorded.
     'update_test_1' => 8003,
-  );
+  ];
   return $dependencies;
 }
 

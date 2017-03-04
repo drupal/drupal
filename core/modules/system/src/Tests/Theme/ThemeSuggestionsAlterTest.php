@@ -17,11 +17,11 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('theme_test');
+  public static $modules = ['theme_test'];
 
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->install(array('test_theme'));
+    \Drupal::service('theme_handler')->install(['test_theme']);
   }
 
   /**
@@ -57,7 +57,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
 
     // Enable the theme_suggestions_test module to test modules implementing
     // suggestions alter hooks.
-    \Drupal::service('module_installer')->install(array('theme_suggestions_test'));
+    \Drupal::service('module_installer')->install(['theme_suggestions_test']);
     $this->resetAll();
     $this->drupalGet('theme-test/general-suggestion-alter');
     $this->assertText('Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_alter().');
@@ -79,7 +79,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
 
     // Enable the theme_suggestions_test module to test modules implementing
     // suggestions alter hooks.
-    \Drupal::service('module_installer')->install(array('theme_suggestions_test'));
+    \Drupal::service('module_installer')->install(['theme_suggestions_test']);
     $this->resetAll();
     $this->drupalGet('theme-test/suggestion-alter');
     $this->assertText('Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_HOOK_alter().');
@@ -103,7 +103,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     $this->assertText('theme_test_specific_suggestions__variant', 'Specific theme call is added to the suggestions array.');
 
     // Ensure that the base hook is used to determine the suggestion alter hook.
-    \Drupal::service('module_installer')->install(array('theme_suggestions_test'));
+    \Drupal::service('module_installer')->install(['theme_suggestions_test']);
     $this->resetAll();
     $this->drupalGet('theme-test/specific-suggestion-alter');
     $this->assertText('Template overridden based on suggestion alter hook determined by the base hook.');
@@ -126,7 +126,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
 
     // Enable the theme_suggestions_test module to test modules implementing
     // suggestions alter hooks.
-    \Drupal::service('module_installer')->install(array('theme_suggestions_test'));
+    \Drupal::service('module_installer')->install(['theme_suggestions_test']);
     $this->resetAll();
     $this->drupalGet('theme-test/function-suggestion-alter');
     $this->assertText('Theme function overridden based on new theme suggestion provided by a module.');
@@ -143,7 +143,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     // Enable theme_suggestions_test module and make two requests to make sure
     // the include file is always loaded. The file will always be included for
     // the first request because the theme registry is being rebuilt.
-    \Drupal::service('module_installer')->install(array('theme_suggestions_test'));
+    \Drupal::service('module_installer')->install(['theme_suggestions_test']);
     $this->resetAll();
     $this->drupalGet('theme-test/suggestion-alter-include');
     $this->assertText('Function suggested via suggestion alter hook found in include file.', 'Include file loaded for initial request.');
@@ -162,7 +162,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     $this->config('system.theme')
       ->set('default', 'test_theme')
       ->save();
-    \Drupal::service('module_installer')->install(array('theme_suggestions_test'));
+    \Drupal::service('module_installer')->install(['theme_suggestions_test']);
     $this->resetAll();
 
     // Send two requests so that we get all the messages we've set via
@@ -170,15 +170,15 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     $this->drupalGet('theme-test/suggestion-alter');
     // Ensure that the order is first by extension, then for a given extension,
     // the hook-specific one after the generic one.
-    $expected = array(
+    $expected = [
       'theme_suggestions_test_theme_suggestions_alter() executed.',
       'theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter() executed.',
       'theme_test_theme_suggestions_alter() executed.',
       'theme_test_theme_suggestions_theme_test_suggestions_alter() executed.',
       'test_theme_theme_suggestions_alter() executed.',
       'test_theme_theme_suggestions_theme_test_suggestions_alter() executed.',
-    );
-    $content = preg_replace('/\s+/', ' ', Xss::filter($this->content, array()));
+    ];
+    $content = preg_replace('/\s+/', ' ', Xss::filter($this->content, []));
     $this->assert(strpos($content, implode(' ', $expected)) !== FALSE, 'Suggestion alter hooks executed in the expected order.');
   }
 

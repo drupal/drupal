@@ -13,41 +13,41 @@ class Condition implements ConditionInterface, \Countable {
   /**
    * Provides a map of condition operators to condition operator options.
    */
-  protected static $conditionOperatorMap = array(
-    'BETWEEN' => array('delimiter' => ' AND '),
-    'NOT BETWEEN' => array('delimiter' => ' AND '),
-    'IN' => array('delimiter' => ', ', 'prefix' => '(', 'postfix' => ')'),
-    'NOT IN' => array('delimiter' => ', ', 'prefix' => '(', 'postfix' => ')'),
-    'IS NULL' => array('use_value' => FALSE),
-    'IS NOT NULL' => array('use_value' => FALSE),
+  protected static $conditionOperatorMap = [
+    'BETWEEN' => ['delimiter' => ' AND '],
+    'NOT BETWEEN' => ['delimiter' => ' AND '],
+    'IN' => ['delimiter' => ', ', 'prefix' => '(', 'postfix' => ')'],
+    'NOT IN' => ['delimiter' => ', ', 'prefix' => '(', 'postfix' => ')'],
+    'IS NULL' => ['use_value' => FALSE],
+    'IS NOT NULL' => ['use_value' => FALSE],
     // Use backslash for escaping wildcard characters.
-    'LIKE' => array('postfix' => " ESCAPE '\\\\'"),
-    'NOT LIKE' => array('postfix' => " ESCAPE '\\\\'"),
+    'LIKE' => ['postfix' => " ESCAPE '\\\\'"],
+    'NOT LIKE' => ['postfix' => " ESCAPE '\\\\'"],
     // Exists expects an already bracketed subquery as right hand part. Do
     // not define additional brackets.
-    'EXISTS' => array(),
-    'NOT EXISTS' => array(),
+    'EXISTS' => [],
+    'NOT EXISTS' => [],
     // These ones are here for performance reasons.
-    '=' => array(),
-    '<' => array(),
-    '>' => array(),
-    '>=' => array(),
-    '<=' => array(),
-  );
+    '=' => [],
+    '<' => [],
+    '>' => [],
+    '>=' => [],
+    '<=' => [],
+  ];
 
   /**
    * Array of conditions.
    *
    * @var array
    */
-  protected $conditions = array();
+  protected $conditions = [];
 
   /**
    * Array of arguments.
    *
    * @var array
    */
-  protected $arguments = array();
+  protected $arguments = [];
 
   /**
    * Whether the conditions have been changed.
@@ -103,11 +103,11 @@ class Condition implements ConditionInterface, \Countable {
       throw new InvalidQueryException(sprintf("Query condition '%s %s ()' cannot be empty.", $field, $operator));
     }
 
-    $this->conditions[] = array(
+    $this->conditions[] = [
       'field' => $field,
       'value' => $value,
       'operator' => $operator,
-    );
+    ];
 
     $this->changed = TRUE;
 
@@ -117,12 +117,12 @@ class Condition implements ConditionInterface, \Countable {
   /**
    * {@inheritdoc}
    */
-  public function where($snippet, $args = array()) {
-    $this->conditions[] = array(
+  public function where($snippet, $args = []) {
+    $this->conditions[] = [
       'field' => $snippet,
       'value' => $args,
       'operator' => NULL,
-    );
+    ];
     $this->changed = TRUE;
 
     return $this;
@@ -183,8 +183,8 @@ class Condition implements ConditionInterface, \Countable {
     if ($this->changed || isset($this->queryPlaceholderIdentifier) && ($this->queryPlaceholderIdentifier != $queryPlaceholder->uniqueIdentifier())) {
       $this->queryPlaceholderIdentifier = $queryPlaceholder->uniqueIdentifier();
 
-      $condition_fragments = array();
-      $arguments = array();
+      $condition_fragments = [];
+      $arguments = [];
 
       $conditions = $this->conditions;
       $conjunction = $conditions['#conjunction'];
@@ -224,7 +224,7 @@ class Condition implements ConditionInterface, \Countable {
 
         // Process operator.
         if ($ignore_operator) {
-          $operator = array('operator' => '', 'use_value' => FALSE);
+          $operator = ['operator' => '', 'use_value' => FALSE];
         }
         else {
           // Remove potentially dangerous characters.
@@ -255,15 +255,15 @@ class Condition implements ConditionInterface, \Countable {
           if (!isset($operator)) {
             $operator = $this->mapConditionOperator($condition['operator']);
           }
-          $operator += array('operator' => $condition['operator']);
+          $operator += ['operator' => $condition['operator']];
         }
         // Add defaults.
-        $operator += array(
+        $operator += [
           'prefix' => '',
           'postfix' => '',
           'delimiter' => '',
           'use_value' => TRUE,
-        );
+        ];
         $operator_fragment = $operator['operator'];
 
         // Process value.
@@ -279,10 +279,10 @@ class Condition implements ConditionInterface, \Countable {
               $operator['prefix'] = '';
               $operator['postfix'] = '';
             }
-            $condition['value'] = array($condition['value']);
+            $condition['value'] = [$condition['value']];
           }
           // Process all individual values.
-          $value_fragment = array();
+          $value_fragment = [];
           foreach ($condition['value'] as $value) {
             if ($value instanceof SelectInterface) {
               // Right hand part is a subquery. Compile, put brackets around it
@@ -303,7 +303,7 @@ class Condition implements ConditionInterface, \Countable {
         }
 
         // Concatenate the left hand part, operator and right hand part.
-        $condition_fragments[] = trim(implode(' ', array($field_fragment, $operator_fragment, $value_fragment)));
+        $condition_fragments[] = trim(implode(' ', [$field_fragment, $operator_fragment, $value_fragment]));
       }
 
       // Concatenate all conditions using the conjunction and brackets around
@@ -377,10 +377,10 @@ class Condition implements ConditionInterface, \Countable {
       // We need to upper case because PHP index matches are case sensitive but
       // do not need the more expensive Unicode::strtoupper() because SQL statements are ASCII.
       $operator = strtoupper($operator);
-      $return = isset(static::$conditionOperatorMap[$operator]) ? static::$conditionOperatorMap[$operator] : array();
+      $return = isset(static::$conditionOperatorMap[$operator]) ? static::$conditionOperatorMap[$operator] : [];
     }
 
-    $return += array('operator' => $operator);
+    $return += ['operator' => $operator];
 
     return $return;
   }

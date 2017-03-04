@@ -149,7 +149,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   clearCachedDefinitions() method. Only use cache tags when cached plugin
    *   definitions should be cleared along with other, related cache entries.
    */
-  public function setCacheBackend(CacheBackendInterface $cache_backend, $cache_key, array $cache_tags = array()) {
+  public function setCacheBackend(CacheBackendInterface $cache_backend, $cache_key, array $cache_tags = []) {
     assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($cache_tags)', 'Cache Tags must be strings.');
     $this->cacheBackend = $cache_backend;
     $this->cacheKey = $cache_key;
@@ -291,7 +291,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     // plugin definition.
     foreach ($definitions as $plugin_id => $plugin_definition) {
       $provider = $this->extractProviderFromDefinition($plugin_definition);
-      if ($provider && !in_array($provider, array('core', 'component')) && !$this->providerExists($provider)) {
+      if ($provider && !in_array($provider, ['core', 'component']) && !$this->providerExists($provider)) {
         unset($definitions[$plugin_id]);
       }
     }

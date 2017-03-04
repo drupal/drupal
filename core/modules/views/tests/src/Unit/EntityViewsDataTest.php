@@ -93,7 +93,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $typed_data_manager->expects($this->any())
       ->method('getDefinition')
       ->with($this->equalTo('field_item:string_long'))
-      ->willReturn(array('class' => '\Drupal\Core\Field\Plugin\Field\FieldType\StringLongItem'));
+      ->willReturn(['class' => '\Drupal\Core\Field\Plugin\Field\FieldType\StringLongItem']);
 
     $this->baseEntityType = new TestEntityType([
       'base_table' => 'entity_test',
@@ -148,16 +148,16 @@ class EntityViewsDataTest extends UnitTestCase {
       ->setLabel('Description')
       ->setDescription('A description of the term.')
       ->setTranslatable(TRUE)
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
           'label' => 'hidden',
           'type' => 'text_default',
           'weight' => 0,
-        ))
+        ])
       ->setDisplayConfigurable('view', TRUE)
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
           'type' => 'text_textfield',
           'weight' => 0,
-        ))
+        ])
       ->setDisplayConfigurable('form', TRUE);
 
     // Add a URL field; this example is from the Comment entity.

@@ -24,47 +24,47 @@ class AjaxFormsTestSimpleForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $object = new Callbacks();
 
-    $form = array();
-    $form['select'] = array(
+    $form = [];
+    $form['select'] = [
       '#title' => $this->t('Color'),
       '#type' => 'select',
-      '#options' => array(
+      '#options' => [
         'red' => 'red',
         'green' => 'green',
-        'blue' => 'blue'),
-      '#ajax' => array(
-        'callback' => array($object, 'selectCallback'),
-      ),
+        'blue' => 'blue'],
+      '#ajax' => [
+        'callback' => [$object, 'selectCallback'],
+      ],
       '#suffix' => '<div id="ajax_selected_color">No color yet selected</div>',
-    );
+    ];
 
-    $form['checkbox'] = array(
+    $form['checkbox'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Test checkbox'),
-      '#ajax' => array(
-        'callback' => array($object, 'checkboxCallback'),
-      ),
+      '#ajax' => [
+        'callback' => [$object, 'checkboxCallback'],
+      ],
       '#suffix' => '<div id="ajax_checkbox_value">No action yet</div>',
-    );
-    $form['submit'] = array(
+    ];
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('submit'),
-    );
+    ];
 
     // This is for testing invalid callbacks that should return a 500 error in
     // \Drupal\Core\Form\FormAjaxResponseBuilderInterface::buildResponse().
-    $invalid_callbacks = array(
+    $invalid_callbacks = [
       'null' => NULL,
       'empty' => '',
       'nonexistent' => 'some_function_that_does_not_exist',
-    );
+    ];
     foreach ($invalid_callbacks as $key => $value) {
-      $form['select_' . $key . '_callback'] = array(
+      $form['select_' . $key . '_callback'] = [
         '#type' => 'select',
-        '#title' => $this->t('Test %key callbacks', array('%key' => $key)),
-        '#options' => array('red' => 'red'),
-        '#ajax' => array('callback' => $value),
-      );
+        '#title' => $this->t('Test %key callbacks', ['%key' => $key]),
+        '#options' => ['red' => 'red'],
+        '#ajax' => ['callback' => $value],
+      ];
     }
 
     $form['test_group'] = [

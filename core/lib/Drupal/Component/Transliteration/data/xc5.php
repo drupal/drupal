@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'sseum', 'sseub', 'sseubs', 'sseus', 'sseuss', 'sseung', 'sseuj', 'sseuch', 'sseuk', 'sseut', 'sseup', 'sseuh', 'ssui', 'ssuig', 'ssuikk', 'ssuigs',
   0x10 => 'ssuin', 'ssuinj', 'ssuinh', 'ssuid', 'ssuil', 'ssuilg', 'ssuilm', 'ssuilb', 'ssuils', 'ssuilt', 'ssuilp', 'ssuilh', 'ssuim', 'ssuib', 'ssuibs', 'ssuis',
   0x20 => 'ssuiss', 'ssuing', 'ssuij', 'ssuich', 'ssuik', 'ssuit', 'ssuip', 'ssuih', 'ssi', 'ssig', 'ssikk', 'ssigs', 'ssin', 'ssinj', 'ssinh', 'ssid',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'e', 'eg', 'ekk', 'egs', 'en', 'enj', 'enh', 'ed', 'el', 'elg', 'elm', 'elb', 'els', 'elt', 'elp', 'elh',
   0xE0 => 'em', 'eb', 'ebs', 'es', 'ess', 'eng', 'ej', 'ech', 'ek', 'et', 'ep', 'eh', 'yeo', 'yeog', 'yeokk', 'yeogs',
   0xF0 => 'yeon', 'yeonj', 'yeonh', 'yeod', 'yeol', 'yeolg', 'yeolm', 'yeolb', 'yeols', 'yeolt', 'yeolp', 'yeolh', 'yeom', 'yeob', 'yeobs', 'yeos',
-);
+];

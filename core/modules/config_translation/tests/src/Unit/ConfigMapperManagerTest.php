@@ -31,7 +31,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
   protected $typedConfigManager;
 
   protected function setUp() {
-    $language = new Language(array('id' => 'en'));
+    $language = new Language(['id' => 'en']);
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->once())
       ->method('getCurrentLanguage')
@@ -83,50 +83,50 @@ class ConfigMapperManagerTest extends UnitTestCase {
    *   ConfigMapperManager::hasTranslatable() as the second key.
    */
   public function providerTestHasTranslatable() {
-    return array(
-      array($this->getElement(array()), FALSE),
-      array($this->getElement(array('aaa' => 'bbb')), FALSE),
-      array($this->getElement(array('translatable' => FALSE)), FALSE),
-      array($this->getElement(array('translatable' => TRUE)), TRUE),
-      array($this->getNestedElement(array(
-        $this->getElement(array()),
-      )), FALSE),
-      array($this->getNestedElement(array(
-        $this->getElement(array('translatable' => TRUE)),
-      )), TRUE),
-      array($this->getNestedElement(array(
-        $this->getElement(array('aaa' => 'bbb')),
-        $this->getElement(array('ccc' => 'ddd')),
-        $this->getElement(array('eee' => 'fff')),
-      )), FALSE),
-      array($this->getNestedElement(array(
-        $this->getElement(array('aaa' => 'bbb')),
-        $this->getElement(array('ccc' => 'ddd')),
-        $this->getElement(array('translatable' => TRUE)),
-      )), TRUE),
-      array($this->getNestedElement(array(
-        $this->getElement(array('aaa' => 'bbb')),
-        $this->getNestedElement(array(
-          $this->getElement(array('ccc' => 'ddd')),
-          $this->getElement(array('eee' => 'fff')),
-        )),
-        $this->getNestedElement(array(
-          $this->getElement(array('ggg' => 'hhh')),
-          $this->getElement(array('iii' => 'jjj')),
-        )),
-      )), FALSE),
-      array($this->getNestedElement(array(
-        $this->getElement(array('aaa' => 'bbb')),
-        $this->getNestedElement(array(
-          $this->getElement(array('ccc' => 'ddd')),
-          $this->getElement(array('eee' => 'fff')),
-        )),
-        $this->getNestedElement(array(
-          $this->getElement(array('ggg' => 'hhh')),
-          $this->getElement(array('translatable' => TRUE)),
-        )),
-      )), TRUE),
-    );
+    return [
+      [$this->getElement([]), FALSE],
+      [$this->getElement(['aaa' => 'bbb']), FALSE],
+      [$this->getElement(['translatable' => FALSE]), FALSE],
+      [$this->getElement(['translatable' => TRUE]), TRUE],
+      [$this->getNestedElement([
+        $this->getElement([]),
+      ]), FALSE],
+      [$this->getNestedElement([
+        $this->getElement(['translatable' => TRUE]),
+      ]), TRUE],
+      [$this->getNestedElement([
+        $this->getElement(['aaa' => 'bbb']),
+        $this->getElement(['ccc' => 'ddd']),
+        $this->getElement(['eee' => 'fff']),
+      ]), FALSE],
+      [$this->getNestedElement([
+        $this->getElement(['aaa' => 'bbb']),
+        $this->getElement(['ccc' => 'ddd']),
+        $this->getElement(['translatable' => TRUE]),
+      ]), TRUE],
+      [$this->getNestedElement([
+        $this->getElement(['aaa' => 'bbb']),
+        $this->getNestedElement([
+          $this->getElement(['ccc' => 'ddd']),
+          $this->getElement(['eee' => 'fff']),
+        ]),
+        $this->getNestedElement([
+          $this->getElement(['ggg' => 'hhh']),
+          $this->getElement(['iii' => 'jjj']),
+        ]),
+      ]), FALSE],
+      [$this->getNestedElement([
+        $this->getElement(['aaa' => 'bbb']),
+        $this->getNestedElement([
+          $this->getElement(['ccc' => 'ddd']),
+          $this->getElement(['eee' => 'fff']),
+        ]),
+        $this->getNestedElement([
+          $this->getElement(['ggg' => 'hhh']),
+          $this->getElement(['translatable' => TRUE]),
+        ]),
+      ]), TRUE],
+    ];
   }
 
   /**

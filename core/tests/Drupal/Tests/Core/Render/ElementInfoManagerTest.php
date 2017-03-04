@@ -85,13 +85,13 @@ class ElementInfoManagerTest extends UnitTestCase {
     $plugin = $this->getMock($plugin_class);
     $plugin->expects($this->once())
       ->method('getInfo')
-      ->willReturn(array(
+      ->willReturn([
         '#theme' => 'page',
-      ));
+      ]);
 
     $element_info = $this->getMockBuilder('Drupal\Core\Render\ElementInfoManager')
-      ->setConstructorArgs(array(new \ArrayObject(), $this->cache, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager))
-      ->setMethods(array('getDefinitions', 'createInstance'))
+      ->setConstructorArgs([new \ArrayObject(), $this->cache, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager])
+      ->setMethods(['getDefinitions', 'createInstance'])
       ->getMock();
 
     $this->themeManager->expects($this->any())
@@ -104,9 +104,9 @@ class ElementInfoManagerTest extends UnitTestCase {
       ->willReturn($plugin);
     $element_info->expects($this->once())
       ->method('getDefinitions')
-      ->willReturn(array(
-        'page' => array('class' => 'TestElementPlugin'),
-      ));
+      ->willReturn([
+        'page' => ['class' => 'TestElementPlugin'],
+      ]);
 
     $this->assertEquals($expected_info, $element_info->getInfo('page'));
   }
@@ -117,26 +117,26 @@ class ElementInfoManagerTest extends UnitTestCase {
    * @return array
    */
   public function providerTestGetInfoElementPlugin() {
-    $data = array();
-    $data[] = array(
+    $data = [];
+    $data[] = [
       'Drupal\Core\Render\Element\ElementInterface',
-      array(
+      [
         '#type' => 'page',
         '#theme' => 'page',
         '#defaults_loaded' => TRUE,
-      ),
-    );
+      ],
+    ];
 
-    $data[] = array(
+    $data[] = [
       'Drupal\Core\Render\Element\FormElementInterface',
-      array(
+      [
         '#type' => 'page',
         '#theme' => 'page',
         '#input' => TRUE,
-        '#value_callback' => array('TestElementPlugin', 'valueCallback'),
+        '#value_callback' => ['TestElementPlugin', 'valueCallback'],
         '#defaults_loaded' => TRUE,
-      ),
-    );
+      ],
+    ];
     return $data;
   }
 
@@ -164,12 +164,12 @@ class TestElementInfoManager extends ElementInfoManager {
   /**
    * {@inheritdoc}
    */
-  protected $elementInfo = array(
-    'test' => array(
-      'foo' => array(
+  protected $elementInfo = [
+    'test' => [
+      'foo' => [
         '#bar' => 'baz',
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 
 }

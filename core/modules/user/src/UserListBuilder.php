@@ -79,36 +79,36 @@ class UserListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header = array(
-      'username' => array(
+    $header = [
+      'username' => [
         'data' => $this->t('Username'),
         'field' => 'name',
         'specifier' => 'name',
-      ),
-      'status' => array(
+      ],
+      'status' => [
         'data' => $this->t('Status'),
         'field' => 'status',
         'specifier' => 'status',
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      ),
-      'roles' => array(
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
+      'roles' => [
         'data' => $this->t('Roles'),
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      ),
-      'member_for' => array(
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
+      'member_for' => [
         'data' => $this->t('Member for'),
         'field' => 'created',
         'specifier' => 'created',
         'sort' => 'desc',
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      ),
-      'access' => array(
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
+      'access' => [
         'data' => $this->t('Last access'),
         'field' => 'access',
         'specifier' => 'access',
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      ),
-    );
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
+    ];
     return $header + parent::buildHeader();
   }
 
@@ -116,25 +116,25 @@ class UserListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['username']['data'] = array(
+    $row['username']['data'] = [
       '#theme' => 'username',
       '#account' => $entity,
-    );
+    ];
     $row['status'] = $entity->isActive() ? $this->t('active') : $this->t('blocked');
 
     $roles = user_role_names(TRUE);
     unset($roles[RoleInterface::AUTHENTICATED_ID]);
-    $users_roles = array();
+    $users_roles = [];
     foreach ($entity->getRoles() as $role) {
       if (isset($roles[$role])) {
         $users_roles[] = $roles[$role];
       }
     }
     asort($users_roles);
-    $row['roles']['data'] = array(
+    $row['roles']['data'] = [
       '#theme' => 'item_list',
       '#items' => $users_roles,
-    );
+    ];
     $options = [
       'return_as_object' => TRUE,
     ];

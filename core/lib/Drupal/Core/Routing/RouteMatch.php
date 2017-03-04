@@ -52,7 +52,7 @@ class RouteMatch implements RouteMatchInterface {
    * @param array $raw_parameters
    *   The raw $parameters array.
    */
-  public function __construct($route_name, Route $route, array $parameters = array(), array $raw_parameters = array()) {
+  public function __construct($route_name, Route $route, array $parameters = [], array $raw_parameters = []) {
     $this->routeName = $route_name;
     $this->route = $route;
 
@@ -77,7 +77,7 @@ class RouteMatch implements RouteMatchInterface {
    */
   public static function createFromRequest(Request $request) {
     if ($request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) {
-      $raw_variables = array();
+      $raw_variables = [];
       if ($raw = $request->attributes->get('_raw_variables')) {
         $raw_variables = $raw->all();
       }
@@ -141,7 +141,7 @@ class RouteMatch implements RouteMatchInterface {
    *   Route parameter names as both the keys and values.
    */
   protected function getParameterNames() {
-    $names = array();
+    $names = [];
     if ($route = $this->getRouteObject()) {
       // Variables defined in path and host patterns are route parameters.
       $variables = $route->compile()->getVariables();

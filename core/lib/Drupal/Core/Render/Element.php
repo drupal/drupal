@@ -74,7 +74,7 @@ class Element {
 
     // Filter out properties from the element, leaving only children.
     $count = count($elements);
-    $child_weights = array();
+    $child_weights = [];
     $i = 0;
     $sortable = FALSE;
     foreach ($elements as $key => $value) {
@@ -94,7 +94,7 @@ class Element {
         // Only trigger an error if the value is not null.
         // @see https://www.drupal.org/node/1283892
         elseif (isset($value)) {
-          trigger_error(SafeMarkup::format('"@key" is an invalid render array key', array('@key' => $key)), E_USER_ERROR);
+          trigger_error(SafeMarkup::format('"@key" is an invalid render array key', ['@key' => $key]), E_USER_ERROR);
         }
       }
       $i++;
@@ -127,7 +127,7 @@ class Element {
    *   The array keys of the element's visible children.
    */
   public static function getVisibleChildren(array $elements) {
-    $visible_children = array();
+    $visible_children = [];
 
     foreach (static::children($elements) as $key) {
       $child = $elements[$key];

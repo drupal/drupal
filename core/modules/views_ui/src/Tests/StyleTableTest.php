@@ -17,7 +17,7 @@ class StyleTableTest extends UITestBase {
    */
   public function testWizard() {
     // Create a new view and check that the first field has a label.
-    $view = array();
+    $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));
     $view['show[wizard_key]'] = 'node';

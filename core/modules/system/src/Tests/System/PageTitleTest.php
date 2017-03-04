@@ -29,11 +29,11 @@ class PageTitleTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     $this->drupalPlaceBlock('page_title_block');
 
-    $this->contentUser = $this->drupalCreateUser(array('create page content', 'access content', 'administer themes', 'administer site configuration', 'link to any page'));
+    $this->contentUser = $this->drupalCreateUser(['create page content', 'access content', 'administer themes', 'administer site configuration', 'link to any page']);
     $this->drupalLogin($this->contentUser);
   }
 
@@ -43,10 +43,10 @@ class PageTitleTest extends WebTestBase {
   function testTitleTags() {
     $title = "string with <em>HTML</em>";
     // Generate node content.
-    $edit = array(
+    $edit = [
       'title[0][value]' => '!SimpleTest! ' . $title . $this->randomMachineName(20),
       'body[0][value]' => '!SimpleTest! test body' . $this->randomMachineName(200),
-    );
+    ];
     // Create the node with HTML in the title.
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
@@ -69,10 +69,10 @@ class PageTitleTest extends WebTestBase {
     $slogan_filtered = Xss::filterAdmin($slogan);
 
     // Set title and slogan.
-    $edit = array(
+    $edit = [
       'site_name'    => $title,
       'site_slogan'  => $slogan,
-    );
+    ];
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
 
     // Place branding block with site name and slogan into header region.
@@ -113,9 +113,9 @@ class PageTitleTest extends WebTestBase {
     $this->assertEqual('Test dynamic title', (string) $result[0]);
 
     // Set some custom translated strings.
-    $this->addCustomTranslations('en', array('' => array(
+    $this->addCustomTranslations('en', ['' => [
       'Static title' => 'Static title translated'
-    )));
+    ]]);
     $this->writeCustomTranslations();
 
     // Ensure that the title got translated.
