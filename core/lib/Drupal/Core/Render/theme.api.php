@@ -31,7 +31,7 @@
  * 8 themes.
  *
  * For further information on theming in Drupal 8 see
- * https://www.drupal.org/theme-guide/8
+ * https://www.drupal.org/docs/8/theming
  *
  * For further Twig documentation see
  * http://twig.sensiolabs.org/doc/templates.html
@@ -223,7 +223,7 @@
  * same, which gives users fewer user interface patterns to learn.
  *
  * For further information on the Theme and Render APIs, see:
- * - https://www.drupal.org/documentation/theme
+ * - https://www.drupal.org/docs/8/theming
  * - https://www.drupal.org/developing/api/8/render
  * - https://www.drupal.org/node/722174
  * - https://www.drupal.org/node/933976
