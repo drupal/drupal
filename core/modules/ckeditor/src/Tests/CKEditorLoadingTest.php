@@ -158,7 +158,7 @@ class CKEditorLoadingTest extends WebTestBase {
   /**
    * Tests presence of essential configuration even without Internal's buttons.
    */
-  protected function testLoadingWithoutInternalButtons() {
+  public function testLoadingWithoutInternalButtons() {
     // Change the CKEditor text editor configuration to only have link buttons.
     // This means:
     // - 0 buttons are from \Drupal\ckeditor\Plugin\CKEditorPlugin\Internal

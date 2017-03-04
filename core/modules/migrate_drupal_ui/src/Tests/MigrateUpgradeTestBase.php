@@ -101,7 +101,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
   /**
    * Executes all steps of migrations upgrade.
    */
-  protected function testMigrateUpgrade() {
+  public function testMigrateUpgrade() {
     $connection_options = $this->sourceDatabase->getConnectionOptions();
     $this->drupalGet('/upgrade');
     $this->assertText('Upgrade a site by importing it into a clean and empty new install of Drupal 8. You will lose any existing configuration once you import your site into it. See the online documentation for Drupal site upgrades for more detailed information.');

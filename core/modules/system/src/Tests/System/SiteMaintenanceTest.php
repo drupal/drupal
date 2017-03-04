@@ -38,7 +38,7 @@ class SiteMaintenanceTest extends WebTestBase {
   /**
    * Verifies site maintenance mode functionality.
    */
-  protected function testSiteMaintenance() {
+  public function testSiteMaintenance() {
 
     // Verify that permission message is displayed.
     $permission_handler = $this->container->get('user.permissions');

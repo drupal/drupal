@@ -67,7 +67,7 @@ class PagerTest extends WebTestBase {
   /**
    * Test proper functioning of the query parameters and the pager cache context.
    */
-  protected function testPagerQueryParametersAndCacheContext() {
+  public function testPagerQueryParametersAndCacheContext() {
     // First page.
     $this->drupalGet('pager-test/query-parameters');
     $this->assertText(t('Pager calls: 0'), 'Initial call to pager shows 0 calls.');
@@ -93,7 +93,7 @@ class PagerTest extends WebTestBase {
   /**
    * Test proper functioning of multiple pagers.
    */
-  protected function testMultiplePagers() {
+  public function testMultiplePagers() {
     // First page.
     $this->drupalGet('pager-test/multiple-pagers');
 
