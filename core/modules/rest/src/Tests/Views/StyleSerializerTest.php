@@ -219,7 +219,7 @@ class StyleSerializerTest extends PluginTestBase {
   /**
    * Verifies site maintenance mode functionality.
    */
-  protected function testSiteMaintenance() {
+  public function testSiteMaintenance() {
     $view = Views::getView('test_serializer_display_field');
     $view->initDisplay();
     $this->executeView($view);

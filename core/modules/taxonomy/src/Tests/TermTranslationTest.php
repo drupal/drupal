@@ -87,7 +87,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   /**
    * Test translation of terms are showed in the node.
    */
-  protected function testTermsTranslation() {
+  public function testTermsTranslation() {
 
     // Set the display of the term reference field on the article content type
     // to "Check boxes/radio buttons".
