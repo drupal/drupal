@@ -26,7 +26,7 @@ class Insert extends QueryInsert {
     $table_information = $this->connection->schema()->queryTableInformation($this->table);
 
     $max_placeholder = 0;
-    $blobs = array();
+    $blobs = [];
     $blob_count = 0;
     foreach ($this->insertValues as $insert_values) {
       foreach ($this->insertFields as $idx => $field) {
@@ -66,7 +66,7 @@ class Insert extends QueryInsert {
             // used twice. However, trying to insert a value into a serial
             // column should only be done in very rare cases and is not thread
             // safe by definition.
-            $this->connection->query("SELECT setval('" . $table_information->sequences[$index] . "', GREATEST(MAX(" . $serial_field . "), :serial_value)) FROM {" . $this->table . "}", array(':serial_value' => (int)$serial_value));
+            $this->connection->query("SELECT setval('" . $table_information->sequences[$index] . "', GREATEST(MAX(" . $serial_field . "), :serial_value)) FROM {" . $this->table . "}", [':serial_value' => (int)$serial_value]);
           }
         }
       }
@@ -103,10 +103,10 @@ class Insert extends QueryInsert {
     try {
       // Only use the returned last_insert_id if it is not already set.
       if (!empty($last_insert_id)) {
-        $this->connection->query($stmt, array(), $options);
+        $this->connection->query($stmt, [], $options);
       }
       else {
-        $last_insert_id = $this->connection->query($stmt, array(), $options);
+        $last_insert_id = $this->connection->query($stmt, [], $options);
       }
       $this->connection->releaseSavepoint();
     }
@@ -116,7 +116,7 @@ class Insert extends QueryInsert {
     }
 
     // Re-initialize the values array so that we can re-use this query.
-    $this->insertValues = array();
+    $this->insertValues = [];
 
     return $last_insert_id;
   }

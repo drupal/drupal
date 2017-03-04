@@ -29,12 +29,12 @@ class PluginExample extends AnnotationBase {
    * {@inheritdoc}
    */
   public function get() {
-    return array(
+    return [
       'id' => $this->id,
       'custom' => $this->custom,
       'class' => $this->class,
       'provider' => $this->provider,
-    );
+    ];
   }
 
 }

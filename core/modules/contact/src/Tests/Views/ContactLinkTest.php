@@ -27,14 +27,14 @@ class ContactLinkTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('contact_test_views');
+  public static $modules = ['contact_test_views'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_contact_link');
+  public static $testViews = ['test_contact_link'];
 
   /**
    * {@inheritdoc}
@@ -42,7 +42,7 @@ class ContactLinkTest extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::createTestViews(get_class($this), array('contact_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['contact_test_views']);
 
     $this->userData = $this->container->get('user.data');
   }
@@ -51,39 +51,39 @@ class ContactLinkTest extends ViewTestBase {
    * Tests contact link.
    */
   public function testContactLink() {
-    $accounts = array();
+    $accounts = [];
     $accounts['root'] = User::load(1);
     // Create an account with access to all contact pages.
-    $admin_account = $this->drupalCreateUser(array('administer users'));
+    $admin_account = $this->drupalCreateUser(['administer users']);
     $accounts['admin'] = $admin_account;
     // Create an account with no access to contact pages.
     $no_contact_account = $this->drupalCreateUser();
     $accounts['no_contact'] = $no_contact_account;
 
     // Create an account with access to contact pages.
-    $contact_account = $this->drupalCreateUser(array('access user contact forms'));
+    $contact_account = $this->drupalCreateUser(['access user contact forms']);
     $accounts['contact'] = $contact_account;
 
     $this->drupalLogin($admin_account);
     $this->drupalGet('test-contact-link');
     // The admin user has access to all contact links beside his own.
-    $this->assertContactLinks($accounts, array('root', 'no_contact', 'contact'));
+    $this->assertContactLinks($accounts, ['root', 'no_contact', 'contact']);
 
     $this->drupalLogin($no_contact_account);
     $this->drupalGet('test-contact-link');
     // Ensure that the user without the permission doesn't see any link.
-    $this->assertContactLinks($accounts, array());
+    $this->assertContactLinks($accounts, []);
 
     $this->drupalLogin($contact_account);
     $this->drupalGet('test-contact-link');
-    $this->assertContactLinks($accounts, array('root', 'admin', 'no_contact'));
+    $this->assertContactLinks($accounts, ['root', 'admin', 'no_contact']);
 
     // Disable contact link for no_contact.
     $this->userData->set('contact', $no_contact_account->id(), 'enabled', FALSE);
     // @todo Remove cache invalidation in https://www.drupal.org/node/2477903.
     Cache::invalidateTags($no_contact_account->getCacheTagsToInvalidate());
     $this->drupalGet('test-contact-link');
-    $this->assertContactLinks($accounts, array('root', 'admin'));
+    $this->assertContactLinks($accounts, ['root', 'admin']);
   }
 
   /**
@@ -100,7 +100,7 @@ class ContactLinkTest extends ViewTestBase {
     foreach ($names as $name) {
       $account = $accounts[$name];
 
-      $result = $this->xpath('//div[contains(@class, "views-field-contact")]//a[contains(@href, :url)]', array(':url' => $account->url('contact-form')));
+      $result = $this->xpath('//div[contains(@class, "views-field-contact")]//a[contains(@href, :url)]', [':url' => $account->url('contact-form')]);
       $this->assertTrue(count($result));
     }
   }

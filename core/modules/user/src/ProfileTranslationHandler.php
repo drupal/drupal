@@ -32,7 +32,7 @@ class ProfileTranslationHandler extends ContentTranslationHandler {
    */
   public function entityFormAlter(array &$form, FormStateInterface $form_state, EntityInterface $entity) {
     parent::entityFormAlter($form, $form_state, $entity);
-    $form['actions']['submit']['#submit'][] = array($this, 'entityFormSave');
+    $form['actions']['submit']['#submit'][] = [$this, 'entityFormSave'];
   }
 
   /**

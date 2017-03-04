@@ -86,10 +86,10 @@ class ActionListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header = array(
+    $header = [
       'type' => t('Action type'),
       'label' => t('Label'),
-    ) + parent::buildHeader();
+    ] + parent::buildHeader();
     return $header;
   }
 
@@ -97,7 +97,7 @@ class ActionListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function getDefaultOperations(EntityInterface $entity) {
-    $operations = $entity->isConfigurable() ? parent::getDefaultOperations($entity) : array();
+    $operations = $entity->isConfigurable() ? parent::getDefaultOperations($entity) : [];
     if (isset($operations['edit'])) {
       $operations['edit']['title'] = t('Configure');
     }

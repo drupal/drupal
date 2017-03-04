@@ -16,7 +16,7 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_taxonomy_node_term_data');
+  public static $testViews = ['test_taxonomy_node_term_data'];
 
   function testViewsHandlerRelationshipNodeTermData() {
     $view = Views::getView('test_taxonomy_node_term_data');
@@ -30,16 +30,16 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
       ],
     ];
     $this->assertIdentical($expected, $view->getDependencies());
-    $this->executeView($view, array($this->term1->id(), $this->term2->id()));
-    $expected_result = array(
-      array(
+    $this->executeView($view, [$this->term1->id(), $this->term2->id()]);
+    $expected_result = [
+      [
         'nid' => $this->nodes[1]->id(),
-      ),
-      array(
+      ],
+      [
         'nid' => $this->nodes[0]->id(),
-      ),
-    );
-    $column_map = array('nid' => 'nid');
+      ],
+    ];
+    $column_map = ['nid' => 'nid'];
     $this->assertIdenticalResultset($view, $expected_result, $column_map);
 
     // Change the view to test relation limited by vocabulary.
@@ -51,7 +51,7 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
     // Tests \Drupal\taxonomy\Plugin\views\relationship\NodeTermData::calculateDependencies().
     $expected['config'][] = 'taxonomy.vocabulary.views_testing_tags';
     $this->assertIdentical($expected, $view->getDependencies());
-    $this->executeView($view, array($this->term1->id(), $this->term2->id()));
+    $this->executeView($view, [$this->term1->id(), $this->term2->id()]);
     $this->assertIdenticalResultset($view, $expected_result, $column_map);
   }
 

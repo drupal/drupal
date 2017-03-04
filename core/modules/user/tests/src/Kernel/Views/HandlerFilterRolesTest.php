@@ -20,7 +20,7 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_user_name');
+  public static $testViews = ['test_user_name'];
 
   /**
    * Tests that role filter dependencies are calculated correctly.

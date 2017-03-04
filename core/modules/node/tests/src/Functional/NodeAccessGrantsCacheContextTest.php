@@ -15,7 +15,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_access_test');
+  public static $modules = ['node_access_test'];
 
   /**
    * User with permission to view content.
@@ -43,9 +43,9 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
     // Create user with simple node access permission. The 'node test view'
     // permission is implemented and granted by the node_access_test module.
-    $this->accessUser = $this->drupalCreateUser(array('access content overview', 'access content', 'node test view'));
-    $this->noAccessUser = $this->drupalCreateUser(array('access content overview', 'access content'));
-    $this->noAccessUser2 = $this->drupalCreateUser(array('access content overview', 'access content'));
+    $this->accessUser = $this->drupalCreateUser(['access content overview', 'access content', 'node test view']);
+    $this->noAccessUser = $this->drupalCreateUser(['access content overview', 'access content']);
+    $this->noAccessUser2 = $this->drupalCreateUser(['access content overview', 'access content']);
 
     $this->userMapping = [
       1 => $this->rootUser,
@@ -84,14 +84,14 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
     // Grant view to all nodes (because nid = 0) for users in the
     // 'node_access_all' realm.
-    $record = array(
+    $record = [
       'nid' => 0,
       'gid' => 0,
       'realm' => 'node_access_all',
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
-    );
+    ];
     db_insert('node_access')->fields($record)->execute();
 
     // Put user accessUser (uid 0) in the realm.

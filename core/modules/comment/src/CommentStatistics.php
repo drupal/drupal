@@ -65,14 +65,14 @@ class CommentStatistics implements CommentStatisticsInterface {
    * {@inheritdoc}
    */
   public function read($entities, $entity_type, $accurate = TRUE) {
-    $options = $accurate ? array() : array('target' => 'replica');
+    $options = $accurate ? [] : ['target' => 'replica'];
     $stats = $this->database->select('comment_entity_statistics', 'ces', $options)
       ->fields('ces')
       ->condition('ces.entity_id', array_keys($entities), 'IN')
       ->condition('ces.entity_type', $entity_type)
       ->execute();
 
-    $statistics_records = array();
+    $statistics_records = [];
     while ($entry = $stats->fetchObject()) {
       $statistics_records[] = $entry;
     }
@@ -94,7 +94,7 @@ class CommentStatistics implements CommentStatisticsInterface {
    */
   public function create(FieldableEntityInterface $entity, $fields) {
     $query = $this->database->insert('comment_entity_statistics')
-      ->fields(array(
+      ->fields([
         'entity_id',
         'entity_type',
         'field_name',
@@ -103,7 +103,7 @@ class CommentStatistics implements CommentStatisticsInterface {
         'last_comment_name',
         'last_comment_uid',
         'comment_count',
-      ));
+      ]);
     foreach ($fields as $field_name => $detail) {
       // Skip fields that entity does not have.
       if (!$entity->hasField($field_name)) {
@@ -127,7 +127,7 @@ class CommentStatistics implements CommentStatisticsInterface {
       if ($entity instanceof EntityChangedInterface) {
         $last_comment_timestamp = $entity->getChangedTimeAcrossTranslations();
       }
-      $query->values(array(
+      $query->values([
         'entity_id' => $entity->id(),
         'entity_type' => $entity->getEntityTypeId(),
         'field_name' => $field_name,
@@ -136,7 +136,7 @@ class CommentStatistics implements CommentStatisticsInterface {
         'last_comment_name' => NULL,
         'last_comment_uid' => $last_comment_uid,
         'comment_count' => 0,
-      ));
+      ]);
     }
     $query->execute();
   }
@@ -145,24 +145,24 @@ class CommentStatistics implements CommentStatisticsInterface {
    * {@inheritdoc}
    */
   public function getMaximumCount($entity_type) {
-    return $this->database->query('SELECT MAX(comment_count) FROM {comment_entity_statistics} WHERE entity_type = :entity_type', array(':entity_type' => $entity_type))->fetchField();
+    return $this->database->query('SELECT MAX(comment_count) FROM {comment_entity_statistics} WHERE entity_type = :entity_type', [':entity_type' => $entity_type])->fetchField();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getRankingInfo() {
-    return array(
-      'comments' => array(
+    return [
+      'comments' => [
         'title' => t('Number of comments'),
-        'join' => array(
+        'join' => [
           'type' => 'LEFT',
           'table' => 'comment_entity_statistics',
           'alias' => 'ces',
           // Default to comment field as this is the most common use case for
           // nodes.
           'on' => "ces.entity_id = i.sid AND ces.entity_type = 'node' AND ces.field_name = 'comment'",
-        ),
+        ],
         // Inverse law that maps the highest view count on the site to 1 and 0
         // to 0. Note that the ROUND here is necessary for PostgreSQL and SQLite
         // in order to ensure that the :comment_scale argument is treated as
@@ -170,9 +170,9 @@ class CommentStatistics implements CommentStatisticsInterface {
         // values in as strings instead of numbers in complex expressions like
         // this.
         'score' => '2.0 - 2.0 / (1.0 + ces.comment_count * (ROUND(:comment_scale, 4)))',
-        'arguments' => array(':comment_scale' => \Drupal::state()->get('comment.node_comment_statistics_scale') ?: 0),
-      ),
-    );
+        'arguments' => [':comment_scale' => \Drupal::state()->get('comment.node_comment_statistics_scale') ?: 0],
+      ],
+    ];
   }
 
   /**
@@ -198,7 +198,7 @@ class CommentStatistics implements CommentStatisticsInterface {
     if ($count > 0) {
       // Comments exist.
       $last_reply = $this->database->select('comment_field_data', 'c')
-        ->fields('c', array('cid', 'name', 'changed', 'uid'))
+        ->fields('c', ['cid', 'name', 'changed', 'uid'])
         ->condition('c.entity_id', $comment->getCommentedEntityId())
         ->condition('c.entity_type', $comment->getCommentedEntityTypeId())
         ->condition('c.field_name', $comment->getFieldName())
@@ -210,18 +210,18 @@ class CommentStatistics implements CommentStatisticsInterface {
         ->fetchObject();
       // Use merge here because entity could be created before comment field.
       $this->database->merge('comment_entity_statistics')
-        ->fields(array(
+        ->fields([
           'cid' => $last_reply->cid,
           'comment_count' => $count,
           'last_comment_timestamp' => $last_reply->changed,
           'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
           'last_comment_uid' => $last_reply->uid,
-        ))
-        ->keys(array(
+        ])
+        ->keys([
           'entity_id' => $comment->getCommentedEntityId(),
           'entity_type' => $comment->getCommentedEntityTypeId(),
           'field_name' => $comment->getFieldName(),
-        ))
+        ])
         ->execute();
     }
     else {
@@ -238,7 +238,7 @@ class CommentStatistics implements CommentStatisticsInterface {
         $last_comment_uid = $this->currentUser->id();
       }
       $this->database->update('comment_entity_statistics')
-        ->fields(array(
+        ->fields([
           'cid' => 0,
           'comment_count' => 0,
           // Use the changed date of the entity if it's set, or default to
@@ -246,7 +246,7 @@ class CommentStatistics implements CommentStatisticsInterface {
           'last_comment_timestamp' => ($entity instanceof EntityChangedInterface) ? $entity->getChangedTimeAcrossTranslations() : REQUEST_TIME,
           'last_comment_name' => '',
           'last_comment_uid' => $last_comment_uid,
-        ))
+        ])
         ->condition('entity_id', $comment->getCommentedEntityId())
         ->condition('entity_type', $comment->getCommentedEntityTypeId())
         ->condition('field_name', $comment->getFieldName())
@@ -255,7 +255,7 @@ class CommentStatistics implements CommentStatisticsInterface {
 
     // Reset the cache of the commented entity so that when the entity is loaded
     // the next time, the statistics will be loaded again.
-    $this->entityManager->getStorage($comment->getCommentedEntityTypeId())->resetCache(array($comment->getCommentedEntityId()));
+    $this->entityManager->getStorage($comment->getCommentedEntityTypeId())->resetCache([$comment->getCommentedEntityId()]);
   }
 
 }

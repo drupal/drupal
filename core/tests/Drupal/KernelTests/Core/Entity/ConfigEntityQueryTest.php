@@ -19,7 +19,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test');
+  public static $modules = ['config_test'];
 
   /**
    * Stores the search results for alter comparison.
@@ -45,7 +45,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->entities = array();
+    $this->entities = [];
     $this->factory = $this->container->get('entity.query');
 
     // These two are here to make sure that matchArray needs to go over several
@@ -54,56 +54,56 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $array['level1a']['level2'] = 9;
     // The tests match array.level1.level2.
     $array['level1']['level2'] = 1;
-    $entity = ConfigQueryTest::create(array(
+    $entity = ConfigQueryTest::create([
       'label' => $this->randomMachineName(),
       'id' => '1',
       'number' => 31,
       'array' => $array,
-    ));
+    ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
     $entity->save();
 
     $array['level1']['level2'] = 2;
-    $entity = ConfigQueryTest::create(array(
+    $entity = ConfigQueryTest::create([
       'label' => $this->randomMachineName(),
       'id' => '2',
       'number' => 41,
       'array' => $array,
-    ));
+    ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
     $entity->save();
 
     $array['level1']['level2'] = 1;
-    $entity = ConfigQueryTest::create(array(
+    $entity = ConfigQueryTest::create([
       'label' => 'test_prefix_' . $this->randomMachineName(),
       'id' => '3',
       'number' => 59,
       'array' => $array,
-    ));
+    ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
     $entity->save();
 
     $array['level1']['level2'] = 2;
-    $entity = ConfigQueryTest::create(array(
+    $entity = ConfigQueryTest::create([
       'label' => $this->randomMachineName() . '_test_suffix',
       'id' => '4',
       'number' => 26,
       'array' => $array,
-    ));
+    ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
     $entity->save();
 
     $array['level1']['level2'] = 3;
-    $entity = ConfigQueryTest::create(array(
+    $entity = ConfigQueryTest::create([
       'label' => $this->randomMachineName() . '_TEST_contains_' . $this->randomMachineName(),
       'id' => '5',
       'number' => 53,
       'array' => $array,
-    ));
+    ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
     $entity->save();
@@ -116,84 +116,84 @@ class ConfigEntityQueryTest extends KernelTestBase {
     // Run a test without any condition.
     $this->queryResults = $this->factory->get('config_query_test')
       ->execute();
-    $this->assertResults(array('1', '2', '3', '4', '5'));
+    $this->assertResults(['1', '2', '3', '4', '5']);
     // No conditions, OR.
     $this->queryResults = $this->factory->get('config_query_test', 'OR')
       ->execute();
-    $this->assertResults(array('1', '2', '3', '4', '5'));
+    $this->assertResults(['1', '2', '3', '4', '5']);
 
     // Filter by ID with equality.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', '3')
       ->execute();
-    $this->assertResults(array('3'));
+    $this->assertResults(['3']);
 
     // Filter by label with a known prefix.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('label', 'test_prefix', 'STARTS_WITH')
       ->execute();
-    $this->assertResults(array('3'));
+    $this->assertResults(['3']);
 
     // Filter by label with a known suffix.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('label', 'test_suffix', 'ENDS_WITH')
       ->execute();
-    $this->assertResults(array('4'));
+    $this->assertResults(['4']);
 
     // Filter by label with a known containing word.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('label', 'test_contains', 'CONTAINS')
       ->execute();
-    $this->assertResults(array('5'));
+    $this->assertResults(['5']);
 
     // Filter by ID with the IN operator.
     $this->queryResults = $this->factory->get('config_query_test')
-      ->condition('id', array('2', '3'), 'IN')
+      ->condition('id', ['2', '3'], 'IN')
       ->execute();
-    $this->assertResults(array('2', '3'));
+    $this->assertResults(['2', '3']);
 
     // Filter by ID with the implicit IN operator.
     $this->queryResults = $this->factory->get('config_query_test')
-      ->condition('id', array('2', '3'))
+      ->condition('id', ['2', '3'])
       ->execute();
-    $this->assertResults(array('2', '3'));
+    $this->assertResults(['2', '3']);
 
     // Filter by ID with the > operator.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', '3', '>')
       ->execute();
-    $this->assertResults(array('4', '5'));
+    $this->assertResults(['4', '5']);
 
     // Filter by ID with the >= operator.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', '3', '>=')
       ->execute();
-    $this->assertResults(array('3', '4', '5'));
+    $this->assertResults(['3', '4', '5']);
 
     // Filter by ID with the <> operator.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', '3', '<>')
       ->execute();
-    $this->assertResults(array('1', '2', '4', '5'));
+    $this->assertResults(['1', '2', '4', '5']);
 
     // Filter by ID with the < operator.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', '3', '<')
       ->execute();
-    $this->assertResults(array('1', '2'));
+    $this->assertResults(['1', '2']);
 
     // Filter by ID with the <= operator.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', '3', '<=')
       ->execute();
-    $this->assertResults(array('1', '2', '3'));
+    $this->assertResults(['1', '2', '3']);
 
     // Filter by two conditions on the same field.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('label', 'test_pref', 'STARTS_WITH')
       ->condition('label', 'test_prefix', 'STARTS_WITH')
       ->execute();
-    $this->assertResults(array('3'));
+    $this->assertResults(['3']);
 
     // Filter by two conditions on different fields. The first query matches for
     // a different ID, so the result is empty.
@@ -201,7 +201,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->condition('label', 'test_prefix', 'STARTS_WITH')
       ->condition('id', '5')
       ->execute();
-    $this->assertResults(array());
+    $this->assertResults([]);
 
     // Filter by two different conditions on different fields. This time the
     // first condition matches on one item, but the second one does as well.
@@ -209,7 +209,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->condition('label', 'test_prefix', 'STARTS_WITH')
       ->condition('id', '3')
       ->execute();
-    $this->assertResults(array('3'));
+    $this->assertResults(['3']);
 
     // Filter by two different conditions, of which the first one matches for
     // every entry, the second one as well, but just the third one filters so
@@ -219,37 +219,37 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->condition('number', 10, '>=')
       ->condition('number', 50, '>=')
       ->execute();
-    $this->assertResults(array('3', '5'));
+    $this->assertResults(['3', '5']);
 
     // Filter with an OR condition group.
     $this->queryResults = $this->factory->get('config_query_test', 'OR')
       ->condition('id', 1)
       ->condition('id', '2')
       ->execute();
-    $this->assertResults(array('1', '2'));
+    $this->assertResults(['1', '2']);
 
     // Simplify it with IN.
     $this->queryResults = $this->factory->get('config_query_test')
-      ->condition('id', array('1', '2'))
+      ->condition('id', ['1', '2'])
       ->execute();
-    $this->assertResults(array('1', '2'));
+    $this->assertResults(['1', '2']);
     // Try explicit IN.
     $this->queryResults = $this->factory->get('config_query_test')
-      ->condition('id', array('1', '2'), 'IN')
+      ->condition('id', ['1', '2'], 'IN')
       ->execute();
-    $this->assertResults(array('1', '2'));
+    $this->assertResults(['1', '2']);
     // Try not IN.
     $this->queryResults = $this->factory->get('config_query_test')
-      ->condition('id', array('1', '2'), 'NOT IN')
+      ->condition('id', ['1', '2'], 'NOT IN')
       ->execute();
-    $this->assertResults(array('3', '4', '5'));
+    $this->assertResults(['3', '4', '5']);
 
     // Filter with an OR condition group on different fields.
     $this->queryResults = $this->factory->get('config_query_test', 'OR')
       ->condition('id', 1)
       ->condition('number', 41)
       ->execute();
-    $this->assertResults(array('1', '2'));
+    $this->assertResults(['1', '2']);
 
     // Filter with an OR condition group on different fields but matching on the
     // same entity.
@@ -257,7 +257,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->condition('id', 1)
       ->condition('number', 31)
       ->execute();
-    $this->assertResults(array('1'));
+    $this->assertResults(['1']);
 
     // NO simple conditions, YES complex conditions, 'AND'.
     $query = $this->factory->get('config_query_test', 'AND');
@@ -271,7 +271,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->condition($and_condition_1)
       ->condition($and_condition_2)
       ->execute();
-    $this->assertResults(array('1'));
+    $this->assertResults(['1']);
 
     // NO simple conditions, YES complex conditions, 'OR'.
     $query = $this->factory->get('config_query_test', 'OR');
@@ -285,7 +285,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->condition($and_condition_1)
       ->condition($and_condition_2)
       ->execute();
-    $this->assertResults(array('1', '2'));
+    $this->assertResults(['1', '2']);
 
     // YES simple conditions, YES complex conditions, 'AND'.
     $query = $this->factory->get('config_query_test', 'AND');
@@ -300,7 +300,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->condition($and_condition_1)
       ->condition($and_condition_2)
       ->execute();
-    $this->assertResults(array('1'));
+    $this->assertResults(['1']);
 
     // YES simple conditions, YES complex conditions, 'OR'.
     $query = $this->factory->get('config_query_test', 'OR');
@@ -315,28 +315,28 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->condition($and_condition_1)
       ->condition($and_condition_2)
       ->execute();
-    $this->assertResults(array('1', '2', '4', '5'));
+    $this->assertResults(['1', '2', '4', '5']);
 
     // Test the exists and notExists conditions.
     $this->queryResults = $this->factory->get('config_query_test')
       ->exists('id')
       ->execute();
-    $this->assertResults(array('1', '2', '3', '4', '5'));
+    $this->assertResults(['1', '2', '3', '4', '5']);
 
     $this->queryResults = $this->factory->get('config_query_test')
       ->exists('non-existent')
       ->execute();
-    $this->assertResults(array());
+    $this->assertResults([]);
 
     $this->queryResults = $this->factory->get('config_query_test')
       ->notExists('id')
       ->execute();
-    $this->assertResults(array());
+    $this->assertResults([]);
 
     $this->queryResults = $this->factory->get('config_query_test')
       ->notExists('non-existent')
       ->execute();
-    $this->assertResults(array('1', '2', '3', '4', '5'));
+    $this->assertResults(['1', '2', '3', '4', '5']);
   }
 
   /**
@@ -344,10 +344,10 @@ class ConfigEntityQueryTest extends KernelTestBase {
    */
   public function testStringIdConditions() {
     // We need an entity with a non-numeric ID.
-    $entity = ConfigQueryTest::create(array(
+    $entity = ConfigQueryTest::create([
       'label' => $this->randomMachineName(),
       'id' => 'foo.bar',
-    ));
+    ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
     $entity->save();
@@ -356,43 +356,43 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', 'foo.bar', 'STARTS_WITH')
       ->execute();
-    $this->assertResults(array('foo.bar'));
+    $this->assertResults(['foo.bar']);
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', 'f', 'STARTS_WITH')
       ->execute();
-    $this->assertResults(array('foo.bar'));
+    $this->assertResults(['foo.bar']);
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', 'miss', 'STARTS_WITH')
       ->execute();
-    $this->assertResults(array());
+    $this->assertResults([]);
 
     // Test 'CONTAINS' condition.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', 'foo.bar', 'CONTAINS')
       ->execute();
-    $this->assertResults(array('foo.bar'));
+    $this->assertResults(['foo.bar']);
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', 'oo.ba', 'CONTAINS')
       ->execute();
-    $this->assertResults(array('foo.bar'));
+    $this->assertResults(['foo.bar']);
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', 'miss', 'CONTAINS')
       ->execute();
-    $this->assertResults(array());
+    $this->assertResults([]);
 
     // Test 'ENDS_WITH' condition.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', 'foo.bar', 'ENDS_WITH')
       ->execute();
-    $this->assertResults(array('foo.bar'));
+    $this->assertResults(['foo.bar']);
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', 'r', 'ENDS_WITH')
       ->execute();
-    $this->assertResults(array('foo.bar'));
+    $this->assertResults(['foo.bar']);
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', 'miss', 'ENDS_WITH')
       ->execute();
-    $this->assertResults(array());
+    $this->assertResults([]);
   }
 
   /**
@@ -429,62 +429,62 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $this->queryResults = $this->factory->get('config_query_test')
       ->sort('number', 'DESC')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('3', '5', '2', '1', '4'));
+    $this->assertIdentical(array_values($this->queryResults), ['3', '5', '2', '1', '4']);
 
     $this->queryResults = $this->factory->get('config_query_test')
       ->sort('number', 'ASC')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('4', '1', '2', '5', '3'));
+    $this->assertIdentical(array_values($this->queryResults), ['4', '1', '2', '5', '3']);
 
     // Apply some filters and sort.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', '3', '>')
       ->sort('number', 'DESC')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('5', '4'));
+    $this->assertIdentical(array_values($this->queryResults), ['5', '4']);
 
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('id', '3', '>')
       ->sort('number', 'ASC')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('4', '5'));
+    $this->assertIdentical(array_values($this->queryResults), ['4', '5']);
 
     // Apply a pager and sort.
     $this->queryResults = $this->factory->get('config_query_test')
       ->sort('number', 'DESC')
       ->range('2', '2')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('2', '1'));
+    $this->assertIdentical(array_values($this->queryResults), ['2', '1']);
 
     $this->queryResults = $this->factory->get('config_query_test')
       ->sort('number', 'ASC')
       ->range('2', '2')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('2', '5'));
+    $this->assertIdentical(array_values($this->queryResults), ['2', '5']);
 
     // Add a range to a query without a start parameter.
     $this->queryResults = $this->factory->get('config_query_test')
       ->range(0, '3')
       ->sort('id', 'ASC')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('1', '2', '3'));
+    $this->assertIdentical(array_values($this->queryResults), ['1', '2', '3']);
 
     // Apply a pager with limit 4.
     $this->queryResults = $this->factory->get('config_query_test')
       ->pager('4', 0)
       ->sort('id', 'ASC')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('1', '2', '3', '4'));
+    $this->assertIdentical(array_values($this->queryResults), ['1', '2', '3', '4']);
   }
 
   /**
    * Tests sorting with tableSort on config entity queries.
    */
   public function testTableSort() {
-    $header = array(
-      array('data' => t('ID'), 'specifier' => 'id'),
-      array('data' => t('Number'), 'specifier' => 'number'),
-    );
+    $header = [
+      ['data' => t('ID'), 'specifier' => 'id'],
+      ['data' => t('Number'), 'specifier' => 'number'],
+    ];
 
     // Sort key: id
     // Sorting with 'DESC' upper case
@@ -492,28 +492,28 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->tableSort($header)
       ->sort('id', 'DESC')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('5', '4', '3', '2', '1'));
+    $this->assertIdentical(array_values($this->queryResults), ['5', '4', '3', '2', '1']);
 
     // Sorting with 'ASC' upper case
     $this->queryResults = $this->factory->get('config_query_test')
       ->tableSort($header)
       ->sort('id', 'ASC')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('1', '2', '3', '4', '5'));
+    $this->assertIdentical(array_values($this->queryResults), ['1', '2', '3', '4', '5']);
 
     // Sorting with 'desc' lower case
     $this->queryResults = $this->factory->get('config_query_test')
       ->tableSort($header)
       ->sort('id', 'desc')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('5', '4', '3', '2', '1'));
+    $this->assertIdentical(array_values($this->queryResults), ['5', '4', '3', '2', '1']);
 
     // Sorting with 'asc' lower case
     $this->queryResults = $this->factory->get('config_query_test')
       ->tableSort($header)
       ->sort('id', 'asc')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('1', '2', '3', '4', '5'));
+    $this->assertIdentical(array_values($this->queryResults), ['1', '2', '3', '4', '5']);
 
     // Sort key: number
     // Sorting with 'DeSc' mixed upper and lower case
@@ -521,28 +521,28 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->tableSort($header)
       ->sort('number', 'DeSc')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('3', '5', '2', '1', '4'));
+    $this->assertIdentical(array_values($this->queryResults), ['3', '5', '2', '1', '4']);
 
     // Sorting with 'AsC' mixed upper and lower case
     $this->queryResults = $this->factory->get('config_query_test')
       ->tableSort($header)
       ->sort('number', 'AsC')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('4', '1', '2', '5', '3'));
+    $this->assertIdentical(array_values($this->queryResults), ['4', '1', '2', '5', '3']);
 
     // Sorting with 'dEsC' mixed upper and lower case
     $this->queryResults = $this->factory->get('config_query_test')
       ->tableSort($header)
       ->sort('number', 'dEsC')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('3', '5', '2', '1', '4'));
+    $this->assertIdentical(array_values($this->queryResults), ['3', '5', '2', '1', '4']);
 
     // Sorting with 'aSc' mixed upper and lower case
     $this->queryResults = $this->factory->get('config_query_test')
       ->tableSort($header)
       ->sort('number', 'aSc')
       ->execute();
-    $this->assertIdentical(array_values($this->queryResults), array('4', '1', '2', '5', '3'));
+    $this->assertIdentical(array_values($this->queryResults), ['4', '1', '2', '5', '3']);
   }
 
   /**
@@ -552,26 +552,26 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('array.level1.*', 1)
       ->execute();
-    $this->assertResults(array('1', '3'));
+    $this->assertResults(['1', '3']);
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('*.level1.level2', 2)
       ->execute();
-    $this->assertResults(array('2', '4'));
+    $this->assertResults(['2', '4']);
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('array.level1.*', 3)
       ->execute();
-    $this->assertResults(array('5'));
+    $this->assertResults(['5']);
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('array.level1.level2', 3)
       ->execute();
-    $this->assertResults(array('5'));
+    $this->assertResults(['5']);
     // Make sure that values on the wildcard level do not match if there are
     // sub-keys defined. This must not find anything even if entity 2 has a
     // top-level key number with value 41.
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('*.level1.level2', 41)
       ->execute();
-    $this->assertResults(array());
+    $this->assertResults([]);
   }
 
   /**
@@ -582,12 +582,12 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('label', 'TEST', 'CONTAINS')
       ->execute();
-    $this->assertResults(array('3', '4', '5'));
+    $this->assertResults(['3', '4', '5']);
 
     $this->queryResults = $this->factory->get('config_query_test')
       ->condition('label', 'test', 'CONTAINS')
       ->execute();
-    $this->assertResults(array('3', '4', '5'));
+    $this->assertResults(['3', '4', '5']);
   }
 
   /**
@@ -599,11 +599,11 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $key_value = $this->container->get('keyvalue')->get(QueryFactory::CONFIG_LOOKUP_PREFIX . 'config_test');
 
     $test_entities = [];
-    $entity = entity_create('config_test', array(
+    $entity = entity_create('config_test', [
       'label' => $this->randomMachineName(),
       'id' => '1',
       'style' => 'test',
-    ));
+    ]);
     $test_entities[$entity->getConfigDependencyName()] = $entity;
     $entity->enforceIsNew();
     $entity->save();
@@ -612,22 +612,22 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $expected[] = $entity->getConfigDependencyName();
     $this->assertEqual($expected, $key_value->get('style:test'));
 
-    $entity = entity_create('config_test', array(
+    $entity = entity_create('config_test', [
       'label' => $this->randomMachineName(),
       'id' => '2',
       'style' => 'test',
-    ));
+    ]);
     $test_entities[$entity->getConfigDependencyName()] = $entity;
     $entity->enforceIsNew();
     $entity->save();
     $expected[] = $entity->getConfigDependencyName();
     $this->assertEqual($expected, $key_value->get('style:test'));
 
-    $entity = entity_create('config_test', array(
+    $entity = entity_create('config_test', [
       'label' => $this->randomMachineName(),
       'id' => '3',
       'style' => 'blah',
-    ));
+    ]);
     $entity->enforceIsNew();
     $entity->save();
     // Do not add this entity to the list of expected result as it has a

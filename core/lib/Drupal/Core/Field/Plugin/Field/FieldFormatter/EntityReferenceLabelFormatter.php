@@ -25,20 +25,20 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'link' => TRUE,
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $elements['link'] = array(
+    $elements['link'] = [
       '#title' => t('Link label to the referenced entity'),
       '#type' => 'checkbox',
       '#default_value' => $this->getSetting('link'),
-    );
+    ];
 
     return $elements;
   }
@@ -47,7 +47,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = [];
     $summary[] = $this->getSetting('link') ? t('Link to the referenced entity') : t('No link');
     return $summary;
   }
@@ -56,7 +56,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
     $output_as_link = $this->getSetting('link');
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
@@ -85,7 +85,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
         ];
 
         if (!empty($items[$delta]->_attributes)) {
-          $elements[$delta]['#options'] += array('attributes' => array());
+          $elements[$delta]['#options'] += ['attributes' => []];
           $elements[$delta]['#options']['attributes'] += $items[$delta]->_attributes;
           // Unset field item attributes since they have been included in the
           // formatter output and shouldn't be rendered in the field template.
@@ -93,7 +93,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
         }
       }
       else {
-        $elements[$delta] = array('#plain_text' => $label);
+        $elements[$delta] = ['#plain_text' => $label];
       }
       $elements[$delta]['#cache']['tags'] = $entity->getCacheTags();
     }

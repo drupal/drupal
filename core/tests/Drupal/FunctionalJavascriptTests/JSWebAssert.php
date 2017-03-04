@@ -113,7 +113,7 @@ JS;
    *   The page element node if found, NULL if not.
    */
   public function waitForButton($locator, $timeout = 10000) {
-    return $this->waitForElement('named', array('button', $locator), $timeout);
+    return $this->waitForElement('named', ['button', $locator], $timeout);
   }
 
   /**
@@ -128,7 +128,7 @@ JS;
    *   The page element node if found, NULL if not.
    */
   public function waitForLink($locator, $timeout = 10000) {
-    return $this->waitForElement('named', array('link', $locator), $timeout);
+    return $this->waitForElement('named', ['link', $locator], $timeout);
   }
 
   /**
@@ -143,7 +143,7 @@ JS;
    *   The page element node if found, NULL if not.
    */
   public function waitForField($locator, $timeout = 10000) {
-    return $this->waitForElement('named', array('field', $locator), $timeout);
+    return $this->waitForElement('named', ['field', $locator], $timeout);
   }
 
   /**
@@ -158,7 +158,7 @@ JS;
    *   The page element node if found, NULL if not.
    */
   public function waitForId($id, $timeout = 10000) {
-    return $this->waitForElement('named', array('id', $id), $timeout);
+    return $this->waitForElement('named', ['id', $id], $timeout);
   }
 
   /**

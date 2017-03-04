@@ -88,7 +88,7 @@ class Permissions extends ManyToOne {
    */
   public function query() {
     // @todo user_role_names() should maybe support multiple permissions.
-    $rids = array();
+    $rids = [];
     // Get all role IDs that have the configured permissions.
     foreach ($this->value as $permission) {
       $roles = user_role_names(FALSE, $permission);

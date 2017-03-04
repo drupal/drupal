@@ -20,14 +20,14 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'text', 'filter');
+  public static $modules = ['node', 'text', 'filter'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('node'));
+    $this->installConfig(['node']);
     $this->executeMigration('d7_node_type');
   }
 

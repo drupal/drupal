@@ -15,7 +15,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('taxonomy');
+  public static $modules = ['taxonomy'];
 
   /**
    * {@inheritdoc}
@@ -30,44 +30,44 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
    * Tests the Drupal 6 taxonomy term to Drupal 8 migration.
    */
   public function testTaxonomyTerms() {
-    $expected_results = array(
-      '1' => array(
+    $expected_results = [
+      '1' => [
         'source_vid' => 1,
         'vid' => 'vocabulary_1_i_0_',
         'weight' => 0,
-        'parent' => array(0),
-      ),
-      '2' => array(
+        'parent' => [0],
+      ],
+      '2' => [
         'source_vid' => 2,
         'vid' => 'vocabulary_2_i_1_',
         'weight' => 3,
-        'parent' => array(0),
-      ),
-      '3' => array(
+        'parent' => [0],
+      ],
+      '3' => [
         'source_vid' => 2,
         'vid' => 'vocabulary_2_i_1_',
         'weight' => 4,
-        'parent' => array(2),
-      ),
-      '4' => array(
+        'parent' => [2],
+      ],
+      '4' => [
         'source_vid' => 3,
         'vid' => 'vocabulary_3_i_2_',
         'weight' => 6,
-        'parent' => array(0),
-      ),
-      '5' => array(
+        'parent' => [0],
+      ],
+      '5' => [
         'source_vid' => 3,
         'vid' => 'vocabulary_3_i_2_',
         'weight' => 7,
-        'parent' => array(4),
-      ),
-      '6' => array(
+        'parent' => [4],
+      ],
+      '6' => [
         'source_vid' => 3,
         'vid' => 'vocabulary_3_i_2_',
         'weight' => 8,
-        'parent' => array(4, 5),
-      ),
-    );
+        'parent' => [4, 5],
+      ],
+    ];
     $terms = Term::loadMultiple(array_keys($expected_results));
 
     // Find each term in the tree.
@@ -87,11 +87,11 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
       $this->assertIdentical("description of term {$tid} of vocabulary {$values['source_vid']}", $term->description->value);
       $this->assertIdentical($values['vid'], $term->vid->target_id);
       $this->assertIdentical((string) $values['weight'], $term->weight->value);
-      if ($values['parent'] === array(0)) {
+      if ($values['parent'] === [0]) {
         $this->assertNull($term->parent->target_id);
       }
       else {
-        $parents = array();
+        $parents = [];
         foreach (\Drupal::entityManager()->getStorage('taxonomy_term')->loadParents($tid) as $parent) {
           $parents[] = (int) $parent->id();
         }

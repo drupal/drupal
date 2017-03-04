@@ -93,12 +93,12 @@ class Entity extends TokenizeAreaPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['view_mode'] = array(
+    $form['view_mode'] = [
       '#type' => 'select',
       '#options' => $this->entityManager->getViewModeOptions($this->entityType),
       '#title' => $this->t('View mode'),
       '#default_value' => $this->options['view_mode'],
-    );
+    ];
 
     $label = $this->entityManager->getDefinition($this->entityType)->getLabel();
     $target = $this->options['target'];
@@ -121,12 +121,12 @@ class Entity extends TokenizeAreaPluginBase {
       '#default_value' => $target,
     ];
 
-    $form['bypass_access'] = array(
+    $form['bypass_access'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Bypass access checks'),
       '#description' => $this->t('If enabled, access permissions for rendering the entity are not checked.'),
       '#default_value' => !empty($this->options['bypass_access']),
-    );
+    ];
   }
 
   /**

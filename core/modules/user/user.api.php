@@ -44,7 +44,7 @@ function hook_user_cancel($edit, $account, $method) {
       $nodes = \Drupal::entityQuery('node')
         ->condition('uid', $account->id())
         ->execute();
-      node_mass_update($nodes, array('status' => 0), NULL, TRUE);
+      node_mass_update($nodes, ['status' => 0], NULL, TRUE);
       break;
 
     case 'user_cancel_reassign':
@@ -53,10 +53,10 @@ function hook_user_cancel($edit, $account, $method) {
       $nodes = \Drupal::entityQuery('node')
         ->condition('uid', $account->id())
         ->execute();
-      node_mass_update($nodes, array('uid' => 0), NULL, TRUE);
+      node_mass_update($nodes, ['uid' => 0], NULL, TRUE);
       // Anonymize old revisions.
       db_update('node_field_revision')
-        ->fields(array('uid' => 0))
+        ->fields(['uid' => 0])
         ->condition('uid', $account->id())
         ->execute();
       break;
@@ -94,12 +94,12 @@ function hook_user_cancel_methods_alter(&$methods) {
   unset($methods['user_cancel_reassign']);
 
   // Add a custom zero-out method.
-  $methods['mymodule_zero_out'] = array(
+  $methods['mymodule_zero_out'] = [
     'title' => t('Delete the account and remove all content.'),
     'description' => t('All your content will be replaced by empty strings.'),
     // access should be used for administrative methods only.
     'access' => $account->hasPermission('access zero-out account cancellation method'),
-  );
+  ];
 }
 
 /**
@@ -123,7 +123,7 @@ function hook_user_cancel_methods_alter(&$methods) {
 function hook_user_format_name_alter(&$name, $account) {
   // Display the user's uid instead of name.
   if ($account->id()) {
-    $name = t('User @uid', array('@uid' => $account->id()));
+    $name = t('User @uid', ['@uid' => $account->id()]);
   }
 }
 
@@ -137,7 +137,7 @@ function hook_user_login($account) {
   $config = \Drupal::config('system.date');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
-    drupal_set_message(t('Configure your <a href=":user-edit">account time zone setting</a>.', array(':user-edit' => $account->url('edit-form', array('query' => \Drupal::destination()->getAsArray(), 'fragment' => 'edit-timezone')))));
+    drupal_set_message(t('Configure your <a href=":user-edit">account time zone setting</a>.', [':user-edit' => $account->url('edit-form', ['query' => \Drupal::destination()->getAsArray(), 'fragment' => 'edit-timezone'])]));
   }
 }
 
@@ -149,10 +149,10 @@ function hook_user_login($account) {
  */
 function hook_user_logout($account) {
   db_insert('logouts')
-    ->fields(array(
+    ->fields([
       'uid' => $account->id(),
       'time' => time(),
-    ))
+    ])
     ->execute();
 }
 

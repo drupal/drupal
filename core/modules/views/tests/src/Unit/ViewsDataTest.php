@@ -63,14 +63,14 @@ class ViewsDataTest extends UnitTestCase {
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->getContainerWithCacheTagsInvalidator($this->cacheTagsInvalidator);
 
-    $configs = array();
+    $configs = [];
     $configs['views.settings']['skip_cache'] = FALSE;
     $this->configFactory = $this->getConfigFactoryStub($configs);
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
-      ->will($this->returnValue(new Language(array('id' => 'en'))));
+      ->will($this->returnValue(new Language(['id' => 'en'])));
 
     $this->viewsData = new ViewsData($this->cacheBackend, $this->configFactory, $this->moduleHandler, $this->languageManager);
   }
@@ -90,7 +90,7 @@ class ViewsDataTest extends UnitTestCase {
     $data['views_test_data']['age']['area']['id'] = 'text';
     $data['views_test_data']['age']['area']['sub_type'] = 'header';
     $data['views_test_data']['job']['area']['id'] = 'text';
-    $data['views_test_data']['job']['area']['sub_type'] = array('header', 'footer');
+    $data['views_test_data']['job']['area']['sub_type'] = ['header', 'footer'];
 
     // Duplicate the example views test data for different weight, different title,
     // and matching data.
@@ -136,7 +136,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->moduleHandler->expects($this->at(0))
       ->method('getImplementations')
       ->with('views_data')
-      ->willReturn(array('views_test_data'));
+      ->willReturn(['views_test_data']);
     $this->moduleHandler->expects($this->at(1))
       ->method('invoke')
       ->with('views_test_data', 'views_data')
@@ -167,11 +167,11 @@ class ViewsDataTest extends UnitTestCase {
     }
 
     // Test the values returned for each base table.
-    $defaults = array(
+    $defaults = [
       'title' => '',
       'help' => '',
       'weight' => 0,
-    );
+    ];
     foreach ($base_tables as $base_table => $info) {
       // Merge in default values as in fetchBaseTables().
       $expected = $data[$base_table]['table']['base'] += $defaults;
@@ -215,7 +215,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->moduleHandler->expects($this->at(0))
       ->method('getImplementations')
       ->with('views_data')
-      ->willReturn(array('views_test_data'));
+      ->willReturn(['views_test_data']);
     $this->moduleHandler->expects($this->at(1))
       ->method('invoke')
       ->with('views_test_data', 'views_data')
@@ -227,7 +227,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->moduleHandler->expects($this->at(3))
       ->method('getImplementations')
       ->with('views_data')
-      ->willReturn(array('views_test_data'));
+      ->willReturn(['views_test_data']);
     $this->moduleHandler->expects($this->at(4))
       ->method('invoke')
       ->with('views_test_data', 'views_data')
@@ -252,7 +252,7 @@ class ViewsDataTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
     $this->cacheBackend->expects($this->at(3))
       ->method('set')
-      ->with("views_data:$random_table_name:en", array());
+      ->with("views_data:$random_table_name:en", []);
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
       ->with(['views_data']);
@@ -269,7 +269,7 @@ class ViewsDataTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
     $this->cacheBackend->expects($this->at(7))
       ->method('set')
-      ->with("views_data:$random_table_name:en", array());
+      ->with("views_data:$random_table_name:en", []);
 
     $views_data = $this->viewsData->getAll();
     $this->assertSame($expected_views_data, $views_data);
@@ -283,7 +283,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->assertSame($expected_views_data[$table_name_2], $views_data);
 
     $views_data = $this->viewsData->get($random_table_name);
-    $this->assertSame(array(), $views_data);
+    $this->assertSame([], $views_data);
 
     $this->viewsData->clear();
 
@@ -379,11 +379,11 @@ class ViewsDataTest extends UnitTestCase {
 
     // All views data should be requested on the first try.
     $views_data = $this->viewsData->get($random_table_name);
-    $this->assertSame(array(), $views_data, 'Make sure fetching views data for an invalid table returns an empty array.');
+    $this->assertSame([], $views_data, 'Make sure fetching views data for an invalid table returns an empty array.');
 
     // Test no data is rebuilt when requesting an invalid table again.
     $views_data = $this->viewsData->get($random_table_name);
-    $this->assertSame(array(), $views_data, 'Make sure fetching views data for an invalid table returns an empty array.');
+    $this->assertSame([], $views_data, 'Make sure fetching views data for an invalid table returns an empty array.');
   }
 
   /**
@@ -433,7 +433,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with('views_data:views_test_data:en')
-      ->will($this->returnValue((object) array('data' => $expected_views_data['views_test_data'])));
+      ->will($this->returnValue((object) ['data' => $expected_views_data['views_test_data']]));
     $this->cacheBackend->expects($this->never())
       ->method('set');
 
@@ -466,7 +466,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->cacheBackend->expects($this->at(1))
       ->method('get')
       ->with('views_data:en')
-      ->will($this->returnValue((object) array('data' => $expected_views_data)));
+      ->will($this->returnValue((object) ['data' => $expected_views_data]));
     $this->cacheBackend->expects($this->at(2))
       ->method('set')
       ->with('views_data:views_test_data_2:en', $expected_views_data['views_test_data_2']);
@@ -502,10 +502,10 @@ class ViewsDataTest extends UnitTestCase {
     $this->cacheBackend->expects($this->at(1))
       ->method('get')
       ->with('views_data:en')
-      ->will($this->returnValue((object) array('data' => $expected_views_data)));
+      ->will($this->returnValue((object) ['data' => $expected_views_data]));
     $this->cacheBackend->expects($this->at(2))
       ->method('set')
-      ->with("views_data:$non_existing_table:en", array());
+      ->with("views_data:$non_existing_table:en", []);
 
     // Initialize the views data cache and request a non-existing table. This
     // will result in the same cache requests as we explicitly write an empty
@@ -514,7 +514,7 @@ class ViewsDataTest extends UnitTestCase {
     // check if the table does exist or not.
     for ($i = 0; $i < 5; $i++) {
       $views_data = $this->viewsData->get($non_existing_table);
-      $this->assertSame(array(), $views_data);
+      $this->assertSame([], $views_data);
     }
   }
 
@@ -535,7 +535,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with("views_data:$non_existing_table:en")
-      ->will($this->returnValue((object) array('data' => array())));
+      ->will($this->returnValue((object) ['data' => []]));
     $this->cacheBackend->expects($this->never())
       ->method('set');
 
@@ -546,7 +546,7 @@ class ViewsDataTest extends UnitTestCase {
     // check if the table does exist or not.
     for ($i = 0; $i < 5; $i++) {
       $views_data = $this->viewsData->get($non_existing_table);
-      $this->assertSame(array(), $views_data);
+      $this->assertSame([], $views_data);
     }
   }
 
@@ -588,7 +588,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with("views_data:en")
-      ->will($this->returnValue((object) array('data' => $expected_views_data)));
+      ->will($this->returnValue((object) ['data' => $expected_views_data]));
     $this->cacheBackend->expects($this->never())
       ->method('set');
 
@@ -618,7 +618,7 @@ class ViewsDataTest extends UnitTestCase {
     $this->cacheBackend->expects($this->at(1))
       ->method('get')
       ->with('views_data:en')
-      ->will($this->returnValue((object) array('data' => $expected_views_data)));
+      ->will($this->returnValue((object) ['data' => $expected_views_data]));
     $this->cacheBackend->expects($this->at(2))
       ->method('set')
       ->with("views_data:$table_name:en", $expected_views_data[$table_name]);

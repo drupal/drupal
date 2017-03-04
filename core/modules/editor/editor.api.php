@@ -36,7 +36,7 @@ function hook_editor_info_alter(array &$editors) {
 function hook_editor_js_settings_alter(array &$settings) {
   if (isset($settings['editor']['formats']['basic_html'])) {
     $settings['editor']['formats']['basic_html']['editor'] = 'MyDifferentEditor';
-    $settings['editor']['formats']['basic_html']['editorSettings']['buttons'] = array('strong', 'italic', 'underline');
+    $settings['editor']['formats']['basic_html']['editorSettings']['buttons'] = ['strong', 'italic', 'underline'];
   }
 }
 

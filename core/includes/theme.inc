@@ -102,13 +102,13 @@ function theme_get_registry($complete = TRUE) {
  * @see \Drupal\Core\Extension\ThemeHandler::$defaultFeatures
  */
 function _system_default_theme_features() {
-  return array(
+  return [
     'favicon',
     'logo',
     'node_user_picture',
     'comment_user_picture',
     'comment_user_verification',
-  );
+  ];
 }
 
 /**
@@ -158,11 +158,11 @@ function drupal_find_theme_functions($cache, $prefixes) {
           foreach ($matches as $match) {
             $new_hook = substr($match, strlen($prefix) + 1);
             $arg_name = isset($info['variables']) ? 'variables' : 'render element';
-            $implementations[$new_hook] = array(
+            $implementations[$new_hook] = [
               'function' => $match,
               $arg_name => $info[$arg_name],
               'base hook' => $hook,
-            );
+            ];
           }
         }
       }
@@ -170,9 +170,9 @@ function drupal_find_theme_functions($cache, $prefixes) {
       // that in what is returned so that the registry knows that the theme has
       // this implementation.
       if (function_exists($prefix . '_' . $hook)) {
-        $implementations[$hook] = array(
+        $implementations[$hook] = [
           'function' => $prefix . '_' . $hook,
-        );
+        ];
       }
     }
   }
@@ -191,12 +191,12 @@ function drupal_find_theme_functions($cache, $prefixes) {
  *   The path to search.
  */
 function drupal_find_theme_templates($cache, $extension, $path) {
-  $implementations = array();
+  $implementations = [];
 
   // Collect paths to all sub-themes grouped by base themes. These will be
   // used for filtering. This allows base themes to have sub-themes in its
   // folder hierarchy without affecting the base themes template discovery.
-  $theme_paths = array();
+  $theme_paths = [];
   foreach (\Drupal::service('theme_handler')->listInfo() as $theme_info) {
     if (!empty($theme_info->base_theme)) {
       $theme_paths[$theme_info->base_theme][$theme_info->getName()] = $theme_info->getPath();
@@ -210,12 +210,12 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     }
   }
   $theme = \Drupal::theme()->getActiveTheme()->getName();
-  $subtheme_paths = isset($theme_paths[$theme]) ? $theme_paths[$theme] : array();
+  $subtheme_paths = isset($theme_paths[$theme]) ? $theme_paths[$theme] : [];
 
   // Escape the periods in the extension.
   $regex = '/' . str_replace('.', '\.', $extension) . '$/';
   // Get a listing of all template files in the path to search.
-  $files = file_scan_directory($path, $regex, array('key' => 'filename'));
+  $files = file_scan_directory($path, $regex, ['key' => 'filename']);
 
   // Find templates that implement registered theme hooks and include that in
   // what is returned so that the registry knows that the theme has this
@@ -231,21 +231,21 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     // for the purposes of searching.
     $hook = strtr($template, '-', '_');
     if (isset($cache[$hook])) {
-      $implementations[$hook] = array(
+      $implementations[$hook] = [
         'template' => $template,
         'path' => dirname($file->uri),
-      );
+      ];
     }
 
     // Match templates based on the 'template' filename.
     foreach ($cache as $hook => $info) {
       if (isset($info['template'])) {
-        $template_candidates = array($info['template'], str_replace($info['theme path'] . '/templates/', '', $info['template']));
+        $template_candidates = [$info['template'], str_replace($info['theme path'] . '/templates/', '', $info['template'])];
         if (in_array($template, $template_candidates)) {
-          $implementations[$hook] = array(
+          $implementations[$hook] = [
             'template' => $template,
             'path' => dirname($file->uri),
-          );
+          ];
         }
       }
     }
@@ -272,12 +272,12 @@ function drupal_find_theme_templates($cache, $extension, $path) {
           // Put the underscores back in for the hook name and register this
           // pattern.
           $arg_name = isset($info['variables']) ? 'variables' : 'render element';
-          $implementations[strtr($file, '-', '_')] = array(
+          $implementations[strtr($file, '-', '_')] = [
             'template' => $file,
             'path' => dirname($files[$match]->uri),
             $arg_name => $info[$arg_name],
             'base hook' => $hook,
-          );
+          ];
         }
       }
     }
@@ -305,7 +305,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  */
 function theme_get_setting($setting_name, $theme = NULL) {
   /** @var \Drupal\Core\Theme\ThemeSettings[] $cache */
-  $cache = &drupal_static(__FUNCTION__, array());
+  $cache = &drupal_static(__FUNCTION__, []);
 
   // If no key is given, use the current theme if we can determine it.
   if (!isset($theme)) {
@@ -488,7 +488,7 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
     elseif (substr($key, 0, 7) == 'toggle_') {
       $config->set('features.' . Unicode::substr($key, 7), $value);
     }
-    elseif (!in_array($key, array('theme', 'logo_upload'))) {
+    elseif (!in_array($key, ['theme', 'logo_upload'])) {
       $config->set($key, $value);
     }
   }
@@ -545,7 +545,7 @@ function template_preprocess_time(&$variables) {
 function template_preprocess_datetime_form(&$variables) {
   $element = $variables['element'];
 
-  $variables['attributes'] = array();
+  $variables['attributes'] = [];
   if (isset($element['#id'])) {
     $variables['attributes']['id'] = $element['#id'];
   }
@@ -664,34 +664,34 @@ function template_preprocess_links(&$variables) {
     if (!empty($heading)) {
       // Convert a string heading into an array, using a <h2> tag by default.
       if (is_string($heading)) {
-        $heading = array('text' => $heading);
+        $heading = ['text' => $heading];
       }
       // Merge in default array properties into $heading.
-      $heading += array(
+      $heading += [
         'level' => 'h2',
-        'attributes' => array(),
-      );
+        'attributes' => [],
+      ];
       // Convert the attributes array into an Attribute object.
       $heading['attributes'] = new Attribute($heading['attributes']);
     }
 
-    $variables['links'] = array();
+    $variables['links'] = [];
     foreach ($links as $key => $link) {
-      $item = array();
-      $link += array(
+      $item = [];
+      $link += [
         'ajax' => NULL,
         'url' => NULL,
-      );
+      ];
 
-      $li_attributes = array();
+      $li_attributes = [];
       $keys = ['title', 'url'];
-      $link_element = array(
+      $link_element = [
         '#type' => 'link',
         '#title' => $link['title'],
         '#options' => array_diff_key($link, array_combine($keys, $keys)),
         '#url' => $link['url'],
         '#ajax' => $link['ajax'],
-      );
+      ];
 
       // Handle links and ensure that the active class is added on the LIs, but
       // only if the 'set_active_class' option is not empty.
@@ -779,7 +779,7 @@ function template_preprocess_image(&$variables) {
   // Generate a srcset attribute conforming to the spec at
   // http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-srcset
   if (!empty($variables['srcset'])) {
-    $srcset = array();
+    $srcset = [];
     foreach ($variables['srcset'] as $src) {
       // URI is mandatory.
       $source = file_url_transform_relative(file_create_url($src['uri']));
@@ -794,7 +794,7 @@ function template_preprocess_image(&$variables) {
     $variables['attributes']['srcset'] = implode(', ', $srcset);
   }
 
-  foreach (array('width', 'height', 'alt', 'title', 'sizes') as $key) {
+  foreach (['width', 'height', 'alt', 'title', 'sizes'] as $key) {
     if (isset($variables[$key])) {
       // If the property has already been defined in the attributes,
       // do not override, including NULL.
@@ -908,11 +908,11 @@ function template_preprocess_table(&$variables) {
       }
       else {
         $cols = $colgroup;
-        $colgroup_attributes = array();
+        $colgroup_attributes = [];
       }
-      $colgroup = array();
+      $colgroup = [];
       $colgroup['attributes'] = new Attribute($colgroup_attributes);
-      $colgroup['cols'] = array();
+      $colgroup['cols'] = [];
 
       // Build columns.
       if (is_array($cols) && !empty($cols)) {
@@ -924,10 +924,10 @@ function template_preprocess_table(&$variables) {
   }
 
   // Build an associative array of responsive classes keyed by column.
-  $responsive_classes = array();
+  $responsive_classes = [];
 
   // Format the table header:
-  $ts = array();
+  $ts = [];
   $header_columns = 0;
   if (!empty($variables['header'])) {
     $ts = tablesort_init($variables['header']);
@@ -979,7 +979,7 @@ function template_preprocess_table(&$variables) {
         // tablesort_header() removes the 'sort' and 'field' keys.
         $cell_attributes = new Attribute($cell);
       }
-      $variables['header'][$col_key] = array();
+      $variables['header'][$col_key] = [];
       $variables['header'][$col_key]['tag'] = $is_header ? 'th' : 'td';
       $variables['header'][$col_key]['attributes'] = $cell_attributes;
       $variables['header'][$col_key]['content'] = $cell_content;
@@ -988,12 +988,12 @@ function template_preprocess_table(&$variables) {
   $variables['header_columns'] = $header_columns;
 
   // Rows and footer have the same structure.
-  $sections = array('rows' , 'footer');
+  $sections = ['rows' , 'footer'];
   foreach ($sections as $section) {
     if (!empty($variables[$section])) {
       foreach ($variables[$section] as $row_key => $row) {
         $cells = $row;
-        $row_attributes = array();
+        $row_attributes = [];
 
         // Check if we're dealing with a simple or complex row
         if (isset($row['data'])) {
@@ -1007,9 +1007,9 @@ function template_preprocess_table(&$variables) {
         }
 
         // Build row.
-        $variables[$section][$row_key] = array();
+        $variables[$section][$row_key] = [];
         $variables[$section][$row_key]['attributes'] = new Attribute($row_attributes);
-        $variables[$section][$row_key]['cells'] = array();
+        $variables[$section][$row_key]['cells'] = [];
         if (!empty($cells)) {
           // Reset the responsive index.
           $responsive_index = -1;
@@ -1019,7 +1019,7 @@ function template_preprocess_table(&$variables) {
 
             if (!is_array($cell)) {
               $cell_content = $cell;
-              $cell_attributes = array();
+              $cell_attributes = [];
               $is_header = FALSE;
             }
             else {
@@ -1079,7 +1079,7 @@ function template_preprocess_table(&$variables) {
 function template_preprocess_item_list(&$variables) {
   $variables['wrapper_attributes'] = new Attribute($variables['wrapper_attributes']);
   foreach ($variables['items'] as &$item) {
-    $attributes = array();
+    $attributes = [];
     // If the item value is an array, then it is a render array.
     if (is_array($item)) {
       // List items support attributes via the '#wrapper_attributes' property.
@@ -1118,10 +1118,10 @@ function template_preprocess_item_list(&$variables) {
     }
 
     // Set the item's value and attributes for the template.
-    $item = array(
+    $item = [
       'value' => $item,
       'attributes' => new Attribute($attributes),
-    );
+    ];
   }
 }
 
@@ -1139,7 +1139,7 @@ function template_preprocess_container(&$variables) {
   $variables['has_parent'] = FALSE;
   $element = $variables['element'];
   // Ensure #attributes is set.
-  $element += array('#attributes' => array());
+  $element += ['#attributes' => []];
 
   // Special handling for form elements.
   if (isset($element['#array_parents'])) {
@@ -1228,16 +1228,16 @@ function template_preprocess(&$variables, $hook, $info) {
  */
 function _template_preprocess_default_variables() {
   // Variables that don't depend on a database connection.
-  $variables = array(
-    'attributes' => array(),
-    'title_attributes' => array(),
-    'content_attributes' => array(),
-    'title_prefix' => array(),
-    'title_suffix' => array(),
+  $variables = [
+    'attributes' => [],
+    'title_attributes' => [],
+    'content_attributes' => [],
+    'title_prefix' => [],
+    'title_suffix' => [],
     'db_is_active' => !defined('MAINTENANCE_MODE'),
     'is_admin' => FALSE,
     'logged_in' => FALSE,
-  );
+  ];
 
   // Give modules a chance to alter the default template variables.
   \Drupal::moduleHandler()->alter('template_preprocess_default_variables', $variables);
@@ -1302,19 +1302,19 @@ function template_preprocess_html(&$variables) {
     $variables['page']['#title'] = (string) \Drupal::service('renderer')->render($variables['page']['#title']);
   }
   if (!empty($variables['page']['#title'])) {
-    $head_title = array(
+    $head_title = [
       // Marking the title as safe since it has had the tags stripped.
       'title' => Markup::create(trim(strip_tags($variables['page']['#title']))),
       'name' => $site_config->get('name'),
-    );
+    ];
   }
   // @todo Remove once views is not bypassing the view subscriber anymore.
   //   @see https://www.drupal.org/node/2068471
   elseif ($is_front_page) {
-    $head_title = array(
+    $head_title = [
       'title' => t('Home'),
       'name' => $site_config->get('name'),
-    );
+    ];
   }
   else {
     $head_title = ['name' => $site_config->get('name')];
@@ -1354,7 +1354,7 @@ function template_preprocess_page(&$variables) {
 
   foreach (\Drupal::theme()->getActiveTheme()->getRegions() as $region) {
     if (!isset($variables['page'][$region])) {
-      $variables['page'][$region] = array();
+      $variables['page'][$region] = [];
     }
   }
 
@@ -1414,7 +1414,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
   // page__node__1
   // page__node__edit
 
-  $suggestions = array();
+  $suggestions = [];
   $prefix = $base;
   foreach ($args as $arg) {
     // Remove slashes or null per SA-CORE-2009-003 and change - (hyphen) to _
@@ -1429,7 +1429,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
     // converted to underscores so here we must convert any hyphens in path
     // arguments to underscores here before fetching theme hook suggestions
     // to ensure the templates are appropriately recognized.
-    $arg = str_replace(array("/", "\\", "\0", '-'), array('', '', '', '_'), $arg);
+    $arg = str_replace(["/", "\\", "\0", '-'], ['', '', '', '_'], $arg);
     // The percent acts as a wildcard for numeric arguments since
     // asterisks are not valid filename characters on many filesystems.
     if (is_numeric($arg)) {
@@ -1562,7 +1562,7 @@ function template_preprocess_field(&$variables, $hook) {
   // on those keys is faster than calling Element::children() or looping on all
   // keys within $element, since that requires traversal of all element
   // properties.
-  $variables['items'] = array();
+  $variables['items'] = [];
   $delta = 0;
   while (!empty($element[$delta])) {
     $variables['items'][$delta]['content'] = $element[$delta];
@@ -1597,29 +1597,29 @@ function template_preprocess_field_multiple_value_form(&$variables) {
   if ($variables['multiple']) {
     $table_id = Html::getUniqueId($element['#field_name'] . '_values');
     $order_class = $element['#field_name'] . '-delta-order';
-    $header_attributes = new Attribute(array('class' => array('label')));
+    $header_attributes = new Attribute(['class' => ['label']]);
     if (!empty($element['#required'])) {
       $header_attributes['class'][] = 'js-form-required';
       $header_attributes['class'][] = 'form-required';
     }
-    $header = array(
-      array(
-        'data' => array(
+    $header = [
+      [
+        'data' => [
           '#prefix' => '<h4' . $header_attributes . '>',
           '#markup' => $element['#title'],
           '#suffix' => '</h4>',
-        ),
+        ],
         'colspan' => 2,
-        'class' => array('field-label'),
-      ),
-      t('Order', array(), array('context' => 'Sort order')),
-    );
-    $rows = array();
+        'class' => ['field-label'],
+      ],
+      t('Order', [], ['context' => 'Sort order']),
+    ];
+    $rows = [];
 
     // Sort items according to '_weight' (needed when the form comes back after
     // preview or failed validation).
-    $items = array();
-    $variables['button'] = array();
+    $items = [];
+    $variables['button'] = [];
     foreach (Element::children($element) as $key) {
       if ($key === 'add_more') {
         $variables['button'] = &$element[$key];
@@ -1632,40 +1632,40 @@ function template_preprocess_field_multiple_value_form(&$variables) {
 
     // Add the items as table rows.
     foreach ($items as $item) {
-      $item['_weight']['#attributes']['class'] = array($order_class);
+      $item['_weight']['#attributes']['class'] = [$order_class];
 
       // Remove weight form element from item render array so it can be rendered
       // in a separate table column.
       $delta_element = $item['_weight'];
       unset($item['_weight']);
 
-      $cells = array(
-        array('data' => '', 'class' => array('field-multiple-drag')),
-        array('data' => $item),
-        array('data' => $delta_element, 'class' => array('delta-order')),
-      );
-      $rows[] = array(
+      $cells = [
+        ['data' => '', 'class' => ['field-multiple-drag']],
+        ['data' => $item],
+        ['data' => $delta_element, 'class' => ['delta-order']],
+      ];
+      $rows[] = [
         'data' => $cells,
-        'class' => array('draggable'),
-      );
+        'class' => ['draggable'],
+      ];
     }
 
-    $variables['table'] = array(
+    $variables['table'] = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#attributes' => array(
+      '#attributes' => [
         'id' => $table_id,
-        'class' => array('field-multiple-table'),
-      ),
-      '#tabledrag' => array(
-        array(
+        'class' => ['field-multiple-table'],
+      ],
+      '#tabledrag' => [
+        [
           'action' => 'order',
           'relationship' => 'sibling',
           'group' => $order_class,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     if (!empty($element['#description'])) {
       $description_id = $element['#attributes']['aria-describedby'];
@@ -1678,7 +1678,7 @@ function template_preprocess_field_multiple_value_form(&$variables) {
     }
   }
   else {
-    $variables['elements'] = array();
+    $variables['elements'] = [];
     foreach (Element::children($element) as $key) {
       $variables['elements'][] = $element[$key];
     }
@@ -1695,10 +1695,10 @@ function template_preprocess_field_multiple_value_form(&$variables) {
  *   - links: A list of \Drupal\Core\Link objects which should be rendered.
  */
 function template_preprocess_breadcrumb(&$variables) {
-  $variables['breadcrumb'] = array();
+  $variables['breadcrumb'] = [];
   /** @var \Drupal\Core\Link $link */
   foreach ($variables['links'] as $key => $link) {
-    $variables['breadcrumb'][$key] = array('text' => $link->getText(), 'url' => $link->getUrl()->toString());
+    $variables['breadcrumb'][$key] = ['text' => $link->getText(), 'url' => $link->getUrl()->toString()];
   }
 }
 
@@ -1717,39 +1717,39 @@ function _field_multiple_value_form_sort_helper($a, $b) {
  * Provides theme registration for themes across .inc files.
  */
 function drupal_common_theme() {
-  return array(
+  return [
     // From theme.inc.
-    'html' => array(
+    'html' => [
       'render element' => 'html',
-    ),
-    'page' => array(
+    ],
+    'page' => [
       'render element' => 'page',
-    ),
-    'page_title' => array(
-      'variables' => array('title' => NULL),
-    ),
-    'region' => array(
+    ],
+    'page_title' => [
+      'variables' => ['title' => NULL],
+    ],
+    'region' => [
       'render element' => 'elements',
-    ),
-    'time' => array(
-      'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array()),
-    ),
-    'datetime_form' => array(
+    ],
+    'time' => [
+      'variables' => ['timestamp' => NULL, 'text' => NULL, 'attributes' => []],
+    ],
+    'datetime_form' => [
       'render element' => 'element',
-    ),
-    'datetime_wrapper' => array(
+    ],
+    'datetime_wrapper' => [
       'render element' => 'element',
-    ),
-    'status_messages' => array(
+    ],
+    'status_messages' => [
       'variables' => ['status_headings' => [], 'message_list' => NULL],
-    ),
-    'links' => array(
-      'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array(), 'set_active_class' => FALSE),
-    ),
-    'dropbutton_wrapper' => array(
-      'variables' => array('children' => NULL),
-    ),
-    'image' => array(
+    ],
+    'links' => [
+      'variables' => ['links' => [], 'attributes' => ['class' => ['links']], 'heading' => [], 'set_active_class' => FALSE],
+    ],
+    'dropbutton_wrapper' => [
+      'variables' => ['children' => NULL],
+    ],
+    'image' => [
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
       // allows the alt attribute to be omitted in some cases. Therefore,
       // default the alt attribute to an empty string, but allow code providing
@@ -1763,107 +1763,107 @@ function drupal_common_theme() {
       // - http://dev.w3.org/html5/spec/Overview.html#alt
       // The title attribute is optional in all cases, so it is omitted by
       // default.
-      'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array(), 'sizes' => NULL, 'srcset' => array(), 'style_name' => NULL),
-    ),
-    'breadcrumb' => array(
-      'variables' => array('links' => array()),
-    ),
-    'table' => array(
-      'variables' => array('header' => NULL, 'rows' => NULL, 'footer' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => FALSE, 'responsive' => TRUE, 'empty' => ''),
-    ),
-    'tablesort_indicator' => array(
-      'variables' => array('style' => NULL),
-    ),
-    'mark' => array(
-      'variables' => array('status' => MARK_NEW),
-    ),
-    'item_list' => array(
-      'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => array(), 'attributes' => array(), 'empty' => NULL, 'context' => array()),
-    ),
-    'feed_icon' => array(
-      'variables' => array('url' => NULL, 'title' => NULL),
-    ),
-    'progress_bar' => array(
-      'variables' => array('label' => NULL, 'percent' => NULL, 'message' => NULL),
-    ),
-    'indentation' => array(
-      'variables' => array('size' => 1),
-    ),
+      'variables' => ['uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => [], 'sizes' => NULL, 'srcset' => [], 'style_name' => NULL],
+    ],
+    'breadcrumb' => [
+      'variables' => ['links' => []],
+    ],
+    'table' => [
+      'variables' => ['header' => NULL, 'rows' => NULL, 'footer' => NULL, 'attributes' => [], 'caption' => NULL, 'colgroups' => [], 'sticky' => FALSE, 'responsive' => TRUE, 'empty' => ''],
+    ],
+    'tablesort_indicator' => [
+      'variables' => ['style' => NULL],
+    ],
+    'mark' => [
+      'variables' => ['status' => MARK_NEW],
+    ],
+    'item_list' => [
+      'variables' => ['items' => [], 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => [], 'attributes' => [], 'empty' => NULL, 'context' => []],
+    ],
+    'feed_icon' => [
+      'variables' => ['url' => NULL, 'title' => NULL],
+    ],
+    'progress_bar' => [
+      'variables' => ['label' => NULL, 'percent' => NULL, 'message' => NULL],
+    ],
+    'indentation' => [
+      'variables' => ['size' => 1],
+    ],
     // From theme.maintenance.inc.
-    'maintenance_page' => array(
+    'maintenance_page' => [
       'render element' => 'page',
-    ),
-    'install_page' => array(
+    ],
+    'install_page' => [
       'render element' => 'page',
-    ),
-    'maintenance_task_list' => array(
-      'variables' => array('items' => NULL, 'active' => NULL, 'variant' => NULL),
-    ),
-    'authorize_report' => array(
+    ],
+    'maintenance_task_list' => [
+      'variables' => ['items' => NULL, 'active' => NULL, 'variant' => NULL],
+    ],
+    'authorize_report' => [
       'variables' => ['messages' => [], 'attributes' => []],
       'includes' => ['core/includes/theme.maintenance.inc'],
       'template' => 'authorize-report',
-    ),
+    ],
     // From pager.inc.
-    'pager' => array(
+    'pager' => [
       'render element' => 'pager',
-    ),
+    ],
     // From menu.inc.
-    'menu' => array(
-      'variables' => array('menu_name' => NULL, 'items' => array(), 'attributes' => array()),
-    ),
-    'menu_local_task' => array(
+    'menu' => [
+      'variables' => ['menu_name' => NULL, 'items' => [], 'attributes' => []],
+    ],
+    'menu_local_task' => [
       'render element' => 'element',
-    ),
-    'menu_local_action' => array(
+    ],
+    'menu_local_action' => [
       'render element' => 'element',
-    ),
-    'menu_local_tasks' => array(
-      'variables' => array('primary' => array(), 'secondary' => array()),
-    ),
+    ],
+    'menu_local_tasks' => [
+      'variables' => ['primary' => [], 'secondary' => []],
+    ],
     // From form.inc.
-    'input' => array(
+    'input' => [
       'render element' => 'element',
-    ),
-    'select' => array(
+    ],
+    'select' => [
       'render element' => 'element',
-    ),
-    'fieldset' => array(
+    ],
+    'fieldset' => [
       'render element' => 'element',
-    ),
-    'details' => array(
+    ],
+    'details' => [
       'render element' => 'element',
-    ),
-    'radios' => array(
+    ],
+    'radios' => [
       'render element' => 'element',
-    ),
-    'checkboxes' => array(
+    ],
+    'checkboxes' => [
       'render element' => 'element',
-    ),
-    'form' => array(
+    ],
+    'form' => [
       'render element' => 'element',
-    ),
-    'textarea' => array(
+    ],
+    'textarea' => [
       'render element' => 'element',
-    ),
-    'form_element' => array(
+    ],
+    'form_element' => [
       'render element' => 'element',
-    ),
-    'form_element_label' => array(
+    ],
+    'form_element_label' => [
       'render element' => 'element',
-    ),
-    'vertical_tabs' => array(
+    ],
+    'vertical_tabs' => [
       'render element' => 'element',
-    ),
-    'container' => array(
+    ],
+    'container' => [
       'render element' => 'element',
-    ),
+    ],
     // From field system.
-    'field' => array(
+    'field' => [
       'render element' => 'element',
-    ),
-    'field_multiple_value_form' => array(
+    ],
+    'field_multiple_value_form' => [
       'render element' => 'element',
-    ),
-  );
+    ],
+  ];
 }

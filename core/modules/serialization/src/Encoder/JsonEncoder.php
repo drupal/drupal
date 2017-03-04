@@ -18,7 +18,7 @@ class JsonEncoder extends BaseJsonEncoder implements EncoderInterface, DecoderIn
    *
    * @var array
    */
-  protected static $format = array('json', 'ajax');
+  protected static $format = ['json', 'ajax'];
 
   /**
    * {@inheritdoc}

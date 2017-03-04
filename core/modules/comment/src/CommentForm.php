@@ -91,7 +91,7 @@ class CommentForm extends ContentEntityForm {
 
     // Use #comment-form as unique jump target, regardless of entity type.
     $form['#id'] = Html::getUniqueId('comment_form');
-    $form['#theme'] = array('comment_form__' . $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $field_name, 'comment_form');
+    $form['#theme'] = ['comment_form__' . $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $field_name, 'comment_form'];
 
     $anonymous_contact = $field_definition->getSetting('anonymous');
     $is_admin = $comment->id() && $this->currentUser->hasPermission('administer comments');
@@ -104,7 +104,7 @@ class CommentForm extends ContentEntityForm {
     // If not replying to a comment, use our dedicated page callback for new
     // Comments on entities.
     if (!$comment->id() && !$comment->hasParentComment()) {
-      $form['#action'] = $this->url('comment.reply', array('entity_type' => $entity->getEntityTypeId(), 'entity' => $entity->id(), 'field_name' => $field_name));
+      $form['#action'] = $this->url('comment.reply', ['entity_type' => $entity->getEntityTypeId(), 'entity' => $entity->id(), 'field_name' => $field_name]);
     }
 
     $comment_preview = $form_state->get('comment_preview');
@@ -112,13 +112,13 @@ class CommentForm extends ContentEntityForm {
       $form += $comment_preview;
     }
 
-    $form['author'] = array();
+    $form['author'] = [];
     // Display author information in a details element for comment moderators.
     if ($is_admin) {
-      $form['author'] += array(
+      $form['author'] += [
         '#type' => 'details',
         '#title' => $this->t('Administration'),
-      );
+      ];
     }
 
     // Prepare default values for form elements.
@@ -129,9 +129,9 @@ class CommentForm extends ContentEntityForm {
       }
       $status = $comment->getStatus();
       if (empty($comment_preview)) {
-        $form['#title'] = $this->t('Edit comment %title', array(
+        $form['#title'] = $this->t('Edit comment %title', [
           '%title' => $comment->getSubject(),
-        ));
+        ]);
       }
     }
     else {
@@ -162,7 +162,7 @@ class CommentForm extends ContentEntityForm {
     // The name field is displayed when an anonymous user is adding a comment or
     // when a user with the permission 'administer comments' is editing an
     // existing comment from an anonymous user.
-    $form['author']['name'] = array(
+    $form['author']['name'] = [
       '#type' => 'textfield',
       '#title' => $is_admin ? $this->t('Name for @anonymous', ['@anonymous' => $config->get('anonymous')]) : $this->t('Your name'),
       '#default_value' => $author,
@@ -173,20 +173,20 @@ class CommentForm extends ContentEntityForm {
       '#attributes' => [
         'data-drupal-default-value' => $config->get('anonymous'),
       ],
-    );
+    ];
 
     if ($is_admin) {
       // When editing a comment only display the name textfield if the uid field
       // is empty.
       $form['author']['name']['#states'] = [
         'visible' => [
-          ':input[name="uid"]' => array('empty' => TRUE),
+          ':input[name="uid"]' => ['empty' => TRUE],
         ],
       ];
     }
 
     // Add author email and homepage fields depending on the current user.
-    $form['author']['mail'] = array(
+    $form['author']['mail'] = [
       '#type' => 'email',
       '#title' => $this->t('Email'),
       '#default_value' => $comment->getAuthorEmail(),
@@ -195,36 +195,36 @@ class CommentForm extends ContentEntityForm {
       '#size' => 30,
       '#description' => $this->t('The content of this field is kept private and will not be shown publicly.'),
       '#access' => ($comment->getOwner()->isAnonymous() && $is_admin) || ($this->currentUser->isAnonymous() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
-    );
+    ];
 
-    $form['author']['homepage'] = array(
+    $form['author']['homepage'] = [
       '#type' => 'url',
       '#title' => $this->t('Homepage'),
       '#default_value' => $comment->getHomepage(),
       '#maxlength' => 255,
       '#size' => 30,
       '#access' => $is_admin || ($this->currentUser->isAnonymous() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
-    );
+    ];
 
     // Add administrative comment publishing options.
-    $form['author']['date'] = array(
+    $form['author']['date'] = [
       '#type' => 'datetime',
       '#title' => $this->t('Authored on'),
       '#default_value' => $date,
       '#size' => 20,
       '#access' => $is_admin,
-    );
+    ];
 
-    $form['author']['status'] = array(
+    $form['author']['status'] = [
       '#type' => 'radios',
       '#title' => $this->t('Status'),
       '#default_value' => $status,
-      '#options' => array(
+      '#options' => [
         CommentInterface::PUBLISHED => $this->t('Published'),
         CommentInterface::NOT_PUBLISHED => $this->t('Not published'),
-      ),
+      ],
       '#access' => $is_admin,
-    );
+    ];
 
     return parent::form($form, $form_state, $comment);
   }
@@ -250,12 +250,12 @@ class CommentForm extends ContentEntityForm {
     // already previewing the submission.
     $element['submit']['#access'] = ($comment->id() && $this->currentUser->hasPermission('administer comments')) || $preview_mode != DRUPAL_REQUIRED || $form_state->get('comment_preview');
 
-    $element['preview'] = array(
+    $element['preview'] = [
       '#type' => 'submit',
       '#value' => $this->t('Preview'),
       '#access' => $preview_mode != DRUPAL_DISABLED,
-      '#submit' => array('::submitForm', '::preview'),
-    );
+      '#submit' => ['::submitForm', '::preview'],
+    ];
 
     return $element;
   }
@@ -365,10 +365,10 @@ class CommentForm extends ContentEntityForm {
       $form_state->setValue('cid', $comment->id());
 
       // Add a log entry.
-      $logger->notice('Comment posted: %subject.', array(
+      $logger->notice('Comment posted: %subject.', [
           '%subject' => $comment->getSubject(),
           'link' => $this->l(t('View'), $comment->urlInfo()->setOption('fragment', 'comment-' . $comment->id()))
-        ));
+        ]);
 
       // Explain the approval queue if necessary.
       if (!$comment->isPublished()) {
@@ -379,7 +379,7 @@ class CommentForm extends ContentEntityForm {
       else {
         drupal_set_message($this->t('Your comment has been posted.'));
       }
-      $query = array();
+      $query = [];
       // Find the current display page for this comment.
       $field_definition = $this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$field_name];
       $page = $this->entityManager->getStorage('comment')->getDisplayOrdinal($comment, $field_definition->getSetting('default_mode'), $field_definition->getSetting('per_page'));
@@ -391,8 +391,8 @@ class CommentForm extends ContentEntityForm {
       $uri->setOption('fragment', 'comment-' . $comment->id());
     }
     else {
-      $logger->warning('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->getSubject()));
-      drupal_set_message($this->t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->getSubject())), 'error');
+      $logger->warning('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', ['%subject' => $comment->getSubject()]);
+      drupal_set_message($this->t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', ['%subject' => $comment->getSubject()]), 'error');
       // Redirect the user to the entity they are commenting on.
     }
     $form_state->setRedirectUrl($uri);

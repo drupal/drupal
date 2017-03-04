@@ -17,7 +17,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('image', 'image_module_test');
+  public static $modules = ['image', 'image_module_test'];
 
   /**
    * @var \Drupal\image\ImageStyleInterface
@@ -27,7 +27,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->style = ImageStyle::create(array('name' => 'style_foo', 'label' => $this->randomString()));
+    $this->style = ImageStyle::create(['name' => 'style_foo', 'label' => $this->randomString()]);
     $this->style->save();
   }
 

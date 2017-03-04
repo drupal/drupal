@@ -17,62 +17,62 @@ trait RfcLoggerTrait {
   /**
    * {@inheritdoc}
    */
-  public function emergency($message, array $context = array()) {
+  public function emergency($message, array $context = []) {
     $this->log(RfcLogLevel::EMERGENCY, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function alert($message, array $context = array()) {
+  public function alert($message, array $context = []) {
     $this->log(RfcLogLevel::ALERT, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function critical($message, array $context = array()) {
+  public function critical($message, array $context = []) {
     $this->log(RfcLogLevel::CRITICAL, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function error($message, array $context = array()) {
+  public function error($message, array $context = []) {
     $this->log(RfcLogLevel::ERROR, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function warning($message, array $context = array()) {
+  public function warning($message, array $context = []) {
     $this->log(RfcLogLevel::WARNING, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function notice($message, array $context = array()) {
+  public function notice($message, array $context = []) {
     $this->log(RfcLogLevel::NOTICE, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function info($message, array $context = array()) {
+  public function info($message, array $context = []) {
     $this->log(RfcLogLevel::INFO, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function debug($message, array $context = array()) {
+  public function debug($message, array $context = []) {
     $this->log(RfcLogLevel::DEBUG, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  abstract public function log($level, $message, array $context = array());
+  abstract public function log($level, $message, array $context = []);
 
 }

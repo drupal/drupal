@@ -21,7 +21,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'language_test');
+  public static $modules = ['language', 'language_test'];
 
   /**
    * An user with permissions to administer languages.
@@ -34,16 +34,16 @@ class LanguageUrlRewritingTest extends WebTestBase {
     parent::setUp();
 
     // Create and log in user.
-    $this->webUser = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
+    $this->webUser = $this->drupalCreateUser(['administer languages', 'access administration pages']);
     $this->drupalLogin($this->webUser);
 
     // Install French language.
-    $edit = array();
+    $edit = [];
     $edit['predefined_langcode'] = 'fr';
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
-    $edit = array('language_interface[enabled][language-url]' => 1);
+    $edit = ['language_interface[enabled][language-url]' => 1];
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Check that drupalSettings contains path prefix.
@@ -56,7 +56,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
    */
   function testUrlRewritingEdgeCases() {
     // Check URL rewriting with a non-installed language.
-    $non_existing = new Language(array('id' => $this->randomMachineName()));
+    $non_existing = new Language(['id' => $this->randomMachineName()]);
     $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.', 'URL language negotiation does not work with non-installed languages');
 
     // Check that URL rewriting is not applied to subrequests.
@@ -79,9 +79,9 @@ class LanguageUrlRewritingTest extends WebTestBase {
    *   The message to display confirming prefixed URL is not working.
    */
   private function checkUrl(LanguageInterface $language, $message1, $message2) {
-    $options = array('language' => $language, 'script' => '');
+    $options = ['language' => $language, 'script' => ''];
     $base_path = trim(base_path(), '/');
-    $rewritten_path = trim(str_replace($base_path, '', \Drupal::url('<front>', array(), $options)), '/');
+    $rewritten_path = trim(str_replace($base_path, '', \Drupal::url('<front>', [], $options)), '/');
     $segments = explode('/', $rewritten_path, 2);
     $prefix = $segments[0];
     $path = isset($segments[1]) ? $segments[1] : $prefix;
@@ -106,11 +106,11 @@ class LanguageUrlRewritingTest extends WebTestBase {
     $language_domain = 'example.fr';
     // Get the current host URI we're running on.
     $base_url_host = parse_url($base_url, PHP_URL_HOST);
-    $edit = array(
+    $edit = [
       'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
       'domain[en]' => $base_url_host,
       'domain[fr]' => $language_domain
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
     // Rebuild the container so that the new language gets picked up by services
     // that hold the list of languages.
@@ -126,11 +126,11 @@ class LanguageUrlRewritingTest extends WebTestBase {
 
     // In case index.php is part of the URLs, we need to adapt the asserted
     // URLs as well.
-    $index_php = strpos(\Drupal::url('<front>', array(), array('absolute' => TRUE)), 'index.php') !== FALSE;
+    $index_php = strpos(\Drupal::url('<front>', [], ['absolute' => TRUE]), 'index.php') !== FALSE;
 
     $request = Request::createFromGlobals();
     $server = $request->server->all();
-    $request = $this->prepareRequestForGenerator(TRUE, array('HTTP_HOST' => $server['HTTP_HOST'] . ':88'));
+    $request = $this->prepareRequestForGenerator(TRUE, ['HTTP_HOST' => $server['HTTP_HOST'] . ':88']);
 
     // Create an absolute French link.
     $language = \Drupal::languageManager()->getLanguage('fr');

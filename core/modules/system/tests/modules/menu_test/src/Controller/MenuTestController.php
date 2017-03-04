@@ -83,8 +83,8 @@ class MenuTestController extends ControllerBase {
    * @return string
    *   The route title.
    */
-  public function titleCallback(array $_title_arguments = array(), $_title = '') {
-    $_title_arguments += array('case_number' => '2', 'title' => $_title);
+  public function titleCallback(array $_title_arguments = [], $_title = '') {
+    $_title_arguments += ['case_number' => '2', 'title' => $_title];
     return t($_title_arguments['title']) . ' - Case ' . $_title_arguments['case_number'];
   }
 

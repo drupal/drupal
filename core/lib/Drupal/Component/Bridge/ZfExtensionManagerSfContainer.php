@@ -25,7 +25,7 @@ class ZfExtensionManagerSfContainer implements ReaderManagerInterface, WriterMan
    *
    * @see \Drupal\Component\Bridge\ZfExtensionManagerSfContainer::canonicalizeName().
    */
-  protected $canonicalNamesReplacements = array('-' => '', '_' => '', ' ' => '', '\\' => '', '/' => '');
+  protected $canonicalNamesReplacements = ['-' => '', '_' => '', ' ' => '', '\\' => '', '/' => ''];
 
   /**
    * The prefix to be used when retrieving plugins from the container.

@@ -38,7 +38,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'block');
+  public static $modules = ['comment', 'block'];
 
   /**
    * Creates a temporary file, for a specific user.
@@ -81,13 +81,13 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     $test_file = $this->getTestFile('text');
 
-    foreach (array('nojs', 'js') as $type) {
+    foreach (['nojs', 'js'] as $type) {
       // Create a new node with the uploaded file and ensure it got uploaded
       // successfully.
       // @todo This only tests a 'nojs' submission, because drupalPostAjaxForm()
       //   does not yet support file uploads.
       $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-      $node_storage->resetCache(array($nid));
+      $node_storage->resetCache([$nid]);
       $node = $node_storage->load($nid);
       $node_file = File::load($node->{$field_name}->target_id);
       $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
@@ -104,11 +104,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       // "Click" the remove button (emulating either a nojs or js submission).
       switch ($type) {
         case 'nojs':
-          $this->drupalPostForm(NULL, array(), t('Remove'));
+          $this->drupalPostForm(NULL, [], t('Remove'));
           break;
         case 'js':
           $button = $this->xpath('//input[@type="submit" and @value="' . t('Remove') . '"]');
-          $this->drupalPostAjaxForm(NULL, array(), array((string) $button[0]['name'] => (string) $button[0]['value']));
+          $this->drupalPostAjaxForm(NULL, [], [(string) $button[0]['name'] => (string) $button[0]['value']]);
           break;
       }
 
@@ -121,8 +121,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertTrue(isset($label[0]), 'Label for upload found.');
 
       // Save the node and ensure it does not have the file.
-      $this->drupalPostForm(NULL, array(), t('Save and keep published'));
-      $node_storage->resetCache(array($nid));
+      $this->drupalPostForm(NULL, [], t('Save and keep published'));
+      $node_storage->resetCache([$nid]);
       $node = $node_storage->load($nid);
       $this->assertTrue(empty($node->{$field_name}->target_id), 'File was successfully removed from the node.');
     }
@@ -143,12 +143,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $field_name = 'test_file_field_1';
     $field_name2 = 'test_file_field_2';
     $cardinality = 3;
-    $this->createFileField($field_name, 'node', $type_name, array('cardinality' => $cardinality));
-    $this->createFileField($field_name2, 'node', $type_name, array('cardinality' => $cardinality));
+    $this->createFileField($field_name, 'node', $type_name, ['cardinality' => $cardinality]);
+    $this->createFileField($field_name2, 'node', $type_name, ['cardinality' => $cardinality]);
 
     $test_file = $this->getTestFile('text');
 
-    foreach (array('nojs', 'js') as $type) {
+    foreach (['nojs', 'js'] as $type) {
       // Visit the node creation form, and upload 3 files for each field. Since
       // the field has cardinality of 3, ensure the "Upload" button is displayed
       // until after the 3rd file, and after that, isn't displayed. Because
@@ -158,9 +158,9 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       //   does not yet emulate jQuery's file upload.
       //
       $this->drupalGet("node/add/$type_name");
-      foreach (array($field_name2, $field_name) as $each_field_name) {
+      foreach ([$field_name2, $field_name] as $each_field_name) {
         for ($delta = 0; $delta < 3; $delta++) {
-          $edit = array('files[' . $each_field_name . '_' . $delta . '][]' => drupal_realpath($test_file->getFileUri()));
+          $edit = ['files[' . $each_field_name . '_' . $delta . '][]' => drupal_realpath($test_file->getFileUri())];
           // If the Upload button doesn't exist, drupalPostForm() will automatically
           // fail with an assertion message.
           $this->drupalPostForm(NULL, $edit, t('Upload'));
@@ -170,7 +170,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
       $num_expected_remove_buttons = 6;
 
-      foreach (array($field_name, $field_name2) as $current_field_name) {
+      foreach ([$field_name, $field_name2] as $current_field_name) {
         // How many uploaded files for the current field are remaining.
         $remaining = 3;
         // Test clicking each "Remove" button. For extra robustness, test them out
@@ -179,11 +179,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
         // - First remove the 2nd file.
         // - Then remove what is then the 2nd file (was originally the 3rd file).
         // - Then remove the first file.
-        foreach (array(1, 1, 0) as $delta) {
+        foreach ([1, 1, 0] as $delta) {
           // Ensure we have the expected number of Remove buttons, and that they
           // are numbered sequentially.
           $buttons = $this->xpath('//input[@type="submit" and @value="Remove"]');
-          $this->assertTrue(is_array($buttons) && count($buttons) === $num_expected_remove_buttons, format_string('There are %n "Remove" buttons displayed (JSMode=%type).', array('%n' => $num_expected_remove_buttons, '%type' => $type)));
+          $this->assertTrue(is_array($buttons) && count($buttons) === $num_expected_remove_buttons, format_string('There are %n "Remove" buttons displayed (JSMode=%type).', ['%n' => $num_expected_remove_buttons, '%type' => $type]));
           foreach ($buttons as $i => $button) {
             $key = $i >= $remaining ? $i - $remaining : $i;
             $check_field_name = $field_name2;
@@ -210,12 +210,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
                   $button['value'] = 'DUMMY';
                 }
               }
-              $this->drupalPostForm(NULL, array(), t('Remove'));
+              $this->drupalPostForm(NULL, [], t('Remove'));
               break;
             case 'js':
               // drupalPostAjaxForm() lets us target the button precisely, so we don't
               // require the workaround used above for nojs.
-              $this->drupalPostAjaxForm(NULL, array(), array($button_name => t('Remove')));
+              $this->drupalPostAjaxForm(NULL, [], [$button_name => t('Remove')]);
               break;
           }
           $num_expected_remove_buttons--;
@@ -224,38 +224,38 @@ class FileFieldWidgetTest extends FileFieldTestBase {
           // Ensure an "Upload" button for the current field is displayed with the
           // correct name.
           $upload_button_name = $current_field_name . '_' . $remaining . '_upload_button';
-          $buttons = $this->xpath('//input[@type="submit" and @value="Upload" and @name=:name]', array(':name' => $upload_button_name));
-          $this->assertTrue(is_array($buttons) && count($buttons) == 1, format_string('The upload button is displayed with the correct name (JSMode=%type).', array('%type' => $type)));
+          $buttons = $this->xpath('//input[@type="submit" and @value="Upload" and @name=:name]', [':name' => $upload_button_name]);
+          $this->assertTrue(is_array($buttons) && count($buttons) == 1, format_string('The upload button is displayed with the correct name (JSMode=%type).', ['%type' => $type]));
 
           // Ensure only at most one button per field is displayed.
           $buttons = $this->xpath('//input[@type="submit" and @value="Upload"]');
           $expected = $current_field_name == $field_name ? 1 : 2;
-          $this->assertTrue(is_array($buttons) && count($buttons) == $expected, format_string('After removing a file, only one "Upload" button for each possible field is displayed (JSMode=%type).', array('%type' => $type)));
+          $this->assertTrue(is_array($buttons) && count($buttons) == $expected, format_string('After removing a file, only one "Upload" button for each possible field is displayed (JSMode=%type).', ['%type' => $type]));
         }
       }
 
       // Ensure the page now has no Remove buttons.
-      $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), format_string('After removing all files, there is no "Remove" button displayed (JSMode=%type).', array('%type' => $type)));
+      $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), format_string('After removing all files, there is no "Remove" button displayed (JSMode=%type).', ['%type' => $type]));
 
       // Save the node and ensure it does not have any files.
-      $this->drupalPostForm(NULL, array('title[0][value]' => $this->randomMachineName()), t('Save and publish'));
-      $matches = array();
+      $this->drupalPostForm(NULL, ['title[0][value]' => $this->randomMachineName()], t('Save and publish'));
+      $matches = [];
       preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
       $nid = $matches[1];
-      $node_storage->resetCache(array($nid));
+      $node_storage->resetCache([$nid]);
       $node = $node_storage->load($nid);
       $this->assertTrue(empty($node->{$field_name}->target_id), 'Node was successfully saved without any files.');
     }
 
-    $upload_files_node_creation = array($test_file, $test_file);
+    $upload_files_node_creation = [$test_file, $test_file];
     // Try to upload multiple files, but fewer than the maximum.
     $nid = $this->uploadNodeFiles($upload_files_node_creation, $field_name, $type_name);
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $this->assertEqual(count($node->{$field_name}), count($upload_files_node_creation), 'Node was successfully saved with mulitple files.');
 
     // Try to upload more files than allowed on revision.
-    $upload_files_node_revision = array($test_file, $test_file, $test_file, $test_file);
+    $upload_files_node_revision = [$test_file, $test_file, $test_file, $test_file];
     $this->uploadNodeFiles($upload_files_node_revision, $field_name, $nid, 1);
     $args = [
       '%field' => $field_name,
@@ -264,7 +264,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       '%list' => implode(', ', array_fill(0, 3, $test_file->getFilename())),
     ];
     $this->assertRaw(t('Field %field can only hold @max values but there were @count uploaded. The following files have been omitted as a result: %list.', $args));
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $this->assertEqual(count($node->{$field_name}), $cardinality, 'More files than allowed could not be saved to node.');
 
@@ -274,14 +274,14 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'type' => $type_name
     ]);
     $this->uploadNodeFile($test_file, $field_name, $node->id(), 1);
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $this->assertEqual(count($node->{$field_name}), $cardinality, 'Node was successfully revised to maximum number of files.');
 
     // Try to upload exactly the allowed number of files, new node.
     $upload_files = array_fill(0, $cardinality, $test_file);
     $nid = $this->uploadNodeFiles($upload_files, $field_name, $type_name);
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $this->assertEqual(count($node->{$field_name}), $cardinality, 'Node was successfully saved with maximum number of files.');
 
@@ -304,7 +304,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   function testPrivateFileSetting() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Grant the admin user required permissions.
-    user_role_grant_permissions($this->adminUser->roles[0]->target_id, array('administer node fields'));
+    user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
 
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
@@ -315,10 +315,10 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
 
     // Change the field setting to make its files private, and upload a file.
-    $edit = array('settings[uri_scheme]' => 'private');
+    $edit = ['settings[uri_scheme]' => 'private'];
     $this->drupalPostForm("admin/structure/types/manage/$type_name/fields/$field_id/storage", $edit, t('Save field settings'));
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
     $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
@@ -342,41 +342,41 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests that download restrictions on private files work on comments.
    */
   function testPrivateFileComment() {
-    $user = $this->drupalCreateUser(array('access comments'));
+    $user = $this->drupalCreateUser(['access comments']);
 
     // Grant the admin user required comment permissions.
     $roles = $this->adminUser->getRoles();
-    user_role_grant_permissions($roles[1], array('administer comment fields', 'administer comments'));
+    user_role_grant_permissions($roles[1], ['administer comment fields', 'administer comments']);
 
     // Revoke access comments permission from anon user, grant post to
     // authenticated.
-    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, array('access comments'));
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('post comments', 'skip comment approval'));
+    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['post comments', 'skip comment approval']);
 
     // Create a new field.
     $this->addDefaultCommentField('node', 'article');
 
     $name = strtolower($this->randomMachineName());
     $label = $this->randomMachineName();
-    $storage_edit = array('settings[uri_scheme]' => 'private');
+    $storage_edit = ['settings[uri_scheme]' => 'private'];
     $this->fieldUIAddNewField('admin/structure/comment/manage/comment', $name, $label, 'file', $storage_edit);
 
     // Manually clear cache on the tester side.
     \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     // Create node.
-    $edit = array(
+    $edit = [
       'title[0][value]' => $this->randomMachineName(),
-    );
+    ];
     $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');
-    $edit = array(
+    $edit = [
       'files[field_' . $name . '_' . 0 . ']' => drupal_realpath($text_file->getFileUri()),
       'comment_body[0][value]' => $comment_body = $this->randomMachineName(),
-    );
+    ];
     $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
 
     // Get the comment ID.
@@ -402,7 +402,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Unpublishes node.
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm('node/' . $node->id() . '/edit', array(), t('Save and unpublish'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and unpublish'));
 
     // Ensures normal user can no longer download the file.
     $this->drupalLogin($user);
@@ -417,11 +417,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
     $this->createFileField($field_name, 'node', $type_name);
-    $this->updateFileField($field_name, $type_name, array('file_extensions' => 'txt'));
+    $this->updateFileField($field_name, $type_name, ['file_extensions' => 'txt']);
 
-    foreach (array('nojs', 'js') as $type) {
+    foreach (['nojs', 'js'] as $type) {
       // Create node and prepare files for upload.
-      $node = $this->drupalCreateNode(array('type' => 'article'));
+      $node = $this->drupalCreateNode(['type' => 'article']);
       $nid = $node->id();
       $this->drupalGet("node/$nid/edit");
       $test_file_text = $this->getTestFile('text');
@@ -436,11 +436,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
           break;
         case 'js':
           $button = $this->xpath('//input[@type="submit" and @value="' . t('Upload') . '"]');
-          $this->drupalPostAjaxForm(NULL, $edit, array((string) $button[0]['name'] => (string) $button[0]['value']));
+          $this->drupalPostAjaxForm(NULL, $edit, [(string) $button[0]['name'] => (string) $button[0]['value']]);
           break;
       }
-      $error_message = t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => 'txt'));
-      $this->assertRaw($error_message, t('Validation error when file with wrong extension uploaded (JSMode=%type).', array('%type' => $type)));
+      $error_message = t('Only files with the following extensions are allowed: %files-allowed.', ['%files-allowed' => 'txt']);
+      $this->assertRaw($error_message, t('Validation error when file with wrong extension uploaded (JSMode=%type).', ['%type' => $type]));
 
       // Upload file with correct extension, check that error message is removed.
       $edit[$name] = drupal_realpath($test_file_text->getFileUri());
@@ -450,10 +450,10 @@ class FileFieldWidgetTest extends FileFieldTestBase {
           break;
         case 'js':
           $button = $this->xpath('//input[@type="submit" and @value="' . t('Upload') . '"]');
-          $this->drupalPostAjaxForm(NULL, $edit, array((string) $button[0]['name'] => (string) $button[0]['value']));
+          $this->drupalPostAjaxForm(NULL, $edit, [(string) $button[0]['name'] => (string) $button[0]['value']]);
           break;
       }
-      $this->assertNoRaw($error_message, t('Validation error removed when file with correct extension uploaded (JSMode=%type).', array('%type' => $type)));
+      $this->assertNoRaw($error_message, t('Validation error removed when file with correct extension uploaded (JSMode=%type).', ['%type' => $type]));
     }
   }
 
@@ -498,11 +498,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $victim_user = $this->drupalCreateUser();
 
     // Create an attacker user.
-    $attacker_user = $this->drupalCreateUser(array(
+    $attacker_user = $this->drupalCreateUser([
       'access content',
       'create article content',
       'edit any article content',
-    ));
+    ]);
 
     // Log in as the attacker user.
     $this->drupalLogin($attacker_user);
@@ -522,11 +522,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $attacker_user = User::getAnonymousUser();
 
     // Set up permissions for anonymous attacker user.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access content' => TRUE,
       'create article content' => TRUE,
       'edit any article content' => TRUE,
-    ));
+    ]);
 
     // Log out so as to be the anonymous attacker user.
     $this->drupalLogout();
@@ -549,7 +549,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->createFileField($field_name, 'node', $type_name);
 
     $test_file = $this->getTestFile('text');
-    foreach (array('nojs', 'js') as $type) {
+    foreach (['nojs', 'js'] as $type) {
       // Create a temporary file owned by the victim user. This will be as if
       // they had uploaded the file, but not saved the node they were editing
       // or creating.
@@ -567,7 +567,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
       // Attach a file to a node.
       $edit['files[' . $field_name . '_0]'] = $this->container->get('file_system')->realpath($test_file->getFileUri());
-      $this->drupalPostForm(Url::fromRoute('node.add', array('node_type' => $type_name)), $edit, t('Save'));
+      $this->drupalPostForm(Url::fromRoute('node.add', ['node_type' => $type_name]), $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
       /** @var \Drupal\file\FileInterface $node_file */

@@ -152,21 +152,21 @@ class PasswordHashingTest extends UnitTestCase {
    */
   public function providerLongPasswords() {
     // '512 byte long password is allowed.'
-    $passwords['allowed'] = array(str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH), TRUE);
+    $passwords['allowed'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH), TRUE];
     // 513 byte long password is not allowed.
-    $passwords['too_long'] = array(str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH + 1), FALSE);
+    $passwords['too_long'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH + 1), FALSE];
 
     // Check a string of 3-byte UTF-8 characters, 510 byte long password is
     // allowed.
     $len = floor(PasswordInterface::PASSWORD_MAX_LENGTH / 3);
     $diff = PasswordInterface::PASSWORD_MAX_LENGTH % 3;
-    $passwords['utf8'] = array(str_repeat('€', $len), TRUE);
+    $passwords['utf8'] = [str_repeat('€', $len), TRUE];
     // 512 byte long password is allowed.
-    $passwords['ut8_extended'] = array($passwords['utf8'][0] . str_repeat('x', $diff), TRUE);
+    $passwords['ut8_extended'] = [$passwords['utf8'][0] . str_repeat('x', $diff), TRUE];
 
     // Check a string of 3-byte UTF-8 characters, 513 byte long password is
     // allowed.
-    $passwords['utf8_too_long'] = array(str_repeat('€', $len + 1), FALSE);
+    $passwords['utf8_too_long'] = [str_repeat('€', $len + 1), FALSE];
     return $passwords;
   }
 

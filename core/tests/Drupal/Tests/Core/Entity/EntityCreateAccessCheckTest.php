@@ -47,18 +47,18 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
     $no_access = FALSE;
     $access = TRUE;
 
-    return array(
-      array('', 'entity_test', $no_access, $no_access),
-      array('', 'entity_test', $access, $access),
-      array('test_entity', 'entity_test:test_entity', $access, $access),
-      array('test_entity', 'entity_test:test_entity', $no_access, $no_access),
-      array('test_entity', 'entity_test:{bundle_argument}', $access, $access),
-      array('test_entity', 'entity_test:{bundle_argument}', $no_access, $no_access),
-      array('', 'entity_test:{bundle_argument}', $no_access, $no_access, FALSE),
+    return [
+      ['', 'entity_test', $no_access, $no_access],
+      ['', 'entity_test', $access, $access],
+      ['test_entity', 'entity_test:test_entity', $access, $access],
+      ['test_entity', 'entity_test:test_entity', $no_access, $no_access],
+      ['test_entity', 'entity_test:{bundle_argument}', $access, $access],
+      ['test_entity', 'entity_test:{bundle_argument}', $no_access, $no_access],
+      ['', 'entity_test:{bundle_argument}', $no_access, $no_access, FALSE],
       // When the bundle is not provided, access should be denied even if the
       // access control handler would allow access.
-      array('', 'entity_test:{bundle_argument}', $access, $no_access, FALSE),
-    );
+      ['', 'entity_test:{bundle_argument}', $access, $no_access, FALSE],
+    ];
   }
 
   /**

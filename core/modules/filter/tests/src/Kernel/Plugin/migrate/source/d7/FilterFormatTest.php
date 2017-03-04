@@ -48,7 +48,7 @@ class FilterFormatTest extends MigrateSqlSourceTestBase {
         'name' => 'filter_autop',
         'weight' => 0,
         'status' => 1,
-        'settings' => serialize(array()),
+        'settings' => serialize([]),
       ],
       [
         'format' => 'custom_text_format',
@@ -56,7 +56,7 @@ class FilterFormatTest extends MigrateSqlSourceTestBase {
         'name' => 'filter_html',
         'weight' => 1,
         'status' => 1,
-        'settings' => serialize(array()),
+        'settings' => serialize([]),
       ],
       [
         'format' => 'full_html',
@@ -64,7 +64,7 @@ class FilterFormatTest extends MigrateSqlSourceTestBase {
         'name' => 'filter_url',
         'weight' => 0,
         'status' => 1,
-        'settings' => serialize(array()),
+        'settings' => serialize([]),
       ],
     ];
 

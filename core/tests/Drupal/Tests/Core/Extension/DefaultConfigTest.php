@@ -24,11 +24,11 @@ class DefaultConfigTest extends UnitTestCase {
    */
   public function testConfigIsEmpty() {
     $config = Yaml::parse(file_get_contents($this->root . '/core/config/install/core.extension.yml'));
-    $expected = array(
-      'module' => array(),
-      'theme' => array(),
+    $expected = [
+      'module' => [],
+      'theme' => [],
       'profile' => '',
-    );
+    ];
     $this->assertEquals($expected, $config);
   }
 

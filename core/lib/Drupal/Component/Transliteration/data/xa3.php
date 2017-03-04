@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'nzup', 'nzurx', 'nzur', 'nzyt', 'nzyx', 'nzy', 'nzyp', 'nzyrx', 'nzyr', 'sit', 'six', 'si', 'sip', 'siex', 'sie', 'siep',
   0x10 => 'sat', 'sax', 'sa', 'sap', 'suox', 'suo', 'suop', 'sot', 'sox', 'so', 'sop', 'sex', 'se', 'sep', 'sut', 'sux',
   0x20 => 'su', 'sup', 'surx', 'sur', 'syt', 'syx', 'sy', 'syp', 'syrx', 'syr', 'ssit', 'ssix', 'ssi', 'ssip', 'ssiex', 'ssie',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'rop', 'rex', 're', 'rep', 'rut', 'rux', 'ru', 'rup', 'rurx', 'rur', 'ryt', 'ryx', 'ry', 'ryp', 'ryrx', 'ryr',
   0xE0 => 'jit', 'jix', 'ji', 'jip', 'jiet', 'jiex', 'jie', 'jiep', 'juot', 'juox', 'juo', 'juop', 'jot', 'jox', 'jo', 'jop',
   0xF0 => 'jut', 'jux', 'ju', 'jup', 'jurx', 'jur', 'jyt', 'jyx', 'jy', 'jyp', 'jyrx', 'jyr', 'qit', 'qix', 'qi', 'qip',
-);
+];

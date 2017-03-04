@@ -41,14 +41,14 @@ class DateTimePlus {
   /**
    * An array of possible date parts.
    */
-  protected static $dateParts = array(
+  protected static $dateParts = [
     'year',
     'month',
     'day',
     'hour',
     'minute',
     'second',
-  );
+  ];
 
   /**
    * The value of the time value passed to the constructor.
@@ -88,7 +88,7 @@ class DateTimePlus {
   /**
    * An array of errors encountered when creating this date.
    */
-  protected $errors = array();
+  protected $errors = [];
 
   /**
    * The DateTime object.
@@ -108,7 +108,7 @@ class DateTimePlus {
    * @return static
    *   A new DateTimePlus object.
    */
-  public static function createFromDateTime(\DateTime $datetime, $settings = array()) {
+  public static function createFromDateTime(\DateTime $datetime, $settings = []) {
     return new static($datetime->format(static::FORMAT), $datetime->getTimezone(), $settings);
   }
 
@@ -133,7 +133,7 @@ class DateTimePlus {
    * @throws \InvalidArgumentException
    *   If the array date values or value combination is not correct.
    */
-  public static function createFromArray(array $date_parts, $timezone = NULL, $settings = array()) {
+  public static function createFromArray(array $date_parts, $timezone = NULL, $settings = []) {
     $date_parts = static::prepareArray($date_parts, TRUE);
     if (static::checkArray($date_parts)) {
       // Even with validation, we can end up with a value that the
@@ -167,7 +167,7 @@ class DateTimePlus {
    * @throws \InvalidArgumentException
    *   If the timestamp is not numeric.
    */
-  public static function createFromTimestamp($timestamp, $timezone = NULL, $settings = array()) {
+  public static function createFromTimestamp($timestamp, $timezone = NULL, $settings = []) {
     if (!is_numeric($timestamp)) {
       throw new \InvalidArgumentException('The timestamp must be numeric.');
     }
@@ -207,7 +207,7 @@ class DateTimePlus {
    * @throws \UnexpectedValueException
    *   If the created date does not match the input value.
    */
-  public static function createFromFormat($format, $time, $timezone = NULL, $settings = array()) {
+  public static function createFromFormat($format, $time, $timezone = NULL, $settings = []) {
     if (!isset($settings['validate_format'])) {
       $settings['validate_format'] = TRUE;
     }
@@ -258,7 +258,7 @@ class DateTimePlus {
    *   - debug: (optional) Boolean choice to leave debug values in the
    *     date object for debugging purposes. Defaults to FALSE.
    */
-  public function __construct($time = 'now', $timezone = NULL, $settings = array()) {
+  public function __construct($time = 'now', $timezone = NULL, $settings = []) {
 
     // Unpack settings.
     $this->langcode = !empty($settings['langcode']) ? $settings['langcode'] : NULL;
@@ -310,7 +310,7 @@ class DateTimePlus {
     if (!method_exists($this->dateTimeObject, $method)) {
       throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_class($this), $method));
     }
-    return call_user_func_array(array($this->dateTimeObject, $method), $args);
+    return call_user_func_array([$this->dateTimeObject, $method], $args);
   }
 
   /**
@@ -346,7 +346,7 @@ class DateTimePlus {
     if (!method_exists('\DateTime', $method)) {
       throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_called_class(), $method));
     }
-    return call_user_func_array(array('\DateTime', $method), $args);
+    return call_user_func_array(['\DateTime', $method], $args);
   }
 
   /**
@@ -529,24 +529,24 @@ class DateTimePlus {
   public static function prepareArray($array, $force_valid_date = FALSE) {
     if ($force_valid_date) {
       $now = new \DateTime();
-      $array += array(
+      $array += [
         'year'   => $now->format('Y'),
         'month'  => 1,
         'day'    => 1,
         'hour'   => 0,
         'minute' => 0,
         'second' => 0,
-      );
+      ];
     }
     else {
-      $array += array(
+      $array += [
         'year'   => '',
         'month'  => '',
         'day'    => '',
         'hour'   => '',
         'minute' => '',
         'second' => '',
-      );
+      ];
     }
     return $array;
   }
@@ -577,7 +577,7 @@ class DateTimePlus {
     }
     // Testing for valid time is reversed. Missing time is OK,
     // but incorrect values are not.
-    foreach (array('hour', 'minute', 'second') as $key) {
+    foreach (['hour', 'minute', 'second'] as $key) {
       if (array_key_exists($key, $array)) {
         $value = $array[$key];
         switch ($key) {
@@ -628,7 +628,7 @@ class DateTimePlus {
    * @return string
    *   The formatted value of the date.
    */
-  public function format($format, $settings = array()) {
+  public function format($format, $settings = []) {
 
     // If there were construction errors, we can't format the date.
     if ($this->hasErrors()) {

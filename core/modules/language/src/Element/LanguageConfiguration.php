@@ -18,50 +18,50 @@ class LanguageConfiguration extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
       '#tree' => TRUE,
-      '#process' => array(
-        array($class, 'processLanguageConfiguration'),
-      ),
-    );
+      '#process' => [
+        [$class, 'processLanguageConfiguration'],
+      ],
+    ];
   }
 
   /**
    * Process handler for the language_configuration form element.
    */
   public static function processLanguageConfiguration(&$element, FormStateInterface $form_state, &$form) {
-    $options = isset($element['#options']) ? $element['#options'] : array();
+    $options = isset($element['#options']) ? $element['#options'] : [];
     // Avoid validation failure since we are moving the '#options' key in the
     // nested 'language' select element.
     unset($element['#options']);
     /** @var \Drupal\language\Entity\ContentLanguageSettings $default_config */
     $default_config = $element['#default_value'];
-    $element['langcode'] = array(
+    $element['langcode'] = [
       '#type' => 'select',
       '#title' => t('Default language'),
       '#options' => $options + static::getDefaultOptions(),
-      '#description' => t('Explanation of the language options is found on the <a href=":languages_list_page">languages list page</a>.', array(':languages_list_page' => \Drupal::url('entity.configurable_language.collection'))),
+      '#description' => t('Explanation of the language options is found on the <a href=":languages_list_page">languages list page</a>.', [':languages_list_page' => \Drupal::url('entity.configurable_language.collection')]),
       '#default_value' => ($default_config != NULL) ? $default_config->getDefaultLangcode() : LanguageInterface::LANGCODE_SITE_DEFAULT,
-    );
+    ];
 
-    $element['language_alterable'] = array(
+    $element['language_alterable'] = [
       '#type' => 'checkbox',
       '#title' => t('Show language selector on create and edit pages'),
       '#default_value' => ($default_config != NULL) ? $default_config->isLanguageAlterable() : FALSE,
-    );
+    ];
 
     // Add the entity type and bundle information to the form if they are set.
     // They will be used, in the submit handler, to generate the names of the
     // configuration entities that will store the settings and are a way to uniquely
     // identify the entity.
     $language = $form_state->get('language') ?: [];
-    $language += array(
-      $element['#name'] => array(
+    $language += [
+      $element['#name'] => [
         'entity_type' => $element['#entity_information']['entity_type'],
         'bundle' => $element['#entity_information']['bundle'],
-      ),
-    );
+      ],
+    ];
     $form_state->set('language', $language);
 
     // Do not add the submit callback for the language content settings page,
@@ -89,15 +89,15 @@ class LanguageConfiguration extends FormElement {
    *   An array containing the default options.
    */
   protected static function getDefaultOptions() {
-    $language_options = array(
-      LanguageInterface::LANGCODE_SITE_DEFAULT => t("Site's default language (@language)", array('@language' => static::languageManager()->getDefaultLanguage()->getName())),
+    $language_options = [
+      LanguageInterface::LANGCODE_SITE_DEFAULT => t("Site's default language (@language)", ['@language' => static::languageManager()->getDefaultLanguage()->getName()]),
       'current_interface' => t('Interface text language selected for page'),
       'authors_default' => t("Author's preferred language"),
-    );
+    ];
 
     $languages = static::languageManager()->getLanguages(LanguageInterface::STATE_ALL);
     foreach ($languages as $langcode => $language) {
-      $language_options[$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->getName())) : $language->getName();
+      $language_options[$langcode] = $language->isLocked() ? t('- @name -', ['@name' => $language->getName()]) : $language->getName();
     }
 
     return $language_options;

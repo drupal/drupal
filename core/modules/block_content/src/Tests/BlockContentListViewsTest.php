@@ -22,7 +22,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
    * Tests the custom block listing page.
    */
   public function testListing() {
-    $this->drupalLogin($this->drupalCreateUser(array('administer blocks', 'translate configuration')));
+    $this->drupalLogin($this->drupalCreateUser(['administer blocks', 'translate configuration']));
     $this->drupalGet('admin/structure/block/block-content');
 
     // Test for the page title.
@@ -58,7 +58,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertLink($link_text);
     $this->clickLink($link_text);
     $this->assertResponse(200);
-    $edit = array();
+    $edit = [];
     $edit['info[0][value]'] = $label;
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -79,14 +79,14 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $blocks = $this->container
       ->get('entity.manager')
       ->getStorage('block_content')
-      ->loadByProperties(array('info' => $label));
+      ->loadByProperties(['info' => $label]);
     $block = reset($blocks);
     if (!empty($block)) {
       $this->assertLinkByHref('block/' . $block->id());
       $this->clickLink(t('Edit'));
       $this->assertResponse(200);
-      $this->assertTitle(strip_tags(t('Edit custom block %label', array('%label' => $label)) . ' | Drupal'));
-      $edit = array('info[0][value]' => $new_label);
+      $this->assertTitle(strip_tags(t('Edit custom block %label', ['%label' => $label]) . ' | Drupal'));
+      $edit = ['info[0][value]' => $new_label];
       $this->drupalPostForm(NULL, $edit, t('Save'));
     }
     else {
@@ -102,8 +102,8 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $delete_text = t('Delete');
     $this->clickLink($delete_text);
     $this->assertResponse(200);
-    $this->assertTitle(strip_tags(t('Are you sure you want to delete the custom block %label?', array('%label' => $new_label)) . ' | Drupal'));
-    $this->drupalPostForm(NULL, array(), $delete_text);
+    $this->assertTitle(strip_tags(t('Are you sure you want to delete the custom block %label?', ['%label' => $new_label]) . ' | Drupal'));
+    $this->drupalPostForm(NULL, [], $delete_text);
 
     // Verify that the text of the label and machine name does not appear in
     // the list (though it may appear elsewhere on the page).

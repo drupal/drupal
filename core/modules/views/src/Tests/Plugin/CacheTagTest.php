@@ -19,14 +19,14 @@ class CacheTagTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_tag_cache');
+  public static $testViews = ['test_tag_cache'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   /**
    * The node storage.
@@ -73,17 +73,17 @@ class CacheTagTest extends PluginTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     $this->nodeStorage = $this->container->get('entity.manager')->getStorage('node');
     $this->nodeViewBuilder = $this->container->get('entity.manager')->getViewBuilder('node');
     $this->userViewBuilder = $this->container->get('entity.manager')->getViewBuilder('user');
 
     for ($i = 1; $i <= 5; $i++) {
-      $this->pages[] = $this->drupalCreateNode(array('title' => "Test $i", 'type' => 'page'));
+      $this->pages[] = $this->drupalCreateNode(['title' => "Test $i", 'type' => 'page']);
     }
-    $this->article = $this->drupalCreateNode(array('title' => "Test article", 'type' => 'article'));
+    $this->article = $this->drupalCreateNode(['title' => "Test article", 'type' => 'article']);
     $this->user = $this->drupalCreateUser();
 
     // Mark the current request safe, in order to make render cache working, see
@@ -183,7 +183,7 @@ class CacheTagTest extends PluginTestBase {
     $this->assertTrue($cache_plugin->cacheGet('results'), 'Results cache found.');
     $this->assertTrue($this->getRenderCache($view), 'Output cache found.');
 
-    $this->userViewBuilder->resetCache(array($this->user));
+    $this->userViewBuilder->resetCache([$this->user]);
 
     $cache_plugin = $view->display_handler->getPlugin('cache');
     $this->assertTrue($cache_plugin->cacheGet('results'), 'Results cache found after a user is invalidated.');

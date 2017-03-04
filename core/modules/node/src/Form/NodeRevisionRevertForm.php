@@ -77,7 +77,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.node.version_history', array('node' => $this->revision->id()));
+    return new Url('entity.node.version_history', ['node' => $this->revision->id()]);
   }
 
   /**
@@ -120,7 +120,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
     drupal_set_message(t('@type %title has been reverted to the revision from %revision-date.', ['@type' => node_get_type_label($this->revision), '%title' => $this->revision->label(), '%revision-date' => $this->dateFormatter->format($original_revision_timestamp)]));
     $form_state->setRedirect(
       'entity.node.version_history',
-      array('node' => $this->revision->id())
+      ['node' => $this->revision->id()]
     );
   }
 

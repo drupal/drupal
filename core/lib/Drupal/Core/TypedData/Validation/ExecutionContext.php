@@ -96,14 +96,14 @@ class ExecutionContext implements ExecutionContextInterface {
    *
    * @var array
    */
-  protected $validatedObjects = array();
+  protected $validatedObjects = [];
 
   /**
    * Stores which class constraint has been validated for which object.
    *
    * @var array
    */
-  protected $validatedConstraints = array();
+  protected $validatedConstraints = [];
 
   /**
    * Creates a new ExecutionContext.
@@ -155,7 +155,7 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function addViolation($message, array $parameters = array(), $invalidValue = NULL, $plural = NULL, $code = NULL) {
+  public function addViolation($message, array $parameters = [], $invalidValue = NULL, $plural = NULL, $code = NULL) {
     // The parameters $invalidValue and following are ignored by the new
     // API, as they are not present in the new interface anymore.
     // You should use buildViolation() instead.
@@ -169,7 +169,7 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildViolation($message, array $parameters = array()) {
+  public function buildViolation($message, array $parameters = []) {
     return new ConstraintViolationBuilder($this->violations, $this->constraint, $message, $parameters, $this->root, $this->propertyPath, $this->value, $this->translator, $this->translationDomain);
   }
 
@@ -246,7 +246,7 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function addViolationAt($subPath, $message, array $parameters = array(), $invalidValue = NULL, $plural = NULL, $code = NULL) {
+  public function addViolationAt($subPath, $message, array $parameters = [], $invalidValue = NULL, $plural = NULL, $code = NULL) {
     throw new \LogicException('Legacy validator API is unsupported.');
   }
 

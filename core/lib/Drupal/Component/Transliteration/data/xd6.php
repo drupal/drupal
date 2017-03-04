@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'hyeo', 'hyeog', 'hyeokk', 'hyeogs', 'hyeon', 'hyeonj', 'hyeonh', 'hyeod', 'hyeol', 'hyeolg', 'hyeolm', 'hyeolb', 'hyeols', 'hyeolt', 'hyeolp', 'hyeolh',
   0x10 => 'hyeom', 'hyeob', 'hyeobs', 'hyeos', 'hyeoss', 'hyeong', 'hyeoj', 'hyeoch', 'hyeok', 'hyeot', 'hyeop', 'hyeoh', 'hye', 'hyeg', 'hyekk', 'hyegs',
   0x20 => 'hyen', 'hyenj', 'hyenh', 'hyed', 'hyel', 'hyelg', 'hyelm', 'hyelb', 'hyels', 'hyelt', 'hyelp', 'hyelh', 'hyem', 'hyeb', 'hyebs', 'hyes',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'huls', 'hult', 'hulp', 'hulh', 'hum', 'hub', 'hubs', 'hus', 'huss', 'hung', 'huj', 'huch', 'huk', 'hut', 'hup', 'huh',
   0xE0 => 'hwo', 'hwog', 'hwokk', 'hwogs', 'hwon', 'hwonj', 'hwonh', 'hwod', 'hwol', 'hwolg', 'hwolm', 'hwolb', 'hwols', 'hwolt', 'hwolp', 'hwolh',
   0xF0 => 'hwom', 'hwob', 'hwobs', 'hwos', 'hwoss', 'hwong', 'hwoj', 'hwoch', 'hwok', 'hwot', 'hwop', 'hwoh', 'hwe', 'hweg', 'hwekk', 'hwegs',
-);
+];

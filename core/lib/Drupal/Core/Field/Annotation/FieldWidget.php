@@ -60,7 +60,7 @@ class FieldWidget extends Plugin {
    *
    * @var array
    */
-  public $field_types = array();
+  public $field_types = [];
 
   /**
    * Does the field widget handles multiple values at once.

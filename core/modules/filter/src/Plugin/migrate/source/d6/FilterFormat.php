@@ -25,37 +25,37 @@ class FilterFormat extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'format' => $this->t('Format ID.'),
       'name' => $this->t('The name of the format.'),
       'cache' => $this->t('Whether the format is cacheable.'),
       'roles' => $this->t('The role IDs which can use the format.'),
       'filters' => $this->t('The filters configured for the format.'),
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    $filters = array();
+    $filters = [];
     $roles = $row->getSourceProperty('roles');
     $row->setSourceProperty('roles', array_values(array_filter(explode(',', $roles))));
     $format = $row->getSourceProperty('format');
     // Find filters for this row.
     $results = $this->select('filters', 'f')
-      ->fields('f', array('module', 'delta', 'weight'))
+      ->fields('f', ['module', 'delta', 'weight'])
       ->condition('format', $format)
       ->execute();
     foreach ($results as $raw_filter) {
       $module = $raw_filter['module'];
       $delta = $raw_filter['delta'];
-      $filter = array(
+      $filter = [
         'module' => $module,
         'delta' => $delta,
         'weight' => $raw_filter['weight'],
-        'settings' => array(),
-      );
+        'settings' => [],
+      ];
       // Load the filter settings for the filter module, modules can use
       // hook_migration_d6_filter_formats_prepare_row() to add theirs.
       if ($raw_filter['module'] == 'filter') {

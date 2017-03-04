@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'tim', 'tib', 'tibs', 'tis', 'tiss', 'ting', 'tij', 'tich', 'tik', 'tit', 'tip', 'tih', 'pa', 'pag', 'pakk', 'pags',
   0x10 => 'pan', 'panj', 'panh', 'pad', 'pal', 'palg', 'palm', 'palb', 'pals', 'palt', 'palp', 'palh', 'pam', 'pab', 'pabs', 'pas',
   0x20 => 'pass', 'pang', 'paj', 'pach', 'pak', 'pat', 'pap', 'pah', 'pae', 'paeg', 'paekk', 'paegs', 'paen', 'paenj', 'paenh', 'paed',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'pye', 'pyeg', 'pyekk', 'pyegs', 'pyen', 'pyenj', 'pyenh', 'pyed', 'pyel', 'pyelg', 'pyelm', 'pyelb', 'pyels', 'pyelt', 'pyelp', 'pyelh',
   0xE0 => 'pyem', 'pyeb', 'pyebs', 'pyes', 'pyess', 'pyeng', 'pyej', 'pyech', 'pyek', 'pyet', 'pyep', 'pyeh', 'po', 'pog', 'pokk', 'pogs',
   0xF0 => 'pon', 'ponj', 'ponh', 'pod', 'pol', 'polg', 'polm', 'polb', 'pols', 'polt', 'polp', 'polh', 'pom', 'pob', 'pobs', 'pos',
-);
+];

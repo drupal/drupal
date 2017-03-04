@@ -21,7 +21,7 @@ class GlossaryTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   /**
    * Tests the default glossary view.
@@ -29,19 +29,19 @@ class GlossaryTest extends ViewTestBase {
   public function testGlossaryView() {
     // Create a content type and add some nodes, with a non-random title.
     $type = $this->drupalCreateContentType();
-    $nodes_per_char = array(
+    $nodes_per_char = [
       'd' => 1,
       'r' => 4,
       'u' => 10,
       'p' => 2,
       'a' => 3,
       'l' => 6,
-    );
+    ];
     $nodes_by_char = [];
     foreach ($nodes_per_char as $char => $count) {
-      $setting = array(
+      $setting = [
         'type' => $type->id()
-      );
+      ];
       for ($i = 0; $i < $count; $i++) {
         $node = $setting;
         $node['title'] = $char . $this->randomString(3);
@@ -111,10 +111,10 @@ class GlossaryTest extends ViewTestBase {
       $label = Unicode::strtoupper($char);
       // Get the summary link for a certain character. Filter by label and href
       // to ensure that both of them are correct.
-      $result = $this->xpath('//a[contains(@href, :href) and normalize-space(text())=:label]/..', array(':href' => $href, ':label' => $label));
+      $result = $this->xpath('//a[contains(@href, :href) and normalize-space(text())=:label]/..', [':href' => $href, ':label' => $label]);
       $this->assertTrue(count($result));
       // The rendered output looks like "| (count)" so let's figure out the int.
-      $result_count = trim(str_replace(array('|', '(', ')'), '', (string) $result[0]));
+      $result_count = trim(str_replace(['|', '(', ')'], '', (string) $result[0]));
       $this->assertEqual($result_count, $count, 'The expected number got rendered.');
     }
   }

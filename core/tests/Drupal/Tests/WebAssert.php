@@ -113,10 +113,10 @@ class WebAssert extends MinkWebAssert {
    */
   public function selectExists($select, TraversableElement $container = NULL) {
     $container = $container ?: $this->session->getPage();
-    $node = $container->find('named', array(
+    $node = $container->find('named', [
       'select',
       $this->session->getSelectorsHandler()->xpathLiteral($select),
-    ));
+    ]);
 
     if ($node === NULL) {
       throw new ElementNotFoundException($this->session, 'select', 'id|name|label|value', $select);
@@ -143,16 +143,16 @@ class WebAssert extends MinkWebAssert {
    */
   public function optionExists($select, $option, TraversableElement $container = NULL) {
     $container = $container ?: $this->session->getPage();
-    $select_field = $container->find('named', array(
+    $select_field = $container->find('named', [
       'select',
       $this->session->getSelectorsHandler()->xpathLiteral($select),
-    ));
+    ]);
 
     if ($select_field === NULL) {
       throw new ElementNotFoundException($this->session, 'select', 'id|name|label|value', $select);
     }
 
-    $option_field = $select_field->find('named', array('option', $option));
+    $option_field = $select_field->find('named', ['option', $option]);
 
     if ($option_field === NULL) {
       throw new ElementNotFoundException($this->session, 'select', 'id|name|label|value', $option);
@@ -176,16 +176,16 @@ class WebAssert extends MinkWebAssert {
    */
   public function optionNotExists($select, $option, TraversableElement $container = NULL) {
     $container = $container ?: $this->session->getPage();
-    $select_field = $container->find('named', array(
+    $select_field = $container->find('named', [
       'select',
       $this->session->getSelectorsHandler()->xpathLiteral($select),
-    ));
+    ]);
 
     if ($select_field === NULL) {
       throw new ElementNotFoundException($this->session, 'select', 'id|name|label|value', $select);
     }
 
-    $option_field = $select_field->find('named', array('option', $option));
+    $option_field = $select_field->find('named', ['option', $option]);
 
     $this->assert($option_field === NULL, sprintf('An option "%s" exists in select "%s", but it should not.', $option, $select));
   }
@@ -316,7 +316,7 @@ class WebAssert extends MinkWebAssert {
    * @return string
    *   An XPath query with arguments replaced.
    */
-  public function buildXPathQuery($xpath, array $args = array()) {
+  public function buildXPathQuery($xpath, array $args = []) {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
       if (is_object($value)) {

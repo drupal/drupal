@@ -46,7 +46,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'node', 'comment');
+  public static $modules = ['language', 'content_translation', 'node', 'comment'];
 
   protected function setUp() {
     $this->entityTypeId = 'comment';
@@ -62,11 +62,11 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    */
   function setupBundle() {
     parent::setupBundle();
-    $this->drupalCreateContentType(array('type' => $this->nodeBundle, 'name' => $this->nodeBundle));
+    $this->drupalCreateContentType(['type' => $this->nodeBundle, 'name' => $this->nodeBundle]);
     // Add a comment field to the article content type.
     $this->addDefaultCommentField('node', 'article', 'comment_article', CommentItemInterface::OPEN, 'comment_article');
     // Create a page content type.
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'page']);
     // Add a comment field to the page content type - this one won't be
     // translatable.
     $this->addDefaultCommentField('node', 'page', 'comment');
@@ -78,7 +78,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getTranslatorPermissions() {
-    return array_merge(parent::getTranslatorPermissions(), array('post comments', 'administer comments', 'access comments'));
+    return array_merge(parent::getTranslatorPermissions(), ['post comments', 'administer comments', 'access comments']);
   }
 
   /**
@@ -95,12 +95,12 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
       $node_type = 'page';
       $field_name = 'comment';
     }
-    $node = $this->drupalCreateNode(array(
+    $node = $this->drupalCreateNode([
       'type' => $node_type,
-      $field_name => array(
-        array('status' => CommentItemInterface::OPEN)
-      ),
-    ));
+      $field_name => [
+        ['status' => CommentItemInterface::OPEN]
+      ],
+    ]);
     $values['entity_id'] = $node->id();
     $values['entity_type'] = 'node';
     $values['field_name'] = $field_name;
@@ -113,10 +113,10 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    */
   protected function getNewEntityValues($langcode) {
     // Comment subject is not translatable hence we use a fixed value.
-    return array(
-      'subject' => array(array('value' => $this->subject)),
-      'comment_body' => array(array('value' => $this->randomMachineName(16))),
-    ) + parent::getNewEntityValues($langcode);
+    return [
+      'subject' => [['value' => $this->subject]],
+      'comment_body' => [['value' => $this->randomMachineName(16)]],
+    ] + parent::getNewEntityValues($langcode);
   }
 
   /**
@@ -132,8 +132,8 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     // Unpublish translations.
     foreach ($this->langcodes as $index => $langcode) {
       if ($index > 0) {
-        $edit = array('status' => 0);
-        $url = $entity->urlInfo('edit-form', array('language' => ConfigurableLanguage::load($langcode)));
+        $edit = ['status' => 0];
+        $url = $entity->urlInfo('edit-form', ['language' => ConfigurableLanguage::load($langcode)]);
         $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
         $storage->resetCache();
         $entity = $storage->load($this->entityId);
@@ -151,21 +151,21 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
-    $values = array();
+    $values = [];
 
     // Post different authoring information for each translation.
     foreach ($this->langcodes as $langcode) {
       $url = $entity->urlInfo('edit-form', ['language' => $languages[$langcode]]);
       $user = $this->drupalCreateUser();
-      $values[$langcode] = array(
+      $values[$langcode] = [
         'uid' => $user->id(),
         'created' => REQUEST_TIME - mt_rand(0, 1000),
-      );
-      $edit = array(
+      ];
+      $edit = [
         'uid' => $user->getUsername() . ' (' . $user->id() . ')',
         'date[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'date[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
-      );
+      ];
       $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
     }
 
@@ -182,11 +182,11 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    * Tests translate link on comment content admin page.
    */
   function testTranslateLinkCommentAdminPage() {
-    $this->adminUser = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), array('access administration pages', 'administer comments', 'skip comment approval')));
+    $this->adminUser = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer comments', 'skip comment approval']));
     $this->drupalLogin($this->adminUser);
 
-    $cid_translatable = $this->createEntity(array(), $this->langcodes[0]);
-    $cid_untranslatable = $this->createEntity(array(), $this->langcodes[0], 'comment');
+    $cid_translatable = $this->createEntity([], $this->langcodes[0]);
+    $cid_untranslatable = $this->createEntity([], $this->langcodes[0], 'comment');
 
     // Verify translation links.
     $this->drupalGet('admin/content/comment');
@@ -208,15 +208,15 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     foreach ($this->langcodes as $langcode) {
       // We only want to test the title for non-english translations.
       if ($langcode != 'en') {
-        $options = array('language' => $languages[$langcode]);
+        $options = ['language' => $languages[$langcode]];
         $url = $entity->urlInfo('edit-form', $options);
         $this->drupalGet($url);
 
-        $title = t('Edit @type @title [%language translation]', array(
+        $title = t('Edit @type @title [%language translation]', [
           '@type' => $this->entityTypeId,
           '@title' => $entity->getTranslation($langcode)->label(),
           '%language' => $languages[$langcode]->getName(),
-        ));
+        ]);
         $this->assertRaw($title);
       }
     }

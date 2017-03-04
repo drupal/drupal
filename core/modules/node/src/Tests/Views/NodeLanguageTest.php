@@ -19,14 +19,14 @@ class NodeLanguageTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('language', 'node_test_views');
+  public static $modules = ['language', 'node_test_views'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_language');
+  public static $testViews = ['test_language'];
 
   /**
    * List of node titles by language.
@@ -43,8 +43,8 @@ class NodeLanguageTest extends NodeTestBase {
 
     // Create Page content type.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-      ViewTestData::createTestViews(get_class($this), array('node_test_views'));
+      $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
+      ViewTestData::createTestViews(get_class($this), ['node_test_views']);
     }
 
     // Add two new languages.
@@ -60,30 +60,30 @@ class NodeLanguageTest extends NodeTestBase {
     // Set up node titles. They should not include the words "French",
     // "English", or "Spanish", as there is a language field in the view
     // that prints out those words.
-    $this->nodeTitles = array(
-      LanguageInterface::LANGCODE_NOT_SPECIFIED => array(
+    $this->nodeTitles = [
+      LanguageInterface::LANGCODE_NOT_SPECIFIED => [
         'First node und',
-      ),
-      'es' => array(
+      ],
+      'es' => [
         'Primero nodo es',
         'Segundo nodo es',
         'Tercera nodo es',
-      ),
-      'en' => array(
+      ],
+      'en' => [
         'First node en',
         'Second node en',
-      ),
-      'fr' => array(
+      ],
+      'fr' => [
         'Premier nœud fr',
-      )
-    );
+      ]
+    ];
 
     // Create nodes with translations.
     foreach ($this->nodeTitles['es'] as $index => $title) {
-      $node = $this->drupalCreateNode(array('title' => $title, 'langcode' => 'es', 'type' => 'page', 'promote' => 1));
-      foreach (array('en', 'fr') as $langcode) {
+      $node = $this->drupalCreateNode(['title' => $title, 'langcode' => 'es', 'type' => 'page', 'promote' => 1]);
+      foreach (['en', 'fr'] as $langcode) {
         if (isset($this->nodeTitles[$langcode][$index])) {
-          $translation = $node->addTranslation($langcode, array('title' => $this->nodeTitles[$langcode][$index]));
+          $translation = $node->addTranslation($langcode, ['title' => $this->nodeTitles[$langcode][$index]]);
           $translation->body->value = $this->randomMachineName(32);
         }
       }
@@ -91,14 +91,14 @@ class NodeLanguageTest extends NodeTestBase {
     }
     // Create non-translatable nodes.
     foreach ($this->nodeTitles[LanguageInterface::LANGCODE_NOT_SPECIFIED] as $index => $title) {
-      $node = $this->drupalCreateNode(array('title' => $title, 'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED, 'type' => 'page', 'promote' => 1));
+      $node = $this->drupalCreateNode(['title' => $title, 'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED, 'type' => 'page', 'promote' => 1]);
       $node->body->value = $this->randomMachineName(32);
       $node->save();
     }
 
     $this->container->get('router.builder')->rebuild();
 
-    $user = $this->drupalCreateUser(array('access content overview', 'access content'));
+    $user = $this->drupalCreateUser(['access content overview', 'access content']);
     $this->drupalLogin($user);
   }
 
@@ -178,7 +178,7 @@ class NodeLanguageTest extends NodeTestBase {
     }
     // When filtered, only the specific languages should show.
     foreach ($this->nodeTitles as $langcode => $titles) {
-      $this->drupalGet('admin/content', array('query' => array('langcode' => $langcode)));
+      $this->drupalGet('admin/content', ['query' => ['langcode' => $langcode]]);
       foreach ($titles as $title) {
         $this->assertText($title);
       }
@@ -195,7 +195,7 @@ class NodeLanguageTest extends NodeTestBase {
     // filter is set to the site default language instead. This should just
     // show the English nodes, no matter what the content language is.
     $config = $this->config('views.view.frontpage');
-    $config->set('display.default.display_options.filters.langcode.value', array(PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT => PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT));
+    $config->set('display.default.display_options.filters.langcode.value', [PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT => PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT]);
     $config->save();
     foreach ($this->nodeTitles as $langcode => $titles) {
       if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
@@ -219,10 +219,10 @@ class NodeLanguageTest extends NodeTestBase {
     //
     // IMPORTANT: Make sure this part of the test is last -- it is changing
     // language configuration!
-    $config->set('display.default.display_options.filters.langcode.value', array('***LANGUAGE_language_interface***' => '***LANGUAGE_language_interface***'));
+    $config->set('display.default.display_options.filters.langcode.value', ['***LANGUAGE_language_interface***' => '***LANGUAGE_language_interface***']);
     $config->save();
     $language_config = $this->config('language.types');
-    $language_config->set('negotiation.language_interface.enabled', array('language-selected' => 1));
+    $language_config->set('negotiation.language_interface.enabled', ['language-selected' => 1]);
     $language_config->save();
     $language_config = $this->config('language.negotiation');
     $language_config->set('selected_langcode', 'es');

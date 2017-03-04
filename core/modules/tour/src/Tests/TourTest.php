@@ -25,7 +25,7 @@ class TourTest extends TourTestBasic {
    * @var array
    *   A list of permissions.
    */
-  protected $permissions = array('access tour', 'administer languages');
+  protected $permissions = ['access tour', 'administer languages'];
 
   /**
    * Tour tip attributes to be tested. Keyed by the path.
@@ -33,9 +33,9 @@ class TourTest extends TourTestBasic {
    * @var array
    *   An array of tip attributes, keyed by path.
    */
-  protected $tips = array(
-    'tour-test-1' => array(),
-  );
+  protected $tips = [
+    'tour-test-1' => [],
+  ];
 
   /**
    * {@inheritdoc}
@@ -57,18 +57,18 @@ class TourTest extends TourTestBasic {
     $this->drupalGet('tour-test-1');
 
     // Test the TourTestBase class assertTourTips() method.
-    $tips = array();
-    $tips[] = array('data-id' => 'tour-test-1');
-    $tips[] = array('data-class' => 'tour-test-5');
+    $tips = [];
+    $tips[] = ['data-id' => 'tour-test-1'];
+    $tips[] = ['data-class' => 'tour-test-5'];
     $this->assertTourTips($tips);
     $this->assertTourTips();
 
-    $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./p//a[@href=:href and contains(., :text)]]', array(
+    $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./p//a[@href=:href and contains(., :text)]]', [
       ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1',
       ':data_id' => 'tour-test-1',
       ':href' => \Drupal::url('<front>', [], ['absolute' => TRUE]),
       ':text' => 'Drupal',
-    ));
+    ]);
     $this->assertEqual(count($elements), 1, 'Found Token replacement.');
 
     $elements = $this->cssSelect("li[data-id=tour-test-1] h2:contains('The first tip')");
@@ -104,43 +104,43 @@ class TourTest extends TourTestBasic {
     $this->assertNotEqual(count($elements), 1, 'Did not find English variant of tip 1.');
 
     // Programmatically create a tour for use through the remainder of the test.
-    $tour = Tour::create(array(
+    $tour = Tour::create([
       'id' => 'tour-entity-create-test-en',
       'label' => 'Tour test english',
       'langcode' => 'en',
       'module' => 'system',
-      'routes' => array(
-        array('route_name' => 'tour_test.1'),
-      ),
-      'tips' => array(
-        'tour-test-1' => array(
+      'routes' => [
+        ['route_name' => 'tour_test.1'],
+      ],
+      'tips' => [
+        'tour-test-1' => [
           'id' => 'tour-code-test-1',
           'plugin' => 'text',
           'label' => 'The rain in spain',
           'body' => 'Falls mostly on the plain.',
           'weight' => '100',
-          'attributes' => array(
+          'attributes' => [
             'data-id' => 'tour-code-test-1',
-          ),
-        ),
-        'tour-code-test-2' => array(
+          ],
+        ],
+        'tour-code-test-2' => [
           'id' => 'tour-code-test-2',
           'plugin' => 'image',
           'label' => 'The awesome image',
           'url' => 'http://local/image.png',
           'weight' => 1,
-          'attributes' => array(
+          'attributes' => [
             'data-id' => 'tour-code-test-2'
-          ),
-        ),
-      ),
-    ));
+          ],
+        ],
+      ],
+    ]);
     $tour->save();
 
     // Ensure that a tour entity has the expected dependencies based on plugin
     // providers and the module named in the configuration entity.
     $dependencies = $tour->calculateDependencies()->getDependencies();
-    $this->assertEqual($dependencies['module'], array('system', 'tour_test'));
+    $this->assertEqual($dependencies['module'], ['system', 'tour_test']);
 
     $this->drupalGet('tour-test-1');
 
@@ -167,21 +167,21 @@ class TourTest extends TourTestBasic {
     // Navigate to tour-test-3 and verify the tour_test_1 tip is found with
     // appropriate classes.
     $this->drupalGet('tour-test-3/foo');
-    $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./h2[contains(., :text)]]', array(
+    $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./h2[contains(., :text)]]', [
       ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1',
       ':data_id' => 'tour-test-1',
       ':text' => 'The first tip',
-    ));
+    ]);
     $this->assertEqual(count($elements), 1, 'Found English variant of tip 1.');
 
     // Navigate to tour-test-3 and verify the tour_test_1 tip is not found with
     // appropriate classes.
     $this->drupalGet('tour-test-3/bar');
-    $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./h2[contains(., :text)]]', array(
+    $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./h2[contains(., :text)]]', [
       ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1',
       ':data_id' => 'tour-test-1',
       ':text' => 'The first tip',
-    ));
+    ]);
     $this->assertEqual(count($elements), 0, 'Did not find English variant of tip 1.');
   }
 

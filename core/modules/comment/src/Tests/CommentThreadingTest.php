@@ -24,7 +24,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Create a node.
     $this->drupalLogin($this->webUser);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()));
+    $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()]);
 
     // Post comment #1.
     $this->drupalLogin($this->webUser);
@@ -139,10 +139,10 @@ class CommentThreadingTest extends CommentTestBase {
 
     $this->assertFieldByXpath($pattern, NULL, format_string(
       'Comment %cid has a link to parent %pid.',
-      array(
+      [
         '%cid' => $cid,
         '%pid' => $pid,
-      )
+      ]
     ));
   }
 
@@ -162,9 +162,9 @@ class CommentThreadingTest extends CommentTestBase {
     $pattern = "//a[@id='comment-$cid']/following-sibling::article//p[contains(@class, 'parent')]";
     $this->assertNoFieldByXpath($pattern, NULL, format_string(
       'Comment %cid does not have a link to a parent.',
-      array(
+      [
         '%cid' => $cid,
-      )
+      ]
     ));
   }
 

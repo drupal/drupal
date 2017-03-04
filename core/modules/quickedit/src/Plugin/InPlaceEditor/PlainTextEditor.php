@@ -28,11 +28,11 @@ class PlainTextEditor extends InPlaceEditorBase {
    * {@inheritdoc}
    */
   public function getAttachments() {
-    return array(
-      'library' => array(
+    return [
+      'library' => [
         'quickedit/quickedit.inPlaceEditor.plainText',
-      ),
-    );
+      ],
+    ];
   }
 
 }

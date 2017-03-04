@@ -26,23 +26,23 @@ class TestFieldMultipleFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'test_formatter_setting_multiple' => 'dummy test string',
       'alter' => FALSE,
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element['test_formatter_setting_multiple'] = array(
+    $element['test_formatter_setting_multiple'] = [
       '#title' => t('Setting'),
       '#type' => 'textfield',
       '#size' => 20,
       '#default_value' => $this->getSetting('test_formatter_setting_multiple'),
       '#required' => TRUE,
-    );
+    ];
     return $element;
   }
 
@@ -50,8 +50,8 @@ class TestFieldMultipleFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
-    $summary[] = t('@setting: @value', array('@setting' => 'test_formatter_setting_multiple', '@value' => $this->getSetting('test_formatter_setting_multiple')));
+    $summary = [];
+    $summary[] = t('@setting: @value', ['@setting' => 'test_formatter_setting_multiple', '@value' => $this->getSetting('test_formatter_setting_multiple')]);
     return $summary;
   }
 
@@ -59,14 +59,14 @@ class TestFieldMultipleFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     if (!empty($items)) {
-      $array = array();
+      $array = [];
       foreach ($items as $delta => $item) {
         $array[] = $delta . ':' . $item->value;
       }
-      $elements[0] = array('#markup' => $this->getSetting('test_formatter_setting_multiple') . '|' . implode('|', $array));
+      $elements[0] = ['#markup' => $this->getSetting('test_formatter_setting_multiple') . '|' . implode('|', $array)];
     }
 
     return $elements;

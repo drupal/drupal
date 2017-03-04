@@ -23,7 +23,7 @@ class ConvertImageEffect extends ConfigurableImageEffectBase {
    */
   public function applyEffect(ImageInterface $image) {
     if (!$image->convert($this->configuration['extension'])) {
-      $this->logger->error('Image convert failed using the %toolkit toolkit on %path (%mimetype)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType()));
+      $this->logger->error('Image convert failed using the %toolkit toolkit on %path (%mimetype)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType()]);
       return FALSE;
     }
     return TRUE;
@@ -40,9 +40,9 @@ class ConvertImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function getSummary() {
-    $summary = array(
+    $summary = [
       '#markup' => Unicode::strtoupper($this->configuration['extension']),
-    );
+    ];
     $summary += parent::getSummary();
 
     return $summary;
@@ -52,9 +52,9 @@ class ConvertImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'extension' => NULL,
-    );
+    ];
   }
 
   /**
@@ -64,15 +64,15 @@ class ConvertImageEffect extends ConfigurableImageEffectBase {
     $extensions = \Drupal::service('image.toolkit.manager')->getDefaultToolkit()->getSupportedExtensions();
     $options = array_combine(
       $extensions,
-      array_map(array('\Drupal\Component\Utility\Unicode', 'strtoupper'), $extensions)
+      array_map(['\Drupal\Component\Utility\Unicode', 'strtoupper'], $extensions)
     );
-    $form['extension'] = array(
+    $form['extension'] = [
       '#type' => 'select',
       '#title' => t('Extension'),
       '#default_value' => $this->configuration['extension'],
       '#required' => TRUE,
       '#options' => $options,
-    );
+    ];
     return $form;
   }
 

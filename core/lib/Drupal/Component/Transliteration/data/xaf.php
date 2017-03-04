@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'kkyeols', 'kkyeolt', 'kkyeolp', 'kkyeolh', 'kkyeom', 'kkyeob', 'kkyeobs', 'kkyeos', 'kkyeoss', 'kkyeong', 'kkyeoj', 'kkyeoch', 'kkyeok', 'kkyeot', 'kkyeop', 'kkyeoh',
   0x10 => 'kkye', 'kkyeg', 'kkyekk', 'kkyegs', 'kkyen', 'kkyenj', 'kkyenh', 'kkyed', 'kkyel', 'kkyelg', 'kkyelm', 'kkyelb', 'kkyels', 'kkyelt', 'kkyelp', 'kkyelh',
   0x20 => 'kkyem', 'kkyeb', 'kkyebs', 'kkyes', 'kkyess', 'kkyeng', 'kkyej', 'kkyech', 'kkyek', 'kkyet', 'kkyep', 'kkyeh', 'kko', 'kkog', 'kkokk', 'kkogs',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'kkuk', 'kkut', 'kkup', 'kkuh', 'kkwo', 'kkwog', 'kkwokk', 'kkwogs', 'kkwon', 'kkwonj', 'kkwonh', 'kkwod', 'kkwol', 'kkwolg', 'kkwolm', 'kkwolb',
   0xE0 => 'kkwols', 'kkwolt', 'kkwolp', 'kkwolh', 'kkwom', 'kkwob', 'kkwobs', 'kkwos', 'kkwoss', 'kkwong', 'kkwoj', 'kkwoch', 'kkwok', 'kkwot', 'kkwop', 'kkwoh',
   0xF0 => 'kkwe', 'kkweg', 'kkwekk', 'kkwegs', 'kkwen', 'kkwenj', 'kkwenh', 'kkwed', 'kkwel', 'kkwelg', 'kkwelm', 'kkwelb', 'kkwels', 'kkwelt', 'kkwelp', 'kkwelh',
-);
+];

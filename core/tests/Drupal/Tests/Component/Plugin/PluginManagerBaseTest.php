@@ -21,10 +21,10 @@ class PluginManagerBaseTest extends UnitTestCase {
     if ('invalid' == $plugin_id) {
       throw new PluginNotFoundException($plugin_id);
     }
-    return array(
+    return [
       'plugin_id' => $plugin_id,
       'configuration' => $configuration,
-    );
+    ];
   }
 
   /**
@@ -32,11 +32,11 @@ class PluginManagerBaseTest extends UnitTestCase {
    */
   public function getMockFactoryInterface($expects_count) {
     $mock_factory = $this->getMockBuilder('Drupal\Component\Plugin\Factory\FactoryInterface')
-      ->setMethods(array('createInstance'))
+      ->setMethods(['createInstance'])
       ->getMockForAbstractClass();
     $mock_factory->expects($this->exactly($expects_count))
       ->method('createInstance')
-      ->willReturnCallback(array($this, 'createInstanceCallback'));
+      ->willReturnCallback([$this, 'createInstanceCallback']);
     return $mock_factory;
   }
 
@@ -55,7 +55,7 @@ class PluginManagerBaseTest extends UnitTestCase {
     $factory_ref->setValue($manager, $this->getMockFactoryInterface(1));
 
     // Finally the test.
-    $configuration_array = array('config' => 'something');
+    $configuration_array = ['config' => 'something'];
     $result = $manager->createInstance('valid', $configuration_array);
     $this->assertEquals('valid', $result['plugin_id']);
     $this->assertArrayEquals($configuration_array, $result['configuration']);
@@ -75,7 +75,7 @@ class PluginManagerBaseTest extends UnitTestCase {
     $factory_ref->setAccessible(TRUE);
 
     // Set up the configuration array.
-    $configuration_array = array('config' => 'something');
+    $configuration_array = ['config' => 'something'];
 
     // Test with fallback interface and valid plugin_id.
     $factory_ref->setValue($manager, $this->getMockFactoryInterface(1));

@@ -16,14 +16,14 @@ class PathPluginTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_node_path_plugin');
+  public static $testViews = ['test_node_path_plugin'];
 
   /**
    * Contains all nodes used by this test.
@@ -35,21 +35,21 @@ class PathPluginTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'article'));
+    $this->drupalCreateContentType(['type' => 'article']);
 
     // Create two nodes.
     for ($i = 0; $i < 2; $i++) {
       $this->nodes[] = $this->drupalCreateNode(
-        array(
+        [
           'type' => 'article',
-          'body' => array(
-            array(
+          'body' => [
+            [
               'value' => $this->randomMachineName(42),
               'format' => filter_default_format(),
               'summary' => $this->randomMachineName(),
-            ),
-          ),
-        )
+            ],
+          ],
+        ]
       );
     }
   }

@@ -61,7 +61,7 @@ class PhpMail implements MailInterface {
         unset($message['headers']['Return-Path']);
       }
     }
-    $mimeheaders = array();
+    $mimeheaders = [];
     foreach ($message['headers'] as $name => $value) {
       $mimeheaders[] = $name . ': ' . Unicode::mimeHeaderEncode($value);
     }

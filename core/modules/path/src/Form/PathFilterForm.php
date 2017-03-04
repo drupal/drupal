@@ -21,31 +21,31 @@ class PathFilterForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $keys = NULL) {
-    $form['#attributes'] = array('class' => array('search-form'));
-    $form['basic'] = array(
+    $form['#attributes'] = ['class' => ['search-form']];
+    $form['basic'] = [
       '#type' => 'details',
       '#title' => $this->t('Filter aliases'),
       '#open' => TRUE,
-      '#attributes' => array('class' => array('container-inline')),
-    );
-    $form['basic']['filter'] = array(
+      '#attributes' => ['class' => ['container-inline']],
+    ];
+    $form['basic']['filter'] = [
       '#type' => 'search',
       '#title' => 'Path alias',
       '#title_display' => 'invisible',
       '#default_value' => $keys,
       '#maxlength' => 128,
       '#size' => 25,
-    );
-    $form['basic']['submit'] = array(
+    ];
+    $form['basic']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Filter'),
-    );
+    ];
     if ($keys) {
-      $form['basic']['reset'] = array(
+      $form['basic']['reset'] = [
         '#type' => 'submit',
         '#value' => $this->t('Reset'),
-        '#submit' => array('::resetForm'),
-      );
+        '#submit' => ['::resetForm'],
+      ];
     }
     return $form;
   }
@@ -54,9 +54,9 @@ class PathFilterForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('path.admin_overview_filter', array(), array(
-      'query' => array('search' => trim($form_state->getValue('filter'))),
-    ));
+    $form_state->setRedirect('path.admin_overview_filter', [], [
+      'query' => ['search' => trim($form_state->getValue('filter'))],
+    ]);
   }
 
   /**

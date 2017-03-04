@@ -27,11 +27,11 @@ class BookUninstallTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    $this->installSchema('book', array('book'));
-    $this->installSchema('node', array('node_access'));
-    $this->installConfig(array('node', 'book', 'field'));
+    $this->installSchema('book', ['book']);
+    $this->installSchema('node', ['node_access']);
+    $this->installConfig(['node', 'book', 'field']);
     // For uninstall to work.
-    $this->installSchema('user', array('users_data'));
+    $this->installSchema('user', ['users_data']);
   }
 
   /**
@@ -42,17 +42,17 @@ class BookUninstallTest extends KernelTestBase {
     $validation_reasons = \Drupal::service('module_installer')->validateUninstall(['book']);
     $this->assertEqual([], $validation_reasons, 'The book module is not required.');
 
-    $content_type = NodeType::create(array(
+    $content_type = NodeType::create([
       'type' => $this->randomMachineName(),
       'name' => $this->randomString(),
-    ));
+    ]);
     $content_type->save();
     $book_config = $this->config('book.settings');
     $allowed_types = $book_config->get('allowed_types');
     $allowed_types[] = $content_type->id();
     $book_config->set('allowed_types', $allowed_types)->save();
 
-    $node = Node::create(array('title' => $this->randomString(), 'type' => $content_type->id()));
+    $node = Node::create(['title' => $this->randomString(), 'type' => $content_type->id()]);
     $node->book['bid'] = 'new';
     $node->save();
 
@@ -60,7 +60,7 @@ class BookUninstallTest extends KernelTestBase {
     $validation_reasons = \Drupal::service('module_installer')->validateUninstall(['book']);
     $this->assertEqual(['To uninstall Book, delete all content that is part of a book'], $validation_reasons['book']);
 
-    $book_node = Node::create(array('title' => $this->randomString(), 'type' => 'book'));
+    $book_node = Node::create(['title' => $this->randomString(), 'type' => 'book']);
     $book_node->book['bid'] = FALSE;
     $book_node->save();
 
@@ -79,7 +79,7 @@ class BookUninstallTest extends KernelTestBase {
     $module_data = _system_rebuild_module_data();
     $this->assertFalse(isset($module_data['book']->info['required']), 'The book module is not required.');
 
-    $node = Node::create(array('title' => $this->randomString(), 'type' => $content_type->id()));
+    $node = Node::create(['title' => $this->randomString(), 'type' => $content_type->id()]);
     $node->save();
     // One node exists but is not part of a book therefore the book module is
     // not required.
@@ -87,7 +87,7 @@ class BookUninstallTest extends KernelTestBase {
     $this->assertEqual([], $validation_reasons, 'The book module is not required.');
 
     // Uninstall the Book module and check the node type is deleted.
-    \Drupal::service('module_installer')->uninstall(array('book'));
+    \Drupal::service('module_installer')->uninstall(['book']);
     $this->assertNull(NodeType::load('book'), "The book node type does not exist.");
   }
 

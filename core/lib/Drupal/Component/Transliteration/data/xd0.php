@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'kwon', 'kwonj', 'kwonh', 'kwod', 'kwol', 'kwolg', 'kwolm', 'kwolb', 'kwols', 'kwolt', 'kwolp', 'kwolh', 'kwom', 'kwob', 'kwobs', 'kwos',
   0x10 => 'kwoss', 'kwong', 'kwoj', 'kwoch', 'kwok', 'kwot', 'kwop', 'kwoh', 'kwe', 'kweg', 'kwekk', 'kwegs', 'kwen', 'kwenj', 'kwenh', 'kwed',
   0x20 => 'kwel', 'kwelg', 'kwelm', 'kwelb', 'kwels', 'kwelt', 'kwelp', 'kwelh', 'kwem', 'kweb', 'kwebs', 'kwes', 'kwess', 'kweng', 'kwej', 'kwech',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'tam', 'tab', 'tabs', 'tas', 'tass', 'tang', 'taj', 'tach', 'tak', 'tat', 'tap', 'tah', 'tae', 'taeg', 'taekk', 'taegs',
   0xE0 => 'taen', 'taenj', 'taenh', 'taed', 'tael', 'taelg', 'taelm', 'taelb', 'taels', 'taelt', 'taelp', 'taelh', 'taem', 'taeb', 'taebs', 'taes',
   0xF0 => 'taess', 'taeng', 'taej', 'taech', 'taek', 'taet', 'taep', 'taeh', 'tya', 'tyag', 'tyakk', 'tyags', 'tyan', 'tyanj', 'tyanh', 'tyad',
-);
+];

@@ -22,22 +22,22 @@ class MapItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     // The properties are dynamic and can not be defined statically.
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'value' => array(
+    return [
+      'columns' => [
+        'value' => [
           'type' => 'blob',
           'size' => 'big',
           'serialize' => TRUE,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -53,7 +53,7 @@ class MapItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
-    $this->values = array();
+    $this->values = [];
     if (!isset($values)) {
       return;
     }
@@ -80,7 +80,7 @@ class MapItem extends FieldItemBase {
    */
   public function __get($name) {
     if (!isset($this->values[$name])) {
-      $this->values[$name] = array();
+      $this->values[$name] = [];
     }
 
     return $this->values[$name];

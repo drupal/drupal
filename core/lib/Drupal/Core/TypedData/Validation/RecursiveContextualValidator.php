@@ -93,7 +93,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
     // You can pass a single constraint or an array of constraints.
     // Make sure to deal with an array in the rest of the code.
     if (isset($constraints) && !is_array($constraints)) {
-      $constraints = array($constraints);
+      $constraints = [$constraints];
     }
 
     $this->validateNode($data, $constraints, $is_root_call);

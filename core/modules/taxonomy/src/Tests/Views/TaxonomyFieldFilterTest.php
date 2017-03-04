@@ -22,14 +22,14 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('language', 'taxonomy', 'taxonomy_test_views', 'text', 'views', 'node');
+  public static $modules = ['language', 'taxonomy', 'taxonomy_test_views', 'text', 'views', 'node'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_field_filters');
+  public static $testViews = ['test_field_filters'];
 
   /**
    * The vocabulary used for creating terms.
@@ -53,11 +53,11 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Set up term names.
-    $this->termNames = array(
+    $this->termNames = [
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
       'fr' => 'Nouriture en Paris',
-    );
+    ];
 
     // Create a vocabulary.
     $this->vocabulary = Vocabulary::create([
@@ -67,11 +67,11 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     $this->vocabulary->save();
 
     // Add a translatable field to the vocabulary.
-    $field = FieldStorageConfig::create(array(
+    $field = FieldStorageConfig::create([
       'field_name' => 'field_foo',
       'entity_type' => 'taxonomy_term',
       'type' => 'text',
-    ));
+    ]);
     $field->save();
     FieldConfig::create([
       'field_name' => 'field_foo',
@@ -81,9 +81,9 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     ])->save();
 
     // Create term with translations.
-    $taxonomy = $this->createTermWithProperties(array('name' => $this->termNames['en'], 'langcode' => 'en', 'description' => $this->termNames['en'], 'field_foo' => $this->termNames['en']));
-    foreach (array('es', 'fr') as $langcode) {
-      $translation = $taxonomy->addTranslation($langcode, array('name' => $this->termNames[$langcode]));
+    $taxonomy = $this->createTermWithProperties(['name' => $this->termNames['en'], 'langcode' => 'en', 'description' => $this->termNames['en'], 'field_foo' => $this->termNames['en']]);
+    foreach (['es', 'fr'] as $langcode) {
+      $translation = $taxonomy->addTranslation($langcode, ['name' => $this->termNames[$langcode]]);
       $translation->description->value = $this->termNames[$langcode];
       $translation->field_foo->value = $this->termNames[$langcode];
     }
@@ -91,7 +91,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
 
     Views::viewsData()->clear();
 
-    ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['taxonomy_test_views']);
     $this->container->get('router.builder')->rebuild();
   }
 
@@ -101,27 +101,27 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
   public function testFilters() {
     // Test the name filter page, which filters for name contains 'Comida'.
     // Should show just the Spanish translation, once.
-    $this->assertPageCounts('test-name-filter', array('es' => 1, 'fr' => 0, 'en' => 0), 'Comida name filter');
+    $this->assertPageCounts('test-name-filter', ['es' => 1, 'fr' => 0, 'en' => 0], 'Comida name filter');
 
     // Test the description filter page, which filters for description contains
     // 'Comida'. Should show just the Spanish translation, once.
-    $this->assertPageCounts('test-desc-filter', array('es' => 1, 'fr' => 0, 'en' => 0), 'Comida description filter');
+    $this->assertPageCounts('test-desc-filter', ['es' => 1, 'fr' => 0, 'en' => 0], 'Comida description filter');
 
     // Test the field filter page, which filters for field_foo contains
     // 'Comida'. Should show just the Spanish translation, once.
-    $this->assertPageCounts('test-field-filter', array('es' => 1, 'fr' => 0, 'en' => 0), 'Comida field filter');
+    $this->assertPageCounts('test-field-filter', ['es' => 1, 'fr' => 0, 'en' => 0], 'Comida field filter');
 
     // Test the name Paris filter page, which filters for name contains
     // 'Paris'. Should show each translation once.
-    $this->assertPageCounts('test-name-paris', array('es' => 1, 'fr' => 1, 'en' => 1), 'Paris name filter');
+    $this->assertPageCounts('test-name-paris', ['es' => 1, 'fr' => 1, 'en' => 1], 'Paris name filter');
 
     // Test the description Paris page, which filters for description contains
     // 'Paris'. Should show each translation, once.
-    $this->assertPageCounts('test-desc-paris', array('es' => 1, 'fr' => 1, 'en' => 1), 'Paris description filter');
+    $this->assertPageCounts('test-desc-paris', ['es' => 1, 'fr' => 1, 'en' => 1], 'Paris description filter');
 
     // Test the field Paris filter page, which filters for field_foo contains
     // 'Paris'. Should show each translation once.
-    $this->assertPageCounts('test-field-paris', array('es' => 1, 'fr' => 1, 'en' => 1), 'Paris field filter');
+    $this->assertPageCounts('test-field-paris', ['es' => 1, 'fr' => 1, 'en' => 1], 'Paris field filter');
 
   }
 
@@ -163,12 +163,12 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     $filter_formats = filter_formats();
     $format = array_pop($filter_formats);
 
-    $properties += array(
+    $properties += [
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'field_foo' => $this->randomMachineName(),
-    );
+    ];
 
     $term = Term::create([
       'name' => $properties['name'],

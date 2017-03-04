@@ -13,7 +13,7 @@ class CacheCollectorHelper extends CacheCollector {
    * Contains data to return on a cache miss.
    * @var array
    */
-  protected $cacheMissData = array();
+  protected $cacheMissData = [];
 
   /**
    * Number of calls to \Drupal\Core\Cache\CacheCollector::resolveCacheMiss().

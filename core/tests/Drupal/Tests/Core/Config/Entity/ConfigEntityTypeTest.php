@@ -21,9 +21,9 @@ class ConfigEntityTypeTest extends UnitTestCase {
    */
   protected function setUpConfigEntityType($definition) {
     if (!isset($definition['id'])) {
-      $definition += array(
+      $definition += [
         'id' => 'example_config_entity_type',
-      );
+      ];
     }
     return new ConfigEntityType($definition);
   }
@@ -37,10 +37,10 @@ class ConfigEntityTypeTest extends UnitTestCase {
   public function testConfigPrefixLengthExceeds() {
     // A provider length of 24 and config_prefix length of 59 (+1 for the .)
     // results in a config length of 84, which is too long.
-    $definition = array(
+    $definition = [
       'provider' => $this->randomMachineName(24),
       'config_prefix' => $this->randomMachineName(59),
-    );
+    ];
     $config_entity = $this->setUpConfigEntityType($definition);
     $this->setExpectedException(
       '\Drupal\Core\Config\ConfigPrefixLengthException',
@@ -58,10 +58,10 @@ class ConfigEntityTypeTest extends UnitTestCase {
   public function testConfigPrefixLengthValid() {
     // A provider length of 24 and config_prefix length of 58 (+1 for the .)
     // results in a config length of 83, which is right at the limit.
-    $definition = array(
+    $definition = [
       'provider' => $this->randomMachineName(24),
       'config_prefix' => $this->randomMachineName(58),
-    );
+    ];
     $config_entity = $this->setUpConfigEntityType($definition);
     $expected_prefix = $definition['provider'] . '.' . $definition['config_prefix'];
     $this->assertEquals($expected_prefix, $config_entity->getConfigPrefix());
@@ -117,10 +117,10 @@ class ConfigEntityTypeTest extends UnitTestCase {
    * Provides test data.
    */
   public function providerTestGetConfigPrefix() {
-    return array(
-      array(array('provider' => 'node', 'id' => 'node_type', 'config_prefix' => 'type'), 'node.type'),
-      array(array('provider' => 'views', 'id' => 'view'), 'views.view'),
-    );
+    return [
+      [['provider' => 'node', 'id' => 'node_type', 'config_prefix' => 'type'], 'node.type'],
+      [['provider' => 'views', 'id' => 'view'], 'views.view'],
+    ];
   }
 
   /**

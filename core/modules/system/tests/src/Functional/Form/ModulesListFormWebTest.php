@@ -14,7 +14,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('system_test', 'help');
+  public static $modules = ['system_test', 'help'];
 
   /**
    * {@inheritdoc}
@@ -30,7 +30,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
   public function testModuleListForm() {
     $this->drupalLogin(
       $this->drupalCreateUser(
-        array('administer modules', 'administer permissions')
+        ['administer modules', 'administer permissions']
       )
     );
     $this->drupalGet('admin/modules');

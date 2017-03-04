@@ -40,32 +40,32 @@ class PhpTransliterationTest extends UnitTestCase {
    *   self::testRemoveDiacritics().
    */
   public function providerTestPhpTransliterationRemoveDiacritics() {
-    return array(
+    return [
       // Test all characters in the Unicode range 0x00bf to 0x017f.
-      array('ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ', 'AAAAAAÆCEEEEIIII'),
-      array('ÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß', 'ÐNOOOOO×OUUUUYÞß'),
-      array('àáâãäåæçèéêëìíîï', 'aaaaaaæceeeeiiii'),
-      array('ðñòóôõö÷øùúûüýþÿ', 'ðnooooo÷ouuuuyþy'),
-      array('ĀāĂăĄąĆćĈĉĊċČčĎď', 'AaAaAaCcCcCcCcDd'),
-      array('ĐđĒēĔĕĖėĘęĚěĜĝĞğ', 'DdEeEeEeEeEeGgGg'),
-      array('ĠġĢģĤĥĦħĨĩĪīĬĭĮį', 'GgGgHhHhIiIiIiIi'),
-      array('İıĲĳĴĵĶķĸĹĺĻļĽľĿ', 'IiĲĳJjKkĸLlLlLlL'),
-      array('ŀŁłŃńŅņŇňŉŊŋŌōŎŏ', 'lLlNnNnNnŉŊŋOoOo'),
-      array('ŐőŒœŔŕŖŗŘřŚśŜŝŞş', 'OoŒœRrRrRrSsSsSs'),
-      array('ŠšŢţŤťŦŧŨũŪūŬŭŮů', 'SsTtTtTtUuUuUuUu'),
-      array('ŰűŲųŴŵŶŷŸŹźŻżŽž', 'UuUuWwYyYZzZzZz'),
+      ['ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ', 'AAAAAAÆCEEEEIIII'],
+      ['ÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß', 'ÐNOOOOO×OUUUUYÞß'],
+      ['àáâãäåæçèéêëìíîï', 'aaaaaaæceeeeiiii'],
+      ['ðñòóôõö÷øùúûüýþÿ', 'ðnooooo÷ouuuuyþy'],
+      ['ĀāĂăĄąĆćĈĉĊċČčĎď', 'AaAaAaCcCcCcCcDd'],
+      ['ĐđĒēĔĕĖėĘęĚěĜĝĞğ', 'DdEeEeEeEeEeGgGg'],
+      ['ĠġĢģĤĥĦħĨĩĪīĬĭĮį', 'GgGgHhHhIiIiIiIi'],
+      ['İıĲĳĴĵĶķĸĹĺĻļĽľĿ', 'IiĲĳJjKkĸLlLlLlL'],
+      ['ŀŁłŃńŅņŇňŉŊŋŌōŎŏ', 'lLlNnNnNnŉŊŋOoOo'],
+      ['ŐőŒœŔŕŖŗŘřŚśŜŝŞş', 'OoŒœRrRrRrSsSsSs'],
+      ['ŠšŢţŤťŦŧŨũŪūŬŭŮů', 'SsTtTtTtUuUuUuUu'],
+      ['ŰűŲųŴŵŶŷŸŹźŻżŽž', 'UuUuWwYyYZzZzZz'],
 
       // Test all characters in the Unicode range 0x01CD to 0x024F.
-      array('ǍǎǏ', 'AaI'),
-      array('ǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟ', 'iOoUuUuUuUuUuǝAa'),
-      array('ǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯ', 'AaǢǣGgGgKkOoOoǮǯ'),
-      array('ǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿ', 'jǱǲǳGgǶǷNnAaǼǽOo'),
-      array('ȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏ', 'AaAaEeEeIiIiOoOo'),
-      array('ȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟ', 'RrRrUuUuSsTtȜȝHh'),
-      array('ȠȡȢȣȤȥȦȧȨȩȪȫȬȭȮȯ', 'ȠȡȢȣZzAaEeOoOoOo'),
-      array('ȰȱȲȳȴȵȶȷȸȹȺȻȼȽȾȿ', 'OoYylntjȸȹACcLTs'),
-      array('ɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏ', 'zɁɂBUɅEeJjQqRrYy'),
-    );
+      ['ǍǎǏ', 'AaI'],
+      ['ǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟ', 'iOoUuUuUuUuUuǝAa'],
+      ['ǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯ', 'AaǢǣGgGgKkOoOoǮǯ'],
+      ['ǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿ', 'jǱǲǳGgǶǷNnAaǼǽOo'],
+      ['ȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏ', 'AaAaEeEeIiIiOoOo'],
+      ['ȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟ', 'RrRrUuUuSsTtȜȝHh'],
+      ['ȠȡȢȣȤȥȦȧȨȩȪȫȬȭȮȯ', 'ȠȡȢȣZzAaEeOoOoOo'],
+      ['ȰȱȲȳȴȵȶȷȸȹȺȻȼȽȾȿ', 'OoYylntjȸȹACcLTs'],
+      ['ɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏ', 'zɁɂBUɅEeJjQqRrYy'],
+    ];
   }
 
   /**
@@ -117,36 +117,36 @@ class PhpTransliterationTest extends UnitTestCase {
     // They are not in our tables, but should at least give us '?' (unknown).
     $five_byte = html_entity_decode('&#x10330;&#x10338;', ENT_NOQUOTES, 'UTF-8');
 
-    return array(
+    return [
       // Each test case is (language code, input, output).
       // Test ASCII in English.
-      array('en', $random, $random),
+      ['en', $random, $random],
       // Test ASCII in some other language with no overrides.
-      array('fr', $random, $random),
+      ['fr', $random, $random],
       // Test 3 and 4-byte characters in a language without overrides.
       // Note: if the data tables change, these will need to change too! They
       // are set up to test that data table loading works, so values come
       // directly from the data files.
-      array('fr', $three_byte, 'c'),
-      array('fr', $four_byte, 'wii'),
+      ['fr', $three_byte, 'c'],
+      ['fr', $four_byte, 'wii'],
       // Test 5-byte characters.
-      array('en', $five_byte, '??'),
+      ['en', $five_byte, '??'],
       // Test a language with no overrides.
-      array('en', $two_byte, 'A O U A O aouaohello'),
+      ['en', $two_byte, 'A O U A O aouaohello'],
       // Test language overrides provided by core.
-      array('de', $two_byte, 'Ae Oe Ue A O aeoeueaohello'),
-      array('de', $random, $random),
-      array('dk', $two_byte, 'A O U Aa Oe aouaaoehello'),
-      array('dk', $random, $random),
-      array('kg', $three_byte, 'ts'),
+      ['de', $two_byte, 'Ae Oe Ue A O aeoeueaohello'],
+      ['de', $random, $random],
+      ['dk', $two_byte, 'A O U Aa Oe aouaaoehello'],
+      ['dk', $random, $random],
+      ['kg', $three_byte, 'ts'],
       // Test strings in some other languages.
       // Turkish, provided by drupal.org user Kartagis.
-      array('tr', 'Abayı serdiler bize. Söyleyeceğim yüzlerine. Sanırım hepimiz aynı şeyi düşünüyoruz.', 'Abayi serdiler bize. Soyleyecegim yuzlerine. Sanirim hepimiz ayni seyi dusunuyoruz.'),
+      ['tr', 'Abayı serdiler bize. Söyleyeceğim yüzlerine. Sanırım hepimiz aynı şeyi düşünüyoruz.', 'Abayi serdiler bize. Soyleyecegim yuzlerine. Sanirim hepimiz ayni seyi dusunuyoruz.'],
       // Illegal/unknown unicode.
-      array('en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '?'),
+      ['en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '?'],
       // Max length.
-      array('de', $two_byte, 'Ae Oe', '?', 5),
-    );
+      ['de', $two_byte, 'Ae Oe', '?', 5],
+    ];
   }
 
   /**

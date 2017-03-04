@@ -100,14 +100,14 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ->will($this->returnValue('field_test'));
     $this->fieldStorage->expects($this->any())
       ->method('getSettings')
-      ->willReturn(array());
+      ->willReturn([]);
     // Place the field in the mocked entity manager's field registry.
     $this->entityManager->expects($this->any())
       ->method('getFieldStorageDefinitions')
       ->with('test_entity_type')
-      ->will($this->returnValue(array(
+      ->will($this->returnValue([
         $this->fieldStorage->getName() => $this->fieldStorage,
-      )));
+      ]));
   }
 
   /**
@@ -118,7 +118,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $target_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
       ->method('getBundleConfigDependency')
-      ->will($this->returnValue(array('type' => 'config', 'name' => 'test.test_entity_type.id')));
+      ->will($this->returnValue(['type' => 'config', 'name' => 'test.test_entity_type.id']));
 
     $this->entityManager->expects($this->at(0))
       ->method('getDefinition')
@@ -146,12 +146,12 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ->method('getConfigDependencyName')
       ->will($this->returnValue('field.storage.test_entity_type.test_field'));
 
-    $field = new FieldConfig(array(
+    $field = new FieldConfig([
       'field_name' => $this->fieldStorage->getName(),
       'entity_type' => 'test_entity_type',
       'bundle' => 'test_bundle',
       'field_type' => 'test_field',
-    ), $this->entityTypeId);
+    ], $this->entityTypeId);
     $dependencies = $field->calculateDependencies()->getDependencies();
     $this->assertContains('field.storage.test_entity_type.test_field', $dependencies['config']);
     $this->assertContains('test.test_entity_type.id', $dependencies['config']);
@@ -176,10 +176,10 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ->with('bundle_entity_type')
       ->will($this->returnValue($storage));
 
-    $target_entity_type = new EntityType(array(
+    $target_entity_type = new EntityType([
       'id' => 'test_entity_type',
       'bundle_entity_type' => 'bundle_entity_type',
-    ));
+    ]);
 
     $this->entityManager->expects($this->at(0))
       ->method('getDefinition')
@@ -203,12 +203,12 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ->with('test_field')
       ->willReturn(['provider' => 'test_module', 'config_dependencies' => ['module' => ['test_module2']], 'class' => '\Drupal\Tests\field\Unit\DependencyFieldItem']);
 
-    $field = new FieldConfig(array(
+    $field = new FieldConfig([
       'field_name' => $this->fieldStorage->getName(),
       'entity_type' => 'test_entity_type',
       'bundle' => 'test_bundle_not_exists',
       'field_type' => 'test_field',
-    ), $this->entityTypeId);
+    ], $this->entityTypeId);
     $field->calculateDependencies();
   }
 
@@ -245,14 +245,14 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
    * @covers ::toArray
    */
   public function testToArray() {
-    $field = new FieldConfig(array(
+    $field = new FieldConfig([
       'field_name' => $this->fieldStorage->getName(),
       'entity_type' => 'test_entity_type',
       'bundle' => 'test_bundle',
       'field_type' => 'test_field',
-    ), $this->entityTypeId);
+    ], $this->entityTypeId);
 
-    $expected = array(
+    $expected = [
       'id' => 'test_entity_type.test_bundle.field_test',
       'uuid' => NULL,
       'status' => TRUE,
@@ -263,12 +263,12 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       'label' => '',
       'description' => '',
       'required' => FALSE,
-      'default_value' => array(),
+      'default_value' => [],
       'default_value_callback' => '',
-      'settings' => array(),
-      'dependencies' => array(),
+      'settings' => [],
+      'dependencies' => [],
       'field_type' => 'test_field',
-    );
+    ];
     $this->entityManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
@@ -279,7 +279,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ->will($this->returnValue('id'));
     $this->typedConfigManager->expects($this->once())
       ->method('getDefinition')
-      ->will($this->returnValue(array('mapping' => array_fill_keys(array_keys($expected), ''))));
+      ->will($this->returnValue(['mapping' => array_fill_keys(array_keys($expected), '')]));
 
     $export = $field->toArray();
     $this->assertEquals($expected, $export);
@@ -296,12 +296,12 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $this->fieldStorage->expects($this->never())
       ->method('getType');
 
-    $field = new FieldConfig(array(
+    $field = new FieldConfig([
       'field_name' => $this->fieldStorage->getName(),
       'entity_type' => 'test_entity_type',
       'bundle' => 'test_bundle',
       'field_type' => 'test_field',
-    ), $this->entityTypeId);
+    ], $this->entityTypeId);
 
     $this->assertEquals('test_field', $field->getType());
   }

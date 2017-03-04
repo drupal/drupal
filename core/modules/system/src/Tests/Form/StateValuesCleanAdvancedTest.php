@@ -18,7 +18,7 @@ class StateValuesCleanAdvancedTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('file', 'form_test');
+  public static $modules = ['file', 'form_test'];
 
   /**
    * An image file path for uploading.
@@ -38,7 +38,7 @@ class StateValuesCleanAdvancedTest extends WebTestBase {
     $this->assertTrue(is_file($this->image->uri), "The image file we're going to upload exists.");
 
     // "Browse" for the desired file.
-    $edit = array('files[image]' => drupal_realpath($this->image->uri));
+    $edit = ['files[image]' => drupal_realpath($this->image->uri)];
 
     // Post the form.
     $this->drupalPostForm('form_test/form-state-values-clean-advanced', $edit, t('Submit'));

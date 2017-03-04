@@ -19,7 +19,7 @@ class LanguageUnitTest extends UnitTestCase {
     $name = $this->randomMachineName();
     $language_code = $this->randomMachineName(2);
     $uuid = $this->randomMachineName();
-    $language = new Language(array('id' => $language_code, 'name' => $name, 'uuid' => $uuid));
+    $language = new Language(['id' => $language_code, 'name' => $name, 'uuid' => $uuid]);
     // Test that nonexistent properties are not added to the language object.
     $this->assertTrue(property_exists($language, 'id'));
     $this->assertTrue(property_exists($language, 'name'));
@@ -32,7 +32,7 @@ class LanguageUnitTest extends UnitTestCase {
   public function testGetName() {
     $name = $this->randomMachineName();
     $language_code = $this->randomMachineName(2);
-    $language = new Language(array('id' => $language_code, 'name' => $name));
+    $language = new Language(['id' => $language_code, 'name' => $name]);
     $this->assertSame($name, $language->getName());
   }
 
@@ -41,7 +41,7 @@ class LanguageUnitTest extends UnitTestCase {
    */
   public function testGetLangcode() {
     $language_code = $this->randomMachineName(2);
-    $language = new Language(array('id' => $language_code));
+    $language = new Language(['id' => $language_code]);
     $this->assertSame($language_code, $language->getId());
   }
 
@@ -50,7 +50,7 @@ class LanguageUnitTest extends UnitTestCase {
    */
   public function testGetDirection() {
     $language_code = $this->randomMachineName(2);
-    $language = new Language(array('id' => $language_code, 'direction' => LanguageInterface::DIRECTION_RTL));
+    $language = new Language(['id' => $language_code, 'direction' => LanguageInterface::DIRECTION_RTL]);
     $this->assertSame(LanguageInterface::DIRECTION_RTL, $language->getDirection());
   }
 
@@ -66,14 +66,14 @@ class LanguageUnitTest extends UnitTestCase {
       ->will($this->returnValue($language_default));
     \Drupal::setContainer($container);
 
-    $language = new Language(array('id' => $this->randomMachineName(2)));
+    $language = new Language(['id' => $this->randomMachineName(2)]);
     // Set up the LanguageDefault to return different default languages on
     // consecutive calls.
     $language_default->expects($this->any())
       ->method('get')
       ->willReturnOnConsecutiveCalls(
         $language,
-        new Language(array('id' => $this->randomMachineName(2)))
+        new Language(['id' => $this->randomMachineName(2)])
       );
 
     $this->assertTrue($language->isDefault());
@@ -104,58 +104,58 @@ class LanguageUnitTest extends UnitTestCase {
    *   An array of test data.
    */
   public function providerTestSortArrayOfLanguages() {
-    $language9A = new Language(array('id' => 'dd', 'name' => 'A', 'weight' => 9));
-    $language10A = new Language(array('id' => 'ee', 'name' => 'A', 'weight' => 10));
-    $language10B = new Language(array('id' => 'ff', 'name' => 'B', 'weight' => 10));
+    $language9A = new Language(['id' => 'dd', 'name' => 'A', 'weight' => 9]);
+    $language10A = new Language(['id' => 'ee', 'name' => 'A', 'weight' => 10]);
+    $language10B = new Language(['id' => 'ff', 'name' => 'B', 'weight' => 10]);
 
-    return array(
+    return [
       // Set up data set #0, already ordered by weight.
-      array(
+      [
         // Set the data.
-        array(
+        [
           $language9A->getId() => $language9A,
           $language10B->getId() => $language10B,
-        ),
+        ],
         // Set the expected key order.
-        array(
+        [
           $language9A->getId(),
           $language10B->getId(),
-        ),
-      ),
+        ],
+      ],
       // Set up data set #1, out of order by weight.
-      array(
-        array(
+      [
+        [
           $language10B->getId() => $language10B,
           $language9A->getId() => $language9A,
-        ),
-        array(
+        ],
+        [
           $language9A->getId(),
           $language10B->getId(),
-        ),
-      ),
+        ],
+      ],
       // Set up data set #2, tied by weight, already ordered by name.
-      array(
-        array(
+      [
+        [
           $language10A->getId() => $language10A,
           $language10B->getId() => $language10B,
-        ),
-        array(
+        ],
+        [
           $language10A->getId(),
           $language10B->getId(),
-        ),
-      ),
+        ],
+      ],
       // Set up data set #3, tied by weight, out of order by name.
-      array(
-        array(
+      [
+        [
           $language10B->getId() => $language10B,
           $language10A->getId() => $language10A,
-        ),
-        array(
+        ],
+        [
           $language10A->getId(),
           $language10B->getId(),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
 }

@@ -69,33 +69,33 @@ class DisplayApiTest extends FieldKernelTestBase {
     $this->label = $this->randomMachineName();
     $this->cardinality = 4;
 
-    $field_storage = array(
+    $field_storage = [
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'test_field',
       'cardinality' => $this->cardinality,
-    );
-    $field = array(
+    ];
+    $field = [
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'label' => $this->label,
-    );
+    ];
 
-    $this->displayOptions = array(
-      'default' => array(
+    $this->displayOptions = [
+      'default' => [
         'type' => 'field_test_default',
-        'settings' => array(
+        'settings' => [
           'test_formatter_setting' => $this->randomMachineName(),
-        ),
-      ),
-      'teaser' => array(
+        ],
+      ],
+      'teaser' => [
         'type' => 'field_test_default',
-        'settings' => array(
+        'settings' => [
           'test_formatter_setting' => $this->randomMachineName(),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     FieldStorageConfig::create($field_storage)->save();
     FieldConfig::create($field)->save();
@@ -104,7 +104,7 @@ class DisplayApiTest extends FieldKernelTestBase {
       ->setComponent($this->fieldName, $this->displayOptions['default'])
       ->save();
     // Create a display for the teaser view mode.
-    EntityViewMode::create(array('id' => 'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
+    EntityViewMode::create(['id' => 'entity_test.teaser', 'targetEntityType' => 'entity_test'])->save();
     entity_get_display($field['entity_type'], $field['bundle'], 'teaser')
       ->setComponent($this->fieldName, $this->displayOptions['teaser'])
       ->save();
@@ -132,66 +132,66 @@ class DisplayApiTest extends FieldKernelTestBase {
     $setting = $settings['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // Display settings: Check hidden field.
-    $display = array(
+    $display = [
       'label' => 'hidden',
       'type' => 'field_test_multiple',
-      'settings' => array(
+      'settings' => [
         'test_formatter_setting_multiple' => $this->randomMachineName(),
         'alter' => TRUE,
-      ),
-    );
+      ],
+    ];
     $build = $items->view($display);
     $this->render($build);
     $setting = $display['settings']['test_formatter_setting_multiple'];
     $this->assertNoText($this->label, 'Label was not displayed.');
     $this->assertText('field_test_entity_display_build_alter', 'Alter fired, display passed.');
     $this->assertText('entity language is en', 'Language is placed onto the context.');
-    $array = array();
+    $array = [];
     foreach ($this->values as $delta => $value) {
       $array[] = $delta . ':' . $value['value'];
     }
     $this->assertText($setting . '|' . implode('|', $array), 'Values were displayed with expected setting.');
 
     // Display settings: Check visually_hidden field.
-    $display = array(
+    $display = [
       'label' => 'visually_hidden',
       'type' => 'field_test_multiple',
-      'settings' => array(
+      'settings' => [
         'test_formatter_setting_multiple' => $this->randomMachineName(),
         'alter' => TRUE,
-      ),
-    );
+      ],
+    ];
     $build = $items->view($display);
     $this->render($build);
     $setting = $display['settings']['test_formatter_setting_multiple'];
     $this->assertRaw('visually-hidden', 'Label was visually hidden.');
     $this->assertText('field_test_entity_display_build_alter', 'Alter fired, display passed.');
     $this->assertText('entity language is en', 'Language is placed onto the context.');
-    $array = array();
+    $array = [];
     foreach ($this->values as $delta => $value) {
       $array[] = $delta . ':' . $value['value'];
     }
     $this->assertText($setting . '|' . implode('|', $array), 'Values were displayed with expected setting.');
 
     // Check the prepare_view steps are invoked.
-    $display = array(
+    $display = [
       'label' => 'hidden',
       'type' => 'field_test_with_prepare_view',
-      'settings' => array(
+      'settings' => [
         'test_formatter_setting_additional' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $build = $items->view($display);
     $this->render($build);
     $setting = $display['settings']['test_formatter_setting_additional'];
     $this->assertNoText($this->label, 'Label was not displayed.');
     $this->assertNoText('field_test_entity_display_build_alter', 'Alter not fired.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // View mode: check that display settings specified in the display object
@@ -201,7 +201,7 @@ class DisplayApiTest extends FieldKernelTestBase {
     $setting = $this->displayOptions['teaser']['settings']['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // Unknown view mode: check that display settings for 'default' view mode
@@ -211,7 +211,7 @@ class DisplayApiTest extends FieldKernelTestBase {
     $setting = $this->displayOptions['default']['settings']['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
   }
 
@@ -226,37 +226,37 @@ class DisplayApiTest extends FieldKernelTestBase {
       $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view();
       $this->render($build);
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // Check that explicit display settings are used.
-    $display = array(
+    $display = [
       'type' => 'field_test_multiple',
-      'settings' => array(
+      'settings' => [
         'test_formatter_setting_multiple' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $setting = $display['settings']['test_formatter_setting_multiple'];
     foreach ($this->values as $delta => $value) {
       $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view($display);
       $this->render($build);
-      $this->assertText($setting . '|0:' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|0:' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // Check that prepare_view steps are invoked.
-    $display = array(
+    $display = [
       'type' => 'field_test_with_prepare_view',
-      'settings' => array(
+      'settings' => [
         'test_formatter_setting_additional' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $setting = $display['settings']['test_formatter_setting_additional'];
     foreach ($this->values as $delta => $value) {
       $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view($display);
       $this->render($build);
-      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // View mode: check that display settings specified in the field are used.
@@ -265,7 +265,7 @@ class DisplayApiTest extends FieldKernelTestBase {
       $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view('teaser');
       $this->render($build);
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
 
     // Unknown view mode: check that display settings for 'default' view mode
@@ -275,7 +275,7 @@ class DisplayApiTest extends FieldKernelTestBase {
       $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view('unknown_view_mode');
       $this->render($build);
-      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
+      $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', ['@delta' => $delta]));
     }
   }
 
@@ -284,13 +284,13 @@ class DisplayApiTest extends FieldKernelTestBase {
    */
   function testFieldEmpty() {
     // Uses \Drupal\field_test\Plugin\Field\FieldFormatter\TestFieldEmptyFormatter.
-    $display = array(
+    $display = [
       'label' => 'hidden',
       'type' => 'field_empty_test',
-      'settings' => array(
+      'settings' => [
         'test_empty_string' => '**EMPTY FIELD**' . $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     // $this->entity is set by the setUp() method and by default contains 4
     // numeric values.  We only want to test the display of this one field.
     $build = $this->entity->get($this->fieldName)->view($display);
@@ -300,7 +300,7 @@ class DisplayApiTest extends FieldKernelTestBase {
     $this->assertNoText($display['settings']['test_empty_string']);
 
     // Now remove the values from the test field and retest.
-    $this->entity->{$this->fieldName} = array();
+    $this->entity->{$this->fieldName} = [];
     $this->entity->save();
     $build = $this->entity->get($this->fieldName)->view($display);
     $this->render($build);

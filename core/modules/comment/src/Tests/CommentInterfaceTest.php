@@ -68,7 +68,7 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Comment as anonymous with preview required.
     $this->drupalLogout();
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access content', 'access comments', 'post comments', 'skip comment approval'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access content', 'access comments', 'post comments', 'skip comment approval']);
     $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $this->assertTrue($this->commentExists($anonymous_comment), 'Comment found.');
     $anonymous_comment->delete();
@@ -92,24 +92,24 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->setCommentPreview(DRUPAL_OPTIONAL);
 
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $this->assertTitle(t('Edit comment @title | Drupal', array(
+    $this->assertTitle(t('Edit comment @title | Drupal', [
       '@title' => $comment->getSubject(),
-    )));
+    ]));
 
     // Test changing the comment author to "Anonymous".
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), array('uid' => ''));
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => '']);
     $this->assertTrue($comment->getAuthorName() == t('Anonymous') && $comment->getOwnerId() == 0, 'Comment author successfully changed to anonymous.');
 
     // Test changing the comment author to an unverified user.
     $random_name = $this->randomMachineName();
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), array('name' => $random_name));
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['name' => $random_name]);
     $this->drupalGet('node/' . $this->node->id());
     $this->assertText($random_name . ' (' . t('not verified') . ')', 'Comment author successfully changed to an unverified user.');
 
     // Test changing the comment author to a verified user.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), array('uid' => $this->webUser->getUsername() . ' (' . $this->webUser->id() . ')'));
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => $this->webUser->getUsername() . ' (' . $this->webUser->id() . ')']);
     $this->assertTrue($comment->getAuthorName() == $this->webUser->getUsername() && $comment->getOwnerId() == $this->webUser->id(), 'Comment author successfully changed to a registered user.');
 
     $this->drupalLogout();
@@ -121,7 +121,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // \Drupal\comment\Controller\CommentController::redirectNode().
     $this->drupalGet('comment/' . $this->node->id() . '/reply');
     // Verify we were correctly redirected.
-    $this->assertUrl(\Drupal::url('comment.reply', array('entity_type' => 'node', 'entity' => $this->node->id(), 'field_name' => 'comment'), array('absolute' => TRUE)));
+    $this->assertUrl(\Drupal::url('comment.reply', ['entity_type' => 'node', 'entity' => $this->node->id(), 'field_name' => 'comment'], ['absolute' => TRUE]));
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment->id());
     $this->assertText($subject_text, 'Individual comment-reply subject found.');
     $this->assertText($comment_text, 'Individual comment-reply body found.');
@@ -161,7 +161,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->setCommentsPerPage(2);
     $comment_new_page = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $this->assertTrue($this->commentExists($comment_new_page), 'Page one exists. %s');
-    $this->drupalGet('node/' . $this->node->id(), array('query' => array('page' => 2)));
+    $this->drupalGet('node/' . $this->node->id(), ['query' => ['page' => 2]]);
     $this->assertTrue($this->commentExists($reply, TRUE), 'Page two exists. %s');
     $this->setCommentsPerPage(50);
 
@@ -172,21 +172,21 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertResponse(403);
 
     // Attempt to post to node with comments disabled.
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(array('status' => CommentItemInterface::HIDDEN))));
+    $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'comment' => [['status' => CommentItemInterface::HIDDEN]]]);
     $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertResponse(403);
     $this->assertNoField('edit-comment', 'Comment body field found.');
 
     // Attempt to post to node with read-only comments.
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(array('status' => CommentItemInterface::CLOSED))));
+    $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'comment' => [['status' => CommentItemInterface::CLOSED]]]);
     $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertResponse(403);
     $this->assertNoField('edit-comment', 'Comment body field found.');
 
     // Attempt to post to node with comments enabled (check field names etc).
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(array('status' => CommentItemInterface::OPEN))));
+    $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'comment' => [['status' => CommentItemInterface::OPEN]]]);
     $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertNoText('This discussion is closed', 'Posting to node with comments enabled');
@@ -254,17 +254,17 @@ class CommentInterfaceTest extends CommentTestBase {
     // can select one of them. Then create a user that can use these formats,
     // log the user in, and then GET the node page on which to test the
     // comments.
-    $filtered_html_format = FilterFormat::create(array(
+    $filtered_html_format = FilterFormat::create([
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
-    ));
+    ]);
     $filtered_html_format->save();
-    $full_html_format = FilterFormat::create(array(
+    $full_html_format = FilterFormat::create([
       'format' => 'full_html',
       'name' => 'Full HTML',
-    ));
+    ]);
     $full_html_format->save();
-    $html_user = $this->drupalCreateUser(array(
+    $html_user = $this->drupalCreateUser([
       'access comments',
       'post comments',
       'edit own comments',
@@ -272,25 +272,25 @@ class CommentInterfaceTest extends CommentTestBase {
       'access content',
       $filtered_html_format->getPermissionName(),
       $full_html_format->getPermissionName(),
-    ));
+    ]);
     $this->drupalLogin($html_user);
     $this->drupalGet('node/' . $this->node->id());
 
     // HTML should not be included in the character count.
     $body_text1 = '<span></span><strong> </strong><span> </span><strong></strong>Hello World<br />';
-    $edit1 = array(
+    $edit1 = [
       'comment_body[0][value]' => $body_text1,
       'comment_body[0][format]' => 'filtered_html',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit1, t('Save'));
     $this->assertEqual('Hello World', Comment::load(1)->getSubject());
 
     // If there's nothing other than HTML, the subject should be '(No subject)'.
     $body_text2 = '<span></span><strong> </strong><span> </span><strong></strong> <br />';
-    $edit2 = array(
+    $edit2 = [
       'comment_body[0][value]' => $body_text2,
       'comment_body[0][format]' => 'filtered_html',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit2, t('Save'));
     $this->assertEqual('(No subject)', Comment::load(2)->getSubject());
   }

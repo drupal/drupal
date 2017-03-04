@@ -47,16 +47,16 @@ class EnvironmentTest extends UnitTestCase {
     $memory_limit = ini_get('memory_limit');
     $twice_avail_memory = ($memory_limit * 2) . 'MB';
 
-    return array(
+    return [
       // Minimal amount of memory should be available.
-      array('30MB', NULL, TRUE),
+      ['30MB', NULL, TRUE],
       // Exceed a custom (unlimited) memory limit.
-      array($twice_avail_memory, -1, TRUE),
+      [$twice_avail_memory, -1, TRUE],
       // Exceed a custom memory limit.
-      array('30MB', '16MB', FALSE),
+      ['30MB', '16MB', FALSE],
       // Available = required.
-      array('30MB', '30MB', TRUE),
-    );
+      ['30MB', '30MB', TRUE],
+    ];
   }
 
 }

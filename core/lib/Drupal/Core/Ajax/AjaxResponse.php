@@ -21,7 +21,7 @@ class AjaxResponse extends JsonResponse implements AttachmentsInterface {
    *
    * @var array
    */
-  protected $commands = array();
+  protected $commands = [];
 
   /**
    * Add an AJAX command to the response.

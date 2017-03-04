@@ -16,7 +16,7 @@ class ArgumentDefaultTest extends UserTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_plugin_argument_default_current_user');
+  public static $testViews = ['test_plugin_argument_default_current_user'];
 
   public function test_plugin_argument_default_current_user() {
     // Create a user to test.

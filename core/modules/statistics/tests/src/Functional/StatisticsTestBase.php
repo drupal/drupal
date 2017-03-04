@@ -14,7 +14,7 @@ abstract class StatisticsTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'block', 'ban', 'statistics');
+  public static $modules = ['node', 'block', 'ban', 'statistics'];
 
   /**
    * User with permissions to ban IP's.
@@ -28,18 +28,18 @@ abstract class StatisticsTestBase extends BrowserTestBase {
 
     // Create Basic page node type.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     }
 
     // Create user.
-    $this->blockingUser = $this->drupalCreateUser(array(
+    $this->blockingUser = $this->drupalCreateUser([
       'access administration pages',
       'access site reports',
       'ban IP addresses',
       'administer blocks',
       'administer statistics',
       'administer users',
-    ));
+    ]);
     $this->drupalLogin($this->blockingUser);
 
     // Enable logging.

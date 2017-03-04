@@ -127,7 +127,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH) {
+  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH) {
     if ($this->router instanceof UrlGeneratorInterface) {
       return $this->router->generate($name, $parameters, $referenceType);
     }

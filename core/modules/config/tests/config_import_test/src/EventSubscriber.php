@@ -88,14 +88,14 @@ class EventSubscriber implements EventSubscriberInterface {
   public function onConfigSave(ConfigCrudEvent $event) {
     $config = $event->getConfig();
     if ($config->getName() == 'action.settings') {
-      $values = $this->state->get('ConfigImportUITest.action.settings.recursion_limit', array());
+      $values = $this->state->get('ConfigImportUITest.action.settings.recursion_limit', []);
       $values[] = $config->get('recursion_limit');
       $this->state->set('ConfigImportUITest.action.settings.recursion_limit', $values);
     }
 
     if ($config->getName() == 'core.extension') {
-      $installed = $this->state->get('ConfigImportUITest.core.extension.modules_installed', array());
-      $uninstalled = $this->state->get('ConfigImportUITest.core.extension.modules_uninstalled', array());
+      $installed = $this->state->get('ConfigImportUITest.core.extension.modules_installed', []);
+      $uninstalled = $this->state->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
       $original = $config->getOriginal('module');
       $data = $config->get('module');
       $install = array_diff_key($data, $original);
@@ -132,10 +132,10 @@ class EventSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[ConfigEvents::SAVE][] = array('onConfigSave', 40);
-    $events[ConfigEvents::DELETE][] = array('onConfigDelete', 40);
-    $events[ConfigEvents::IMPORT_VALIDATE] = array('onConfigImporterValidate');
-    $events[ConfigEvents::IMPORT_MISSING_CONTENT] = array(array('onConfigImporterMissingContentOne'), array('onConfigImporterMissingContentTwo', -100));
+    $events[ConfigEvents::SAVE][] = ['onConfigSave', 40];
+    $events[ConfigEvents::DELETE][] = ['onConfigDelete', 40];
+    $events[ConfigEvents::IMPORT_VALIDATE] = ['onConfigImporterValidate'];
+    $events[ConfigEvents::IMPORT_MISSING_CONTENT] = [['onConfigImporterMissingContentOne'], ['onConfigImporterMissingContentTwo', -100]];
     return $events;
   }
 

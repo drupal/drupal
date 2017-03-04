@@ -12,13 +12,13 @@ use Drupal\entity_test\Entity\EntityTest;
  */
 function simpletest_test_install() {
   $total = 2;
-  $operations = array();
+  $operations = [];
   for ($i = 1; $i <= $total; $i++) {
-    $operations[] = array('_simpletest_test_callback', array($i));
+    $operations[] = ['_simpletest_test_callback', [$i]];
   }
-  $batch = array(
+  $batch = [
     'operations' => $operations,
-  );
+  ];
   batch_set($batch);
   $batch =& batch_get();
   $batch['progressive'] = FALSE;
@@ -29,6 +29,6 @@ function simpletest_test_install() {
  * Callback for batch operations.
  */
 function _simpletest_test_callback($id) {
-  $entity = EntityTest::create(array('id' => $id));
+  $entity = EntityTest::create(['id' => $id]);
   $entity->save();
 }

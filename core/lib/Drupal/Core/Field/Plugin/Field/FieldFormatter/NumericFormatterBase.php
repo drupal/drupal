@@ -18,28 +18,28 @@ abstract class NumericFormatterBase extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $options = array(
+    $options = [
       ''  => t('- None -'),
       '.' => t('Decimal point'),
       ',' => t('Comma'),
       ' ' => t('Space'),
       chr(8201) => t('Thin space'),
       "'" => t('Apostrophe'),
-    );
-    $elements['thousand_separator'] = array(
+    ];
+    $elements['thousand_separator'] = [
       '#type' => 'select',
       '#title' => t('Thousand marker'),
       '#options' => $options,
       '#default_value' => $this->getSetting('thousand_separator'),
       '#weight' => 0,
-    );
+    ];
 
-    $elements['prefix_suffix'] = array(
+    $elements['prefix_suffix'] = [
       '#type' => 'checkbox',
       '#title' => t('Display prefix and suffix'),
       '#default_value' => $this->getSetting('prefix_suffix'),
       '#weight' => 10,
-    );
+    ];
 
     return $elements;
   }
@@ -48,7 +48,7 @@ abstract class NumericFormatterBase extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = [];
 
     $summary[] = $this->numberFormat(1234.1234567890);
     if ($this->getSetting('prefix_suffix')) {
@@ -62,7 +62,7 @@ abstract class NumericFormatterBase extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
     $settings = $this->getFieldSettings();
 
     foreach ($items as $delta => $item) {
@@ -70,8 +70,8 @@ abstract class NumericFormatterBase extends FormatterBase {
 
       // Account for prefix and suffix.
       if ($this->getSetting('prefix_suffix')) {
-        $prefixes = isset($settings['prefix']) ? array_map(array('Drupal\Core\Field\FieldFilteredMarkup', 'create'), explode('|', $settings['prefix'])) : array('');
-        $suffixes = isset($settings['suffix']) ? array_map(array('Drupal\Core\Field\FieldFilteredMarkup', 'create'), explode('|', $settings['suffix'])) : array('');
+        $prefixes = isset($settings['prefix']) ? array_map(['Drupal\Core\Field\FieldFilteredMarkup', 'create'], explode('|', $settings['prefix'])) : [''];
+        $suffixes = isset($settings['suffix']) ? array_map(['Drupal\Core\Field\FieldFilteredMarkup', 'create'], explode('|', $settings['suffix'])) : [''];
         $prefix = (count($prefixes) > 1) ? $this->formatPlural($item->value, $prefixes[0], $prefixes[1]) : $prefixes[0];
         $suffix = (count($suffixes) > 1) ? $this->formatPlural($item->value, $suffixes[0], $suffixes[1]) : $suffixes[0];
         $output = $prefix . $output . $suffix;
@@ -79,10 +79,10 @@ abstract class NumericFormatterBase extends FormatterBase {
       // Output the raw value in a content attribute if the text of the HTML
       // element differs from the raw value (for example when a prefix is used).
       if (isset($item->_attributes) && $item->value != $output) {
-        $item->_attributes += array('content' => $item->value);
+        $item->_attributes += ['content' => $item->value];
       }
 
-      $elements[$delta] = array('#markup' => $output);
+      $elements[$delta] = ['#markup' => $output];
     }
 
     return $elements;

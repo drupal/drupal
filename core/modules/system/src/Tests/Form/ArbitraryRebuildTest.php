@@ -18,19 +18,19 @@ class ArbitraryRebuildTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('text', 'form_test');
+  public static $modules = ['text', 'form_test'];
 
   protected function setUp() {
     parent::setUp();
 
     // Auto-create a field for testing.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'entity_type' => 'user',
       'field_name' => 'test_multiple',
       'type' => 'text',
       'cardinality' => -1,
       'translatable' => FALSE,
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'entity_type' => 'user',
       'field_name' => 'test_multiple',
@@ -38,10 +38,10 @@ class ArbitraryRebuildTest extends WebTestBase {
       'label' => 'Test a multiple valued field',
     ])->save();
     entity_get_form_display('user', 'user', 'register')
-      ->setComponent('test_multiple', array(
+      ->setComponent('test_multiple', [
         'type' => 'text_textfield',
         'weight' => 0,
-      ))
+      ])
       ->save();
   }
 
@@ -49,10 +49,10 @@ class ArbitraryRebuildTest extends WebTestBase {
    * Tests a basic rebuild with the user registration form.
    */
   function testUserRegistrationRebuild() {
-    $edit = array(
+    $edit = [
       'name' => 'foo',
       'mail' => 'bar@example.com',
-    );
+    ];
     $this->drupalPostForm('user/register', $edit, 'Rebuild');
     $this->assertText('Form rebuilt.');
     $this->assertFieldByName('name', 'foo', 'Entered username has been kept.');
@@ -63,10 +63,10 @@ class ArbitraryRebuildTest extends WebTestBase {
    * Tests a rebuild caused by a multiple value field.
    */
   function testUserRegistrationMultipleField() {
-    $edit = array(
+    $edit = [
       'name' => 'foo',
       'mail' => 'bar@example.com',
-    );
+    ];
     $this->drupalPostForm('user/register', $edit, t('Add another item'));
     $this->assertText('Test a multiple valued field', 'Form has been rebuilt.');
     $this->assertFieldByName('name', 'foo', 'Entered username has been kept.');

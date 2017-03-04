@@ -12,7 +12,7 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 class ConfigLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   protected function setUp() {
-    $this->directoryList = array('config' => 'core/modules/config');
+    $this->directoryList = ['config' => 'core/modules/config'];
     parent::setUp();
   }
 
@@ -29,13 +29,13 @@ class ConfigLocalTasksTest extends LocalTaskIntegrationTestBase {
    * Provides a list of routes to test.
    */
   public function getConfigAdminRoutes() {
-    return array(
-      array('config.sync', array(array('config.sync', 'config.import', 'config.export'))),
-      array('config.import_full', array(array('config.sync', 'config.import', 'config.export'), array('config.import_full', 'config.import_single'))),
-      array('config.import_single', array(array('config.sync', 'config.import', 'config.export'), array('config.import_full', 'config.import_single'))),
-      array('config.export_full', array(array('config.sync', 'config.import', 'config.export'), array('config.export_full', 'config.export_single'))),
-      array('config.export_single', array(array('config.sync', 'config.import', 'config.export'), array('config.export_full', 'config.export_single'))),
-    );
+    return [
+      ['config.sync', [['config.sync', 'config.import', 'config.export']]],
+      ['config.import_full', [['config.sync', 'config.import', 'config.export'], ['config.import_full', 'config.import_single']]],
+      ['config.import_single', [['config.sync', 'config.import', 'config.export'], ['config.import_full', 'config.import_single']]],
+      ['config.export_full', [['config.sync', 'config.import', 'config.export'], ['config.export_full', 'config.export_single']]],
+      ['config.export_single', [['config.sync', 'config.import', 'config.export'], ['config.export_full', 'config.export_single']]],
+    ];
   }
 
 }

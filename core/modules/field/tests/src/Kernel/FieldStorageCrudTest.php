@@ -21,7 +21,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array();
+  public static $modules = [];
 
   // TODO : test creation with
   // - a full fledged $field structure, check that all the values are there
@@ -32,11 +32,11 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
    * Test the creation of a field storage.
    */
   function testCreate() {
-    $field_storage_definition = array(
+    $field_storage_definition = [
       'field_name' => 'field_2',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-    );
+    ];
     field_test_memorize();
     $field_storage = FieldStorageConfig::create($field_storage_definition);
     $field_storage->save();
@@ -86,10 +86,10 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
 
     // Check that field type is required.
     try {
-      $field_storage_definition = array(
+      $field_storage_definition = [
         'field_name' => 'field_1',
         'entity_type' => 'entity_type',
-      );
+      ];
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create a field with no type.'));
     }
@@ -99,10 +99,10 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
 
     // Check that field name is required.
     try {
-      $field_storage_definition = array(
+      $field_storage_definition = [
         'type' => 'test_field',
         'entity_type' => 'entity_test',
-      );
+      ];
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create an unnamed field.'));
     }
@@ -111,10 +111,10 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     }
     // Check that entity type is required.
     try {
-      $field_storage_definition = array(
+      $field_storage_definition = [
         'field_name' => 'test_field',
         'type' => 'test_field'
-      );
+      ];
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail('Cannot create a field without an entity type.');
     }
@@ -124,11 +124,11 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
 
     // Check that field name must start with a letter or _.
     try {
-      $field_storage_definition = array(
+      $field_storage_definition = [
         'field_name' => '2field_2',
         'entity_type' => 'entity_test',
         'type' => 'test_field',
-      );
+      ];
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create a field with a name starting with a digit.'));
     }
@@ -138,11 +138,11 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
 
     // Check that field name must only contain lowercase alphanumeric or _.
     try {
-      $field_storage_definition = array(
+      $field_storage_definition = [
         'field_name' => 'field#_3',
         'entity_type' => 'entity_test',
         'type' => 'test_field',
-      );
+      ];
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create a field with a name containing an illegal character.'));
     }
@@ -152,11 +152,11 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
 
     // Check that field name cannot be longer than 32 characters long.
     try {
-      $field_storage_definition = array(
+      $field_storage_definition = [
         'field_name' => '_12345678901234567890123456789012',
         'entity_type' => 'entity_test',
         'type' => 'test_field',
-      );
+      ];
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create a field with a name longer than 32 characters.'));
     }
@@ -167,11 +167,11 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     // Check that field name can not be an entity key.
     // "id" is known as an entity key from the "entity_test" type.
     try {
-      $field_storage_definition = array(
+      $field_storage_definition = [
         'type' => 'test_field',
         'field_name' => 'id',
         'entity_type' => 'entity_test',
-      );
+      ];
       FieldStorageConfig::create($field_storage_definition)->save();
       $this->fail(t('Cannot create a field bearing the name of an entity key.'));
     }
@@ -187,15 +187,15 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
    * since plugin classes (and thus the field type schema) cannot be accessed.
    */
   function testCreateWithExplicitSchema() {
-    $schema = array(
+    $schema = [
       'dummy' => 'foobar'
-    );
-    $field_storage = FieldStorageConfig::create(array(
+    ];
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_2',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
       'schema' => $schema,
-    ));
+    ]);
     $this->assertEqual($field_storage->getSchema(), $schema);
   }
 
@@ -203,31 +203,31 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
    * Tests reading field storage definitions.
    */
   function testRead() {
-    $field_storage_definition = array(
+    $field_storage_definition = [
       'field_name' => 'field_1',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-    );
+    ];
     $field_storage = FieldStorageConfig::create($field_storage_definition);
     $field_storage->save();
     $id = $field_storage->id();
 
     // Check that 'single column' criteria works.
-    $fields = entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field_storage_definition['field_name']));
+    $fields = entity_load_multiple_by_properties('field_storage_config', ['field_name' => $field_storage_definition['field_name']]);
     $this->assertTrue(count($fields) == 1 && isset($fields[$id]), 'The field was properly read.');
 
     // Check that 'multi column' criteria works.
-    $fields = entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field_storage_definition['field_name'], 'type' => $field_storage_definition['type']));
+    $fields = entity_load_multiple_by_properties('field_storage_config', ['field_name' => $field_storage_definition['field_name'], 'type' => $field_storage_definition['type']]);
     $this->assertTrue(count($fields) == 1 && isset($fields[$id]), 'The field was properly read.');
-    $fields = entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field_storage_definition['field_name'], 'type' => 'foo'));
+    $fields = entity_load_multiple_by_properties('field_storage_config', ['field_name' => $field_storage_definition['field_name'], 'type' => 'foo']);
     $this->assertTrue(empty($fields), 'No field was found.');
 
     // Create a field from the field storage.
-    $field_definition = array(
+    $field_definition = [
       'field_name' => $field_storage_definition['field_name'],
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
+    ];
     FieldConfig::create($field_definition)->save();
   }
 
@@ -236,48 +236,48 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
    */
   function testIndexes() {
     // Check that indexes specified by the field type are used by default.
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_1',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-    ));
+    ]);
     $field_storage->save();
     $field_storage = FieldStorageConfig::load($field_storage->id());
     $schema = $field_storage->getSchema();
-    $expected_indexes = array('value' => array('value'));
+    $expected_indexes = ['value' => ['value']];
     $this->assertEqual($schema['indexes'], $expected_indexes, 'Field type indexes saved by default');
 
     // Check that indexes specified by the field definition override the field
     // type indexes.
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_2',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-      'indexes' => array(
-        'value' => array(),
-      ),
-    ));
+      'indexes' => [
+        'value' => [],
+      ],
+    ]);
     $field_storage->save();
     $field_storage = FieldStorageConfig::load($field_storage->id());
     $schema = $field_storage->getSchema();
-    $expected_indexes = array('value' => array());
+    $expected_indexes = ['value' => []];
     $this->assertEqual($schema['indexes'], $expected_indexes, 'Field definition indexes override field type indexes');
 
     // Check that indexes specified by the field definition add to the field
     // type indexes.
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_3',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-      'indexes' => array(
-        'value_2' => array('value'),
-      ),
-    ));
+      'indexes' => [
+        'value_2' => ['value'],
+      ],
+    ]);
     $field_storage->save();
     $id = $field_storage->id();
     $field_storage = FieldStorageConfig::load($id);
     $schema = $field_storage->getSchema();
-    $expected_indexes = array('value' => array('value'), 'value_2' => array('value'));
+    $expected_indexes = ['value' => ['value'], 'value_2' => ['value']];
     $this->assertEqual($schema['indexes'], $expected_indexes, 'Field definition indexes are merged with field type indexes');
   }
 
@@ -288,43 +288,43 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     // TODO: Also test deletion of the data stored in the field ?
 
     // Create two fields (so we can test that only one is deleted).
-    $field_storage_definition = array(
+    $field_storage_definition = [
       'field_name' => 'field_1',
       'type' => 'test_field',
       'entity_type' => 'entity_test',
-    );
+    ];
     FieldStorageConfig::create($field_storage_definition)->save();
-    $another_field_storage_definition = array(
+    $another_field_storage_definition = [
       'field_name' => 'field_2',
       'type' => 'test_field',
       'entity_type' => 'entity_test',
-    );
+    ];
     FieldStorageConfig::create($another_field_storage_definition)->save();
 
     // Create fields for each.
-    $field_definition = array(
+    $field_definition = [
       'field_name' => $field_storage_definition['field_name'],
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-    );
+    ];
     FieldConfig::create($field_definition)->save();
     $another_field_definition = $field_definition;
     $another_field_definition['field_name'] = $another_field_storage_definition['field_name'];
     FieldConfig::create($another_field_definition)->save();
 
     // Test that the first field is not deleted, and then delete it.
-    $field_storage = current(entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE)));
+    $field_storage = current(entity_load_multiple_by_properties('field_storage_config', ['field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE]));
     $this->assertTrue(!empty($field_storage) && !$field_storage->isDeleted(), 'A new storage is not marked for deletion.');
     FieldStorageConfig::loadByName('entity_test', $field_storage_definition['field_name'])->delete();
 
     // Make sure that the field is marked as deleted when it is specifically
     // loaded.
-    $field_storage = current(entity_load_multiple_by_properties('field_storage_config', array('field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE)));
+    $field_storage = current(entity_load_multiple_by_properties('field_storage_config', ['field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE]));
     $this->assertTrue($field_storage->isDeleted(), 'A deleted storage is marked for deletion.');
 
     // Make sure that this field is marked as deleted when it is
     // specifically loaded.
-    $field = current(entity_load_multiple_by_properties('field_config', array('entity_type' => 'entity_test', 'field_name' => $field_definition['field_name'], 'bundle' => $field_definition['bundle'], 'include_deleted' => TRUE)));
+    $field = current(entity_load_multiple_by_properties('field_config', ['entity_type' => 'entity_test', 'field_name' => $field_definition['field_name'], 'bundle' => $field_definition['bundle'], 'include_deleted' => TRUE]));
     $this->assertTrue($field->isDeleted(), 'A field whose storage was deleted is marked for deletion.');
 
     // Try to load the storage normally and make sure it does not show up.
@@ -364,11 +364,11 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   }
 
   function testUpdateFieldType() {
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_type',
       'entity_type' => 'entity_test',
       'type' => 'decimal',
-    ));
+    ]);
     $field_storage->save();
 
     try {
@@ -389,12 +389,12 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     // respected. Since cardinality enforcement is consistent across database
     // systems, it makes a good test case.
     $cardinality = 4;
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_update',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
       'cardinality' => $cardinality,
-    ));
+    ]);
     $field_storage->save();
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
@@ -427,14 +427,14 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
    * Test field type modules forbidding an update.
    */
   function testUpdateForbid() {
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'forbidden',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-      'settings' => array(
+      'settings' => [
         'changeable' => 0,
         'unchangeable' => 0
-    )));
+    ]]);
     $field_storage->save();
     $field_storage->setSetting('changeable', $field_storage->getSetting('changeable') + 1);
     try {

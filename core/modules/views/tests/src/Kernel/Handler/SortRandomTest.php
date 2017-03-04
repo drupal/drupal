@@ -19,7 +19,7 @@ class SortRandomTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Add more items to the test set, to make the order tests more robust.
@@ -34,13 +34,13 @@ class SortRandomTest extends ViewsKernelTestBase {
   protected function dataSet() {
     $data = parent::dataSet();
     for ($i = 0; $i < 55; $i++) {
-      $data[] = array(
+      $data[] = [
         'name' => 'name_' . $i,
         'age' => $i,
         'job' => 'job_' . $i,
         'created' => rand(0, time()),
         'status' => 1,
-      );
+      ];
     }
     return $data;
   }
@@ -53,13 +53,13 @@ class SortRandomTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Add a random ordering.
-    $view->displayHandlers->get('default')->overrideOption('sorts', array(
-      'random' => array(
+    $view->displayHandlers->get('default')->overrideOption('sorts', [
+      'random' => [
         'id' => 'random',
         'field' => 'random',
         'table' => 'views',
-      ),
-    ));
+      ],
+    ]);
 
     return $view;
   }
@@ -76,28 +76,28 @@ class SortRandomTest extends ViewsKernelTestBase {
 
     // Verify the result.
     $this->assertEqual(count($this->dataSet()), count($view->result), 'The number of returned rows match.');
-    $this->assertIdenticalResultset($view, $this->dataSet(), array(
+    $this->assertIdenticalResultset($view, $this->dataSet(), [
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
-    ));
+    ]);
 
     // Execute a random view, we expect the result set to be different.
     $view_random = $this->getBasicRandomView();
     $this->executeView($view_random);
     $this->assertEqual(count($this->dataSet()), count($view_random->result), 'The number of returned rows match.');
-    $this->assertNotIdenticalResultset($view_random, $view->result, array(
+    $this->assertNotIdenticalResultset($view_random, $view->result, [
       'views_test_data_name' => 'views_test_data_name',
       'views_test_data_age' => 'views_test_data_name',
-    ));
+    ]);
 
     // Execute a second random view, we expect the result set to be different again.
     $view_random_2 = $this->getBasicRandomView();
     $this->executeView($view_random_2);
     $this->assertEqual(count($this->dataSet()), count($view_random_2->result), 'The number of returned rows match.');
-    $this->assertNotIdenticalResultset($view_random, $view->result, array(
+    $this->assertNotIdenticalResultset($view_random, $view->result, [
       'views_test_data_name' => 'views_test_data_name',
       'views_test_data_age' => 'views_test_data_name',
-    ));
+    ]);
   }
 
   /**

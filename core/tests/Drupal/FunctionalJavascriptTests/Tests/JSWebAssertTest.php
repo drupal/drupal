@@ -80,7 +80,7 @@ class JSWebAssertTest extends JavascriptTestBase {
     $result = $page->findButton('Added WaitForElementVisible');
     $this->assertEmpty($result);
     $test_wait_on_element_visible->click();
-    $result = $assert_session->waitForElementVisible('named', array('button', 'Added WaitForElementVisible'));
+    $result = $assert_session->waitForElementVisible('named', ['button', 'Added WaitForElementVisible']);
     $this->assertNotEmpty($result);
     $this->assertTrue($result instanceof NodeElement);
     $this->assertEquals(TRUE, $result->isVisible());

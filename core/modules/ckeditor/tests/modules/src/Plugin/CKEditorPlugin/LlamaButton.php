@@ -18,11 +18,11 @@ class LlamaButton extends Llama implements CKEditorPluginButtonsInterface {
    * {@inheritdoc}
    */
   function getButtons() {
-    return array(
-      'Llama' => array(
+    return [
+      'Llama' => [
         'label' => t('Insert Llama'),
-      ),
-    );
+      ],
+    ];
   }
 
   /**

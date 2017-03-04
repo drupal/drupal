@@ -99,7 +99,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
     }
 
     $options['admin_label']['default'] = $label;
-    $options['required'] = array('default' => FALSE);
+    $options['required'] = ['default' => FALSE];
 
     return $options;
   }
@@ -113,12 +113,12 @@ abstract class RelationshipPluginBase extends HandlerBase {
     unset($form['admin_label']['#fieldset']);
     $form['admin_label']['#weight'] = -1;
 
-    $form['required'] = array(
+    $form['required'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Require this relationship'),
       '#description' => $this->t('Enable to hide items that do not contain this relationship'),
       '#default_value' => !empty($this->options['required']),
-    );
+    ];
   }
 
   /**

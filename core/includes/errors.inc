@@ -21,23 +21,23 @@ use Symfony\Component\HttpFoundation\Response;
  * @ingroup logging_severity_levels
  */
 function drupal_error_levels() {
-  $types = array(
-    E_ERROR => array('Error', RfcLogLevel::ERROR),
-    E_WARNING => array('Warning', RfcLogLevel::WARNING),
-    E_PARSE => array('Parse error', RfcLogLevel::ERROR),
-    E_NOTICE => array('Notice', RfcLogLevel::NOTICE),
-    E_CORE_ERROR => array('Core error', RfcLogLevel::ERROR),
-    E_CORE_WARNING => array('Core warning', RfcLogLevel::WARNING),
-    E_COMPILE_ERROR => array('Compile error', RfcLogLevel::ERROR),
-    E_COMPILE_WARNING => array('Compile warning', RfcLogLevel::WARNING),
-    E_USER_ERROR => array('User error', RfcLogLevel::ERROR),
-    E_USER_WARNING => array('User warning', RfcLogLevel::WARNING),
-    E_USER_NOTICE => array('User notice', RfcLogLevel::NOTICE),
-    E_STRICT => array('Strict warning', RfcLogLevel::DEBUG),
-    E_RECOVERABLE_ERROR => array('Recoverable fatal error', RfcLogLevel::ERROR),
-    E_DEPRECATED => array('Deprecated function', RfcLogLevel::DEBUG),
-    E_USER_DEPRECATED => array('User deprecated function', RfcLogLevel::DEBUG),
-  );
+  $types = [
+    E_ERROR => ['Error', RfcLogLevel::ERROR],
+    E_WARNING => ['Warning', RfcLogLevel::WARNING],
+    E_PARSE => ['Parse error', RfcLogLevel::ERROR],
+    E_NOTICE => ['Notice', RfcLogLevel::NOTICE],
+    E_CORE_ERROR => ['Core error', RfcLogLevel::ERROR],
+    E_CORE_WARNING => ['Core warning', RfcLogLevel::WARNING],
+    E_COMPILE_ERROR => ['Compile error', RfcLogLevel::ERROR],
+    E_COMPILE_WARNING => ['Compile warning', RfcLogLevel::WARNING],
+    E_USER_ERROR => ['User error', RfcLogLevel::ERROR],
+    E_USER_WARNING => ['User warning', RfcLogLevel::WARNING],
+    E_USER_NOTICE => ['User notice', RfcLogLevel::NOTICE],
+    E_STRICT => ['Strict warning', RfcLogLevel::DEBUG],
+    E_RECOVERABLE_ERROR => ['Recoverable fatal error', RfcLogLevel::ERROR],
+    E_DEPRECATED => ['Deprecated function', RfcLogLevel::DEBUG],
+    E_USER_DEPRECATED => ['User deprecated function', RfcLogLevel::DEBUG],
+  ];
 
   return $types;
 }
@@ -70,7 +70,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
     // in PHP, we allow them to trigger a fatal error by emitting a user error
     // using trigger_error().
     $to_string = $error_level == E_USER_ERROR && substr($caller['function'], -strlen('__toString()')) == '__toString()';
-    _drupal_log_error(array(
+    _drupal_log_error([
       '%type' => isset($types[$error_level]) ? $severity_msg : 'Unknown error',
       // The standard PHP error handler considers that the error messages
       // are HTML. We mimick this behavior here.
@@ -81,7 +81,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
       'severity_level' => $severity_level,
       'backtrace' => $backtrace,
       '@backtrace_string' => (new \Exception())->getTraceAsString(),
-    ), $recoverable || $to_string);
+    ], $recoverable || $to_string);
   }
 }
 
@@ -139,15 +139,15 @@ function _drupal_log_error($error, $fatal = FALSE) {
     // $number does not use drupal_static as it should not be reset
     // as it uniquely identifies each PHP error.
     static $number = 0;
-    $assertion = array(
+    $assertion = [
       $error['@message'],
       $error['%type'],
-      array(
+      [
         'function' => $error['%function'],
         'file' => $error['%file'],
         'line' => $error['%line'],
-      ),
-    );
+      ],
+    ];
     // For non-fatal errors (e.g. PHP notices) _drupal_log_error can be called
     // multiple times per request. In that case the response is typically
     // generated outside of the error handler, e.g., in a controller. As a
@@ -257,10 +257,10 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
       if ($is_installer) {
         // install_display_output() prints the output and ends script execution.
-        $output = array(
+        $output = [
           '#title' => 'Error',
           '#markup' => $message,
-        );
+        ];
         install_display_output($output, $GLOBALS['install_state'], $response->headers->all());
         exit;
       }

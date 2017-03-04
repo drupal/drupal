@@ -191,9 +191,9 @@ class PoHeader {
    * @throws Exception
    */
   function parsePluralForms($pluralforms) {
-    $plurals = array();
+    $plurals = [];
     // First, delete all whitespace.
-    $pluralforms = strtr($pluralforms, array(" " => "", "\t" => ""));
+    $pluralforms = strtr($pluralforms, [" " => "", "\t" => ""]);
 
     // Select the parts that define nplurals and plural.
     $nplurals = strstr($pluralforms, "nplurals=");
@@ -215,7 +215,7 @@ class PoHeader {
 
     // If the number of plurals is zero, we return a default result.
     if ($nplurals == 0) {
-      return array($nplurals, array('default' => 0));
+      return [$nplurals, ['default' => 0]];
     }
 
     // Calculate possible plural positions of different plural values. All known
@@ -233,7 +233,7 @@ class PoHeader {
       });
       $plurals['default'] = $default;
 
-      return array($nplurals, $plurals);
+      return [$nplurals, $plurals];
     }
     else {
       throw new \Exception('The plural formula could not be parsed.');
@@ -250,7 +250,7 @@ class PoHeader {
    *   An associative array of key-value pairs.
    */
   private function parseHeader($header) {
-    $header_parsed = array();
+    $header_parsed = [];
     $lines = array_map('trim', explode("\n", $header));
     foreach ($lines as $line) {
       if ($line) {
@@ -275,17 +275,17 @@ class PoHeader {
    */
   private function parseArithmetic($string) {
     // Operator precedence table.
-    $precedence = array("(" => -1, ")" => -1, "?" => 1, ":" => 1, "||" => 3, "&&" => 4, "==" => 5, "!=" => 5, "<" => 6, ">" => 6, "<=" => 6, ">=" => 6, "+" => 7, "-" => 7, "*" => 8, "/" => 8, "%" => 8);
+    $precedence = ["(" => -1, ")" => -1, "?" => 1, ":" => 1, "||" => 3, "&&" => 4, "==" => 5, "!=" => 5, "<" => 6, ">" => 6, "<=" => 6, ">=" => 6, "+" => 7, "-" => 7, "*" => 8, "/" => 8, "%" => 8];
     // Right associativity.
-    $right_associativity = array("?" => 1, ":" => 1);
+    $right_associativity = ["?" => 1, ":" => 1];
 
     $tokens = $this->tokenizeFormula($string);
 
     // Parse by converting into infix notation then back into postfix
     // Operator stack - holds math operators and symbols.
-    $operator_stack = array();
+    $operator_stack = [];
     // Element Stack - holds data to be operated on.
-    $element_stack = array();
+    $element_stack = [];
 
     foreach ($tokens as $token) {
       $current_token = $token;
@@ -373,7 +373,7 @@ class PoHeader {
    */
   private function tokenizeFormula($formula) {
     $formula = str_replace(" ", "", $formula);
-    $tokens = array();
+    $tokens = [];
     for ($i = 0; $i < strlen($formula); $i++) {
       if (is_numeric($formula[$i])) {
         $num = $formula[$i];

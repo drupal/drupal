@@ -14,11 +14,11 @@ class FileTransferAuthorizeFormTest extends UpdateTestBase {
    *
    * @var array
    */
-  public static $modules = array('update', 'update_test');
+  public static $modules = ['update', 'update_test'];
 
   protected function setUp() {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(array('administer modules', 'administer software updates', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer modules', 'administer software updates', 'administer site configuration']);
     $this->drupalLogin($admin_user);
 
     // Create a local cache so the module is not downloaded from drupal.org.

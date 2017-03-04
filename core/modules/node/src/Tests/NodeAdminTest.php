@@ -43,7 +43,7 @@ class NodeAdminTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('views');
+  public static $modules = ['views'];
 
   protected function setUp() {
     parent::setUp();
@@ -51,9 +51,9 @@ class NodeAdminTest extends NodeTestBase {
     // Remove the "view own unpublished content" permission which is set
     // by default for authenticated users so we can test this permission
     // correctly.
-    user_role_revoke_permissions(RoleInterface::AUTHENTICATED_ID, array('view own unpublished content'));
+    user_role_revoke_permissions(RoleInterface::AUTHENTICATED_ID, ['view own unpublished content']);
 
-    $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'access content overview', 'administer nodes', 'bypass node access'));
+    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'access content overview', 'administer nodes', 'bypass node access']);
     $this->baseUser1 = $this->drupalCreateUser(['access content overview']);
     $this->baseUser2 = $this->drupalCreateUser(['access content overview', 'view own unpublished content']);
     $this->baseUser3 = $this->drupalCreateUser(['access content overview', 'bypass node access']);
@@ -66,39 +66,39 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
 
     $changed = REQUEST_TIME;
-    foreach (array('dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB') as $prefix) {
+    foreach (['dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB'] as $prefix) {
       $changed += 1000;
-      $node = $this->drupalCreateNode(array('title' => $prefix . $this->randomMachineName(6)));
+      $node = $this->drupalCreateNode(['title' => $prefix . $this->randomMachineName(6)]);
       db_update('node_field_data')
-        ->fields(array('changed' => $changed))
+        ->fields(['changed' => $changed])
         ->condition('nid', $node->id())
         ->execute();
     }
 
     // Test that the default sort by node.changed DESC actually fires properly.
     $nodes_query = db_select('node_field_data', 'n')
-      ->fields('n', array('title'))
+      ->fields('n', ['title'])
       ->orderBy('changed', 'DESC')
       ->execute()
       ->fetchCol();
 
     $this->drupalGet('admin/content');
     foreach ($nodes_query as $delta => $string) {
-      $elements = $this->xpath('//table[contains(@class, :class)]/tbody/tr[' . ($delta + 1) . ']/td[2]/a[normalize-space(text())=:label]', array(':class' => 'views-table', ':label' => $string));
+      $elements = $this->xpath('//table[contains(@class, :class)]/tbody/tr[' . ($delta + 1) . ']/td[2]/a[normalize-space(text())=:label]', [':class' => 'views-table', ':label' => $string]);
       $this->assertTrue(!empty($elements), 'The node was found in the correct order.');
     }
 
     // Compare the rendered HTML node list to a query for the nodes ordered by
     // title to account for possible database-dependent sort order.
     $nodes_query = db_select('node_field_data', 'n')
-      ->fields('n', array('title'))
+      ->fields('n', ['title'])
       ->orderBy('title')
       ->execute()
       ->fetchCol();
 
-    $this->drupalGet('admin/content', array('query' => array('sort' => 'asc', 'order' => 'title')));
+    $this->drupalGet('admin/content', ['query' => ['sort' => 'asc', 'order' => 'title']]);
     foreach ($nodes_query as $delta => $string) {
-      $elements = $this->xpath('//table[contains(@class, :class)]/tbody/tr[' . ($delta + 1) . ']/td[2]/a[normalize-space(text())=:label]', array(':class' => 'views-table', ':label' => $string));
+      $elements = $this->xpath('//table[contains(@class, :class)]/tbody/tr[' . ($delta + 1) . ']/td[2]/a[normalize-space(text())=:label]', [':class' => 'views-table', ':label' => $string]);
       $this->assertTrue(!empty($elements), 'The node was found in the correct order.');
     }
   }
@@ -118,10 +118,10 @@ class NodeAdminTest extends NodeTestBase {
     // they appear in the following code, and the 'content' View has a table
     // style configuration with a default sort on the 'changed' field DESC.
     $time = time();
-    $nodes['published_page'] = $this->drupalCreateNode(array('type' => 'page', 'changed' => $time--));
-    $nodes['published_article'] = $this->drupalCreateNode(array('type' => 'article', 'changed' => $time--));
-    $nodes['unpublished_page_1'] = $this->drupalCreateNode(array('type' => 'page', 'changed' => $time--, 'uid' => $this->baseUser1->id(), 'status' => 0));
-    $nodes['unpublished_page_2'] = $this->drupalCreateNode(array('type' => 'page', 'changed' => $time, 'uid' => $this->baseUser2->id(), 'status' => 0));
+    $nodes['published_page'] = $this->drupalCreateNode(['type' => 'page', 'changed' => $time--]);
+    $nodes['published_article'] = $this->drupalCreateNode(['type' => 'article', 'changed' => $time--]);
+    $nodes['unpublished_page_1'] = $this->drupalCreateNode(['type' => 'page', 'changed' => $time--, 'uid' => $this->baseUser1->id(), 'status' => 0]);
+    $nodes['unpublished_page_2'] = $this->drupalCreateNode(['type' => 'page', 'changed' => $time, 'uid' => $this->baseUser2->id(), 'status' => 0]);
 
     // Verify view, edit, and delete links for any content.
     $this->drupalGet('admin/content');
@@ -139,14 +139,14 @@ class NodeAdminTest extends NodeTestBase {
     }
 
     // Verify filtering by publishing status.
-    $this->drupalGet('admin/content', array('query' => array('status' => TRUE)));
+    $this->drupalGet('admin/content', ['query' => ['status' => TRUE]]);
 
     $this->assertLinkByHref('node/' . $nodes['published_page']->id() . '/edit');
     $this->assertLinkByHref('node/' . $nodes['published_article']->id() . '/edit');
     $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->id() . '/edit');
 
     // Verify filtering by status and content type.
-    $this->drupalGet('admin/content', array('query' => array('status' => TRUE, 'type' => 'page')));
+    $this->drupalGet('admin/content', ['query' => ['status' => TRUE, 'type' => 'page']]);
 
     $this->assertLinkByHref('node/' . $nodes['published_page']->id() . '/edit');
     $this->assertNoLinkByHref('node/' . $nodes['published_article']->id() . '/edit');

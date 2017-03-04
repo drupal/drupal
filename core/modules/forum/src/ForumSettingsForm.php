@@ -30,35 +30,35 @@ class ForumSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('forum.settings');
 
-    $options = array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500);
-    $form['forum_hot_topic'] = array(
+    $options = [5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500];
+    $form['forum_hot_topic'] = [
       '#type' => 'select',
       '#title' => $this->t('Hot topic threshold'),
       '#default_value' => $config->get('topics.hot_threshold'),
       '#options' => array_combine($options, $options),
       '#description' => $this->t('The number of replies a topic must have to be considered "hot".'),
-    );
-    $options = array(10, 25, 50, 75, 100);
-    $form['forum_per_page'] = array(
+    ];
+    $options = [10, 25, 50, 75, 100];
+    $form['forum_per_page'] = [
       '#type' => 'select',
       '#title' => $this->t('Topics per page'),
       '#default_value' => $config->get('topics.page_limit'),
       '#options' => array_combine($options, $options),
       '#description' => $this->t('Default number of forum topics displayed per page.'),
-    );
-    $forder = array(
+    ];
+    $forder = [
       1 => $this->t('Date - newest first'),
       2 => $this->t('Date - oldest first'),
       3 => $this->t('Posts - most active first'),
       4 => $this->t('Posts - least active first')
-    );
-    $form['forum_order'] = array(
+    ];
+    $form['forum_order'] = [
       '#type' => 'radios',
       '#title' => $this->t('Default order'),
       '#default_value' => $config->get('topics.order'),
       '#options' => $forder,
       '#description' => $this->t('Default display order for topics.'),
-    );
+    ];
 
     return parent::buildForm($form, $form_state);
   }

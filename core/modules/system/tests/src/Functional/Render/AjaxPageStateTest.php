@@ -43,7 +43,7 @@ class AjaxPageStateTest extends BrowserTestBase {
    * and available in code as scripts. Do this as the base test.
    */
   public function testLibrariesAvailable() {
-    $this->drupalGet('node', array());
+    $this->drupalGet('node', []);
     $this->assertRaw(
       '/core/assets/vendor/html5shiv/html5shiv.min.js',
       'The html5shiv library from core should be loaded.'
@@ -63,14 +63,14 @@ class AjaxPageStateTest extends BrowserTestBase {
    */
   public function testHtml5ShivIsNotLoaded() {
     $this->drupalGet('node',
-      array(
+      [
         "query" =>
-          array(
-            'ajax_page_state' => array(
+          [
+            'ajax_page_state' => [
               'libraries' => 'core/html5shiv'
-            )
-          )
-      )
+            ]
+          ]
+      ]
     );
     $this->assertNoRaw(
       '/core/assets/vendor/html5shiv/html5shiv.min.js',

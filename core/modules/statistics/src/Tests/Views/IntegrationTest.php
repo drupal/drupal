@@ -19,7 +19,7 @@ class IntegrationTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('statistics', 'statistics_test_views', 'node');
+  public static $modules = ['statistics', 'statistics_test_views', 'node'];
 
   /**
    * Stores the user object that accesses the page.
@@ -40,21 +40,21 @@ class IntegrationTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_statistics_integration');
+  public static $testViews = ['test_statistics_integration'];
 
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::createTestViews(get_class($this), array('statistics_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['statistics_test_views']);
 
     // Create a new user for viewing nodes and statistics.
-    $this->webUser = $this->drupalCreateUser(array('access content', 'view post access counter'));
+    $this->webUser = $this->drupalCreateUser(['access content', 'view post access counter']);
 
     // Create a new user for viewing nodes only.
-    $this->deniedUser = $this->drupalCreateUser(array('access content'));
+    $this->deniedUser = $this->drupalCreateUser(['access content']);
 
-    $this->drupalCreateContentType(array('type' => 'page'));
-    $this->node = $this->drupalCreateNode(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->node = $this->drupalCreateNode(['type' => 'page']);
 
     // Enable counting of content views.
     $this->config('statistics.settings')
@@ -75,7 +75,7 @@ class IntegrationTest extends ViewTestBase {
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
     $client = \Drupal::httpClient();
-    $client->post($stats_path, array('form_params' => array('nid' => $this->node->id())));
+    $client->post($stats_path, ['form_params' => ['nid' => $this->node->id()]]);
     $this->drupalGet('test_statistics_integration');
 
     $expected = statistics_get($this->node->id());

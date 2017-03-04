@@ -18,7 +18,7 @@ class LocaleConfigManagerTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'language', 'locale', 'locale_test', 'block');
+  public static $modules = ['system', 'language', 'locale', 'locale_test', 'block'];
 
   /**
    * This test creates simple config on the fly breaking schema checking.
@@ -31,8 +31,8 @@ class LocaleConfigManagerTest extends KernelTestBase {
    * Tests hasTranslation().
    */
   public function testHasTranslation() {
-    $this->installSchema('locale', array('locales_location', 'locales_source', 'locales_target'));
-    $this->installConfig(array('locale_test'));
+    $this->installSchema('locale', ['locales_location', 'locales_source', 'locales_target']);
+    $this->installConfig(['locale_test']);
     $locale_config_manager = \Drupal::service('locale.config_manager');
 
     $language = ConfigurableLanguage::createFromLangcode('de');
@@ -48,8 +48,8 @@ class LocaleConfigManagerTest extends KernelTestBase {
    * Tests getStringTranslation().
    */
   public function testGetStringTranslation() {
-    $this->installSchema('locale', array('locales_location', 'locales_source', 'locales_target'));
-    $this->installConfig(array('locale_test'));
+    $this->installSchema('locale', ['locales_location', 'locales_source', 'locales_target']);
+    $this->installConfig(['locale_test']);
 
     $locale_config_manager = \Drupal::service('locale.config_manager');
 
@@ -80,7 +80,7 @@ class LocaleConfigManagerTest extends KernelTestBase {
     $simple_config->set('foo', 'bar')->save();
     $this->assertNull(\Drupal::service('locale.config_manager')->getDefaultConfigLangcode($simple_config->getName()), 'Simple config created through the API is not treated as shipped configuration.');
 
-    $block = Block::create(array(
+    $block = Block::create([
       'id' => 'test_default_config',
       'theme' => 'classy',
       'status' => TRUE,
@@ -94,7 +94,7 @@ class LocaleConfigManagerTest extends KernelTestBase {
         'primary' => TRUE,
         'secondary' => TRUE,
       ],
-    ));
+    ]);
     $block->save();
 
     // Install the theme after creating the block as installing the theme will

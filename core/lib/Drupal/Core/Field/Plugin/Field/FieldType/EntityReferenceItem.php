@@ -44,19 +44,19 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return array(
+    return [
       'target_type' => \Drupal::moduleHandler()->moduleExists('node') ? 'node' : 'user',
-    ) + parent::defaultStorageSettings();
+    ] + parent::defaultStorageSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function defaultFieldSettings() {
-    return array(
+    return [
       'handler' => 'default',
-      'handler_settings' => array(),
-    ) + parent::defaultFieldSettings();
+      'handler_settings' => [],
+    ] + parent::defaultFieldSettings();
   }
 
   /**
@@ -116,32 +116,32 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
     $properties = static::propertyDefinitions($field_definition)['target_id'];
     if ($target_type_info->entityClassImplements(FieldableEntityInterface::class) && $properties->getDataType() === 'integer') {
-      $columns = array(
-        'target_id' => array(
+      $columns = [
+        'target_id' => [
           'description' => 'The ID of the target entity.',
           'type' => 'int',
           'unsigned' => TRUE,
-        ),
-      );
+        ],
+      ];
     }
     else {
-      $columns = array(
-        'target_id' => array(
+      $columns = [
+        'target_id' => [
           'description' => 'The ID of the target entity.',
           'type' => 'varchar_ascii',
           // If the target entities act as bundles for another entity type,
           // their IDs should not exceed the maximum length for bundles.
           'length' => $target_type_info->getBundleOf() ? EntityTypeInterface::BUNDLE_MAX_LENGTH : 255,
-        ),
-      );
+        ],
+      ];
     }
 
-    $schema = array(
+    $schema = [
       'columns' => $columns,
-      'indexes' => array(
-        'target_id' => array('target_id'),
-      ),
-    );
+      'indexes' => [
+        'target_id' => ['target_id'],
+      ],
+    ];
 
     return $schema;
   }
@@ -272,12 +272,12 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
 
     // Instead of calling $manager->getSelectionHandler($field_definition)
     // replicate the behavior to be able to override the sorting settings.
-    $options = array(
+    $options = [
       'target_type' => $field_definition->getFieldStorageDefinition()->getSetting('target_type'),
       'handler' => $field_definition->getSetting('handler'),
-      'handler_settings' => $field_definition->getSetting('handler_settings') ?: array(),
+      'handler_settings' => $field_definition->getSetting('handler_settings') ?: [],
       'entity' => NULL,
-    );
+    ];
 
     $entity_type = \Drupal::entityManager()->getDefinition($options['target_type']);
     $options['handler_settings']['sort'] = [
@@ -299,7 +299,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $element['target_type'] = array(
+    $element['target_type'] = [
       '#type' => 'select',
       '#title' => t('Type of item to reference'),
       '#options' => \Drupal::entityManager()->getEntityTypeLabels(TRUE),
@@ -307,7 +307,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       '#required' => TRUE,
       '#disabled' => $has_data,
       '#size' => 1,
-    );
+    ];
 
     return $element;
   }
@@ -320,7 +320,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
 
     // Get all selection plugins for this entity type.
     $selection_plugins = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionGroups($this->getSetting('target_type'));
-    $handlers_options = array();
+    $handlers_options = [];
     foreach (array_keys($selection_plugins) as $selection_group_id) {
       // We only display base plugins (e.g. 'default', 'views', ...) and not
       // entity type specific plugins (e.g. 'default:node', 'default:user',
@@ -334,46 +334,46 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       }
     }
 
-    $form = array(
+    $form = [
       '#type' => 'container',
-      '#process' => array(array(get_class($this), 'fieldSettingsAjaxProcess')),
-      '#element_validate' => array(array(get_class($this), 'fieldSettingsFormValidate')),
+      '#process' => [[get_class($this), 'fieldSettingsAjaxProcess']],
+      '#element_validate' => [[get_class($this), 'fieldSettingsFormValidate']],
 
-    );
-    $form['handler'] = array(
+    ];
+    $form['handler'] = [
       '#type' => 'details',
       '#title' => t('Reference type'),
       '#open' => TRUE,
       '#tree' => TRUE,
-      '#process' => array(array(get_class($this), 'formProcessMergeParent')),
-    );
+      '#process' => [[get_class($this), 'formProcessMergeParent']],
+    ];
 
-    $form['handler']['handler'] = array(
+    $form['handler']['handler'] = [
       '#type' => 'select',
       '#title' => t('Reference method'),
       '#options' => $handlers_options,
       '#default_value' => $field->getSetting('handler'),
       '#required' => TRUE,
       '#ajax' => TRUE,
-      '#limit_validation_errors' => array(),
-    );
-    $form['handler']['handler_submit'] = array(
+      '#limit_validation_errors' => [],
+    ];
+    $form['handler']['handler_submit'] = [
       '#type' => 'submit',
       '#value' => t('Change handler'),
-      '#limit_validation_errors' => array(),
-      '#attributes' => array(
-        'class' => array('js-hide'),
-      ),
-      '#submit' => array(array(get_class($this), 'settingsAjaxSubmit')),
-    );
+      '#limit_validation_errors' => [],
+      '#attributes' => [
+        'class' => ['js-hide'],
+      ],
+      '#submit' => [[get_class($this), 'settingsAjaxSubmit']],
+    ];
 
-    $form['handler']['handler_settings'] = array(
+    $form['handler']['handler_settings'] = [
       '#type' => 'container',
-      '#attributes' => array('class' => array('entity_reference-settings')),
-    );
+      '#attributes' => ['class' => ['entity_reference-settings']],
+    ];
 
     $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field);
-    $form['handler']['handler_settings'] += $handler->buildConfigurationForm(array(), $form_state);
+    $form['handler']['handler_settings'] += $handler->buildConfigurationForm([], $form_state);
 
     return $form;
   }
@@ -556,14 +556,14 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   public function getSettableOptions(AccountInterface $account = NULL) {
     $field_definition = $this->getFieldDefinition();
     if (!$options = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field_definition, $this->getEntity())->getReferenceableEntities()) {
-      return array();
+      return [];
     }
 
     // Rebuild the array by changing the bundle key into the bundle label.
     $target_type = $field_definition->getSetting('target_type');
     $bundles = \Drupal::entityManager()->getBundleInfo($target_type);
 
-    $return = array();
+    $return = [];
     foreach ($options as $bundle => $entity_ids) {
       // The label does not need sanitizing since it is used as an optgroup
       // which is only supported by select elements and auto-escaped.
@@ -593,11 +593,11 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    */
   public static function fieldSettingsAjaxProcessElement(&$element, $main_form) {
     if (!empty($element['#ajax'])) {
-      $element['#ajax'] = array(
-        'callback' => array(get_called_class(), 'settingsAjax'),
+      $element['#ajax'] = [
+        'callback' => [get_called_class(), 'settingsAjax'],
         'wrapper' => $main_form['#id'],
         'element' => $main_form['#array_parents'],
-      );
+      ];
     }
 
     foreach (Element::children($element) as $key) {
@@ -641,7 +641,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    * {@inheritdoc}
    */
   public static function getPreconfiguredOptions() {
-    $options = array();
+    $options = [];
 
     // Add all the commonly referenced entity types as distinct pre-configured
     // options.

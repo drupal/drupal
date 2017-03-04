@@ -37,8 +37,8 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
     // Create initial block.
     $block = $this->createBlockContent('initial');
 
-    $blocks = array();
-    $logs = array();
+    $blocks = [];
+    $logs = [];
 
     // Get original block.
     $blocks[] = $block->getRevisionId();
@@ -74,9 +74,9 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
         ->getStorage('block_content')
         ->loadRevision($revision_id);
       // Verify revision log is the same.
-      $this->assertEqual($loaded->getRevisionLogMessage(), $logs[$delta], format_string('Correct log message found for revision @revision', array(
+      $this->assertEqual($loaded->getRevisionLogMessage(), $logs[$delta], format_string('Correct log message found for revision @revision', [
         '@revision' => $loaded->getRevisionId(),
-      )));
+      ]));
       if ($delta > 0) {
         $this->assertTrue($loaded->getRevisionUser() instanceof UserInterface, 'Revision User found.');
         $this->assertTrue(is_numeric($loaded->getRevisionUserId()), 'Revision User ID found.');

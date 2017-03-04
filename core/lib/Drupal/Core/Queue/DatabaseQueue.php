@@ -84,13 +84,13 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
    */
   protected function doCreateItem($data) {
     $query = $this->connection->insert(static::TABLE_NAME)
-      ->fields(array(
+      ->fields([
         'name' => $this->name,
         'data' => serialize($data),
         // We cannot rely on REQUEST_TIME because many items might be created
         // by a single request which takes longer than 1 second.
         'created' => time(),
-      ));
+      ]);
     // Return the new serial ID, or FALSE on failure.
     return $query->execute();
   }
@@ -100,7 +100,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
    */
   public function numberOfItems() {
     try {
-      return $this->connection->query('SELECT COUNT(item_id) FROM {' . static::TABLE_NAME . '} WHERE name = :name', array(':name' => $this->name))
+      return $this->connection->query('SELECT COUNT(item_id) FROM {' . static::TABLE_NAME . '} WHERE name = :name', [':name' => $this->name])
         ->fetchField();
     }
     catch (\Exception $e) {
@@ -120,7 +120,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
     // are no unclaimed items left.
     while (TRUE) {
       try {
-        $item = $this->connection->queryRange('SELECT data, created, item_id FROM {' . static::TABLE_NAME . '} q WHERE expire = 0 AND name = :name ORDER BY created, item_id ASC', 0, 1, array(':name' => $this->name))->fetchObject();
+        $item = $this->connection->queryRange('SELECT data, created, item_id FROM {' . static::TABLE_NAME . '} q WHERE expire = 0 AND name = :name ORDER BY created, item_id ASC', 0, 1, [':name' => $this->name])->fetchObject();
       }
       catch (\Exception $e) {
         $this->catchException($e);
@@ -136,9 +136,9 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
         // time from the lease, and will tend to reset items before the lease
         // should really expire.
         $update = $this->connection->update(static::TABLE_NAME)
-          ->fields(array(
+          ->fields([
             'expire' => time() + $lease_time,
-          ))
+          ])
           ->condition('item_id', $item->item_id)
           ->condition('expire', 0);
         // If there are affected rows, this update succeeded.
@@ -160,9 +160,9 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
   public function releaseItem($item) {
     try {
       $update = $this->connection->update(static::TABLE_NAME)
-        ->fields(array(
+        ->fields([
           'expire' => 0,
-        ))
+        ])
         ->condition('item_id', $item->item_id);
       return $update->execute();
     }
@@ -223,9 +223,9 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
       // Reset expired items in the default queue implementation table. If that's
       // not used, this will simply be a no-op.
       $this->connection->update(static::TABLE_NAME)
-        ->fields(array(
+        ->fields([
           'expire' => 0,
-        ))
+        ])
         ->condition('expire', 0, '<>')
         ->condition('expire', REQUEST_TIME, '<')
         ->execute();

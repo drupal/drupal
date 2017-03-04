@@ -21,16 +21,16 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     // Perform the tests with all permutations of $form['#tree'],
     // $element['#extended'], and $element['#multiple'].
     $test_file = $this->getTestFile('text');
-    foreach (array(0, 1) as $tree) {
-      foreach (array(0, 1) as $extended) {
-        foreach (array(0, 1) as $multiple) {
+    foreach ([0, 1] as $tree) {
+      foreach ([0, 1] as $extended) {
+        foreach ([0, 1] as $multiple) {
           $path = 'file/test/' . $tree . '/' . $extended . '/' . $multiple;
           $input_base_name = $tree ? 'nested_file' : 'file';
           $file_field_name = $multiple ? 'files[' . $input_base_name . '][]' : 'files[' . $input_base_name . ']';
 
           // Submit without a file.
-          $this->drupalPostForm($path, array(), t('Save'));
-          $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array()))), 'Submitted without a file.');
+          $this->drupalPostForm($path, [], t('Save'));
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [])]), 'Submitted without a file.');
 
           // Submit with a file, but with an invalid form token. Ensure the file
           // was not saved.
@@ -46,22 +46,22 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
           // Submit a new file, without using the Upload button.
           $last_fid_prior = $this->getLastFileId();
-          $edit = array($file_field_name => drupal_realpath($test_file->getFileUri()));
+          $edit = [$file_field_name => drupal_realpath($test_file->getFileUri())];
           $this->drupalPostForm($path, $edit, t('Save'));
           $last_fid = $this->getLastFileId();
           $this->assertTrue($last_fid > $last_fid_prior, 'New file got saved.');
-          $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array($last_fid)))), 'Submit handler has correct file info.');
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]), 'Submit handler has correct file info.');
 
           // Submit no new input, but with a default file.
-          $this->drupalPostForm($path . '/' . $last_fid, array(), t('Save'));
-          $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array($last_fid)))), 'Empty submission did not change an existing file.');
+          $this->drupalPostForm($path . '/' . $last_fid, [], t('Save'));
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]), 'Empty submission did not change an existing file.');
 
           // Now, test the Upload and Remove buttons, with and without Ajax.
-          foreach (array(FALSE, TRUE) as $ajax) {
+          foreach ([FALSE, TRUE] as $ajax) {
             // Upload, then Submit.
             $last_fid_prior = $this->getLastFileId();
             $this->drupalGet($path);
-            $edit = array($file_field_name => drupal_realpath($test_file->getFileUri()));
+            $edit = [$file_field_name => drupal_realpath($test_file->getFileUri())];
             if ($ajax) {
               $this->drupalPostAjaxForm(NULL, $edit, $input_base_name . '_upload_button');
             }
@@ -70,15 +70,15 @@ class FileManagedFileElementTest extends FileFieldTestBase {
             }
             $last_fid = $this->getLastFileId();
             $this->assertTrue($last_fid > $last_fid_prior, 'New file got uploaded.');
-            $this->drupalPostForm(NULL, array(), t('Save'));
-            $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', array($last_fid)))), 'Submit handler has correct file info.');
+            $this->drupalPostForm(NULL, [], t('Save'));
+            $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]), 'Submit handler has correct file info.');
 
             // Remove, then Submit.
             $remove_button_title = $multiple ? t('Remove selected') : t('Remove');
-            $remove_edit = array();
+            $remove_edit = [];
             if ($multiple) {
               $selected_checkbox = ($tree ? 'nested[file]' : 'file') . '[file_' . $last_fid . '][selected]';
-              $remove_edit = array($selected_checkbox => '1');
+              $remove_edit = [$selected_checkbox => '1'];
             }
             $this->drupalGet($path . '/' . $last_fid);
             if ($ajax) {
@@ -87,22 +87,22 @@ class FileManagedFileElementTest extends FileFieldTestBase {
             else {
               $this->drupalPostForm(NULL, $remove_edit, $remove_button_title);
             }
-            $this->drupalPostForm(NULL, array(), t('Save'));
-            $this->assertRaw(t('The file ids are %fids.', array('%fids' => '')), 'Submission after file removal was successful.');
+            $this->drupalPostForm(NULL, [], t('Save'));
+            $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']), 'Submission after file removal was successful.');
 
             // Upload, then Remove, then Submit.
             $this->drupalGet($path);
-            $edit = array($file_field_name => drupal_realpath($test_file->getFileUri()));
+            $edit = [$file_field_name => drupal_realpath($test_file->getFileUri())];
             if ($ajax) {
               $this->drupalPostAjaxForm(NULL, $edit, $input_base_name . '_upload_button');
             }
             else {
               $this->drupalPostForm(NULL, $edit, t('Upload'));
             }
-            $remove_edit = array();
+            $remove_edit = [];
             if ($multiple) {
               $selected_checkbox = ($tree ? 'nested[file]' : 'file') . '[file_' . $this->getLastFileId() . '][selected]';
-              $remove_edit = array($selected_checkbox => '1');
+              $remove_edit = [$selected_checkbox => '1'];
             }
             if ($ajax) {
               $this->drupalPostAjaxForm(NULL, $remove_edit, $input_base_name . '_remove_button');
@@ -111,8 +111,8 @@ class FileManagedFileElementTest extends FileFieldTestBase {
               $this->drupalPostForm(NULL, $remove_edit, $remove_button_title);
             }
 
-            $this->drupalPostForm(NULL, array(), t('Save'));
-            $this->assertRaw(t('The file ids are %fids.', array('%fids' => '')), 'Submission after file upload and removal was successful.');
+            $this->drupalPostForm(NULL, [], t('Save'));
+            $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']), 'Submission after file upload and removal was successful.');
           }
         }
       }
@@ -120,8 +120,8 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
     // The multiple file upload has additional conditions that need checking.
     $path = 'file/test/1/1/1';
-    $edit = array('files[nested_file][]' => drupal_realpath($test_file->getFileUri()));
-    $fid_list = array();
+    $edit = ['files[nested_file][]' => drupal_realpath($test_file->getFileUri())];
+    $fid_list = [];
 
     $this->drupalGet($path);
 
@@ -136,13 +136,13 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->assertFieldByXpath('//input[@name="nested[file][file_' . $fid_list[1] . '][selected]"]', NULL, 'Second file successfully uploaded to multiple file element.');
 
     // Save the entire form.
-    $this->drupalPostForm(NULL, array(), t('Save'));
-    $this->assertRaw(t('The file ids are %fids.', array('%fids' => implode(',', $fid_list))), 'Two files saved into a single multiple file element.');
+    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', $fid_list)]), 'Two files saved into a single multiple file element.');
 
     // Delete only the first file.
-    $edit = array(
+    $edit = [
       'nested[file][file_' . $fid_list[0] . '][selected]' => '1',
-    );
+    ];
     $this->drupalPostForm($path . '/' . implode(',', $fid_list), $edit, t('Remove selected'));
 
     // Check that the first file has been deleted but not the second.
@@ -181,7 +181,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
     $edit = [$file_field_name => drupal_realpath($test_file->getFileUri())];
     $this->drupalPostForm(NULL, $edit, t('Upload'));
-    $this->drupalPostForm(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, [], t('Save'));
 
     $fid = $this->getLastFileId();
     /** @var $file \Drupal\file\FileInterface */

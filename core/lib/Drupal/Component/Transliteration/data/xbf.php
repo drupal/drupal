@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'ppess', 'ppeng', 'ppej', 'ppech', 'ppek', 'ppet', 'ppep', 'ppeh', 'ppyeo', 'ppyeog', 'ppyeokk', 'ppyeogs', 'ppyeon', 'ppyeonj', 'ppyeonh', 'ppyeod',
   0x10 => 'ppyeol', 'ppyeolg', 'ppyeolm', 'ppyeolb', 'ppyeols', 'ppyeolt', 'ppyeolp', 'ppyeolh', 'ppyeom', 'ppyeob', 'ppyeobs', 'ppyeos', 'ppyeoss', 'ppyeong', 'ppyeoj', 'ppyeoch',
   0x20 => 'ppyeok', 'ppyeot', 'ppyeop', 'ppyeoh', 'ppye', 'ppyeg', 'ppyekk', 'ppyegs', 'ppyen', 'ppyenj', 'ppyenh', 'ppyed', 'ppyel', 'ppyelg', 'ppyelm', 'ppyelb',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'ppun', 'ppunj', 'ppunh', 'ppud', 'ppul', 'ppulg', 'ppulm', 'ppulb', 'ppuls', 'ppult', 'ppulp', 'ppulh', 'ppum', 'ppub', 'ppubs', 'ppus',
   0xE0 => 'ppuss', 'ppung', 'ppuj', 'ppuch', 'ppuk', 'pput', 'ppup', 'ppuh', 'ppwo', 'ppwog', 'ppwokk', 'ppwogs', 'ppwon', 'ppwonj', 'ppwonh', 'ppwod',
   0xF0 => 'ppwol', 'ppwolg', 'ppwolm', 'ppwolb', 'ppwols', 'ppwolt', 'ppwolp', 'ppwolh', 'ppwom', 'ppwob', 'ppwobs', 'ppwos', 'ppwoss', 'ppwong', 'ppwoj', 'ppwoch',
-);
+];

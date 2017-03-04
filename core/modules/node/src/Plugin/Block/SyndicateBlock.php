@@ -21,9 +21,9 @@ class SyndicateBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'block_count' => 10,
-    );
+    ];
   }
 
   /**
@@ -37,10 +37,10 @@ class SyndicateBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    return array(
+    return [
       '#theme' => 'feed_icon',
       '#url' => 'rss.xml',
-    );
+    ];
   }
 
 }

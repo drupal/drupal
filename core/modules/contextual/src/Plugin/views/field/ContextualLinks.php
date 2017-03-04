@@ -35,8 +35,8 @@ class ContextualLinks extends FieldPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['fields'] = array('default' => array());
-    $options['destination'] = array('default' => 1);
+    $options['fields'] = ['default' => []];
+    $options['destination'] = ['default' => 1];
 
     return $options;
   }
@@ -48,23 +48,23 @@ class ContextualLinks extends FieldPluginBase {
     $all_fields = $this->view->display_handler->getFieldLabels();
     // Offer to include only those fields that follow this one.
     $field_options = array_slice($all_fields, 0, array_search($this->options['id'], array_keys($all_fields)));
-    $form['fields'] = array(
+    $form['fields'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Fields'),
       '#description' => $this->t('Fields to be included as contextual links.'),
       '#options' => $field_options,
       '#default_value' => $this->options['fields'],
-    );
-    $form['destination'] = array(
+    ];
+    $form['destination'] = [
       '#type' => 'select',
       '#title' => $this->t('Include destination'),
       '#description' => $this->t('Include a "destination" parameter in the link to return the user to the original view upon completing the contextual action.'),
-      '#options' => array(
+      '#options' => [
         '0' => $this->t('No'),
         '1' => $this->t('Yes'),
-      ),
+      ],
       '#default_value' => $this->options['destination'],
-    );
+    ];
   }
 
   /**
@@ -93,7 +93,7 @@ class ContextualLinks extends FieldPluginBase {
    * @see contextual_contextual_links_view_alter()
    */
   public function render(ResultRow $values) {
-    $links = array();
+    $links = [];
     foreach ($this->options['fields'] as $field) {
       $rendered_field = $this->view->style_plugin->getField($values->index, $field);
       if (empty($rendered_field)) {
@@ -109,13 +109,13 @@ class ContextualLinks extends FieldPluginBase {
       }
       if (!empty($title) && !empty($path)) {
         // Make sure that tokens are replaced for this paths as well.
-        $tokens = $this->getRenderTokens(array());
+        $tokens = $this->getRenderTokens([]);
         $path = strip_tags(Html::decodeEntities(strtr($path, $tokens)));
 
-        $links[$field] = array(
+        $links[$field] = [
           'href' => $path,
           'title' => $title,
-        );
+        ];
         if (!empty($this->options['destination'])) {
           $links[$field]['query'] = $this->getDestinationArray();
         }
@@ -124,20 +124,20 @@ class ContextualLinks extends FieldPluginBase {
 
     // Renders a contextual links placeholder.
     if (!empty($links)) {
-      $contextual_links = array(
-        'contextual' => array(
+      $contextual_links = [
+        'contextual' => [
           '',
-          array(),
-          array(
+          [],
+          [
             'contextual-views-field-links' => UrlHelper::encodePath(Json::encode($links)),
-          )
-        )
-      );
+          ]
+        ]
+      ];
 
-      $element = array(
+      $element = [
         '#type' => 'contextual_links_placeholder',
         '#id' => _contextual_links_to_id($contextual_links),
-      );
+      ];
       return drupal_render($element);
     }
     else {

@@ -50,7 +50,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
   /**
    * {@inheritdoc}
    */
-  protected $defaults = array(
+  protected $defaults = [
     // Human readable label for breakpoint.
     'label' => '',
     // The media query for the breakpoint.
@@ -58,14 +58,14 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
     // Weight used for ordering breakpoints.
     'weight' => 0,
     // Breakpoint multipliers.
-    'multipliers' => array(),
+    'multipliers' => [],
     // The breakpoint group.
     'group' => '',
     // Default class for breakpoint implementations.
     'class' => 'Drupal\breakpoint\Breakpoint',
     // The plugin id. Set by the plugin system based on the top-level YAML key.
     'id' => '',
-  );
+  ];
 
   /**
    * The theme handler.
@@ -86,7 +86,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
    *
    * @var array
    */
-  protected $instances = array();
+  protected $instances = [];
 
   /**
    * Constructs a new BreakpointManager instance.
@@ -106,7 +106,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
     $this->themeHandler = $theme_handler;
     $this->setStringTranslation($string_translation);
     $this->alterInfo('breakpoints');
-    $this->setCacheBackend($cache_backend, 'breakpoints', array('breakpoints'));
+    $this->setCacheBackend($cache_backend, 'breakpoints', ['breakpoints']);
   }
 
   /**
@@ -153,19 +153,19 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
         $this->breakpointsByGroup[$group] = $cache->data;
       }
       else {
-        $breakpoints = array();
+        $breakpoints = [];
         foreach ($this->getDefinitions() as $plugin_id => $plugin_definition) {
           if ($plugin_definition['group'] == $group) {
             $breakpoints[$plugin_id] = $plugin_definition;
           }
         }
-        uasort($breakpoints, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
-        $this->cacheBackend->set($this->cacheKey . ':' . $group, $breakpoints, Cache::PERMANENT, array('breakpoints'));
+        uasort($breakpoints, ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
+        $this->cacheBackend->set($this->cacheKey . ':' . $group, $breakpoints, Cache::PERMANENT, ['breakpoints']);
         $this->breakpointsByGroup[$group] = $breakpoints;
       }
     }
 
-    $instances = array();
+    $instances = [];
     foreach ($this->breakpointsByGroup[$group] as $plugin_id => $definition) {
       if (!isset($this->instances[$plugin_id])) {
         $this->instances[$plugin_id] = $this->createInstance($plugin_id);
@@ -184,16 +184,16 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
       $groups = $cache->data;
     }
     else {
-      $groups = array();
+      $groups = [];
       foreach ($this->getDefinitions() as $plugin_definition) {
         if (!isset($groups[$plugin_definition['group']])) {
           $groups[$plugin_definition['group']] = $plugin_definition['group'];
         }
       }
-      $this->cacheBackend->set($this->cacheKey . '::groups', $groups, Cache::PERMANENT, array('breakpoints'));
+      $this->cacheBackend->set($this->cacheKey . '::groups', $groups, Cache::PERMANENT, ['breakpoints']);
     }
     // Get the labels. This is not cacheable due to translation.
-    $group_labels = array();
+    $group_labels = [];
     foreach ($groups as $group) {
       $group_labels[$group] = $this->getGroupLabel($group);
     }
@@ -205,7 +205,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
    * {@inheritdoc}
    */
   public function getGroupProviders($group) {
-    $providers = array();
+    $providers = [];
     $breakpoints = $this->getBreakpointsByGroup($group);
     foreach ($breakpoints as $breakpoint) {
       $provider = $breakpoint->getProvider();
@@ -229,7 +229,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
   public function clearCachedDefinitions() {
     parent::clearCachedDefinitions();
     $this->breakpointsByGroup = NULL;
-    $this->instances = array();
+    $this->instances = [];
   }
 
   /**
@@ -251,7 +251,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
     }
     else {
       // Custom group label that should be translatable.
-      $label = $this->t($group, array(), array('context' => 'breakpoint'));
+      $label = $this->t($group, [], ['context' => 'breakpoint']);
     }
     return $label;
   }

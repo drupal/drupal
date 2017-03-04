@@ -37,13 +37,13 @@ class VocabularyUiTest extends TaxonomyTestBase {
 
     // Create a new vocabulary.
     $this->clickLink(t('Add vocabulary'));
-    $edit = array();
+    $edit = [];
     $vid = Unicode::strtolower($this->randomMachineName());
     $edit['name'] = $this->randomMachineName();
     $edit['description'] = $this->randomMachineName();
     $edit['vid'] = $vid;
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Created new vocabulary %name.', array('%name' => $edit['name'])), 'Vocabulary created successfully.');
+    $this->assertRaw(t('Created new vocabulary %name.', ['%name' => $edit['name']]), 'Vocabulary created successfully.');
 
     // Edit the vocabulary.
     $this->drupalGet('admin/structure/taxonomy');
@@ -51,7 +51,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertText($edit['description'], 'Vocabulary description found in the vocabulary overview listing.');
     $this->assertLinkByHref(Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $edit['vid']])->toString());
     $this->clickLink(t('Edit vocabulary'));
-    $edit = array();
+    $edit = [];
     $edit['name'] = $this->randomMachineName();
     $edit['description'] = $this->randomMachineName();
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -70,15 +70,15 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertText(t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
 
     // Ensure that vocabulary titles are escaped properly.
-    $edit = array();
+    $edit = [];
     $edit['name'] = 'Don\'t Panic';
     $edit['description'] = $this->randomMachineName();
     $edit['vid'] = 'don_t_panic';
     $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
 
     $site_name = $this->config('system.site')->get('name');
-    $this->assertTitle(t('Don\'t Panic | @site-name', array('@site-name' => $site_name)), 'The page title contains the escaped character.');
-    $this->assertNoTitle(t('Don&#039;t Panic | @site-name', array('@site-name' => $site_name)), 'The page title does not contain an encoded character.');
+    $this->assertTitle(t('Don\'t Panic | @site-name', ['@site-name' => $site_name]), 'The page title contains the escaped character.');
+    $this->assertNoTitle(t('Don&#039;t Panic | @site-name', ['@site-name' => $site_name]), 'The page title does not contain an encoded character.');
   }
 
   /**
@@ -91,7 +91,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     }
     // Get all vocabularies and change their weights.
     $vocabularies = Vocabulary::loadMultiple();
-    $edit = array();
+    $edit = [];
     foreach ($vocabularies as $key => $vocabulary) {
       $weight = -$vocabulary->get('weight');
       $vocabularies[$key]->set('weight', $weight);
@@ -132,10 +132,10 @@ class VocabularyUiTest extends TaxonomyTestBase {
   function testTaxonomyAdminDeletingVocabulary() {
     // Create a vocabulary.
     $vid = Unicode::strtolower($this->randomMachineName());
-    $edit = array(
+    $edit = [
       'name' => $this->randomMachineName(),
       'vid' => $vid,
-    );
+    ];
     $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
     $this->assertText(t('Created new vocabulary'), 'New vocabulary was created.');
 
@@ -147,12 +147,12 @@ class VocabularyUiTest extends TaxonomyTestBase {
     // Delete the vocabulary.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id());
     $this->clickLink(t('Delete'));
-    $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->label())), '[confirm deletion] Asks for confirmation.');
+    $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', ['%name' => $vocabulary->label()]), '[confirm deletion] Asks for confirmation.');
     $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), '[confirm deletion] Inform that all terms will be deleted.');
 
     // Confirm deletion.
     $this->drupalPostForm(NULL, NULL, t('Delete'));
-    $this->assertRaw(t('Deleted vocabulary %name.', array('%name' => $vocabulary->label())), 'Vocabulary deleted.');
+    $this->assertRaw(t('Deleted vocabulary %name.', ['%name' => $vocabulary->label()]), 'Vocabulary deleted.');
     $this->container->get('entity.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertFalse(Vocabulary::load($vid), 'Vocabulary not found.');
   }

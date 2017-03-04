@@ -100,7 +100,7 @@ interface DrupalKernelInterface extends HttpKernelInterface, ContainerAwareInter
    * @param array $module_filenames
    *   List of module filenames, keyed by module name.
    */
-  public function updateModules(array $module_list, array $module_filenames = array());
+  public function updateModules(array $module_list, array $module_filenames = []);
 
   /**
    * Force a container rebuild.

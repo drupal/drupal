@@ -77,7 +77,7 @@ class Node extends DrupalSqlBase {
     $query->innerJoin('node', 'n', static::JOIN);
     $this->handleTranslations($query);
 
-    $query->fields('n', array(
+    $query->fields('n', [
         'nid',
         'type',
         'language',
@@ -90,8 +90,8 @@ class Node extends DrupalSqlBase {
         'sticky',
         'tnid',
         'translate',
-      ))
-      ->fields('nr', array(
+      ])
+      ->fields('nr', [
         'title',
         'body',
         'teaser',
@@ -99,7 +99,7 @@ class Node extends DrupalSqlBase {
         'timestamp',
         'format',
         'vid',
-      ));
+      ]);
     $query->addField('n', 'uid', 'node_uid');
     $query->addField('nr', 'uid', 'revision_uid');
 
@@ -129,7 +129,7 @@ class Node extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    $fields = array(
+    $fields = [
       'nid' => $this->t('Node ID'),
       'type' => $this->t('Type'),
       'title' => $this->t('Title'),
@@ -147,7 +147,7 @@ class Node extends DrupalSqlBase {
       'language' => $this->t('Language (fr, en, ...)'),
       'tnid' => $this->t('The translation set id for this node'),
       'timestamp' => $this->t('The timestamp the latest revision of this node was created.'),
-    );
+    ];
     return $fields;
   }
 

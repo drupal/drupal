@@ -124,7 +124,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
     $config_name = 'locale_test.translation';
     ConfigurableLanguage::createFromLangcode('en')->save();
     // Adding a language on the UI would normally call updateConfigTranslations.
-    $this->localeConfigManager->updateConfigTranslations(array($config_name), array('en'));
+    $this->localeConfigManager->updateConfigTranslations([$config_name], ['en']);
     $this->assertConfigOverride($config_name, 'test', 'English test', 'en');
 
     $this->configFactory->getEditable('locale.settings')->set('translate_english', TRUE)->save();

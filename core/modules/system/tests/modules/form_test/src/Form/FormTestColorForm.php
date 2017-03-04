@@ -22,14 +22,14 @@ class FormTestColorForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['color'] = array(
+    $form['color'] = [
       '#type' => 'color',
       '#title' => 'Color',
-    );
-    $form['submit'] = array(
+    ];
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => 'Submit',
-    );
+    ];
     return $form;
   }
 

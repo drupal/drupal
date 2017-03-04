@@ -19,17 +19,17 @@ class RelationshipTest extends RelationshipJoinTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Maps between the key in the expected result and the query result.
    *
    * @var array
    */
-  protected $columnMap = array(
+  protected $columnMap = [
     'views_test_data_name' => 'name',
     'users_field_data_views_test_data_uid' => 'uid',
-  );
+  ];
 
   /**
    * Tests the query result of a view with a relationship.
@@ -42,53 +42,53 @@ class RelationshipTest extends RelationshipJoinTestBase {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
-    $view->displayHandlers->get('default')->overrideOption('relationships', array(
-      'uid' => array(
+    $view->displayHandlers->get('default')->overrideOption('relationships', [
+      'uid' => [
         'id' => 'uid',
         'table' => 'views_test_data',
         'field' => 'uid',
-      ),
-    ));
+      ],
+    ]);
 
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'uid' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'uid' => [
         'id' => 'uid',
         'table' => 'users_field_data',
         'field' => 'uid',
         'relationship' => 'uid',
-      ),
-    ));
+      ],
+    ]);
 
     $fields = $view->displayHandlers->get('default')->getOption('fields');
-    $view->displayHandlers->get('default')->overrideOption('fields', $fields + array(
-      'uid' => array(
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
+      'uid' => [
         'id' => 'uid',
         'table' => 'users_field_data',
         'field' => 'uid',
         'relationship' => 'uid',
-      ),
-    ));
+      ],
+    ]);
 
     $view->initHandlers();
 
     // Check for all beatles created by admin.
-    $view->filter['uid']->value = array(1);
+    $view->filter['uid']->value = [1];
     $this->executeView($view);
 
-    $expected_result = array(
-      array(
+    $expected_result = [
+      [
         'name' => 'John',
         'uid' => 1
-      )
-    );
+      ]
+    ];
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
     $view->destroy();
 
     // Check for all beatles created by another user, which so doesn't exist.
     $view->initHandlers();
-    $view->filter['uid']->value = array(3);
+    $view->filter['uid']->value = [3];
     $this->executeView($view);
-    $expected_result = array();
+    $expected_result = [];
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
     $view->destroy();
 
@@ -98,12 +98,12 @@ class RelationshipTest extends RelationshipJoinTestBase {
     $view->relationship['uid']->options['required'] = TRUE;
     $this->executeView($view);
 
-    $expected_result = array(
-      array(
+    $expected_result = [
+      [
         'name' => 'John',
         'uid' => 1
-      )
-    );
+      ]
+    ];
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
     $view->destroy();
 

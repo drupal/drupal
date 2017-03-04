@@ -26,37 +26,37 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'match_operator' => 'CONTAINS',
       'size' => '60',
       'placeholder' => '',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element['match_operator'] = array(
+    $element['match_operator'] = [
       '#type' => 'radios',
       '#title' => t('Autocomplete matching'),
       '#default_value' => $this->getSetting('match_operator'),
       '#options' => $this->getMatchOperatorOptions(),
       '#description' => t('Select the method used to collect autocomplete suggestions. Note that <em>Contains</em> can cause performance issues on sites with thousands of entities.'),
-    );
-    $element['size'] = array(
+    ];
+    $element['size'] = [
       '#type' => 'number',
       '#title' => t('Size of textfield'),
       '#default_value' => $this->getSetting('size'),
       '#min' => 1,
       '#required' => TRUE,
-    );
-    $element['placeholder'] = array(
+    ];
+    $element['placeholder'] = [
       '#type' => 'textfield',
       '#title' => t('Placeholder'),
       '#default_value' => $this->getSetting('placeholder'),
       '#description' => t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
-    );
+    ];
     return $element;
   }
 
@@ -64,14 +64,14 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = [];
 
     $operators = $this->getMatchOperatorOptions();
-    $summary[] = t('Autocomplete matching: @match_operator', array('@match_operator' => $operators[$this->getSetting('match_operator')]));
-    $summary[] = t('Textfield size: @size', array('@size' => $this->getSetting('size')));
+    $summary[] = t('Autocomplete matching: @match_operator', ['@match_operator' => $operators[$this->getSetting('match_operator')]]);
+    $summary[] = t('Textfield size: @size', ['@size' => $this->getSetting('size')]);
     $placeholder = $this->getSetting('placeholder');
     if (!empty($placeholder)) {
-      $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
+      $summary[] = t('Placeholder: @placeholder', ['@placeholder' => $placeholder]);
     }
     else {
       $summary[] = t('No placeholder');
@@ -90,7 +90,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
     // Append the match operation to the selection settings.
     $selection_settings = $this->getFieldSetting('handler_settings') + ['match_operator' => $this->getSetting('match_operator')];
 
-    $element += array(
+    $element += [
       '#type' => 'entity_autocomplete',
       '#target_type' => $this->getFieldSetting('target_type'),
       '#selection_handler' => $this->getFieldSetting('handler'),
@@ -102,16 +102,16 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
       '#default_value' => isset($referenced_entities[$delta]) ? $referenced_entities[$delta] : NULL,
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
-    );
+    ];
 
     if ($this->getSelectionHandlerSetting('auto_create') && ($bundle = $this->getAutocreateBundle())) {
-      $element['#autocreate'] = array(
+      $element['#autocreate'] = [
         'bundle' => $bundle,
         'uid' => ($entity instanceof EntityOwnerInterface) ? $entity->getOwnerId() : \Drupal::currentUser()->id()
-      );
+      ];
     }
 
-    return array('target_id' => $element);
+    return ['target_id' => $element];
   }
 
   /**

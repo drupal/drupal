@@ -30,7 +30,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'image', 'field_ui', 'image_module_test');
+  public static $modules = ['node', 'image', 'field_ui', 'image_module_test'];
 
   /**
    * An user with permissions to administer content types and image styles.
@@ -44,11 +44,11 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
 
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+      $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
+      $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     }
 
-    $this->adminUser = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer node fields', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles', 'administer node display'));
+    $this->adminUser = $this->drupalCreateUser(['access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer node fields', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles', 'administer node display']);
     $this->drupalLogin($this->adminUser);
   }
 
@@ -63,9 +63,9 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
    *   The type of node to create.
    */
   function previewNodeImage($image, $field_name, $type) {
-    $edit = array(
+    $edit = [
       'title[0][value]' => $this->randomMachineName(),
-    );
+    ];
     $edit['files[' . $field_name . '_0]'] = drupal_realpath($image->uri);
     $this->drupalPostForm('node/add/' . $type, $edit, t('Preview'));
   }
@@ -83,9 +83,9 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
    *   The alt text for the image. Use if the field settings require alt text.
    */
   function uploadNodeImage($image, $field_name, $type, $alt = '') {
-    $edit = array(
+    $edit = [
       'title[0][value]' => $this->randomMachineName(),
-    );
+    ];
     $edit['files[' . $field_name . '_0]'] = drupal_realpath($image->uri);
     $this->drupalPostForm('node/add/' . $type, $edit, t('Save and publish'));
     if ($alt) {
@@ -94,7 +94,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
     }
 
     // Retrieve ID of the newly created node from the current URL.
-    $matches = array();
+    $matches = [];
     preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
     return isset($matches[1]) ? $matches[1] : FALSE;
   }

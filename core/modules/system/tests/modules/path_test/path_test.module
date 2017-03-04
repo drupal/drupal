@@ -9,14 +9,14 @@
  * Resets the path test results.
  */
 function path_test_reset() {
-  \Drupal::state()->set('path_test.results', array());
+  \Drupal::state()->set('path_test.results', []);
 }
 
 /**
  * Implements hook_path_update().
  */
 function path_test_path_update($path) {
-  $results = \Drupal::state()->get('path_test.results') ?: array();
+  $results = \Drupal::state()->get('path_test.results') ?: [];
   $results['hook_path_update'] = $path;
   \Drupal::state()->set('path_test.results', $results);
 }

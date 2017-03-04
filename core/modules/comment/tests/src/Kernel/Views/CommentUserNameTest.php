@@ -43,11 +43,11 @@ class CommentUserNameTest extends ViewsKernelTestBase {
     $storage = \Drupal::entityManager()->getStorage('user');
     // Insert a row for the anonymous user.
     $storage
-      ->create(array(
+      ->create([
         'uid' => 0,
         'name' => '',
         'status' => 0,
-      ))
+      ])
       ->save();
 
     $admin_role = Role::create([

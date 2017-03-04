@@ -24,7 +24,7 @@ class LinkItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('link');
+  public static $modules = ['link'];
 
   protected function setUp() {
     parent::setUp();
@@ -78,7 +78,7 @@ class LinkItemTest extends FieldKernelTestBase {
     $entity->field_test->uri = $parsed_url['path'];
     $entity->field_test->title = $title;
     $entity->field_test->first()->get('options')->set('query', $parsed_url['query']);
-    $entity->field_test->first()->get('options')->set('attributes', array('class' => $class));
+    $entity->field_test->first()->get('options')->set('attributes', ['class' => $class]);
     $this->assertEquals([
       'query' => $parsed_url['query'],
       'attributes' => [
@@ -118,7 +118,7 @@ class LinkItemTest extends FieldKernelTestBase {
     $entity->field_test->uri = $new_url;
     $entity->field_test->title = $new_title;
     $entity->field_test->first()->get('options')->set('query', NULL);
-    $entity->field_test->first()->get('options')->set('attributes', array('class' => $new_class));
+    $entity->field_test->first()->get('options')->set('attributes', ['class' => $new_class]);
     $this->assertEqual($entity->field_test->uri, $new_url);
     $this->assertEqual($entity->field_test->title, $new_title);
     $this->assertEqual($entity->field_test->options['attributes']['class'], $new_class);

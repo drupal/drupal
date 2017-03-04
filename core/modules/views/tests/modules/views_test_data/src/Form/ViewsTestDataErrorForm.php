@@ -21,13 +21,13 @@ class ViewsTestDataErrorForm implements FormInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['text'] = array(
+    $form['text'] = [
       '#type' => 'textfield',
-    );
-    $form['submit'] = array(
+    ];
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => t('Submit'),
-    );
+    ];
 
     return $form;
   }

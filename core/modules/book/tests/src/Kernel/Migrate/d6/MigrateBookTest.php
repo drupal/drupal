@@ -32,7 +32,7 @@ class MigrateBookTest extends MigrateDrupal6TestBase {
    * Tests the Drupal 6 book structure to Drupal 8 migration.
    */
   public function testBook() {
-    $nodes = Node::loadMultiple(array(4, 5, 6, 7, 8));
+    $nodes = Node::loadMultiple([4, 5, 6, 7, 8]);
     $this->assertIdentical('4', $nodes[4]->book['bid']);
     $this->assertIdentical('0', $nodes[4]->book['pid']);
 
@@ -53,8 +53,8 @@ class MigrateBookTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('5', $tree['49990 Node 4 4']['below']['50000 Node 5 5']['link']['nid']);
     $this->assertIdentical('6', $tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 6 6']['link']['nid']);
     $this->assertIdentical('7', $tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 7 7']['link']['nid']);
-    $this->assertIdentical(array(), $tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 6 6']['below']);
-    $this->assertIdentical(array(), $tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 7 7']['below']);
+    $this->assertIdentical([], $tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 6 6']['below']);
+    $this->assertIdentical([], $tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 7 7']['below']);
   }
 
 }

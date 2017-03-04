@@ -21,7 +21,7 @@ class Url extends FieldPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['display_as_link'] = array('default' => TRUE);
+    $options['display_as_link'] = ['default' => TRUE];
 
     return $options;
   }
@@ -30,11 +30,11 @@ class Url extends FieldPluginBase {
    * Provide link to the page being visited.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $form['display_as_link'] = array(
+    $form['display_as_link'] = [
       '#title' => $this->t('Display as link'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['display_as_link']),
-    );
+    ];
     parent::buildOptionsForm($form, $form_state);
   }
 

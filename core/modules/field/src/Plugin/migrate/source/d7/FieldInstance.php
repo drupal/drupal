@@ -25,7 +25,7 @@ class FieldInstance extends DrupalSqlBase {
       ->condition('fc.active', 1)
       ->condition('fc.deleted', 0)
       ->condition('fc.storage_active', 1)
-      ->fields('fc', array('type'));
+      ->fields('fc', ['type']);
 
     $query->innerJoin('field_config', 'fc', 'fci.field_id = fc.id');
     $query->addField('fc', 'data', 'field_data');
@@ -46,7 +46,7 @@ class FieldInstance extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'field_name' => $this->t('The machine name of field.'),
       'entity_type' => $this->t('The entity type.'),
       'bundle' => $this->t('The entity bundle.'),
@@ -55,7 +55,7 @@ class FieldInstance extends DrupalSqlBase {
       'widget_settings' => $this->t('Widget settings.'),
       'display_settings' => $this->t('Display settings.'),
       'field_settings' => $this->t('Field settings.'),
-    );
+    ];
   }
 
   /**
@@ -68,7 +68,7 @@ class FieldInstance extends DrupalSqlBase {
     $row->setSourceProperty('description', $data['description']);
     $row->setSourceProperty('required', $data['required']);
 
-    $default_value = !empty($data['default_value']) ? $data['default_value'] : array();
+    $default_value = !empty($data['default_value']) ? $data['default_value'] : [];
     if ($data['widget']['type'] == 'email_textfield' && $default_value) {
       $default_value[0]['value'] = $default_value[0]['email'];
       unset($default_value[0]['email']);
@@ -112,20 +112,20 @@ class FieldInstance extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function getIds() {
-    return array(
-      'entity_type' => array(
+    return [
+      'entity_type' => [
         'type' => 'string',
         'alias' => 'fci',
-      ),
-      'bundle' => array(
+      ],
+      'bundle' => [
         'type' => 'string',
         'alias' => 'fci',
-      ),
-      'field_name' => array(
+      ],
+      'field_name' => [
         'type' => 'string',
         'alias' => 'fci',
-      ),
-    );
+      ],
+    ];
   }
 
 }

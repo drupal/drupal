@@ -21,7 +21,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user');
+  public static $modules = ['system', 'user'];
 
   /**
    * A key/value store factory.
@@ -42,21 +42,21 @@ class TempStoreDatabaseTest extends KernelTestBase {
    *
    * @var array
    */
-  protected $users = array();
+  protected $users = [];
 
   /**
    * An array of random stdClass objects.
    *
    * @var array
    */
-  protected $objects = array();
+  protected $objects = [];
 
   protected function setUp() {
     parent::setUp();
 
     // Install system tables to test the key/value storage without installing a
     // full Drupal environment.
-    $this->installSchema('system', array('key_value_expire'));
+    $this->installSchema('system', ['key_value_expire']);
 
     // Create several objects for testing.
     for ($i = 0; $i <= 3; $i++) {
@@ -135,7 +135,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
     // Now manually expire the item (this is not exposed by the API) and then
     // assert it is no longer accessible.
     db_update('key_value_expire')
-      ->fields(array('expire' => REQUEST_TIME - 1))
+      ->fields(['expire' => REQUEST_TIME - 1])
       ->condition('collection', "user.shared_tempstore.$collection")
       ->condition('name', $key)
       ->execute();

@@ -59,25 +59,25 @@ class HtmlTest extends UnitTestCase {
     $id1 = 'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ-0123456789';
     $id2 = '¡¢£¤¥';
     $id3 = 'css__identifier__with__double__underscores';
-    return array(
+    return [
       // Verify that no valid ASCII characters are stripped from the identifier.
-      array($id1, $id1, array()),
+      [$id1, $id1, []],
       // Verify that valid UTF-8 characters are not stripped from the identifier.
-      array($id2, $id2, array()),
+      [$id2, $id2, []],
       // Verify that invalid characters (including non-breaking space) are stripped from the identifier.
-      array($id3, $id3),
+      [$id3, $id3],
       // Verify that double underscores are not stripped from the identifier.
-      array('invalididentifier', 'invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', array()),
+      ['invalididentifier', 'invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', []],
       // Verify that an identifier starting with a digit is replaced.
-      array('_cssidentifier', '1cssidentifier', array()),
+      ['_cssidentifier', '1cssidentifier', []],
       // Verify that an identifier starting with a hyphen followed by a digit is
       // replaced.
-      array('__cssidentifier', '-1cssidentifier', array()),
+      ['__cssidentifier', '-1cssidentifier', []],
       // Verify that an identifier starting with two hyphens is replaced.
-      array('__cssidentifier', '--cssidentifier', array()),
+      ['__cssidentifier', '--cssidentifier', []],
       // Verify that passing double underscores as a filter is processed.
-      array('_cssidentifier', '__cssidentifier', array('__' => '_')),
-    );
+      ['_cssidentifier', '__cssidentifier', ['__' => '_']],
+    ];
   }
 
   /**
@@ -119,18 +119,18 @@ class HtmlTest extends UnitTestCase {
    */
   public function providerTestHtmlGetUniqueId() {
     $id = 'abcdefghijklmnopqrstuvwxyz-0123456789';
-    return array(
+    return [
       // Verify that letters, digits, and hyphens are not stripped from the ID.
-      array($id, $id),
+      [$id, $id],
       // Verify that invalid characters are stripped from the ID.
-      array('invalididentifier', 'invalid,./:@\\^`{Üidentifier'),
+      ['invalididentifier', 'invalid,./:@\\^`{Üidentifier'],
       // Verify Drupal coding standards are enforced.
-      array('id-name-1', 'ID NAME_[1]'),
+      ['id-name-1', 'ID NAME_[1]'],
       // Verify that a repeated ID is made unique.
-      array('test-unique-id', 'test-unique-id', TRUE),
-      array('test-unique-id--2', 'test-unique-id'),
-      array('test-unique-id--3', 'test-unique-id'),
-    );
+      ['test-unique-id', 'test-unique-id', TRUE],
+      ['test-unique-id--2', 'test-unique-id'],
+      ['test-unique-id--3', 'test-unique-id'],
+    ];
   }
 
   /**
@@ -168,13 +168,13 @@ class HtmlTest extends UnitTestCase {
    *   Test data.
    */
   public function providerTestHtmlGetUniqueIdWithAjaxIds() {
-    return array(
-      array('test-unique-id1--', 'test-unique-id1'),
+    return [
+      ['test-unique-id1--', 'test-unique-id1'],
       // Note, we truncate two hyphens at the end.
       // @see \Drupal\Component\Utility\Html::getId()
-      array('test-unique-id1---', 'test-unique-id1--'),
-      array('test-unique-id2--', 'test-unique-id2'),
-    );
+      ['test-unique-id1---', 'test-unique-id1--'],
+      ['test-unique-id2--', 'test-unique-id2'],
+    ];
   }
 
   /**
@@ -202,17 +202,17 @@ class HtmlTest extends UnitTestCase {
    */
   public function providerTestHtmlGetId() {
     $id = 'abcdefghijklmnopqrstuvwxyz-0123456789';
-    return array(
+    return [
       // Verify that letters, digits, and hyphens are not stripped from the ID.
-      array($id, $id),
+      [$id, $id],
       // Verify that invalid characters are stripped from the ID.
-      array('invalididentifier', 'invalid,./:@\\^`{Üidentifier'),
+      ['invalididentifier', 'invalid,./:@\\^`{Üidentifier'],
       // Verify Drupal coding standards are enforced.
-      array('id-name-1', 'ID NAME_[1]'),
+      ['id-name-1', 'ID NAME_[1]'],
       // Verify that a repeated ID is made unique.
-      array('test-unique-id', 'test-unique-id'),
-      array('test-unique-id', 'test-unique-id'),
-    );
+      ['test-unique-id', 'test-unique-id'],
+      ['test-unique-id', 'test-unique-id'],
+    ];
   }
 
   /**
@@ -231,29 +231,29 @@ class HtmlTest extends UnitTestCase {
    * @see testDecodeEntities()
    */
   public function providerDecodeEntities() {
-    return array(
-      array('Drupal', 'Drupal'),
-      array('<script>', '<script>'),
-      array('&lt;script&gt;', '<script>'),
-      array('&#60;script&#62;', '<script>'),
-      array('&amp;lt;script&amp;gt;', '&lt;script&gt;'),
-      array('"', '"'),
-      array('&#34;', '"'),
-      array('&amp;#34;', '&#34;'),
-      array('&quot;', '"'),
-      array('&amp;quot;', '&quot;'),
-      array("'", "'"),
-      array('&#39;', "'"),
-      array('&amp;#39;', '&#39;'),
-      array('©', '©'),
-      array('&copy;', '©'),
-      array('&#169;', '©'),
-      array('→', '→'),
-      array('&#8594;', '→'),
-      array('➼', '➼'),
-      array('&#10172;', '➼'),
-      array('&euro;', '€'),
-    );
+    return [
+      ['Drupal', 'Drupal'],
+      ['<script>', '<script>'],
+      ['&lt;script&gt;', '<script>'],
+      ['&#60;script&#62;', '<script>'],
+      ['&amp;lt;script&amp;gt;', '&lt;script&gt;'],
+      ['"', '"'],
+      ['&#34;', '"'],
+      ['&amp;#34;', '&#34;'],
+      ['&quot;', '"'],
+      ['&amp;quot;', '&quot;'],
+      ["'", "'"],
+      ['&#39;', "'"],
+      ['&amp;#39;', '&#39;'],
+      ['©', '©'],
+      ['&copy;', '©'],
+      ['&#169;', '©'],
+      ['→', '→'],
+      ['&#8594;', '→'],
+      ['➼', '➼'],
+      ['&#10172;', '➼'],
+      ['&euro;', '€'],
+    ];
   }
 
   /**
@@ -272,21 +272,21 @@ class HtmlTest extends UnitTestCase {
    * @see testEscape()
    */
   public function providerEscape() {
-    return array(
-      array('Drupal', 'Drupal'),
-      array('&lt;script&gt;', '<script>'),
-      array('&amp;lt;script&amp;gt;', '&lt;script&gt;'),
-      array('&amp;#34;', '&#34;'),
-      array('&quot;', '"'),
-      array('&amp;quot;', '&quot;'),
-      array('&#039;', "'"),
-      array('&amp;#039;', '&#039;'),
-      array('©', '©'),
-      array('→', '→'),
-      array('➼', '➼'),
-      array('€', '€'),
-      array('Drup�al', "Drup\x80al"),
-    );
+    return [
+      ['Drupal', 'Drupal'],
+      ['&lt;script&gt;', '<script>'],
+      ['&amp;lt;script&amp;gt;', '&lt;script&gt;'],
+      ['&amp;#34;', '&#34;'],
+      ['&quot;', '"'],
+      ['&amp;quot;', '&quot;'],
+      ['&#039;', "'"],
+      ['&amp;#039;', '&#039;'],
+      ['©', '©'],
+      ['→', '→'],
+      ['➼', '➼'],
+      ['€', '€'],
+      ['Drup�al', "Drup\x80al"],
+    ];
   }
 
   /**

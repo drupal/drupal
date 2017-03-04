@@ -49,10 +49,10 @@ function template_preprocess_admin_block_content(&$variables) {
  *     'right'.
  */
 function template_preprocess_admin_page(&$variables) {
-  $variables['system_compact_link'] = array(
+  $variables['system_compact_link'] = [
     '#type' => 'system_compact_link',
-  );
-  $variables['containers'] = array();
+  ];
+  $variables['containers'] = [];
   $stripe = 0;
   foreach ($variables['blocks'] as $block) {
     if (!empty($block['content']['#content'])) {
@@ -60,10 +60,10 @@ function template_preprocess_admin_page(&$variables) {
         // Perform automatic striping.
         $block['position'] = ++$stripe % 2 ? 'left' : 'right';
       }
-      $variables['containers'][$block['position']]['blocks'][] = array(
+      $variables['containers'][$block['position']]['blocks'][] = [
         '#theme' => 'admin_block',
         '#block' => $block,
-      );
+      ];
     }
   }
 }
@@ -78,10 +78,10 @@ function template_preprocess_admin_page(&$variables) {
  *   - menu_items: An array of modules to be displayed.
  */
 function template_preprocess_system_admin_index(&$variables) {
-  $variables['system_compact_link'] = array(
+  $variables['system_compact_link'] = [
     '#type' => 'system_compact_link',
-  );
-  $variables['containers'] = array();
+  ];
+  $variables['containers'] = [];
   $stripe = 0;
   // Iterate over all modules.
   foreach ($variables['menu_items'] as $module => $block) {
@@ -89,18 +89,18 @@ function template_preprocess_system_admin_index(&$variables) {
     $position = ++$stripe % 2 ? 'left' : 'right';
     // Output links.
     if (count($items)) {
-      $variables['containers'][$position][] = array(
+      $variables['containers'][$position][] = [
         '#theme' => 'admin_block',
-        '#block' => array(
+        '#block' => [
           'position' => $position,
           'title' => $module,
-          'content' => array(
+          'content' => [
             '#theme' => 'admin_block_content',
             '#content' => $items,
-          ),
+          ],
           'description' => t($description),
-        ),
-      );
+        ],
+      ];
     }
   }
 }
@@ -241,7 +241,7 @@ function template_preprocess_system_modules_uninstall(&$variables) {
  *   - theme_group_titles: An associative array containing titles of themes.
  */
 function template_preprocess_system_themes_page(&$variables) {
-  $groups = array();
+  $groups = [];
   $theme_groups = $variables['theme_groups'];
   $variables['attributes']['id'] = 'system-themes-page';
 
@@ -251,33 +251,33 @@ function template_preprocess_system_themes_page(&$variables) {
       continue;
     }
     // Start new theme group.
-    $theme_group = array();
+    $theme_group = [];
     $theme_group['state'] = $state;
     $theme_group['title'] = $title;
-    $theme_group['themes'] = array();
+    $theme_group['themes'] = [];
     $theme_group['attributes'] = new Attribute();
 
     foreach ($theme_groups[$state] as $theme) {
-      $current_theme = array();
+      $current_theme = [];
 
       // Screenshot depicting the theme.
       if ($theme->screenshot) {
-        $current_theme['screenshot'] = array(
+        $current_theme['screenshot'] = [
           '#theme' => 'image',
           '#uri' => $theme->screenshot['uri'],
           '#alt' => $theme->screenshot['alt'],
           '#title' => $theme->screenshot['title'],
           '#attributes' => $theme->screenshot['attributes'],
-        );
+        ];
       }
       else {
-        $current_theme['screenshot'] = array(
+        $current_theme['screenshot'] = [
           '#theme' => 'image',
           '#uri' => drupal_get_path('module', 'system') . '/images/no_screenshot.png',
           '#alt' => t('No screenshot'),
           '#title' => t('No screenshot'),
-          '#attributes' => new Attribute(array('class' => array('no-screenshot'))),
-        );
+          '#attributes' => new Attribute(['class' => ['no-screenshot']]),
+        ];
       }
 
       // Localize the theme description.
@@ -302,23 +302,23 @@ function template_preprocess_system_themes_page(&$variables) {
         if (substr_count($theme->info['php'], '.') < 2) {
           $theme->info['php'] .= '.*';
         }
-        $current_theme['incompatible'] = t('This theme requires PHP version @php_required and is incompatible with PHP version @php_version.', array('@php_required' => $theme->info['php'], '@php_version' => phpversion()));
+        $current_theme['incompatible'] = t('This theme requires PHP version @php_required and is incompatible with PHP version @php_version.', ['@php_required' => $theme->info['php'], '@php_version' => phpversion()]);
       }
       elseif (!empty($theme->incompatible_base)) {
-        $current_theme['incompatible'] = t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => $theme->info['base theme']));
+        $current_theme['incompatible'] = t('This theme requires the base theme @base_theme to operate correctly.', ['@base_theme' => $theme->info['base theme']]);
       }
       elseif (!empty($theme->incompatible_engine)) {
-        $current_theme['incompatible'] = t('This theme requires the theme engine @theme_engine to operate correctly.', array('@theme_engine' => $theme->info['engine']));
+        $current_theme['incompatible'] = t('This theme requires the theme engine @theme_engine to operate correctly.', ['@theme_engine' => $theme->info['engine']]);
       }
 
       // Build operation links.
-      $current_theme['operations'] = array(
+      $current_theme['operations'] = [
         '#theme' => 'links',
         '#links' => $theme->operations,
-        '#attributes' => array(
-          'class' => array('operations', 'clearfix'),
-        ),
-      );
+        '#attributes' => [
+          'class' => ['operations', 'clearfix'],
+        ],
+      ];
       $theme_group['themes'][] = $current_theme;
     }
     $groups[] = $theme_group;

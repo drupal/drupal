@@ -16,7 +16,7 @@ class SessionTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('session_test');
+  public static $modules = ['session_test'];
 
   protected $dumpHeaders = TRUE;
 
@@ -48,24 +48,24 @@ class SessionTest extends WebTestBase {
     $user->name = 'session_test_user';
     $user->save();
     $this->drupalGet('session-test/id');
-    $matches = array();
+    $matches = [];
     preg_match('/\s*session_id:(.*)\n/', $this->getRawContent(), $matches);
     $this->assertTrue(!empty($matches[1]), 'Found session ID before logging in.');
     $original_session = $matches[1];
 
     // We cannot use $this->drupalLogin($user); because we exit in
     // session_test_user_login() which breaks a normal assertion.
-    $edit = array(
+    $edit = [
       'name' => $user->getUsername(),
       'pass' => $user->pass_raw
-    );
+    ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->drupalGet('user');
-    $pass = $this->assertText($user->getUsername(), format_string('Found name: %name', array('%name' => $user->getUsername())), 'User login');
+    $pass = $this->assertText($user->getUsername(), format_string('Found name: %name', ['%name' => $user->getUsername()]), 'User login');
     $this->_logged_in = $pass;
 
     $this->drupalGet('session-test/id');
-    $matches = array();
+    $matches = [];
     preg_match('/\s*session_id:(.*)\n/', $this->getRawContent(), $matches);
     $this->assertTrue(!empty($matches[1]), 'Found session ID after logging in.');
     $this->assertTrue($matches[1] != $original_session, 'Session ID changed after login.');
@@ -75,7 +75,7 @@ class SessionTest extends WebTestBase {
    * Test data persistence via the session_test module callbacks.
    */
   function testDataPersistence() {
-    $user = $this->drupalCreateUser(array());
+    $user = $this->drupalCreateUser([]);
     // Enable sessions.
     $this->sessionReset($user->id());
 
@@ -127,7 +127,7 @@ class SessionTest extends WebTestBase {
     $this->assertNoText($value_1, 'Session has persisted for an authenticated user after logging out and then back in.', 'Session');
 
     // Change session and create another user.
-    $user2 = $this->drupalCreateUser(array());
+    $user2 = $this->drupalCreateUser([]);
     $this->sessionReset($user2->id());
     $this->drupalLogin($user2);
   }
@@ -211,11 +211,11 @@ class SessionTest extends WebTestBase {
    * Test that sessions are only saved when necessary.
    */
   function testSessionWrite() {
-    $user = $this->drupalCreateUser(array());
+    $user = $this->drupalCreateUser([]);
     $this->drupalLogin($user);
 
     $sql = 'SELECT u.access, s.timestamp FROM {users_field_data} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE u.uid = :uid';
-    $times1 = db_query($sql, array(':uid' => $user->id()))->fetchObject();
+    $times1 = db_query($sql, [':uid' => $user->id()])->fetchObject();
 
     // Before every request we sleep one second to make sure that if the session
     // is saved, its timestamp will change.
@@ -223,34 +223,34 @@ class SessionTest extends WebTestBase {
     // Modify the session.
     sleep(1);
     $this->drupalGet('session-test/set/foo');
-    $times2 = db_query($sql, array(':uid' => $user->id()))->fetchObject();
+    $times2 = db_query($sql, [':uid' => $user->id()])->fetchObject();
     $this->assertEqual($times2->access, $times1->access, 'Users table was not updated.');
     $this->assertNotEqual($times2->timestamp, $times1->timestamp, 'Sessions table was updated.');
 
     // Write the same value again, i.e. do not modify the session.
     sleep(1);
     $this->drupalGet('session-test/set/foo');
-    $times3 = db_query($sql, array(':uid' => $user->id()))->fetchObject();
+    $times3 = db_query($sql, [':uid' => $user->id()])->fetchObject();
     $this->assertEqual($times3->access, $times1->access, 'Users table was not updated.');
     $this->assertEqual($times3->timestamp, $times2->timestamp, 'Sessions table was not updated.');
 
     // Do not change the session.
     sleep(1);
     $this->drupalGet('');
-    $times4 = db_query($sql, array(':uid' => $user->id()))->fetchObject();
+    $times4 = db_query($sql, [':uid' => $user->id()])->fetchObject();
     $this->assertEqual($times4->access, $times3->access, 'Users table was not updated.');
     $this->assertEqual($times4->timestamp, $times3->timestamp, 'Sessions table was not updated.');
 
     // Force updating of users and sessions table once per second.
     $this->settingsSet('session_write_interval', 0);
     // Write that value also into the test settings.php file.
-    $settings['settings']['session_write_interval'] = (object) array(
+    $settings['settings']['session_write_interval'] = (object) [
       'value' => 0,
       'required' => TRUE,
-    );
+    ];
     $this->writeSettings($settings);
     $this->drupalGet('');
-    $times5 = db_query($sql, array(':uid' => $user->id()))->fetchObject();
+    $times5 = db_query($sql, [':uid' => $user->id()])->fetchObject();
     $this->assertNotEqual($times5->access, $times4->access, 'Users table was updated.');
     $this->assertNotEqual($times5->timestamp, $times4->timestamp, 'Sessions table was updated.');
   }
@@ -259,14 +259,14 @@ class SessionTest extends WebTestBase {
    * Test that empty session IDs are not allowed.
    */
   function testEmptySessionID() {
-    $user = $this->drupalCreateUser(array());
+    $user = $this->drupalCreateUser([]);
     $this->drupalLogin($user);
     $this->drupalGet('session-test/is-logged-in');
     $this->assertResponse(200, 'User is logged in.');
 
     // Reset the sid in {sessions} to a blank string. This may exist in the
     // wild in some cases, although we normally prevent it from happening.
-    db_query("UPDATE {sessions} SET sid = '' WHERE uid = :uid", array(':uid' => $user->id()));
+    db_query("UPDATE {sessions} SET sid = '' WHERE uid = :uid", [':uid' => $user->id()]);
     // Send a blank sid in the session cookie, and the session should no longer
     // be valid. Closing the curl handler will stop the previous session ID
     // from persisting.

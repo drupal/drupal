@@ -18,7 +18,7 @@ class QueueFactory implements ContainerAwareInterface {
    *
    * @var array
    */
-  protected $queues = array();
+  protected $queues = [];
 
   /**
    * The settings object.

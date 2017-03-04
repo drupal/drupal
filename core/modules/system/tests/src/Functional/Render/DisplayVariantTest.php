@@ -16,7 +16,7 @@ class DisplayVariantTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('display_variant_test');
+  public static $modules = ['display_variant_test'];
 
   /**
    * Tests selecting the variant and passing configuration.

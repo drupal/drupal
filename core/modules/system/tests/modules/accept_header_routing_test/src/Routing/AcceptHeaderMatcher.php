@@ -20,7 +20,7 @@ class AcceptHeaderMatcher implements RouteFilterInterface {
     // Generates a list of Symfony formats matching the acceptable MIME types.
     // @todo replace by proper content negotiation library.
     $acceptable_mime_types = $request->getAcceptableContentTypes();
-    $acceptable_formats = array_filter(array_map(array($request, 'getFormat'), $acceptable_mime_types));
+    $acceptable_formats = array_filter(array_map([$request, 'getFormat'], $acceptable_mime_types));
     $primary_format = $request->getRequestFormat();
 
     foreach ($collection as $name => $route) {

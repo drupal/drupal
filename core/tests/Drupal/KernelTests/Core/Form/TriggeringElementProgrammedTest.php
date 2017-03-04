@@ -25,27 +25,27 @@ class TriggeringElementProgrammedTest extends KernelTestBase implements FormInte
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['one'] = array(
+    $form['one'] = [
       '#type' => 'textfield',
       '#title' => 'One',
       '#required' => TRUE,
-    );
-    $form['two'] = array(
+    ];
+    $form['two'] = [
       '#type' => 'textfield',
       '#title' => 'Two',
       '#required' => TRUE,
-    );
-    $form['actions'] = array('#type' => 'actions');
+    ];
+    $form['actions'] = ['#type' => 'actions'];
     $user_input = $form_state->getUserInput();
-    $form['actions']['submit'] = array(
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => 'Save',
-      '#limit_validation_errors' => array(
-        array($user_input['section']),
-      ),
+      '#limit_validation_errors' => [
+        [$user_input['section']],
+      ],
       // Required for #limit_validation_errors.
-      '#submit' => array(array($this, 'submitForm')),
-    );
+      '#submit' => [[$this, 'submitForm']],
+    ];
     return $form;
   }
 

@@ -25,11 +25,11 @@ class PathMatcherTest extends UnitTestCase {
     // Create a stub config factory with all config settings that will be
     // checked during this test.
     $config_factory_stub = $this->getConfigFactoryStub(
-      array(
-        'system.site' => array(
+      [
+        'system.site' => [
           'page.front' => '/dummy',
-        ),
-      )
+        ],
+      ]
     );
     $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
     $this->pathMatcher = new PathMatcher($config_factory_stub, $route_match);
@@ -54,76 +54,76 @@ class PathMatcherTest extends UnitTestCase {
    *   A nested array of pattern arrays and path arrays.
    */
   public function getMatchPathData() {
-    return array(
-      array(
+    return [
+      [
         // Single absolute paths.
         '/example/1',
-        array(
+        [
           '/example/1' => TRUE,
           '/example/2' => FALSE,
           '/test' => FALSE,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         // Single paths with wildcards.
         '/example/*',
-        array(
+        [
           '/example/1' => TRUE,
           '/example/2' => TRUE,
           '/example/3/edit' => TRUE,
           '/example/' => TRUE,
           '/example' => FALSE,
           '/test' => FALSE,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         // Single paths with multiple wildcards.
         '/node/*/revisions/*',
-        array(
+        [
           '/node/1/revisions/3' => TRUE,
           '/node/345/revisions/test' => TRUE,
           '/node/23/edit' => FALSE,
           '/test' => FALSE,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         // Single paths with '<front>'.
         "<front>",
-        array(
+        [
           '/dummy' => TRUE,
           "/dummy/" => FALSE,
           "/dummy/edit" => FALSE,
           '/node' => FALSE,
           '' => FALSE,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         // Paths with both '<front>' and wildcards (should not work).
         "<front>/*",
-        array(
+        [
           '/dummy' => FALSE,
           '/dummy/' => FALSE,
           '/dummy/edit' => FALSE,
           '/node/12' => FALSE,
           '/' => FALSE,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         // Multiple paths with the \n delimiter.
         "/node/*\n/node/*/edit",
-        array(
+        [
           '/node/1' => TRUE,
           '/node/view' => TRUE,
           '/node/32/edit' => TRUE,
           '/node/delete/edit' => TRUE,
           '/node/50/delete' => TRUE,
           '/test/example' => FALSE,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         // Multiple paths with the \r delimiter.
         "/user/*\r/example/*",
-        array(
+        [
           '/user/1' => TRUE,
           '/example/1' => TRUE,
           '/user/1/example/1' => TRUE,
@@ -131,26 +131,26 @@ class PathMatcherTest extends UnitTestCase {
           '/test/example' => FALSE,
           '/user' => FALSE,
           '/example' => FALSE,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         // Multiple paths with the \r\n delimiter.
         "/test\r\n<front>",
-        array(
+        [
           '/test' => TRUE,
           '/dummy' => TRUE,
           '/example' => FALSE,
-        ),
-      ),
-      array(
+        ],
+      ],
+      [
         // Test existing regular expressions (should be escaped).
         '[^/]+?/[0-9]',
-        array(
+        [
           '/test/1' => FALSE,
           '[^/]+?/[0-9]' => TRUE,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
 }

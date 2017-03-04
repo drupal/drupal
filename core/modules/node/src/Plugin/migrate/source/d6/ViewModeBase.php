@@ -33,7 +33,7 @@ abstract class ViewModeBase extends DrupalSqlBase {
    *   The view mode names.
    */
   public function getViewModes() {
-    return array(
+    return [
       0,
       1,
       2,
@@ -42,7 +42,7 @@ abstract class ViewModeBase extends DrupalSqlBase {
       5,
       'teaser',
       'full',
-    );
+    ];
   }
 
 }

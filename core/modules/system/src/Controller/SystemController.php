@@ -100,19 +100,19 @@ class SystemController extends ControllerBase {
   public function overview($link_id) {
     // Check for status report errors.
     if ($this->systemManager->checkRequirements() && $this->currentUser()->hasPermission('administer site configuration')) {
-      drupal_set_message($this->t('One or more problems were detected with your Drupal installation. Check the <a href=":status">status report</a> for more information.', array(':status' => $this->url('system.status'))), 'error');
+      drupal_set_message($this->t('One or more problems were detected with your Drupal installation. Check the <a href=":status">status report</a> for more information.', [':status' => $this->url('system.status')]), 'error');
     }
     // Load all menu links below it.
     $parameters = new MenuTreeParameters();
     $parameters->setRoot($link_id)->excludeRoot()->setTopLevelOnly()->onlyEnabledLinks();
     $tree = $this->menuLinkTree->load(NULL, $parameters);
-    $manipulators = array(
-      array('callable' => 'menu.default_tree_manipulators:checkAccess'),
-      array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
-    );
+    $manipulators = [
+      ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+      ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+    ];
     $tree = $this->menuLinkTree->transform($tree, $manipulators);
     $tree_access_cacheability = new CacheableMetadata();
-    $blocks = array();
+    $blocks = [];
     foreach ($tree as $key => $element) {
       $tree_access_cacheability = $tree_access_cacheability->merge(CacheableMetadata::createFromObject($element->access));
 
@@ -124,10 +124,10 @@ class SystemController extends ControllerBase {
       $link = $element->link;
       $block['title'] = $link->getTitle();
       $block['description'] = $link->getDescription();
-      $block['content'] = array(
+      $block['content'] = [
         '#theme' => 'admin_block_content',
         '#content' => $this->systemManager->getAdminBlock($link),
-      );
+      ];
 
       if (!empty($block['content']['#content'])) {
         $blocks[$key] = $block;
@@ -161,7 +161,7 @@ class SystemController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
   public function compactPage($mode) {
-    user_cookie_save(array('admin_compact_mode' => ($mode == 'on')));
+    user_cookie_save(['admin_compact_mode' => ($mode == 'on')]);
     return $this->redirect('<front>');
   }
 
@@ -187,9 +187,9 @@ class SystemController extends ControllerBase {
     uasort($themes, 'system_sort_modules_by_info_name');
 
     $theme_default = $config->get('default');
-    $theme_groups  = array('installed' => array(), 'uninstalled' => array());
+    $theme_groups  = ['installed' => [], 'uninstalled' => []];
     $admin_theme = $config->get('admin');
-    $admin_theme_options = array();
+    $admin_theme_options = [];
 
     foreach ($themes as &$theme) {
       if (!empty($theme->info['hidden'])) {
@@ -206,17 +206,17 @@ class SystemController extends ControllerBase {
         $theme_keys[] = $theme->getName();
       }
       else {
-        $theme_keys = array($theme->getName());
+        $theme_keys = [$theme->getName()];
       }
       // Look for a screenshot in the current theme or in its closest ancestor.
       foreach (array_reverse($theme_keys) as $theme_key) {
         if (isset($themes[$theme_key]) && file_exists($themes[$theme_key]->info['screenshot'])) {
-          $theme->screenshot = array(
+          $theme->screenshot = [
             'uri' => $themes[$theme_key]->info['screenshot'],
-            'alt' => $this->t('Screenshot for @theme theme', array('@theme' => $theme->info['name'])),
-            'title' => $this->t('Screenshot for @theme theme', array('@theme' => $theme->info['name'])),
-            'attributes' => array('class' => array('screenshot')),
-          );
+            'alt' => $this->t('Screenshot for @theme theme', ['@theme' => $theme->info['name']]),
+            'title' => $this->t('Screenshot for @theme theme', ['@theme' => $theme->info['name']]),
+            'attributes' => ['class' => ['screenshot']],
+          ];
           break;
         }
       }
@@ -233,16 +233,16 @@ class SystemController extends ControllerBase {
         // Confirm that the theme engine is available.
         $theme->incompatible_engine = isset($theme->info['engine']) && !isset($theme->owner);
       }
-      $theme->operations = array();
+      $theme->operations = [];
       if (!empty($theme->status) || !$theme->incompatible_core && !$theme->incompatible_php && !$theme->incompatible_base && !$theme->incompatible_engine) {
         // Create the operations links.
         $query['theme'] = $theme->getName();
         if ($this->themeAccess->checkAccess($theme->getName())) {
-          $theme->operations[] = array(
+          $theme->operations[] = [
             'title' => $this->t('Settings'),
             'url' => Url::fromRoute('system.theme_settings_theme', ['theme' => $theme->getName()]),
-            'attributes' => array('title' => $this->t('Settings for @theme theme', array('@theme' => $theme->info['name']))),
-          );
+            'attributes' => ['title' => $this->t('Settings for @theme theme', ['@theme' => $theme->info['name']])],
+          ];
         }
         if (!empty($theme->status)) {
           if (!$theme->is_default) {
@@ -257,40 +257,40 @@ class SystemController extends ControllerBase {
               }
             }
             if ($theme_uninstallable) {
-              $theme->operations[] = array(
+              $theme->operations[] = [
                 'title' => $this->t('Uninstall'),
                 'url' => Url::fromRoute('system.theme_uninstall'),
                 'query' => $query,
-                'attributes' => array('title' => $this->t('Uninstall @theme theme', array('@theme' => $theme->info['name']))),
-              );
+                'attributes' => ['title' => $this->t('Uninstall @theme theme', ['@theme' => $theme->info['name']])],
+              ];
             }
-            $theme->operations[] = array(
+            $theme->operations[] = [
               'title' => $this->t('Set as default'),
               'url' => Url::fromRoute('system.theme_set_default'),
               'query' => $query,
-              'attributes' => array('title' => $this->t('Set @theme as default theme', array('@theme' => $theme->info['name']))),
-            );
+              'attributes' => ['title' => $this->t('Set @theme as default theme', ['@theme' => $theme->info['name']])],
+            ];
           }
           $admin_theme_options[$theme->getName()] = $theme->info['name'];
         }
         else {
-          $theme->operations[] = array(
+          $theme->operations[] = [
             'title' => $this->t('Install'),
             'url' => Url::fromRoute('system.theme_install'),
             'query' => $query,
-            'attributes' => array('title' => $this->t('Install @theme theme', array('@theme' => $theme->info['name']))),
-          );
-          $theme->operations[] = array(
+            'attributes' => ['title' => $this->t('Install @theme theme', ['@theme' => $theme->info['name']])],
+          ];
+          $theme->operations[] = [
             'title' => $this->t('Install and set as default'),
             'url' => Url::fromRoute('system.theme_set_default'),
             'query' => $query,
-            'attributes' => array('title' => $this->t('Install @theme as default theme', array('@theme' => $theme->info['name']))),
-          );
+            'attributes' => ['title' => $this->t('Install @theme as default theme', ['@theme' => $theme->info['name']])],
+          ];
         }
       }
 
       // Add notes to default and administration theme.
-      $theme->notes = array();
+      $theme->notes = [];
       if ($theme->is_default) {
         $theme->notes[] = $this->t('default theme');
       }
@@ -303,9 +303,9 @@ class SystemController extends ControllerBase {
     }
 
     // There are two possible theme groups.
-    $theme_group_titles = array(
+    $theme_group_titles = [
       'installed' => $this->formatPlural(count($theme_groups['installed']), 'Installed theme', 'Installed themes'),
-    );
+    ];
     if (!empty($theme_groups['uninstalled'])) {
       $theme_group_titles['uninstalled'] = $this->formatPlural(count($theme_groups['uninstalled']), 'Uninstalled theme', 'Uninstalled themes');
     }
@@ -313,12 +313,12 @@ class SystemController extends ControllerBase {
     uasort($theme_groups['installed'], 'system_sort_themes');
     $this->moduleHandler()->alter('system_themes_page', $theme_groups);
 
-    $build = array();
-    $build[] = array(
+    $build = [];
+    $build[] = [
       '#theme' => 'system_themes_page',
       '#theme_groups' => $theme_groups,
       '#theme_group_titles' => $theme_group_titles,
-    );
+    ];
     $build[] = $this->formBuilder->getForm('Drupal\system\Form\ThemeAdminForm', $admin_theme_options);
 
     return $build;

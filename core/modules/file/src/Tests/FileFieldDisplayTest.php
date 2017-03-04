@@ -18,23 +18,23 @@ class FileFieldDisplayTest extends FileFieldTestBase {
   function testNodeDisplay() {
     $field_name = strtolower($this->randomMachineName());
     $type_name = 'article';
-    $field_storage_settings = array(
+    $field_storage_settings = [
       'display_field' => '1',
       'display_default' => '1',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    );
-    $field_settings = array(
+    ];
+    $field_settings = [
       'description_field' => '1',
-    );
-    $widget_settings = array();
+    ];
+    $widget_settings = [];
     $this->createFileField($field_name, 'node', $type_name, $field_storage_settings, $field_settings, $widget_settings);
 
     // Create a new node *without* the file field set, and check that the field
     // is not shown for each node display.
-    $node = $this->drupalCreateNode(array('type' => $type_name));
+    $node = $this->drupalCreateNode(['type' => $type_name]);
     // Check file_default last as the assertions below assume that this is the
     // case.
-    $file_formatters = array('file_table', 'file_url_plain', 'hidden', 'file_default');
+    $file_formatters = ['file_table', 'file_url_plain', 'hidden', 'file_default'];
     foreach ($file_formatters as $formatter) {
       if ($formatter === 'hidden') {
         $edit = [
@@ -49,7 +49,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       }
       $this->drupalPostForm("admin/structure/types/manage/$type_name/display", $edit, t('Save'));
       $this->drupalGet('node/' . $node->id());
-      $this->assertNoText($field_name, format_string('Field label is hidden when no file attached for formatter %formatter', array('%formatter' => $formatter)));
+      $this->assertNoText($field_name, format_string('Field label is hidden when no file attached for formatter %formatter', ['%formatter' => $formatter]));
     }
 
     $test_file = $this->getTestFile('text');
@@ -65,28 +65,28 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Check that the default formatter is displaying with the file name.
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
-    $node_storage->resetCache(array($nid));
+    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
-    $file_link = array(
+    $file_link = [
       '#theme' => 'file_link',
       '#file' => $node_file,
-    );
+    ];
     $default_output = \Drupal::service('renderer')->renderRoot($file_link);
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Turn the "display" option off and check that the file is no longer displayed.
-    $edit = array($field_name . '[0][display]' => FALSE);
+    $edit = [$field_name . '[0][display]' => FALSE];
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
 
     $this->assertNoRaw($default_output, 'Field is hidden when "display" option is unchecked.');
 
     // Add a description and make sure that it is displayed.
     $description = $this->randomMachineName();
-    $edit = array(
+    $edit = [
       $field_name . '[0][description]' => $description,
       $field_name . '[0][display]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $this->assertText($description);
 
@@ -113,15 +113,15 @@ class FileFieldDisplayTest extends FileFieldTestBase {
   function testDefaultFileFieldDisplay() {
     $field_name = strtolower($this->randomMachineName());
     $type_name = 'article';
-    $field_storage_settings = array(
+    $field_storage_settings = [
       'display_field' => '1',
       'display_default' => '0',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    );
-    $field_settings = array(
+    ];
+    $field_settings = [
       'description_field' => '1',
-    );
-    $widget_settings = array();
+    ];
+    $widget_settings = [];
     $this->createFileField($field_name, 'node', $type_name, $field_storage_settings, $field_settings, $widget_settings);
 
     $test_file = $this->getTestFile('text');
@@ -142,31 +142,31 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $field_type = 'file';
     $field_name = strtolower($this->randomMachineName());
     // Use the UI to add a new content type that also contains a file field.
-    $edit = array(
+    $edit = [
       'name' => $type_name,
       'type' => $type_name,
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/add', $edit, t('Save and manage fields'));
-    $edit = array(
+    $edit = [
       'new_storage_type' => $field_type,
       'field_name' => $field_name,
       'label' => $this->randomString(),
-    );
+    ];
     $this->drupalPostForm('/admin/structure/types/manage/' . $type_name . '/fields/add-field', $edit, t('Save and continue'));
-    $this->drupalPostForm(NULL, array(), t('Save field settings'));
+    $this->drupalPostForm(NULL, [], t('Save field settings'));
     // Ensure the description field is selected on the field instance settings
     // form. That's what this test is all about.
-    $edit = array(
+    $edit = [
       'settings[description_field]' => TRUE,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     // Add a node of our new type and upload a file to it.
     $file = current($this->drupalGetTestFiles('text'));
     $title = $this->randomString();
-    $edit = array(
+    $edit = [
       'title[0][value]' => $title,
       'files[field_' . $field_name . '_0]' => drupal_realpath($file->uri),
-    );
+    ];
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');

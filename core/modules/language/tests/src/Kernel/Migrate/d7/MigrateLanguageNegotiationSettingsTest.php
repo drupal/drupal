@@ -75,7 +75,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal7TestBase {
    */
   public function testLanguageNegotiationWithDomain() {
     $this->sourceDatabase->update('variable')
-      ->fields(array('value' => serialize(1)))
+      ->fields(['value' => serialize(1)])
       ->condition('name', 'locale_language_negotiation_url_part')
       ->execute();
 

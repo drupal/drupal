@@ -397,7 +397,7 @@ class AccessResultTest extends UnitTestCase {
     $verify($access, ['bar', 'foo']);
 
     // ::cachePerPermissions() convenience method.
-    $contexts = array('user.permissions');
+    $contexts = ['user.permissions'];
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
     $b = AccessResult::neutral()->cachePerPermissions();
@@ -405,7 +405,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals($a, $b);
 
     // ::cachePerUser() convenience method.
-    $contexts = array('user');
+    $contexts = ['user'];
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
     $b = AccessResult::neutral()->cachePerUser();
@@ -413,7 +413,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals($a, $b);
 
     // Both.
-    $contexts = array('user', 'user.permissions');
+    $contexts = ['user', 'user.permissions'];
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
     $b = AccessResult::neutral()->cachePerPermissions()->cachePerUser();
@@ -429,7 +429,7 @@ class AccessResultTest extends UnitTestCase {
       ->method('hasPermission')
       ->with('may herd llamas')
       ->will($this->returnValue(FALSE));
-    $contexts = array('user.permissions');
+    $contexts = ['user.permissions'];
 
     // Verify the object when using the ::allowedIfHasPermission() convenience
     // static method.
@@ -480,14 +480,14 @@ class AccessResultTest extends UnitTestCase {
     $node = $this->getMock('\Drupal\node\NodeInterface');
     $node->expects($this->any())
       ->method('getCacheTags')
-      ->will($this->returnValue(array('node:20011988')));
+      ->will($this->returnValue(['node:20011988']));
     $node->expects($this->any())
       ->method('getCacheMaxAge')
       ->willReturn(600);
     $node->expects($this->any())
       ->method('getCacheContexts')
       ->willReturn(['user']);
-    $tags = array('node:20011988');
+    $tags = ['node:20011988'];
     $a = AccessResult::neutral()->addCacheTags($tags);
     $verify($a, $tags);
     $b = AccessResult::neutral()->addCacheableDependency($node);

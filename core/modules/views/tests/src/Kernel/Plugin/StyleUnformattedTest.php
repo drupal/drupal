@@ -16,7 +16,7 @@ class StyleUnformattedTest extends StyleTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Make sure that the default css classes works as expected.

@@ -18,7 +18,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * {@inheritdoc}
@@ -26,7 +26,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
   protected function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['table']['base']['access query tag'] = 'test_tag';
-    $data['views_test_data']['table']['base']['query metadata'] = array('key1' => 'test_metadata', 'key2' => 'test_metadata2');
+    $data['views_test_data']['table']['base']['query metadata'] = ['key1' => 'test_metadata', 'key2' => 'test_metadata2'];
 
     return $data;
   }
@@ -45,7 +45,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
     /** @var \Drupal\Core\Database\Query\Select $count_query */
     $count_query = $view->build_info['count_query'];
 
-    foreach (array($main_query, $count_query) as $query) {
+    foreach ([$main_query, $count_query] as $query) {
       // Check query access tags.
       $this->assertTrue($query->hasTag('test_tag'));
 
@@ -69,7 +69,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
     /** @var \Drupal\Core\Database\Query\Select $count_query */
     $count_query = $view->build_info['count_query'];
 
-    foreach (array($main_query, $count_query) as $query) {
+    foreach ([$main_query, $count_query] as $query) {
       // Check query access tags.
       $this->assertFalse($query->hasTag('test_tag'));
 

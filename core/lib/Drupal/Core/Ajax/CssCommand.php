@@ -32,7 +32,7 @@ class CssCommand implements CommandInterface {
    *
    * @var array
    */
-  protected $css = array();
+  protected $css = [];
 
   /**
    * Constructs a CssCommand object.
@@ -42,7 +42,7 @@ class CssCommand implements CommandInterface {
    * @param array $css
    *   An array of CSS property/value pairs to set.
    */
-  public function __construct($selector, array $css = array()) {
+  public function __construct($selector, array $css = []) {
     $this->selector = $selector;
     $this->css = $css;
   }
@@ -67,11 +67,11 @@ class CssCommand implements CommandInterface {
    */
   public function render() {
 
-    return array(
+    return [
       'command' => 'css',
       'selector' => $this->selector,
       'argument' => $this->css,
-    );
+    ];
   }
 
 }

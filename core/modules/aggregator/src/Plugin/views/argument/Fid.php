@@ -50,7 +50,7 @@ class Fid extends NumericArgument {
    * {@inheritdoc}
    */
   public function titleQuery() {
-    $titles = array();
+    $titles = [];
 
     $feeds = $this->entityManager->getStorage('aggregator_feed')->loadMultiple($this->value);
     foreach ($feeds as $feed) {

@@ -53,7 +53,7 @@ class MachineNameTest extends MigrateProcessTestCase {
       ->with($human_name)
       ->will($this->returnValue($human_name_ascii . 'aeo'));
 
-    $plugin = new MachineName(array(), 'machine_name', array(), $this->transliteration);
+    $plugin = new MachineName([], 'machine_name', [], $this->transliteration);
     $value = $plugin->transform($human_name, $this->migrateExecutable, $this->row, 'destinationproperty');
     $this->assertEquals($expected_result, $value);
   }

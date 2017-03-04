@@ -21,7 +21,7 @@ class SearchNodeDiacriticsTest extends SearchTestBase {
     node_access_rebuild();
 
     // Create a test user and log in.
-    $this->testUser = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'access user profiles'));
+    $this->testUser = $this->drupalCreateUser(['access content', 'search content', 'use advanced search', 'access user profiles']);
     $this->drupalLogin($this->testUser);
   }
 
@@ -31,7 +31,7 @@ class SearchNodeDiacriticsTest extends SearchTestBase {
   function testPhraseSearchPunctuation() {
     $body_text = 'The Enricþment Center is cómmīŦŧęđ to the well BɆĬŇĜ of æll påŔťıçȉpǎǹţș. ';
     $body_text .= 'Also meklēt (see #731298)';
-    $this->drupalCreateNode(array('body' => array(array('value' => $body_text))));
+    $this->drupalCreateNode(['body' => [['value' => $body_text]]]);
 
     // Update the search index.
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
@@ -40,39 +40,39 @@ class SearchNodeDiacriticsTest extends SearchTestBase {
     // Refresh variables after the treatment.
     $this->refreshVariables();
 
-    $edit = array('keys' => 'meklet');
+    $edit = ['keys' => 'meklet'];
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertRaw('<strong>meklēt</strong>');
 
-    $edit = array('keys' => 'meklēt');
+    $edit = ['keys' => 'meklēt'];
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertRaw('<strong>meklēt</strong>');
 
-    $edit = array('keys' => 'cómmīŦŧęđ BɆĬŇĜ påŔťıçȉpǎǹţș');
+    $edit = ['keys' => 'cómmīŦŧęđ BɆĬŇĜ påŔťıçȉpǎǹţș'];
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertRaw('<strong>cómmīŦŧęđ</strong>');
     $this->assertRaw('<strong>BɆĬŇĜ</strong>');
     $this->assertRaw('<strong>påŔťıçȉpǎǹţș</strong>');
 
-    $edit = array('keys' => 'committed being participants');
+    $edit = ['keys' => 'committed being participants'];
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertRaw('<strong>cómmīŦŧęđ</strong>');
     $this->assertRaw('<strong>BɆĬŇĜ</strong>');
     $this->assertRaw('<strong>påŔťıçȉpǎǹţș</strong>');
 
-    $edit = array('keys' => 'Enricþment');
+    $edit = ['keys' => 'Enricþment'];
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertRaw('<strong>Enricþment</strong>');
 
-    $edit = array('keys' => 'Enritchment');
+    $edit = ['keys' => 'Enritchment'];
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertNoRaw('<strong>Enricþment</strong>');
 
-    $edit = array('keys' => 'æll');
+    $edit = ['keys' => 'æll'];
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertRaw('<strong>æll</strong>');
 
-    $edit = array('keys' => 'all');
+    $edit = ['keys' => 'all'];
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertNoRaw('<strong>æll</strong>');
   }

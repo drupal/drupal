@@ -21,7 +21,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'comment',
     'datetime',
     'file',
@@ -32,7 +32,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     'taxonomy',
     'telephone',
     'text',
-  );
+  ];
 
   /**
    * {@inheritdoc}
@@ -57,16 +57,16 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
    *   The node type ID.
    */
   protected function createType($id) {
-    NodeType::create(array(
+    NodeType::create([
       'type' => $id,
       'label' => $this->randomString(),
-    ))->save();
+    ])->save();
 
-    CommentType::create(array(
+    CommentType::create([
       'id' => 'comment_node_' . $id,
       'label' => $this->randomString(),
       'target_entity_type_id' => 'node',
-    ))->save();
+    ])->save();
   }
 
   /**

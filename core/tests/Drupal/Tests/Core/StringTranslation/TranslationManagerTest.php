@@ -36,21 +36,21 @@ class TranslationManagerTest extends UnitTestCase {
    * @return array
    */
   public function providerTestFormatPlural() {
-    return array(
-      [1, 'Singular', '@count plural', array(), array(), 'Singular'],
-      [2, 'Singular', '@count plural', array(), array(), '2 plural'],
+    return [
+      [1, 'Singular', '@count plural', [], [], 'Singular'],
+      [2, 'Singular', '@count plural', [], [], '2 plural'],
       // @todo support locale_get_plural
-      [2, 'Singular', '@count @arg', array('@arg' => '<script>'), array(), '2 &lt;script&gt;'],
-      [2, 'Singular', '@count %arg', array('%arg' => '<script>'), array(), '2 <em class="placeholder">&lt;script&gt;</em>'],
-      [1, 'Singular', '@count plural', array(), array('langcode' => NULL), 'Singular'],
-      [1, 'Singular', '@count plural', array(), array('langcode' => 'es'), 'Singular'],
-    );
+      [2, 'Singular', '@count @arg', ['@arg' => '<script>'], [], '2 &lt;script&gt;'],
+      [2, 'Singular', '@count %arg', ['%arg' => '<script>'], [], '2 <em class="placeholder">&lt;script&gt;</em>'],
+      [1, 'Singular', '@count plural', [], ['langcode' => NULL], 'Singular'],
+      [1, 'Singular', '@count plural', [], ['langcode' => 'es'], 'Singular'],
+    ];
   }
 
   /**
    * @dataProvider providerTestFormatPlural
    */
-  public function testFormatPlural($count, $singular, $plural, array $args = array(), array $options = array(), $expected) {
+  public function testFormatPlural($count, $singular, $plural, array $args = [], array $options = [], $expected) {
     $langcode = empty($options['langcode']) ? 'fr' : $options['langcode'];
     $translator = $this->getMock('\Drupal\Core\StringTranslation\Translator\TranslatorInterface');
     $translator->expects($this->once())
@@ -78,7 +78,7 @@ class TranslationManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestTranslatePlaceholder
    */
-  public function testTranslatePlaceholder($string, array $args = array(), $expected_string) {
+  public function testTranslatePlaceholder($string, array $args = [], $expected_string) {
     $actual = $this->translationManager->translate($string, $args);
     $this->assertInstanceOf(MarkupInterface::class, $actual);
     $this->assertEquals($expected_string, (string) $actual);

@@ -46,43 +46,43 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     $referenced = $this->drupalCreateContentType();
     $this->referencedType = $referenced->id();
 
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => 'test_field',
       'entity_type' => 'node',
       'translatable' => FALSE,
-      'entity_types' => array(),
-      'settings' => array(
+      'entity_types' => [],
+      'settings' => [
         'target_type' => 'node',
-      ),
+      ],
       'type' => 'entity_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ))->save();
+    ])->save();
 
     FieldConfig::create([
       'label' => 'Entity reference field',
       'field_name' => 'test_field',
       'entity_type' => 'node',
       'bundle' => $referencing->id(),
-      'settings' => array(
+      'settings' => [
         'handler' => 'default',
-        'handler_settings' => array(
+        'handler_settings' => [
           // Reference a single vocabulary.
-          'target_bundles' => array(
+          'target_bundles' => [
             $referenced->id(),
-          ),
+          ],
           // Enable auto-create.
           'auto_create' => TRUE,
-        ),
-      ),
+        ],
+      ],
     ])->save();
 
     entity_get_display('node', $referencing->id(), 'default')
       ->setComponent('test_field')
       ->save();
     entity_get_form_display('node', $referencing->id(), 'default')
-      ->setComponent('test_field', array(
+      ->setComponent('test_field', [
         'type' => 'entity_reference_autocomplete',
-      ))
+      ])
       ->save();
 
     $account = $this->drupalCreateUser(['access content', "create $this->referencingType content"]);
@@ -109,10 +109,10 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     $result = $query->execute();
     $this->assertFalse($result, 'Referenced node does not exist yet.');
 
-    $edit = array(
+    $edit = [
       'title[0][value]' => $this->randomMachineName(),
       'test_field[0][target_id]' => $new_title,
-    );
+    ];
     $this->drupalPostForm("node/add/$this->referencingType", $edit, 'Save');
 
     // Assert referenced node was created.

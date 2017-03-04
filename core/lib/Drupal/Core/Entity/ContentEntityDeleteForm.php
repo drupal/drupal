@@ -34,19 +34,19 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
           $languages[] = $language->getName();
         }
 
-        $form['deleted_translations'] = array(
+        $form['deleted_translations'] = [
           '#theme' => 'item_list',
           '#title' => $this->t('The following @entity-type translations will be deleted:', [
             '@entity-type' => $entity->getEntityType()->getLowercaseLabel()
           ]),
           '#items' => $languages,
-        );
+        ];
 
         $form['actions']['submit']['#value'] = $this->t('Delete all translations');
       }
     }
     else {
-      $form['actions']['submit']['#value'] = $this->t('Delete @language translation', array('@language' => $entity->language()->getName()));
+      $form['actions']['submit']['#value'] = $this->t('Delete @language translation', ['@language' => $entity->language()->getName()]);
     }
 
     return $form;
@@ -129,11 +129,11 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
     $entity = $this->getEntity();
 
     if (!$entity->isDefaultTranslation()) {
-      return $this->t('Are you sure you want to delete the @language translation of the @entity-type %label?', array(
+      return $this->t('Are you sure you want to delete the @language translation of the @entity-type %label?', [
         '@language' => $entity->language()->getName(),
         '@entity-type' => $this->getEntity()->getEntityType()->getLowercaseLabel(),
         '%label' => $this->getEntity()->label(),
-      ));
+      ]);
     }
 
     return $this->traitGetQuestion();

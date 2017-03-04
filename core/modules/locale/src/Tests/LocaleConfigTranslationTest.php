@@ -24,7 +24,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale', 'contact', 'contact_test');
+  public static $modules = ['locale', 'contact', 'contact_test'];
 
   /**
    * {@inheritdoc}
@@ -42,15 +42,15 @@ class LocaleConfigTranslationTest extends WebTestBase {
 
     // Add custom language.
     $this->langcode = 'xx';
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface', 'administer modules', 'access site-wide contact form', 'administer contact forms', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'translate interface', 'administer modules', 'access site-wide contact form', 'administer contact forms', 'administer site configuration']);
     $this->drupalLogin($admin_user);
     $name = $this->randomMachineName(16);
-    $edit = array(
+    $edit = [
       'predefined_langcode' => 'custom',
       'langcode' => $this->langcode,
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     // Set path prefix.
     $edit = ["prefix[$this->langcode]" => $this->langcode];
@@ -63,23 +63,23 @@ class LocaleConfigTranslationTest extends WebTestBase {
   public function testConfigTranslation() {
     // Check that the maintenance message exists and create translation for it.
     $source = '@site is currently under maintenance. We should be back shortly. Thank you for your patience.';
-    $string = $this->storage->findString(array('source' => $source, 'context' => '', 'type' => 'configuration'));
+    $string = $this->storage->findString(['source' => $source, 'context' => '', 'type' => 'configuration']);
     $this->assertTrue($string, 'Configuration strings have been created upon installation.');
 
     // Translate using the UI so configuration is refreshed.
     $message = $this->randomMachineName(20);
-    $search = array(
+    $search = [
       'string' => $string->source,
       'langcode' => $this->langcode,
       'translation' => 'all',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textareas = $this->xpath('//textarea');
     $textarea = current($textareas);
     $lid = (string) $textarea[0]['name'];
-    $edit = array(
+    $edit = [
       $lid => $message,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
     // Get translation and check we've only got the message.
@@ -88,22 +88,22 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertEqual($translation['message'], $message);
 
     // Check default medium date format exists and create a translation for it.
-    $string = $this->storage->findString(array('source' => 'D, m/d/Y - H:i', 'context' => 'PHP date format', 'type' => 'configuration'));
+    $string = $this->storage->findString(['source' => 'D, m/d/Y - H:i', 'context' => 'PHP date format', 'type' => 'configuration']);
     $this->assertTrue($string, 'Configuration date formats have been created upon installation.');
 
     // Translate using the UI so configuration is refreshed.
-    $search = array(
+    $search = [
       'string' => $string->source,
       'langcode' => $this->langcode,
       'translation' => 'all',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textareas = $this->xpath('//textarea');
     $textarea = current($textareas);
     $lid = (string) $textarea[0]['name'];
-    $edit = array(
+    $edit = [
       $lid => 'D',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
     $translation = \Drupal::languageManager()->getLanguageConfigOverride($this->langcode, 'core.date_format.medium')->get();
@@ -115,14 +115,14 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertEqual($formatted_date, 'Tue', 'Got the right formatted date using the date format translation pattern.');
 
     // Assert strings from image module config are not available.
-    $string = $this->storage->findString(array('source' => 'Medium (220×220)', 'context' => '', 'type' => 'configuration'));
+    $string = $this->storage->findString(['source' => 'Medium (220×220)', 'context' => '', 'type' => 'configuration']);
     $this->assertFalse($string, 'Configuration strings have been created upon installation.');
 
     // Enable the image module.
-    $this->drupalPostForm('admin/modules', array('modules[image][enable]' => "1"), t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[image][enable]' => "1"], t('Install'));
     $this->rebuildContainer();
 
-    $string = $this->storage->findString(array('source' => 'Medium (220×220)', 'context' => '', 'type' => 'configuration'));
+    $string = $this->storage->findString(['source' => 'Medium (220×220)', 'context' => '', 'type' => 'configuration']);
     $this->assertTrue($string, 'Configuration strings have been created upon installation.');
     $locations = $string->getLocations();
     $this->assertTrue(isset($locations['configuration']) && isset($locations['configuration']['image.style.medium']), 'Configuration string has been created with the right location');
@@ -136,17 +136,17 @@ class LocaleConfigTranslationTest extends WebTestBase {
 
     // Translate using the UI so configuration is refreshed.
     $image_style_label = $this->randomMachineName(20);
-    $search = array(
+    $search = [
       'string' => $string->source,
       'langcode' => $this->langcode,
       'translation' => 'all',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
-    $edit = array(
+    $edit = [
       $lid => $image_style_label,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
     // Check the right single translation has been created.
@@ -159,8 +159,8 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertEqual($translation['label'], $image_style_label, 'Got the right translation for image style name after translation');
 
     // Uninstall the module.
-    $this->drupalPostForm('admin/modules/uninstall', array('uninstall[image]' => "image"), t('Uninstall'));
-    $this->drupalPostForm(NULL, array(), t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[image]' => "image"], t('Uninstall'));
+    $this->drupalPostForm(NULL, [], t('Uninstall'));
 
     // Ensure that the translated configuration has been removed.
     $override = \Drupal::languageManager()->getLanguageConfigOverride('xx', 'image.style.medium');
@@ -168,17 +168,17 @@ class LocaleConfigTranslationTest extends WebTestBase {
 
     // Translate default category using the UI so configuration is refreshed.
     $category_label = $this->randomMachineName(20);
-    $search = array(
+    $search = [
       'string' => 'Website feedback',
       'langcode' => $this->langcode,
       'translation' => 'all',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
-    $edit = array(
+    $edit = [
       $lid => $category_label,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
     // Check if this category displayed in this language will use the

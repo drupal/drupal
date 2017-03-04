@@ -49,16 +49,16 @@ class AddHandler extends ViewsFormBase {
     $display_id = $form_state->get('display_id');
     $type = $form_state->get('type');
 
-    $form = array(
-      'options' => array(
-        '#theme_wrappers' => array('container'),
-        '#attributes' => array('class' => array('scroll'), 'data-drupal-views-scroll' => TRUE),
-      ),
-    );
+    $form = [
+      'options' => [
+        '#theme_wrappers' => ['container'],
+        '#attributes' => ['class' => ['scroll'], 'data-drupal-views-scroll' => TRUE],
+      ],
+    ];
 
     $executable = $view->getExecutable();
     if (!$executable->setDisplay($display_id)) {
-      $form['markup'] = array('#markup' => $this->t('Invalid display id @display', array('@display' => $display_id)));
+      $form['markup'] = ['#markup' => $this->t('Invalid display id @display', ['@display' => $display_id])];
       return $form;
     }
     $display = &$executable->displayHandlers->get($display_id);
@@ -71,7 +71,7 @@ class AddHandler extends ViewsFormBase {
       $type = $types[$type]['type'];
     }
 
-    $form['#title'] = $this->t('Add @type', array('@type' => $ltitle));
+    $form['#title'] = $this->t('Add @type', ['@type' => $ltitle]);
     $form['#section'] = $display_id . 'add-handler';
 
     // Add the display override dropdown.
@@ -82,36 +82,36 @@ class AddHandler extends ViewsFormBase {
     $options = Views::viewsDataHelper()->fetchFields(array_keys($base_tables), $type, $display->useGroupBy(), $form_state->get('type'));
 
     if (!empty($options)) {
-      $form['override']['controls'] = array(
-        '#theme_wrappers' => array('container'),
+      $form['override']['controls'] = [
+        '#theme_wrappers' => ['container'],
         '#id' => 'views-filterable-options-controls',
         '#attributes' => ['class' => ['form--inline', 'views-filterable-options-controls']],
-      );
-      $form['override']['controls']['options_search'] = array(
+      ];
+      $form['override']['controls']['options_search'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Search'),
-      );
+      ];
 
-      $groups = array('all' => $this->t('- All -'));
-      $form['override']['controls']['group'] = array(
+      $groups = ['all' => $this->t('- All -')];
+      $form['override']['controls']['group'] = [
         '#type' => 'select',
         '#title' => $this->t('Category'),
-        '#options' => array(),
-      );
+        '#options' => [],
+      ];
 
-      $form['options']['name'] = array(
+      $form['options']['name'] = [
         '#prefix' => '<div class="views-radio-box form-checkboxes views-filterable-options">',
         '#suffix' => '</div>',
         '#type' => 'tableselect',
-        '#header' => array(
+        '#header' => [
           'title' => $this->t('Title'),
           'group' => $this->t('Category'),
           'help' => $this->t('Description'),
-        ),
+        ],
         '#js_select' => FALSE,
-      );
+      ];
 
-      $grouped_options = array();
+      $grouped_options = [];
       foreach ($options as $key => $option) {
         $group = preg_replace('/[^a-z0-9]/', '-', strtolower($option['group']));
         $groups[$group] = $option['group'];
@@ -136,50 +136,50 @@ class AddHandler extends ViewsFormBase {
 
       foreach ($grouped_options as $group => $group_options) {
         foreach ($group_options as $key => $option) {
-          $form['options']['name']['#options'][$key] = array(
-            '#attributes' => array(
-              'class' => array('filterable-option', $group),
-            ),
-            'title' => array(
-              'data' => array(
+          $form['options']['name']['#options'][$key] = [
+            '#attributes' => [
+              'class' => ['filterable-option', $group],
+            ],
+            'title' => [
+              'data' => [
                 '#title' => $option['title'],
                 '#plain_text' => $option['title'],
-              ),
-              'class' => array('title'),
-            ),
+              ],
+              'class' => ['title'],
+            ],
             'group' => $option['group'],
-            'help' => array(
+            'help' => [
               'data' => $option['help'],
-              'class' => array('description'),
-            ),
-          );
+              'class' => ['description'],
+            ],
+          ];
         }
       }
 
       $form['override']['controls']['group']['#options'] = $groups;
     }
     else {
-      $form['options']['markup'] = array(
-        '#markup' => '<div class="js-form-item form-item">' . $this->t('There are no @types available to add.', array('@types' => $ltitle)) . '</div>',
-      );
+      $form['options']['markup'] = [
+        '#markup' => '<div class="js-form-item form-item">' . $this->t('There are no @types available to add.', ['@types' => $ltitle]) . '</div>',
+      ];
     }
     // Add a div to show the selected items
-    $form['selected'] = array(
+    $form['selected'] = [
       '#type' => 'item',
       '#markup' => '<span class="views-ui-view-title">' . $this->t('Selected:') . '</span> ' . '<div class="views-selected-options"></div>',
-      '#theme_wrappers' => array('form_element', 'views_ui_container'),
-      '#attributes' => array(
-        'class' => array('container-inline', 'views-add-form-selected', 'views-offset-bottom'),
+      '#theme_wrappers' => ['form_element', 'views_ui_container'],
+      '#attributes' => [
+        'class' => ['container-inline', 'views-add-form-selected', 'views-offset-bottom'],
         'data-drupal-views-offset' => 'bottom',
-      ),
-    );
-    $view->getStandardButtons($form, $form_state, 'views_ui_add_handler_form', $this->t('Add and configure @types', array('@types' => $ltitle)));
+      ],
+    ];
+    $view->getStandardButtons($form, $form_state, 'views_ui_add_handler_form', $this->t('Add and configure @types', ['@types' => $ltitle]));
 
     // Remove the default submit function.
     $form['actions']['submit']['#submit'] = array_filter($form['actions']['submit']['#submit'], function($var) {
       return !(is_array($var) && isset($var[1]) && $var[1] == 'standardSubmit');
     });
-    $form['actions']['submit']['#submit'][] = array($view, 'submitItemAdd');
+    $form['actions']['submit']['#submit'][] = [$view, 'submitItemAdd'];
 
     return $form;
   }

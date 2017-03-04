@@ -40,21 +40,21 @@ abstract class Database {
    *
    * @var array
    */
-  static protected $connections = array();
+  static protected $connections = [];
 
   /**
    * A processed copy of the database connection information from settings.php.
    *
    * @var array
    */
-  static protected $databaseInfo = array();
+  static protected $databaseInfo = [];
 
   /**
    * A list of key/target credentials to simply ignore.
    *
    * @var array
    */
-  static protected $ignoreTargets = array();
+  static protected $ignoreTargets = [];
 
   /**
    * The key of the currently active database connection.
@@ -75,7 +75,7 @@ abstract class Database {
    *
    * @var array
    */
-  static protected $logs = array();
+  static protected $logs = [];
 
   /**
    * Starts logging a given logging key on the specified connection.
@@ -214,15 +214,15 @@ abstract class Database {
     // Parse the prefix information.
     if (!isset($info['prefix'])) {
       // Default to an empty prefix.
-      $info['prefix'] = array(
+      $info['prefix'] = [
         'default' => '',
-      );
+      ];
     }
     elseif (!is_array($info['prefix'])) {
       // Transform the flat form into an array form.
-      $info['prefix'] = array(
+      $info['prefix'] = [
         'default' => $info['prefix'],
-      );
+      ];
     }
     return $info;
   }
@@ -459,11 +459,11 @@ abstract class Database {
     if (!isset($info['scheme'], $info['host'], $info['path'])) {
       throw new \InvalidArgumentException('Minimum requirement: driver://host/database');
     }
-    $info += array(
+    $info += [
       'user' => '',
       'pass' => '',
       'fragment' => '',
-    );
+    ];
 
     // A SQLite database path with two leading slashes indicates a system path.
     // Otherwise the path is relative to the Drupal root.
@@ -474,13 +474,13 @@ abstract class Database {
       $info['path'] = $root . '/' . $info['path'];
     }
 
-    $database = array(
+    $database = [
       'driver' => $info['scheme'],
       'username' => $info['user'],
       'password' => $info['pass'],
       'host' => $info['host'],
       'database' => $info['path'],
-    );
+    ];
     if (isset($info['port'])) {
       $database['port'] = $info['port'];
     }

@@ -34,20 +34,20 @@ class MockMenuBlockDeriver implements DeriverInterface {
     // Here, we create some mock menu block definitions for menus that might
     // exist in a typical Drupal site. In a real implementation, we would query
     // Drupal's configuration to find out which menus actually exist.
-    $derivatives = array(
-      'main_menu' => array(
+    $derivatives = [
+      'main_menu' => [
         'label' => t('Main menu'),
-      ) + $base_plugin_definition,
-      'navigation' => array(
+      ] + $base_plugin_definition,
+      'navigation' => [
         'label' => t('Navigation'),
-      ) + $base_plugin_definition,
-      'foo' => array(
+      ] + $base_plugin_definition,
+      'foo' => [
         // Instead of the derivative label, the specific label will be used.
         'label' => t('Derivative label'),
         // This setting will be merged in.
          'setting' => 'default'
-      ) + $base_plugin_definition,
-    );
+      ] + $base_plugin_definition,
+    ];
 
     return $derivatives;
   }

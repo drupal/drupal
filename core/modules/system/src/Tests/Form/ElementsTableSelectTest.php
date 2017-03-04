@@ -17,7 +17,7 @@ class ElementsTableSelectTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = ['form_test'];
 
   /**
    * Test the display of checkboxes when #multiple is TRUE.
@@ -31,9 +31,9 @@ class ElementsTableSelectTest extends WebTestBase {
     // Test for the presence of the Select all rows tableheader.
     $this->assertFieldByXPath('//th[@class="select-all"]', NULL, 'Presence of the "Select all" checkbox.');
 
-    $rows = array('row1', 'row2', 'row3');
+    $rows = ['row1', 'row2', 'row3'];
     foreach ($rows as $row) {
-      $this->assertFieldByXPath('//input[@type="checkbox"]', $row, format_string('Checkbox for value @row.', array('@row' => $row)));
+      $this->assertFieldByXPath('//input[@type="checkbox"]', $row, format_string('Checkbox for value @row.', ['@row' => $row]));
     }
   }
 
@@ -41,20 +41,20 @@ class ElementsTableSelectTest extends WebTestBase {
    * Test the presence of ajax functionality for all options.
    */
   function testAjax() {
-    $rows = array('row1', 'row2', 'row3');
+    $rows = ['row1', 'row2', 'row3'];
     // Test checkboxes (#multiple == TRUE).
     foreach ($rows as $row) {
       $element = 'tableselect[' . $row . ']';
-      $edit = array($element => TRUE);
+      $edit = [$element => TRUE];
       $result = $this->drupalPostAjaxForm('form_test/tableselect/multiple-true', $edit, $element);
-      $this->assertFalse(empty($result), t('Ajax triggers on checkbox for @row.', array('@row' => $row)));
+      $this->assertFalse(empty($result), t('Ajax triggers on checkbox for @row.', ['@row' => $row]));
     }
     // Test radios (#multiple == FALSE).
     $element = 'tableselect';
     foreach ($rows as $row) {
-      $edit = array($element => $row);
+      $edit = [$element => $row];
       $result = $this->drupalPostAjaxForm('form_test/tableselect/multiple-false', $edit, $element);
-      $this->assertFalse(empty($result), t('Ajax triggers on radio for @row.', array('@row' => $row)));
+      $this->assertFalse(empty($result), t('Ajax triggers on radio for @row.', ['@row' => $row]));
     }
   }
 
@@ -69,9 +69,9 @@ class ElementsTableSelectTest extends WebTestBase {
     // Test for the absence of the Select all rows tableheader.
     $this->assertNoFieldByXPath('//th[@class="select-all"]', '', 'Absence of the "Select all" checkbox.');
 
-    $rows = array('row1', 'row2', 'row3');
+    $rows = ['row1', 'row2', 'row3'];
     foreach ($rows as $row) {
-      $this->assertFieldByXPath('//input[@type="radio"]', $row, format_string('Radio button for value @row.', array('@row' => $row)));
+      $this->assertFieldByXPath('//input[@type="radio"]', $row, format_string('Radio button for value @row.', ['@row' => $row]));
     }
   }
 
@@ -93,7 +93,7 @@ class ElementsTableSelectTest extends WebTestBase {
     // radio, one cell in the first column, one cell in the second column,
     // and two cells in the third column which has colspan 2.
     for ( $i = 0; $i <= 1; $i++) {
-      $this->assertEqual(count($table_body[0]->tr[$i]->td), 5, format_string('There are five cells in row @row.', array('@row' => $i)));
+      $this->assertEqual(count($table_body[0]->tr[$i]->td), 5, format_string('There are five cells in row @row.', ['@row' => $i]));
     }
     // The third row should have 3 cells, one for the radio, one spanning the
     // first and second column, and a third in column 3 (which has colspan 3).
@@ -114,7 +114,7 @@ class ElementsTableSelectTest extends WebTestBase {
   function testMultipleTrueSubmit() {
 
     // Test a submission with one checkbox checked.
-    $edit = array();
+    $edit = [];
     $edit['tableselect[row1]'] = TRUE;
     $this->drupalPostForm('form_test/tableselect/multiple-true', $edit, 'Submit');
 
@@ -170,18 +170,18 @@ class ElementsTableSelectTest extends WebTestBase {
 
     list($header, $options) = _form_test_tableselect_get_data();
 
-    $form['tableselect'] = array(
+    $form['tableselect'] = [
       '#type' => 'tableselect',
       '#header' => $header,
       '#options' => $options,
-    );
+    ];
 
     // Test with a valid value.
-    list(, , $errors) = $this->formSubmitHelper($form, array('tableselect' => array('row1' => 'row1')));
+    list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => ['row1' => 'row1']]);
     $this->assertFalse(isset($errors['tableselect']), 'Option checker allows valid values for checkboxes.');
 
     // Test with an invalid value.
-    list(, , $errors) = $this->formSubmitHelper($form, array('tableselect' => array('non_existing_value' => 'non_existing_value')));
+    list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => ['non_existing_value' => 'non_existing_value']]);
     $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for checkboxes.');
 
   }
@@ -194,19 +194,19 @@ class ElementsTableSelectTest extends WebTestBase {
 
     list($header, $options) = _form_test_tableselect_get_data();
 
-    $form['tableselect'] = array(
+    $form['tableselect'] = [
       '#type' => 'tableselect',
       '#header' => $header,
       '#options' => $options,
       '#multiple' => FALSE,
-    );
+    ];
 
     // Test with a valid value.
-    list(, , $errors) = $this->formSubmitHelper($form, array('tableselect' => 'row1'));
+    list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => 'row1']);
     $this->assertFalse(isset($errors['tableselect']), 'Option checker allows valid values for radio buttons.');
 
     // Test with an invalid value.
-    list(, , $errors) = $this->formSubmitHelper($form, array('tableselect' => 'non_existing_value'));
+    list(, , $errors) = $this->formSubmitHelper($form, ['tableselect' => 'non_existing_value']);
     $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for radio buttons.');
   }
 
@@ -226,7 +226,7 @@ class ElementsTableSelectTest extends WebTestBase {
     $form_id = $this->randomMachineName();
     $form_state = new FormState();
 
-    $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
+    $form['op'] = ['#type' => 'submit', '#value' => t('Submit')];
     // The form token CSRF protection should not interfere with this test, so we
     // bypass it by setting the token to FALSE.
     $form['#token'] = FALSE;
@@ -252,7 +252,7 @@ class ElementsTableSelectTest extends WebTestBase {
 
     // Return the processed form together with form_state and errors
     // to allow the caller lowlevel access to the form.
-    return array($form, $form_state, $errors);
+    return [$form, $form_state, $errors];
   }
 
 }

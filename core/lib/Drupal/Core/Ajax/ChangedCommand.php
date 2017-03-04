@@ -50,11 +50,11 @@ class ChangedCommand implements CommandInterface {
    */
   public function render() {
 
-    return array(
+    return [
       'command' => 'changed',
       'selector' => $this->selector,
       'asterisk' => $this->asterisk,
-    );
+    ];
   }
 
 }

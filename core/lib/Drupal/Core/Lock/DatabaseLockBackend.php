@@ -34,7 +34,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
   public function __construct(Connection $database) {
     // __destruct() is causing problems with garbage collections, register a
     // shutdown function instead.
-    drupal_register_shutdown_function(array($this, 'releaseAll'));
+    drupal_register_shutdown_function([$this, 'releaseAll']);
     $this->database = $database;
   }
 
@@ -48,7 +48,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
     if (isset($this->locks[$name])) {
       // Try to extend the expiration of a lock we already acquired.
       $success = (bool) $this->database->update('semaphore')
-        ->fields(array('expire' => $expire))
+        ->fields(['expire' => $expire])
         ->condition('name', $name)
         ->condition('value', $this->getLockId())
         ->execute();
@@ -66,11 +66,11 @@ class DatabaseLockBackend extends LockBackendAbstract {
       do {
         try {
           $this->database->insert('semaphore')
-            ->fields(array(
+            ->fields([
               'name' => $name,
               'value' => $this->getLockId(),
               'expire' => $expire,
-            ))
+            ])
             ->execute();
           // We track all acquired locks in the global variable.
           $this->locks[$name] = TRUE;
@@ -107,7 +107,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
    */
   public function lockMayBeAvailable($name) {
     try {
-      $lock = $this->database->query('SELECT expire, value FROM {semaphore} WHERE name = :name', array(':name' => $name))->fetchAssoc();
+      $lock = $this->database->query('SELECT expire, value FROM {semaphore} WHERE name = :name', [':name' => $name])->fetchAssoc();
     }
     catch (\Exception $e) {
       $this->catchException($e);
@@ -154,7 +154,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
   public function releaseAll($lock_id = NULL) {
     // Only attempt to release locks if any were acquired.
     if (!empty($this->locks)) {
-      $this->locks = array();
+      $this->locks = [];
       if (empty($lock_id)) {
         $lock_id = $this->getLockId();
       }

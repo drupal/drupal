@@ -75,7 +75,7 @@ class YamlDiscovery implements DiscoveryInterface {
     $plugins = $this->discovery->findAll();
 
     // Flatten definitions into what's expected from plugins.
-    $definitions = array();
+    $definitions = [];
     foreach ($plugins as $provider => $list) {
       foreach ($list as $id => $definition) {
         // Add TranslatableMarkup.
@@ -92,10 +92,10 @@ class YamlDiscovery implements DiscoveryInterface {
           }
         }
         // Add ID and provider.
-        $definitions[$id] = $definition + array(
+        $definitions[$id] = $definition + [
           'provider' => $provider,
           'id' => $id,
-        );
+        ];
       }
     }
 

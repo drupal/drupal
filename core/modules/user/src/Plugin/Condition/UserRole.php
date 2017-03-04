@@ -22,13 +22,13 @@ class UserRole extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['roles'] = array(
+    $form['roles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('When the user has the following roles'),
       '#default_value' => $this->configuration['roles'],
       '#options' => array_map('\Drupal\Component\Utility\Html::escape', user_role_names()),
       '#description' => $this->t('If you select no roles, the condition will evaluate to TRUE for all users.'),
-    );
+    ];
     return parent::buildConfigurationForm($form, $form_state);
   }
 
@@ -36,9 +36,9 @@ class UserRole extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
-      'roles' => array(),
-    ) + parent::defaultConfiguration();
+    return [
+      'roles' => [],
+    ] + parent::defaultConfiguration();
   }
 
   /**
@@ -62,10 +62,10 @@ class UserRole extends ConditionPluginBase {
       $roles = reset($roles);
     }
     if (!empty($this->configuration['negate'])) {
-      return $this->t('The user is not a member of @roles', array('@roles' => $roles));
+      return $this->t('The user is not a member of @roles', ['@roles' => $roles]);
     }
     else {
-      return $this->t('The user is a member of @roles', array('@roles' => $roles));
+      return $this->t('The user is a member of @roles', ['@roles' => $roles]);
     }
   }
 

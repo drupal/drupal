@@ -82,18 +82,18 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
     foreach (array_keys($this->commentManager->getFields($entity_type)) as $field_name) {
       /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
       if (($field_storage = FieldStorageConfig::loadByName($entity_type, $field_name)) && $field_storage->getSetting('comment_type') == $this->entity->id() && !$field_storage->isDeleted()) {
-        $caption .= '<p>' . $this->t('%label is used by the %field field on your site. You can not remove this comment type until you have removed the field.', array(
+        $caption .= '<p>' . $this->t('%label is used by the %field field on your site. You can not remove this comment type until you have removed the field.', [
           '%label' => $this->entity->label(),
           '%field' => $field_storage->label(),
-        )) . '</p>';
+        ]) . '</p>';
       }
     }
 
     if (!empty($comments)) {
-      $caption .= '<p>' . $this->formatPlural(count($comments), '%label is used by 1 comment on your site. You can not remove this comment type until you have removed all of the %label comments.', '%label is used by @count comments on your site. You may not remove %label until you have removed all of the %label comments.', array('%label' => $this->entity->label())) . '</p>';
+      $caption .= '<p>' . $this->formatPlural(count($comments), '%label is used by 1 comment on your site. You can not remove this comment type until you have removed all of the %label comments.', '%label is used by @count comments on your site. You may not remove %label until you have removed all of the %label comments.', ['%label' => $this->entity->label()]) . '</p>';
     }
     if ($caption) {
-      $form['description'] = array('#markup' => $caption);
+      $form['description'] = ['#markup' => $caption];
       return $form;
     }
     else {

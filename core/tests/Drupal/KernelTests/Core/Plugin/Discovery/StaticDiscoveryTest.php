@@ -13,20 +13,20 @@ class StaticDiscoveryTest extends DiscoveryTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->expectedDefinitions = array(
-      'apple' => array(
+    $this->expectedDefinitions = [
+      'apple' => [
         'label' => 'Apple',
         'color' => 'green',
-      ),
-      'cherry' => array(
+      ],
+      'cherry' => [
         'label' => 'Cherry',
         'color' => 'red',
-      ),
-      'orange' => array(
+      ],
+      'orange' => [
         'label' => 'Orange',
         'color' => 'orange',
-      ),
-    );
+      ],
+    ];
     // Instead of registering the empty discovery component first and then
     // setting the plugin definitions, we set them first and then delete them
     // again. This implicitly tests StaticDiscovery::deleteDefinition() (in

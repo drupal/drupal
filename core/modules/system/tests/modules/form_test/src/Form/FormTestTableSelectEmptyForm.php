@@ -17,7 +17,7 @@ class FormTestTableSelectEmptyForm extends FormTestTableSelectFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    return $this->tableselectFormBuilder($form, $form_state, array('#options' => array()));
+    return $this->tableselectFormBuilder($form, $form_state, ['#options' => []]);
   }
 
   /**

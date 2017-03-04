@@ -20,20 +20,20 @@ class TaxonomyTermReference extends CckFieldPluginBase {
    * {@inheritdoc}
    */
   public function getFieldFormatterMap() {
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
-    $process = array(
+    $process = [
       'plugin' => 'iterator',
       'source' => $field_name,
-      'process' => array(
+      'process' => [
         'target_id' => 'tid',
-      ),
-    );
+      ],
+    ];
     $migration->setProcessOfProperty($field_name, $process);
   }
 

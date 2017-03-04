@@ -16,7 +16,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('responsive_image', 'responsive_image_test_module');
+  public static $modules = ['responsive_image', 'responsive_image_test_module'];
 
   /**
    * Drupal\simpletest\WebTestBase\setUp().
@@ -43,12 +43,12 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     $this->assertFieldByName('breakpoint_group', 'responsive_image');
 
     // Create a new group.
-    $edit = array(
+    $edit = [
       'label' => 'Style One',
       'id' => 'style_one',
       'breakpoint_group' => 'responsive_image_test_module',
       'fallback_image_style' => 'thumbnail',
-    );
+    ];
     $this->drupalPostForm('admin/config/media/responsive-image-style/add', $edit, t('Save'));
 
     // Check if the new group is created.
@@ -64,14 +64,14 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     $this->assertFieldByName('breakpoint_group', 'responsive_image_test_module');
     $this->assertFieldByName('fallback_image_style', 'thumbnail');
 
-    $cases = array(
-      array('mobile', '1x'),
-      array('mobile', '2x'),
-      array('narrow', '1x'),
-      array('narrow', '2x'),
-      array('wide', '1x'),
-      array('wide', '2x'),
-    );
+    $cases = [
+      ['mobile', '1x'],
+      ['mobile', '2x'],
+      ['narrow', '1x'],
+      ['narrow', '2x'],
+      ['wide', '1x'],
+      ['wide', '2x'],
+    ];
     $image_styles = array_merge(
       [RESPONSIVE_IMAGE_EMPTY_IMAGE, RESPONSIVE_IMAGE_ORIGINAL_IMAGE],
       array_keys(image_style_options(FALSE))
@@ -99,7 +99,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     }
 
     // Save styles for 1x variant only.
-    $edit = array(
+    $edit = [
       'label' => 'Style One',
       'breakpoint_group' => 'responsive_image_test_module',
       'fallback_image_style' => 'thumbnail',
@@ -111,7 +111,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
       'keyed_styles[responsive_image_test_module.narrow][1x][sizes_image_styles][medium]' => 'medium',
       'keyed_styles[responsive_image_test_module.wide][1x][image_mapping_type]' => 'image_style',
       'keyed_styles[responsive_image_test_module.wide][1x][image_style]' => 'large',
-    );
+    ];
     $this->drupalPostForm('admin/config/media/responsive-image-style/style_one', $edit, t('Save'));
     $this->drupalGet('admin/config/media/responsive-image-style/style_one');
 
@@ -135,7 +135,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
 
     // Delete the style.
     $this->drupalGet('admin/config/media/responsive-image-style/style_one/delete');
-    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertText('There is no Responsive image style yet.');
   }

@@ -23,7 +23,7 @@ function test_subtheme_views_post_render(ViewExecutable $view, &$output, CachePl
   // We append the function name to the title for test to check for.
   $view->setTitle($view->getTitle() . ":" . __FUNCTION__);
   if ($view->id() == 'test_page_display') {
-    $output['#rows'][0]['#title'] = t('%total_rows items found.', array('%total_rows' => $view->total_rows));
+    $output['#rows'][0]['#title'] = t('%total_rows items found.', ['%total_rows' => $view->total_rows]);
   }
 }
 

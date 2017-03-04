@@ -27,54 +27,54 @@ class RoleAccessCheckTest extends UnitTestCase {
   protected function getTestRouteCollection() {
     $route_collection = new RouteCollection();
     $route_collection->add('role_test_1', new Route('/role_test_1',
-      array(
+      [
         '_controller' => '\Drupal\router_test\TestControllers::test1',
-      ),
-      array(
+      ],
+      [
         '_role' => 'role_test_1',
-      )
+      ]
     ));
     $route_collection->add('role_test_2', new Route('/role_test_2',
-      array(
+      [
         '_controller' => '\Drupal\router_test\TestControllers::test1',
-      ),
-      array(
+      ],
+      [
         '_role' => 'role_test_2',
-      )
+      ]
     ));
     $route_collection->add('role_test_3', new Route('/role_test_3',
-      array(
+      [
         '_controller' => '\Drupal\router_test\TestControllers::test1',
-      ),
-      array(
+      ],
+      [
         '_role' => 'role_test_1,role_test_2',
-      )
+      ]
     ));
     // Ensure that trimming the values works on "OR" conjunctions.
     $route_collection->add('role_test_4', new Route('/role_test_4',
-      array(
+      [
         '_controller' => '\Drupal\router_test\TestControllers::test1',
-      ),
-      array(
+      ],
+      [
         '_role' => 'role_test_1 , role_test_2',
-      )
+      ]
     ));
     $route_collection->add('role_test_5', new Route('/role_test_5',
-      array(
+      [
         '_controller' => '\Drupal\router_test\TestControllers::test1',
-      ),
-      array(
+      ],
+      [
         '_role' => 'role_test_1+role_test_2',
-      )
+      ]
     ));
     // Ensure that trimming the values works on "AND" conjunctions.
     $route_collection->add('role_test_6', new Route('/role_test_6',
-      array(
+      [
         '_controller' => '\Drupal\router_test\TestControllers::test1',
-      ),
-      array(
+      ],
+      [
         '_role' => 'role_test_1 + role_test_2',
-      )
+      ]
     ));
 
     return $route_collection;
@@ -93,35 +93,35 @@ class RoleAccessCheckTest extends UnitTestCase {
     // Setup one user with the first role, one with the second, one with both
     // and one final without any of these two roles.
 
-    $account_1 = new UserSession(array(
+    $account_1 = new UserSession([
       'uid' => 1,
-      'roles' => array($rid_1),
-    ));
+      'roles' => [$rid_1],
+    ]);
 
-    $account_2 = new UserSession(array(
+    $account_2 = new UserSession([
       'uid' => 2,
-      'roles' => array($rid_2),
-    ));
+      'roles' => [$rid_2],
+    ]);
 
-    $account_12 = new UserSession(array(
+    $account_12 = new UserSession([
       'uid' => 3,
-      'roles' => array($rid_1, $rid_2),
-    ));
+      'roles' => [$rid_1, $rid_2],
+    ]);
 
-    $account_none = new UserSession(array(
+    $account_none = new UserSession([
       'uid' => 1,
-      'roles' => array(),
-    ));
+      'roles' => [],
+    ]);
 
     // Setup expected values; specify which paths can be accessed by which user.
-    return array(
-      array('role_test_1', array($account_1, $account_12), array($account_2, $account_none)),
-      array('role_test_2', array($account_2, $account_12), array($account_1, $account_none)),
-      array('role_test_3', array($account_12), array($account_1, $account_2, $account_none)),
-      array('role_test_4', array($account_12), array($account_1, $account_2, $account_none)),
-      array('role_test_5', array($account_1, $account_2, $account_12), array()),
-      array('role_test_6', array($account_1, $account_2, $account_12), array()),
-    );
+    return [
+      ['role_test_1', [$account_1, $account_12], [$account_2, $account_none]],
+      ['role_test_2', [$account_2, $account_12], [$account_1, $account_none]],
+      ['role_test_3', [$account_12], [$account_1, $account_2, $account_none]],
+      ['role_test_4', [$account_12], [$account_1, $account_2, $account_none]],
+      ['role_test_5', [$account_1, $account_2, $account_12], []],
+      ['role_test_6', [$account_1, $account_2, $account_12], []],
+    ];
   }
 
   /**

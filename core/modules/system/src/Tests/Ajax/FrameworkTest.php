@@ -22,7 +22,7 @@ class FrameworkTest extends AjaxTestBase {
   public function testAJAXRender() {
     // Verify that settings command is generated if JavaScript settings exist.
     $commands = $this->drupalGetAjax('ajax-test/render');
-    $expected = new SettingsCommand(array('ajax' => 'test'), TRUE);
+    $expected = new SettingsCommand(['ajax' => 'test'], TRUE);
     $this->assertCommand($commands, $expected->render(), 'JavaScript settings command is present.');
   }
 
@@ -30,14 +30,14 @@ class FrameworkTest extends AjaxTestBase {
    * Tests AjaxResponse::prepare() AJAX commands ordering.
    */
   public function testOrder() {
-    $expected_commands = array();
+    $expected_commands = [];
 
     // Expected commands, in a very specific order.
     $asset_resolver = \Drupal::service('asset.resolver');
     $css_collection_renderer = \Drupal::service('asset.css.collection_renderer');
     $js_collection_renderer = \Drupal::service('asset.js.collection_renderer');
     $renderer = \Drupal::service('renderer');
-    $expected_commands[0] = new SettingsCommand(array('ajax' => 'test'), TRUE);
+    $expected_commands[0] = new SettingsCommand(['ajax' => 'test'], TRUE);
     $build['#attached']['library'][] = 'ajax_test/order-css-command';
     $assets = AttachedAssets::createFromRenderArray($build);
     $css_render_array = $css_collection_renderer->render($asset_resolver->getCssAssets($assets, FALSE));
@@ -65,7 +65,7 @@ class FrameworkTest extends AjaxTestBase {
     // 3. JavaScript files in the header
     // 4. JavaScript files in the footer
     // 5. Any other AJAX commands, in whatever order they were added.
-    $commands = $this->drupalPostAjaxForm(NULL, array(), NULL, 'ajax-test/order', array(), array(), NULL, array());
+    $commands = $this->drupalPostAjaxForm(NULL, [], NULL, 'ajax-test/order', [], [], NULL, []);
     $this->assertCommand(array_slice($commands, 0, 1), $expected_commands[0]->render(), 'Settings command is first.');
     $this->assertCommand(array_slice($commands, 1, 1), $expected_commands[1]->render(), 'CSS command is second (and CSS files are ordered correctly).');
     $this->assertCommand(array_slice($commands, 2, 1), $expected_commands[2]->render(), 'Header JS command is third.');
@@ -78,10 +78,10 @@ class FrameworkTest extends AjaxTestBase {
    */
   public function testAJAXRenderError() {
     // Verify custom error message.
-    $edit = array(
+    $edit = [
       'message' => 'Custom error message.',
-    );
-    $commands = $this->drupalGetAjax('ajax-test/render-error', array('query' => $edit));
+    ];
+    $commands = $this->drupalGetAjax('ajax-test/render-error', ['query' => $edit]);
     $expected = new AlertCommand($edit['message']);
     $this->assertCommand($commands, $expected->render(), 'Custom error message is output.');
   }
@@ -95,12 +95,12 @@ class FrameworkTest extends AjaxTestBase {
     $js_collection_renderer = \Drupal::service('asset.js.collection_renderer');
     $renderer = \Drupal::service('renderer');
 
-    $expected = array(
+    $expected = [
       'setting_name' => 'ajax_forms_test_lazy_load_form_submit',
       'setting_value' => 'executed',
       'library_1' => 'system/admin',
       'library_2' => 'system/drupal.system',
-    );
+    ];
 
     // Get the base page.
     $this->drupalGet('ajax_forms_test_lazy_load_form');
@@ -109,9 +109,9 @@ class FrameworkTest extends AjaxTestBase {
 
     // Verify that the base page doesn't have the settings and files that are to
     // be lazy loaded as part of the next requests.
-    $this->assertTrue(!isset($original_settings[$expected['setting_name']]), format_string('Page originally lacks the %setting, as expected.', array('%setting' => $expected['setting_name'])));
-    $this->assertTrue(!in_array($expected['library_1'], $original_libraries), format_string('Page originally lacks the %library library, as expected.', array('%library' => $expected['library_1'])));
-    $this->assertTrue(!in_array($expected['library_2'], $original_libraries), format_string('Page originally lacks the %library library, as expected.', array('%library' => $expected['library_2'])));
+    $this->assertTrue(!isset($original_settings[$expected['setting_name']]), format_string('Page originally lacks the %setting, as expected.', ['%setting' => $expected['setting_name']]));
+    $this->assertTrue(!in_array($expected['library_1'], $original_libraries), format_string('Page originally lacks the %library library, as expected.', ['%library' => $expected['library_1']]));
+    $this->assertTrue(!in_array($expected['library_2'], $original_libraries), format_string('Page originally lacks the %library library, as expected.', ['%library' => $expected['library_2']]));
 
     // Calculate the expected CSS and JS.
     $assets = new AttachedAssets();
@@ -128,14 +128,14 @@ class FrameworkTest extends AjaxTestBase {
     $expected_js_html = $renderer->renderRoot($js_render_array);
 
     // Submit the AJAX request without triggering files getting added.
-    $commands = $this->drupalPostAjaxForm(NULL, array('add_files' => FALSE), array('op' => t('Submit')));
+    $commands = $this->drupalPostAjaxForm(NULL, ['add_files' => FALSE], ['op' => t('Submit')]);
     $new_settings = $this->getDrupalSettings();
     $new_libraries = explode(',', $new_settings['ajaxPageState']['libraries']);
 
     // Verify the setting was not added when not expected.
-    $this->assertTrue(!isset($new_settings[$expected['setting_name']]), format_string('Page still lacks the %setting, as expected.', array('%setting' => $expected['setting_name'])));
-    $this->assertTrue(!in_array($expected['library_1'], $new_libraries), format_string('Page still lacks the %library library, as expected.', array('%library' => $expected['library_1'])));
-    $this->assertTrue(!in_array($expected['library_2'], $new_libraries), format_string('Page still lacks the %library library, as expected.', array('%library' => $expected['library_2'])));
+    $this->assertTrue(!isset($new_settings[$expected['setting_name']]), format_string('Page still lacks the %setting, as expected.', ['%setting' => $expected['setting_name']]));
+    $this->assertTrue(!in_array($expected['library_1'], $new_libraries), format_string('Page still lacks the %library library, as expected.', ['%library' => $expected['library_1']]));
+    $this->assertTrue(!in_array($expected['library_2'], $new_libraries), format_string('Page still lacks the %library library, as expected.', ['%library' => $expected['library_2']]));
     // Verify a settings command does not add CSS or scripts to drupalSettings
     // and no command inserts the corresponding tags on the page.
     $found_settings_command = FALSE;
@@ -148,24 +148,24 @@ class FrameworkTest extends AjaxTestBase {
         $found_markup_command = TRUE;
       }
     }
-    $this->assertFalse($found_settings_command, format_string('Page state still lacks the %library_1 and %library_2 libraries, as expected.', array('%library_1' => $expected['library_1'], '%library_2' => $expected['library_2'])));
-    $this->assertFalse($found_markup_command, format_string('Page still lacks the %library_1 and %library_2 libraries, as expected.', array('%library_1' => $expected['library_1'], '%library_2' => $expected['library_2'])));
+    $this->assertFalse($found_settings_command, format_string('Page state still lacks the %library_1 and %library_2 libraries, as expected.', ['%library_1' => $expected['library_1'], '%library_2' => $expected['library_2']]));
+    $this->assertFalse($found_markup_command, format_string('Page still lacks the %library_1 and %library_2 libraries, as expected.', ['%library_1' => $expected['library_1'], '%library_2' => $expected['library_2']]));
 
     // Submit the AJAX request and trigger adding files.
-    $commands = $this->drupalPostAjaxForm(NULL, array('add_files' => TRUE), array('op' => t('Submit')));
+    $commands = $this->drupalPostAjaxForm(NULL, ['add_files' => TRUE], ['op' => t('Submit')]);
     $new_settings = $this->getDrupalSettings();
     $new_libraries = explode(',', $new_settings['ajaxPageState']['libraries']);
 
     // Verify the expected setting was added, both to drupalSettings, and as
     // the first AJAX command.
-    $this->assertIdentical($new_settings[$expected['setting_name']], $expected['setting_value'], format_string('Page now has the %setting.', array('%setting' => $expected['setting_name'])));
-    $expected_command = new SettingsCommand(array($expected['setting_name'] => $expected['setting_value']), TRUE);
+    $this->assertIdentical($new_settings[$expected['setting_name']], $expected['setting_value'], format_string('Page now has the %setting.', ['%setting' => $expected['setting_name']]));
+    $expected_command = new SettingsCommand([$expected['setting_name'] => $expected['setting_value']], TRUE);
     $this->assertCommand(array_slice($commands, 0, 1), $expected_command->render(), 'The settings command was first.');
 
     // Verify the expected CSS file was added, both to drupalSettings, and as
     // the second AJAX command for inclusion into the HTML.
-    $this->assertTrue(in_array($expected['library_1'], $new_libraries), format_string('Page state now has the %library library.', array('%library' => $expected['library_1'])));
-    $this->assertCommand(array_slice($commands, 1, 1), array('data' => $expected_css_html), format_string('Page now has the %library library.', array('%library' => $expected['library_1'])));
+    $this->assertTrue(in_array($expected['library_1'], $new_libraries), format_string('Page state now has the %library library.', ['%library' => $expected['library_1']]));
+    $this->assertCommand(array_slice($commands, 1, 1), ['data' => $expected_css_html], format_string('Page now has the %library library.', ['%library' => $expected['library_1']]));
 
     // Verify the expected JS file was added, both to drupalSettings, and as
     // the third AJAX command for inclusion into the HTML. By testing for an
@@ -173,15 +173,15 @@ class FrameworkTest extends AjaxTestBase {
     // unexpected JavaScript code, such as a jQuery.extend() that would
     // potentially clobber rather than properly merge settings, didn't
     // accidentally get added.
-    $this->assertTrue(in_array($expected['library_2'], $new_libraries), format_string('Page state now has the %library library.', array('%library' => $expected['library_2'])));
-    $this->assertCommand(array_slice($commands, 2, 1), array('data' => $expected_js_html), format_string('Page now has the %library library.', array('%library' => $expected['library_2'])));
+    $this->assertTrue(in_array($expected['library_2'], $new_libraries), format_string('Page state now has the %library library.', ['%library' => $expected['library_2']]));
+    $this->assertCommand(array_slice($commands, 2, 1), ['data' => $expected_js_html], format_string('Page now has the %library library.', ['%library' => $expected['library_2']]));
   }
 
   /**
    * Tests that drupalSettings.currentPath is not updated on AJAX requests.
    */
   public function testCurrentPathChange() {
-    $commands = $this->drupalPostAjaxForm('ajax_forms_test_lazy_load_form', array('add_files' => FALSE), array('op' => t('Submit')));
+    $commands = $this->drupalPostAjaxForm('ajax_forms_test_lazy_load_form', ['add_files' => FALSE], ['op' => t('Submit')]);
     foreach ($commands as $command) {
       if ($command['command'] == 'settings') {
         $this->assertFalse(isset($command['settings']['currentPath']), 'Value of drupalSettings.currentPath is not updated after an AJAX request.');
@@ -195,14 +195,14 @@ class FrameworkTest extends AjaxTestBase {
   public function testLazyLoadOverriddenCSS() {
     // The test theme overrides js.module.css without an implementation,
     // thereby removing it.
-    \Drupal::service('theme_handler')->install(array('test_theme'));
+    \Drupal::service('theme_handler')->install(['test_theme']);
     $this->config('system.theme')
       ->set('default', 'test_theme')
       ->save();
 
     // This gets the form, and emulates an Ajax submission on it, including
     // adding markup to the HEAD and BODY for any lazy loaded JS/CSS files.
-    $this->drupalPostAjaxForm('ajax_forms_test_lazy_load_form', array('add_files' => TRUE), array('op' => t('Submit')));
+    $this->drupalPostAjaxForm('ajax_forms_test_lazy_load_form', ['add_files' => TRUE], ['op' => t('Submit')]);
 
     // Verify that the resulting HTML does not load the overridden CSS file.
     // We add a "?" to the assertion, because drupalSettings may include

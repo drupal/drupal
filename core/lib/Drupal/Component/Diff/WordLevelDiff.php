@@ -22,8 +22,8 @@ class WordLevelDiff extends MappedDiff {
   }
 
   protected function _split($lines) {
-    $words = array();
-    $stripped = array();
+    $words = [];
+    $stripped = [];
     $first = TRUE;
     foreach ($lines as $line) {
       // If the line is too long, just pretend the entire line is one big word
@@ -46,7 +46,7 @@ class WordLevelDiff extends MappedDiff {
         }
       }
     }
-    return array($words, $stripped);
+    return [$words, $stripped];
   }
 
   public function orig() {

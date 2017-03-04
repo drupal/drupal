@@ -197,7 +197,7 @@ function config_get_config_directory($type) {
 function drupal_get_filename($type, $name, $filename = NULL) {
   // The location of files will not change during the request, so do not use
   // drupal_static().
-  static $files = array();
+  static $files = [];
 
   // Type 'core' only exists to simplify application-level logic; it always maps
   // to the /core directory, whereas $name is ignored. It is only requested via
@@ -213,7 +213,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     $type = 'module';
   }
   if (!isset($files[$type])) {
-    $files[$type] = array();
+    $files[$type] = [];
   }
 
   if (isset($filename)) {
@@ -233,11 +233,11 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     // system_rebuild_module_data() and
     // \Drupal\Core\Extension\ThemeHandlerInterface::rebuildThemeData().
     if (!isset($files[$type][$name]) && \Drupal::hasService('state')) {
-      $files[$type] += \Drupal::state()->get('system.' . $type . '.files', array());
+      $files[$type] += \Drupal::state()->get('system.' . $type . '.files', []);
     }
     // If still unknown, create a user-level error message.
     if (!isset($files[$type][$name])) {
-      trigger_error(SafeMarkup::format('The following @type is missing from the file system: @name', array('@type' => $type, '@name' => $name)), E_USER_WARNING);
+      trigger_error(SafeMarkup::format('The following @type is missing from the file system: @name', ['@type' => $type, '@name' => $name]), E_USER_WARNING);
     }
   }
 
@@ -301,7 +301,7 @@ function drupal_get_path($type, $name) {
  *
  * @ingroup sanitization
  */
-function t($string, array $args = array(), array $options = array()) {
+function t($string, array $args = [], array $options = []) {
   return new TranslatableMarkup($string, $args, $options);
 }
 
@@ -376,7 +376,7 @@ function drupal_validate_utf8($text) {
  *
  * @see \Drupal\Core\Utility\Error::decodeException()
  */
-function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = RfcLogLevel::ERROR, $link = NULL) {
+function watchdog_exception($type, Exception $exception, $message = NULL, $variables = [], $severity = RfcLogLevel::ERROR, $link = NULL) {
 
   // Use a default value if $message is not set.
   if (empty($message)) {
@@ -447,7 +447,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
 function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) {
   if (isset($message)) {
     if (!isset($_SESSION['messages'][$type])) {
-      $_SESSION['messages'][$type] = array();
+      $_SESSION['messages'][$type] = [];
     }
 
     // Convert strings which are safe to the simplest Markup objects.
@@ -501,7 +501,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
         unset($_SESSION['messages'][$type]);
       }
       if (isset($messages[$type])) {
-        return array($type => $messages[$type]);
+        return [$type => $messages[$type]];
       }
     }
     else {
@@ -511,7 +511,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
       return $messages;
     }
   }
-  return array();
+  return [];
 }
 
 /**
@@ -899,7 +899,7 @@ function drupal_classloader_register($name, $path) {
  * @see drupal_static_reset()
  */
 function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
-  static $data = array(), $default = array();
+  static $data = [], $default = [];
   // First check if dealing with a previously defined static variable.
   if (isset($data[$name]) || array_key_exists($name, $data)) {
     // Non-NULL $name and both $data[$name] and $default[$name] statics exist.
@@ -978,7 +978,7 @@ function drupal_placeholder($text) {
 function &drupal_register_shutdown_function($callback = NULL) {
   // We cannot use drupal_static() here because the static cache is reset during
   // batch processing, which breaks batch handling.
-  static $callbacks = array();
+  static $callbacks = [];
 
   if (isset($callback)) {
     // Only register the internal shutdown function once.
@@ -989,7 +989,7 @@ function &drupal_register_shutdown_function($callback = NULL) {
     // Remove $callback from the arguments.
     unset($args[0]);
     // Save callback and arguments
-    $callbacks[] = array('callback' => $callback, 'arguments' => $args);
+    $callbacks[] = ['callback' => $callback, 'arguments' => $args];
   }
   return $callbacks;
 }

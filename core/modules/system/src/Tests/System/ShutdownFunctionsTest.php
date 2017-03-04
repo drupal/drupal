@@ -16,7 +16,7 @@ class ShutdownFunctionsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('system_test');
+  public static $modules = ['system_test'];
 
   protected function tearDown() {
     // This test intentionally throws an exception in a PHP shutdown function.
@@ -42,8 +42,8 @@ class ShutdownFunctionsTest extends WebTestBase {
       // We need to wait to ensure that the shutdown functions have fired.
       sleep(1);
     }
-    $this->assertEqual(\Drupal::state()->get('_system_test_first_shutdown_function'), array($arg1, $arg2));
-    $this->assertEqual(\Drupal::state()->get('_system_test_second_shutdown_function'), array($arg1, $arg2));
+    $this->assertEqual(\Drupal::state()->get('_system_test_first_shutdown_function'), [$arg1, $arg2]);
+    $this->assertEqual(\Drupal::state()->get('_system_test_second_shutdown_function'), [$arg1, $arg2]);
 
     if (!$server_using_fastcgi) {
       // Make sure exceptions displayed through

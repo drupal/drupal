@@ -17,20 +17,20 @@ class EntityDisplayModeController extends ControllerBase {
    *   A list of entity types to add a view mode for.
    */
   public function viewModeTypeSelection() {
-    $entity_types = array();
+    $entity_types = [];
     foreach ($this->entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type->get('field_ui_base_route') && $entity_type->hasViewBuilderClass()) {
-        $entity_types[$entity_type_id] = array(
+        $entity_types[$entity_type_id] = [
           'title' => $entity_type->getLabel(),
-          'url' => Url::fromRoute('entity.entity_view_mode.add_form', array('entity_type_id' => $entity_type_id)),
-          'localized_options' => array(),
-        );
+          'url' => Url::fromRoute('entity.entity_view_mode.add_form', ['entity_type_id' => $entity_type_id]),
+          'localized_options' => [],
+        ];
       }
     }
-    return array(
+    return [
       '#theme' => 'admin_block_content',
       '#content' => $entity_types,
-    );
+    ];
   }
 
   /**
@@ -40,20 +40,20 @@ class EntityDisplayModeController extends ControllerBase {
    *   A list of entity types to add a form mode for.
    */
   public function formModeTypeSelection() {
-    $entity_types = array();
+    $entity_types = [];
     foreach ($this->entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type->get('field_ui_base_route') && $entity_type->hasFormClasses()) {
-        $entity_types[$entity_type_id] = array(
+        $entity_types[$entity_type_id] = [
           'title' => $entity_type->getLabel(),
-          'url' => Url::fromRoute('entity.entity_form_mode.add_form', array('entity_type_id' => $entity_type_id)),
-          'localized_options' => array(),
-        );
+          'url' => Url::fromRoute('entity.entity_form_mode.add_form', ['entity_type_id' => $entity_type_id]),
+          'localized_options' => [],
+        ];
       }
     }
-    return array(
+    return [
       '#theme' => 'admin_block_content',
       '#content' => $entity_types,
-    );
+    ];
   }
 
 }

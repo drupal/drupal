@@ -17,7 +17,7 @@ class LocaleStringTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale');
+  public static $modules = ['locale'];
 
   /**
    * The locale storage.
@@ -34,7 +34,7 @@ class LocaleStringTest extends BrowserTestBase {
     // Add a default locale storage for all these tests.
     $this->storage = $this->container->get('locale.storage');
     // Create two languages: Spanish and German.
-    foreach (array('es', 'de') as $langcode) {
+    foreach (['es', 'de'] as $langcode) {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
   }
@@ -46,51 +46,51 @@ class LocaleStringTest extends BrowserTestBase {
     // Create source string.
     $source = $this->buildSourceString();
     $source->save();
-    $this->assertTrue($source->lid, format_string('Successfully created string %string', array('%string' => $source->source)));
+    $this->assertTrue($source->lid, format_string('Successfully created string %string', ['%string' => $source->source]));
 
     // Load strings by lid and source.
-    $string1 = $this->storage->findString(array('lid' => $source->lid));
+    $string1 = $this->storage->findString(['lid' => $source->lid]);
     $this->assertEqual($source, $string1, 'Successfully retrieved string by identifier.');
-    $string2 = $this->storage->findString(array('source' => $source->source, 'context' => $source->context));
+    $string2 = $this->storage->findString(['source' => $source->source, 'context' => $source->context]);
     $this->assertEqual($source, $string2, 'Successfully retrieved string by source and context.');
-    $string3 = $this->storage->findString(array('source' => $source->source, 'context' => ''));
+    $string3 = $this->storage->findString(['source' => $source->source, 'context' => '']);
     $this->assertFalse($string3, 'Cannot retrieve string with wrong context.');
 
     // Check version handling and updating.
     $this->assertEqual($source->version, 'none', 'String originally created without version.');
-    $string = $this->storage->findTranslation(array('lid' => $source->lid));
+    $string = $this->storage->findTranslation(['lid' => $source->lid]);
     $this->assertEqual($string->version, \Drupal::VERSION, 'Checked and updated string version to Drupal version.');
 
     // Create translation and find it by lid and source.
     $langcode = 'es';
     $translation = $this->createTranslation($source, $langcode);
     $this->assertEqual($translation->customized, LOCALE_NOT_CUSTOMIZED, 'Translation created as not customized by default.');
-    $string1 = $this->storage->findTranslation(array('language' => $langcode, 'lid' => $source->lid));
+    $string1 = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
     $this->assertEqual($string1->translation, $translation->translation, 'Successfully loaded translation by string identifier.');
-    $string2 = $this->storage->findTranslation(array('language' => $langcode, 'source' => $source->source, 'context' => $source->context));
+    $string2 = $this->storage->findTranslation(['language' => $langcode, 'source' => $source->source, 'context' => $source->context]);
     $this->assertEqual($string2->translation, $translation->translation, 'Successfully loaded translation by source and context.');
     $translation
       ->setCustomized()
       ->save();
-    $translation = $this->storage->findTranslation(array('language' => $langcode, 'lid' => $source->lid));
+    $translation = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
     $this->assertEqual($translation->customized, LOCALE_CUSTOMIZED, 'Translation successfully marked as customized.');
 
     // Delete translation.
     $translation->delete();
-    $deleted = $this->storage->findTranslation(array('language' => $langcode, 'lid' => $source->lid));
+    $deleted = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
     $this->assertFalse(isset($deleted->translation), 'Successfully deleted translation string.');
 
     // Create some translations and then delete string and all of its
     // translations.
     $lid = $source->lid;
     $this->createAllTranslations($source);
-    $search = $this->storage->getTranslations(array('lid' => $source->lid));
+    $search = $this->storage->getTranslations(['lid' => $source->lid]);
     $this->assertEqual(count($search), 3, 'Created and retrieved all translations for our source string.');
 
     $source->delete();
-    $string = $this->storage->findString(array('lid' => $lid));
+    $string = $this->storage->findString(['lid' => $lid]);
     $this->assertFalse($string, 'Successfully deleted source string.');
-    $deleted = $search = $this->storage->getTranslations(array('lid' => $lid));
+    $deleted = $search = $this->storage->getTranslations(['lid' => $lid]);
     $this->assertFalse($deleted, 'Successfully deleted all translation strings.');
 
     // Tests that locations of different types and arbitrary lengths can be
@@ -102,7 +102,7 @@ class LocaleStringTest extends BrowserTestBase {
     $source_string->addLocation('path', $location = $this->randomString(300));
     $source_string->save();
 
-    $rows = db_query('SELECT * FROM {locales_location} WHERE sid = :sid', array(':sid' => $source_string->lid))->fetchAllAssoc('type');
+    $rows = db_query('SELECT * FROM {locales_location} WHERE sid = :sid', [':sid' => $source_string->lid])->fetchAllAssoc('type');
     $this->assertEqual(count($rows), 4, '4 source locations have been persisted.');
     $this->assertEqual($rows['path']->name, substr($location, 0, 255), 'Too long location has been limited to 255 characters.');
   }
@@ -117,50 +117,50 @@ class LocaleStringTest extends BrowserTestBase {
     // Source 2 will have all translations, customized.
     // Source 3 will have no translations.
     $prefix = $this->randomMachineName(100);
-    $source1 = $this->buildSourceString(array('source' => $prefix . $this->randomMachineName(100)))->save();
-    $source2 = $this->buildSourceString(array('source' => $prefix . $this->randomMachineName(100)))->save();
+    $source1 = $this->buildSourceString(['source' => $prefix . $this->randomMachineName(100)])->save();
+    $source2 = $this->buildSourceString(['source' => $prefix . $this->randomMachineName(100)])->save();
     $source3 = $this->buildSourceString()->save();
     // Load all source strings.
-    $strings = $this->storage->getStrings(array());
+    $strings = $this->storage->getStrings([]);
     $this->assertEqual(count($strings), 3, 'Found 3 source strings in the database.');
     // Load all source strings matching a given string.
-    $filter_options['filters'] = array('source' => $prefix);
-    $strings = $this->storage->getStrings(array(), $filter_options);
+    $filter_options['filters'] = ['source' => $prefix];
+    $strings = $this->storage->getStrings([], $filter_options);
     $this->assertEqual(count($strings), 2, 'Found 2 strings using some string filter.');
 
     // Not customized translations.
     $translate1 = $this->createAllTranslations($source1);
     // Customized translations.
-    $this->createAllTranslations($source2, array('customized' => LOCALE_CUSTOMIZED));
+    $this->createAllTranslations($source2, ['customized' => LOCALE_CUSTOMIZED]);
     // Try quick search function with different field combinations.
     $langcode = 'es';
-    $found = $this->storage->findTranslation(array('language' => $langcode, 'source' => $source1->source, 'context' => $source1->context));
+    $found = $this->storage->findTranslation(['language' => $langcode, 'source' => $source1->source, 'context' => $source1->context]);
     $this->assertTrue($found && isset($found->language) && isset($found->translation) && !$found->isNew(), 'Translation found searching by source and context.');
     $this->assertEqual($found->translation, $translate1[$langcode]->translation, 'Found the right translation.');
     // Now try a translation not found.
-    $found = $this->storage->findTranslation(array('language' => $langcode, 'source' => $source3->source, 'context' => $source3->context));
+    $found = $this->storage->findTranslation(['language' => $langcode, 'source' => $source3->source, 'context' => $source3->context]);
     $this->assertTrue($found && $found->lid == $source3->lid && !isset($found->translation) && $found->isNew(), 'Translation not found but source string found.');
 
     // Load all translations. For next queries we'll be loading only translated
     // strings.
-    $translations = $this->storage->getTranslations(array('translated' => TRUE));
+    $translations = $this->storage->getTranslations(['translated' => TRUE]);
     $this->assertEqual(count($translations), 2 * $language_count, 'Created and retrieved all translations for source strings.');
 
     // Load all customized translations.
-    $translations = $this->storage->getTranslations(array('customized' => LOCALE_CUSTOMIZED, 'translated' => TRUE));
+    $translations = $this->storage->getTranslations(['customized' => LOCALE_CUSTOMIZED, 'translated' => TRUE]);
     $this->assertEqual(count($translations), $language_count, 'Retrieved all customized translations for source strings.');
 
     // Load all Spanish customized translations.
-    $translations = $this->storage->getTranslations(array('language' => 'es', 'customized' => LOCALE_CUSTOMIZED, 'translated' => TRUE));
+    $translations = $this->storage->getTranslations(['language' => 'es', 'customized' => LOCALE_CUSTOMIZED, 'translated' => TRUE]);
     $this->assertEqual(count($translations), 1, 'Found only Spanish and customized translations.');
 
     // Load all source strings without translation (1).
-    $translations = $this->storage->getStrings(array('translated' => FALSE));
+    $translations = $this->storage->getStrings(['translated' => FALSE]);
     $this->assertEqual(count($translations), 1, 'Found 1 source string without translations.');
 
     // Load Spanish translations using string filter.
-    $filter_options['filters'] = array('source' => $prefix);
-    $translations = $this->storage->getTranslations(array('language' => 'es'), $filter_options);
+    $filter_options['filters'] = ['source' => $prefix];
+    $translations = $this->storage->getTranslations(['language' => 'es'], $filter_options);
     $this->assertEqual(count($translations), 2, 'Found 2 translations using some string filter.');
 
   }
@@ -171,18 +171,18 @@ class LocaleStringTest extends BrowserTestBase {
    * @return \Drupal\locale\StringInterface
    *   A locale string.
    */
-  public function buildSourceString($values = array()) {
-    return $this->storage->createString($values += array(
+  public function buildSourceString($values = []) {
+    return $this->storage->createString($values += [
       'source' => $this->randomMachineName(100),
       'context' => $this->randomMachineName(20),
-    ));
+    ]);
   }
 
   /**
    * Creates translations for source string and all languages.
    */
-  public function createAllTranslations($source, $values = array()) {
-    $list = array();
+  public function createAllTranslations($source, $values = []) {
+    $list = [];
     /* @var $language_manager \Drupal\Core\Language\LanguageManagerInterface */
     $language_manager = $this->container->get('language_manager');
     foreach ($language_manager->getLanguages() as $language) {
@@ -194,12 +194,12 @@ class LocaleStringTest extends BrowserTestBase {
   /**
    * Creates single translation for source string.
    */
-  public function createTranslation($source, $langcode, $values = array()) {
-    return $this->storage->createTranslation($values + array(
+  public function createTranslation($source, $langcode, $values = []) {
+    return $this->storage->createTranslation($values + [
       'lid' => $source->lid,
       'language' => $langcode,
       'translation' => $this->randomMachineName(100),
-    ))->save();
+    ])->save();
   }
 
 }

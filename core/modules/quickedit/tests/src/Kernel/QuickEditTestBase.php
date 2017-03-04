@@ -37,11 +37,11 @@ abstract class QuickEditTestBase extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->fields = new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS);
+    $this->fields = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
-    $this->installConfig(array('field', 'filter'));
+    $this->installConfig(['field', 'filter']);
   }
 
   /**
@@ -67,12 +67,12 @@ abstract class QuickEditTestBase extends KernelTestBase {
    */
   protected function createFieldWithStorage($field_name, $type, $cardinality, $label, $field_settings, $widget_type, $widget_settings, $formatter_type, $formatter_settings) {
     $field_storage = $field_name . '_field_storage';
-    $this->fields->$field_storage = FieldStorageConfig::create(array(
+    $this->fields->$field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => $type,
       'cardinality' => $cardinality,
-    ));
+    ]);
     $this->fields->$field_storage->save();
 
     $field = $field_name . '_field';
@@ -87,18 +87,18 @@ abstract class QuickEditTestBase extends KernelTestBase {
     $this->fields->$field->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($field_name, array(
+      ->setComponent($field_name, [
         'type' => $widget_type,
         'settings' => $widget_settings,
-      ))
+      ])
       ->save();
 
     entity_get_display('entity_test', 'entity_test', 'default')
-      ->setComponent($field_name, array(
+      ->setComponent($field_name, [
         'label' => 'above',
         'type' => $formatter_type,
         'settings' => $formatter_settings
-      ))
+      ])
       ->save();
   }
 

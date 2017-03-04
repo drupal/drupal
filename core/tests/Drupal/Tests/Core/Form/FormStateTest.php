@@ -41,17 +41,17 @@ class FormStateTest extends UnitTestCase {
    *   Returns some test data.
    */
   public function providerTestGetRedirect() {
-    $data = array();
-    $data[] = array(array(), NULL);
+    $data = [];
+    $data[] = [[], NULL];
 
     $redirect = new RedirectResponse('/example');
-    $data[] = array(array('redirect' => $redirect), $redirect);
+    $data[] = [['redirect' => $redirect], $redirect];
 
-    $data[] = array(array('redirect' => new Url('test_route_b', array('key' => 'value'))), new Url('test_route_b', array('key' => 'value')));
+    $data[] = [['redirect' => new Url('test_route_b', ['key' => 'value'])], new Url('test_route_b', ['key' => 'value'])];
 
-    $data[] = array(array('programmed' => TRUE), NULL);
-    $data[] = array(array('rebuild' => TRUE), NULL);
-    $data[] = array(array('no_redirect' => TRUE), NULL);
+    $data[] = [['programmed' => TRUE], NULL];
+    $data[] = [['rebuild' => TRUE], NULL];
+    $data[] = [['no_redirect' => TRUE], NULL];
 
     return $data;
   }
@@ -63,7 +63,7 @@ class FormStateTest extends UnitTestCase {
    */
   public function testSetError() {
     $form_state = new FormState();
-    $element['#parents'] = array('foo', 'bar');
+    $element['#parents'] = ['foo', 'bar'];
     $form_state->setError($element, 'Fail');
     $this->assertSame(['foo][bar' => 'Fail'], $form_state->getErrors());
   }
@@ -84,18 +84,18 @@ class FormStateTest extends UnitTestCase {
   }
 
   public function providerTestGetError() {
-    return array(
-      array(array(), array('foo')),
-      array(array('foo][bar' => 'Fail'), array()),
-      array(array('foo][bar' => 'Fail'), array('foo')),
-      array(array('foo][bar' => 'Fail'), array('bar')),
-      array(array('foo][bar' => 'Fail'), array('baz')),
-      array(array('foo][bar' => 'Fail'), array('foo', 'bar'), 'Fail'),
-      array(array('foo][bar' => 'Fail'), array('foo', 'bar', 'baz'), 'Fail'),
-      array(array('foo][bar' => 'Fail 2'), array('foo')),
-      array(array('foo' => 'Fail 1', 'foo][bar' => 'Fail 2'), array('foo'), 'Fail 1'),
-      array(array('foo' => 'Fail 1', 'foo][bar' => 'Fail 2'), array('foo', 'bar'), 'Fail 1'),
-    );
+    return [
+      [[], ['foo']],
+      [['foo][bar' => 'Fail'], []],
+      [['foo][bar' => 'Fail'], ['foo']],
+      [['foo][bar' => 'Fail'], ['bar']],
+      [['foo][bar' => 'Fail'], ['baz']],
+      [['foo][bar' => 'Fail'], ['foo', 'bar'], 'Fail'],
+      [['foo][bar' => 'Fail'], ['foo', 'bar', 'baz'], 'Fail'],
+      [['foo][bar' => 'Fail 2'], ['foo']],
+      [['foo' => 'Fail 1', 'foo][bar' => 'Fail 2'], ['foo'], 'Fail 1'],
+      [['foo' => 'Fail 1', 'foo][bar' => 'Fail 2'], ['foo', 'bar'], 'Fail 1'],
+    ];
   }
 
   /**
@@ -117,15 +117,15 @@ class FormStateTest extends UnitTestCase {
   }
 
   public function providerTestSetErrorByName() {
-    return array(
+    return [
       // Only validate the 'options' element.
-      array(array(array('options')), array('options' => '')),
+      [[['options']], ['options' => '']],
       // Do not limit an validation, and, ensuring the first error is returned
       // for the 'test' element.
       [NULL, ['test' => 'Fail 1', 'options' => '']],
       // Limit all validation.
-      array(array(), array()),
-    );
+      [[], []],
+    ];
   }
 
   /**
@@ -182,7 +182,7 @@ class FormStateTest extends UnitTestCase {
     $module = 'some_module';
     $name = 'some_name';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(array('moduleLoadInclude'))
+      ->setMethods(['moduleLoadInclude'])
       ->getMock();
     $form_state->expects($this->once())
       ->method('moduleLoadInclude')
@@ -198,7 +198,7 @@ class FormStateTest extends UnitTestCase {
     $type = 'some_type';
     $module = 'some_module';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(array('moduleLoadInclude'))
+      ->setMethods(['moduleLoadInclude'])
       ->getMock();
     $form_state->expects($this->once())
       ->method('moduleLoadInclude')
@@ -214,7 +214,7 @@ class FormStateTest extends UnitTestCase {
     $type = 'some_type';
     $module = 'some_module';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(array('moduleLoadInclude'))
+      ->setMethods(['moduleLoadInclude'])
       ->getMock();
     $form_state->expects($this->once())
       ->method('moduleLoadInclude')
@@ -231,7 +231,7 @@ class FormStateTest extends UnitTestCase {
     $module = 'some_module';
     $name = 'some_name';
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
-      ->setMethods(array('moduleLoadInclude'))
+      ->setMethods(['moduleLoadInclude'])
       ->getMock();
 
     $form_state->addBuildInfo('files', [
@@ -376,9 +376,9 @@ class FormStateTest extends UnitTestCase {
     $form_state->setTemporaryValue('rainbow_sparkles', 'yes please');
     $this->assertSame($form_state->getTemporaryValue('rainbow_sparkles'), 'yes please');
     $this->assertTrue($form_state->hasTemporaryValue('rainbow_sparkles'), TRUE);
-    $form_state->setTemporaryValue(array('rainbow_sparkles', 'magic_ponies'), 'yes please');
-    $this->assertSame($form_state->getTemporaryValue(array('rainbow_sparkles', 'magic_ponies')), 'yes please');
-    $this->assertTrue($form_state->hasTemporaryValue(array('rainbow_sparkles', 'magic_ponies')), TRUE);
+    $form_state->setTemporaryValue(['rainbow_sparkles', 'magic_ponies'], 'yes please');
+    $this->assertSame($form_state->getTemporaryValue(['rainbow_sparkles', 'magic_ponies']), 'yes please');
+    $this->assertTrue($form_state->hasTemporaryValue(['rainbow_sparkles', 'magic_ponies']), TRUE);
   }
 
   /**

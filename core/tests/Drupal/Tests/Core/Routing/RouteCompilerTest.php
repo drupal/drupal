@@ -38,15 +38,15 @@ class RouteCompilerTest extends UnitTestCase {
    *   value.
    */
   public function providerTestGetFit() {
-    return array(
-      array('test', 1),
-      array('/testwithleadingslash', 1),
-      array('testwithtrailingslash/', 1),
-      array('/testwithslashes/', 1),
-      array('test/with/multiple/parts', 15),
-      array('test/with/{some}/slugs', 13),
-      array('test/very/long/path/that/drupal/7/could/not/have/handled', 2047),
-    );
+    return [
+      ['test', 1],
+      ['/testwithleadingslash', 1],
+      ['testwithtrailingslash/', 1],
+      ['/testwithslashes/', 1],
+      ['test/with/multiple/parts', 15],
+      ['test/with/{some}/slugs', 13],
+      ['test/very/long/path/that/drupal/7/could/not/have/handled', 2047],
+    ];
   }
 
   /**
@@ -67,9 +67,9 @@ class RouteCompilerTest extends UnitTestCase {
   public function testCompilationDefaultValue() {
     // Because "here" has a default value, it should not factor into the outline
     // or the fitness.
-    $route = new Route('/test/{something}/more/{here}', array(
+    $route = new Route('/test/{something}/more/{here}', [
       'here' => 'there',
-    ));
+    ]);
     $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
     $compiled = $route->compile();
 

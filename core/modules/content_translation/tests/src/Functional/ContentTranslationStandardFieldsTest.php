@@ -16,14 +16,14 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'language',
     'content_translation',
     'node',
     'comment',
     'field_ui',
     'entity_test',
-  );
+  ];
 
   /**
    * {@inheritdoc}
@@ -36,7 +36,7 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $admin_user = $this->drupalCreateUser(array(
+    $admin_user = $this->drupalCreateUser([
       'access administration pages',
       'administer languages',
       'administer content translation',
@@ -45,7 +45,7 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
       'administer comment fields',
       'administer comments',
       'administer comment types',
-    ));
+    ]);
     $this->drupalLogin($admin_user);
   }
 

@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'AUM', '', '', '', '', '', '', '', ' // ', ' * ', '', '-', ' / ', ' / ', ' // ', ' -/ ',
   0x10 => ' +/ ', ' X/ ', ' /XX/ ', ' /X/ ', ',', '', '', '', '', '', '', '', '', '', '', '',
   0x20 => '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.5', '1.5', '2.5', '3.5', '4.5', '5.5',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   0xE0 => NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   0xF0 => NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-);
+];

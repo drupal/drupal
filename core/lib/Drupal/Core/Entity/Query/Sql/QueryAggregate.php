@@ -15,7 +15,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
    * @var array
    *   An array of expressions.
    */
-  protected $sqlExpressions = array();
+  protected $sqlExpressions = [];
 
   /**
    * {@inheritdoc}
@@ -39,7 +39,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   public function prepare() {
     parent::prepare();
     // Throw away the id fields.
-    $this->sqlFields = array();
+    $this->sqlFields = [];
     return $this;
   }
 
@@ -105,7 +105,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
       $sql_field = $this->getSqlField($field, $group_by['langcode']);
       $this->sqlGroupBy[$sql_field] = $sql_field;
       list($table, $real_sql_field) = explode('.', $sql_field);
-      $this->sqlFields[$sql_field] = array($table, $real_sql_field, $this->createSqlAlias($field, $real_sql_field));
+      $this->sqlFields[$sql_field] = [$table, $real_sql_field, $this->createSqlAlias($field, $real_sql_field)];
     }
 
     return $this;
@@ -170,7 +170,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
     if ($this->count) {
       return parent::result();
     }
-    $return = array();
+    $return = [];
     foreach ($this->sqlQuery->execute() as $row) {
       $return[] = (array)$row;
     }

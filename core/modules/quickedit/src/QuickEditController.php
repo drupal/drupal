@@ -98,7 +98,7 @@ class QuickEditController extends ControllerBase {
     }
     $entities = $request->request->get('entities');
 
-    $metadata = array();
+    $metadata = [];
     foreach ($fields as $field) {
       list($entity_type, $entity_id, $field_name, $langcode, $view_mode) = explode('/', $field);
 
@@ -205,7 +205,7 @@ class QuickEditController extends ControllerBase {
 
       // Re-render the updated field for other view modes (i.e. for other
       // instances of the same logical field on the user's page).
-      $other_view_mode_ids = $request->request->get('other_view_modes') ?: array();
+      $other_view_mode_ids = $request->request->get('other_view_modes') ?: [];
       $other_view_modes = array_map($render_field_in_view_mode, array_combine($other_view_mode_ids, $other_view_mode_ids));
 
       $response->addCommand(new FieldFormSavedCommand($output, $other_view_modes));
@@ -220,9 +220,9 @@ class QuickEditController extends ControllerBase {
 
       $errors = $form_state->getErrors();
       if (count($errors)) {
-        $status_messages = array(
+        $status_messages = [
           '#type' => 'status_messages'
-        );
+        ];
         $response->addCommand(new FieldFormValidationErrorsCommand($this->renderer->renderRoot($status_messages)));
       }
     }
@@ -266,7 +266,7 @@ class QuickEditController extends ControllerBase {
       // by a dash; the first part must be the module name.
       $mode_id_parts = explode('-', $view_mode_id, 2);
       $module = reset($mode_id_parts);
-      $args = array($entity, $field_name, $view_mode_id, $langcode);
+      $args = [$entity, $field_name, $view_mode_id, $langcode];
       $output = $this->moduleHandler()->invoke($module, 'quickedit_render_field', $args);
     }
 
@@ -291,10 +291,10 @@ class QuickEditController extends ControllerBase {
 
     // Return information about the entity that allows a front end application
     // to identify it.
-    $output = array(
+    $output = [
       'entity_type' => $entity->getEntityTypeId(),
       'entity_id' => $entity->id()
-    );
+    ];
 
     // Respond to client that the entity was saved properly.
     $response = new AjaxResponse();

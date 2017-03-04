@@ -31,14 +31,14 @@ class DataFieldRow extends RowPluginBase {
    *
    * @var array
    */
-  protected $replacementAliases = array();
+  protected $replacementAliases = [];
 
   /**
    * Stores an array of options to determine if the raw field output is used.
    *
    * @var array
    */
-  protected $rawOutputOptions = array();
+  protected $rawOutputOptions = [];
 
   /**
    * {@inheritdoc}
@@ -61,7 +61,7 @@ class DataFieldRow extends RowPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['field_options'] = array('default' => array());
+    $options['field_options'] = ['default' => []];
 
     return $options;
   }
@@ -72,12 +72,12 @@ class DataFieldRow extends RowPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['field_options'] = array(
+    $form['field_options'] = [
       '#type' => 'table',
-      '#header' => array($this->t('Field'), $this->t('Alias'), $this->t('Raw output')),
+      '#header' => [$this->t('Field'), $this->t('Alias'), $this->t('Raw output')],
       '#empty' => $this->t('You have no fields. Add some to your view.'),
       '#tree' => TRUE,
-    );
+    ];
 
     $options = $this->options['field_options'];
 
@@ -87,22 +87,22 @@ class DataFieldRow extends RowPluginBase {
         if (!empty($field['exclude'])) {
           continue;
         }
-        $form['field_options'][$id]['field'] = array(
+        $form['field_options'][$id]['field'] = [
           '#markup' => $id,
-        );
-        $form['field_options'][$id]['alias'] = array(
-          '#title' => $this->t('Alias for @id', array('@id' => $id)),
+        ];
+        $form['field_options'][$id]['alias'] = [
+          '#title' => $this->t('Alias for @id', ['@id' => $id]),
           '#title_display' => 'invisible',
           '#type' => 'textfield',
           '#default_value' => isset($options[$id]['alias']) ? $options[$id]['alias'] : '',
-          '#element_validate' => array(array($this, 'validateAliasName')),
-        );
-        $form['field_options'][$id]['raw_output'] = array(
-          '#title' => $this->t('Raw output for @id', array('@id' => $id)),
+          '#element_validate' => [[$this, 'validateAliasName']],
+        ];
+        $form['field_options'][$id]['raw_output'] = [
+          '#title' => $this->t('Raw output for @id', ['@id' => $id]),
           '#title_display' => 'invisible',
           '#type' => 'checkbox',
           '#default_value' => isset($options[$id]['raw_output']) ? $options[$id]['raw_output'] : '',
-        );
+        ];
       }
     }
   }
@@ -121,7 +121,7 @@ class DataFieldRow extends RowPluginBase {
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Collect an array of aliases to validate.
-    $aliases = static::extractFromOptionsArray('alias', $form_state->getValue(array('row_options', 'field_options')));
+    $aliases = static::extractFromOptionsArray('alias', $form_state->getValue(['row_options', 'field_options']));
 
     // If array filter returns empty, no values have been entered. Unique keys
     // should only be validated if we have some.
@@ -134,7 +134,7 @@ class DataFieldRow extends RowPluginBase {
    * {@inheritdoc}
    */
   public function render($row) {
-    $output = array();
+    $output = [];
 
     foreach ($this->view->field as $id => $field) {
       // If the raw output option has been set, just get the raw value.

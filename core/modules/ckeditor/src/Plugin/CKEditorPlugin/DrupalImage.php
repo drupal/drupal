@@ -29,31 +29,31 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
    * {@inheritdoc}
    */
   public function getLibraries(Editor $editor) {
-    return array(
+    return [
       'core/drupal.ajax',
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
-    return array(
+    return [
       'drupalImage_dialogTitleAdd' => $this->t('Insert Image'),
       'drupalImage_dialogTitleEdit' => $this->t('Edit Image'),
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getButtons() {
-    return array(
-      'DrupalImage' => array(
+    return [
+      'DrupalImage' => [
         'label' => $this->t('Image'),
         'image' => drupal_get_path('module', 'ckeditor') . '/js/plugins/drupalimage/icons/drupalimage.png',
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -66,7 +66,7 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
     $form_state->loadInclude('editor', 'admin.inc');
     $form['image_upload'] = editor_image_upload_settings_form($editor);
     $form['image_upload']['#attached']['library'][] = 'ckeditor/drupal.ckeditor.drupalimage.admin';
-    $form['image_upload']['#element_validate'][] = array($this, 'validateImageUploadSettings');
+    $form['image_upload']['#element_validate'][] = [$this, 'validateImageUploadSettings'];
     return $form;
   }
 
@@ -80,9 +80,9 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
    * @see editor_image_upload_settings_form()
    */
   function validateImageUploadSettings(array $element, FormStateInterface $form_state) {
-    $settings = &$form_state->getValue(array('editor', 'settings', 'plugins', 'drupalimage', 'image_upload'));
+    $settings = &$form_state->getValue(['editor', 'settings', 'plugins', 'drupalimage', 'image_upload']);
     $form_state->get('editor')->setImageUploadSettings($settings);
-    $form_state->unsetValue(array('editor', 'settings', 'plugins', 'drupalimage'));
+    $form_state->unsetValue(['editor', 'settings', 'plugins', 'drupalimage']);
   }
 
 }

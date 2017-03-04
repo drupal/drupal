@@ -34,18 +34,18 @@ class ManyToOne extends ArgumentPluginBase {
 
     // Ensure defaults for these, during summaries and stuff:
     $this->operator = 'or';
-    $this->value = array();
+    $this->value = [];
   }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
 
     if (!empty($this->definition['numeric'])) {
-      $options['break_phrase'] = array('default' => FALSE);
+      $options['break_phrase'] = ['default' => FALSE];
     }
 
-    $options['add_table'] = array('default' => FALSE);
-    $options['require_value'] = array('default' => FALSE);
+    $options['add_table'] = ['default' => FALSE];
+    $options['require_value'] = ['default' => FALSE];
 
     if (isset($this->helper)) {
       $this->helper->defineOptions($options);
@@ -62,28 +62,28 @@ class ManyToOne extends ArgumentPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     // allow + for or, , for and
-    $form['break_phrase'] = array(
+    $form['break_phrase'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow multiple values'),
       '#description' => $this->t('If selected, users can enter multiple values in the form of 1+2+3 (for OR) or 1,2,3 (for AND).'),
       '#default_value' => !empty($this->options['break_phrase']),
       '#group' => 'options][more',
-    );
+    ];
 
-    $form['add_table'] = array(
+    $form['add_table'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow multiple filter values to work together'),
       '#description' => $this->t('If selected, multiple instances of this filter can work together, as though multiple values were supplied to the same filter. This setting is not compatible with the "Reduce duplicates" setting.'),
       '#default_value' => !empty($this->options['add_table']),
       '#group' => 'options][more',
-    );
+    ];
 
-    $form['require_value'] = array(
+    $form['require_value'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Do not display items with no value in summary'),
       '#default_value' => !empty($this->options['require_value']),
       '#group' => 'options][more',
-    );
+    ];
 
     $this->helper->buildOptionsForm($form, $form_state);
   }
@@ -119,7 +119,7 @@ class ManyToOne extends ArgumentPluginBase {
       $this->unpackArgumentValue($force_int);
     }
     else {
-      $this->value = array($this->argument);
+      $this->value = [$this->argument];
       $this->operator = 'or';
     }
 
@@ -136,7 +136,7 @@ class ManyToOne extends ArgumentPluginBase {
       $this->unpackArgumentValue($force_int);
     }
     else {
-      $this->value = array($this->argument);
+      $this->value = [$this->argument];
       $this->operator = 'or';
     }
 
@@ -146,7 +146,7 @@ class ManyToOne extends ArgumentPluginBase {
       return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : $this->t('Uncategorized');
     }
 
-    if ($this->value === array(-1)) {
+    if ($this->value === [-1]) {
       return !empty($this->definition['invalid input']) ? $this->definition['invalid input'] : $this->t('Invalid input');
     }
 

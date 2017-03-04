@@ -16,7 +16,7 @@ class ActionListTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('action');
+  public static $modules = ['action'];
 
   /**
    * Tests the behavior when there are no actions to list in the admin page.

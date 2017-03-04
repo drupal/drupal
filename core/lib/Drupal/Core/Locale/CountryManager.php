@@ -37,7 +37,7 @@ class CountryManager implements CountryManagerInterface {
    *   An array of country code => country name pairs.
    */
   public static function getStandardList() {
-    $countries = array(
+    $countries = [
       'AC' => t('Ascension Island'),
       'AD' => t('Andorra'),
       'AE' => t('United Arab Emirates'),
@@ -296,7 +296,7 @@ class CountryManager implements CountryManagerInterface {
       'ZA' => t('South Africa'),
       'ZM' => t('Zambia'),
       'ZW' => t('Zimbabwe'),
-    );
+    ];
 
     // Sort the list.
     natcasesort($countries);

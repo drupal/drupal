@@ -16,7 +16,7 @@ class TestLocalAction4 extends LocalActionDefault {
    * {@inheritdoc}
    */
   public function getTitle() {
-    return $this->t('My @arg action', array('@arg' => 'dynamic-title'));
+    return $this->t('My @arg action', ['@arg' => 'dynamic-title']);
   }
 
 }

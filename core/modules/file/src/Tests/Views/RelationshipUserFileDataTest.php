@@ -21,25 +21,25 @@ class RelationshipUserFileDataTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('file', 'file_test_views', 'user');
+  public static $modules = ['file', 'file_test_views', 'user'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_file_user_file_data');
+  public static $testViews = ['test_file_user_file_data'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create the user profile field and instance.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'entity_type' => 'user',
       'field_name' => 'user_file',
       'type' => 'file',
       'translatable' => '0',
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'label' => 'User File',
       'description' => '',
@@ -49,7 +49,7 @@ class RelationshipUserFileDataTest extends ViewTestBase {
       'required' => 0,
     ])->save();
 
-    ViewTestData::createTestViews(get_class($this), array('file_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['file_test_views']);
   }
 
   /**
@@ -84,12 +84,12 @@ class RelationshipUserFileDataTest extends ViewTestBase {
     ];
     $this->assertIdentical($expected, $view->getDependencies());
     $this->executeView($view);
-    $expected_result = array(
-      array(
+    $expected_result = [
+      [
         'file_managed_user__user_file_fid' => '2',
-      ),
-    );
-    $column_map = array('file_managed_user__user_file_fid' => 'file_managed_user__user_file_fid');
+      ],
+    ];
+    $column_map = ['file_managed_user__user_file_fid' => 'file_managed_user__user_file_fid'];
     $this->assertIdenticalResultset($view, $expected_result, $column_map);
   }
 

@@ -16,7 +16,7 @@ class ElementsLabelsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = ['form_test'];
 
   /**
    * Test form elements, labels, title attributes and required marks output
@@ -137,12 +137,12 @@ class ElementsLabelsTest extends WebTestBase {
    * Return a form with element with not all properties defined.
    */
   protected function getFormWithLimitedProperties() {
-    $form = array();
+    $form = [];
 
-    $form['fieldset'] = array(
+    $form['fieldset'] = [
       '#type' => 'fieldset',
       '#title' => 'Fieldset',
-    );
+    ];
 
     return $form;
   }

@@ -19,14 +19,14 @@ class Role extends DrupalSqlBase {
    *
    * @var array
    */
-  protected $filterPermissions = array();
+  protected $filterPermissions = [];
 
   /**
    * {@inheritdoc}
    */
   public function query() {
     $query = $this->select('role', 'r')
-      ->fields('r', array('rid', 'name'))
+      ->fields('r', ['rid', 'name'])
       ->orderBy('r.rid');
     return $query;
   }
@@ -35,10 +35,10 @@ class Role extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'rid' => $this->t('Role ID.'),
       'name' => $this->t('The name of the user role.'),
-    );
+    ];
   }
 
   /**
@@ -46,7 +46,7 @@ class Role extends DrupalSqlBase {
    */
   protected function initializeIterator() {
     $filter_roles = $this->select('filter_formats', 'f')
-      ->fields('f', array('format', 'roles'))
+      ->fields('f', ['format', 'roles'])
       ->execute()
       ->fetchAllKeyed();
     foreach ($filter_roles as $format => $roles) {
@@ -65,7 +65,7 @@ class Role extends DrupalSqlBase {
   public function prepareRow(Row $row) {
     $rid = $row->getSourceProperty('rid');
     $permissions = $this->select('permission', 'p')
-      ->fields('p', array('perm'))
+      ->fields('p', ['perm'])
       ->condition('rid', $rid)
       ->execute()
       ->fetchField();

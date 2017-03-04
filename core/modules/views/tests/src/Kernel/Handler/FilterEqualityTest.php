@@ -12,23 +12,23 @@ use Drupal\views\Views;
  */
 class FilterEqualityTest extends ViewsKernelTestBase {
 
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Map column names.
    *
    * @var array
    */
-  protected $columnMap = array(
+  protected $columnMap = [
     'views_test_data_name' => 'name',
-  );
+  ];
 
   function viewsData() {
     $data = parent::viewsData();
@@ -41,23 +41,23 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Change the filtering
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'name' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'name' => [
         'id' => 'name',
         'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'operator' => '=',
         'value' => 'Ringo',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'Ringo',
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -74,11 +74,11 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'Ringo',
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -87,32 +87,32 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Change the filtering
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'name' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'name' => [
         'id' => 'name',
         'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'operator' => '!=',
         'value' => 'Ringo',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'John',
-      ),
-      array(
+      ],
+      [
         'name' => 'George',
-      ),
-      array(
+      ],
+      [
         'name' => 'Paul',
-      ),
-      array(
+      ],
+      [
         'name' => 'Meredith',
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -129,27 +129,27 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'John',
-      ),
-      array(
+      ],
+      [
         'name' => 'George',
-      ),
-      array(
+      ],
+      [
         'name' => 'Paul',
-      ),
-      array(
+      ],
+      [
         'name' => 'Meredith',
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
 
   protected function getGroupedExposedFilters() {
-    $filters = array(
-      'name' => array(
+    $filters = [
+      'name' => [
         'id' => 'name',
         'plugin_id' => 'equality',
         'table' => 'views_test_data',
@@ -157,31 +157,31 @@ class FilterEqualityTest extends ViewsKernelTestBase {
         'relationship' => 'none',
         'group' => 1,
         'exposed' => TRUE,
-        'expose' => array(
+        'expose' => [
           'operator' => 'name_op',
           'label' => 'name',
           'identifier' => 'name',
-        ),
+        ],
         'is_grouped' => TRUE,
-        'group_info' => array(
+        'group_info' => [
           'label' => 'name',
           'identifier' => 'name',
           'default_group' => 'All',
-          'group_items' => array(
-            1 => array(
+          'group_items' => [
+            1 => [
               'title' => 'Name is equal to Ringo',
               'operator' => '=',
               'value' => 'Ringo',
-            ),
-            2 => array(
+            ],
+            2 => [
               'title' => 'Name is not equal to Ringo',
               'operator' => '!=',
               'value' => 'Ringo',
-            ),
-          ),
-        ),
-      ),
-    );
+            ],
+          ],
+        ],
+      ],
+    ];
     return $filters;
   }
 

@@ -16,7 +16,7 @@ class StaticMapTest extends MigrateProcessTestCase {
    */
   protected function setUp() {
     $configuration['map']['foo']['bar'] = 'baz';
-    $this->plugin = new StaticMap($configuration, 'map', array());
+    $this->plugin = new StaticMap($configuration, 'map', []);
     parent::setUp();
   }
 
@@ -25,14 +25,14 @@ class StaticMapTest extends MigrateProcessTestCase {
    */
   public function testMapWithSourceString() {
     $value = $this->plugin->transform('foo', $this->migrateExecutable, $this->row, 'destinationproperty');
-    $this->assertSame($value, array('bar' => 'baz'));
+    $this->assertSame($value, ['bar' => 'baz']);
   }
 
   /**
    * Tests map when the source is a list.
    */
   public function testMapWithSourceList() {
-    $value = $this->plugin->transform(array('foo', 'bar'), $this->migrateExecutable, $this->row, 'destinationproperty');
+    $value = $this->plugin->transform(['foo', 'bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
     $this->assertSame($value, 'baz');
   }
 
@@ -42,7 +42,7 @@ class StaticMapTest extends MigrateProcessTestCase {
    * @expectedException \Drupal\migrate\MigrateException
    */
   public function testMapwithEmptySource() {
-    $this->plugin->transform(array(), $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform([], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 
   /**
@@ -51,7 +51,7 @@ class StaticMapTest extends MigrateProcessTestCase {
    * @expectedException \Drupal\migrate\MigrateSkipRowException
    */
   public function testMapwithInvalidSource() {
-    $this->plugin->transform(array('bar'), $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 
   /**
@@ -60,8 +60,8 @@ class StaticMapTest extends MigrateProcessTestCase {
   public function testMapWithInvalidSourceWithADefaultValue() {
     $configuration['map']['foo']['bar'] = 'baz';
     $configuration['default_value'] = 'test';
-    $this->plugin = new StaticMap($configuration, 'map', array());
-    $value = $this->plugin->transform(array('bar'), $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin = new StaticMap($configuration, 'map', []);
+    $value = $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
     $this->assertSame($value, 'test');
   }
 
@@ -72,7 +72,7 @@ class StaticMapTest extends MigrateProcessTestCase {
     $configuration['map']['foo']['bar'] = 'baz';
     $configuration['default_value'] = NULL;
     $this->plugin = new StaticMap($configuration, 'map', []);
-    $value = $this->plugin->transform(array('bar'), $this->migrateExecutable, $this->row, 'destinationproperty');
+    $value = $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
     $this->assertNull($value);
   }
 
@@ -86,8 +86,8 @@ class StaticMapTest extends MigrateProcessTestCase {
     $configuration['map']['foo']['bar'] = 'baz';
     $configuration['default_value'] = 'test';
     $configuration['bypass'] = TRUE;
-    $this->plugin = new StaticMap($configuration, 'map', array());
-    $this->plugin->transform(array('bar'), $this->migrateExecutable, $this->row, 'destinationproperty');
+    $this->plugin = new StaticMap($configuration, 'map', []);
+    $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 
 }

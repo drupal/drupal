@@ -88,7 +88,7 @@ class ExtensionInstallStorage extends InstallStorage {
    */
   protected function getAllFolders() {
     if (!isset($this->folders)) {
-      $this->folders = array();
+      $this->folders = [];
       $this->folders += $this->getCoreNames();
 
       $extensions = $this->configStorage->read('core.extension');
@@ -107,7 +107,7 @@ class ExtensionInstallStorage extends InstallStorage {
           drupal_get_filename('profile', $this->installProfile, $profile_list[$this->installProfile]->getPathname());
         }
         $module_list_scan = $listing->scan('module');
-        $module_list = array();
+        $module_list = [];
         foreach (array_keys($modules) as $module) {
           if (isset($module_list_scan[$module])) {
             $module_list[$module] = $module_list_scan[$module];
@@ -134,7 +134,7 @@ class ExtensionInstallStorage extends InstallStorage {
             $profile_list = $listing->scan('profile');
           }
           if (isset($profile_list[$this->installProfile])) {
-            $profile_folders = $this->getComponentNames(array($profile_list[$this->installProfile]));
+            $profile_folders = $this->getComponentNames([$profile_list[$this->installProfile]]);
             $this->folders = $profile_folders + $this->folders;
           }
         }

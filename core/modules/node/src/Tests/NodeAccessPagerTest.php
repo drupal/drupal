@@ -21,15 +21,15 @@ class NodeAccessPagerTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_access_test', 'comment', 'forum');
+  public static $modules = ['node_access_test', 'comment', 'forum'];
 
   protected function setUp() {
     parent::setUp();
 
     node_access_rebuild();
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => t('Basic page')]);
     $this->addDefaultCommentField('node', 'page');
-    $this->webUser = $this->drupalCreateUser(array('access content', 'access comments', 'node test view'));
+    $this->webUser = $this->drupalCreateUser(['access content', 'access comments', 'node test view']);
   }
 
   /**
@@ -41,16 +41,16 @@ class NodeAccessPagerTest extends WebTestBase {
 
     // Create 60 comments.
     for ($i = 0; $i < 60; $i++) {
-      $comment = Comment::create(array(
+      $comment = Comment::create([
         'entity_id' => $node->id(),
         'entity_type' => 'node',
         'field_name' => 'comment',
         'subject' => $this->randomMachineName(),
-        'comment_body' => array(
-          array('value' => $this->randomMachineName()),
-        ),
+        'comment_body' => [
+          ['value' => $this->randomMachineName()],
+        ],
         'status' => CommentInterface::PUBLISHED,
-      ));
+      ]);
       $comment->save();
     }
 
@@ -80,13 +80,13 @@ class NodeAccessPagerTest extends WebTestBase {
 
     // Create 30 nodes.
     for ($i = 0; $i < 30; $i++) {
-      $this->drupalCreateNode(array(
+      $this->drupalCreateNode([
         'nid' => NULL,
         'type' => 'forum',
-        'taxonomy_forums' => array(
-          array('target_id' => $tid),
-        ),
-      ));
+        'taxonomy_forums' => [
+          ['target_id' => $tid],
+        ],
+      ]);
     }
 
     // View the general discussion forum page. With the default 25 nodes per

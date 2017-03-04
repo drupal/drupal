@@ -59,9 +59,9 @@ class Formula extends ArgumentPluginBase {
     // Now that our table is secure, get our formula.
     $placeholder = $this->placeholder();
     $formula = $this->getFormula() . ' = ' . $placeholder;
-    $placeholders = array(
+    $placeholders = [
       $placeholder => $this->argument,
-    );
+    ];
     $this->query->addWhere(0, $formula, $placeholders, 'formula');
   }
 

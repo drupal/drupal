@@ -50,14 +50,14 @@ function hook_config_translation_info(&$info) {
 
       // Make sure entity type has field UI enabled and has a base route.
       if ($entity_type->get('field_ui_base_route') && !empty($base_route)) {
-        $info[$entity_type_id . '_fields'] = array(
+        $info[$entity_type_id . '_fields'] = [
           'base_route_name' => 'entity.field_config.' . $entity_type_id . '_field_edit_form',
           'entity_type' => 'field_config',
           'title' => t('Title'),
           'class' => '\Drupal\config_translation\ConfigFieldMapper',
           'base_entity_type' => $entity_type_id,
           'weight' => 10,
-        );
+        ];
       }
     }
   }

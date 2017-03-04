@@ -17,7 +17,7 @@ class BlockCacheTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test', 'test_page_test');
+  public static $modules = ['block', 'block_test', 'test_page_test'];
 
   /**
    * A user with permission to create and edit books and to administer blocks.
@@ -51,7 +51,7 @@ class BlockCacheTest extends BrowserTestBase {
     parent::setUp();
 
     // Create an admin user, log in and enable test blocks.
-    $this->adminUser = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));
+    $this->adminUser = $this->drupalCreateUser(['administer blocks', 'access administration pages']);
     $this->drupalLogin($this->adminUser);
 
     // Create additional users to test caching modes.
@@ -87,7 +87,7 @@ class BlockCacheTest extends BrowserTestBase {
     $this->assertText($old_content, 'Block is served from the cache.');
 
     // Clear the cache and verify that the stale data is no longer there.
-    Cache::invalidateTags(array('block_view'));
+    Cache::invalidateTags(['block_view']);
     $this->drupalGet('');
     $this->assertNoText($old_content, 'Block cache clear removes stale cache data.');
     $this->assertText($current_content, 'Fresh block content is displayed after clearing the cache.');

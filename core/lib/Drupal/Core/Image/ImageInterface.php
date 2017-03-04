@@ -91,7 +91,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function apply($operation, array $arguments = array());
+  public function apply($operation, array $arguments = []);
 
   /**
    * Closes the image and saves the changes to a file.

@@ -18,12 +18,12 @@ class WebTestBaseTest extends UnitTestCase {
    *   An array of values passed to the test method.
    */
   public function providerAssertFieldByName() {
-    $data = array();
-    $data[] = array('select_2nd_selected', 'test', '1', FALSE);
-    $data[] = array('select_2nd_selected', 'test', '2', TRUE);
-    $data[] = array('select_none_selected', 'test', '', FALSE);
-    $data[] = array('select_none_selected', 'test', '1', TRUE);
-    $data[] = array('select_none_selected', 'test', NULL, TRUE);
+    $data = [];
+    $data[] = ['select_2nd_selected', 'test', '1', FALSE];
+    $data[] = ['select_2nd_selected', 'test', '2', TRUE];
+    $data[] = ['select_none_selected', 'test', '', FALSE];
+    $data[] = ['select_none_selected', 'test', '1', TRUE];
+    $data[] = ['select_none_selected', 'test', NULL, TRUE];
 
     return $data;
   }
@@ -50,7 +50,7 @@ class WebTestBaseTest extends UnitTestCase {
 
     $web_test = $this->getMockBuilder('Drupal\simpletest\WebTestBase')
       ->disableOriginalConstructor()
-      ->setMethods(array('getRawContent', 'assertTrue', 'pass'))
+      ->setMethods(['getRawContent', 'assertTrue', 'pass'])
       ->getMock();
 
     $web_test->expects($this->any())
@@ -65,7 +65,7 @@ class WebTestBaseTest extends UnitTestCase {
 
     $test_method = new \ReflectionMethod('Drupal\simpletest\WebTestBase', 'assertFieldByName');
     $test_method->setAccessible(TRUE);
-    $test_method->invokeArgs($web_test, array($name, $value, 'message'));
+    $test_method->invokeArgs($web_test, [$name, $value, 'message']);
   }
 
   /**
@@ -87,32 +87,32 @@ class WebTestBaseTest extends UnitTestCase {
    *     to mock no link found on the page.
    */
   public function providerTestClickLink() {
-    return array(
+    return [
       // Test for a non-existent label.
-      array(
+      [
         FALSE,
         'does_not_exist',
         0,
-        array(),
-      ),
+        [],
+      ],
       // Test for an existing label.
-      array(
+      [
         'This Text Returned By drupalGet()',
         'exists',
         0,
-        array(0 => array('href' => 'this_is_a_url')),
-      ),
+        [0 => ['href' => 'this_is_a_url']],
+      ],
       // Test for an existing label that isn't the first one.
-      array(
+      [
         'This Text Returned By drupalGet()',
         'exists',
         1,
-        array(
-          0 => array('href' => 'this_is_a_url'),
-          1 => array('href' => 'this_is_another_url'),
-        ),
-      ),
-    );
+        [
+          0 => ['href' => 'this_is_a_url'],
+          1 => ['href' => 'this_is_another_url'],
+        ],
+      ],
+    ];
   }
 
   /**
@@ -134,14 +134,14 @@ class WebTestBaseTest extends UnitTestCase {
     // Mock a WebTestBase object and some of its methods.
     $web_test = $this->getMockBuilder('Drupal\simpletest\WebTestBase')
       ->disableOriginalConstructor()
-      ->setMethods(array(
+      ->setMethods([
         'pass',
         'fail',
         'getUrl',
         'xpath',
         'drupalGet',
         'getAbsoluteUrl',
-      ))
+      ])
       ->getMock();
 
     // Mocked getUrl() is only used for reporting so we just return a string.

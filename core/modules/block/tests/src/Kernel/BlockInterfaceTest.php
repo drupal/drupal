@@ -13,7 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class BlockInterfaceTest extends KernelTestBase {
 
-  public static $modules = array('system', 'block', 'block_test', 'user');
+  public static $modules = ['system', 'block', 'block_test', 'user'];
 
   /**
    * Test configuration and subsequent form() and build() method calls.
@@ -31,16 +31,16 @@ class BlockInterfaceTest extends KernelTestBase {
    */
   public function testBlockInterface() {
     $manager = $this->container->get('plugin.manager.block');
-    $configuration = array(
+    $configuration = [
       'label' => 'Custom Display Message',
-    );
-    $expected_configuration = array(
+    ];
+    $expected_configuration = [
       'id' => 'test_block_instantiation',
       'label' => 'Custom Display Message',
       'provider' => 'block_test',
       'label_display' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
       'display_message' => 'no message set',
-    );
+    ];
     // Initial configuration of the block at construction time.
     /** @var $display_block \Drupal\Core\Block\BlockPluginInterface */
     $display_block = $manager->createInstance('test_block_instantiation', $configuration);
@@ -52,46 +52,46 @@ class BlockInterfaceTest extends KernelTestBase {
     $this->assertIdentical($display_block->getConfiguration(), $expected_configuration, 'The block configuration was updated correctly.');
     $definition = $display_block->getPluginDefinition();
 
-    $expected_form = array(
-      'provider' => array(
+    $expected_form = [
+      'provider' => [
         '#type' => 'value',
         '#value' => 'block_test',
-      ),
-      'admin_label' => array(
+      ],
+      'admin_label' => [
         '#type' => 'item',
         '#title' => t('Block description'),
         '#plain_text' => $definition['admin_label'],
-      ),
-      'label' => array(
+      ],
+      'label' => [
         '#type' => 'textfield',
         '#title' => 'Title',
         '#maxlength' => 255,
         '#default_value' => 'Custom Display Message',
         '#required' => TRUE,
-      ),
-      'label_display' => array(
+      ],
+      'label_display' => [
         '#type' => 'checkbox',
         '#title' => 'Display title',
         '#default_value' => TRUE,
         '#return_value' => 'visible',
-      ),
-      'context_mapping' => array(),
-      'display_message' => array(
+      ],
+      'context_mapping' => [],
+      'display_message' => [
         '#type' => 'textfield',
         '#title' => t('Display message'),
         '#default_value' => 'My custom display message.',
-      ),
-    );
+      ],
+    ];
     $form_state = new FormState();
     // Ensure there are no form elements that do not belong to the plugin.
-    $actual_form = $display_block->buildConfigurationForm(array(), $form_state);
+    $actual_form = $display_block->buildConfigurationForm([], $form_state);
     // Remove the visibility sections, as that just tests condition plugins.
     unset($actual_form['visibility'], $actual_form['visibility_tabs']);
     $this->assertIdentical($this->castSafeStrings($actual_form), $this->castSafeStrings($expected_form), 'Only the expected form elements were present.');
 
-    $expected_build = array(
+    $expected_build = [
       '#children' => 'My custom display message.',
-    );
+    ];
     // Ensure the build array is proper.
     $this->assertIdentical($display_block->build(), $expected_build, 'The plugin returned the appropriate build array.');
 

@@ -12,7 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  */
 class TermLanguageTest extends TaxonomyTestBase {
 
-  public static $modules = array('language');
+  public static $modules = ['language'];
 
   /**
    * Vocabulary for testing.
@@ -31,19 +31,19 @@ class TermLanguageTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
 
     // Add some custom languages.
-    foreach (array('aa', 'bb', 'cc') as $language_code) {
-      ConfigurableLanguage::create(array(
+    foreach (['aa', 'bb', 'cc'] as $language_code) {
+      ConfigurableLanguage::create([
         'id' => $language_code,
         'label' => $this->randomMachineName(),
-      ))->save();
+      ])->save();
     }
   }
 
   function testTermLanguage() {
     // Configure the vocabulary to not hide the language selector.
-    $edit = array(
+    $edit = [
       'default_language[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
 
     // Add a term.
@@ -51,10 +51,10 @@ class TermLanguageTest extends TaxonomyTestBase {
     // Check that we have the language selector.
     $this->assertField('edit-langcode-0-value', t('The language selector field was found on the page.'));
     // Submit the term.
-    $edit = array(
+    $edit = [
       'name[0][value]' => $this->randomMachineName(),
       'langcode[0][value]' => 'aa',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
@@ -76,19 +76,19 @@ class TermLanguageTest extends TaxonomyTestBase {
   function testDefaultTermLanguage() {
     // Configure the vocabulary to not hide the language selector, and make the
     // default language of the terms fixed.
-    $edit = array(
+    $edit = [
       'default_language[langcode]' => 'bb',
       'default_language[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertOptionSelected('edit-langcode-0-value', 'bb', 'The expected langcode was selected.');
 
     // Make the default language of the terms to be the current interface.
-    $edit = array(
+    $edit = [
       'default_language[langcode]' => 'current_interface',
       'default_language[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
     $this->drupalGet('aa/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertOptionSelected('edit-langcode-0-value', 'aa', "The expected langcode, 'aa', was selected.");
@@ -98,10 +98,10 @@ class TermLanguageTest extends TaxonomyTestBase {
     // Change the default language of the site and check if the default terms
     // language is still correctly selected.
     $this->config('system.site')->set('default_langcode', 'cc')->save();
-    $edit = array(
+    $edit = [
       'default_language[langcode]' => LanguageInterface::LANGCODE_SITE_DEFAULT,
       'default_language[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertOptionSelected('edit-langcode-0-value', 'cc', "The expected langcode, 'cc', was selected.");

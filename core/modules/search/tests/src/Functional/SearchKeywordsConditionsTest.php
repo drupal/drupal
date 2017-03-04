@@ -20,7 +20,7 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'search_extra_type', 'test_page_test');
+  public static $modules = ['comment', 'search_extra_type', 'test_page_test'];
 
   /**
    * A user with permission to search and post comments.
@@ -33,7 +33,7 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
     parent::setUp();
 
     // Create searching user.
-    $this->searchingUser = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
+    $this->searchingUser = $this->drupalCreateUser(['search content', 'access content', 'access comments', 'skip comment approval']);
     // Log in with sufficient privileges.
     $this->drupalLogin($this->searchingUser);
   }
@@ -47,16 +47,16 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
     $this->assertNoText('Dummy search snippet to display');
     // With keys - get results.
     $keys = 'bike shed ' . $this->randomMachineName();
-    $this->drupalGet("search/dummy_path", array('query' => array('keys' => $keys)));
+    $this->drupalGet("search/dummy_path", ['query' => ['keys' => $keys]]);
     $this->assertText("Dummy search snippet to display. Keywords: {$keys}");
     $keys = 'blue drop ' . $this->randomMachineName();
-    $this->drupalGet("search/dummy_path", array('query' => array('keys' => $keys)));
+    $this->drupalGet("search/dummy_path", ['query' => ['keys' => $keys]]);
     $this->assertText("Dummy search snippet to display. Keywords: {$keys}");
     // Add some conditions and keys.
     $keys = 'moving drop ' . $this->randomMachineName();
-    $this->drupalGet("search/dummy_path", array('query' => array('keys' => 'bike', 'search_conditions' => $keys)));
+    $this->drupalGet("search/dummy_path", ['query' => ['keys' => 'bike', 'search_conditions' => $keys]]);
     $this->assertText("Dummy search snippet to display.");
-    $this->assertRaw(Html::escape(print_r(array('keys' => 'bike', 'search_conditions' => $keys), TRUE)));
+    $this->assertRaw(Html::escape(print_r(['keys' => 'bike', 'search_conditions' => $keys], TRUE)));
   }
 
 }

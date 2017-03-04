@@ -22,7 +22,7 @@ class AggregatorAdminTest extends AggregatorTestBase {
     $this->assertText('Test processor');
 
     // Set new values and enable test plugins.
-    $edit = array(
+    $edit = [
       'aggregator_allowed_html_tags' => '<a>',
       'aggregator_summary_items' => 10,
       'aggregator_clear' => 3600,
@@ -30,27 +30,27 @@ class AggregatorAdminTest extends AggregatorTestBase {
       'aggregator_fetcher' => 'aggregator_test_fetcher',
       'aggregator_parser' => 'aggregator_test_parser',
       'aggregator_processors[aggregator_test_processor]' => 'aggregator_test_processor',
-    );
+    ];
     $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
 
     foreach ($edit as $name => $value) {
-      $this->assertFieldByName($name, $value, format_string('"@name" has correct default value.', array('@name' => $name)));
+      $this->assertFieldByName($name, $value, format_string('"@name" has correct default value.', ['@name' => $name]));
     }
 
     // Check for our test processor settings form.
     $this->assertText(t('Dummy length setting'));
     // Change its value to ensure that settingsSubmit is called.
-    $edit = array(
+    $edit = [
       'dummy_length' => 100,
-    );
+    ];
     $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
     $this->assertFieldByName('dummy_length', 100, '"dummy_length" has correct default value.');
 
     // Make sure settings form is still accessible even after uninstalling a module
     // that provides the selected plugins.
-    $this->container->get('module_installer')->uninstall(array('aggregator_test'));
+    $this->container->get('module_installer')->uninstall(['aggregator_test']);
     $this->resetAll();
     $this->drupalGet('admin/config/services/aggregator/settings');
     $this->assertResponse(200);

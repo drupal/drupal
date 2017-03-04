@@ -13,10 +13,10 @@ class QueryTest extends DatabaseTestBase {
    * Tests that we can pass an array of values directly in the query.
    */
   function testArraySubstitution() {
-    $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', array(':ages[]' => array(25, 26, 27)))->fetchAll();
+    $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25, 26, 27]])->fetchAll();
     $this->assertEqual(count($names), 3, 'Correct number of names returned');
 
-    $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', array(':ages[]' => array(25)))->fetchAll();
+    $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25]])->fetchAll();
     $this->assertEqual(count($names), 1, 'Correct number of names returned');
   }
 
@@ -25,7 +25,7 @@ class QueryTest extends DatabaseTestBase {
    */
   function testScalarSubstitution() {
     try {
-      $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', array(':ages[]' => 25))->fetchAll();
+      $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => 25])->fetchAll();
       $this->fail('Array placeholder with scalar argument should result in an exception.');
     }
     catch (\InvalidArgumentException $e) {
@@ -39,12 +39,12 @@ class QueryTest extends DatabaseTestBase {
    */
   public function testArrayArgumentsSQLInjection() {
     // Attempt SQL injection and verify that it does not work.
-    $condition = array(
+    $condition = [
       "1 ;INSERT INTO {test} (name) VALUES ('test12345678'); -- " => '',
       '1' => '',
-    );
+    ];
     try {
-      db_query("SELECT * FROM {test} WHERE name = :name", array(':name' => $condition))->fetchObject();
+      db_query("SELECT * FROM {test} WHERE name = :name", [':name' => $condition])->fetchObject();
       $this->fail('SQL injection attempt via array arguments should result in a database exception.');
     }
     catch (\InvalidArgumentException $e) {
@@ -101,7 +101,7 @@ class QueryTest extends DatabaseTestBase {
 
     try {
       $result = db_select('test', 't')
-        ->fields('t', array('name', 'name'))
+        ->fields('t', ['name', 'name'])
         ->condition('name', 1, $injection)
         ->execute();
       $this->fail('Should not be able to attempt SQL injection via operator.');
@@ -118,7 +118,7 @@ class QueryTest extends DatabaseTestBase {
 
     try {
       $result = db_select('test', 't')
-        ->fields('t', array('name'))
+        ->fields('t', ['name'])
         ->condition('name', 1, $injection)
         ->execute();
       $this->fail('Should not be able to attempt SQL injection via operator.');
@@ -139,9 +139,9 @@ class QueryTest extends DatabaseTestBase {
     $count = db_query('SELECT COUNT(*) >= 3 FROM {test}')->fetchField();
     $this->assertEqual((bool) $count, TRUE);
 
-    $count = db_query('SELECT COUNT(*) >= :count FROM {test}', array(
+    $count = db_query('SELECT COUNT(*) >= :count FROM {test}', [
       ':count' => 3,
-    ))->fetchField();
+    ])->fetchField();
     $this->assertEqual((bool) $count, TRUE);
   }
 

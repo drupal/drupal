@@ -26,17 +26,17 @@ class StatusTest extends BrowserTestBase {
 
     // Unset the sync directory in settings.php to trigger $config_directories
     // error.
-    $settings['config_directories']  = array(
-      CONFIG_SYNC_DIRECTORY => (object) array(
+    $settings['config_directories']  = [
+      CONFIG_SYNC_DIRECTORY => (object) [
         'value' => '',
         'required' => TRUE,
-      ),
-    );
+      ],
+    ];
     $this->writeSettings($settings);
 
-    $admin_user = $this->drupalCreateUser(array(
+    $admin_user = $this->drupalCreateUser([
       'administer site configuration',
-    ));
+    ]);
     $this->drupalLogin($admin_user);
   }
 
@@ -71,7 +71,7 @@ class StatusTest extends BrowserTestBase {
     $this->assertNoText(t('Out of date'));
 
     // The global $config_directories is not properly formed.
-    $this->assertRaw(t('Your %file file must define the $config_directories variable as an array containing the names of directories in which configuration files can be found. It must contain a %sync_key key.', array('%file' => $this->siteDirectory . '/settings.php', '%sync_key' => CONFIG_SYNC_DIRECTORY)));
+    $this->assertRaw(t('Your %file file must define the $config_directories variable as an array containing the names of directories in which configuration files can be found. It must contain a %sync_key key.', ['%file' => $this->siteDirectory . '/settings.php', '%sync_key' => CONFIG_SYNC_DIRECTORY]));
 
     // Set the schema version of update_test_postupdate to a lower version, so
     // update_test_postupdate_update_8001() needs to be executed.

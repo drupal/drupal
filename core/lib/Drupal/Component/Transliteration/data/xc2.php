@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'syon', 'syonj', 'syonh', 'syod', 'syol', 'syolg', 'syolm', 'syolb', 'syols', 'syolt', 'syolp', 'syolh', 'syom', 'syob', 'syobs', 'syos',
   0x10 => 'syoss', 'syong', 'syoj', 'syoch', 'syok', 'syot', 'syop', 'syoh', 'su', 'sug', 'sukk', 'sugs', 'sun', 'sunj', 'sunh', 'sud',
   0x20 => 'sul', 'sulg', 'sulm', 'sulb', 'suls', 'sult', 'sulp', 'sulh', 'sum', 'sub', 'subs', 'sus', 'suss', 'sung', 'suj', 'such',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'suim', 'suib', 'suibs', 'suis', 'suiss', 'suing', 'suij', 'suich', 'suik', 'suit', 'suip', 'suih', 'si', 'sig', 'sikk', 'sigs',
   0xE0 => 'sin', 'sinj', 'sinh', 'sid', 'sil', 'silg', 'silm', 'silb', 'sils', 'silt', 'silp', 'silh', 'sim', 'sib', 'sibs', 'sis',
   0xF0 => 'siss', 'sing', 'sij', 'sich', 'sik', 'sit', 'sip', 'sih', 'ssa', 'ssag', 'ssakk', 'ssags', 'ssan', 'ssanj', 'ssanh', 'ssad',
-);
+];

@@ -62,8 +62,8 @@ class EntityTypeRepository implements EntityTypeRepositoryInterface {
       }
 
       // Make sure that the 'Content' group is situated at the top.
-      $content = $this->t('Content', array(), array('context' => 'Entity type group'));
-      $options = array((string) $content => $options[(string) $content]) + $options;
+      $content = $this->t('Content', [], ['context' => 'Entity type group']);
+      $options = [(string) $content => $options[(string) $content]] + $options;
     }
 
     return $options;

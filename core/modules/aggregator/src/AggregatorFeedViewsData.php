@@ -15,12 +15,12 @@ class AggregatorFeedViewsData extends EntityViewsData {
   public function getViewsData() {
     $data = parent::getViewsData();
 
-    $data['aggregator_feed']['table']['join'] = array(
-      'aggregator_item' => array(
+    $data['aggregator_feed']['table']['join'] = [
+      'aggregator_item' => [
         'left_field' => 'fid',
         'field' => 'fid',
-      ),
-    );
+      ],
+    ];
 
     $data['aggregator_feed']['fid']['help'] = $this->t('The unique ID of the aggregator feed.');
     $data['aggregator_feed']['fid']['argument']['id'] = 'aggregator_fid';

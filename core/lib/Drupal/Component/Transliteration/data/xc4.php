@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'sswals', 'sswalt', 'sswalp', 'sswalh', 'sswam', 'sswab', 'sswabs', 'sswas', 'sswass', 'sswang', 'sswaj', 'sswach', 'sswak', 'sswat', 'sswap', 'sswah',
   0x10 => 'sswae', 'sswaeg', 'sswaekk', 'sswaegs', 'sswaen', 'sswaenj', 'sswaenh', 'sswaed', 'sswael', 'sswaelg', 'sswaelm', 'sswaelb', 'sswaels', 'sswaelt', 'sswaelp', 'sswaelh',
   0x20 => 'sswaem', 'sswaeb', 'sswaebs', 'sswaes', 'sswaess', 'sswaeng', 'sswaej', 'sswaech', 'sswaek', 'sswaet', 'sswaep', 'sswaeh', 'ssoe', 'ssoeg', 'ssoekk', 'ssoegs',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'sswik', 'sswit', 'sswip', 'sswih', 'ssyu', 'ssyug', 'ssyukk', 'ssyugs', 'ssyun', 'ssyunj', 'ssyunh', 'ssyud', 'ssyul', 'ssyulg', 'ssyulm', 'ssyulb',
   0xE0 => 'ssyuls', 'ssyult', 'ssyulp', 'ssyulh', 'ssyum', 'ssyub', 'ssyubs', 'ssyus', 'ssyuss', 'ssyung', 'ssyuj', 'ssyuch', 'ssyuk', 'ssyut', 'ssyup', 'ssyuh',
   0xF0 => 'sseu', 'sseug', 'sseukk', 'sseugs', 'sseun', 'sseunj', 'sseunh', 'sseud', 'sseul', 'sseulg', 'sseulm', 'sseulb', 'sseuls', 'sseult', 'sseulp', 'sseulh',
-);
+];

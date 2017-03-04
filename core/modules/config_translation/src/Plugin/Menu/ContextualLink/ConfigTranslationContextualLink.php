@@ -28,7 +28,7 @@ class ConfigTranslationContextualLink extends ContextualLinkDefault {
     // storing the title on the plugin definition for the link) because it
     // contains translated parts that we need in the runtime language.
     $type_name = Unicode::strtolower($this->mapperManager()->createInstance($this->pluginDefinition['config_translation_plugin_id'])->getTypeLabel());
-    return $this->t('Translate @type_name', array('@type_name' => $type_name));
+    return $this->t('Translate @type_name', ['@type_name' => $type_name]);
   }
 
   /**

@@ -14,7 +14,7 @@ class GroupByTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_views_groupby_save');
+  public static $testViews = ['test_views_groupby_save'];
 
   /**
    * Tests whether basic saving works.
@@ -28,18 +28,18 @@ class GroupByTest extends UITestBase {
     $this->assertNoLinkByHref($edit_groupby_url, 0, 'No aggregation link found.');
 
     // Enable aggregation on the view.
-    $edit = array(
+    $edit = [
       'group_by' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_views_groupby_save/default/group_by', $edit, t('Apply'));
 
     $this->assertLinkByHref($edit_groupby_url, 0, 'Aggregation link found.');
 
     // Change the groupby type in the UI.
-    $this->drupalPostForm($edit_groupby_url, array('options[group_type]' => 'count'), t('Apply'));
+    $this->drupalPostForm($edit_groupby_url, ['options[group_type]' => 'count'], t('Apply'));
     $this->assertLink('COUNT(Views test: ID)', 0, 'The count setting is displayed in the UI');
 
-    $this->drupalPostForm(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, [], t('Save'));
 
     $view = $this->container->get('entity.manager')->getStorage('view')->load('test_views_groupby_save');
     $display = $view->getDisplay('default');

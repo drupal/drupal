@@ -20,9 +20,9 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
   public function testInstaller() {
     // Verify that the confirmation message appears.
     require_once \Drupal::root() . '/core/includes/install.inc';
-    $this->assertRaw(t('Congratulations, you installed @drupal!', array(
+    $this->assertRaw(t('Congratulations, you installed @drupal!', [
       '@drupal' => drupal_install_profile_distribution_name(),
-    )));
+    ]));
   }
 
   /**

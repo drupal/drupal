@@ -48,7 +48,7 @@ class Search extends ArgumentPluginBase {
    */
   protected function queryParseSearchExpression($input) {
     if (!isset($this->searchQuery)) {
-      $this->searchQuery = db_select('search_index', 'i', array('target' => 'replica'))->extend('Drupal\search\ViewsSearchQuery');
+      $this->searchQuery = db_select('search_index', 'i', ['target' => 'replica'])->extend('Drupal\search\ViewsSearchQuery');
       $this->searchQuery->searchExpression($input, $this->searchType);
       $this->searchQuery->publicParseSearchExpression();
     }
@@ -80,17 +80,17 @@ class Search extends ArgumentPluginBase {
       $search_condition = new Condition('AND');
 
       // Create a new join to relate the 'search_total' table to our current 'search_index' table.
-      $definition = array(
+      $definition = [
         'table' => 'search_total',
         'field' => 'word',
         'left_table' => $search_index,
         'left_field' => 'word',
-      );
+      ];
       $join = Views::pluginManager('join')->createInstance('standard', $definition);
       $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
       // Add the search score field to the query.
-      $this->search_score = $this->query->addField('', "$search_index.score * $search_total.count", 'score', array('function' => 'sum'));
+      $this->search_score = $this->query->addField('', "$search_index.score * $search_total.count", 'score', ['function' => 'sum']);
 
       // Add the conditions set up by the search query to the views query.
       $search_condition->condition("$search_index.type", $this->searchType);
@@ -121,7 +121,7 @@ class Search extends ArgumentPluginBase {
       $this->query->addGroupBy("$search_index.sid");
       $matches = $this->searchQuery->matches();
       $placeholder = $this->placeholder();
-      $this->query->addHavingExpression(0, "COUNT(*) >= $placeholder", array($placeholder => $matches));
+      $this->query->addHavingExpression(0, "COUNT(*) >= $placeholder", [$placeholder => $matches]);
     }
 
     // Set to NULL to prevent PDO exception when views object is cached

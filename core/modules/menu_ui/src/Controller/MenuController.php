@@ -49,7 +49,7 @@ class MenuController extends ControllerBase {
    *   The available menu and menu items.
    */
   public function getParentOptions(Request $request) {
-    $available_menus = array();
+    $available_menus = [];
     if ($menus = $request->request->get('menus')) {
       foreach ($menus as $menu) {
         $available_menus[$menu] = $menu;

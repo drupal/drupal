@@ -77,59 +77,59 @@ class FileSystemForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('system.file');
-    $form['file_public_path'] = array(
+    $form['file_public_path'] = [
       '#type' => 'item',
       '#title' => t('Public file system path'),
       '#markup' => PublicStream::basePath(),
       '#description' => t('A local file system path where public files will be stored. This directory must exist and be writable by Drupal. This directory must be relative to the Drupal installation directory and be accessible over the web. This must be changed in settings.php'),
-    );
+    ];
 
-    $form['file_public_base_url'] = array(
+    $form['file_public_base_url'] = [
       '#type' => 'item',
       '#title' => t('Public file base URL'),
       '#markup' => PublicStream::baseUrl(),
       '#description' => t('The base URL that will be used for public file URLs. This can be changed in settings.php'),
-    );
+    ];
 
-    $form['file_private_path'] = array(
+    $form['file_private_path'] = [
       '#type' => 'item',
       '#title' => t('Private file system path'),
       '#markup' => (PrivateStream::basePath() ? PrivateStream::basePath() : t('Not set')),
       '#description' => t('An existing local file system path for storing private files. It should be writable by Drupal and not accessible over the web. This must be changed in settings.php'),
-    );
+    ];
 
-    $form['file_temporary_path'] = array(
+    $form['file_temporary_path'] = [
       '#type' => 'textfield',
       '#title' => t('Temporary directory'),
       '#default_value' => $config->get('path.temporary'),
       '#maxlength' => 255,
       '#description' => t('A local file system path where temporary files will be stored. This directory should not be accessible over the web.'),
-      '#after_build' => array('system_check_directory'),
-    );
+      '#after_build' => ['system_check_directory'],
+    ];
     // Any visible, writeable wrapper can potentially be used for the files
     // directory, including a remote file system that integrates with a CDN.
     $options = $this->streamWrapperManager->getDescriptions(StreamWrapperInterface::WRITE_VISIBLE);
 
     if (!empty($options)) {
-      $form['file_default_scheme'] = array(
+      $form['file_default_scheme'] = [
         '#type' => 'radios',
         '#title' => t('Default download method'),
         '#default_value' => $config->get('default_scheme'),
         '#options' => $options,
         '#description' => t('This setting is used as the preferred download method. The use of public files is more efficient, but does not provide any access control.'),
-      );
+      ];
     }
 
-    $intervals = array(0, 21600, 43200, 86400, 604800, 2419200, 7776000);
-    $period = array_combine($intervals, array_map(array($this->dateFormatter, 'formatInterval'), $intervals));
+    $intervals = [0, 21600, 43200, 86400, 604800, 2419200, 7776000];
+    $period = array_combine($intervals, array_map([$this->dateFormatter, 'formatInterval'], $intervals));
     $period[0] = t('Never');
-    $form['temporary_maximum_age'] = array(
+    $form['temporary_maximum_age'] = [
       '#type' => 'select',
       '#title' => t('Delete orphaned files after'),
       '#default_value' => $config->get('temporary_maximum_age'),
       '#options' => $period,
       '#description' => t('Orphaned files are not referenced from any content but remain in the file system and may appear in administrative listings. <strong>Warning:</strong> If enabled, orphaned files will be permanently deleted and may not be recoverable.'),
-    );
+    ];
 
     return parent::buildForm($form, $form_state);
   }

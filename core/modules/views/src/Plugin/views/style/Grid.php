@@ -32,13 +32,13 @@ class Grid extends StylePluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['columns'] = array('default' => '4');
-    $options['automatic_width'] = array('default' => TRUE);
-    $options['alignment'] = array('default' => 'horizontal');
-    $options['col_class_custom'] = array('default' => '');
-    $options['col_class_default'] = array('default' => TRUE);
-    $options['row_class_custom'] = array('default' => '');
-    $options['row_class_default'] = array('default' => TRUE);
+    $options['columns'] = ['default' => '4'];
+    $options['automatic_width'] = ['default' => TRUE];
+    $options['alignment'] = ['default' => 'horizontal'];
+    $options['col_class_custom'] = ['default' => ''];
+    $options['col_class_default'] = ['default' => TRUE];
+    $options['row_class_custom'] = ['default' => ''];
+    $options['row_class_default'] = ['default' => TRUE];
     return $options;
   }
 
@@ -47,53 +47,53 @@ class Grid extends StylePluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $form['columns'] = array(
+    $form['columns'] = [
       '#type' => 'number',
       '#title' => $this->t('Number of columns'),
       '#default_value' => $this->options['columns'],
       '#required' => TRUE,
       '#min' => 1,
-    );
-    $form['automatic_width'] = array(
+    ];
+    $form['automatic_width'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Automatic width'),
       '#description' => $this->t('The width of each column will be calculated automatically based on the number of columns provided. If additional classes are entered or a theme injects classes based on a grid system, disabling this option may prove beneficial.'),
       '#default_value' => $this->options['automatic_width'],
-    );
-    $form['alignment'] = array(
+    ];
+    $form['alignment'] = [
       '#type' => 'radios',
       '#title' => $this->t('Alignment'),
-      '#options' => array('horizontal' => $this->t('Horizontal'), 'vertical' => $this->t('Vertical')),
+      '#options' => ['horizontal' => $this->t('Horizontal'), 'vertical' => $this->t('Vertical')],
       '#default_value' => $this->options['alignment'],
       '#description' => $this->t('Horizontal alignment will place items starting in the upper left and moving right. Vertical alignment will place items starting in the upper left and moving down.'),
-    );
-    $form['col_class_default'] = array(
+    ];
+    $form['col_class_default'] = [
       '#title' => $this->t('Default column classes'),
       '#description' => $this->t('Add the default views column classes like views-col, col-1 and clearfix to the output. You can use this to quickly reduce the amount of markup the view provides by default, at the cost of making it more difficult to apply CSS.'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['col_class_default'],
-    );
-    $form['col_class_custom'] = array(
+    ];
+    $form['col_class_custom'] = [
       '#title' => $this->t('Custom column class'),
       '#description' => $this->t('Additional classes to provide on each column. Separated by a space.'),
       '#type' => 'textfield',
       '#default_value' => $this->options['col_class_custom'],
-    );
+    ];
     if ($this->usesFields()) {
       $form['col_class_custom']['#description'] .= ' ' . $this->t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
     }
-    $form['row_class_default'] = array(
+    $form['row_class_default'] = [
       '#title' => $this->t('Default row classes'),
       '#description' => $this->t('Adds the default views row classes like views-row, row-1 and clearfix to the output. You can use this to quickly reduce the amount of markup the view provides by default, at the cost of making it more difficult to apply CSS.'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['row_class_default'],
-    );
-    $form['row_class_custom'] = array(
+    ];
+    $form['row_class_custom'] = [
       '#title' => $this->t('Custom row class'),
       '#description' => $this->t('Additional classes to provide on each row. Separated by a space.'),
       '#type' => 'textfield',
       '#default_value' => $this->options['row_class_custom'],
-    );
+    ];
     if ($this->usesFields()) {
       $form['row_class_custom']['#description'] .= ' ' . $this->t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
     }

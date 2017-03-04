@@ -16,10 +16,10 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
    * @return array
    */
   protected function getFilterLabels() {
-    return array(
+    return [
       'placeholder' => $this->t('Enter label'),
       'description' => $this->t('Enter a part of the label or description to filter by.'),
-    );
+    ];
   }
 
   /**
@@ -29,28 +29,28 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
     $build = parent::render();
     $filter = $this->getFilterLabels();
 
-    usort($build['table']['#rows'], array($this, 'sortRows'));
+    usort($build['table']['#rows'], [$this, 'sortRows']);
 
-    $build['filters'] = array(
+    $build['filters'] = [
       '#type' => 'container',
-      '#attributes' => array(
-        'class' => array('table-filter', 'js-show'),
-      ),
+      '#attributes' => [
+        'class' => ['table-filter', 'js-show'],
+      ],
       '#weight' => -10,
-    );
+    ];
 
-    $build['filters']['text'] = array(
+    $build['filters']['text'] = [
       '#type' => 'search',
       '#title' => $this->t('Search'),
       '#size' => 30,
       '#placeholder' => $filter['placeholder'],
-      '#attributes' => array(
-        'class' => array('table-filter-text'),
+      '#attributes' => [
+        'class' => ['table-filter-text'],
         'data-table' => '.config-translation-entity-list',
         'autocomplete' => 'off',
         'title' => $filter['description'],
-      ),
-    );
+      ],
+    ];
 
     $build['table']['#attributes']['class'][] = 'config-translation-entity-list';
     $build['table']['#weight'] = 0;
@@ -95,7 +95,7 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
    * {@inheritdoc}
    */
   public function sortRows($a, $b) {
-    return $this->sortRowsMultiple($a, $b, array('label'));
+    return $this->sortRowsMultiple($a, $b, ['label']);
   }
 
   /**

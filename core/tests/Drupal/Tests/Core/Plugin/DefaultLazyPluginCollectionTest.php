@@ -58,12 +58,12 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
    *   The test data.
    */
   public function providerTestSortHelper() {
-    return array(
-      array('apple', 'apple', 0),
-      array('apple', 'cherry', -1),
-      array('cherry', 'apple', 1),
-      array('cherry', 'banana', 1),
-    );
+    return [
+      ['apple', 'apple', 0],
+      ['apple', 'cherry', -1],
+      ['cherry', 'apple', 1],
+      ['cherry', 'banana', 1],
+    ];
   }
 
   /**
@@ -91,7 +91,7 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
   public function testGetConfiguration() {
     $this->setupPluginCollection($this->exactly(3));
     // The expected order matches $this->config.
-    $expected = array('banana', 'cherry', 'apple');
+    $expected = ['banana', 'cherry', 'apple'];
 
     $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($expected, array_keys($config), 'The order of the configuration is unchanged.');
@@ -113,21 +113,21 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
    */
   public function testAddInstanceId() {
     $this->setupPluginCollection($this->exactly(4));
-    $expected = array(
+    $expected = [
       'banana' => 'banana',
       'cherry' => 'cherry',
       'apple' => 'apple',
-    );
+    ];
     $this->defaultPluginCollection->addInstanceId('apple');
     $result = $this->defaultPluginCollection->getInstanceIds();
     $this->assertSame($expected, $result);
     $this->assertSame($expected, array_intersect_key($result, $this->defaultPluginCollection->getConfiguration()));
 
-    $expected = array(
+    $expected = [
       'cherry' => 'cherry',
       'apple' => 'apple',
       'banana' => 'banana',
-    );
+    ];
     $this->defaultPluginCollection->removeInstanceId('banana');
     $this->defaultPluginCollection->addInstanceId('banana', $this->config['banana']);
 
@@ -151,11 +151,11 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
    */
   public function testSetInstanceConfiguration() {
     $this->setupPluginCollection($this->exactly(3));
-    $expected = array(
+    $expected = [
       'id' => 'cherry',
       'key' => 'value',
       'custom' => 'bananas',
-    );
+    ];
     $this->defaultPluginCollection->setInstanceConfiguration('cherry', $expected);
     $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($expected, $config['cherry']);
@@ -189,12 +189,12 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
     $this->defaultPluginCollection->set('cherry2', $instance);
     $this->defaultPluginCollection->setInstanceConfiguration('cherry2', $this->config['cherry']);
 
-    $expected = array(
+    $expected = [
       'banana',
       'cherry',
       'apple',
       'cherry2',
-    );
+    ];
     $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($expected, array_keys($config));
   }

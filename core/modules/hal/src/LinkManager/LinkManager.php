@@ -34,21 +34,21 @@ class LinkManager implements LinkManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTypeUri($entity_type, $bundle, $context = array()) {
+  public function getTypeUri($entity_type, $bundle, $context = []) {
     return $this->typeLinkManager->getTypeUri($entity_type, $bundle, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getTypeInternalIds($type_uri, $context = array()) {
+  public function getTypeInternalIds($type_uri, $context = []) {
     return $this->typeLinkManager->getTypeInternalIds($type_uri, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getRelationUri($entity_type, $bundle, $field_name, $context = array()) {
+  public function getRelationUri($entity_type, $bundle, $field_name, $context = []) {
     return $this->relationLinkManager->getRelationUri($entity_type, $bundle, $field_name, $context);
   }
 

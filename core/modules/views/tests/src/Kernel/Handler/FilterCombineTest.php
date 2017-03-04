@@ -15,24 +15,24 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('entity_test');
+  public static $modules = ['entity_test'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view', 'entity_test_fields');
+  public static $testViews = ['test_view', 'entity_test_fields'];
 
   /**
    * Map column names.
    *
    * @var array
    */
-  protected $columnMap = array(
+  protected $columnMap = [
     'views_test_data_name' => 'name',
     'views_test_data_job' => 'job',
-  );
+  ];
 
   /**
    * {@inheritdoc}
@@ -48,50 +48,50 @@ class FilterCombineTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     $fields = $view->displayHandlers->get('default')->getOption('fields');
-    $view->displayHandlers->get('default')->overrideOption('fields', $fields + array(
-      'job' => array(
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
+      'job' => [
         'id' => 'job',
         'table' => 'views_test_data',
         'field' => 'job',
         'relationship' => 'none',
-      ),
-    ));
+      ],
+    ]);
 
     // Change the filtering.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'combine',
         'table' => 'views',
         'field' => 'combine',
         'relationship' => 'none',
         'operator' => 'contains',
-        'fields' => array(
+        'fields' => [
           'name',
           'job',
-        ),
+        ],
         'value' => 'ing',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'John',
         'job' => 'Singer',
-      ),
-      array(
+      ],
+      [
         'name' => 'George',
         'job' => 'Singer',
-      ),
-      array(
+      ],
+      [
         'name' => 'Ringo',
         'job' => 'Drummer',
-      ),
-      array(
+      ],
+      [
         'name' => 'Ginger',
         'job' => NULL,
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -103,46 +103,46 @@ class FilterCombineTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     $fields = $view->displayHandlers->get('default')->getOption('fields');
-    $view->displayHandlers->get('default')->overrideOption('fields', $fields + array(
-        'job' => array(
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
+        'job' => [
           'id' => 'job',
           'table' => 'views_test_data',
           'field' => 'job',
           'relationship' => 'none',
-        ),
-      ));
+        ],
+      ]);
 
     // Change the filtering.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'combine',
         'table' => 'views',
         'field' => 'combine',
         'relationship' => 'none',
         'operator' => 'word',
-        'fields' => array(
+        'fields' => [
           'name',
           'job',
-        ),
+        ],
         'value' => 'singer ringo',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'John',
         'job' => 'Singer',
-      ),
-      array(
+      ],
+      [
         'name' => 'George',
         'job' => 'Singer',
-      ),
-      array(
+      ],
+      [
         'name' => 'Ringo',
         'job' => 'Drummer',
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -154,39 +154,39 @@ class FilterCombineTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     $fields = $view->displayHandlers->get('default')->getOption('fields');
-    $view->displayHandlers->get('default')->overrideOption('fields', $fields + array(
-        'job' => array(
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
+        'job' => [
           'id' => 'job',
           'table' => 'views_test_data',
           'field' => 'job',
           'relationship' => 'none',
-        ),
-      ));
+        ],
+      ]);
 
     // Set the filtering to allwords and simulate searching for a phrase.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'combine',
         'table' => 'views',
         'field' => 'combine',
         'relationship' => 'none',
         'operator' => 'allwords',
-        'fields' => array(
+        'fields' => [
           'name',
           'job',
           'age',
-        ),
+        ],
         'value' => '25 "john   singer"',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
-    $resultset = array(
-      array(
+    $resultset = [
+      [
         'name' => 'John',
         'job' => 'Singer',
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
@@ -202,40 +202,40 @@ class FilterCombineTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     $fields = $view->displayHandlers->get('default')->getOption('fields');
-    $view->displayHandlers->get('default')->overrideOption('fields', $fields + array(
-      'job' => array(
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
+      'job' => [
         'id' => 'job',
         'table' => 'views_test_data',
         'field' => 'job',
         'relationship' => 'none',
-      ),
-    ));
+      ],
+    ]);
 
     // Change the filtering.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
         'id' => 'combine',
         'table' => 'views',
         'field' => 'combine',
         'relationship' => 'none',
         'operator' => 'contains',
-        'fields' => array(
+        'fields' => [
           'name',
           'job',
           // Add a dummy field to the combined fields to simulate
           // a removed or deleted field.
           'dummy',
-        ),
+        ],
         'value' => 'ing',
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
     // Make sure this view will not get displayed.
     $this->assertTrue($view->build_info['fail'], "View build has been marked as failed.");
     // Make sure this view does not pass validation with the right error.
     $errors = $view->validate();
-    $this->assertEquals(t('Field %field set in %filter is not set in display %display.', array('%field' => 'dummy', '%filter' => 'Global: Combine fields filter', '%display' => 'Master')), reset($errors['default']));
+    $this->assertEquals(t('Field %field set in %filter is not set in display %display.', ['%field' => 'dummy', '%filter' => 'Global: Combine fields filter', '%display' => 'Master']), reset($errors['default']));
   }
 
   /**
@@ -247,30 +247,30 @@ class FilterCombineTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Set the rows to a plugin type that doesn't support fields.
-    $view->displayHandlers->get('default')->overrideOption('row', array(
+    $view->displayHandlers->get('default')->overrideOption('row', [
       'type' => 'entity:entity_test',
-      'options' => array(
+      'options' => [
         'view_mode' => 'teaser',
-      ),
-    ));
+      ],
+    ]);
     // Change the filtering.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'name' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'name' => [
         'id' => 'combine',
         'table' => 'views',
         'field' => 'combine',
         'relationship' => 'none',
         'operator' => 'contains',
-        'fields' => array(
+        'fields' => [
           'name',
-        ),
+        ],
         'value' => 'ing',
-      ),
-    ));
+      ],
+    ]);
     $this->executeView($view);
     $errors = $view->validate();
     // Check that the right error is shown.
-    $this->assertEquals(t('%display: %filter can only be used on displays that use fields. Set the style or row format for that display to one using fields to use the combine field filter.', array('%filter' => 'Global: Combine fields filter', '%display' => 'Master')), reset($errors['default']));
+    $this->assertEquals(t('%display: %filter can only be used on displays that use fields. Set the style or row format for that display to one using fields to use the combine field filter.', ['%filter' => 'Global: Combine fields filter', '%display' => 'Master']), reset($errors['default']));
   }
 
   /**
@@ -278,13 +278,13 @@ class FilterCombineTest extends ViewsKernelTestBase {
    */
   protected function dataSet() {
     $data_set = parent::dataSet();
-    $data_set[] = array(
+    $data_set[] = [
       'name' => 'Ginger',
       'age' => 25,
       'job' => NULL,
       'created' => gmmktime(0, 0, 0, 1, 2, 2000),
       'status' => 1,
-    );
+    ];
     return $data_set;
   }
 

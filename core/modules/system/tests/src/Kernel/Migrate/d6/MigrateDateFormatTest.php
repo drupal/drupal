@@ -37,7 +37,7 @@ class MigrateDateFormatTest extends MigrateDrupal6TestBase {
     // Test that we can re-import using the EntityDateFormat destination.
     Database::getConnection('default', 'migrate')
       ->update('variable')
-      ->fields(array('value' => serialize('\S\H\O\R\T d/m/Y - H:i')))
+      ->fields(['value' => serialize('\S\H\O\R\T d/m/Y - H:i')])
       ->condition('name', 'date_format_short')
       ->execute();
 

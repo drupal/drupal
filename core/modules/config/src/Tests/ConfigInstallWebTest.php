@@ -26,7 +26,7 @@ class ConfigInstallWebTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(array('administer modules', 'administer themes', 'administer site configuration'));
+    $this->adminUser = $this->drupalCreateUser(['administer modules', 'administer themes', 'administer site configuration']);
 
     // Ensure the global variable being asserted by this test does not exist;
     // a previous test executed in this request/process might have set it.
@@ -41,7 +41,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $default_configuration_entity = 'config_test.dynamic.config_integration_test';
 
     // Install the config_test module we're integrating with.
-    \Drupal::service('module_installer')->install(array('config_test'));
+    \Drupal::service('module_installer')->install(['config_test']);
 
     // Verify the configuration does not exist prior to installation.
     $config_static = $this->config($default_config);
@@ -50,7 +50,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->assertIdentical($config_entity->isNew(), TRUE);
 
     // Install the integration module.
-    \Drupal::service('module_installer')->install(array('config_integration_test'));
+    \Drupal::service('module_installer')->install(['config_integration_test']);
 
     // Verify that default module config exists.
     \Drupal::configFactory()->reset($default_config);
@@ -73,7 +73,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->container->get('config.factory')->reset();
 
     // Disable and uninstall the integration module.
-    $this->container->get('module_installer')->uninstall(array('config_integration_test'));
+    $this->container->get('module_installer')->uninstall(['config_integration_test']);
 
     // Verify the integration module's config was uninstalled.
     $config_static = $this->config($default_config);
@@ -86,7 +86,7 @@ class ConfigInstallWebTest extends WebTestBase {
 
     // Reinstall the integration module.
     try {
-      \Drupal::service('module_installer')->install(array('config_integration_test'));
+      \Drupal::service('module_installer')->install(['config_integration_test']);
       $this->fail('Expected PreExistingConfigException not thrown.');
     }
     catch (PreExistingConfigException $e) {
@@ -97,7 +97,7 @@ class ConfigInstallWebTest extends WebTestBase {
 
     // Delete the configuration entity so that the install will work.
     $config_entity->delete();
-    \Drupal::service('module_installer')->install(array('config_integration_test'));
+    \Drupal::service('module_installer')->install(['config_integration_test']);
 
     // Verify the integration module's config was re-installed.
     \Drupal::configFactory()->reset($default_config);
@@ -122,19 +122,19 @@ class ConfigInstallWebTest extends WebTestBase {
     // will install the config_test module first because it is a dependency of
     // config_install_fail_test.
     // @see \Drupal\system\Form\ModulesListForm::submitForm()
-    $this->drupalPostForm('admin/modules', array('modules[config_test][enable]' => TRUE, 'modules[config_install_fail_test][enable]' => TRUE), t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[config_test][enable]' => TRUE, 'modules[config_install_fail_test][enable]' => TRUE], t('Install'));
     $this->assertRaw('Unable to install Configuration install fail test, <em class="placeholder">config_test.dynamic.dotted.default</em> already exists in active configuration.');
 
     // Uninstall the config_test module to test the confirm form.
-    $this->drupalPostForm('admin/modules/uninstall', array('uninstall[config_test]' => TRUE), t('Uninstall'));
-    $this->drupalPostForm(NULL, array(), t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[config_test]' => TRUE], t('Uninstall'));
+    $this->drupalPostForm(NULL, [], t('Uninstall'));
 
     // Try to install config_install_fail_test without selecting config_test.
     // The user is shown a confirm form because the config_test module is a
     // dependency.
     // @see \Drupal\system\Form\ModulesListConfirmForm::submitForm()
-    $this->drupalPostForm('admin/modules', array('modules[config_install_fail_test][enable]' => TRUE), t('Install'));
-    $this->drupalPostForm(NULL, array(), t('Continue'));
+    $this->drupalPostForm('admin/modules', ['modules[config_install_fail_test][enable]' => TRUE], t('Install'));
+    $this->drupalPostForm(NULL, [], t('Continue'));
     $this->assertRaw('Unable to install Configuration install fail test, <em class="placeholder">config_test.dynamic.dotted.default</em> already exists in active configuration.');
 
     // Test that collection configuration clashes during a module install are
@@ -147,7 +147,7 @@ class ConfigInstallWebTest extends WebTestBase {
       ->set('label', 'Je suis Charlie')
       ->save();
 
-    $this->drupalPostForm('admin/modules', array('modules[config_install_fail_test][enable]' => TRUE), t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[config_install_fail_test][enable]' => TRUE], t('Install'));
     $this->assertRaw('Unable to install Configuration install fail test, <em class="placeholder">config_test.dynamic.dotted.default, language/fr/config_test.dynamic.dotted.default</em> already exist in active configuration.');
 
     // Test installing a theme through the UI that has existing configuration.
@@ -178,16 +178,16 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->drupalLogin($this->adminUser);
     // We need to install separately since config_install_dependency_test does
     // not depend on config_test and order is important.
-    $this->drupalPostForm('admin/modules', array('modules[config_test][enable]' => TRUE), t('Install'));
-    $this->drupalPostForm('admin/modules', array('modules[config_install_dependency_test][enable]' => TRUE), t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[config_test][enable]' => TRUE], t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[config_install_dependency_test][enable]' => TRUE], t('Install'));
     $this->assertRaw('Unable to install <em class="placeholder">Config install dependency test</em> due to unmet dependencies: <em class="placeholder">config_test.dynamic.other_module_test_with_dependency (config_other_module_config_test, config_test.dynamic.dotted.english)</em>');
 
-    $this->drupalPostForm('admin/modules', array('modules[config_test_language][enable]' => TRUE), t('Install'));
-    $this->drupalPostForm('admin/modules', array('modules[config_install_dependency_test][enable]' => TRUE), t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[config_test_language][enable]' => TRUE], t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[config_install_dependency_test][enable]' => TRUE], t('Install'));
     $this->assertRaw('Unable to install <em class="placeholder">Config install dependency test</em> due to unmet dependencies: <em class="placeholder">config_test.dynamic.other_module_test_with_dependency (config_other_module_config_test)</em>');
 
-    $this->drupalPostForm('admin/modules', array('modules[config_other_module_config_test][enable]' => TRUE), t('Install'));
-    $this->drupalPostForm('admin/modules', array('modules[config_install_dependency_test][enable]' => TRUE), t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[config_other_module_config_test][enable]' => TRUE], t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[config_install_dependency_test][enable]' => TRUE], t('Install'));
     $this->rebuildContainer();
     $this->assertTrue(entity_load('config_test', 'other_module_test_with_dependency'), 'The config_test.dynamic.other_module_test_with_dependency configuration has been created during install.');
   }
@@ -197,12 +197,12 @@ class ConfigInstallWebTest extends WebTestBase {
    */
   public function testConfigModuleRequirements() {
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm('admin/modules', array('modules[config][enable]' => TRUE), t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[config][enable]' => TRUE], t('Install'));
 
     $directory = config_get_config_directory(CONFIG_SYNC_DIRECTORY);
     file_unmanaged_delete_recursive($directory);
     $this->drupalGet('/admin/reports/status');
-    $this->assertRaw(t('The directory %directory does not exist.', array('%directory' => $directory)));
+    $this->assertRaw(t('The directory %directory does not exist.', ['%directory' => $directory]));
 
     file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     \Drupal::service('file_system')->chmod($directory, 0555);

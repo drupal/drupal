@@ -15,7 +15,7 @@ abstract class MigrateDrupalTestBase extends MigrateTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'field', 'migrate_drupal', 'options', 'file');
+  public static $modules = ['system', 'user', 'field', 'migrate_drupal', 'options', 'file'];
 
   /**
    * {@inheritdoc}

@@ -53,7 +53,7 @@ use Drupal\Core\Site\Settings;
  * @see \Drupal\Core\Database\Connection::query()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
-function db_query($query, array $args = array(), array $options = array()) {
+function db_query($query, array $args = [], array $options = []) {
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }
@@ -91,7 +91,7 @@ function db_query($query, array $args = array(), array $options = array()) {
  * @see \Drupal\Core\Database\Connection::queryRange()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
-function db_query_range($query, $from, $count, array $args = array(), array $options = array()) {
+function db_query_range($query, $from, $count, array $args = [], array $options = []) {
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }
@@ -127,7 +127,7 @@ function db_query_range($query, $from, $count, array $args = array(), array $opt
  * @see \Drupal\Core\Database\Connection::queryTemporary()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
-function db_query_temporary($query, array $args = array(), array $options = array()) {
+function db_query_temporary($query, array $args = [], array $options = []) {
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }
@@ -154,7 +154,7 @@ function db_query_temporary($query, array $args = array(), array $options = arra
  * @see \Drupal\Core\Database\Connection::insert()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
-function db_insert($table, array $options = array()) {
+function db_insert($table, array $options = []) {
   if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
@@ -180,7 +180,7 @@ function db_insert($table, array $options = array()) {
  * @see \Drupal\Core\Database\Connection::merge()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
-function db_merge($table, array $options = array()) {
+function db_merge($table, array $options = []) {
   if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
@@ -206,7 +206,7 @@ function db_merge($table, array $options = array()) {
  * @see \Drupal\Core\Database\Connection::update()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
-function db_update($table, array $options = array()) {
+function db_update($table, array $options = []) {
   if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
@@ -232,7 +232,7 @@ function db_update($table, array $options = array()) {
  * @see \Drupal\Core\Database\Connection::delete()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
-function db_delete($table, array $options = array()) {
+function db_delete($table, array $options = []) {
   if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
@@ -258,7 +258,7 @@ function db_delete($table, array $options = array()) {
  * @see \Drupal\Core\Database\Connection::truncate()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
-function db_truncate($table, array $options = array()) {
+function db_truncate($table, array $options = []) {
   if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
@@ -288,7 +288,7 @@ function db_truncate($table, array $options = array()) {
  * @see \Drupal\Core\Database\Connection::select()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
-function db_select($table, $alias = NULL, array $options = array()) {
+function db_select($table, $alias = NULL, array $options = []) {
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }
@@ -315,7 +315,7 @@ function db_select($table, $alias = NULL, array $options = array()) {
  * @see \Drupal\Core\Database\Connection::startTransaction()
  * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
-function db_transaction($name = NULL, array $options = array()) {
+function db_transaction($name = NULL, array $options = []) {
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }
@@ -451,7 +451,7 @@ function db_driver() {
  *
  * @see \Drupal\Core\Database\Database::closeConnection()
  */
-function db_close(array $options = array()) {
+function db_close(array $options = []) {
   if (empty($options['target'])) {
     $options['target'] = NULL;
   }
@@ -752,7 +752,7 @@ function db_drop_table($table) {
  * @see \Drupal\Core\Database\Schema::addField()
  * @see db_change_field()
  */
-function db_add_field($table, $field, $spec, $keys_new = array()) {
+function db_add_field($table, $field, $spec, $keys_new = []) {
   return Database::getConnection()->schema()->addField($table, $field, $spec, $keys_new);
 }
 
@@ -1020,7 +1020,7 @@ function db_drop_index($table, $name) {
  *
  * @see \Drupal\Core\Database\Schema::changeField()
  */
-function db_change_field($table, $field, $field_new, $spec, $keys_new = array()) {
+function db_change_field($table, $field, $field_new, $spec, $keys_new = []) {
   return Database::getConnection()->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
 }
 

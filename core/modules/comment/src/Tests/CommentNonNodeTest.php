@@ -24,7 +24,7 @@ class CommentNonNodeTest extends WebTestBase {
   use FieldUiTestTrait;
   use CommentTestTrait;
 
-  public static $modules = array('comment', 'user', 'field_ui', 'entity_test', 'block');
+  public static $modules = ['comment', 'user', 'field_ui', 'entity_test', 'block'];
 
   /**
    * An administrative user with permission to configure comment settings.
@@ -50,12 +50,12 @@ class CommentNonNodeTest extends WebTestBase {
 
     // Create a bundle for entity_test.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test');
-    CommentType::create(array(
+    CommentType::create([
       'id' => 'comment',
       'label' => 'Comment settings',
       'description' => 'Comment settings',
       'target_entity_type_id' => 'entity_test',
-    ))->save();
+    ])->save();
     // Create comment field on entity_test bundle.
     $this->addDefaultCommentField('entity_test', 'entity_test');
 
@@ -64,30 +64,30 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertEqual($bundles['comment']['label'], 'Comment settings');
 
     // Create test user.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'administer comments',
       'skip comment approval',
       'post comments',
       'access comments',
       'view test entity',
       'administer entity_test content',
-    ));
+    ]);
 
     // Enable anonymous and authenticated user comments.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments',
       'post comments',
       'skip comment approval',
-    ));
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array(
+    ]);
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, [
       'access comments',
       'post comments',
       'skip comment approval',
-    ));
+    ]);
 
     // Create a test entity.
     $random_label = $this->randomMachineName();
-    $data = array('type' => 'entity_test', 'name' => $random_label);
+    $data = ['type' => 'entity_test', 'name' => $random_label];
     $this->entity = EntityTest::create($data);
     $this->entity->save();
   }
@@ -109,7 +109,7 @@ class CommentNonNodeTest extends WebTestBase {
    *   The new comment entity.
    */
   function postComment(EntityInterface $entity, $comment, $subject = '', $contact = NULL) {
-    $edit = array();
+    $edit = [];
     $edit['comment_body[0][value]'] = $comment;
 
     $field = FieldConfig::loadByName('entity_test', 'entity_test', 'comment');
@@ -151,7 +151,7 @@ class CommentNonNodeTest extends WebTestBase {
         $this->drupalPostForm(NULL, $edit, t('Save'));
         break;
     }
-    $match = array();
+    $match = [];
     // Get comment ID
     preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
 
@@ -216,17 +216,17 @@ class CommentNonNodeTest extends WebTestBase {
    *   Operation is found on approval page.
    */
   function performCommentOperation($comment, $operation, $approval = FALSE) {
-    $edit = array();
+    $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
     $this->drupalPostForm('admin/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
 
     if ($operation == 'delete') {
-      $this->drupalPostForm(NULL, array(), t('Delete comments'));
-      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), format_string('Operation "@operation" was performed on comment.', array('@operation' => $operation)));
+      $this->drupalPostForm(NULL, [], t('Delete comments'));
+      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), format_string('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
     }
     else {
-      $this->assertText(t('The update has been performed.'), format_string('Operation "@operation" was performed on comment.', array('@operation' => $operation)));
+      $this->assertText(t('The update has been performed.'), format_string('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
     }
   }
 
@@ -250,9 +250,9 @@ class CommentNonNodeTest extends WebTestBase {
    * Tests anonymous comment functionality.
    */
   function testCommentFunctionality() {
-    $limited_user = $this->drupalCreateUser(array(
+    $limited_user = $this->drupalCreateUser([
       'administer entity_test fields'
-    ));
+    ]);
     $this->drupalLogin($limited_user);
     // Test that default field exists.
     $this->drupalGet('entity_test/structure/entity_test/fields');
@@ -320,9 +320,9 @@ class CommentNonNodeTest extends WebTestBase {
 
     // Check that entity access applies to administrative page.
     $this->assertText($this->entity->label(), 'Name of commented account found.');
-    $limited_user = $this->drupalCreateUser(array(
+    $limited_user = $this->drupalCreateUser([
       'administer comments',
-    ));
+    ]);
     $this->drupalLogin($limited_user);
     $this->drupalGet('admin/content/comment');
     $this->assertNoText($this->entity->label(), 'No commented account name found.');
@@ -330,12 +330,12 @@ class CommentNonNodeTest extends WebTestBase {
     $this->drupalLogout();
 
     // Deny anonymous users access to comments.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => FALSE,
       'post comments' => FALSE,
       'skip comment approval' => FALSE,
       'view test entity' => TRUE,
-    ));
+    ]);
 
     // Attempt to view comments while disallowed.
     $this->drupalGet('entity-test/' . $this->entity->id());
@@ -348,12 +348,12 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertNoFieldByName('subject[0][value]', '', 'Subject field not found.');
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
 
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
       'post comments' => FALSE,
       'view test entity' => TRUE,
       'skip comment approval' => FALSE,
-    ));
+    ]);
     $this->drupalGet('entity_test/' . $this->entity->id());
     $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
     $this->assertLink('Log in', 0, 'Link to login was found.');
@@ -364,12 +364,12 @@ class CommentNonNodeTest extends WebTestBase {
     // Test the combination of anonymous users being able to post, but not view
     // comments, to ensure that access to post comments doesn't grant access to
     // view them.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => FALSE,
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
       'view test entity' => TRUE,
-    ));
+    ]);
     $this->drupalGet('entity_test/' . $this->entity->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertFieldByName('subject[0][value]', '', 'Subject field found.');
@@ -380,22 +380,22 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertNoText($comment1->getSubject(), 'Comment not displayed.');
 
     // Test comment field widget changes.
-    $limited_user = $this->drupalCreateUser(array(
+    $limited_user = $this->drupalCreateUser([
       'administer entity_test fields',
       'view test entity',
       'administer entity_test content',
       'administer comments',
-    ));
+    ]);
     $this->drupalLogin($limited_user);
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-1');
     $this->assertFieldChecked('edit-default-value-input-comment-0-status-2');
     // Test comment option change in field settings.
-    $edit = array(
+    $edit = [
       'default_value_input[comment][0][status]' => CommentItemInterface::CLOSED,
       'settings[anonymous]' => COMMENT_ANONYMOUS_MAY_CONTACT,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
@@ -404,18 +404,18 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertFieldByName('settings[anonymous]', COMMENT_ANONYMOUS_MAY_CONTACT);
 
     // Add a new comment-type.
-    $bundle = CommentType::create(array(
+    $bundle = CommentType::create([
       'id' => 'foobar',
       'label' => 'Foobar',
       'description' => '',
       'target_entity_type_id' => 'entity_test',
-    ));
+    ]);
     $bundle->save();
 
     // Add a new comment field.
-    $storage_edit = array(
+    $storage_edit = [
       'settings[comment_type]' => 'foobar',
-    );
+    ];
     $this->fieldUIAddNewField('entity_test/structure/entity_test', 'foobar', 'Foobar', 'comment', $storage_edit);
 
     // Add a third comment field.
@@ -429,7 +429,7 @@ class CommentNonNodeTest extends WebTestBase {
 
     // Test the new entity commenting inherits default.
     $random_label = $this->randomMachineName();
-    $data = array('bundle' => 'entity_test', 'name' => $random_label);
+    $data = ['bundle' => 'entity_test', 'name' => $random_label];
     $new_entity = EntityTest::create($data);
     $new_entity->save();
     $this->drupalGet('entity_test/manage/' . $new_entity->id() . '/edit');
@@ -443,12 +443,12 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field found.');
 
     // Test removal of comment_body field.
-    $limited_user = $this->drupalCreateUser(array(
+    $limited_user = $this->drupalCreateUser([
       'administer entity_test fields',
       'post comments',
       'administer comment fields',
       'administer comment types',
-    ));
+    ]);
     $this->drupalLogin($limited_user);
 
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
@@ -467,9 +467,9 @@ class CommentNonNodeTest extends WebTestBase {
   public function testsNonIntegerIdEntities() {
     // Create a bundle for entity_test_string_id.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_string_id');
-    $limited_user = $this->drupalCreateUser(array(
+    $limited_user = $this->drupalCreateUser([
       'administer entity_test_string_id fields',
-    ));
+    ]);
     $this->drupalLogin($limited_user);
     // Visit the Field UI field add page.
     $this->drupalGet('entity_test_string_id/structure/entity_test/fields/add-field');
@@ -480,9 +480,9 @@ class CommentNonNodeTest extends WebTestBase {
 
     // Create a bundle for entity_test_no_id.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_no_id');
-    $this->drupalLogin($this->drupalCreateUser(array(
+    $this->drupalLogin($this->drupalCreateUser([
       'administer entity_test_no_id fields',
-    )));
+    ]));
     // Visit the Field UI field add page.
     $this->drupalGet('entity_test_no_id/structure/entity_test/fields/add-field');
     // Ensure field isn't shown for empty IDs.

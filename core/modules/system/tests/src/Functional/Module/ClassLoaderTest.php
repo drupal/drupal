@@ -23,7 +23,7 @@ class ClassLoaderTest extends BrowserTestBase {
    */
   function testClassLoading() {
     // Enable the module_test and module_autoload_test modules.
-    \Drupal::service('module_installer')->install(array('module_test', 'module_autoload_test'), FALSE);
+    \Drupal::service('module_installer')->install(['module_test', 'module_autoload_test'], FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i = 0; $i < 2; $i++) {
@@ -40,7 +40,7 @@ class ClassLoaderTest extends BrowserTestBase {
    */
   function testClassLoadingNotInstalledModules() {
     // Enable the module_test module.
-    \Drupal::service('module_installer')->install(array('module_test'), FALSE);
+    \Drupal::service('module_installer')->install(['module_test'], FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i = 0; $i < 2; $i++) {
@@ -57,10 +57,10 @@ class ClassLoaderTest extends BrowserTestBase {
    */
   function testClassLoadingDisabledModules() {
     // Enable the module_test and module_autoload_test modules.
-    \Drupal::service('module_installer')->install(array('module_test', 'module_autoload_test'), FALSE);
+    \Drupal::service('module_installer')->install(['module_test', 'module_autoload_test'], FALSE);
     $this->resetAll();
     // Ensure that module_autoload_test is disabled.
-    $this->container->get('module_installer')->uninstall(array('module_autoload_test'), FALSE);
+    $this->container->get('module_installer')->uninstall(['module_autoload_test'], FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i = 0; $i < 2; $i++) {

@@ -20,7 +20,7 @@ class SystemListingCompatibleTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('drupal_system_listing_compatible_test');
+  public static $modules = ['drupal_system_listing_compatible_test'];
 
   /**
    * Use the Minimal profile.

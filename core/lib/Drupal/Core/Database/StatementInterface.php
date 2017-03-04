@@ -51,7 +51,7 @@ interface StatementInterface extends \Traversable {
    * @return
    *   TRUE on success, or FALSE on failure.
    */
-  public function execute($args = array(), $options = array());
+  public function execute($args = [], $options = []);
 
   /**
    * Gets the query string of this statement.
@@ -90,7 +90,7 @@ interface StatementInterface extends \Traversable {
    *   If $mode is PDO::FETCH_CLASS, the optional arguments to pass to the
    *   constructor.
    */
-  public function setFetchMode($mode, $a1 = NULL, $a2 = array());
+  public function setFetchMode($mode, $a1 = NULL, $a2 = []);
 
   /**
    * Fetches the next row from a result set.

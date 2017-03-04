@@ -31,7 +31,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    * {@inheritdoc}
    */
   public function getOriginalTermId(NodeInterface $node) {
-    return $this->database->queryRange("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->id()))->fetchField();
+    return $this->database->queryRange("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, [':nid' => $node->id()])->fetchField();
   }
 
   /**
@@ -39,11 +39,11 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function create(NodeInterface $node) {
     $this->database->insert('forum')
-      ->fields(array(
+      ->fields([
         'tid' => $node->forum_tid,
         'vid' => $node->getRevisionId(),
         'nid' => $node->id(),
-      ))
+      ])
       ->execute();
   }
 
@@ -52,7 +52,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function read(array $vids) {
     return $this->database->select('forum', 'f')
-      ->fields('f', array('nid', 'tid'))
+      ->fields('f', ['nid', 'tid'])
       ->condition('f.vid', $vids, 'IN')
       ->execute();
   }
@@ -81,7 +81,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function update(NodeInterface $node) {
     $this->database->update('forum')
-      ->fields(array('tid' => $node->forum_tid))
+      ->fields(['tid' => $node->forum_tid])
       ->condition('vid', $node->getRevisionId())
       ->execute();
   }
@@ -91,22 +91,22 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function updateIndex(NodeInterface $node) {
     $nid = $node->id();
-    $count = $this->database->query("SELECT COUNT(cid) FROM {comment_field_data} c INNER JOIN {forum_index} i ON c.entity_id = i.nid WHERE c.entity_id = :nid AND c.field_name = 'comment_forum' AND c.entity_type = 'node' AND c.status = :status AND c.default_langcode = 1", array(
+    $count = $this->database->query("SELECT COUNT(cid) FROM {comment_field_data} c INNER JOIN {forum_index} i ON c.entity_id = i.nid WHERE c.entity_id = :nid AND c.field_name = 'comment_forum' AND c.entity_type = 'node' AND c.status = :status AND c.default_langcode = 1", [
       ':nid' => $nid,
       ':status' => CommentInterface::PUBLISHED,
-    ))->fetchField();
+    ])->fetchField();
 
     if ($count > 0) {
       // Comments exist.
-      $last_reply = $this->database->queryRange("SELECT cid, name, created, uid FROM {comment_field_data} WHERE entity_id = :nid AND field_name = 'comment_forum' AND entity_type = 'node' AND status = :status AND default_langcode = 1 ORDER BY cid DESC", 0, 1, array(
+      $last_reply = $this->database->queryRange("SELECT cid, name, created, uid FROM {comment_field_data} WHERE entity_id = :nid AND field_name = 'comment_forum' AND entity_type = 'node' AND status = :status AND default_langcode = 1 ORDER BY cid DESC", 0, 1, [
         ':nid' => $nid,
         ':status' => CommentInterface::PUBLISHED,
-      ))->fetchObject();
+      ])->fetchObject();
       $this->database->update('forum_index')
-        ->fields( array(
+        ->fields( [
           'comment_count' => $count,
           'last_comment_timestamp' => $last_reply->created,
-        ))
+        ])
         ->condition('nid', $nid)
         ->execute();
     }
@@ -114,10 +114,10 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
       // Comments do not exist.
       // @todo This should be actually filtering on the desired node language
       $this->database->update('forum_index')
-        ->fields( array(
+        ->fields( [
           'comment_count' => 0,
           'last_comment_timestamp' => $node->getCreatedTime(),
-        ))
+        ])
         ->condition('nid', $nid)
         ->execute();
     }
@@ -128,11 +128,11 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function createIndex(NodeInterface $node) {
     $query = $this->database->insert('forum_index')
-      ->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
+      ->fields(['nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp']);
     foreach ($node->getTranslationLanguages() as $langcode => $language) {
       $translation = $node->getTranslation($langcode);
       foreach ($translation->taxonomy_forums as $item) {
-        $query->values(array(
+        $query->values([
           'nid' => $node->id(),
           'title' => $translation->label(),
           'tid' => $item->target_id,
@@ -140,7 +140,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
           'created' => $node->getCreatedTime(),
           'comment_count' => 0,
           'last_comment_timestamp' => $node->getCreatedTime(),
-        ));
+        ]);
       }
     }
     $query->execute();

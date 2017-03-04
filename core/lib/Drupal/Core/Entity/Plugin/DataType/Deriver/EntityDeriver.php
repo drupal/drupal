@@ -17,7 +17,7 @@ class EntityDeriver implements ContainerDeriverInterface {
    *
    * @var array
    */
-  protected $derivatives = array();
+  protected $derivatives = [];
 
   /**
    * The base plugin ID this derivative is for.
@@ -86,18 +86,18 @@ class EntityDeriver implements ContainerDeriverInterface {
     $this->derivatives[''] = $base_plugin_definition;
     // Add definitions for each entity type and bundle.
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
-      $this->derivatives[$entity_type_id] = array(
+      $this->derivatives[$entity_type_id] = [
         'label' => $entity_type->getLabel(),
         'constraints' => $entity_type->getConstraints(),
-      ) + $base_plugin_definition;
+      ] + $base_plugin_definition;
 
       // Incorporate the bundles as entity:$entity_type:$bundle, if any.
       foreach ($this->bundleInfoService->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
         if ($bundle !== $entity_type_id) {
-          $this->derivatives[$entity_type_id . ':' . $bundle] = array(
+          $this->derivatives[$entity_type_id . ':' . $bundle] = [
             'label' => $bundle_info['label'],
             'constraints' => $this->derivatives[$entity_type_id]['constraints']
-          ) + $base_plugin_definition;
+          ] + $base_plugin_definition;
         }
       }
     }

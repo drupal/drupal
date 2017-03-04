@@ -52,16 +52,16 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
    *
    * @var array
    */
-  protected $libraryData = array(
-    'test_1' => array(
-      'js' => array(),
-      'css' => array(),
-    ),
-    'test_2' => array(
-      'js' => array(),
-      'css' => array(),
-    ),
-  );
+  protected $libraryData = [
+    'test_1' => [
+      'js' => [],
+      'css' => [],
+    ],
+    'test_2' => [
+      'js' => [],
+      'css' => [],
+    ],
+  ];
 
   protected $activeTheme;
 
@@ -140,7 +140,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
       ->willReturn(FALSE);
     $this->cache->expects($this->once())
       ->method('set')
-      ->with('library_info:kitten_theme', array('test' => $this->libraryData), Cache::PERMANENT, ['library_info']);
+      ->with('library_info:kitten_theme', ['test' => $this->libraryData], Cache::PERMANENT, ['library_info']);
     $this->lock->expects($this->once())
       ->method('release')
       ->with($lock_key);

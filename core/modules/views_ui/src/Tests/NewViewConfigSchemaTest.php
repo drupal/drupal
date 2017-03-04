@@ -16,16 +16,16 @@ class NewViewConfigSchemaTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('views_ui', 'node', 'comment', 'file', 'taxonomy', 'dblog', 'aggregator');
+  public static $modules = ['views_ui', 'node', 'comment', 'file', 'taxonomy', 'dblog', 'aggregator'];
 
   /**
    * Tests creating brand new views.
    */
   public function testNewViews() {
-    $this->drupalLogin($this->drupalCreateUser(array('administer views')));
+    $this->drupalLogin($this->drupalCreateUser(['administer views']));
 
     // Create views with all core Views wizards.
-    $wizards = array(
+    $wizards = [
       // Wizard with their own classes.
       'node',
       'node_revision',
@@ -37,9 +37,9 @@ class NewViewConfigSchemaTest extends WebTestBase {
       // Standard derivative classes.
       'standard:aggregator_feed',
       'standard:aggregator_item',
-    );
+    ];
     foreach ($wizards as $wizard_key) {
-      $edit = array();
+      $edit = [];
       $edit['label'] = $this->randomString();
       $edit['id'] = strtolower($this->randomMachineName());
       $edit['show[wizard_key]'] = $wizard_key;

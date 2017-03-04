@@ -26,21 +26,21 @@ class Search extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
       '#size' => 60,
       '#maxlength' => 128,
       '#autocomplete_route_name' => FALSE,
-      '#process' => array(
-        array($class, 'processAutocomplete'),
-        array($class, 'processAjaxForm'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderSearch'),
-      ),
+      '#process' => [
+        [$class, 'processAutocomplete'],
+        [$class, 'processAjaxForm'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderSearch'],
+      ],
       '#theme' => 'input__search',
-      '#theme_wrappers' => array('form_element'),
-    );
+      '#theme_wrappers' => ['form_element'],
+    ];
   }
 
   /**
@@ -56,8 +56,8 @@ class Search extends FormElement {
    */
   public static function preRenderSearch($element) {
     $element['#attributes']['type'] = 'search';
-    Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-    static::setAttributes($element, array('form-search'));
+    Element::setAttributes($element, ['id', 'name', 'value', 'size', 'maxlength', 'placeholder']);
+    static::setAttributes($element, ['form-search']);
 
     return $element;
   }

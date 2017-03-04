@@ -28,7 +28,7 @@ abstract class ImageFormatterBase extends FileFormatterBase {
         // so that the fallback image can be rendered without affecting the
         // field values in the entity being rendered.
         $items = clone $items;
-        $items->setValue(array(
+        $items->setValue([
           'target_id' => $file->id(),
           'alt' => $default_image['alt'],
           'title' => $default_image['title'],
@@ -37,7 +37,7 @@ abstract class ImageFormatterBase extends FileFormatterBase {
           'entity' => $file,
           '_loaded' => TRUE,
           '_is_default' => TRUE,
-        ));
+        ]);
         $file->_referringItem = $items[0];
       }
     }

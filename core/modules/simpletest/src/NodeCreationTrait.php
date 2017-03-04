@@ -64,17 +64,17 @@ trait NodeCreationTrait {
    * @return \Drupal\node\NodeInterface
    *   The created node entity.
    */
-  protected function createNode(array $settings = array()) {
+  protected function createNode(array $settings = []) {
     // Populate defaults array.
-    $settings += array(
-      'body'      => array(array(
+    $settings += [
+      'body'      => [[
         'value' => $this->randomMachineName(32),
         'format' => filter_default_format(),
-      )),
+      ]],
       'title'     => $this->randomMachineName(8),
       'type'      => 'page',
       'uid'       => \Drupal::currentUser()->id(),
-    );
+    ];
     $node = Node::create($settings);
     $node->save();
 

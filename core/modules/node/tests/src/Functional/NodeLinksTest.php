@@ -16,16 +16,16 @@ class NodeLinksTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('views');
+  public static $modules = ['views'];
 
   /**
    * Tests that the links can be hidden in the view display settings.
    */
   public function testHideLinks() {
-    $node = $this->drupalCreateNode(array(
+    $node = $this->drupalCreateNode([
       'type' => 'article',
       'promote' => NodeInterface::PROMOTED,
-    ));
+    ]);
 
     // Links are displayed by default.
     $this->drupalGet('node');

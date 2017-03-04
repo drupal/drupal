@@ -21,7 +21,7 @@ class SelectionTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected $nodes = array();
+  protected $nodes = [];
 
   /**
    * The entity reference field to test.
@@ -38,39 +38,39 @@ class SelectionTest extends BrowserTestBase {
 
     // Create nodes.
     $type = $this->drupalCreateContentType()->id();
-    $node1 = $this->drupalCreateNode(array('type' => $type));
-    $node2 = $this->drupalCreateNode(array('type' => $type));
+    $node1 = $this->drupalCreateNode(['type' => $type]);
+    $node2 = $this->drupalCreateNode(['type' => $type]);
     $node3 = $this->drupalCreateNode();
 
-    foreach (array($node1, $node2, $node3) as $node) {
+    foreach ([$node1, $node2, $node3] as $node) {
       $this->nodes[$node->getType()][$node->id()] = $node->label();
     }
 
     // Create a field.
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
-      'settings' => array(
+      'settings' => [
         'target_type' => 'node',
-      ),
+      ],
       'type' => 'entity_reference',
       'cardinality' => '1',
-    ));
+    ]);
     $field_storage->save();
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'test_bundle',
-      'settings' => array(
+      'settings' => [
         'handler' => 'views',
-        'handler_settings' => array(
-          'view' => array(
+        'handler_settings' => [
+          'view' => [
             'view_name' => 'test_entity_reference',
             'display_name' => 'entity_reference_1',
-            'arguments' => array(),
-          ),
-        ),
-      ),
+            'arguments' => [],
+          ],
+        ],
+      ],
     ]);
     $field->save();
     $this->field = $field;
@@ -112,23 +112,23 @@ class SelectionTest extends BrowserTestBase {
     // Add a relationship to the view.
     $view = Views::getView('test_entity_reference');
     $view->setDisplay();
-    $view->displayHandlers->get('default')->setOption('relationships', array(
-      'test_relationship' => array(
+    $view->displayHandlers->get('default')->setOption('relationships', [
+      'test_relationship' => [
         'id' => 'uid',
         'table' => 'node_field_data',
         'field' => 'uid',
-      ),
-    ));
+      ],
+    ]);
 
     // Add a filter depending on the relationship to the test view.
-    $view->displayHandlers->get('default')->setOption('filters', array(
-      'uid' => array(
+    $view->displayHandlers->get('default')->setOption('filters', [
+      'uid' => [
         'id' => 'uid',
         'table' => 'users_field_data',
         'field' => 'uid',
         'relationship' => 'test_relationship',
-      )
-    ));
+      ]
+    ]);
 
     // Set view to distinct so only one row per node is returned.
     $query_options = $view->display_handler->getOption('query');

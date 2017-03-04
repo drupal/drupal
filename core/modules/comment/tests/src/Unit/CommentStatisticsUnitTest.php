@@ -56,7 +56,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
 
     $this->statement->expects($this->any())
       ->method('fetchObject')
-      ->will($this->returnCallback(array($this, 'fetchObjectCallback')));
+      ->will($this->returnCallback([$this, 'fetchObjectCallback']));
 
     $this->select = $this->getMockBuilder('Drupal\Core\Database\Query\Select')
       ->disableOriginalConstructor()
@@ -95,8 +95,8 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    */
   public function testRead() {
     $this->calls_to_fetch = 0;
-    $results = $this->commentStatistics->read(array('1' => 'boo', '2' => 'foo'), 'snafoos');
-    $this->assertEquals($results, array('something', 'something-else'));
+    $results = $this->commentStatistics->read(['1' => 'boo', '2' => 'foo'], 'snafoos');
+    $this->assertEquals($results, ['something', 'something-else']);
   }
 
   /**

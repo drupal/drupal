@@ -37,7 +37,7 @@ class FrontPageTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'contextual');
+  public static $modules = ['node', 'contextual'];
 
   protected function setUp() {
     parent::setUp();
@@ -74,14 +74,14 @@ class FrontPageTest extends ViewTestBase {
     $this->executeView($view);
     $view->preview();
 
-    $this->assertEqual($view->getTitle(), format_string('Welcome to @site_name', array('@site_name' => $site_name)), 'The welcome title is used for the empty view.');
+    $this->assertEqual($view->getTitle(), format_string('Welcome to @site_name', ['@site_name' => $site_name]), 'The welcome title is used for the empty view.');
     $view->destroy();
 
     // Create some nodes on the frontpage view. Add more than 10 nodes in order
     // to enable paging.
-    $expected = array();
+    $expected = [];
     for ($i = 0; $i < 20; $i++) {
-      $values = array();
+      $values = [];
       $values['type'] = 'article';
       $values['title'] = $this->randomMachineName();
       $values['promote'] = TRUE;
@@ -94,21 +94,21 @@ class FrontPageTest extends ViewTestBase {
         $node = $this->nodeStorage->create($values);
         $node->save();
         // Put the sticky on at the front.
-        array_unshift($expected, array('nid' => $node->id()));
+        array_unshift($expected, ['nid' => $node->id()]);
       }
       else {
         $values['sticky'] = FALSE;
         $node = $this->nodeStorage->create($values);
         $node->save();
-        array_push($expected, array('nid' => $node->id()));
+        array_push($expected, ['nid' => $node->id()]);
       }
     }
 
     // Create some nodes which aren't on the frontpage, either because they
     // aren't promoted or because they aren't published.
-    $not_expected_nids = array();
+    $not_expected_nids = [];
 
-    $values = array();
+    $values = [];
     $values['type'] = 'article';
     $values['title'] = $this->randomMachineName();
     $values['status'] = TRUE;
@@ -132,7 +132,7 @@ class FrontPageTest extends ViewTestBase {
     $node->save();
     $not_expected_nids[] = $node->id();
 
-    $column_map = array('nid' => 'nid');
+    $column_map = ['nid' => 'nid'];
 
     $view->setDisplay('page_1');
     $this->executeView($view);
@@ -171,7 +171,7 @@ class FrontPageTest extends ViewTestBase {
   public function testAdminFrontPage() {
     // When a user with sufficient permissions is logged in, views_ui adds
     // contextual links to the homepage view. This verifies there are no errors.
-    \Drupal::service('module_installer')->install(array('views_ui'));
+    \Drupal::service('module_installer')->install(['views_ui']);
     // Log in root user with sufficient permissions.
     $this->drupalLogin($this->rootUser);
     // Test frontpage view.

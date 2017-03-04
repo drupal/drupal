@@ -16,7 +16,7 @@ class MainContentFallbackTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'system_test');
+  public static $modules = ['block', 'system_test'];
 
   protected $adminUser;
   protected $webUser;
@@ -25,22 +25,22 @@ class MainContentFallbackTest extends BrowserTestBase {
     parent::setUp();
 
     // Create and log in admin user.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'access administration pages',
       'administer site configuration',
       'administer modules',
-    ));
+    ]);
     $this->drupalLogin($this->adminUser);
 
     // Create a web user.
-    $this->webUser = $this->drupalCreateUser(array('access user profiles'));
+    $this->webUser = $this->drupalCreateUser(['access user profiles']);
   }
 
   /**
    * Test availability of main content: Drupal falls back to SimplePageVariant.
    */
   function testMainContentFallback() {
-    $edit = array();
+    $edit = [];
     // Uninstall the block module.
     $edit['uninstall[block]'] = 'block';
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
@@ -63,7 +63,7 @@ class MainContentFallbackTest extends BrowserTestBase {
 
     // Enable the block module again.
     $this->drupalLogin($this->adminUser);
-    $edit = array();
+    $edit = [];
     $edit['modules[block][enable]'] = 'block';
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->assertText(t('Module Block has been enabled.'), 'Modules status has been updated.');

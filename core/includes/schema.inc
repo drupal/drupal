@@ -28,9 +28,9 @@ const SCHEMA_UNINSTALLED = -1;
 function drupal_get_schema_versions($module) {
   $updates = &drupal_static(__FUNCTION__, NULL);
   if (!isset($updates[$module])) {
-    $updates = array();
+    $updates = [];
     foreach (\Drupal::moduleHandler()->getModuleList() as $loaded_module => $filename) {
-      $updates[$loaded_module] = array();
+      $updates[$loaded_module] = [];
     }
 
     // Prepare regular expression to match all possible defined hook_update_N().
@@ -74,15 +74,15 @@ function drupal_get_schema_versions($module) {
  *   module is not installed.
  */
 function drupal_get_installed_schema_version($module, $reset = FALSE, $array = FALSE) {
-  $versions = &drupal_static(__FUNCTION__, array());
+  $versions = &drupal_static(__FUNCTION__, []);
 
   if ($reset) {
-    $versions = array();
+    $versions = [];
   }
 
   if (!$versions) {
     if (!$versions = \Drupal::keyValue('system.schema')->getAll()) {
-      $versions = array();
+      $versions = [];
     }
   }
 
@@ -162,12 +162,12 @@ function drupal_get_module_schema($module, $table = NULL) {
     if (isset($schema[$table])) {
       return $schema[$table];
     }
-    return array();
+    return [];
   }
   elseif (!empty($schema)) {
     return $schema;
   }
-  return array();
+  return [];
 }
 
 /**

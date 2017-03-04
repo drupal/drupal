@@ -48,7 +48,7 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(['tags'], $settings['handler_settings']['target_bundles'], 'The target_bundles handler setting is correct.');
     $this->assertIdentical(TRUE, $settings['handler_settings']['auto_create'], 'The "auto_create" setting is correct.');
 
-    $this->assertIdentical(array('node', 'article', 'tags'), $this->getMigration('d6_vocabulary_field_instance')->getIdMap()->lookupDestinationID(array(4, 'article')));
+    $this->assertIdentical(['node', 'article', 'tags'], $this->getMigration('d6_vocabulary_field_instance')->getIdMap()->lookupDestinationID([4, 'article']));
 
     // Test the the field vocabulary_1_i_0_
     $field_id = 'node.story.vocabulary_1_i_0_';

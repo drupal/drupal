@@ -23,7 +23,7 @@ class LanguageManager implements LanguageManagerInterface {
    *
    * @see \Drupal\Core\Language\LanguageManager::getLanguages()
    */
-  protected $languages = array();
+  protected $languages = [];
 
   /**
    * The default language object.
@@ -53,7 +53,7 @@ class LanguageManager implements LanguageManagerInterface {
    * {@inheritdoc}
    */
   public function getLanguageTypes() {
-    return array(LanguageInterface::TYPE_INTERFACE, LanguageInterface::TYPE_CONTENT, LanguageInterface::TYPE_URL);
+    return [LanguageInterface::TYPE_INTERFACE, LanguageInterface::TYPE_CONTENT, LanguageInterface::TYPE_URL];
   }
 
   /**
@@ -77,21 +77,21 @@ class LanguageManager implements LanguageManagerInterface {
    *   hook_language_types_info().
    */
   public function getDefinedLanguageTypesInfo() {
-    $this->definedLanguageTypesInfo = array(
-      LanguageInterface::TYPE_INTERFACE => array(
+    $this->definedLanguageTypesInfo = [
+      LanguageInterface::TYPE_INTERFACE => [
         'name' => new TranslatableMarkup('Interface text'),
         'description' => new TranslatableMarkup('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
         'locked' => TRUE,
-      ),
-      LanguageInterface::TYPE_CONTENT => array(
+      ],
+      LanguageInterface::TYPE_CONTENT => [
         'name' => new TranslatableMarkup('Content'),
         'description' => new TranslatableMarkup('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
         'locked' => TRUE,
-      ),
-      LanguageInterface::TYPE_URL => array(
+      ],
+      LanguageInterface::TYPE_URL => [
         'locked' => TRUE,
-      ),
-    );
+      ],
+    ];
 
     return $this->definedLanguageTypesInfo;
   }
@@ -127,7 +127,7 @@ class LanguageManager implements LanguageManagerInterface {
       // The default language and locked languages comprise the full language
       // list.
       $default = $this->getDefaultLanguage();
-      $languages = array($default->getId() => $default);
+      $languages = [$default->getId() => $default];
       $languages += $this->getDefaultLockedLanguages($default->getWeight());
 
       // Filter the full list of languages based on the value of $flags.
@@ -165,33 +165,33 @@ class LanguageManager implements LanguageManagerInterface {
     if (empty($langcode)) {
       return new TranslatableMarkup('Unknown');
     }
-    return new TranslatableMarkup('Unknown (@langcode)', array('@langcode' => $langcode));
+    return new TranslatableMarkup('Unknown (@langcode)', ['@langcode' => $langcode]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDefaultLockedLanguages($weight = 0) {
-    $languages = array();
+    $languages = [];
 
-    $locked_language = array(
+    $locked_language = [
       'default' => FALSE,
       'locked' => TRUE,
       'direction' => LanguageInterface::DIRECTION_LTR,
-    );
+    ];
     // This is called very early while initializing the language system. Prevent
     // early t() calls by using the TranslatableMarkup.
-    $languages[LanguageInterface::LANGCODE_NOT_SPECIFIED] = new Language(array(
+    $languages[LanguageInterface::LANGCODE_NOT_SPECIFIED] = new Language([
       'id' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'name' => new TranslatableMarkup('Not specified'),
       'weight' => ++$weight,
-    ) + $locked_language);
+    ] + $locked_language);
 
-    $languages[LanguageInterface::LANGCODE_NOT_APPLICABLE] = new Language(array(
+    $languages[LanguageInterface::LANGCODE_NOT_APPLICABLE] = new Language([
       'id' => LanguageInterface::LANGCODE_NOT_APPLICABLE,
       'name' => new TranslatableMarkup('Not applicable'),
       'weight' => ++$weight,
-    ) + $locked_language);
+    ] + $locked_language);
 
     return $languages;
   }
@@ -207,15 +207,15 @@ class LanguageManager implements LanguageManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFallbackCandidates(array $context = array()) {
-    return array(LanguageInterface::LANGCODE_DEFAULT);
+  public function getFallbackCandidates(array $context = []) {
+    return [LanguageInterface::LANGCODE_DEFAULT];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getLanguageSwitchLinks($type, Url $url) {
-    return array();
+    return [];
   }
 
   /**
@@ -229,103 +229,103 @@ class LanguageManager implements LanguageManagerInterface {
     // The "Left-to-right marker" comments and the enclosed UTF-8 markers are to
     // make otherwise strange looking PHP syntax natural (to not be displayed in
     // right to left). See https://www.drupal.org/node/128866#comment-528929.
-    return array(
-      'af' => array('Afrikaans', 'Afrikaans'),
-      'am' => array('Amharic', 'አማርኛ'),
-      'ar' => array('Arabic', /* Left-to-right marker "‭" */ 'العربية', LanguageInterface::DIRECTION_RTL),
-      'ast' => array('Asturian', 'Asturianu'),
-      'az' => array('Azerbaijani', 'Azərbaycanca'),
-      'be' => array('Belarusian', 'Беларуская'),
-      'bg' => array('Bulgarian', 'Български'),
-      'bn' => array('Bengali', 'বাংলা'),
-      'bo' => array('Tibetan', 'བོད་སྐད་'),
-      'bs' => array('Bosnian', 'Bosanski'),
-      'ca' => array('Catalan', 'Català'),
-      'cs' => array('Czech', 'Čeština'),
-      'cy' => array('Welsh', 'Cymraeg'),
-      'da' => array('Danish', 'Dansk'),
-      'de' => array('German', 'Deutsch'),
-      'dz' => array('Dzongkha', 'རྫོང་ཁ'),
-      'el' => array('Greek', 'Ελληνικά'),
-      'en' => array('English', 'English'),
-      'en-x-simple' => array('Simple English', 'Simple English'),
-      'eo' => array('Esperanto', 'Esperanto'),
-      'es' => array('Spanish', 'Español'),
-      'et' => array('Estonian', 'Eesti'),
-      'eu' => array('Basque', 'Euskera'),
-      'fa' => array('Persian, Farsi', /* Left-to-right marker "‭" */ 'فارسی', LanguageInterface::DIRECTION_RTL),
-      'fi' => array('Finnish', 'Suomi'),
-      'fil' => array('Filipino', 'Filipino'),
-      'fo' => array('Faeroese', 'Føroyskt'),
-      'fr' => array('French', 'Français'),
-      'fy' => array('Frisian, Western', 'Frysk'),
-      'ga' => array('Irish', 'Gaeilge'),
-      'gd' => array('Scots Gaelic', 'Gàidhlig'),
-      'gl' => array('Galician', 'Galego'),
-      'gsw-berne' => array('Swiss German', 'Schwyzerdütsch'),
-      'gu' => array('Gujarati', 'ગુજરાતી'),
-      'he' => array('Hebrew', /* Left-to-right marker "‭" */ 'עברית', LanguageInterface::DIRECTION_RTL),
-      'hi' => array('Hindi', 'हिन्दी'),
-      'hr' => array('Croatian', 'Hrvatski'),
-      'ht' => array('Haitian Creole', 'Kreyòl ayisyen'),
-      'hu' => array('Hungarian', 'Magyar'),
-      'hy' => array('Armenian', 'Հայերեն'),
-      'id' => array('Indonesian', 'Bahasa Indonesia'),
-      'is' => array('Icelandic', 'Íslenska'),
-      'it' => array('Italian', 'Italiano'),
-      'ja' => array('Japanese', '日本語'),
-      'jv' => array('Javanese', 'Basa Java'),
-      'ka' => array('Georgian', 'ქართული ენა'),
-      'kk' => array('Kazakh', 'Қазақ'),
-      'km' => array('Khmer', 'ភាសាខ្មែរ'),
-      'kn' => array('Kannada', 'ಕನ್ನಡ'),
-      'ko' => array('Korean', '한국어'),
-      'ku' => array('Kurdish', 'Kurdî'),
-      'ky' => array('Kyrgyz', 'Кыргызча'),
-      'lo' => array('Lao', 'ພາສາລາວ'),
-      'lt' => array('Lithuanian', 'Lietuvių'),
-      'lv' => array('Latvian', 'Latviešu'),
-      'mg' => array('Malagasy', 'Malagasy'),
-      'mk' => array('Macedonian', 'Македонски'),
-      'ml' => array('Malayalam', 'മലയാളം'),
-      'mn' => array('Mongolian', 'монгол'),
-      'mr' => array('Marathi', 'मराठी'),
-      'ms' => array('Bahasa Malaysia', 'بهاس ملايو'),
-      'my' => array('Burmese', 'ဗမာစကား'),
-      'ne' => array('Nepali', 'नेपाली'),
-      'nl' => array('Dutch', 'Nederlands'),
-      'nb' => array('Norwegian Bokmål', 'Norsk, bokmål'),
-      'nn' => array('Norwegian Nynorsk', 'Norsk, nynorsk'),
-      'oc' => array('Occitan', 'Occitan'),
-      'pa' => array('Punjabi', 'ਪੰਜਾਬੀ'),
-      'pl' => array('Polish', 'Polski'),
-      'pt-pt' => array('Portuguese, Portugal', 'Português, Portugal'),
-      'pt-br' => array('Portuguese, Brazil', 'Português, Brasil'),
-      'ro' => array('Romanian', 'Română'),
-      'ru' => array('Russian', 'Русский'),
-      'sco' => array('Scots', 'Scots'),
-      'se' => array('Northern Sami', 'Sámi'),
-      'si' => array('Sinhala', 'සිංහල'),
-      'sk' => array('Slovak', 'Slovenčina'),
-      'sl' => array('Slovenian', 'Slovenščina'),
-      'sq' => array('Albanian', 'Shqip'),
-      'sr' => array('Serbian', 'Српски'),
-      'sv' => array('Swedish', 'Svenska'),
-      'sw' => array('Swahili', 'Kiswahili'),
-      'ta' => array('Tamil', 'தமிழ்'),
-      'ta-lk' => array('Tamil, Sri Lanka', 'தமிழ், இலங்கை'),
-      'te' => array('Telugu', 'తెలుగు'),
-      'th' => array('Thai', 'ภาษาไทย'),
-      'tr' => array('Turkish', 'Türkçe'),
-      'tyv' => array('Tuvan', 'Тыва дыл'),
-      'ug' => array('Uyghur', /* Left-to-right marker "‭" */ 'ئۇيغۇرچە', LanguageInterface::DIRECTION_RTL),
-      'uk' => array('Ukrainian', 'Українська'),
-      'ur' => array('Urdu', /* Left-to-right marker "‭" */ 'اردو', LanguageInterface::DIRECTION_RTL),
-      'vi' => array('Vietnamese', 'Tiếng Việt'),
-      'xx-lolspeak' => array('Lolspeak', 'Lolspeak'),
-      'zh-hans' => array('Chinese, Simplified', '简体中文'),
-      'zh-hant' => array('Chinese, Traditional', '繁體中文'),
-    );
+    return [
+      'af' => ['Afrikaans', 'Afrikaans'],
+      'am' => ['Amharic', 'አማርኛ'],
+      'ar' => ['Arabic', /* Left-to-right marker "‭" */ 'العربية', LanguageInterface::DIRECTION_RTL],
+      'ast' => ['Asturian', 'Asturianu'],
+      'az' => ['Azerbaijani', 'Azərbaycanca'],
+      'be' => ['Belarusian', 'Беларуская'],
+      'bg' => ['Bulgarian', 'Български'],
+      'bn' => ['Bengali', 'বাংলা'],
+      'bo' => ['Tibetan', 'བོད་སྐད་'],
+      'bs' => ['Bosnian', 'Bosanski'],
+      'ca' => ['Catalan', 'Català'],
+      'cs' => ['Czech', 'Čeština'],
+      'cy' => ['Welsh', 'Cymraeg'],
+      'da' => ['Danish', 'Dansk'],
+      'de' => ['German', 'Deutsch'],
+      'dz' => ['Dzongkha', 'རྫོང་ཁ'],
+      'el' => ['Greek', 'Ελληνικά'],
+      'en' => ['English', 'English'],
+      'en-x-simple' => ['Simple English', 'Simple English'],
+      'eo' => ['Esperanto', 'Esperanto'],
+      'es' => ['Spanish', 'Español'],
+      'et' => ['Estonian', 'Eesti'],
+      'eu' => ['Basque', 'Euskera'],
+      'fa' => ['Persian, Farsi', /* Left-to-right marker "‭" */ 'فارسی', LanguageInterface::DIRECTION_RTL],
+      'fi' => ['Finnish', 'Suomi'],
+      'fil' => ['Filipino', 'Filipino'],
+      'fo' => ['Faeroese', 'Føroyskt'],
+      'fr' => ['French', 'Français'],
+      'fy' => ['Frisian, Western', 'Frysk'],
+      'ga' => ['Irish', 'Gaeilge'],
+      'gd' => ['Scots Gaelic', 'Gàidhlig'],
+      'gl' => ['Galician', 'Galego'],
+      'gsw-berne' => ['Swiss German', 'Schwyzerdütsch'],
+      'gu' => ['Gujarati', 'ગુજરાતી'],
+      'he' => ['Hebrew', /* Left-to-right marker "‭" */ 'עברית', LanguageInterface::DIRECTION_RTL],
+      'hi' => ['Hindi', 'हिन्दी'],
+      'hr' => ['Croatian', 'Hrvatski'],
+      'ht' => ['Haitian Creole', 'Kreyòl ayisyen'],
+      'hu' => ['Hungarian', 'Magyar'],
+      'hy' => ['Armenian', 'Հայերեն'],
+      'id' => ['Indonesian', 'Bahasa Indonesia'],
+      'is' => ['Icelandic', 'Íslenska'],
+      'it' => ['Italian', 'Italiano'],
+      'ja' => ['Japanese', '日本語'],
+      'jv' => ['Javanese', 'Basa Java'],
+      'ka' => ['Georgian', 'ქართული ენა'],
+      'kk' => ['Kazakh', 'Қазақ'],
+      'km' => ['Khmer', 'ភាសាខ្មែរ'],
+      'kn' => ['Kannada', 'ಕನ್ನಡ'],
+      'ko' => ['Korean', '한국어'],
+      'ku' => ['Kurdish', 'Kurdî'],
+      'ky' => ['Kyrgyz', 'Кыргызча'],
+      'lo' => ['Lao', 'ພາສາລາວ'],
+      'lt' => ['Lithuanian', 'Lietuvių'],
+      'lv' => ['Latvian', 'Latviešu'],
+      'mg' => ['Malagasy', 'Malagasy'],
+      'mk' => ['Macedonian', 'Македонски'],
+      'ml' => ['Malayalam', 'മലയാളം'],
+      'mn' => ['Mongolian', 'монгол'],
+      'mr' => ['Marathi', 'मराठी'],
+      'ms' => ['Bahasa Malaysia', 'بهاس ملايو'],
+      'my' => ['Burmese', 'ဗမာစကား'],
+      'ne' => ['Nepali', 'नेपाली'],
+      'nl' => ['Dutch', 'Nederlands'],
+      'nb' => ['Norwegian Bokmål', 'Norsk, bokmål'],
+      'nn' => ['Norwegian Nynorsk', 'Norsk, nynorsk'],
+      'oc' => ['Occitan', 'Occitan'],
+      'pa' => ['Punjabi', 'ਪੰਜਾਬੀ'],
+      'pl' => ['Polish', 'Polski'],
+      'pt-pt' => ['Portuguese, Portugal', 'Português, Portugal'],
+      'pt-br' => ['Portuguese, Brazil', 'Português, Brasil'],
+      'ro' => ['Romanian', 'Română'],
+      'ru' => ['Russian', 'Русский'],
+      'sco' => ['Scots', 'Scots'],
+      'se' => ['Northern Sami', 'Sámi'],
+      'si' => ['Sinhala', 'සිංහල'],
+      'sk' => ['Slovak', 'Slovenčina'],
+      'sl' => ['Slovenian', 'Slovenščina'],
+      'sq' => ['Albanian', 'Shqip'],
+      'sr' => ['Serbian', 'Српски'],
+      'sv' => ['Swedish', 'Svenska'],
+      'sw' => ['Swahili', 'Kiswahili'],
+      'ta' => ['Tamil', 'தமிழ்'],
+      'ta-lk' => ['Tamil, Sri Lanka', 'தமிழ், இலங்கை'],
+      'te' => ['Telugu', 'తెలుగు'],
+      'th' => ['Thai', 'ภาษาไทย'],
+      'tr' => ['Turkish', 'Türkçe'],
+      'tyv' => ['Tuvan', 'Тыва дыл'],
+      'ug' => ['Uyghur', /* Left-to-right marker "‭" */ 'ئۇيغۇرچە', LanguageInterface::DIRECTION_RTL],
+      'uk' => ['Ukrainian', 'Українська'],
+      'ur' => ['Urdu', /* Left-to-right marker "‭" */ 'اردو', LanguageInterface::DIRECTION_RTL],
+      'vi' => ['Vietnamese', 'Tiếng Việt'],
+      'xx-lolspeak' => ['Lolspeak', 'Lolspeak'],
+      'zh-hans' => ['Chinese, Simplified', '简体中文'],
+      'zh-hant' => ['Chinese, Traditional', '繁體中文'],
+    ];
   }
 
   /**
@@ -391,7 +391,7 @@ class LanguageManager implements LanguageManagerInterface {
       return $languages;
     }
 
-    $filtered_languages = array();
+    $filtered_languages = [];
     // Add the site's default language if requested.
     if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
 
@@ -399,13 +399,13 @@ class LanguageManager implements LanguageManagerInterface {
       // default language only for runtime.
       $defaultLanguage = $this->getDefaultLanguage();
       $default = new Language(
-        array(
+        [
           'id' => $defaultLanguage->getId(),
           'name' => new TranslatableMarkup("Site's default language (@lang_name)",
-            array('@lang_name' => $defaultLanguage->getName())),
+            ['@lang_name' => $defaultLanguage->getName()]),
           'direction' => $defaultLanguage->getDirection(),
           'weight' => $defaultLanguage->getWeight(),
-        )
+        ]
       );
       $filtered_languages[LanguageInterface::LANGCODE_SITE_DEFAULT] = $default;
     }

@@ -25,7 +25,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'taxonomy');
+  public static $modules = ['language', 'content_translation', 'taxonomy'];
 
   protected function setUp() {
     $this->entityTypeId = 'taxonomy_term';
@@ -54,14 +54,14 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getTranslatorPermissions() {
-    return array_merge(parent::getTranslatorPermissions(), array('administer taxonomy'));
+    return array_merge(parent::getTranslatorPermissions(), ['administer taxonomy']);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getNewEntityValues($langcode) {
-    return array('name' => $this->randomMachineName()) + parent::getNewEntityValues($langcode);
+    return ['name' => $this->randomMachineName()] + parent::getNewEntityValues($langcode);
   }
 
   /**
@@ -73,7 +73,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
     // To be able to post values for the configurable base fields (name,
     // description) have to be suffixed with [0][value].
     foreach ($edit as $property => $value) {
-      foreach (array('name', 'description') as $key) {
+      foreach (['name', 'description'] as $key) {
         if ($property == $key) {
           $edit[$key . '[0][value]'] = $value;
           unset($edit[$property]);
@@ -91,7 +91,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
 
     // Make sure that no row was inserted for taxonomy vocabularies which do
     // not have translations enabled.
-    $rows = db_query('SELECT tid, count(tid) AS count FROM {taxonomy_term_field_data} WHERE vid <> :vid GROUP BY tid', array(':vid' => $this->bundle))->fetchAll();
+    $rows = db_query('SELECT tid, count(tid) AS count FROM {taxonomy_term_field_data} WHERE vid <> :vid GROUP BY tid', [':vid' => $this->bundle])->fetchAll();
     foreach ($rows as $row) {
       $this->assertTrue($row->count < 2, 'Term does not have translations.');
     }
@@ -103,9 +103,9 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   function testTranslateLinkVocabularyAdminPage() {
     $this->drupalLogin($this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer taxonomy'])));
 
-    $values = array(
+    $values = [
       'name' => $this->randomMachineName(),
-    );
+    ];
     $translatable_tid = $this->createEntity($values, $this->langcodes[0], $this->vocabulary->id());
 
     // Create an untranslatable vocabulary.
@@ -118,9 +118,9 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
     ]);
     $untranslatable_vocabulary->save();
 
-    $values = array(
+    $values = [
       'name' => $this->randomMachineName(),
-    );
+    ];
     $untranslatable_tid = $this->createEntity($values, $this->langcodes[0], $untranslatable_vocabulary->id());
 
     // Verify translation links.
@@ -148,14 +148,14 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
     foreach ($this->langcodes as $langcode) {
       // We only want to test the title for non-english translations.
       if ($langcode != 'en') {
-        $options = array('language' => $languages[$langcode]);
+        $options = ['language' => $languages[$langcode]];
         $url = $entity->urlInfo('edit-form', $options);
         $this->drupalGet($url);
 
-        $title = t('@title [%language translation]', array(
+        $title = t('@title [%language translation]', [
           '@title' => $entity->getTranslation($langcode)->label(),
           '%language' => $languages[$langcode]->getName(),
-        ));
+        ]);
         $this->assertRaw($title);
       }
     }

@@ -27,7 +27,7 @@ class User extends FieldableEntity {
    * {@inheritdoc}
    */
   public function fields() {
-    $fields = array(
+    $fields = [
       'uid' => $this->t('User ID'),
       'name' => $this->t('Username'),
       'pass' => $this->t('Password'),
@@ -44,12 +44,12 @@ class User extends FieldableEntity {
       'init' => $this->t('Init'),
       'data' => $this->t('User data'),
       'roles' => $this->t('Roles'),
-    );
+    ];
 
     // Profile fields.
     if ($this->moduleExists('profile')) {
       $fields += $this->select('profile_fields', 'pf')
-        ->fields('pf', array('name', 'title'))
+        ->fields('pf', ['name', 'title'])
         ->execute()
         ->fetchAllKeyed();
     }
@@ -79,9 +79,9 @@ class User extends FieldableEntity {
     // ProfileFieldValues plugin.
     if ($this->getDatabase()->schema()->tableExists('profile_value')) {
       $query = $this->select('profile_value', 'pv')
-        ->fields('pv', array('fid', 'value'));
+        ->fields('pv', ['fid', 'value']);
       $query->leftJoin('profile_field', 'pf', 'pf.fid=pv.fid');
-      $query->fields('pf', array('name', 'type'));
+      $query->fields('pf', ['name', 'type']);
       $query->condition('uid', $row->getSourceProperty('uid'));
       $results = $query->execute();
 
@@ -89,14 +89,14 @@ class User extends FieldableEntity {
         if ($profile_value['type'] == 'date') {
           $date = unserialize($profile_value['value']);
           $date = date('Y-m-d', mktime(0, 0, 0, $date['month'], $date['day'], $date['year']));
-          $row->setSourceProperty($profile_value['name'], array('value' => $date));
+          $row->setSourceProperty($profile_value['name'], ['value' => $date]);
         }
         elseif ($profile_value['type'] == 'list') {
           // Explode by newline and comma.
           $row->setSourceProperty($profile_value['name'], preg_split("/[\r\n,]+/", $profile_value['value']));
         }
         else {
-          $row->setSourceProperty($profile_value['name'], array($profile_value['value']));
+          $row->setSourceProperty($profile_value['name'], [$profile_value['value']]);
         }
       }
     }
@@ -108,12 +108,12 @@ class User extends FieldableEntity {
    * {@inheritdoc}
    */
   public function getIds() {
-    return array(
-      'uid' => array(
+    return [
+      'uid' => [
         'type' => 'integer',
         'alias' => 'u',
-      ),
-    );
+      ],
+    ];
   }
 
 }

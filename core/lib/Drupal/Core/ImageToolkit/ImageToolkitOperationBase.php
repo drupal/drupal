@@ -103,7 +103,7 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
    */
   protected function prepareArguments(array $arguments) {
     foreach ($this->arguments() as $id => $argument) {
-      $argument += array('required' => TRUE);
+      $argument += ['required' => TRUE];
       // Check if the argument is required and, if so, has been provided.
       if ($argument['required']) {
         if (!array_key_exists($id, $arguments)) {

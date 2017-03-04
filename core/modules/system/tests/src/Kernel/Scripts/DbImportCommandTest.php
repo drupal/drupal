@@ -51,10 +51,10 @@ class DbImportCommandTest extends KernelTestBase {
    * @requires extension pdo_sqlite
    */
   public function testDbImportCommand() {
-    $connection_info = array(
+    $connection_info = [
       'driver' => 'sqlite',
       'database' => ':memory:',
-    );
+    ];
     Database::addConnectionInfo($this->databasePrefix, 'default', $connection_info);
 
     $command = new DbImportCommand();

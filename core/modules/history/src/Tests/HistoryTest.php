@@ -17,7 +17,7 @@ class HistoryTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'history');
+  public static $modules = ['node', 'history'];
 
   /**
    * The main user for testing.
@@ -36,11 +36,11 @@ class HistoryTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
-    $this->user = $this->drupalCreateUser(array('create page content', 'access content'));
+    $this->user = $this->drupalCreateUser(['create page content', 'access content']);
     $this->drupalLogin($this->user);
-    $this->testNode = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->user->id()));
+    $this->testNode = $this->drupalCreateNode(['type' => 'page', 'uid' => $this->user->id()]);
   }
 
   /**
@@ -54,7 +54,7 @@ class HistoryTest extends WebTestBase {
    */
   protected function getNodeReadTimestamps(array $node_ids) {
     // Build POST values.
-    $post = array();
+    $post = [];
     for ($i = 0; $i < count($node_ids); $i++) {
       $post['node_ids[' . $i . ']'] = $node_ids[$i];
     }
@@ -69,15 +69,15 @@ class HistoryTest extends WebTestBase {
     $post = implode('&', $post);
 
     // Perform HTTP request.
-    return $this->curlExec(array(
-      CURLOPT_URL => \Drupal::url('history.get_last_node_view', array(), array('absolute' => TRUE)),
+    return $this->curlExec([
+      CURLOPT_URL => \Drupal::url('history.get_last_node_view', [], ['absolute' => TRUE]),
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $post,
-      CURLOPT_HTTPHEADER => array(
+      CURLOPT_HTTPHEADER => [
         'Accept: application/json',
         'Content-Type: application/x-www-form-urlencoded',
-      ),
-    ));
+      ],
+    ]);
   }
 
   /**
@@ -90,12 +90,12 @@ class HistoryTest extends WebTestBase {
    *   The response body.
    */
   protected function markNodeAsRead($node_id) {
-    return $this->curlExec(array(
-      CURLOPT_URL => \Drupal::url('history.read_node', array('node' => $node_id), array('absolute' => TRUE)),
-      CURLOPT_HTTPHEADER => array(
+    return $this->curlExec([
+      CURLOPT_URL => \Drupal::url('history.read_node', ['node' => $node_id], ['absolute' => TRUE]),
+      CURLOPT_HTTPHEADER => [
         'Accept: application/json',
-      ),
-    ));
+      ],
+    ]);
   }
 
   /**
@@ -105,10 +105,10 @@ class HistoryTest extends WebTestBase {
     $nid = $this->testNode->id();
 
     // Retrieve "last read" timestamp for test node, for the current user.
-    $response = $this->getNodeReadTimestamps(array($nid));
+    $response = $this->getNodeReadTimestamps([$nid]);
     $this->assertResponse(200);
     $json = Json::decode($response);
-    $this->assertIdentical(array(1 => 0), $json, 'The node has not yet been read.');
+    $this->assertIdentical([1 => 0], $json, 'The node has not yet been read.');
 
     // View the node.
     $this->drupalGet('node/' . $nid);
@@ -126,20 +126,20 @@ class HistoryTest extends WebTestBase {
     $this->assertTrue(is_numeric($timestamp), 'Node has been marked as read. Timestamp received.');
 
     // Retrieve "last read" timestamp for test node, for the current user.
-    $response = $this->getNodeReadTimestamps(array($nid));
+    $response = $this->getNodeReadTimestamps([$nid]);
     $this->assertResponse(200);
     $json = Json::decode($response);
-    $this->assertIdentical(array(1 => $timestamp), $json, 'The node has been read.');
+    $this->assertIdentical([1 => $timestamp], $json, 'The node has been read.');
 
     // Failing to specify node IDs for the first endpoint should return a 404.
-    $this->getNodeReadTimestamps(array());
+    $this->getNodeReadTimestamps([]);
     $this->assertResponse(404);
 
     // Accessing either endpoint as the anonymous user should return a 403.
     $this->drupalLogout();
-    $this->getNodeReadTimestamps(array($nid));
+    $this->getNodeReadTimestamps([$nid]);
     $this->assertResponse(403);
-    $this->getNodeReadTimestamps(array());
+    $this->getNodeReadTimestamps([]);
     $this->assertResponse(403);
     $this->markNodeAsRead($nid);
     $this->assertResponse(403);

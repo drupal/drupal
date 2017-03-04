@@ -29,42 +29,42 @@ class DiffArrayTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->array1 = array(
+    $this->array1 = [
       'same' => 'yes',
       'different' => 'no',
-      'array_empty_diff' => array(),
+      'array_empty_diff' => [],
       'null' => NULL,
       'int_diff' => 1,
-      'array_diff' => array('same' => 'same', 'array' => array('same' => 'same')),
-      'array_compared_to_string' => array('value'),
+      'array_diff' => ['same' => 'same', 'array' => ['same' => 'same']],
+      'array_compared_to_string' => ['value'],
       'string_compared_to_array' => 'value',
       'new' => 'new',
-    );
-    $this->array2 = array(
+    ];
+    $this->array2 = [
       'same' => 'yes',
       'different' => 'yes',
-      'array_empty_diff' => array(),
+      'array_empty_diff' => [],
       'null' => NULL,
       'int_diff' => '1',
-      'array_diff' => array('same' => 'different', 'array' => array('same' => 'same')),
+      'array_diff' => ['same' => 'different', 'array' => ['same' => 'same']],
       'array_compared_to_string' => 'value',
-      'string_compared_to_array' => array('value'),
-    );
+      'string_compared_to_array' => ['value'],
+    ];
   }
 
   /**
    * Tests DiffArray::diffAssocRecursive().
    */
   public function testDiffAssocRecursive() {
-    $expected = array(
+    $expected = [
       'different' => 'no',
       'int_diff' => 1,
       // The 'array' key should not be returned, as it's the same.
-      'array_diff' => array('same' => 'same'),
-      'array_compared_to_string' => array('value'),
+      'array_diff' => ['same' => 'same'],
+      'array_compared_to_string' => ['value'],
       'string_compared_to_array' => 'value',
       'new' => 'new',
-    );
+    ];
 
     $this->assertSame(DiffArray::diffAssocRecursive($this->array1, $this->array2), $expected);
   }

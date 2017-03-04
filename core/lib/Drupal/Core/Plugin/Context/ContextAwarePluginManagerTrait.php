@@ -19,7 +19,7 @@ trait ContextAwarePluginManagerTrait {
   /**
    * See \Drupal\Core\Plugin\Context\ContextAwarePluginManagerInterface::getDefinitionsForContexts().
    */
-  public function getDefinitionsForContexts(array $contexts = array()) {
+  public function getDefinitionsForContexts(array $contexts = []) {
     return $this->contextHandler()->filterPluginDefinitionsByContexts($contexts, $this->getDefinitions());
   }
 

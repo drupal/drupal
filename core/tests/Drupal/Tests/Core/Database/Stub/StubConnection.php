@@ -23,14 +23,14 @@ class StubConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
+  public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return new StatementEmpty();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function queryTemporary($query, array $args = array(), array $options = array()) {
+  public function queryTemporary($query, array $args = [], array $options = []) {
     return '';
   }
 

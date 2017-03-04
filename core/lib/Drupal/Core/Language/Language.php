@@ -16,13 +16,13 @@ class Language implements LanguageInterface {
    *
    * @var array
    */
-  public static $defaultValues = array(
+  public static $defaultValues = [
     'id' => 'en',
     'name' => 'English',
     'direction' => self::DIRECTION_LTR,
     'weight' => 0,
     'locked' => FALSE,
-  );
+  ];
 
   // Properties within the Language are set up as the default language.
 
@@ -74,7 +74,7 @@ class Language implements LanguageInterface {
    *   An array of property values, keyed by property name, used to construct
    *   the language.
    */
-  public function __construct(array $values = array()) {
+  public function __construct(array $values = []) {
     // Set all the provided properties for the language.
     foreach ($values as $key => $value) {
       if (property_exists($this, $key)) {

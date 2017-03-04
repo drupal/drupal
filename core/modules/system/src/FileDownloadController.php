@@ -45,7 +45,7 @@ class FileDownloadController extends ControllerBase {
 
     if (file_stream_wrapper_valid_scheme($scheme) && file_exists($uri)) {
       // Let other modules provide headers and controls access to the file.
-      $headers = $this->moduleHandler()->invokeAll('file_download', array($uri));
+      $headers = $this->moduleHandler()->invokeAll('file_download', [$uri]);
 
       foreach ($headers as $result) {
         if ($result == -1) {

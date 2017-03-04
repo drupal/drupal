@@ -19,7 +19,7 @@ class CommentNodeAccessTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_access_test');
+  public static $modules = ['node_access_test'];
 
   protected function setUp() {
     parent::setUp();
@@ -27,14 +27,14 @@ class CommentNodeAccessTest extends CommentTestBase {
     node_access_rebuild();
 
     // Re-create user.
-    $this->webUser = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser([
       'access comments',
       'post comments',
       'create article content',
       'edit own comments',
       'node test view',
       'skip comment approval',
-    ));
+    ]);
 
     // Set the author of the created node to the web_user uid.
     $this->node->setOwnerId($this->webUser->id())->save();

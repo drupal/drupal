@@ -61,7 +61,7 @@ class FieldFormatter extends Plugin {
    *
    * @var array
    */
-  public $field_types = array();
+  public $field_types = [];
 
   /**
    * An integer to determine the weight of this formatter relative to other

@@ -54,11 +54,11 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->assertFieldChecked('edit-revision', "'Create new revision' checkbox is checked");
 
     // Uncheck the create new revision checkbox and save the node.
-    $edit = array('revision' => FALSE);
+    $edit = ['revision' => FALSE];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 
     // Load the node again and check the revision is the same as before.
-    $node_storage->resetCache(array($node->id()));
+    $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id(), TRUE);
     $this->assertEqual($node_revision->getRevisionId(), $node->getRevisionId(), "After an existing node is saved with 'Create new revision' unchecked, a new revision is not created.");
 
@@ -67,11 +67,11 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->assertFieldChecked('edit-revision', "'Create new revision' checkbox is checked");
 
     // Submit the form without changing the checkbox.
-    $edit = array();
+    $edit = [];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 
     // Load the node again and check the revision is different from before.
-    $node_storage->resetCache(array($node->id()));
+    $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
     $this->assertNotEqual($node_revision->getRevisionId(), $node->getRevisionId(), "After an existing node is saved with 'Create new revision' checked, a new revision is created.");
   }

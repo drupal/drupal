@@ -21,7 +21,7 @@ class Vocabulary extends DrupalSqlBase {
    */
   public function query() {
     $query = $this->select('vocabulary', 'v')
-      ->fields('v', array(
+      ->fields('v', [
         'vid',
         'name',
         'description',
@@ -33,7 +33,7 @@ class Vocabulary extends DrupalSqlBase {
         'tags',
         'module',
         'weight',
-      ));
+      ]);
     return $query;
   }
 
@@ -41,7 +41,7 @@ class Vocabulary extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'vid' => $this->t('The vocabulary ID.'),
       'name' => $this->t('The name of the vocabulary.'),
       'description' => $this->t('The description of the vocabulary.'),
@@ -54,7 +54,7 @@ class Vocabulary extends DrupalSqlBase {
       'weight' => $this->t('The weight of the vocabulary in relation to other vocabularies.'),
       'parents' => $this->t("The Drupal term IDs of the term's parents."),
       'node_types' => $this->t('The names of the node types the vocabulary may be used with.'),
-    );
+    ];
   }
 
   /**
@@ -63,7 +63,7 @@ class Vocabulary extends DrupalSqlBase {
   public function prepareRow(Row $row) {
     // Find node types for this row.
     $node_types = $this->select('vocabulary_node_types', 'nt')
-      ->fields('nt', array('type', 'vid'))
+      ->fields('nt', ['type', 'vid'])
       ->condition('vid', $row->getSourceProperty('vid'))
       ->execute()
       ->fetchCol();

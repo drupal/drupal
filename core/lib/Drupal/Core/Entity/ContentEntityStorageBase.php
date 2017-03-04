@@ -84,7 +84,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       }
       $bundle = $values[$this->bundleKey];
     }
-    $entity = new $this->entityClass(array(), $this->entityTypeId, $bundle);
+    $entity = new $this->entityClass([], $this->entityTypeId, $bundle);
     $this->initFieldValues($entity, $values);
     return $entity;
   }
@@ -605,11 +605,11 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    */
   protected function getFromPersistentCache(array &$ids = NULL) {
     if (!$this->entityType->isPersistentlyCacheable() || empty($ids)) {
-      return array();
+      return [];
     }
-    $entities = array();
+    $entities = [];
     // Build the list of cache entries to retrieve.
-    $cid_map = array();
+    $cid_map = [];
     foreach ($ids as $id) {
       $cid_map[$id] = $this->buildCacheId($id);
     }
@@ -638,10 +638,10 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       return;
     }
 
-    $cache_tags = array(
+    $cache_tags = [
       $this->entityTypeId . '_values',
       'entity_field_info',
-    );
+    ];
     foreach ($entities as $id => $entity) {
       $this->cacheBackend->set($this->buildCacheId($id), $entity, CacheBackendInterface::CACHE_PERMANENT, $cache_tags);
     }
@@ -692,7 +692,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    */
   public function resetCache(array $ids = NULL) {
     if ($ids) {
-      $cids = array();
+      $cids = [];
       foreach ($ids as $id) {
         unset($this->entities[$id]);
         $cids[] = $this->buildCacheId($id);
@@ -702,9 +702,9 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       }
     }
     else {
-      $this->entities = array();
+      $this->entities = [];
       if ($this->entityType->isPersistentlyCacheable()) {
-        Cache::invalidateTags(array($this->entityTypeId . '_values'));
+        Cache::invalidateTags([$this->entityTypeId . '_values']);
       }
     }
   }

@@ -25,7 +25,7 @@ trait BrokenHandlerTrait {
    * @see \Drupal\views\Plugin\views\PluginBase::defineOptions()
    */
   public function defineOptions() {
-    return array();
+    return [];
   }
 
   /**
@@ -55,28 +55,28 @@ trait BrokenHandlerTrait {
 
     foreach ($this->definition['original_configuration'] as $key => $value) {
       if (is_scalar($value)) {
-        $items[] = SafeMarkup::format('@key: @value', array('@key' => $key, '@value' => $value));
+        $items[] = SafeMarkup::format('@key: @value', ['@key' => $key, '@value' => $value]);
       }
     }
 
     $description_bottom = t('Enabling the appropriate module will may solve this issue. Otherwise, check to see if there is a module update available.');
 
-    $form['description'] = array(
+    $form['description'] = [
       '#type' => 'container',
-      '#attributes' => array(
-        'class' => array('js-form-item', 'form-item', 'description'),
-      ),
-      'description_top' => array(
+      '#attributes' => [
+        'class' => ['js-form-item', 'form-item', 'description'],
+      ],
+      'description_top' => [
         '#markup' => '<p>' . $description_top . '</p>',
-      ),
-      'detail_list' => array(
+      ],
+      'detail_list' => [
         '#theme' => 'item_list',
         '#items' => $items,
-      ),
-      'description_bottom' => array(
+      ],
+      'description_bottom' => [
         '#markup' => '<p>' . $description_bottom . '</p>',
-      ),
-    );
+      ],
+    ];
   }
 
   /**

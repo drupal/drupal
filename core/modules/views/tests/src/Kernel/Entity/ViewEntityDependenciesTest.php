@@ -40,14 +40,14 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
 
     // Install the necessary dependencies for node type creation to work.
     $this->installEntitySchema('node');
-    $this->installConfig(array('field', 'node'));
+    $this->installConfig(['field', 'node']);
 
-    $comment_type = CommentType::create(array(
+    $comment_type = CommentType::create([
       'id' => 'comment',
       'label' => 'Comment settings',
       'description' => 'Comment settings',
       'target_entity_type_id' => 'node',
-    ));
+    ]);
     $comment_type->save();
 
     $content_type = NodeType::create([
@@ -55,29 +55,29 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
       'name' => $this->randomString(),
     ]);
     $content_type->save();
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => Unicode::strtolower($this->randomMachineName()),
       'entity_type' => 'node',
       'type' => 'comment',
-    ));
+    ]);
     $field_storage->save();
     FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $content_type->id(),
       'label' => $this->randomMachineName() . '_label',
       'description' => $this->randomMachineName() . '_description',
-      'settings' => array(
+      'settings' => [
         'comment_type' => $comment_type->id(),
-      ),
+      ],
     ])->save();
     FieldConfig::create([
       'field_storage' => FieldStorageConfig::loadByName('node', 'body'),
       'bundle' => $content_type->id(),
       'label' => $this->randomMachineName() . '_body',
-      'settings' => array('display_summary' => TRUE),
+      'settings' => ['display_summary' => TRUE],
     ])->save();
 
-    ViewTestData::createTestViews(get_class($this), array('views_test_config'));
+    ViewTestData::createTestViews(get_class($this), ['views_test_config']);
   }
 
   /**

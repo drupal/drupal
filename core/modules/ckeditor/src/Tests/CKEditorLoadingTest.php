@@ -18,7 +18,7 @@ class CKEditorLoadingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter', 'editor', 'ckeditor', 'node');
+  public static $modules = ['filter', 'editor', 'ckeditor', 'node'];
 
   /**
    * An untrusted user with access to only the 'plain_text' format.
@@ -38,12 +38,12 @@ class CKEditorLoadingTest extends WebTestBase {
     parent::setUp();
 
     // Create text format, associate CKEditor.
-    $filtered_html_format = FilterFormat::create(array(
+    $filtered_html_format = FilterFormat::create([
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,
-      'filters' => array(),
-    ));
+      'filters' => [],
+    ]);
     $filtered_html_format->save();
     $editor = Editor::create([
       'format' => 'filtered_html',
@@ -53,22 +53,22 @@ class CKEditorLoadingTest extends WebTestBase {
 
     // Create a second format without an associated editor so a drop down select
     // list is created when selecting formats.
-    $full_html_format = FilterFormat::create(array(
+    $full_html_format = FilterFormat::create([
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
-      'filters' => array(),
-    ));
+      'filters' => [],
+    ]);
     $full_html_format->save();
 
     // Create node type.
-    $this->drupalCreateContentType(array(
+    $this->drupalCreateContentType([
       'type' => 'article',
       'name' => 'Article',
-    ));
+    ]);
 
-    $this->untrustedUser = $this->drupalCreateUser(array('create article content', 'edit any article content'));
-    $this->normalUser = $this->drupalCreateUser(array('create article content', 'edit any article content', 'use text format filtered_html', 'use text format full_html'));
+    $this->untrustedUser = $this->drupalCreateUser(['create article content', 'edit any article content']);
+    $this->normalUser = $this->drupalCreateUser(['create article content', 'edit any article content', 'use text format filtered_html', 'use text format full_html']);
   }
 
   /**
@@ -101,13 +101,13 @@ class CKEditorLoadingTest extends WebTestBase {
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $ckeditor_plugin = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $editor = Editor::load('filtered_html');
-    $expected = array('formats' => array('filtered_html' => array(
+    $expected = ['formats' => ['filtered_html' => [
       'format' => 'filtered_html',
       'editor' => 'ckeditor',
       'editorSettings' => $this->castSafeStrings($ckeditor_plugin->getJSSettings($editor)),
       'editorSupportsContentFiltering' => TRUE,
       'isXssSafe' => FALSE,
-    )));
+    ]]];
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
@@ -122,7 +122,7 @@ class CKEditorLoadingTest extends WebTestBase {
     // NOTE: the tests in CKEditorTest already ensure that changing the
     // configuration also results in modified CKEditor configuration, so we
     // don't test that here.
-    \Drupal::service('module_installer')->install(array('ckeditor_test'));
+    \Drupal::service('module_installer')->install(['ckeditor_test']);
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $editor_settings = $editor->getSettings();
     $editor_settings['toolbar']['rows'][0][0]['items'][] = 'Llama';
@@ -130,15 +130,15 @@ class CKEditorLoadingTest extends WebTestBase {
     $editor->save();
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
-    $expected = array(
-      'formats' => array(
-        'filtered_html' => array(
+    $expected = [
+      'formats' => [
+        'filtered_html' => [
           'format' => 'filtered_html',
           'editor' => 'ckeditor',
           'editorSettings' => $this->castSafeStrings($ckeditor_plugin->getJSSettings($editor)),
           'editorSupportsContentFiltering' => TRUE,
           'isXssSafe' => FALSE,
-    )));
+    ]]];
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
@@ -226,7 +226,7 @@ class CKEditorLoadingTest extends WebTestBase {
 
   protected function getThingsToCheck() {
     $settings = $this->getDrupalSettings();
-    return array(
+    return [
       // JavaScript settings.
       $settings,
       // Editor.module's JS settings present.
@@ -239,7 +239,7 @@ class CKEditorLoadingTest extends WebTestBase {
       $this->xpath('//textarea[@id="edit-body-0-value"]'),
       // Format selector.
       $this->xpath('//select[contains(@class, "filter-list")]'),
-    );
+    ];
   }
 
 }

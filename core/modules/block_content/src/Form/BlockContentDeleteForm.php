@@ -16,10 +16,10 @@ class BlockContentDeleteForm extends ContentEntityDeleteForm {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $instances = $this->entity->getInstances();
 
-    $form['message'] = array(
+    $form['message'] = [
       '#markup' => $this->formatPlural(count($instances), 'This will also remove 1 placed block instance.', 'This will also remove @count placed block instances.'),
       '#access' => !empty($instances),
-    );
+    ];
 
     return parent::buildForm($form, $form_state);
   }

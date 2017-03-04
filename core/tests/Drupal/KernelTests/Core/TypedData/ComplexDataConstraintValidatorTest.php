@@ -35,19 +35,19 @@ class ComplexDataConstraintValidatorTest extends KernelTestBase {
     // Create a definition that specifies some ComplexData constraint.
     $definition = MapDataDefinition::create()
       ->setPropertyDefinition('key', DataDefinition::create('integer'))
-      ->addConstraint('ComplexData', array(
-        'key' => array(
-          'AllowedValues' => array(1, 2, 3)
-        ),
-      ));
+      ->addConstraint('ComplexData', [
+        'key' => [
+          'AllowedValues' => [1, 2, 3]
+        ],
+      ]);
 
     // Test the validation.
-    $typed_data = $this->typedData->create($definition, array('key' => 1));
+    $typed_data = $this->typedData->create($definition, ['key' => 1]);
     $violations = $typed_data->validate();
     $this->assertEqual($violations->count(), 0, 'Validation passed for correct value.');
 
     // Test the validation when an invalid value is passed.
-    $typed_data = $this->typedData->create($definition, array('key' => 4));
+    $typed_data = $this->typedData->create($definition, ['key' => 4]);
     $violations = $typed_data->validate();
     $this->assertEqual($violations->count(), 1, 'Validation failed for incorrect value.');
 
@@ -59,19 +59,19 @@ class ComplexDataConstraintValidatorTest extends KernelTestBase {
 
     // Test using the constraint with a map without the specified key. This
     // should be ignored as long as there is no NotNull or NotBlank constraint.
-    $typed_data = $this->typedData->create($definition, array('foo' => 'bar'));
+    $typed_data = $this->typedData->create($definition, ['foo' => 'bar']);
     $violations = $typed_data->validate();
     $this->assertEqual($violations->count(), 0, 'Constraint on non-existing key is ignored.');
 
     $definition = MapDataDefinition::create()
       ->setPropertyDefinition('key', DataDefinition::create('integer'))
-      ->addConstraint('ComplexData', array(
-        'key' => array(
-          'NotNull' => array()
-        ),
-      ));
+      ->addConstraint('ComplexData', [
+        'key' => [
+          'NotNull' => []
+        ],
+      ]);
 
-    $typed_data = $this->typedData->create($definition, array('foo' => 'bar'));
+    $typed_data = $this->typedData->create($definition, ['foo' => 'bar']);
     $violations = $typed_data->validate();
     $this->assertEqual($violations->count(), 1, 'Key is required.');
   }

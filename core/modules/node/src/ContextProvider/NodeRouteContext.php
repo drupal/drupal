@@ -48,7 +48,7 @@ class NodeRouteContext implements ContextProviderInterface {
     }
     elseif ($this->routeMatch->getRouteName() == 'node.add') {
       $node_type = $this->routeMatch->getParameter('node_type');
-      $value = Node::create(array('type' => $node_type->id()));
+      $value = Node::create(['type' => $node_type->id()]);
     }
 
     $cacheability = new CacheableMetadata();

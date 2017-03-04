@@ -22,43 +22,43 @@ class ViewPreviewForm extends ViewFormBase {
 
     $form_state->disableCache();
 
-    $form['controls']['#attributes'] = array('class' => array('clearfix'));
+    $form['controls']['#attributes'] = ['class' => ['clearfix']];
 
-    $form['controls']['title'] = array(
+    $form['controls']['title'] = [
       '#prefix' => '<h2 class="view-preview-form__title">',
       '#markup' => $this->t('Preview'),
       '#suffix' => '</h2>',
-    );
+    ];
 
     // Add a checkbox controlling whether or not this display auto-previews.
-    $form['controls']['live_preview'] = array(
+    $form['controls']['live_preview'] = [
       '#type' => 'checkbox',
       '#id' => 'edit-displays-live-preview',
       '#title' => $this->t('Auto preview'),
       '#default_value' => \Drupal::config('views.settings')->get('ui.always_live_preview'),
-    );
+    ];
 
     // Add the arguments textfield
-    $form['controls']['view_args'] = array(
+    $form['controls']['view_args'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Preview with contextual filters:'),
-      '#description' => $this->t('Separate contextual filter values with a "/". For example, %example.', array('%example' => '40/12/10')),
+      '#description' => $this->t('Separate contextual filter values with a "/". For example, %example.', ['%example' => '40/12/10']),
       '#id' => 'preview-args',
-    );
+    ];
 
-    $args = array();
+    $args = [];
     if (!$form_state->isValueEmpty('view_args')) {
       $args = explode('/', $form_state->getValue('view_args'));
     }
 
     $user_input = $form_state->getUserInput();
     if ($form_state->get('show_preview') || !empty($user_input['js'])) {
-      $form['preview'] = array(
+      $form['preview'] = [
         '#weight' => 110,
-        '#theme_wrappers' => array('container'),
+        '#theme_wrappers' => ['container'],
         '#attributes' => ['id' => 'views-live-preview', 'class' => ['views-live-preview']],
         'preview' => $view->renderPreview($this->displayID, $args),
-      );
+      ];
     }
     $uri = $view->urlInfo('preview-form');
     $uri->setRouteParameter('display_id', $this->displayID);
@@ -72,27 +72,27 @@ class ViewPreviewForm extends ViewFormBase {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $view = $this->entity;
-    return array(
-      '#attributes' => array(
+    return [
+      '#attributes' => [
         'id' => 'preview-submit-wrapper',
-        'class' => array('preview-submit-wrapper')
-      ),
-      'button' => array(
+        'class' => ['preview-submit-wrapper']
+      ],
+      'button' => [
         '#type' => 'submit',
         '#value' => $this->t('Update preview'),
-        '#attributes' => array('class' => array('arguments-preview')),
-        '#submit' => array('::submitPreview'),
+        '#attributes' => ['class' => ['arguments-preview']],
+        '#submit' => ['::submitPreview'],
         '#id' => 'preview-submit',
-        '#ajax' => array(
+        '#ajax' => [
           'url' => Url::fromRoute('entity.view.preview_form', ['view' => $view->id(), 'display_id' => $this->displayID]),
           'wrapper' => 'views-preview-wrapper',
           'event' => 'click',
-          'progress' => array('type' => 'fullscreen'),
+          'progress' => ['type' => 'fullscreen'],
           'method' => 'replaceWith',
           'disable-refocus' => TRUE,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**

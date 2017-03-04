@@ -9,39 +9,39 @@
  * Implements hook_schema().
  */
 function shortcut_schema() {
-  $schema['shortcut_set_users'] = array(
+  $schema['shortcut_set_users'] = [
     'description' => 'Maps users to shortcut sets.',
-    'fields' => array(
-      'uid' => array(
+    'fields' => [
+      'uid' => [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The {users}.uid for this set.',
-      ),
-      'set_name' => array(
+      ],
+      'set_name' => [
         'type' => 'varchar_ascii',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
         'description' => "The {shortcut_set}.set_name that will be displayed for this user.",
-      ),
-    ),
-    'primary key' => array('uid'),
-    'indexes' => array(
-      'set_name' => array('set_name'),
-    ),
-    'foreign keys' => array(
-      'set_user' => array(
+      ],
+    ],
+    'primary key' => ['uid'],
+    'indexes' => [
+      'set_name' => ['set_name'],
+    ],
+    'foreign keys' => [
+      'set_user' => [
         'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-      'set_name' => array(
+        'columns' => ['uid' => 'uid'],
+      ],
+      'set_name' => [
         'table' => 'shortcut_set',
-        'columns' => array('set_name' => 'set_name'),
-      ),
-    ),
-  );
+        'columns' => ['set_name' => 'set_name'],
+      ],
+    ],
+  ];
 
   return $schema;
 }

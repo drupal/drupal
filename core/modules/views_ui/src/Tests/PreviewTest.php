@@ -17,23 +17,23 @@ class PreviewTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_preview', 'test_preview_error', 'test_pager_full', 'test_mini_pager', 'test_click_sort');
+  public static $testViews = ['test_preview', 'test_preview_error', 'test_pager_full', 'test_mini_pager', 'test_click_sort'];
 
   /**
    * Tests contextual links in the preview form.
    */
   public function testPreviewContextual() {
-    \Drupal::service('module_installer')->install(array('contextual'));
+    \Drupal::service('module_installer')->install(['contextual']);
     $this->resetAll();
 
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertResponse(200);
-    $this->drupalPostForm(NULL, $edit = array(), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = [], t('Update preview'));
 
-    $elements = $this->xpath('//div[@id="views-live-preview"]//ul[contains(@class, :ul-class)]/li[contains(@class, :li-class)]', array(':ul-class' => 'contextual-links', ':li-class' => 'filter-add'));
+    $elements = $this->xpath('//div[@id="views-live-preview"]//ul[contains(@class, :ul-class)]/li[contains(@class, :li-class)]', [':ul-class' => 'contextual-links', ':li-class' => 'filter-add']);
     $this->assertEqual(count($elements), 1, 'The contextual link to add a new field is shown.');
 
-    $this->drupalPostForm(NULL, $edit = array('view_args' => '100'), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], t('Update preview'));
 
     // Test that area text and exposed filters are present and rendered.
     $this->assertFieldByName('id', NULL, 'ID exposed filter field found.');
@@ -49,19 +49,19 @@ class PreviewTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertResponse(200);
 
-    $this->drupalPostForm(NULL, $edit = array(), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = [], t('Update preview'));
 
     $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
     $this->assertEqual(count($elements), 5);
 
     // Filter just the first result.
-    $this->drupalPostForm(NULL, $edit = array('view_args' => '1'), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = ['view_args' => '1'], t('Update preview'));
 
     $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
     $this->assertEqual(count($elements), 1);
 
     // Filter for no results.
-    $this->drupalPostForm(NULL, $edit = array('view_args' => '100'), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], t('Update preview'));
 
     $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
     $this->assertEqual(count($elements), 0);
@@ -73,7 +73,7 @@ class PreviewTest extends UITestBase {
     $this->assertText('Test empty text', 'Rendered empty text found.');
 
     // Test feed preview.
-    $view = array();
+    $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));
     $view['page[create]'] = 1;
@@ -83,7 +83,7 @@ class PreviewTest extends UITestBase {
     $view['page[feed_properties][path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
     $this->clickLink(t('Feed'));
-    $this->drupalPostForm(NULL, array(), t('Update preview'));
+    $this->drupalPostForm(NULL, [], t('Update preview'));
     $result = $this->xpath('//div[@id="views-live-preview"]/pre');
     $this->assertTrue(strpos($result[0], '<title>' . $view['page[title]'] . '</title>'), 'The Feed RSS preview was rendered.');
 
@@ -92,7 +92,7 @@ class PreviewTest extends UITestBase {
     $settings = \Drupal::configFactory()->getEditable('views.settings');
     $settings->set('ui.show.performance_statistics', TRUE)->save();
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
-    $this->drupalPostForm(NULL, $edit = array('view_args' => '100'), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], t('Update preview'));
     $this->assertText(t('Query build time'));
     $this->assertText(t('Query execute time'));
     $this->assertText(t('View render time'));
@@ -100,7 +100,7 @@ class PreviewTest extends UITestBase {
 
     // Statistics and query.
     $settings->set('ui.show.sql_query.enabled', TRUE)->save();
-    $this->drupalPostForm(NULL, $edit = array('view_args' => '100'), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], t('Update preview'));
     $this->assertText(t('Query build time'));
     $this->assertText(t('Query execute time'));
     $this->assertText(t('View render time'));
@@ -112,7 +112,7 @@ class PreviewTest extends UITestBase {
 
     // Test that statistics and query rendered below the preview.
     $settings->set('ui.show.sql_query.where', 'below')->save();
-    $this->drupalPostForm(NULL, $edit = array('view_args' => '100'), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], t('Update preview'));
     $this->assertTrue(strpos($this->getRawContent(), 'view-test-preview') < strpos($this->getRawContent(), 'views-query-info'), 'Statistics shown below the preview.');
   }
 
@@ -124,7 +124,7 @@ class PreviewTest extends UITestBase {
    * @see https://www.drupal.org/node/2452659
    */
   public function testTaxonomyAJAX() {
-    \Drupal::service('module_installer')->install(array('taxonomy'));
+    \Drupal::service('module_installer')->install(['taxonomy']);
     $this->getPreviewAJAX('taxonomy_term', 'page_1', 0);
   }
 
@@ -134,7 +134,7 @@ class PreviewTest extends UITestBase {
   public function testPreviewWithPagersUI() {
 
     // Create 11 nodes and make sure that everyone is returned.
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
     }
@@ -143,7 +143,7 @@ class PreviewTest extends UITestBase {
     $this->getPreviewAJAX('test_pager_full', 'default', 5);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, :class)]/li', array(':class' => 'pager__items'));
+    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
     $this->assertTrue(!empty($elements), 'Full pager found.');
 
     // Verify elements and links to pages.
@@ -165,11 +165,11 @@ class PreviewTest extends UITestBase {
     $this->assertTrue($elements[4]->a, 'Link to last page found.');
 
     // Navigate to next page.
-    $elements = $this->xpath('//li[contains(@class, :class)]/a', array(':class' => 'pager__item--next'));
+    $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--next']);
     $this->clickPreviewLinkAJAX($elements[0]['href'], 5);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, :class)]/li', array(':class' => 'pager__items'));
+    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
     $this->assertTrue(!empty($elements), 'Full pager found.');
 
     // Verify elements and links to pages.
@@ -201,7 +201,7 @@ class PreviewTest extends UITestBase {
     $this->getPreviewAJAX('test_mini_pager', 'default', 3);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, :class)]/li', array(':class' => 'pager__items'));
+    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
     $this->assertTrue(!empty($elements), 'Mini pager found.');
 
     // Verify elements and links to pages.
@@ -213,11 +213,11 @@ class PreviewTest extends UITestBase {
     $this->assertTrue($elements[1]->a, 'Link to next page found.');
 
     // Navigate to next page.
-    $elements = $this->xpath('//li[contains(@class, :class)]/a', array(':class' => 'pager__item--next'));
+    $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--next']);
     $this->clickPreviewLinkAJAX($elements[0]['href'], 3);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, :class)]/li', array(':class' => 'pager__items'));
+    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
     $this->assertTrue(!empty($elements), 'Mini pager found.');
 
     // Verify elements and links to pages.
@@ -237,17 +237,17 @@ class PreviewTest extends UITestBase {
    * Tests the additional information query info area.
    */
   public function testPreviewAdditionalInfo() {
-    \Drupal::service('module_installer')->install(array('views_ui_test'));
+    \Drupal::service('module_installer')->install(['views_ui_test']);
     $this->resetAll();
 
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertResponse(200);
 
-    $this->drupalPostForm(NULL, $edit = array(), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = [], t('Update preview'));
 
     // Check for implementation of hook_views_preview_info_alter().
     // @see views_ui_test.module
-    $elements = $this->xpath('//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()=:text]', array(':text' => t('Test row count')));
+    $elements = $this->xpath('//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()=:text]', [':text' => t('Test row count')]);
     $this->assertEqual(count($elements), 1, 'Views Query Preview Info area altered.');
     // Check that additional assets are attached.
     $this->assertTrue(strpos($this->getDrupalSettings()['ajaxPageState']['libraries'], 'views_ui_test/views_ui_test.test') !== FALSE, 'Attached library found.');
@@ -261,7 +261,7 @@ class PreviewTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_preview_error/edit');
     $this->assertResponse(200);
 
-    $this->drupalPostForm(NULL, $edit = array(), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = [], t('Update preview'));
 
     $this->assertText('Unable to preview due to validation errors.', 'Preview error text found.');
   }
@@ -275,7 +275,7 @@ class PreviewTest extends UITestBase {
     $this->getPreviewAJAX('test_click_sort', 'page_1', 0);
 
     // Test that the header label is present.
-    $elements = $this->xpath('//th[contains(@class, :class)]/a', array(':class' => 'views-field views-field-name'));
+    $elements = $this->xpath('//th[contains(@class, :class)]/a', [':class' => 'views-field views-field-name']);
     $this->assertTrue(!empty($elements), 'The header label is present.');
 
     // Verify link.
@@ -285,7 +285,7 @@ class PreviewTest extends UITestBase {
     $this->clickPreviewLinkAJAX($elements[0]['href'], 0);
 
     // Test that the header label is present.
-    $elements = $this->xpath('//th[contains(@class, :class)]/a', array(':class' => 'views-field views-field-name is-active'));
+    $elements = $this->xpath('//th[contains(@class, :class)]/a', [':class' => 'views-field views-field-name is-active']);
     $this->assertTrue(!empty($elements), 'The header label is present.');
 
     // Verify link.
@@ -304,7 +304,7 @@ class PreviewTest extends UITestBase {
    */
   protected function getPreviewAJAX($view_name, $panel_id, $row_count) {
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/preview/' . $panel_id);
-    $result = $this->drupalPostAjaxForm(NULL, array(), array('op' => t('Update preview')));
+    $result = $this->drupalPostAjaxForm(NULL, [], ['op' => t('Update preview')]);
     $this->assertPreviewAJAX($result, $row_count);
   }
 
@@ -319,12 +319,12 @@ class PreviewTest extends UITestBase {
   protected function clickPreviewLinkAJAX($url, $row_count) {
     $content = $this->content;
     $drupal_settings = $this->drupalSettings;
-    $ajax_settings = array(
+    $ajax_settings = [
       'wrapper' => 'views-preview-wrapper',
       'method' => 'replaceWith',
-    );
+    ];
     $url = $this->getAbsoluteUrl($url);
-    $post = array('js' => 'true') + $this->getAjaxPageStatePostData();
+    $post = ['js' => 'true'] + $this->getAjaxPageStatePostData();
     $result = Json::decode($this->drupalPost($url, '', $post, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]));
     if (!empty($result)) {
       $this->drupalProcessAjaxResponse($content, $result, $ajax_settings, $drupal_settings);
@@ -343,7 +343,7 @@ class PreviewTest extends UITestBase {
   protected function assertPreviewAJAX($result, $row_count) {
     // Has AJAX callback replied with an insert command? If so, we can
     // assume that the page content was updated with AJAX returned data.
-    $result_commands = array();
+    $result_commands = [];
     foreach ($result as $command) {
       $result_commands[$command['command']] = $command;
     }

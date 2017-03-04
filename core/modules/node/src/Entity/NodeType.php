@@ -182,10 +182,10 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
         drupal_set_message(\Drupal::translation()->formatPlural($update_count,
           'Changed the content type of 1 post from %old-type to %type.',
           'Changed the content type of @count posts from %old-type to %type.',
-          array(
+          [
             '%old-type' => $this->getOriginalId(),
             '%type' => $this->id(),
-          )));
+          ]));
       }
     }
     if ($update) {

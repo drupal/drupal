@@ -38,7 +38,7 @@ class ContextTypedDataTest extends UnitTestCase {
     $typed_data_manager = $this->getMock(TypedDataManagerInterface::class);
     $typed_data_manager->expects($this->once())
       ->method('getCanonicalRepresentation')
-      ->will($this->returnCallback(array($this, 'getCanonicalRepresentation')));
+      ->will($this->returnCallback([$this, 'getCanonicalRepresentation']));
     $container = new ContainerBuilder();
     $container->set('typed_data_manager', $typed_data_manager);
     \Drupal::setContainer($container);

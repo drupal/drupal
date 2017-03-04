@@ -27,7 +27,7 @@ class DateHelper {
   public static function monthNamesUntranslated() {
     // Force the key to use the correct month value, rather than
     // starting with zero.
-    return array(
+    return [
       1  => 'January',
       2  => 'February',
       3  => 'March',
@@ -40,7 +40,7 @@ class DateHelper {
       10 => 'October',
       11 => 'November',
       12 => 'December',
-    );
+    ];
   }
 
   /**
@@ -52,7 +52,7 @@ class DateHelper {
   public static function monthNamesAbbrUntranslated() {
     // Force the key to use the correct month value, rather than
     // starting with zero.
-    return array(
+    return [
       1  => 'Jan',
       2  => 'Feb',
       3  => 'Mar',
@@ -65,7 +65,7 @@ class DateHelper {
       10 => 'Oct',
       11 => 'Nov',
       12 => 'Dec',
-    );
+    ];
   }
 
   /**
@@ -81,21 +81,21 @@ class DateHelper {
   public static function monthNames($required = FALSE) {
     // Force the key to use the correct month value, rather than
     // starting with zero.
-    $monthnames = array(
-      1  => t('January', array(), array('context' => 'Long month name')),
-      2  => t('February', array(), array('context' => 'Long month name')),
-      3  => t('March', array(), array('context' => 'Long month name')),
-      4  => t('April', array(), array('context' => 'Long month name')),
-      5  => t('May', array(), array('context' => 'Long month name')),
-      6  => t('June', array(), array('context' => 'Long month name')),
-      7  => t('July', array(), array('context' => 'Long month name')),
-      8  => t('August', array(), array('context' => 'Long month name')),
-      9  => t('September', array(), array('context' => 'Long month name')),
-      10 => t('October', array(), array('context' => 'Long month name')),
-      11 => t('November', array(), array('context' => 'Long month name')),
-      12 => t('December', array(), array('context' => 'Long month name')),
-    );
-    $none = array('' => '');
+    $monthnames = [
+      1  => t('January', [], ['context' => 'Long month name']),
+      2  => t('February', [], ['context' => 'Long month name']),
+      3  => t('March', [], ['context' => 'Long month name']),
+      4  => t('April', [], ['context' => 'Long month name']),
+      5  => t('May', [], ['context' => 'Long month name']),
+      6  => t('June', [], ['context' => 'Long month name']),
+      7  => t('July', [], ['context' => 'Long month name']),
+      8  => t('August', [], ['context' => 'Long month name']),
+      9  => t('September', [], ['context' => 'Long month name']),
+      10 => t('October', [], ['context' => 'Long month name']),
+      11 => t('November', [], ['context' => 'Long month name']),
+      12 => t('December', [], ['context' => 'Long month name']),
+    ];
+    $none = ['' => ''];
     return !$required ? $none + $monthnames : $monthnames;
   }
 
@@ -112,21 +112,21 @@ class DateHelper {
   public static function monthNamesAbbr($required = FALSE) {
     // Force the key to use the correct month value, rather than
     // starting with zero.
-    $monthnames = array(
-      1  => t('Jan', array(), array('context' => 'Abbreviated month name')),
-      2  => t('Feb', array(), array('context' => 'Abbreviated month name')),
-      3  => t('Mar', array(), array('context' => 'Abbreviated month name')),
-      4  => t('Apr', array(), array('context' => 'Abbreviated month name')),
-      5  => t('May', array(), array('context' => 'Abbreviated month name')),
-      6  => t('Jun', array(), array('context' => 'Abbreviated month name')),
-      7  => t('Jul', array(), array('context' => 'Abbreviated month name')),
-      8  => t('Aug', array(), array('context' => 'Abbreviated month name')),
-      9  => t('Sep', array(), array('context' => 'Abbreviated month name')),
-      10 => t('Oct', array(), array('context' => 'Abbreviated month name')),
-      11 => t('Nov', array(), array('context' => 'Abbreviated month name')),
-      12 => t('Dec', array(), array('context' => 'Abbreviated month name')),
-    );
-    $none = array('' => '');
+    $monthnames = [
+      1  => t('Jan', [], ['context' => 'Abbreviated month name']),
+      2  => t('Feb', [], ['context' => 'Abbreviated month name']),
+      3  => t('Mar', [], ['context' => 'Abbreviated month name']),
+      4  => t('Apr', [], ['context' => 'Abbreviated month name']),
+      5  => t('May', [], ['context' => 'Abbreviated month name']),
+      6  => t('Jun', [], ['context' => 'Abbreviated month name']),
+      7  => t('Jul', [], ['context' => 'Abbreviated month name']),
+      8  => t('Aug', [], ['context' => 'Abbreviated month name']),
+      9  => t('Sep', [], ['context' => 'Abbreviated month name']),
+      10 => t('Oct', [], ['context' => 'Abbreviated month name']),
+      11 => t('Nov', [], ['context' => 'Abbreviated month name']),
+      12 => t('Dec', [], ['context' => 'Abbreviated month name']),
+    ];
+    $none = ['' => ''];
     return !$required ? $none + $monthnames : $monthnames;
   }
 
@@ -137,7 +137,7 @@ class DateHelper {
    *   An array of week day names
    */
   public static function weekDaysUntranslated() {
-    return array(
+    return [
       'Sunday',
       'Monday',
       'Tuesday',
@@ -145,7 +145,7 @@ class DateHelper {
       'Thursday',
       'Friday',
       'Saturday',
-    );
+    ];
   }
 
   /**
@@ -159,7 +159,7 @@ class DateHelper {
    *   An array of week day names
    */
   public static function weekDays($required = FALSE) {
-    $weekdays = array(
+    $weekdays = [
       t('Sunday'),
       t('Monday'),
       t('Tuesday'),
@@ -167,8 +167,8 @@ class DateHelper {
       t('Thursday'),
       t('Friday'),
       t('Saturday'),
-    );
-    $none = array('' => '');
+    ];
+    $none = ['' => ''];
     return !$required ? $none + $weekdays : $weekdays;
   }
 
@@ -183,16 +183,16 @@ class DateHelper {
    *   An array of week day abbreviations
    */
   public static function weekDaysAbbr($required = FALSE) {
-    $weekdays = array(
-      t('Sun', array(), array('context' => 'Abbreviated weekday')),
-      t('Mon', array(), array('context' => 'Abbreviated weekday')),
-      t('Tue', array(), array('context' => 'Abbreviated weekday')),
-      t('Wed', array(), array('context' => 'Abbreviated weekday')),
-      t('Thu', array(), array('context' => 'Abbreviated weekday')),
-      t('Fri', array(), array('context' => 'Abbreviated weekday')),
-      t('Sat', array(), array('context' => 'Abbreviated weekday')),
-    );
-    $none = array('' => '');
+    $weekdays = [
+      t('Sun', [], ['context' => 'Abbreviated weekday']),
+      t('Mon', [], ['context' => 'Abbreviated weekday']),
+      t('Tue', [], ['context' => 'Abbreviated weekday']),
+      t('Wed', [], ['context' => 'Abbreviated weekday']),
+      t('Thu', [], ['context' => 'Abbreviated weekday']),
+      t('Fri', [], ['context' => 'Abbreviated weekday']),
+      t('Sat', [], ['context' => 'Abbreviated weekday']),
+    ];
+    $none = ['' => ''];
     return !$required ? $none + $weekdays : $weekdays;
   }
 
@@ -207,16 +207,16 @@ class DateHelper {
    *   An array of week day 2 letter abbreviations
    */
   public static function weekDaysAbbr2($required = FALSE) {
-    $weekdays = array(
-      t('Su', array(), array('context' => 'Abbreviated weekday')),
-      t('Mo', array(), array('context' => 'Abbreviated weekday')),
-      t('Tu', array(), array('context' => 'Abbreviated weekday')),
-      t('We', array(), array('context' => 'Abbreviated weekday')),
-      t('Th', array(), array('context' => 'Abbreviated weekday')),
-      t('Fr', array(), array('context' => 'Abbreviated weekday')),
-      t('Sa', array(), array('context' => 'Abbreviated weekday')),
-    );
-    $none = array('' => '');
+    $weekdays = [
+      t('Su', [], ['context' => 'Abbreviated weekday']),
+      t('Mo', [], ['context' => 'Abbreviated weekday']),
+      t('Tu', [], ['context' => 'Abbreviated weekday']),
+      t('We', [], ['context' => 'Abbreviated weekday']),
+      t('Th', [], ['context' => 'Abbreviated weekday']),
+      t('Fr', [], ['context' => 'Abbreviated weekday']),
+      t('Sa', [], ['context' => 'Abbreviated weekday']),
+    ];
+    $none = ['' => ''];
     return !$required ? $none + $weekdays : $weekdays;
   }
 
@@ -231,16 +231,16 @@ class DateHelper {
    *   An array of week day 1 letter abbreviations
    */
   public static function weekDaysAbbr1($required = FALSE) {
-    $weekdays = array(
-      t('S', array(), array('context' => 'Abbreviated 1 letter weekday Sunday')),
-      t('M', array(), array('context' => 'Abbreviated 1 letter weekday Monday')),
-      t('T', array(), array('context' => 'Abbreviated 1 letter weekday Tuesday')),
-      t('W', array(), array('context' => 'Abbreviated 1 letter weekday Wednesday')),
-      t('T', array(), array('context' => 'Abbreviated 1 letter weekday Thursday')),
-      t('F', array(), array('context' => 'Abbreviated 1 letter weekday Friday')),
-      t('S', array(), array('context' => 'Abbreviated 1 letter weekday Saturday')),
-    );
-    $none = array('' => '');
+    $weekdays = [
+      t('S', [], ['context' => 'Abbreviated 1 letter weekday Sunday']),
+      t('M', [], ['context' => 'Abbreviated 1 letter weekday Monday']),
+      t('T', [], ['context' => 'Abbreviated 1 letter weekday Tuesday']),
+      t('W', [], ['context' => 'Abbreviated 1 letter weekday Wednesday']),
+      t('T', [], ['context' => 'Abbreviated 1 letter weekday Thursday']),
+      t('F', [], ['context' => 'Abbreviated 1 letter weekday Friday']),
+      t('S', [], ['context' => 'Abbreviated 1 letter weekday Saturday']),
+    ];
+    $none = ['' => ''];
     return !$required ? $none + $weekdays : $weekdays;
   }
 
@@ -296,7 +296,7 @@ class DateHelper {
     if (empty($max)) {
       $max = intval(date('Y', REQUEST_TIME) + 3);
     }
-    $none = array('' => '');
+    $none = ['' => ''];
     $range = range($min, $max);
     $range = array_combine($range, $range);
     return !$required ? $none + $range : $range;
@@ -328,7 +328,7 @@ class DateHelper {
     if (empty($max)) {
       $max = 31;
     }
-    $none = array('' => '');
+    $none = ['' => ''];
     $range = range(1, $max);
     $range = array_combine($range, $range);
     return !$required ? $none + $range : $range;
@@ -349,7 +349,7 @@ class DateHelper {
    *   An array of hours in the selected format.
    */
   public static function hours($format = 'H', $required = FALSE) {
-    $hours = array();
+    $hours = [];
     if ($format == 'h' || $format == 'g') {
       $min = 1;
       $max = 12;
@@ -362,7 +362,7 @@ class DateHelper {
       $formatted = ($format == 'H' || $format == 'h') ? DrupalDateTime::datePad($i) : $i;
       $hours[$i] = $formatted;
     }
-    $none = array('' => '');
+    $none = ['' => ''];
     return !$required ? $none + $hours : $hours;
   }
 
@@ -382,7 +382,7 @@ class DateHelper {
    *   An array of minutes in the selected format.
    */
   public static function minutes($format = 'i', $required = FALSE, $increment = 1) {
-    $minutes = array();
+    $minutes = [];
     // Ensure $increment has a value so we don't loop endlessly.
     if (empty($increment)) {
       $increment = 1;
@@ -391,7 +391,7 @@ class DateHelper {
       $formatted = $format == 'i' ? DrupalDateTime::datePad($i) : $i;
       $minutes[$i] = $formatted;
     }
-    $none = array('' => '');
+    $none = ['' => ''];
     return !$required ? $none + $minutes : $minutes;
   }
 
@@ -411,7 +411,7 @@ class DateHelper {
    *   An array of seconds in the selected format.
    */
   public static function seconds($format = 's', $required = FALSE, $increment = 1) {
-    $seconds = array();
+    $seconds = [];
     // Ensure $increment has a value so we don't loop endlessly.
     if (empty($increment)) {
       $increment = 1;
@@ -420,7 +420,7 @@ class DateHelper {
       $formatted = $format == 's' ? DrupalDateTime::datePad($i) : $i;
       $seconds[$i] = $formatted;
     }
-    $none = array('' => '');
+    $none = ['' => ''];
     return !$required ? $none + $seconds : $seconds;
   }
 
@@ -435,11 +435,11 @@ class DateHelper {
    *   An array of AM and PM options.
    */
   public static function ampm($required = FALSE) {
-    $none = array('' => '');
-    $ampm = array(
-             'am' => t('am', array(), array('context' => 'ampm')),
-             'pm' => t('pm', array(), array('context' => 'ampm')),
-            );
+    $none = ['' => ''];
+    $ampm = [
+             'am' => t('am', [], ['context' => 'ampm']),
+             'pm' => t('pm', [], ['context' => 'ampm']),
+            ];
     return !$required ? $none + $ampm : $ampm;
   }
 

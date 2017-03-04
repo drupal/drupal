@@ -98,7 +98,7 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
   protected function doGetActiveTrailIds($menu_name) {
     // Parent ids; used both as key and value to ensure uniqueness.
     // We always want all the top-level links with parent == ''.
-    $active_trail = array('' => '');
+    $active_trail = ['' => ''];
 
     // If a link in the given menu indeed matches the route, then use it to
     // complete the active trail.

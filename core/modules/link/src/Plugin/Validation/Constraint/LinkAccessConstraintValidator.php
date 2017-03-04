@@ -55,7 +55,7 @@ class LinkAccessConstraintValidator extends ConstraintValidator implements Conta
       // permission nor can access this URI.
       $allowed = $this->current_user->hasPermission('link to any page') || $url->access();
       if (!$allowed) {
-        $this->context->addViolation($constraint->message, array('@uri' => $value->uri));
+        $this->context->addViolation($constraint->message, ['@uri' => $value->uri]);
       }
     }
   }

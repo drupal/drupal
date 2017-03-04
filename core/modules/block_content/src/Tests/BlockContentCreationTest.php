@@ -21,17 +21,17 @@ class BlockContentCreationTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $modules = array('block_content_test', 'dblog', 'field_ui');
+  public static $modules = ['block_content_test', 'dblog', 'field_ui'];
 
   /**
    * Permissions to grant admin user.
    *
    * @var array
    */
-  protected $permissions = array(
+  protected $permissions = [
     'administer blocks',
     'administer block_content display'
-  );
+  ];
 
   /**
    * Sets the test up.
@@ -48,22 +48,22 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Create a block.
-    $edit = array();
+    $edit = [];
     $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
-    $this->assertRaw(format_string('@block %name has been created.', array(
+    $this->assertRaw(format_string('@block %name has been created.', [
       '@block' => 'basic',
       '%name' => $edit['info[0][value]']
-    )), 'Basic block created.');
+    ]), 'Basic block created.');
 
     // Check that the view mode setting is hidden because only one exists.
     $this->assertNoFieldByXPath('//select[@name="settings[view_mode]"]', NULL, 'View mode setting hidden because only one exists');
 
     // Check that the block exists in the database.
-    $blocks = entity_load_multiple_by_properties('block_content', array('info' => $edit['info[0][value]']));
+    $blocks = entity_load_multiple_by_properties('block_content', ['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertTrue($block, 'Custom Block found in database.');
 
@@ -72,9 +72,9 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
-    $this->assertRaw(format_string('A custom block with block description %value already exists.', array(
+    $this->assertRaw(format_string('A custom block with block description %value already exists.', [
       '%value' => $edit['info[0][value]']
-    )));
+    ]));
     $this->assertResponse(200);
   }
 
@@ -83,28 +83,28 @@ class BlockContentCreationTest extends BlockContentTestBase {
    */
   public function testBlockContentCreationMultipleViewModes() {
     // Add a new view mode and verify if it is selected as expected.
-    $this->drupalLogin($this->drupalCreateUser(array('administer display modes')));
+    $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/view/add/block_content');
-    $edit = array(
+    $edit = [
       'id' => 'test_view_mode',
       'label' => 'Test View Mode',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Saved the %label view mode.', array('%label' => $edit['label'])));
+    $this->assertRaw(t('Saved the %label view mode.', ['%label' => $edit['label']]));
 
     $this->drupalLogin($this->adminUser);
 
     // Create a block.
-    $edit = array();
+    $edit = [];
     $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
-    $this->assertRaw(format_string('@block %name has been created.', array(
+    $this->assertRaw(format_string('@block %name has been created.', [
       '@block' => 'basic',
       '%name' => $edit['info[0][value]']
-    )), 'Basic block created.');
+    ]), 'Basic block created.');
 
     // Save our block permanently
     $this->drupalPostForm(NULL, ['region' => 'content'], t('Save block'));
@@ -114,9 +114,9 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet('admin/structure/block/block-content/types');
     $this->clickLink(t('Manage display'));
     $this->drupalGet('admin/structure/block/block-content/manage/basic/display');
-    $custom_view_mode = array(
+    $custom_view_mode = [
       'display_modes_custom[test_view_mode]' => 1,
-    );
+    ];
     $this->drupalPostForm(NULL, $custom_view_mode, t('Save'));
 
     // Go to the configure page and change the view mode.
@@ -143,7 +143,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertFieldByXPath('//select[@name="settings[view_mode]"]/option[@selected="selected"]/@value', 'test_view_mode', 'View mode changed to Test View Mode');
 
     // Check that the block exists in the database.
-    $blocks = entity_load_multiple_by_properties('block_content', array('info' => $edit['info[0][value]']));
+    $blocks = entity_load_multiple_by_properties('block_content', ['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertTrue($block, 'Custom Block found in database.');
 
@@ -152,9 +152,9 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
-    $this->assertRaw(format_string('A custom block with block description %value already exists.', array(
+    $this->assertRaw(format_string('A custom block with block description %value already exists.', [
       '%value' => $edit['info[0][value]']
-    )));
+    ]));
     $this->assertResponse(200);
   }
 
@@ -165,20 +165,20 @@ class BlockContentCreationTest extends BlockContentTestBase {
    * type is being used.
    */
   public function testDefaultBlockContentCreation() {
-    $edit = array();
+    $edit = [];
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
     // Don't pass the custom block type in the url so the default is forced.
     $this->drupalPostForm('block/add', $edit, t('Save'));
 
     // Check that the block has been created and that it is a basic block.
-    $this->assertRaw(format_string('@block %name has been created.', array(
+    $this->assertRaw(format_string('@block %name has been created.', [
       '@block' => 'basic',
       '%name' => $edit['info[0][value]'],
-    )), 'Basic block created.');
+    ]), 'Basic block created.');
 
     // Check that the block exists in the database.
-    $blocks = entity_load_multiple_by_properties('block_content', array('info' => $edit['info[0][value]']));
+    $blocks = entity_load_multiple_by_properties('block_content', ['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertTrue($block, 'Default Custom Block found in database.');
   }
@@ -199,7 +199,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     if (Database::getConnection()->supportsTransactions()) {
       // Check that the block does not exist in the database.
       $id = db_select('block_content_field_data', 'b')
-        ->fields('b', array('id'))
+        ->fields('b', ['id'])
         ->condition('info', 'fail_creation')
         ->execute()
         ->fetchField();
@@ -208,7 +208,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     else {
       // Check that the block exists in the database.
       $id = db_select('block_content_field_data', 'b')
-        ->fields('b', array('id'))
+        ->fields('b', ['id'])
         ->condition('info', 'fail_creation')
         ->execute()
         ->fetchField();
@@ -225,18 +225,18 @@ class BlockContentCreationTest extends BlockContentTestBase {
    */
   public function testBlockDelete() {
     // Create a block.
-    $edit = array();
+    $edit = [];
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $body = $this->randomMachineName(16);
     $edit['body[0][value]'] = $body;
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Place the block.
-    $instance = array(
+    $instance = [
       'id' => Unicode::strtolower($edit['info[0][value]']),
       'settings[label]' => $edit['info[0][value]'],
       'region' => 'sidebar_first',
-    );
+    ];
     $block = BlockContent::load(1);
     $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
     $this->drupalPostForm($url, $instance, t('Save block'));
@@ -254,11 +254,11 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet('block/1/delete');
     $this->assertText(\Drupal::translation()->formatPlural(1, 'This will also remove 1 placed block instance.', 'This will also remove @count placed block instance.'));
 
-    $this->drupalPostForm(NULL, array(), 'Delete');
-    $this->assertRaw(t('The custom block %name has been deleted.', array('%name' => $edit['info[0][value]'])));
+    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->assertRaw(t('The custom block %name has been deleted.', ['%name' => $edit['info[0][value]']]));
 
     // Create another block and force the plugin cache to flush.
-    $edit2 = array();
+    $edit2 = [];
     $edit2['info[0][value]'] = $this->randomMachineName(8);
     $body2 = $this->randomMachineName(16);
     $edit2['body[0][value]'] = $body2;
@@ -268,7 +268,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Create another block with no instances, and test we don't get a
     // confirmation message about deleting instances.
-    $edit3 = array();
+    $edit3 = [];
     $edit3['info[0][value]'] = $this->randomMachineName(8);
     $body = $this->randomMachineName(16);
     $edit3['body[0][value]'] = $body;
@@ -286,16 +286,16 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $block = $this->createBlockContent();
     // Place the block.
     $block_placement_id = Unicode::strtolower($block->label());
-    $instance = array(
+    $instance = [
       'id' => $block_placement_id,
       'settings[label]' => $block->label(),
       'region' => 'sidebar_first',
-    );
+    ];
     $block = BlockContent::load(1);
     $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
     $this->drupalPostForm($url, $instance, t('Save block'));
 
-    $dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('content', array($block->getConfigDependencyName()));
+    $dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('content', [$block->getConfigDependencyName()]);
     $block_placement = reset($dependencies);
     $this->assertEqual($block_placement_id, $block_placement->id(), "The block placement config entity has a dependency on the block content entity.");
   }

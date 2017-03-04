@@ -22,9 +22,9 @@ class Result extends AreaPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['content'] = array(
+    $options['content'] = [
       'default' => $this->t('Displaying @start - @end of @total'),
-    );
+    ];
 
     return $options;
   }
@@ -34,9 +34,9 @@ class Result extends AreaPluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $item_list = array(
+    $item_list = [
       '#theme' => 'item_list',
-      '#items' => array(
+      '#items' => [
         '@start -- the initial record number in the set',
         '@end -- the last record number in the set',
         '@total -- the total records in the set',
@@ -45,16 +45,16 @@ class Result extends AreaPluginBase {
         '@current_page -- the current page number',
         '@current_record_count -- the current page record count',
         '@page_count -- the total page count',
-      ),
-    );
+      ],
+    ];
     $list = drupal_render($item_list);
-    $form['content'] = array(
+    $form['content'] = [
       '#title' => $this->t('Display'),
       '#type' => 'textarea',
       '#rows' => 3,
       '#default_value' => $this->options['content'],
       '#description' => $this->t('You may use HTML code in this field. The following tokens are supported:') . $list,
-    );
+    ];
   }
 
   /**
@@ -72,7 +72,7 @@ class Result extends AreaPluginBase {
   public function render($empty = FALSE) {
     // Must have options and does not work on summaries.
     if (!isset($this->options['content']) || $this->view->style_plugin instanceof DefaultSummary) {
-      return array();
+      return [];
     }
     $output = '';
     $format = $this->options['content'];
@@ -113,9 +113,9 @@ class Result extends AreaPluginBase {
       $output .= Xss::filterAdmin(str_replace(array_keys($replacements), array_values($replacements), $format));
     }
     // Return as render array.
-    return array(
+    return [
       '#markup' => $output,
-    );
+    ];
   }
 
 }

@@ -15,7 +15,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('image_test');
+  public static $modules = ['image_test'];
 
   /**
    * The URI for the file.
@@ -78,7 +78,7 @@ abstract class ToolkitTestBase extends WebTestBase {
   function assertToolkitOperationsCalled(array $expected) {
     // If one of the image operations is expected, apply should be expected as
     // well.
-    $operations = array(
+    $operations = [
       'resize',
       'rotate',
       'crop',
@@ -88,7 +88,7 @@ abstract class ToolkitTestBase extends WebTestBase {
       'scale_and_crop',
       'my_operation',
       'convert',
-    );
+    ];
     if (count(array_intersect($expected, $operations)) > 0 && !in_array('apply', $expected)) {
       $expected[] = 'apply';
     }
@@ -99,10 +99,10 @@ abstract class ToolkitTestBase extends WebTestBase {
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
     if (count($uncalled)) {
-      $this->assertTrue(FALSE, SafeMarkup::format('Expected operations %expected to be called but %uncalled was not called.', array('%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled))));
+      $this->assertTrue(FALSE, SafeMarkup::format('Expected operations %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
     }
     else {
-      $this->assertTrue(TRUE, SafeMarkup::format('All the expected operations were called: %expected', array('%expected' => implode(', ', $expected))));
+      $this->assertTrue(TRUE, SafeMarkup::format('All the expected operations were called: %expected', ['%expected' => implode(', ', $expected)]));
     }
 
     // Determine if there were any unexpected calls.
@@ -110,7 +110,7 @@ abstract class ToolkitTestBase extends WebTestBase {
     // count it as an error.
     $unexpected = array_diff($actual, $expected);
     if (count($unexpected) && (!in_array('apply', $expected) || count(array_intersect($unexpected, $operations)) !== count($unexpected))) {
-      $this->assertTrue(FALSE, SafeMarkup::format('Unexpected operations were called: %unexpected.', array('%unexpected' => implode(', ', $unexpected))));
+      $this->assertTrue(FALSE, SafeMarkup::format('Unexpected operations were called: %unexpected.', ['%unexpected' => implode(', ', $unexpected)]));
     }
     else {
       $this->assertTrue(TRUE, 'No unexpected operations were called.');
@@ -122,20 +122,20 @@ abstract class ToolkitTestBase extends WebTestBase {
    */
   function imageTestReset() {
     // Keep track of calls to these operations
-    $results = array(
-      'parseFile' => array(),
-      'save' => array(),
-      'settings' => array(),
-      'apply' => array(),
-      'resize' => array(),
-      'rotate' => array(),
-      'crop' => array(),
-      'desaturate' => array(),
-      'create_new' => array(),
-      'scale' => array(),
-      'scale_and_crop' => array(),
-      'convert' => array(),
-    );
+    $results = [
+      'parseFile' => [],
+      'save' => [],
+      'settings' => [],
+      'apply' => [],
+      'resize' => [],
+      'rotate' => [],
+      'crop' => [],
+      'desaturate' => [],
+      'create_new' => [],
+      'scale' => [],
+      'scale_and_crop' => [],
+      'convert' => [],
+    ];
     \Drupal::state()->set('image_test.results', $results);
   }
 
@@ -148,7 +148,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    *   parameters passed to each call.
    */
   function imageTestGetAllCalls() {
-    return \Drupal::state()->get('image_test.results') ?: array();
+    return \Drupal::state()->get('image_test.results') ?: [];
   }
 
 }

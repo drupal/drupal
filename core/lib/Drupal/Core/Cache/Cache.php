@@ -152,7 +152,7 @@ class Cache {
    *   An array of cache backend objects keyed by cache bins.
    */
   public static function getBins() {
-    $bins = array();
+    $bins = [];
     $container = \Drupal::getContainer();
     foreach ($container->getParameter('cache_bins') as $service_id => $bin) {
       $bins[$bin] = $container->get($service_id);
@@ -178,7 +178,7 @@ class Cache {
    */
   public static function keyFromQuery(SelectInterface $query) {
     $query->preExecute();
-    $keys = array((string) $query, $query->getArguments());
+    $keys = [(string) $query, $query->getArguments()];
     return hash('sha256', serialize($keys));
   }
 

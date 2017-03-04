@@ -15,14 +15,14 @@ class FieldDropButtonTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_dropbutton');
+  public static $testViews = ['test_dropbutton'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   /**
    * {@inheritdoc}
@@ -39,16 +39,16 @@ class FieldDropButtonTest extends HandlerTestBase {
    */
   public function testDropbutton() {
     // Create some test nodes.
-    $nodes = array();
+    $nodes = [];
     for ($i = 0; $i < 5; $i++) {
       $nodes[] = $this->drupalCreateNode();
     }
 
     $this->drupalGet('test-dropbutton');
     foreach ($nodes as $node) {
-      $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', array(':path' => '/node/' . $node->id(), ':title' => $node->label()));
+      $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', [':path' => '/node/' . $node->id(), ':title' => $node->label()]);
       $this->assertEqual(count($result), 1, 'Just one node title link was found.');
-      $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', array(':path' => '/node/' . $node->id(), ':title' => t('Custom Text')));
+      $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', [':path' => '/node/' . $node->id(), ':title' => t('Custom Text')]);
       $this->assertEqual(count($result), 1, 'Just one custom link was found.');
     }
 

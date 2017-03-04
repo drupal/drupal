@@ -26,13 +26,13 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'comment');
+  public static $modules = ['node', 'comment'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create an Article node type.
-    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
   }
 
   /**
@@ -50,10 +50,10 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
 
     foreach ($tests as $test) {
       foreach ($test['arguments'] as $arguments) {
-        $result = call_user_func_array(array($handler, 'getReferenceableEntities'), $arguments);
-        $this->assertEqual($result, $test['result'], format_string('Valid result set returned by @handler.', array('@handler' => $handler_name)));
+        $result = call_user_func_array([$handler, 'getReferenceableEntities'], $arguments);
+        $this->assertEqual($result, $test['result'], format_string('Valid result set returned by @handler.', ['@handler' => $handler_name]));
 
-        $result = call_user_func_array(array($handler, 'countReferenceableEntities'), $arguments);
+        $result = call_user_func_array([$handler, 'countReferenceableEntities'], $arguments);
         if (!empty($test['result'])) {
           $bundle = key($test['result']);
           $count = count($test['result'][$bundle]);
@@ -62,7 +62,7 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
           $count = 0;
         }
 
-        $this->assertEqual($result, $count, format_string('Valid count returned by @handler.', array('@handler' => $handler_name)));
+        $this->assertEqual($result, $count, format_string('Valid count returned by @handler.', ['@handler' => $handler_name]));
       }
     }
   }
@@ -71,39 +71,39 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
    * Test the node-specific overrides of the entity handler.
    */
   public function testNodeHandler() {
-    $selection_options = array(
+    $selection_options = [
       'target_type' => 'node',
       'handler' => 'default',
-      'handler_settings' => array(
+      'handler_settings' => [
         'target_bundles' => NULL,
-      ),
-    );
+      ],
+    ];
 
     // Build a set of test data.
     // Titles contain HTML-special characters to test escaping.
-    $node_values = array(
-      'published1' => array(
+    $node_values = [
+      'published1' => [
         'type' => 'article',
         'status' => NodeInterface::PUBLISHED,
         'title' => 'Node published1 (<&>)',
         'uid' => 1,
-      ),
-      'published2' => array(
+      ],
+      'published2' => [
         'type' => 'article',
         'status' => NodeInterface::PUBLISHED,
         'title' => 'Node published2 (<&>)',
         'uid' => 1,
-      ),
-      'unpublished' => array(
+      ],
+      'unpublished' => [
         'type' => 'article',
         'status' => NodeInterface::NOT_PUBLISHED,
         'title' => 'Node unpublished (<&>)',
         'uid' => 1,
-      ),
-    );
+      ],
+    ];
 
-    $nodes = array();
-    $node_labels = array();
+    $nodes = [];
+    $node_labels = [];
     foreach ($node_values as $key => $values) {
       $node = Node::create($values);
       $node->save();
@@ -112,84 +112,84 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     }
 
     // Test as a non-admin.
-    $normal_user = $this->drupalCreateUser(array('access content'));
+    $normal_user = $this->drupalCreateUser(['access content']);
     \Drupal::currentUser()->setAccount($normal_user);
-    $referenceable_tests = array(
-      array(
-        'arguments' => array(
-          array(NULL, 'CONTAINS'),
-        ),
-        'result' => array(
-          'article' => array(
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          'article' => [
             $nodes['published1']->id() => $node_labels['published1'],
             $nodes['published2']->id() => $node_labels['published2'],
-          ),
-        ),
-      ),
-      array(
-        'arguments' => array(
-          array('published1', 'CONTAINS'),
-          array('Published1', 'CONTAINS'),
-        ),
-        'result' => array(
-          'article' => array(
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['published1', 'CONTAINS'],
+          ['Published1', 'CONTAINS'],
+        ],
+        'result' => [
+          'article' => [
             $nodes['published1']->id() => $node_labels['published1'],
-          ),
-        ),
-      ),
-      array(
-        'arguments' => array(
-          array('published2', 'CONTAINS'),
-          array('Published2', 'CONTAINS'),
-        ),
-        'result' => array(
-          'article' => array(
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['published2', 'CONTAINS'],
+          ['Published2', 'CONTAINS'],
+        ],
+        'result' => [
+          'article' => [
             $nodes['published2']->id() => $node_labels['published2'],
-          ),
-        ),
-      ),
-      array(
-        'arguments' => array(
-          array('invalid node', 'CONTAINS'),
-        ),
-        'result' => array(),
-      ),
-      array(
-        'arguments' => array(
-          array('Node unpublished', 'CONTAINS'),
-        ),
-        'result' => array(),
-      ),
-    );
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['invalid node', 'CONTAINS'],
+        ],
+        'result' => [],
+      ],
+      [
+        'arguments' => [
+          ['Node unpublished', 'CONTAINS'],
+        ],
+        'result' => [],
+      ],
+    ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'Node handler');
 
     // Test as an admin.
-    $admin_user = $this->drupalCreateUser(array('access content', 'bypass node access'));
+    $admin_user = $this->drupalCreateUser(['access content', 'bypass node access']);
     \Drupal::currentUser()->setAccount($admin_user);
-    $referenceable_tests = array(
-      array(
-        'arguments' => array(
-          array(NULL, 'CONTAINS'),
-        ),
-        'result' => array(
-          'article' => array(
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          'article' => [
             $nodes['published1']->id() => $node_labels['published1'],
             $nodes['published2']->id() => $node_labels['published2'],
             $nodes['unpublished']->id() => $node_labels['unpublished'],
-          ),
-        ),
-      ),
-      array(
-        'arguments' => array(
-          array('Node unpublished', 'CONTAINS'),
-        ),
-        'result' => array(
-          'article' => array(
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['Node unpublished', 'CONTAINS'],
+        ],
+        'result' => [
+          'article' => [
             $nodes['unpublished']->id() => $node_labels['unpublished'],
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'Node handler (admin)');
   }
 
@@ -197,39 +197,39 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
    * Test the user-specific overrides of the entity handler.
    */
   public function testUserHandler() {
-    $selection_options = array(
+    $selection_options = [
       'target_type' => 'user',
       'handler' => 'default',
-      'handler_settings' => array(
+      'handler_settings' => [
         'target_bundles' => NULL,
         'include_anonymous' => TRUE,
-      ),
-    );
+      ],
+    ];
 
     // Build a set of test data.
-    $user_values = array(
+    $user_values = [
       'anonymous' => User::load(0),
       'admin' => User::load(1),
-      'non_admin' => array(
+      'non_admin' => [
         'name' => 'non_admin <&>',
         'mail' => 'non_admin@example.com',
-        'roles' => array(),
+        'roles' => [],
         'pass' => user_password(),
         'status' => 1,
-      ),
-      'blocked' => array(
+      ],
+      'blocked' => [
         'name' => 'blocked <&>',
         'mail' => 'blocked@example.com',
-        'roles' => array(),
+        'roles' => [],
         'pass' => user_password(),
         'status' => 0,
-      ),
-    );
+      ],
+    ];
 
     $user_values['anonymous']->name = $this->config('user.settings')->get('anonymous');
-    $users = array();
+    $users = [];
 
-    $user_labels = array();
+    $user_labels = [];
     foreach ($user_values as $key => $values) {
       if (is_array($values)) {
         $account = User::create($values);
@@ -244,113 +244,113 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
 
     // Test as a non-admin.
     \Drupal::currentUser()->setAccount($users['non_admin']);
-    $referenceable_tests = array(
-      array(
-        'arguments' => array(
-          array(NULL, 'CONTAINS'),
-        ),
-        'result' => array(
-          'user' => array(
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          'user' => [
             $users['admin']->id() => $user_labels['admin'],
             $users['non_admin']->id() => $user_labels['non_admin'],
-          ),
-        ),
-      ),
-      array(
-        'arguments' => array(
-          array('non_admin', 'CONTAINS'),
-          array('NON_ADMIN', 'CONTAINS'),
-        ),
-        'result' => array(
-          'user' => array(
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['non_admin', 'CONTAINS'],
+          ['NON_ADMIN', 'CONTAINS'],
+        ],
+        'result' => [
+          'user' => [
             $users['non_admin']->id() => $user_labels['non_admin'],
-          ),
-        ),
-      ),
-      array(
-        'arguments' => array(
-          array('invalid user', 'CONTAINS'),
-        ),
-        'result' => array(),
-      ),
-      array(
-        'arguments' => array(
-          array('blocked', 'CONTAINS'),
-        ),
-        'result' => array(),
-      ),
-    );
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['invalid user', 'CONTAINS'],
+        ],
+        'result' => [],
+      ],
+      [
+        'arguments' => [
+          ['blocked', 'CONTAINS'],
+        ],
+        'result' => [],
+      ],
+    ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler');
 
     \Drupal::currentUser()->setAccount($users['admin']);
-    $referenceable_tests = array(
-      array(
-        'arguments' => array(
-          array(NULL, 'CONTAINS'),
-        ),
-        'result' => array(
-          'user' => array(
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          'user' => [
             $users['anonymous']->id() => $user_labels['anonymous'],
             $users['admin']->id() => $user_labels['admin'],
             $users['non_admin']->id() => $user_labels['non_admin'],
             $users['blocked']->id() => $user_labels['blocked'],
-          ),
-        ),
-      ),
-      array(
-        'arguments' => array(
-          array('blocked', 'CONTAINS'),
-        ),
-        'result' => array(
-          'user' => array(
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['blocked', 'CONTAINS'],
+        ],
+        'result' => [
+          'user' => [
             $users['blocked']->id() => $user_labels['blocked'],
-          ),
-        ),
-      ),
-      array(
-        'arguments' => array(
-          array('Anonymous', 'CONTAINS'),
-          array('anonymous', 'CONTAINS'),
-        ),
-        'result' => array(
-          'user' => array(
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['Anonymous', 'CONTAINS'],
+          ['anonymous', 'CONTAINS'],
+        ],
+        'result' => [
+          'user' => [
             $users['anonymous']->id() => $user_labels['anonymous'],
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler (admin)');
 
     // Test the 'include_anonymous' option.
     $selection_options['handler_settings']['include_anonymous'] = FALSE;
-    $referenceable_tests = array(
-      array(
-        'arguments' => array(
-          array('Anonymous', 'CONTAINS'),
-          array('anonymous', 'CONTAINS'),
-        ),
-        'result' => array(),
-      ),
-    );
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          ['Anonymous', 'CONTAINS'],
+          ['anonymous', 'CONTAINS'],
+        ],
+        'result' => [],
+      ],
+    ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler (does not include anonymous)');
 
     // Check that the Anonymous user is not included in the results when no
     // label matching is done, for example when using the 'options_select'
     // widget.
-    $referenceable_tests = array(
-      array(
-        'arguments' => array(
-          array(NULL),
-        ),
-        'result' => array(
-          'user' => array(
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL],
+        ],
+        'result' => [
+          'user' => [
             $users['admin']->id() => $user_labels['admin'],
             $users['non_admin']->id() => $user_labels['non_admin'],
             $users['blocked']->id() => $user_labels['blocked'],
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler (does not include anonymous)');
   }
 
@@ -358,30 +358,30 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
    * Test the comment-specific overrides of the entity handler.
    */
   public function testCommentHandler() {
-    $selection_options = array(
+    $selection_options = [
       'target_type' => 'comment',
       'handler' => 'default',
-      'handler_settings' => array(
+      'handler_settings' => [
         'target_bundles' => NULL,
-      ),
-    );
+      ],
+    ];
 
     // Build a set of test data.
-    $node_values = array(
-      'published' => array(
+    $node_values = [
+      'published' => [
         'type' => 'article',
         'status' => 1,
         'title' => 'Node published',
         'uid' => 1,
-      ),
-      'unpublished' => array(
+      ],
+      'unpublished' => [
         'type' => 'article',
         'status' => 0,
         'title' => 'Node unpublished',
         'uid' => 1,
-      ),
-    );
-    $nodes = array();
+      ],
+    ];
+    $nodes = [];
     foreach ($node_values as $key => $values) {
       $node = Node::create($values);
       $node->save();
@@ -391,8 +391,8 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     // Create comment field on article.
     $this->addDefaultCommentField('node', 'article');
 
-    $comment_values = array(
-      'published_published' => array(
+    $comment_values = [
+      'published_published' => [
         'entity_id' => $nodes['published']->id(),
         'entity_type' => 'node',
         'field_name' => 'comment',
@@ -402,8 +402,8 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
         'status' => CommentInterface::PUBLISHED,
         'subject' => 'Comment Published <&>',
         'language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      ),
-      'published_unpublished' => array(
+      ],
+      'published_unpublished' => [
         'entity_id' => $nodes['published']->id(),
         'entity_type' => 'node',
         'field_name' => 'comment',
@@ -413,8 +413,8 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
         'status' => CommentInterface::NOT_PUBLISHED,
         'subject' => 'Comment Unpublished <&>',
         'language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      ),
-      'unpublished_published' => array(
+      ],
+      'unpublished_published' => [
         'entity_id' => $nodes['unpublished']->id(),
         'entity_type' => 'node',
         'field_name' => 'comment',
@@ -424,11 +424,11 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
         'status' => CommentInterface::NOT_PUBLISHED,
         'subject' => 'Comment Published on Unpublished node <&>',
         'language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      ),
-    );
+      ],
+    ];
 
-    $comments = array();
-    $comment_labels = array();
+    $comments = [];
+    $comment_labels = [];
     foreach ($comment_values as $key => $values) {
       $comment = Comment::create($values);
       $comment->save();
@@ -437,79 +437,79 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     }
 
     // Test as a non-admin.
-    $normal_user = $this->drupalCreateUser(array('access content', 'access comments'));
+    $normal_user = $this->drupalCreateUser(['access content', 'access comments']);
     \Drupal::currentUser()->setAccount($normal_user);
-    $referenceable_tests = array(
-      array(
-        'arguments' => array(
-          array(NULL, 'CONTAINS'),
-        ),
-        'result' => array(
-          'comment' => array(
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          'comment' => [
             $comments['published_published']->cid->value => $comment_labels['published_published'],
-          ),
-        ),
-      ),
-      array(
-        'arguments' => array(
-          array('Published', 'CONTAINS'),
-        ),
-        'result' => array(
-          'comment' => array(
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['Published', 'CONTAINS'],
+        ],
+        'result' => [
+          'comment' => [
             $comments['published_published']->cid->value => $comment_labels['published_published'],
-          ),
-        ),
-      ),
-      array(
-        'arguments' => array(
-          array('invalid comment', 'CONTAINS'),
-        ),
-        'result' => array(),
-      ),
-      array(
-        'arguments' => array(
-          array('Comment Unpublished', 'CONTAINS'),
-        ),
-        'result' => array(),
-      ),
-    );
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['invalid comment', 'CONTAINS'],
+        ],
+        'result' => [],
+      ],
+      [
+        'arguments' => [
+          ['Comment Unpublished', 'CONTAINS'],
+        ],
+        'result' => [],
+      ],
+    ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'Comment handler');
 
     // Test as a comment admin.
-    $admin_user = $this->drupalCreateUser(array('access content', 'access comments', 'administer comments'));
+    $admin_user = $this->drupalCreateUser(['access content', 'access comments', 'administer comments']);
     \Drupal::currentUser()->setAccount($admin_user);
-    $referenceable_tests = array(
-      array(
-        'arguments' => array(
-          array(NULL, 'CONTAINS'),
-        ),
-        'result' => array(
-          'comment' => array(
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          'comment' => [
             $comments['published_published']->cid->value => $comment_labels['published_published'],
             $comments['published_unpublished']->cid->value => $comment_labels['published_unpublished'],
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'Comment handler (comment admin)');
 
     // Test as a node and comment admin.
-    $admin_user = $this->drupalCreateUser(array('access content', 'access comments', 'administer comments', 'bypass node access'));
+    $admin_user = $this->drupalCreateUser(['access content', 'access comments', 'administer comments', 'bypass node access']);
     \Drupal::currentUser()->setAccount($admin_user);
-    $referenceable_tests = array(
-      array(
-        'arguments' => array(
-          array(NULL, 'CONTAINS'),
-        ),
-        'result' => array(
-          'comment' => array(
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          'comment' => [
             $comments['published_published']->cid->value => $comment_labels['published_published'],
             $comments['published_unpublished']->cid->value => $comment_labels['published_unpublished'],
             $comments['unpublished_published']->cid->value => $comment_labels['unpublished_published'],
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'Comment handler (comment + node admin)');
   }
 

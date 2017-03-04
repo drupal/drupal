@@ -43,25 +43,25 @@ class Email extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
       '#size' => 60,
       '#maxlength' => self::EMAIL_MAX_LENGTH,
       '#autocomplete_route_name' => FALSE,
-      '#process' => array(
-        array($class, 'processAutocomplete'),
-        array($class, 'processAjaxForm'),
-        array($class, 'processPattern'),
-      ),
-      '#element_validate' => array(
-        array($class, 'validateEmail'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderEmail'),
-      ),
+      '#process' => [
+        [$class, 'processAutocomplete'],
+        [$class, 'processAjaxForm'],
+        [$class, 'processPattern'],
+      ],
+      '#element_validate' => [
+        [$class, 'validateEmail'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderEmail'],
+      ],
       '#theme' => 'input__email',
-      '#theme_wrappers' => array('form_element'),
-    );
+      '#theme_wrappers' => ['form_element'],
+    ];
   }
 
   /**
@@ -74,7 +74,7 @@ class Email extends FormElement {
     $form_state->setValueForElement($element, $value);
 
     if ($value !== '' && !\Drupal::service('email.validator')->isValid($value)) {
-      $form_state->setError($element, t('The email address %mail is not valid.', array('%mail' => $value)));
+      $form_state->setError($element, t('The email address %mail is not valid.', ['%mail' => $value]));
     }
   }
 
@@ -91,8 +91,8 @@ class Email extends FormElement {
    */
   public static function preRenderEmail($element) {
     $element['#attributes']['type'] = 'email';
-    Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
-    static::setAttributes($element, array('form-email'));
+    Element::setAttributes($element, ['id', 'name', 'value', 'size', 'maxlength', 'placeholder']);
+    static::setAttributes($element, ['form-email']);
     return $element;
   }
 

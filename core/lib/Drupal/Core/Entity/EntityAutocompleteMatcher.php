@@ -50,13 +50,13 @@ class EntityAutocompleteMatcher {
    * @see \Drupal\system\Controller\EntityAutocompleteController
    */
   public function getMatches($target_type, $selection_handler, $selection_settings, $string = '') {
-    $matches = array();
+    $matches = [];
 
-    $options = array(
+    $options = [
       'target_type' => $target_type,
       'handler' => $selection_handler,
       'handler_settings' => $selection_settings,
-    );
+    ];
     $handler = $this->selectionManager->getInstance($options);
 
     if (isset($string)) {
@@ -73,7 +73,7 @@ class EntityAutocompleteMatcher {
           $key = preg_replace('/\s\s+/', ' ', str_replace("\n", '', trim(Html::decodeEntities(strip_tags($key)))));
           // Names containing commas or quotes must be wrapped in quotes.
           $key = Tags::encode($key);
-          $matches[] = array('value' => $key, 'label' => $label);
+          $matches[] = ['value' => $key, 'label' => $label];
         }
       }
     }

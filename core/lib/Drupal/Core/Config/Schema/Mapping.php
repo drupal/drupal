@@ -22,7 +22,7 @@ class Mapping extends ArrayElement {
    */
   protected function getElementDefinition($key) {
     $value = isset($this->value[$key]) ? $this->value[$key] : NULL;
-    $definition = isset($this->definition['mapping'][$key]) ? $this->definition['mapping'][$key] : array();
+    $definition = isset($this->definition['mapping'][$key]) ? $this->definition['mapping'][$key] : [];
     return $this->buildDataDefinition($definition, $value, $key);
   }
 

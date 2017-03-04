@@ -24,7 +24,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('comment');
+  public static $modules = ['comment'];
 
   /**
    * @var \Drupal\entity_test\Entity\EntityTest
@@ -66,24 +66,24 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     $field->save();
 
     // Create a "Camelids" test entity that the comment will be assigned to.
-    $this->entityTestCamelid = EntityTest::create(array(
+    $this->entityTestCamelid = EntityTest::create([
       'name' => 'Camelids',
       'type' => 'bar',
-    ));
+    ]);
     $this->entityTestCamelid->save();
 
     // Create a "Llama" comment.
-    $comment = Comment::create(array(
+    $comment = Comment::create([
       'subject' => 'Llama',
-      'comment_body' => array(
+      'comment_body' => [
         'value' => 'The name "llama" was adopted by European settlers from native Peruvians.',
         'format' => 'plain_text',
-      ),
+      ],
       'entity_id' => $this->entityTestCamelid->id(),
       'entity_type' => 'entity_test',
       'field_name' => 'comment',
       'status' => CommentInterface::PUBLISHED,
-    ));
+    ]);
     $comment->save();
 
     return $comment;
@@ -97,26 +97,26 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     $this->verifyPageCache($this->entityTestCamelid->urlInfo(), 'HIT');
 
     // Create a "Hippopotamus" comment.
-    $this->entityTestHippopotamidae = EntityTest::create(array(
+    $this->entityTestHippopotamidae = EntityTest::create([
       'name' => 'Hippopotamus',
       'type' => 'bar',
-    ));
+    ]);
     $this->entityTestHippopotamidae->save();
 
     $this->verifyPageCache($this->entityTestHippopotamidae->urlInfo(), 'MISS');
     $this->verifyPageCache($this->entityTestHippopotamidae->urlInfo(), 'HIT');
 
-    $hippo_comment = Comment::create(array(
+    $hippo_comment = Comment::create([
       'subject' => 'Hippopotamus',
-      'comment_body' => array(
+      'comment_body' => [
         'value' => 'The common hippopotamus (Hippopotamus amphibius), or hippo, is a large, mostly herbivorous mammal in sub-Saharan Africa',
         'format' => 'plain_text',
-      ),
+      ],
       'entity_id' => $this->entityTestHippopotamidae->id(),
       'entity_type' => 'entity_test',
       'field_name' => 'comment',
       'status' => CommentInterface::PUBLISHED,
-    ));
+    ]);
     $hippo_comment->save();
 
     // Ensure that a new comment only invalidates the commented entity.
@@ -145,11 +145,11 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    */
   protected function getAdditionalCacheTagsForEntity(EntityInterface $entity) {
     /** @var \Drupal\comment\CommentInterface $entity */
-    return array(
+    return [
       'config:filter.format.plain_text',
       'user:' . $entity->getOwnerId(),
       'user_view',
-    );
+    ];
   }
 
 }

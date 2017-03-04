@@ -30,7 +30,7 @@ function tracker_page($account = NULL) {
       ->condition('t.uid', $account->id());
   }
   else {
-    $query = db_select('tracker_node', 't', array('target' => 'replica'))
+    $query = db_select('tracker_node', 't', ['target' => 'replica'])
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->addMetaData('base_table', 'tracker_node');
   }
@@ -39,7 +39,7 @@ function tracker_page($account = NULL) {
   // while keeping the correct order.
   $tracker_data = $query
     ->addTag('node_access')
-    ->fields('t', array('nid', 'changed'))
+    ->fields('t', ['nid', 'changed'])
     ->condition('t.published', 1)
     ->orderBy('t.changed', 'DESC')
     ->limit(25)
@@ -86,34 +86,34 @@ function tracker_page($account = NULL) {
         $comments = $node->comment_count;
       }
 
-      $row = array(
+      $row = [
         'type' => node_get_type_label($node),
-        'title' => array(
-          'data' => array(
+        'title' => [
+          'data' => [
             '#type' => 'link',
             '#url' => $node->urlInfo(),
             '#title' => $node->getTitle(),
-          ),
+          ],
           'data-history-node-id' => $node->id(),
           'data-history-node-timestamp' => $node->getChangedTime(),
-        ),
-        'author' => array(
-          'data' => array(
+        ],
+        'author' => [
+          'data' => [
             '#theme' => 'username',
             '#account' => $node->getOwner(),
-          ),
-        ),
-        'comments' => array(
-          'class' => array('comments'),
+          ],
+        ],
+        'comments' => [
+          'class' => ['comments'],
           'data' => $comments,
           'data-history-node-last-comment-timestamp' => $node->last_comment_timestamp,
-        ),
-        'last updated' => array(
-          'data' => t('@time ago', array(
+        ],
+        'last updated' => [
+          'data' => t('@time ago', [
             '@time' => \Drupal::service('date.formatter')->formatTimeDiffSince($node->last_activity),
-          )),
-        ),
-      );
+          ]),
+        ],
+      ];
 
       $rows[] = $row;
 
@@ -128,16 +128,16 @@ function tracker_page($account = NULL) {
   // Add the list cache tag for nodes.
   $cache_tags = Cache::mergeTags($cache_tags, \Drupal::entityManager()->getDefinition('node')->getListCacheTags());
 
-  $page['tracker'] = array(
+  $page['tracker'] = [
     '#rows' => $rows,
-    '#header' => array(t('Type'), t('Title'), t('Author'), t('Comments'), t('Last updated')),
+    '#header' => [t('Type'), t('Title'), t('Author'), t('Comments'), t('Last updated')],
     '#type' => 'table',
     '#empty' => t('No content available.'),
-  );
-  $page['pager'] = array(
+  ];
+  $page['pager'] = [
     '#type' => 'pager',
     '#weight' => 10,
-  );
+  ];
   $page['#sorted'] = TRUE;
   $page['#cache']['tags'] = $cache_tags;
   $page['#cache']['contexts'][] = 'user.node_grants:view';

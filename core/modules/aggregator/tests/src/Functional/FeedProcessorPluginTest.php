@@ -45,7 +45,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
     $description = $feed->description->value ?: '';
     $this->updateAndDelete($feed, NULL);
     // Make sure the feed title is changed.
-    $entities = entity_load_multiple_by_properties('aggregator_feed', array('description' => $description));
+    $entities = entity_load_multiple_by_properties('aggregator_feed', ['description' => $description]);
     $this->assertTrue(empty($entities));
   }
 
@@ -53,11 +53,11 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
    * Test post-processing functionality.
    */
   public function testPostProcess() {
-    $feed = $this->createFeed(NULL, array('refresh' => 1800));
+    $feed = $this->createFeed(NULL, ['refresh' => 1800]);
     $this->updateFeedItems($feed);
     $feed_id = $feed->id();
     // Reset entity cache manually.
-    \Drupal::entityManager()->getStorage('aggregator_feed')->resetCache(array($feed_id));
+    \Drupal::entityManager()->getStorage('aggregator_feed')->resetCache([$feed_id]);
     // Reload the feed to get new values.
     $feed = Feed::load($feed_id);
     // Make sure its refresh rate doubled.

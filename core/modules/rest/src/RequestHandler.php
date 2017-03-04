@@ -131,7 +131,7 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     // Determine the request parameters that should be passed to the resource
     // plugin.
     $route_parameters = $route_match->getParameters();
-    $parameters = array();
+    $parameters = [];
     // Filter out all internal parameters starting with "_".
     foreach ($route_parameters as $key => $parameter) {
       if ($key{0} !== '_') {
@@ -140,7 +140,7 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     }
 
     // Invoke the operation on the resource plugin.
-    $response = call_user_func_array(array($resource, $method), array_merge($parameters, array($unserialized, $request)));
+    $response = call_user_func_array([$resource, $method], array_merge($parameters, [$unserialized, $request]));
 
     if ($response instanceof CacheableResponseInterface) {
       // Add rest config's cache tags.

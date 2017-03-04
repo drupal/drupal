@@ -22,7 +22,7 @@ trait ContentTypeCreationTrait {
    * @return \Drupal\node\Entity\NodeType
    *   Created content type.
    */
-  protected function createContentType(array $values = array()) {
+  protected function createContentType(array $values = []) {
     // Find a non-existent random type name.
     if (!isset($values['type'])) {
       do {
@@ -32,19 +32,19 @@ trait ContentTypeCreationTrait {
     else {
       $id = $values['type'];
     }
-    $values += array(
+    $values += [
       'type' => $id,
       'name' => $id,
-    );
+    ];
     $type = NodeType::create($values);
     $status = $type->save();
     node_add_body_field($type);
 
     if ($this instanceof \PHPUnit_Framework_TestCase) {
-      $this->assertSame($status, SAVED_NEW, (new FormattableMarkup('Created content type %type.', array('%type' => $type->id())))->__toString());
+      $this->assertSame($status, SAVED_NEW, (new FormattableMarkup('Created content type %type.', ['%type' => $type->id()]))->__toString());
     }
     else {
-      $this->assertEqual($status, SAVED_NEW, (new FormattableMarkup('Created content type %type.', array('%type' => $type->id())))->__toString());
+      $this->assertEqual($status, SAVED_NEW, (new FormattableMarkup('Created content type %type.', ['%type' => $type->id()]))->__toString());
     }
 
     return $type;

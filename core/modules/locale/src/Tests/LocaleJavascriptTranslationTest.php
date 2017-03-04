@@ -18,7 +18,7 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale', 'locale_test');
+  public static $modules = ['locale', 'locale_test'];
 
   public function testFileParsing() {
     $filename = __DIR__ . '/../../tests/locale_test.js';
@@ -29,19 +29,19 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
     // Get all of the source strings that were found.
     $strings = $this->container
       ->get('locale.storage')
-      ->getStrings(array(
+      ->getStrings([
         'type' => 'javascript',
         'name' => $filename,
-      ));
+      ]);
 
-    $source_strings = array();
+    $source_strings = [];
     foreach ($strings as $string) {
       $source_strings[$string->source] = $string->context;
     }
 
     $etx = LOCALE_PLURAL_DELIMITER;
     // List of all strings that should be in the file.
-    $test_strings = array(
+    $test_strings = [
       'Standard Call t' => '',
       'Whitespace Call t' => '',
 
@@ -73,11 +73,11 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
       "Context Unquoted plural{$etx}Context Unquoted @count plural" => 'Context string unquoted',
       "Context Single Quoted plural{$etx}Context Single Quoted @count plural" => 'Context string single quoted',
       "Context Double Quoted plural{$etx}Context Double Quoted @count plural" => 'Context string double quoted',
-    );
+    ];
 
     // Assert that all strings were found properly.
     foreach ($test_strings as $str => $context) {
-      $args = array('%source' => $str, '%context' => $context);
+      $args = ['%source' => $str, '%context' => $context];
 
       // Make sure that the string was found in the file.
       $this->assertTrue(isset($source_strings[$str]), SafeMarkup::format('Found source string: %source', $args));
@@ -95,7 +95,7 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
    */
   public function testLocaleTranslationJsDependencies() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface'));
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'translate interface']);
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -105,16 +105,16 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
     $name = $this->randomMachineName(16);
     // The domain prefix.
     $prefix = $langcode;
-    $edit = array(
+    $edit = [
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Set path prefix.
-    $edit = array("prefix[$langcode]" => $prefix);
+    $edit = ["prefix[$langcode]" => $prefix];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // This forces locale.admin.js string sources to be imported, which contains
@@ -123,11 +123,11 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
 
     // Translate a string in locale.admin.js to our new language.
     $strings = \Drupal::service('locale.storage')
-      ->getStrings(array(
+      ->getStrings([
         'source' => 'Show description',
         'type' => 'javascript',
         'name' => 'core/modules/locale/locale.admin.js',
-      ));
+      ]);
     $string = $strings[0];
 
     $this->drupalPostForm(NULL, ['string' => 'Show description'], t('Filter'));

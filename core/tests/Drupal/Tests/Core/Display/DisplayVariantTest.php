@@ -22,10 +22,10 @@ class DisplayVariantTest extends UnitTestCase {
    * @return \Drupal\Core\Display\VariantBase|\PHPUnit_Framework_MockObject_MockObject
    *   A mocked display variant plugin.
    */
-  public function setUpDisplayVariant($configuration = array(), $definition = array()) {
+  public function setUpDisplayVariant($configuration = [], $definition = []) {
     return $this->getMockBuilder('Drupal\Core\Display\VariantBase')
-      ->setConstructorArgs(array($configuration, 'test', $definition))
-      ->setMethods(array('build'))
+      ->setConstructorArgs([$configuration, 'test', $definition])
+      ->setMethods(['build'])
       ->getMock();
   }
 
@@ -35,7 +35,7 @@ class DisplayVariantTest extends UnitTestCase {
    * @covers ::label
    */
   public function testLabel() {
-    $display_variant = $this->setUpDisplayVariant(array('label' => 'foo'));
+    $display_variant = $this->setUpDisplayVariant(['label' => 'foo']);
     $this->assertSame('foo', $display_variant->label());
   }
 
@@ -55,7 +55,7 @@ class DisplayVariantTest extends UnitTestCase {
    * @covers ::getWeight
    */
   public function testGetWeight() {
-    $display_variant = $this->setUpDisplayVariant(array('weight' => 5));
+    $display_variant = $this->setUpDisplayVariant(['weight' => 5]);
     $this->assertSame(5, $display_variant->getWeight());
   }
 
@@ -86,34 +86,34 @@ class DisplayVariantTest extends UnitTestCase {
    * Provides test data for testGetConfiguration().
    */
   public function providerTestGetConfiguration() {
-    $data = array();
-    $data[] = array(
-      array(),
-      array(
+    $data = [];
+    $data[] = [
+      [],
+      [
         'id' => 'test',
         'label' => '',
         'uuid' => '',
         'weight' => 0,
-      ),
-    );
-    $data[] = array(
-      array('label' => 'Test'),
-      array(
+      ],
+    ];
+    $data[] = [
+      ['label' => 'Test'],
+      [
         'id' => 'test',
         'label' => 'Test',
         'uuid' => '',
         'weight' => 0,
-      ),
-    );
-    $data[] = array(
-      array('id' => 'foo'),
-      array(
+      ],
+    ];
+    $data[] = [
+      ['id' => 'foo'],
+      [
         'id' => 'test',
         'label' => '',
         'uuid' => '',
         'weight' => 0,
-      ),
-    );
+      ],
+    ];
     return $data;
   }
 
@@ -136,7 +136,7 @@ class DisplayVariantTest extends UnitTestCase {
     $display_variant = $this->setUpDisplayVariant();
     $this->assertSame('', $display_variant->label());
 
-    $form = array();
+    $form = [];
     $label = $this->randomMachineName();
     $form_state = new FormState();
     $form_state->setValue('label', $label);

@@ -100,7 +100,7 @@ function _batch_test_finished_helper($batch_id, $success, $results, $operations)
   if (!$success) {
     // A fatal error occurred during the processing.
     $error_operation = reset($operations);
-    $messages[] = t('An error occurred while processing @op with arguments:<br />@args', array('@op' => $error_operation[0], '@args' => print_r($error_operation[1], TRUE)));
+    $messages[] = t('An error occurred while processing @op with arguments:<br />@args', ['@op' => $error_operation[0], '@args' => print_r($error_operation[1], TRUE)]);
   }
 
   // Use item list template to render the messages.

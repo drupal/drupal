@@ -23,7 +23,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
 
     // Set a controller to ensure it is not overridden.
     $request = new Request();
-    $defaults = array();
+    $defaults = [];
     $defaults['_controller'] = 'Drupal\Tests\Core\Controller\TestController::content';
     $defaults['_entity_form'] = 'entity_test.default';
     $new_defaults = $route_enhancer->enhance($defaults, $request);
@@ -31,13 +31,13 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $this->assertEquals($defaults['_controller'], $new_defaults['_controller'], '_controller did not get overridden.');
 
     // Set _entity_form and ensure that the form is set.
-    $defaults = array();
+    $defaults = [];
     $defaults['_entity_form'] = 'entity_test.default';
     $new_defaults = $route_enhancer->enhance($defaults, $request);
     $this->assertEquals('controller.entity_form:getContentResult', $new_defaults['_controller']);
 
     // Set _entity_list and ensure that the entity list controller is set.
-    $defaults = array();
+    $defaults = [];
     $defaults['_entity_list'] = 'entity_test.default';
     $new_defaults = $route_enhancer->enhance($defaults, $request);
     $this->assertEquals('\Drupal\Core\Entity\Controller\EntityListController::listing', $new_defaults['_controller'], 'The entity list controller was not set.');
@@ -45,7 +45,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $this->assertFalse(isset($new_defaults['_entity_list']));
 
     // Set _entity_view and ensure that the entity view controller is set.
-    $defaults = array();
+    $defaults = [];
     $defaults['_entity_view'] = 'entity_test.full';
     $defaults['entity_test'] = 'Mock entity';
     $defaults = $route_enhancer->enhance($defaults, $request);
@@ -56,11 +56,11 @@ class EntityRouteEnhancerTest extends UnitTestCase {
 
     // Set _entity_view and ensure that the entity view controller is set using
     // a converter.
-    $defaults = array();
+    $defaults = [];
     $defaults['_entity_view'] = 'entity_test.full';
     $defaults['foo'] = 'Mock entity';
     // Add a converter.
-    $options['parameters']['foo'] = array('type' => 'entity:entity_test');
+    $options['parameters']['foo'] = ['type' => 'entity:entity_test'];
     // Set the route.
     $route = $this->getMockBuilder('Symfony\Component\Routing\Route')
       ->disableOriginalConstructor()
@@ -78,7 +78,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $this->assertFalse(isset($defaults['_entity_view']));
 
     // Set _entity_view without a view mode.
-    $defaults = array();
+    $defaults = [];
     $defaults['_entity_view'] = 'entity_test';
     $defaults['entity_test'] = 'Mock entity';
     $defaults = $route_enhancer->enhance($defaults, $request);

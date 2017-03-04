@@ -19,7 +19,7 @@ class SelectComplexTest extends DatabaseTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'node_access_test', 'field');
+  public static $modules = ['system', 'user', 'node_access_test', 'field'];
 
   /**
    * Tests simple JOIN statements.
@@ -83,7 +83,7 @@ class SelectComplexTest extends DatabaseTestBase {
 
     $num_records = 0;
     $last_count = 0;
-    $records = array();
+    $records = [];
     foreach ($result as $record) {
       $num_records++;
       $this->assertTrue($record->$count_field >= $last_count, 'Results returned in correct order.');
@@ -91,16 +91,16 @@ class SelectComplexTest extends DatabaseTestBase {
       $records[$record->$task_field] = $record->$count_field;
     }
 
-    $correct_results = array(
+    $correct_results = [
       'eat' => 1,
       'sleep' => 2,
       'code' => 1,
       'found new band' => 1,
       'perform at superbowl' => 1,
-    );
+    ];
 
     foreach ($correct_results as $task => $count) {
-      $this->assertEqual($records[$task], $count, format_string("Correct number of '@task' records found.", array('@task' => $task)));
+      $this->assertEqual($records[$task], $count, format_string("Correct number of '@task' records found.", ['@task' => $task]));
     }
 
     $this->assertEqual($num_records, 6, 'Returned the correct number of total rows.');
@@ -120,7 +120,7 @@ class SelectComplexTest extends DatabaseTestBase {
 
     $num_records = 0;
     $last_count = 0;
-    $records = array();
+    $records = [];
     foreach ($result as $record) {
       $num_records++;
       $this->assertTrue($record->$count_field >= 2, 'Record has the minimum count.');
@@ -129,12 +129,12 @@ class SelectComplexTest extends DatabaseTestBase {
       $records[$record->$task_field] = $record->$count_field;
     }
 
-    $correct_results = array(
+    $correct_results = [
       'sleep' => 2,
-    );
+    ];
 
     foreach ($correct_results as $task => $count) {
-      $this->assertEqual($records[$task], $count, format_string("Correct number of '@task' records found.", array('@task' => $task)));
+      $this->assertEqual($records[$task], $count, format_string("Correct number of '@task' records found.", ['@task' => $task]));
     }
 
     $this->assertEqual($num_records, 1, 'Returned the correct number of total rows.');
@@ -256,7 +256,7 @@ class SelectComplexTest extends DatabaseTestBase {
     // number of records, which in this case happens to be 4 (there are four
     // records in the {test} table).
     $query = db_select('test');
-    $query->fields('test', array('fail'));
+    $query->fields('test', ['fail']);
     $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed fields');
 
     $query = db_select('test');
@@ -344,7 +344,7 @@ class SelectComplexTest extends DatabaseTestBase {
       'mail' => $this->randomMachineName() . '@example.com',
     ]);
 
-    $query = db_select('test_task', 'tt', array('target' => 'replica'));
+    $query = db_select('test_task', 'tt', ['target' => 'replica']);
     $query->addExpression('tt.pid + 1', 'abc');
     $query->condition('priority', 1, '>');
     $query->condition('priority', 100, '<');

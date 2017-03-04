@@ -90,11 +90,11 @@ class TimestampFormatter extends FormatterBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'date_format' => 'medium',
       'custom_date_format' => '',
       'timezone' => '',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
@@ -103,38 +103,38 @@ class TimestampFormatter extends FormatterBase implements ContainerFactoryPlugin
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
 
-    $date_formats = array();
+    $date_formats = [];
 
     foreach ($this->dateFormatStorage->loadMultiple() as $machine_name => $value) {
-      $date_formats[$machine_name] = $this->t('@name format: @date', array('@name' => $value->label(), '@date' => $this->dateFormatter->format(REQUEST_TIME, $machine_name)));
+      $date_formats[$machine_name] = $this->t('@name format: @date', ['@name' => $value->label(), '@date' => $this->dateFormatter->format(REQUEST_TIME, $machine_name)]);
     }
 
     $date_formats['custom'] = $this->t('Custom');
 
-    $elements['date_format'] = array(
+    $elements['date_format'] = [
       '#type' => 'select',
       '#title' => $this->t('Date format'),
       '#options' => $date_formats,
       '#default_value' => $this->getSetting('date_format') ?: 'medium',
-    );
+    ];
 
-    $elements['custom_date_format'] = array(
+    $elements['custom_date_format'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom date format'),
       '#description' => $this->t('See <a href="http://php.net/manual/function.date.php" target="_blank">the documentation for PHP date formats</a>.'),
       '#default_value' => $this->getSetting('custom_date_format') ?: '',
-    );
+    ];
 
-    $elements['custom_date_format']['#states']['visible'][] = array(
-      ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][date_format]"]' => array('value' => 'custom'),
-    );
+    $elements['custom_date_format']['#states']['visible'][] = [
+      ':input[name="fields[' . $this->fieldDefinition->getName() . '][settings_edit_form][settings][date_format]"]' => ['value' => 'custom'],
+    ];
 
-    $elements['timezone'] = array(
+    $elements['timezone'] = [
       '#type' => 'select',
       '#title' => $this->t('Time zone'),
-      '#options' => array('' => $this->t('- Default site/user time zone -')) + system_time_zones(FALSE),
+      '#options' => ['' => $this->t('- Default site/user time zone -')] + system_time_zones(FALSE),
       '#default_value' => $this->getSetting('timezone'),
-    );
+    ];
 
     return $elements;
   }
@@ -146,12 +146,12 @@ class TimestampFormatter extends FormatterBase implements ContainerFactoryPlugin
     $summary = parent::settingsSummary();
 
     $date_format = $this->getSetting('date_format');
-    $summary[] = $this->t('Date format: @date_format', array('@date_format' => $date_format));
+    $summary[] = $this->t('Date format: @date_format', ['@date_format' => $date_format]);
     if ($this->getSetting('date_format') === 'custom' && ($custom_date_format = $this->getSetting('custom_date_format'))) {
-      $summary[] = $this->t('Custom date format: @custom_date_format', array('@custom_date_format' => $custom_date_format));
+      $summary[] = $this->t('Custom date format: @custom_date_format', ['@custom_date_format' => $custom_date_format]);
     }
     if ($timezone = $this->getSetting('timezone')) {
-      $summary[] = $this->t('Time zone: @timezone', array('@timezone' => $timezone));
+      $summary[] = $this->t('Time zone: @timezone', ['@timezone' => $timezone]);
     }
 
     return $summary;
@@ -161,7 +161,7 @@ class TimestampFormatter extends FormatterBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     $date_format = $this->getSetting('date_format');
     $custom_date_format = '';

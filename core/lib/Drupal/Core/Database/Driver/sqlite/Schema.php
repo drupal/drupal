@@ -26,7 +26,7 @@ class Schema extends DatabaseSchema {
     $info = $this->getPrefixInfo($table);
 
     // Don't use {} around sqlite_master table.
-    return (bool) $this->connection->query('SELECT 1 FROM ' . $info['schema'] . '.sqlite_master WHERE type = :type AND name = :name', array(':type' => 'table', ':name' => $info['table']))->fetchField();
+    return (bool) $this->connection->query('SELECT 1 FROM ' . $info['schema'] . '.sqlite_master WHERE type = :type AND name = :name', [':type' => 'table', ':name' => $info['table']])->fetchField();
   }
 
   public function fieldExists($table, $column) {
@@ -45,7 +45,7 @@ class Schema extends DatabaseSchema {
    *   An array of SQL statements to create the table.
    */
   public function createTableSql($name, $table) {
-    $sql = array();
+    $sql = [];
     $sql[] = "CREATE TABLE {" . $name . "} (\n" . $this->createColumnsSql($name, $table) . "\n)\n";
     return array_merge($sql, $this->createIndexSql($name, $table));
   }
@@ -54,7 +54,7 @@ class Schema extends DatabaseSchema {
    * Build the SQL expression for indexes.
    */
   protected function createIndexSql($tablename, $schema) {
-    $sql = array();
+    $sql = [];
     $info = $this->getPrefixInfo($tablename);
     if (!empty($schema['unique keys'])) {
       foreach ($schema['unique keys'] as $key => $fields) {
@@ -73,7 +73,7 @@ class Schema extends DatabaseSchema {
    * Build the SQL expression for creating columns.
    */
   protected function createColumnsSql($tablename, $schema) {
-    $sql_array = array();
+    $sql_array = [];
 
     // Add the SQL statement for each field.
     foreach ($schema['fields'] as $name => $field) {
@@ -97,7 +97,7 @@ class Schema extends DatabaseSchema {
    * Build the SQL expression for keys.
    */
   protected function createKeySql($fields) {
-    $return = array();
+    $return = [];
     foreach ($fields as $field) {
       if (is_array($field)) {
         $return[] = $field[0];
@@ -163,7 +163,7 @@ class Schema extends DatabaseSchema {
     else {
       $sql = $name . ' ' . $spec['sqlite_type'];
 
-      if (in_array($spec['sqlite_type'], array('VARCHAR', 'TEXT'))) {
+      if (in_array($spec['sqlite_type'], ['VARCHAR', 'TEXT'])) {
         if (isset($spec['length'])) {
           $sql .= '(' . $spec['length'] . ')';
         }
@@ -209,7 +209,7 @@ class Schema extends DatabaseSchema {
     // it much easier for modules (such as schema.module) to map
     // database types back into schema types.
     // $map does not use drupal_static as its value never changes.
-    static $map = array(
+    static $map = [
       'varchar_ascii:normal' => 'VARCHAR',
 
       'varchar:normal'  => 'VARCHAR',
@@ -243,16 +243,16 @@ class Schema extends DatabaseSchema {
 
       'blob:big'        => 'BLOB',
       'blob:normal'     => 'BLOB',
-    );
+    ];
     return $map;
   }
 
   public function renameTable($table, $new_name) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot rename @table to @table_new: table @table doesn't exist.", array('@table' => $table, '@table_new' => $new_name)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot rename @table to @table_new: table @table doesn't exist.", ['@table' => $table, '@table_new' => $new_name]));
     }
     if ($this->tableExists($new_name)) {
-      throw new SchemaObjectExistsException(t("Cannot rename @table to @table_new: table @table_new already exists.", array('@table' => $table, '@table_new' => $new_name)));
+      throw new SchemaObjectExistsException(t("Cannot rename @table to @table_new: table @table_new already exists.", ['@table' => $table, '@table_new' => $new_name]));
     }
 
     $schema = $this->introspectSchema($table);
@@ -293,12 +293,12 @@ class Schema extends DatabaseSchema {
     return TRUE;
   }
 
-  public function addField($table, $field, $specification, $keys_new = array()) {
+  public function addField($table, $field, $specification, $keys_new = []) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add field @table.@field: table doesn't exist.", array('@field' => $field, '@table' => $table)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add field @table.@field: table doesn't exist.", ['@field' => $field, '@table' => $table]));
     }
     if ($this->fieldExists($table, $field)) {
-      throw new SchemaObjectExistsException(t("Cannot add field @table.@field: field already exists.", array('@field' => $field, '@table' => $table)));
+      throw new SchemaObjectExistsException(t("Cannot add field @table.@field: field already exists.", ['@field' => $field, '@table' => $table]));
     }
 
     // SQLite doesn't have a full-featured ALTER TABLE statement. It only
@@ -313,7 +313,7 @@ class Schema extends DatabaseSchema {
       // Apply the initial value if set.
       if (isset($specification['initial'])) {
         $this->connection->update($table)
-          ->fields(array($field => $specification['initial']))
+          ->fields([$field => $specification['initial']])
           ->execute();
       }
       if (isset($specification['initial_from_field'])) {
@@ -332,20 +332,20 @@ class Schema extends DatabaseSchema {
       $new_schema['fields'][$field] = $specification;
 
       // Build the mapping between the old fields and the new fields.
-      $mapping = array();
+      $mapping = [];
       if (isset($specification['initial'])) {
         // If we have a initial value, copy it over.
-        $mapping[$field] = array(
+        $mapping[$field] = [
           'expression' => ':newfieldinitial',
-          'arguments' => array(':newfieldinitial' => $specification['initial']),
-        );
+          'arguments' => [':newfieldinitial' => $specification['initial']],
+        ];
       }
       elseif (isset($specification['initial_from_field'])) {
         // If we have a initial value, copy it over.
-        $mapping[$field] = array(
+        $mapping[$field] = [
           'expression' => $specification['initial_from_field'],
           'arguments' => [],
-        );
+        ];
       }
       else {
         // Else use the default of the field.
@@ -380,7 +380,7 @@ class Schema extends DatabaseSchema {
    *     - an associative array with two keys 'expression' and 'arguments',
    *       that will be used as an expression field.
    */
-  protected function alterTable($table, $old_schema, $new_schema, array $mapping = array()) {
+  protected function alterTable($table, $old_schema, $new_schema, array $mapping = []) {
     $i = 0;
     do {
       $new_table = $table . '_' . $i++;
@@ -441,12 +441,12 @@ class Schema extends DatabaseSchema {
    */
   protected function introspectSchema($table) {
     $mapped_fields = array_flip($this->getFieldTypeMap());
-    $schema = array(
-      'fields' => array(),
-      'primary key' => array(),
-      'unique keys' => array(),
-      'indexes' => array(),
-    );
+    $schema = [
+      'fields' => [],
+      'primary key' => [],
+      'unique keys' => [],
+      'indexes' => [],
+    ];
 
     $info = $this->getPrefixInfo($table);
     $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.table_info(' . $info['table'] . ')');
@@ -461,12 +461,12 @@ class Schema extends DatabaseSchema {
       }
       if (isset($mapped_fields[$type])) {
         list($type, $size) = explode(':', $mapped_fields[$type]);
-        $schema['fields'][$row->name] = array(
+        $schema['fields'][$row->name] = [
           'type' => $type,
           'size' => $size,
           'not null' => !empty($row->notnull),
           'default' => trim($row->dflt_value, "'"),
-        );
+        ];
         if ($length) {
           $schema['fields'][$row->name]['length'] = $length;
         }
@@ -478,14 +478,14 @@ class Schema extends DatabaseSchema {
         throw new \Exception("Unable to parse the column type " . $row->type);
       }
     }
-    $indexes = array();
+    $indexes = [];
     $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.index_list(' . $info['table'] . ')');
     foreach ($result as $row) {
       if (strpos($row->name, 'sqlite_autoindex_') !== 0) {
-        $indexes[] = array(
+        $indexes[] = [
           'schema_key' => $row->unique ? 'unique keys' : 'indexes',
           'name' => $row->name,
-        );
+        ];
       }
     }
     foreach ($indexes as $index) {
@@ -531,12 +531,12 @@ class Schema extends DatabaseSchema {
     return TRUE;
   }
 
-  public function changeField($table, $field, $field_new, $spec, $keys_new = array()) {
+  public function changeField($table, $field, $field_new, $spec, $keys_new = []) {
     if (!$this->fieldExists($table, $field)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot change the definition of field @table.@name: field doesn't exist.", array('@table' => $table, '@name' => $field)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot change the definition of field @table.@name: field doesn't exist.", ['@table' => $table, '@name' => $field]));
     }
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
-      throw new SchemaObjectExistsException(t("Cannot rename field @table.@name to @name_new: target field already exists.", array('@table' => $table, '@name' => $field, '@name_new' => $field_new)));
+      throw new SchemaObjectExistsException(t("Cannot rename field @table.@name to @name_new: target field already exists.", ['@table' => $table, '@name' => $field, '@name_new' => $field_new]));
     }
 
     $old_schema = $this->introspectSchema($table);
@@ -547,7 +547,7 @@ class Schema extends DatabaseSchema {
       $mapping[$field_new] = $field;
     }
     else {
-      $mapping = array();
+      $mapping = [];
     }
 
     // Remove the previous definition and swap in the new one.
@@ -556,7 +556,7 @@ class Schema extends DatabaseSchema {
 
     // Map the former indexes to the new column name.
     $new_schema['primary key'] = $this->mapKeyDefinition($new_schema['primary key'], $mapping);
-    foreach (array('unique keys', 'indexes') as $k) {
+    foreach (['unique keys', 'indexes'] as $k) {
       foreach ($new_schema[$k] as &$key_definition) {
         $key_definition = $this->mapKeyDefinition($key_definition, $mapping);
       }
@@ -566,7 +566,7 @@ class Schema extends DatabaseSchema {
     if (isset($keys_new['primary key'])) {
       $new_schema['primary key'] = $keys_new['primary key'];
     }
-    foreach (array('unique keys', 'indexes') as $k) {
+    foreach (['unique keys', 'indexes'] as $k) {
       if (!empty($keys_new[$k])) {
         $new_schema[$k] = $keys_new[$k] + $new_schema[$k];
       }
@@ -601,10 +601,10 @@ class Schema extends DatabaseSchema {
    */
   public function addIndex($table, $name, $fields, array $spec) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add index @name to table @table: table doesn't exist.", array('@table' => $table, '@name' => $name)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add index @name to table @table: table doesn't exist.", ['@table' => $table, '@name' => $name]));
     }
     if ($this->indexExists($table, $name)) {
-      throw new SchemaObjectExistsException(t("Cannot add index @name to table @table: index already exists.", array('@table' => $table, '@name' => $name)));
+      throw new SchemaObjectExistsException(t("Cannot add index @name to table @table: index already exists.", ['@table' => $table, '@name' => $name]));
     }
 
     $schema['indexes'][$name] = $fields;
@@ -633,10 +633,10 @@ class Schema extends DatabaseSchema {
 
   public function addUniqueKey($table, $name, $fields) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add unique key @name to table @table: table doesn't exist.", array('@table' => $table, '@name' => $name)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add unique key @name to table @table: table doesn't exist.", ['@table' => $table, '@name' => $name]));
     }
     if ($this->indexExists($table, $name)) {
-      throw new SchemaObjectExistsException(t("Cannot add unique key @name to table @table: unique key already exists.", array('@table' => $table, '@name' => $name)));
+      throw new SchemaObjectExistsException(t("Cannot add unique key @name to table @table: unique key already exists.", ['@table' => $table, '@name' => $name]));
     }
 
     $schema['unique keys'][$name] = $fields;
@@ -659,14 +659,14 @@ class Schema extends DatabaseSchema {
 
   public function addPrimaryKey($table, $fields) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add primary key to table @table: table doesn't exist.", array('@table' => $table)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add primary key to table @table: table doesn't exist.", ['@table' => $table]));
     }
 
     $old_schema = $this->introspectSchema($table);
     $new_schema = $old_schema;
 
     if (!empty($new_schema['primary key'])) {
-      throw new SchemaObjectExistsException(t("Cannot add primary key to table @table: primary key already exists.", array('@table' => $table)));
+      throw new SchemaObjectExistsException(t("Cannot add primary key to table @table: primary key already exists.", ['@table' => $table]));
     }
 
     $new_schema['primary key'] = $fields;
@@ -688,7 +688,7 @@ class Schema extends DatabaseSchema {
 
   public function fieldSetDefault($table, $field, $default) {
     if (!$this->fieldExists($table, $field)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field @table.@field: field doesn't exist.", array('@table' => $table, '@field' => $field)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field @table.@field: field doesn't exist.", ['@table' => $table, '@field' => $field]));
     }
 
     $old_schema = $this->introspectSchema($table);
@@ -700,7 +700,7 @@ class Schema extends DatabaseSchema {
 
   public function fieldSetNoDefault($table, $field) {
     if (!$this->fieldExists($table, $field)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot remove default value of field @table.@field: field doesn't exist.", array('@table' => $table, '@field' => $field)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot remove default value of field @table.@field: field doesn't exist.", ['@table' => $table, '@field' => $field]));
     }
 
     $old_schema = $this->introspectSchema($table);
@@ -726,11 +726,11 @@ class Schema extends DatabaseSchema {
       // Can't use query placeholders for the schema because the query would
       // have to be :prefixsqlite_master, which does not work. We also need to
       // ignore the internal SQLite tables.
-      $result = $this->connection->query("SELECT name FROM " . $schema . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", array(
+      $result = $this->connection->query("SELECT name FROM " . $schema . ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
         ':type' => 'table',
         ':table_name' => $table_expression,
         ':pattern' => 'sqlite_%',
-      ));
+      ]);
       $tables += $result->fetchAllKeyed(0, 0);
     }
 

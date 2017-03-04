@@ -52,13 +52,13 @@ class FieldInstanceSettings extends ProcessPluginBase {
     switch ($widget_type) {
       case 'image_image':
         $settings = $instance_settings;
-        $settings['default_image'] = array(
+        $settings['default_image'] = [
           'alt' => '',
           'title' => '',
           'width' => NULL,
           'height' => NULL,
           'uuid' => '',
-        );
+        ];
         break;
 
       default:

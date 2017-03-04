@@ -28,7 +28,7 @@ class UnsavedPreviewTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('node', 'views_ui');
+  public static $modules = ['node', 'views_ui'];
 
   /**
    * Sets up a Drupal site for running functional and integration tests.

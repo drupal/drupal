@@ -16,7 +16,7 @@ class TwigNamespaceTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('twig_theme_test', 'twig_namespace_a', 'twig_namespace_b', 'node');
+  public static $modules = ['twig_theme_test', 'twig_namespace_a', 'twig_namespace_b', 'node'];
 
   /**
    * @var \Drupal\Core\Template\TwigEnvironment
@@ -25,7 +25,7 @@ class TwigNamespaceTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->install(array('test_theme', 'bartik'));
+    \Drupal::service('theme_handler')->install(['test_theme', 'bartik']);
     $this->twig = \Drupal::service('twig');
   }
 
@@ -52,7 +52,7 @@ class TwigNamespaceTest extends WebTestBase {
    */
   public function testTwigNamespaces() {
     // Test twig @extends and @include in template files.
-    $test = array('#theme' => 'twig_namespace_test');
+    $test = ['#theme' => 'twig_namespace_test'];
     $this->setRawContent(\Drupal::service('renderer')->renderRoot($test));
 
     $this->assertText('This line is from twig_namespace_a/templates/test.html.twig');

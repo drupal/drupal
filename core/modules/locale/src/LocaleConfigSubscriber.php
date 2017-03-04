@@ -114,7 +114,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    *   override. This allows us to update locale keys for data not in the
    *   override but still in the active configuration.
    */
-  protected function updateLocaleStorage(StorableConfigBase $config, $langcode, array $reference_config = array()) {
+  protected function updateLocaleStorage(StorableConfigBase $config, $langcode, array $reference_config = []) {
     $name = $config->getName();
     if ($this->localeConfigManager->isSupported($name) && locale_is_translatable($langcode)) {
       $translatables = $this->localeConfigManager->getTranslatableDefaultConfig($name);
@@ -139,7 +139,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    *   override. This allows us to update locale keys for data not in the
    *   override but still in the active configuration.
    */
-  protected function processTranslatableData($name, array $config, array $translatable, $langcode, array $reference_config = array()) {
+  protected function processTranslatableData($name, array $config, array $translatable, $langcode, array $reference_config = []) {
     foreach ($translatable as $key => $item) {
       if (!isset($config[$key])) {
         if (isset($reference_config[$key])) {
@@ -148,7 +148,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
         continue;
       }
       if (is_array($item)) {
-        $reference_config = isset($reference_config[$key]) ? $reference_config[$key] : array();
+        $reference_config = isset($reference_config[$key]) ? $reference_config[$key] : [];
         $this->processTranslatableData($name, $config[$key], $item, $langcode, $reference_config);
       }
       else {

@@ -23,21 +23,21 @@ class BatchTestChainedForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // This value is used to test that $form_state persists through batched
     // submit handlers.
-    $form['value'] = array(
+    $form['value'] = [
       '#type' => 'textfield',
       '#title' => 'Value',
       '#default_value' => 1,
-    );
-    $form['submit'] = array(
+    ];
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => 'Submit',
-    );
-    $form['#submit'] = array(
+    ];
+    $form['#submit'] = [
       'Drupal\batch_test\Form\BatchTestChainedForm::batchTestChainedFormSubmit1',
       'Drupal\batch_test\Form\BatchTestChainedForm::batchTestChainedFormSubmit2',
       'Drupal\batch_test\Form\BatchTestChainedForm::batchTestChainedFormSubmit3',
       'Drupal\batch_test\Form\BatchTestChainedForm::batchTestChainedFormSubmit4',
-    );
+    ];
     return $form;
   }
 

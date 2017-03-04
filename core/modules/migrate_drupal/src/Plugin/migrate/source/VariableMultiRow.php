@@ -21,7 +21,7 @@ class VariableMultiRow extends DrupalSqlBase {
    */
   public function query() {
     return $this->select('variable', 'v')
-      ->fields('v', array('name', 'value'))
+      ->fields('v', ['name', 'value'])
       // Cast scalars to array so we can consistently use an IN condition.
       ->condition('name', (array) $this->configuration['variables'], 'IN');
   }
@@ -30,10 +30,10 @@ class VariableMultiRow extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'name' => $this->t('Name'),
       'value' => $this->t('Value'),
-    );
+    ];
   }
 
   /**

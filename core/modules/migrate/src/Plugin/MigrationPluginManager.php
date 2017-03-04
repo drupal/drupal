@@ -24,9 +24,9 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    *
    * @var array
    */
-  protected $defaults = array(
+  protected $defaults = [
     'class' => '\Drupal\migrate\Plugin\Migration',
-  );
+  ];
 
   /**
    * The interface the plugins should implement.
@@ -55,7 +55,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   public function __construct(ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager) {
     $this->factory = new ContainerFactory($this, $this->pluginInterface);
     $this->alterInfo('migration_plugins');
-    $this->setCacheBackend($cache_backend, 'migration_plugins', array('migration_plugins'));
+    $this->setCacheBackend($cache_backend, 'migration_plugins', ['migration_plugins']);
     $this->moduleHandler = $module_handler;
   }
 
@@ -85,7 +85,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   /**
    * {@inheritdoc}
    */
-  public function createInstance($plugin_id, array $configuration = array()) {
+  public function createInstance($plugin_id, array $configuration = []) {
     $instances = $this->createInstances([$plugin_id], [$plugin_id => $configuration]);
     return reset($instances);
   }
@@ -93,7 +93,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   /**
    * {@inheritdoc}
    */
-  public function createInstances($migration_id, array $configuration = array()) {
+  public function createInstances($migration_id, array $configuration = []) {
     if (empty($migration_id)) {
       $migration_id = array_keys($this->getDefinitions());
     }
@@ -222,9 +222,9 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    *   The dynamic ID mapping.
    */
   protected function addDependency(array &$graph, $id, $dependency, $dynamic_ids) {
-    $dependencies = isset($dynamic_ids[$dependency]) ? $dynamic_ids[$dependency] : array($dependency);
+    $dependencies = isset($dynamic_ids[$dependency]) ? $dynamic_ids[$dependency] : [$dependency];
     if (!isset($graph[$id]['edges'])) {
-      $graph[$id]['edges'] = array();
+      $graph[$id]['edges'] = [];
     }
     $graph[$id]['edges'] += array_combine($dependencies, $dependencies);
   }

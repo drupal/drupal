@@ -17,7 +17,7 @@ class ConfigTranslationFormTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_translation', 'config_translation_test', 'editor');
+  public static $modules = ['config_translation', 'config_translation_test', 'editor'];
 
   /**
    * The plugin ID of the mapper to test.
@@ -40,7 +40,7 @@ class ConfigTranslationFormTest extends WebTestBase {
     $this->pluginId = key($definitions);
 
     $this->langcode = 'xx';
-    ConfigurableLanguage::create(array('id' => $this->langcode, 'label' => 'XX'))->save();
+    ConfigurableLanguage::create(['id' => $this->langcode, 'label' => 'XX'])->save();
 
     \Drupal::state()->set('config_translation_test_alter_form_alter', TRUE);
   }

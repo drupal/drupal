@@ -17,7 +17,7 @@ class MailFormatHelper {
    *
    * @var array
    */
-  protected static $urls = array();
+  protected static $urls = [];
 
   /**
    * Quoted regex expression based on base path.
@@ -31,7 +31,7 @@ class MailFormatHelper {
    *
    * @var array
    */
-  protected static $supportedTags = array();
+  protected static $supportedTags = [];
 
   /**
    * Performs format=flowed soft wrapping for mail (RFC 3676).
@@ -63,12 +63,12 @@ class MailFormatHelper {
       $text = preg_replace('/(?(?<!^--) +\n|  +\n)/m', "\n", $text);
       // Wrap each line at the needed width.
       $lines = explode("\n", $text);
-      array_walk($lines, '\Drupal\Core\Mail\MailFormatHelper::wrapMailLine', array('soft' => $soft, 'length' => strlen($indent)));
+      array_walk($lines, '\Drupal\Core\Mail\MailFormatHelper::wrapMailLine', ['soft' => $soft, 'length' => strlen($indent)]);
       $text = implode("\n", $lines);
     }
     else {
       // Wrap this line.
-      static::wrapMailLine($text, 0, array('soft' => $soft, 'length' => strlen($indent)));
+      static::wrapMailLine($text, 0, ['soft' => $soft, 'length' => strlen($indent)]);
     }
     // Empty lines with nothing but spaces.
     $text = preg_replace('/^ +\n/m', "\n", $text);
@@ -104,9 +104,9 @@ class MailFormatHelper {
   public static function htmlToText($string, $allowed_tags = NULL) {
     // Cache list of supported tags.
     if (empty(static::$supportedTags)) {
-      static::$supportedTags = array('a', 'em', 'i', 'strong', 'b', 'br', 'p',
+      static::$supportedTags = ['a', 'em', 'i', 'strong', 'b', 'br', 'p',
         'blockquote', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'h1', 'h2', 'h3',
-        'h4', 'h5', 'h6', 'hr');
+        'h4', 'h5', 'h6', 'hr'];
     }
 
     // Make sure only supported tags are kept.
@@ -146,9 +146,9 @@ class MailFormatHelper {
     $casing = NULL;
     $output = '';
     // All current indentation string chunks.
-    $indent = array();
+    $indent = [];
     // Array of counters for opened lists.
-    $lists = array();
+    $lists = [];
     foreach ($split as $value) {
       // Holds a string ready to be formatted and output.
       $chunk = NULL;
@@ -302,12 +302,12 @@ class MailFormatHelper {
    */
   protected static function wrapMailLine(&$line, $key, $values) {
     $line_is_mime_header = FALSE;
-    $mime_headers = array(
+    $mime_headers = [
       'Content-Type',
       'Content-Transfer-Encoding',
       'Content-Disposition',
       'Content-Description',
-    );
+    ];
 
     // Do not break MIME headers which could be longer than 77 characters.
     foreach ($mime_headers as $header) {
@@ -336,7 +336,7 @@ class MailFormatHelper {
 
     if ($reset) {
       // Reset internal URL list.
-      static::$urls = array();
+      static::$urls = [];
     }
     else {
       if (empty(static::$regexp)) {

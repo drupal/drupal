@@ -51,7 +51,7 @@ trait BasicAuthTestTrait {
    *
    * @see \Drupal\simpletest\WebTestBase::drupalPostForm()
    */
-  protected function basicAuthPostForm($path, $edit, $submit, $username, $password, array $options = array(), $form_html_id = NULL, $extra_post = NULL) {
+  protected function basicAuthPostForm($path, $edit, $submit, $username, $password, array $options = [], $form_html_id = NULL, $extra_post = NULL) {
     return $this->drupalPostForm($path, $edit, $submit, $options, $this->getBasicAuthHeaders($username, $password), $form_html_id, $extra_post);
   }
 

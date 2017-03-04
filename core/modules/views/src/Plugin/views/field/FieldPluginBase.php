@@ -69,7 +69,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   const RENDER_TEXT_PHASE_EMPTY = 2;
 
   public $field_alias = 'unknown';
-  public $aliases = array();
+  public $aliases = [];
 
   /**
    * The field value prior to any rewriting.
@@ -85,7 +85,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    *
    * @var array
    */
-  public $additional_fields = array();
+  public $additional_fields = [];
 
   /**
    * The link generator.
@@ -114,7 +114,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $this->additional_fields = array();
+    $this->additional_fields = [];
     if (!empty($this->definition['additional fields'])) {
       $this->additional_fields = $this->definition['additional fields'];
     }
@@ -140,7 +140,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   public function query() {
     $this->ensureMyTable();
     // Add the field.
-    $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
+    $params = $this->options['group_type'] != 'group' ? ['function' => $this->options['group_type']] : [];
     $this->field_alias = $this->query->addField($this->tableAlias, $this->realField, NULL, $params);
 
     $this->addAdditionalFields();
@@ -165,11 +165,11 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $fields = $this->additional_fields;
     }
 
-    $group_params = array();
+    $group_params = [];
     if ($this->options['group_type'] != 'group') {
-      $group_params = array(
+      $group_params = [
         'function' => $this->options['group_type'],
-      );
+      ];
     }
 
     if (!empty($fields) && is_array($fields)) {
@@ -183,12 +183,12 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
           }
 
           if (empty($table_alias)) {
-            debug(t('Handler @handler tried to add additional_field @identifier but @table could not be added!', array('@handler' => $this->definition['id'], '@identifier' => $identifier, '@table' => $info['table'])));
+            debug(t('Handler @handler tried to add additional_field @identifier but @table could not be added!', ['@handler' => $this->definition['id'], '@identifier' => $identifier, '@table' => $info['table']]));
             $this->aliases[$identifier] = 'broken';
             continue;
           }
 
-          $params = array();
+          $params = [];
           if (!empty($info['params'])) {
             $params = $info['params'];
           }
@@ -210,7 +210,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if (isset($this->field_alias)) {
       // Since fields should always have themselves already added, just
       // add a sort on the field.
-      $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
+      $params = $this->options['group_type'] != 'group' ? ['function' => $this->options['group_type']] : [];
       $this->query->addOrderBy(NULL, NULL, $order, $this->field_alias, $params);
     }
   }
@@ -307,10 +307,10 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     static $elements = NULL;
     if (!isset($elements)) {
       // @todo Add possible html5 elements.
-      $elements = array(
+      $elements = [
         '' => $this->t('- Use default -'),
         '0' => $this->t('- None -')
-      );
+      ];
       $elements += \Drupal::config('views.settings')->get('field_rewrite_elements');
     }
 
@@ -334,10 +334,10 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    */
   public function tokenizeValue($value, $row_index = NULL) {
     if (strpos($value, '{{') !== FALSE) {
-      $fake_item = array(
+      $fake_item = [
         'alter_text' => TRUE,
         'text' => $value,
-      );
+      ];
 
       // Use isset() because empty() will trigger on 0 and 0 is
       // the first row.
@@ -421,60 +421,60 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['label'] = array('default' => '');
+    $options['label'] = ['default' => ''];
     // Some styles (for example table) should have labels enabled by default.
     $style = $this->view->getStyle();
     if (isset($style) && $style->defaultFieldLabels()) {
       $options['label']['default'] = $this->definition['title'];
     }
 
-    $options['exclude'] = array('default' => FALSE);
-    $options['alter'] = array(
-      'contains' => array(
-        'alter_text' => array('default' => FALSE),
-        'text' => array('default' => ''),
-        'make_link' => array('default' => FALSE),
-        'path' => array('default' => ''),
-        'absolute' => array('default' => FALSE),
-        'external' => array('default' => FALSE),
-        'replace_spaces' => array('default' => FALSE),
-        'path_case' => array('default' => 'none'),
-        'trim_whitespace' => array('default' => FALSE),
-        'alt' => array('default' => ''),
-        'rel' => array('default' => ''),
-        'link_class' => array('default' => ''),
-        'prefix' => array('default' => ''),
-        'suffix' => array('default' => ''),
-        'target' => array('default' => ''),
-        'nl2br' => array('default' => FALSE),
-        'max_length' => array('default' => 0),
-        'word_boundary' => array('default' => TRUE),
-        'ellipsis' => array('default' => TRUE),
-        'more_link' => array('default' => FALSE),
-        'more_link_text' => array('default' => ''),
-        'more_link_path' => array('default' => ''),
-        'strip_tags' => array('default' => FALSE),
-        'trim' => array('default' => FALSE),
-        'preserve_tags' => array('default' => ''),
-        'html' => array('default' => FALSE),
-      ),
-    );
-    $options['element_type'] = array('default' => '');
-    $options['element_class'] = array('default' => '');
+    $options['exclude'] = ['default' => FALSE];
+    $options['alter'] = [
+      'contains' => [
+        'alter_text' => ['default' => FALSE],
+        'text' => ['default' => ''],
+        'make_link' => ['default' => FALSE],
+        'path' => ['default' => ''],
+        'absolute' => ['default' => FALSE],
+        'external' => ['default' => FALSE],
+        'replace_spaces' => ['default' => FALSE],
+        'path_case' => ['default' => 'none'],
+        'trim_whitespace' => ['default' => FALSE],
+        'alt' => ['default' => ''],
+        'rel' => ['default' => ''],
+        'link_class' => ['default' => ''],
+        'prefix' => ['default' => ''],
+        'suffix' => ['default' => ''],
+        'target' => ['default' => ''],
+        'nl2br' => ['default' => FALSE],
+        'max_length' => ['default' => 0],
+        'word_boundary' => ['default' => TRUE],
+        'ellipsis' => ['default' => TRUE],
+        'more_link' => ['default' => FALSE],
+        'more_link_text' => ['default' => ''],
+        'more_link_path' => ['default' => ''],
+        'strip_tags' => ['default' => FALSE],
+        'trim' => ['default' => FALSE],
+        'preserve_tags' => ['default' => ''],
+        'html' => ['default' => FALSE],
+      ],
+    ];
+    $options['element_type'] = ['default' => ''];
+    $options['element_class'] = ['default' => ''];
 
-    $options['element_label_type'] = array('default' => '');
-    $options['element_label_class'] = array('default' => '');
-    $options['element_label_colon'] = array('default' => TRUE);
+    $options['element_label_type'] = ['default' => ''];
+    $options['element_label_class'] = ['default' => ''];
+    $options['element_label_colon'] = ['default' => TRUE];
 
-    $options['element_wrapper_type'] = array('default' => '');
-    $options['element_wrapper_class'] = array('default' => '');
+    $options['element_wrapper_type'] = ['default' => ''];
+    $options['element_wrapper_class'] = ['default' => ''];
 
-    $options['element_default_classes'] = array('default' => TRUE);
+    $options['element_default_classes'] = ['default' => TRUE];
 
-    $options['empty'] = array('default' => '');
-    $options['hide_empty'] = array('default' => FALSE);
-    $options['empty_zero'] = array('default' => FALSE);
-    $options['hide_alter_empty'] = array('default' => TRUE);
+    $options['empty'] = ['default' => ''];
+    $options['hide_empty'] = ['default' => FALSE];
+    $options['empty_zero'] = ['default' => FALSE];
+    $options['hide_alter_empty'] = ['default' => TRUE];
 
     return $options;
   }
@@ -484,8 +484,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $options = &$form_state->getValue('options');
-    $types = array('element_type', 'element_label_type', 'element_wrapper_type');
-    $classes = array_combine(array('element_class', 'element_label_class', 'element_wrapper_class'), $types);
+    $types = ['element_type', 'element_label_type', 'element_wrapper_type'];
+    $classes = array_combine(['element_class', 'element_label_class', 'element_wrapper_class'], $types);
 
     foreach ($types as $type) {
       if (!$options[$type . '_enable']) {
@@ -513,349 +513,349 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     parent::buildOptionsForm($form, $form_state);
 
     $label = $this->label();
-    $form['custom_label'] = array(
+    $form['custom_label'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Create a label'),
       '#default_value' => $label !== '',
       '#weight' => -103,
-    );
-    $form['label'] = array(
+    ];
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#default_value' => $label,
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[custom_label]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[custom_label]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#weight' => -102,
-    );
-    $form['element_label_colon'] = array(
+    ];
+    $form['element_label_colon'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Place a colon after the label'),
       '#default_value' => $this->options['element_label_colon'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[custom_label]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[custom_label]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#weight' => -101,
-    );
+    ];
 
-    $form['exclude'] = array(
+    $form['exclude'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Exclude from display'),
       '#default_value' => $this->options['exclude'],
       '#description' => $this->t('Enable to load this field as hidden. Often used to group fields, or to use as token in another field.'),
       '#weight' => -100,
-    );
+    ];
 
-    $form['style_settings'] = array(
+    $form['style_settings'] = [
       '#type' => 'details',
       '#title' => $this->t('Style settings'),
       '#weight' => 99,
-    );
+    ];
 
-    $form['element_type_enable'] = array(
+    $form['element_type_enable'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Customize field HTML'),
       '#default_value' => !empty($this->options['element_type']) || (string) $this->options['element_type'] == '0' || !empty($this->options['element_class']) || (string) $this->options['element_class'] == '0',
       '#fieldset' => 'style_settings',
-    );
-    $form['element_type'] = array(
+    ];
+    $form['element_type'] = [
       '#title' => $this->t('HTML element'),
       '#options' => $this->getElements(),
       '#type' => 'select',
       '#default_value' => $this->options['element_type'],
       '#description' => $this->t('Choose the HTML element to wrap around this field, e.g. H1, H2, etc.'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[element_type_enable]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[element_type_enable]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#fieldset' => 'style_settings',
-    );
+    ];
 
-    $form['element_class_enable'] = array(
+    $form['element_class_enable'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Create a CSS class'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[element_type_enable]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[element_type_enable]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#default_value' => !empty($this->options['element_class']) || (string) $this->options['element_class'] == '0',
       '#fieldset' => 'style_settings',
-    );
-    $form['element_class'] = array(
+    ];
+    $form['element_class'] = [
       '#title' => $this->t('CSS class'),
       '#description' => $this->t('You may use token substitutions from the rewriting section in this class.'),
       '#type' => 'textfield',
       '#default_value' => $this->options['element_class'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[element_type_enable]"]' => array('checked' => TRUE),
-          ':input[name="options[element_class_enable]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[element_type_enable]"]' => ['checked' => TRUE],
+          ':input[name="options[element_class_enable]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#fieldset' => 'style_settings',
-    );
+    ];
 
-    $form['element_label_type_enable'] = array(
+    $form['element_label_type_enable'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Customize label HTML'),
       '#default_value' => !empty($this->options['element_label_type']) || (string) $this->options['element_label_type'] == '0' || !empty($this->options['element_label_class']) || (string) $this->options['element_label_class'] == '0',
       '#fieldset' => 'style_settings',
-    );
-    $form['element_label_type'] = array(
+    ];
+    $form['element_label_type'] = [
       '#title' => $this->t('Label HTML element'),
       '#options' => $this->getElements(FALSE),
       '#type' => 'select',
       '#default_value' => $this->options['element_label_type'],
       '#description' => $this->t('Choose the HTML element to wrap around this label, e.g. H1, H2, etc.'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[element_label_type_enable]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[element_label_type_enable]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#fieldset' => 'style_settings',
-    );
-    $form['element_label_class_enable'] = array(
+    ];
+    $form['element_label_class_enable'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Create a CSS class'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[element_label_type_enable]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[element_label_type_enable]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#default_value' => !empty($this->options['element_label_class']) || (string) $this->options['element_label_class'] == '0',
       '#fieldset' => 'style_settings',
-    );
-    $form['element_label_class'] = array(
+    ];
+    $form['element_label_class'] = [
       '#title' => $this->t('CSS class'),
       '#description' => $this->t('You may use token substitutions from the rewriting section in this class.'),
       '#type' => 'textfield',
       '#default_value' => $this->options['element_label_class'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[element_label_type_enable]"]' => array('checked' => TRUE),
-          ':input[name="options[element_label_class_enable]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[element_label_type_enable]"]' => ['checked' => TRUE],
+          ':input[name="options[element_label_class_enable]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#fieldset' => 'style_settings',
-    );
+    ];
 
-    $form['element_wrapper_type_enable'] = array(
+    $form['element_wrapper_type_enable'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Customize field and label wrapper HTML'),
       '#default_value' => !empty($this->options['element_wrapper_type']) || (string) $this->options['element_wrapper_type'] == '0' || !empty($this->options['element_wrapper_class']) || (string) $this->options['element_wrapper_class'] == '0',
       '#fieldset' => 'style_settings',
-    );
-    $form['element_wrapper_type'] = array(
+    ];
+    $form['element_wrapper_type'] = [
       '#title' => $this->t('Wrapper HTML element'),
       '#options' => $this->getElements(FALSE),
       '#type' => 'select',
       '#default_value' => $this->options['element_wrapper_type'],
       '#description' => $this->t('Choose the HTML element to wrap around this field and label, e.g. H1, H2, etc. This may not be used if the field and label are not rendered together, such as with a table.'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[element_wrapper_type_enable]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[element_wrapper_type_enable]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#fieldset' => 'style_settings',
-    );
+    ];
 
-    $form['element_wrapper_class_enable'] = array(
+    $form['element_wrapper_class_enable'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Create a CSS class'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[element_wrapper_type_enable]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[element_wrapper_type_enable]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#default_value' => !empty($this->options['element_wrapper_class']) || (string) $this->options['element_wrapper_class'] == '0',
       '#fieldset' => 'style_settings',
-    );
-    $form['element_wrapper_class'] = array(
+    ];
+    $form['element_wrapper_class'] = [
       '#title' => $this->t('CSS class'),
       '#description' => $this->t('You may use token substitutions from the rewriting section in this class.'),
       '#type' => 'textfield',
       '#default_value' => $this->options['element_wrapper_class'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[element_wrapper_class_enable]"]' => array('checked' => TRUE),
-          ':input[name="options[element_wrapper_type_enable]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[element_wrapper_class_enable]"]' => ['checked' => TRUE],
+          ':input[name="options[element_wrapper_type_enable]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#fieldset' => 'style_settings',
-    );
+    ];
 
-    $form['element_default_classes'] = array(
+    $form['element_default_classes'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Add default classes'),
       '#default_value' => $this->options['element_default_classes'],
       '#description' => $this->t('Use default Views classes to identify the field, field label and field content.'),
       '#fieldset' => 'style_settings',
-    );
+    ];
 
-    $form['alter'] = array(
+    $form['alter'] = [
       '#title' => $this->t('Rewrite results'),
       '#type' => 'details',
       '#weight' => 100,
-    );
+    ];
 
     if ($this->allowAdvancedRender()) {
       $form['alter']['#tree'] = TRUE;
-      $form['alter']['alter_text'] = array(
+      $form['alter']['alter_text'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Override the output of this field with custom text'),
         '#default_value' => $this->options['alter']['alter_text'],
-      );
+      ];
 
-      $form['alter']['text'] = array(
+      $form['alter']['text'] = [
         '#title' => $this->t('Text'),
         '#type' => 'textarea',
         '#default_value' => $this->options['alter']['text'],
-        '#description' => $this->t('The text to display for this field. You may include HTML or <a href=":url">Twig</a>. You may enter data from this view as per the "Replacement patterns" below.', array(':url' => CoreUrl::fromUri('http://twig.sensiolabs.org/documentation')->toString())),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][alter_text]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#description' => $this->t('The text to display for this field. You may include HTML or <a href=":url">Twig</a>. You may enter data from this view as per the "Replacement patterns" below.', [':url' => CoreUrl::fromUri('http://twig.sensiolabs.org/documentation')->toString()]),
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][alter_text]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
-      $form['alter']['make_link'] = array(
+      $form['alter']['make_link'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Output this field as a custom link'),
         '#default_value' => $this->options['alter']['make_link'],
-      );
-      $form['alter']['path'] = array(
+      ];
+      $form['alter']['path'] = [
         '#title' => $this->t('Link path'),
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['path'],
         '#description' => $this->t('The Drupal path or absolute URL for this link. You may enter data from this view as per the "Replacement patterns" below.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
         '#maxlength' => 255,
-      );
-      $form['alter']['absolute'] = array(
+      ];
+      $form['alter']['absolute'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Use absolute path'),
         '#default_value' => $this->options['alter']['absolute'],
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
-      $form['alter']['replace_spaces'] = array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['alter']['replace_spaces'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Replace spaces with dashes'),
         '#default_value' => $this->options['alter']['replace_spaces'],
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
-      $form['alter']['external'] = array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['alter']['external'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('External server URL'),
         '#default_value' => $this->options['alter']['external'],
         '#description' => $this->t("Links to an external server using a full URL: e.g. 'http://www.example.com' or 'www.example.com'."),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
-      $form['alter']['path_case'] = array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['alter']['path_case'] = [
         '#type' => 'select',
         '#title' => $this->t('Transform the case'),
         '#description' => $this->t('When printing URL paths, how to transform the case of the filter value.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-       '#options' => array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+       '#options' => [
           'none' => $this->t('No transform'),
           'upper' => $this->t('Upper case'),
           'lower' => $this->t('Lower case'),
           'ucfirst' => $this->t('Capitalize first letter'),
           'ucwords' => $this->t('Capitalize each word'),
-        ),
+        ],
         '#default_value' => $this->options['alter']['path_case'],
-      );
-      $form['alter']['link_class'] = array(
+      ];
+      $form['alter']['link_class'] = [
         '#title' => $this->t('Link class'),
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['link_class'],
         '#description' => $this->t('The CSS class to apply to the link.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
-      $form['alter']['alt'] = array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['alter']['alt'] = [
         '#title' => $this->t('Title text'),
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['alt'],
         '#description' => $this->t('Text to place as "title" text which most browsers display as a tooltip when hovering over the link.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
-      $form['alter']['rel'] = array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['alter']['rel'] = [
         '#title' => $this->t('Rel Text'),
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['rel'],
         '#description' => $this->t('Include Rel attribute for use in lightbox2 or other javascript utility.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
-      $form['alter']['prefix'] = array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['alter']['prefix'] = [
         '#title' => $this->t('Prefix text'),
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['prefix'],
         '#description' => $this->t('Any text to display before this link. You may include HTML.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
-      $form['alter']['suffix'] = array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['alter']['suffix'] = [
         '#title' => $this->t('Suffix text'),
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['suffix'],
         '#description' => $this->t('Any text to display after this link. You may include HTML.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
-      $form['alter']['target'] = array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['alter']['target'] = [
         '#title' => $this->t('Target'),
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['target'],
         '#description' => $this->t("Target of the link, such as _blank, _parent or an iframe's name. This field is rarely used."),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
 
       // Get a list of the available fields and arguments for token replacement.
@@ -871,8 +871,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $options[$optgroup_fields]["{{ {$this->options['id']} }}"] = substr(strrchr($this->adminLabel(), ":"), 2 );
 
       foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
-        $options[$optgroup_arguments]["{{ arguments.$arg }}"] = $this->t('@argument title', array('@argument' => $handler->adminLabel()));
-        $options[$optgroup_arguments]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', array('@argument' => $handler->adminLabel()));
+        $options[$optgroup_arguments]["{{ arguments.$arg }}"] = $this->t('@argument title', ['@argument' => $handler->adminLabel()]);
+        $options[$optgroup_arguments]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', ['@argument' => $handler->adminLabel()]);
       }
 
       $this->documentSelfTokens($options[$optgroup_fields]);
@@ -890,14 +890,14 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         ];
         foreach (array_keys($options) as $type) {
           if (!empty($options[$type])) {
-            $items = array();
+            $items = [];
             foreach ($options[$type] as $key => $value) {
               $items[] = $key . ' == ' . $value;
             }
-            $item_list = array(
+            $item_list = [
               '#theme' => 'item_list',
               '#items' => $items,
-            );
+            ];
             $output[] = $item_list;
           }
         }
@@ -906,181 +906,181 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // run. It also has an extra div because the dependency wants to hide
       // the parent in situations like this, so we need a second div to
       // make this work.
-      $form['alter']['help'] = array(
+      $form['alter']['help'] = [
         '#type' => 'details',
         '#title' => $this->t('Replacement patterns'),
         '#value' => $output,
-        '#states' => array(
-          'visible' => array(
-            array(
-              ':input[name="options[alter][make_link]"]' => array('checked' => TRUE),
-            ),
-            array(
-              ':input[name="options[alter][alter_text]"]' => array('checked' => TRUE),
-            ),
-            array(
-              ':input[name="options[alter][more_link]"]' => array('checked' => TRUE),
-            ),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            [
+              ':input[name="options[alter][make_link]"]' => ['checked' => TRUE],
+            ],
+            [
+              ':input[name="options[alter][alter_text]"]' => ['checked' => TRUE],
+            ],
+            [
+              ':input[name="options[alter][more_link]"]' => ['checked' => TRUE],
+            ],
+          ],
+        ],
+      ];
 
-      $form['alter']['trim'] = array(
+      $form['alter']['trim'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Trim this field to a maximum number of characters'),
         '#default_value' => $this->options['alter']['trim'],
-      );
+      ];
 
-      $form['alter']['max_length'] = array(
+      $form['alter']['max_length'] = [
         '#title' => $this->t('Maximum number of characters'),
         '#type' => 'textfield',
         '#default_value' => $this->options['alter']['max_length'],
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][trim]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
-      $form['alter']['word_boundary'] = array(
+      $form['alter']['word_boundary'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Trim only on a word boundary'),
         '#description' => $this->t('If checked, this field be trimmed only on a word boundary. This is guaranteed to be the maximum characters stated or less. If there are no word boundaries this could trim a field to nothing.'),
         '#default_value' => $this->options['alter']['word_boundary'],
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][trim]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
-      $form['alter']['ellipsis'] = array(
+      $form['alter']['ellipsis'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Add "…" at the end of trimmed text'),
         '#default_value' => $this->options['alter']['ellipsis'],
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][trim]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
-      $form['alter']['more_link'] = array(
+      $form['alter']['more_link'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Add a read-more link if output is trimmed'),
         '#default_value' => $this->options['alter']['more_link'],
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][trim]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
-      $form['alter']['more_link_text'] = array(
+      $form['alter']['more_link_text'] = [
         '#type' => 'textfield',
         '#title' => $this->t('More link label'),
         '#default_value' => $this->options['alter']['more_link_text'],
         '#description' => $this->t('You may use the "Replacement patterns" above.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
-            ':input[name="options[alter][more_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
-      $form['alter']['more_link_path'] = array(
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][trim]"]' => ['checked' => TRUE],
+            ':input[name="options[alter][more_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+      $form['alter']['more_link_path'] = [
         '#type' => 'textfield',
         '#title' => $this->t('More link path'),
         '#default_value' => $this->options['alter']['more_link_path'],
         '#description' => $this->t('This can be an internal Drupal path such as node/add or an external URL such as "https://www.drupal.org". You may use the "Replacement patterns" above.'),
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
-            ':input[name="options[alter][more_link]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][trim]"]' => ['checked' => TRUE],
+            ':input[name="options[alter][more_link]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
-      $form['alter']['html'] = array(
+      $form['alter']['html'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Field can contain HTML'),
         '#description' => $this->t('An HTML corrector will be run to ensure HTML tags are properly closed after trimming.'),
         '#default_value' => $this->options['alter']['html'],
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][trim]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
-      $form['alter']['strip_tags'] = array(
+      $form['alter']['strip_tags'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Strip HTML tags'),
         '#default_value' => $this->options['alter']['strip_tags'],
-      );
+      ];
 
-      $form['alter']['preserve_tags'] = array(
+      $form['alter']['preserve_tags'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Preserve certain tags'),
         '#description' => $this->t('List the tags that need to be preserved during the stripping process. example &quot;&lt;p&gt; &lt;br&gt;&quot; which will preserve all p and br elements'),
         '#default_value' => $this->options['alter']['preserve_tags'],
-        '#states' => array(
-          'visible' => array(
-            ':input[name="options[alter][strip_tags]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            ':input[name="options[alter][strip_tags]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
-      $form['alter']['trim_whitespace'] = array(
+      $form['alter']['trim_whitespace'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Remove whitespace'),
         '#default_value' => $this->options['alter']['trim_whitespace'],
-      );
+      ];
 
-      $form['alter']['nl2br'] = array(
+      $form['alter']['nl2br'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Convert newlines to HTML &lt;br&gt; tags'),
         '#default_value' => $this->options['alter']['nl2br'],
-      );
+      ];
     }
 
-    $form['empty_field_behavior'] = array(
+    $form['empty_field_behavior'] = [
       '#type' => 'details',
       '#title' => $this->t('No results behavior'),
       '#weight' => 100,
-    );
+    ];
 
-    $form['empty'] = array(
+    $form['empty'] = [
       '#type' => 'textarea',
       '#title' => $this->t('No results text'),
       '#default_value' => $this->options['empty'],
       '#description' => $this->t('Provide text to display if this field contains an empty result. You may include HTML. You may enter data from this view as per the "Replacement patterns" in the "Rewrite Results" section below.'),
       '#fieldset' => 'empty_field_behavior',
-    );
+    ];
 
-    $form['empty_zero'] = array(
+    $form['empty_zero'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Count the number 0 as empty'),
       '#default_value' => $this->options['empty_zero'],
       '#description' => $this->t('Enable to display the "no results text" if the field contains the number 0.'),
       '#fieldset' => 'empty_field_behavior',
-    );
+    ];
 
-    $form['hide_empty'] = array(
+    $form['hide_empty'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide if empty'),
       '#default_value' => $this->options['hide_empty'],
       '#description' => $this->t('Enable to hide this field if it is empty. Note that the field label or rewritten output may still be displayed. To hide labels, check the style or row style settings for empty fields. To hide rewritten content, check the "Hide rewriting if empty" checkbox.'),
       '#fieldset' => 'empty_field_behavior',
-    );
+    ];
 
-    $form['hide_alter_empty'] = array(
+    $form['hide_alter_empty'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide rewriting if empty'),
       '#default_value' => $this->options['hide_alter_empty'],
       '#description' => $this->t('Do not display rewritten content if this field is empty.'),
       '#fieldset' => 'empty_field_behavior',
-    );
+    ];
   }
 
   /**
@@ -1152,7 +1152,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if ($this->allowAdvancedRender()) {
       $tokens = NULL;
       if ($this instanceof MultiItemsFieldHandlerInterface) {
-        $items = array();
+        $items = [];
         foreach ($raw_items as $count => $item) {
           $value = $this->render_item($count, $item);
           if (is_array($value)) {
@@ -1169,7 +1169,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         $value = $this->renderItems($items);
       }
       else {
-        $alter = array('phase' => static::RENDER_TEXT_PHASE_COMPLETELY) + $this->options['alter'];
+        $alter = ['phase' => static::RENDER_TEXT_PHASE_COMPLETELY] + $this->options['alter'];
         $value = $this->renderText($alter);
       }
 
@@ -1291,13 +1291,13 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
         // @todo Views should expect and store a leading /. See
         //   https://www.drupal.org/node/2423913.
-        $options = array(
-          'attributes' => array(
-            'class' => array(
+        $options = [
+          'attributes' => [
+            'class' => [
               'views-more-link',
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
         if (UrlHelper::isExternal($more_link_path)) {
           $more_link_url = CoreUrl::fromUri($more_link_path, $options);
         }
@@ -1375,7 +1375,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * the user.
    */
   protected function renderAsLink($alter, $text, $tokens) {
-    $options = array(
+    $options = [
       'absolute' => !empty($alter['absolute']) ? TRUE : FALSE,
       'alias' => FALSE,
       'entity' => NULL,
@@ -1383,7 +1383,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       'fragment' => NULL,
       'language' => NULL,
       'query' => [],
-    );
+    ];
 
     $alter += [
       'path' => NULL
@@ -1488,7 +1488,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
 
     if (isset($url['fragment'])) {
-      $path = strtr($path, array('#' . $url['fragment'] => ''));
+      $path = strtr($path, ['#' . $url['fragment'] => '']);
       // If the path is empty we want to have a fragment for the current site.
       if ($path == '') {
         $options['external'] = TRUE;
@@ -1504,7 +1504,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     $class = $this->viewsTokenReplace($alter['link_class'], $tokens);
     if ($class) {
-      $options['attributes']['class'] = array($class);
+      $options['attributes']['class'] = [$class];
     }
 
     if (!empty($alter['rel']) && $rel = $this->viewsTokenReplace($alter['rel'], $tokens)) {
@@ -1534,7 +1534,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // \Drupal\Core\Utility\LinkGeneratorInterface::generate().
       $options['query'] = UrlHelper::buildQuery($alter['query']);
       $options['query'] = $this->viewsTokenReplace($options['query'], $tokens);
-      $query = array();
+      $query = [];
       parse_str($options['query'], $query);
       $options['query'] = $query;
     }
@@ -1582,7 +1582,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function getRenderTokens($item) {
-    $tokens = array();
+    $tokens = [];
     if (!empty($this->view->build_info['substitutions'])) {
       $tokens = $this->view->build_info['substitutions'];
     }
@@ -1677,8 +1677,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * @return
    *   An array of available tokens, with nested keys representative of the array structure.
    */
-  protected function getTokenValuesRecursive(array $array, array $parent_keys = array()) {
-    $tokens = array();
+  protected function getTokenValuesRecursive(array $array, array $parent_keys = []) {
+    $tokens = [];
 
     foreach ($array as $param => $val) {
       if (is_array($val)) {
@@ -1727,12 +1727,12 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    */
   function theme(ResultRow $values) {
     $renderer = $this->getRenderer();
-    $build = array(
+    $build = [
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
       '#field' => $this,
       '#row' => $values,
-    );
+    ];
     $output = $renderer->render($build);
 
     // Set the bubbleable rendering metadata on $view->element. This ensures the
@@ -1744,7 +1744,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   }
 
   public function themeFunctions() {
-    $themes = array();
+    $themes = [];
     $hook = 'views_view_field';
 
     $display = $this->view->display_handler->display;

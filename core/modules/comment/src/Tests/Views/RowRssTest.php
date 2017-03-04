@@ -15,7 +15,7 @@ class RowRssTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_comment_rss');
+  public static $testViews = ['test_comment_rss'];
 
   /**
    * Test comment rss output.

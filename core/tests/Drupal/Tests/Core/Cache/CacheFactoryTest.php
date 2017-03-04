@@ -20,7 +20,7 @@ class CacheFactoryTest extends UnitTestCase {
    * @covers ::get
    */
   public function testCacheFactoryWithDefaultSettings() {
-    $settings = new Settings(array());
+    $settings = new Settings([]);
     $cache_factory = new CacheFactory($settings);
 
     $container = new ContainerBuilder();
@@ -46,11 +46,11 @@ class CacheFactoryTest extends UnitTestCase {
    * @covers ::get
    */
   public function testCacheFactoryWithCustomizedDefaultBackend() {
-    $settings = new Settings(array(
-      'cache' => array(
+    $settings = new Settings([
+      'cache' => [
         'default' => 'cache.backend.custom',
-      ),
-    ));
+      ],
+    ]);
     $cache_factory = new CacheFactory($settings);
 
     $container = new ContainerBuilder();
@@ -77,11 +77,11 @@ class CacheFactoryTest extends UnitTestCase {
    */
   public function testCacheFactoryWithDefaultBinBackend() {
     // Ensure the default bin backends are used before the configured default.
-    $settings = new Settings(array(
-      'cache' => array(
+    $settings = new Settings([
+      'cache' => [
         'default' => 'cache.backend.unused',
-      ),
-    ));
+      ],
+    ]);
 
     $default_bin_backends = [
       'render' => 'cache.backend.custom',
@@ -114,14 +114,14 @@ class CacheFactoryTest extends UnitTestCase {
   public function testCacheFactoryWithSpecifiedPerBinBackend() {
     // Ensure the per-bin configuration is used before the configured default
     // and per-bin defaults.
-    $settings = new Settings(array(
-      'cache' => array(
+    $settings = new Settings([
+      'cache' => [
         'default' => 'cache.backend.unused',
-        'bins' => array(
+        'bins' => [
           'render' => 'cache.backend.custom',
-        ),
-      ),
-    ));
+        ],
+      ],
+    ]);
 
     $default_bin_backends = [
       'render' => 'cache.backend.unused',

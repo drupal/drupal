@@ -21,7 +21,7 @@ class FilterFormatAddForm extends FilterFormatFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    drupal_set_message($this->t('Added text format %format.', array('%format' => $this->entity->label())));
+    drupal_set_message($this->t('Added text format %format.', ['%format' => $this->entity->label()]));
     return $this->entity;
   }
 

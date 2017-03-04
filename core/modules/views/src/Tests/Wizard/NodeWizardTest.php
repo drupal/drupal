@@ -15,9 +15,9 @@ class NodeWizardTest extends WizardTestBase {
    * Tests creating a view with node titles.
    */
   public function testViewAddWithNodeTitles() {
-    $this->drupalCreateContentType(array('type' => 'article'));
+    $this->drupalCreateContentType(['type' => 'article']);
 
-    $view = array();
+    $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));
     $view['description'] = $this->randomMachineName(16);

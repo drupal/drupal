@@ -173,7 +173,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @see \Drupal\Core\Entity\EntityViewBuilderInterface::viewFieldItem()
    * @see \Drupal\Core\Field\FieldItemListInterface::view()
    */
-  public function view($display_options = array());
+  public function view($display_options = []);
 
   /**
    * Defines custom presave behavior for field values.

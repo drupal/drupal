@@ -95,7 +95,7 @@ class FileSystem implements FileSystemInterface {
       return TRUE;
     }
 
-    $this->logger->error('The file permissions could not be set on %uri.', array('%uri' => $uri));
+    $this->logger->error('The file permissions could not be set on %uri.', ['%uri' => $uri]);
     return FALSE;
   }
 

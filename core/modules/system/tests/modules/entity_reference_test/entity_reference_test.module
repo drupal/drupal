@@ -12,7 +12,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * Implements hook_entity_base_field_info().
  */
 function entity_reference_test_entity_base_field_info(EntityTypeInterface $entity_type) {
-  $fields = array();
+  $fields = [];
 
   if ($entity_type->id() === 'entity_test') {
     $fields['user_role'] = BaseFieldDefinition::create('entity_reference')
@@ -33,10 +33,10 @@ function entity_reference_test_entity_base_field_info_alter(&$fields, EntityType
     // Allow user_id field to use configurable widget.
     $fields['user_id']
       ->setSetting('handler', 'default')
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
         'weight' => 0,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
   }
 }

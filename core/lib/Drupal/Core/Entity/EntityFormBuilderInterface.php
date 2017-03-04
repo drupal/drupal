@@ -53,6 +53,6 @@ interface EntityFormBuilderInterface {
    * @see \Drupal\Core\Entity\EntityTypeInterface::setFormClass()
    * @see system_entity_type_build()
    */
-  public function getForm(EntityInterface $entity, $operation = 'default', array $form_state_additions = array());
+  public function getForm(EntityInterface $entity, $operation = 'default', array $form_state_additions = []);
 
 }

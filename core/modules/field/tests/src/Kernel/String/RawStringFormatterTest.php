@@ -23,7 +23,7 @@ class RawStringFormatterTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'text', 'entity_test', 'system', 'filter', 'user');
+  public static $modules = ['field', 'text', 'entity_test', 'system', 'filter', 'user'];
 
   /**
    * @var string
@@ -52,7 +52,7 @@ class RawStringFormatterTest extends KernelTestBase {
     parent::setUp();
 
     // Configure the theme system.
-    $this->installConfig(array('system', 'field'));
+    $this->installConfig(['system', 'field']);
     \Drupal::service('router.builder')->rebuild();
     $this->installEntitySchema('entity_test');
 
@@ -60,25 +60,25 @@ class RawStringFormatterTest extends KernelTestBase {
     $this->bundle = $this->entityType;
     $this->fieldName = Unicode::strtolower($this->randomMachineName());
 
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => $this->entityType,
       'type' => 'string_long',
-    ));
+    ]);
     $field_storage->save();
 
-    $instance = FieldConfig::create(array(
+    $instance = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $this->bundle,
       'label' => $this->randomMachineName(),
-    ));
+    ]);
     $instance->save();
 
     $this->display = entity_get_display($this->entityType, $this->bundle, 'default')
-      ->setComponent($this->fieldName, array(
+      ->setComponent($this->fieldName, [
         'type' => 'string',
-        'settings' => array(),
-      ));
+        'settings' => [],
+      ]);
     $this->display->save();
   }
 
@@ -107,7 +107,7 @@ class RawStringFormatterTest extends KernelTestBase {
     $value .= "\n\n<strong>" . $this->randomString() . '</strong>';
     $value .= "\n\n" . $this->randomString();
 
-    $entity = EntityTest::create(array());
+    $entity = EntityTest::create([]);
     $entity->{$this->fieldName}->value = $value;
 
     // Verify that all HTML is escaped and newlines are retained.

@@ -16,7 +16,7 @@ class ConfigDiffTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test', 'system');
+  public static $modules = ['config_test', 'system'];
 
   /**
    * Tests calculating the difference between two sets of configuration.
@@ -32,7 +32,7 @@ class ConfigDiffTest extends KernelTestBase {
     $change_data = 'foobar';
 
     // Install the default config.
-    $this->installConfig(array('config_test'));
+    $this->installConfig(['config_test']);
     $original_data = \Drupal::config($config_name)->get();
 
     // Change a configuration value in sync.
@@ -75,10 +75,10 @@ class ConfigDiffTest extends KernelTestBase {
 
     // Test diffing a renamed config entity.
     $test_entity_id = $this->randomMachineName();
-    $test_entity = entity_create('config_test', array(
+    $test_entity = entity_create('config_test', [
       'id' => $test_entity_id,
       'label' => $this->randomMachineName(),
-    ));
+    ]);
     $test_entity->save();
     $data = $active->read('config_test.dynamic.' . $test_entity_id);
     $sync->write('config_test.dynamic.' . $test_entity_id, $data);
@@ -117,12 +117,12 @@ class ConfigDiffTest extends KernelTestBase {
     $sync_test_collection = $sync->createCollection('test');
 
     $config_name = 'config_test.test';
-    $data = array('foo' => 'bar');
+    $data = ['foo' => 'bar'];
 
     $active->write($config_name, $data);
     $sync->write($config_name, $data);
     $active_test_collection->write($config_name, $data);
-    $sync_test_collection->write($config_name, array('foo' => 'baz'));
+    $sync_test_collection->write($config_name, ['foo' => 'baz']);
 
     // Test the fields match in the default collection diff.
     $diff = \Drupal::service('config.manager')->diff($active, $sync, $config_name);

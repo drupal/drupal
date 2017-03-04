@@ -14,7 +14,7 @@ class DeleteFeedTest extends AggregatorTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = ['block'];
 
   /**
    * Deletes a feed and ensures that all of its services are deleted.
@@ -43,7 +43,7 @@ class DeleteFeedTest extends AggregatorTestBase {
     $this->assertResponse(404, 'Deleted feed source does not exists.');
 
     // Check database for feed.
-    $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $feed1->label(), ':url' => $feed1->getUrl()))->fetchField();
+    $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", [':title' => $feed1->label(), ':url' => $feed1->getUrl()])->fetchField();
     $this->assertFalse($result, 'Feed not found in database');
   }
 

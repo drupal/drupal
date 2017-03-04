@@ -45,7 +45,7 @@ class FilterFormatPermission extends ProcessPluginBase implements ContainerFacto
       $plugin_id,
       $plugin_definition,
       $migration,
-      $container->get('plugin.manager.migrate.process')->createInstance('migration', array('migration' => 'd6_filter_format'), $migration)
+      $container->get('plugin.manager.migrate.process')->createInstance('migration', ['migration' => 'd6_filter_format'], $migration)
     );
   }
 

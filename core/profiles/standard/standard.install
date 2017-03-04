@@ -25,8 +25,8 @@ function standard_install() {
   $user_settings->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save(TRUE);
 
   // Enable default permissions for system roles.
-  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access comments'));
-  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access comments', 'post comments', 'skip comment approval'));
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access comments', 'post comments', 'skip comment approval']);
 
   // Assign user 1 the "administrator" role.
   $user = User::load(1);
@@ -40,34 +40,34 @@ function standard_install() {
   // Enable the Contact link in the footer menu.
   /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
   $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-  $menu_link_manager->updateDefinition('contact.site_page', array('enabled' => TRUE));
+  $menu_link_manager->updateDefinition('contact.site_page', ['enabled' => TRUE]);
 
-  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
-  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access site-wide contact form'));
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access site-wide contact form']);
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access site-wide contact form']);
 
   // Allow authenticated users to use shortcuts.
-  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access shortcuts'));
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access shortcuts']);
 
   // Populate the default shortcut set.
-  $shortcut = Shortcut::create(array(
+  $shortcut = Shortcut::create([
     'shortcut_set' => 'default',
     'title' => t('Add content'),
     'weight' => -20,
-    'link' => array('uri' => 'internal:/node/add'),
-  ));
+    'link' => ['uri' => 'internal:/node/add'],
+  ]);
   $shortcut->save();
 
-  $shortcut = Shortcut::create(array(
+  $shortcut = Shortcut::create([
     'shortcut_set' => 'default',
     'title' => t('All content'),
     'weight' => -19,
-    'link' => array('uri' => 'internal:/admin/content'),
-  ));
+    'link' => ['uri' => 'internal:/admin/content'],
+  ]);
   $shortcut->save();
 
   // Allow all users to use search.
-  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('search content'));
-  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('search content'));
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['search content']);
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['search content']);
 
   // Enable the admin theme.
   \Drupal::configFactory()->getEditable('node.settings')->set('use_admin_theme', TRUE)->save(TRUE);

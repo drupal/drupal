@@ -60,9 +60,9 @@ function module_test_system_info_alter(&$info, Extension $file, $type) {
  * Implements hook_hook_info().
  */
 function module_test_hook_info() {
-  $hooks['test_hook'] = array(
+  $hooks['test_hook'] = [
     'group' => 'file',
-  );
+  ];
   return $hooks;
 }
 

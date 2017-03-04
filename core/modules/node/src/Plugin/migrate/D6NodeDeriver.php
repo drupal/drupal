@@ -101,7 +101,7 @@ class D6NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
     }
 
     // Read all CCK field instance definitions in the source database.
-    $fields = array();
+    $fields = [];
     try {
       $source_plugin = static::getSourcePlugin('d6_field_instance');
       $source_plugin->checkRequirements();

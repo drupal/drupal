@@ -63,10 +63,10 @@ class FormState implements FormStateInterface {
    *
    * @var array
    */
-  protected $build_info = array(
-    'args' => array(),
-    'files' => array(),
-  );
+  protected $build_info = [
+    'args' => [],
+    'files' => [],
+  ];
 
   /**
    * Similar to self::$build_info, but pertaining to
@@ -76,7 +76,7 @@ class FormState implements FormStateInterface {
    *
    * @var array
    */
-  protected $rebuild_info = array();
+  protected $rebuild_info = [];
 
   /**
    * Normally, after the entire form processing is completed and submit handlers
@@ -216,7 +216,7 @@ class FormState implements FormStateInterface {
    *
    * @var array
    */
-  protected $values = array();
+  protected $values = [];
 
   /**
    * An associative array of form value keys to be removed by cleanValues().
@@ -348,7 +348,7 @@ class FormState implements FormStateInterface {
    *
    * @var array
    */
-  protected $groups = array();
+  protected $groups = [];
 
   /**
    * This is not a special key, and no specific support is provided for it in
@@ -368,7 +368,7 @@ class FormState implements FormStateInterface {
    *
    * @var array
    */
-  protected $storage = array();
+  protected $storage = [];
 
   /**
    * A list containing copies of all submit and button elements in the form.
@@ -377,7 +377,7 @@ class FormState implements FormStateInterface {
    *
    * @var array
    */
-  protected $buttons = array();
+  protected $buttons = [];
 
   /**
    * Holds temporary data accessible during the current page request only.
@@ -413,7 +413,7 @@ class FormState implements FormStateInterface {
    *
    * @var array
    */
-  protected $errors = array();
+  protected $errors = [];
 
   /**
    * Stores which errors should be limited during validation.
@@ -618,7 +618,7 @@ class FormState implements FormStateInterface {
    * @see \Symfony\Component\HttpFoundation\Request::isMethodSafe()
    */
   protected function isRequestMethodSafe() {
-    return in_array($this->requestMethod, array('GET', 'HEAD'));
+    return in_array($this->requestMethod, ['GET', 'HEAD']);
   }
 
   /**
@@ -862,11 +862,11 @@ class FormState implements FormStateInterface {
     if (!isset($build_info['files']["$module:$name.$type"])) {
       // Only add successfully included files to the form state.
       if ($result = $this->moduleLoadInclude($module, $type, $name)) {
-        $build_info['files']["$module:$name.$type"] = array(
+        $build_info['files']["$module:$name.$type"] = [
           'type' => $type,
           'module' => $module,
           'name' => $name,
-        );
+        ];
         $this->setBuildInfo($build_info);
         return $result;
       }
@@ -998,7 +998,7 @@ class FormState implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
-  public function setRedirect($route_name, array $route_parameters = array(), array $options = array()) {
+  public function setRedirect($route_name, array $route_parameters = [], array $options = []) {
     $url = new Url($route_name, $route_parameters, $options);
     return $this->setRedirectUrl($url);
   }
@@ -1108,7 +1108,7 @@ class FormState implements FormStateInterface {
    */
   public function getError(array $element) {
     if ($errors = $this->getErrors()) {
-      $parents = array();
+      $parents = [];
       foreach ($element['#parents'] as $parent) {
         $parents[] = $parent;
         $key = implode('][', $parents);

@@ -36,7 +36,7 @@ class MachineName extends FieldPluginBase {
       }
     }
     else {
-      $this->valueOptions = array();
+      $this->valueOptions = [];
     }
   }
 
@@ -45,7 +45,7 @@ class MachineName extends FieldPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['machine_name'] = array('default' => FALSE);
+    $options['machine_name'] = ['default' => FALSE];
 
     return $options;
   }
@@ -56,12 +56,12 @@ class MachineName extends FieldPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['machine_name'] = array(
+    $form['machine_name'] = [
       '#title' => $this->t('Output machine name'),
       '#description' => $this->t('Display field as machine name.'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['machine_name']),
-    );
+    ];
   }
 
   /**

@@ -29,19 +29,19 @@ function image_uninstall() {
  */
 function image_requirements($phase) {
   if ($phase != 'runtime') {
-    return array();
+    return [];
   }
 
   $toolkit = \Drupal::service('image.toolkit.manager')->getDefaultToolkit();
   if ($toolkit) {
     $plugin_definition = $toolkit->getPluginDefinition();
-    $requirements = array(
-      'image.toolkit' => array(
+    $requirements = [
+      'image.toolkit' => [
         'title' => t('Image toolkit'),
         'value' => $toolkit->getPluginId(),
         'description' => $plugin_definition['title'],
-      ),
-    );
+      ],
+    ];
 
     foreach ($toolkit->getRequirements() as $key => $requirement) {
       $namespaced_key = 'image.toolkit.' . $toolkit->getPluginId() . '.' . $key;
@@ -49,14 +49,14 @@ function image_requirements($phase) {
     }
   }
   else {
-    $requirements = array(
-      'image.toolkit' => array(
+    $requirements = [
+      'image.toolkit' => [
         'title' => t('Image toolkit'),
         'value' => t('None'),
         'description' => t("No image toolkit is configured on the site. Check PHP installed extensions or add a contributed toolkit that doesn't require a PHP extension. Make sure that at least one valid image toolkit is enabled."),
         'severity' => REQUIREMENT_ERROR,
-      ),
-    );
+      ],
+    ];
   }
 
   return $requirements;

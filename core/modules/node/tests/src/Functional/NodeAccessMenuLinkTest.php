@@ -16,7 +16,7 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu_ui', 'block');
+  public static $modules = ['menu_ui', 'block'];
 
   /**
    * A user with permission to manage menu links and create nodes.
@@ -30,13 +30,13 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
 
     $this->drupalPlaceBlock('system_menu_block:main');
 
-    $this->contentAdminUser = $this->drupalCreateUser(array(
+    $this->contentAdminUser = $this->drupalCreateUser([
       'access content',
       'administer content types',
       'administer menu'
-    ));
+    ]);
 
-    $this->config('user.role.' . RoleInterface::ANONYMOUS_ID)->set('permissions', array())->save();
+    $this->config('user.role.' . RoleInterface::ANONYMOUS_ID)->set('permissions', [])->save();
   }
 
   /**
@@ -64,7 +64,7 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
 
     // Ensure anonymous users with "access content" permission see this menu
     // link.
-    $this->config('user.role.' . RoleInterface::ANONYMOUS_ID)->set('permissions', array('access content'))->save();
+    $this->config('user.role.' . RoleInterface::ANONYMOUS_ID)->set('permissions', ['access content'])->save();
     $this->drupalGet('');
     $this->assertLink($menu_link_title);
   }

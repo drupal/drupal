@@ -9,14 +9,14 @@
  * Implements hook_theme().
  */
 function twig_extension_test_theme($existing, $type, $theme, $path) {
-  return array(
-    'twig_extension_test_filter' => array(
-      'variables' => array('message' => NULL, 'safe_join_items' => NULL),
+  return [
+    'twig_extension_test_filter' => [
+      'variables' => ['message' => NULL, 'safe_join_items' => NULL],
       'template' => 'twig_extension_test.filter',
-    ),
-    'twig_extension_test_function' => array(
+    ],
+    'twig_extension_test_function' => [
       'render element' => 'element',
       'template' => 'twig_extension_test.function',
-    ),
-  );
+    ],
+  ];
 }

@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'chyess', 'chyeng', 'chyej', 'chyech', 'chyek', 'chyet', 'chyep', 'chyeh', 'cho', 'chog', 'chokk', 'chogs', 'chon', 'chonj', 'chonh', 'chod',
   0x10 => 'chol', 'cholg', 'cholm', 'cholb', 'chols', 'cholt', 'cholp', 'cholh', 'chom', 'chob', 'chobs', 'chos', 'choss', 'chong', 'choj', 'choch',
   0x20 => 'chok', 'chot', 'chop', 'choh', 'chwa', 'chwag', 'chwakk', 'chwags', 'chwan', 'chwanj', 'chwanh', 'chwad', 'chwal', 'chwalg', 'chwalm', 'chwalb',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'chwen', 'chwenj', 'chwenh', 'chwed', 'chwel', 'chwelg', 'chwelm', 'chwelb', 'chwels', 'chwelt', 'chwelp', 'chwelh', 'chwem', 'chweb', 'chwebs', 'chwes',
   0xE0 => 'chwess', 'chweng', 'chwej', 'chwech', 'chwek', 'chwet', 'chwep', 'chweh', 'chwi', 'chwig', 'chwikk', 'chwigs', 'chwin', 'chwinj', 'chwinh', 'chwid',
   0xF0 => 'chwil', 'chwilg', 'chwilm', 'chwilb', 'chwils', 'chwilt', 'chwilp', 'chwilh', 'chwim', 'chwib', 'chwibs', 'chwis', 'chwiss', 'chwing', 'chwij', 'chwich',
-);
+];

@@ -137,7 +137,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'example_module', $path);
 
-    $this->assertSame($this->libraryDiscoveryParser->buildByExtension('example_module'), array());
+    $this->assertSame($this->libraryDiscoveryParser->buildByExtension('example_module'), []);
   }
 
   /**
@@ -320,7 +320,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->assertEquals('file', $library['css'][0]['type']);
     $this->assertEquals($path . '/css/base.css', $library['css'][0]['data']);
 
-    $this->assertEquals(array('key' => 'value'), $library['drupalSettings']);
+    $this->assertEquals(['key' => 'value'], $library['drupalSettings']);
   }
 
   /**
@@ -443,65 +443,65 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->assertCount(1, $library['css']);
     $this->assertCount(1, $library['js']);
     $this->assertTrue(isset($library['license']));
-    $default_license = array(
+    $default_license = [
       'name' => 'GNU-GPL-2.0-or-later',
       'url' => 'https://www.drupal.org/licensing/faq',
       'gpl-compatible' => TRUE,
-    );
+    ];
     $this->assertEquals($library['license'], $default_license);
 
     // GPL2-licensed libraries.
     $library = $libraries['gpl2'];
     $this->assertCount(1, $library['css']);
     $this->assertCount(1, $library['js']);
-    $expected_license = array(
+    $expected_license = [
       'name' => 'gpl2',
       'url' => 'https://url-to-gpl2-license',
       'gpl-compatible' => TRUE,
-    );
+    ];
     $this->assertEquals($library['license'], $expected_license);
 
     // MIT-licensed libraries.
     $library = $libraries['mit'];
     $this->assertCount(1, $library['css']);
     $this->assertCount(1, $library['js']);
-    $expected_license = array(
+    $expected_license = [
       'name' => 'MIT',
       'url' => 'https://url-to-mit-license',
       'gpl-compatible' => TRUE,
-    );
+    ];
     $this->assertEquals($library['license'], $expected_license);
 
     // Libraries in the Public Domain.
     $library = $libraries['public-domain'];
     $this->assertCount(1, $library['css']);
     $this->assertCount(1, $library['js']);
-    $expected_license = array(
+    $expected_license = [
       'name' => 'Public Domain',
       'url' => 'https://url-to-public-domain-license',
       'gpl-compatible' => TRUE,
-    );
+    ];
     $this->assertEquals($library['license'], $expected_license);
 
     // Apache-licensed libraries.
     $library = $libraries['apache'];
     $this->assertCount(1, $library['css']);
     $this->assertCount(1, $library['js']);
-    $expected_license = array(
+    $expected_license = [
       'name' => 'apache',
       'url' => 'https://url-to-apache-license',
       'gpl-compatible' => FALSE,
-    );
+    ];
     $this->assertEquals($library['license'], $expected_license);
 
     // Copyrighted libraries.
     $library = $libraries['copyright'];
     $this->assertCount(1, $library['css']);
     $this->assertCount(1, $library['js']);
-    $expected_license = array(
+    $expected_license = [
       'name' => '© Some company',
       'gpl-compatible' => FALSE,
-    );
+    ];
     $this->assertEquals($library['license'], $expected_license);
   }
 

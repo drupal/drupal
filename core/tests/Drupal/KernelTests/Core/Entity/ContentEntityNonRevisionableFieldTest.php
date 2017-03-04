@@ -57,21 +57,21 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
     $user2 = $this->createUser();
 
     // Create a test entity.
-    $entity = EntityTestMulRev::create(array(
+    $entity = EntityTestMulRev::create([
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
       'language' => 'en',
       'non_rev_field' => 'Huron',
-    ));
+    ]);
     $entity->save();
 
     // Create a test entity.
-    $entity2 = EntityTestMulRev::create(array(
+    $entity2 = EntityTestMulRev::create([
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
       'language' => 'en',
       'non_rev_field' => 'Michigan',
-    ));
+    ]);
     $entity2->save();
 
     $this->assertEquals('Huron', $entity->get('non_rev_field')->value, 'Huron found on entity 1');
@@ -123,19 +123,19 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
     $user2 = $this->createUser();
 
     // Create a test entity.
-    $entity = EntityTestRev::create(array(
+    $entity = EntityTestRev::create([
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
       'non_rev_field' => 'Superior',
-    ));
+    ]);
     $entity->save();
 
     // Create a test entity.
-    $entity2 = EntityTestRev::create(array(
+    $entity2 = EntityTestRev::create([
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
       'non_rev_field' => 'Ontario',
-    ));
+    ]);
     $entity2->save();
 
     $this->assertEquals('Superior', $entity->get('non_rev_field')->value, 'Superior found on entity 1');

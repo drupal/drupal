@@ -24,24 +24,24 @@ class IntegerItem extends NumericItemBase {
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return array(
+    return [
       'unsigned' => FALSE,
       // Valid size property values include: 'tiny', 'small', 'medium', 'normal'
       // and 'big'.
       'size' => 'normal',
-    ) + parent::defaultStorageSettings();
+    ] + parent::defaultStorageSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function defaultFieldSettings() {
-    return array(
+    return [
       'min' => '',
       'max' => '',
       'prefix' => '',
       'suffix' => '',
-    ) + parent::defaultFieldSettings();
+    ] + parent::defaultFieldSettings();
   }
 
   /**
@@ -65,17 +65,17 @@ class IntegerItem extends NumericItemBase {
     // integer to be positive.
     if ($this->getSetting('unsigned')) {
       $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
-      $constraints[] = $constraint_manager->create('ComplexData', array(
-        'value' => array(
-          'Range' => array(
+      $constraints[] = $constraint_manager->create('ComplexData', [
+        'value' => [
+          'Range' => [
             'min' => 0,
-            'minMessage' => t('%name: The integer must be larger or equal to %min.', array(
+            'minMessage' => t('%name: The integer must be larger or equal to %min.', [
               '%name' => $this->getFieldDefinition()->getLabel(),
               '%min' => 0,
-            )),
-          ),
-        ),
-      ));
+            ]),
+          ],
+        ],
+      ]);
     }
 
     return $constraints;
@@ -85,18 +85,18 @@ class IntegerItem extends NumericItemBase {
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'value' => array(
+    return [
+      'columns' => [
+        'value' => [
           'type' => 'int',
           // Expose the 'unsigned' setting in the field item schema.
           'unsigned' => $field_definition->getSetting('unsigned'),
           // Expose the 'size' setting in the field item schema. For instance,
           // supply 'big' as a value to produce a 'bigint' type.
           'size' => $field_definition->getSetting('size'),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**

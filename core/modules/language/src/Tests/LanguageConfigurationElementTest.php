@@ -20,11 +20,11 @@ class LanguageConfigurationElementTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'node', 'language', 'language_elements_test', 'field_ui');
+  public static $modules = ['taxonomy', 'node', 'language', 'language_elements_test', 'field_ui'];
 
   protected function setUp() {
     parent::setUp();
-    $user = $this->drupalCreateUser(array('access administration pages', 'administer languages', 'administer content types'));
+    $user = $this->drupalCreateUser(['access administration pages', 'administer languages', 'administer content types']);
     $this->drupalLogin($user);
   }
 
@@ -60,12 +60,12 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->assertFieldChecked('edit-lang-configuration-language-alterable');
 
     // Test if content type settings have been saved.
-    $edit = array(
+    $edit = [
       'name' => 'Page',
       'type' => 'page',
       'language_configuration[langcode]' => 'authors_default',
       'language_configuration[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/add', $edit, 'Save and manage fields');
 
     // Make sure the settings are saved when creating the content type.
@@ -80,11 +80,11 @@ class LanguageConfigurationElementTest extends WebTestBase {
    */
   public function testDefaultLangcode() {
     // Add some custom languages.
-    foreach (array('aa', 'bb', 'cc') as $language_code) {
-      ConfigurableLanguage::create(array(
+    foreach (['aa', 'bb', 'cc'] as $language_code) {
+      ConfigurableLanguage::create([
         'id' => $language_code,
         'label' => $this->randomMachineName(),
-      ))->save();
+      ])->save();
     }
 
     // Fixed language.
@@ -154,14 +154,14 @@ class LanguageConfigurationElementTest extends WebTestBase {
     // Create the article content type first if the profile used is not the
     // standard one.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+      $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     }
-    $admin_user = $this->drupalCreateUser(array('administer content types'));
+    $admin_user = $this->drupalCreateUser(['administer content types']);
     $this->drupalLogin($admin_user);
-    $edit = array(
+    $edit = [
       'language_configuration[langcode]' => 'current_interface',
       'language_configuration[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     // Check the language default configuration for the articles.
     $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', 'article');
@@ -169,9 +169,9 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->assertEqual($configuration->getDefaultLangcode(), 'current_interface', 'The default language configuration has been saved on the Article content type.');
     $this->assertTrue($configuration->isLanguageAlterable(), 'The alterable language configuration has been saved on the Article content type.');
     // Update the article content type by changing the title label.
-    $edit = array(
+    $edit = [
       'title_label' => 'Name'
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     // Check that we still have the settings for the updated node type.
     $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', 'article');
@@ -187,19 +187,19 @@ class LanguageConfigurationElementTest extends WebTestBase {
     // Create the article content type first if the profile used is not the
     // standard one.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array(
+      $this->drupalCreateContentType([
         'type' => 'article',
         'name' => 'Article'
-      ));
+      ]);
     }
-    $admin_user = $this->drupalCreateUser(array('administer content types'));
+    $admin_user = $this->drupalCreateUser(['administer content types']);
     $this->drupalLogin($admin_user);
 
     // Create language configuration for the articles.
-    $edit = array(
+    $edit = [
       'language_configuration[langcode]' => 'authors_default',
       'language_configuration[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
 
     // Check the language default configuration for articles is present.
@@ -207,7 +207,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->assertTrue($configuration, 'The language configuration is present.');
 
     // Delete 'article' bundle.
-    $this->drupalPostForm('admin/structure/types/manage/article/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/structure/types/manage/article/delete', [], t('Delete'));
 
     // Check that the language configuration has been deleted.
     \Drupal::entityManager()->getStorage('language_content_settings')->resetCache();
@@ -225,12 +225,12 @@ class LanguageConfigurationElementTest extends WebTestBase {
     ]);
     $vocabulary->save();
 
-    $admin_user = $this->drupalCreateUser(array('administer taxonomy'));
+    $admin_user = $this->drupalCreateUser(['administer taxonomy']);
     $this->drupalLogin($admin_user);
-    $edit = array(
+    $edit = [
       'default_language[langcode]' => 'current_interface',
       'default_language[language_alterable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/taxonomy/manage/country', $edit, t('Save'));
 
     // Check the language default configuration.
@@ -239,9 +239,9 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->assertEqual($configuration->getDefaultLangcode(), 'current_interface', 'The default language configuration has been saved on the Country vocabulary.');
     $this->assertTrue($configuration->isLanguageAlterable(), 'The alterable language configuration has been saved on the Country vocabulary.');
     // Update the vocabulary.
-    $edit = array(
+    $edit = [
       'name' => 'Nation'
-    );
+    ];
     $this->drupalPostForm('admin/structure/taxonomy/manage/country', $edit, t('Save'));
     // Check that we still have the settings for the updated vocabulary.
     $configuration = ContentLanguageSettings::loadByEntityTypeBundle('taxonomy_term', 'country');

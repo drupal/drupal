@@ -19,7 +19,7 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('link', 'menu_ui', 'menu_link_content', 'node');
+  public static $modules = ['link', 'menu_ui', 'menu_link_content', 'node'];
 
   /**
    * {@inheritdoc}

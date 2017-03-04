@@ -15,7 +15,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('language', 'content_translation');
+  public static $modules = ['language', 'content_translation'];
 
   /**
    * The name of the file field used in the test.
@@ -31,14 +31,14 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     parent::setUp();
 
     // Create the "Basic page" node type.
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create a file field on the "Basic page" node type.
     $this->fieldName = strtolower($this->randomMachineName());
-    $this->createFileField($this->fieldName, 'node', 'page', array('uri_scheme' => 'private'));
+    $this->createFileField($this->fieldName, 'node', 'page', ['uri_scheme' => 'private']);
 
     // Create and log in user.
-    $permissions = array(
+    $permissions = [
       'access administration pages',
       'administer content translation',
       'administer content types',
@@ -47,21 +47,21 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
       'create page content',
       'edit any page content',
       'translate any entity',
-    );
+    ];
     $admin_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($admin_user);
 
     // Add a second language.
-    $edit = array();
+    $edit = [];
     $edit['predefined_langcode'] = 'fr';
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable translation for "Basic page" nodes.
-    $edit = array(
+    $edit = [
       'entity_types[node]' => 1,
       'settings[node][page][translatable]' => 1,
       "settings[node][page][fields][$this->fieldName]" => 1,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
     \Drupal::entityManager()->clearCachedDefinitions();
   }
@@ -75,10 +75,10 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->assertTrue($definitions[$this->fieldName]->isTranslatable(), 'Node file field is translatable.');
 
     // Create a default language node.
-    $default_language_node = $this->drupalCreateNode(array('type' => 'page'));
+    $default_language_node = $this->drupalCreateNode(['type' => 'page']);
 
     // Edit the node to upload a file.
-    $edit = array();
+    $edit = [];
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = drupal_realpath($this->drupalGetTestFiles('text')[0]->uri);
     $this->drupalPostForm('node/' . $default_language_node->id() . '/edit', $edit, t('Save'));
@@ -88,7 +88,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->rebuildContainer();
 
     // Ensure the file can be downloaded.
-    \Drupal::entityManager()->getStorage('node')->resetCache(array($default_language_node->id()));
+    \Drupal::entityManager()->getStorage('node')->resetCache([$default_language_node->id()]);
     $node = Node::load($default_language_node->id());
     $node_file = File::load($node->{$this->fieldName}->target_id);
     $this->drupalGet(file_create_url($node_file->getFileUri()));
@@ -99,10 +99,10 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->clickLink(t('Add'));
 
     // Remove the existing file.
-    $this->drupalPostForm(NULL, array(), t('Remove'));
+    $this->drupalPostForm(NULL, [], t('Remove'));
 
     // Upload a different file.
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = drupal_realpath($this->drupalGetTestFiles('text')[1]->uri);
@@ -110,7 +110,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $last_fid = $this->getLastFileId();
 
     // Verify the translation was created.
-    \Drupal::entityManager()->getStorage('node')->resetCache(array($default_language_node->id()));
+    \Drupal::entityManager()->getStorage('node')->resetCache([$default_language_node->id()]);
     $default_language_node = Node::load($default_language_node->id());
     $this->assertTrue($default_language_node->hasTranslation('fr'), 'Node found in database.');
     $this->assertTrue($last_fid > $last_fid_prior, 'New file got saved.');

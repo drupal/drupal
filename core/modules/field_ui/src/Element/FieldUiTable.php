@@ -42,7 +42,7 @@ class FieldUiTable extends Table {
    * @see \Drupal\Core\Render\Element\Table::preRenderTable()
    */
   public static function tablePreRender($elements) {
-    $js_settings = array();
+    $js_settings = [];
 
     // For each region, build the tree structure from the weight and parenting
     // data contained in the flat form structure, to determine row order and

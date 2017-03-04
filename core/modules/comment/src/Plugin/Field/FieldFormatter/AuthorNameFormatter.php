@@ -24,19 +24,19 @@ class AuthorNameFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     foreach ($items as $delta => $item) {
       /** @var $comment \Drupal\comment\CommentInterface */
       $comment = $item->getEntity();
       $account = $comment->getOwner();
-      $elements[$delta] = array(
+      $elements[$delta] = [
         '#theme' => 'username',
         '#account' => $account,
-        '#cache' => array(
+        '#cache' => [
           'tags' => $account->getCacheTags() + $comment->getCacheTags(),
-        ),
-      );
+        ],
+      ];
     }
 
     return $elements;

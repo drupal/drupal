@@ -73,61 +73,61 @@ class DrupalDateTimeTest extends UnitTestCase {
     $negative_1_hour = new \DateInterval('PT1H');
     $negative_1_hour->invert = 1;
 
-    return array(
+    return [
 
       // There should be a 19 hour time interval between
       // new years in Sydney and new years in LA in year 2000.
-      array(
+      [
         'input2' => DrupalDateTime::createFromFormat('Y-m-d H:i:s', '2000-01-01 00:00:00', new \DateTimeZone('Australia/Sydney'), $settings),
         'input1' => DrupalDateTime::createFromFormat('Y-m-d H:i:s', '2000-01-01 00:00:00', new \DateTimeZone('America/Los_Angeles'), $settings),
         'absolute' => FALSE,
         'expected' => $positive_19_hours,
-      ),
+      ],
       // In 1970 Sydney did not observe daylight savings time
       // So there is only a 18 hour time interval.
-      array(
+      [
         'input2' => DrupalDateTime::createFromFormat('Y-m-d H:i:s', '1970-01-01 00:00:00', new \DateTimeZone('Australia/Sydney'), $settings),
         'input1' => DrupalDateTime::createFromFormat('Y-m-d H:i:s', '1970-01-01 00:00:00', new \DateTimeZone('America/Los_Angeles'), $settings),
         'absolute' => FALSE,
         'expected' => $positive_18_hours,
-      ),
-      array(
+      ],
+      [
         'input1' => DrupalDateTime::createFromFormat('U', 3600, new \DateTimeZone('America/Los_Angeles'), $settings),
         'input2' => DrupalDateTime::createFromFormat('U', 0, $utc_tz, $settings),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
-      ),
-      array(
+      ],
+      [
         'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
         'input2' => DrupalDateTime::createFromFormat('U', 0, $utc_tz, $settings),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
-      ),
-      array(
+      ],
+      [
         'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
         'input2' => \DateTime::createFromFormat('U', 0),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
-      ),
-      array(
+      ],
+      [
         'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
         'input2' => DrupalDateTime::createFromFormat('U', 0, $utc_tz, $settings),
         'absolute' => TRUE,
         'expected' => $positive_1_hour,
-      ),
-      array(
+      ],
+      [
         'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
         'input2' => \DateTime::createFromFormat('U', 0),
         'absolute' => TRUE,
         'expected' => $positive_1_hour,
-      ),
-      array(
+      ],
+      [
         'input1' => DrupalDateTime::createFromFormat('U', 0, $utc_tz, $settings),
         'input2' => DrupalDateTime::createFromFormat('U', 0, $utc_tz, $settings),
         'absolute' => FALSE,
         'expected' => $empty_interval,
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -142,18 +142,18 @@ class DrupalDateTimeTest extends UnitTestCase {
   public function providerTestInvalidDateDiff() {
     $settings = ['langcode' => 'en'];
     $utc_tz = new \DateTimeZone('UTC');
-    return array(
-      array(
+    return [
+      [
         'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
         'input2' => '1970-01-01 00:00:00',
         'absolute' => FALSE,
-      ),
-      array(
+      ],
+      [
         'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
         'input2' => NULL,
         'absolute' => FALSE,
-      ),
-    );
+      ],
+    ];
   }
 
 }

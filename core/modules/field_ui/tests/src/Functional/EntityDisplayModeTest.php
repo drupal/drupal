@@ -35,7 +35,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // Test the listing page.
     $this->drupalGet('admin/structure/display-modes/view');
     $this->assertResponse(403);
-    $this->drupalLogin($this->drupalCreateUser(array('administer display modes')));
+    $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/view');
     $this->assertResponse(200);
     $this->assertText(t('Add view mode'));
@@ -50,29 +50,29 @@ class EntityDisplayModeTest extends BrowserTestBase {
 
     // Test adding a view mode including dots in machine_name.
     $this->clickLink(t('Test entity'));
-    $edit = array(
+    $edit = [
       'id' => strtolower($this->randomMachineName()) . '.' . strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     // Test adding a view mode.
-    $edit = array(
+    $edit = [
       'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Saved the %label view mode.', array('%label' => $edit['label'])));
+    $this->assertRaw(t('Saved the %label view mode.', ['%label' => $edit['label']]));
 
     // Test editing the view mode.
     $this->drupalGet('admin/structure/display-modes/view/manage/entity_test.' . $edit['id']);
 
     // Test deleting the view mode.
     $this->clickLink(t('Delete'));
-    $this->assertRaw(t('Are you sure you want to delete the view mode %label?', array('%label' => $edit['label'])));
+    $this->assertRaw(t('Are you sure you want to delete the view mode %label?', ['%label' => $edit['label']]));
     $this->drupalPostForm(NULL, NULL, t('Delete'));
-    $this->assertRaw(t('The view mode %label has been deleted.', array('%label' => $edit['label'])));
+    $this->assertRaw(t('The view mode %label has been deleted.', ['%label' => $edit['label']]));
   }
 
   /**
@@ -82,7 +82,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // Test the listing page.
     $this->drupalGet('admin/structure/display-modes/form');
     $this->assertResponse(403);
-    $this->drupalLogin($this->drupalCreateUser(array('administer display modes')));
+    $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/form');
     $this->assertResponse(200);
     $this->assertText(t('Add form mode'));
@@ -96,29 +96,29 @@ class EntityDisplayModeTest extends BrowserTestBase {
 
     // Test adding a view mode including dots in machine_name.
     $this->clickLink(t('Test entity'));
-    $edit = array(
+    $edit = [
       'id' => strtolower($this->randomMachineName()) . '.' . strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     // Test adding a form mode.
-    $edit = array(
+    $edit = [
       'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Saved the %label form mode.', array('%label' => $edit['label'])));
+    $this->assertRaw(t('Saved the %label form mode.', ['%label' => $edit['label']]));
 
     // Test editing the form mode.
     $this->drupalGet('admin/structure/display-modes/form/manage/entity_test.' . $edit['id']);
 
     // Test deleting the form mode.
     $this->clickLink(t('Delete'));
-    $this->assertRaw(t('Are you sure you want to delete the form mode %label?', array('%label' => $edit['label'])));
+    $this->assertRaw(t('Are you sure you want to delete the form mode %label?', ['%label' => $edit['label']]));
     $this->drupalPostForm(NULL, NULL, t('Delete'));
-    $this->assertRaw(t('The form mode %label has been deleted.', array('%label' => $edit['label'])));
+    $this->assertRaw(t('The form mode %label has been deleted.', ['%label' => $edit['label']]));
   }
 
 }

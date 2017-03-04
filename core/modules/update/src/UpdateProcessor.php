@@ -104,8 +104,8 @@ class UpdateProcessor implements UpdateProcessorInterface {
     $this->availableReleasesTempStore = $key_value_expirable_factory->get('update_available_releases');
     $this->stateStore = $state_store;
     $this->privateKey = $private_key;
-    $this->fetchTasks = array();
-    $this->failed = array();
+    $this->fetchTasks = [];
+    $this->failed = [];
   }
 
   /**
@@ -151,7 +151,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
     $max_fetch_attempts = $this->updateSettings->get('fetch.max_attempts');
 
     $success = FALSE;
-    $available = array();
+    $available = [];
     $site_key = Crypt::hmacBase64($base_url, $this->privateKey->get());
     $fetch_url_base = $this->updateFetcher->getFetchBaseUrl($project);
     $project_name = $project['name'];
@@ -219,23 +219,23 @@ class UpdateProcessor implements UpdateProcessorInterface {
     if (!isset($xml->short_name)) {
       return NULL;
     }
-    $data = array();
+    $data = [];
     foreach ($xml as $k => $v) {
       $data[$k] = (string) $v;
     }
-    $data['releases'] = array();
+    $data['releases'] = [];
     if (isset($xml->releases)) {
       foreach ($xml->releases->children() as $release) {
         $version = (string) $release->version;
-        $data['releases'][$version] = array();
+        $data['releases'][$version] = [];
         foreach ($release->children() as $k => $v) {
           $data['releases'][$version][$k] = (string) $v;
         }
-        $data['releases'][$version]['terms'] = array();
+        $data['releases'][$version]['terms'] = [];
         if ($release->terms) {
           foreach ($release->terms->children() as $term) {
             if (!isset($data['releases'][$version]['terms'][(string) $term->name])) {
-              $data['releases'][$version]['terms'][(string) $term->name] = array();
+              $data['releases'][$version]['terms'][(string) $term->name] = [];
             }
             $data['releases'][$version]['terms'][(string) $term->name][] = (string) $term->value;
           }

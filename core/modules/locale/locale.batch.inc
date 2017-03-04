@@ -38,11 +38,11 @@ require_once __DIR__ . '/locale.translation.inc';
  */
 function locale_translation_batch_status_check($project, $langcode, array $options, &$context) {
   $failure = $checked = FALSE;
-  $options += array(
+  $options += [
     'finish_feedback' => TRUE,
     'use_remote' => TRUE,
-  );
-  $source = locale_translation_get_status(array($project), array($langcode));
+  ];
+  $source = locale_translation_get_status([$project], [$langcode]);
   $source = $source[$project][$langcode];
 
   // Check the status of local translation files.
@@ -82,7 +82,7 @@ function locale_translation_batch_status_check($project, $langcode, array $optio
   if ($failure && !$checked) {
     $context['results']['failed_files'][] = $source->name;
   }
-  $context['message'] = t('Checked translation for %project.', array('%project' => $source->project));
+  $context['message'] = t('Checked translation for %project.', ['%project' => $source->project]);
 }
 
 /**
@@ -99,7 +99,7 @@ function locale_translation_batch_status_finished($success, $results) {
   if ($success) {
     if (isset($results['failed_files'])) {
       if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
-        $message = \Drupal::translation()->formatPlural(count($results['failed_files']), 'One translation file could not be checked. <a href=":url">See the log</a> for details.', '@count translation files could not be checked. <a href=":url">See the log</a> for details.', array(':url' => \Drupal::url('dblog.overview')));
+        $message = \Drupal::translation()->formatPlural(count($results['failed_files']), 'One translation file could not be checked. <a href=":url">See the log</a> for details.', '@count translation files could not be checked. <a href=":url">See the log</a> for details.', [':url' => \Drupal::url('dblog.overview')]);
       }
       else {
         $message = \Drupal::translation()->formatPlural(count($results['failed_files']), 'One translation files could not be checked. See the log for details.', '@count translation files could not be checked. See the log for details.');
@@ -139,12 +139,12 @@ function locale_translation_batch_status_finished($success, $results) {
  * @see locale_translation_batch_fetch_import()
  */
 function locale_translation_batch_fetch_download($project, $langcode, &$context) {
-  $sources = locale_translation_get_status(array($project), array($langcode));
+  $sources = locale_translation_get_status([$project], [$langcode]);
   if (isset($sources[$project][$langcode])) {
     $source = $sources[$project][$langcode];
     if (isset($source->type) && $source->type == LOCALE_TRANSLATION_REMOTE) {
       if ($file = locale_translation_download_source($source->files[LOCALE_TRANSLATION_REMOTE], 'translations://')) {
-        $context['message'] = t('Downloaded translation for %project.', array('%project' => $source->project));
+        $context['message'] = t('Downloaded translation for %project.', ['%project' => $source->project]);
         locale_translation_status_save($source->name, $source->langcode, LOCALE_TRANSLATION_LOCAL, $file);
       }
       else {
@@ -173,16 +173,16 @@ function locale_translation_batch_fetch_download($project, $langcode, &$context)
  * @see locale_translation_batch_fetch_download()
  */
 function locale_translation_batch_fetch_import($project, $langcode, $options, &$context) {
-  $sources = locale_translation_get_status(array($project), array($langcode));
+  $sources = locale_translation_get_status([$project], [$langcode]);
   if (isset($sources[$project][$langcode])) {
     $source = $sources[$project][$langcode];
     if (isset($source->type)) {
       if ($source->type == LOCALE_TRANSLATION_REMOTE || $source->type == LOCALE_TRANSLATION_LOCAL) {
         $file = $source->files[LOCALE_TRANSLATION_LOCAL];
         module_load_include('bulk.inc', 'locale');
-        $options += array(
-          'message' => t('Importing translation for %project.', array('%project' => $source->project)),
-        );
+        $options += [
+          'message' => t('Importing translation for %project.', ['%project' => $source->project]),
+        ];
         // Import the translation file. For large files the batch operations is
         // progressive and will be called repeatedly until finished.
         locale_translate_batch_import($file, $options, $context);
@@ -191,7 +191,7 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
         if (isset($context['finished']) && $context['finished'] == 1) {
           // The import is successful.
           if (isset($context['results']['files'][$file->uri])) {
-            $context['message'] = t('Imported translation for %project.', array('%project' => $source->project));
+            $context['message'] = t('Imported translation for %project.', ['%project' => $source->project]);
 
             // Save the data of imported source into the {locale_file} table and
             // update the current translation status.
@@ -243,7 +243,7 @@ function locale_translation_http_check($uri) {
         $actual_uri = (string) $request_uri;
       }
     ]])->head($uri);
-    $result = array();
+    $result = [];
 
     // Return the effective URL if it differs from the requested.
     if ($actual_uri && $actual_uri !== $uri) {
@@ -262,10 +262,10 @@ function locale_translation_http_check($uri) {
         // theme does not define the location of a translation file. By default
         // the file is checked at the translation server, but it will not be
         // found there.
-        $logger->notice('Translation file not found: @uri.', array('@uri' => $uri));
+        $logger->notice('Translation file not found: @uri.', ['@uri' => $uri]);
         return TRUE;
       }
-      $logger->notice('HTTP request to @url failed with error: @error.', array('@url' => $uri, '@error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()));
+      $logger->notice('HTTP request to @url failed with error: @error.', ['@url' => $uri, '@error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()]);
     }
   }
 
@@ -298,6 +298,6 @@ function locale_translation_download_source($source_file, $directory = 'temporar
     $file->timestamp = filemtime($uri);
     return $file;
   }
-  \Drupal::logger('locale')->error('Unable to download translation file @uri.', array('@uri' => $source_file->uri));
+  \Drupal::logger('locale')->error('Unable to download translation file @uri.', ['@uri' => $source_file->uri]);
   return FALSE;
 }

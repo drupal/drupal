@@ -202,9 +202,9 @@ trait EntityDefinitionTestTrait {
    * @see \Drupal\entity_test\EntityTestStorageSchema::getEntitySchema()
    */
   protected function addEntityIndex() {
-    $indexes = array(
-      'entity_test_update__new_index' => array('name', 'user_id'),
-    );
+    $indexes = [
+      'entity_test_update__new_index' => ['name', 'user_id'],
+    ];
     $this->state->set('entity_test_update.additional_entity_indexes', $indexes);
   }
 

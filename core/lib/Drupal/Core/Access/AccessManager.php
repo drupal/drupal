@@ -78,7 +78,7 @@ class AccessManager implements AccessManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function checkNamedRoute($route_name, array $parameters = array(), AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function checkNamedRoute($route_name, array $parameters = [], AccountInterface $account = NULL, $return_as_object = FALSE) {
     try {
       $route = $this->routeProvider->getRouteByName($route_name, $parameters);
 
@@ -120,7 +120,7 @@ class AccessManager implements AccessManagerInterface {
       $account = $this->currentUser;
     }
     $route = $route_match->getRouteObject();
-    $checks = $route->getOption('_access_checks') ?: array();
+    $checks = $route->getOption('_access_checks') ?: [];
 
     // Filter out checks which require the incoming request.
     if (!isset($request)) {

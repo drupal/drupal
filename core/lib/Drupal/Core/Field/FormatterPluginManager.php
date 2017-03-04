@@ -52,7 +52,7 @@ class FormatterPluginManager extends DefaultPluginManager {
   /**
    * {@inheritdoc}
    */
-  public function createInstance($plugin_id, array $configuration = array()) {
+  public function createInstance($plugin_id, array $configuration = []) {
     $plugin_definition = $this->getDefinition($plugin_id);
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
 
@@ -119,10 +119,10 @@ class FormatterPluginManager extends DefaultPluginManager {
       $plugin_id = $field_type_definition['default_formatter'];
     }
 
-    $configuration += array(
+    $configuration += [
       'field_definition' => $field_definition,
       'view_mode' => $options['view_mode'],
-    );
+    ];
     return $this->createInstance($plugin_id, $configuration);
   }
 
@@ -139,11 +139,11 @@ class FormatterPluginManager extends DefaultPluginManager {
    */
   public function prepareConfiguration($field_type, array $configuration) {
     // Fill in defaults for missing properties.
-    $configuration += array(
+    $configuration += [
       'label' => 'above',
-      'settings' => array(),
-      'third_party_settings' => array(),
-    );
+      'settings' => [],
+      'third_party_settings' => [],
+    ];
     // If no formatter is specified, use the default formatter.
     if (!isset($configuration['type'])) {
       $field_type = $this->fieldTypeManager->getDefinition($field_type);
@@ -168,10 +168,10 @@ class FormatterPluginManager extends DefaultPluginManager {
    */
   public function getOptions($field_type = NULL) {
     if (!isset($this->formatterOptions)) {
-      $options = array();
+      $options = [];
       $field_types = $this->fieldTypeManager->getDefinitions();
       $formatter_types = $this->getDefinitions();
-      uasort($formatter_types, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
+      uasort($formatter_types, ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
       foreach ($formatter_types as $name => $formatter_type) {
         foreach ($formatter_type['field_types'] as $formatter_field_type) {
           // Check that the field type exists.
@@ -183,7 +183,7 @@ class FormatterPluginManager extends DefaultPluginManager {
       $this->formatterOptions = $options;
     }
     if ($field_type) {
-      return !empty($this->formatterOptions[$field_type]) ? $this->formatterOptions[$field_type] : array();
+      return !empty($this->formatterOptions[$field_type]) ? $this->formatterOptions[$field_type] : [];
     }
     return $this->formatterOptions;
   }
@@ -204,7 +204,7 @@ class FormatterPluginManager extends DefaultPluginManager {
       $plugin_class = DefaultFactory::getPluginClass($type, $plugin_definition);
       return $plugin_class::defaultSettings();
     }
-    return array();
+    return [];
   }
 
 }

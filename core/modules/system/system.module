@@ -95,29 +95,29 @@ function system_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.system':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The System module is integral to the site: it provides user interfaces for many core systems and settings, as well as the basic administrative menu structure. For more information, see the <a href=":system">online documentation for the System module</a>.', array(':system' => 'https://www.drupal.org/documentation/modules/system')) . '</p>';
+      $output .= '<p>' . t('The System module is integral to the site: it provides user interfaces for many core systems and settings, as well as the basic administrative menu structure. For more information, see the <a href=":system">online documentation for the System module</a>.', [':system' => 'https://www.drupal.org/documentation/modules/system']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing modules') . '</dt>';
-      $output .= '<dd>' . t('Users with appropriate permission can install and uninstall modules from the <a href=":modules">Extend page</a>. Depending on which distribution or installation profile you choose when you install your site, several modules are installed and others are provided but not installed. Each module provides a discrete set of features; modules may be installed or uninstalled depending on the needs of the site. Many additional modules contributed by members of the Drupal community are available for download from the <a href=":drupal-modules">Drupal.org module page</a>. Note that uninstalling a module is a destructive action: when you uninstall a module, you will permanently lose all data connected to the module.', array(':modules' => \Drupal::url('system.modules_list'), ':drupal-modules' => 'https://www.drupal.org/project/modules')) . '</dd>';
+      $output .= '<dd>' . t('Users with appropriate permission can install and uninstall modules from the <a href=":modules">Extend page</a>. Depending on which distribution or installation profile you choose when you install your site, several modules are installed and others are provided but not installed. Each module provides a discrete set of features; modules may be installed or uninstalled depending on the needs of the site. Many additional modules contributed by members of the Drupal community are available for download from the <a href=":drupal-modules">Drupal.org module page</a>. Note that uninstalling a module is a destructive action: when you uninstall a module, you will permanently lose all data connected to the module.', [':modules' => \Drupal::url('system.modules_list'), ':drupal-modules' => 'https://www.drupal.org/project/modules']) . '</dd>';
       $output .= '<dt>' . t('Managing themes') . '</dt>';
-      $output .= '<dd>' . t('Users with appropriate permission can install and uninstall themes on the <a href=":themes">Appearance page</a>. Themes determine the design and presentation of your site. Depending on which distribution or installation profile you choose when you install your site, a default theme is installed, and possibly a different theme for administration pages. Other themes are provided but not installed, and additional contributed themes are available at the <a href=":drupal-themes">Drupal.org theme page</a>.', array(':themes' => \Drupal::url('system.themes_page'), ':drupal-themes' => 'https://www.drupal.org/project/themes')) . '</dd>';
+      $output .= '<dd>' . t('Users with appropriate permission can install and uninstall themes on the <a href=":themes">Appearance page</a>. Themes determine the design and presentation of your site. Depending on which distribution or installation profile you choose when you install your site, a default theme is installed, and possibly a different theme for administration pages. Other themes are provided but not installed, and additional contributed themes are available at the <a href=":drupal-themes">Drupal.org theme page</a>.', [':themes' => \Drupal::url('system.themes_page'), ':drupal-themes' => 'https://www.drupal.org/project/themes']) . '</dd>';
       $output .= '<dt>' . t('Disabling drag-and-drop functionality') . '</dt>';
       $output .= '<dd>' . t('The default drag-and-drop user interface for ordering tables in the administrative interface presents a challenge for some users, including users of screen readers and other assistive technology. The drag-and-drop interface can be disabled in a table by clicking a link labeled "Show row weights" above the table. The replacement interface allows users to order the table by choosing numerical weights instead of dragging table rows.') . '</dd>';
       $output .= '<dt>' . t('Configuring basic site settings') . '</dt>';
-      $output .= '<dd>' . t('The System module provides pages for managing basic site configuration, including <a href=":date-time-settings">Date and time formats</a> and <a href=":site-info">Basic site settings</a> (site name, email address to send mail from, home page, and error pages). Additional configuration pages are listed on the main <a href=":config">Configuration page</a>.', array(':date-time-settings' => \Drupal::url('entity.date_format.collection'), ':site-info' => \Drupal::url('system.site_information_settings'), ':config' => \Drupal::url('system.admin_config'))) . '</dd>';
+      $output .= '<dd>' . t('The System module provides pages for managing basic site configuration, including <a href=":date-time-settings">Date and time formats</a> and <a href=":site-info">Basic site settings</a> (site name, email address to send mail from, home page, and error pages). Additional configuration pages are listed on the main <a href=":config">Configuration page</a>.', [':date-time-settings' => \Drupal::url('entity.date_format.collection'), ':site-info' => \Drupal::url('system.site_information_settings'), ':config' => \Drupal::url('system.admin_config')]) . '</dd>';
       $output .= '<dt>' . t('Checking site status') . '</dt>';
-      $output .= '<dd>' . t('The <a href=":status">Status report</a> provides an overview of the configuration, status, and health of your site. Review this report to make sure there are not any problems to address, and to find information about the software your site and web server are using.', array(':status' => \Drupal::url('system.status'))) . '</dd>';
+      $output .= '<dd>' . t('The <a href=":status">Status report</a> provides an overview of the configuration, status, and health of your site. Review this report to make sure there are not any problems to address, and to find information about the software your site and web server are using.', [':status' => \Drupal::url('system.status')]) . '</dd>';
       $output .= '<dt>' . t('Using maintenance mode') . '</dt>';
-      $output .= '<dd>' . t('When you are performing site maintenance, you can prevent non-administrative users (including anonymous visitors) from viewing your site by putting it in <a href=":maintenance-mode">Maintenance mode</a>. This will prevent unauthorized users from making changes to the site while you are performing maintenance, or from seeing a broken site while updates are in progress.', array(':maintenance-mode' => \Drupal::url('system.site_maintenance_mode'))) . '</dd>';
+      $output .= '<dd>' . t('When you are performing site maintenance, you can prevent non-administrative users (including anonymous visitors) from viewing your site by putting it in <a href=":maintenance-mode">Maintenance mode</a>. This will prevent unauthorized users from making changes to the site while you are performing maintenance, or from seeing a broken site while updates are in progress.', [':maintenance-mode' => \Drupal::url('system.site_maintenance_mode')]) . '</dd>';
       $output .= '<dt>' . t('Configuring for performance') . '</dt>';
-      $output .= '<dd>' . t('On the <a href=":performance-page">Performance page</a>, the site can be configured to aggregate CSS and JavaScript files, making the total request size smaller. Note that, for small- to medium-sized websites, the <a href=":page-cache">Internal Page Cache module</a> should be installed so that pages are efficiently cached and reused for anonymous users. Finally, for websites of all sizes, the <a href=":dynamic-page-cache">Dynamic Page Cache module</a> should also be installed so that the non-personalized parts of pages are efficiently cached (for all users).', array(':performance-page' => \Drupal::url('system.performance_settings'), ':page-cache' => (\Drupal::moduleHandler()->moduleExists('page_cache')) ? \Drupal::url('help.page', array('name' => 'page_cache')) : '#', ':dynamic-page-cache' => (\Drupal::moduleHandler()->moduleExists('dynamic_page_cache')) ? \Drupal::url('help.page', array('name' => 'dynamic_page_cache')) : '#')) . '</dd>';
+      $output .= '<dd>' . t('On the <a href=":performance-page">Performance page</a>, the site can be configured to aggregate CSS and JavaScript files, making the total request size smaller. Note that, for small- to medium-sized websites, the <a href=":page-cache">Internal Page Cache module</a> should be installed so that pages are efficiently cached and reused for anonymous users. Finally, for websites of all sizes, the <a href=":dynamic-page-cache">Dynamic Page Cache module</a> should also be installed so that the non-personalized parts of pages are efficiently cached (for all users).', [':performance-page' => \Drupal::url('system.performance_settings'), ':page-cache' => (\Drupal::moduleHandler()->moduleExists('page_cache')) ? \Drupal::url('help.page', ['name' => 'page_cache']) : '#', ':dynamic-page-cache' => (\Drupal::moduleHandler()->moduleExists('dynamic_page_cache')) ? \Drupal::url('help.page', ['name' => 'dynamic_page_cache']) : '#']) . '</dd>';
       $output .= '<dt>' . t('Configuring cron') . '</dt>';
-      $output .= '<dd>' . t('In order for the site and its modules to continue to operate well, a set of routine administrative operations must run on a regular basis; these operations are known as <em>cron</em> tasks. On the <a href=":cron">Cron page</a>, you can configure cron to run periodically as part of server responses by installing the <em>Automated Cron</em> module, or you can turn this off and trigger cron from an outside process on your web server. You can verify the status of cron tasks by visiting the <a href=":status">Status report page</a>. For more information, see the <a href=":handbook">online documentation for configuring cron jobs</a>.', array(':status' => \Drupal::url('system.status'), ':handbook' => 'https://www.drupal.org/cron', ':cron' => \Drupal::url('system.cron_settings'))) . '</dd>';
+      $output .= '<dd>' . t('In order for the site and its modules to continue to operate well, a set of routine administrative operations must run on a regular basis; these operations are known as <em>cron</em> tasks. On the <a href=":cron">Cron page</a>, you can configure cron to run periodically as part of server responses by installing the <em>Automated Cron</em> module, or you can turn this off and trigger cron from an outside process on your web server. You can verify the status of cron tasks by visiting the <a href=":status">Status report page</a>. For more information, see the <a href=":handbook">online documentation for configuring cron jobs</a>.', [':status' => \Drupal::url('system.status'), ':handbook' => 'https://www.drupal.org/cron', ':cron' => \Drupal::url('system.cron_settings')]) . '</dd>';
       $output .= '<dt>' . t('Configuring the file system') . '</dt>';
-      $output .= '<dd>' . t('Your site has several file directories, which are used to store and process uploaded and generated files. The <em>public</em> file directory, which is configured in your settings.php file, is the default place for storing uploaded files. Links to files in this directory contain the direct file URL, so when the files are requested, the web server will send them directly without invoking your site code. This means that the files can be downloaded by anyone with the file URL, so requests are not access-controlled but they are efficient. The <em>private</em> file directory, also configured in your settings.php file and ideally located outside the site web root, is access controlled. Links to files in this directory are not direct, so requests to these files are mediated by your site code. This means that your site can check file access permission for each file before deciding to fulfill the request, so the requests are more secure, but less efficient. You should only use the private storage for files that need access control, not for files like your site logo and background images used on every page. The <em>temporary</em> file directory is used internally by your site code for various operations, and is configured on the <a href=":file-system">File system settings</a> page. You can also see the configured public and private file directories on this page, and choose whether public or private should be the default for uploaded files.', array(':file-system' => \Drupal::url('system.file_system_settings'))) . '</dd>';
+      $output .= '<dd>' . t('Your site has several file directories, which are used to store and process uploaded and generated files. The <em>public</em> file directory, which is configured in your settings.php file, is the default place for storing uploaded files. Links to files in this directory contain the direct file URL, so when the files are requested, the web server will send them directly without invoking your site code. This means that the files can be downloaded by anyone with the file URL, so requests are not access-controlled but they are efficient. The <em>private</em> file directory, also configured in your settings.php file and ideally located outside the site web root, is access controlled. Links to files in this directory are not direct, so requests to these files are mediated by your site code. This means that your site can check file access permission for each file before deciding to fulfill the request, so the requests are more secure, but less efficient. You should only use the private storage for files that need access control, not for files like your site logo and background images used on every page. The <em>temporary</em> file directory is used internally by your site code for various operations, and is configured on the <a href=":file-system">File system settings</a> page. You can also see the configured public and private file directories on this page, and choose whether public or private should be the default for uploaded files.', [':file-system' => \Drupal::url('system.file_system_settings')]) . '</dd>';
       $output .= '<dt>' . t('Configuring the image toolkit') . '</dt>';
-      $output .= '<dd>' . t('On the <a href=":toolkit">Image toolkit page</a>, you can select and configure the PHP toolkit used to manipulate images. Depending on which distribution or installation profile you choose when you install your site, the GD2 toolkit and possibly others are included; other toolkits may be provided by contributed modules.', array(':toolkit' => \Drupal::url('system.image_toolkit_settings'))) . '</dd>';
+      $output .= '<dd>' . t('On the <a href=":toolkit">Image toolkit page</a>, you can select and configure the PHP toolkit used to manipulate images. Depending on which distribution or installation profile you choose when you install your site, the GD2 toolkit and possibly others are included; other toolkits may be provided by contributed modules.', [':toolkit' => \Drupal::url('system.image_toolkit_settings')]) . '</dd>';
       $output .= '</dl>';
       return $output;
 
@@ -125,24 +125,24 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('This page shows you all available administration tasks for each module.') . '</p>';
 
     case 'system.themes_page':
-      $output = '<p>' . t('Set and configure the default theme for your website.  Alternative <a href=":themes">themes</a> are available.', array(':themes' => 'https://www.drupal.org/project/themes')) . '</p>';
+      $output = '<p>' . t('Set and configure the default theme for your website.  Alternative <a href=":themes">themes</a> are available.', [':themes' => 'https://www.drupal.org/project/themes']) . '</p>';
       if (\Drupal::moduleHandler()->moduleExists('block')) {
-        $output .= '<p>' . t('You can place blocks for each theme on the <a href=":blocks">block layout</a> page.', array(':blocks' => \Drupal::url('block.admin_display'))) . '</p>';
+        $output .= '<p>' . t('You can place blocks for each theme on the <a href=":blocks">block layout</a> page.', [':blocks' => \Drupal::url('block.admin_display')]) . '</p>';
       }
       return $output;
 
     case 'system.theme_settings_theme':
       $theme_list = \Drupal::service('theme_handler')->listInfo();
       $theme = $theme_list[$route_match->getParameter('theme')];
-      return '<p>' . t('These options control the display settings for the %name theme. When your site is displayed using this theme, these settings will be used.', array('%name' => $theme->info['name'])) . '</p>';
+      return '<p>' . t('These options control the display settings for the %name theme. When your site is displayed using this theme, these settings will be used.', ['%name' => $theme->info['name']]) . '</p>';
 
     case 'system.theme_settings':
       return '<p>' . t('Control default display settings for your site, across all themes. Use theme-specific settings to override these defaults.') . '</p>';
 
     case 'system.modules_list':
-      $output = '<p>' . t('Download additional <a href=":modules">contributed modules</a> to extend your site\'s functionality.', array(':modules' => 'https://www.drupal.org/project/modules')) . '</p>';
+      $output = '<p>' . t('Download additional <a href=":modules">contributed modules</a> to extend your site\'s functionality.', [':modules' => 'https://www.drupal.org/project/modules']) . '</p>';
       if (!\Drupal::moduleHandler()->moduleExists('update')) {
-        $output .= '<p>' . t('Regularly review available updates to maintain a secure and current site. Always run the <a href=":update-php">update script</a> each time a module is updated. Enable the <a href=":update-manager">Update Manager module</a> to update and install modules and themes.', array(':update-php' => \Drupal::url('system.db_update'), ':update-manager' => \Drupal::url('system.modules_list', [], ['fragment' => 'module-update']))) . '</p>';
+        $output .= '<p>' . t('Regularly review available updates to maintain a secure and current site. Always run the <a href=":update-php">update script</a> each time a module is updated. Enable the <a href=":update-manager">Update Manager module</a> to update and install modules and themes.', [':update-php' => \Drupal::url('system.db_update'), ':update-manager' => \Drupal::url('system.modules_list', [], ['fragment' => 'module-update'])]) . '</p>';
       }
       return $output;
 
@@ -168,7 +168,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       break;
 
     case 'system.status':
-      return '<p>' . t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on Drupal.org's support forums and project issue queues. Before filing a support request, ensure that your web server meets the <a href=\":system-requirements\">system requirements.</a>", array(':system-requirements' => 'https://www.drupal.org/requirements')) . '</p>';
+      return '<p>' . t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on Drupal.org's support forums and project issue queues. Before filing a support request, ensure that your web server meets the <a href=\":system-requirements\">system requirements.</a>", [':system-requirements' => 'https://www.drupal.org/requirements']) . '</p>';
   }
 }
 
@@ -176,117 +176,117 @@ function system_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_theme().
  */
 function system_theme() {
-  return array_merge(drupal_common_theme(), array(
+  return array_merge(drupal_common_theme(), [
     // Normally theme suggestion templates are only picked up when they are in
     // themes. We explicitly define theme suggestions here so that the block
     // templates in core/modules/system/templates are picked up.
-    'block__system_branding_block' => array(
+    'block__system_branding_block' => [
       'render element' => 'elements',
       'base hook' => 'block',
-    ),
-    'block__system_messages_block' => array(
+    ],
+    'block__system_messages_block' => [
       'base hook' => 'block',
-    ),
-    'block__system_menu_block' => array(
+    ],
+    'block__system_menu_block' => [
       'render element' => 'elements',
       'base hook' => 'block',
-    ),
-    'system_themes_page' => array(
-      'variables' => array(
-        'theme_groups' => array(),
-        'theme_group_titles' => array(),
-      ),
+    ],
+    'system_themes_page' => [
+      'variables' => [
+        'theme_groups' => [],
+        'theme_group_titles' => [],
+      ],
       'file' => 'system.admin.inc',
-    ),
-    'system_config_form' => array(
+    ],
+    'system_config_form' => [
       'render element' => 'form',
-    ),
-    'confirm_form' => array(
+    ],
+    'confirm_form' => [
       'render element' => 'form',
-    ),
-    'system_modules_details' => array(
-      'render element' => 'form',
-      'file' => 'system.admin.inc',
-    ),
-    'system_modules_uninstall' => array(
+    ],
+    'system_modules_details' => [
       'render element' => 'form',
       'file' => 'system.admin.inc',
-    ),
-    'status_report_page' => array(
-      'variables' => array(
-        'counters' => array(),
-        'general_info' => array(),
+    ],
+    'system_modules_uninstall' => [
+      'render element' => 'form',
+      'file' => 'system.admin.inc',
+    ],
+    'status_report_page' => [
+      'variables' => [
+        'counters' => [],
+        'general_info' => [],
         'requirements' => NULL,
-      ),
-    ),
-    'status_report' => array(
-      'variables' => array(
+      ],
+    ],
+    'status_report' => [
+      'variables' => [
         'grouped_requirements' => NULL,
         'requirements' => NULL,
-      ),
-    ),
-    'status_report_grouped' => array(
-      'variables' => array(
+      ],
+    ],
+    'status_report_grouped' => [
+      'variables' => [
         'grouped_requirements' => NULL,
         'requirements' => NULL,
-      ),
-    ),
-    'status_report_counter' => array(
-      'variables' => array('amount' => NULL, 'text' => NULL, 'severity' => NULL),
-    ),
-    'status_report_general_info' => array(
-      'variables' => array(
-        'drupal' => array(),
-        'cron' => array(),
-        'database_system' => array(),
-        'database_system_version' => array(),
-        'php' => array(),
-        'php_memory_limit' => array(),
-        'webserver' => array(),
-      ),
-    ),
-    'admin_page' => array(
-      'variables' => array('blocks' => NULL),
+      ],
+    ],
+    'status_report_counter' => [
+      'variables' => ['amount' => NULL, 'text' => NULL, 'severity' => NULL],
+    ],
+    'status_report_general_info' => [
+      'variables' => [
+        'drupal' => [],
+        'cron' => [],
+        'database_system' => [],
+        'database_system_version' => [],
+        'php' => [],
+        'php_memory_limit' => [],
+        'webserver' => [],
+      ],
+    ],
+    'admin_page' => [
+      'variables' => ['blocks' => NULL],
       'file' => 'system.admin.inc',
-    ),
-    'admin_block' => array(
-      'variables' => array('block' => NULL),
+    ],
+    'admin_block' => [
+      'variables' => ['block' => NULL],
       'file' => 'system.admin.inc',
-    ),
-    'admin_block_content' => array(
-      'variables' => array('content' => NULL),
+    ],
+    'admin_block_content' => [
+      'variables' => ['content' => NULL],
       'file' => 'system.admin.inc',
-    ),
-    'system_admin_index' => array(
-      'variables' => array('menu_items' => NULL),
+    ],
+    'system_admin_index' => [
+      'variables' => ['menu_items' => NULL],
       'file' => 'system.admin.inc',
-    ),
-    'entity_add_list' => array(
-      'variables' => array(
-        'bundles' => array(),
+    ],
+    'entity_add_list' => [
+      'variables' => [
+        'bundles' => [],
         'add_bundle_message' => NULL,
-      ),
+      ],
       'template' => 'entity-add-list',
-    ),
-  ));
+    ],
+  ]);
 }
 
 /**
  * Implements hook_hook_info().
  */
 function system_hook_info() {
-  $hooks['token_info'] = array(
+  $hooks['token_info'] = [
     'group' => 'tokens',
-  );
-  $hooks['token_info_alter'] = array(
+  ];
+  $hooks['token_info_alter'] = [
     'group' => 'tokens',
-  );
-  $hooks['tokens'] = array(
+  ];
+  $hooks['tokens'] = [
     'group' => 'tokens',
-  );
-  $hooks['tokens_alter'] = array(
+  ];
+  $hooks['tokens_alter'] = [
     'group' => 'tokens',
-  );
+  ];
 
   return $hooks;
 }
@@ -311,7 +311,7 @@ function system_theme_suggestions_page(array $variables) {
  * Implements hook_theme_suggestions_HOOK().
  */
 function system_theme_suggestions_maintenance_page(array $variables) {
-  $suggestions = array();
+  $suggestions = [];
 
   // Dead databases will show error messages so supplying this template will
   // allow themers to override the page and the content completely.
@@ -334,7 +334,7 @@ function system_theme_suggestions_maintenance_page(array $variables) {
  * Implements hook_theme_suggestions_HOOK().
  */
 function system_theme_suggestions_region(array $variables) {
-  $suggestions = array();
+  $suggestions = [];
   if (!empty($variables['elements']['#region'])) {
     $suggestions[] = 'region__' . $variables['elements']['#region'];
   }
@@ -345,7 +345,7 @@ function system_theme_suggestions_region(array $variables) {
  * Implements hook_theme_suggestions_HOOK().
  */
 function system_theme_suggestions_field(array $variables) {
-  $suggestions = array();
+  $suggestions = [];
   $element = $variables['element'];
 
   $suggestions[] = 'field__' . $element['#field_type'];
@@ -452,18 +452,18 @@ function template_preprocess_entity_add_list(&$variables) {
  * @return
  *   Nothing, this function just initializes variables in the user's session.
  */
-function system_authorized_init($callback, $file, $arguments = array(), $page_title = NULL) {
+function system_authorized_init($callback, $file, $arguments = [], $page_title = NULL) {
   // First, figure out what file transfer backends the site supports, and put
   // all of those in the SESSION so that authorize.php has access to all of
   // them via the class autoloader, even without a full bootstrap.
   $_SESSION['authorize_filetransfer_info'] = drupal_get_filetransfer_info();
 
   // Now, define the callback to invoke.
-  $_SESSION['authorize_operation'] = array(
+  $_SESSION['authorize_operation'] = [
     'callback' => $callback,
     'file' => $file,
     'arguments' => $arguments,
-  );
+  ];
 
   if (isset($page_title)) {
     $_SESSION['authorize_page_title'] = $page_title;
@@ -480,7 +480,7 @@ function system_authorized_init($callback, $file, $arguments = array(), $page_ti
  *
  * @see system_authorized_init()
  */
-function system_authorized_get_url(array $options = array()) {
+function system_authorized_get_url(array $options = []) {
   // core/authorize.php is an unrouted URL, so using the base: scheme is
   // the correct usage for this case.
   $url = Url::fromUri('base:core/authorize.php');
@@ -497,8 +497,8 @@ function system_authorized_get_url(array $options = array()) {
  *
  * @return \Drupal\Core\Url
  */
-function system_authorized_batch_processing_url(array $options = array()) {
-  $options['query'] = array('batch' => '1');
+function system_authorized_batch_processing_url(array $options = []) {
+  $options['query'] = ['batch' => '1'];
   return system_authorized_get_url($options);
 }
 
@@ -507,7 +507,7 @@ function system_authorized_batch_processing_url(array $options = array()) {
  *
  * @see system_authorized_init()
  */
-function system_authorized_run($callback, $file, $arguments = array(), $page_title = NULL) {
+function system_authorized_run($callback, $file, $arguments = [], $page_title = NULL) {
   system_authorized_init($callback, $file, $arguments, $page_title);
   return new RedirectResponse(system_authorized_get_url()->toString());
 }
@@ -531,43 +531,43 @@ function system_authorized_batch_process() {
  * Implements hook_updater_info().
  */
 function system_updater_info() {
-  return array(
-    'module' => array(
+  return [
+    'module' => [
       'class' => 'Drupal\Core\Updater\Module',
       'name' => t('Update modules'),
       'weight' => 0,
-    ),
-    'theme' => array(
+    ],
+    'theme' => [
       'class' => 'Drupal\Core\Updater\Theme',
       'name' => t('Update themes'),
       'weight' => 0,
-    ),
-  );
+    ],
+  ];
 }
 
 /**
  * Implements hook_filetransfer_info().
  */
 function system_filetransfer_info() {
-  $backends = array();
+  $backends = [];
 
   // This is the default, will be available on most systems.
   if (function_exists('ftp_connect')) {
-    $backends['ftp'] = array(
+    $backends['ftp'] = [
       'title' => t('FTP'),
       'class' => 'Drupal\Core\FileTransfer\FTP',
       'weight' => 0,
-    );
+    ];
   }
 
   // SSH2 lib connection is only available if the proper PHP extension is
   // installed.
   if (function_exists('ssh2_connect')) {
-    $backends['ssh'] = array(
+    $backends['ssh'] = [
       'title' => t('SSH'),
       'class' => 'Drupal\Core\FileTransfer\SSH',
       'weight' => 20,
-    );
+    ];
   }
   return $backends;
 }
@@ -595,61 +595,61 @@ function system_page_attachments(array &$page) {
   if (theme_get_setting('features.favicon')) {
     $favicon = theme_get_setting('favicon.url');
     $type = theme_get_setting('favicon.mimetype');
-    $page['#attached']['html_head_link'][][] = array(
+    $page['#attached']['html_head_link'][][] = [
       'rel' => 'shortcut icon',
       'href' => UrlHelper::stripDangerousProtocols($favicon),
       'type' => $type,
-    );
+    ];
   }
 
   // Get the major Drupal version.
   list($version, ) = explode('.', \Drupal::VERSION);
 
   // Attach default meta tags.
-  $meta_default = array(
+  $meta_default = [
     // Make sure the Content-Type comes first because the IE browser may be
     // vulnerable to XSS via encoding attacks from any content that comes
     // before this META tag, such as a TITLE tag.
-    'system_meta_content_type' => array(
+    'system_meta_content_type' => [
       '#tag' => 'meta',
-      '#attributes' => array(
+      '#attributes' => [
         'charset' => 'utf-8',
-      ),
+      ],
       // Security: This always has to be output first.
       '#weight' => -1000,
-    ),
+    ],
     // Show Drupal and the major version number in the META GENERATOR tag.
-    'system_meta_generator' => array(
+    'system_meta_generator' => [
       '#type' => 'html_tag',
       '#tag' => 'meta',
-      '#attributes' => array(
+      '#attributes' => [
         'name' => 'Generator',
         'content' => 'Drupal ' . $version . ' (https://www.drupal.org)',
-      ),
-    ),
+      ],
+    ],
     // Attach default mobile meta tags for responsive design.
-    'MobileOptimized' => array(
+    'MobileOptimized' => [
       '#tag' => 'meta',
-      '#attributes' => array(
+      '#attributes' => [
         'name' => 'MobileOptimized',
         'content' => 'width',
-      ),
-    ),
-    'HandheldFriendly' => array(
+      ],
+    ],
+    'HandheldFriendly' => [
       '#tag' => 'meta',
-      '#attributes' => array(
+      '#attributes' => [
         'name' => 'HandheldFriendly',
         'content' => 'true',
-      ),
-    ),
-    'viewport' => array(
+      ],
+    ],
+    'viewport' => [
       '#tag' => 'meta',
-      '#attributes' => array(
+      '#attributes' => [
         'name' => 'viewport',
         'content' => 'width=device-width, initial-scale=1.0',
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
   foreach ($meta_default as $key => $value) {
     $page['#attached']['html_head'][] = [$value, $key];
   }
@@ -824,7 +824,7 @@ function system_user_login(UserInterface $account) {
   $config = \Drupal::config('system.date');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
-    drupal_set_message(t('Configure your <a href=":user-edit">account time zone setting</a>.', array(':user-edit' => $account->url('edit-form', array('query' => \Drupal::destination()->getAsArray(), 'fragment' => 'edit-timezone')))));
+    drupal_set_message(t('Configure your <a href=":user-edit">account time zone setting</a>.', [':user-edit' => $account->url('edit-form', ['query' => \Drupal::destination()->getAsArray(), 'fragment' => 'edit-timezone'])]));
   }
 }
 
@@ -835,23 +835,23 @@ function system_user_timezone(&$form, FormStateInterface $form_state) {
   $user = \Drupal::currentUser();
 
   $account = $form_state->getFormObject()->getEntity();
-  $form['timezone'] = array(
+  $form['timezone'] = [
     '#type' => 'details',
     '#title' => t('Locale settings'),
     '#open' => TRUE,
     '#weight' => 6,
-  );
-  $form['timezone']['timezone'] = array(
+  ];
+  $form['timezone']['timezone'] = [
     '#type' => 'select',
     '#title' => t('Time zone'),
     '#default_value' => $account->getTimezone() ? $account->getTimezone() : \Drupal::config('system.date')->get('timezone.default'),
     '#options' => system_time_zones($account->id() != $user->id()),
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
-  );
+  ];
   $user_input = $form_state->getUserInput();
   if (!$account->getTimezone() && $account->id() == $user->id() && empty($user_input['timezone'])) {
     $form['timezone']['#attached']['library'][] = 'core/drupal.timezone';
-    $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
+    $form['timezone']['timezone']['#attributes'] = ['class' => ['timezone-detect']];
   }
 }
 
@@ -903,14 +903,14 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
   $logger = \Drupal::logger('file system');
   if (!is_dir($directory) && !drupal_mkdir($directory, NULL, TRUE)) {
     // If the directory does not exists and cannot be created.
-    $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory does not exist and could not be created.', array('%directory' => $directory)));
-    $logger->error('The directory %directory does not exist and could not be created.', array('%directory' => $directory));
+    $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory does not exist and could not be created.', ['%directory' => $directory]));
+    $logger->error('The directory %directory does not exist and could not be created.', ['%directory' => $directory]);
   }
 
   if (is_dir($directory) && !is_writable($directory) && !drupal_chmod($directory)) {
     // If the directory is not writable and cannot be made so.
-    $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory)));
-    $logger->error('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory));
+    $form_state->setErrorByName($form_element['#parents'][0], t('The directory %directory exists but is not writable and could not be made writable.', ['%directory' => $directory]));
+    $logger->error('The directory %directory exists but is not writable and could not be made writable.', ['%directory' => $directory]);
   }
   elseif (is_dir($directory)) {
     if ($form_element['#name'] == 'file_public_path') {
@@ -971,7 +971,7 @@ function system_get_info($type, $name = NULL) {
     }
   }
   else {
-    $info = array();
+    $info = [];
     $list = system_list($type);
     foreach ($list as $shortname => $item) {
       if (!empty($item->status)) {
@@ -980,7 +980,7 @@ function system_get_info($type, $name = NULL) {
     }
   }
   if (isset($name)) {
-    return isset($info[$name]) ? $info[$name] : array();
+    return isset($info[$name]) ? $info[$name] : [];
   }
   return $info;
 }
@@ -1017,13 +1017,13 @@ function _system_rebuild_module_data() {
   }
 
   // Set defaults for module info.
-  $defaults = array(
-    'dependencies' => array(),
+  $defaults = [
+    'dependencies' => [],
     'description' => '',
     'package' => 'Other',
     'version' => NULL,
     'php' => DRUPAL_MINIMUM_PHP,
-  );
+  ];
 
   // Read info files for each module.
   foreach ($modules as $key => $module) {
@@ -1085,7 +1085,7 @@ function _system_rebuild_module_data_ensure_required($module, &$modules) {
       $dependency_name = ModuleHandler::parseDependency($dependency)['name'];
       if (!isset($modules[$dependency_name]->info['required'])) {
         $modules[$dependency_name]->info['required'] = TRUE;
-        $modules[$dependency_name]->info['explanation'] = t('Dependency of required module @module', array('@module' => $module->info['name']));
+        $modules[$dependency_name]->info['explanation'] = t('Dependency of required module @module', ['@module' => $module->info['name']]);
         // Ensure any dependencies it has are required.
         _system_rebuild_module_data_ensure_required($modules[$dependency_name], $modules);
       }
@@ -1106,10 +1106,10 @@ function system_rebuild_module_data() {
   // reference from system_list_reset() during the rebuild.
   if (!isset($modules_cache)) {
     $modules = _system_rebuild_module_data();
-    $files = array();
+    $files = [];
     ksort($modules);
     // Add status, weight, and schema version.
-    $installed_modules = \Drupal::config('core.extension')->get('module') ?: array();
+    $installed_modules = \Drupal::config('core.extension')->get('module') ?: [];
     foreach ($modules as $name => $module) {
       $module->weight = isset($installed_modules[$name]) ? $installed_modules[$name] : 0;
       $module->status = (int) isset($installed_modules[$name]);
@@ -1144,11 +1144,11 @@ function system_region_list($theme, $show = REGIONS_ALL) {
   if (!$theme instanceof Extension) {
     $themes = \Drupal::service('theme_handler')->listInfo();
     if (!isset($themes[$theme])) {
-      return array();
+      return [];
     }
     $theme = $themes[$theme];
   }
-  $list = array();
+  $list = [];
   $info = $theme->info;
   // If requested, suppress hidden regions. See block_admin_display_form().
   foreach ($info['regions'] as $name => $label) {
@@ -1253,15 +1253,15 @@ function system_get_module_admin_tasks($module, array $info) {
     $parameters = new MenuTreeParameters();
     $parameters->setRoot('system.admin')->excludeRoot()->onlyEnabledLinks();
     $tree = $menu_tree->load('system.admin', $parameters);
-    $manipulators = array(
-      array('callable' => 'menu.default_tree_manipulators:checkAccess'),
-      array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
-      array('callable' => 'menu.default_tree_manipulators:flatten'),
-    );
+    $manipulators = [
+      ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+      ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+      ['callable' => 'menu.default_tree_manipulators:flatten'],
+    ];
     $tree = $menu_tree->transform($tree, $manipulators);
   }
 
-  $admin_tasks = array();
+  $admin_tasks = [];
   foreach ($tree as $element) {
     if (!$element->access->isAllowed()) {
       // @todo Bubble cacheability metadata of both accessible and inaccessible
@@ -1273,11 +1273,11 @@ function system_get_module_admin_tasks($module, array $info) {
     if ($link->getProvider() != $module) {
       continue;
     }
-    $admin_tasks[] = array(
+    $admin_tasks[] = [
       'title' => $link->getTitle(),
       'description' => $link->getDescription(),
       'url' => $link->getUrlObject(),
-    );
+    ];
   }
 
   // Append link for permissions.
@@ -1287,15 +1287,15 @@ function system_get_module_admin_tasks($module, array $info) {
   if ($permission_handler->moduleProvidesPermissions($module)) {
     /** @var \Drupal\Core\Access\AccessManagerInterface $access_manager */
     $access_manager = \Drupal::service('access_manager');
-    if ($access_manager->checkNamedRoute('user.admin_permissions', array(), \Drupal::currentUser())) {
+    if ($access_manager->checkNamedRoute('user.admin_permissions', [], \Drupal::currentUser())) {
       /** @var \Drupal\Core\Url $url */
       $url = new Url('user.admin_permissions');
       $url->setOption('fragment', 'module-' . $module);
-      $admin_tasks["user.admin_permissions.$module"] = array(
-        'title' => t('Configure @module permissions', array('@module' => $info['name'])),
+      $admin_tasks["user.admin_permissions.$module"] = [
+        'title' => t('Configure @module permissions', ['@module' => $info['name']]),
         'description' => '',
         'url' => $url,
-      );
+      ];
     }
   }
 
@@ -1348,7 +1348,7 @@ function system_mail($key, &$message, $params) {
   $subject = PlainTextOutput::renderFromHtml($token_service->replace($context['subject'], $context));
   $body = $token_service->replace($context['message'], $context);
 
-  $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
+  $message['subject'] .= str_replace(["\r", "\n"], '', $subject);
   $message['body'][] = $body;
 }
 
@@ -1360,13 +1360,13 @@ function system_mail($key, &$message, $params) {
  */
 function system_time_zones($blank = NULL) {
   $zonelist = timezone_identifiers_list();
-  $zones = $blank ? array('' => t('- None selected -')) : array();
+  $zones = $blank ? ['' => t('- None selected -')] : [];
   foreach ($zonelist as $zone) {
     // Because many time zones exist in PHP only for backward compatibility
     // reasons and should not be used, the list is filtered by a regular
     // expression.
     if (preg_match('!^((Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)/|UTC$)!', $zone)) {
-      $zones[$zone] = t('@zone', array('@zone' => t(str_replace('_', ' ', $zone))));
+      $zones[$zone] = t('@zone', ['@zone' => t(str_replace('_', ' ', $zone))]);
     }
   }
   // Sort the translated time zones alphabetically.
@@ -1425,11 +1425,11 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
     $local = $managed ? file_save_data($data, $path, $replace) : file_unmanaged_save_data($data, $path, $replace);
   }
   catch (RequestException $exception) {
-    drupal_set_message(t('Failed to fetch file due to error "%error"', array('%error' => $exception->getMessage())), 'error');
+    drupal_set_message(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]), 'error');
     return FALSE;
   }
   if (!$local) {
-    drupal_set_message(t('@remote could not be saved to @path.', array('@remote' => $url, '@path' => $path)), 'error');
+    drupal_set_message(t('@remote could not be saved to @path.', ['@remote' => $url, '@path' => $path]), 'error');
   }
 
   return $local;

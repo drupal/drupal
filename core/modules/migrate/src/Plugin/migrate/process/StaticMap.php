@@ -31,7 +31,7 @@ class StaticMap extends ProcessPluginBase {
       }
     }
     else {
-      $new_value = array($value);
+      $new_value = [$value];
     }
     $new_value = NestedArray::getValue($this->configuration['map'], $new_value, $key_exists);
     if (!$key_exists) {

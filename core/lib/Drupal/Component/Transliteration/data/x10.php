@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'k', 'kh', 'g', 'gh', 'ng', 'c', 'ch', 'j', 'jh', 'ny', 'nny', 'tt', 'tth', 'dd', 'ddh', 'nn',
   0x10 => 'tt', 'th', 'd', 'dh', 'n', 'p', 'ph', 'b', 'bh', 'm', 'y', 'r', 'l', 'w', 's', 'h',
   0x20 => 'll', 'a', NULL, 'i', 'ii', 'u', 'uu', 'e', NULL, 'o', 'au', NULL, 'aa', 'i', 'ii', 'u',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'a', 'b', 'g', 'd', 'e', 'v', 'z', 't', 'i', 'k', 'l', 'm', 'n', 'o', 'p', 'zh',
   0xE0 => 'r', 's', 't', 'u', 'p', 'k', 'gh', 'q', 'sh', 'ch', 'ts', 'dz', 'c', 'ch', 'kh', 'j',
   0xF0 => 'h', 'e', 'y', 'ui', 'q', 'oe', 'f', NULL, NULL, NULL, NULL, ' // ', NULL, NULL, NULL, NULL,
-);
+];

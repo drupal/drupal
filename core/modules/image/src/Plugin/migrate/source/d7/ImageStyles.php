@@ -47,7 +47,7 @@ class ImageStyles extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    $effects = array();
+    $effects = [];
 
     $results = $this->select('image_effects', 'ie')
       ->fields('ie')

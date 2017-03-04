@@ -37,27 +37,27 @@ class Checkboxes extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
-      '#process' => array(
-        array($class, 'processCheckboxes'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderCompositeFormElement'),
-      ),
-      '#theme_wrappers' => array('checkboxes'),
-    );
+      '#process' => [
+        [$class, 'processCheckboxes'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderCompositeFormElement'],
+      ],
+      '#theme_wrappers' => ['checkboxes'],
+    ];
   }
 
   /**
    * Processes a checkboxes form element.
    */
   public static function processCheckboxes(&$element, FormStateInterface $form_state, &$complete_form) {
-    $value = is_array($element['#value']) ? $element['#value'] : array();
+    $value = is_array($element['#value']) ? $element['#value'] : [];
     $element['#tree'] = TRUE;
     if (count($element['#options']) > 0) {
       if (!isset($element['#default_value']) || $element['#default_value'] == 0) {
-        $element['#default_value'] = array();
+        $element['#default_value'] = [];
       }
       $weight = 0;
       foreach ($element['#options'] as $key => $choice) {
@@ -73,8 +73,8 @@ class Checkboxes extends FormElement {
         // sub-elements.
         $weight += 0.001;
 
-        $element += array($key => array());
-        $element[$key] += array(
+        $element += [$key => []];
+        $element[$key] += [
           '#type' => 'checkbox',
           '#title' => $choice,
           '#return_value' => $key,
@@ -84,7 +84,7 @@ class Checkboxes extends FormElement {
           // Errors should only be shown on the parent checkboxes element.
           '#error_no_message' => TRUE,
           '#weight' => $weight,
-        );
+        ];
       }
     }
     return $element;
@@ -95,8 +95,8 @@ class Checkboxes extends FormElement {
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input === FALSE) {
-      $value = array();
-      $element += array('#default_value' => array());
+      $value = [];
+      $element += ['#default_value' => []];
       foreach ($element['#default_value'] as $key) {
         $value[$key] = $key;
       }
@@ -118,7 +118,7 @@ class Checkboxes extends FormElement {
       return array_combine($input, $input);
     }
     else {
-      return array();
+      return [];
     }
   }
 

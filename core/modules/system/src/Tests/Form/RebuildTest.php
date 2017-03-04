@@ -21,7 +21,7 @@ class RebuildTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'form_test');
+  public static $modules = ['node', 'form_test'];
 
   /**
    * A user for testing.
@@ -33,9 +33,9 @@ class RebuildTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
-    $this->webUser = $this->drupalCreateUser(array('access content'));
+    $this->webUser = $this->drupalCreateUser(['access content']);
     $this->drupalLogin($this->webUser);
   }
 
@@ -43,11 +43,11 @@ class RebuildTest extends WebTestBase {
    * Tests preservation of values.
    */
   function testRebuildPreservesValues() {
-    $edit = array(
+    $edit = [
       'checkbox_1_default_off' => TRUE,
       'checkbox_1_default_on' => FALSE,
       'text_1' => 'foo',
-    );
+    ];
     $this->drupalPostForm('form-test/form-rebuild-preserve-values', $edit, 'Add more');
 
     // Verify that initial elements retained their submitted values.
@@ -70,30 +70,30 @@ class RebuildTest extends WebTestBase {
   function testPreserveFormActionAfterAJAX() {
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'text',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'page',
     ])->save();
     entity_get_form_display('node', 'page', 'default')
-      ->setComponent($field_name, array('type' => 'text_textfield'))
+      ->setComponent($field_name, ['type' => 'text_textfield'])
       ->save();
 
     // Log in a user who can create 'page' nodes.
-    $this->webUser = $this->drupalCreateUser(array('create page content'));
+    $this->webUser = $this->drupalCreateUser(['create page content']);
     $this->drupalLogin($this->webUser);
 
     // Get the form for adding a 'page' node. Submit an "add another item" Ajax
     // submission and verify it worked by ensuring the updated page has two text
     // field items in the field for which we just added an item.
     $this->drupalGet('node/add/page');
-    $this->drupalPostAjaxForm(NULL, array(), array('field_ajax_test_add_more' => t('Add another item')), NULL, array(), array(), 'node-page-form');
+    $this->drupalPostAjaxForm(NULL, [], ['field_ajax_test_add_more' => t('Add another item')], NULL, [], [], 'node-page-form');
     $this->assert(count($this->xpath('//div[contains(@class, "field--name-field-ajax-test")]//input[@type="text"]')) == 2, 'AJAX submission succeeded.');
 
     // Submit the form with the non-Ajax "Save" button, leaving the title field
@@ -101,7 +101,7 @@ class RebuildTest extends WebTestBase {
     // occurred, because this test is for testing what happens when a form is
     // re-rendered without being re-built, which is what happens when there's
     // a validation error.
-    $this->drupalPostForm(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, [], t('Save'));
     $this->assertText('Title field is required.', 'Non-AJAX submission correctly triggered a validation error.');
 
     // Ensure that the form contains two items in the multi-valued field, so we

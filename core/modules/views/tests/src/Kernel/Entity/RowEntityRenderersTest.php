@@ -27,7 +27,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_entity_row_renderers');
+  public static $testViews = ['test_entity_row_renderers'];
 
   /**
    * An array of added languages.
@@ -51,13 +51,13 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
 
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
-    $this->installSchema('node', array('node_access'));
-    $this->installConfig(array('node', 'language'));
+    $this->installSchema('node', ['node_access']);
+    $this->installConfig(['node', 'language']);
 
     // The entity.node.canonical route must exist when nodes are rendered.
     $this->container->get('router.builder')->rebuild();
 
-    $this->langcodes = array(\Drupal::languageManager()->getDefaultLanguage()->getId());
+    $this->langcodes = [\Drupal::languageManager()->getDefaultLanguage()->getId()];
     for ($i = 0; $i < 2; $i++) {
       $langcode = 'l' . $i;
       $this->langcodes[] = $langcode;
@@ -65,27 +65,27 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
     }
 
     // Make sure we do not try to render non-existing user data.
-    $node_type = NodeType::create(array('type' => 'test'));
+    $node_type = NodeType::create(['type' => 'test']);
     $node_type->setDisplaySubmitted(FALSE);
     $node_type->save();
 
-    $this->values = array();
+    $this->values = [];
     $controller = \Drupal::entityManager()->getStorage('node');
     $langcode_index = 0;
 
     for ($i = 0; $i < count($this->langcodes); $i++) {
       // Create a node with a different default language each time.
       $default_langcode = $this->langcodes[$langcode_index++];
-      $node = $controller->create(array('type' => 'test', 'uid' => 0, 'langcode' => $default_langcode));
+      $node = $controller->create(['type' => 'test', 'uid' => 0, 'langcode' => $default_langcode]);
       // Ensure the default language is processed first.
-      $langcodes = array_merge(array($default_langcode), array_diff($this->langcodes, array($default_langcode)));
+      $langcodes = array_merge([$default_langcode], array_diff($this->langcodes, [$default_langcode]));
 
       foreach ($langcodes as $langcode) {
         // Ensure we have a predictable result order.
         $this->values[$i][$langcode] = $i . '-' . $langcode . '-' . $this->randomMachineName();
 
         if ($langcode != $default_langcode) {
-          $node->addTranslation($langcode, array('title' => $this->values[$i][$langcode]));
+          $node->addTranslation($langcode, ['title' => $this->values[$i][$langcode]]);
         }
         else {
           $node->setTitle($this->values[$i][$langcode]);
@@ -121,7 +121,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    *   node.
    */
   protected function checkLanguageRenderers($display, $values) {
-    $expected = array(
+    $expected = [
       $values[0]['en'],
       $values[0]['en'],
       $values[0]['en'],
@@ -131,10 +131,10 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
       $values[2]['en'],
       $values[2]['en'],
       $values[2]['en'],
-    );
+    ];
     $this->assertTranslations($display, '***LANGUAGE_language_content***', $expected, 'The current language renderer behaves as expected.');
 
-    $expected = array(
+    $expected = [
       $values[0]['en'],
       $values[0]['en'],
       $values[0]['en'],
@@ -144,10 +144,10 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
       $values[2]['l1'],
       $values[2]['l1'],
       $values[2]['l1'],
-    );
+    ];
     $this->assertTranslations($display, '***LANGUAGE_entity_default***', $expected, 'The default language renderer behaves as expected.');
 
-    $expected = array(
+    $expected = [
       $values[0]['en'],
       $values[0]['l0'],
       $values[0]['l1'],
@@ -157,10 +157,10 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
       $values[2]['en'],
       $values[2]['l0'],
       $values[2]['l1'],
-    );
+    ];
     $this->assertTranslations($display, '***LANGUAGE_entity_translation***', $expected, 'The translation language renderer behaves as expected.');
 
-    $expected = array(
+    $expected = [
       $values[0][$this->langcodes[0]],
       $values[0][$this->langcodes[0]],
       $values[0][$this->langcodes[0]],
@@ -170,10 +170,10 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
       $values[2][$this->langcodes[0]],
       $values[2][$this->langcodes[0]],
       $values[2][$this->langcodes[0]],
-    );
+    ];
     $this->assertTranslations($display, '***LANGUAGE_site_default***', $expected, 'The site default language renderer behaves as expected.');
 
-    $expected = array(
+    $expected = [
       $values[0]['l0'],
       $values[0]['l0'],
       $values[0]['l0'],
@@ -183,7 +183,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
       $values[2]['l0'],
       $values[2]['l0'],
       $values[2]['l0'],
-    );
+    ];
     $this->assertTranslations($display, 'l0', $expected, 'The language specific renderer behaves as expected.');
   }
 

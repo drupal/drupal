@@ -29,8 +29,8 @@ class LanguageServiceProvider extends ServiceProviderBase {
         ->addArgument(new Reference('current_user'));
 
       $container->register('path_processor_language', 'Drupal\language\HttpKernel\PathProcessorLanguage')
-        ->addTag('path_processor_inbound', array('priority' => 300))
-        ->addTag('path_processor_outbound', array('priority' => 100))
+        ->addTag('path_processor_inbound', ['priority' => 300])
+        ->addTag('path_processor_outbound', ['priority' => 100])
         ->addArgument(new Reference('config.factory'))
         ->addArgument(new Reference('language_manager'))
         ->addArgument(new Reference('language_negotiator'))

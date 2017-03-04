@@ -83,9 +83,9 @@ abstract class DateTimeFormatterBase extends FormatterBase implements ContainerF
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'timezone_override' => '',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
@@ -94,13 +94,13 @@ abstract class DateTimeFormatterBase extends FormatterBase implements ContainerF
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
 
-    $form['timezone_override'] = array(
+    $form['timezone_override'] = [
       '#type' => 'select',
       '#title' => $this->t('Time zone override'),
       '#description' => $this->t('The time zone selected here will always be used'),
       '#options' => system_time_zones(TRUE),
       '#default_value' => $this->getSetting('timezone_override'),
-    );
+    ];
 
     return $form;
   }
@@ -112,7 +112,7 @@ abstract class DateTimeFormatterBase extends FormatterBase implements ContainerF
     $summary = parent::settingsSummary();
 
     if ($override = $this->getSetting('timezone_override')) {
-      $summary[] = $this->t('Time zone: @timezone', array('@timezone' => $override));
+      $summary[] = $this->t('Time zone: @timezone', ['@timezone' => $override]);
     }
 
     return $summary;
@@ -122,7 +122,7 @@ abstract class DateTimeFormatterBase extends FormatterBase implements ContainerF
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     foreach ($items as $delta => $item) {
       if ($item->date) {

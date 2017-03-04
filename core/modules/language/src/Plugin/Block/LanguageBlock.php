@@ -84,22 +84,22 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   public function build() {
-    $build = array();
+    $build = [];
     $route_name = $this->pathMatcher->isFrontPage() ? '<front>' : '<current>';
     $type = $this->getDerivativeId();
     $links = $this->languageManager->getLanguageSwitchLinks($type, Url::fromRoute($route_name));
 
     if (isset($links->links)) {
-      $build = array(
+      $build = [
         '#theme' => 'links__language_block',
         '#links' => $links->links,
-        '#attributes' => array(
-          'class' => array(
+        '#attributes' => [
+          'class' => [
             "language-switcher-{$links->method_id}",
-          ),
-        ),
+          ],
+        ],
         '#set_active_class' => TRUE,
-      );
+      ];
     }
     return $build;
   }

@@ -96,10 +96,10 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
 
     if ($field_storage && !$field_storage->isLocked()) {
       $this->entity->delete();
-      drupal_set_message($this->t('The field %field has been deleted from the %type content type.', array('%field' => $this->entity->label(), '%type' => $bundle_label)));
+      drupal_set_message($this->t('The field %field has been deleted from the %type content type.', ['%field' => $this->entity->label(), '%type' => $bundle_label]));
     }
     else {
-      drupal_set_message($this->t('There was a problem removing the %field from the %type content type.', array('%field' => $this->entity->label(), '%type' => $bundle_label)), 'error');
+      drupal_set_message($this->t('There was a problem removing the %field from the %type content type.', ['%field' => $this->entity->label(), '%type' => $bundle_label]), 'error');
     }
 
     $form_state->setRedirectUrl($this->getCancelUrl());

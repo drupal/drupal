@@ -19,7 +19,7 @@ class AccessPermissionTest extends AccessTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_access_perm');
+  public static $testViews = ['test_access_perm'];
 
   /**
    * Tests perm access plugin.

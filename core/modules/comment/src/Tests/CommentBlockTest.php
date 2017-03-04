@@ -17,12 +17,12 @@ class CommentBlockTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'views');
+  public static $modules = ['block', 'views'];
 
   protected function setUp() {
     parent::setUp();
     // Update admin user to have the 'administer blocks' permission.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'administer content types',
       'administer comments',
       'skip comment approval',
@@ -30,7 +30,7 @@ class CommentBlockTest extends CommentTestBase {
       'access comments',
       'access content',
       'administer blocks',
-     ));
+     ]);
   }
 
   /**
@@ -54,10 +54,10 @@ class CommentBlockTest extends CommentTestBase {
     // Test that a user without the 'access comments' permission cannot see the
     // block.
     $this->drupalLogout();
-    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, array('access comments'));
+    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
     $this->drupalGet('');
     $this->assertNoText(t('Recent comments'));
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access comments'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access comments']);
 
     // Test that a user with the 'access comments' permission can see the
     // block.
@@ -68,11 +68,11 @@ class CommentBlockTest extends CommentTestBase {
     // Test the only the 10 latest comments are shown and in the proper order.
     $this->assertNoText($comments[10]->getSubject(), 'Comment 11 not found in block.');
     for ($i = 0; $i < 10; $i++) {
-      $this->assertText($comments[$i]->getSubject(), SafeMarkup::format('Comment @number found in block.', array('@number' => 10 - $i)));
+      $this->assertText($comments[$i]->getSubject(), SafeMarkup::format('Comment @number found in block.', ['@number' => 10 - $i]));
       if ($i > 1) {
         $previous_position = $position;
         $position = strpos($this->getRawContent(), $comments[$i]->getSubject());
-        $this->assertTrue($position > $previous_position, SafeMarkup::format('Comment @a appears after comment @b', array('@a' => 10 - $i, '@b' => 11 - $i)));
+        $this->assertTrue($position > $previous_position, SafeMarkup::format('Comment @a appears after comment @b', ['@a' => 10 - $i, '@b' => 11 - $i]));
       }
       $position = strpos($this->getRawContent(), $comments[$i]->getSubject());
     }

@@ -19,7 +19,7 @@ class FilePrivateTest extends FileFieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_access_test', 'field_test');
+  public static $modules = ['node_access_test', 'field_test'];
 
   protected function setUp() {
     parent::setUp();
@@ -35,11 +35,11 @@ class FilePrivateTest extends FileFieldTestBase {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
-    $this->createFileField($field_name, 'node', $type_name, array('uri_scheme' => 'private'));
+    $this->createFileField($field_name, 'node', $type_name, ['uri_scheme' => 'private']);
 
     $test_file = $this->getTestFile('text');
-    $nid = $this->uploadNodeFile($test_file, $field_name, $type_name, TRUE, array('private' => TRUE));
-    \Drupal::entityManager()->getStorage('node')->resetCache(array($nid));
+    $nid = $this->uploadNodeFile($test_file, $field_name, $type_name, TRUE, ['private' => TRUE]);
+    \Drupal::entityManager()->getStorage('node')->resetCache([$nid]);
     /* @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
@@ -56,11 +56,11 @@ class FilePrivateTest extends FileFieldTestBase {
     // Create a field with no view access. See
     // field_test_entity_field_access().
     $no_access_field_name = 'field_no_view_access';
-    $this->createFileField($no_access_field_name, 'node', $type_name, array('uri_scheme' => 'private'));
+    $this->createFileField($no_access_field_name, 'node', $type_name, ['uri_scheme' => 'private']);
     // Test with the field that should deny access through field access.
     $this->drupalLogin($this->adminUser);
-    $nid = $this->uploadNodeFile($test_file, $no_access_field_name, $type_name, TRUE, array('private' => TRUE));
-    \Drupal::entityManager()->getStorage('node')->resetCache(array($nid));
+    $nid = $this->uploadNodeFile($test_file, $no_access_field_name, $type_name, TRUE, ['private' => TRUE]);
+    \Drupal::entityManager()->getStorage('node')->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$no_access_field_name}->target_id);
 
@@ -70,7 +70,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->assertResponse(403, 'Confirmed that access is denied for the file without view field access permission.');
 
     // Attempt to reuse the file when editing a node.
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
@@ -80,17 +80,17 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->assertUrl('node/' . $new_node->id() . '/edit');
     // Check that we got the expected constraint form error.
     $constraint = new ReferenceAccessConstraint();
-    $this->assertRaw(SafeMarkup::format($constraint->message, array('%type' => 'file', '%id' => $node_file->id())));
+    $this->assertRaw(SafeMarkup::format($constraint->message, ['%type' => 'file', '%id' => $node_file->id()]));
     // Attempt to reuse the existing file when creating a new node, and confirm
     // that access is still denied.
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit[$field_name . '[0][fids]'] = $node_file->id();
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue(empty($new_node), 'Node was not created.');
     $this->assertUrl('node/add/' . $type_name);
-    $this->assertRaw(SafeMarkup::format($constraint->message, array('%type' => 'file', '%id' => $node_file->id())));
+    $this->assertRaw(SafeMarkup::format($constraint->message, ['%type' => 'file', '%id' => $node_file->id()]));
 
     // Now make file_test_file_download() return everything.
     \Drupal::state()->set('file_test.allow_all', TRUE);

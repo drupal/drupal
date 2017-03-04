@@ -25,7 +25,7 @@ class UserBulkFormTest extends UnitTestCase {
    * Tests the constructor assignment of actions.
    */
   public function testConstructor() {
-    $actions = array();
+    $actions = [];
 
     for ($i = 1; $i <= 2; $i++) {
       $action = $this->getMock('\Drupal\system\ActionConfigEntityInterface');
@@ -60,7 +60,7 @@ class UserBulkFormTest extends UnitTestCase {
     $views_data->expects($this->any())
       ->method('get')
       ->with('users')
-      ->will($this->returnValue(array('table' => array('entity type' => 'user'))));
+      ->will($this->returnValue(['table' => ['entity type' => 'user']]));
     $container = new ContainerBuilder();
     $container->set('views.views_data', $views_data);
     $container->set('string_translation', $this->getStringTranslationStub());
@@ -82,9 +82,9 @@ class UserBulkFormTest extends UnitTestCase {
       ->getMock();
 
     $definition['title'] = '';
-    $options = array();
+    $options = [];
 
-    $user_bulk_form = new UserBulkForm(array(), 'user_bulk_form', $definition, $entity_manager, $language_manager);
+    $user_bulk_form = new UserBulkForm([], 'user_bulk_form', $definition, $entity_manager, $language_manager);
     $user_bulk_form->init($executable, $display, $options);
 
     $this->assertAttributeEquals(array_slice($actions, 0, -1, TRUE), 'actions', $user_bulk_form);

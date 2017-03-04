@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'ssal', 'ssalg', 'ssalm', 'ssalb', 'ssals', 'ssalt', 'ssalp', 'ssalh', 'ssam', 'ssab', 'ssabs', 'ssas', 'ssass', 'ssang', 'ssaj', 'ssach',
   0x10 => 'ssak', 'ssat', 'ssap', 'ssah', 'ssae', 'ssaeg', 'ssaekk', 'ssaegs', 'ssaen', 'ssaenj', 'ssaenh', 'ssaed', 'ssael', 'ssaelg', 'ssaelm', 'ssaelb',
   0x20 => 'ssaels', 'ssaelt', 'ssaelp', 'ssaelh', 'ssaem', 'ssaeb', 'ssaebs', 'ssaes', 'ssaess', 'ssaeng', 'ssaej', 'ssaech', 'ssaek', 'ssaet', 'ssaep', 'ssaeh',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'ssyess', 'ssyeng', 'ssyej', 'ssyech', 'ssyek', 'ssyet', 'ssyep', 'ssyeh', 'sso', 'ssog', 'ssokk', 'ssogs', 'sson', 'ssonj', 'ssonh', 'ssod',
   0xE0 => 'ssol', 'ssolg', 'ssolm', 'ssolb', 'ssols', 'ssolt', 'ssolp', 'ssolh', 'ssom', 'ssob', 'ssobs', 'ssos', 'ssoss', 'ssong', 'ssoj', 'ssoch',
   0xF0 => 'ssok', 'ssot', 'ssop', 'ssoh', 'sswa', 'sswag', 'sswakk', 'sswags', 'sswan', 'sswanj', 'sswanh', 'sswad', 'sswal', 'sswalg', 'sswalm', 'sswalb',
-);
+];

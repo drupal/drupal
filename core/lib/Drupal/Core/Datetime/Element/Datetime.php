@@ -38,30 +38,30 @@ class Datetime extends DateElementBase {
     }
 
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
-      '#element_validate' => array(
-        array($class, 'validateDatetime'),
-      ),
-      '#process' => array(
-        array($class, 'processDatetime'),
-        array($class, 'processGroup'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderGroup'),
-      ),
+      '#element_validate' => [
+        [$class, 'validateDatetime'],
+      ],
+      '#process' => [
+        [$class, 'processDatetime'],
+        [$class, 'processGroup'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderGroup'],
+      ],
       '#theme' => 'datetime_form',
-      '#theme_wrappers' => array('datetime_wrapper'),
+      '#theme_wrappers' => ['datetime_wrapper'],
       '#date_date_format' => $date_format,
       '#date_date_element' => 'date',
-      '#date_date_callbacks' => array(),
+      '#date_date_callbacks' => [],
       '#date_time_format' => $time_format,
       '#date_time_element' => 'time',
-      '#date_time_callbacks' => array(),
+      '#date_time_callbacks' => [],
       '#date_year_range' => '1900:2050',
       '#date_increment' => 1,
       '#date_timezone' => '',
-    );
+    ];
   }
 
   /**
@@ -88,27 +88,27 @@ class Datetime extends DateElementBase {
       catch (\Exception $e) {
         $date = NULL;
       }
-      $input = array(
+      $input = [
         'date'   => $date_input,
         'time'   => $time_input,
         'object' => $date,
-      );
+      ];
     }
     else {
       $date = $element['#default_value'];
       if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
-        $input = array(
+        $input = [
           'date'   => $date->format($element['#date_date_format']),
           'time'   => $date->format($element['#date_time_format']),
           'object' => $date,
-        );
+        ];
       }
       else {
-        $input = array(
+        $input = [
           'date'   => '',
           'time'   => '',
           'object' => NULL,
-        );
+        ];
       }
     }
     return $input;
@@ -213,7 +213,7 @@ class Datetime extends DateElementBase {
    *   The form element whose value has been processed.
    */
   public static function processDatetime(&$element, FormStateInterface $form_state, &$complete_form) {
-    $format_settings = array();
+    $format_settings = [];
     // The value callback has populated the #value array.
     $date = !empty($element['#value']['object']) ? $element['#value']['object'] : NULL;
 
@@ -235,10 +235,10 @@ class Datetime extends DateElementBase {
       // Creating format examples on every individual date item is messy, and
       // placeholders are invalid for HTML5 date and datetime, so an example
       // format is appended to the title to appear in tooltips.
-      $extra_attributes = array(
-        'title' => t('Date (e.g. @format)', array('@format' => static::formatExample($date_format))),
+      $extra_attributes = [
+        'title' => t('Date (e.g. @format)', ['@format' => static::formatExample($date_format)]),
         'type' => $element['#date_date_element'],
-      );
+      ];
 
       // Adds the HTML5 date attributes.
       if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
@@ -248,13 +248,13 @@ class Datetime extends DateElementBase {
         $html5_max = clone($date);
         $html5_max->setDate($range[1], 12, 31)->setTime(23, 59, 59);
 
-        $extra_attributes += array(
+        $extra_attributes += [
           'min' => $html5_min->format($date_format, $format_settings),
           'max' => $html5_max->format($date_format, $format_settings),
-        );
+        ];
       }
 
-      $element['date'] = array(
+      $element['date'] = [
         '#type' => 'date',
         '#title' => t('Date'),
         '#title_display' => 'invisible',
@@ -264,7 +264,7 @@ class Datetime extends DateElementBase {
         '#size' => max(12, strlen($element['#value']['date'])),
         '#error_no_message' => TRUE,
         '#date_date_format' => $element['#date_date_format'],
-      );
+      ];
 
       // Allows custom callbacks to alter the element.
       if (!empty($element['#date_date_callbacks'])) {
@@ -282,12 +282,12 @@ class Datetime extends DateElementBase {
       $time_value = !empty($date) ? $date->format($time_format, $format_settings) : $element['#value']['time'];
 
       // Adds the HTML5 attributes.
-      $extra_attributes = array(
-        'title' => t('Time (e.g. @format)', array('@format' => static::formatExample($time_format))),
+      $extra_attributes = [
+        'title' => t('Time (e.g. @format)', ['@format' => static::formatExample($time_format)]),
         'type' => $element['#date_time_element'],
         'step' => $element['#date_increment'],
-      );
-      $element['time'] = array(
+      ];
+      $element['time'] = [
         '#type' => 'date',
         '#title' => t('Time'),
         '#title_display' => 'invisible',
@@ -296,7 +296,7 @@ class Datetime extends DateElementBase {
         '#required' => $element['#required'],
         '#size' => 12,
         '#error_no_message' => TRUE,
-      );
+      ];
 
       // Allows custom callbacks to alter the element.
       if (!empty($element['#date_time_callbacks'])) {
@@ -343,7 +343,7 @@ class Datetime extends DateElementBase {
       // If there's empty input and the field is required, set an error. A
       // reminder of the required format in the message provides a good UX.
       elseif (empty($input['date']) && empty($input['time']) && $element['#required']) {
-        $form_state->setError($element, t('The %field date is required. Please enter a date in the format %format.', array('%field' => $title, '%format' => static::formatExample($format))));
+        $form_state->setError($element, t('The %field date is required. Please enter a date in the format %format.', ['%field' => $title, '%format' => static::formatExample($format)]));
       }
       else {
         // If the date is valid, set it.
@@ -354,7 +354,7 @@ class Datetime extends DateElementBase {
         // If the date is invalid, set an error. A reminder of the required
         // format in the message provides a good UX.
         else {
-          $form_state->setError($element, t('The %field date is invalid. Please enter a date in the format %format.', array('%field' => $title, '%format' => static::formatExample($format))));
+          $form_state->setError($element, t('The %field date is invalid. Please enter a date in the format %format.', ['%field' => $title, '%format' => static::formatExample($format)]));
         }
       }
     }

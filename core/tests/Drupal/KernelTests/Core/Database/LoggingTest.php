@@ -17,11 +17,11 @@ class LoggingTest extends DatabaseTestBase {
   function testEnableLogging() {
     Database::startLog('testing');
 
-    db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
-    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchCol();
+    db_query('SELECT name FROM {test} WHERE age > :age', [':age' => 25])->fetchCol();
+    db_query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo'])->fetchCol();
 
     // Trigger a call that does not have file in the backtrace.
-    call_user_func_array('db_query', array('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo')))->fetchCol();
+    call_user_func_array('db_query', ['SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo']])->fetchCol();
 
     $queries = Database::getLog('testing', 'default');
 
@@ -38,11 +38,11 @@ class LoggingTest extends DatabaseTestBase {
   function testEnableMultiLogging() {
     Database::startLog('testing1');
 
-    db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
+    db_query('SELECT name FROM {test} WHERE age > :age', [':age' => 25])->fetchCol();
 
     Database::startLog('testing2');
 
-    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchCol();
+    db_query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo'])->fetchCol();
 
     $queries1 = Database::getLog('testing1');
     $queries2 = Database::getLog('testing2');
@@ -62,9 +62,9 @@ class LoggingTest extends DatabaseTestBase {
 
     Database::startLog('testing1');
 
-    db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
+    db_query('SELECT name FROM {test} WHERE age > :age', [':age' => 25])->fetchCol();
 
-    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'replica'));//->fetchCol();
+    db_query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo'], ['target' => 'replica']);//->fetchCol();
 
     $queries1 = Database::getLog('testing1');
 
@@ -83,14 +83,14 @@ class LoggingTest extends DatabaseTestBase {
   function testEnableTargetLoggingNoTarget() {
     Database::startLog('testing1');
 
-    db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
+    db_query('SELECT name FROM {test} WHERE age > :age', [':age' => 25])->fetchCol();
 
     // We use "fake" here as a target because any non-existent target will do.
     // However, because all of the tests in this class share a single page
     // request there is likely to be a target of "replica" from one of the other
     // unit tests, so we use a target here that we know with absolute certainty
     // does not exist.
-    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'fake'))->fetchCol();
+    db_query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo'], ['target' => 'fake'])->fetchCol();
 
     $queries1 = Database::getLog('testing1');
 
@@ -111,11 +111,11 @@ class LoggingTest extends DatabaseTestBase {
     Database::startLog('testing1');
     Database::startLog('testing1', 'test2');
 
-    db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
+    db_query('SELECT name FROM {test} WHERE age > :age', [':age' => 25])->fetchCol();
 
     $old_key = db_set_active('test2');
 
-    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'replica'))->fetchCol();
+    db_query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo'], ['target' => 'replica'])->fetchCol();
 
     db_set_active($old_key);
 

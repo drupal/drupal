@@ -19,24 +19,24 @@ class Crop extends GDImageToolkitOperationBase {
    * {@inheritdoc}
    */
   protected function arguments() {
-    return array(
-      'x' => array(
+    return [
+      'x' => [
         'description' => 'The starting x offset at which to start the crop, in pixels',
-      ),
-      'y' => array(
+      ],
+      'y' => [
         'description' => 'The starting y offset at which to start the crop, in pixels',
-      ),
-      'width' => array(
+      ],
+      'width' => [
         'description' => 'The width of the cropped area, in pixels',
         'required' => FALSE,
         'default' => NULL,
-      ),
-      'height' => array(
+      ],
+      'height' => [
         'description' => 'The height of the cropped area, in pixels',
         'required' => FALSE,
         'default' => NULL,
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -54,7 +54,7 @@ class Crop extends GDImageToolkitOperationBase {
     $arguments['width'] = empty($arguments['width']) ? $arguments['height'] / $aspect : $arguments['width'];
 
     // Assure integers for all arguments.
-    foreach (array('x', 'y', 'width', 'height') as $key) {
+    foreach (['x', 'y', 'width', 'height'] as $key) {
       $arguments[$key] = (int) round($arguments[$key]);
     }
 
@@ -77,13 +77,13 @@ class Crop extends GDImageToolkitOperationBase {
     // the original resource on it with resampling. Destroy the original
     // resource upon success.
     $original_resource = $this->getToolkit()->getResource();
-    $data = array(
+    $data = [
       'width' => $arguments['width'],
       'height' => $arguments['height'],
       'extension' => image_type_to_extension($this->getToolkit()->getType(), FALSE),
       'transparent_color' => $this->getToolkit()->getTransparentColor(),
       'is_temp' => TRUE,
-    );
+    ];
     if ($this->getToolkit()->apply('create_new', $data)) {
       if (imagecopyresampled($this->getToolkit()->getResource(), $original_resource, 0, 0, $arguments['x'], $arguments['y'], $arguments['width'], $arguments['height'], $arguments['width'], $arguments['height'])) {
         imagedestroy($original_resource);

@@ -56,11 +56,11 @@ class Color {
 
     $c = hexdec($hex);
 
-    return array(
+    return [
       'red' => $c >> 16 & 0xFF,
       'green' => $c >> 8 & 0xFF,
       'blue' => $c & 0xFF,
-    );
+    ];
   }
 
   /**

@@ -23,7 +23,7 @@ class UserSession implements AccountInterface {
    *
    * @var array
    */
-  protected $roles = array(AccountInterface::ANONYMOUS_ROLE);
+  protected $roles = [AccountInterface::ANONYMOUS_ROLE];
 
   /**
    * The Unix timestamp when the user last accessed the site.
@@ -73,7 +73,7 @@ class UserSession implements AccountInterface {
    * @param array $values
    *   Array of initial values for the user session.
    */
-  public function __construct(array $values = array()) {
+  public function __construct(array $values = []) {
     foreach ($values as $key => $value) {
       $this->$key = $value;
     }
@@ -93,7 +93,7 @@ class UserSession implements AccountInterface {
     $roles = $this->roles;
 
     if ($exclude_locked_roles) {
-      $roles = array_values(array_diff($roles, array(AccountInterface::ANONYMOUS_ROLE, AccountInterface::AUTHENTICATED_ROLE)));
+      $roles = array_values(array_diff($roles, [AccountInterface::ANONYMOUS_ROLE, AccountInterface::AUTHENTICATED_ROLE]));
     }
 
     return $roles;

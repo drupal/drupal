@@ -16,29 +16,29 @@ class TrackerUserUidTest extends TrackerTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_tracker_user_uid');
+  public static $testViews = ['test_tracker_user_uid'];
 
   /**
    * Tests the user uid filter and argument.
    */
   public function testUserUid() {
-    $map = array(
+    $map = [
       'nid' => 'nid',
       'title' => 'title',
-    );
+    ];
 
-    $expected = array(
-      array(
+    $expected = [
+      [
         'nid' => $this->node->id(),
         'title' => $this->node->label(),
-      )
-    );
+      ]
+    ];
 
     $view = Views::getView('test_tracker_user_uid');
     $this->executeView($view);
 
     // We should have no results as the filter is set for uid 0.
-    $this->assertIdenticalResultSet($view, array(), $map);
+    $this->assertIdenticalResultSet($view, [], $map);
     $view->destroy();
 
     // Change the filter value to our user.
@@ -55,13 +55,13 @@ class TrackerUserUidTest extends TrackerTestBase {
 
     // Test the incorrect argument UID.
     $view->initHandlers();
-    $this->executeView($view, array(rand()));
-    $this->assertIdenticalResultSet($view, array(), $map);
+    $this->executeView($view, [rand()]);
+    $this->assertIdenticalResultSet($view, [], $map);
     $view->destroy();
 
     // Test the correct argument UID.
     $view->initHandlers();
-    $this->executeView($view, array($this->node->getOwnerId()));
+    $this->executeView($view, [$this->node->getOwnerId()]);
     $this->assertIdenticalResultSet($view, $expected, $map);
   }
 

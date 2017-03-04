@@ -21,7 +21,7 @@ abstract class TaxonomyTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'block');
+  public static $modules = ['taxonomy', 'block'];
 
   /**
    * {@inheritdoc}
@@ -32,7 +32,7 @@ abstract class TaxonomyTestBase extends WebTestBase {
 
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+      $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     }
   }
 

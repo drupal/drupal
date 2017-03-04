@@ -19,14 +19,14 @@ abstract class ForumBlockBase extends BlockBase {
    */
   public function build() {
     $result = $this->buildForumQuery()->execute();
-    $elements = array();
+    $elements = [];
     if ($node_title_list = node_title_list($result)) {
       $elements['forum_list'] = $node_title_list;
-      $elements['forum_more'] = array(
+      $elements['forum_more'] = [
         '#type' => 'more_link',
         '#url' => Url::fromRoute('forum.index'),
-        '#attributes' => array('title' => $this->t('Read the latest forum topics.')),
-      );
+        '#attributes' => ['title' => $this->t('Read the latest forum topics.')],
+      ];
     }
     return $elements;
   }
@@ -43,12 +43,12 @@ abstract class ForumBlockBase extends BlockBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
-      'properties' => array(
+    return [
+      'properties' => [
         'administrative' => TRUE,
-      ),
+      ],
       'block_count' => 5,
-    );
+    ];
   }
 
   /**
@@ -63,12 +63,12 @@ abstract class ForumBlockBase extends BlockBase {
    */
   public function blockForm($form, FormStateInterface $form_state) {
     $range = range(2, 20);
-    $form['block_count'] = array(
+    $form['block_count'] = [
       '#type' => 'select',
       '#title' => $this->t('Number of topics'),
       '#default_value' => $this->configuration['block_count'],
       '#options' => array_combine($range, $range),
-    );
+    ];
     return $form;
   }
 

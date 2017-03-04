@@ -19,16 +19,16 @@ $block_configs[] = Yaml::decode(file_get_contents(__DIR__ . '/block.block.second
 
 foreach ($block_configs as $block_config) {
   $connection->insert('config')
-    ->fields(array(
+    ->fields([
       'collection',
       'name',
       'data',
-    ))
-    ->values(array(
+    ])
+    ->values([
       'collection' => '',
       'name' => 'block.block.' . $block_config['id'],
       'data' => serialize($block_config),
-    ))
+    ])
     ->execute();
 }
 

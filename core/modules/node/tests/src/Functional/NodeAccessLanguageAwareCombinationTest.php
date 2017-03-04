@@ -22,14 +22,14 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'node_access_test_language', 'node_access_test');
+  public static $modules = ['language', 'node_access_test_language', 'node_access_test'];
 
   /**
    * A set of nodes to use in testing.
    *
    * @var \Drupal\node\NodeInterface[]
    */
-  protected $nodes = array();
+  protected $nodes = [];
 
   /**
    * A normal authenticated user.
@@ -52,24 +52,24 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Create the 'private' field, which allows the node to be marked as private
     // (restricted access) in a given translation.
-    $field_storage = FieldStorageConfig::create(array(
+    $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_private',
       'entity_type' => 'node',
       'type' => 'boolean',
       'cardinality' => 1,
-    ));
+    ]);
     $field_storage->save();
 
     FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'page',
-      'widget' => array(
+      'widget' => [
         'type' => 'options_buttons',
-      ),
-      'settings' => array(
+      ],
+      'settings' => [
         'on_label' => 'Private',
         'off_label' => 'Not private',
-      ),
+      ],
     ])->save();
 
     // After enabling a node access module, the access table has to be rebuild.
@@ -80,7 +80,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     ConfigurableLanguage::createFromLangcode('ca')->save();
 
     // Create a normal authenticated user.
-    $this->webUser = $this->drupalCreateUser(array('access content'));
+    $this->webUser = $this->drupalCreateUser(['access content']);
 
     // Load the user 1 user for later use as an admin user with permission to
     // see everything.
@@ -101,92 +101,92 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     // 4. One public with only the Catalan translation private.
     // 5. One public with both the Hungarian and Catalan translations private.
     // 6. One private with both the Hungarian and Catalan translations private.
-    $this->nodes['public_both_public'] = $node = $this->drupalCreateNode(array(
-      'body' => array(array()),
+    $this->nodes['public_both_public'] = $node = $this->drupalCreateNode([
+      'body' => [[]],
       'langcode' => 'hu',
-      'field_private' => array(array('value' => 0)),
+      'field_private' => [['value' => 0]],
       'private' => FALSE,
-    ));
+    ]);
     $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
 
-    $this->nodes['private_both_public'] = $node = $this->drupalCreateNode(array(
-      'body' => array(array()),
+    $this->nodes['private_both_public'] = $node = $this->drupalCreateNode([
+      'body' => [[]],
       'langcode' => 'hu',
-      'field_private' => array(array('value' => 0)),
+      'field_private' => [['value' => 0]],
       'private' => TRUE,
-    ));
+    ]);
     $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
 
-    $this->nodes['public_hu_private'] = $node = $this->drupalCreateNode(array(
-      'body' => array(array()),
+    $this->nodes['public_hu_private'] = $node = $this->drupalCreateNode([
+      'body' => [[]],
       'langcode' => 'hu',
-      'field_private' => array(array('value' => 1)),
+      'field_private' => [['value' => 1]],
       'private' => FALSE,
-    ));
+    ]);
     $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 0;
     $node->save();
 
-    $this->nodes['public_ca_private'] = $node = $this->drupalCreateNode(array(
-      'body' => array(array()),
+    $this->nodes['public_ca_private'] = $node = $this->drupalCreateNode([
+      'body' => [[]],
       'langcode' => 'hu',
-      'field_private' => array(array('value' => 0)),
+      'field_private' => [['value' => 0]],
       'private' => FALSE,
-    ));
+    ]);
     $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();
 
-    $this->nodes['public_both_private'] = $node = $this->drupalCreateNode(array(
-      'body' => array(array()),
+    $this->nodes['public_both_private'] = $node = $this->drupalCreateNode([
+      'body' => [[]],
       'langcode' => 'hu',
-      'field_private' => array(array('value' => 1)),
+      'field_private' => [['value' => 1]],
       'private' => FALSE,
-    ));
+    ]);
     $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();
 
-    $this->nodes['private_both_private'] = $node = $this->drupalCreateNode(array(
-      'body' => array(array()),
+    $this->nodes['private_both_private'] = $node = $this->drupalCreateNode([
+      'body' => [[]],
       'langcode' => 'hu',
-      'field_private' => array(array('value' => 1)),
+      'field_private' => [['value' => 1]],
       'private' => TRUE,
-    ));
+    ]);
     $translation = $node->addTranslation('ca');
     $translation->title->value = $this->randomString();
     $translation->field_private->value = 1;
     $node->save();
 
-    $this->nodes['public_no_language_private'] = $this->drupalCreateNode(array(
-      'field_private' => array(array('value' => 1)),
+    $this->nodes['public_no_language_private'] = $this->drupalCreateNode([
+      'field_private' => [['value' => 1]],
       'private' => FALSE,
         'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
-    $this->nodes['public_no_language_public'] = $this->drupalCreateNode(array(
-      'field_private' => array(array('value' => 0)),
+    ]);
+    $this->nodes['public_no_language_public'] = $this->drupalCreateNode([
+      'field_private' => [['value' => 0]],
       'private' => FALSE,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
-    $this->nodes['private_no_language_private'] = $this->drupalCreateNode(array(
-      'field_private' => array(array('value' => 1)),
+    ]);
+    $this->nodes['private_no_language_private'] = $this->drupalCreateNode([
+      'field_private' => [['value' => 1]],
       'private' => TRUE,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
-    $this->nodes['private_no_language_public'] = $this->drupalCreateNode(array(
-      'field_private' => array(array('value' => 1)),
+    ]);
+    $this->nodes['private_no_language_public'] = $this->drupalCreateNode([
+      'field_private' => [['value' => 1]],
       'private' => TRUE,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
+    ]);
   }
 
   /**
@@ -194,8 +194,8 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
    */
   function testNodeAccessLanguageAwareCombination() {
 
-    $expected_node_access = array('view' => TRUE, 'update' => FALSE, 'delete' => FALSE);
-    $expected_node_access_no_access = array('view' => FALSE, 'update' => FALSE, 'delete' => FALSE);
+    $expected_node_access = ['view' => TRUE, 'update' => FALSE, 'delete' => FALSE];
+    $expected_node_access_no_access = ['view' => FALSE, 'update' => FALSE, 'delete' => FALSE];
 
     // When the node and both translations are public, access should always be
     // granted.
@@ -254,7 +254,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Query with no language specified. The fallback (hu or und) will be used.
     $select = db_select('node', 'n')
-      ->fields('n', array('nid'))
+      ->fields('n', ['nid'])
       ->addMetaData('account', $this->webUser)
       ->addTag('node_access');
     $nids = $select->execute()->fetchAllAssoc('nid');
@@ -269,7 +269,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Query with Hungarian (hu) specified.
     $select = db_select('node', 'n')
-      ->fields('n', array('nid'))
+      ->fields('n', ['nid'])
       ->addMetaData('account', $this->webUser)
       ->addMetaData('langcode', 'hu')
       ->addTag('node_access');
@@ -283,7 +283,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Query with Catalan (ca) specified.
     $select = db_select('node', 'n')
-      ->fields('n', array('nid'))
+      ->fields('n', ['nid'])
       ->addMetaData('account', $this->webUser)
       ->addMetaData('langcode', 'ca')
       ->addTag('node_access');
@@ -297,7 +297,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
     // Query with German (de) specified.
     $select = db_select('node', 'n')
-      ->fields('n', array('nid'))
+      ->fields('n', ['nid'])
       ->addMetaData('account', $this->webUser)
       ->addMetaData('langcode', 'de')
       ->addTag('node_access');
@@ -309,7 +309,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     // Query the nodes table as admin user (full access) with the node access
     // tag and no specific langcode.
     $select = db_select('node', 'n')
-      ->fields('n', array('nid'))
+      ->fields('n', ['nid'])
       ->addMetaData('account', $this->adminUser)
       ->addTag('node_access');
     $nids = $select->execute()->fetchAllAssoc('nid');
@@ -320,7 +320,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     // Query the nodes table as admin user (full access) with the node access
     // tag and langcode de.
     $select = db_select('node', 'n')
-      ->fields('n', array('nid'))
+      ->fields('n', ['nid'])
       ->addMetaData('account', $this->adminUser)
       ->addMetaData('langcode', 'de')
       ->addTag('node_access');

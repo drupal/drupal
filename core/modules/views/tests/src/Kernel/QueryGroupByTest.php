@@ -20,14 +20,14 @@ class QueryGroupByTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_group_by_in_filters', 'test_aggregate_count', 'test_group_by_count', 'test_group_by_count_multicardinality', 'test_group_by_field_not_within_bundle');
+  public static $testViews = ['test_group_by_in_filters', 'test_aggregate_count', 'test_group_by_count', 'test_group_by_count_multicardinality', 'test_group_by_field_not_within_bundle'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'system', 'field', 'user', 'language');
+  public static $modules = ['entity_test', 'system', 'field', 'user', 'language'];
 
   /**
    * The storage for the test entity type.
@@ -63,7 +63,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
 
     $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
 
-    $types = array();
+    $types = [];
     foreach ($view->result as $item) {
       // num_records is a alias for id.
       $types[$item->entity_test_name] = $item->num_records;
@@ -101,12 +101,12 @@ class QueryGroupByTest extends ViewsKernelTestBase {
 
     $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
     // Group by name to identify the right count.
-    $results = array();
+    $results = [];
     foreach ($view->result as $item) {
       $results[$item->entity_test_name] = $item->id;
     }
-    $this->assertEqual($results['name1'], $values[0], format_string('Aggregation with @aggregation_function and groupby name: name1 returned the expected amount of results', array('@aggregation_function' => $aggregation_function)));
-    $this->assertEqual($results['name2'], $values[1], format_string('Aggregation with @aggregation_function and groupby name: name2 returned the expected amount of results', array('@aggregation_function' => $aggregation_function)));
+    $this->assertEqual($results['name1'], $values[0], format_string('Aggregation with @aggregation_function and groupby name: name1 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
+    $this->assertEqual($results['name2'], $values[1], format_string('Aggregation with @aggregation_function and groupby name: name2 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
   }
 
   /**
@@ -114,18 +114,18 @@ class QueryGroupByTest extends ViewsKernelTestBase {
    */
   protected function setupTestEntities() {
     // Create 4 entities with name1 and 3 entities with name2.
-    $entity_1 = array(
+    $entity_1 = [
       'name' => 'name1',
-    );
+    ];
 
     $this->storage->create($entity_1)->save();
     $this->storage->create($entity_1)->save();
     $this->storage->create($entity_1)->save();
     $this->storage->create($entity_1)->save();
 
-    $entity_2 = array(
+    $entity_2 = [
       'name' => 'name2',
-    );
+    ];
     $this->storage->create($entity_2)->save();
     $this->storage->create($entity_2)->save();
     $this->storage->create($entity_2)->save();
@@ -135,42 +135,42 @@ class QueryGroupByTest extends ViewsKernelTestBase {
    * Tests the count aggregation function.
    */
   public function testGroupByCount() {
-    $this->groupByTestHelper('count', array(4, 3));
+    $this->groupByTestHelper('count', [4, 3]);
   }
 
   /**
    * Tests the sum aggregation function.
    */
   public function testGroupBySum() {
-    $this->groupByTestHelper('sum', array(10, 18));
+    $this->groupByTestHelper('sum', [10, 18]);
   }
 
   /**
    * Tests the average aggregation function.
    */
   public function testGroupByAverage() {
-    $this->groupByTestHelper('avg', array(2.5, 6));
+    $this->groupByTestHelper('avg', [2.5, 6]);
   }
 
   /**
    * Tests the min aggregation function.
    */
   public function testGroupByMin() {
-    $this->groupByTestHelper('min', array(1, 5));
+    $this->groupByTestHelper('min', [1, 5]);
   }
 
   /**
    * Tests the max aggregation function.
    */
   public function testGroupByMax() {
-    $this->groupByTestHelper('max', array(4, 7));
+    $this->groupByTestHelper('max', [4, 7]);
   }
 
   /**
    * Tests aggregation with no specific function.
    */
   public function testGroupByNone() {
-    $this->groupByTestHelper(NULL, array(1, 5));
+    $this->groupByTestHelper(NULL, [1, 5]);
   }
 
   /**
@@ -181,7 +181,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     // doesn't display SUM, COUNT, MAX, etc. functions in SELECT statement.
 
     for ($x = 0; $x < 10; $x++) {
-      $this->storage->create(array('name' => 'name1'))->save();
+      $this->storage->create(['name' => 'name1'])->save();
     }
 
     $view = Views::getView('test_group_by_in_filters');

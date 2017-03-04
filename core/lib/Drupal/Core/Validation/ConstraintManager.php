@@ -74,7 +74,7 @@ class ConstraintManager extends DefaultPluginManager {
       // Plugins need an array as configuration, so make sure we have one.
       // The constraint classes support passing the options as part of the
       // 'value' key also.
-      $options = isset($options) ? array('value' => $options) : array();
+      $options = isset($options) ? ['value' => $options] : [];
     }
     return $this->createInstance($name, $options);
   }
@@ -85,26 +85,26 @@ class ConstraintManager extends DefaultPluginManager {
    * @see ConstraintManager::__construct()
    */
   public function registerDefinitions() {
-    $this->getDiscovery()->setDefinition('Callback', array(
+    $this->getDiscovery()->setDefinition('Callback', [
       'label' => new TranslatableMarkup('Callback'),
       'class' => '\Symfony\Component\Validator\Constraints\Callback',
       'type' => FALSE,
-    ));
-    $this->getDiscovery()->setDefinition('Blank', array(
+    ]);
+    $this->getDiscovery()->setDefinition('Blank', [
       'label' => new TranslatableMarkup('Blank'),
       'class' => '\Symfony\Component\Validator\Constraints\Blank',
       'type' => FALSE,
-    ));
-    $this->getDiscovery()->setDefinition('NotBlank', array(
+    ]);
+    $this->getDiscovery()->setDefinition('NotBlank', [
       'label' => new TranslatableMarkup('Not blank'),
       'class' => '\Symfony\Component\Validator\Constraints\NotBlank',
       'type' => FALSE,
-    ));
-    $this->getDiscovery()->setDefinition('Email', array(
+    ]);
+    $this->getDiscovery()->setDefinition('Email', [
       'label' => new TranslatableMarkup('Email'),
       'class' => '\Drupal\Core\Validation\Plugin\Validation\Constraint\EmailConstraint',
-      'type' => array('string'),
-    ));
+      'type' => ['string'],
+    ]);
   }
 
   /**
@@ -113,7 +113,7 @@ class ConstraintManager extends DefaultPluginManager {
   public function processDefinition(&$definition, $plugin_id) {
     // Make sure 'type' is set and either an array or FALSE.
     if ($definition['type'] !== FALSE && !is_array($definition['type'])) {
-      $definition['type'] = array($definition['type']);
+      $definition['type'] = [$definition['type']];
     }
   }
 
@@ -128,7 +128,7 @@ class ConstraintManager extends DefaultPluginManager {
    *   keyed by constraint name (plugin ID).
    */
   public function getDefinitionsByType($type) {
-    $definitions = array();
+    $definitions = [];
     foreach ($this->getDefinitions() as $plugin_id => $definition) {
       if ($definition['type'] === FALSE || in_array($type, $definition['type'])) {
         $definitions[$plugin_id] = $definition;

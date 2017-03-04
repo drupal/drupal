@@ -39,7 +39,7 @@ class Statement extends \PDOStatement implements StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function execute($args = array(), $options = array()) {
+  public function execute($args = [], $options = []) {
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
         // \PDO::FETCH_PROPS_LATE tells __construct() to run before properties
@@ -84,7 +84,7 @@ class Statement extends \PDOStatement implements StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllAssoc($key, $fetch = NULL) {
-    $return = array();
+    $return = [];
     if (isset($fetch)) {
       if (is_string($fetch)) {
         $this->setFetchMode(\PDO::FETCH_CLASS, $fetch);
@@ -106,7 +106,7 @@ class Statement extends \PDOStatement implements StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
-    $return = array();
+    $return = [];
     $this->setFetchMode(\PDO::FETCH_NUM);
     foreach ($this as $record) {
       $return[$record[$key_index]] = $record[$value_index];
@@ -146,7 +146,7 @@ class Statement extends \PDOStatement implements StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function setFetchMode($mode, $a1 = NULL, $a2 = array()) {
+  public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.

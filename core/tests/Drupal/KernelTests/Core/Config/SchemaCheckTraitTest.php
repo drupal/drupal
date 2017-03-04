@@ -27,14 +27,14 @@ class SchemaCheckTraitTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test', 'config_schema_test');
+  public static $modules = ['config_test', 'config_schema_test'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('config_test', 'config_schema_test'));
+    $this->installConfig(['config_test', 'config_schema_test']);
     $this->typedConfig = \Drupal::service('config.typed');
   }
 
@@ -53,14 +53,14 @@ class SchemaCheckTraitTest extends KernelTestBase {
 
     // Add a new key, a new array and overwrite boolean with array to test the
     // error messages.
-    $config_data = array('new_key' => 'new_value', 'new_array' => array()) + $config_data;
-    $config_data['boolean'] = array();
+    $config_data = ['new_key' => 'new_value', 'new_array' => []] + $config_data;
+    $config_data['boolean'] = [];
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
-    $expected = array(
+    $expected = [
       'config_test.types:new_key' => 'missing schema',
       'config_test.types:new_array' => 'missing schema',
       'config_test.types:boolean' => 'non-scalar value but not defined as an array (such as mapping or sequence)',
-    );
+    ];
     $this->assertEqual($ret, $expected);
   }
 

@@ -66,7 +66,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    *
    * @var array
    */
-  protected $settings = array();
+  protected $settings = [];
 
   /**
    * The region this block is placed in.

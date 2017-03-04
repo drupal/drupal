@@ -55,20 +55,20 @@ class ShortcutSetController extends ControllerBase {
     $link = $request->query->get('link');
     $name = $request->query->get('name');
     if (parse_url($link, PHP_URL_SCHEME) === NULL && $this->pathValidator->isValid($link)) {
-      $shortcut = $this->entityManager()->getStorage('shortcut')->create(array(
+      $shortcut = $this->entityManager()->getStorage('shortcut')->create([
         'title' => $name,
         'shortcut_set' => $shortcut_set->id(),
-        'link' => array(
+        'link' => [
           'uri' => 'internal:/' . $link,
-        ),
-      ));
+        ],
+      ]);
 
       try {
         $shortcut->save();
-        drupal_set_message($this->t('Added a shortcut for %title.', array('%title' => $shortcut->label())));
+        drupal_set_message($this->t('Added a shortcut for %title.', ['%title' => $shortcut->label()]));
       }
       catch (\Exception $e) {
-        drupal_set_message($this->t('Unable to add a shortcut for %title.', array('%title' => $shortcut->label())), 'error');
+        drupal_set_message($this->t('Unable to add a shortcut for %title.', ['%title' => $shortcut->label()]), 'error');
       }
 
       return $this->redirect('<front>');

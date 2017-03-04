@@ -28,7 +28,7 @@ class QueryParameterTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $raw = new QueryParameter(array(), 'query_parameter', array());
+    $raw = new QueryParameter([], 'query_parameter', []);
     $raw->init($view, $display_plugin, $options);
     $this->assertEquals($expected, $raw->getArgument());
   }

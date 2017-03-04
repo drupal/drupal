@@ -22,14 +22,14 @@ class TableTest extends KernelTestBase {
    * Tableheader.js provides 'sticky' table headers, and is included by default.
    */
   function testThemeTableStickyHeaders() {
-    $header = array('one', 'two', 'three');
-    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
-    $table = array(
+    $header = ['one', 'two', 'three'];
+    $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+    $table = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#sticky' => TRUE,
-    );
+    ];
     $this->render($table);
     // Make sure tableheader.js was attached.
     $tableheader = $this->xpath("//script[contains(@src, 'tableheader.js')]");
@@ -41,12 +41,12 @@ class TableTest extends KernelTestBase {
    * If $sticky is FALSE, no tableheader.js should be included.
    */
   function testThemeTableNoStickyHeaders() {
-    $header = array('one', 'two', 'three');
-    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
-    $attributes = array();
+    $header = ['one', 'two', 'three'];
+    $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+    $attributes = [];
     $caption = NULL;
-    $colgroups = array();
-    $table = array(
+    $colgroups = [];
+    $table = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
@@ -54,7 +54,7 @@ class TableTest extends KernelTestBase {
       '#caption' => $caption,
       '#colgroups' => $colgroups,
       '#sticky' => FALSE,
-    );
+    ];
     $this->render($table);
     // Make sure tableheader.js was not attached.
     $tableheader = $this->xpath("//script[contains(@src, 'tableheader.js')]");
@@ -67,19 +67,19 @@ class TableTest extends KernelTestBase {
    * and that the empty text is displayed correctly.
    */
   function testThemeTableWithEmptyMessage() {
-    $header = array(
+    $header = [
       'Header 1',
-      array(
+      [
         'data' => 'Header 2',
         'colspan' => 2,
-      ),
-    );
-    $table = array(
+      ],
+    ];
+    $table = [
       '#type' => 'table',
       '#header' => $header,
-      '#rows' => array(),
+      '#rows' => [],
       '#empty' => 'Empty row.',
-    );
+    ];
 
     // Enable the Classy theme.
     \Drupal::service('theme_handler')->install(['classy']);
@@ -95,16 +95,16 @@ class TableTest extends KernelTestBase {
    * Tests that the 'no_striping' option works correctly.
    */
   function testThemeTableWithNoStriping() {
-    $rows = array(
-      array(
-        'data' => array(1),
+    $rows = [
+      [
+        'data' => [1],
         'no_striping' => TRUE,
-      ),
-    );
-    $table = array(
+      ],
+    ];
+    $table = [
       '#type' => 'table',
       '#rows' => $rows,
-    );
+    ];
     $this->render($table);
     $this->assertNoRaw('class="odd"', 'Odd/even classes were not added because $no_striping = TRUE.');
     $this->assertNoRaw('no_striping', 'No invalid no_striping HTML attribute was printed.');
@@ -114,18 +114,18 @@ class TableTest extends KernelTestBase {
    * Test that the 'footer' option works correctly.
    */
   function testThemeTableFooter() {
-    $footer = array(
-      array(
-        'data' => array(1),
-      ),
-      array('Foo'),
-    );
+    $footer = [
+      [
+        'data' => [1],
+      ],
+      ['Foo'],
+    ];
 
-    $table = array(
+    $table = [
       '#type' => 'table',
-      '#rows' => array(),
+      '#rows' => [],
       '#footer' => $footer,
-    );
+    ];
 
     $this->render($table);
     $this->removeWhiteSpace();
@@ -136,17 +136,17 @@ class TableTest extends KernelTestBase {
    * Tests that the 'header' option in cells works correctly.
    */
   function testThemeTableHeaderCellOption() {
-    $rows = array(
-      array(
-        array('data' => 1, 'header' => TRUE),
-        array('data' => 1, 'header' => FALSE),
-        array('data' => 1),
-      ),
-    );
-    $table = array(
+    $rows = [
+      [
+        ['data' => 1, 'header' => TRUE],
+        ['data' => 1, 'header' => FALSE],
+        ['data' => 1],
+      ],
+    ];
+    $table = [
       '#type' => 'table',
       '#rows' => $rows,
-    );
+    ];
     $this->render($table);
     $this->removeWhiteSpace();
     $this->assertRaw('<th>1</th><td>1</td><td>1</td>', 'The th and td tags was printed correctly.');
@@ -156,14 +156,14 @@ class TableTest extends KernelTestBase {
    * Tests that the 'responsive-table' class is applied correctly.
    */
   public function testThemeTableResponsive() {
-    $header = array('one', 'two', 'three');
-    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
-    $table = array(
+    $header = ['one', 'two', 'three'];
+    $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+    $table = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#responsive' => TRUE,
-    );
+    ];
     $this->render($table);
     $this->assertRaw('responsive-enabled', 'The responsive-enabled class was printed correctly.');
   }
@@ -172,12 +172,12 @@ class TableTest extends KernelTestBase {
    * Tests that the 'responsive-table' class is not applied without headers.
    */
   public function testThemeTableNotResponsiveHeaders() {
-    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
-    $table = array(
+    $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+    $table = [
       '#type' => 'table',
       '#rows' => $rows,
       '#responsive' => TRUE,
-    );
+    ];
     $this->render($table);
     $this->assertNoRaw('responsive-enabled', 'The responsive-enabled class is not applied without table headers.');
   }
@@ -186,14 +186,14 @@ class TableTest extends KernelTestBase {
    * Tests that 'responsive-table' class only applied when responsive is TRUE.
    */
   public function testThemeTableNotResponsiveProperty() {
-    $header = array('one', 'two', 'three');
-    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
-    $table = array(
+    $header = ['one', 'two', 'three'];
+    $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+    $table = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#responsive' => FALSE,
-    );
+    ];
     $this->render($table);
     $this->assertNoRaw('responsive-enabled', 'The responsive-enabled class is not applied without the "responsive" property set to TRUE.');
   }
@@ -202,21 +202,21 @@ class TableTest extends KernelTestBase {
    * Tests 'priority-medium' and 'priority-low' classes.
    */
   public function testThemeTableResponsivePriority() {
-    $header = array(
+    $header = [
       // Test associative header indices.
-      'associative_key' => array('data' => 1, 'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
+      'associative_key' => ['data' => 1, 'class' => [RESPONSIVE_PRIORITY_MEDIUM]],
       // Test non-associative header indices.
-      array('data' => 2, 'class' => array(RESPONSIVE_PRIORITY_LOW)),
+      ['data' => 2, 'class' => [RESPONSIVE_PRIORITY_LOW]],
       // Test no responsive priorities.
-      array('data' => 3),
-    );
-    $rows = array(array(4, 5, 6));
-    $table = array(
+      ['data' => 3],
+    ];
+    $rows = [[4, 5, 6]];
+    $table = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#responsive' => TRUE,
-    );
+    ];
     $this->render($table);
     $this->assertRaw('<th class="priority-medium">1</th>', 'Header 1: the priority-medium class was applied correctly.');
     $this->assertRaw('<th class="priority-low">2</th>', 'Header 2: the priority-low class was applied correctly.');
@@ -230,28 +230,28 @@ class TableTest extends KernelTestBase {
    * Tests header elements with a mix of string and render array values.
    */
   public function testThemeTableHeaderRenderArray() {
-    $header = array(
-      array (
-        'data' => array(
+    $header = [
+       [
+        'data' => [
           '#markup' => 'one',
-        ),
-      ),
+        ],
+      ],
       'two',
-      array (
-        'data' => array(
+       [
+        'data' => [
           '#type' => 'html_tag',
           '#tag' => 'b',
           '#value' => 'three',
-        ),
-      ),
-    );
-    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
-    $table = array(
+        ],
+      ],
+    ];
+    $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+    $table = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#responsive' => FALSE,
-    );
+    ];
     $this->render($table);
     $this->removeWhiteSpace();
     $this->assertRaw('<thead><tr><th>one</th><th>two</th><th><b>three</b></th></tr>', 'Table header found.');
@@ -261,37 +261,37 @@ class TableTest extends KernelTestBase {
    * Tests row elements with a mix of string and render array values.
    */
   public function testThemeTableRowRenderArray() {
-    $header = array('one', 'two', 'three');
-    $rows = array(
-      array(
+    $header = ['one', 'two', 'three'];
+    $rows = [
+      [
         '1-one',
-        array(
+        [
           'data' => '1-two'
-        ),
+        ],
         '1-three',
-      ),
-      array(
-        array (
-          'data' => array(
+      ],
+      [
+         [
+          'data' => [
             '#markup' => '2-one',
-          ),
-        ),
+          ],
+        ],
         '2-two',
-        array (
-          'data' => array(
+         [
+          'data' => [
             '#type' => 'html_tag',
             '#tag' => 'b',
             '#value' => '2-three',
-          ),
-        ),
-      ),
-    );
-    $table = array(
+          ],
+        ],
+      ],
+    ];
+    $table = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#responsive' => FALSE,
-    );
+    ];
     $this->render($table);
     $this->removeWhiteSpace();
     $this->assertRaw('<tbody><tr><td>1-one</td><td>1-two</td><td>1-three</td></tr>', 'Table row 1 found.');

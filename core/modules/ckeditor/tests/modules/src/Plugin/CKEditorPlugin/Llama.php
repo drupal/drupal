@@ -30,14 +30,14 @@ class Llama extends PluginBase implements CKEditorPluginInterface {
    * {@inheritdoc}
    */
   function getDependencies(Editor $editor) {
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   function getLibraries(Editor $editor) {
-    return array();
+    return [];
   }
 
   /**
@@ -58,7 +58,7 @@ class Llama extends PluginBase implements CKEditorPluginInterface {
    * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
-    return array();
+    return [];
   }
 
 }

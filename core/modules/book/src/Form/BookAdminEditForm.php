@@ -70,10 +70,10 @@ class BookAdminEditForm extends FormBase {
     $form['#title'] = $node->label();
     $form['#node'] = $node;
     $this->bookAdminTable($node, $form);
-    $form['save'] = array(
+    $form['save'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save book pages'),
-    );
+    ];
 
     return $form;
   }
@@ -101,7 +101,7 @@ class BookAdminEditForm extends FormBase {
       foreach (Element::children($form['table']) as $key) {
         if ($form['table'][$key]['#item']) {
           $row = $form['table'][$key];
-          $values = $form_state->getValue(array('table', $key));
+          $values = $form_state->getValue(['table', $key]);
 
           // Update menu item if moved.
           if ($row['parent']['pid']['#default_value'] != $values['pid'] || $row['weight']['#default_value'] != $values['weight']) {
@@ -114,18 +114,18 @@ class BookAdminEditForm extends FormBase {
           // Update the title if changed.
           if ($row['title']['#default_value'] != $values['title']) {
             $node = $this->nodeStorage->load($values['nid']);
-            $node->revision_log = $this->t('Title changed from %original to %current.', array('%original' => $node->label(), '%current' => $values['title']));
+            $node->revision_log = $this->t('Title changed from %original to %current.', ['%original' => $node->label(), '%current' => $values['title']]);
             $node->title = $values['title'];
             $node->book['link_title'] = $values['title'];
             $node->setNewRevision();
             $node->save();
-            $this->logger('content')->notice('book: updated %title.', array('%title' => $node->label(), 'link' => $node->link($this->t('View'))));
+            $this->logger('content')->notice('book: updated %title.', ['%title' => $node->label(), 'link' => $node->link($this->t('View'))]);
           }
         }
       }
     }
 
-    drupal_set_message($this->t('Updated book %title.', array('%title' => $form['#node']->label())));
+    drupal_set_message($this->t('Updated book %title.', ['%title' => $form['#node']->label()]));
   }
 
   /**
@@ -139,7 +139,7 @@ class BookAdminEditForm extends FormBase {
    * @see self::buildForm()
    */
   protected function bookAdminTable(NodeInterface $node, array &$form) {
-    $form['table'] = array(
+    $form['table'] = [
       '#type' => 'table',
       '#header' => [
         $this->t('Title'),
@@ -164,7 +164,7 @@ class BookAdminEditForm extends FormBase {
           'group' => 'book-weight',
         ],
       ],
-    );
+    ];
 
     $tree = $this->bookManager->bookSubtreeData($node->book);
     // Do not include the book item itself.
@@ -173,14 +173,14 @@ class BookAdminEditForm extends FormBase {
       $hash = Crypt::hashBase64(serialize($tree['below']));
       // Store the hash value as a hidden form element so that we can detect
       // if another user changed the book hierarchy.
-      $form['tree_hash'] = array(
+      $form['tree_hash'] = [
         '#type' => 'hidden',
         '#default_value' => $hash,
-      );
-      $form['tree_current_hash'] = array(
+      ];
+      $form['tree_current_hash'] = [
         '#type' => 'value',
         '#value' => $hash,
-      );
+      ];
       $this->bookAdminTableTree($tree['below'], $form['table']);
     }
   }

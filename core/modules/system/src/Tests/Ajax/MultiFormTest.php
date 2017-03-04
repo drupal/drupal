@@ -19,32 +19,32 @@ class MultiFormTest extends AjaxTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = ['form_test'];
 
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
 
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'entity_type' => 'node',
       'field_name' => $field_name,
       'type' => 'text',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'page',
     ])->save();
     entity_get_form_display('node', 'page', 'default')
-      ->setComponent($field_name, array('type' => 'text_textfield'))
+      ->setComponent($field_name, ['type' => 'text_textfield'])
       ->save();
 
     // Log in a user who can create 'page' nodes.
-    $this->drupalLogin ($this->drupalCreateUser(array('create page content')));
+    $this->drupalLogin ($this->drupalCreateUser(['create page content']));
   }
 
   /**
@@ -84,7 +84,7 @@ class MultiFormTest extends AjaxTestBase {
       $forms = $this->xpath($form_xpath);
       foreach ($forms as $offset => $form) {
         $form_html_id = (string) $form['id'];
-        $this->drupalPostAjaxForm(NULL, array(), array($button_name => $button_value), NULL, array(), array(), $form_html_id);
+        $this->drupalPostAjaxForm(NULL, [], [$button_name => $button_value], NULL, [], [], $form_html_id);
         $form = $this->xpath($form_xpath)[$offset];
         $field = $form->xpath('.' . $field_xpath);
 

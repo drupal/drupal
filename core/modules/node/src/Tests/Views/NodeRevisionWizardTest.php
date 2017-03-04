@@ -17,11 +17,11 @@ class NodeRevisionWizardTest extends WizardTestBase {
    * Tests creating a node revision view.
    */
   public function testViewAdd() {
-    $this->drupalCreateContentType(array('type' => 'article'));
+    $this->drupalCreateContentType(['type' => 'article']);
     // Create two nodes with two revision.
     $node_storage = \Drupal::entityManager()->getStorage('node');
     /** @var \Drupal\node\NodeInterface $node */
-    $node = $node_storage->create(array('title' => $this->randomString(), 'type' => 'article', 'created' => REQUEST_TIME + 40));
+    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'created' => REQUEST_TIME + 40]);
     $node->save();
 
     $node = $node->createDuplicate();
@@ -29,7 +29,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $node->created->value = REQUEST_TIME + 20;
     $node->save();
 
-    $node = $node_storage->create(array('title' => $this->randomString(), 'type' => 'article', 'created' => REQUEST_TIME + 30));
+    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'created' => REQUEST_TIME + 30]);
     $node->save();
 
     $node = $node->createDuplicate();
@@ -37,7 +37,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $node->created->value = REQUEST_TIME + 10;
     $node->save();
 
-    $view = array();
+    $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));
     $view['description'] = $this->randomMachineName(16);
@@ -54,8 +54,8 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $executable = Views::executableFactory()->get($view);
     $this->executeView($executable);
 
-    $this->assertIdenticalResultset($executable, array(array('vid' => 1), array('vid' => 3), array('vid' => 2), array('vid' => 4)),
-      array('vid' => 'vid'));
+    $this->assertIdenticalResultset($executable, [['vid' => 1], ['vid' => 3], ['vid' => 2], ['vid' => 4]],
+      ['vid' => 'vid']);
   }
 
 }

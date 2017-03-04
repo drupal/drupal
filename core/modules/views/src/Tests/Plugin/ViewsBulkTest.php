@@ -23,7 +23,7 @@ class ViewsBulkTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'views');
+  public static $modules = ['node', 'views'];
 
   public function setUp() {
     parent::setUp();

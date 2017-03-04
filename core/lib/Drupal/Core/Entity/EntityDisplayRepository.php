@@ -187,7 +187,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
    *   An array of display mode labels, keyed by the display mode ID.
    */
   protected function getDisplayModeOptions($display_type, $entity_type_id) {
-    $options = array('default' => t('Default'));
+    $options = ['default' => t('Default')];
     foreach ($this->getDisplayModesByEntityType($display_type, $entity_type_id) as $mode => $settings) {
       $options[$mode] = $settings['label'];
     }
@@ -213,7 +213,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
 
     // Filter out modes for which the entity display is disabled
     // (or non-existent).
-    $load_ids = array();
+    $load_ids = [];
     // Get the list of available entity displays for the current bundle.
     foreach (array_keys($options) as $mode) {
       $load_ids[] = $entity_type_id . '.' . $bundle . '.' . $mode;

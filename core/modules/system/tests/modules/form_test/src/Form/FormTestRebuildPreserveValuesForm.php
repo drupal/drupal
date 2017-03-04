@@ -23,58 +23,58 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Start the form with two checkboxes, to test different defaults, and a
     // textfield, to test more than one element type.
-    $form = array(
-      'checkbox_1_default_off' => array(
+    $form = [
+      'checkbox_1_default_off' => [
         '#type' => 'checkbox',
         '#title' => t('This checkbox defaults to unchecked'),
         '#default_value' => FALSE,
-      ),
-      'checkbox_1_default_on' => array(
+      ],
+      'checkbox_1_default_on' => [
         '#type' => 'checkbox',
         '#title' => t('This checkbox defaults to checked'),
         '#default_value' => TRUE,
-      ),
-      'text_1' => array(
+      ],
+      'text_1' => [
         '#type' => 'textfield',
         '#title' => t('This textfield has a non-empty default value.'),
         '#default_value' => 'DEFAULT 1',
-      ),
-    );
+      ],
+    ];
     // Provide an 'add more' button that rebuilds the form with an additional two
     // checkboxes and a textfield. The test is to make sure that the rebuild
     // triggered by this button preserves the user input values for the initial
     // elements and initializes the new elements with the correct default values.
     if (!$form_state->has('add_more')) {
-      $form['add_more'] = array(
+      $form['add_more'] = [
         '#type' => 'submit',
         '#value' => 'Add more',
-        '#submit' => array('::addMoreSubmitForm'),
-      );
+        '#submit' => ['::addMoreSubmitForm'],
+      ];
     }
     else {
-      $form += array(
-        'checkbox_2_default_off' => array(
+      $form += [
+        'checkbox_2_default_off' => [
           '#type' => 'checkbox',
           '#title' => t('This checkbox defaults to unchecked'),
           '#default_value' => FALSE,
-        ),
-        'checkbox_2_default_on' => array(
+        ],
+        'checkbox_2_default_on' => [
           '#type' => 'checkbox',
           '#title' => t('This checkbox defaults to checked'),
           '#default_value' => TRUE,
-        ),
-        'text_2' => array(
+        ],
+        'text_2' => [
           '#type' => 'textfield',
           '#title' => t('This textfield has a non-empty default value.'),
           '#default_value' => 'DEFAULT 2',
-        ),
-      );
+        ],
+      ];
     }
     // A submit button that finishes the form workflow (does not rebuild).
-    $form['submit'] = array(
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => 'Submit',
-    );
+    ];
     return $form;
   }
 
@@ -92,7 +92,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Finish the workflow. Do not rebuild.
-    drupal_set_message(t('Form values: %values', array('%values' => var_export($form_state->getValues(), TRUE))));
+    drupal_set_message(t('Form values: %values', ['%values' => var_export($form_state->getValues(), TRUE)]));
   }
 
 }

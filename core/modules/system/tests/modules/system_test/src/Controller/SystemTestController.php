@@ -206,15 +206,15 @@ class SystemTestController extends ControllerBase {
    * Set cache tag on on the returned render array.
    */
   public function system_test_cache_tags_page() {
-    $build['main'] = array(
-      '#cache' => array('tags' => array('system_test_cache_tags_page')),
-      '#pre_render' => array(
+    $build['main'] = [
+      '#cache' => ['tags' => ['system_test_cache_tags_page']],
+      '#pre_render' => [
         '\Drupal\system_test\Controller\SystemTestController::preRenderCacheTags',
-      ),
-      'message' => array(
+      ],
+      'message' => [
         '#markup' => 'Cache tags page example',
-      ),
-    );
+      ],
+    ];
     return $build;
   }
 
@@ -222,12 +222,12 @@ class SystemTestController extends ControllerBase {
    * Set cache max-age on the returned render array.
    */
   public function system_test_cache_maxage_page() {
-    $build['main'] = array(
-      '#cache' => array('max-age' => 90),
-      'message' => array(
+    $build['main'] = [
+      '#cache' => ['max-age' => 90],
+      'message' => [
         '#markup' => 'Cache max-age page example',
-      ),
-    );
+      ],
+    ];
     return $build;
   }
 
@@ -245,8 +245,8 @@ class SystemTestController extends ControllerBase {
    * @see system_authorized_init()
    */
   public function authorizeInit($page_title) {
-    $authorize_url = Url::fromUri('base:core/authorize.php', array('absolute' => TRUE))->toString();
-    system_authorized_init('system_test_authorize_run', __DIR__ . '/../../system_test.module', array(), $page_title);
+    $authorize_url = Url::fromUri('base:core/authorize.php', ['absolute' => TRUE])->toString();
+    system_authorized_init('system_test_authorize_run', __DIR__ . '/../../system_test.module', [], $page_title);
     return new RedirectResponse($authorize_url);
   }
 
@@ -258,7 +258,7 @@ class SystemTestController extends ControllerBase {
     $response = new CacheableResponse();
     $response->headers->set($query['name'], $query['value']);
     $response->getCacheableMetadata()->addCacheContexts(['url.query_args:name', 'url.query_args:value']);
-    $response->setContent($this->t('The following header was set: %name: %value', array('%name' => $query['name'], '%value' => $query['value'])));
+    $response->setContent($this->t('The following header was set: %name: %value', ['%name' => $query['name'], '%value' => $query['value']]));
 
     return $response;
   }

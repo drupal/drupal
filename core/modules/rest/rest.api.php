@@ -47,7 +47,7 @@ function hook_rest_resource_alter(&$definitions) {
  * @see \Symfony\Component\Serializer\NormalizerInterface::normalize()
  * @see \Symfony\Component\Serializer\DenormalizerInterface::denormalize()
  */
-function hook_rest_type_uri_alter(&$uri, $context = array()) {
+function hook_rest_type_uri_alter(&$uri, $context = []) {
   if ($context['mymodule'] == TRUE) {
     $base = \Drupal::config('serialization.settings')->get('link_domain');
     $uri = str_replace($base, 'http://mymodule.domain', $uri);
@@ -74,7 +74,7 @@ function hook_rest_type_uri_alter(&$uri, $context = array()) {
  * @see \Symfony\Component\Serializer\NormalizerInterface::normalize()
  * @see \Symfony\Component\Serializer\DenormalizerInterface::denormalize()
  */
-function hook_rest_relation_uri_alter(&$uri, $context = array()) {
+function hook_rest_relation_uri_alter(&$uri, $context = []) {
   if ($context['mymodule'] == TRUE) {
     $base = \Drupal::config('serialization.settings')->get('link_domain');
     $uri = str_replace($base, 'http://mymodule.domain', $uri);

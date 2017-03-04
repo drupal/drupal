@@ -75,14 +75,14 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->will($this->returnValue($this->query));
     $this->query->expects($this->once())
       ->method('execute')
-      ->will($this->returnValue(array('test' => 'test', 'other_test' => 'other_test')));
+      ->will($this->returnValue(['test' => 'test', 'other_test' => 'other_test']));
 
-    $entities = array();
+    $entities = [];
     $entities['test'] = $this->getMock('Drupal\search\SearchPageInterface');
     $entities['other_test'] = $this->getMock('Drupal\search\SearchPageInterface');
     $this->storage->expects($this->once())
       ->method('loadMultiple')
-      ->with(array('test' => 'test', 'other_test' => 'other_test'))
+      ->with(['test' => 'test', 'other_test' => 'other_test'])
       ->will($this->returnValue($entities));
 
     $result = $this->searchPageRepository->getActiveSearchPages();
@@ -103,7 +103,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->will($this->returnValue($this->query));
     $this->query->expects($this->once())
       ->method('execute')
-      ->will($this->returnValue(array('test' => 'test')));
+      ->will($this->returnValue(['test' => 'test']));
 
     $this->assertSame(TRUE, $this->searchPageRepository->isSearchActive());
   }
@@ -118,9 +118,9 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->will($this->returnValue($this->query));
     $this->query->expects($this->once())
       ->method('execute')
-      ->will($this->returnValue(array('test' => 'test', 'other_test' => 'other_test')));
+      ->will($this->returnValue(['test' => 'test', 'other_test' => 'other_test']));
 
-    $entities = array();
+    $entities = [];
     $entities['test'] = $this->getMock('Drupal\search\SearchPageInterface');
     $entities['test']->expects($this->once())
       ->method('isIndexable')
@@ -131,7 +131,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
     $this->storage->expects($this->once())
       ->method('loadMultiple')
-      ->with(array('test' => 'test', 'other_test' => 'other_test'))
+      ->with(['test' => 'test', 'other_test' => 'other_test'])
       ->will($this->returnValue($entities));
 
     $result = $this->searchPageRepository->getIndexableSearchPages();
@@ -167,7 +167,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->will($this->returnValue($this->query));
     $this->query->expects($this->once())
       ->method('execute')
-      ->will($this->returnValue(array('test' => 'test', 'other_test' => 'other_test')));
+      ->will($this->returnValue(['test' => 'test', 'other_test' => 'other_test']));
 
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()
@@ -194,7 +194,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->will($this->returnValue($this->query));
     $this->query->expects($this->once())
       ->method('execute')
-      ->will($this->returnValue(array('test' => 'test')));
+      ->will($this->returnValue(['test' => 'test']));
 
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()
@@ -259,10 +259,10 @@ class SearchPageRepositoryTest extends UnitTestCase {
     // Declare entities out of their expected order so we can be sure they were
     // sorted. We cannot mock these because of uasort(), see
     // https://bugs.php.net/bug.php?id=50688.
-    $unsorted_entities['test4'] = new TestSearchPage(array('weight' => 0, 'status' => FALSE, 'label' => 'Test4'));
-    $unsorted_entities['test3'] = new TestSearchPage(array('weight' => 10, 'status' => TRUE, 'label' => 'Test3'));
-    $unsorted_entities['test2'] = new TestSearchPage(array('weight' => 0, 'status' => TRUE, 'label' => 'Test2'));
-    $unsorted_entities['test1'] = new TestSearchPage(array('weight' => 0, 'status' => TRUE, 'label' => 'Test1'));
+    $unsorted_entities['test4'] = new TestSearchPage(['weight' => 0, 'status' => FALSE, 'label' => 'Test4']);
+    $unsorted_entities['test3'] = new TestSearchPage(['weight' => 10, 'status' => TRUE, 'label' => 'Test3']);
+    $unsorted_entities['test2'] = new TestSearchPage(['weight' => 0, 'status' => TRUE, 'label' => 'Test2']);
+    $unsorted_entities['test1'] = new TestSearchPage(['weight' => 0, 'status' => TRUE, 'label' => 'Test1']);
     $expected = $unsorted_entities;
     ksort($expected);
 

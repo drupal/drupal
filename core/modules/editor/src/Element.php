@@ -64,14 +64,14 @@ class Element {
     if (!$element['format']['format']['#access']) {
       // Use the first (and only) available text format.
       $format_id = $format_ids[0];
-      $element['format']['editor'] = array(
+      $element['format']['editor'] = [
         '#type' => 'hidden',
         '#name' => $element['format']['format']['#name'],
         '#value' => $format_id,
-        '#attributes' => array(
+        '#attributes' => [
           'data-editor-for' => $field_id,
-        ),
-      );
+        ],
+      ];
     }
     // Otherwise, attach to text format selector.
     else {

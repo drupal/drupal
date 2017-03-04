@@ -34,7 +34,7 @@ class ListNormalizerTest extends UnitTestCase {
    *
    * @var array
    */
-  protected $expectedListValues = array('test', 'test', 'test');
+  protected $expectedListValues = ['test', 'test', 'test'];
 
   /**
    * The mocked typed data.
@@ -54,7 +54,7 @@ class ListNormalizerTest extends UnitTestCase {
     // Set up a mock container as ItemList() will call for the 'typed_data_manager'
     // service.
     $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-      ->setMethods(array('get'))
+      ->setMethods(['get'])
       ->getMock();
     $container->expects($this->any())
       ->method('get')

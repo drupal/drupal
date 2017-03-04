@@ -18,7 +18,7 @@ class TextCustom extends TokenizeAreaPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['content'] = array('default' => '');
+    $options['content'] = ['default' => ''];
     return $options;
   }
 
@@ -28,12 +28,12 @@ class TextCustom extends TokenizeAreaPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['content'] = array(
+    $form['content'] = [
       '#title' => $this->t('Content'),
       '#type' => 'textarea',
       '#default_value' => $this->options['content'],
       '#rows' => 6,
-    );
+    ];
   }
 
   /**
@@ -41,12 +41,12 @@ class TextCustom extends TokenizeAreaPluginBase {
    */
   public function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
-      return array(
+      return [
         '#markup' => $this->renderTextarea($this->options['content']),
-      );
+      ];
     }
 
-    return array();
+    return [];
   }
 
   /**

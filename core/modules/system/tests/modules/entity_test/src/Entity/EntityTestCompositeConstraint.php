@@ -36,15 +36,15 @@ class EntityTestCompositeConstraint extends EntityTest {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['name']->setDisplayOptions('form', array(
+    $fields['name']->setDisplayOptions('form', [
       'type' => 'string',
       'weight' => 0,
-    ));
+    ]);
 
-    $fields['type']->setDisplayOptions('form', array(
+    $fields['type']->setDisplayOptions('form', [
       'type' => 'entity_reference_autocomplete',
       'weight' => 0,
-    ));
+    ]);
 
     return $fields;
   }

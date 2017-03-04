@@ -30,12 +30,12 @@ class TimestampDatetimeWidget extends WidgetBase {
     $date_format = DateFormat::load('html_date')->getPattern();
     $time_format = DateFormat::load('html_time')->getPattern();
     $default_value = isset($items[$delta]->value) ? DrupalDateTime::createFromTimestamp($items[$delta]->value) : '';
-    $element['value'] = $element + array(
+    $element['value'] = $element + [
       '#type' => 'datetime',
       '#default_value' => $default_value,
       '#date_year_range' => '1902:2037',
-    );
-    $element['value']['#description'] = $this->t('Format: %format. Leave blank to use the time of form submission.', array('%format' => Datetime::formatExample($date_format . ' ' . $time_format)));
+    ];
+    $element['value']['#description'] = $this->t('Format: %format. Leave blank to use the time of form submission.', ['%format' => Datetime::formatExample($date_format . ' ' . $time_format)]);
 
     return $element;
   }

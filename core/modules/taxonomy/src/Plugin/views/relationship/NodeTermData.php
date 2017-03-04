@@ -74,24 +74,24 @@ class NodeTermData extends RelationshipPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['vids'] = array('default' => array());
+    $options['vids'] = ['default' => []];
     return $options;
   }
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $vocabularies = $this->vocabularyStorage->loadMultiple();
-    $options = array();
+    $options = [];
     foreach ($vocabularies as $voc) {
       $options[$voc->id()] = $voc->label();
     }
 
-    $form['vids'] = array(
+    $form['vids'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Vocabularies'),
       '#options' => $options,
       '#default_value' => $this->options['vids'],
       '#description' => $this->t('Choose which vocabularies you wish to relate. Remember that every term found will create a new record, so this relationship is best used on just one vocabulary that has only one term per node.'),
-    );
+    ];
     parent::buildOptionsForm($form, $form_state);
   }
 
@@ -134,7 +134,7 @@ class NodeTermData extends RelationshipPluginBase {
       $query->condition('td.vid', array_filter($this->options['vids']), 'IN');
       $query->addTag('taxonomy_term_access');
       $query->fields('td');
-      $query->fields('tn', array('nid'));
+      $query->fields('tn', ['nid']);
       $def['table formula'] = $query;
     }
 

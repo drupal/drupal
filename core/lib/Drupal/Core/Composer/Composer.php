@@ -84,22 +84,22 @@ class Composer {
     // Check for our packages, and then optimize them if they're present.
     if ($repository->findPackage('symfony/http-foundation', $constraint)) {
       $autoload = $package->getAutoload();
-      $autoload['classmap'] = array_merge($autoload['classmap'], array(
+      $autoload['classmap'] = array_merge($autoload['classmap'], [
         'vendor/symfony/http-foundation/Request.php',
         'vendor/symfony/http-foundation/ParameterBag.php',
         'vendor/symfony/http-foundation/FileBag.php',
         'vendor/symfony/http-foundation/ServerBag.php',
         'vendor/symfony/http-foundation/HeaderBag.php',
-      ));
+      ]);
       $package->setAutoload($autoload);
     }
     if ($repository->findPackage('symfony/http-kernel', $constraint)) {
       $autoload = $package->getAutoload();
-      $autoload['classmap'] = array_merge($autoload['classmap'], array(
+      $autoload['classmap'] = array_merge($autoload['classmap'], [
         'vendor/symfony/http-kernel/HttpKernel.php',
         'vendor/symfony/http-kernel/HttpKernelInterface.php',
         'vendor/symfony/http-kernel/TerminableInterface.php',
-      ));
+      ]);
       $package->setAutoload($autoload);
     }
   }

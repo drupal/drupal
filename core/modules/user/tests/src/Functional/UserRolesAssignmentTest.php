@@ -13,7 +13,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(array('administer permissions', 'administer users'));
+    $admin_user = $this->drupalCreateUser(['administer permissions', 'administer users']);
     $this->drupalLogin($admin_user);
   }
 
@@ -22,17 +22,17 @@ class UserRolesAssignmentTest extends BrowserTestBase {
    * again.
    */
   function testAssignAndRemoveRole()  {
-    $rid = $this->drupalCreateRole(array('administer users'));
+    $rid = $this->drupalCreateRole(['administer users']);
     $account = $this->drupalCreateUser();
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $account->id() . '/edit', array("roles[$rid]" => $rid), t('Save'));
+    $this->drupalPostForm('user/' . $account->id() . '/edit', ["roles[$rid]" => $rid], t('Save'));
     $this->assertText(t('The changes have been saved.'));
     $this->assertFieldChecked('edit-roles-' . $rid, 'Role is assigned.');
     $this->userLoadAndCheckRoleAssigned($account, $rid);
 
     // Remove the role from the user.
-    $this->drupalPostForm('user/' . $account->id() . '/edit', array("roles[$rid]" => FALSE), t('Save'));
+    $this->drupalPostForm('user/' . $account->id() . '/edit', ["roles[$rid]" => FALSE], t('Save'));
     $this->assertText(t('The changes have been saved.'));
     $this->assertNoFieldChecked('edit-roles-' . $rid, 'Role is removed from user.');
     $this->userLoadAndCheckRoleAssigned($account, $rid, FALSE);
@@ -43,17 +43,17 @@ class UserRolesAssignmentTest extends BrowserTestBase {
    * be removed again.
    */
   function testCreateUserWithRole() {
-    $rid = $this->drupalCreateRole(array('administer users'));
+    $rid = $this->drupalCreateRole(['administer users']);
     // Create a new user and add the role at the same time.
-    $edit = array(
+    $edit = [
       'name' => $this->randomMachineName(),
       'mail' => $this->randomMachineName() . '@example.com',
       'pass[pass1]' => $pass = $this->randomString(),
       'pass[pass2]' => $pass,
       "roles[$rid]" => $rid,
-    );
+    ];
     $this->drupalPostForm('admin/people/create', $edit, t('Create new account'));
-    $this->assertText(t('Created a new user account for @name.', array('@name' => $edit['name'])));
+    $this->assertText(t('Created a new user account for @name.', ['@name' => $edit['name']]));
     // Get the newly added user.
     $account = user_load_by_name($edit['name']);
 
@@ -62,7 +62,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
     $this->userLoadAndCheckRoleAssigned($account, $rid);
 
     // Remove the role again.
-    $this->drupalPostForm('user/' . $account->id() . '/edit', array("roles[$rid]" => FALSE), t('Save'));
+    $this->drupalPostForm('user/' . $account->id() . '/edit', ["roles[$rid]" => FALSE], t('Save'));
     $this->assertText(t('The changes have been saved.'));
     $this->assertNoFieldChecked('edit-roles-' . $rid, 'Role is removed from user.');
     $this->userLoadAndCheckRoleAssigned($account, $rid, FALSE);
@@ -81,7 +81,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
    */
   private function userLoadAndCheckRoleAssigned($account, $rid, $is_assigned = TRUE) {
     $user_storage = $this->container->get('entity.manager')->getStorage('user');
-    $user_storage->resetCache(array($account->id()));
+    $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     if ($is_assigned) {
       $this->assertFalse(array_search($rid, $account->getRoles()) === FALSE, 'The role is present in the user object.');

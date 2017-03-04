@@ -9,14 +9,14 @@ namespace Drupal\locale\Tests;
  */
 class LocaleUpdateCronTest extends LocaleUpdateBase {
 
-  protected $batchOutput = array();
+  protected $batchOutput = [];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(array('administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'translate interface'));
+    $admin_user = $this->drupalCreateUser(['administer modules', 'administer site configuration', 'administer languages', 'access administration pages', 'translate interface']);
     $this->drupalLogin($admin_user);
     $this->addLanguage('de');
   }
@@ -35,7 +35,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Update translations using batch to ensure a clean test starting point.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPostForm('admin/reports/translations', array(), t('Update translations'));
+    $this->drupalPostForm('admin/reports/translations', [], t('Update translations'));
 
     // Store translation status for comparison.
     $initial_history = locale_translation_get_file_history();
@@ -48,16 +48,16 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     // Prepare for test: Simulate that the file has not been checked for a long
     // time. Set the last_check timestamp to zero.
     $query = db_update('locale_file');
-    $query->fields(array('last_checked' => 0));
+    $query->fields(['last_checked' => 0]);
     $query->condition('project', 'contrib_module_two');
     $query->condition('langcode', 'de');
     $query->execute();
 
     // Test: Disable cron update and verify that no tasks are added to the
     // queue.
-    $edit = array(
+    $edit = [
       'update_interval_days' => 0,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
 
     // Execute locale cron tasks to add tasks to the queue.
@@ -70,9 +70,9 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     // Test: Enable cron update and check if update tasks are added to the
     // queue.
     // Set cron update to Weekly.
-    $edit = array(
+    $edit = [
       'update_interval_days' => 7,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
 
     // Execute locale cron tasks to add tasks to the queue.

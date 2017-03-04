@@ -18,7 +18,7 @@ class ElementsVerticalTabsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = ['form_test'];
 
   /**
    * A user with permission to access vertical_tab_test_tabs.
@@ -37,7 +37,7 @@ class ElementsVerticalTabsTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(array('access vertical_tab_test tabs'));
+    $this->adminUser = $this->drupalCreateUser(['access vertical_tab_test tabs']);
     $this->webUser = $this->drupalCreateUser();
     $this->drupalLogin($this->adminUser);
   }

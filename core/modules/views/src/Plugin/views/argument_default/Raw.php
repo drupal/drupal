@@ -74,8 +74,8 @@ class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['index'] = array('default' => '');
-    $options['use_alias'] = array('default' => FALSE);
+    $options['index'] = ['default' => ''];
+    $options['use_alias'] = ['default' => FALSE];
 
     return $options;
   }
@@ -85,7 +85,7 @@ class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $form['index'] = array(
+    $form['index'] = [
       '#type' => 'select',
       '#title' => $this->t('Path component'),
       '#default_value' => $this->options['index'],
@@ -94,13 +94,13 @@ class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
       // - values that count from 1 for display to humans.
       '#options' => range(1, 10),
       '#description' => $this->t('The numbering starts from 1, e.g. on the page admin/structure/types, the 3rd path component is "types".'),
-    );
-    $form['use_alias'] = array(
+    ];
+    $form['use_alias'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Use path alias'),
       '#default_value' => $this->options['use_alias'],
       '#description' => $this->t('Use path alias instead of internal path.'),
-    );
+    ];
   }
 
   /**

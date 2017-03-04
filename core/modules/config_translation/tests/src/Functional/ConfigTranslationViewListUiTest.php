@@ -16,22 +16,22 @@ class ConfigTranslationViewListUiTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('node', 'test_view');
+  public static $testViews = ['node', 'test_view'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('config_translation', 'views_ui');
+  public static $modules = ['config_translation', 'views_ui'];
 
   protected function setUp() {
     parent::setUp();
 
-    $permissions = array(
+    $permissions = [
       'administer views',
       'translate configuration',
-    );
+    ];
 
     // Create and log in user.
     $this->drupalLogin($this->drupalCreateUser($permissions));

@@ -18,11 +18,11 @@ class UpdateContribTest extends UpdateTestBase {
    *
    * @var array
    */
-  public static $modules = array('update_test', 'update', 'aaa_update_test', 'bbb_update_test', 'ccc_update_test');
+  public static $modules = ['update_test', 'update', 'aaa_update_test', 'bbb_update_test', 'ccc_update_test'];
 
   protected function setUp() {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
   }
 
@@ -30,18 +30,18 @@ class UpdateContribTest extends UpdateTestBase {
    * Tests when there is no available release data for a contrib module.
    */
   function testNoReleasesAvailable() {
-    $system_info = array(
-      '#all' => array(
+    $system_info = [
+      '#all' => [
         'version' => '8.0.0',
-      ),
-      'aaa_update_test' => array(
+      ],
+      'aaa_update_test' => [
         'project' => 'aaa_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
-    );
+      ],
+    ];
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
-    $this->refreshUpdateStatus(array('drupal' => '0.0', 'aaa_update_test' => 'no-releases'));
+    $this->refreshUpdateStatus(['drupal' => '0.0', 'aaa_update_test' => 'no-releases']);
     $this->drupalGet('admin/reports/updates');
     // Cannot use $this->standardTests() because we need to check for the
     // 'No available releases found' string.
@@ -62,22 +62,22 @@ class UpdateContribTest extends UpdateTestBase {
    */
   function testUpdateContribBasic() {
     $project_link = \Drupal::l(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'));
-    $system_info = array(
-      '#all' => array(
+    $system_info = [
+      '#all' => [
         'version' => '8.0.0',
-      ),
-      'aaa_update_test' => array(
+      ],
+      'aaa_update_test' => [
         'project' => 'aaa_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
-    );
+      ],
+    ];
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(
-      array(
+      [
         'drupal' => '0.0',
         'aaa_update_test' => '1_0',
-      )
+      ]
     );
     $this->standardTests();
     $this->assertText(t('Up to date'));
@@ -90,10 +90,10 @@ class UpdateContribTest extends UpdateTestBase {
     $system_info['aaa_update_test']['hidden'] = TRUE;
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(
-      array(
+      [
         'drupal' => '0.0',
         'aaa_update_test' => '1_0',
-      )
+      ]
     );
     $this->assertNoRaw($project_link, 'Link to aaa_update_test project does not appear.');
 
@@ -101,10 +101,10 @@ class UpdateContribTest extends UpdateTestBase {
     $system_info['aaa_update_test']['package'] = 'aaa_update_test';
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(
-      array(
+      [
         'drupal' => '0.0',
         'aaa_update_test' => '1_0',
-      )
+      ]
     );
     $this->assertRaw($project_link, 'Link to aaa_update_test project appears.');
   }
@@ -124,38 +124,38 @@ class UpdateContribTest extends UpdateTestBase {
    */
   function testUpdateContribOrder() {
     // We want core to be version 8.0.0.
-    $system_info = array(
-      '#all' => array(
+    $system_info = [
+      '#all' => [
         'version' => '8.0.0',
-      ),
+      ],
       // All the rest should be visible as contrib modules at version 8.x-1.0.
 
       // aaa_update_test needs to be part of the "CCC Update test" project,
       // which would throw off the report if we weren't properly sorting by
       // the project names.
-      'aaa_update_test' => array(
+      'aaa_update_test' => [
         'project' => 'ccc_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
+      ],
 
       // This should be its own project, and listed first on the report.
-      'bbb_update_test' => array(
+      'bbb_update_test' => [
         'project' => 'bbb_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
+      ],
 
       // This will contain both aaa_update_test and ccc_update_test, and
       // should come after the bbb_update_test project.
-      'ccc_update_test' => array(
+      'ccc_update_test' => [
         'project' => 'ccc_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
-    );
+      ],
+    ];
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
-    $this->refreshUpdateStatus(array('drupal' => '0.0', '#all' => '1_0'));
+    $this->refreshUpdateStatus(['drupal' => '0.0', '#all' => '1_0']);
     $this->standardTests();
     // We're expecting the report to say all projects are up to date.
     $this->assertText(t('Up to date'));
@@ -188,33 +188,33 @@ class UpdateContribTest extends UpdateTestBase {
     // @todo https://www.drupal.org/node/2338175 base themes have to be
     //  installed.
     // Only install the subtheme, not the base theme.
-    \Drupal::service('theme_handler')->install(array('update_test_subtheme'));
+    \Drupal::service('theme_handler')->install(['update_test_subtheme']);
 
     // Define the initial state for core and the subtheme.
-    $system_info = array(
+    $system_info = [
       // We want core to be version 8.0.0.
-      '#all' => array(
+      '#all' => [
         'version' => '8.0.0',
-      ),
+      ],
       // Show the update_test_basetheme
-      'update_test_basetheme' => array(
+      'update_test_basetheme' => [
         'project' => 'update_test_basetheme',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
+      ],
       // Show the update_test_subtheme
-      'update_test_subtheme' => array(
+      'update_test_subtheme' => [
         'project' => 'update_test_subtheme',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
-    );
+      ],
+    ];
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
-    $xml_mapping = array(
+    $xml_mapping = [
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
       'update_test_basetheme' => '1_1-sec',
-    );
+    ];
     $this->refreshUpdateStatus($xml_mapping);
     $this->assertText(t('Security update required!'));
     $this->assertRaw(\Drupal::l(t('Update test base theme'), Url::fromUri('http://example.com/project/update_test_basetheme')), 'Link to the Update test base theme project appears.');
@@ -238,38 +238,38 @@ class UpdateContribTest extends UpdateTestBase {
     $extension_config->save();
 
     // Define the initial state for core and the test contrib themes.
-    $system_info = array(
+    $system_info = [
       // We want core to be version 8.0.0.
-      '#all' => array(
+      '#all' => [
         'version' => '8.0.0',
-      ),
+      ],
       // The update_test_basetheme should be visible and up to date.
-      'update_test_basetheme' => array(
+      'update_test_basetheme' => [
         'project' => 'update_test_basetheme',
         'version' => '8.x-1.1',
         'hidden' => FALSE,
-      ),
+      ],
       // The update_test_subtheme should be visible and up to date.
-      'update_test_subtheme' => array(
+      'update_test_subtheme' => [
         'project' => 'update_test_subtheme',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
-    );
+      ],
+    ];
     // When there are contributed modules in the site's file system, the
     // total number of attempts made in the test may exceed the default value
     // of update_max_fetch_attempts. Therefore this variable is set very high
     // to avoid test failures in those cases.
     $update_settings->set('fetch.max_attempts', 99999)->save();
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
-    $xml_mapping = array(
+    $xml_mapping = [
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
       'update_test_basetheme' => '1_1-sec',
-    );
+    ];
     $base_theme_project_link = \Drupal::l(t('Update test base theme'), Url::fromUri('http://example.com/project/update_test_basetheme'));
     $sub_theme_project_link = \Drupal::l(t('Update test subtheme'), Url::fromUri('http://example.com/project/update_test_subtheme'));
-    foreach (array(TRUE, FALSE) as $check_disabled) {
+    foreach ([TRUE, FALSE] as $check_disabled) {
       $update_settings->set('check.disabled_extensions', $check_disabled)->save();
       $this->refreshUpdateStatus($xml_mapping);
       // In neither case should we see the "Themes" heading for installed
@@ -295,21 +295,21 @@ class UpdateContribTest extends UpdateTestBase {
     module_load_include('compare.inc', 'update');
 
     // Install the subtheme.
-    \Drupal::service('theme_handler')->install(array('update_test_subtheme'));
+    \Drupal::service('theme_handler')->install(['update_test_subtheme']);
 
     // Add a project and initial state for base theme and subtheme.
-    $system_info = array(
+    $system_info = [
       // Hide the update_test_basetheme.
-      'update_test_basetheme' => array(
+      'update_test_basetheme' => [
         'project' => 'update_test_basetheme',
         'hidden' => TRUE,
-      ),
+      ],
       // Show the update_test_subtheme.
-      'update_test_subtheme' => array(
+      'update_test_subtheme' => [
         'project' => 'update_test_subtheme',
         'hidden' => FALSE,
-      ),
-    );
+      ],
+    ];
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $projects = \Drupal::service('update.manager')->getProjects();
     $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
@@ -323,37 +323,37 @@ class UpdateContribTest extends UpdateTestBase {
    * Makes sure that if we fetch from a broken URL, sane things happen.
    */
   function testUpdateBrokenFetchURL() {
-    $system_info = array(
-      '#all' => array(
+    $system_info = [
+      '#all' => [
         'version' => '8.0.0',
-      ),
-      'aaa_update_test' => array(
+      ],
+      'aaa_update_test' => [
         'project' => 'aaa_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
-      'bbb_update_test' => array(
+      ],
+      'bbb_update_test' => [
         'project' => 'bbb_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
-      'ccc_update_test' => array(
+      ],
+      'ccc_update_test' => [
         'project' => 'ccc_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
-    );
+      ],
+    ];
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
 
     // Ensure that the update information is correct before testing.
     $this->drupalGet('admin/reports/updates');
 
-    $xml_mapping = array(
+    $xml_mapping = [
       'drupal' => '0.0',
       'aaa_update_test' => '1_0',
       'bbb_update_test' => 'does-not-exist',
       'ccc_update_test' => '1_0',
-    );
+    ];
     $this->refreshUpdateStatus($xml_mapping);
 
     $this->assertText(t('Up to date'));
@@ -388,31 +388,31 @@ class UpdateContribTest extends UpdateTestBase {
    */
   function testHookUpdateStatusAlter() {
     $update_test_config = $this->config('update_test.settings');
-    $update_admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer software updates'));
+    $update_admin_user = $this->drupalCreateUser(['administer site configuration', 'administer software updates']);
     $this->drupalLogin($update_admin_user);
 
-    $system_info = array(
-      '#all' => array(
+    $system_info = [
+      '#all' => [
         'version' => '8.0.0',
-      ),
-      'aaa_update_test' => array(
+      ],
+      'aaa_update_test' => [
         'project' => 'aaa_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-      ),
-    );
+      ],
+    ];
     $update_test_config->set('system_info', $system_info)->save();
-    $update_status = array(
-      'aaa_update_test' => array(
+    $update_status = [
+      'aaa_update_test' => [
         'status' => UPDATE_NOT_SECURE,
-      ),
-    );
+      ],
+    ];
     $update_test_config->set('update_status', $update_status)->save();
     $this->refreshUpdateStatus(
-      array(
+      [
         'drupal' => '0.0',
         'aaa_update_test' => '1_0',
-      )
+      ]
     );
     $this->drupalGet('admin/reports/updates');
     $this->assertRaw('<h3>' . t('Modules') . '</h3>');
@@ -421,7 +421,7 @@ class UpdateContribTest extends UpdateTestBase {
 
     // Visit the reports page again without the altering and make sure the
     // status is back to normal.
-    $update_test_config->set('update_status', array())->save();
+    $update_test_config->set('update_status', [])->save();
     $this->drupalGet('admin/reports/updates');
     $this->assertRaw('<h3>' . t('Modules') . '</h3>');
     $this->assertNoText(t('Security update required!'));
@@ -433,7 +433,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertText(t('Security update'));
 
     // Turn the altering back off and visit the Update manager UI.
-    $update_test_config->set('update_status', array())->save();
+    $update_test_config->set('update_status', [])->save();
     $this->drupalGet('admin/modules/update');
     $this->assertNoText(t('Security update'));
   }

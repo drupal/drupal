@@ -43,11 +43,11 @@ class RoleListBuilder extends DraggableListBuilder {
     $operations = parent::getDefaultOperations($entity);
 
     if ($entity->hasLinkTemplate('edit-permissions-form')) {
-      $operations['permissions'] = array(
+      $operations['permissions'] = [
         'title' => t('Edit permissions'),
         'weight' => 20,
         'url' => $entity->urlInfo('edit-permissions-form'),
-      );
+      ];
     }
     return $operations;
   }

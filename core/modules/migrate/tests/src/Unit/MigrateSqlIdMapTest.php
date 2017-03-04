@@ -130,11 +130,11 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *   - hash
    */
   protected function idMapDefaults() {
-    $defaults = array(
+    $defaults = [
       'source_row_status' => MigrateIdMapInterface::STATUS_IMPORTED,
       'rollback_action' => MigrateIdMapInterface::ROLLBACK_DELETE,
       'hash' => '',
-    );
+    ];
     // By default, the PDO SQLite driver strongly prefers to return strings
     // from SELECT queries. Even for columns that don't store strings. Even
     // if the connection's STRINGIFY_FETCHES attribute is FALSE. This can cause
@@ -157,9 +157,9 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - updating work.
    */
   public function testSaveIdMapping() {
-    $source = array(
+    $source = [
       'source_id_property' => 'source_value',
-    );
+    ];
     $row = new Row($source, ['source_id_property' => []]);
     $id_map = $this->getIdMap();
     $id_map->saveIdMapping($row, ['destination_id_property' => 2]);

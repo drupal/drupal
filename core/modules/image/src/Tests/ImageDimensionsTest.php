@@ -17,7 +17,7 @@ class ImageDimensionsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('image', 'image_module_test');
+  public static $modules = ['image', 'image_module_test'];
 
   protected $profile = 'testing';
 
@@ -33,33 +33,33 @@ class ImageDimensionsTest extends WebTestBase {
 
     // Create a style.
     /** @var $style \Drupal\image\ImageStyleInterface */
-    $style = ImageStyle::create(array('name' => 'test', 'label' => 'Test'));
+    $style = ImageStyle::create(['name' => 'test', 'label' => 'Test']);
     $style->save();
     $generated_uri = 'public://styles/test/public/' . \Drupal::service('file_system')->basename($original_uri);
     $url = file_url_transform_relative($style->buildUrl($original_uri));
 
-    $variables = array(
+    $variables = [
       '#theme' => 'image_style',
       '#style_name' => 'test',
       '#uri' => $original_uri,
       '#width' => 40,
       '#height' => 20,
-    );
+    ];
     // Verify that the original image matches the hard-coded values.
     $image_file = $image_factory->get($original_uri);
     $this->assertEqual($image_file->getWidth(), $variables['#width']);
     $this->assertEqual($image_file->getHeight(), $variables['#height']);
 
     // Scale an image that is wider than it is high.
-    $effect = array(
+    $effect = [
       'id' => 'image_scale',
-      'data' => array(
+      'data' => [
         'width' => 120,
         'height' => 90,
         'upscale' => TRUE,
-      ),
+      ],
       'weight' => 0,
-    );
+    ];
 
     $style->addImageEffect($effect);
     $style->save();
@@ -73,14 +73,14 @@ class ImageDimensionsTest extends WebTestBase {
     $this->assertEqual($image_file->getHeight(), 60);
 
     // Rotate 90 degrees anticlockwise.
-    $effect = array(
+    $effect = [
       'id' => 'image_rotate',
-      'data' => array(
+      'data' => [
         'degrees' => -90,
         'random' => FALSE,
-      ),
+      ],
       'weight' => 1,
-    );
+    ];
 
     $style->addImageEffect($effect);
     $style->save();
@@ -94,15 +94,15 @@ class ImageDimensionsTest extends WebTestBase {
     $this->assertEqual($image_file->getHeight(), 120);
 
     // Scale an image that is higher than it is wide (rotated by previous effect).
-    $effect = array(
+    $effect = [
       'id' => 'image_scale',
-      'data' => array(
+      'data' => [
         'width' => 120,
         'height' => 90,
         'upscale' => TRUE,
-      ),
+      ],
       'weight' => 2,
-    );
+    ];
 
     $style->addImageEffect($effect);
     $style->save();
@@ -116,15 +116,15 @@ class ImageDimensionsTest extends WebTestBase {
     $this->assertEqual($image_file->getHeight(), 90);
 
     // Test upscale disabled.
-    $effect = array(
+    $effect = [
       'id' => 'image_scale',
-      'data' => array(
+      'data' => [
         'width' => 400,
         'height' => 200,
         'upscale' => FALSE,
-      ),
+      ],
       'weight' => 3,
-    );
+    ];
 
     $style->addImageEffect($effect);
     $style->save();
@@ -138,11 +138,11 @@ class ImageDimensionsTest extends WebTestBase {
     $this->assertEqual($image_file->getHeight(), 90);
 
     // Add a desaturate effect.
-    $effect = array(
+    $effect = [
       'id' => 'image_desaturate',
-      'data' => array(),
+      'data' => [],
       'weight' => 4,
-    );
+    ];
 
     $style->addImageEffect($effect);
     $style->save();
@@ -156,14 +156,14 @@ class ImageDimensionsTest extends WebTestBase {
     $this->assertEqual($image_file->getHeight(), 90);
 
     // Add a random rotate effect.
-    $effect = array(
+    $effect = [
       'id' => 'image_rotate',
-      'data' => array(
+      'data' => [
         'degrees' => 180,
         'random' => TRUE,
-      ),
+      ],
       'weight' => 5,
-    );
+    ];
 
     $style->addImageEffect($effect);
     $style->save();
@@ -175,15 +175,15 @@ class ImageDimensionsTest extends WebTestBase {
 
 
     // Add a crop effect.
-    $effect = array(
+    $effect = [
       'id' => 'image_crop',
-      'data' => array(
+      'data' => [
         'width' => 30,
         'height' => 30,
         'anchor' => 'center-center',
-      ),
+      ],
       'weight' => 6,
-    );
+    ];
 
     $style->addImageEffect($effect);
     $style->save();
@@ -197,14 +197,14 @@ class ImageDimensionsTest extends WebTestBase {
     $this->assertEqual($image_file->getHeight(), 30);
 
     // Rotate to a non-multiple of 90 degrees.
-    $effect = array(
+    $effect = [
       'id' => 'image_rotate',
-      'data' => array(
+      'data' => [
         'degrees' => 57,
         'random' => FALSE,
-      ),
+      ],
       'weight' => 7,
-    );
+    ];
 
     $effect_id = $style->addImageEffect($effect);
     $style->save();
@@ -221,11 +221,11 @@ class ImageDimensionsTest extends WebTestBase {
     $style->deleteImageEffect($effect_plugin);
 
     // Ensure that an effect can unset dimensions.
-    $effect = array(
+    $effect = [
       'id' => 'image_module_test_null',
-      'data' => array(),
+      'data' => [],
       'weight' => 8,
-    );
+    ];
 
     $style->addImageEffect($effect);
     $style->save();

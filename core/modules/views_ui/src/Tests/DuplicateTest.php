@@ -24,7 +24,7 @@ class DuplicateTest extends UITestBase {
     $random_view = $this->randomView();
 
     // Initialize array for duplicated view.
-    $view = array();
+    $view = [];
 
     // Generate random label and id for new view.
     $view['label'] = $this->randomMachineName(255);
@@ -34,7 +34,7 @@ class DuplicateTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/view/' . $random_view['id'] . '/duplicate', $view, t('Duplicate'));
 
     // Assert that the page url is correct.
-    $this->assertUrl('admin/structure/views/view/' . $view['id'], array(), 'Make sure the view saving was successful and the browser got redirected to the edit page.');
+    $this->assertUrl('admin/structure/views/view/' . $view['id'], [], 'Make sure the view saving was successful and the browser got redirected to the edit page.');
 
     // Assert that the page title is correctly displayed.
     $this->assertText($view['label']);

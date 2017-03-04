@@ -15,7 +15,7 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 function language_test_page_top() {
   if (\Drupal::moduleHandler()->moduleExists('language')) {
     language_test_store_language_negotiation();
-    drupal_set_message(t('Language negotiation method: @name', array('@name' => \Drupal::languageManager()->getNegotiatedLanguageMethod())));
+    drupal_set_message(t('Language negotiation method: @name', ['@name' => \Drupal::languageManager()->getNegotiatedLanguageMethod()]));
   }
 }
 
@@ -24,16 +24,16 @@ function language_test_page_top() {
  */
 function language_test_language_types_info() {
   if (\Drupal::state()->get('language_test.language_types')) {
-    return array(
-      'test_language_type' => array(
+    return [
+      'test_language_type' => [
         'name' => t('Test'),
         'description' => t('A test language type.'),
-      ),
-      'fixed_test_language_type' => array(
-        'fixed' => array('test_language_negotiation_method'),
+      ],
+      'fixed_test_language_type' => [
+        'fixed' => ['test_language_negotiation_method'],
         'locked' => TRUE,
-      ),
-    );
+      ],
+    ];
   }
 }
 
@@ -68,7 +68,7 @@ function language_test_language_negotiation_info_alter(array &$negotiation_info)
  * Store the last negotiated languages.
  */
 function language_test_store_language_negotiation() {
-  $last = array();
+  $last = [];
   foreach (\Drupal::languageManager()->getDefinedLanguageTypes() as $type) {
     $last[$type] = \Drupal::languageManager()->getCurrentLanguage($type)->getId();
   }

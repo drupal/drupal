@@ -22,12 +22,12 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'language',
     'content_translation',
     'menu_link_content',
     'menu_ui',
-  );
+  ];
 
   /**
    * {@inheritdoc}
@@ -42,14 +42,14 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getTranslatorPermissions() {
-    return array_merge(parent::getTranslatorPermissions(), array('administer menu'));
+    return array_merge(parent::getTranslatorPermissions(), ['administer menu']);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getAdministratorPermissions() {
-    return array_merge(parent::getAdministratorPermissions(), array('administer themes', 'view the administration theme'));
+    return array_merge(parent::getAdministratorPermissions(), ['administer themes', 'view the administration theme']);
   }
 
   /**
@@ -81,11 +81,11 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
    */
   function testTranslationLinkTheme() {
     $this->drupalLogin($this->administrator);
-    $entityId = $this->createEntity(array(), 'en');
+    $entityId = $this->createEntity([], 'en');
 
     // Set up Seven as the admin theme to test.
-    $this->container->get('theme_handler')->install(array('seven'));
-    $edit = array();
+    $this->container->get('theme_handler')->install(['seven']);
+    $edit = [];
     $edit['admin_theme'] = 'seven';
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
     $this->drupalGet('admin/structure/menu/item/' . $entityId . '/edit');
@@ -107,14 +107,14 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
     foreach ($this->langcodes as $langcode) {
       // We only want to test the title for non-english translations.
       if ($langcode != 'en') {
-        $options = array('language' => $languages[$langcode]);
+        $options = ['language' => $languages[$langcode]];
         $url = $entity->urlInfo('edit-form', $options);
         $this->drupalGet($url);
 
-        $title = t('@title [%language translation]', array(
+        $title = t('@title [%language translation]', [
           '@title' => $entity->getTranslation($langcode)->label(),
           '%language' => $languages[$langcode]->getName(),
-        ));
+        ]);
         $this->assertRaw($title);
       }
     }

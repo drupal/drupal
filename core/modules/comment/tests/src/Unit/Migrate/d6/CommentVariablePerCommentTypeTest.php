@@ -13,46 +13,46 @@ class CommentVariablePerCommentTypeTest extends MigrateSqlSourceTestCase {
 
   const PLUGIN_CLASS = CommentVariablePerCommentType::class;
 
-  protected $migrationConfiguration = array(
+  protected $migrationConfiguration = [
     'id' => 'test',
-    'source' => array(
+    'source' => [
       'plugin' => 'd6_comment_variable_per_comment_type',
-    ),
-  );
+    ],
+  ];
 
-  protected $expectedResults = array(
+  protected $expectedResults = [
     // Each result will also include a label and description, but those are
     // static values set by the source plugin and don't need to be asserted.
-    array(
+    [
       'comment_type' => 'comment',
-    ),
-    array(
+    ],
+    [
       'comment_type' => 'comment_no_subject',
-    ),
-  );
+    ],
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->databaseContents['node_type'] = array(
-      array(
+    $this->databaseContents['node_type'] = [
+      [
         'type' => 'page',
-      ),
-      array(
+      ],
+      [
         'type' => 'story',
-      ),
-    );
-    $this->databaseContents['variable'] = array(
-      array(
+      ],
+    ];
+    $this->databaseContents['variable'] = [
+      [
         'name' => 'comment_subject_field_page',
         'value' => serialize(1),
-      ),
-      array(
+      ],
+      [
         'name' => 'comment_subject_field_story',
         'value' => serialize(0),
-      ),
-    );
+      ],
+    ];
     parent::setUp();
   }
 

@@ -35,7 +35,7 @@ class EntityTestUpdate extends EntityTestRev {
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-    $fields += \Drupal::state()->get('entity_test_update.additional_base_field_definitions', array());
+    $fields += \Drupal::state()->get('entity_test_update.additional_base_field_definitions', []);
     return $fields;
   }
 
@@ -44,7 +44,7 @@ class EntityTestUpdate extends EntityTestRev {
    */
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $fields = parent::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
-    $fields += \Drupal::state()->get('entity_test_update.additional_bundle_field_definitions.' . $bundle, array());
+    $fields += \Drupal::state()->get('entity_test_update.additional_bundle_field_definitions.' . $bundle, []);
     return $fields;
   }
 

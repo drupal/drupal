@@ -65,7 +65,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *
    * @var array
    */
-  protected $counts = array();
+  protected $counts = [];
 
   /**
    * The source.
@@ -151,10 +151,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
     // Only begin the import operation if the migration is currently idle.
     if ($this->migration->getStatus() !== MigrationInterface::STATUS_IDLE) {
       $this->message->display($this->t('Migration @id is busy with another operation: @status',
-        array(
+        [
           '@id' => $this->migration->id(),
           '@status' => $this->t($this->migration->getStatusLabel()),
-        )), 'error');
+        ]), 'error');
       return MigrationInterface::RESULT_FAILED;
     }
     $this->getEventDispatcher()->dispatch(MigrateEvents::PRE_IMPORT, new MigrateImportEvent($this->migration, $this->message));
@@ -167,11 +167,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
       $this->message->display(
         $this->t(
           'Migration @id did not meet the requirements. @message @requirements',
-          array(
+          [
             '@id' => $this->migration->id(),
             '@message' => $e->getMessage(),
             '@requirements' => $e->getRequirementsString(),
-          )
+          ]
         ),
         'error'
       );
@@ -189,7 +189,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     }
     catch (\Exception $e) {
       $this->message->display(
-        $this->t('Migration failed with source plugin exception: @e', array('@e' => $e->getMessage())), 'error');
+        $this->t('Migration failed with source plugin exception: @e', ['@e' => $e->getMessage()]), 'error');
       $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
       return MigrationInterface::RESULT_FAILED;
     }
@@ -204,7 +204,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $save = TRUE;
       }
       catch (MigrateException $e) {
-        $this->migration->getIdMap()->saveIdMapping($row, array(), $e->getStatus());
+        $this->migration->getIdMap()->saveIdMapping($row, [], $e->getStatus());
         $this->saveMessage($e->getMessage(), $e->getLevel());
         $save = FALSE;
       }
@@ -230,7 +230,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
             }
           }
           else {
-            $id_map->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_FAILED);
+            $id_map->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_FAILED);
             if (!$id_map->messageCount()) {
               $message = $this->t('New object was not saved, no error provided');
               $this->saveMessage($message);
@@ -239,11 +239,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
           }
         }
         catch (MigrateException $e) {
-          $this->migration->getIdMap()->saveIdMapping($row, array(), $e->getStatus());
+          $this->migration->getIdMap()->saveIdMapping($row, [], $e->getStatus());
           $this->saveMessage($e->getMessage(), $e->getLevel());
         }
         catch (\Exception $e) {
-          $this->migration->getIdMap()->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_FAILED);
+          $this->migration->getIdMap()->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_FAILED);
           $this->handleException($e);
         }
       }
@@ -268,7 +268,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       catch (\Exception $e) {
         $this->message->display(
           $this->t('Migration failed with source plugin exception: @e',
-            array('@e' => $e->getMessage())), 'error');
+            ['@e' => $e->getMessage()]), 'error');
         $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
         return MigrationInterface::RESULT_FAILED;
       }
@@ -356,7 +356,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         // plugin) and in this case the current value needs to be iterated
         // and each scalar separately transformed.
         if ($multiple && !$definition['handle_multiples']) {
-          $new_value = array();
+          $new_value = [];
           if (!is_array($value)) {
             throw new MigrateException(sprintf('Pipeline failed for destination %s: %s got instead of an array,', $destination, $value));
           }
@@ -460,11 +460,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
       $this->message->display(
         $this->t(
           'Memory usage is @usage (@pct% of limit @limit), reclaiming memory.',
-          array(
+          [
             '@pct' => round($pct_memory * 100),
             '@usage' => $this->formatSize($usage),
             '@limit' => $this->formatSize($this->memoryLimit),
-          )
+          ]
         ),
         'warning'
       );
@@ -476,11 +476,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $this->message->display(
           $this->t(
             'Memory usage is now @usage (@pct% of limit @limit), not enough reclaimed, starting new batch',
-            array(
+            [
               '@pct' => round($pct_memory * 100),
               '@usage' => $this->formatSize($usage),
               '@limit' => $this->formatSize($this->memoryLimit),
-            )
+            ]
           ),
           'warning'
         );
@@ -490,11 +490,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $this->message->display(
           $this->t(
             'Memory usage is now @usage (@pct% of limit @limit), reclaimed enough, continuing',
-            array(
+            [
               '@pct' => round($pct_memory * 100),
               '@usage' => $this->formatSize($usage),
               '@limit' => $this->formatSize($this->memoryLimit),
-            )
+            ]
           ),
           'warning');
         return FALSE;

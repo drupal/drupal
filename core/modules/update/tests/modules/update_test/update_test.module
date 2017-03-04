@@ -20,7 +20,7 @@ use Drupal\Core\Extension\Extension;
  */
 function update_test_system_info_alter(&$info, Extension $file) {
   $setting = \Drupal::config('update_test.settings')->get('system_info');
-  foreach (array('#all', $file->getName()) as $id) {
+  foreach (['#all', $file->getName()] as $id) {
     if (!empty($setting[$id])) {
       foreach ($setting[$id] as $key => $value) {
         $info[$key] = $value;
@@ -44,7 +44,7 @@ function update_test_update_status_alter(&$projects) {
   $setting = \Drupal::config('update_test.settings')->get('update_status');
   if (!empty($setting)) {
     foreach ($projects as $project_name => &$project) {
-      foreach (array('#all', $project_name) as $id) {
+      foreach (['#all', $project_name] as $id) {
         if (!empty($setting[$id])) {
           foreach ($setting[$id] as $key => $value) {
             $project[$key] = $value;
@@ -62,11 +62,11 @@ function update_test_filetransfer_info() {
   // Define a test file transfer method, to ensure that there will always be at
   // least one method available in the user interface (regardless of the
   // environment in which the update manager tests are run).
-  return array(
-    'system_test' => array(
+  return [
+    'system_test' => [
       'title' => t('Update Test FileTransfer'),
       'class' => 'Drupal\update_test\TestFileTransferWithSettingsForm',
       'weight' => -20,
-    ),
-  );
+    ],
+  ];
 }

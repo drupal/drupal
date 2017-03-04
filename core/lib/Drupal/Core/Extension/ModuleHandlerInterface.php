@@ -73,7 +73,7 @@ interface ModuleHandlerInterface {
    *   An associative array whose keys are the names of the modules and whose
    *   values are Extension objects.
    */
-  public function setModuleList(array $module_list = array());
+  public function setModuleList(array $module_list = []);
 
   /**
    * Adds a module to the list of currently active modules.
@@ -220,7 +220,7 @@ interface ModuleHandlerInterface {
    * @return mixed
    *   The return value of the hook implementation.
    */
-  public function invoke($module, $hook, array $args = array());
+  public function invoke($module, $hook, array $args = []);
 
   /**
    * Invokes a hook in all enabled modules that implement it.
@@ -236,7 +236,7 @@ interface ModuleHandlerInterface {
    *   recursively. Note: integer keys in arrays will be lost, as the merge is
    *   done using array_merge_recursive().
    */
-  public function invokeAll($hook, array $args = array());
+  public function invokeAll($hook, array $args = []);
 
   /**
    * Passes alterable variables to specific hook_TYPE_alter() implementations.

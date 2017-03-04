@@ -19,8 +19,8 @@ class StorageReplaceDataWrapperTest extends ConfigStorageTestBase {
     parent::setUp();
     $this->storage = new StorageReplaceDataWrapper($this->container->get('config.storage'));
     // ::listAll() verifications require other configuration data to exist.
-    $this->storage->write('system.performance', array());
-    $this->storage->replaceData('system.performance', array('foo' => 'bar'));
+    $this->storage->write('system.performance', []);
+    $this->storage->replaceData('system.performance', ['foo' => 'bar']);
   }
 
   /**

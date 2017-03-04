@@ -25,7 +25,7 @@ class FormTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_test', 'options', 'entity_test', 'locale');
+  public static $modules = ['node', 'field_test', 'options', 'entity_test', 'locale'];
 
   /**
    * An array of values defining a field single.
@@ -58,37 +58,37 @@ class FormTest extends FieldTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));
+    $web_user = $this->drupalCreateUser(['view test entity', 'administer entity_test content']);
     $this->drupalLogin($web_user);
 
-    $this->fieldStorageSingle = array(
+    $this->fieldStorageSingle = [
       'field_name' => 'field_single',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-    );
-    $this->fieldStorageMultiple = array(
+    ];
+    $this->fieldStorageMultiple = [
       'field_name' => 'field_multiple',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
       'cardinality' => 4,
-    );
-    $this->fieldStorageUnlimited = array(
+    ];
+    $this->fieldStorageUnlimited = [
       'field_name' => 'field_unlimited',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    );
+    ];
 
-    $this->field = array(
+    $this->field = [
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'label' => $this->randomMachineName() . '_label',
       'description' => '[site:name]_description',
       'weight' => mt_rand(0, 127),
-      'settings' => array(
+      'settings' => [
         'test_field_setting' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
   }
 
   function testFieldFormSingle() {
@@ -115,22 +115,22 @@ class FormTest extends FieldTestBase {
     $this->assertNoText('From hook_field_widget_form_alter(): Default form is true.', 'Not default value form in hook_field_widget_form_alter().');
 
     // Submit with invalid value (field-level validation).
-    $edit = array(
+    $edit = [
       "{$field_name}[0][value]" => -1
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('%name does not accept the value -1.', array('%name' => $this->field['label'])), 'Field validation fails with invalid input.');
+    $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $this->field['label']]), 'Field validation fails with invalid input.');
     // TODO : check that the correct field is flagged for error.
 
     // Create an entity
     $value = mt_rand(1, 127);
-    $edit = array(
+    $edit = [
       "{$field_name}[0][value]" => $value,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was saved');
 
@@ -141,23 +141,23 @@ class FormTest extends FieldTestBase {
 
     // Update the entity.
     $value = mt_rand(1, 127);
-    $edit = array(
+    $edit = [
       "{$field_name}[0][value]" => $value,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)), 'Entity was updated');
-    $this->container->get('entity.manager')->getStorage('entity_test')->resetCache(array($id));
+    $this->assertText(t('entity_test @id has been updated.', ['@id' => $id]), 'Entity was updated');
+    $this->container->get('entity.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
 
     // Empty the field.
     $value = '';
-    $edit = array(
+    $edit = [
       "{$field_name}[0][value]" => $value
-    );
+    ];
     $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, t('Save'));
-    $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)), 'Entity was updated');
-    $this->container->get('entity.manager')->getStorage('entity_test')->resetCache(array($id));
+    $this->assertText(t('entity_test @id has been updated.', ['@id' => $id]), 'Entity was updated');
+    $this->container->get('entity.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field was emptied');
   }
@@ -170,7 +170,7 @@ class FormTest extends FieldTestBase {
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
     $default = rand(1, 127);
-    $this->field['default_value'] = array(array('value' => $default));
+    $this->field['default_value'] = [['value' => $default]];
     FieldStorageConfig::create($field_storage)->save();
     FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
@@ -183,13 +183,13 @@ class FormTest extends FieldTestBase {
     $this->assertFieldByXpath("//input[@name='{$field_name}[0][value]' and @value='$default']");
 
     // Try to submit an empty value.
-    $edit = array(
+    $edit = [
       "{$field_name}[0][value]" => '',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created.');
+    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created.');
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field is now empty.');
   }
@@ -206,29 +206,29 @@ class FormTest extends FieldTestBase {
       ->save();
 
     // Submit with missing required value.
-    $edit = array();
+    $edit = [];
     $this->drupalPostForm('entity_test/add', $edit, t('Save'));
-    $this->assertRaw(t('@name field is required.', array('@name' => $this->field['label'])), 'Required field with no value fails validation');
+    $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]), 'Required field with no value fails validation');
 
     // Create an entity
     $value = mt_rand(1, 127);
-    $edit = array(
+    $edit = [
       "{$field_name}[0][value]" => $value,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was saved');
 
     // Edit with missing required value.
     $value = '';
-    $edit = array(
+    $edit = [
       "{$field_name}[0][value]" => $value,
-    );
+    ];
     $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, t('Save'));
-    $this->assertRaw(t('@name field is required.', array('@name' => $this->field['label'])), 'Required field with no value fails validation');
+    $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]), 'Required field with no value fails validation');
   }
 
   function testFieldFormUnlimited() {
@@ -251,20 +251,20 @@ class FormTest extends FieldTestBase {
     $this->assertTrue(isset($elements[0]), t('aria-describedby attribute is properly placed on multiple value widgets.'));
 
     // Press 'add more' button -> 2 widgets.
-    $this->drupalPostForm(NULL, array(), t('Add another item'));
+    $this->drupalPostForm(NULL, [], t('Add another item'));
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget 1 is displayed');
     $this->assertFieldByName("{$field_name}[1][value]", '', 'New widget is displayed');
     $this->assertNoField("{$field_name}[2][value]", 'No extraneous widget is displayed');
     // TODO : check that non-field inputs are preserved ('title'), etc.
 
     // Yet another time so that we can play with more values -> 3 widgets.
-    $this->drupalPostForm(NULL, array(), t('Add another item'));
+    $this->drupalPostForm(NULL, [], t('Add another item'));
 
     // Prepare values and weights.
     $count = 3;
     $delta_range = $count - 1;
-    $values = $weights = $pattern = $expected_values = array();
-    $edit = array();
+    $values = $weights = $pattern = $expected_values = [];
+    $edit = [];
     for ($delta = 0; $delta <= $delta_range; $delta++) {
       // Assign unique random values and weights.
       do {
@@ -299,7 +299,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
     $entity = EntityTest::load($id);
     ksort($field_values);
     $field_values = array_values($field_values);
@@ -330,11 +330,11 @@ class FormTest extends FieldTestBase {
     // Display creation form -> 1 widget.
     $this->drupalGet('entity_test/add');
     // Check that the Required symbol is present for the multifield label.
-    $element = $this->xpath('//h4[contains(@class, "label") and contains(@class, "js-form-required") and contains(text(), :value)]', array(':value' => $this->field['label']));
+    $element = $this->xpath('//h4[contains(@class, "label") and contains(@class, "js-form-required") and contains(text(), :value)]', [':value' => $this->field['label']]);
     $this->assertTrue(isset($element[0]), 'Required symbol added field label.');
     // Check that the label of the field input is visually hidden and contains
     // the field title and an indication of the delta for a11y.
-    $element = $this->xpath('//label[@for=:for and contains(@class, "visually-hidden") and contains(text(), :value)]', array(':for' => 'edit-field-unlimited-0-value', ':value' => $this->field['label'] . ' (value 1)'));
+    $element = $this->xpath('//label[@for=:for and contains(@class, "visually-hidden") and contains(text(), :value)]', [':for' => 'edit-field-unlimited-0-value', ':value' => $this->field['label'] . ' (value 1)']);
     $this->assertTrue(isset($element[0]), 'Required symbol not added for field input.');
   }
 
@@ -353,32 +353,32 @@ class FormTest extends FieldTestBase {
       ->save();
 
     // Add a required radio field.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => 'required_radio_test',
       'entity_type' => 'entity_test',
       'type' => 'list_string',
-      'settings' => array(
-        'allowed_values' => array('yes' => 'yes', 'no' => 'no'),
-      ),
-    ))->save();
-    $field = array(
+      'settings' => [
+        'allowed_values' => ['yes' => 'yes', 'no' => 'no'],
+      ],
+    ])->save();
+    $field = [
       'field_name' => 'required_radio_test',
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'required' => TRUE,
-    );
+    ];
     FieldConfig::create($field)->save();
     entity_get_form_display($field['entity_type'], $field['bundle'], 'default')
-      ->setComponent($field['field_name'], array(
+      ->setComponent($field['field_name'], [
         'type' => 'options_buttons',
-      ))
+      ])
       ->save();
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
 
     // Press the 'Add more' button.
-    $this->drupalPostForm(NULL, array(), t('Add another item'));
+    $this->drupalPostForm(NULL, [], t('Add another item'));
 
     // Verify that no error is thrown by the radio element.
     $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed.');
@@ -405,13 +405,13 @@ class FormTest extends FieldTestBase {
     // Press 'add more' button a couple times -> 3 widgets.
     // drupalPostAjaxForm() will not work iteratively, so we add those through
     // non-JS submission.
-    $this->drupalPostForm(NULL, array(), t('Add another item'));
-    $this->drupalPostForm(NULL, array(), t('Add another item'));
+    $this->drupalPostForm(NULL, [], t('Add another item'));
+    $this->drupalPostForm(NULL, [], t('Add another item'));
 
     // Prepare values and weights.
     $count = 3;
     $delta_range = $count - 1;
-    $values = $weights = $pattern = $expected_values = $edit = array();
+    $values = $weights = $pattern = $expected_values = $edit = [];
     for ($delta = 0; $delta <= $delta_range; $delta++) {
       // Assign unique random values and weights.
       do {
@@ -457,9 +457,9 @@ class FormTest extends FieldTestBase {
     FieldStorageConfig::create($field_storage)->save();
     FieldConfig::create($this->field)->save();
     entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
-      ->setComponent($field_name, array(
+      ->setComponent($field_name, [
         'type' => 'test_field_widget_multiple',
-      ))
+      ])
       ->save();
 
     // Display creation form.
@@ -467,27 +467,27 @@ class FormTest extends FieldTestBase {
     $this->assertFieldByName($field_name, '', 'Widget is displayed.');
 
     // Create entity with three values.
-    $edit = array(
+    $edit = [
       $field_name => '1, 2, 3',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
 
     // Check that the values were saved.
     $entity_init = EntityTest::load($id);
-    $this->assertFieldValues($entity_init, $field_name, array(1, 2, 3));
+    $this->assertFieldValues($entity_init, $field_name, [1, 2, 3]);
 
     // Display the form, check that the values are correctly filled in.
     $this->drupalGet('entity_test/manage/' . $id . '/edit');
     $this->assertFieldByName($field_name, '1, 2, 3', 'Widget is displayed.');
 
     // Submit the form with more values than the field accepts.
-    $edit = array($field_name => '1, 2, 3, 4, 5');
+    $edit = [$field_name => '1, 2, 3, 4, 5'];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw('this field cannot hold more than 4 values', 'Form validation failed.');
     // Check that the field values were not submitted.
-    $this->assertFieldValues($entity_init, $field_name, array(1, 2, 3));
+    $this->assertFieldValues($entity_init, $field_name, [1, 2, 3]);
   }
 
   /**
@@ -511,18 +511,18 @@ class FormTest extends FieldTestBase {
 
     // Create a field with no edit access. See
     // field_test_entity_field_access().
-    $field_storage_no_access = array(
+    $field_storage_no_access = [
       'field_name' => 'field_no_edit_access',
       'entity_type' => $entity_type,
       'type' => 'test_field',
-    );
+    ];
     $field_name_no_access = $field_storage_no_access['field_name'];
-    $field_no_access = array(
+    $field_no_access = [
       'field_name' => $field_name_no_access,
       'entity_type' => $entity_type,
       'bundle' => $entity_type,
-      'default_value' => array(0 => array('value' => 99)),
-    );
+      'default_value' => [0 => ['value' => 99]],
+    ];
     FieldStorageConfig::create($field_storage_no_access)->save();
     FieldConfig::create($field_no_access)->save();
     entity_get_form_display($field_no_access['entity_type'], $field_no_access['bundle'], 'default')
@@ -533,10 +533,10 @@ class FormTest extends FieldTestBase {
     // apart from #access.
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
-      ->create(array('id' => 0, 'revision_id' => 0));
+      ->create(['id' => 0, 'revision_id' => 0]);
 
     $display = entity_get_form_display($entity_type, $entity_type, 'default');
-    $form = array();
+    $form = [];
     $form_state = new FormState();
     $display->buildForm($entity, $form, $form_state);
 
@@ -547,9 +547,9 @@ class FormTest extends FieldTestBase {
     $this->assertNoFieldByName("{$field_name_no_access}[0][value]", '', 'Widget is not displayed if field access is denied.');
 
     // Create entity.
-    $edit = array(
+    $edit = [
       "{$field_name}[0][value]" => 1,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match("|$entity_type/manage/(\d+)|", $this->url, $match);
     $id = $match[1];
@@ -562,10 +562,10 @@ class FormTest extends FieldTestBase {
     $this->assertEqual($entity->$field_name->value, 1, 'Entered value vas saved for the field with edit access.');
 
     // Create a new revision.
-    $edit = array(
+    $edit = [
       "{$field_name}[0][value]" => 2,
       'revision' => TRUE,
-    );
+    ];
     $this->drupalPostForm($entity_type . '/manage/' . $id . '/edit', $edit, t('Save'));
 
     // Check that the new revision has the expected values.
@@ -591,7 +591,7 @@ class FormTest extends FieldTestBase {
     $field_storage['entity_type'] = $entity_type;
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
-    $this->field['default_value'] = array(0 => array('value' => 99));
+    $this->field['default_value'] = [0 => ['value' => 99]];
     $this->field['entity_type'] = $entity_type;
     $this->field['bundle'] = $entity_type;
     FieldStorageConfig::create($field_storage)->save();
@@ -606,10 +606,10 @@ class FormTest extends FieldTestBase {
     // Create an entity and test that the default value is assigned correctly to
     // the field that uses the hidden widget.
     $this->assertNoField("{$field_name}[0][value]", 'The field does not appear in the form');
-    $this->drupalPostForm(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, [], t('Save'));
     preg_match('|' . $entity_type . '/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
-    $this->assertText(t('entity_test_rev @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->assertText(t('entity_test_rev @id has been created.', ['@id' => $id]), 'Entity was created');
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($entity_type);
 
@@ -618,12 +618,12 @@ class FormTest extends FieldTestBase {
 
     // Update the field to remove the default value, and switch to the default
     // widget.
-    $this->field->setDefaultValue(array());
+    $this->field->setDefaultValue([]);
     $this->field->save();
     entity_get_form_display($entity_type, $this->field->getTargetBundle(), 'default')
-      ->setComponent($this->field->getName(), array(
+      ->setComponent($this->field->getName(), [
         'type' => 'test_field_widget',
-      ))
+      ])
       ->save();
 
     // Display edit form.
@@ -632,9 +632,9 @@ class FormTest extends FieldTestBase {
 
     // Update the entity.
     $value = mt_rand(1, 127);
-    $edit = array("{$field_name}[0][value]" => $value);
+    $edit = ["{$field_name}[0][value]" => $value];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('entity_test_rev @id has been updated.', array('@id' => $id)), 'Entity was updated');
+    $this->assertText(t('entity_test_rev @id has been updated.', ['@id' => $id]), 'Entity was updated');
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
@@ -645,11 +645,11 @@ class FormTest extends FieldTestBase {
       ->save();
 
     // Create a new revision.
-    $edit = array('revision' => TRUE);
+    $edit = ['revision' => TRUE];
     $this->drupalPostForm($entity_type . '/manage/' . $id . '/edit', $edit, t('Save'));
 
     // Check that the expected value has been carried over to the new revision.
-    $storage->resetCache(array($id));
+    $storage->resetCache([$id]);
     $entity = $storage->load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'New revision has the expected value for the field with the Hidden widget');
   }

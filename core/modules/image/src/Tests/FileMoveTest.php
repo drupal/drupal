@@ -18,7 +18,7 @@ class FileMoveTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('image');
+  public static $modules = ['image'];
 
   /**
    * Tests moving a randomly generated image.

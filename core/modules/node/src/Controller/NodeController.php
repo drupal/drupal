@@ -74,7 +74,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       ],
     ];
 
-    $content = array();
+    $content = [];
 
     // Only use node types the user has access to.
     foreach ($this->entityManager()->getStorage('node_type')->loadMultiple() as $type) {
@@ -88,7 +88,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     // Bypass the node/add listing if only one content type is available.
     if (count($content) == 1) {
       $type = array_shift($content);
-      return $this->redirect('node.add', array('node_type' => $type->id()));
+      return $this->redirect('node.add', ['node_type' => $type->id()]);
     }
 
     $build['#content'] = $content;
@@ -106,9 +106,9 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   A node submission form.
    */
   public function add(NodeTypeInterface $node_type) {
-    $node = $this->entityManager()->getStorage('node')->create(array(
+    $node = $this->entityManager()->getStorage('node')->create([
       'type' => $node_type->id(),
-    ));
+    ]);
 
     $form = $this->entityFormBuilder()->getForm($node);
 
@@ -144,7 +144,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   public function revisionPageTitle($node_revision) {
     $node = $this->entityManager()->getStorage('node')->loadRevision($node_revision);
-    return $this->t('Revision of %title from %date', array('%title' => $node->label(), '%date' => format_date($node->getRevisionCreationTime())));
+    return $this->t('Revision of %title from %date', ['%title' => $node->label(), '%date' => format_date($node->getRevisionCreationTime())]);
   }
 
   /**
@@ -166,12 +166,12 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     $type = $node->getType();
 
     $build['#title'] = $has_translations ? $this->t('@langname revisions for %title', ['@langname' => $langname, '%title' => $node->label()]) : $this->t('Revisions for %title', ['%title' => $node->label()]);
-    $header = array($this->t('Revision'), $this->t('Operations'));
+    $header = [$this->t('Revision'), $this->t('Operations')];
 
     $revert_permission = (($account->hasPermission("revert $type revisions") || $account->hasPermission('revert all revisions') || $account->hasPermission('administer nodes')) && $node->access('update'));
     $delete_permission = (($account->hasPermission("delete $type revisions") || $account->hasPermission('delete all revisions') || $account->hasPermission('administer nodes')) && $node->access('delete'));
 
-    $rows = array();
+    $rows = [];
     $default_revision = $node->getRevisionId();
 
     foreach ($this->getRevisionIds($node, $node_storage) as $vid) {
@@ -254,17 +254,17 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       }
     }
 
-    $build['node_revisions_table'] = array(
+    $build['node_revisions_table'] = [
       '#theme' => 'table',
       '#rows' => $rows,
       '#header' => $header,
-      '#attached' => array(
-        'library' => array('node/drupal.node.admin'),
-      ),
+      '#attached' => [
+        'library' => ['node/drupal.node.admin'],
+      ],
       '#attributes' => ['class' => 'node-revision-table'],
-    );
+    ];
 
-    $build['pager'] = array('#type' => 'pager');
+    $build['pager'] = ['#type' => 'pager'];
 
     return $build;
   }
@@ -279,7 +279,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   The page title.
    */
   public function addPageTitle(NodeTypeInterface $node_type) {
-    return $this->t('Create @name', array('@name' => $node_type->label()));
+    return $this->t('Create @name', ['@name' => $node_type->label()]);
   }
 
   /**

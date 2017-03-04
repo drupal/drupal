@@ -29,90 +29,90 @@ function tracker_install() {
  * Implements hook_schema().
  */
 function tracker_schema() {
-  $schema['tracker_node'] = array(
+  $schema['tracker_node'] = [
     'description' => 'Tracks when nodes were last changed or commented on.',
-    'fields' => array(
-      'nid' => array(
+    'fields' => [
+      'nid' => [
         'description' => 'The {node}.nid this record tracks.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'published' => array(
+      ],
+      'published' => [
         'description' => 'Boolean indicating whether the node is published.',
         'type' => 'int',
         'not null' => FALSE,
         'default' => 0,
         'size' => 'tiny',
-      ),
-      'changed' => array(
+      ],
+      'changed' => [
         'description' => 'The Unix timestamp when the node was most recently saved or commented on.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'tracker' => array('published', 'changed'),
-    ),
-    'primary key' => array('nid'),
-    'foreign keys' => array(
-      'tracked_node' => array(
+      ],
+    ],
+    'indexes' => [
+      'tracker' => ['published', 'changed'],
+    ],
+    'primary key' => ['nid'],
+    'foreign keys' => [
+      'tracked_node' => [
         'table' => 'node',
-        'columns' => array('nid' => 'nid'),
-      ),
-    ),
-  );
+        'columns' => ['nid' => 'nid'],
+      ],
+    ],
+  ];
 
-  $schema['tracker_user'] = array(
+  $schema['tracker_user'] = [
     'description' => 'Tracks when nodes were last changed or commented on, for each user that authored the node or one of its comments.',
-    'fields' => array(
-      'nid' => array(
+    'fields' => [
+      'nid' => [
         'description' => 'The {node}.nid this record tracks.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'uid' => array(
+      ],
+      'uid' => [
         'description' => 'The {users}.uid of the node author or commenter.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'published' => array(
+      ],
+      'published' => [
         'description' => 'Boolean indicating whether the node is published.',
         'type' => 'int',
         'not null' => FALSE,
         'default' => 0,
         'size' => 'tiny',
-      ),
-      'changed' => array(
+      ],
+      'changed' => [
         'description' => 'The Unix timestamp when the node was most recently saved or commented on.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'tracker' => array('uid', 'published', 'changed'),
-    ),
-    'primary key' => array('nid', 'uid'),
-    'foreign keys' => array(
-      'tracked_node' => array(
+      ],
+    ],
+    'indexes' => [
+      'tracker' => ['uid', 'published', 'changed'],
+    ],
+    'primary key' => ['nid', 'uid'],
+    'foreign keys' => [
+      'tracked_node' => [
         'table' => 'node',
-        'columns' => array('nid' => 'nid'),
-      ),
-      'tracked_user' => array(
+        'columns' => ['nid' => 'nid'],
+      ],
+      'tracked_user' => [
         'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-  );
+        'columns' => ['uid' => 'uid'],
+      ],
+    ],
+  ];
 
   return $schema;
 }

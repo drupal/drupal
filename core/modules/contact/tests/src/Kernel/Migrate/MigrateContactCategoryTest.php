@@ -18,7 +18,7 @@ class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
    *
    * @var array
    */
-  public static $modules = array('contact');
+  public static $modules = ['contact'];
 
   /**
    * {@inheritdoc}

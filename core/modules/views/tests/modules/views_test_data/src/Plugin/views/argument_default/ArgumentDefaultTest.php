@@ -19,7 +19,7 @@ class ArgumentDefaultTest extends ArgumentDefaultPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['value'] = array('default' => '');
+    $options['value'] = ['default' => ''];
 
     return $options;
   }

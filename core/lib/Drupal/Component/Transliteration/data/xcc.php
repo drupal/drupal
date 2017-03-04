@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'jjuim', 'jjuib', 'jjuibs', 'jjuis', 'jjuiss', 'jjuing', 'jjuij', 'jjuich', 'jjuik', 'jjuit', 'jjuip', 'jjuih', 'jji', 'jjig', 'jjikk', 'jjigs',
   0x10 => 'jjin', 'jjinj', 'jjinh', 'jjid', 'jjil', 'jjilg', 'jjilm', 'jjilb', 'jjils', 'jjilt', 'jjilp', 'jjilh', 'jjim', 'jjib', 'jjibs', 'jjis',
   0x20 => 'jjiss', 'jjing', 'jjij', 'jjich', 'jjik', 'jjit', 'jjip', 'jjih', 'cha', 'chag', 'chakk', 'chags', 'chan', 'chanj', 'chanh', 'chad',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'chyeo', 'chyeog', 'chyeokk', 'chyeogs', 'chyeon', 'chyeonj', 'chyeonh', 'chyeod', 'chyeol', 'chyeolg', 'chyeolm', 'chyeolb', 'chyeols', 'chyeolt', 'chyeolp', 'chyeolh',
   0xE0 => 'chyeom', 'chyeob', 'chyeobs', 'chyeos', 'chyeoss', 'chyeong', 'chyeoj', 'chyeoch', 'chyeok', 'chyeot', 'chyeop', 'chyeoh', 'chye', 'chyeg', 'chyekk', 'chyegs',
   0xF0 => 'chyen', 'chyenj', 'chyenh', 'chyed', 'chyel', 'chyelg', 'chyelm', 'chyelb', 'chyels', 'chyelt', 'chyelp', 'chyelh', 'chyem', 'chyeb', 'chyebs', 'chyes',
-);
+];

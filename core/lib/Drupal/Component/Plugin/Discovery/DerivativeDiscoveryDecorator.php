@@ -21,7 +21,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    * @var \Drupal\Component\Plugin\Derivative\DeriverInterface[]
    *   Keys are base plugin IDs.
    */
-  protected $derivers = array();
+  protected $derivers = [];
 
   /**
    * The decorated plugin discovery.
@@ -94,7 +94,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    * DiscoveryInterface::getDefinitions().
    */
   protected function getDerivatives(array $base_plugin_definitions) {
-    $plugin_definitions = array();
+    $plugin_definitions = [];
     foreach ($base_plugin_definitions as $base_plugin_id => $plugin_definition) {
       $deriver = $this->getDeriver($base_plugin_id, $plugin_definition);
       if ($deriver) {
@@ -137,7 +137,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
       return explode(':', $plugin_id, 2);
     }
 
-    return array($plugin_id, NULL);
+    return [$plugin_id, NULL];
   }
 
   /**
@@ -239,7 +239,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
     // Use this definition as defaults if a plugin already defined itself as
     // this derivative, but filter out empty values first.
     $filtered_base = array_filter($base_plugin_definition);
-    $derivative_definition = $filtered_base + ($derivative_definition ?: array());
+    $derivative_definition = $filtered_base + ($derivative_definition ?: []);
     // Add back any empty keys that the derivative didn't have.
     return $derivative_definition + $base_plugin_definition;
   }
@@ -248,7 +248,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    * Passes through all unknown calls onto the decorated object.
    */
   public function __call($method, $args) {
-    return call_user_func_array(array($this->decorated, $method), $args);
+    return call_user_func_array([$this->decorated, $method], $args);
   }
 
 }

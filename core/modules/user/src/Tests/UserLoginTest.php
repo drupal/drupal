@@ -21,9 +21,9 @@ class UserLoginTest extends WebTestBase {
     // depends on config:system.site, and its cache tags should be present.
     $this->assertCacheTag('config:system.site');
 
-    $user = $this->drupalCreateUser(array());
-    $this->drupalGet('user/login', array('query' => array('destination' => 'foo')));
-    $edit = array('name' => $user->getUserName(), 'pass' => $user->pass_raw);
+    $user = $this->drupalCreateUser([]);
+    $this->drupalGet('user/login', ['query' => ['destination' => 'foo']]);
+    $edit = ['name' => $user->getUserName(), 'pass' => $user->pass_raw];
     $this->drupalPostForm(NULL, $edit, t('Log in'));
     $this->assertUrl('foo', [], 'Redirected to the correct URL');
   }
@@ -38,7 +38,7 @@ class UserLoginTest extends WebTestBase {
       ->set('user_limit', 4000)
       ->save();
 
-    $user1 = $this->drupalCreateUser(array());
+    $user1 = $this->drupalCreateUser([]);
     $incorrect_user1 = clone $user1;
     $incorrect_user1->pass_raw .= 'incorrect';
 
@@ -75,11 +75,11 @@ class UserLoginTest extends WebTestBase {
       ->set('user_limit', 3)
       ->save();
 
-    $user1 = $this->drupalCreateUser(array());
+    $user1 = $this->drupalCreateUser([]);
     $incorrect_user1 = clone $user1;
     $incorrect_user1->pass_raw .= 'incorrect';
 
-    $user2 = $this->drupalCreateUser(array());
+    $user2 = $this->drupalCreateUser([]);
 
     // Try 2 failed logins.
     for ($i = 0; $i < 2; $i++) {
@@ -116,7 +116,7 @@ class UserLoginTest extends WebTestBase {
     $password_hasher = $this->container->get('password');
 
     // Create a new user and authenticate.
-    $account = $this->drupalCreateUser(array());
+    $account = $this->drupalCreateUser([]);
     $password = $account->pass_raw;
     $this->drupalLogin($account);
     $this->drupalLogout();
@@ -129,13 +129,13 @@ class UserLoginTest extends WebTestBase {
     // containing the necessary container builder code and then verify that the
     // users password gets rehashed during the login.
     $overridden_count_log2 = 19;
-    \Drupal::service('module_installer')->install(array('user_custom_phpass_params_test'));
+    \Drupal::service('module_installer')->install(['user_custom_phpass_params_test']);
     $this->resetAll();
 
     $account->pass_raw = $password;
     $this->drupalLogin($account);
     // Load the stored user, which should have a different password hash now.
-    $user_storage->resetCache(array($account->id()));
+    $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $overridden_count_log2);
     $this->assertTrue($password_hasher->check($password, $account->getPassword()));
@@ -155,19 +155,19 @@ class UserLoginTest extends WebTestBase {
    *   - Set to NULL to expect a failed login.
    */
   function assertFailedLogin($account, $flood_trigger = NULL) {
-    $edit = array(
+    $edit = [
       'name' => $account->getUsername(),
       'pass' => $account->pass_raw,
-    );
+    ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
     $this->assertNoFieldByXPath("//input[@name='pass' and @value!='']", NULL, 'Password value attribute is blank.');
     if (isset($flood_trigger)) {
       if ($flood_trigger == 'user') {
-        $this->assertRaw(\Drupal::translation()->formatPlural($this->config('user.flood')->get('user_limit'), 'There has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', array(':url' => \Drupal::url('user.pass'))));
+        $this->assertRaw(\Drupal::translation()->formatPlural($this->config('user.flood')->get('user_limit'), 'There has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => \Drupal::url('user.pass')]));
       }
       else {
         // No uid, so the limit is IP-based.
-        $this->assertRaw(t('Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', array(':url' => \Drupal::url('user.pass'))));
+        $this->assertRaw(t('Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => \Drupal::url('user.pass')]));
       }
     }
     else {

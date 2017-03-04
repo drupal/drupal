@@ -76,9 +76,9 @@ class SearchBlockForm extends FormBase {
     // Set up the form to submit using GET to the correct search page.
     $entity_id = $this->searchPageRepository->getDefaultSearchPage();
     if (!$entity_id) {
-      $form['message'] = array(
+      $form['message'] = [
         '#markup' => $this->t('Search is currently disabled'),
-      );
+      ];
       return $form;
     }
 
@@ -86,22 +86,22 @@ class SearchBlockForm extends FormBase {
     $form['#action'] = $this->url($route);
     $form['#method'] = 'get';
 
-    $form['keys'] = array(
+    $form['keys'] = [
       '#type' => 'search',
       '#title' => $this->t('Search'),
       '#title_display' => 'invisible',
       '#size' => 15,
       '#default_value' => '',
-      '#attributes' => array('title' => $this->t('Enter the terms you wish to search for.')),
-    );
+      '#attributes' => ['title' => $this->t('Enter the terms you wish to search for.')],
+    ];
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Search'),
       // Prevent op from showing up in the query string.
       '#name' => '',
-    );
+    ];
 
     // SearchPageRepository::getDefaultSearchPage() depends on search.settings.
     $this->renderer->addCacheableDependency($form, $this->configFactory->get('search.settings'));

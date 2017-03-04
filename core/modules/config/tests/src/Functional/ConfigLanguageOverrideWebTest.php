@@ -35,18 +35,18 @@ class ConfigLanguageOverrideWebTest extends BrowserTestBase {
    * Tests translating the site name.
    */
   function testSiteNameTranslation() {
-    $adminUser = $this->drupalCreateUser(array('administer site configuration', 'administer languages'));
+    $adminUser = $this->drupalCreateUser(['administer site configuration', 'administer languages']);
     $this->drupalLogin($adminUser);
 
     // Add a custom language.
     $langcode = 'xx';
     $name = $this->randomMachineName(16);
-    $edit = array(
+    $edit = [
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     \Drupal::languageManager()
       ->getLanguageConfigOverride($langcode, 'system.site')

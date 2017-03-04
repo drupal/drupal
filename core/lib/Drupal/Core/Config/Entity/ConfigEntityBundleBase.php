@@ -109,7 +109,7 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
       $storage = $this->entityManager()->getStorage($entity_type_id);
       return $storage->loadMultiple($ids);
     }
-    return array();
+    return [];
   }
 
 }

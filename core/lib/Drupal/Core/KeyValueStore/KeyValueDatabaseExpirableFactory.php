@@ -15,7 +15,7 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
    *
    * @var \Drupal\Core\KeyValueStore\DatabaseStorageExpirable[]
    */
-  protected $storages = array();
+  protected $storages = [];
 
   /**
    * The serialization class to use.

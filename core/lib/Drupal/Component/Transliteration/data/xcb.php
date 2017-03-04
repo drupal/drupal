@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'jjwaels', 'jjwaelt', 'jjwaelp', 'jjwaelh', 'jjwaem', 'jjwaeb', 'jjwaebs', 'jjwaes', 'jjwaess', 'jjwaeng', 'jjwaej', 'jjwaech', 'jjwaek', 'jjwaet', 'jjwaep', 'jjwaeh',
   0x10 => 'jjoe', 'jjoeg', 'jjoekk', 'jjoegs', 'jjoen', 'jjoenj', 'jjoenh', 'jjoed', 'jjoel', 'jjoelg', 'jjoelm', 'jjoelb', 'jjoels', 'jjoelt', 'jjoelp', 'jjoelh',
   0x20 => 'jjoem', 'jjoeb', 'jjoebs', 'jjoes', 'jjoess', 'jjoeng', 'jjoej', 'jjoech', 'jjoek', 'jjoet', 'jjoep', 'jjoeh', 'jjyo', 'jjyog', 'jjyokk', 'jjyogs',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'jjyuk', 'jjyut', 'jjyup', 'jjyuh', 'jjeu', 'jjeug', 'jjeukk', 'jjeugs', 'jjeun', 'jjeunj', 'jjeunh', 'jjeud', 'jjeul', 'jjeulg', 'jjeulm', 'jjeulb',
   0xE0 => 'jjeuls', 'jjeult', 'jjeulp', 'jjeulh', 'jjeum', 'jjeub', 'jjeubs', 'jjeus', 'jjeuss', 'jjeung', 'jjeuj', 'jjeuch', 'jjeuk', 'jjeut', 'jjeup', 'jjeuh',
   0xF0 => 'jjui', 'jjuig', 'jjuikk', 'jjuigs', 'jjuin', 'jjuinj', 'jjuinh', 'jjuid', 'jjuil', 'jjuilg', 'jjuilm', 'jjuilb', 'jjuils', 'jjuilt', 'jjuilp', 'jjuilh',
-);
+];

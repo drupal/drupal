@@ -75,12 +75,12 @@ class TwigExtensionTest extends UnitTestCase {
    * @dataProvider providerTestEscaping
    */
   public function testEscaping($template, $expected) {
-    $twig = new \Twig_Environment(NULL, array(
+    $twig = new \Twig_Environment(NULL, [
       'debug' => TRUE,
       'cache' => FALSE,
       'autoescape' => 'html',
       'optimizations' => 0,
-    ));
+    ]);
     $twig->addExtension($this->systemUnderTest);
 
     $nodes = $twig->parse($twig->tokenize($template));
@@ -98,27 +98,27 @@ class TwigExtensionTest extends UnitTestCase {
    *   a boolean expecting whether the path will be safe.
    */
   public function providerTestEscaping() {
-    return array(
-      array('{{ path("foo") }}', FALSE),
-      array('{{ path("foo", {}) }}', FALSE),
-      array('{{ path("foo", { foo: "foo" }) }}', FALSE),
-      array('{{ path("foo", foo) }}', TRUE),
-      array('{{ path("foo", { foo: foo }) }}', TRUE),
-      array('{{ path("foo", { foo: ["foo", "bar"] }) }}', TRUE),
-      array('{{ path("foo", { foo: "foo", bar: "bar" }) }}', TRUE),
-      array('{{ path(name = "foo", parameters = {}) }}', FALSE),
-      array('{{ path(name = "foo", parameters = { foo: "foo" }) }}', FALSE),
-      array('{{ path(name = "foo", parameters = foo) }}', TRUE),
-      array(
+    return [
+      ['{{ path("foo") }}', FALSE],
+      ['{{ path("foo", {}) }}', FALSE],
+      ['{{ path("foo", { foo: "foo" }) }}', FALSE],
+      ['{{ path("foo", foo) }}', TRUE],
+      ['{{ path("foo", { foo: foo }) }}', TRUE],
+      ['{{ path("foo", { foo: ["foo", "bar"] }) }}', TRUE],
+      ['{{ path("foo", { foo: "foo", bar: "bar" }) }}', TRUE],
+      ['{{ path(name = "foo", parameters = {}) }}', FALSE],
+      ['{{ path(name = "foo", parameters = { foo: "foo" }) }}', FALSE],
+      ['{{ path(name = "foo", parameters = foo) }}', TRUE],
+      [
         '{{ path(name = "foo", parameters = { foo: ["foo", "bar"] }) }}',
         TRUE
-      ),
-      array('{{ path(name = "foo", parameters = { foo: foo }) }}', TRUE),
-      array(
+      ],
+      ['{{ path(name = "foo", parameters = { foo: foo }) }}', TRUE],
+      [
         '{{ path(name = "foo", parameters = { foo: "foo", bar: "bar" }) }}',
         TRUE
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -185,12 +185,12 @@ class TwigExtensionTest extends UnitTestCase {
    * @covers ::escapeFilter
    */
   public function testSafeStringEscaping() {
-    $twig = new \Twig_Environment(NULL, array(
+    $twig = new \Twig_Environment(NULL, [
       'debug' => TRUE,
       'cache' => FALSE,
       'autoescape' => 'html',
       'optimizations' => 0,
-    ));
+    ]);
 
     // By default, TwigExtension will attempt to cast objects to strings.
     // Ensure objects that implement MarkupInterface are unchanged.

@@ -80,10 +80,10 @@ class UserAccessControlHandlerTest extends UnitTestCase {
     $this->owner
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap(array(
-        array('administer users', FALSE),
-        array('change own username', TRUE),
-      )));
+      ->will($this->returnValueMap([
+        ['administer users', FALSE],
+        ['change own username', TRUE],
+      ]));
 
     $this->owner
       ->expects($this->any())
@@ -102,7 +102,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
     $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $module_handler->expects($this->any())
       ->method('getImplementations')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
     $this->accessControlHandler->setModuleHandler($module_handler);
 
     $this->items = $this->getMockBuilder('Drupal\Core\Field\FieldItemList')
@@ -128,7 +128,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       ->method('getEntity')
       ->will($this->returnValue($this->{$target}));
 
-    foreach (array('view' => $view, 'edit' => $edit) as $operation => $result) {
+    foreach (['view' => $view, 'edit' => $edit] as $operation => $result) {
       $result_text = !isset($result) ? 'null' : ($result ? 'true' : 'false');
       $message = "User '$field' field access returns '$result_text' with operation '$operation' for '$viewer' accessing '$target'";
       $this->assertSame($result, $this->accessControlHandler->fieldAccess($operation, $field_definition, $this->{$viewer}, $this->items), $message);
@@ -148,41 +148,41 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Provides test data for testUserNameAccess().
    */
   public function userNameProvider() {
-    $name_access = array(
+    $name_access = [
       // The viewer user is allowed to see user names on all accounts.
-      array(
+      [
         'viewer' => 'viewer',
         'target' => 'viewer',
         'view' => TRUE,
         'edit' => FALSE,
-      ),
-      array(
+      ],
+      [
         'viewer' => 'owner',
         'target' => 'viewer',
         'view' => TRUE,
         'edit' => FALSE,
-      ),
-      array(
+      ],
+      [
         'viewer' => 'viewer',
         'target' => 'owner',
         'view' => TRUE,
         'edit' => FALSE,
-      ),
+      ],
       // The owner user is allowed to change its own user name.
-      array(
+      [
         'viewer' => 'owner',
         'target' => 'owner',
         'view' => TRUE,
         'edit' => TRUE,
-      ),
+      ],
       // The users-administrator user has full access.
-      array(
+      [
         'viewer' => 'admin',
         'target' => 'owner',
         'view' => TRUE,
         'edit' => TRUE,
-      ),
-    );
+      ],
+    ];
     return $name_access;
   }
 
@@ -199,24 +199,24 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Provides test data for testHiddenUserSettings().
    */
   public function hiddenUserSettingsProvider() {
-    $access_info = array();
+    $access_info = [];
 
-    $fields = array(
+    $fields = [
       'preferred_langcode',
       'preferred_admin_langcode',
       'timezone',
       'mail',
-    );
+    ];
 
     foreach ($fields as $field) {
-      $access_info[] = array(
+      $access_info[] = [
         'field' => $field,
         'viewer' => 'viewer',
         'target' => 'viewer',
         'view' => TRUE,
         'edit' => TRUE,
-      );
-      $access_info[] = array(
+      ];
+      $access_info[] = [
         'field' => $field,
         'viewer' => 'viewer',
         'target' => 'owner',
@@ -225,21 +225,21 @@ class UserAccessControlHandlerTest extends UnitTestCase {
         // reality edit access will already be checked on entity level and the
         // user without view access will typically not be able to edit.
         'edit' => TRUE,
-      );
-      $access_info[] = array(
+      ];
+      $access_info[] = [
         'field' => $field,
         'viewer' => 'owner',
         'target' => 'owner',
         'view' => TRUE,
         'edit' => TRUE,
-      );
-      $access_info[] = array(
+      ];
+      $access_info[] = [
         'field' => $field,
         'viewer' => 'admin',
         'target' => 'owner',
         'view' => TRUE,
         'edit' => TRUE,
-      );
+      ];
     }
 
     return $access_info;
@@ -258,38 +258,38 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Provides test data for testAdminFieldAccess().
    */
   public function adminFieldAccessProvider() {
-    $access_info = array();
+    $access_info = [];
 
-    $fields = array(
+    $fields = [
       'roles',
       'status',
       'access',
       'login',
       'init',
-    );
+    ];
 
     foreach ($fields as $field) {
-      $access_info[] = array(
+      $access_info[] = [
         'field' => $field,
         'viewer' => 'viewer',
         'target' => 'viewer',
         'view' => FALSE,
         'edit' => FALSE,
-      );
-      $access_info[] = array(
+      ];
+      $access_info[] = [
         'field' => $field,
         'viewer' => 'viewer',
         'target' => 'owner',
         'view' => FALSE,
         'edit' => FALSE,
-      );
-      $access_info[] = array(
+      ];
+      $access_info[] = [
         'field' => $field,
         'viewer' => 'admin',
         'target' => 'owner',
         'view' => TRUE,
         'edit' => TRUE,
-      );
+      ];
     }
 
     return $access_info;
@@ -308,14 +308,14 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Provides test data for passwordAccessProvider().
    */
   public function passwordAccessProvider() {
-    $pass_access = array(
-      array(
+    $pass_access = [
+      [
         'viewer' => 'viewer',
         'target' => 'viewer',
         'view' => FALSE,
         'edit' => TRUE,
-      ),
-      array(
+      ],
+      [
         'viewer' => 'viewer',
         'target' => 'owner',
         'view' => FALSE,
@@ -323,20 +323,20 @@ class UserAccessControlHandlerTest extends UnitTestCase {
         // reality edit access will already be checked on entity level and the
         // user without view access will typically not be able to edit.
         'edit' => TRUE,
-      ),
-      array(
+      ],
+      [
         'viewer' => 'owner',
         'target' => 'viewer',
         'view' => FALSE,
         'edit' => TRUE,
-      ),
-      array(
+      ],
+      [
         'viewer' => 'admin',
         'target' => 'owner',
         'view' => FALSE,
         'edit' => TRUE,
-      ),
-    );
+      ],
+    ];
     return $pass_access;
   }
 
@@ -353,26 +353,26 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Provides test data for testCreatedAccess().
    */
   public function createdAccessProvider() {
-    $created_access = array(
-      array(
+    $created_access = [
+      [
         'viewer' => 'viewer',
         'target' => 'viewer',
         'view' => TRUE,
         'edit' => FALSE,
-      ),
-      array(
+      ],
+      [
         'viewer' => 'owner',
         'target' => 'viewer',
         'view' => TRUE,
         'edit' => FALSE,
-      ),
-      array(
+      ],
+      [
         'viewer' => 'admin',
         'target' => 'owner',
         'view' => TRUE,
         'edit' => TRUE,
-      ),
-    );
+      ],
+    ];
     return $created_access;
   }
 
@@ -392,26 +392,26 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Provides test data for testNonExistingFieldAccess().
    */
   public function NonExistingFieldAccessProvider() {
-    $created_access = array(
-      array(
+    $created_access = [
+      [
         'viewer' => 'viewer',
         'target' => 'viewer',
         'view' => TRUE,
         'edit' => TRUE,
-      ),
-      array(
+      ],
+      [
         'viewer' => 'owner',
         'target' => 'viewer',
         'view' => TRUE,
         'edit' => TRUE,
-      ),
-      array(
+      ],
+      [
         'viewer' => 'admin',
         'target' => 'owner',
         'view' => TRUE,
         'edit' => TRUE,
-      ),
-    );
+      ],
+    ];
     return $created_access;
   }
 

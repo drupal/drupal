@@ -19,7 +19,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *   Array of valid configuration data keys.
    */
   protected function getAllKeys() {
-    return is_array($this->value) ? array_keys($this->value) : array();
+    return is_array($this->value) ? array_keys($this->value) : [];
   }
 
   /**
@@ -29,7 +29,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *   An array of elements contained in this element.
    */
   protected function parse() {
-    $elements = array();
+    $elements = [];
     foreach ($this->getAllKeys() as $key) {
       $value = isset($this->value[$key]) ? $this->value[$key] : NULL;
       $definition = $this->getElementDefinition($key);
@@ -96,7 +96,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    * {@inheritdoc}
    */
   public function toArray() {
-    return isset($this->value) ? $this->value : array();
+    return isset($this->value) ? $this->value : [];
   }
 
   /**

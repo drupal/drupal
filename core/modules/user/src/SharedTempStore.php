@@ -142,11 +142,11 @@ class SharedTempStore {
    *   TRUE if the data was set, or FALSE if it already existed.
    */
   public function setIfNotExists($key, $value) {
-    $value = (object) array(
+    $value = (object) [
       'owner' => $this->owner,
       'data' => $value,
       'updated' => (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME'),
-    );
+    ];
     return $this->storage->setWithExpireIfNotExists($key, $value, $this->expire);
   }
 
@@ -200,11 +200,11 @@ class SharedTempStore {
       }
     }
 
-    $value = (object) array(
+    $value = (object) [
       'owner' => $this->owner,
       'data' => $value,
       'updated' => (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME'),
-    );
+    ];
     $this->storage->setWithExpire($key, $value, $this->expire);
     $this->lockBackend->release($key);
   }

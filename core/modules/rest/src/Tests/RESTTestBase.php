@@ -65,7 +65,7 @@ abstract class RESTTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('rest', 'entity_test');
+  public static $modules = ['rest', 'entity_test'];
 
   /**
    * The last response.
@@ -78,11 +78,11 @@ abstract class RESTTestBase extends WebTestBase {
     parent::setUp();
     $this->defaultFormat = 'hal_json';
     $this->defaultMimeType = 'application/hal+json';
-    $this->defaultAuth = array('cookie');
+    $this->defaultAuth = ['cookie'];
     $this->resourceConfigStorage = $this->container->get('entity_type.manager')->getStorage('rest_resource_config');
     // Create a test content type for node testing.
     if (in_array('node', static::$modules)) {
-      $this->drupalCreateContentType(array('name' => 'resttest', 'type' => 'resttest'));
+      $this->drupalCreateContentType(['name' => 'resttest', 'type' => 'resttest']);
     }
 
     $this->cookieFile = $this->publicFilesDirectory . '/cookie.jar';
@@ -142,7 +142,7 @@ abstract class RESTTestBase extends WebTestBase {
     if (!isset($mime_type)) {
       $mime_type = $this->defaultMimeType;
     }
-    if (!in_array($method, array('GET', 'HEAD', 'OPTIONS', 'TRACE'))) {
+    if (!in_array($method, ['GET', 'HEAD', 'OPTIONS', 'TRACE'])) {
       // GET the CSRF token first for writing requests.
       $requested_token = $this->drupalGet('session/token');
     }
@@ -303,28 +303,28 @@ abstract class RESTTestBase extends WebTestBase {
   protected function entityValues($entity_type_id) {
     switch ($entity_type_id) {
       case 'entity_test':
-        return array(
+        return [
           'name' => $this->randomMachineName(),
           'user_id' => 1,
-          'field_test_text' => array(0 => array(
+          'field_test_text' => [0 => [
             'value' => $this->randomString(),
             'format' => 'plain_text',
-          )),
-        );
+          ]],
+        ];
       case 'config_test':
         return [
           'id' => $this->randomMachineName(),
           'label' => 'Test label',
         ];
       case 'node':
-        return array('title' => $this->randomString(), 'type' => 'resttest');
+        return ['title' => $this->randomString(), 'type' => 'resttest'];
       case 'node_type':
-        return array(
+        return [
           'type' => 'article',
           'name' => $this->randomMachineName(),
-        );
+        ];
       case 'user':
-        return array('name' => $this->randomMachineName());
+        return ['name' => $this->randomMachineName()];
 
       case 'comment':
         return [
@@ -353,7 +353,7 @@ abstract class RESTTestBase extends WebTestBase {
         if ($this->isConfigEntity($entity_type_id)) {
           return $this->configEntityValues($entity_type_id);
         }
-        return array();
+        return [];
     }
   }
 
@@ -460,22 +460,22 @@ abstract class RESTTestBase extends WebTestBase {
       case 'entity_test':
         switch ($operation) {
           case 'view':
-            return array('view test entity');
+            return ['view test entity'];
           case 'create':
           case 'update':
           case 'delete':
-            return array('administer entity_test content');
+            return ['administer entity_test content'];
         }
       case 'node':
         switch ($operation) {
           case 'view':
-            return array('access content');
+            return ['access content'];
           case 'create':
-            return array('create resttest content');
+            return ['create resttest content'];
           case 'update':
-            return array('edit any resttest content');
+            return ['edit any resttest content'];
           case 'delete':
-            return array('delete any resttest content');
+            return ['delete any resttest content'];
         }
 
       case 'comment':
@@ -573,7 +573,7 @@ abstract class RESTTestBase extends WebTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertResponseBody($expected, $message = '', $group = 'REST Response') {
-    return $this->assertIdentical($expected, $this->responseBody, $message ? $message : strtr('Response body @expected (expected) is equal to @response (actual).', array('@expected' => var_export($expected, TRUE), '@response' => var_export($this->responseBody, TRUE))), $group);
+    return $this->assertIdentical($expected, $this->responseBody, $message ? $message : strtr('Response body @expected (expected) is equal to @response (actual).', ['@expected' => var_export($expected, TRUE), '@response' => var_export($this->responseBody, TRUE)]), $group);
   }
 
   /**

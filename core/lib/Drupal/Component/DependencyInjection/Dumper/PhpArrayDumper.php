@@ -30,7 +30,7 @@ class PhpArrayDumper extends OptimizedPhpArrayDumper {
    * {@inheritdoc}
    */
   protected function dumpCollection($collection, &$resolve = FALSE) {
-    $code = array();
+    $code = [];
 
     foreach ($collection as $key => $value) {
       if (is_array($value)) {

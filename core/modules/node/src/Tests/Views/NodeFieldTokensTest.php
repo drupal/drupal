@@ -17,7 +17,7 @@ class NodeFieldTokensTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_node_tokens');
+  public static $testViews = ['test_node_tokens'];
 
   /**
    * Tests token replacement for Views tokens supplied by the Node module.

@@ -16,14 +16,14 @@ class DisplayCRUDTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_display');
+  public static $testViews = ['test_display'];
 
   /**
    * Modules to enable
    *
    * @var array
    */
-  public static $modules = array('contextual');
+  public static $modules = ['contextual'];
 
   /**
    * Tests adding a display.
@@ -39,14 +39,14 @@ class DisplayCRUDTest extends UITestBase {
     $this->drupalGet($path_prefix);
 
     // Add a new display.
-    $this->drupalPostForm(NULL, array(), 'Add Page');
+    $this->drupalPostForm(NULL, [], 'Add Page');
     $this->assertLinkByHref($path_prefix . '/page_1', 0, 'Make sure after adding a display the new display appears in the UI');
 
     $this->assertNoLink('Master*', 'Make sure the master display is not marked as changed.');
     $this->assertLink('Page*', 0, 'Make sure the added display is marked as changed.');
 
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/path", array('path' => 'test/path'), t('Apply'));
-    $this->drupalPostForm(NULL, array(), t('Save'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/path", ['path' => 'test/path'], t('Apply'));
+    $this->drupalPostForm(NULL, [], t('Save'));
   }
 
   /**
@@ -63,22 +63,22 @@ class DisplayCRUDTest extends UITestBase {
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is a delete button on the page display.');
 
     // Delete the page, so we can test the undo process.
-    $this->drupalPostForm($path_prefix . '/page_1', array(), 'Delete Page');
+    $this->drupalPostForm($path_prefix . '/page_1', [], 'Delete Page');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'Undo delete of Page', 'Make sure there a undo button on the page display after deleting.');
-    $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', array(':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link'));
+    $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', [':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link']);
     $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
 
-    $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', array(':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link'));
+    $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', [':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link']);
     $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
 
     // Undo the deleting of the display.
-    $this->drupalPostForm($path_prefix . '/page_1', array(), 'Undo delete of Page');
+    $this->drupalPostForm($path_prefix . '/page_1', [], 'Undo delete of Page');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'Undo delete of Page', 'Make sure there is no undo button on the page display after reverting.');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is a delete button on the page display after the reverting.');
 
     // Now delete again and save the view.
-    $this->drupalPostForm($path_prefix . '/page_1', array(), 'Delete Page');
-    $this->drupalPostForm(NULL, array(), t('Save'));
+    $this->drupalPostForm($path_prefix . '/page_1', [], 'Delete Page');
+    $this->drupalPostForm(NULL, [], t('Save'));
 
     $this->assertNoLinkByHref($path_prefix . '/page_1', 'Make sure there is no display tab for the deleted display.');
 
@@ -86,9 +86,9 @@ class DisplayCRUDTest extends UITestBase {
     $view = $this->randomView();
     $machine_name = 'new_machine_name';
     $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/display_id", array('display_id' => $machine_name), 'Apply');
-    $this->drupalPostForm(NULL, array(), 'Delete Page');
-    $this->drupalPostForm(NULL, array(), t('Save'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/display_id", ['display_id' => $machine_name], 'Apply');
+    $this->drupalPostForm(NULL, [], 'Delete Page');
+    $this->drupalPostForm(NULL, [], t('Save'));
     $this->assertResponse(200);
     $this->assertNoLinkByHref($path_prefix . '/new_machine_name', 'Make sure there is no display tab for the deleted display.');
   }
@@ -111,24 +111,24 @@ class DisplayCRUDTest extends UITestBase {
     $path = $view['page[path]'];
 
     $this->drupalGet($path_prefix);
-    $this->drupalPostForm(NULL, array(), 'Duplicate Page');
+    $this->drupalPostForm(NULL, [], 'Duplicate Page');
     $this->assertLinkByHref($path_prefix . '/page_2', 0, 'Make sure after duplicating the new display appears in the UI');
-    $this->assertUrl($path_prefix . '/page_2', array(), 'The user got redirected to the new display.');
+    $this->assertUrl($path_prefix . '/page_2', [], 'The user got redirected to the new display.');
 
     // Set the title and override the css classes.
     $random_title = $this->randomMachineName();
     $random_css = $this->randomMachineName();
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/title", array('title' => $random_title), t('Apply'));
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/css_class", array('override[dropdown]' => 'page_2', 'css_class' => $random_css), t('Apply'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/title", ['title' => $random_title], t('Apply'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/css_class", ['override[dropdown]' => 'page_2', 'css_class' => $random_css], t('Apply'));
 
     // Duplicate as a different display type.
-    $this->drupalPostForm(NULL, array(), 'Duplicate as Block');
+    $this->drupalPostForm(NULL, [], 'Duplicate as Block');
     $this->assertLinkByHref($path_prefix . '/block_1', 0, 'Make sure after duplicating the new display appears in the UI');
-    $this->assertUrl($path_prefix . '/block_1', array(), 'The user got redirected to the new display.');
+    $this->assertUrl($path_prefix . '/block_1', [], 'The user got redirected to the new display.');
     $this->assertText(t('Block settings'));
     $this->assertNoText(t('Page settings'));
 
-    $this->drupalPostForm(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, [], t('Save'));
     $view = Views::getView($view['id']);
     $view->initDisplay();
 

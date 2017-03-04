@@ -52,7 +52,7 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
     $this->installEntitySchema('entity_test_rev');
 
     // Give anonymous users permission to view test entities.
-    $this->installConfig(array('user'));
+    $this->installConfig(['user']);
     Role::load(RoleInterface::ANONYMOUS_ID)
       ->grantPermission('view test entity')
       ->save();
@@ -61,20 +61,20 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
 
     // Add the mapping.
     $mapping = rdf_get_mapping('entity_test', 'entity_test');
-    $mapping->setFieldMapping($this->fieldName, array(
-      'properties' => array('schema:knows'),
-    ))->save();
+    $mapping->setFieldMapping($this->fieldName, [
+      'properties' => ['schema:knows'],
+    ])->save();
 
     // Create the entity to be referenced.
     $this->targetEntity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityType)
-      ->create(array('name' => $this->randomMachineName()));
+      ->create(['name' => $this->randomMachineName()]);
     $this->targetEntity->save();
 
     // Create the entity that will have the entity reference field.
     $this->entity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityType)
-      ->create(array('name' => $this->randomMachineName()));
+      ->create(['name' => $this->randomMachineName()]);
     $this->entity->save();
     $this->entity->{$this->fieldName}->entity = $this->targetEntity;
     $this->uri = $this->getAbsoluteUri($this->entity);
@@ -87,9 +87,9 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
     $entity_uri = $this->getAbsoluteUri($this->targetEntity);
 
     // Tests the label formatter.
-    $this->assertFormatterRdfa(array('type' => 'entity_reference_label'), 'http://schema.org/knows', array('value' => $entity_uri, 'type' => 'uri'));
+    $this->assertFormatterRdfa(['type' => 'entity_reference_label'], 'http://schema.org/knows', ['value' => $entity_uri, 'type' => 'uri']);
     // Tests the entity formatter.
-    $this->assertFormatterRdfa(array('type' => 'entity_reference_entity_view'), 'http://schema.org/knows', array('value' => $entity_uri, 'type' => 'uri'));
+    $this->assertFormatterRdfa(['type' => 'entity_reference_entity_view'], 'http://schema.org/knows', ['value' => $entity_uri, 'type' => 'uri']);
   }
 
 }

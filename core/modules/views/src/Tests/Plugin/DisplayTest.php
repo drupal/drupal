@@ -19,26 +19,26 @@ class DisplayTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid', 'test_display_empty', 'test_exposed_relationship_admin_ui');
+  public static $testViews = ['test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid', 'test_display_empty', 'test_exposed_relationship_admin_ui'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('views_ui', 'node', 'block');
+  public static $modules = ['views_ui', 'node', 'block'];
 
   protected function setUp() {
     parent::setUp();
 
     $this->enableViewsTestModule();
 
-    $this->adminUser = $this->drupalCreateUser(array('administer views'));
+    $this->adminUser = $this->drupalCreateUser(['administer views']);
     $this->drupalLogin($this->adminUser);
 
     // Create 10 nodes.
     for ($i = 0; $i <= 10; $i++) {
-      $this->drupalCreateNode(array('promote' => TRUE));
+      $this->drupalCreateNode(['promote' => TRUE]);
     }
   }
 
@@ -59,25 +59,25 @@ class DisplayTest extends PluginTestBase {
     $this->assertTrue(isset($displays['display_test_1']), 'Added display has been assigned to "display_test_1"');
 
     // Check the display options are like expected.
-    $options = array(
-      'display_options' => array(),
+    $options = [
+      'display_options' => [],
       'display_plugin' => 'display_test',
       'id' => 'display_test_1',
       'display_title' => 'Display test',
       'position' => 1,
-    );
+    ];
     $this->assertEqual($displays['display_test_1'], $options);
 
     // Add another one to ensure that position is counted up.
     $view->storage->addDisplay('display_test');
     $displays = $view->storage->get('display');
-    $options = array(
-      'display_options' => array(),
+    $options = [
+      'display_options' => [],
       'display_plugin' => 'display_test',
       'id' => 'display_test_2',
       'display_title' => 'Display test 2',
       'position' => 2,
-    );
+    ];
     $this->assertEqual($displays['display_test_2'], $options);
 
     // Move the second display before the first one in order to test custom
@@ -120,7 +120,7 @@ class DisplayTest extends PluginTestBase {
     $this->clickLink('Test option title');
 
     $test_option = $this->randomString();
-    $this->drupalPostForm(NULL, array('test_option' => $test_option), t('Apply'));
+    $this->drupalPostForm(NULL, ['test_option' => $test_option], t('Apply'));
 
     // Check the new value has been saved by checking the UI summary text.
     $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');
@@ -154,10 +154,10 @@ class DisplayTest extends PluginTestBase {
 
     // Both the feed_1 and the feed_2 display are attached to the page display.
     $view->setDisplay('page_1');
-    $this->assertEqual($view->display_handler->getAttachedDisplays(), array('feed_1', 'feed_2'));
+    $this->assertEqual($view->display_handler->getAttachedDisplays(), ['feed_1', 'feed_2']);
 
     $view->setDisplay('feed_1');
-    $this->assertEqual($view->display_handler->getAttachedDisplays(), array());
+    $this->assertEqual($view->display_handler->getAttachedDisplays(), []);
   }
 
   /**
@@ -179,7 +179,7 @@ class DisplayTest extends PluginTestBase {
     $output = $renderer->renderRoot($output);
 
     $this->setRawContent($output);
-    $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
+    $result = $this->xpath('//a[@class=:class]', [':class' => 'more-link']);
     $this->assertEqual($result[0]->attributes()->href, \Drupal::url('view.test_display_more.page_1'), 'The right more link is shown.');
     $this->assertEqual(trim($result[0][0]), $expected_more_text, 'The right link text is shown.');
 
@@ -188,7 +188,7 @@ class DisplayTest extends PluginTestBase {
     $more_link = $view->display_handler->renderMoreLink();
     $more_link = $renderer->renderRoot($more_link);
     $this->setRawContent($more_link);
-    $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
+    $result = $this->xpath('//a[@class=:class]', [':class' => 'more-link']);
     $this->assertEqual($result[0]->attributes()->href, \Drupal::url('view.test_display_more.page_1'), 'The right more link is shown.');
     $this->assertEqual(trim($result[0][0]), $expected_more_text, 'The right link text is shown.');
 
@@ -204,25 +204,25 @@ class DisplayTest extends PluginTestBase {
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
     $this->setRawContent($output);
-    $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
+    $result = $this->xpath('//a[@class=:class]', [':class' => 'more-link']);
     $this->assertTrue(empty($result), 'The more link is not shown.');
 
     $view = Views::getView('test_display_more');
     $view->setDisplay();
     $view->display_handler->setOption('use_more', 0);
     $view->display_handler->setOption('use_more_always', 0);
-    $view->display_handler->setOption('pager', array(
+    $view->display_handler->setOption('pager', [
       'type' => 'some',
-      'options' => array(
+      'options' => [
         'items_per_page' => 1,
         'offset' => 0,
-      ),
-    ));
+      ],
+    ]);
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
     $this->setRawContent($output);
-    $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
+    $result = $this->xpath('//a[@class=:class]', [':class' => 'more-link']);
     $this->assertTrue(empty($result), 'The more link is not shown when view has more records.');
 
     // Test the default value of use_more_always.
@@ -286,7 +286,7 @@ class DisplayTest extends PluginTestBase {
     $config->save();
 
     // Place the block display.
-    $block = $this->drupalPlaceBlock('views_block:test_display_invalid-block_1', array('label' => 'Invalid display'));
+    $block = $this->drupalPlaceBlock('views_block:test_display_invalid-block_1', ['label' => 'Invalid display']);
 
     $this->drupalGet('<front>');
     $this->assertResponse(200);
@@ -326,8 +326,8 @@ class DisplayTest extends PluginTestBase {
     $errors = $view->validate();
     // Check that the error messages are shown.
     $this->assertTrue(count($errors['default']) == 2, 'Error messages found for required relationship');
-    $this->assertEqual($errors['default'][0], t('The %handler_type %handler uses a relationship that has been removed.', array('%handler_type' => 'field', '%handler' => 'User: Last login')));
-    $this->assertEqual($errors['default'][1], t('The %handler_type %handler uses a relationship that has been removed.', array('%handler_type' => 'field', '%handler' => 'User: Created')));
+    $this->assertEqual($errors['default'][0], t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Last login']));
+    $this->assertEqual($errors['default'][1], t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Created']));
   }
 
   /**
@@ -342,12 +342,12 @@ class DisplayTest extends PluginTestBase {
 
     // Add a filter, so the view result is empty.
     $view->setDisplay('default');
-    $item = array(
+    $item = [
       'table' => 'views_test_data',
       'field' => 'id',
       'id' => 'id',
-      'value' => array('value' => 7297)
-    );
+      'value' => ['value' => 7297]
+    ];
     $view->setHandler('default', 'filter', 'id', $item);
     $this->executeView($view);
     $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');

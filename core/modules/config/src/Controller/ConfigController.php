@@ -103,7 +103,7 @@ class ConfigController implements ContainerInjectionInterface {
       }
     }
 
-    $request = new Request(array('file' => 'config.tar.gz'));
+    $request = new Request(['file' => 'config.tar.gz']);
     return $this->fileDownloadController->download($request, 'temporary');
   }
 
@@ -129,34 +129,34 @@ class ConfigController implements ContainerInjectionInterface {
     $diff = $this->configManager->diff($this->targetStorage, $this->sourceStorage, $source_name, $target_name, $collection);
     $this->diffFormatter->show_header = FALSE;
 
-    $build = array();
+    $build = [];
 
-    $build['#title'] = t('View changes of @config_file', array('@config_file' => $source_name));
+    $build['#title'] = t('View changes of @config_file', ['@config_file' => $source_name]);
     // Add the CSS for the inline diff.
     $build['#attached']['library'][] = 'system/diff';
 
-    $build['diff'] = array(
+    $build['diff'] = [
       '#type' => 'table',
-      '#attributes' => array(
-        'class' => array('diff'),
-      ),
-      '#header' => array(
-        array('data' => t('Active'), 'colspan' => '2'),
-        array('data' => t('Staged'), 'colspan' => '2'),
-      ),
+      '#attributes' => [
+        'class' => ['diff'],
+      ],
+      '#header' => [
+        ['data' => t('Active'), 'colspan' => '2'],
+        ['data' => t('Staged'), 'colspan' => '2'],
+      ],
       '#rows' => $this->diffFormatter->format($diff),
-    );
+    ];
 
-    $build['back'] = array(
+    $build['back'] = [
       '#type' => 'link',
-      '#attributes' => array(
-        'class' => array(
+      '#attributes' => [
+        'class' => [
           'dialog-cancel',
-        ),
-      ),
+        ],
+      ],
       '#title' => "Back to 'Synchronize configuration' page.",
       '#url' => Url::fromRoute('config.sync'),
-    );
+    ];
 
     return $build;
   }

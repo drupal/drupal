@@ -55,7 +55,7 @@ class CronQueueTest extends KernelTestBase {
     $queue = $this->container->get('queue')->get('cron_queue_test_exception');
 
     // Enqueue an item for processing.
-    $queue->createItem(array($this->randomMachineName() => $this->randomMachineName()));
+    $queue->createItem([$this->randomMachineName() => $this->randomMachineName()]);
 
     // Run cron; the worker for this queue should throw an exception and handle
     // it.

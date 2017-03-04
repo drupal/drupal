@@ -25,7 +25,7 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
    *
    * @var array
    */
-  public $items = array();
+  public $items = [];
 
   /**
    * {@inheritdoc}
@@ -33,8 +33,8 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['type'] = array('default' => 'separator');
-    $options['separator'] = array('default' => ', ');
+    $options['type'] = ['default' => 'separator'];
+    $options['separator'] = ['default' => ', '];
 
     return $options;
   }
@@ -43,27 +43,27 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $form['type'] = array(
+    $form['type'] = [
       '#type' => 'radios',
       '#title' => $this->t('Display type'),
-      '#options' => array(
+      '#options' => [
         'ul' => $this->t('Unordered list'),
         'ol' => $this->t('Ordered list'),
         'separator' => $this->t('Simple separator'),
-      ),
+      ],
       '#default_value' => $this->options['type'],
-    );
+    ];
 
-    $form['separator'] = array(
+    $form['separator'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Separator'),
       '#default_value' => $this->options['separator'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[type]"]' => array('value' => 'separator'),
-        ),
-      ),
-    );
+      '#states' => [
+        'visible' => [
+          ':input[name="options[type]"]' => ['value' => 'separator'],
+        ],
+      ],
+    ];
     parent::buildOptionsForm($form, $form_state);
   }
 
@@ -83,12 +83,12 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
         ];
       }
       else {
-        $render = array(
+        $render = [
           '#theme' => 'item_list',
           '#items' => $items,
           '#title' => NULL,
           '#list_type' => $this->options['type'],
-        );
+        ];
       }
       return drupal_render($render);
     }
@@ -110,7 +110,7 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
       return $this->items[$field];
     }
 
-    return array();
+    return [];
   }
 
 }

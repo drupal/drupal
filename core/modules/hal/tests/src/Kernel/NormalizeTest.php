@@ -26,135 +26,135 @@ class NormalizeTest extends NormalizerTestBase {
    * Tests the normalize function.
    */
   public function testNormalize() {
-    $target_entity_de = EntityTest::create((array('langcode' => 'de', 'field_test_entity_reference' => NULL)));
+    $target_entity_de = EntityTest::create((['langcode' => 'de', 'field_test_entity_reference' => NULL]));
     $target_entity_de->save();
-    $target_entity_en = EntityTest::create((array('langcode' => 'en', 'field_test_entity_reference' => NULL)));
+    $target_entity_en = EntityTest::create((['langcode' => 'en', 'field_test_entity_reference' => NULL]));
     $target_entity_en->save();
 
     // Create a German entity.
-    $values = array(
+    $values = [
       'langcode' => 'de',
       'name' => $this->randomMachineName(),
-      'field_test_text' => array(
+      'field_test_text' => [
         'value' => $this->randomMachineName(),
         'format' => 'full_html',
-      ),
-      'field_test_entity_reference' => array(
+      ],
+      'field_test_entity_reference' => [
         'target_id' => $target_entity_de->id(),
-      ),
-    );
+      ],
+    ];
     // Array of translated values.
-    $translation_values = array(
+    $translation_values = [
       'name' => $this->randomMachineName(),
-      'field_test_entity_reference' => array(
+      'field_test_entity_reference' => [
         'target_id' => $target_entity_en->id(),
-      )
-    );
+      ]
+    ];
 
     $entity = EntityTest::create($values);
     $entity->save();
     // Add an English value for name and entity reference properties.
-    $entity->addTranslation('en')->set('name', array(0 => array('value' => $translation_values['name'])));
-    $entity->getTranslation('en')->set('field_test_entity_reference', array(0 => $translation_values['field_test_entity_reference']));
+    $entity->addTranslation('en')->set('name', [0 => ['value' => $translation_values['name']]]);
+    $entity->getTranslation('en')->set('field_test_entity_reference', [0 => $translation_values['field_test_entity_reference']]);
     $entity->save();
 
-    $type_uri = Url::fromUri('base:rest/type/entity_test/entity_test', array('absolute' => TRUE))->toString();
-    $relation_uri = Url::fromUri('base:rest/relation/entity_test/entity_test/field_test_entity_reference', array('absolute' => TRUE))->toString();
+    $type_uri = Url::fromUri('base:rest/type/entity_test/entity_test', ['absolute' => TRUE])->toString();
+    $relation_uri = Url::fromUri('base:rest/relation/entity_test/entity_test/field_test_entity_reference', ['absolute' => TRUE])->toString();
 
-    $expected_array = array(
-      '_links' => array(
-        'curies' => array(
-          array(
+    $expected_array = [
+      '_links' => [
+        'curies' => [
+          [
             'href' => '/relations',
             'name' => 'site',
             'templated' => TRUE,
-          ),
-        ),
-        'self' => array(
+          ],
+        ],
+        'self' => [
           'href' => $this->getEntityUri($entity),
-        ),
-        'type' => array(
+        ],
+        'type' => [
           'href' => $type_uri,
-        ),
-        $relation_uri => array(
-          array(
+        ],
+        $relation_uri => [
+          [
             'href' => $this->getEntityUri($target_entity_de),
             'lang' => 'de',
-          ),
-          array(
+          ],
+          [
             'href' => $this->getEntityUri($target_entity_en),
             'lang' => 'en',
-          ),
-        ),
-      ),
-      '_embedded' => array(
-        $relation_uri => array(
-          array(
-            '_links' => array(
-              'self' => array(
+          ],
+        ],
+      ],
+      '_embedded' => [
+        $relation_uri => [
+          [
+            '_links' => [
+              'self' => [
                 'href' => $this->getEntityUri($target_entity_de),
-              ),
-              'type' => array(
+              ],
+              'type' => [
                 'href' => $type_uri,
-              ),
-            ),
-            'uuid' => array(
-              array(
+              ],
+            ],
+            'uuid' => [
+              [
                 'value' => $target_entity_de->uuid(),
-              ),
-            ),
+              ],
+            ],
             'lang' => 'de',
-          ),
-          array(
-            '_links' => array(
-              'self' => array(
+          ],
+          [
+            '_links' => [
+              'self' => [
                 'href' => $this->getEntityUri($target_entity_en),
-              ),
-              'type' => array(
+              ],
+              'type' => [
                 'href' => $type_uri,
-              ),
-            ),
-            'uuid' => array(
-              array(
+              ],
+            ],
+            'uuid' => [
+              [
                 'value' => $target_entity_en->uuid(),
-              ),
-            ),
+              ],
+            ],
             'lang' => 'en',
-          ),
-        ),
-      ),
-      'id' => array(
-        array(
+          ],
+        ],
+      ],
+      'id' => [
+        [
           'value' => $entity->id(),
-        ),
-      ),
-      'uuid' => array(
-        array(
+        ],
+      ],
+      'uuid' => [
+        [
           'value' => $entity->uuid(),
-        ),
-      ),
-      'langcode' => array(
-        array(
+        ],
+      ],
+      'langcode' => [
+        [
           'value' => 'de',
-        ),
-      ),
-      'name' => array(
-        array(
+        ],
+      ],
+      'name' => [
+        [
           'value' => $values['name'],
           'lang' => 'de',
-        ),
-        array(
+        ],
+        [
           'value' => $translation_values['name'],
           'lang' => 'en',
-        ),
-      ),
-      'field_test_text' => array(
-        array(
+        ],
+      ],
+      'field_test_text' => [
+        [
           'value' => $values['field_test_text']['value'],
           'format' => $values['field_test_text']['format'],
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     $normalized = $this->serializer->normalize($entity, $this->format);
     $this->assertEqual($normalized['_links']['self'], $expected_array['_links']['self'], 'self link placed correctly.');

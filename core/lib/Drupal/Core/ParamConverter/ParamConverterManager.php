@@ -18,7 +18,7 @@ class ParamConverterManager implements ParamConverterManagerInterface {
    *
    * @var array
    */
-  protected $converters = array();
+  protected $converters = [];
 
   /**
    * {@inheritdoc}

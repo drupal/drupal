@@ -214,7 +214,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
         continue;
       }
 
-      $hostMatches = array();
+      $hostMatches = [];
       if ($compiledRoute->getHostRegex() && !preg_match($compiledRoute->getHostRegex(), $this->context->getHost(), $hostMatches)) {
         $routes->remove($name);
         continue;
@@ -383,7 +383,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   /**
    * {@inheritdoc}
    */
-  public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH) {
+  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH) {
     @trigger_error('Use the \Drupal\Core\Url object instead', E_USER_DEPRECATED);
     return $this->urlGenerator->generate($name, $parameters, $referenceType);
   }

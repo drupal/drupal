@@ -17,15 +17,15 @@ class MenuUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu_ui');
+  public static $modules = ['menu_ui'];
 
   /**
    * Tests Menu uninstall.
    */
   public function testMenuUninstall() {
-    \Drupal::service('module_installer')->uninstall(array('menu_ui'));
+    \Drupal::service('module_installer')->uninstall(['menu_ui']);
 
-    \Drupal::entityManager()->getStorage('menu')->resetCache(array('admin'));
+    \Drupal::entityManager()->getStorage('menu')->resetCache(['admin']);
 
     $this->assertTrue(Menu::load('admin'), 'The \'admin\' menu still exists after uninstalling Menu UI module.');
   }

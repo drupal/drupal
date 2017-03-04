@@ -44,7 +44,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     parent::setUp();
 
     $container = new ContainerBuilder();
-    $config_factory = $this->getConfigFactoryStub(array());
+    $config_factory = $this->getConfigFactoryStub([]);
     $container->set('config.factory', $config_factory);
     $container->set('app.root', $this->root);
     \Drupal::setContainer($container);
@@ -115,7 +115,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $property->setValue($manager, $factory);
 
     $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $manager->setCacheBackend($cache_backend, 'local_task.en', array('local_task'));
+    $manager->setCacheBackend($cache_backend, 'local_task.en', ['local_task']);
 
     return $manager;
   }
@@ -130,9 +130,9 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
    * @param array $route_params
    *   (optional) a list of route parameters used to resolve tasks.
    */
-  protected function assertLocalTasks($route_name, $expected_tasks, $route_params = array()) {
+  protected function assertLocalTasks($route_name, $expected_tasks, $route_params = []) {
 
-    $directory_list = array();
+    $directory_list = [];
     foreach ($this->directoryList as $key => $value) {
       $directory_list[$key] = $this->root . '/' . $value;
     }
@@ -148,7 +148,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     // using the DefaultPluginManager base means we get into dependency soup
     // because its factories create method and pulling services off the \Drupal
     // container.
-    $tasks = array();
+    $tasks = [];
     foreach ($tmp_tasks as $level => $level_tasks) {
       $tasks[$level] = array_keys($level_tasks);
     }

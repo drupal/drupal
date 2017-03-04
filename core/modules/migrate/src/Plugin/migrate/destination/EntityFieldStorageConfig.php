@@ -25,7 +25,7 @@ class EntityFieldStorageConfig extends EntityConfigBase {
    */
   public function rollback(array $destination_identifier) {
     $destination_identifier = implode('.', $destination_identifier);
-    parent::rollback(array($destination_identifier));
+    parent::rollback([$destination_identifier]);
   }
 
 }

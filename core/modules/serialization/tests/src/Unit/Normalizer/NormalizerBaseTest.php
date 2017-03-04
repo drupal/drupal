@@ -45,20 +45,20 @@ class NormalizerBaseTest extends UnitTestCase {
    *   An array of provider data for testSupportsNormalization.
    */
   public function providerTestSupportsNormalization() {
-    return array(
+    return [
       // Something that is not an object should return FALSE immediately.
-      array(FALSE, array()),
+      [FALSE, []],
       // An object with no class set should return FALSE.
-      array(FALSE, new \stdClass()),
+      [FALSE, new \stdClass()],
       // Set a supported Class.
-      array(TRUE, new \stdClass(), 'stdClass'),
+      [TRUE, new \stdClass(), 'stdClass'],
       // Set a supported interface.
-      array(TRUE, new \RecursiveArrayIterator(), 'RecursiveIterator'),
+      [TRUE, new \RecursiveArrayIterator(), 'RecursiveIterator'],
       // Set a different class.
-      array(FALSE, new \stdClass(), 'ArrayIterator'),
+      [FALSE, new \stdClass(), 'ArrayIterator'],
       // Set a different interface.
-      array(FALSE, new \stdClass(), 'RecursiveIterator'),
-    );
+      [FALSE, new \stdClass(), 'RecursiveIterator'],
+    ];
   }
 
 }

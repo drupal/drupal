@@ -19,12 +19,12 @@ class FieldApiDataTest extends FieldTestBase {
     $field_names = $this->setUpFieldStorages(1);
 
     // Attach the field to nodes only.
-    $field = array(
+    $field = [
       'field_name' => $field_names[0],
       'entity_type' => 'node',
       'bundle' => 'page',
       'label' => 'GiraffeA" label'
-    );
+    ];
     FieldConfig::create($field)->save();
 
     // Attach the same field to a different bundle with a different label.
@@ -38,9 +38,9 @@ class FieldApiDataTest extends FieldTestBase {
 
     // Now create some example nodes/users for the view result.
     for ($i = 0; $i < 5; $i++) {
-      $edit = array(
-        $field_names[0] => array((array('value' => $this->randomMachineName()))),
-      );
+      $edit = [
+        $field_names[0] => [(['value' => $this->randomMachineName()])],
+      ];
       $nodes[] = $this->drupalCreateNode($edit);
     }
   }
@@ -63,25 +63,25 @@ class FieldApiDataTest extends FieldTestBase {
     $this->assertTrue(isset($data[$current_table]['table']['join']['node_field_data']));
     $this->assertTrue(isset($data[$revision_table]['table']['join']['node_field_revision']));
 
-    $expected_join = array(
+    $expected_join = [
       'table' => $current_table,
       'left_field' => 'nid',
       'field' => 'entity_id',
-      'extra' => array(
-        array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
-        array('left_field' => 'langcode', 'field' => 'langcode'),
-      ),
-    );
+      'extra' => [
+        ['field' => 'deleted', 'value' => 0, 'numeric' => TRUE],
+        ['left_field' => 'langcode', 'field' => 'langcode'],
+      ],
+    ];
     $this->assertEqual($expected_join, $data[$current_table]['table']['join']['node_field_data']);
-    $expected_join = array(
+    $expected_join = [
       'table' => $revision_table,
       'left_field' => 'vid',
       'field' => 'revision_id',
-      'extra' => array(
-        array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
-        array('left_field' => 'langcode', 'field' => 'langcode'),
-      ),
-    );
+      'extra' => [
+        ['field' => 'deleted', 'value' => 0, 'numeric' => TRUE],
+        ['left_field' => 'langcode', 'field' => 'langcode'],
+      ],
+    ];
     $this->assertEqual($expected_join, $data[$revision_table]['table']['join']['node_field_revision']);
 
     // Test click sortable.
@@ -124,7 +124,7 @@ class FieldApiDataTest extends FieldTestBase {
    */
   protected function getViewsData() {
     $views_data = $this->container->get('views.views_data');
-    $data = array();
+    $data = [];
 
     // Check the table and the joins of the first field.
     // Attached to node only.

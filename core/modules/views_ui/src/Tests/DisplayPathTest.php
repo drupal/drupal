@@ -21,14 +21,14 @@ class DisplayPathTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('menu_ui');
+  public static $modules = ['menu_ui'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view', 'test_page_display_menu');
+  public static $testViews = ['test_view', 'test_page_display_menu'];
 
   /**
    * Runs the tests.
@@ -46,9 +46,9 @@ class DisplayPathTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display and check the appearing text.
-    $this->drupalPostForm(NULL, array(), 'Add Page');
+    $this->drupalPostForm(NULL, [], 'Add Page');
     $this->assertText(t('No path is set'), 'The right text appears if no path was set.');
-    $this->assertNoLink(t('View @display', array('@display' => 'page')), 'No view page link found on the page.');
+    $this->assertNoLink(t('View @display', ['@display' => 'page']), 'No view page link found on the page.');
 
     // Save a path and make sure the summary appears as expected.
     $random_path = $this->randomMachineName();
@@ -56,7 +56,7 @@ class DisplayPathTest extends UITestBase {
     //   longer use Url::fromUri(), and this path will be able to contain ':'.
     $random_path = str_replace(':', '', $random_path);
 
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $random_path), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => $random_path], t('Apply'));
     $this->assertText('/' . $random_path, 'The custom path appears in the summary.');
     $display_link_text = t('View @display', ['@display' => 'Page']);
     $this->assertLink($display_link_text, 0, 'view page link found on the page.');
@@ -69,13 +69,13 @@ class DisplayPathTest extends UITestBase {
    */
   public function doPathXssFilterTest() {
     $this->drupalGet('admin/structure/views/view/test_view');
-    $this->drupalPostForm(NULL, array(), 'Add Page');
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_2/path', array('path' => '<object>malformed_path</object>'), t('Apply'));
-    $this->drupalPostForm(NULL, array(), 'Add Page');
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_3/path', array('path' => '<script>alert("hello");</script>'), t('Apply'));
-    $this->drupalPostForm(NULL, array(), 'Add Page');
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_4/path', array('path' => '<script>alert("hello I have placeholders %");</script>'), t('Apply'));
-    $this->drupalPostForm('admin/structure/views/view/test_view', array(), t('Save'));
+    $this->drupalPostForm(NULL, [], 'Add Page');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_2/path', ['path' => '<object>malformed_path</object>'], t('Apply'));
+    $this->drupalPostForm(NULL, [], 'Add Page');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_3/path', ['path' => '<script>alert("hello");</script>'], t('Apply'));
+    $this->drupalPostForm(NULL, [], 'Add Page');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_4/path', ['path' => '<script>alert("hello I have placeholders %");</script>'], t('Apply'));
+    $this->drupalPostForm('admin/structure/views/view/test_view', [], t('Save'));
     $this->drupalGet('admin/structure/views');
     // The anchor text should be escaped.
     $this->assertEscaped('/<object>malformed_path</object>');
@@ -92,11 +92,11 @@ class DisplayPathTest extends UITestBase {
   protected function doAdvancedPathsValidationTest() {
     $url = 'admin/structure/views/nojs/display/test_view/page_1/path';
 
-    $this->drupalPostForm($url, array('path' => '%/magrathea'), t('Apply'));
+    $this->drupalPostForm($url, ['path' => '%/magrathea'], t('Apply'));
     $this->assertUrl($url);
     $this->assertText('"%" may not be used for the first segment of a path.');
 
-    $this->drupalPostForm($url, array('path' => 'user/%1/example'), t('Apply'));
+    $this->drupalPostForm($url, ['path' => 'user/%1/example'], t('Apply'));
     $this->assertUrl($url);
     $this->assertText("Numeric placeholders may not be used. Please use plain placeholders (%).");
   }
@@ -106,51 +106,51 @@ class DisplayPathTest extends UITestBase {
    */
   public function testDeleteWithNoPath() {
     $this->drupalGet('admin/structure/views/view/test_view');
-    $this->drupalPostForm(NULL, array(), t('Add Page'));
-    $this->drupalPostForm(NULL, array(), t('Delete Page'));
-    $this->drupalPostForm(NULL, array(), t('Save'));
-    $this->assertRaw(t('The view %view has been saved.', array('%view' => 'Test view')));
+    $this->drupalPostForm(NULL, [], t('Add Page'));
+    $this->drupalPostForm(NULL, [], t('Delete Page'));
+    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->assertRaw(t('The view %view has been saved.', ['%view' => 'Test view']));
   }
 
   /**
    * Tests the menu and tab option form.
    */
   public function testMenuOptions() {
-    $this->container->get('module_installer')->install(array('menu_ui'));
+    $this->container->get('module_installer')->install(['menu_ui']);
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display.
-    $this->drupalPostForm(NULL, array(), 'Add Page');
+    $this->drupalPostForm(NULL, [], 'Add Page');
 
     // Add an invalid path (only fragment).
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => '#foo'), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => '#foo'], t('Apply'));
     $this->assertText('Path is empty');
 
     // Add an invalid path with a query.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => 'foo?bar'), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => 'foo?bar'], t('Apply'));
     $this->assertText('No query allowed.');
 
     // Add an invalid path with just a query.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => '?bar'), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => '?bar'], t('Apply'));
     $this->assertText('Path is empty');
 
     // Provide a random, valid path string.
     $random_string = $this->randomMachineName();
 
     // Save a path.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $random_string), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => $random_string], t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_view');
 
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/menu', array('menu[type]' => 'default tab', 'menu[title]' => 'Test tab title'), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/menu', ['menu[type]' => 'default tab', 'menu[title]' => 'Test tab title'], t('Apply'));
     $this->assertResponse(200);
     $this->assertUrl('admin/structure/views/nojs/display/test_view/page_1/tab_options');
 
-    $this->drupalPostForm(NULL, array('tab_options[type]' => 'tab', 'tab_options[title]' => $this->randomString()), t('Apply'));
+    $this->drupalPostForm(NULL, ['tab_options[type]' => 'tab', 'tab_options[title]' => $this->randomString()], t('Apply'));
     $this->assertResponse(200);
     $this->assertUrl('admin/structure/views/view/test_view/edit/page_1');
 
     $this->drupalGet('admin/structure/views/view/test_view');
-    $this->assertLink(t('Tab: @title', array('@title' => 'Test tab title')));
+    $this->assertLink(t('Tab: @title', ['@title' => 'Test tab title']));
     // If it's a default tab, it should also have an additional settings link.
     $this->assertLinkByHref('admin/structure/views/nojs/display/test_view/page_1/tab_options');
 

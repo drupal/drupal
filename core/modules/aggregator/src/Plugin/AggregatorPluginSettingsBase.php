@@ -25,7 +25,7 @@ abstract class AggregatorPluginSettingsBase extends PluginBase implements Plugin
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array();
+    return [];
   }
 
   /**
@@ -38,7 +38,7 @@ abstract class AggregatorPluginSettingsBase extends PluginBase implements Plugin
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    return array();
+    return [];
   }
 
 }

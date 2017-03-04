@@ -15,9 +15,9 @@ class LocaleLocalTasksTest extends LocalTaskIntegrationTestBase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->directoryList = array(
+    $this->directoryList = [
       'locale' => 'core/modules/locale',
-    );
+    ];
     parent::setUp();
   }
 
@@ -27,9 +27,9 @@ class LocaleLocalTasksTest extends LocalTaskIntegrationTestBase {
    * @dataProvider getLocalePageRoutes
    */
   public function testLocalePageLocalTasks($route) {
-    $tasks = array(
-      0 => array('locale.translate_page', 'locale.translate_import', 'locale.translate_export', 'locale.settings'),
-    );
+    $tasks = [
+      0 => ['locale.translate_page', 'locale.translate_import', 'locale.translate_export', 'locale.settings'],
+    ];
     $this->assertLocalTasks($route, $tasks);
   }
 
@@ -37,12 +37,12 @@ class LocaleLocalTasksTest extends LocalTaskIntegrationTestBase {
    * Provides a list of routes to test.
    */
   public function getLocalePageRoutes() {
-    return array(
-      array('locale.translate_page'),
-      array('locale.translate_import'),
-      array('locale.translate_export'),
-      array('locale.settings'),
-    );
+    return [
+      ['locale.translate_page'],
+      ['locale.translate_import'],
+      ['locale.translate_export'],
+      ['locale.settings'],
+    ];
   }
 
 }

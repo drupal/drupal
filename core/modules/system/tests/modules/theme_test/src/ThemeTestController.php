@@ -17,9 +17,9 @@ class ThemeTestController extends ControllerBase {
    *   Render array containing a theme.
    */
   public function functionTemplateOverridden() {
-    return array(
+    return [
       '#theme' => 'theme_test_function_template_override',
-    );
+    ];
   }
 
   /**
@@ -29,13 +29,13 @@ class ThemeTestController extends ControllerBase {
    *   A render array containing custom stylesheets.
    */
   public function testInfoStylesheets() {
-    return array(
-      '#attached' => array(
-        'library' => array(
+    return [
+      '#attached' => [
+        'library' => [
           'theme_test/theme_stylesheets_override_and_remove_test',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -45,7 +45,7 @@ class ThemeTestController extends ControllerBase {
    *   A render array containing a theme override.
    */
   public function testTemplate() {
-    return ['#markup' => \Drupal::theme()->render('theme_test_template_test', array())];
+    return ['#markup' => \Drupal::theme()->render('theme_test_template_test', [])];
   }
 
   /**
@@ -55,12 +55,12 @@ class ThemeTestController extends ControllerBase {
    *   A render array containing an inline template.
    */
   public function testInlineTemplate() {
-    $element = array();
-    $element['test'] = array(
+    $element = [];
+    $element['test'] = [
       '#type' => 'inline_template',
       '#template' => 'test-with-context {{ llama }}',
-      '#context' => array('llama' => 'muuh'),
-    );
+      '#context' => ['llama' => 'muuh'],
+    ];
     return $element;
   }
 
@@ -71,7 +71,7 @@ class ThemeTestController extends ControllerBase {
    *   An HTML string containing the themed output.
    */
   public function testSuggestion() {
-    return ['#markup' => \Drupal::theme()->render(array('theme_test__suggestion', 'theme_test'), array())];
+    return ['#markup' => \Drupal::theme()->render(['theme_test__suggestion', 'theme_test'], [])];
   }
 
   /**
@@ -88,35 +88,35 @@ class ThemeTestController extends ControllerBase {
    * Menu callback for testing suggestion alter hooks with template files.
    */
   function suggestionProvided() {
-    return array('#theme' => 'theme_test_suggestion_provided');
+    return ['#theme' => 'theme_test_suggestion_provided'];
   }
 
   /**
    * Menu callback for testing suggestion alter hooks with template files.
    */
   function suggestionAlter() {
-    return array('#theme' => 'theme_test_suggestions');
+    return ['#theme' => 'theme_test_suggestions'];
   }
 
   /**
    * Menu callback for testing hook_theme_suggestions_alter().
    */
   function generalSuggestionAlter() {
-    return array('#theme' => 'theme_test_general_suggestions');
+    return ['#theme' => 'theme_test_general_suggestions'];
   }
 
   /**
    * Menu callback for testing suggestion alter hooks with specific suggestions.
    */
   function specificSuggestionAlter() {
-    return array('#theme' => 'theme_test_specific_suggestions__variant');
+    return ['#theme' => 'theme_test_specific_suggestions__variant'];
   }
 
   /**
    * Menu callback for testing suggestion alter hooks with theme functions.
    */
   function functionSuggestionAlter() {
-    return array('#theme' => 'theme_test_function_suggestions');
+    return ['#theme' => 'theme_test_function_suggestions'];
   }
 
 
@@ -124,7 +124,7 @@ class ThemeTestController extends ControllerBase {
    * Menu callback for testing includes with suggestion alter hooks.
    */
   function suggestionAlterInclude() {
-    return array('#theme' => 'theme_test_suggestions_include');
+    return ['#theme' => 'theme_test_suggestions_include'];
   }
 
   /**

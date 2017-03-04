@@ -33,15 +33,15 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->standardSettings = array(
+    $this->standardSettings = [
       'directory' => $this->directory,
       'bin' => 'test',
-    );
-    $this->readonlyStorage = array(
+    ];
+    $this->readonlyStorage = [
       'directory' => $this->directory,
       // Let this read from the bin where the other instance is writing.
       'bin' => 'test',
-    );
+    ];
   }
 
   /**

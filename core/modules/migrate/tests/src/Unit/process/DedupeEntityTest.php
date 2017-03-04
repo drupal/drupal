@@ -34,9 +34,9 @@ class DedupeEntityTest extends MigrateProcessTestCase {
    *
    * @var array
    */
-  protected $migrationConfiguration = array(
+  protected $migrationConfiguration = [
     'id' => 'test',
-  );
+  ];
 
   /**
    * {@inheritdoc}
@@ -64,16 +64,16 @@ class DedupeEntityTest extends MigrateProcessTestCase {
    * @dataProvider providerTestDedupe
    */
   public function testDedupe($count, $postfix = '', $start = NULL, $length = NULL) {
-    $configuration = array(
+    $configuration = [
       'entity_type' => 'test_entity_type',
       'field' => 'test_field',
-    );
+    ];
     if ($postfix) {
       $configuration['postfix'] = $postfix;
     }
     $configuration['start'] = isset($start) ? $start : NULL;
     $configuration['length'] = isset($length) ? $length : NULL;
-    $plugin = new DedupeEntity($configuration, 'dedupe_entity', array(), $this->getMigration(), $this->entityTypeManager);
+    $plugin = new DedupeEntity($configuration, 'dedupe_entity', [], $this->getMigration(), $this->entityTypeManager);
     $this->entityQueryExpects($count);
     $value = $this->randomMachineName(32);
     $actual = $plugin->transform($value, $this->migrateExecutable, $this->row, 'testproperty');
@@ -86,12 +86,12 @@ class DedupeEntityTest extends MigrateProcessTestCase {
    * Tests that invalid start position throws an exception.
    */
   public function testDedupeEntityInvalidStart() {
-    $configuration = array(
+    $configuration = [
       'entity_type' => 'test_entity_type',
       'field' => 'test_field',
       'start' => 'foobar',
-    );
-    $plugin = new DedupeEntity($configuration, 'dedupe_entity', array(), $this->getMigration(), $this->entityTypeManager);
+    ];
+    $plugin = new DedupeEntity($configuration, 'dedupe_entity', [], $this->getMigration(), $this->entityTypeManager);
     $this->setExpectedException('Drupal\migrate\MigrateException', 'The start position configuration key should be an integer. Omit this key to capture from the beginning of the string.');
     $plugin->transform('test_start', $this->migrateExecutable, $this->row, 'testproperty');
   }
@@ -100,12 +100,12 @@ class DedupeEntityTest extends MigrateProcessTestCase {
    * Tests that invalid length option throws an exception.
    */
   public function testDedupeEntityInvalidLength() {
-    $configuration = array(
+    $configuration = [
       'entity_type' => 'test_entity_type',
       'field' => 'test_field',
       'length' => 'foobar',
-    );
-    $plugin = new DedupeEntity($configuration, 'dedupe_entity', array(), $this->getMigration(), $this->entityTypeManager);
+    ];
+    $plugin = new DedupeEntity($configuration, 'dedupe_entity', [], $this->getMigration(), $this->entityTypeManager);
     $this->setExpectedException('Drupal\migrate\MigrateException', 'The character length configuration key should be an integer. Omit this key to capture the entire string.');
     $plugin->transform('test_length', $this->migrateExecutable, $this->row, 'testproperty');
   }
@@ -114,40 +114,40 @@ class DedupeEntityTest extends MigrateProcessTestCase {
    * Data provider for testDedupe().
    */
   public function providerTestDedupe() {
-    return array(
+    return [
       // Tests no duplication.
-      array(0),
+      [0],
       // Tests no duplication and start position.
-      array(0, NULL, 10),
+      [0, NULL, 10],
       // Tests no duplication, start position, and length.
-      array(0, NULL, 5, 10),
+      [0, NULL, 5, 10],
       // Tests no duplication and length.
-      array(0, NULL, NULL, 10),
+      [0, NULL, NULL, 10],
       // Tests duplication.
-      array(3),
+      [3],
       // Tests duplication and start position.
-      array(3, NULL, 10),
+      [3, NULL, 10],
       // Tests duplication, start position, and length.
-      array(3, NULL, 5, 10),
+      [3, NULL, 5, 10],
       // Tests duplication and length.
-      array(3, NULL, NULL, 10),
+      [3, NULL, NULL, 10],
       // Tests no duplication and postfix.
-      array(0, '_'),
+      [0, '_'],
       // Tests no duplication, postfix, and start position.
-      array(0, '_', 5),
+      [0, '_', 5],
       // Tests no duplication, postfix, start position, and length.
-      array(0, '_', 5, 10),
+      [0, '_', 5, 10],
       // Tests no duplication, postfix, and length.
-      array(0, '_', NULL, 10),
+      [0, '_', NULL, 10],
       // Tests duplication and postfix.
-      array(2, '_'),
+      [2, '_'],
       // Tests duplication, postfix, and start position.
-      array(2, '_', 5),
+      [2, '_', 5],
       // Tests duplication, postfix, start position, and length.
-      array(2, '_', 5, 10),
+      [2, '_', 5, 10],
       // Tests duplication, postfix, and length.
-      array(2, '_', NULL, 10),
-    );
+      [2, '_', NULL, 10],
+    ];
   }
 
   /**
@@ -172,12 +172,12 @@ class DedupeEntityTest extends MigrateProcessTestCase {
    * Test deduplicating only migrated entities.
    */
   public function testDedupeMigrated() {
-    $configuration = array(
+    $configuration = [
       'entity_type' => 'test_entity_type',
       'field' => 'test_field',
       'migrated' => TRUE,
-    );
-    $plugin = new DedupeEntity($configuration, 'dedupe_entity', array(), $this->getMigration(), $this->entityTypeManager);
+    ];
+    $plugin = new DedupeEntity($configuration, 'dedupe_entity', [], $this->getMigration(), $this->entityTypeManager);
 
     // Setup the entityQuery used in DedupeEntity::exists. The map, $map, is
     // an array consisting of the four input parameters to the query condition

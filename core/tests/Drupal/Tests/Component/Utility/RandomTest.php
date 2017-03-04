@@ -29,7 +29,7 @@ class RandomTest extends UnitTestCase {
    * @covers ::string
    */
   public function testRandomStringUniqueness() {
-    $strings = array();
+    $strings = [];
     $random = new Random();
     for ($i = 0; $i <= 50; $i++) {
       $str = $random->string(1, TRUE);
@@ -44,7 +44,7 @@ class RandomTest extends UnitTestCase {
    * @covers ::name
    */
   public function testRandomNamesUniqueness() {
-    $names = array();
+    $names = [];
     $random = new Random();
     for ($i = 0; $i <= 10; $i++) {
       $str = $random->name(1, TRUE);
@@ -138,7 +138,7 @@ class RandomTest extends UnitTestCase {
   public function testRandomStringValidator() {
     $random = new Random();
     $this->firstStringGenerated = '';
-    $str = $random->string(1, TRUE, array($this, '_RandomStringValidate'));
+    $str = $random->string(1, TRUE, [$this, '_RandomStringValidate']);
     $this->assertNotEquals($this->firstStringGenerated, $str);
   }
 

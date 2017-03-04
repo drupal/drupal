@@ -31,11 +31,11 @@ class ViewsPluginManager extends DefaultPluginManager {
     $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($type);
     parent::__construct("Plugin/views/$type", $namespaces, $module_handler, 'Drupal\views\Plugin\views\ViewsPluginInterface', $plugin_definition_annotation_name);
 
-    $this->defaults += array(
+    $this->defaults += [
       'parent' => 'parent',
       'plugin_type' => $type,
       'register_theme' => TRUE,
-    );
+    ];
 
     $this->alterInfo('views_plugins_' . $type);
     $this->setCacheBackend($cache_backend, "views:$type");

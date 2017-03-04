@@ -33,9 +33,9 @@ function hook_file_download($uri) {
   $scheme = file_uri_scheme($uri);
   $target = file_uri_target($uri);
   if ($scheme == 'temporary' && $target == 'config.tar.gz') {
-    return array(
+    return [
       'Content-disposition' => 'attachment; filename="config.tar.gz"',
-    );
+    ];
   }
 }
 
@@ -64,11 +64,11 @@ function hook_file_url_alter(&$uri) {
 
   $cdn1 = 'http://cdn1.example.com';
   $cdn2 = 'http://cdn2.example.com';
-  $cdn_extensions = array('css', 'js', 'gif', 'jpg', 'jpeg', 'png');
+  $cdn_extensions = ['css', 'js', 'gif', 'jpg', 'jpeg', 'png'];
 
   // Most CDNs don't support private file transfers without a lot of hassle,
   // so don't support this in the common case.
-  $schemes = array('public');
+  $schemes = ['public'];
 
   $scheme = file_uri_scheme($uri);
 
@@ -166,11 +166,11 @@ function hook_archiver_info_alter(&$info) {
  * @see drupal_get_filetransfer_info()
  */
 function hook_filetransfer_info() {
-  $info['sftp'] = array(
+  $info['sftp'] = [
     'title' => t('SFTP (Secure FTP)'),
     'class' => 'Drupal\Core\FileTransfer\SFTP',
     'weight' => 10,
-  );
+  ];
   return $info;
 }
 

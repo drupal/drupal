@@ -26,7 +26,7 @@ class MenuNodeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu_ui', 'test_page_test', 'node', 'block', 'locale', 'language', 'content_translation');
+  public static $modules = ['menu_ui', 'test_page_test', 'node', 'block', 'locale', 'language', 'content_translation'];
 
   protected function setUp() {
     parent::setUp();
@@ -34,9 +34,9 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalPlaceBlock('system_menu_block:main');
     $this->drupalPlaceBlock('page_title_block');
 
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
-    $this->editor = $this->drupalCreateUser(array(
+    $this->editor = $this->drupalCreateUser([
       'access administration pages',
       'administer content types',
       'administer menu',
@@ -47,7 +47,7 @@ class MenuNodeTest extends WebTestBase {
       'update content translations',
       'delete content translations',
       'translate any entity',
-    ));
+    ]);
     $this->drupalLogin($this->editor);
   }
 
@@ -68,9 +68,9 @@ class MenuNodeTest extends WebTestBase {
     $this->assertPattern('/<input .* id="edit-menu-title" .* maxlength="' . $max_length . '" .* \/>/', 'Menu link title field has correct maxlength in node add form.');
 
     // Disable the default main menu, so that no menus are enabled.
-    $edit = array(
+    $edit = [
       'menu_options[main]' => FALSE,
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
 
     // Verify that no menu settings are displayed and nodes can be created.
@@ -78,47 +78,47 @@ class MenuNodeTest extends WebTestBase {
     $this->assertText(t('Create Basic page'));
     $this->assertNoText(t('Menu settings'));
     $node_title = $this->randomMachineName();
-    $edit = array(
+    $edit = [
       'title[0][value]' => $node_title,
       'body[0][value]' => $this->randomString(),
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($node_title);
     $this->assertEqual($node->getTitle(), $edit['title[0][value]']);
 
     // Test that we cannot set a menu item from a menu that is not set as
     // available.
-    $edit = array(
+    $edit = [
       'menu_options[tools]' => 1,
       'menu_parent' => 'main:',
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertText(t('The selected menu item is not under one of the selected menus.'));
-    $this->assertNoRaw(t('The content type %name has been updated.', array('%name' => 'Basic page')));
+    $this->assertNoRaw(t('The content type %name has been updated.', ['%name' => 'Basic page']));
 
     // Enable Tools menu as available menu.
-    $edit = array(
+    $edit = [
       'menu_options[main]' => 1,
       'menu_options[tools]' => 1,
       'menu_parent' => 'main:',
-    );
+    ];
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %name has been updated.', array('%name' => 'Basic page')));
+    $this->assertRaw(t('The content type %name has been updated.', ['%name' => 'Basic page']));
 
     // Test that we can preview a node that will create a menu item.
-    $edit = array(
+    $edit = [
       'title[0][value]' => $node_title,
       'menu[enabled]' => 1,
       'menu[title]' => 'Test preview',
-    );
+    ];
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 
     // Create a node.
     $node_title = $this->randomMachineName();
-    $edit = array(
+    $edit = [
       'title[0][value]' => $node_title,
       'body[0][value]' => $this->randomString(),
-    );
+    ];
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($node_title);
     // Assert that there is no link for the node.
@@ -126,9 +126,9 @@ class MenuNodeTest extends WebTestBase {
     $this->assertNoLink($node_title);
 
     // Edit the node, enable the menu link setting, but skip the link title.
-    $edit = array(
+    $edit = [
       'menu[enabled]' => 1,
-    );
+    ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     // Assert that there is no link for the node.
     $this->drupalGet('test-page');
@@ -165,11 +165,11 @@ class MenuNodeTest extends WebTestBase {
     // Log back in as normal user.
     $this->drupalLogin($this->editor);
     // Edit the node and create a menu link.
-    $edit = array(
+    $edit = [
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
       'menu[weight]' => 17,
-    );
+    ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     // Assert that the link exists.
     $this->drupalGet('test-page');
@@ -190,20 +190,20 @@ class MenuNodeTest extends WebTestBase {
     $this->assertFalse($link->isEnabled(), 'Saving a node with a disabled menu link keeps the menu link disabled.');
 
     // Edit the node and remove the menu link.
-    $edit = array(
+    $edit = [
       'menu[enabled]' => FALSE,
-    );
+    ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     // Assert that there is no link for the node.
     $this->drupalGet('test-page');
     $this->assertNoLink($node_title);
 
     // Add a menu link to the Administration menu.
-    $item = MenuLinkContent::create(array(
+    $item = MenuLinkContent::create([
       'link' => [['uri' => 'entity:node/' . $node->id()]],
       'title' => $this->randomMachineName(16),
       'menu_name' => 'admin',
-    ));
+    ]);
     $item->save();
 
     // Assert that disabled Administration menu is not shown on the
@@ -219,14 +219,14 @@ class MenuNodeTest extends WebTestBase {
     $item->menu_name->value = 'tools';
     $item->save();
     // Create a second node.
-    $child_node = $this->drupalCreateNode(array('type' => 'article'));
+    $child_node = $this->drupalCreateNode(['type' => 'article']);
     // Assign a menu link to the second node, being a child of the first one.
-    $child_item = MenuLinkContent::create(array(
+    $child_item = MenuLinkContent::create([
       'link' => [['uri' => 'entity:node/' . $child_node->id()]],
       'title' => $this->randomMachineName(16),
       'parent' => $item->getPluginId(),
       'menu_name' => $item->getMenuName(),
-    ));
+    ]);
     $child_item->save();
     // Edit the first node.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -242,7 +242,7 @@ class MenuNodeTest extends WebTestBase {
    */
   function testMultilingualMenuNodeFormWidget() {
     // Setup languages.
-    $langcodes = array('de');
+    $langcodes = ['de'];
     foreach ($langcodes as $langcode) {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
@@ -257,7 +257,7 @@ class MenuNodeTest extends WebTestBase {
 
     $this->rebuildContainer();
 
-    $languages = array();
+    $languages = [];
     foreach ($langcodes as $langcode) {
       $languages[$langcode] = ConfigurableLanguage::load($langcode);
     }
@@ -265,14 +265,14 @@ class MenuNodeTest extends WebTestBase {
     // Use a UI form submission to make the node type and menu link content entity translatable.
     $this->drupalLogout();
     $this->drupalLogin($this->rootUser);
-    $edit = array(
+    $edit = [
       'entity_types[node]' => TRUE,
       'entity_types[menu_link_content]' => TRUE,
       'settings[node][page][settings][language][language_alterable]' => TRUE,
       'settings[node][page][translatable]' => TRUE,
       'settings[node][page][fields][title]' => TRUE,
       'settings[menu_link_content][menu_link_content][translatable]' => TRUE,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
 
     // Log out and back in as normal user.
@@ -297,42 +297,42 @@ class MenuNodeTest extends WebTestBase {
     $node->save();
 
     // Edit the node and create a menu link.
-    $edit = array(
+    $edit = [
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
       'menu[weight]' => 17,
-    );
-    $options = array('language' => $languages[$langcodes[0]]);
+    ];
+    $options = ['language' => $languages[$langcodes[0]]];
     $url = $node->toUrl('edit-form', $options);
     $this->drupalPostForm($url, $edit, t('Save') . ' ' . t('(this translation)'));
 
     // Edit the node in a different language and translate the menu link.
-    $edit = array(
+    $edit = [
       'menu[enabled]' => 1,
       'menu[title]' => $translated_node_title,
       'menu[weight]' => 17,
-    );
-    $options = array('language' => $languages[$langcodes[1]]);
+    ];
+    $options = ['language' => $languages[$langcodes[1]]];
     $url = $node->toUrl('edit-form', $options);
     $this->drupalPostForm($url, $edit, t('Save') . ' ' . t('(this translation)'));
 
     // Assert that the original link exists in the frontend.
-    $this->drupalGet('node/' . $node->id(), array('language' => $languages[$langcodes[0]]));
+    $this->drupalGet('node/' . $node->id(), ['language' => $languages[$langcodes[0]]]);
     $this->assertLink($node_title);
 
     // Assert that the translated link exists in the frontend.
-    $this->drupalGet('node/' . $node->id(), array('language' => $languages[$langcodes[1]]));
+    $this->drupalGet('node/' . $node->id(), ['language' => $languages[$langcodes[1]]]);
     $this->assertLink($translated_node_title);
 
     // Revisit the edit page in original language, check the loaded menu item title and save.
-    $options = array('language' => $languages[$langcodes[0]]);
+    $options = ['language' => $languages[$langcodes[0]]];
     $url = $node->toUrl('edit-form', $options);
     $this->drupalGet($url);
     $this->assertFieldById('edit-menu-title', $node_title);
     $this->drupalPostForm(NULL, [], t('Save') . ' ' . t('(this translation)'));
 
     // Revisit the edit page of the translation and check the loaded menu item title.
-    $options = array('language' => $languages[$langcodes[1]]);
+    $options = ['language' => $languages[$langcodes[1]]];
     $url = $node->toUrl('edit-form', $options);
     $this->drupalGet($url);
     $this->assertFieldById('edit-menu-title', $translated_node_title);

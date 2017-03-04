@@ -54,17 +54,17 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
    */
   protected $unchangedFieldValues;
 
-  public static $modules = array('language', 'content_translation');
+  public static $modules = ['language', 'content_translation'];
 
   protected function setUp() {
     parent::setUp();
 
     $this->synchronizer = new FieldTranslationSynchronizer($this->container->get('entity.manager'));
-    $this->synchronized = array('sync1', 'sync2');
-    $this->columns = array_merge($this->synchronized, array('var1', 'var2'));
-    $this->langcodes = array('en', 'it', 'fr', 'de', 'es');
+    $this->synchronized = ['sync1', 'sync2'];
+    $this->columns = array_merge($this->synchronized, ['var1', 'var2']);
+    $this->langcodes = ['en', 'it', 'fr', 'de', 'es'];
     $this->cardinality = 4;
-    $this->unchangedFieldValues = array();
+    $this->unchangedFieldValues = [];
 
     // Set up an initial set of values in the correct state, that is with
     // "synchronized" values being equal.
@@ -88,7 +88,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
     $sync_langcode = $this->langcodes[2];
     $unchanged_items = $this->unchangedFieldValues[$sync_langcode];
     $field_values = $this->unchangedFieldValues;
-    $item = array();
+    $item = [];
     foreach ($this->columns as $column) {
       $item[$column] = $this->randomMachineName();
     }
@@ -140,7 +140,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
     $sync_langcode = $this->langcodes[3];
     $unchanged_items = $this->unchangedFieldValues[$sync_langcode];
     $field_values = $this->unchangedFieldValues;
-    $field_values[$sync_langcode] = array();
+    $field_values[$sync_langcode] = [];
     // Scramble the items.
     foreach ($unchanged_items as $delta => $item) {
       $new_delta = ($delta + 1) % $this->cardinality;
@@ -179,7 +179,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
 
     // Determine whether the unchanged values should be altered depending on
     // their delta.
-    $delta_callbacks = array(
+    $delta_callbacks = [
       // Continuous field values: all values are equal.
       function($delta) { return TRUE; },
       // Alternated field values: only the even ones are equal.
@@ -188,7 +188,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
       function($delta) { return $delta === 1 || $delta === 2; },
       // Sparse field values: only the "extreme" ones are equal.
       function($delta) { return $delta === 0 || $delta === 3; },
-    );
+    ];
 
     foreach ($delta_callbacks as $delta_callback) {
       $field_values = $this->unchangedFieldValues;

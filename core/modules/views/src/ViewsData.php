@@ -40,7 +40,7 @@ class ViewsData {
    *
    * @var array
    */
-  protected $storage = array();
+  protected $storage = [];
 
   /**
    * All table storage data loaded from cache.
@@ -50,7 +50,7 @@ class ViewsData {
    *
    * @var array
    */
-  protected $allStorage = array();
+  protected $allStorage = [];
 
   /**
    * Whether the data has been fully loaded in this request.
@@ -167,8 +167,8 @@ class ViewsData {
           // Write an empty cache entry if no information for that table
           // exists to avoid repeated cache get calls for this table and
           // prevent loading all tables unnecessarily.
-          $this->storage[$key] = array();
-          $this->allStorage[$key] = array();
+          $this->storage[$key] = [];
+          $this->allStorage[$key] = [];
         }
         else {
           $this->storage[$key] = $this->allStorage[$key];
@@ -208,7 +208,7 @@ class ViewsData {
    *   The data that will be cached.
    */
   protected function cacheSet($cid, $data) {
-    return $this->cacheBackend->set($this->prepareCid($cid), $data, Cache::PERMANENT, array('views_data', 'config:core.extension'));
+    return $this->cacheBackend->set($this->prepareCid($cid), $data, Cache::PERMANENT, ['views_data', 'config:core.extension']);
   }
 
   /**
@@ -274,9 +274,9 @@ class ViewsData {
       if (!empty($table_info['table']['entity type'])) {
         $entity_table = 'views_entity_' . $table_info['table']['entity type'];
 
-        $data[$entity_table]['table']['join'][$table_name] = array(
+        $data[$entity_table]['table']['join'][$table_name] = [
           'left_table' => $table_name,
-        );
+        ];
         $data[$entity_table]['table']['entity type'] = $table_info['table']['entity type'];
         // Copy over the default table group if we have none yet.
         if (!empty($table_info['table']['group']) && empty($data[$entity_table]['table']['group'])) {
@@ -297,15 +297,15 @@ class ViewsData {
    *     - weight: The weight of the base table.
    */
   public function fetchBaseTables() {
-    $tables = array();
+    $tables = [];
 
     foreach ($this->get() as $table => $info) {
       if (!empty($info['table']['base'])) {
-        $tables[$table] = array(
+        $tables[$table] = [
           'title' => $info['table']['base']['title'],
           'help' => !empty($info['table']['base']['help']) ? $info['table']['base']['help'] : '',
           'weight' => !empty($info['table']['base']['weight']) ? $info['table']['base']['weight'] : 0,
-        );
+        ];
       }
     }
 
@@ -327,10 +327,10 @@ class ViewsData {
    * Clears the class storage and cache.
    */
   public function clear() {
-    $this->storage = array();
-    $this->allStorage = array();
+    $this->storage = [];
+    $this->allStorage = [];
     $this->fullyLoaded = FALSE;
-    Cache::invalidateTags(array('views_data'));
+    Cache::invalidateTags(['views_data']);
   }
 
 }

@@ -24,7 +24,7 @@ abstract class ExecutablePluginBase extends ContextAwarePluginBase implements Ex
     if (!empty($definition['configuration'])) {
       return $definition['configuration'];
     }
-    return array();
+    return [];
   }
 
   /**

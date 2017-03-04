@@ -30,13 +30,13 @@ class InlineTemplate extends RenderElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
-      '#pre_render' => array(
-        array($class, 'preRenderInlineTemplate'),
-      ),
+    return [
+      '#pre_render' => [
+        [$class, 'preRenderInlineTemplate'],
+      ],
       '#template' => '',
-      '#context' => array(),
-    );
+      '#context' => [],
+    ];
   }
 
   /**

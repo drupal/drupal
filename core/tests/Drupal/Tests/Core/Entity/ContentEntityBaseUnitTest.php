@@ -107,21 +107,21 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    */
   protected function setUp() {
     $this->id = 1;
-    $values = array(
+    $values = [
       'id' => $this->id,
       'uuid' => '3bb9ee60-bea5-4622-b89b-a63319d10b3a',
-      'defaultLangcode' => array(LanguageInterface::LANGCODE_DEFAULT => 'en'),
-    );
+      'defaultLangcode' => [LanguageInterface::LANGCODE_DEFAULT => 'en'],
+    ];
     $this->entityTypeId = $this->randomMachineName();
     $this->bundle = $this->randomMachineName();
 
     $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('getKeys')
-      ->will($this->returnValue(array(
+      ->will($this->returnValue([
         'id' => 'id',
         'uuid' => 'uuid',
-    )));
+    ]));
 
     $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
     $this->entityManager->expects($this->any())
@@ -137,12 +137,12 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->with('entity')
       ->will($this->returnValue(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']));
 
-    $english = new Language(array('id' => 'en'));
-    $not_specified = new Language(array('id' => LanguageInterface::LANGCODE_NOT_SPECIFIED, 'locked' => TRUE));
+    $english = new Language(['id' => 'en']);
+    $not_specified = new Language(['id' => LanguageInterface::LANGCODE_NOT_SPECIFIED, 'locked' => TRUE]);
     $this->languageManager = $this->getMock('\Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
       ->method('getLanguages')
-      ->will($this->returnValue(array('en' => $english, LanguageInterface::LANGCODE_NOT_SPECIFIED => $not_specified)));
+      ->will($this->returnValue(['en' => $english, LanguageInterface::LANGCODE_NOT_SPECIFIED => $not_specified]));
     $this->languageManager->expects($this->any())
       ->method('getLanguage')
       ->with('en')
@@ -157,10 +157,10 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->getMock();
     $this->fieldTypePluginManager->expects($this->any())
       ->method('getDefaultStorageSettings')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
     $this->fieldTypePluginManager->expects($this->any())
       ->method('getDefaultFieldSettings')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
     $this->fieldTypePluginManager->expects($this->any())
       ->method('createFieldItemList')
       ->will($this->returnValue($this->getMock('Drupal\Core\Field\FieldItemListInterface')));
@@ -173,19 +173,19 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $container->set('plugin.manager.field.field_type', $this->fieldTypePluginManager);
     \Drupal::setContainer($container);
 
-    $this->fieldDefinitions = array(
+    $this->fieldDefinitions = [
       'id' => BaseFieldDefinition::create('integer'),
       'revision_id' => BaseFieldDefinition::create('integer'),
-    );
+    ];
 
     $this->entityManager->expects($this->any())
       ->method('getFieldDefinitions')
       ->with($this->entityTypeId, $this->bundle)
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', array($values, $this->entityTypeId, $this->bundle), '', TRUE, TRUE, TRUE, ['isNew']);
-    $values['defaultLangcode'] = array(LanguageInterface::LANGCODE_DEFAULT => LanguageInterface::LANGCODE_NOT_SPECIFIED);
-    $this->entityUnd = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', array($values, $this->entityTypeId, $this->bundle));
+    $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', [$values, $this->entityTypeId, $this->bundle], '', TRUE, TRUE, TRUE, ['isNew']);
+    $values['defaultLangcode'] = [LanguageInterface::LANGCODE_DEFAULT => LanguageInterface::LANGCODE_NOT_SPECIFIED];
+    $this->entityUnd = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', [$values, $this->entityTypeId, $this->bundle]);
   }
 
   /**
@@ -285,11 +285,11 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->entityManager->expects($this->any())
       ->method('getBundleInfo')
       ->with($this->entityTypeId)
-      ->will($this->returnValue(array(
-        $this->bundle => array(
+      ->will($this->returnValue([
+        $this->bundle => [
           'translatable' => TRUE,
-        ),
-      )));
+        ],
+      ]));
     $this->languageManager->expects($this->any())
       ->method('isMultilingual')
       ->will($this->returnValue(TRUE));
@@ -458,7 +458,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->will($this->returnValue($callback_label));
     $this->entityType->expects($this->once())
       ->method('getLabelCallback')
-      ->will($this->returnValue(array($callback_container, __FUNCTION__)));
+      ->will($this->returnValue([$callback_container, __FUNCTION__]));
 
     $this->assertSame($callback_label, $this->entity->label());
   }
@@ -491,7 +491,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     // Mock ContentEntityBase.
     $mock_base = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
-      ->setMethods(array('getTranslatedField'))
+      ->setMethods(['getTranslatedField'])
       ->getMockForAbstractClass();
 
     // Set up expectations for getTranslatedField() method. In get(),
@@ -553,14 +553,14 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     // Mock ContentEntityBase.
     $mock_base = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
-      ->setMethods(array('getFieldDefinitions', 'get'))
+      ->setMethods(['getFieldDefinitions', 'get'])
       ->getMockForAbstractClass();
 
     // Mock field definition objects for each element of $field_definitions.
-    $mocked_field_definitions = array();
+    $mocked_field_definitions = [];
     foreach ($field_definitions as $name) {
       $mock_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinitionInterface')
-        ->setMethods(array('isComputed'))
+        ->setMethods(['isComputed'])
         ->getMockForAbstractClass();
       // Set expectations for isComputed(). isComputed() gets called whenever
       // $include_computed is FALSE, but not otherwise. It returns the value of

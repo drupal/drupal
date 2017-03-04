@@ -39,34 +39,34 @@ class RawTest extends UnitTestCase {
 
     // Don't use aliases. Check against NULL and nonexistent path component
     // values in addition to valid ones.
-    $raw = new Raw(array(), 'raw', array(), $alias_manager, $current_path);
-    $options = array(
+    $raw = new Raw([], 'raw', [], $alias_manager, $current_path);
+    $options = [
       'use_alias' => FALSE,
-    );
+    ];
     $raw->init($view, $display_plugin, $options);
     $this->assertEquals(NULL, $raw->getArgument());
 
-    $raw = new Raw(array(), 'raw', array(), $alias_manager, $current_path);
-    $options = array(
+    $raw = new Raw([], 'raw', [], $alias_manager, $current_path);
+    $options = [
       'use_alias' => FALSE,
       'index' => 0,
-    );
+    ];
     $raw->init($view, $display_plugin, $options);
     $this->assertEquals('test', $raw->getArgument());
 
-    $raw = new Raw(array(), 'raw', array(), $alias_manager, $current_path);
-    $options = array(
+    $raw = new Raw([], 'raw', [], $alias_manager, $current_path);
+    $options = [
       'use_alias' => FALSE,
       'index' => 1,
-    );
+    ];
     $raw->init($view, $display_plugin, $options);
     $this->assertEquals('example', $raw->getArgument());
 
-    $raw = new Raw(array(), 'raw', array(), $alias_manager, $current_path);
-    $options = array(
+    $raw = new Raw([], 'raw', [], $alias_manager, $current_path);
+    $options = [
       'use_alias' => FALSE,
       'index' => 2,
-    );
+    ];
     $raw->init($view, $display_plugin, $options);
     $this->assertEquals(NULL, $raw->getArgument());
 
@@ -77,34 +77,34 @@ class RawTest extends UnitTestCase {
       ->with($this->equalTo('/test/example'))
       ->will($this->returnValue('/other/example'));
 
-    $raw = new Raw(array(), 'raw', array(), $alias_manager, $current_path);
-    $options = array(
+    $raw = new Raw([], 'raw', [], $alias_manager, $current_path);
+    $options = [
       'use_alias' => TRUE,
-    );
+    ];
     $raw->init($view, $display_plugin, $options);
     $this->assertEquals(NULL, $raw->getArgument());
 
-    $raw = new Raw(array(), 'raw', array(), $alias_manager, $current_path);
-    $options = array(
+    $raw = new Raw([], 'raw', [], $alias_manager, $current_path);
+    $options = [
       'use_alias' => TRUE,
       'index' => 0,
-    );
+    ];
     $raw->init($view, $display_plugin, $options);
     $this->assertEquals('other', $raw->getArgument());
 
-    $raw = new Raw(array(), 'raw', array(), $alias_manager, $current_path);
-    $options = array(
+    $raw = new Raw([], 'raw', [], $alias_manager, $current_path);
+    $options = [
       'use_alias' => TRUE,
       'index' => 1,
-    );
+    ];
     $raw->init($view, $display_plugin, $options);
     $this->assertEquals('example', $raw->getArgument());
 
-    $raw = new Raw(array(), 'raw', array(), $alias_manager, $current_path);
-    $options = array(
+    $raw = new Raw([], 'raw', [], $alias_manager, $current_path);
+    $options = [
       'use_alias' => TRUE,
       'index' => 2,
-    );
+    ];
     $raw->init($view, $display_plugin, $options);
     $this->assertEquals(NULL, $raw->getArgument());
   }

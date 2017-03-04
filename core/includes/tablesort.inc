@@ -41,7 +41,7 @@ function tablesort_init($header) {
 function tablesort_header(&$cell_content, array &$cell_attributes, array $header, array $ts) {
   // Special formatting for the currently sorted column header.
   if (isset($cell_attributes['field'])) {
-    $title = t('sort by @s', array('@s' => $cell_content));
+    $title = t('sort by @s', ['@s' => $cell_content]);
     if ($cell_content == $ts['name']) {
       // aria-sort is a WAI-ARIA property that indicates if items in a table
       // or grid are sorted in ascending or descending order. See
@@ -49,10 +49,10 @@ function tablesort_header(&$cell_content, array &$cell_attributes, array $header
       $cell_attributes['aria-sort'] = ($ts['sort'] == 'asc') ? 'ascending' : 'descending';
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
       $cell_attributes['class'][] = 'is-active';
-      $tablesort_indicator = array(
+      $tablesort_indicator = [
         '#theme' => 'tablesort_indicator',
         '#style' => $ts['sort'],
-      );
+      ];
       $image = drupal_render($tablesort_indicator);
     }
     else {
@@ -60,12 +60,12 @@ function tablesort_header(&$cell_content, array &$cell_attributes, array $header
       $ts['sort'] = 'asc';
       $image = '';
     }
-    $cell_content = \Drupal::l(SafeMarkup::format('@cell_content@image', array('@cell_content' => $cell_content, '@image' => $image)), new Url('<current>', [], [
-      'attributes' => array('title' => $title),
-      'query' => array_merge($ts['query'], array(
+    $cell_content = \Drupal::l(SafeMarkup::format('@cell_content@image', ['@cell_content' => $cell_content, '@image' => $image]), new Url('<current>', [], [
+      'attributes' => ['title' => $title],
+      'query' => array_merge($ts['query'], [
         'sort' => $ts['sort'],
         'order' => $cell_content,
-      )),
+      ]),
     ]));
 
     unset($cell_attributes['field'], $cell_attributes['sort']);
@@ -80,7 +80,7 @@ function tablesort_header(&$cell_content, array &$cell_attributes, array $header
  *   page request except for those pertaining to table sorting.
  */
 function tablesort_get_query_parameters() {
-  return UrlHelper::filterQueryParameters(\Drupal::request()->query->all(), array('sort', 'order'));
+  return UrlHelper::filterQueryParameters(\Drupal::request()->query->all(), ['sort', 'order']);
 }
 
 /**
@@ -112,12 +112,12 @@ function tablesort_get_order($headers) {
   if (!isset($default)) {
     $default = reset($headers);
     if (!is_array($default)) {
-      $default = array('data' => $default);
+      $default = ['data' => $default];
     }
   }
 
-  $default += array('data' => NULL, 'field' => NULL);
-  return array('name' => $default['data'], 'sql' => $default['field']);
+  $default += ['data' => NULL, 'field' => NULL];
+  return ['name' => $default['data'], 'sql' => $default['field']];
 }
 
 /**

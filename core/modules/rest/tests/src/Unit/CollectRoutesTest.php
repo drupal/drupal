@@ -39,18 +39,18 @@ class CollectRoutesTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->view = $this->getMock('\Drupal\views\Entity\View', array('initHandlers'), array(
-      array('id' => 'test_view'),
+    $this->view = $this->getMock('\Drupal\views\Entity\View', ['initHandlers'], [
+      ['id' => 'test_view'],
       'view',
-    ));
+    ]);
 
-    $view_executable = $this->getMock('\Drupal\views\ViewExecutable', array('initHandlers', 'getTitle'), array(), '', FALSE);
+    $view_executable = $this->getMock('\Drupal\views\ViewExecutable', ['initHandlers', 'getTitle'], [], '', FALSE);
     $view_executable->expects($this->any())
       ->method('getTitle')
       ->willReturn('View title');
 
     $view_executable->storage = $this->view;
-    $view_executable->argument = array();
+    $view_executable->argument = [];
 
     $display_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
       ->disableOriginalConstructor()
@@ -86,21 +86,21 @@ class CollectRoutesTest extends UnitTestCase {
 
     \Drupal::setContainer($container);
 
-    $this->restExport = RestExport::create($container, array(), "test_routes", array());
+    $this->restExport = RestExport::create($container, [], "test_routes", []);
     $this->restExport->view = $view_executable;
 
     // Initialize a display.
-    $this->restExport->display = array('id' => 'page_1');
+    $this->restExport->display = ['id' => 'page_1'];
 
     // Set the style option.
-    $this->restExport->setOption('style', array('type' => 'serializer'));
+    $this->restExport->setOption('style', ['type' => 'serializer']);
 
     // Set the auth option.
     $this->restExport->setOption('auth', ['basic_auth']);
 
     $display_manager->expects($this->once())
       ->method('getDefinition')
-      ->will($this->returnValue(array('id' => 'test', 'provider' => 'test')));
+      ->will($this->returnValue(['id' => 'test', 'provider' => 'test']));
 
     $none = $this->getMockBuilder('\Drupal\views\Plugin\views\access\None')
       ->disableOriginalConstructor()
@@ -110,11 +110,11 @@ class CollectRoutesTest extends UnitTestCase {
       ->method('createInstance')
       ->will($this->returnValue($none));
 
-    $style_plugin = $this->getMock('\Drupal\rest\Plugin\views\style\Serializer', array('getFormats', 'init'), array(), '', FALSE);
+    $style_plugin = $this->getMock('\Drupal\rest\Plugin\views\style\Serializer', ['getFormats', 'init'], [], '', FALSE);
 
     $style_plugin->expects($this->once())
       ->method('getFormats')
-      ->will($this->returnValue(array('json')));
+      ->will($this->returnValue(['json']));
 
     $style_plugin->expects($this->once())
       ->method('init')

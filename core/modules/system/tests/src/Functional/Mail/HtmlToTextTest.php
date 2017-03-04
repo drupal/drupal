@@ -27,8 +27,8 @@ class HtmlToTextTest extends BrowserTestBase {
   protected function stringToHtml($text) {
     return '"' .
       str_replace(
-        array("\n", ' '),
-        array('\n', '&nbsp;'),
+        ["\n", ' '],
+        ['\n', '&nbsp;'],
         Html::escape($text)
       ) . '"';
   }
@@ -68,7 +68,7 @@ class HtmlToTextTest extends BrowserTestBase {
    */
   public function testTags() {
     global $base_path, $base_url;
-    $tests = array(
+    $tests = [
       // @todo Trailing linefeeds should be trimmed.
       '<a href = "https://www.drupal.org">Drupal.org</a>' => "Drupal.org [1]\n\n[1] https://www.drupal.org\n",
       // @todo Footer URLs should be absolute.
@@ -151,7 +151,7 @@ class HtmlToTextTest extends BrowserTestBase {
       // A couple of tests for Unicode characters.
       '<q>I <em>will</em> be back…</q>' => "I /will/ be back…\n",
       'FrançAIS is ÜBER-åwesome' => "FrançAIS is ÜBER-åwesome\n",
-    );
+    ];
 
     foreach ($tests as $html => $text) {
       $this->assertHtmlToText($html, $text, 'Supported tags');
@@ -168,27 +168,27 @@ class HtmlToTextTest extends BrowserTestBase {
       'Drupal <b>Drupal</b> Drupal',
       "Drupal *Drupal* Drupal\n",
       'Allowed <b> tag found',
-      array('b')
+      ['b']
     );
     $this->assertHtmlToText(
       'Drupal <h1>Drupal</h1> Drupal',
       "Drupal Drupal Drupal\n",
       'Disallowed <h1> tag not found',
-      array('b')
+      ['b']
     );
 
     $this->assertHtmlToText(
       'Drupal <p><em><b>Drupal</b></em><p> Drupal',
       "Drupal Drupal Drupal\n",
       'Disallowed <p>, <em>, and <b> tags not found',
-      array('a', 'br', 'h1')
+      ['a', 'br', 'h1']
     );
 
     $this->assertHtmlToText(
       '<html><body>Drupal</body></html>',
       "Drupal\n",
       'Unsupported <html> and <body> tags not found',
-      array('html', 'body')
+      ['html', 'body']
     );
   }
 
@@ -203,7 +203,7 @@ class HtmlToTextTest extends BrowserTestBase {
       $input,
       $collapsed,
       'Whitespace is collapsed',
-      array('p')
+      ['p']
     );
   }
 
@@ -312,17 +312,17 @@ class HtmlToTextTest extends BrowserTestBase {
    * and spaces are properly handled.
    */
   public function testDrupalHtmlToTextParagraphs() {
-    $tests = array();
-    $tests[] = array(
+    $tests = [];
+    $tests[] = [
         'html' => "<p>line 1<br />\nline 2<br />line 3\n<br />line 4</p><p>paragraph</p>",
         // @todo Trailing line breaks should be trimmed.
         'text' => "line 1\nline 2\nline 3\nline 4\n\nparagraph\n\n",
-    );
-    $tests[] = array(
+    ];
+    $tests[] = [
       'html' => "<p>line 1<br /> line 2</p> <p>line 4<br /> line 5</p> <p>0</p>",
       // @todo Trailing line breaks should be trimmed.
       'text' => "line 1\nline 2\n\nline 4\nline 5\n\n0\n\n",
-    );
+    ];
     foreach ($tests as $test) {
       $this->assertHtmlToText($test['html'], $test['text'], 'Paragraph breaks');
     }

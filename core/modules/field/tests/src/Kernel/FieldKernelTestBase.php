@@ -43,24 +43,24 @@ abstract class FieldKernelTestBase extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->fieldTestData = new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS);
+    $this->fieldTestData = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
 
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
     $this->installSchema('system', ['sequences', 'key_value']);
 
     // Set default storage backend and configure the theme system.
-    $this->installConfig(array('field', 'system'));
+    $this->installConfig(['field', 'system']);
 
     // Create user 1.
     $storage = \Drupal::entityManager()->getStorage('user');
     $storage
-      ->create(array(
+      ->create([
         'uid' => 1,
         'name' => 'entity-test',
         'mail' => 'entity@localhost',
         'status' => TRUE,
-      ))
+      ])
       ->save();
   }
 
@@ -88,33 +88,33 @@ abstract class FieldKernelTestBase extends KernelTestBase {
     $field_definition = 'field_definition' . $suffix;
 
     $this->fieldTestData->$field_name = Unicode::strtolower($this->randomMachineName() . '_field_name' . $suffix);
-    $this->fieldTestData->$field_storage = FieldStorageConfig::create(array(
+    $this->fieldTestData->$field_storage = FieldStorageConfig::create([
       'field_name' => $this->fieldTestData->$field_name,
       'entity_type' => $entity_type,
       'type' => 'test_field',
       'cardinality' => 4,
-    ));
+    ]);
     $this->fieldTestData->$field_storage->save();
     $this->fieldTestData->$field_storage_uuid = $this->fieldTestData->$field_storage->uuid();
-    $this->fieldTestData->$field_definition = array(
+    $this->fieldTestData->$field_definition = [
       'field_storage' => $this->fieldTestData->$field_storage,
       'bundle' => $bundle,
       'label' => $this->randomMachineName() . '_label',
       'description' => $this->randomMachineName() . '_description',
-      'settings' => array(
+      'settings' => [
         'test_field_setting' => $this->randomMachineName(),
-      ),
-    );
+      ],
+    ];
     $this->fieldTestData->$field = FieldConfig::create($this->fieldTestData->$field_definition);
     $this->fieldTestData->$field->save();
 
     entity_get_form_display($entity_type, $bundle, 'default')
-      ->setComponent($this->fieldTestData->$field_name, array(
+      ->setComponent($this->fieldTestData->$field_name, [
         'type' => 'test_field_widget',
-        'settings' => array(
+        'settings' => [
           'test_widget_setting' => $this->randomMachineName(),
-        )
-      ))
+        ]
+      ])
       ->save();
   }
 
@@ -159,7 +159,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    *   An array of random values, in the format expected for field values.
    */
   protected function _generateTestFieldValues($cardinality) {
-    $values = array();
+    $values = [];
     for ($i = 0; $i < $cardinality; $i++) {
       // field_test fields treat 0 as 'empty value'.
       $values[$i]['value'] = mt_rand(1, 127);
@@ -197,7 +197,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
     $values = $field->getValue();
     $this->assertEqual(count($values), count($expected_values), 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {
-      $this->assertEqual($values[$key][$column], $value, format_string('Value @value was saved correctly.', array('@value' => $value)));
+      $this->assertEqual($values[$key][$column], $value, format_string('Value @value was saved correctly.', ['@value' => $value]));
     }
   }
 

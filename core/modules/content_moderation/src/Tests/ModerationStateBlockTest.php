@@ -73,11 +73,11 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $this->assertText(t('basic Moderated block has been created.'));
 
     // Place the block in the Sidebar First region.
-    $instance = array(
+    $instance = [
       'id' => 'moderated_block',
       'settings[label]' => $edit['info[0][value]'],
       'region' => 'sidebar_first',
-    );
+    ];
     $block = BlockContent::load(1);
     $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
     $this->drupalPostForm($url, $instance, t('Save block'));

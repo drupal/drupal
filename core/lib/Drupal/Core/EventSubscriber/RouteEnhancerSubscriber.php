@@ -41,7 +41,7 @@ class RouteEnhancerSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events[RoutingEvents::ALTER][] = array('onRouteAlter', -300);
+    $events[RoutingEvents::ALTER][] = ['onRouteAlter', -300];
     return $events;
   }
 

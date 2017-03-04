@@ -163,7 +163,7 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
 
     $values = (array) $this->getValues($config, $parts[0], $get_method, $parts);
 
-    $output = array();
+    $output = [];
     // Flatten the array to a single dimension and add the key to all the
     // values.
     array_walk_recursive($values, function ($current) use (&$output, $key) {
@@ -250,8 +250,8 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events[ConfigEvents::SAVE][] = array('onConfigSave', 128);
-    $events[ConfigEvents::DELETE][] = array('onConfigDelete', 128);
+    $events[ConfigEvents::SAVE][] = ['onConfigSave', 128];
+    $events[ConfigEvents::DELETE][] = ['onConfigDelete', 128];
     return $events;
   }
 

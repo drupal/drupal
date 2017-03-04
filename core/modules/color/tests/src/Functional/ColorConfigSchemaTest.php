@@ -16,7 +16,7 @@ class ColorConfigSchemaTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('color');
+  public static $modules = ['color'];
 
   /**
    * A user with administrative permissions.
@@ -30,10 +30,10 @@ class ColorConfigSchemaTest extends BrowserTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->install(array('bartik'));
+    \Drupal::service('theme_handler')->install(['bartik']);
 
     // Create user.
-    $this->adminUser = $this->drupalCreateUser(array('administer themes'));
+    $this->adminUser = $this->drupalCreateUser(['administer themes']);
     $this->drupalLogin($this->adminUser);
   }
 

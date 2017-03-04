@@ -38,7 +38,7 @@ class FilterTestPlaceholders extends FilterBase {
    */
   public static function renderDynamicThing($thing) {
     return [
-      '#markup' => format_string('This is a dynamic @thing.', array('@thing' => $thing)),
+      '#markup' => format_string('This is a dynamic @thing.', ['@thing' => $thing]),
     ];
   }
 

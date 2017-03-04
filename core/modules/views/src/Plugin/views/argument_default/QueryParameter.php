@@ -23,9 +23,9 @@ class QueryParameter extends ArgumentDefaultPluginBase implements CacheableDepen
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['query_param'] = array('default' => '');
-    $options['fallback'] = array('default' => '');
-    $options['multiple'] = array('default' => 'and');
+    $options['query_param'] = ['default' => ''];
+    $options['fallback'] = ['default' => ''];
+    $options['multiple'] = ['default' => 'and'];
 
     return $options;
   }
@@ -35,28 +35,28 @@ class QueryParameter extends ArgumentDefaultPluginBase implements CacheableDepen
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    $form['query_param'] = array(
+    $form['query_param'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Query parameter'),
       '#description' => $this->t('The query parameter to use.'),
       '#default_value' => $this->options['query_param'],
-    );
-    $form['fallback'] = array(
+    ];
+    $form['fallback'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Fallback value'),
       '#description' => $this->t('The fallback value to use when the above query parameter is not present.'),
       '#default_value' => $this->options['fallback'],
-    );
-    $form['multiple'] = array(
+    ];
+    $form['multiple'] = [
       '#type' => 'radios',
       '#title' => $this->t('Multiple values'),
       '#description' => $this->t('Conjunction to use when handling multiple values. E.g. "?value[0]=a&value[1]=b".'),
       '#default_value' => $this->options['multiple'],
-      '#options' => array(
+      '#options' => [
         'and' => $this->t('AND'),
         'or' => $this->t('OR'),
-      ),
-    );
+      ],
+    ];
   }
 
   /**

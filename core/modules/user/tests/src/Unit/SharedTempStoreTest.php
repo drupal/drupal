@@ -76,11 +76,11 @@ class SharedTempStoreTest extends UnitTestCase {
 
     $this->tempStore = new SharedTempStore($this->keyValue, $this->lock, $this->owner, $this->requestStack, 604800);
 
-    $this->ownObject = (object) array(
+    $this->ownObject = (object) [
       'data' => 'test_data',
       'owner' => $this->owner,
       'updated' => (int) $request->server->get('REQUEST_TIME'),
-    );
+    ];
 
     // Clone the object but change the owner.
     $this->otherObject = clone $this->ownObject;

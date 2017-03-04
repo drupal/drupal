@@ -30,14 +30,14 @@ trait ImageFieldCreationTrait {
    * @param string $description
    *   (optional) A description for the field. Defaults to ''.
    */
-  protected function createImageField($name, $type_name, $storage_settings = array(), $field_settings = array(), $widget_settings = array(), $formatter_settings = array(), $description = '') {
-    FieldStorageConfig::create(array(
+  protected function createImageField($name, $type_name, $storage_settings = [], $field_settings = [], $widget_settings = [], $formatter_settings = [], $description = '') {
+    FieldStorageConfig::create([
       'field_name' => $name,
       'entity_type' => 'node',
       'type' => 'image',
       'settings' => $storage_settings,
       'cardinality' => !empty($storage_settings['cardinality']) ? $storage_settings['cardinality'] : 1,
-    ))->save();
+    ])->save();
 
     $field_config = FieldConfig::create([
       'field_name' => $name,
@@ -51,17 +51,17 @@ trait ImageFieldCreationTrait {
     $field_config->save();
 
     entity_get_form_display('node', $type_name, 'default')
-      ->setComponent($name, array(
+      ->setComponent($name, [
         'type' => 'image_image',
         'settings' => $widget_settings,
-      ))
+      ])
       ->save();
 
     entity_get_display('node', $type_name, 'default')
-      ->setComponent($name, array(
+      ->setComponent($name, [
         'type' => 'image',
         'settings' => $formatter_settings,
-      ))
+      ])
       ->save();
 
     return $field_config;

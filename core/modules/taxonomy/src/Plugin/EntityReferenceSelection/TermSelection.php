@@ -53,7 +53,7 @@ class TermSelection extends DefaultSelection {
       return parent::getReferenceableEntities($match, $match_operator, $limit);
     }
 
-    $options = array();
+    $options = [];
 
     $bundles = $this->entityManager->getBundleInfo('taxonomy_term');
     $handler_settings = $this->configuration['handler_settings'];

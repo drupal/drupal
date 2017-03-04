@@ -27,7 +27,7 @@ class CommentRestExportTest extends CommentTestBase {
   protected function setUp() {
     parent::setUp();
     // Add another anonymous comment.
-    $comment = array(
+    $comment = [
       'uid' => 0,
       'entity_id' => $this->nodeUserCommented->id(),
       'entity_type' => 'node',
@@ -38,7 +38,7 @@ class CommentRestExportTest extends CommentTestBase {
       'mail' => 'someone@example.com',
       'name' => 'bobby tables',
       'hostname' => 'public.example.com',
-    );
+    ];
     $this->comment = Comment::create($comment);
     $this->comment->save();
 

@@ -34,12 +34,12 @@ class YamlDiscoveryTest extends UnitTestCase {
     file_put_contents($url . '/test_2/test_4.test.yml', '');
 
     // Set up the directories to search.
-    $directories = array(
+    $directories = [
       'test_1' => $url . '/test_1',
       'test_2' => $url . '/test_1',
       'test_3' => $url . '/test_2',
       'test_4' => $url . '/test_2',
-    );
+    ];
 
     $discovery = new YamlDiscovery('test', $directories);
     $data = $discovery->findAll();
@@ -50,12 +50,12 @@ class YamlDiscoveryTest extends UnitTestCase {
     $this->assertArrayHasKey('test_3', $data);
     $this->assertArrayHasKey('test_4', $data);
 
-    foreach (array('test_1', 'test_2', 'test_3') as $key) {
+    foreach (['test_1', 'test_2', 'test_3'] as $key) {
       $this->assertArrayHasKey('name', $data[$key]);
       $this->assertEquals($data[$key]['name'], 'test');
     }
 
-    $this->assertSame(array(), $data['test_4']);
+    $this->assertSame([], $data['test_4']);
   }
 
 }

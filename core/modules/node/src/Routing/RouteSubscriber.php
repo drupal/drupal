@@ -19,13 +19,13 @@ class RouteSubscriber extends RouteSubscriberBase {
     // a node listing instead of the path's child links.
     $route = $collection->get('system.admin_content');
     if ($route) {
-      $route->setDefaults(array(
+      $route->setDefaults([
         '_title' => 'Content',
         '_entity_list' => 'node',
-      ));
-      $route->setRequirements(array(
+      ]);
+      $route->setRequirements([
         '_permission' => 'access content overview',
-      ));
+      ]);
     }
   }
 

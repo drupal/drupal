@@ -168,7 +168,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    */
   protected function loadLanguageTypesConfiguration() {
     if (!$this->languageTypes) {
-      $this->languageTypes = $this->configFactory->get('language.types')->get() ?: array('configurable' => array(), 'all' => parent::getLanguageTypes());
+      $this->languageTypes = $this->configFactory->get('language.types')->get() ?: ['configurable' => [], 'all' => parent::getLanguageTypes()];
     }
     return $this->languageTypes;
   }
@@ -227,7 +227,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
         // afterwards. This can happen for instance while parsing negotiation
         // method definitions.
         elseif ($type == LanguageInterface::TYPE_INTERFACE) {
-          return new Language(array('id' => LanguageInterface::LANGCODE_SYSTEM));
+          return new Language(['id' => LanguageInterface::LANGCODE_SYSTEM]);
         }
       }
     }
@@ -241,11 +241,11 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   public function reset($type = NULL) {
     if (!isset($type)) {
       $this->initialized = FALSE;
-      $this->negotiatedLanguages = array();
-      $this->negotiatedMethods = array();
+      $this->negotiatedLanguages = [];
+      $this->negotiatedMethods = [];
       $this->languageTypes = NULL;
       $this->languageTypesInfo = NULL;
-      $this->languages = array();
+      $this->languages = [];
       if ($this->negotiator) {
         $this->negotiator->reset();
       }
@@ -270,7 +270,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   public function setNegotiator(LanguageNegotiatorInterface $negotiator) {
     $this->negotiator = $negotiator;
     $this->initialized = FALSE;
-    $this->negotiatedLanguages = array();
+    $this->negotiatedLanguages = [];
   }
 
   /**
@@ -292,7 +292,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
       // and the configuration entities for languages are not yet fully
       // imported.
       $default = $this->getDefaultLanguage();
-      $languages = array($default->getId() => $default);
+      $languages = [$default->getId() => $default];
       $languages += $this->getDefaultLockedLanguages($default->getWeight());
 
       // Load configurable languages on top of the defaults. Ideally this could
@@ -325,7 +325,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    */
   public function getNativeLanguages() {
     $languages = $this->getLanguages(LanguageInterface::STATE_CONFIGURABLE);
-    $natives = array();
+    $natives = [];
 
     $original_language = $this->getConfigOverrideLanguage();
 
@@ -363,9 +363,9 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   /**
    * {@inheritdoc}
    */
-  public function getFallbackCandidates(array $context = array()) {
+  public function getFallbackCandidates(array $context = []) {
     if ($this->isMultilingual()) {
-      $candidates = array();
+      $candidates = [];
       if (empty($context['operation']) || $context['operation'] != 'locale_lookup') {
         // If the fallback context is not locale_lookup, initialize the
         // candidates with languages ordered by weight and add
@@ -379,13 +379,13 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
         // The first candidate should always be the desired language if
         // specified.
         if (!empty($context['langcode'])) {
-          $candidates = array($context['langcode'] => $context['langcode']) + $candidates;
+          $candidates = [$context['langcode'] => $context['langcode']] + $candidates;
         }
       }
 
       // Let other modules hook in and add/change candidates.
       $type = 'language_fallback_candidates';
-      $types = array();
+      $types = [];
       if (!empty($context['operation'])) {
         $types[] = $type . '_' . $context['operation'];
       }
@@ -415,7 +415,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
           if (!empty($result)) {
             // Allow modules to provide translations for specific links.
             $this->moduleHandler->alter('language_switch_links', $result, $type, $url);
-            $links = (object) array('links' => $result, 'method_id' => $method_id);
+            $links = (object) ['links' => $result, 'method_id' => $method_id];
             break;
           }
         }

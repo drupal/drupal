@@ -27,7 +27,7 @@ function system_test_help($route_name, RouteMatchInterface $route_match) {
 function system_test_modules_installed($modules) {
   if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
     foreach ($modules as $module) {
-      drupal_set_message(t('hook_modules_installed fired for @module', array('@module' => $module)));
+      drupal_set_message(t('hook_modules_installed fired for @module', ['@module' => $module]));
     }
   }
 }
@@ -38,7 +38,7 @@ function system_test_modules_installed($modules) {
 function system_test_modules_uninstalled($modules) {
   if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
     foreach ($modules as $module) {
-      drupal_set_message(t('hook_modules_uninstalled fired for @module', array('@module' => $module)));
+      drupal_set_message(t('hook_modules_uninstalled fired for @module', ['@module' => $module]));
     }
   }
 }
@@ -66,12 +66,12 @@ function system_test_system_info_alter(&$info, Extension $file, $type) {
   if ($file->getName() == 'system_dependencies_test') {
     $info['hidden'] = FALSE;
   }
-  if (in_array($file->getName(), array(
+  if (in_array($file->getName(), [
     'system_incompatible_module_version_dependencies_test',
     'system_incompatible_core_version_dependencies_test',
     'system_incompatible_module_version_test',
     'system_incompatible_core_version_test',
-  ))) {
+  ])) {
     $info['hidden'] = FALSE;
   }
   if ($file->getName() == 'requirements1_test' || $file->getName() == 'requirements2_test') {
@@ -99,7 +99,7 @@ function system_test_page_attachments(array &$page) {
  */
 function _system_test_first_shutdown_function($arg1, $arg2) {
   // Set something to ensure that this function got called.
-  \Drupal::state()->set('_system_test_first_shutdown_function', array($arg1, $arg2));
+  \Drupal::state()->set('_system_test_first_shutdown_function', [$arg1, $arg2]);
   drupal_register_shutdown_function('_system_test_second_shutdown_function', $arg1, $arg2);
 }
 
@@ -108,7 +108,7 @@ function _system_test_first_shutdown_function($arg1, $arg2) {
  */
 function _system_test_second_shutdown_function($arg1, $arg2) {
   // Set something to ensure that this function got called.
-  \Drupal::state()->set('_system_test_second_shutdown_function', array($arg1, $arg2));
+  \Drupal::state()->set('_system_test_second_shutdown_function', [$arg1, $arg2]);
 
   // Throw an exception with an HTML tag. Since this is called in a shutdown
   // function, it will not bubble up to the default exception handler but will
@@ -121,13 +121,13 @@ function _system_test_second_shutdown_function($arg1, $arg2) {
  * Implements hook_filetransfer_info().
  */
 function system_test_filetransfer_info() {
-  return array(
-    'system_test' => array(
+  return [
+    'system_test' => [
       'title' => t('System Test FileTransfer'),
       'class' => 'Drupal\system_test\MockFileTransfer',
       'weight' => -10,
-    ),
-  );
+    ],
+  ];
 }
 
 /**

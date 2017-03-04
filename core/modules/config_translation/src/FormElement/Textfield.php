@@ -13,9 +13,9 @@ class Textfield extends FormElementBase {
    * {@inheritdoc}
    */
   public function getTranslationElement(LanguageInterface $translation_language, $source_config, $translation_config) {
-    return array(
+    return [
       '#type' => 'textfield',
-    ) + parent::getTranslationElement($translation_language, $source_config, $translation_config);
+    ] + parent::getTranslationElement($translation_language, $source_config, $translation_config);
   }
 
 }

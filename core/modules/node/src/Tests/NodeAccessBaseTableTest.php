@@ -16,7 +16,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node_access_test', 'views');
+  public static $modules = ['node_access_test', 'views'];
 
   /**
    * The installation profile to use with this test.
@@ -85,23 +85,23 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    */
   function testNodeAccessBasic() {
     $num_simple_users = 2;
-    $simple_users = array();
+    $simple_users = [];
 
     // Nodes keyed by uid and nid: $nodes[$uid][$nid] = $is_private;
-    $this->nodesByUser = array();
+    $this->nodesByUser = [];
     // Titles keyed by nid.
     $titles = [];
     // Array of nids marked private.
     $private_nodes = [];
     for ($i = 0; $i < $num_simple_users; $i++) {
-      $simple_users[$i] = $this->drupalCreateUser(array('access content', 'create article content'));
+      $simple_users[$i] = $this->drupalCreateUser(['access content', 'create article content']);
     }
     foreach ($simple_users as $this->webUser) {
       $this->drupalLogin($this->webUser);
-      foreach (array(0 => 'Public', 1 => 'Private') as $is_private => $type) {
-        $edit = array(
-          'title[0][value]' => t('@private_public Article created by @user', array('@private_public' => $type, '@user' => $this->webUser->getUsername())),
-        );
+      foreach ([0 => 'Public', 1 => 'Private'] as $is_private => $type) {
+        $edit = [
+          'title[0][value]' => t('@private_public Article created by @user', ['@private_public' => $type, '@user' => $this->webUser->getUsername()]),
+        ];
         if ($is_private) {
           $edit['private[0][value]'] = TRUE;
           $edit['body[0][value]'] = 'private node';
@@ -122,8 +122,8 @@ class NodeAccessBaseTableTest extends NodeTestBase {
         $this->nodesByUser[$this->webUser->id()][$node->id()] = $is_private;
       }
     }
-    $this->publicTid = db_query('SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1', array(':name' => 'public'))->fetchField();
-    $this->privateTid = db_query('SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1', array(':name' => 'private'))->fetchField();
+    $this->publicTid = db_query('SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1', [':name' => 'public'])->fetchField();
+    $this->privateTid = db_query('SELECT tid FROM {taxonomy_term_field_data} WHERE name = :name AND default_langcode = 1', [':name' => 'private'])->fetchField();
     $this->assertTrue($this->publicTid, 'Public tid was found');
     $this->assertTrue($this->privateTid, 'Private tid was found');
     foreach ($simple_users as $this->webUser) {
@@ -138,12 +138,12 @@ class NodeAccessBaseTableTest extends NodeTestBase {
           else {
             $should_be_visible = TRUE;
           }
-          $this->assertResponse($should_be_visible ? 200 : 403, strtr('A %private node by user %uid is %visible for user %current_uid.', array(
+          $this->assertResponse($should_be_visible ? 200 : 403, strtr('A %private node by user %uid is %visible for user %current_uid.', [
             '%private' => $is_private ? 'private' : 'public',
             '%uid' => $uid,
             '%visible' => $should_be_visible ? 'visible' : 'not visible',
             '%current_uid' => $this->webUser->id(),
-          )));
+          ]));
         }
       }
 
@@ -153,7 +153,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     }
 
     // Now test that a user with 'node test view' permissions can view content.
-    $access_user = $this->drupalCreateUser(array('access content', 'create article content', 'node test view', 'search content'));
+    $access_user = $this->drupalCreateUser(['access content', 'create article content', 'node test view', 'search content']);
     $this->drupalLogin($access_user);
 
     foreach ($this->nodesByUser as $private_status) {
@@ -193,7 +193,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    *   user's own private nodes should be listed.
    */
   protected function assertTaxonomyPage($is_admin) {
-    foreach (array($this->publicTid, $this->privateTid) as $tid_is_private => $tid) {
+    foreach ([$this->publicTid, $this->privateTid] as $tid_is_private => $tid) {
       $this->drupalGet("taxonomy/term/$tid");
       $this->nidsVisible = [];
       foreach ($this->xpath("//a[text()='Read more']") as $link) {
@@ -211,13 +211,13 @@ class NodeAccessBaseTableTest extends NodeTestBase {
           if (!$is_admin && $tid_is_private) {
             $should_be_visible = $should_be_visible && $uid == $this->webUser->id();
           }
-          $this->assertIdentical(isset($this->nidsVisible[$nid]), $should_be_visible, strtr('A %private node by user %uid is %visible for user %current_uid on the %tid_is_private page.', array(
+          $this->assertIdentical(isset($this->nidsVisible[$nid]), $should_be_visible, strtr('A %private node by user %uid is %visible for user %current_uid on the %tid_is_private page.', [
             '%private' => $is_private ? 'private' : 'public',
             '%uid' => $uid,
             '%visible' => isset($this->nidsVisible[$nid]) ? 'visible' : 'not visible',
             '%current_uid' => $this->webUser->id(),
             '%tid_is_private' => $tid_is_private ? 'private' : 'public',
-          )));
+          ]));
         }
       }
     }

@@ -119,6 +119,6 @@ interface MailManagerInterface extends PluginManagerInterface {
    *   watchdog. (Success means nothing more than the message being accepted at
    *   php-level, which still doesn't guarantee it to be delivered.)
    */
-  public function mail($module, $key, $to, $langcode, $params = array(), $reply = NULL, $send = TRUE);
+  public function mail($module, $key, $to, $langcode, $params = [], $reply = NULL, $send = TRUE);
 
 }

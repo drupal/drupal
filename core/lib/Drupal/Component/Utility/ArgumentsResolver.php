@@ -49,7 +49,7 @@ class ArgumentsResolver implements ArgumentsResolverInterface {
    * {@inheritdoc}
    */
   public function getArguments(callable $callable) {
-    $arguments = array();
+    $arguments = [];
     foreach ($this->getReflector($callable)->getParameters() as $parameter) {
       $arguments[] = $this->getArgument($parameter);
     }

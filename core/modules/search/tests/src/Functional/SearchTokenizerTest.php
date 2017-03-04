@@ -31,7 +31,7 @@ class SearchTokenizerTest extends SearchTestBase {
     // the Unicode tables.
 
     // Beginnings of the character ranges.
-    $starts = array(
+    $starts = [
       'CJK unified' => 0x4e00,
       'CJK Ext A' => 0x3400,
       'CJK Compat' => 0xf900,
@@ -52,10 +52,10 @@ class SearchTokenizerTest extends SearchTestBase {
       'Bomofo Ext' => 0x31a0,
       'Lisu' => 0xa4d0,
       'Yi' => 0xa000,
-    );
+    ];
 
     // Ends of the character ranges.
-    $ends = array(
+    $ends = [
       'CJK unified' => 0x9fcf,
       'CJK Ext A' => 0x4dbf,
       'CJK Compat' => 0xfaff,
@@ -76,11 +76,11 @@ class SearchTokenizerTest extends SearchTestBase {
       'Bomofo Ext' => 0x31b7,
       'Lisu' => 0xa4fd,
       'Yi' => 0xa48f,
-    );
+    ];
 
     // Generate characters consisting of starts, midpoints, and ends.
-    $chars = array();
-    $charcodes = array();
+    $chars = [];
+    $charcodes = [];
     foreach ($starts as $key => $value) {
       $charcodes[] = $starts[$key];
       $chars[] = $this->code2utf($starts[$key]);

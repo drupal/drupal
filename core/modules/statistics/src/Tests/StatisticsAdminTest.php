@@ -16,7 +16,7 @@ class StatisticsAdminTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'statistics');
+  public static $modules = ['node', 'statistics'];
 
   /**
    * A user that has permission to administer statistics.
@@ -47,11 +47,11 @@ class StatisticsAdminTest extends WebTestBase {
 
     // Create Basic page node type.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     }
-    $this->privilegedUser = $this->drupalCreateUser(array('administer statistics', 'view post access counter', 'create page content'));
+    $this->privilegedUser = $this->drupalCreateUser(['administer statistics', 'view post access counter', 'create page content']);
     $this->drupalLogin($this->privilegedUser);
-    $this->testNode = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->privilegedUser->id()));
+    $this->testNode = $this->drupalCreateNode(['type' => 'page', 'uid' => $this->privilegedUser->id()]);
     $this->client = \Drupal::httpClient();
   }
 
@@ -72,19 +72,19 @@ class StatisticsAdminTest extends WebTestBase {
     $this->drupalGet('node/' . $this->testNode->id());
     // Manually calling statistics.php, simulating ajax behavior.
     $nid = $this->testNode->id();
-    $post = array('nid' => $nid);
+    $post = ['nid' => $nid];
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
-    $this->client->post($stats_path, array('form_params' => $post));
+    $this->client->post($stats_path, ['form_params' => $post]);
 
     // Hit the node again (the counter is incremented after the hit, so
     // "1 view" will actually be shown when the node is hit the second time).
     $this->drupalGet('node/' . $this->testNode->id());
-    $this->client->post($stats_path, array('form_params' => $post));
+    $this->client->post($stats_path, ['form_params' => $post]);
     $this->assertText('1 view', 'Node is viewed once.');
 
     $this->drupalGet('node/' . $this->testNode->id());
-    $this->client->post($stats_path, array('form_params' => $post));
+    $this->client->post($stats_path, ['form_params' => $post]);
     $this->assertText('2 views', 'Node is viewed 2 times.');
 
     // Increase the max age to test that nodes are no longer immediately
@@ -93,7 +93,7 @@ class StatisticsAdminTest extends WebTestBase {
     $this->drupalGet('node/' . $this->testNode->id());
     $this->assertText('3 views', 'Node is viewed 3 times.');
 
-    $this->client->post($stats_path, array('form_params' => $post));
+    $this->client->post($stats_path, ['form_params' => $post]);
     $this->drupalGet('node/' . $this->testNode->id());
     $this->assertText('3 views', 'Views counter was not updated.');
   }
@@ -107,13 +107,13 @@ class StatisticsAdminTest extends WebTestBase {
     $this->drupalGet('node/' . $this->testNode->id());
     // Manually calling statistics.php, simulating ajax behavior.
     $nid = $this->testNode->id();
-    $post = array('nid' => $nid);
+    $post = ['nid' => $nid];
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
-    $this->client->post($stats_path, array('form_params' => $post));
+    $this->client->post($stats_path, ['form_params' => $post]);
 
     $result = db_select('node_counter', 'n')
-      ->fields('n', array('nid'))
+      ->fields('n', ['nid'])
       ->condition('n.nid', $this->testNode->id())
       ->execute()
       ->fetchAssoc();
@@ -122,7 +122,7 @@ class StatisticsAdminTest extends WebTestBase {
     $this->testNode->delete();
 
     $result = db_select('node_counter', 'n')
-      ->fields('n', array('nid'))
+      ->fields('n', ['nid'])
       ->condition('n.nid', $this->testNode->id())
       ->execute()
       ->fetchAssoc();
@@ -141,12 +141,12 @@ class StatisticsAdminTest extends WebTestBase {
     $this->drupalGet('node/' . $this->testNode->id());
     // Manually calling statistics.php, simulating ajax behavior.
     $nid = $this->testNode->id();
-    $post = array('nid' => $nid);
+    $post = ['nid' => $nid];
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
-    $this->client->post($stats_path, array('form_params' => $post));
+    $this->client->post($stats_path, ['form_params' => $post]);
     $this->drupalGet('node/' . $this->testNode->id());
-    $this->client->post($stats_path, array('form_params' => $post));
+    $this->client->post($stats_path, ['form_params' => $post]);
     $this->assertText('1 view', 'Node is viewed once.');
 
     // statistics_cron() will subtract
@@ -160,7 +160,7 @@ class StatisticsAdminTest extends WebTestBase {
     $this->assertNoText('node/' . $this->testNode->id(), 'No hit URL found.');
 
     $result = db_select('node_counter', 'nc')
-      ->fields('nc', array('daycount'))
+      ->fields('nc', ['daycount'])
       ->condition('nid', $this->testNode->id(), '=')
       ->execute()
       ->fetchField();

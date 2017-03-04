@@ -23,7 +23,7 @@ interface RelationLinkManagerInterface extends ConfigurableLinkManagerInterface 
    * @return string
    *   The corresponding URI for the field.
    */
-  public function getRelationUri($entity_type, $bundle, $field_name, $context = array());
+  public function getRelationUri($entity_type, $bundle, $field_name, $context = []);
 
   /**
    * Translates a REST URI into internal IDs.

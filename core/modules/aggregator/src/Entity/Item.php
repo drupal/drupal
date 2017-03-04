@@ -61,11 +61,11 @@ class Item extends ContentEntityBase implements ItemInterface {
       ->setRequired(TRUE)
       ->setDescription(t('The aggregator feed entity associated with this item.'))
       ->setSetting('target_type', 'aggregator_feed')
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'entity_reference_label',
         'weight' => 0,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['title'] = BaseFieldDefinition::create('string')
@@ -75,18 +75,18 @@ class Item extends ContentEntityBase implements ItemInterface {
     $fields['link'] = BaseFieldDefinition::create('uri')
       ->setLabel(t('Link'))
       ->setDescription(t('The link of the feed item.'))
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'region' => 'hidden',
-      ))
+      ])
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['author'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Author'))
       ->setDescription(t('The author of the feed item.'))
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'hidden',
         'weight' => 3,
-      ))
+      ])
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['description'] = BaseFieldDefinition::create('string_long')
@@ -96,11 +96,11 @@ class Item extends ContentEntityBase implements ItemInterface {
     $fields['timestamp'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Posted on'))
       ->setDescription(t('Posted date of the feed item, as a Unix timestamp.'))
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'timestamp_ago',
         'weight' => 1,
-      ))
+      ])
       ->setDisplayConfigurable('view', TRUE);
 
     // @todo Convert to a real UUID field in

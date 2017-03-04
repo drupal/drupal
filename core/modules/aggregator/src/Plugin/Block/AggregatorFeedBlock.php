@@ -77,10 +77,10 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   public function defaultConfiguration() {
     // By default, the block will contain 10 feed items.
-    return array(
+    return [
       'block_count' => 10,
       'feed' => NULL,
-    );
+    ];
   }
 
   /**
@@ -96,23 +96,23 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   public function blockForm($form, FormStateInterface $form_state) {
     $feeds = $this->feedStorage->loadMultiple();
-    $options = array();
+    $options = [];
     foreach ($feeds as $feed) {
       $options[$feed->id()] = $feed->label();
     }
-    $form['feed'] = array(
+    $form['feed'] = [
       '#type' => 'select',
       '#title' => $this->t('Select the feed that should be displayed'),
       '#default_value' => $this->configuration['feed'],
       '#options' => $options,
-    );
+    ];
     $range = range(2, 20);
-    $form['block_count'] = array(
+    $form['block_count'] = [
       '#type' => 'select',
       '#title' => $this->t('Number of news items in block'),
       '#default_value' => $this->configuration['block_count'],
       '#options' => array_combine($range, $range),
-    );
+    ];
     return $form;
   }
 

@@ -18,18 +18,18 @@ class FileDenormalizeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('hal', 'file', 'node');
+  public static $modules = ['hal', 'file', 'node'];
 
   /**
    * Tests file entity denormalization.
    */
   public function testFileDenormalize() {
-    $file_params = array(
+    $file_params = [
       'filename' => 'test_1.txt',
       'uri' => 'public://test_1.txt',
       'filemime' => 'text/plain',
       'status' => FILE_STATUS_PERMANENT,
-    );
+    ];
     // Create a new file entity.
     $file = File::create($file_params);
     file_put_contents($file->getFileUri(), 'hello world');
@@ -56,11 +56,11 @@ class FileDenormalizeTest extends BrowserTestBase {
     file_put_contents($file_path, 'hello world');
     $file_uri = file_create_url($file_path);
 
-    $data = array(
-      'uri' => array(
-        array('value' => $file_uri),
-      ),
-    );
+    $data = [
+      'uri' => [
+        ['value' => $file_uri],
+      ],
+    ];
 
     $denormalized = $serializer->denormalize($data, 'Drupal\file\Entity\File', 'hal_json');
 

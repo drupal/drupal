@@ -93,7 +93,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    *
    * @var array
    */
-  protected $display = array();
+  protected $display = [];
 
   /**
    * The name of the base field to use.
@@ -184,15 +184,15 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       }
     }
 
-    $display_options = array(
+    $display_options = [
       'display_plugin' => $plugin_id,
       'id' => $id,
       // Cast the display title to a string since it is an object.
       // @see \Drupal\Core\StringTranslation\TranslatableMarkup
       'display_title' => (string) $title,
       'position' => $id === 'default' ? 0 : count($this->display),
-      'display_options' => array(),
-    );
+      'display_options' => [],
+    ];
 
     // Add the display options to the view.
     $this->display[$id] = $display_options;
@@ -413,17 +413,17 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
 
     // If there is no information about displays available add at least the
     // default display.
-    $values += array(
-      'display' => array(
-        'default' => array(
+    $values += [
+      'display' => [
+        'default' => [
           'display_plugin' => 'default',
           'id' => 'default',
           'display_title' => 'Master',
           'position' => 0,
-          'display_options' => array(),
-        ),
-      )
-    );
+          'display_options' => [],
+        ],
+      ]
+    ];
   }
 
   /**
@@ -468,15 +468,15 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function mergeDefaultDisplaysOptions() {
-    $displays = array();
+    $displays = [];
     foreach ($this->get('display') as $key => $options) {
-      $options += array(
-        'display_options' => array(),
+      $options += [
+        'display_options' => [],
         'display_plugin' => NULL,
         'id' => NULL,
         'display_title' => '',
         'position' => NULL,
-      );
+      ];
       // Add the defaults for the display.
       $displays[$key] = $options;
     }

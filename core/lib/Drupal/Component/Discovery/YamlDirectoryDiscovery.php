@@ -65,7 +65,7 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
    * {@inheritdoc}
    */
   public function findAll() {
-    $all = array();
+    $all = [];
 
     $files = $this->findFiles();
 

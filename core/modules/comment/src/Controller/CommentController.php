@@ -125,7 +125,7 @@ class CommentController extends ControllerBase {
       $page = $this->entityManager()->getStorage('comment')->getDisplayOrdinal($comment, $field_definition->getSetting('default_mode'), $field_definition->getSetting('per_page'));
       // @todo: Cleaner sub request handling.
       $subrequest_url = $entity->urlInfo()->setOption('query', ['page' => $page])->toString(TRUE);
-      $redirect_request = Request::create($subrequest_url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
+      $redirect_request = Request::create($subrequest_url->getGeneratedUrl(), 'GET', $request->query->all(), $request->cookies->all(), [], $request->server->all());
       // Carry over the session to the subrequest.
       if ($session = $request->getSession()) {
         $redirect_request->setSession($session);
@@ -174,11 +174,11 @@ class CommentController extends ControllerBase {
     // Legacy nodes only had a single comment field, so use the first comment
     // field on the entity.
     if (!empty($fields) && ($field_names = array_keys($fields)) && ($field_name = reset($field_names))) {
-      return $this->redirect('comment.reply', array(
+      return $this->redirect('comment.reply', [
         'entity_type' => 'node',
         'entity' => $node->id(),
         'field_name' => $field_name,
-      ));
+      ]);
     }
     throw new NotFoundHttpException();
   }
@@ -211,7 +211,7 @@ class CommentController extends ControllerBase {
    */
   public function getReplyForm(Request $request, EntityInterface $entity, $field_name, $pid = NULL) {
     $account = $this->currentUser();
-    $build = array();
+    $build = [];
 
     // The user is not just previewing a comment.
     if ($request->request->get('op') != $this->t('Preview')) {
@@ -240,12 +240,12 @@ class CommentController extends ControllerBase {
     }
 
     // Show the actual reply box.
-    $comment = $this->entityManager()->getStorage('comment')->create(array(
+    $comment = $this->entityManager()->getStorage('comment')->create([
       'entity_id' => $entity->id(),
       'pid' => $pid,
       'entity_type' => $entity->getEntityTypeId(),
       'field_name' => $field_name,
-    ));
+    ]);
     $build['comment_form'] = $this->entityFormBuilder()->getForm($comment);
 
     return $build;
@@ -324,17 +324,17 @@ class CommentController extends ControllerBase {
     // Only handle up to 100 nodes.
     $nids = array_slice($nids, 0, 100);
 
-    $links = array();
+    $links = [];
     foreach ($nids as $nid) {
       $node = $this->entityManager->getStorage('node')->load($nid);
       $new = $this->commentManager->getCountNewComments($node);
       $page_number = $this->entityManager()->getStorage('comment')
         ->getNewCommentPageNumber($node->{$field_name}->comment_count, $new, $node, $field_name);
-      $query = $page_number ? array('page' => $page_number) : NULL;
-      $links[$nid] = array(
+      $query = $page_number ? ['page' => $page_number] : NULL;
+      $links[$nid] = [
         'new_comment_count' => (int) $new,
-        'first_new_comment_link' => $this->getUrlGenerator()->generateFromRoute('entity.node.canonical', array('node' => $node->id()), array('query' => $query, 'fragment' => 'new')),
-      );
+        'first_new_comment_link' => $this->getUrlGenerator()->generateFromRoute('entity.node.canonical', ['node' => $node->id()], ['query' => $query, 'fragment' => 'new']),
+      ];
     }
 
     return new JsonResponse($links);

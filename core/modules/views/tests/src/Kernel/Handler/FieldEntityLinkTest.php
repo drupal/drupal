@@ -23,14 +23,14 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_entity_test_link');
+  public static $testViews = ['test_entity_test_link'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('user', 'entity_test');
+  public static $modules = ['user', 'entity_test'];
 
   /**
    * An admin user account.

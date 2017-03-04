@@ -12,14 +12,14 @@ use Drupal\Tests\BrowserTestBase;
  */
 class AdminPathEntityConverterLanguageTest extends BrowserTestBase {
 
-  public static $modules = array('language', 'language_test');
+  public static $modules = ['language', 'language_test'];
 
   protected function setUp() {
     parent::setUp();
-    $permissions = array(
+    $permissions = [
       'access administration pages',
       'administer site configuration',
-    );
+    ];
     $this->drupalLogin($this->drupalCreateUser($permissions));
     ConfigurableLanguage::createFromLangcode('es')->save();
   }
@@ -34,12 +34,12 @@ class AdminPathEntityConverterLanguageTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('es/admin/language_test/entity_using_current_language/es');
-    $this->assertNoRaw(t('Loaded %label.', array('%label' => 'Spanish')));
-    $this->assertRaw(t('Loaded %label.', array('%label' => 'Español')));
+    $this->assertNoRaw(t('Loaded %label.', ['%label' => 'Spanish']));
+    $this->assertRaw(t('Loaded %label.', ['%label' => 'Español']));
 
     $this->drupalGet('es/admin/language_test/entity_using_original_language/es');
-    $this->assertRaw(t('Loaded %label.', array('%label' => 'Spanish')));
-    $this->assertNoRaw(t('Loaded %label.', array('%label' => 'Español')));
+    $this->assertRaw(t('Loaded %label.', ['%label' => 'Spanish']));
+    $this->assertNoRaw(t('Loaded %label.', ['%label' => 'Español']));
   }
 
 }

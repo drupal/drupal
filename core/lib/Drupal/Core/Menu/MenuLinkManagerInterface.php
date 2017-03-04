@@ -72,7 +72,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    * @return \Drupal\Core\Menu\MenuLinkInterface[]
    *   An array of instances keyed by plugin ID.
    */
-  public function loadLinksByRoute($route_name, array $route_parameters = array(), $menu_name = NULL);
+  public function loadLinksByRoute($route_name, array $route_parameters = [], $menu_name = NULL);
 
   /**
    * Adds a new menu link definition to the menu tree storage.

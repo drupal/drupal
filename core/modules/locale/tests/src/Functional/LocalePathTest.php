@@ -18,7 +18,7 @@ class LocalePathTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'locale', 'path', 'views');
+  public static $modules = ['node', 'locale', 'path', 'views'];
 
   /**
    * {@inheritdoc}
@@ -26,7 +26,7 @@ class LocalePathTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->config('system.site')->set('page.front', '/node')->save();
   }
 
@@ -35,7 +35,7 @@ class LocalePathTest extends BrowserTestBase {
    */
   public function testPathLanguageConfiguration() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'create page content', 'administer url aliases', 'create url aliases', 'access administration pages', 'access content overview'));
+    $admin_user = $this->drupalCreateUser(['administer languages', 'create page content', 'administer url aliases', 'create url aliases', 'access administration pages', 'access content overview']);
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -45,16 +45,16 @@ class LocalePathTest extends BrowserTestBase {
     $name = $this->randomMachineName(16);
     // The domain prefix.
     $prefix = $langcode;
-    $edit = array(
+    $edit = [
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Set path prefix.
-    $edit = array("prefix[$langcode]" => $prefix);
+    $edit = ["prefix[$langcode]" => $prefix];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // Check that the "xx" front page is readily available because path prefix
@@ -63,25 +63,25 @@ class LocalePathTest extends BrowserTestBase {
     $this->assertText(t('Welcome to Drupal'), 'The "xx" front page is readibly available.');
 
     // Create a node.
-    $node = $this->drupalCreateNode(array('type' => 'page'));
+    $node = $this->drupalCreateNode(['type' => 'page']);
 
     // Create a path alias in default language (English).
     $path = 'admin/config/search/path/add';
     $english_path = $this->randomMachineName(8);
-    $edit = array(
+    $edit = [
       'source'   => '/node/' . $node->id(),
       'alias'    => '/' . $english_path,
       'langcode' => 'en',
-    );
+    ];
     $this->drupalPostForm($path, $edit, t('Save'));
 
     // Create a path alias in new custom language.
     $custom_language_path = $this->randomMachineName(8);
-    $edit = array(
+    $edit = [
       'source'   => '/node/' . $node->id(),
       'alias'    => '/' . $custom_language_path,
       'langcode' => $langcode,
-    );
+    ];
     $this->drupalPostForm($path, $edit, t('Save'));
 
     // Confirm English language path alias works.
@@ -96,11 +96,11 @@ class LocalePathTest extends BrowserTestBase {
     $custom_path = $this->randomMachineName(8);
 
     // Check priority of language for alias by source path.
-    $edit = array(
+    $edit = [
       'source'   => '/node/' . $node->id(),
       'alias'    => '/' . $custom_path,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    );
+    ];
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
     $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('/node/' . $node->id(), 'en');
     $this->assertEqual('/' . $english_path, $lookup_path, 'English language alias has priority.');
@@ -110,32 +110,32 @@ class LocalePathTest extends BrowserTestBase {
     $this->container->get('path.alias_storage')->delete($edit);
 
     // Create language nodes to check priority of aliases.
-    $first_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1, 'langcode' => 'en'));
-    $second_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1, 'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED));
+    $first_node = $this->drupalCreateNode(['type' => 'page', 'promote' => 1, 'langcode' => 'en']);
+    $second_node = $this->drupalCreateNode(['type' => 'page', 'promote' => 1, 'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED]);
 
     // Assign a custom path alias to the first node with the English language.
-    $edit = array(
+    $edit = [
       'source'   => '/node/' . $first_node->id(),
       'alias'    => '/' . $custom_path,
       'langcode' => $first_node->language()->getId(),
-    );
+    ];
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
 
     // Assign a custom path alias to second node with
     // LanguageInterface::LANGCODE_NOT_SPECIFIED.
-    $edit = array(
+    $edit = [
       'source'   => '/node/' . $second_node->id(),
       'alias'    => '/' . $custom_path,
       'langcode' => $second_node->language()->getId(),
-    );
+    ];
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
 
     // Test that both node titles link to our path alias.
     $this->drupalGet('admin/content');
     $custom_path_url = Url::fromUserInput('/' . $custom_path)->toString();
-    $elements = $this->xpath('//a[@href=:href and normalize-space(text())=:title]', array(':href' => $custom_path_url, ':title' => $first_node->label()));
+    $elements = $this->xpath('//a[@href=:href and normalize-space(text())=:title]', [':href' => $custom_path_url, ':title' => $first_node->label()]);
     $this->assertTrue(!empty($elements), 'First node links to the path alias.');
-    $elements = $this->xpath('//a[@href=:href and normalize-space(text())=:title]', array(':href' => $custom_path_url, ':title' => $second_node->label()));
+    $elements = $this->xpath('//a[@href=:href and normalize-space(text())=:title]', [':href' => $custom_path_url, ':title' => $second_node->label()]);
     $this->assertTrue(!empty($elements), 'Second node links to the path alias.');
 
     // Confirm that the custom path leads to the first node.

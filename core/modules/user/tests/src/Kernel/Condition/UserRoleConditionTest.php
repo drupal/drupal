@@ -48,7 +48,7 @@ class UserRoleConditionTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'field');
+  public static $modules = ['system', 'user', 'field'];
 
   /**
    * {@inheritdoc}
@@ -62,38 +62,38 @@ class UserRoleConditionTest extends KernelTestBase {
     $this->manager = $this->container->get('plugin.manager.condition');
 
     // Set up the authenticated and anonymous roles.
-    Role::create(array(
+    Role::create([
       'id' => RoleInterface::ANONYMOUS_ID,
       'label' => 'Anonymous user',
-    ))->save();
-    Role::create(array(
+    ])->save();
+    Role::create([
       'id' => RoleInterface::AUTHENTICATED_ID,
       'label' => 'Authenticated user',
-    ))->save();
+    ])->save();
 
     // Create new role.
     $rid = strtolower($this->randomMachineName(8));
     $label = $this->randomString(8);
-    $role = Role::create(array(
+    $role = Role::create([
       'id' => $rid,
       'label' => $label,
-    ));
+    ]);
     $role->save();
     $this->role = $role;
 
     // Setup an anonymous user for our tests.
-    $this->anonymous = User::create(array(
+    $this->anonymous = User::create([
       'name' => '',
       'uid' => 0,
-    ));
+    ]);
     $this->anonymous->save();
     // Loading the anonymous user adds the correct role.
     $this->anonymous = User::load($this->anonymous->id());
 
     // Setup an authenticated user for our tests.
-    $this->authenticated = User::create(array(
+    $this->authenticated = User::create([
       'name' => $this->randomMachineName(),
-    ));
+    ]);
     $this->authenticated->save();
     // Add the custom role.
     $this->authenticated->addRole($this->role->id());
@@ -107,7 +107,7 @@ class UserRoleConditionTest extends KernelTestBase {
     // authenticated user roles.
     /** @var $condition \Drupal\Core\Condition\ConditionInterface */
     $condition = $this->manager->createInstance('user_role')
-      ->setConfig('roles', array(RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID))
+      ->setConfig('roles', [RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID])
       ->setContextValue('user', $this->anonymous);
     $this->assertFalse($condition->execute(), 'Anonymous users fail role checks for authenticated.');
     // Check for the proper summary.
@@ -115,13 +115,13 @@ class UserRoleConditionTest extends KernelTestBase {
     $this->assertEqual($condition->summary(), 'The user is a member of Authenticated user');
 
     // Set the user role to anonymous.
-    $condition->setConfig('roles', array(RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID));
+    $condition->setConfig('roles', [RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID]);
     $this->assertTrue($condition->execute(), 'Anonymous users pass role checks for anonymous.');
     // Check for the proper summary.
     $this->assertEqual($condition->summary(), 'The user is a member of Anonymous user');
 
     // Set the user role to check anonymous or authenticated.
-    $condition->setConfig('roles', array(RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID));
+    $condition->setConfig('roles', [RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID]);
     $this->assertTrue($condition->execute(), 'Anonymous users pass role checks for anonymous or authenticated.');
     // Check for the proper summary.
     $this->assertEqual($condition->summary(), 'The user is a member of Anonymous user, Authenticated user');
@@ -132,11 +132,11 @@ class UserRoleConditionTest extends KernelTestBase {
     $this->assertTrue($condition->execute(), 'Authenticated users pass role checks for anonymous or authenticated.');
 
     // Set the role to just authenticated and recheck.
-    $condition->setConfig('roles', array(RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID));
+    $condition->setConfig('roles', [RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID]);
     $this->assertTrue($condition->execute(), 'Authenticated users pass role checks for authenticated.');
 
     // Test Constructor injection.
-    $condition = $this->manager->createInstance('user_role', array('roles' => array(RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID), 'context' => array('user' => $this->authenticated)));
+    $condition = $this->manager->createInstance('user_role', ['roles' => [RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID], 'context' => ['user' => $this->authenticated]]);
     $this->assertTrue($condition->execute(), 'Constructor injection of context and configuration working as anticipated.');
 
     // Check the negated summary.
@@ -144,14 +144,14 @@ class UserRoleConditionTest extends KernelTestBase {
     $this->assertEqual($condition->summary(), 'The user is not a member of Authenticated user');
 
     // Check the complex negated summary.
-    $condition->setConfig('roles', array(RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID));
+    $condition->setConfig('roles', [RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID]);
     $this->assertEqual($condition->summary(), 'The user is not a member of Anonymous user, Authenticated user');
 
     // Check a custom role.
-    $condition->setConfig('roles', array($this->role->id() => $this->role->id()));
+    $condition->setConfig('roles', [$this->role->id() => $this->role->id()]);
     $condition->setConfig('negate', FALSE);
     $this->assertTrue($condition->execute(), 'Authenticated user is a member of the custom role.');
-    $this->assertEqual($condition->summary(), SafeMarkup::format('The user is a member of @roles', array('@roles' => $this->role->label())));
+    $this->assertEqual($condition->summary(), SafeMarkup::format('The user is a member of @roles', ['@roles' => $this->role->label()]));
   }
 
 }

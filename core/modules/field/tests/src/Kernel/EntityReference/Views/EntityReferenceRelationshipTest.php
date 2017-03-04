@@ -27,14 +27,14 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array(
+  public static $testViews = [
     'test_entity_reference_entity_test_view',
     'test_entity_reference_entity_test_view_long',
     'test_entity_reference_reverse_entity_test_view',
     'test_entity_reference_entity_test_mul_view',
     'test_entity_reference_reverse_entity_test_mul_view',
     'test_entity_reference_group_by_empty_relationships',
-    );
+    ];
 
   /**
    * Modules to install.
@@ -48,7 +48,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected $entities = array();
+  protected $entities = [];
 
   /**
    * {@inheritdoc}
@@ -74,9 +74,9 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     $this->createEntityReferenceField('entity_test_mul_changed', 'entity_test_mul_changed', 'field_test_data_with_a_long_name', 'field_test_data_with_a_long_name', 'entity_test');
 
     // Create reference from entity_test_mul to entity_test cardinality: infinite.
-    $this->createEntityReferenceField('entity_test_mul', 'entity_test_mul', 'field_data_test_unlimited', 'field_data_test_unlimited', 'entity_test', 'default', array(), FieldStorageConfig::CARDINALITY_UNLIMITED);
+    $this->createEntityReferenceField('entity_test_mul', 'entity_test_mul', 'field_data_test_unlimited', 'field_data_test_unlimited', 'entity_test', 'default', [], FieldStorageConfig::CARDINALITY_UNLIMITED);
 
-    ViewTestData::createTestViews(get_class($this), array('entity_reference_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['entity_reference_test_views']);
   }
 
   /**

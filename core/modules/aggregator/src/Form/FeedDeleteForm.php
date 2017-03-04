@@ -28,9 +28,9 @@ class FeedDeleteForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   protected function getDeletionMessage() {
-    return $this->t('The feed %label has been deleted.', array(
+    return $this->t('The feed %label has been deleted.', [
       '%label' => $this->entity->label(),
-    ));
+    ]);
   }
 
 }

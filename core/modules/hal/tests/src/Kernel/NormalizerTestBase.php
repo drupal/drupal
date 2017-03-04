@@ -58,29 +58,29 @@ abstract class NormalizerTestBase extends KernelTestBase {
         // Only check the modules, if the $modules property was not inherited.
         $rp = new \ReflectionProperty($class, 'modules');
         if ($rp->class == $class) {
-          foreach (array_intersect(array('node', 'comment'), $class::$modules) as $module) {
+          foreach (array_intersect(['node', 'comment'], $class::$modules) as $module) {
             $this->installEntitySchema($module);
           }
         }
       }
       $class = get_parent_class($class);
     }
-    $this->installConfig(array('field', 'language'));
+    $this->installConfig(['field', 'language']);
     \Drupal::service('router.builder')->rebuild();
 
     // Add German as a language.
-    ConfigurableLanguage::create(array(
+    ConfigurableLanguage::create([
       'id' => 'de',
       'label' => 'Deutsch',
       'weight' => -1,
-    ))->save();
+    ])->save();
 
     // Create the test text field.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => 'field_test_text',
       'entity_type' => 'entity_test',
       'type' => 'text',
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_text',
@@ -89,11 +89,11 @@ abstract class NormalizerTestBase extends KernelTestBase {
     ])->save();
 
     // Create the test translatable field.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => 'field_test_translatable_text',
       'entity_type' => 'entity_test',
       'type' => 'text',
-    ))->save();
+    ])->save();
     FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_translatable_text',
@@ -102,14 +102,14 @@ abstract class NormalizerTestBase extends KernelTestBase {
     ])->save();
 
     // Create the test entity reference field.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => 'field_test_entity_reference',
       'entity_type' => 'entity_test',
       'type' => 'entity_reference',
-      'settings' => array(
+      'settings' => [
         'target_type' => 'entity_test',
-      ),
-    ))->save();
+      ],
+    ])->save();
     FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'field_test_entity_reference',

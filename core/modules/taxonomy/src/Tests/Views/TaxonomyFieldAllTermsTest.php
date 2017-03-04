@@ -17,7 +17,7 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $testViews = array('taxonomy_all_terms_test');
+  public static $testViews = ['taxonomy_all_terms_test'];
 
   /**
    * Tests the "all terms" field handler.

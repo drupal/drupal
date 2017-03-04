@@ -25,24 +25,24 @@ class ShortcutSetUsers extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'uid' => $this->t('The users.uid for this set.'),
       'set_name' => $this->t('The shortcut_set.set_name that will be displayed for this user.'),
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getIds() {
-    return array(
-      'set_name' => array(
+    return [
+      'set_name' => [
         'type' => 'string',
-      ),
-      'uid' => array(
+      ],
+      'uid' => [
         'type' => 'integer',
-      ),
-    );
+      ],
+    ];
   }
 
 }

@@ -22,7 +22,7 @@ class StyleTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Stores the SimpleXML representation of the output.
@@ -100,52 +100,52 @@ class StyleTest extends ViewTestBase {
     $view->setDisplay();
     // Setup grouping by the job and the age field.
     $view->initStyle();
-    $view->style_plugin->options['grouping'] = array(
-      array('field' => 'job'),
-      array('field' => 'age'),
-    );
+    $view->style_plugin->options['grouping'] = [
+      ['field' => 'job'],
+      ['field' => 'age'],
+    ];
 
     // Reduce the amount of items to make the test a bit easier.
     // Set up the pager.
-    $view->displayHandlers->get('default')->overrideOption('pager', array(
+    $view->displayHandlers->get('default')->overrideOption('pager', [
       'type' => 'some',
-      'options' => array('items_per_page' => 3),
-    ));
+      'options' => ['items_per_page' => 3],
+    ]);
 
     // Add the job and age field.
-    $fields = array(
-      'name' => array(
+    $fields = [
+      'name' => [
         'id' => 'name',
         'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',
         'label' => 'Name',
-      ),
-      'job' => array(
+      ],
+      'job' => [
         'id' => 'job',
         'table' => 'views_test_data',
         'field' => 'job',
         'relationship' => 'none',
         'label' => 'Job',
-      ),
-      'age' => array(
+      ],
+      'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
         'label' => 'Age',
-      ),
-    );
+      ],
+    ];
     $view->displayHandlers->get('default')->overrideOption('fields', $fields);
 
     // Now run the query and groupby the result.
     $this->executeView($view);
 
-    $expected = array();
-    $expected['Job: Singer'] = array();
+    $expected = [];
+    $expected['Job: Singer'] = [];
     $expected['Job: Singer']['group'] = 'Job: Singer';
     $expected['Job: Singer']['level'] = 0;
-    $expected['Job: Singer']['rows']['Age: 25'] = array();
+    $expected['Job: Singer']['rows']['Age: 25'] = [];
     $expected['Job: Singer']['rows']['Age: 25']['group'] = 'Age: 25';
     $expected['Job: Singer']['rows']['Age: 25']['level'] = 1;
     $expected['Job: Singer']['rows']['Age: 25']['rows'][0] = new ResultRow(['index' => 0]);
@@ -153,7 +153,7 @@ class StyleTest extends ViewTestBase {
     $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_job = 'Singer';
     $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_age = '25';
     $expected['Job: Singer']['rows']['Age: 25']['rows'][0]->views_test_data_id = '1';
-    $expected['Job: Singer']['rows']['Age: 27'] = array();
+    $expected['Job: Singer']['rows']['Age: 27'] = [];
     $expected['Job: Singer']['rows']['Age: 27']['group'] = 'Age: 27';
     $expected['Job: Singer']['rows']['Age: 27']['level'] = 1;
     $expected['Job: Singer']['rows']['Age: 27']['rows'][1] = new ResultRow(['index' => 1]);
@@ -161,10 +161,10 @@ class StyleTest extends ViewTestBase {
     $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_job = 'Singer';
     $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_age = '27';
     $expected['Job: Singer']['rows']['Age: 27']['rows'][1]->views_test_data_id = '2';
-    $expected['Job: Drummer'] = array();
+    $expected['Job: Drummer'] = [];
     $expected['Job: Drummer']['group'] = 'Job: Drummer';
     $expected['Job: Drummer']['level'] = 0;
-    $expected['Job: Drummer']['rows']['Age: 28'] = array();
+    $expected['Job: Drummer']['rows']['Age: 28'] = [];
     $expected['Job: Drummer']['rows']['Age: 28']['group'] = 'Age: 28';
     $expected['Job: Drummer']['rows']['Age: 28']['level'] = 1;
     $expected['Job: Drummer']['rows']['Age: 28']['rows'][2] = new ResultRow(['index' => 2]);
@@ -190,8 +190,8 @@ class StyleTest extends ViewTestBase {
       $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_job = 'Drummer' . $rand3;
       $expected['Job: Drummer']['group'] = 'Job: Drummer';
 
-      $view->style_plugin->options['grouping'][0] = array('field' => 'job', 'rendered' => TRUE, 'rendered_strip' => TRUE);
-      $view->style_plugin->options['grouping'][1] = array('field' => 'age', 'rendered' => TRUE, 'rendered_strip' => TRUE);
+      $view->style_plugin->options['grouping'][0] = ['field' => 'job', 'rendered' => TRUE, 'rendered_strip' => TRUE];
+      $view->style_plugin->options['grouping'][1] = ['field' => 'age', 'rendered' => TRUE, 'rendered_strip' => TRUE];
     }
 
 
@@ -226,10 +226,10 @@ class StyleTest extends ViewTestBase {
     $view->setDisplay();
     $view->initStyle();
     $view->displayHandlers->get('default')->overrideOption('fields', $fields);
-    $view->style_plugin->options['grouping'] = array(
-      array('field' => 'job'),
-      array('field' => 'age'),
-    );
+    $view->style_plugin->options['grouping'] = [
+      ['field' => 'job'],
+      ['field' => 'age'],
+    ];
 
     $this->executeView($view);
 
@@ -237,8 +237,8 @@ class StyleTest extends ViewTestBase {
       $view->result[0]->views_test_data_job .= $rand1;
       $view->result[1]->views_test_data_job .= $rand2;
       $view->result[2]->views_test_data_job .= $rand3;
-      $view->style_plugin->options['grouping'][0] = array('field' => 'job', 'rendered' => TRUE, 'rendered_strip' => TRUE);
-      $view->style_plugin->options['grouping'][1] = array('field' => 'age', 'rendered' => TRUE, 'rendered_strip' => TRUE);
+      $view->style_plugin->options['grouping'][0] = ['field' => 'job', 'rendered' => TRUE, 'rendered_strip' => TRUE];
+      $view->style_plugin->options['grouping'][1] = ['field' => 'age', 'rendered' => TRUE, 'rendered_strip' => TRUE];
     }
 
     $sets_new_rendered = $view->style_plugin->renderGrouping($view->result, $view->style_plugin->options['grouping'], TRUE);

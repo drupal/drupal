@@ -90,11 +90,11 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
     $output = $this->view->render();
 
     if (!empty($this->view->live_preview)) {
-      $output = array(
+      $output = [
         '#prefix' => '<pre>',
         '#plain_text' => drupal_render_root($output),
         '#suffix' => '</pre>',
-      );
+      ];
     }
 
     return $output;
@@ -117,7 +117,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
   public function defaultableSections($section = NULL) {
     $sections = parent::defaultableSections($section);
 
-    if (in_array($section, array('style', 'row'))) {
+    if (in_array($section, ['style', 'row'])) {
       return FALSE;
     }
 
@@ -137,11 +137,11 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['displays'] = array('default' => array());
+    $options['displays'] = ['default' => []];
 
     // Overrides for standard stuff.
     $options['style']['contains']['type']['default'] = 'rss';
-    $options['style']['contains']['options']['default']  = array('description' => '');
+    $options['style']['contains']['options']['default']  = ['description' => ''];
     $options['sitename_title']['default'] = FALSE;
     $options['row']['contains']['type']['default'] = 'rss_fields';
     $options['defaults']['default']['style'] = FALSE;
@@ -160,7 +160,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
     // definition, but in this case it's dependent on the view's base table,
     // which we don't know until init().
     if (empty($this->options['row']['type']) || $this->options['row']['type'] === 'rss_fields') {
-      $row_plugins = Views::fetchPluginNames('row', $this->getType(), array($this->view->storage->get('base_table')));
+      $row_plugins = Views::fetchPluginNames('row', $this->getType(), [$this->view->storage->get('base_table')]);
       $default_row_plugin = key($row_plugins);
 
       $options = $this->getOption('row');
@@ -177,13 +177,13 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
 
     // Since we're childing off the 'path' type, we'll still *call* our
     // category 'page' but let's override it so it says feed settings.
-    $categories['page'] = array(
+    $categories['page'] = [
       'title' => $this->t('Feed settings'),
       'column' => 'second',
-      'build' => array(
+      'build' => [
         '#weight' => -10,
-      ),
-    );
+      ],
+    ];
 
     if ($this->getOption('sitename_title')) {
       $options['title']['value'] = $this->t('Using the site name');
@@ -205,11 +205,11 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
       $attach_to = $this->t('None');
     }
 
-    $options['displays'] = array(
+    $options['displays'] = [
       'category' => 'page',
       'title' => $this->t('Attach to'),
       'value' => $attach_to,
-    );
+    ];
   }
 
   /**
@@ -224,34 +224,34 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
         $title = $form['title'];
         // A little juggling to move the 'title' field beyond our checkbox.
         unset($form['title']);
-        $form['sitename_title'] = array(
+        $form['sitename_title'] = [
           '#type' => 'checkbox',
           '#title' => $this->t('Use the site name for the title'),
           '#default_value' => $this->getOption('sitename_title'),
-        );
+        ];
         $form['title'] = $title;
-        $form['title']['#states'] = array(
-          'visible' => array(
-            ':input[name="sitename_title"]' => array('checked' => FALSE),
-          ),
-        );
+        $form['title']['#states'] = [
+          'visible' => [
+            ':input[name="sitename_title"]' => ['checked' => FALSE],
+          ],
+        ];
         break;
       case 'displays':
         $form['#title'] .= $this->t('Attach to');
-        $displays = array();
+        $displays = [];
         foreach ($this->view->storage->get('display') as $display_id => $display) {
           // @todo The display plugin should have display_title and id as well.
           if ($this->view->displayHandlers->has($display_id) && $this->view->displayHandlers->get($display_id)->acceptAttachments()) {
             $displays[$display_id] = $display['display_title'];
           }
         }
-        $form['displays'] = array(
+        $form['displays'] = [
           '#title' => $this->t('Displays'),
           '#type' => 'checkboxes',
           '#description' => $this->t('The feed icon will be available only to the selected displays.'),
           '#options' => array_map('\Drupal\Component\Utility\Html::escape', $displays),
           '#default_value' => $this->getOption('displays'),
-        );
+        ];
         break;
       case 'path':
         $form['path']['#description'] = $this->t('This view will be displayed by visiting this path on your site. It is recommended that the path be something like "path/%/%/feed" or "path/%/%/rss.xml", putting one % in the path for each contextual filter you have defined in the view.');

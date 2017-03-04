@@ -79,7 +79,7 @@ class Context implements ContextInterface {
     if (empty($this->contextDefinition['class'])) {
       throw new ContextException("An error was encountered while trying to validate the context.");
     }
-    return array(new Type($this->contextDefinition['class']));
+    return [new Type($this->contextDefinition['class'])];
   }
 
   /**

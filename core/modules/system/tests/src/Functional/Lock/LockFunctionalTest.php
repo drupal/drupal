@@ -16,7 +16,7 @@ class LockFunctionalTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('system_test');
+  public static $modules = ['system_test'];
 
   /**
    * Confirms that we can acquire and release locks in two parallel requests.

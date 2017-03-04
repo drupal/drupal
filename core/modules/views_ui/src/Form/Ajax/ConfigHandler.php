@@ -54,17 +54,17 @@ class ConfigHandler extends ViewsFormBase {
     $type = $form_state->get('type');
     $id = $form_state->get('id');
 
-    $form = array(
-      'options' => array(
+    $form = [
+      'options' => [
         '#tree' => TRUE,
-        '#theme_wrappers' => array('container'),
-        '#attributes' => array('class' => array('scroll'), 'data-drupal-views-scroll' => TRUE),
-      ),
-    );
+        '#theme_wrappers' => ['container'],
+        '#attributes' => ['class' => ['scroll'], 'data-drupal-views-scroll' => TRUE],
+      ],
+    ];
     $executable = $view->getExecutable();
     $save_ui_cache = FALSE;
     if (!$executable->setDisplay($display_id)) {
-      $form['markup'] = array('#markup' => $this->t('Invalid display id @display', array('@display' => $display_id)));
+      $form['markup'] = ['#markup' => $this->t('Invalid display id @display', ['@display' => $display_id])];
       return $form;
     }
     $item = $executable->getHandler($display_id, $type, $id);
@@ -72,7 +72,7 @@ class ConfigHandler extends ViewsFormBase {
     if ($item) {
       $handler = $executable->display_handler->getHandler($type, $id);
       if (empty($handler)) {
-        $form['markup'] = array('#markup' => $this->t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
+        $form['markup'] = ['#markup' => $this->t("Error: handler for @table > @field doesn't exist!", ['@table' => $item['table'], '@field' => $item['field']])];
       }
       else {
         $types = ViewExecutable::getHandlerTypes();
@@ -88,7 +88,7 @@ class ConfigHandler extends ViewsFormBase {
         // A whole bunch of code to figure out what relationships are valid for
         // this item.
         $relationships = $executable->display_handler->getOption('relationships');
-        $relationship_options = array();
+        $relationship_options = [];
 
         foreach ($relationships as $relationship) {
           // relationships can't link back to self. But also, due to ordering,
@@ -118,7 +118,7 @@ class ConfigHandler extends ViewsFormBase {
           // it to none.
           $base_fields = Views::viewsDataHelper()->fetchFields($view->get('base_table'), $type, $executable->display_handler->useGroupBy());
           if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
-            $relationship_options = array_merge(array('none' => $this->t('Do not use a relationship')), $relationship_options);
+            $relationship_options = array_merge(['none' => $this->t('Do not use a relationship')], $relationship_options);
           }
           $rel = empty($item['relationship']) ? 'none' : $item['relationship'];
           if (empty($relationship_options[$rel])) {
@@ -133,30 +133,30 @@ class ConfigHandler extends ViewsFormBase {
             $handler->init($executable, $executable->display_handler, $item);
           }
 
-          $form['options']['relationship'] = array(
+          $form['options']['relationship'] = [
             '#type' => 'select',
             '#title' => $this->t('Relationship'),
             '#options' => $relationship_options,
             '#default_value' => $rel,
             '#weight' => -500,
-          );
+          ];
         }
         else {
-          $form['options']['relationship'] = array(
+          $form['options']['relationship'] = [
             '#type' => 'value',
             '#value' => 'none',
-          );
+          ];
         }
 
-        $form['#title'] = $this->t('Configure @type: @item', array('@type' => $types[$type]['lstitle'], '@item' => $handler->adminLabel()));
+        $form['#title'] = $this->t('Configure @type: @item', ['@type' => $types[$type]['lstitle'], '@item' => $handler->adminLabel()]);
 
         if (!empty($handler->definition['help'])) {
-          $form['options']['form_description'] = array(
+          $form['options']['form_description'] = [
             '#markup' => $handler->definition['help'],
-            '#theme_wrappers' => array('container'),
-            '#attributes' => array('class' => array('js-form-item form-item description')),
+            '#theme_wrappers' => ['container'],
+            '#attributes' => ['class' => ['js-form-item form-item description']],
             '#weight' => -1000,
-          );
+          ];
         }
 
         $form['#section'] = $display_id . '-' . $type . '-' . $id;
@@ -170,13 +170,13 @@ class ConfigHandler extends ViewsFormBase {
 
       $view->getStandardButtons($form, $form_state, 'views_ui_config_item_form', $name);
       // Add a 'remove' button.
-      $form['actions']['remove'] = array(
+      $form['actions']['remove'] = [
         '#type' => 'submit',
         '#value' => $this->t('Remove'),
-        '#submit' => array(array($this, 'remove')),
-        '#limit_validation_errors' => array(array('override')),
+        '#submit' => [[$this, 'remove']],
+        '#limit_validation_errors' => [['override']],
         '#button_type' => 'danger',
-      );
+      ];
     }
 
     if ($save_ui_cache) {

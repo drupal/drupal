@@ -78,11 +78,11 @@ class ControllerResolverTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $mock_account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $request = new Request(array(), array(), array(
+    $request = new Request([], [], [
       'entity' => $mock_entity,
       'user' => $mock_account,
-      '_raw_variables' => new ParameterBag(array('entity' => 1, 'user' => 1)),
-    ), array(), array(), array('HTTP_HOST' => 'drupal.org'));
+      '_raw_variables' => new ParameterBag(['entity' => 1, 'user' => 1]),
+    ], [], [], ['HTTP_HOST' => 'drupal.org']);
     $arguments = $this->controllerResolver->getArguments($request, $controller);
 
     $this->assertEquals($mock_entity, $arguments[0]);
@@ -106,16 +106,16 @@ class ControllerResolverTest extends UnitTestCase {
    * Provides test data for testCreateController().
    */
   public function providerTestCreateController() {
-    return array(
+    return [
       // Tests class::method.
-      array('Drupal\Tests\Core\Controller\MockController::getResult', 'Drupal\Tests\Core\Controller\MockController', 'This is a regular controller.'),
+      ['Drupal\Tests\Core\Controller\MockController::getResult', 'Drupal\Tests\Core\Controller\MockController', 'This is a regular controller.'],
       // Tests service:method.
-      array('some_service:getResult', 'Drupal\Tests\Core\Controller\MockController', 'This is a regular controller.'),
+      ['some_service:getResult', 'Drupal\Tests\Core\Controller\MockController', 'This is a regular controller.'],
       // Tests a class with injection.
-      array('Drupal\Tests\Core\Controller\MockContainerInjection::getResult', 'Drupal\Tests\Core\Controller\MockContainerInjection', 'This used injection.'),
+      ['Drupal\Tests\Core\Controller\MockContainerInjection::getResult', 'Drupal\Tests\Core\Controller\MockContainerInjection', 'This used injection.'],
       // Tests a ContainerAware class.
-      array('Drupal\Tests\Core\Controller\MockContainerAware::getResult', 'Drupal\Tests\Core\Controller\MockContainerAware', 'This is container aware.'),
-    );
+      ['Drupal\Tests\Core\Controller\MockContainerAware::getResult', 'Drupal\Tests\Core\Controller\MockContainerAware', 'This is container aware.'],
+    ];
   }
 
   /**
@@ -142,7 +142,7 @@ class ControllerResolverTest extends UnitTestCase {
    * @dataProvider providerTestGetController
    */
   public function testGetController($attributes, $class, $output = NULL) {
-    $request = new Request(array(), array(), $attributes);
+    $request = new Request([], [], $attributes);
     $result = $this->controllerResolver->getController($request);
     if ($class) {
       $this->assertCallableController($result, $class, $output);
@@ -156,12 +156,12 @@ class ControllerResolverTest extends UnitTestCase {
    * Provides test data for testGetController().
    */
   public function providerTestGetController() {
-    return array(
+    return [
       // Tests passing a controller via the request.
-      array(array('_controller' => 'Drupal\Tests\Core\Controller\MockContainerAware::getResult'), 'Drupal\Tests\Core\Controller\MockContainerAware', 'This is container aware.'),
+      [['_controller' => 'Drupal\Tests\Core\Controller\MockContainerAware::getResult'], 'Drupal\Tests\Core\Controller\MockContainerAware', 'This is container aware.'],
       // Tests a request with no controller specified.
-      array(array(), FALSE)
-    );
+      [[], FALSE]
+    ];
   }
 
   /**
@@ -178,16 +178,16 @@ class ControllerResolverTest extends UnitTestCase {
    * Provides test data for testGetControllerFromDefinition().
    */
   public function providerTestGetControllerFromDefinition() {
-    return array(
+    return [
       // Tests a method on an object.
-      array(array(new MockController(), 'getResult'), 'This is a regular controller.'),
+      [[new MockController(), 'getResult'], 'This is a regular controller.'],
       // Tests a function.
-      array('phpversion', phpversion()),
+      ['phpversion', phpversion()],
       // Tests an object using __invoke().
-      array(new MockInvokeController(), 'This used __invoke().'),
+      [new MockInvokeController(), 'This used __invoke().'],
       // Tests a class using __invoke().
-      array('Drupal\Tests\Core\Controller\MockInvokeController', 'This used __invoke().'),
-    );
+      ['Drupal\Tests\Core\Controller\MockInvokeController', 'This used __invoke().'],
+    ];
   }
   /**
    * Tests getControllerFromDefinition() without a callable.

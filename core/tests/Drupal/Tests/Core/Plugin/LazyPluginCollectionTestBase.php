@@ -36,11 +36,11 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    *
    * @var array
    */
-  protected $config = array(
-    'banana' => array('id' => 'banana', 'key' => 'value'),
-    'cherry' => array('id' => 'cherry', 'key' => 'value'),
-    'apple' => array('id' => 'apple', 'key' => 'value'),
-  );
+  protected $config = [
+    'banana' => ['id' => 'banana', 'key' => 'value'],
+    'cherry' => ['id' => 'cherry', 'key' => 'value'],
+    'apple' => ['id' => 'apple', 'key' => 'value'],
+  ];
 
   protected function setUp() {
     $this->pluginManager = $this->getMock('Drupal\Component\Plugin\PluginManagerInterface');
@@ -59,18 +59,18 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    *   Defaults to $this->never().
    */
   protected function setupPluginCollection(\PHPUnit_Framework_MockObject_Matcher_InvokedRecorder $create_count = NULL) {
-    $this->pluginInstances = array();
-    $map = array();
+    $this->pluginInstances = [];
+    $map = [];
     foreach ($this->getPluginDefinitions() as $plugin_id => $definition) {
       // Create a mock plugin instance.
       $this->pluginInstances[$plugin_id] = $this->getPluginMock($plugin_id, $definition);
 
-      $map[] = array($plugin_id, $this->config[$plugin_id], $this->pluginInstances[$plugin_id]);
+      $map[] = [$plugin_id, $this->config[$plugin_id], $this->pluginInstances[$plugin_id]];
     }
     $create_count = $create_count ?: $this->never();
     $this->pluginManager->expects($create_count)
       ->method('createInstance')
-      ->will($this->returnCallback(array($this, 'returnPluginMap')));
+      ->will($this->returnCallback([$this, 'returnPluginMap']));
 
     $this->defaultPluginCollection = new DefaultLazyPluginCollection($this->pluginManager, $this->config);
   }
@@ -116,32 +116,32 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    *   The example plugin definitions.
    */
   protected function getPluginDefinitions() {
-    $definitions = array(
-      'apple' => array(
+    $definitions = [
+      'apple' => [
         'id' => 'apple',
         'label' => 'Apple',
         'color' => 'green',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Apple',
         'provider' => 'plugin_test',
-      ),
-      'banana' => array(
+      ],
+      'banana' => [
         'id' => 'banana',
         'label' => 'Banana',
         'color' => 'yellow',
-        'uses' => array(
+        'uses' => [
           'bread' => 'Banana bread',
-        ),
+        ],
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Banana',
         'provider' => 'plugin_test',
-      ),
-      'cherry' => array(
+      ],
+      'cherry' => [
         'id' => 'cherry',
         'label' => 'Cherry',
         'color' => 'red',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry',
         'provider' => 'plugin_test',
-      ),
-    );
+      ],
+    ];
     return $definitions;
   }
 

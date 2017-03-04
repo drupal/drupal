@@ -8,7 +8,7 @@
 /**
  * Implements hook_hal_type_uri_alter().
  */
-function hal_test_hal_type_uri_alter(&$uri, $context = array()) {
+function hal_test_hal_type_uri_alter(&$uri, $context = []) {
   if (!empty($context['hal_test'])) {
     $uri = 'hal_test_type';
   }
@@ -17,7 +17,7 @@ function hal_test_hal_type_uri_alter(&$uri, $context = array()) {
 /**
  * Implements hook_hal_relation_uri_alter().
  */
-function hal_test_hal_relation_uri_alter(&$uri, $context = array()) {
+function hal_test_hal_relation_uri_alter(&$uri, $context = []) {
   if (!empty($context['hal_test'])) {
     $uri = 'hal_test_relation';
   }
@@ -28,7 +28,7 @@ function hal_test_hal_relation_uri_alter(&$uri, $context = array()) {
  *
  * @deprecated Kept only for BC test coverage, see \Drupal\Tests\hal\Kernel\HalLinkManagerTest::testGetTypeUri().
  */
-function hal_test_rest_type_uri_alter(&$uri, $context = array()) {
+function hal_test_rest_type_uri_alter(&$uri, $context = []) {
   if (!empty($context['rest_test'])) {
     $uri = 'rest_test_type';
   }
@@ -39,7 +39,7 @@ function hal_test_rest_type_uri_alter(&$uri, $context = array()) {
  *
  * @deprecated Kept only for BC test coverage, see \Drupal\Tests\hal\Kernel\HalLinkManagerTest::testGetRelationUri().
  */
-function hal_test_rest_relation_uri_alter(&$uri, $context = array()) {
+function hal_test_rest_relation_uri_alter(&$uri, $context = []) {
   if (!empty($context['rest_test'])) {
     $uri = 'rest_test_relation';
   }

@@ -9,208 +9,208 @@
  * Implements hook_views_data().
  */
 function dblog_views_data() {
-  $data = array();
+  $data = [];
 
   $data['watchdog']['table']['group'] = t('Watchdog');
   $data['watchdog']['table']['wizard_id'] = 'watchdog';
 
-  $data['watchdog']['table']['base'] = array(
+  $data['watchdog']['table']['base'] = [
     'field' => 'wid',
     'title' => t('Log entries'),
     'help' => t('Contains a list of log entries.'),
-  );
+  ];
 
-  $data['watchdog']['wid'] = array(
+  $data['watchdog']['wid'] = [
     'title' => t('WID'),
     'help' => t('Unique watchdog event ID.'),
-    'field' => array(
+    'field' => [
       'id' => 'numeric',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'numeric',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'numeric',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['watchdog']['uid'] = array(
+  $data['watchdog']['uid'] = [
     'title' => t('UID'),
     'help' => t('The user ID of the user on which the log entry was written..'),
-    'field' => array(
+    'field' => [
       'id' => 'numeric',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'numeric',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'numeric',
-    ),
-    'relationship' => array(
+    ],
+    'relationship' => [
       'title' => t('User'),
       'help' => t('The user on which the log entry as written.'),
       'base' => 'users',
       'base field' => 'uid',
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['watchdog']['type'] = array(
+  $data['watchdog']['type'] = [
     'title' => t('Type'),
     'help' => t('The type of the log entry, for example "user" or "page not found".'),
-    'field' => array(
+    'field' => [
       'id' => 'standard',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'string',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'in_operator',
       'options callback' => '_dblog_get_message_types',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['watchdog']['message'] = array(
+  $data['watchdog']['message'] = [
     'title' => t('Message'),
     'help' => t('The actual message of the log entry.'),
-    'field' => array(
+    'field' => [
       'id' => 'dblog_message',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'string',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'string',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['watchdog']['variables'] = array(
+  $data['watchdog']['variables'] = [
     'title' => t('Variables'),
     'help' => t('The variables of the log entry in a serialized format.'),
-    'field' => array(
+    'field' => [
       'id' => 'serialized',
       'click sortable' => FALSE,
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'string',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'string',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['watchdog']['severity'] = array(
+  $data['watchdog']['severity'] = [
     'title' => t('Severity level'),
     'help' => t('The severity level of the event; ranges from 0 (Emergency) to 7 (Debug).'),
-    'field' => array(
+    'field' => [
       'id' => 'machine_name',
       'options callback' => 'Drupal\dblog\Controller\DbLogController::getLogLevelClassMap',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'in_operator',
       'options callback' => 'Drupal\dblog\Controller\DbLogController::getLogLevelClassMap',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['watchdog']['link'] = array(
+  $data['watchdog']['link'] = [
     'title' => t('Operations'),
     'help' => t('Operation links for the event.'),
-    'field' => array(
+    'field' => [
       'id' => 'dblog_operations',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'string',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'string',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['watchdog']['location'] = array(
+  $data['watchdog']['location'] = [
     'title' => t('Location'),
     'help' => t('URL of the origin of the event.'),
-    'field' => array(
+    'field' => [
       'id' => 'standard',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'string',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'string',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['watchdog']['referer'] = array(
+  $data['watchdog']['referer'] = [
     'title' => t('Referer'),
     'help' => t('URL of the previous page.'),
-    'field' => array(
+    'field' => [
       'id' => 'standard',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'string',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'string',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['watchdog']['hostname'] = array(
+  $data['watchdog']['hostname'] = [
     'title' => t('Hostname'),
     'help' => t('Hostname of the user who triggered the event.'),
-    'field' => array(
+    'field' => [
       'id' => 'standard',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'string',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'string',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'standard',
-    ),
-  );
+    ],
+  ];
 
-  $data['watchdog']['timestamp'] = array(
+  $data['watchdog']['timestamp'] = [
     'title' => t('Timestamp'),
     'help' => t('Date when the event occurred.'),
-    'field' => array(
+    'field' => [
       'id' => 'date',
-    ),
-    'argument' => array(
+    ],
+    'argument' => [
       'id' => 'date',
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'id' => 'date',
-    ),
-    'sort' => array(
+    ],
+    'sort' => [
       'id' => 'date',
-    ),
-  );
+    ],
+  ];
 
   return $data;
 }

@@ -61,7 +61,7 @@ trait AssertContentTrait {
     $this->content = $content;
     $this->plainTextContent = NULL;
     $this->elements = NULL;
-    $this->drupalSettings = array();
+    $this->drupalSettings = [];
     if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $content, $matches)) {
       $this->drupalSettings = Json::decode($matches[1]);
     }
@@ -75,7 +75,7 @@ trait AssertContentTrait {
       $raw_content = $this->getRawContent();
       // Strip everything between the HEAD tags.
       $raw_content = preg_replace('@<head>(.+?)</head>@si', '', $raw_content);
-      $this->plainTextContent = Xss::filter($raw_content, array());
+      $this->plainTextContent = Xss::filter($raw_content, []);
     }
     return $this->plainTextContent;
   }
@@ -127,7 +127,7 @@ trait AssertContentTrait {
       $html_dom = new \DOMDocument();
       @$html_dom->loadHTML('<?xml encoding="UTF-8">' . $this->getRawContent());
       if ($html_dom) {
-        $this->pass(SafeMarkup::format('Valid HTML found on "@path"', array('@path' => $this->getUrl())), 'Browser');
+        $this->pass(SafeMarkup::format('Valid HTML found on "@path"', ['@path' => $this->getUrl()]), 'Browser');
         // It's much easier to work with simplexml than DOM, luckily enough
         // we can just simply import our DOM tree.
         $this->elements = simplexml_import_dom($html_dom);
@@ -170,7 +170,7 @@ trait AssertContentTrait {
    * @return string
    *   An XPath query with arguments replaced.
    */
-  protected function buildXPathQuery($xpath, array $args = array()) {
+  protected function buildXPathQuery($xpath, array $args = []) {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
       // Cast MarkupInterface objects to string.
@@ -260,7 +260,7 @@ trait AssertContentTrait {
    *   Option elements in select.
    */
   protected function getAllOptions(\SimpleXMLElement $element) {
-    $options = array();
+    $options = [];
     // Add all options items.
     foreach ($element->option as $option) {
       $options[] = $option;
@@ -300,8 +300,8 @@ trait AssertContentTrait {
   protected function assertLink($label, $index = 0, $message = '', $group = 'Other') {
     // Cast MarkupInterface objects to string.
     $label = (string) $label;
-    $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
-    $message = ($message ? $message : strtr('Link with label %label found.', array('%label' => $label)));
+    $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
+    $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
     return $this->assert(isset($links[$index]), $message, $group);
   }
 
@@ -327,8 +327,8 @@ trait AssertContentTrait {
   protected function assertNoLink($label, $message = '', $group = 'Other') {
     // Cast MarkupInterface objects to string.
     $label = (string) $label;
-    $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
-    $message = ($message ? $message : SafeMarkup::format('Link with label %label not found.', array('%label' => $label)));
+    $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
+    $message = ($message ? $message : SafeMarkup::format('Link with label %label not found.', ['%label' => $label]));
     return $this->assert(empty($links), $message, $group);
   }
 
@@ -354,8 +354,8 @@ trait AssertContentTrait {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertLinkByHref($href, $index = 0, $message = '', $group = 'Other') {
-    $links = $this->xpath('//a[contains(@href, :href)]', array(':href' => $href));
-    $message = ($message ? $message : SafeMarkup::format('Link containing href %href found.', array('%href' => $href)));
+    $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
+    $message = ($message ? $message : SafeMarkup::format('Link containing href %href found.', ['%href' => $href]));
     return $this->assert(isset($links[$index]), $message, $group);
   }
 
@@ -379,8 +379,8 @@ trait AssertContentTrait {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNoLinkByHref($href, $message = '', $group = 'Other') {
-    $links = $this->xpath('//a[contains(@href, :href)]', array(':href' => $href));
-    $message = ($message ? $message : SafeMarkup::format('No link containing href %href found.', array('%href' => $href)));
+    $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
+    $message = ($message ? $message : SafeMarkup::format('No link containing href %href found.', ['%href' => $href]));
     return $this->assert(empty($links), $message, $group);
   }
 
@@ -404,8 +404,8 @@ trait AssertContentTrait {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNoLinkByHrefInMainRegion($href, $message = '', $group = 'Other') {
-    $links = $this->xpath('//main//a[contains(@href, :href)]', array(':href' => $href));
-    $message = ($message ? $message : SafeMarkup::format('No link containing href %href found.', array('%href' => $href)));
+    $links = $this->xpath('//main//a[contains(@href, :href)]', [':href' => $href]);
+    $message = ($message ? $message : SafeMarkup::format('No link containing href %href found.', ['%href' => $href]));
     return $this->assert(empty($links), $message, $group);
   }
 
@@ -604,7 +604,7 @@ trait AssertContentTrait {
    */
   protected function assertTextHelper($text, $message = '', $group = 'Other', $not_exists = TRUE) {
     if (!$message) {
-      $message = !$not_exists ? SafeMarkup::format('"@text" found', array('@text' => $text)) : SafeMarkup::format('"@text" not found', array('@text' => $text));
+      $message = !$not_exists ? SafeMarkup::format('"@text" found', ['@text' => $text]) : SafeMarkup::format('"@text" not found', ['@text' => $text]);
     }
     return $this->assert($not_exists == (strpos($this->getTextContent(), (string) $text) === FALSE), $message, $group);
   }
@@ -723,7 +723,7 @@ trait AssertContentTrait {
    */
   protected function assertPattern($pattern, $message = '', $group = 'Other') {
     if (!$message) {
-      $message = SafeMarkup::format('Pattern "@pattern" found', array('@pattern' => $pattern));
+      $message = SafeMarkup::format('Pattern "@pattern" found', ['@pattern' => $pattern]);
     }
     return $this->assert((bool) preg_match($pattern, $this->getRawContent()), $message, $group);
   }
@@ -749,7 +749,7 @@ trait AssertContentTrait {
    */
   protected function assertNoPattern($pattern, $message = '', $group = 'Other') {
     if (!$message) {
-      $message = SafeMarkup::format('Pattern "@pattern" not found', array('@pattern' => $pattern));
+      $message = SafeMarkup::format('Pattern "@pattern" not found', ['@pattern' => $pattern]);
     }
     return $this->assert(!preg_match($pattern, $this->getRawContent()), $message, $group);
   }
@@ -772,7 +772,7 @@ trait AssertContentTrait {
    */
   protected function assertTextPattern($pattern, $message = NULL, $group = 'Other') {
     if (!isset($message)) {
-      $message = SafeMarkup::format('Pattern "@pattern" found', array('@pattern' => $pattern));
+      $message = SafeMarkup::format('Pattern "@pattern" found', ['@pattern' => $pattern]);
     }
     return $this->assert((bool) preg_match($pattern, $this->getTextContent()), $message, $group);
   }
@@ -804,10 +804,10 @@ trait AssertContentTrait {
       $actual = $this->castSafeStrings($actual);
       $title = $this->castSafeStrings($title);
       if (!$message) {
-        $message = SafeMarkup::format('Page title @actual is equal to @expected.', array(
+        $message = SafeMarkup::format('Page title @actual is equal to @expected.', [
           '@actual' => var_export($actual, TRUE),
           '@expected' => var_export($title, TRUE),
-        ));
+        ]);
       }
       return $this->assertEqual($actual, $title, $message, $group);
     }
@@ -836,10 +836,10 @@ trait AssertContentTrait {
   protected function assertNoTitle($title, $message = '', $group = 'Other') {
     $actual = (string) current($this->xpath('//title'));
     if (!$message) {
-      $message = SafeMarkup::format('Page title @actual is not equal to @unexpected.', array(
+      $message = SafeMarkup::format('Page title @actual is not equal to @unexpected.', [
         '@actual' => var_export($actual, TRUE),
         '@unexpected' => var_export($title, TRUE),
-      ));
+      ]);
     }
     return $this->assertNotEqual($actual, $title, $message, $group);
   }
@@ -867,7 +867,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertThemeOutput($callback, array $variables = array(), $expected = '', $message = '', $group = 'Other') {
+  protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = '', $group = 'Other') {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
@@ -885,7 +885,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = '%callback rendered correctly.';
     }
-    $message = format_string($message, array('%callback' => 'theme_' . $callback . '()'));
+    $message = format_string($message, ['%callback' => 'theme_' . $callback . '()']);
     return $this->assertIdentical($output, $expected, $message, $group);
   }
 
@@ -1064,15 +1064,15 @@ trait AssertContentTrait {
   protected function assertFieldByName($name, $value = NULL, $message = NULL, $group = 'Browser') {
     if (!isset($message)) {
       if (!isset($value)) {
-        $message = SafeMarkup::format('Found field with name @name', array(
+        $message = SafeMarkup::format('Found field with name @name', [
           '@name' => var_export($name, TRUE),
-        ));
+        ]);
       }
       else {
-        $message = SafeMarkup::format('Found field with name @name and value @value', array(
+        $message = SafeMarkup::format('Found field with name @name and value @value', [
           '@name' => var_export($name, TRUE),
           '@value' => var_export($value, TRUE),
-        ));
+        ]);
       }
     }
     return $this->assertFieldByXPath($this->constructFieldXpath('name', $name), $value, $message, $group);
@@ -1103,7 +1103,7 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoFieldByName($name, $value = '', $message = '', $group = 'Browser') {
-    return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value, $message ? $message : SafeMarkup::format('Did not find field by name @name', array('@name' => $name)), $group);
+    return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value, $message ? $message : SafeMarkup::format('Did not find field by name @name', ['@name' => $name]), $group);
   }
 
   /**
@@ -1136,7 +1136,7 @@ trait AssertContentTrait {
       $value = (string) $value;
     }
     $message = (string) $message;
-    return $this->assertFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : SafeMarkup::format('Found field by id @id', array('@id' => $id)), $group);
+    return $this->assertFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : SafeMarkup::format('Found field by id @id', ['@id' => $id]), $group);
   }
 
   /**
@@ -1164,7 +1164,7 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoFieldById($id, $value = '', $message = '', $group = 'Browser') {
-    return $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : SafeMarkup::format('Did not find field by id @id', array('@id' => $id)), $group);
+    return $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : SafeMarkup::format('Did not find field by id @id', ['@id' => $id]), $group);
   }
 
   /**
@@ -1187,8 +1187,8 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertFieldChecked($id, $message = '', $group = 'Browser') {
-    $elements = $this->xpath('//input[@id=:id]', array(':id' => $id));
-    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), $message ? $message : SafeMarkup::format('Checkbox field @id is checked.', array('@id' => $id)), $group);
+    $elements = $this->xpath('//input[@id=:id]', [':id' => $id]);
+    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), $message ? $message : SafeMarkup::format('Checkbox field @id is checked.', ['@id' => $id]), $group);
   }
 
   /**
@@ -1211,8 +1211,8 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoFieldChecked($id, $message = '', $group = 'Browser') {
-    $elements = $this->xpath('//input[@id=:id]', array(':id' => $id));
-    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), $message ? $message : SafeMarkup::format('Checkbox field @id is not checked.', array('@id' => $id)), $group);
+    $elements = $this->xpath('//input[@id=:id]', [':id' => $id]);
+    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), $message ? $message : SafeMarkup::format('Checkbox field @id is not checked.', ['@id' => $id]), $group);
   }
 
   /**
@@ -1237,8 +1237,8 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertOption($id, $option, $message = '', $group = 'Browser') {
-    $options = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
-    return $this->assertTrue(isset($options[0]), $message ? $message : SafeMarkup::format('Option @option for field @id exists.', array('@option' => $option, '@id' => $id)), $group);
+    $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
+    return $this->assertTrue(isset($options[0]), $message ? $message : SafeMarkup::format('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]), $group);
   }
 
   /**
@@ -1281,8 +1281,8 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertOptionWithDrupalSelector($drupal_selector, $option, $message = '', $group = 'Browser') {
-    $options = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', array(':data_drupal_selector' => $drupal_selector, ':option' => $option));
-    return $this->assertTrue(isset($options[0]), $message ? $message : SafeMarkup::format('Option @option for field @data_drupal_selector exists.', array('@option' => $option, '@data_drupal_selector' => $drupal_selector)), $group);
+    $options = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
+    return $this->assertTrue(isset($options[0]), $message ? $message : SafeMarkup::format('Option @option for field @data_drupal_selector exists.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]), $group);
   }
 
   /**
@@ -1307,9 +1307,9 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoOption($id, $option, $message = '', $group = 'Browser') {
-    $selects = $this->xpath('//select[@id=:id]', array(':id' => $id));
-    $options = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
-    return $this->assertTrue(isset($selects[0]) && !isset($options[0]), $message ? $message : SafeMarkup::format('Option @option for field @id does not exist.', array('@option' => $option, '@id' => $id)), $group);
+    $selects = $this->xpath('//select[@id=:id]', [':id' => $id]);
+    $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
+    return $this->assertTrue(isset($selects[0]) && !isset($options[0]), $message ? $message : SafeMarkup::format('Option @option for field @id does not exist.', ['@option' => $option, '@id' => $id]), $group);
   }
 
   /**
@@ -1336,8 +1336,8 @@ trait AssertContentTrait {
    * @todo $id is unusable. Replace with $name.
    */
   protected function assertOptionSelected($id, $option, $message = '', $group = 'Browser') {
-    $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
-    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : SafeMarkup::format('Option @option for field @id is selected.', array('@option' => $option, '@id' => $id)), $group);
+    $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
+    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : SafeMarkup::format('Option @option for field @id is selected.', ['@option' => $option, '@id' => $id]), $group);
   }
 
   /**
@@ -1364,8 +1364,8 @@ trait AssertContentTrait {
    * @todo $id is unusable. Replace with $name.
    */
   protected function assertOptionSelectedWithDrupalSelector($drupal_selector, $option, $message = '', $group = 'Browser') {
-    $elements = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', array(':data_drupal_selector' => $drupal_selector, ':option' => $option));
-    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : SafeMarkup::format('Option @option for field @data_drupal_selector is selected.', array('@option' => $option, '@data_drupal_selector' => $drupal_selector)), $group);
+    $elements = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
+    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : SafeMarkup::format('Option @option for field @data_drupal_selector is selected.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]), $group);
   }
 
   /**
@@ -1390,8 +1390,8 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoOptionSelected($id, $option, $message = '', $group = 'Browser') {
-    $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
-    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['selected']), $message ? $message : SafeMarkup::format('Option @option for field @id is not selected.', array('@option' => $option, '@id' => $id)), $group);
+    $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
+    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['selected']), $message ? $message : SafeMarkup::format('Option @option for field @id is not selected.', ['@option' => $option, '@id' => $id]), $group);
   }
 
   /**
@@ -1464,12 +1464,12 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoDuplicateIds($message = '', $group = 'Other', $ids_to_skip = array()) {
+  protected function assertNoDuplicateIds($message = '', $group = 'Other', $ids_to_skip = []) {
     $status = TRUE;
     foreach ($this->xpath('//*[@id]') as $element) {
       $id = (string) $element['id'];
       if (isset($seen_ids[$id]) && !in_array($id, $ids_to_skip)) {
-        $this->fail(SafeMarkup::format('The HTML ID %id is unique.', array('%id' => $id)), $group);
+        $this->fail(SafeMarkup::format('The HTML ID %id is unique.', ['%id' => $id]), $group);
         $status = FALSE;
       }
       $seen_ids[$id] = TRUE;
@@ -1490,7 +1490,7 @@ trait AssertContentTrait {
    */
   protected function constructFieldXpath($attribute, $value) {
     $xpath = '//textarea[@' . $attribute . '=:value]|//input[@' . $attribute . '=:value]|//select[@' . $attribute . '=:value]';
-    return $this->buildXPathQuery($xpath, array(':value' => $value));
+    return $this->buildXPathQuery($xpath, [':value' => $value]);
   }
 
 }

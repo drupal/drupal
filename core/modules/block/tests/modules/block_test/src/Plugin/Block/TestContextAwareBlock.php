@@ -25,11 +25,11 @@ class TestContextAwareBlock extends BlockBase {
   public function build() {
     /** @var $user \Drupal\user\UserInterface */
     $user = $this->getContextValue('user');
-    return array(
+    return [
       '#prefix' => '<div id="' . $this->getPluginId() . '--username">',
       '#suffix' => '</div>',
       '#markup' => $user ? $user->getUsername() : 'No context mapping selected.' ,
-    );
+    ];
   }
 
   /**

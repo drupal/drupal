@@ -17,7 +17,7 @@ class RearrangeFieldsTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Gets the fields from the View.
@@ -25,7 +25,7 @@ class RearrangeFieldsTest extends UITestBase {
   protected function getViewFields($view_name = 'test_view', $display_id = 'default') {
     $view = Views::getView($view_name);
     $view->setDisplay($display_id);
-    $fields = array();
+    $fields = [];
     foreach ($view->displayHandlers->get('default')->getHandlers('field') as $field => $handler) {
       $fields[] = $field;
     }
@@ -58,13 +58,13 @@ class RearrangeFieldsTest extends UITestBase {
     $this->assertFieldOrder($view_name, $this->getViewFields($view_name));
 
     // Checks that a field is not deleted if a value is not passed back.
-    $fields = array();
+    $fields = [];
     $this->drupalPostForm('admin/structure/views/nojs/rearrange/' . $view_name . '/default/field', $fields, t('Apply'));
     $this->assertFieldOrder($view_name, $this->getViewFields($view_name));
 
     // Checks that revers the new field order is respected.
     $reversedFields = array_reverse($this->getViewFields($view_name));
-    $fields = array();
+    $fields = [];
     foreach ($reversedFields as $delta => $field) {
       $fields['fields[' . $field . '][weight]'] = $delta;
     }

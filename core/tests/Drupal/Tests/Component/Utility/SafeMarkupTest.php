@@ -89,15 +89,15 @@ class SafeMarkupTest extends UnitTestCase {
    */
   function providerCheckPlain() {
     // Checks that invalid multi-byte sequences are escaped.
-    $tests[] = array("Foo\xC0barbaz", 'Foo�barbaz', 'Escapes invalid sequence "Foo\xC0barbaz"');
-    $tests[] = array("\xc2\"", '�&quot;', 'Escapes invalid sequence "\xc2\""');
-    $tests[] = array("Fooÿñ", "Fooÿñ", 'Does not escape valid sequence "Fooÿñ"');
+    $tests[] = ["Foo\xC0barbaz", 'Foo�barbaz', 'Escapes invalid sequence "Foo\xC0barbaz"'];
+    $tests[] = ["\xc2\"", '�&quot;', 'Escapes invalid sequence "\xc2\""'];
+    $tests[] = ["Fooÿñ", "Fooÿñ", 'Does not escape valid sequence "Fooÿñ"'];
 
     // Checks that special characters are escaped.
-    $tests[] = array(SafeMarkupTestMarkup::create("<script>"), '&lt;script&gt;', 'Escapes &lt;script&gt; even inside an object that implements MarkupInterface.');
-    $tests[] = array("<script>", '&lt;script&gt;', 'Escapes &lt;script&gt;');
-    $tests[] = array('<>&"\'', '&lt;&gt;&amp;&quot;&#039;', 'Escapes reserved HTML characters.');
-    $tests[] = array(SafeMarkupTestMarkup::create('<>&"\''), '&lt;&gt;&amp;&quot;&#039;', 'Escapes reserved HTML characters even inside an object that implements MarkupInterface.');
+    $tests[] = [SafeMarkupTestMarkup::create("<script>"), '&lt;script&gt;', 'Escapes &lt;script&gt; even inside an object that implements MarkupInterface.'];
+    $tests[] = ["<script>", '&lt;script&gt;', 'Escapes &lt;script&gt;'];
+    $tests[] = ['<>&"\'', '&lt;&gt;&amp;&quot;&#039;', 'Escapes reserved HTML characters.'];
+    $tests[] = [SafeMarkupTestMarkup::create('<>&"\''), '&lt;&gt;&amp;&quot;&#039;', 'Escapes reserved HTML characters even inside an object that implements MarkupInterface.'];
 
     return $tests;
   }
@@ -137,11 +137,11 @@ class SafeMarkupTest extends UnitTestCase {
    * @see testFormat()
    */
   function providerFormat() {
-    $tests[] = array('Simple text', array(), 'Simple text', 'SafeMarkup::format leaves simple text alone.', TRUE);
-    $tests[] = array('Escaped text: @value', array('@value' => '<script>'), 'Escaped text: &lt;script&gt;', 'SafeMarkup::format replaces and escapes string.', TRUE);
-    $tests[] = array('Escaped text: @value', array('@value' => SafeMarkupTestMarkup::create('<span>Safe HTML</span>')), 'Escaped text: <span>Safe HTML</span>', 'SafeMarkup::format does not escape an already safe string.', TRUE);
-    $tests[] = array('Placeholder text: %value', array('%value' => '<script>'), 'Placeholder text: <em class="placeholder">&lt;script&gt;</em>', 'SafeMarkup::format replaces, escapes and themes string.', TRUE);
-    $tests[] = array('Placeholder text: %value', array('%value' => SafeMarkupTestMarkup::create('<span>Safe HTML</span>')), 'Placeholder text: <em class="placeholder"><span>Safe HTML</span></em>', 'SafeMarkup::format does not escape an already safe string themed as a placeholder.', TRUE);
+    $tests[] = ['Simple text', [], 'Simple text', 'SafeMarkup::format leaves simple text alone.', TRUE];
+    $tests[] = ['Escaped text: @value', ['@value' => '<script>'], 'Escaped text: &lt;script&gt;', 'SafeMarkup::format replaces and escapes string.', TRUE];
+    $tests[] = ['Escaped text: @value', ['@value' => SafeMarkupTestMarkup::create('<span>Safe HTML</span>')], 'Escaped text: <span>Safe HTML</span>', 'SafeMarkup::format does not escape an already safe string.', TRUE];
+    $tests[] = ['Placeholder text: %value', ['%value' => '<script>'], 'Placeholder text: <em class="placeholder">&lt;script&gt;</em>', 'SafeMarkup::format replaces, escapes and themes string.', TRUE];
+    $tests[] = ['Placeholder text: %value', ['%value' => SafeMarkupTestMarkup::create('<span>Safe HTML</span>')], 'Placeholder text: <em class="placeholder"><span>Safe HTML</span></em>', 'SafeMarkup::format does not escape an already safe string themed as a placeholder.', TRUE];
 
     $tests['javascript-protocol-url'] = ['Simple text <a href=":url">giraffe</a>', [':url' => 'javascript://example.com?foo&bar'], 'Simple text <a href="//example.com?foo&amp;bar">giraffe</a>', 'Support for filtering bad protocols', TRUE];
     $tests['external-url'] = ['Simple text <a href=":url">giraffe</a>', [':url' => 'http://example.com?foo&bar'], 'Simple text <a href="http://example.com?foo&amp;bar">giraffe</a>', 'Support for filtering bad protocols', TRUE];

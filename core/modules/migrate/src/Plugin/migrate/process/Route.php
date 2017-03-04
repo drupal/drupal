@@ -64,12 +64,12 @@ class Route extends ProcessPluginBase implements ContainerFactoryPluginInterface
     }
 
     $extracted = $this->pathValidator->getUrlIfValidWithoutAccessCheck($link_path);
-    $route = array();
+    $route = [];
 
     if ($extracted) {
       if ($extracted->isExternal()) {
         $route['route_name'] = NULL;
-        $route['route_parameters'] = array();
+        $route['route_parameters'] = [];
         $route['options'] = $options;
         $route['url'] = $extracted->getUri();
       }

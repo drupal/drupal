@@ -37,10 +37,10 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
     }
 
     // Initialize default options.
-    $options += array(
+    $options += [
       'handler' => $this->getPluginId($options['target_type'], 'default'),
-      'handler_settings' => array(),
-    );
+      'handler_settings' => [],
+    ];
 
     // A specific selection plugin ID was already specified.
     if (strpos($options['handler'], ':') !== FALSE) {
@@ -62,7 +62,7 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
     $selection_handler_groups = $this->getSelectionGroups($target_type);
 
     // Sort the selection plugins by weight and select the best match.
-    uasort($selection_handler_groups[$base_plugin_id], array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
+    uasort($selection_handler_groups[$base_plugin_id], ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
     end($selection_handler_groups[$base_plugin_id]);
     $plugin_id = key($selection_handler_groups[$base_plugin_id]);
 
@@ -73,7 +73,7 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
    * {@inheritdoc}
    */
   public function getSelectionGroups($entity_type_id) {
-    $plugins = array();
+    $plugins = [];
     $definitions = $this->getDefinitions();
 
     // Do not display the 'broken' plugin in the UI.
@@ -92,19 +92,19 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
    * {@inheritdoc}
    */
   public function getSelectionHandler(FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
-    $options = array(
+    $options = [
       'target_type' => $field_definition->getFieldStorageDefinition()->getSetting('target_type'),
       'handler' => $field_definition->getSetting('handler'),
-      'handler_settings' => $field_definition->getSetting('handler_settings') ?: array(),
+      'handler_settings' => $field_definition->getSetting('handler_settings') ?: [],
       'entity' => $entity,
-    );
+    ];
     return $this->getInstance($options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFallbackPluginId($plugin_id, array $configuration = array()) {
+  public function getFallbackPluginId($plugin_id, array $configuration = []) {
     return 'broken';
   }
 

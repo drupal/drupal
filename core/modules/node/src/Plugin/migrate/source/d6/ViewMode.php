@@ -16,7 +16,7 @@ class ViewMode extends ViewModeBase {
    * {@inheritdoc}
    */
   protected function initializeIterator() {
-    $rows = array();
+    $rows = [];
     $result = $this->prepareQuery()->execute();
     while ($field_row = $result->fetchAssoc()) {
       $field_row['display_settings'] = unserialize($field_row['display_settings']);
@@ -38,9 +38,9 @@ class ViewMode extends ViewModeBase {
    */
   public function query() {
     $query = $this->select('content_node_field_instance', 'cnfi')
-      ->fields('cnfi', array(
+      ->fields('cnfi', [
         'display_settings',
-      ));
+      ]);
 
     return $query;
   }
@@ -49,9 +49,9 @@ class ViewMode extends ViewModeBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'display_settings' => $this->t('Serialize data with display settings.'),
-    );
+    ];
   }
 
   /**

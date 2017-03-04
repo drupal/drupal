@@ -18,18 +18,18 @@ class HandlerFieldRoleTest extends UserTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_views_handler_field_role');
+  public static $testViews = ['test_views_handler_field_role'];
 
   public function testRole() {
     // Create a couple of roles for the view.
     $rolename_a = 'a' . $this->randomMachineName(8);
-    $this->drupalCreateRole(array('access content'), $rolename_a, '<em>' . $rolename_a . '</em>', 9);
+    $this->drupalCreateRole(['access content'], $rolename_a, '<em>' . $rolename_a . '</em>', 9);
 
     $rolename_b = 'b' . $this->randomMachineName(8);
-    $this->drupalCreateRole(array('access content'), $rolename_b, $rolename_b, 8);
+    $this->drupalCreateRole(['access content'], $rolename_b, $rolename_b, 8);
 
     $rolename_not_assigned = $this->randomMachineName(8);
-    $this->drupalCreateRole(array('access content'), $rolename_not_assigned, $rolename_not_assigned);
+    $this->drupalCreateRole(['access content'], $rolename_not_assigned, $rolename_not_assigned);
 
     // Add roles to user 1.
     $user = User::load(1);

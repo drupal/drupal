@@ -27,10 +27,10 @@ class NodeDeleteForm extends ContentEntityDeleteForm {
       ]);
     }
 
-    return $this->t('The @type %title has been deleted.', array(
+    return $this->t('The @type %title has been deleted.', [
       '@type' => $node_type,
       '%title' => $this->getEntity()->label(),
-    ));
+    ]);
   }
 
   /**

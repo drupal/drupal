@@ -23,7 +23,7 @@ class TranslationTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'node');
+  public static $modules = ['language', 'node'];
 
   /**
    * The name of the field to use in this test.
@@ -73,33 +73,33 @@ class TranslationTest extends FieldKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installConfig(array('language'));
+    $this->installConfig(['language']);
 
     $this->fieldName = Unicode::strtolower($this->randomMachineName());
 
     $this->entityType = 'entity_test';
 
-    $this->fieldStorageDefinition = array(
+    $this->fieldStorageDefinition = [
       'field_name' => $this->fieldName,
       'entity_type' => $this->entityType,
       'type' => 'test_field',
       'cardinality' => 4,
-    );
+    ];
     $this->fieldStorage = FieldStorageConfig::create($this->fieldStorageDefinition);
     $this->fieldStorage->save();
 
-    $this->fieldDefinition = array(
+    $this->fieldDefinition = [
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
-    );
+    ];
     $this->field = FieldConfig::create($this->fieldDefinition);
     $this->field->save();
 
     for ($i = 0; $i < 3; ++$i) {
-      ConfigurableLanguage::create(array(
+      ConfigurableLanguage::create([
         'id' => 'l' . $i,
         'label' => $this->randomString(),
-      ))->save();
+      ])->save();
     }
   }
 
@@ -117,8 +117,8 @@ class TranslationTest extends FieldKernelTestBase {
     field_test_entity_info_translatable($entity_type_id, TRUE);
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type_id)
-      ->create(array('type' => $this->field->getTargetBundle()));
-    $field_translations = array();
+      ->create(['type' => $this->field->getTargetBundle()]);
+    $field_translations = [];
     $available_langcodes = array_keys($this->container->get('language_manager')->getLanguages());
     $entity->langcode->value = reset($available_langcodes);
     foreach ($available_langcodes as $langcode) {
@@ -136,7 +136,7 @@ class TranslationTest extends FieldKernelTestBase {
       foreach ($items as $delta => $item) {
         $result = $result && $item['value'] == $entity->getTranslation($langcode)->{$this->fieldName}[$delta]->value;
       }
-      $this->assertTrue($result, format_string('%language translation correctly handled.', array('%language' => $langcode)));
+      $this->assertTrue($result, format_string('%language translation correctly handled.', ['%language' => $langcode]));
     }
 
     // Test default values.
@@ -148,7 +148,7 @@ class TranslationTest extends FieldKernelTestBase {
 
     $field_definition = $this->fieldDefinition;
     $field_definition['field_storage'] = $field_storage;
-    $field_definition['default_value'] = array(array('value' => rand(1, 127)));
+    $field_definition['default_value'] = [['value' => rand(1, 127)]];
     $field = FieldConfig::create($field_definition);
     $field->save();
 
@@ -156,7 +156,7 @@ class TranslationTest extends FieldKernelTestBase {
     asort($translation_langcodes);
     $translation_langcodes = array_values($translation_langcodes);
 
-    $values = array('type' => $field->getTargetBundle(), 'langcode' => $translation_langcodes[0]);
+    $values = ['type' => $field->getTargetBundle(), 'langcode' => $translation_langcodes[0]];
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type_id)
       ->create($values);
@@ -173,11 +173,11 @@ class TranslationTest extends FieldKernelTestBase {
     // @todo Test every translation once the Entity Translation API allows for
     //   multilingual defaults.
     $langcode = $entity->language()->getId();
-    $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $field->getDefaultValueLiteral(), format_string('Default value correctly populated for language %language.', array('%language' => $langcode)));
+    $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $field->getDefaultValueLiteral(), format_string('Default value correctly populated for language %language.', ['%language' => $langcode]));
 
     // Check that explicit empty values are not overridden with default values.
-    foreach (array(NULL, array()) as $empty_items) {
-      $values = array('type' => $field->getTargetBundle(), 'langcode' => $translation_langcodes[0]);
+    foreach ([NULL, []] as $empty_items) {
+      $values = ['type' => $field->getTargetBundle(), 'langcode' => $translation_langcodes[0]];
       $entity = entity_create($entity_type_id, $values);
       foreach ($translation_langcodes as $langcode) {
         $values[$this->fieldName][$langcode] = $this->_generateTestFieldValues($this->fieldStorage->getCardinality());
@@ -188,7 +188,7 @@ class TranslationTest extends FieldKernelTestBase {
       }
 
       foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-        $this->assertEquals([], $entity->getTranslation($langcode)->{$field_name_default}->getValue(), format_string('Empty value correctly populated for language %language.', array('%language' => $langcode)));
+        $this->assertEquals([], $entity->getTranslation($langcode)->{$field_name_default}->getValue(), format_string('Empty value correctly populated for language %language.', ['%language' => $langcode]));
       }
     }
   }

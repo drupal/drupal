@@ -33,19 +33,19 @@ class ConfigFileContentTest extends KernelTestBase {
     $nested_key = 'biff.bang';
     $nested_value = 'pow';
     $array_key = 'array';
-    $array_value = array(
+    $array_value = [
       'foo' => 'bar',
-      'biff' => array(
+      'biff' => [
         'bang' => 'pow',
-      ),
-    );
+      ],
+    ];
     $casting_array_key = 'casting_array';
     $casting_array_false_value_key = 'casting_array.cast.false';
-    $casting_array_value = array(
-      'cast' => array(
+    $casting_array_value = [
+      'cast' => [
         'false' => FALSE,
-      ),
-    );
+      ],
+    ];
     $nested_array_key = 'nested.array';
     $true_key = 'true';
     $false_key = 'false';
@@ -58,7 +58,7 @@ class ConfigFileContentTest extends KernelTestBase {
     $this->assertTrue($config, 'Config object created.');
 
     // Verify the configuration object is empty.
-    $this->assertEqual($config->get(), array(), 'New config object is empty.');
+    $this->assertEqual($config->get(), [], 'New config object is empty.');
 
     // Verify nothing was saved.
     $data = $storage->read($name);
@@ -173,7 +173,7 @@ class ConfigFileContentTest extends KernelTestBase {
     // Get file listing for all files starting with 'bar'. Should return
     // an empty array.
     $files = $storage->listAll('bar');
-    $this->assertEqual($files, array(), 'No files listed with the prefix \'bar\'.');
+    $this->assertEqual($files, [], 'No files listed with the prefix \'bar\'.');
 
     // Delete the configuration.
     $config = $this->config($name);
@@ -189,20 +189,20 @@ class ConfigFileContentTest extends KernelTestBase {
    */
   function testSerialization() {
     $name = $this->randomMachineName(10) . '.' . $this->randomMachineName(10);
-    $config_data = array(
+    $config_data = [
       // Indexed arrays; the order of elements is essential.
-      'numeric keys' => array('i', 'n', 'd', 'e', 'x', 'e', 'd'),
+      'numeric keys' => ['i', 'n', 'd', 'e', 'x', 'e', 'd'],
       // Infinitely nested keys using arbitrary element names.
-      'nested keys' => array(
+      'nested keys' => [
         // HTML/XML in values.
         'HTML' => '<strong> <bold> <em> <blockquote>',
         // UTF-8 in values.
         'UTF-8' => 'FrançAIS is ÜBER-åwesome',
         // Unicode in keys and values.
         'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ' => 'αβγδεζηθικλμνξοσὠ',
-      ),
+      ],
       'invalid xml' => '</title><script type="text/javascript">alert("Title XSS!");</script> & < > " \' ',
-    );
+    ];
 
     // Encode and write, and reload and decode the configuration data.
     $filestorage = new FileStorage(config_get_config_directory(CONFIG_SYNC_DIRECTORY));

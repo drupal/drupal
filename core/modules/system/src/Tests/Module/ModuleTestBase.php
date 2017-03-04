@@ -21,14 +21,14 @@ abstract class ModuleTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('system_test');
+  public static $modules = ['system_test'];
 
   protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
+    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer modules']);
     $this->drupalLogin($this->adminUser);
   }
 
@@ -45,9 +45,9 @@ abstract class ModuleTestBase extends WebTestBase {
     $tables = db_find_tables(Database::getConnection()->prefixTables('{' . $base_table . '}') . '%');
 
     if ($count) {
-      return $this->assertTrue($tables, format_string('Tables matching "@base_table" found.', array('@base_table' => $base_table)));
+      return $this->assertTrue($tables, format_string('Tables matching "@base_table" found.', ['@base_table' => $base_table]));
     }
-    return $this->assertFalse($tables, format_string('Tables matching "@base_table" not found.', array('@base_table' => $base_table)));
+    return $this->assertFalse($tables, format_string('Tables matching "@base_table" not found.', ['@base_table' => $base_table]));
   }
 
   /**
@@ -64,7 +64,7 @@ abstract class ModuleTestBase extends WebTestBase {
         $tables_exist = FALSE;
       }
     }
-    return $this->assertTrue($tables_exist, format_string('All database tables defined by the @module module exist.', array('@module' => $module)));
+    return $this->assertTrue($tables_exist, format_string('All database tables defined by the @module module exist.', ['@module' => $module]));
   }
 
   /**
@@ -81,7 +81,7 @@ abstract class ModuleTestBase extends WebTestBase {
         $tables_exist = TRUE;
       }
     }
-    return $this->assertFalse($tables_exist, format_string('None of the database tables defined by the @module module exist.', array('@module' => $module)));
+    return $this->assertFalse($tables_exist, format_string('None of the database tables defined by the @module module exist.', ['@module' => $module]));
   }
 
   /**
@@ -123,7 +123,7 @@ abstract class ModuleTestBase extends WebTestBase {
     }
     // Verify that all configuration has been installed (which means that $names
     // is empty).
-    return $this->assertFalse($names, format_string('All default configuration of @module module found.', array('@module' => $module)));
+    return $this->assertFalse($names, format_string('All default configuration of @module module found.', ['@module' => $module]));
   }
 
   /**
@@ -137,7 +137,7 @@ abstract class ModuleTestBase extends WebTestBase {
    */
   function assertNoModuleConfig($module) {
     $names = \Drupal::configFactory()->listAll($module . '.');
-    return $this->assertFalse($names, format_string('No configuration found for @module module.', array('@module' => $module)));
+    return $this->assertFalse($names, format_string('No configuration found for @module module.', ['@module' => $module]));
   }
 
   /**
@@ -157,7 +157,7 @@ abstract class ModuleTestBase extends WebTestBase {
       else {
         $message = 'Module "@module" is not enabled.';
       }
-      $this->assertEqual($this->container->get('module_handler')->moduleExists($module), $enabled, format_string($message, array('@module' => $module)));
+      $this->assertEqual($this->container->get('module_handler')->moduleExists($module), $enabled, format_string($message, ['@module' => $module]));
     }
   }
 
@@ -181,7 +181,7 @@ abstract class ModuleTestBase extends WebTestBase {
    * @param $link
    *   A link to associate with the message.
    */
-  function assertLogMessage($type, $message, $variables = array(), $severity = RfcLogLevel::NOTICE, $link = '') {
+  function assertLogMessage($type, $message, $variables = [], $severity = RfcLogLevel::NOTICE, $link = '') {
     $count = db_select('watchdog', 'w')
       ->condition('type', $type)
       ->condition('message', $message)
@@ -191,7 +191,7 @@ abstract class ModuleTestBase extends WebTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertTrue($count > 0, format_string('watchdog table contains @count rows for @message', array('@count' => $count, '@message' => format_string($message, $variables))));
+    $this->assertTrue($count > 0, format_string('watchdog table contains @count rows for @message', ['@count' => $count, '@message' => format_string($message, $variables)]));
   }
 
 }

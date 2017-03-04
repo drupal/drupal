@@ -104,13 +104,13 @@ class TokenTest extends UnitTestCase {
    * @covers ::getInfo
    */
   public function testGetInfo() {
-    $token_info = array(
-      'types' => array(
-        'foo' => array(
+    $token_info = [
+      'types' => [
+        'foo' => [
           'name' => $this->randomMachineName(),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     $this->language->expects($this->atLeastOnce())
       ->method('getId')

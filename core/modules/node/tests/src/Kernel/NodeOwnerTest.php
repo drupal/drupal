@@ -19,16 +19,16 @@ class NodeOwnerTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'language');
+  public static $modules = ['node', 'language'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create the node bundles required for testing.
-    $type = NodeType::create(array(
+    $type = NodeType::create([
       'type' => 'page',
       'name' => 'page',
-    ));
+    ]);
     $type->save();
 
     // Enable two additional languages.
@@ -48,11 +48,11 @@ class NodeOwnerTest extends EntityKernelTestBase {
     $container->get('current_user')->setAccount($user);
 
     // Create a test node.
-    $english = Node::create(array(
+    $english = Node::create([
       'type' => 'page',
       'title' => $this->randomMachineName(),
       'language' => 'en',
-    ));
+    ]);
     $english->save();
 
     $this->assertEqual($user->id(), $english->getOwnerId());

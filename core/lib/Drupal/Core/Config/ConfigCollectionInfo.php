@@ -17,7 +17,7 @@ class ConfigCollectionInfo extends Event {
    *
    * @var array
    */
-  protected $collections = array();
+  protected $collections = [];
 
   /**
    * Adds a collection to the list of possible collections.

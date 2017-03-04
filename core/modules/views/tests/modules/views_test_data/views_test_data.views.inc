@@ -39,7 +39,7 @@ function views_test_data_views_data_alter() {
 function views_test_data_views_analyze(ViewExecutable $view) {
   \Drupal::state()->set('views_hook_test_views_analyze', TRUE);
 
-  $ret = array();
+  $ret = [];
 
   $ret[] = Analyzer::formatMessage(t('Test ok message'), 'ok');
   $ret[] = Analyzer::formatMessage(t('Test warning message'), 'warning');

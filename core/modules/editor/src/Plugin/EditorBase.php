@@ -26,7 +26,7 @@ abstract class EditorBase extends PluginBase implements EditorPluginInterface {
    * {@inheritdoc}
    */
   public function getDefaultSettings() {
-    return array();
+    return [];
   }
 
   /**

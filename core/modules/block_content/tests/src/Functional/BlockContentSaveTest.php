@@ -16,7 +16,7 @@ class BlockContentSaveTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $modules = array('block_content_test');
+  public static $modules = ['block_content_test'];
 
   /**
    * Sets the test up.
@@ -35,12 +35,12 @@ class BlockContentSaveTest extends BlockContentTestBase {
     $max_id = db_query('SELECT MAX(id) FROM {block_content}')->fetchField();
     $test_id = $max_id + mt_rand(1000, 1000000);
     $info = $this->randomMachineName(8);
-    $block_array = array(
+    $block_array = [
       'info' => $info,
-      'body' => array('value' => $this->randomMachineName(32)),
+      'body' => ['value' => $this->randomMachineName(32)],
       'type' => 'basic',
       'id' => $test_id
-    );
+    ];
     $block = BlockContent::create($block_array);
     $block->enforceIsNew(TRUE);
     $block->save();

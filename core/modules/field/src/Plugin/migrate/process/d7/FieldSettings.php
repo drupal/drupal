@@ -22,7 +22,7 @@ class FieldSettings extends ProcessPluginBase {
     switch ($row->getSourceProperty('type')) {
       case 'image':
         if (!is_array($value['default_image'])) {
-          $value['default_image'] = array('uuid' => '');
+          $value['default_image'] = ['uuid' => ''];
         }
         break;
 

@@ -17,7 +17,7 @@ class FormatDateTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language');
+  public static $modules = ['language'];
 
   /**
    * Arbitrary langcode for a custom language.
@@ -32,16 +32,16 @@ class FormatDateTest extends WebTestBase {
       ->save();
     $formats = $this->container->get('entity.manager')
       ->getStorage('date_format')
-      ->loadMultiple(array('long', 'medium', 'short'));
+      ->loadMultiple(['long', 'medium', 'short']);
     $formats['long']->setPattern('l, j. F Y - G:i')->save();
     $formats['medium']->setPattern('j. F Y - G:i')->save();
     $formats['short']->setPattern('Y M j - g:ia')->save();
     $this->refreshVariables();
 
-    $this->settingsSet('locale_custom_strings_' . self::LANGCODE, array(
-      '' => array('Sunday' => 'domingo'),
-      'Long month name' => array('March' => 'marzo'),
-    ));
+    $this->settingsSet('locale_custom_strings_' . self::LANGCODE, [
+      '' => ['Sunday' => 'domingo'],
+      'Long month name' => ['March' => 'marzo'],
+    ]);
 
     ConfigurableLanguage::createFromLangcode(static::LANGCODE)->save();
     $this->resetAll();
@@ -52,22 +52,22 @@ class FormatDateTest extends WebTestBase {
    */
   function testAdminDefinedFormatDate() {
     // Create and log in an admin user.
-    $this->drupalLogin($this->drupalCreateUser(array('administer site configuration')));
+    $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
 
     // Add new date format.
-    $edit = array(
+    $edit = [
       'id' => 'example_style',
       'label' => 'Example Style',
       'date_format_pattern' => 'j M y',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
 
     // Add a second date format with a different case than the first.
-    $edit = array(
+    $edit = [
       'id' => 'example_style_uppercase',
       'label' => 'Example Style Uppercase',
       'date_format_pattern' => 'j M Y',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
     $this->assertText(t('Custom date format added.'));
 

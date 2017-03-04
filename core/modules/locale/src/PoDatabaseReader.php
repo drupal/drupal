@@ -45,7 +45,7 @@ class PoDatabaseReader implements PoReaderInterface {
    * Constructor, initializes with default options.
    */
   public function __construct() {
-    $this->setOptions(array());
+    $this->setOptions([]);
   }
 
   /**
@@ -73,11 +73,11 @@ class PoDatabaseReader implements PoReaderInterface {
    * Set the options for the current reader.
    */
   public function setOptions(array $options) {
-    $options += array(
+    $options += [
       'customized' => FALSE,
       'not_customized' => FALSE,
       'not_translated' => FALSE,
-    );
+    ];
     $this->options = $options;
   }
 
@@ -104,7 +104,7 @@ class PoDatabaseReader implements PoReaderInterface {
   private function loadStrings() {
     $langcode = $this->langcode;
     $options = $this->options;
-    $conditions = array();
+    $conditions = [];
 
     if (array_sum($options) == 0) {
       // If user asked to not include anything in the translation files,

@@ -21,15 +21,15 @@ class ProcessedText extends RenderElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#text' => '',
       '#format' => NULL,
-      '#filter_types_to_skip' => array(),
+      '#filter_types_to_skip' => [],
       '#langcode' => '',
-      '#pre_render' => array(
-        array($class, 'preRenderText'),
-      ),
-    );
+      '#pre_render' => [
+        [$class, 'preRenderText'],
+      ],
+    ];
   }
 
   /**
@@ -77,7 +77,7 @@ class ProcessedText extends RenderElement {
     // cannot be filtered.
     if (!$format || !$format->status()) {
       $message = !$format ? 'Missing text format: %format.' : 'Disabled text format: %format.';
-      static::logger('filter')->alert($message, array('%format' => $format_id));
+      static::logger('filter')->alert($message, ['%format' => $format_id]);
       $element['#markup'] = '';
       return $element;
     }
@@ -92,7 +92,7 @@ class ProcessedText extends RenderElement {
 
     // Convert all Windows and Mac newlines to a single newline, so filters only
     // need to deal with one possibility.
-    $text = str_replace(array("\r\n", "\r"), "\n", $text);
+    $text = str_replace(["\r\n", "\r"], "\n", $text);
 
     // Get a complete list of filters, ordered properly.
     /** @var \Drupal\filter\Plugin\FilterInterface[] $filters **/

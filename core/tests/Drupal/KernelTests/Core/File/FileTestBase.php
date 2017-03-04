@@ -16,7 +16,7 @@ abstract class FileTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /**
    * A stream wrapper scheme to register for the test.
@@ -70,9 +70,9 @@ abstract class FileTestBase extends KernelTestBase {
 
     $this->setSetting('file_public_path', $public_file_directory);
 
-    $GLOBALS['config_directories'] = array(
+    $GLOBALS['config_directories'] = [
       CONFIG_SYNC_DIRECTORY => $this->siteDirectory . '/files/config/sync',
-    );
+    ];
   }
 
   /**
@@ -105,7 +105,7 @@ abstract class FileTestBase extends KernelTestBase {
     }
 
     if (!isset($message)) {
-      $message = t('Expected file permission to be %expected, actually were %actual.', array('%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)));
+      $message = t('Expected file permission to be %expected, actually were %actual.', ['%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)]);
     }
     $this->assertEqual($actual_mode, $expected_mode, $message);
   }
@@ -141,7 +141,7 @@ abstract class FileTestBase extends KernelTestBase {
     }
 
     if (!isset($message)) {
-      $message = t('Expected directory permission to be %expected, actually were %actual.', array('%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)));
+      $message = t('Expected directory permission to be %expected, actually were %actual.', ['%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)]);
     }
     $this->assertEqual($actual_mode, $expected_mode, $message);
   }

@@ -24,42 +24,42 @@ class FilterCrudTest extends KernelTestBase {
    */
   function testTextFormatCrud() {
     // Add a text format with minimum data only.
-    $format = FilterFormat::create(array(
+    $format = FilterFormat::create([
       'format' => 'empty_format',
       'name' => 'Empty format',
-    ));
+    ]);
     $format->save();
     $this->verifyTextFormat($format);
 
     // Add another text format specifying all possible properties.
-    $format = FilterFormat::create(array(
+    $format = FilterFormat::create([
       'format' => 'custom_format',
       'name' => 'Custom format',
-    ));
-    $format->setFilterConfig('filter_url', array(
+    ]);
+    $format->setFilterConfig('filter_url', [
       'status' => 1,
-      'settings' => array(
+      'settings' => [
         'filter_url_length' => 30,
-      ),
-    ));
+      ],
+    ]);
     $format->save();
     $this->verifyTextFormat($format);
 
     // Alter some text format properties and save again.
     $format->set('name', 'Altered format');
-    $format->setFilterConfig('filter_url', array(
+    $format->setFilterConfig('filter_url', [
       'status' => 0,
-    ));
-    $format->setFilterConfig('filter_autop', array(
+    ]);
+    $format->setFilterConfig('filter_autop', [
       'status' => 1,
-    ));
+    ]);
     $format->save();
     $this->verifyTextFormat($format);
 
     // Add a filter_test_replace  filter and save again.
-    $format->setFilterConfig('filter_test_replace', array(
+    $format->setFilterConfig('filter_test_replace', [
       'status' => 1,
-    ));
+    ]);
     $format->save();
     $this->verifyTextFormat($format);
 
@@ -89,7 +89,7 @@ class FilterCrudTest extends KernelTestBase {
    * Verifies that a text format is properly stored.
    */
   function verifyTextFormat($format) {
-    $t_args = array('%format' => $format->label());
+    $t_args = ['%format' => $format->label()];
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
     // Verify the loaded filter has all properties.

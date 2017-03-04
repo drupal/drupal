@@ -16,7 +16,7 @@ class FieldHelpTest extends BrowserTestBase {
    *
    * @var array.
    */
-  public static $modules = array('field', 'help');
+  public static $modules = ['field', 'help'];
 
   // Tests field help implementation without optional core modules enabled.
   protected $profile = 'minimal';
@@ -30,7 +30,7 @@ class FieldHelpTest extends BrowserTestBase {
     parent::setUp();
 
     // Create the admin user.
-    $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'view the administration theme'));
+    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'view the administration theme']);
   }
 
   /**
@@ -44,7 +44,7 @@ class FieldHelpTest extends BrowserTestBase {
     $this->drupalGet('admin/help/field');
 
     // Enable the Options, Email and Field API Test modules.
-    \Drupal::service('module_installer')->install(array('options', 'field_test'));
+    \Drupal::service('module_installer')->install(['options', 'field_test']);
     $this->resetAll();
     \Drupal::service('plugin.manager.field.widget')->clearCachedDefinitions();
     \Drupal::service('plugin.manager.field.field_type')->clearCachedDefinitions();

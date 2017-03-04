@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'yeoss', 'yeong', 'yeoj', 'yeoch', 'yeok', 'yeot', 'yeop', 'yeoh', 'ye', 'yeg', 'yekk', 'yegs', 'yen', 'yenj', 'yenh', 'yed',
   0x10 => 'yel', 'yelg', 'yelm', 'yelb', 'yels', 'yelt', 'yelp', 'yelh', 'yem', 'yeb', 'yebs', 'yes', 'yess', 'yeng', 'yej', 'yech',
   0x20 => 'yek', 'yet', 'yep', 'yeh', 'o', 'og', 'okk', 'ogs', 'on', 'onj', 'onh', 'od', 'ol', 'olg', 'olm', 'olb',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'won', 'wonj', 'wonh', 'wod', 'wol', 'wolg', 'wolm', 'wolb', 'wols', 'wolt', 'wolp', 'wolh', 'wom', 'wob', 'wobs', 'wos',
   0xE0 => 'woss', 'wong', 'woj', 'woch', 'wok', 'wot', 'wop', 'woh', 'we', 'weg', 'wekk', 'wegs', 'wen', 'wenj', 'wenh', 'wed',
   0xF0 => 'wel', 'welg', 'welm', 'welb', 'wels', 'welt', 'welp', 'welh', 'wem', 'web', 'webs', 'wes', 'wess', 'weng', 'wej', 'wech',
-);
+];

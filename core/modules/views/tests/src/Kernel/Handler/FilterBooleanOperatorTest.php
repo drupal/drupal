@@ -18,23 +18,23 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   /**
    * Map column names.
    *
    * @var array
    */
-  protected $columnMap = array(
+  protected $columnMap = [
     'views_test_data_id' => 'id',
-  );
+  ];
 
   /**
    * Tests the BooleanOperator filter.
@@ -44,20 +44,20 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Add a the status boolean filter.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'status' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'status' => [
         'id' => 'status',
         'field' => 'status',
         'table' => 'views_test_data',
         'value' => 0,
-      ),
-    ));
+      ],
+    ]);
     $this->executeView($view);
 
-    $expected_result = array(
-      array('id' => 2),
-      array('id' => 4),
-    );
+    $expected_result = [
+      ['id' => 2],
+      ['id' => 4],
+    ];
 
     $this->assertEqual(2, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
@@ -66,21 +66,21 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Add the status boolean filter.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'status' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'status' => [
         'id' => 'status',
         'field' => 'status',
         'table' => 'views_test_data',
         'value' => 1,
-      ),
-    ));
+      ],
+    ]);
     $this->executeView($view);
 
-    $expected_result = array(
-      array('id' => 1),
-      array('id' => 3),
-      array('id' => 5),
-    );
+    $expected_result = [
+      ['id' => 1],
+      ['id' => 3],
+      ['id' => 5],
+    ];
 
     $this->assertEqual(3, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
@@ -89,22 +89,22 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
     $view->setDisplay();
 
     // Testing the same scenario but using the reverse status and operation.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'status' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'status' => [
         'id' => 'status',
         'field' => 'status',
         'table' => 'views_test_data',
         'value' => 0,
         'operator' => '!=',
-      ),
-    ));
+      ],
+    ]);
     $this->executeView($view);
 
-    $expected_result = array(
-      array('id' => 1),
-      array('id' => 3),
-      array('id' => 5),
-    );
+    $expected_result = [
+      ['id' => 1],
+      ['id' => 3],
+      ['id' => 5],
+    ];
 
     $this->assertEqual(3, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
@@ -117,32 +117,32 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
     $filters = $this->getGroupedExposedFilters();
     $view = Views::getView('test_view');
 
-    $view->setExposedInput(array('status' => 1));
+    $view->setExposedInput(['status' => 1]);
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
-    $expected_result = array(
-      array('id' => 1),
-      array('id' => 3),
-      array('id' => 5),
-    );
+    $expected_result = [
+      ['id' => 1],
+      ['id' => 3],
+      ['id' => 5],
+    ];
 
     $this->assertEqual(3, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
     $view->destroy();
 
-    $view->setExposedInput(array('status' => 2));
+    $view->setExposedInput(['status' => 2]);
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('filters', $filters);
 
     $this->executeView($view);
 
-    $expected_result = array(
-      array('id' => 2),
-      array('id' => 4),
-    );
+    $expected_result = [
+      ['id' => 2],
+      ['id' => 4],
+    ];
 
     $this->assertEqual(2, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
@@ -156,11 +156,11 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
 
     $this->executeView($view);
 
-    $expected_result = array(
-      array('id' => 1),
-      array('id' => 3),
-      array('id' => 5),
-    );
+    $expected_result = [
+      ['id' => 1],
+      ['id' => 3],
+      ['id' => 5],
+    ];
 
     $this->assertEqual(3, count($view->result));
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
@@ -172,45 +172,45 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
    * @return array
    */
   protected function getGroupedExposedFilters() {
-    $filters = array(
-      'status' => array(
+    $filters = [
+      'status' => [
         'id' => 'status',
         'table' => 'views_test_data',
         'field' => 'status',
         'relationship' => 'none',
         'exposed' => TRUE,
-        'expose' => array(
+        'expose' => [
           'operator' => 'status_op',
           'label' => 'status',
           'identifier' => 'status',
-        ),
+        ],
         'is_grouped' => TRUE,
-        'group_info' => array(
+        'group_info' => [
           'label' => 'status',
           'identifier' => 'status',
           'default_group' => 'All',
-          'group_items' => array(
-            1 => array(
+          'group_items' => [
+            1 => [
               'title' => 'Active',
               'operator' => '=',
               'value' => '1',
-            ),
-            2 => array(
+            ],
+            2 => [
               'title' => 'Blocked',
               'operator' => '=',
               'value' => '0',
-            ),
+            ],
             // This group should return the same results as group 1, because it
             // is the negation of group 2.
-            3 => array(
+            3 => [
               'title' => 'Active (reverse)',
               'operator' => '!=',
               'value' => '0',
-            ),
-          ),
-        ),
-      ),
-    );
+            ],
+          ],
+        ],
+      ],
+    ];
     return $filters;
   }
 

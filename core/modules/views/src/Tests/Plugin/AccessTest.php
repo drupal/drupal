@@ -19,14 +19,14 @@ class AccessTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_access_none', 'test_access_static', 'test_access_dynamic');
+  public static $testViews = ['test_access_none', 'test_access_static', 'test_access_dynamic'];
 
   /**
    * Modules to enable.
    *
    * @return array
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   /**
    * Web user for testing.
@@ -47,12 +47,12 @@ class AccessTest extends PluginTestBase {
 
     $this->enableViewsTestModule();
 
-    ViewTestData::createTestViews(get_class($this), array('views_test_data'));
+    ViewTestData::createTestViews(get_class($this), ['views_test_data']);
 
     $this->webUser = $this->drupalCreateUser();
 
-    $normal_role = $this->drupalCreateRole(array());
-    $this->normalUser = $this->drupalCreateUser(array('views_test_data test permission'));
+    $normal_role = $this->drupalCreateRole([]);
+    $this->normalUser = $this->drupalCreateUser(['views_test_data test permission']);
     $this->normalUser->addRole($normal_role);
     // @todo when all the plugin information is cached make a reset function and
     // call it here.

@@ -59,7 +59,7 @@ class DatabaseBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE) {
-    $cids = array($cid);
+    $cids = [$cid];
     $cache = $this->getMultiple($cids, $allow_invalid);
     return reset($cache);
   }
@@ -68,7 +68,7 @@ class DatabaseBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
-    $cid_mapping = array();
+    $cid_mapping = [];
     foreach ($cids as $cid) {
       $cid_mapping[$this->normalizeCid($cid)] = $cid;
     }
@@ -79,14 +79,14 @@ class DatabaseBackend implements CacheBackendInterface {
     // is used here only due to the performance overhead we would incur
     // otherwise. When serving an uncached page, the overhead of using
     // ::select() is a much smaller proportion of the request.
-    $result = array();
+    $result = [];
     try {
-      $result = $this->connection->query('SELECT cid, data, created, expire, serialized, tags, checksum FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE cid IN ( :cids[] ) ORDER BY cid', array(':cids[]' => array_keys($cid_mapping)));
+      $result = $this->connection->query('SELECT cid, data, created, expire, serialized, tags, checksum FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE cid IN ( :cids[] ) ORDER BY cid', [':cids[]' => array_keys($cid_mapping)]);
     }
     catch (\Exception $e) {
       // Nothing to do.
     }
-    $cache = array();
+    $cache = [];
     foreach ($result as $item) {
       // Map the cache ID back to the original.
       $item->cid = $cid_mapping[$item->cid];
@@ -119,7 +119,7 @@ class DatabaseBackend implements CacheBackendInterface {
       return FALSE;
     }
 
-    $cache->tags = $cache->tags ? explode(' ', $cache->tags) : array();
+    $cache->tags = $cache->tags ? explode(' ', $cache->tags) : [];
 
     // Check expire time.
     $cache->valid = $cache->expire == Cache::PERMANENT || $cache->expire >= REQUEST_TIME;
@@ -144,7 +144,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
     $this->setMultiple([
       $cid => [
         'data' => $data,
@@ -186,26 +186,26 @@ class DatabaseBackend implements CacheBackendInterface {
    * @see \Drupal\Core\Cache\CacheBackendInterface::setMultiple()
    */
   protected function doSetMultiple(array $items) {
-    $values = array();
+    $values = [];
 
     foreach ($items as $cid => $item) {
-      $item += array(
+      $item += [
         'expire' => CacheBackendInterface::CACHE_PERMANENT,
-        'tags' => array(),
-      );
+        'tags' => [],
+      ];
 
       assert('\Drupal\Component\Assertion\Inspector::assertAllStrings($item[\'tags\'])', 'Cache Tags must be strings.');
       $item['tags'] = array_unique($item['tags']);
       // Sort the cache tags so that they are stored consistently in the DB.
       sort($item['tags']);
 
-      $fields = array(
+      $fields = [
         'cid' => $this->normalizeCid($cid),
         'expire' => $item['expire'],
         'created' => round(microtime(TRUE), 3),
         'tags' => implode(' ', $item['tags']),
         'checksum' => $this->checksumProvider->getCurrentChecksum($item['tags']),
-      );
+      ];
 
       if (!is_string($item['data'])) {
         $fields['data'] = serialize($item['data']);
@@ -223,7 +223,7 @@ class DatabaseBackend implements CacheBackendInterface {
     $query = $this->connection
       ->upsert($this->bin)
       ->key('cid')
-      ->fields(array('cid', 'expire', 'created', 'tags', 'checksum', 'data', 'serialized'));
+      ->fields(['cid', 'expire', 'created', 'tags', 'checksum', 'data', 'serialized']);
     foreach ($values as $fields) {
       // Only pass the values since the order of $fields matches the order of
       // the insert fields. This is a performance optimization to avoid
@@ -238,14 +238,14 @@ class DatabaseBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function delete($cid) {
-    $this->deleteMultiple(array($cid));
+    $this->deleteMultiple([$cid]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function deleteMultiple(array $cids) {
-    $cids = array_values(array_map(array($this, 'normalizeCid'), $cids));
+    $cids = array_values(array_map([$this, 'normalizeCid'], $cids));
     try {
       // Delete in chunks when a large array is passed.
       foreach (array_chunk($cids, 1000) as $cids_chunk) {
@@ -285,19 +285,19 @@ class DatabaseBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function invalidate($cid) {
-    $this->invalidateMultiple(array($cid));
+    $this->invalidateMultiple([$cid]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function invalidateMultiple(array $cids) {
-    $cids = array_values(array_map(array($this, 'normalizeCid'), $cids));
+    $cids = array_values(array_map([$this, 'normalizeCid'], $cids));
     try {
       // Update in chunks when a large array is passed.
       foreach (array_chunk($cids, 1000) as $cids_chunk) {
         $this->connection->update($this->bin)
-          ->fields(array('expire' => REQUEST_TIME - 1))
+          ->fields(['expire' => REQUEST_TIME - 1])
           ->condition('cid', $cids_chunk, 'IN')
           ->execute();
       }
@@ -313,7 +313,7 @@ class DatabaseBackend implements CacheBackendInterface {
   public function invalidateAll() {
     try {
       $this->connection->update($this->bin)
-        ->fields(array('expire' => REQUEST_TIME - 1))
+        ->fields(['expire' => REQUEST_TIME - 1])
         ->execute();
     }
     catch (\Exception $e) {
@@ -419,62 +419,62 @@ class DatabaseBackend implements CacheBackendInterface {
    * Defines the schema for the {cache_*} bin tables.
    */
   public function schemaDefinition() {
-    $schema = array(
+    $schema = [
       'description' => 'Storage for the cache API.',
-      'fields' => array(
-        'cid' => array(
+      'fields' => [
+        'cid' => [
           'description' => 'Primary Key: Unique cache ID.',
           'type' => 'varchar_ascii',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
           'binary' => TRUE,
-        ),
-        'data' => array(
+        ],
+        'data' => [
           'description' => 'A collection of data to cache.',
           'type' => 'blob',
           'not null' => FALSE,
           'size' => 'big',
-        ),
-        'expire' => array(
+        ],
+        'expire' => [
           'description' => 'A Unix timestamp indicating when the cache entry should expire, or ' . Cache::PERMANENT . ' for never.',
           'type' => 'int',
           'not null' => TRUE,
           'default' => 0,
-        ),
-        'created' => array(
+        ],
+        'created' => [
           'description' => 'A timestamp with millisecond precision indicating when the cache entry was created.',
           'type' => 'numeric',
           'precision' => 14,
           'scale' => 3,
           'not null' => TRUE,
           'default' => 0,
-        ),
-        'serialized' => array(
+        ],
+        'serialized' => [
           'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
           'type' => 'int',
           'size' => 'small',
           'not null' => TRUE,
           'default' => 0,
-        ),
-        'tags' => array(
+        ],
+        'tags' => [
           'description' => 'Space-separated list of cache tags for this entry.',
           'type' => 'text',
           'size' => 'big',
           'not null' => FALSE,
-        ),
-        'checksum' => array(
+        ],
+        'checksum' => [
           'description' => 'The tag invalidation checksum when this entry was saved.',
           'type' => 'varchar_ascii',
           'length' => 255,
           'not null' => TRUE,
-        ),
-      ),
-      'indexes' => array(
-        'expire' => array('expire'),
-      ),
-      'primary key' => array('cid'),
-    );
+        ],
+      ],
+      'indexes' => [
+        'expire' => ['expire'],
+      ],
+      'primary key' => ['cid'],
+    ];
     return $schema;
   }
 

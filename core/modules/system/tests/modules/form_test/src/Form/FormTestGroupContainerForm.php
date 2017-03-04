@@ -21,19 +21,19 @@ class FormTestGroupContainerForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['container'] = array(
+    $form['container'] = [
       '#type' => 'container',
-    );
-    $form['meta'] = array(
+    ];
+    $form['meta'] = [
       '#type' => 'details',
       '#title' => 'Group element',
       '#open' => TRUE,
       '#group' => 'container',
-    );
-    $form['meta']['element'] = array(
+    ];
+    $form['meta']['element'] = [
       '#type' => 'textfield',
       '#title' => 'Nest in details element',
-    );
+    ];
     return $form;
   }
 

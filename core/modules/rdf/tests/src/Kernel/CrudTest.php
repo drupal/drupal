@@ -16,7 +16,7 @@ class CrudTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'rdf', 'system');
+  public static $modules = ['entity_test', 'rdf', 'system'];
 
   /**
    * @var string
@@ -57,18 +57,18 @@ class CrudTest extends KernelTestBase {
    */
   function testBundleMapping() {
     // Test that the bundle mapping can be saved.
-    $types = array('sioc:Post', 'foaf:Document');
+    $types = ['sioc:Post', 'foaf:Document'];
     rdf_get_mapping($this->entityType, $this->bundle)
-      ->setBundleMapping(array('types' => $types))
+      ->setBundleMapping(['types' => $types])
       ->save();
     $bundle_mapping = rdf_get_mapping($this->entityType, $this->bundle)
       ->getBundleMapping();
     $this->assertEqual($types, $bundle_mapping['types'], 'Bundle mapping saved.');
 
     // Test that the bundle mapping can be edited.
-    $types = array('schema:BlogPosting');
+    $types = ['schema:BlogPosting'];
     rdf_get_mapping($this->entityType, $this->bundle)
-      ->setBundleMapping(array('types' => $types))
+      ->setBundleMapping(['types' => $types])
       ->save();
     $bundle_mapping = rdf_get_mapping($this->entityType, $this->bundle)
       ->getBundleMapping();
@@ -82,11 +82,11 @@ class CrudTest extends KernelTestBase {
     $field_name = 'created';
 
     // Test that the field mapping can be saved.
-    $mapping = array(
-      'properties' => array('dc:created'),
+    $mapping = [
+      'properties' => ['dc:created'],
       'datatype' => 'xsd:dateTime',
-      'datatype_callback' => array('callable' => 'Drupal\rdf\CommonDataConverter::dateIso8601Value'),
-    );
+      'datatype_callback' => ['callable' => 'Drupal\rdf\CommonDataConverter::dateIso8601Value'],
+    ];
     rdf_get_mapping($this->entityType, $this->bundle)
       ->setFieldMapping($field_name, $mapping)
       ->save();
@@ -95,11 +95,11 @@ class CrudTest extends KernelTestBase {
     $this->assertEqual($mapping, $field_mapping, 'Field mapping saved.');
 
     // Test that the field mapping can be edited.
-    $mapping = array(
-      'properties' => array('dc:date'),
+    $mapping = [
+      'properties' => ['dc:date'],
       'datatype' => 'foo:bar',
-      'datatype_callback' => array('callable' => 'Drupal\rdf\CommonDataConverter::dateIso8601Value'),
-    );
+      'datatype_callback' => ['callable' => 'Drupal\rdf\CommonDataConverter::dateIso8601Value'],
+    ];
     rdf_get_mapping($this->entityType, $this->bundle)
       ->setFieldMapping($field_name, $mapping)
       ->save();

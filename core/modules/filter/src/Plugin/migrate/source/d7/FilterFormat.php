@@ -25,14 +25,14 @@ class FilterFormat extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'format' => $this->t('Format ID.'),
       'name' => $this->t('The name of the format.'),
       'cache' => $this->t('Whether the format is cacheable.'),
       'status' => $this->t('The status of the format'),
       'weight' => $this->t('The weight of the format'),
       'filters' => $this->t('The filters configured for the format.'),
-    );
+    ];
   }
 
   /**

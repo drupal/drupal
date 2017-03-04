@@ -84,7 +84,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * @var array
    * @see \Drupal\Core\Config\ConfigFactoryInterface::getCacheKeys().
    */
-  protected $entities = array();
+  protected $entities = [];
 
   /**
    * Determines if the underlying configuration is retrieved override free.
@@ -170,7 +170,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       $names = $this->configFactory->listAll($prefix);
     }
     else {
-      $names = array();
+      $names = [];
       foreach ($ids as $id) {
         // Add the prefix to the ID to serve as the configuration object name.
         $names[] = $prefix . $id;
@@ -220,7 +220,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    */
   protected function doCreate(array $values) {
     // Set default language to current language if not provided.
-    $values += array($this->langcodeKey => $this->languageManager->getCurrentLanguage()->getId());
+    $values += [$this->langcodeKey => $this->languageManager->getCurrentLanguage()->getId()];
     $entity = new $this->entityClass($values, $this->entityTypeId);
 
     return $entity;
@@ -282,7 +282,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     // Update the entity with the values stored in configuration. It is possible
     // that configuration schema has casted some of the values.
     if (!$entity->hasTrustedData()) {
-      $data = $this->mapFromStorageRecords(array($config->get()));
+      $data = $this->mapFromStorageRecords([$config->get()]);
       $updated_entity = current($data);
 
       foreach (array_keys($config->get()) as $property) {
@@ -326,7 +326,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    *   Array of entities from the entity cache.
    */
   protected function getFromStaticCache(array $ids) {
-    $entities = array();
+    $entities = [];
     // Load any available entities from the internal cache.
     if ($this->entityType->isStaticallyCacheable() && !empty($this->entities)) {
       $config_overrides_key = $this->overrideFree ? '' : implode(':', $this->configFactory->getCacheKeys());
@@ -366,9 +366,9 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    */
   protected function invokeHook($hook, EntityInterface $entity) {
     // Invoke the hook.
-    $this->moduleHandler->invokeAll($this->entityTypeId . '_' . $hook, array($entity));
+    $this->moduleHandler->invokeAll($this->entityTypeId . '_' . $hook, [$entity]);
     // Invoke the respective entity-level hook.
-    $this->moduleHandler->invokeAll('entity_' . $hook, array($entity, $this->entityTypeId));
+    $this->moduleHandler->invokeAll('entity_' . $hook, [$entity, $this->entityTypeId]);
   }
 
   /**
@@ -449,7 +449,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     if ($this->uuidKey && $this->uuidService && !isset($values[$this->uuidKey])) {
       $values[$this->uuidKey] = $this->uuidService->generate();
     }
-    $data = $this->mapFromStorageRecords(array($values));
+    $data = $this->mapFromStorageRecords([$values]);
     $entity = current($data);
     $entity->original = clone $entity;
     $entity->setSyncing($is_syncing);
@@ -469,7 +469,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   public function updateFromStorageRecord(ConfigEntityInterface $entity, array $values) {
     $entity->original = clone $entity;
 
-    $data = $this->mapFromStorageRecords(array($values));
+    $data = $this->mapFromStorageRecords([$values]);
     $updated_entity = current($data);
 
     foreach (array_keys($values) as $property) {

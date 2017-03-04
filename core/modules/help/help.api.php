@@ -48,7 +48,7 @@ function hook_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_
   switch ($route_name) {
     // Main module help for the block module.
     case 'help.page.block':
-      return '<p>' . t('Blocks are boxes of content rendered into an area, or region, of a web page. The default theme Bartik, for example, implements the regions "Sidebar first", "Sidebar second", "Featured", "Content", "Header", "Footer", etc., and a block may appear in any one of these areas. The <a href=":blocks">blocks administration page</a> provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions.', array(':blocks' => \Drupal::url('block.admin_display'))) . '</p>';
+      return '<p>' . t('Blocks are boxes of content rendered into an area, or region, of a web page. The default theme Bartik, for example, implements the regions "Sidebar first", "Sidebar second", "Featured", "Content", "Header", "Footer", etc., and a block may appear in any one of these areas. The <a href=":blocks">blocks administration page</a> provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions.', [':blocks' => \Drupal::url('block.admin_display')]) . '</p>';
 
     // Help for another path in the block module.
     case 'block.admin_display':

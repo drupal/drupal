@@ -50,19 +50,19 @@ abstract class TestBase {
    *
    * @var Array
    */
-  public $results = array(
+  public $results = [
     '#pass' => 0,
     '#fail' => 0,
     '#exception' => 0,
     '#debug' => 0,
-  );
+  ];
 
   /**
    * Assertions thrown in that test case.
    *
    * @var Array
    */
-  protected $assertions = array();
+  protected $assertions = [];
 
   /**
    * This class is skipped when looking for the source of an assertion.
@@ -72,7 +72,7 @@ abstract class TestBase {
    * that called it. So we need to skip the classes defining these helper
    * methods.
    */
-  protected $skipClasses = array(__CLASS__ => TRUE);
+  protected $skipClasses = [__CLASS__ => TRUE];
 
   /**
    * TRUE if verbose debugging is enabled.
@@ -255,7 +255,7 @@ abstract class TestBase {
    *   Array of errors containing a list of unmet requirements.
    */
   protected function checkRequirements() {
-    return array();
+    return [];
   }
 
   /**
@@ -319,7 +319,7 @@ abstract class TestBase {
     }
 
     // Creation assertion array that can be displayed while tests are running.
-    $assertion = array(
+    $assertion = [
       'test_id' => $this->testId,
       'test_class' => get_class($this),
       'status' => $status,
@@ -328,7 +328,7 @@ abstract class TestBase {
       'function' => $caller['function'],
       'line' => $caller['line'],
       'file' => $caller['file'],
-    );
+    ];
 
     // Store assertion for display after the test has completed.
     $message_id = $this->storeAssertion($assertion);
@@ -364,19 +364,19 @@ abstract class TestBase {
    * @see \Drupal\simpletest\TestBase::assert()
    * @see \Drupal\simpletest\TestBase::deleteAssert()
    */
-  public static function insertAssert($test_id, $test_class, $status, $message = '', $group = 'Other', array $caller = array()) {
+  public static function insertAssert($test_id, $test_class, $status, $message = '', $group = 'Other', array $caller = []) {
     // Convert boolean status to string status.
     if (is_bool($status)) {
       $status = $status ? 'pass' : 'fail';
     }
 
-    $caller += array(
+    $caller += [
       'function' => 'Unknown',
       'line' => 0,
       'file' => 'Unknown',
-    );
+    ];
 
-    $assertion = array(
+    $assertion = [
       'test_id' => $test_id,
       'test_class' => $test_class,
       'status' => $status,
@@ -385,7 +385,7 @@ abstract class TestBase {
       'function' => $caller['function'],
       'line' => $caller['line'],
       'file' => $caller['file'],
-    );
+    ];
 
     // We can't use storeAssertion() because this method is static.
     return self::getDatabaseConnection()
@@ -457,7 +457,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertTrue($value, $message = '', $group = 'Other') {
-    return $this->assert((bool) $value, $message ? $message : SafeMarkup::format('Value @value is TRUE.', array('@value' => var_export($value, TRUE))), $group);
+    return $this->assert((bool) $value, $message ? $message : SafeMarkup::format('Value @value is TRUE.', ['@value' => var_export($value, TRUE)]), $group);
   }
 
   /**
@@ -482,7 +482,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertFalse($value, $message = '', $group = 'Other') {
-    return $this->assert(!$value, $message ? $message : SafeMarkup::format('Value @value is FALSE.', array('@value' => var_export($value, TRUE))), $group);
+    return $this->assert(!$value, $message ? $message : SafeMarkup::format('Value @value is FALSE.', ['@value' => var_export($value, TRUE)]), $group);
   }
 
   /**
@@ -505,7 +505,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNull($value, $message = '', $group = 'Other') {
-    return $this->assert(!isset($value), $message ? $message : SafeMarkup::format('Value @value is NULL.', array('@value' => var_export($value, TRUE))), $group);
+    return $this->assert(!isset($value), $message ? $message : SafeMarkup::format('Value @value is NULL.', ['@value' => var_export($value, TRUE)]), $group);
   }
 
   /**
@@ -528,7 +528,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotNull($value, $message = '', $group = 'Other') {
-    return $this->assert(isset($value), $message ? $message : SafeMarkup::format('Value @value is not NULL.', array('@value' => var_export($value, TRUE))), $group);
+    return $this->assert(isset($value), $message ? $message : SafeMarkup::format('Value @value is not NULL.', ['@value' => var_export($value, TRUE)]), $group);
   }
 
   /**
@@ -560,7 +560,7 @@ abstract class TestBase {
     $second = $this->castSafeStrings($second);
     $is_equal = $first == $second;
     if (!$is_equal || !$message) {
-      $default_message = SafeMarkup::format('Value @first is equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)));
+      $default_message = SafeMarkup::format('Value @first is equal to value @second.', ['@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)]);
       $message = $message ? $message . PHP_EOL . $default_message : $default_message;
     }
     return $this->assert($is_equal, $message, $group);
@@ -595,7 +595,7 @@ abstract class TestBase {
     $second = $this->castSafeStrings($second);
     $not_equal = $first != $second;
     if (!$not_equal || !$message) {
-      $default_message = SafeMarkup::format('Value @first is not equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)));
+      $default_message = SafeMarkup::format('Value @first is not equal to value @second.', ['@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)]);
       $message = $message ? $message . PHP_EOL . $default_message : $default_message;
     }
     return $this->assert($not_equal, $message, $group);
@@ -625,7 +625,7 @@ abstract class TestBase {
   protected function assertIdentical($first, $second, $message = '', $group = 'Other') {
     $is_identical = $first === $second;
     if (!$is_identical || !$message) {
-      $default_message = SafeMarkup::format('Value @first is identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)));
+      $default_message = SafeMarkup::format('Value @first is identical to value @second.', ['@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)]);
       $message = $message ? $message . PHP_EOL . $default_message : $default_message;
     }
     return $this->assert($is_identical, $message, $group);
@@ -655,7 +655,7 @@ abstract class TestBase {
   protected function assertNotIdentical($first, $second, $message = '', $group = 'Other') {
     $not_identical = $first !== $second;
     if (!$not_identical || !$message) {
-      $default_message = SafeMarkup::format('Value @first is not identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)));
+      $default_message = SafeMarkup::format('Value @first is not identical to value @second.', ['@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE)]);
       $message = $message ? $message . PHP_EOL . $default_message : $default_message;
     }
     return $this->assert($not_identical, $message, $group);
@@ -683,10 +683,10 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertIdenticalObject($object1, $object2, $message = '', $group = 'Other') {
-    $message = $message ?: SafeMarkup::format('@object1 is identical to @object2', array(
+    $message = $message ?: SafeMarkup::format('@object1 is identical to @object2', [
       '@object1' => var_export($object1, TRUE),
       '@object2' => var_export($object2, TRUE),
-    ));
+    ]);
     $identical = TRUE;
     foreach ($object1 as $key => $value) {
       $identical = $identical && isset($object2->$key) && $object2->$key === $value;
@@ -858,14 +858,14 @@ abstract class TestBase {
    *   taken into account, but it can be useful to only run a few selected test
    *   methods during debugging.
    */
-  public function run(array $methods = array()) {
+  public function run(array $methods = []) {
     $class = get_class($this);
 
     if ($missing_requirements = $this->checkRequirements()) {
       $object_info = new \ReflectionObject($this);
-      $caller = array(
+      $caller = [
         'file' => $object_info->getFileName(),
-      );
+      ];
       foreach ($missing_requirements as $missing_requirement) {
         TestBase::insertAssert($this->testId, $class, FALSE, $missing_requirement, 'Requirements check', $caller);
       }
@@ -903,7 +903,7 @@ abstract class TestBase {
     // compatibility.
     Handle::register();
 
-    set_error_handler(array($this, 'errorHandler'));
+    set_error_handler([$this, 'errorHandler']);
     // Iterate through all the methods in this class, unless a specific list of
     // methods to run was passed.
     $test_methods = array_filter(get_class_methods($class), function ($method) {
@@ -912,7 +912,7 @@ abstract class TestBase {
     if (empty($test_methods)) {
       // Call $this->assert() here because we need to pass along custom caller
       // information, lest the wrong originating code file/line be identified.
-      $this->assert(FALSE, 'No test methods found.', 'Requirements', array('function' => __METHOD__ . '()', 'file' => __FILE__, 'line' => __LINE__));
+      $this->assert(FALSE, 'No test methods found.', 'Requirements', ['function' => __METHOD__ . '()', 'file' => __FILE__, 'line' => __LINE__]);
     }
     if ($methods) {
       $test_methods = array_intersect($test_methods, $methods);
@@ -921,11 +921,11 @@ abstract class TestBase {
       // Insert a fail record. This will be deleted on completion to ensure
       // that testing completed.
       $method_info = new \ReflectionMethod($class, $method);
-      $caller = array(
+      $caller = [
         'file' => $method_info->getFileName(),
         'line' => $method_info->getStartLine(),
         'function' => $class . '->' . $method . '()',
-      );
+      ];
       $test_completion_check_id = TestBase::insertAssert($this->testId, $class, FALSE, 'The test did not complete due to a fatal error.', 'Completion check', $caller);
 
       try {
@@ -1014,7 +1014,7 @@ abstract class TestBase {
     // All assertions as well as the SimpleTest batch operations are associated
     // with the testId, so the database prefix has to be associated with it.
     $affected_rows = self::getDatabaseConnection()->update('simpletest_test_id')
-      ->fields(array('last_prefix' => $this->databasePrefix))
+      ->fields(['last_prefix' => $this->databasePrefix])
       ->condition('test_id', $this->testId)
       ->execute();
     if (!$affected_rows) {
@@ -1103,7 +1103,7 @@ abstract class TestBase {
     // handlers defined by the original one.
     $callbacks = &drupal_register_shutdown_function();
     $this->originalShutdownCallbacks = $callbacks;
-    $callbacks = array();
+    $callbacks = [];
 
     // Create test directory ahead of installation so fatal errors and debug
     // information can be logged during installation process.
@@ -1153,11 +1153,11 @@ abstract class TestBase {
     drupal_valid_test_ua($this->databasePrefix);
 
     // Reset settings.
-    new Settings(array(
+    new Settings([
       // For performance, simply use the database prefix as hash salt.
       'hash_salt' => $this->databasePrefix,
       'container_yamls' => [],
-    ));
+    ]);
 
     drupal_set_time_limit($this->timeLimit);
   }
@@ -1181,7 +1181,7 @@ abstract class TestBase {
    */
   private function restoreEnvironment() {
     // Destroy the session if one was started during the test-run.
-    $_SESSION = array();
+    $_SESSION = [];
     if (PHP_SAPI !== 'cli' && session_status() === PHP_SESSION_ACTIVE) {
       session_destroy();
       $params = session_get_cookie_params();
@@ -1197,7 +1197,7 @@ abstract class TestBase {
     drupal_static_reset();
 
     if ($this->container && $this->container->has('state') && $state = $this->container->get('state')) {
-      $captured_emails = $state->get('system.test_mail_collector') ?: array();
+      $captured_emails = $state->get('system.test_mail_collector') ?: [];
       $emailCount = count($captured_emails);
       if ($emailCount) {
         $message = $emailCount == 1 ? '1 email was sent during this test.' : $emailCount . ' emails were sent during this test.';
@@ -1232,7 +1232,7 @@ abstract class TestBase {
     \Drupal::setContainer($this->originalContainer);
 
     // Delete test site directory.
-    file_unmanaged_delete_recursive($this->siteDirectory, array($this, 'filePreDeleteCallback'));
+    file_unmanaged_delete_recursive($this->siteDirectory, [$this, 'filePreDeleteCallback']);
 
     // Restore original database connection.
     Database::removeConnection('default');
@@ -1278,7 +1278,7 @@ abstract class TestBase {
    */
   public function errorHandler($severity, $message, $file = NULL, $line = NULL) {
     if ($severity & error_reporting()) {
-      $error_map = array(
+      $error_map = [
         E_STRICT => 'Run-time notice',
         E_WARNING => 'Warning',
         E_NOTICE => 'Notice',
@@ -1290,7 +1290,7 @@ abstract class TestBase {
         E_RECOVERABLE_ERROR => 'Recoverable error',
         E_DEPRECATED => 'Deprecated',
         E_USER_DEPRECATED => 'User deprecated',
-      );
+      ];
 
       $backtrace = debug_backtrace();
 
@@ -1315,15 +1315,15 @@ abstract class TestBase {
     $backtrace = $exception->getTrace();
     $verbose_backtrace = $backtrace;
     // Push on top of the backtrace the call that generated the exception.
-    array_unshift($backtrace, array(
+    array_unshift($backtrace, [
       'line' => $exception->getLine(),
       'file' => $exception->getFile(),
-    ));
+    ]);
     $decoded_exception = Error::decodeException($exception);
     unset($decoded_exception['backtrace']);
-    $message = SafeMarkup::format('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $decoded_exception + array(
+    $message = SafeMarkup::format('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $decoded_exception + [
       '@backtrace' => Error::formatBacktrace($verbose_backtrace),
-    ));
+    ]);
     $this->error($message, 'Uncaught exception', Error::getLastCaller($backtrace));
   }
 
@@ -1375,15 +1375,15 @@ abstract class TestBase {
    *   single value only.
    */
   public static function generatePermutations($parameters) {
-    $all_permutations = array(array());
+    $all_permutations = [[]];
     foreach ($parameters as $parameter => $values) {
-      $new_permutations = array();
+      $new_permutations = [];
       // Iterate over all values of the parameter.
       foreach ($values as $value) {
         // Iterate over all existing permutations.
         foreach ($all_permutations as $permutation) {
           // Add the new parameter value to existing permutations.
-          $new_permutations[] = $permutation + array($parameter => $value);
+          $new_permutations[] = $permutation + [$parameter => $value];
         }
       }
       // Replace the old permutations with the new permutations.

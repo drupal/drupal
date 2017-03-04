@@ -142,19 +142,19 @@ class CacheContextsManagerTest extends UnitTestCase {
   public function testAvailableContextStrings() {
     $cache_contexts_manager = new CacheContextsManager($this->getMockContainer(), $this->getContextsFixture());
     $contexts = $cache_contexts_manager->getAll();
-    $this->assertEquals(array("foo", "baz"), $contexts);
+    $this->assertEquals(["foo", "baz"], $contexts);
   }
 
   public function testAvailableContextLabels() {
     $container = $this->getMockContainer();
     $cache_contexts_manager = new CacheContextsManager($container, $this->getContextsFixture());
     $labels = $cache_contexts_manager->getLabels();
-    $expected = array("foo" => "Foo");
+    $expected = ["foo" => "Foo"];
     $this->assertEquals($expected, $labels);
   }
 
   protected function getContextsFixture() {
-    return array('foo', 'baz');
+    return ['foo', 'baz'];
   }
 
   protected function getMockContainer() {

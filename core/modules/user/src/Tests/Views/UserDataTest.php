@@ -24,7 +24,7 @@ class UserDataTest extends UserTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_user_data');
+  public static $testViews = ['test_user_data'];
 
   /**
    * Tests field handler.

@@ -44,16 +44,16 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
 
     $this->privateKey = $this->getMockBuilder('Drupal\Core\PrivateKey')
       ->disableOriginalConstructor()
-      ->setMethods(array('get'))
+      ->setMethods(['get'])
       ->getMock();
 
     $this->sessionMetadata = $this->getMockBuilder('Drupal\Core\Session\MetadataBag')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $settings = array(
+    $settings = [
       'hash_salt' => $this->randomMachineName(),
-    );
+    ];
 
     new Settings($settings);
 
@@ -154,11 +154,11 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    *   An array of data used by the test.
    */
   public function providerTestValidateParameterTypes() {
-    return array(
-      array(array(), ''),
-      array(TRUE, 'foo'),
-      array(0, 'foo'),
-    );
+    return [
+      [[], ''],
+      [TRUE, 'foo'],
+      [0, 'foo'],
+    ];
   }
 
   /**
@@ -186,12 +186,12 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    *   An array of data used by the test.
    */
   public function providerTestInvalidParameterTypes() {
-    return array(
-      array(NULL, new \stdClass()),
-      array(0, array()),
-      array('', array()),
-      array(array(), array()),
-    );
+    return [
+      [NULL, new \stdClass()],
+      [0, []],
+      ['', []],
+      [[], []],
+    ];
   }
 
   /**
@@ -202,7 +202,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    */
   public function testGetWithNoHashSalt() {
     // Update settings with no hash salt.
-    new Settings(array());
+    new Settings([]);
     $generator = new CsrfTokenGenerator($this->privateKey, $this->sessionMetadata);
     $generator->get();
   }

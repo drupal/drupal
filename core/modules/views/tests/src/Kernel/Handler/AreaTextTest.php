@@ -13,19 +13,19 @@ use Drupal\views\Views;
  */
 class AreaTextTest extends ViewsKernelTestBase {
 
-  public static $modules = array('system', 'user', 'filter');
+  public static $modules = ['system', 'user', 'filter'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_view');
+  public static $testViews = ['test_view'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
-    $this->installConfig(array('system', 'filter'));
+    $this->installConfig(['system', 'filter']);
     $this->installEntitySchema('user');
   }
 
@@ -37,16 +37,16 @@ class AreaTextTest extends ViewsKernelTestBase {
 
     // add a text header
     $string = $this->randomMachineName();
-    $view->displayHandlers->get('default')->overrideOption('header', array(
-      'area' => array(
+    $view->displayHandlers->get('default')->overrideOption('header', [
+      'area' => [
         'id' => 'area',
         'table' => 'views',
         'field' => 'area',
-        'content' => array(
+        'content' => [
           'value' => $string,
-        ),
-      ),
-    ));
+        ],
+      ],
+    ]);
 
     // Execute the view.
     $this->executeView($view);
@@ -60,7 +60,7 @@ class AreaTextTest extends ViewsKernelTestBase {
     $this->assertEqual(check_markup($string), $renderer->renderRoot($build), 'Existent format should return something');
 
     // Empty results, and it shouldn't be displayed .
-    $this->assertEqual(array(), $view->display_handler->handlers['header']['area']->render(TRUE), 'No result should lead to no header');
+    $this->assertEqual([], $view->display_handler->handlers['header']['area']->render(TRUE), 'No result should lead to no header');
     // Empty results, and it should be displayed.
     $view->display_handler->handlers['header']['area']->options['empty'] = TRUE;
     $build = $view->display_handler->handlers['header']['area']->render(TRUE);

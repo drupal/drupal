@@ -66,12 +66,12 @@ class ContentTranslationLocalTasks extends DeriverBase implements ContainerDeriv
       $translation_route_name = "entity.$entity_type_id.content_translation_overview";
 
       $base_route_name = "entity.$entity_type_id.canonical";
-      $this->derivatives[$translation_route_name] = array(
+      $this->derivatives[$translation_route_name] = [
         'entity_type' => $entity_type_id,
         'title' => $this->t('Translate'),
         'route_name' => $translation_route_name,
         'base_route' => $base_route_name,
-      ) + $base_plugin_definition;
+      ] + $base_plugin_definition;
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);
   }

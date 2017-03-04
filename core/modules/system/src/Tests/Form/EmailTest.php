@@ -17,7 +17,7 @@ class EmailTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = ['form_test'];
 
   protected $profile = 'testing';
 
@@ -25,20 +25,20 @@ class EmailTest extends WebTestBase {
    * Tests that #type 'email' fields are properly validated.
    */
   function testFormEmail() {
-    $edit = array();
+    $edit = [];
     $edit['email'] = 'invalid';
     $edit['email_required'] = ' ';
     $this->drupalPostForm('form-test/email', $edit, 'Submit');
-    $this->assertRaw(t('The email address %mail is not valid.', array('%mail' => 'invalid')));
-    $this->assertRaw(t('@name field is required.', array('@name' => 'Address')));
+    $this->assertRaw(t('The email address %mail is not valid.', ['%mail' => 'invalid']));
+    $this->assertRaw(t('@name field is required.', ['@name' => 'Address']));
 
-    $edit = array();
+    $edit = [];
     $edit['email_required'] = '  foo.bar@example.com ';
     $values = Json::decode($this->drupalPostForm('form-test/email', $edit, 'Submit'));
     $this->assertIdentical($values['email'], '');
     $this->assertEqual($values['email_required'], 'foo.bar@example.com');
 
-    $edit = array();
+    $edit = [];
     $edit['email'] = 'foo@example.com';
     $edit['email_required'] = 'example@drupal.org';
     $values = Json::decode($this->drupalPostForm('form-test/email', $edit, 'Submit'));

@@ -47,7 +47,7 @@ class ConfigImporterFieldPurger {
     }
     else {
       $context['finished'] = $context['sandbox']['field']['current_progress'] / $context['sandbox']['field']['steps_to_delete'];
-      $context['message'] = \Drupal::translation()->translate('Purging field @field_label', array('@field_label' => $field_storage->label()));
+      $context['message'] = \Drupal::translation()->translate('Purging field @field_label', ['@field_label' => $field_storage->label()]);
     }
   }
 
@@ -111,11 +111,11 @@ class ConfigImporterFieldPurger {
   public static function getFieldStoragesToPurge(array $extensions, array $deletes) {
     $providers = array_keys($extensions['module']);
     $providers[] = 'core';
-    $storages_to_delete = array();
+    $storages_to_delete = [];
 
     // Gather fields that will be deleted during configuration synchronization
     // where the module that provides the field type is also being uninstalled.
-    $field_storage_ids = array();
+    $field_storage_ids = [];
     foreach ($deletes as $config_name) {
       $field_storage_config_prefix = \Drupal::entityManager()->getDefinition('field_storage_config')->getConfigPrefix();
       if (strpos($config_name, $field_storage_config_prefix . '.') === 0) {
@@ -134,7 +134,7 @@ class ConfigImporterFieldPurger {
 
     // Gather deleted fields from modules that are being uninstalled.
     /** @var \Drupal\field\FieldStorageConfigInterface[] $field_storages */
-    $field_storages = entity_load_multiple_by_properties('field_storage_config', array('deleted' => TRUE, 'include_deleted' => TRUE));
+    $field_storages = entity_load_multiple_by_properties('field_storage_config', ['deleted' => TRUE, 'include_deleted' => TRUE]);
     foreach ($field_storages as $field_storage) {
       if (!in_array($field_storage->getTypeProvider(), $providers)) {
         $storages_to_delete[$field_storage->id()] = $field_storage;

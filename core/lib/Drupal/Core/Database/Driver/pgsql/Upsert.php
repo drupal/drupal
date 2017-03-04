@@ -18,9 +18,9 @@ class Upsert extends QueryUpsert {
     }
 
     // Default options for upsert queries.
-    $this->queryOptions += array(
+    $this->queryOptions += [
       'throw_exception' => TRUE,
-    );
+    ];
 
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
@@ -66,7 +66,7 @@ class Upsert extends QueryUpsert {
     }
 
     // Re-initialize the values array so that we can re-use this query.
-    $this->insertValues = array();
+    $this->insertValues = [];
 
     // Transaction commits here where $transaction looses scope.
 

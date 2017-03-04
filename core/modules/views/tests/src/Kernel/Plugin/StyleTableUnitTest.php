@@ -19,7 +19,7 @@ class StyleTableUnitTest extends PluginKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_table');
+  public static $testViews = ['test_table'];
 
   /**
    * Tests the table style.
@@ -101,7 +101,7 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     $view->destroy();
 
     // Use a existing field, and sort both ascending and descending.
-    foreach (array('asc', 'desc') as $order) {
+    foreach (['asc', 'desc'] as $order) {
       $this->prepareView($view);
       $style_plugin = $view->style_plugin;
       $request->query->set('sort', $order);
@@ -133,7 +133,7 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     // Render an empty result, and ensure that the area handler is rendered.
     $view->setDisplay('default');
     $view->executed = TRUE;
-    $view->result = array();
+    $view->result = [];
     $output = $view->preview();
     $output = \Drupal::service('renderer')->renderRoot($output);
 

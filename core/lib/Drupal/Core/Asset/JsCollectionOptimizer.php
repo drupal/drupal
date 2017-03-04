@@ -81,8 +81,8 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
     // Drupal contrib can override this default JS aggregator to keep the same
     // grouping, optimizing and dumping, but change the strategy that is used to
     // determine when the aggregate should be rebuilt (e.g. mtime, HTTPS …).
-    $map = $this->state->get('system.js_cache_files') ?: array();
-    $js_assets = array();
+    $map = $this->state->get('system.js_cache_files') ?: [];
+    $js_assets = [];
     foreach ($js_groups as $order => $js_group) {
       // We have to return a single asset, not a group of assets. It is now up
       // to one of the pieces of code in the switch statement below to set the
@@ -159,7 +159,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
    *   A hash to uniquely identify the given group of JavaScript assets.
    */
   protected function generateHash(array $js_group) {
-    $js_data = array();
+    $js_data = [];
     foreach ($js_group['items'] as $js_file) {
       $js_data[] = $js_file['data'];
     }
@@ -184,7 +184,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
         file_unmanaged_delete($uri);
       }
     };
-    file_scan_directory('public://js', '/.*/', array('callback' => $delete_stale));
+    file_scan_directory('public://js', '/.*/', ['callback' => $delete_stale]);
   }
 
 }

@@ -25,7 +25,7 @@ class EntityReference extends Fields {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['separator'] = array('default' => '-');
+    $options['separator'] = ['default' => '-'];
 
     return $options;
   }

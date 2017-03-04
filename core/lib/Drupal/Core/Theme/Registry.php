@@ -249,7 +249,7 @@ class Registry implements DestructableInterface {
   public function getRuntime() {
     $this->init($this->themeName);
     if (!isset($this->runtimeRegistry[$this->theme->getName()])) {
-      $this->runtimeRegistry[$this->theme->getName()] = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->runtimeCache ?: $this->cache, $this->lock, array('theme_registry'), $this->moduleHandler->isLoaded());
+      $this->runtimeRegistry[$this->theme->getName()] = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->runtimeCache ?: $this->cache, $this->lock, ['theme_registry'], $this->moduleHandler->isLoaded());
     }
     return $this->runtimeRegistry[$this->theme->getName()];
   }
@@ -258,7 +258,7 @@ class Registry implements DestructableInterface {
    * Persists the theme registry in the cache backend.
    */
   protected function setCache() {
-    $this->cache->set('theme_registry:' . $this->theme->getName(), $this->registry[$this->theme->getName()], Cache::PERMANENT, array('theme_registry'));
+    $this->cache->set('theme_registry:' . $this->theme->getName(), $this->registry[$this->theme->getName()], Cache::PERMANENT, ['theme_registry']);
   }
 
   /**
@@ -320,7 +320,7 @@ class Registry implements DestructableInterface {
    * @see hook_theme_registry_alter()
    */
   protected function build() {
-    $cache = array();
+    $cache = [];
     // First, preprocess the theme hooks advertised by modules. This will
     // serve as the basic registry. Since the list of enabled modules is the
     // same regardless of the theme used, this is cached in its own entry to
@@ -334,7 +334,7 @@ class Registry implements DestructableInterface {
       }
       // Only cache this registry if all modules are loaded.
       if ($this->moduleHandler->isLoaded()) {
-        $this->cache->set("theme_registry:build:modules", $cache, Cache::PERMANENT, array('theme_registry'));
+        $this->cache->set("theme_registry:build:modules", $cache, Cache::PERMANENT, ['theme_registry']);
       }
     }
 
@@ -428,14 +428,14 @@ class Registry implements DestructableInterface {
    * @throws \BadFunctionCallException
    */
   protected function processExtension(array &$cache, $name, $type, $theme, $path) {
-    $result = array();
+    $result = [];
 
-    $hook_defaults = array(
+    $hook_defaults = [
       'variables' => TRUE,
       'render element' => TRUE,
       'pattern' => TRUE,
       'base hook' => TRUE,
-    );
+    ];
 
     $module_list = array_keys($this->moduleHandler->getModuleList());
 
@@ -519,8 +519,8 @@ class Registry implements DestructableInterface {
         // Preprocess variables for all theming hooks, whether the hook is
         // implemented as a template or as a function. Ensure they are arrays.
         if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
-          $info['preprocess functions'] = array();
-          $prefixes = array();
+          $info['preprocess functions'] = [];
+          $prefixes = [];
           if ($type == 'module') {
             // Default variable preprocessor prefix.
             $prefixes[] = 'template';
@@ -578,7 +578,7 @@ class Registry implements DestructableInterface {
         // Check only if not registered by the theme or engine.
         if (empty($result[$hook])) {
           if (!isset($info['preprocess functions'])) {
-            $cache[$hook]['preprocess functions'] = array();
+            $cache[$hook]['preprocess functions'] = [];
           }
           // Only use non-hook-specific variable preprocessors for theme hooks
           // implemented as templates. See the @defgroup themeable topic.
@@ -605,7 +605,7 @@ class Registry implements DestructableInterface {
    */
   protected function completeSuggestion($hook, array &$cache) {
     $previous_hook = $hook;
-    $incomplete_previous_hook = array();
+    $incomplete_previous_hook = [];
     // Continue looping if the candidate hook doesn't exist or if the candidate
     // hook has incomplete preprocess functions, and if the candidate hook is a
     // suggestion (has a double underscore).
@@ -767,7 +767,7 @@ class Registry implements DestructableInterface {
     $this->runtimeRegistry = [];
 
     $this->registry = [];
-    Cache::invalidateTags(array('theme_registry'));
+    Cache::invalidateTags(['theme_registry']);
     return $this;
   }
 
@@ -788,7 +788,7 @@ class Registry implements DestructableInterface {
    * @return array
    *   Functions grouped by the first prefix.
    */
-  public function getPrefixGroupedUserFunctions($prefixes = array()) {
+  public function getPrefixGroupedUserFunctions($prefixes = []) {
     $functions = get_defined_functions();
 
     // If a list of prefixes is supplied, trim down the list to those items

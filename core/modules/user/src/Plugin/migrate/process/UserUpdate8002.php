@@ -22,10 +22,10 @@ class UserUpdate8002 extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $rid = $row->getSourceProperty('rid');
-    $map = array(
+    $map = [
       1 => 'anonymous',
       2 => 'authenticated',
-    );
+    ];
     return isset($map[$rid]) ? $map[$rid] : $value;
   }
 

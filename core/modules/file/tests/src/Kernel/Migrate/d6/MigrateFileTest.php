@@ -79,12 +79,12 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     // Update the file_directory_path.
     Database::getConnection('default', 'migrate')
       ->update('variable')
-      ->fields(array('value' => serialize('files/test')))
+      ->fields(['value' => serialize('files/test')])
       ->condition('name', 'file_directory_path')
       ->execute();
     Database::getConnection('default', 'migrate')
       ->update('variable')
-      ->fields(array('value' => serialize(file_directory_temp())))
+      ->fields(['value' => serialize(file_directory_temp())])
       ->condition('name', 'file_directory_temp')
       ->execute();
 
@@ -122,10 +122,10 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
 
     $db->update('files')
       ->condition('fid', 6)
-      ->fields(array(
+      ->fields([
         'filename' => static::$tempFilename,
         'filepath' => $file_path,
-      ))
+      ])
       ->execute();
 
     $file = (array) $db->select('files')

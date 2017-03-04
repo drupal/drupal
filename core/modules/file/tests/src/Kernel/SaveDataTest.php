@@ -26,7 +26,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('insert'));
+    $this->assertFileHooksCalled(['insert']);
 
     // Verify that what was returned is what's in the database.
     $this->assertFileUnchanged($result, File::load($result->id()));
@@ -51,7 +51,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('insert'));
+    $this->assertFileHooksCalled(['insert']);
 
     // Verify that what was returned is what's in the database.
     $this->assertFileUnchanged($result, File::load($result->id()));
@@ -75,7 +75,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('insert'));
+    $this->assertFileHooksCalled(['insert']);
 
     // Ensure that the existing file wasn't overwritten.
     $this->assertDifferentFile($existing, $result);
@@ -103,7 +103,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('load', 'update'));
+    $this->assertFileHooksCalled(['load', 'update']);
 
     // Verify that the existing file was re-used.
     $this->assertSameFile($existing, $result);
@@ -125,7 +125,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertEqual($contents, file_get_contents($existing->getFileUri()), 'Contents of existing file were unchanged.');
 
     // Check that no hooks were called while failing.
-    $this->assertFileHooksCalled(array());
+    $this->assertFileHooksCalled([]);
 
     // Ensure that the existing file wasn't overwritten.
     $this->assertFileUnchanged($existing, File::load($existing->id()));

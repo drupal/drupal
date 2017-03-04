@@ -24,7 +24,7 @@ class CommentStatisticsTest extends CommentTestBase {
     parent::setUp();
 
     // Create a second user to post comments.
-    $this->webUser2 = $this->drupalCreateUser(array(
+    $this->webUser2 = $this->drupalCreateUser([
       'post comments',
       'create article content',
       'edit own comments',
@@ -32,7 +32,7 @@ class CommentStatisticsTest extends CommentTestBase {
       'skip comment approval',
       'access comments',
       'access content',
-    ));
+    ]);
   }
 
   /**
@@ -62,7 +62,7 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Checks the new values of node comment statistics with comment #1.
     // The node cache needs to be reset before reload.
-    $node_storage->resetCache(array($this->node->id()));
+    $node_storage->resetCache([$this->node->id()]);
     $node = $node_storage->load($this->node->id());
     $this->assertEqual($node->get('comment')->last_comment_name, NULL, 'The value of node last_comment_name is NULL.');
     $this->assertEqual($node->get('comment')->last_comment_uid, $this->webUser2->id(), 'The value of node last_comment_uid is the comment #1 uid.');
@@ -70,11 +70,11 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Prepare for anonymous comment submission (comment approval enabled).
     $this->drupalLogin($this->adminUser);
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
-    ));
+    ]);
     // Ensure that the poster can leave some contact info.
     $this->setCommentAnonymous('1');
     $this->drupalLogout();
@@ -86,7 +86,7 @@ class CommentStatisticsTest extends CommentTestBase {
     // Checks the new values of node comment statistics with comment #2 and
     // ensure they haven't changed since the comment has not been moderated.
     // The node needs to be reloaded with the cache reset.
-    $node_storage->resetCache(array($this->node->id()));
+    $node_storage->resetCache([$this->node->id()]);
     $node = $node_storage->load($this->node->id());
     $this->assertEqual($node->get('comment')->last_comment_name, NULL, 'The value of node last_comment_name is still NULL.');
     $this->assertEqual($node->get('comment')->last_comment_uid, $this->webUser2->id(), 'The value of node last_comment_uid is still the comment #1 uid.');
@@ -94,21 +94,21 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Prepare for anonymous comment submission (no approval required).
     $this->drupalLogin($this->adminUser);
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
-    ));
+    ]);
     $this->drupalLogout();
 
     // Post comment #3 as anonymous.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
-    $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), '', array('name' => $this->randomMachineName()));
+    $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), '', ['name' => $this->randomMachineName()]);
     $comment_loaded = Comment::load($anonymous_comment->id());
 
     // Checks the new values of node comment statistics with comment #3.
     // The node needs to be reloaded with the cache reset.
-    $node_storage->resetCache(array($this->node->id()));
+    $node_storage->resetCache([$this->node->id()]);
     $node = $node_storage->load($this->node->id());
     $this->assertEqual($node->get('comment')->last_comment_name, $comment_loaded->getAuthorName(), 'The value of node last_comment_name is the name of the anonymous user.');
     $this->assertEqual($node->get('comment')->last_comment_uid, 0, 'The value of node last_comment_uid is zero.');

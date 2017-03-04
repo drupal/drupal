@@ -82,13 +82,13 @@ class User extends ContentEntityBase implements UserInterface {
 
     // Make sure that the authenticated/anonymous roles are not persisted.
     foreach ($this->get('roles') as $index => $item) {
-      if (in_array($item->target_id, array(RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID))) {
+      if (in_array($item->target_id, [RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID])) {
         $this->get('roles')->offsetUnset($index);
       }
     }
 
     // Store account cancellation information.
-    foreach (array('user_cancel_method', 'user_cancel_notify') as $key) {
+    foreach (['user_cancel_method', 'user_cancel_notify'] as $key) {
       if (isset($this->{$key})) {
         \Drupal::service('user.data')->set('user', $this->id(), substr($key, 5), $this->{$key});
       }
@@ -140,7 +140,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function getRoles($exclude_locked_roles = FALSE) {
-    $roles = array();
+    $roles = [];
 
     // Users with an ID always have the authenticated user role.
     if (!$exclude_locked_roles) {
@@ -186,7 +186,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function removeRole($rid) {
-    $this->set('roles', array_diff($this->getRoles(TRUE), array($rid)));
+    $this->set('roles', array_diff($this->getRoles(TRUE), [$rid]));
   }
 
   /**
@@ -445,9 +445,9 @@ class User extends ContentEntityBase implements UserInterface {
       ->setDescription(t("The user's preferred language code for receiving emails and viewing the site."))
       // @todo: Define this via an options provider once
       // https://www.drupal.org/node/2329937 is completed.
-      ->addPropertyConstraints('value', array(
-        'AllowedValues' => array('callback' => __CLASS__ . '::getAllowedConfigurableLanguageCodes'),
-      ));
+      ->addPropertyConstraints('value', [
+        'AllowedValues' => ['callback' => __CLASS__ . '::getAllowedConfigurableLanguageCodes'],
+      ]);
 
     $fields['preferred_admin_langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Preferred admin language code'))
@@ -455,12 +455,12 @@ class User extends ContentEntityBase implements UserInterface {
       // @todo: A default value of NULL is ignored, so we have to specify
       // an empty field item structure instead. Fix this in
       // https://www.drupal.org/node/2318605.
-      ->setDefaultValue(array(0 => array ('value' => NULL)))
+      ->setDefaultValue([0 =>  ['value' => NULL]])
       // @todo: Define this via an options provider once
       // https://www.drupal.org/node/2329937 is completed.
-      ->addPropertyConstraints('value', array(
-        'AllowedValues' => array('callback' => __CLASS__ . '::getAllowedConfigurableLanguageCodes'),
-      ));
+      ->addPropertyConstraints('value', [
+        'AllowedValues' => ['callback' => __CLASS__ . '::getAllowedConfigurableLanguageCodes'],
+      ]);
 
     // The name should not vary per language. The username is the visual
     // identifier for a user and needs to be consistent in all languages.
@@ -468,12 +468,12 @@ class User extends ContentEntityBase implements UserInterface {
       ->setLabel(t('Name'))
       ->setDescription(t('The name of this user.'))
       ->setRequired(TRUE)
-      ->setConstraints(array(
+      ->setConstraints([
         // No Length constraint here because the UserName constraint also covers
         // that.
-        'UserName' => array(),
-        'UserNameUnique' => array(),
-      ));
+        'UserName' => [],
+        'UserNameUnique' => [],
+      ]);
     $fields['name']->getItemDefinition()->setClass('\Drupal\user\UserNameItem');
 
     $fields['pass'] = BaseFieldDefinition::create('password')
@@ -495,9 +495,9 @@ class User extends ContentEntityBase implements UserInterface {
       ->setSetting('max_length', 32)
       // @todo: Define this via an options provider once
       // https://www.drupal.org/node/2329937 is completed.
-      ->addPropertyConstraints('value', array(
-        'AllowedValues' => array('callback' => __CLASS__ . '::getAllowedTimezones'),
-      ));
+      ->addPropertyConstraints('value', [
+        'AllowedValues' => ['callback' => __CLASS__ . '::getAllowedTimezones'],
+      ]);
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('User status'))

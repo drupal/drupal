@@ -44,12 +44,12 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
       'uid' => 2,
       'name' => 'Ford Prefect',
       'mail' => 'ford.prefect@localhost',
-      'signature' => array(
-        array(
+      'signature' => [
+        [
           'value' => 'Bring a towel.',
           'format' => 'filtered_html',
-        ),
-      ),
+        ],
+      ],
       'init' => 'proto@zo.an',
     ])->save();
 

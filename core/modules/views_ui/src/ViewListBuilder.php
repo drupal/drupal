@@ -65,10 +65,10 @@ class ViewListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function load() {
-    $entities = array(
-      'enabled' => array(),
-      'disabled' => array(),
-    );
+    $entities = [
+      'enabled' => [],
+      'disabled' => [],
+    ];
     foreach (parent::load() as $entity) {
       if ($entity->status()) {
         $entities['enabled'][] = $entity;
@@ -85,73 +85,73 @@ class ViewListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $view) {
     $row = parent::buildRow($view);
-    return array(
-      'data' => array(
-        'view_name' => array(
-          'data' => array(
+    return [
+      'data' => [
+        'view_name' => [
+          'data' => [
             '#plain_text' => $view->label(),
-          ),
-        ),
-        'machine_name' => array(
-          'data' => array(
+          ],
+        ],
+        'machine_name' => [
+          'data' => [
             '#plain_text' => $view->id(),
-          ),
-        ),
-        'description' => array(
-          'data' => array(
+          ],
+        ],
+        'description' => [
+          'data' => [
             '#plain_text' => $view->get('description'),
-          ),
-        ),
-        'displays' => array(
-          'data' => array(
+          ],
+        ],
+        'displays' => [
+          'data' => [
             '#theme' => 'views_ui_view_displays_list',
             '#displays' => $this->getDisplaysList($view),
-          ),
-        ),
+          ],
+        ],
         'operations' => $row['operations'],
-      ),
-      '#attributes' => array(
-        'class' => array($view->status() ? 'views-ui-list-enabled' : 'views-ui-list-disabled'),
-      ),
-    );
+      ],
+      '#attributes' => [
+        'class' => [$view->status() ? 'views-ui-list-enabled' : 'views-ui-list-disabled'],
+      ],
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildHeader() {
-    return array(
-      'view_name' => array(
+    return [
+      'view_name' => [
         'data' => $this->t('View name'),
-        '#attributes' => array(
-          'class' => array('views-ui-name'),
-        ),
-      ),
-      'machine_name' => array(
+        '#attributes' => [
+          'class' => ['views-ui-name'],
+        ],
+      ],
+      'machine_name' => [
         'data' => $this->t('Machine name'),
-        '#attributes' => array(
-          'class' => array('views-ui-machine-name'),
-        ),
-      ),
-      'description' => array(
+        '#attributes' => [
+          'class' => ['views-ui-machine-name'],
+        ],
+      ],
+      'description' => [
         'data' => $this->t('Description'),
-        '#attributes' => array(
-          'class' => array('views-ui-description'),
-        ),
-      ),
-      'displays' => array(
+        '#attributes' => [
+          'class' => ['views-ui-description'],
+        ],
+      ],
+      'displays' => [
         'data' => $this->t('Displays'),
-        '#attributes' => array(
-          'class' => array('views-ui-displays'),
-        ),
-      ),
-      'operations' => array(
+        '#attributes' => [
+          'class' => ['views-ui-displays'],
+        ],
+      ],
+      'operations' => [
         'data' => $this->t('Operations'),
-        '#attributes' => array(
-          'class' => array('views-ui-operations'),
-        ),
-      ),
-    );
+        '#attributes' => [
+          'class' => ['views-ui-operations'],
+        ],
+      ],
+    ];
   }
 
   /**
@@ -161,15 +161,15 @@ class ViewListBuilder extends ConfigEntityListBuilder {
     $operations = parent::getDefaultOperations($entity);
 
     if ($entity->hasLinkTemplate('duplicate-form')) {
-      $operations['duplicate'] = array(
+      $operations['duplicate'] = [
         'title' => $this->t('Duplicate'),
         'weight' => 15,
         'url' => $entity->urlInfo('duplicate-form'),
-      );
+      ];
     }
 
     // Add AJAX functionality to enable/disable operations.
-    foreach (array('enable', 'disable') as $op) {
+    foreach (['enable', 'disable'] as $op) {
       if (isset($operations[$op])) {
         $operations[$op]['url'] = $entity->urlInfo($op);
         // Enable and disable operations should use AJAX.
@@ -191,37 +191,37 @@ class ViewListBuilder extends ConfigEntityListBuilder {
     $list['#attached']['library'][] = 'core/drupal.ajax';
     $list['#attached']['library'][] = 'views_ui/views_ui.listing';
 
-    $form['filters'] = array(
+    $form['filters'] = [
       '#type' => 'container',
-      '#attributes' => array(
-        'class' => array('table-filter', 'js-show'),
-      ),
-    );
+      '#attributes' => [
+        'class' => ['table-filter', 'js-show'],
+      ],
+    ];
 
-    $list['filters']['text'] = array(
+    $list['filters']['text'] = [
       '#type' => 'search',
       '#title' => $this->t('Filter'),
       '#title_display' => 'invisible',
       '#size' => 60,
       '#placeholder' => $this->t('Filter by view name, machine name, description, or display path'),
-      '#attributes' => array(
-        'class' => array('views-filter-text'),
+      '#attributes' => [
+        'class' => ['views-filter-text'],
         'data-table' => '.views-listing-table',
         'autocomplete' => 'off',
         'title' => $this->t('Enter a part of the view name, machine name, description, or display path to filter by.'),
-      ),
-    );
+      ],
+    ];
 
-    $list['enabled']['heading']['#markup'] = '<h2>' . $this->t('Enabled', array(), array('context' => 'Plural')) . '</h2>';
-    $list['disabled']['heading']['#markup'] = '<h2>' . $this->t('Disabled', array(), array('context' => 'Plural')) . '</h2>';
-    foreach (array('enabled', 'disabled') as $status) {
+    $list['enabled']['heading']['#markup'] = '<h2>' . $this->t('Enabled', [], ['context' => 'Plural']) . '</h2>';
+    $list['disabled']['heading']['#markup'] = '<h2>' . $this->t('Disabled', [], ['context' => 'Plural']) . '</h2>';
+    foreach (['enabled', 'disabled'] as $status) {
       $list[$status]['#type'] = 'container';
-      $list[$status]['#attributes'] = array('class' => array('views-list-section', $status));
-      $list[$status]['table'] = array(
+      $list[$status]['#attributes'] = ['class' => ['views-list-section', $status]];
+      $list[$status]['table'] = [
         '#theme' => 'views_ui_views_listing_table',
         '#headers' => $this->buildHeader(),
-        '#attributes' => array('class' => array('views-listing-table', $status)),
-      );
+        '#attributes' => ['class' => ['views-listing-table', $status]],
+      ];
       foreach ($entities[$status] as $entity) {
         $list[$status]['table']['#rows'][$entity->id()] = $this->buildRow($entity);
       }
@@ -244,7 +244,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
    *   An array of display types that this view includes.
    */
   protected function getDisplaysList(EntityInterface $view) {
-    $displays = array();
+    $displays = [];
 
     $executable = $view->getExecutable();
     $executable->initDisplay();
@@ -263,10 +263,10 @@ class ViewListBuilder extends ConfigEntityListBuilder {
             $rendered_path = '/' . $path;
           }
         }
-        $displays[] = array(
+        $displays[] = [
           'display' => $definition['admin'],
           'path' => $rendered_path,
-        );
+        ];
       }
     }
 

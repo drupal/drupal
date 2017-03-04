@@ -26,7 +26,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'comment');
+  public static $modules = ['entity_test', 'comment'];
 
   /**
    * {@inheritdoc}
@@ -48,11 +48,11 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
     // user does not have access to the 'administer comments' permission, to
     // ensure only published comments are visible to the end user.
     $current_user = $this->container->get('current_user');
-    $current_user->setAccount($this->createUser(array(), array('access comments')));
+    $current_user->setAccount($this->createUser([], ['access comments']));
 
     // Install tables and config needed to render comments.
-    $this->installSchema('comment', array('comment_entity_statistics'));
-    $this->installConfig(array('system', 'filter', 'comment'));
+    $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installConfig(['system', 'filter', 'comment']);
 
     // Comment rendering generates links, so build the router.
     $this->container->get('router.builder')->rebuild();
@@ -70,7 +70,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
     $renderer = $this->container->get('renderer');
 
     // Create the entity that will be commented upon.
-    $commented_entity = EntityTest::create(array('name' => $this->randomMachineName()));
+    $commented_entity = EntityTest::create(['name' => $this->randomMachineName()]);
     $commented_entity->save();
 
     // Verify cache tags on the rendered entity before it has comments.
@@ -94,19 +94,19 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
     // also exists in the {users} table.
     $user = $this->createUser();
     $user->save();
-    $comment = Comment::create(array(
+    $comment = Comment::create([
       'subject' => 'Llama',
-      'comment_body' => array(
+      'comment_body' => [
         'value' => 'Llamas are cool!',
         'format' => 'plain_text',
-      ),
+      ],
       'entity_id' => $commented_entity->id(),
       'entity_type' => 'entity_test',
       'field_name' => 'comment',
       'comment_type' => 'comment',
       'status' => CommentInterface::PUBLISHED,
       'uid' => $user->id(),
-    ));
+    ]);
     $comment->save();
 
     // Load commented entity so comment_count gets computed.

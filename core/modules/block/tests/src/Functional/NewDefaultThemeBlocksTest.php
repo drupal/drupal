@@ -16,7 +16,7 @@ class NewDefaultThemeBlocksTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = ['block'];
 
   /**
    * Check the enabled Bartik blocks are correctly copied over.
@@ -25,22 +25,22 @@ class NewDefaultThemeBlocksTest extends BrowserTestBase {
     $default_theme = $this->config('system.theme')->get('default');
 
     // Add two instances of the user login block.
-    $this->drupalPlaceBlock('user_login_block', array(
+    $this->drupalPlaceBlock('user_login_block', [
       'id' => $default_theme . '_' . strtolower($this->randomMachineName(8)),
-    ));
-    $this->drupalPlaceBlock('user_login_block', array(
+    ]);
+    $this->drupalPlaceBlock('user_login_block', [
       'id' => $default_theme . '_' . strtolower($this->randomMachineName(8)),
-    ));
+    ]);
 
     // Add an instance of a different block.
-    $this->drupalPlaceBlock('system_powered_by_block', array(
+    $this->drupalPlaceBlock('system_powered_by_block', [
       'id' => $default_theme . '_' . strtolower($this->randomMachineName(8)),
-    ));
+    ]);
 
     // Install a different theme.
     $new_theme = 'bartik';
     $this->assertFalse($new_theme == $default_theme, 'The new theme is different from the previous default theme.');
-    \Drupal::service('theme_handler')->install(array($new_theme));
+    \Drupal::service('theme_handler')->install([$new_theme]);
     $this->config('system.theme')
       ->set('default', $new_theme)
       ->save();

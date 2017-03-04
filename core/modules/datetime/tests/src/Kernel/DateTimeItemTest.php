@@ -36,25 +36,25 @@ class DateTimeItemTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('datetime');
+  public static $modules = ['datetime'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create a field with settings to validate.
-    $this->fieldStorage = FieldStorageConfig::create(array(
+    $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => 'field_datetime',
       'type' => 'datetime',
       'entity_type' => 'entity_test',
-      'settings' => array('datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME),
-    ));
+      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+    ]);
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
-      'settings' => array(
+      'settings' => [
         'default_value' => 'blank',
-      ),
+      ],
     ]);
     $this->field->save();
   }

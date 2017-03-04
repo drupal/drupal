@@ -43,7 +43,7 @@ class LinkTypeConstraintValidator extends ConstraintValidator {
       }
 
       if (!$uri_is_valid) {
-        $this->context->addViolation($constraint->message, array('@uri' => $link_item->uri));
+        $this->context->addViolation($constraint->message, ['@uri' => $link_item->uri]);
       }
     }
   }

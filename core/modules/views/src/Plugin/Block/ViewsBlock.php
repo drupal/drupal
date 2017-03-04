@@ -74,7 +74,7 @@ class ViewsBlock extends ViewsBlockBase {
       return $output;
     }
 
-    return array();
+    return [];
   }
 
   /**
@@ -117,7 +117,7 @@ class ViewsBlock extends ViewsBlockBase {
       return $this->view->display_handler->blockForm($this, $form, $form_state);
     }
 
-    return array();
+    return [];
   }
 
   /**

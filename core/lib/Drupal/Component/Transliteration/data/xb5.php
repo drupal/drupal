@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'duil', 'duilg', 'duilm', 'duilb', 'duils', 'duilt', 'duilp', 'duilh', 'duim', 'duib', 'duibs', 'duis', 'duiss', 'duing', 'duij', 'duich',
   0x10 => 'duik', 'duit', 'duip', 'duih', 'di', 'dig', 'dikk', 'digs', 'din', 'dinj', 'dinh', 'did', 'dil', 'dilg', 'dilm', 'dilb',
   0x20 => 'dils', 'dilt', 'dilp', 'dilh', 'dim', 'dib', 'dibs', 'dis', 'diss', 'ding', 'dij', 'dich', 'dik', 'dit', 'dip', 'dih',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'ttess', 'tteng', 'ttej', 'ttech', 'ttek', 'ttet', 'ttep', 'tteh', 'ttyeo', 'ttyeog', 'ttyeokk', 'ttyeogs', 'ttyeon', 'ttyeonj', 'ttyeonh', 'ttyeod',
   0xE0 => 'ttyeol', 'ttyeolg', 'ttyeolm', 'ttyeolb', 'ttyeols', 'ttyeolt', 'ttyeolp', 'ttyeolh', 'ttyeom', 'ttyeob', 'ttyeobs', 'ttyeos', 'ttyeoss', 'ttyeong', 'ttyeoj', 'ttyeoch',
   0xF0 => 'ttyeok', 'ttyeot', 'ttyeop', 'ttyeoh', 'ttye', 'ttyeg', 'ttyekk', 'ttyegs', 'ttyen', 'ttyenj', 'ttyenh', 'ttyed', 'ttyel', 'ttyelg', 'ttyelm', 'ttyelb',
-);
+];

@@ -22,10 +22,10 @@ class InstallerExistingDatabaseSettingsTest extends InstallerTestBase {
     unset($connection_info['default']['pdo']);
     unset($connection_info['default']['init_commands']);
 
-    $this->settings['databases']['default'] = (object) array(
+    $this->settings['databases']['default'] = (object) [
       'value' => $connection_info,
       'required' => TRUE,
-    );
+    ];
     parent::setUp();
   }
 
@@ -40,13 +40,13 @@ class InstallerExistingDatabaseSettingsTest extends InstallerTestBase {
     // All database settings should be pre-configured, except password.
     $values = $this->parameters['forms']['install_settings_form'];
     $driver = $values['driver'];
-    $edit = array();
+    $edit = [];
     if (isset($values[$driver]['password']) && $values[$driver]['password'] !== '') {
-      $edit = $this->translatePostValues(array(
-        $driver => array(
+      $edit = $this->translatePostValues([
+        $driver => [
           'password' => $values[$driver]['password'],
-        ),
-      ));
+        ],
+      ]);
     }
     $this->drupalPostForm(NULL, $edit, $this->translations['Save and continue']);
   }

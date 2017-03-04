@@ -13,61 +13,61 @@ use Drupal\user\Entity\User;
  * Implements hook_token_info().
  */
 function user_token_info() {
-  $types['user'] = array(
+  $types['user'] = [
     'name' => t('Users'),
     'description' => t('Tokens related to individual user accounts.'),
     'needs-data' => 'user',
-  );
-  $types['current-user'] = array(
+  ];
+  $types['current-user'] = [
     'name' => t('Current user'),
     'description' => t('Tokens related to the currently logged in user.'),
     'type' => 'user',
-  );
+  ];
 
-  $user['uid'] = array(
+  $user['uid'] = [
     'name' => t('User ID'),
     'description' => t("The unique ID of the user account."),
-  );
-  $user['name'] = array(
+  ];
+  $user['name'] = [
     'name' => t("Deprecated: User Name"),
     'description' => t("Deprecated: Use account-name or display-name instead."),
-  );
-  $user['account-name'] = array(
+  ];
+  $user['account-name'] = [
     'name' => t("Account Name"),
     'description' => t("The login name of the user account."),
-  );
-  $user['display-name'] = array(
+  ];
+  $user['display-name'] = [
     'name' => t("Display Name"),
     'description' => t("The display name of the user account."),
-  );
-  $user['mail'] = array(
+  ];
+  $user['mail'] = [
     'name' => t("Email"),
     'description' => t("The email address of the user account."),
-  );
-  $user['url'] = array(
+  ];
+  $user['url'] = [
     'name' => t("URL"),
     'description' => t("The URL of the account profile page."),
-  );
-  $user['edit-url'] = array(
+  ];
+  $user['edit-url'] = [
     'name' => t("Edit URL"),
     'description' => t("The URL of the account edit page."),
-  );
+  ];
 
-  $user['last-login'] = array(
+  $user['last-login'] = [
     'name' => t("Last login"),
     'description' => t("The date the user last logged in to the site."),
     'type' => 'date',
-  );
-  $user['created'] = array(
+  ];
+  $user['created'] = [
     'name' => t("Created"),
     'description' => t("The date the user account was created."),
     'type' => 'date',
-  );
+  ];
 
-  return array(
+  return [
     'types' => $types,
-    'tokens' => array('user' => $user),
-  );
+    'tokens' => ['user' => $user],
+  ];
 }
 
 /**
@@ -76,7 +76,7 @@ function user_token_info() {
 function user_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
 
   $token_service = \Drupal::token();
-  $url_options = array('absolute' => TRUE);
+  $url_options = ['absolute' => TRUE];
   if (isset($options['langcode'])) {
     $url_options['language'] = \Drupal::languageManager()->getLanguage($options['langcode']);
     $langcode = $options['langcode'];
@@ -84,7 +84,7 @@ function user_tokens($type, $tokens, array $data, array $options, BubbleableMeta
   else {
     $langcode = NULL;
   }
-  $replacements = array();
+  $replacements = [];
 
   if ($type == 'user' && !empty($data['user'])) {
     /** @var \Drupal\user\UserInterface $account */
@@ -142,18 +142,18 @@ function user_tokens($type, $tokens, array $data, array $options, BubbleableMeta
     }
 
     if ($login_tokens = $token_service->findWithPrefix($tokens, 'last-login')) {
-      $replacements += $token_service->generate('date', $login_tokens, array('date' => $account->getLastLoginTime()), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('date', $login_tokens, ['date' => $account->getLastLoginTime()], $options, $bubbleable_metadata);
     }
 
     if ($registered_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $registered_tokens, array('date' => $account->getCreatedTime()), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('date', $registered_tokens, ['date' => $account->getCreatedTime()], $options, $bubbleable_metadata);
     }
   }
 
   if ($type == 'current-user') {
     $account = User::load(\Drupal::currentUser()->id());
     $bubbleable_metadata->addCacheContexts(['user']);
-    $replacements += $token_service->generate('user', $tokens, array('user' => $account), $options, $bubbleable_metadata);
+    $replacements += $token_service->generate('user', $tokens, ['user' => $account], $options, $bubbleable_metadata);
   }
 
   return $replacements;

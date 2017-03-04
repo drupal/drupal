@@ -36,16 +36,16 @@ class VocabularyListBuilder extends DraggableListBuilder {
       $operations['edit']['title'] = t('Edit vocabulary');
     }
 
-    $operations['list'] = array(
+    $operations['list'] = [
       'title' => t('List terms'),
       'weight' => 0,
       'url' => $entity->urlInfo('overview-form'),
-    );
-    $operations['add'] = array(
+    ];
+    $operations['add'] = [
       'title' => t('Add terms'),
       'weight' => 10,
       'url' => Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $entity->id()]),
-    );
+    ];
     unset($operations['delete']);
 
     return $operations;
@@ -80,7 +80,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
       unset($this->weightKey);
     }
     $build = parent::render();
-    $build['table']['#empty'] = t('No vocabularies available. <a href=":link">Add vocabulary</a>.', array(':link' => \Drupal::url('entity.taxonomy_vocabulary.add_form')));
+    $build['table']['#empty'] = t('No vocabularies available. <a href=":link">Add vocabulary</a>.', [':link' => \Drupal::url('entity.taxonomy_vocabulary.add_form')]);
     return $build;
   }
 
@@ -89,7 +89,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $form['vocabularies']['#attributes'] = array('id' => 'taxonomy');
+    $form['vocabularies']['#attributes'] = ['id' => 'taxonomy'];
     $form['actions']['submit']['#value'] = t('Save');
 
     return $form;

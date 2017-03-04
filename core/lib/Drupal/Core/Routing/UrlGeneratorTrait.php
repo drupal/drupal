@@ -38,7 +38,7 @@ trait UrlGeneratorTrait {
    *
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    */
-  protected function url($route_name, $route_parameters = array(), $options = array()) {
+  protected function url($route_name, $route_parameters = [], $options = []) {
     return $this->getUrlGenerator()->generateFromRoute($route_name, $route_parameters, $options);
   }
 

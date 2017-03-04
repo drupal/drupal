@@ -66,7 +66,7 @@ class TypedDataDefinitionTest extends KernelTestBase {
     $this->assertTrue($map_definition instanceof ComplexDataDefinitionInterface);
 
     // Test retrieving metadata about contained properties.
-    $this->assertEqual(array_keys($map_definition->getPropertyDefinitions()), array('one', 'two', 'three'));
+    $this->assertEqual(array_keys($map_definition->getPropertyDefinitions()), ['one', 'two', 'three']);
     $this->assertEqual($map_definition->getPropertyDefinition('one')->getDataType(), 'string');
     $this->assertNull($map_definition->getMainPropertyName());
     $this->assertNull($map_definition->getPropertyDefinition('invalid'));

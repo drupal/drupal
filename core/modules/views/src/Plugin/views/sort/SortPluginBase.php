@@ -42,13 +42,13 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['order'] = array('default' => 'ASC');
-    $options['exposed'] = array('default' => FALSE);
-    $options['expose'] = array(
-      'contains' => array(
-        'label' => array('default' => ''),
-      ),
-    );
+    $options['order'] = ['default' => 'ASC'];
+    $options['exposed'] = ['default' => FALSE];
+    $options['expose'] = [
+      'contains' => [
+        'label' => ['default' => ''],
+      ],
+    ];
     return $options;
   }
 
@@ -79,9 +79,9 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     if ($this->canExpose()) {
       $this->showExposeButton($form, $form_state);
     }
-    $form['op_val_start'] = array('#value' => '<div class="clearfix">');
+    $form['op_val_start'] = ['#value' => '<div class="clearfix">'];
     $this->showSortForm($form, $form_state);
-    $form['op_val_end'] = array('#value' => '</div>');
+    $form['op_val_end'] = ['#value' => '</div>'];
     if ($this->canExpose()) {
       $this->showExposeForm($form, $form_state);
     }
@@ -91,47 +91,47 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
    * Shortcut to display the expose/hide button.
    */
   public function showExposeButton(&$form, FormStateInterface $form_state) {
-    $form['expose_button'] = array(
+    $form['expose_button'] = [
       '#prefix' => '<div class="views-expose clearfix">',
       '#suffix' => '</div>',
       // Should always come first
       '#weight' => -1000,
-    );
+    ];
 
     // Add a checkbox for JS users, which will have behavior attached to it
     // so it can replace the button.
-    $form['expose_button']['checkbox'] = array(
-      '#theme_wrappers' => array('container'),
-      '#attributes' => array('class' => array('js-only')),
-    );
-    $form['expose_button']['checkbox']['checkbox'] = array(
+    $form['expose_button']['checkbox'] = [
+      '#theme_wrappers' => ['container'],
+      '#attributes' => ['class' => ['js-only']],
+    ];
+    $form['expose_button']['checkbox']['checkbox'] = [
       '#title' => $this->t('Expose this sort to visitors, to allow them to change it'),
       '#type' => 'checkbox',
-    );
+    ];
 
     // Then add the button itself.
     if (empty($this->options['exposed'])) {
-      $form['expose_button']['markup'] = array(
+      $form['expose_button']['markup'] = [
         '#markup' => '<div class="description exposed-description" style="float: left; margin-right:10px">' . $this->t('This sort is not exposed. Expose it to allow the users to change it.') . '</div>',
-      );
-      $form['expose_button']['button'] = array(
-        '#limit_validation_errors' => array(),
+      ];
+      $form['expose_button']['button'] = [
+        '#limit_validation_errors' => [],
         '#type' => 'submit',
         '#value' => $this->t('Expose sort'),
-        '#submit' => array(array($this, 'displayExposedForm')),
-      );
+        '#submit' => [[$this, 'displayExposedForm']],
+      ];
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 0;
     }
     else {
-      $form['expose_button']['markup'] = array(
+      $form['expose_button']['markup'] = [
         '#markup' => '<div class="description exposed-description">' . $this->t('This sort is exposed. If you hide it, users will not be able to change it.') . '</div>',
-      );
-      $form['expose_button']['button'] = array(
-        '#limit_validation_errors' => array(),
+      ];
+      $form['expose_button']['button'] = [
+        '#limit_validation_errors' => [],
         '#type' => 'submit',
         '#value' => $this->t('Hide sort'),
-        '#submit' => array(array($this, 'displayExposedForm')),
-      );
+        '#submit' => [[$this, 'displayExposedForm']],
+      ];
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 1;
     }
   }
@@ -166,12 +166,12 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
   protected function showSortForm(&$form, FormStateInterface $form_state) {
     $options = $this->sortOptions();
     if (!empty($options)) {
-      $form['order'] = array(
+      $form['order'] = [
         '#title' => $this->t('Order'),
         '#type' => 'radios',
         '#options' => $options,
         '#default_value' => $this->options['order'],
-      );
+      ];
     }
   }
 
@@ -184,10 +184,10 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
    * Should be overridden by classes that don't override sort_form
    */
   protected function sortOptions() {
-    return array(
+    return [
       'ASC' => $this->t('Sort ascending'),
       'DESC' => $this->t('Sort descending'),
-    );
+    ];
   }
 
   public function buildExposeForm(&$form, FormStateInterface $form_state) {
@@ -195,26 +195,26 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     // prior to rendering. That's why the preRender for it needs to run first,
     // so that when the next preRender (the one for fieldsets) runs, it gets
     // the flattened data.
-    array_unshift($form['#pre_render'], array(get_class($this), 'preRenderFlattenData'));
+    array_unshift($form['#pre_render'], [get_class($this), 'preRenderFlattenData']);
     $form['expose']['#flatten'] = TRUE;
 
-    $form['expose']['label'] = array(
+    $form['expose']['label'] = [
       '#type' => 'textfield',
       '#default_value' => $this->options['expose']['label'],
       '#title' => $this->t('Label'),
       '#required' => TRUE,
       '#size' => 40,
       '#weight' => -1,
-   );
+   ];
   }
 
   /**
    * Provide default options for exposed sorts.
    */
   public function defaultExposeOptions() {
-    $this->options['expose'] = array(
+    $this->options['expose'] = [
       'label' => $this->definition['title'],
-    );
+    ];
   }
 
   /**

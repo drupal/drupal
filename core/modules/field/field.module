@@ -67,10 +67,10 @@ require_once __DIR__ . '/field.purge.inc';
 function field_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.field':
-      $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? \Drupal::url('help.page', array('name' => 'field_ui')) : '#';
+      $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? \Drupal::url('help.page', ['name' => 'field_ui']) : '#';
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Field module allows custom data fields to be defined for <em>entity</em> types (see below). The Field module takes care of storing, loading, editing, and rendering field data. Most users will not interact with the Field module directly, but will instead use the <a href=":field-ui-help">Field UI module</a> user interface. Module developers can use the Field API to make new entity types "fieldable" and thus allow fields to be attached to them. For more information, see the <a href=":field">online documentation for the Field module</a>.', array(':field-ui-help' => $field_ui_url, ':field' => 'https://www.drupal.org/documentation/modules/field')) . '</p>';
+      $output .= '<p>' . t('The Field module allows custom data fields to be defined for <em>entity</em> types (see below). The Field module takes care of storing, loading, editing, and rendering field data. Most users will not interact with the Field module directly, but will instead use the <a href=":field-ui-help">Field UI module</a> user interface. Module developers can use the Field API to make new entity types "fieldable" and thus allow fields to be attached to them. For more information, see the <a href=":field">online documentation for the Field module</a>.', [':field-ui-help' => $field_ui_url, ':field' => 'https://www.drupal.org/documentation/modules/field']) . '</p>';
       $output .= '<h3>' . t('Terminology') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Entities and entity types') . '</dt>';
@@ -87,19 +87,19 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling field types, widgets, and formatters') . '</dt>';
-      $output .= '<dd>' . t('The Field module provides the infrastructure for fields; the field types, formatters, and widgets are provided by Drupal core or additional modules. Some of the modules are required; the optional modules can be enabled from the <a href=":modules">Extend administration page</a>. Additional fields, formatters, and widgets may be provided by contributed modules, which you can find in the <a href=":contrib">contributed module section of Drupal.org</a>.', array(':modules' => \Drupal::url('system.modules_list'), ':contrib' => 'https://www.drupal.org/project/modules')) . '</dd>';
+      $output .= '<dd>' . t('The Field module provides the infrastructure for fields; the field types, formatters, and widgets are provided by Drupal core or additional modules. Some of the modules are required; the optional modules can be enabled from the <a href=":modules">Extend administration page</a>. Additional fields, formatters, and widgets may be provided by contributed modules, which you can find in the <a href=":contrib">contributed module section of Drupal.org</a>.', [':modules' => \Drupal::url('system.modules_list'), ':contrib' => 'https://www.drupal.org/project/modules']) . '</dd>';
 
       $output .= '<h3>' . t('Field, widget, and formatter information') . '</h3>';
 
       // Make a list of all widget, formatter, and field modules currently
       // enabled, ordered by displayed module name (module names are not
       // translated).
-      $items = array();
+      $items = [];
       $modules = \Drupal::moduleHandler()->getModuleList();
       $widgets = \Drupal::service('plugin.manager.field.widget')->getDefinitions();
       $field_types = \Drupal::service('plugin.manager.field.field_type')->getUiDefinitions();
       $formatters = \Drupal::service('plugin.manager.field.formatter')->getDefinitions();
-      $providers = array();
+      $providers = [];
       foreach (array_merge($field_types, $widgets, $formatters) as $plugin) {
         $providers[] = $plugin['provider'];
       }
@@ -111,7 +111,7 @@ function field_help($route_name, RouteMatchInterface $route_match) {
         if (isset($modules[$provider])) {
           $display = \Drupal::moduleHandler()->getName($provider);
           if (\Drupal::moduleHandler()->implementsHook($provider, 'help')) {
-            $items[] = \Drupal::l($display, new Url('help.page', array('name' => $provider)));
+            $items[] = \Drupal::l($display, new Url('help.page', ['name' => $provider]));
           }
           else {
             $items[] = $display;
@@ -121,10 +121,10 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       if ($items) {
         $output .= '<dt>' . t('Provided by modules') . '</dt>';
         $output .= '<dd>' . t('Here is a list of the currently enabled field, formatter, and widget modules:');
-        $item_list = array(
+        $item_list = [
           '#theme' => 'item_list',
           '#items' => $items,
-        );
+        ];
         $output .= \Drupal::service('renderer')->renderPlain($item_list);
         $output .= '</dd>';
       }
@@ -132,10 +132,10 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Provided by Drupal core') . '</dt>';
       $output .= '<dd>' . t('As mentioned previously, some field types, widgets, and formatters are provided by Drupal core. Here are some notes on how to use some of these:');
       $output .= '<ul>';
-      $output .= '<li><p>' . t('<strong>Entity Reference</strong> fields allow you to create fields that contain links to other entities (such as content items, taxonomy terms, etc.) within the site. This allows you, for example, to include a link to a user within a content item. For more information, see <a href=":er_do">the online documentation for the Entity Reference module</a>.', array(':er_do' => 'https://drupal.org/documentation/modules/entityreference')) . '</p>';
+      $output .= '<li><p>' . t('<strong>Entity Reference</strong> fields allow you to create fields that contain links to other entities (such as content items, taxonomy terms, etc.) within the site. This allows you, for example, to include a link to a user within a content item. For more information, see <a href=":er_do">the online documentation for the Entity Reference module</a>.', [':er_do' => 'https://drupal.org/documentation/modules/entityreference']) . '</p>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing and displaying entity reference fields') . '</dt>';
-      $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the entity reference field can be configured separately. See the <a href=":field_ui">Field UI help</a> for more information on how to manage fields and their display.', array(':field_ui' => $field_ui_url)) . '</dd>';
+      $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the entity reference field can be configured separately. See the <a href=":field_ui">Field UI help</a> for more information on how to manage fields and their display.', [':field_ui' => $field_ui_url]) . '</dd>';
       $output .= '<dt>' . t('Selecting reference type') . '</dt>';
       $output .= '<dd>' . t('In the field settings you can select which entity type you want to create a reference to.') . '</dd>';
       $output .= '<dt>' . t('Filtering and sorting reference fields') . '</dt>';
@@ -179,7 +179,7 @@ function field_entity_field_storage_info(EntityTypeInterface $entity_type) {
       ->execute();
     // Fetch all fields and key them by field name.
     $field_storages = FieldStorageConfig::loadMultiple($ids);
-    $result = array();
+    $result = [];
     foreach ($field_storages as $field_storage) {
       $result[$field_storage->getName()] = $field_storage;
     }
@@ -200,7 +200,7 @@ function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundl
       ->execute();
     // Fetch all fields and key them by field name.
     $field_configs = FieldConfig::loadMultiple($ids);
-    $result = array();
+    $result = [];
     foreach ($field_configs as $field_instance) {
       $result[$field_instance->getName()] = $field_instance;
     }
@@ -283,7 +283,7 @@ function field_entity_bundle_delete($entity_type_id, $bundle) {
  *   An entity, initialized with the provided IDs.
  */
 function _field_create_entity_from_ids($ids) {
-  $id_properties = array();
+  $id_properties = [];
   $entity_type = \Drupal::entityManager()->getDefinition($ids->entity_type);
   if ($id_key = $entity_type->getKey('id')) {
     $id_properties[$id_key] = $ids->entity_id;
@@ -311,7 +311,7 @@ function field_config_import_steps_alter(&$sync_steps, ConfigImporter $config_im
     // Add a step to the beginning of the configuration synchronization process
     // to purge field data where the module that provides the field is being
     // uninstalled.
-    array_unshift($sync_steps, array('\Drupal\field\ConfigImporterFieldPurger', 'process'));
+    array_unshift($sync_steps, ['\Drupal\field\ConfigImporterFieldPurger', 'process']);
   };
 }
 
@@ -341,7 +341,7 @@ function field_form_config_admin_import_form_alter(&$form, FormStateInterface $f
         count($field_storages),
         'This synchronization will delete data from the field %fields.',
         'This synchronization will delete data from the fields: %fields.',
-        array('%fields' => implode(', ', $field_labels))
+        ['%fields' => implode(', ', $field_labels)]
       ), 'warning');
     }
   }

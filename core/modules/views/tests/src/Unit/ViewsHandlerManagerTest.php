@@ -48,7 +48,7 @@ class ViewsHandlerManagerTest extends UnitTestCase {
       ->getMock();
     $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->handlerManager = new ViewsHandlerManager('test', new \ArrayObject(array()), $this->viewsData, $cache_backend, $this->moduleHandler);
+    $this->handlerManager = new ViewsHandlerManager('test', new \ArrayObject([]), $this->viewsData, $cache_backend, $this->moduleHandler);
   }
 
   /**
@@ -72,7 +72,7 @@ class ViewsHandlerManagerTest extends UnitTestCase {
   public function testAlterHookInvocation() {
     $this->moduleHandler->expects($this->once())
       ->method('alter')
-      ->with('views_plugins_test', array());
+      ->with('views_plugins_test', []);
 
     $this->handlerManager->getDefinitions();
   }

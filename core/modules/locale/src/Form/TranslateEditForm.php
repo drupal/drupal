@@ -32,12 +32,12 @@ class TranslateEditForm extends TranslateFormBase {
 
     $form['#attached']['library'][] = 'locale/drupal.locale.admin';
 
-    $form['langcode'] = array(
+    $form['langcode'] = [
       '#type' => 'value',
       '#value' => $filter_values['langcode'],
-    );
+    ];
 
-    $form['strings'] = array(
+    $form['strings'] = [
       '#type' => 'table',
       '#tree' => TRUE,
       '#language' => $langname,
@@ -47,7 +47,7 @@ class TranslateEditForm extends TranslateFormBase {
       ],
       '#empty' => $this->t('No strings available.'),
       '#attributes' => ['class' => ['locale-translate-edit-table']],
-    );
+    ];
 
     if (isset($langcode)) {
       $strings = $this->translateFilterLoadStrings();
@@ -63,14 +63,14 @@ class TranslateEditForm extends TranslateFormBase {
         if (count($source_array) == 1) {
           // Add original string value and mark as non-plural.
           $plural = FALSE;
-          $form['strings'][$string->lid]['original'] = array(
+          $form['strings'][$string->lid]['original'] = [
             '#type' => 'item',
-            '#title' => $this->t('Source string (@language)', array('@language' => $this->t('Built-in English'))),
+            '#title' => $this->t('Source string (@language)', ['@language' => $this->t('Built-in English')]),
             '#title_display' => 'invisible',
             '#plain_text' => $source_array[0],
             '#preffix' => '<span lang="en">',
             '#suffix' => '</span>',
-          );
+          ];
         }
         else {
           // Add original string value and mark as plural.
@@ -79,7 +79,7 @@ class TranslateEditForm extends TranslateFormBase {
             '#type' => 'item',
             '#title' => $this->t('Singular form'),
             '#plain_text' => $source_array[0],
-            '#prefix' => '<span class="visually-hidden">' . $this->t('Source string (@language)', array('@language' => $this->t('Built-in English'))) . '</span><span lang="en">',
+            '#prefix' => '<span class="visually-hidden">' . $this->t('Source string (@language)', ['@language' => $this->t('Built-in English')]) . '</span><span lang="en">',
             '#suffix' => '</span>',
           ];
           $original_plural = [
@@ -108,27 +108,27 @@ class TranslateEditForm extends TranslateFormBase {
         // Approximate the number of rows to use in the default textarea.
         $rows = min(ceil(str_word_count($source_array[0]) / 12), 10);
         if (!$plural) {
-          $form['strings'][$string->lid]['translations'][0] = array(
+          $form['strings'][$string->lid]['translations'][0] = [
             '#type' => 'textarea',
-            '#title' => $this->t('Translated string (@language)', array('@language' => $langname)),
+            '#title' => $this->t('Translated string (@language)', ['@language' => $langname]),
             '#title_display' => 'invisible',
             '#rows' => $rows,
             '#default_value' => $translation_array[0],
-            '#attributes' => array('lang' => $langcode),
-          );
+            '#attributes' => ['lang' => $langcode],
+          ];
         }
         else {
           // Add a textarea for each plural variant.
           for ($i = 0; $i < $plurals; $i++) {
-            $form['strings'][$string->lid]['translations'][$i] = array(
+            $form['strings'][$string->lid]['translations'][$i] = [
               '#type' => 'textarea',
               // @todo Should use better labels https://www.drupal.org/node/2499639
               '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
               '#rows' => $rows,
               '#default_value' => isset($translation_array[$i]) ? $translation_array[$i] : '',
-              '#attributes' => array('lang' => $langcode),
-              '#prefix' => $i == 0 ? ('<span class="visually-hidden">' . $this->t('Translated string (@language)', array('@language' => $langname)) . '</span>') : '',
-            );
+              '#attributes' => ['lang' => $langcode],
+              '#prefix' => $i == 0 ? ('<span class="visually-hidden">' . $this->t('Translated string (@language)', ['@language' => $langname]) . '</span>') : '',
+            ];
           }
           if ($plurals == 2) {
             // Simplify interface text for the most common case.
@@ -137,11 +137,11 @@ class TranslateEditForm extends TranslateFormBase {
         }
       }
       if (count(Element::children($form['strings']))) {
-        $form['actions'] = array('#type' => 'actions');
-        $form['actions']['submit'] = array(
+        $form['actions'] = ['#type' => 'actions'];
+        $form['actions']['submit'] = [
           '#type' => 'submit',
           '#value' => $this->t('Save translations'),
-        );
+        ];
       }
     }
     $form['pager']['#type'] = 'pager';
@@ -156,9 +156,9 @@ class TranslateEditForm extends TranslateFormBase {
     foreach ($form_state->getValue('strings') as $lid => $translations) {
       foreach ($translations['translations'] as $key => $value) {
         if (!locale_string_is_safe($value)) {
-          $form_state->setErrorByName("strings][$lid][translations][$key", $this->t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
-          $form_state->setErrorByName("translations][$langcode][$key", $this->t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
-          $this->logger('locale')->warning('Attempted submission of a translation string with disallowed HTML: %string', array('%string' => $value));
+          $form_state->setErrorByName("strings][$lid][translations][$key", $this->t('The submitted string contains disallowed HTML: %string', ['%string' => $value]));
+          $form_state->setErrorByName("translations][$langcode][$key", $this->t('The submitted string contains disallowed HTML: %string', ['%string' => $value]));
+          $this->logger('locale')->warning('Attempted submission of a translation string with disallowed HTML: %string', ['%string' => $value]);
         }
       }
     }
@@ -169,12 +169,12 @@ class TranslateEditForm extends TranslateFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $langcode = $form_state->getValue('langcode');
-    $updated = array();
+    $updated = [];
 
     // Preload all translations for strings in the form.
     $lids = array_keys($form_state->getValue('strings'));
-    $existing_translation_objects = array();
-    foreach ($this->localeStorage->getTranslations(array('lid' => $lids, 'language' => $langcode, 'translated' => TRUE)) as $existing_translation_object) {
+    $existing_translation_objects = [];
+    foreach ($this->localeStorage->getTranslations(['lid' => $lids, 'language' => $langcode, 'translated' => TRUE]) as $existing_translation_object) {
       $existing_translation_objects[$existing_translation_object->lid] = $existing_translation_object;
     }
 
@@ -204,7 +204,7 @@ class TranslateEditForm extends TranslateFormBase {
 
       if ($is_changed) {
         // Only update or insert if we have a value to use.
-        $target = isset($existing_translation_objects[$lid]) ? $existing_translation_objects[$lid] : $this->localeStorage->createTranslation(array('lid' => $lid, 'language' => $langcode));
+        $target = isset($existing_translation_objects[$lid]) ? $existing_translation_objects[$lid] : $this->localeStorage->createTranslation(['lid' => $lid, 'language' => $langcode]);
         $target->setPlurals($new_translation['translations'])
           ->setCustomized()
           ->save();
@@ -224,15 +224,15 @@ class TranslateEditForm extends TranslateFormBase {
     if (isset($page)) {
       $form_state->setRedirect(
         'locale.translate_page',
-        array(),
-        array('page' => $page)
+        [],
+        ['page' => $page]
       );
     }
 
     if ($updated) {
       // Clear cache and force refresh of JavaScript translations.
-      _locale_refresh_translations(array($langcode), $updated);
-      _locale_refresh_configuration(array($langcode), $updated);
+      _locale_refresh_translations([$langcode], $updated);
+      _locale_refresh_configuration([$langcode], $updated);
     }
   }
 

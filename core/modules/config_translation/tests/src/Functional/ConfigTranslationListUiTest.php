@@ -26,7 +26,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'block',
     'config_translation',
     'contact',
@@ -40,7 +40,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     'image',
     'responsive_image',
     'toolbar',
-  );
+  ];
 
   /**
    * Admin user with all needed permissions.
@@ -52,7 +52,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $permissions = array(
+    $permissions = [
       'access site-wide contact form',
       'administer blocks',
       'administer contact forms',
@@ -70,7 +70,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
       'administer image styles',
       'administer responsive images',
       'translate configuration',
-    );
+    ];
 
     // Create and log in user.
     $this->adminUser = $this->drupalCreateUser($permissions);
@@ -94,7 +94,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Add a test block, any block will do.
     // Set the machine name so the translate link can be built later.
     $id = Unicode::strtolower($this->randomMachineName(16));
-    $this->drupalPlaceBlock('system_powered_by_block', array('id' => $id));
+    $this->drupalPlaceBlock('system_powered_by_block', ['id' => $id]);
 
     // Get the Block listing.
     $this->drupalGet('admin/structure/block');
@@ -118,11 +118,11 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Lowercase the machine name.
     $menu_name = Unicode::strtolower($this->randomMachineName(16));
     $label = $this->randomMachineName(16);
-    $edit = array(
+    $edit = [
       'id' => $menu_name,
       'description' => '',
       'label' => $label,
-    );
+    ];
     // Create the menu by posting the form.
     $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));
 
@@ -135,9 +135,9 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Check if the Link is not added if you are missing 'translate
     // configuration' permission.
-    $permissions = array(
+    $permissions = [
       'administer menu',
-    );
+    ];
     $this->drupalLogin($this->drupalCreateUser($permissions));
 
     // Get the Menu listing.
@@ -186,11 +186,11 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   public function doCustomContentTypeListTest() {
     // Create a test custom block type to decouple looking for translate
     // operations link so this does not test more than necessary.
-    $block_content_type = BlockContentType::create(array(
+    $block_content_type = BlockContentType::create([
       'id' => Unicode::strtolower($this->randomMachineName(16)),
       'label' => $this->randomMachineName(),
       'revision' => FALSE
-    ));
+    ]);
     $block_content_type->save();
 
     // Get the custom block type listing.
@@ -235,10 +235,10 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   public function doContentTypeListTest() {
     // Create a test content type to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $content_type = $this->drupalCreateContentType(array(
+    $content_type = $this->drupalCreateContentType([
       'type' => Unicode::strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
-    ));
+    ]);
 
     // Get the content type listing.
     $this->drupalGet('admin/structure/types');
@@ -258,10 +258,10 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   public function doFormatsListTest() {
     // Create a test format to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $filter_format = FilterFormat::create(array(
+    $filter_format = FilterFormat::create([
       'format' => Unicode::strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
-    ));
+    ]);
     $filter_format->save();
 
     // Get the format listing.
@@ -282,10 +282,10 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   public function doShortcutListTest() {
     // Create a test shortcut to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $shortcut = ShortcutSet::create(array(
+    $shortcut = ShortcutSet::create([
       'id' => Unicode::strtolower($this->randomMachineName(16)),
       'label' => $this->randomString(),
-    ));
+    ]);
     $shortcut->save();
 
     // Get the shortcut listing.
@@ -307,7 +307,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Create a test role to decouple looking for translate operations
     // link so this does not test more than necessary.
     $role_id = Unicode::strtolower($this->randomMachineName(16));
-    $this->drupalCreateRole(array(), $role_id);
+    $this->drupalCreateRole([], $role_id);
 
     // Get the role listing.
     $this->drupalGet('admin/people/roles');
@@ -361,13 +361,13 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    * Tests the responsive image mapping listing for the translate operation.
    */
   public function doResponsiveImageListTest() {
-    $edit = array();
+    $edit = [];
     $edit['label'] = $this->randomMachineName();
     $edit['id'] = strtolower($edit['label']);
     $edit['fallback_image_style'] = 'thumbnail';
 
     $this->drupalPostForm('admin/config/media/responsive-image-style/add', $edit, t('Save'));
-    $this->assertRaw(t('Responsive image style %label saved.', array('%label' => $edit['label'])));
+    $this->assertRaw(t('Responsive image style %label saved.', ['%label' => $edit['label']]));
 
     // Get the responsive image style listing.
     $this->drupalGet('admin/config/media/responsive-image-style');
@@ -386,17 +386,17 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    */
   public function doFieldListTest() {
     // Create a base content type.
-    $content_type = $this->drupalCreateContentType(array(
+    $content_type = $this->drupalCreateContentType([
       'type' => Unicode::strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
-    ));
+    ]);
 
     // Create a block content type.
-    $block_content_type = BlockContentType::create(array(
+    $block_content_type = BlockContentType::create([
       'id' => 'basic',
       'label' => 'Basic',
       'revision' => FALSE
-    ));
+    ]);
     $block_content_type->save();
     $field = FieldConfig::create([
       // The field storage is guaranteed to exist because it is supplied by the
@@ -404,21 +404,21 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
       'field_storage' => FieldStorageConfig::loadByName('block_content', 'body'),
       'bundle' => $block_content_type->id(),
       'label' => 'Body',
-      'settings' => array('display_summary' => FALSE),
+      'settings' => ['display_summary' => FALSE],
     ]);
     $field->save();
 
     // Look at a few fields on a few entity types.
-    $pages = array(
-      array(
+    $pages = [
+      [
         'list' => 'admin/structure/types/manage/' . $content_type->id() . '/fields',
         'field' => 'node.' . $content_type->id() . '.body',
-      ),
-      array(
+      ],
+      [
         'list' => 'admin/structure/block/block-content/manage/basic/fields',
         'field' => 'block_content.basic.body',
-      ),
-    );
+      ],
+    ];
 
     foreach ($pages as $values) {
       // Get fields listing.

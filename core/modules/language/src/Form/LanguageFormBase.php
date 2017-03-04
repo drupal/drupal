@@ -47,45 +47,45 @@ abstract class LanguageFormBase extends EntityForm {
     /* @var $language \Drupal\language\ConfigurableLanguageInterface */
     $language = $this->entity;
     if ($language->getId()) {
-      $form['langcode_view'] = array(
+      $form['langcode_view'] = [
         '#type' => 'item',
         '#title' => $this->t('Language code'),
         '#markup' => $language->id()
-      );
-      $form['langcode'] = array(
+      ];
+      $form['langcode'] = [
         '#type' => 'value',
         '#value' => $language->id()
-      );
+      ];
     }
     else {
-      $form['langcode'] = array(
+      $form['langcode'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Language code'),
         '#maxlength' => 12,
         '#required' => TRUE,
         '#default_value' => '',
         '#disabled' => FALSE,
-        '#description' => $this->t('Use language codes as <a href=":w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array(':w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
-      );
+        '#description' => $this->t('Use language codes as <a href=":w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', [':w3ctags' => 'http://www.w3.org/International/articles/language-tags/']),
+      ];
     }
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Language name'),
       '#maxlength' => 64,
       '#default_value' => $language->label(),
       '#required' => TRUE,
-    );
-    $form['direction'] = array(
+    ];
+    $form['direction'] = [
       '#type' => 'radios',
       '#title' => $this->t('Direction'),
       '#required' => TRUE,
       '#description' => $this->t('Direction that text in this language is presented.'),
       '#default_value' => $language->getDirection(),
-      '#options' => array(
+      '#options' => [
         LanguageInterface::DIRECTION_LTR => $this->t('Left to right'),
         LanguageInterface::DIRECTION_RTL => $this->t('Right to left'),
-      ),
-    );
+      ],
+    ];
 
     return $form;
   }
@@ -96,13 +96,13 @@ abstract class LanguageFormBase extends EntityForm {
   public function validateCommon(array $form, FormStateInterface $form_state) {
     // Ensure sane field values for langcode and name.
     if (!isset($form['langcode_view']) && !preg_match('@^[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*$@', $form_state->getValue('langcode'))) {
-      $form_state->setErrorByName('langcode', $this->t('%field must be a valid language tag as <a href=":url">defined by the W3C</a>.', array(
+      $form_state->setErrorByName('langcode', $this->t('%field must be a valid language tag as <a href=":url">defined by the W3C</a>.', [
         '%field' => $form['langcode']['#title'],
         ':url' => 'http://www.w3.org/International/articles/language-tags/',
-      )));
+      ]));
     }
     if ($form_state->getValue('label') != Html::escape($form_state->getValue('label'))) {
-      $form_state->setErrorByName('label', $this->t('%field cannot contain any markup.', array('%field' => $form['label']['#title'])));
+      $form_state->setErrorByName('label', $this->t('%field cannot contain any markup.', ['%field' => $form['label']['#title']]));
     }
   }
 

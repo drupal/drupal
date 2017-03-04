@@ -16,14 +16,14 @@ class BlockAdminThemeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'contextual');
+  public static $modules = ['block', 'contextual'];
 
   /**
    * Check for the accessibility of the admin theme on the block admin page.
    */
   function testAdminTheme() {
     // Create administrative user.
-    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer themes'));
+    $admin_user = $this->drupalCreateUser(['administer blocks', 'administer themes']);
     $this->drupalLogin($admin_user);
 
     // Ensure that access to block admin page is denied when theme is not
@@ -32,7 +32,7 @@ class BlockAdminThemeTest extends WebTestBase {
     $this->assertResponse(403);
 
     // Install admin theme and confirm that tab is accessible.
-    \Drupal::service('theme_handler')->install(array('bartik'));
+    \Drupal::service('theme_handler')->install(['bartik']);
     $edit['admin_theme'] = 'bartik';
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
     $this->drupalGet('admin/structure/block/list/bartik');

@@ -19,7 +19,7 @@ class EmailFieldRdfaTest extends FieldRdfaTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('text');
+  public static $modules = ['text'];
 
   protected function setUp() {
     parent::setUp();
@@ -28,13 +28,13 @@ class EmailFieldRdfaTest extends FieldRdfaTestBase {
 
     // Add the mapping.
     $mapping = rdf_get_mapping('entity_test', 'entity_test');
-    $mapping->setFieldMapping($this->fieldName, array(
-      'properties' => array('schema:email'),
-    ))->save();
+    $mapping->setFieldMapping($this->fieldName, [
+      'properties' => ['schema:email'],
+    ])->save();
 
     // Set up test values.
     $this->testValue = 'test@example.com';
-    $this->entity = EntityTest::create(array());
+    $this->entity = EntityTest::create([]);
     $this->entity->{$this->fieldName}->value = $this->testValue;
   }
 
@@ -43,9 +43,9 @@ class EmailFieldRdfaTest extends FieldRdfaTestBase {
    */
   public function testAllFormatters() {
     // Test the plain formatter.
-    $this->assertFormatterRdfa(array('type' => 'string'), 'http://schema.org/email', array('value' => $this->testValue));
+    $this->assertFormatterRdfa(['type' => 'string'], 'http://schema.org/email', ['value' => $this->testValue]);
     // Test the mailto formatter.
-    $this->assertFormatterRdfa(array('type' => 'email_mailto'), 'http://schema.org/email', array('value' => $this->testValue));
+    $this->assertFormatterRdfa(['type' => 'email_mailto'], 'http://schema.org/email', ['value' => $this->testValue]);
   }
 
 }

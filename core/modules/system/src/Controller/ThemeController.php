@@ -71,15 +71,15 @@ class ThemeController extends ControllerBase {
       if (!empty($themes[$theme])) {
         // Do not uninstall the default or admin theme.
         if ($theme === $config->get('default') || $theme === $config->get('admin')) {
-          drupal_set_message($this->t('%theme is the default theme and cannot be uninstalled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
+          drupal_set_message($this->t('%theme is the default theme and cannot be uninstalled.', ['%theme' => $themes[$theme]->info['name']]), 'error');
         }
         else {
-          $this->themeHandler->uninstall(array($theme));
-          drupal_set_message($this->t('The %theme theme has been uninstalled.', array('%theme' => $themes[$theme]->info['name'])));
+          $this->themeHandler->uninstall([$theme]);
+          drupal_set_message($this->t('The %theme theme has been uninstalled.', ['%theme' => $themes[$theme]->info['name']]));
         }
       }
       else {
-        drupal_set_message($this->t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
+        drupal_set_message($this->t('The %theme theme was not found.', ['%theme' => $theme]), 'error');
       }
 
       return $this->redirect('system.themes_page');
@@ -106,12 +106,12 @@ class ThemeController extends ControllerBase {
 
     if (isset($theme)) {
       try {
-        if ($this->themeHandler->install(array($theme))) {
+        if ($this->themeHandler->install([$theme])) {
           $themes = $this->themeHandler->listInfo();
-          drupal_set_message($this->t('The %theme theme has been installed.', array('%theme' => $themes[$theme]->info['name'])));
+          drupal_set_message($this->t('The %theme theme has been installed.', ['%theme' => $themes[$theme]->info['name']]));
         }
         else {
-          drupal_set_message($this->t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
+          drupal_set_message($this->t('The %theme theme was not found.', ['%theme' => $theme]), 'error');
         }
       }
       catch (PreExistingConfigException $e) {
@@ -121,10 +121,10 @@ class ThemeController extends ControllerBase {
             count($config_objects),
             'Unable to install @extension, %config_names already exists in active configuration.',
             'Unable to install @extension, %config_names already exist in active configuration.',
-            array(
+            [
               '%config_names' => implode(', ', $config_objects),
               '@extension' => $theme,
-            )),
+            ]),
           'error'
         );
       }
@@ -160,7 +160,7 @@ class ThemeController extends ControllerBase {
 
       // Check if the specified theme is one recognized by the system.
       // Or try to install the theme.
-      if (isset($themes[$theme]) || $this->themeHandler->install(array($theme))) {
+      if (isset($themes[$theme]) || $this->themeHandler->install([$theme])) {
         $themes = $this->themeHandler->listInfo();
 
         // Set the default theme.
@@ -171,17 +171,17 @@ class ThemeController extends ControllerBase {
         // theme.
         $admin_theme = $config->get('admin');
         if ($admin_theme != 0 && $admin_theme != $theme) {
-          drupal_set_message($this->t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
+          drupal_set_message($this->t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', [
             '%admin_theme' => $themes[$admin_theme]->info['name'],
             '%selected_theme' => $themes[$theme]->info['name'],
-          )));
+          ]));
         }
         else {
-          drupal_set_message($this->t('%theme is now the default theme.', array('%theme' => $themes[$theme]->info['name'])));
+          drupal_set_message($this->t('%theme is now the default theme.', ['%theme' => $themes[$theme]->info['name']]));
         }
       }
       else {
-        drupal_set_message($this->t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
+        drupal_set_message($this->t('The %theme theme was not found.', ['%theme' => $theme]), 'error');
       }
 
       return $this->redirect('system.themes_page');

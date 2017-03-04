@@ -17,7 +17,7 @@ class ViewsSqlExceptionTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter');
+  public static $testViews = ['test_filter'];
 
   /**
    * {@inheritdoc}
@@ -46,16 +46,16 @@ class ViewsSqlExceptionTest extends PluginTestBase {
     $view->initDisplay();
 
     // Adding a filter that will result in an invalid query.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'test_filter' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'test_filter' => [
         'id' => 'test_exception_filter',
         'table' => 'views_test_data',
         'field' => 'name',
         'operator' => '=',
         'value' => 'John',
         'group' => 0,
-      ),
-    ));
+      ],
+    ]);
 
     try {
       $this->executeView($view);

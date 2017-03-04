@@ -19,7 +19,7 @@ class CKEditorTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'filter', 'editor', 'ckeditor', 'filter_test');
+  public static $modules = ['system', 'user', 'filter', 'editor', 'ckeditor', 'filter_test'];
 
   /**
    * An instance of the "CKEditor" text editor plugin.
@@ -41,19 +41,19 @@ class CKEditorTest extends KernelTestBase {
     // Install the Filter module.
 
     // Create text format, associate CKEditor.
-    $filtered_html_format = FilterFormat::create(array(
+    $filtered_html_format = FilterFormat::create([
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'weight' => 0,
-      'filters' => array(
-        'filter_html' => array(
+      'filters' => [
+        'filter_html' => [
           'status' => 1,
-          'settings' => array(
+          'settings' => [
             'allowed_html' => '<h2 id> <h3> <h4> <h5> <h6> <p> <br> <strong> <a href hreflang>',
-          )
-        ),
-      ),
-    ));
+          ]
+        ],
+      ],
+    ]);
     $filtered_html_format->save();
     $editor = Editor::create([
       'format' => 'filtered_html',
@@ -72,7 +72,7 @@ class CKEditorTest extends KernelTestBase {
     $editor = Editor::load('filtered_html');
 
     // Default toolbar.
-    $expected_config = $this->getDefaultInternalConfig() + array(
+    $expected_config = $this->getDefaultInternalConfig() + [
       'drupalImage_dialogTitleAdd' => 'Insert Image',
       'drupalImage_dialogTitleEdit' => 'Edit Image',
       'drupalLink_dialogTitleAdd' => 'Add Link',
@@ -84,11 +84,11 @@ class CKEditorTest extends KernelTestBase {
       'extraPlugins' => 'drupalimage,drupallink',
       'language' => 'en',
       'stylesSet' => FALSE,
-      'drupalExternalPlugins' => array(
+      'drupalExternalPlugins' => [
         'drupalimage' => file_url_transform_relative(file_create_url('core/modules/ckeditor/js/plugins/drupalimage/plugin.js')),
         'drupallink' => file_url_transform_relative(file_create_url('core/modules/ckeditor/js/plugins/drupallink/plugin.js')),
-      ),
-    );
+      ],
+    ];
     $expected_config = $this->castSafeStrings($expected_config);
     ksort($expected_config);
     ksort($expected_config['allowedContent']);
@@ -96,7 +96,7 @@ class CKEditorTest extends KernelTestBase {
 
     // Customize the configuration: add button, have two contextually enabled
     // buttons, and configure a CKEditor plugin setting.
-    $this->enableModules(array('ckeditor_test'));
+    $this->enableModules(['ckeditor_test']);
     $this->container->get('plugin.manager.editor')->clearCachedDefinitions();
     $this->ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
@@ -121,16 +121,16 @@ class CKEditorTest extends KernelTestBase {
     $format->filters('filter_html')->settings['allowed_html'] .= '<pre class> <h1> <blockquote class="*"> <address class="foo bar-* *">';
     $format->save();
 
-    $expected_config['allowedContent']['pre'] = array('attributes' => 'class', 'styles' => FALSE, 'classes' => TRUE);
-    $expected_config['allowedContent']['h1'] = array('attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE);
-    $expected_config['allowedContent']['blockquote'] = array('attributes' => 'class', 'styles' => FALSE, 'classes' => TRUE);
-    $expected_config['allowedContent']['address'] = array('attributes' => 'class', 'styles' => FALSE, 'classes' => 'foo,bar-*');
+    $expected_config['allowedContent']['pre'] = ['attributes' => 'class', 'styles' => FALSE, 'classes' => TRUE];
+    $expected_config['allowedContent']['h1'] = ['attributes' => FALSE, 'styles' => FALSE, 'classes' => FALSE];
+    $expected_config['allowedContent']['blockquote'] = ['attributes' => 'class', 'styles' => FALSE, 'classes' => TRUE];
+    $expected_config['allowedContent']['address'] = ['attributes' => 'class', 'styles' => FALSE, 'classes' => 'foo,bar-*'];
     $expected_config['format_tags'] = 'p;h1;h2;h3;h4;h5;h6;pre';
     ksort($expected_config['allowedContent']);
     $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for customized configuration.');
 
     // Disable the filter_html filter: allow *all *tags.
-    $format->setFilterConfig('filter_html', array('status' => 0));
+    $format->setFilterConfig('filter_html', ['status' => 0]);
     $format->save();
 
     $expected_config['allowedContent'] = TRUE;
@@ -139,73 +139,73 @@ class CKEditorTest extends KernelTestBase {
     $this->assertIdentical($expected_config, $this->castSafeStrings($this->ckeditor->getJSSettings($editor)), 'Generated JS settings are correct for customized configuration.');
 
     // Enable the filter_test_restrict_tags_and_attributes filter.
-    $format->setFilterConfig('filter_test_restrict_tags_and_attributes', array(
+    $format->setFilterConfig('filter_test_restrict_tags_and_attributes', [
       'status' => 1,
-      'settings' => array(
-        'restrictions' => array(
-          'allowed' => array(
+      'settings' => [
+        'restrictions' => [
+          'allowed' => [
             'p' => TRUE,
-            'a' => array(
+            'a' => [
               'href' => TRUE,
-              'rel' => array('nofollow' => TRUE),
-              'class' => array('external' => TRUE),
-              'target' => array('_blank' => FALSE),
-            ),
-            'span' => array(
-              'class' => array('dodo' => FALSE),
-              'property' => array('dc:*' => TRUE),
-              'rel' => array('foaf:*' => FALSE),
-              'style' => array('underline' => FALSE, 'color' => FALSE, 'font-size' => TRUE),
-            ),
-            '*' => array(
+              'rel' => ['nofollow' => TRUE],
+              'class' => ['external' => TRUE],
+              'target' => ['_blank' => FALSE],
+            ],
+            'span' => [
+              'class' => ['dodo' => FALSE],
+              'property' => ['dc:*' => TRUE],
+              'rel' => ['foaf:*' => FALSE],
+              'style' => ['underline' => FALSE, 'color' => FALSE, 'font-size' => TRUE],
+            ],
+            '*' => [
               'style' => FALSE,
               'on*' => FALSE,
-              'class' => array('is-a-hipster-llama' => TRUE, 'and-more' => TRUE),
+              'class' => ['is-a-hipster-llama' => TRUE, 'and-more' => TRUE],
               'data-*' => TRUE,
-            ),
+            ],
             'del' => FALSE,
-          ),
-        ),
-      ),
-    ));
+          ],
+        ],
+      ],
+    ]);
     $format->save();
 
-    $expected_config['allowedContent'] = array(
-      'p' => array(
+    $expected_config['allowedContent'] = [
+      'p' => [
         'attributes' => TRUE,
         'styles' => FALSE,
         'classes' => 'is-a-hipster-llama,and-more',
-      ),
-      'a' => array(
+      ],
+      'a' => [
         'attributes' => 'href,rel,class,target',
         'styles' => FALSE,
         'classes' => 'external',
-      ),
-      'span' => array(
+      ],
+      'span' => [
         'attributes' => 'class,property,rel,style',
         'styles' => 'font-size',
         'classes' => FALSE,
-      ),
-      '*' => array(
+      ],
+      '*' => [
         'attributes' => 'class,data-*',
         'styles' => FALSE,
         'classes' => 'is-a-hipster-llama,and-more',
-      ),
-      'del' => array(
+      ],
+      'del' => [
         'attributes' => FALSE,
         'styles' => FALSE,
         'classes' => FALSE,
-      ),
-    );
-    $expected_config['disallowedContent'] = array(
-      'span' => array(
+      ],
+    ];
+    $expected_config['disallowedContent'] = [
+      'span' => [
         'styles' => 'underline,color',
         'classes' => 'dodo',
-      ),
-      '*' => array(
+      ],
+      '*' => [
         'attributes' => 'on*',
-      ),
-    );
+      ],
+    ];
     $expected_config['format_tags'] = 'p';
     ksort($expected_config);
     ksort($expected_config['allowedContent']);
@@ -232,7 +232,7 @@ class CKEditorTest extends KernelTestBase {
     $this->assertIdentical($expected, $this->castSafeStrings($this->ckeditor->buildToolbarJSSetting($editor)), '"toolbar" configuration part of JS settings built correctly for customized toolbar.');
 
     // Enable the editor_test module, customize further.
-    $this->enableModules(array('ckeditor_test'));
+    $this->enableModules(['ckeditor_test']);
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     // Override the label of a toolbar component.
     $settings['toolbar']['rows'][0][0]['name'] = 'JunkScience';
@@ -255,7 +255,7 @@ class CKEditorTest extends KernelTestBase {
     $this->assertIdentical($expected, $this->ckeditor->buildContentsCssJSSetting($editor), '"contentsCss" configuration part of JS settings built correctly for default toolbar.');
 
     // Enable the editor_test module, which implements hook_ckeditor_css_alter().
-    $this->enableModules(array('ckeditor_test'));
+    $this->enableModules(['ckeditor_test']);
     $expected[] = file_url_transform_relative(file_create_url(drupal_get_path('module', 'ckeditor_test') . '/ckeditor_test.css'));
     $this->assertIdentical($expected, $this->ckeditor->buildContentsCssJSSetting($editor), '"contentsCss" configuration part of JS settings built correctly while a hook_ckeditor_css_alter() implementation exists.');
 
@@ -315,7 +315,7 @@ class CKEditorTest extends KernelTestBase {
     $settings['plugins']['stylescombo']['styles'] = '';
     $editor->setSettings($settings);
     $editor->save();
-    $expected['stylesSet'] = array();
+    $expected['stylesSet'] = [];
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
 
     // Configure the optional "styles" setting in odd ways that shouldn't affect
@@ -333,10 +333,10 @@ class CKEditorTest extends KernelTestBase {
     $settings['plugins']['stylescombo']['styles'] = "h1.title|Title\np.mAgical.Callout|Callout";
     $editor->setSettings($settings);
     $editor->save();
-    $expected['stylesSet'] = array(
-      array('name' => 'Title', 'element' => 'h1', 'attributes' => array('class' => 'title')),
-      array('name' => 'Callout', 'element' => 'p', 'attributes' => array('class' => 'mAgical Callout')),
-    );
+    $expected['stylesSet'] = [
+      ['name' => 'Title', 'element' => 'h1', 'attributes' => ['class' => 'title']],
+      ['name' => 'Callout', 'element' => 'p', 'attributes' => ['class' => 'mAgical Callout']],
+    ];
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
 
     // Same configuration, but now interspersed with nonsense. Should yield the
@@ -350,7 +350,7 @@ class CKEditorTest extends KernelTestBase {
     $settings['plugins']['stylescombo']['styles'] = "      h1 |  Title ";
     $editor->setSettings($settings);
     $editor->save();
-    $expected['stylesSet'] = array(array('name' => 'Title', 'element' => 'h1'));
+    $expected['stylesSet'] = [['name' => 'Title', 'element' => 'h1']];
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
 
     // Invalid syntax should cause stylesSet to be set to FALSE.
@@ -366,8 +366,8 @@ class CKEditorTest extends KernelTestBase {
    */
   function testLanguages() {
     // Get CKEditor supported language codes and spot-check.
-    $this->enableModules(array('language'));
-    $this->installConfig(array('language'));
+    $this->enableModules(['language']);
+    $this->installConfig(['language']);
     $langcodes = $this->ckeditor->getLangcodes();
 
     // Language codes transformed with browser mappings.
@@ -390,14 +390,14 @@ class CKEditorTest extends KernelTestBase {
    * Tests that CKEditor plugins participate in JS translation.
    */
   function testJSTranslation() {
-    $this->enableModules(array('language', 'locale'));
+    $this->enableModules(['language', 'locale']);
     $this->installSchema('locale', 'locales_source');
     $this->installSchema('locale', 'locales_location');
     $this->installSchema('locale', 'locales_target');
     $editor = Editor::load('filtered_html');
     $this->ckeditor->getJSSettings($editor);
     $localeStorage = $this->container->get('locale.storage');
-    $string = $localeStorage->findString(array('source' => 'Edit Link', 'context' => ''));
+    $string = $localeStorage->findString(['source' => 'Edit Link', 'context' => '']);
     $this->assertTrue(!empty($string), 'String from JavaScript file saved.');
 
     // With locale module, CKEditor should not adhere to the language selected.
@@ -428,14 +428,14 @@ class CKEditorTest extends KernelTestBase {
   }
 
   protected function getDefaultInternalConfig() {
-    return array(
+    return [
       'customConfig' => '',
       'pasteFromWordPromptCleanup' => TRUE,
       'resize_dir' => 'vertical',
-      'justifyClasses' => array('text-align-left', 'text-align-center', 'text-align-right', 'text-align-justify'),
+      'justifyClasses' => ['text-align-left', 'text-align-center', 'text-align-right', 'text-align-justify'],
       'entities' => FALSE,
       'disableNativeSpellChecker' => FALSE,
-    );
+    ];
   }
 
   protected function getDefaultAllowedContentConfig() {
@@ -454,42 +454,42 @@ class CKEditorTest extends KernelTestBase {
   }
 
   protected function getDefaultDisallowedContentConfig() {
-    return array(
-      '*' => array('attributes' => 'on*'),
-    );
+    return [
+      '*' => ['attributes' => 'on*'],
+    ];
   }
 
   protected function getDefaultToolbarConfig() {
-    return array(
-      array(
+    return [
+      [
         'name' => 'Formatting',
-        'items' => array('Bold', 'Italic',),
-      ),
-      array(
+        'items' => ['Bold', 'Italic',],
+      ],
+      [
         'name' => 'Links',
-        'items' => array('DrupalLink', 'DrupalUnlink',),
-      ),
-      array(
+        'items' => ['DrupalLink', 'DrupalUnlink',],
+      ],
+      [
         'name' => 'Lists',
-        'items' => array('BulletedList', 'NumberedList',),
-      ),
-      array(
+        'items' => ['BulletedList', 'NumberedList',],
+      ],
+      [
         'name' => 'Media',
-        'items' => array('Blockquote', 'DrupalImage',),
-      ),
-      array(
+        'items' => ['Blockquote', 'DrupalImage',],
+      ],
+      [
         'name' => 'Tools',
-        'items' => array('Source',),
-      ),
+        'items' => ['Source',],
+      ],
       '/',
-    );
+    ];
   }
 
   protected function getDefaultContentsCssConfig() {
-    return array(
+    return [
       file_url_transform_relative(file_create_url('core/modules/ckeditor/css/ckeditor-iframe.css')),
       file_url_transform_relative(file_create_url('core/modules/system/css/components/align.module.css')),
-    );
+    ];
   }
 
 }

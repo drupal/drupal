@@ -32,12 +32,12 @@ class ContextualController implements ContainerAwareInterface {
       throw new BadRequestHttpException(t('No contextual ids specified.'));
     }
 
-    $rendered = array();
+    $rendered = [];
     foreach ($ids as $id) {
-      $element = array(
+      $element = [
         '#type' => 'contextual_links',
         '#contextual_links' => _contextual_id_to_links($id),
-      );
+      ];
       $rendered[$id] = $this->container->get('renderer')->renderRoot($element);
     }
 

@@ -17,9 +17,9 @@ class TrustedHostsTest extends BrowserTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $admin_user = $this->drupalCreateUser(array(
+    $admin_user = $this->drupalCreateUser([
       'administer site configuration',
-    ));
+    ]);
     $this->drupalLogin($admin_user);
   }
 
@@ -39,10 +39,10 @@ class TrustedHostsTest extends BrowserTestBase {
    * Tests that the status page shows the trusted patterns from settings.php.
    */
   public function testStatusPageWithConfiguration() {
-    $settings['settings']['trusted_host_patterns'] = (object) array(
-      'value' => array('^' . preg_quote(\Drupal::request()->getHost()) . '$'),
+    $settings['settings']['trusted_host_patterns'] = (object) [
+      'value' => ['^' . preg_quote(\Drupal::request()->getHost()) . '$'],
       'required' => TRUE,
-    );
+    ];
 
     $this->writeSettings($settings);
 
@@ -63,10 +63,10 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->container->get('router.builder')->rebuild();
 
     $host = $this->container->get('request_stack')->getCurrentRequest()->getHost();
-    $settings['settings']['trusted_host_patterns'] = (object) array(
-      'value' => array('^' . preg_quote($host) . '$'),
+    $settings['settings']['trusted_host_patterns'] = (object) [
+      'value' => ['^' . preg_quote($host) . '$'],
       'required' => TRUE,
-    );
+    ];
 
     $this->writeSettings($settings);
 

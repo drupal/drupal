@@ -33,7 +33,7 @@ class Memory implements QueueInterface {
    *   An arbitrary string. The name of the queue to work with.
    */
   public function __construct($name) {
-    $this->queue = array();
+    $this->queue = [];
     $this->idSequence = 0;
   }
 
@@ -100,7 +100,7 @@ class Memory implements QueueInterface {
    * {@inheritdoc}
    */
   public function deleteQueue() {
-    $this->queue = array();
+    $this->queue = [];
     $this->idSequence = 0;
   }
 

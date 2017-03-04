@@ -21,7 +21,7 @@ class UserPicture extends DrupalSqlBase {
   public function query() {
     $query = $this->select('users', 'u')
       ->condition('picture', '', '<>')
-      ->fields('u', array('uid', 'access', 'picture'))
+      ->fields('u', ['uid', 'access', 'picture'])
       ->orderBy('u.access');
     return $query;
   }
@@ -30,11 +30,11 @@ class UserPicture extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'uid' => 'Primary Key: Unique user ID.',
       'access' => 'Timestamp for previous time user accessed the site.',
       'picture' => "Path to the user's uploaded picture.",
-    );
+    ];
   }
   /**
    * {@inheritdoc}

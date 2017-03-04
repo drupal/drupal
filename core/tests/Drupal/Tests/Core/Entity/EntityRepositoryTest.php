@@ -63,7 +63,7 @@ class EntityRepositoryTest extends UnitTestCase {
     $this->languageManager->getFallbackCandidates(Argument::type('array'))
       ->will(function ($args) {
         $context = $args[0];
-        $candidates = array();
+        $candidates = [];
         if (!empty($context['langcode'])) {
           $candidates[$context['langcode']] = $context['langcode'];
         }

@@ -88,8 +88,8 @@ class Date extends FormElement {
     if (empty($element['#attributes']['type'])) {
       $element['#attributes']['type'] = 'date';
     }
-    Element::setAttributes($element, array('id', 'name', 'type', 'min', 'max', 'step', 'value', 'size'));
-    static::setAttributes($element, array('form-' . $element['#attributes']['type']));
+    Element::setAttributes($element, ['id', 'name', 'type', 'min', 'max', 'step', 'value', 'size']);
+    static::setAttributes($element, ['form-' . $element['#attributes']['type']]);
 
     return $element;
   }

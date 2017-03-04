@@ -21,7 +21,7 @@ class FilterTestReplace extends FilterBase {
    * {@inheritdoc}
    */
   public function process($text, $langcode) {
-    $text = array();
+    $text = [];
     $text[] = 'Filter: ' . $this->getLabel() . ' (' . $this->getPluginId() . ')';
     $text[] = 'Language: ' . $langcode;
     return new FilterProcessResult(implode("<br />\n", $text));

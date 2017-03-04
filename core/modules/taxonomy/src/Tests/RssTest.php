@@ -18,7 +18,7 @@ class RssTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'views');
+  public static $modules = ['node', 'field_ui', 'views'];
 
   /**
    * Vocabulary for testing.
@@ -41,23 +41,23 @@ class RssTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
     $this->fieldName = 'taxonomy_' . $this->vocabulary->id();
 
-    $handler_settings = array(
-      'target_bundles' => array(
+    $handler_settings = [
+      'target_bundles' => [
         $this->vocabulary->id() => $this->vocabulary->id(),
-      ),
+      ],
       'auto_create' => TRUE,
-    );
+    ];
     $this->createEntityReferenceField('node', 'article', $this->fieldName, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->fieldName, array(
+      ->setComponent($this->fieldName, [
         'type' => 'options_select',
-      ))
+      ])
       ->save();
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->fieldName, array(
+      ->setComponent($this->fieldName, [
         'type' => 'entity_reference_label',
-      ))
+      ])
       ->save();
   }
 
@@ -72,21 +72,21 @@ class RssTest extends TaxonomyTestBase {
 
     // RSS display must be added manually.
     $this->drupalGet("admin/structure/types/manage/article/display");
-    $edit = array(
+    $edit = [
       "display_modes_custom[rss]" => '1',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Change the format to 'RSS category'.
     $this->drupalGet("admin/structure/types/manage/article/display/rss");
-    $edit = array(
+    $edit = [
       "fields[taxonomy_" . $this->vocabulary->id() . "][type]" => 'entity_reference_rss_category',
       "fields[taxonomy_" . $this->vocabulary->id() . "][region]" => 'content',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Post an article.
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit[$this->fieldName . '[]'] = $term1->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
@@ -95,7 +95,7 @@ class RssTest extends TaxonomyTestBase {
     $this->drupalGet('rss.xml');
     $test_element = sprintf(
       '<category %s>%s</category>',
-      'domain="' . $term1->url('canonical', array('absolute' => TRUE)) . '"',
+      'domain="' . $term1->url('canonical', ['absolute' => TRUE]) . '"',
       $term1->getName()
     );
     $this->assertRaw($test_element, 'Term is displayed when viewing the rss feed.');

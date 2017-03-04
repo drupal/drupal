@@ -53,7 +53,7 @@ class DbLog implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = array()) {
+  public function log($level, $message, array $context = []) {
     // Remove any backtraces since they may contain an unserializable variable.
     unset($context['backtrace']);
 
@@ -64,7 +64,7 @@ class DbLog implements LoggerInterface {
     try {
       $this->connection
         ->insert('watchdog')
-        ->fields(array(
+        ->fields([
           'uid' => $context['uid'],
           'type' => Unicode::substr($context['channel'], 0, 64),
           'message' => $message,
@@ -75,7 +75,7 @@ class DbLog implements LoggerInterface {
           'referer' => $context['referer'],
           'hostname' => Unicode::substr($context['ip'], 0, 128),
           'timestamp' => $context['timestamp'],
-        ))
+        ])
         ->execute();
     }
     catch (\Exception $e) {

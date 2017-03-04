@@ -108,17 +108,17 @@ class TaggedHandlersPass implements CompilerPassInterface {
         // Determine the ID.
 
         if (!isset($interface)) {
-          throw new LogicException(vsprintf("Service consumer '%s' class method %s::%s() has to type-hint an interface.", array(
+          throw new LogicException(vsprintf("Service consumer '%s' class method %s::%s() has to type-hint an interface.", [
             $consumer_id,
             $consumer->getClass(),
             $method_name,
-          )));
+          ]));
         }
         $interface = $interface->getName();
 
         // Find all tagged handlers.
-        $handlers = array();
-        $extra_arguments = array();
+        $handlers = [];
+        $extra_arguments = [];
         foreach ($container->findTaggedServiceIds($tag) as $id => $attributes) {
           // Validate the interface.
           $handler = $container->getDefinition($id);
@@ -143,7 +143,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
         // Add a method call for each handler to the consumer service
         // definition.
         foreach ($handlers as $id => $priority) {
-          $arguments = array();
+          $arguments = [];
           $arguments[$interface_pos] = new Reference($id);
           if (isset($priority_pos)) {
             $arguments[$priority_pos] = $priority;

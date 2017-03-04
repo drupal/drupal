@@ -40,7 +40,7 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    *   Array of \Drupal\locale\LocaleLookup objects indexed by language code
    *   and context.
    */
-  protected $translations = array();
+  protected $translations = [];
 
   /**
    * The cache backend that should be used.
@@ -137,7 +137,7 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    */
   public function reset() {
     unset($this->translateEnglish);
-    $this->translations = array();
+    $this->translations = [];
   }
 
   /**

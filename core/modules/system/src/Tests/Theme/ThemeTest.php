@@ -22,11 +22,11 @@ class ThemeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('theme_test', 'node');
+  public static $modules = ['theme_test', 'node'];
 
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->install(array('test_theme'));
+    \Drupal::service('theme_handler')->install(['test_theme']);
   }
 
   /**
@@ -40,14 +40,14 @@ class ThemeTest extends WebTestBase {
    *   - any attributes set in the template's preprocessing function
    */
   function testAttributeMerging() {
-    $theme_test_render_element = array(
-      'elements' => array(
-        '#attributes' => array('data-foo' => 'bar'),
-      ),
-      'attributes' => array(
+    $theme_test_render_element = [
+      'elements' => [
+        '#attributes' => ['data-foo' => 'bar'],
+      ],
+      'attributes' => [
         'id' => 'bazinga',
-      ),
-    );
+      ],
+    ];
     $this->assertThemeOutput('theme_test_render_element', $theme_test_render_element, '<div id="bazinga" data-foo="bar" data-variables-are-preprocessed></div>' . "\n");
   }
 
@@ -58,10 +58,10 @@ class ThemeTest extends WebTestBase {
     // theme_test_false is an implemented theme hook so \Drupal::theme() service
     // should return a string or an object that implements MarkupInterface,
     // even though the theme function itself can return anything.
-    $foos = array('null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo', 'empty_string' => '');
+    $foos = ['null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo', 'empty_string' => ''];
     foreach ($foos as $type => $example) {
-      $output = \Drupal::theme()->render('theme_test_foo', array('foo' => $example));
-      $this->assertTrue($output instanceof MarkupInterface || is_string($output), format_string('\Drupal::theme() returns an object that implements MarkupInterface or a string for data type @type.', array('@type' => $type)));
+      $output = \Drupal::theme()->render('theme_test_foo', ['foo' => $example]);
+      $this->assertTrue($output instanceof MarkupInterface || is_string($output), format_string('\Drupal::theme() returns an object that implements MarkupInterface or a string for data type @type.', ['@type' => $type]));
       if ($output instanceof MarkupInterface) {
         $this->assertIdentical((string) $example, $output->__toString());
       }
@@ -72,7 +72,7 @@ class ThemeTest extends WebTestBase {
 
     // suggestionnotimplemented is not an implemented theme hook so \Drupal::theme() service
     // should return FALSE instead of a string.
-    $output = \Drupal::theme()->render(array('suggestionnotimplemented'), array());
+    $output = \Drupal::theme()->render(['suggestionnotimplemented'], []);
     $this->assertIdentical($output, FALSE, '\Drupal::theme() returns FALSE when a hook suggestion is not implemented.');
   }
 
@@ -83,22 +83,22 @@ class ThemeTest extends WebTestBase {
     // Set the front page as something random otherwise the CLI
     // test runner fails.
     $this->config('system.site')->set('page.front', '/nobody-home')->save();
-    $args = array('node', '1', 'edit');
+    $args = ['node', '1', 'edit'];
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), 'Found expected node edit page suggestions');
+    $this->assertEqual($suggestions, ['page__node', 'page__node__%', 'page__node__1', 'page__node__edit'], 'Found expected node edit page suggestions');
     // Check attack vectors.
-    $args = array('node', '\\1');
+    $args = ['node', '\\1'];
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid \\ from suggestions');
-    $args = array('node', '1/');
+    $this->assertEqual($suggestions, ['page__node', 'page__node__%', 'page__node__1'], 'Removed invalid \\ from suggestions');
+    $args = ['node', '1/'];
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid / from suggestions');
-    $args = array('node', "1\0");
+    $this->assertEqual($suggestions, ['page__node', 'page__node__%', 'page__node__1'], 'Removed invalid / from suggestions');
+    $args = ['node', "1\0"];
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid \\0 from suggestions');
+    $this->assertEqual($suggestions, ['page__node', 'page__node__%', 'page__node__1'], 'Removed invalid \\0 from suggestions');
     // Define path with hyphens to be used to generate suggestions.
-    $args = array('node', '1', 'hyphen-path');
-    $result = array('page__node', 'page__node__%', 'page__node__1', 'page__node__hyphen_path');
+    $args = ['node', '1', 'hyphen-path'];
+    $result = ['page__node', 'page__node__%', 'page__node__1', 'page__node__hyphen_path'];
     $suggestions = theme_get_suggestions($args, 'page');
     $this->assertEqual($suggestions, $result, 'Found expected page suggestions for paths containing hyphens.');
   }
@@ -150,7 +150,7 @@ class ThemeTest extends WebTestBase {
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/user/login'));
     \Drupal::requestStack()->push($request);
     $this->config('system.site')->set('page.front', '/user/login')->save();
-    $suggestions = theme_get_suggestions(array('user', 'login'), 'page');
+    $suggestions = theme_get_suggestions(['user', 'login'], 'page');
     // Set it back to not annoy the batch runner.
     \Drupal::requestStack()->pop();
     $this->assertTrue(in_array('page__front', $suggestions), 'Front page template was suggested.');
@@ -207,7 +207,7 @@ class ThemeTest extends WebTestBase {
    */
   function testListThemes() {
     $theme_handler = $this->container->get('theme_handler');
-    $theme_handler->install(array('test_subtheme'));
+    $theme_handler->install(['test_subtheme']);
     $themes = $theme_handler->listInfo();
 
     // Check if ThemeHandlerInterface::listInfo() retrieves enabled themes.
@@ -215,8 +215,8 @@ class ThemeTest extends WebTestBase {
 
     // Check if ThemeHandlerInterface::listInfo() returns disabled themes.
     // Check for base theme and subtheme lists.
-    $base_theme_list = array('test_basetheme' => 'Theme test base theme');
-    $sub_theme_list = array('test_subsubtheme' => 'Theme test subsubtheme', 'test_subtheme' => 'Theme test subtheme');
+    $base_theme_list = ['test_basetheme' => 'Theme test base theme'];
+    $sub_theme_list = ['test_subsubtheme' => 'Theme test subsubtheme', 'test_subtheme' => 'Theme test subtheme'];
 
     $this->assertIdentical($themes['test_basetheme']->sub_themes, $sub_theme_list, 'Base theme\'s object includes list of subthemes.');
     $this->assertIdentical($themes['test_subtheme']->base_themes, $base_theme_list, 'Subtheme\'s object includes list of base themes.');
@@ -231,20 +231,20 @@ class ThemeTest extends WebTestBase {
    * Tests child element rendering for 'render element' theme hooks.
    */
   function testDrupalRenderChildren() {
-    $element = array(
+    $element = [
       '#theme' => 'theme_test_render_element_children',
-      'child' => array(
+      'child' => [
         '#markup' => 'Foo',
-      ),
-    );
+      ],
+    ];
     $this->assertThemeOutput('theme_test_render_element_children', $element, 'Foo', 'drupal_render() avoids #theme recursion loop when rendering a render element.');
 
-    $element = array(
-      '#theme_wrappers' => array('theme_test_render_element_children'),
-      'child' => array(
+    $element = [
+      '#theme_wrappers' => ['theme_test_render_element_children'],
+      'child' => [
         '#markup' => 'Foo',
-      ),
-    );
+      ],
+    ];
     $this->assertThemeOutput('theme_test_render_element_children', $element, 'Foo', 'drupal_render() avoids #theme_wrappers recursion loop when rendering a render element.');
   }
 
@@ -281,7 +281,7 @@ class ThemeTest extends WebTestBase {
    * Tests that region attributes can be manipulated via preprocess functions.
    */
   public function testRegionClass() {
-    \Drupal::service('module_installer')->install(array('block', 'theme_region_test'));
+    \Drupal::service('module_installer')->install(['block', 'theme_region_test']);
 
     // Place a block.
     $this->drupalPlaceBlock('system_main_block');

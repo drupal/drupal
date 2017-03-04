@@ -47,12 +47,12 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     $entity_manager = $container->get('entity.manager');
-    $migration_configuration = array(
-      'migration' => array(
+    $migration_configuration = [
+      'migration' => [
         'd6_custom_block',
         'd7_custom_block',
-      ),
-    );
+      ],
+    ];
     return new static(
       $configuration,
       $plugin_id,

@@ -16,7 +16,7 @@ class ViewRenderTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view_render');
+  public static $testViews = ['test_view_render'];
 
   protected function setUp() {
     parent::setUp();

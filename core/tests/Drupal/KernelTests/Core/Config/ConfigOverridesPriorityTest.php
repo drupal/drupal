@@ -18,7 +18,7 @@ class ConfigOverridesPriorityTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'config', 'config_override_test', 'language');
+  public static $modules = ['system', 'config', 'config_override_test', 'language'];
 
   public function testOverridePriorities() {
     $GLOBALS['config_test_run_module_overrides'] = FALSE;
@@ -50,10 +50,10 @@ class ConfigOverridesPriorityTest extends KernelTestBase {
     $this->assertEqual(50, $config_factory->get('system.site')->get('weight_select_max'));
 
     // Override using language.
-    $language = new Language(array(
+    $language = new Language([
       'name' => 'French',
       'id' => 'fr',
-    ));
+    ]);
     \Drupal::languageManager()->setConfigOverrideLanguage($language);
     \Drupal::languageManager()
       ->getLanguageConfigOverride($language->getId(), 'system.site')

@@ -31,18 +31,18 @@ function seven_preprocess_html(&$variables) {
  */
 function seven_preprocess_menu_local_tasks(&$variables) {
   if (!empty($variables['primary'])) {
-    $variables['primary']['#attached'] = array(
-      'library' => array(
+    $variables['primary']['#attached'] = [
+      'library' => [
         'seven/drupal.nav-tabs',
-      ),
-    );
+      ],
+    ];
   }
   elseif (!empty($variables['secondary'])) {
-    $variables['secondary']['#attached'] = array(
-      'library' => array(
+    $variables['secondary']['#attached'] = [
+      'library' => [
         'seven/drupal.nav-tabs',
-      ),
-    );
+      ],
+    ];
   }
 }
 
@@ -61,7 +61,7 @@ function seven_preprocess_node_add_list(&$variables) {
     /** @var \Drupal\node\NodeTypeInterface $type */
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()]['label'] = $type->label();
-      $variables['types'][$type->id()]['url'] = \Drupal::url('node.add', array('node_type' => $type->id()));
+      $variables['types'][$type->id()]['url'] = \Drupal::url('node.add', ['node_type' => $type->id()]);
     }
   }
 }
@@ -76,8 +76,8 @@ function seven_preprocess_block_content_add_list(&$variables) {
   if (!empty($variables['content'])) {
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()]['label'] = $type->label();
-      $options = array('query' => \Drupal::request()->query->all());
-      $variables['types'][$type->id()]['url'] = \Drupal::url('block_content.add_form', array('block_content_type' => $type->id()), $options);
+      $options = ['query' => \Drupal::request()->query->all()];
+      $variables['types'][$type->id()]['url'] = \Drupal::url('block_content.add_form', ['block_content_type' => $type->id()], $options);
     }
   }
 }
@@ -153,36 +153,36 @@ function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
   /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state->getFormObject()->getEntity();
 
-  $form['#theme'] = array('node_edit_form');
+  $form['#theme'] = ['node_edit_form'];
   $form['#attached']['library'][] = 'seven/node-form';
 
   $form['advanced']['#type'] = 'container';
   $is_new = !$node->isNew() ? format_date($node->getChangedTime(), 'short') : t('Not saved yet');
-  $form['meta'] = array(
-    '#attributes' => array('class' => array('entity-meta__header')),
+  $form['meta'] = [
+    '#attributes' => ['class' => ['entity-meta__header']],
     '#type' => 'container',
     '#group' => 'advanced',
     '#weight' => -100,
-    'published' => array(
+    'published' => [
       '#type' => 'html_tag',
       '#tag' => 'h3',
       '#value' => $node->isPublished() ? t('Published') : t('Not published'),
       '#access' => !$node->isNew(),
-      '#attributes' => array(
+      '#attributes' => [
         'class' => ['entity-meta__title'],
-      ),
-    ),
-    'changed' => array(
+      ],
+    ],
+    'changed' => [
       '#type' => 'item',
-      '#wrapper_attributes' => array('class' => array('entity-meta__last-saved', 'container-inline')),
+      '#wrapper_attributes' => ['class' => ['entity-meta__last-saved', 'container-inline']],
       '#markup' => '<h4 class="label inline">' . t('Last saved') . '</h4> ' . $is_new,
-    ),
-    'author' => array(
+    ],
+    'author' => [
       '#type' => 'item',
-      '#wrapper_attributes' => array('class' => array('author', 'container-inline')),
+      '#wrapper_attributes' => ['class' => ['author', 'container-inline']],
       '#markup' => '<h4 class="label inline">' . t('Author') . '</h4> ' . $node->getOwner()->getUsername(),
-    ),
-  );
+    ],
+  ];
   $form['revision_information']['#type'] = 'container';
   $form['revision_information']['#group'] = 'meta';
 }

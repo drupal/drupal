@@ -166,8 +166,8 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events[KernelEvents::RESPONSE][] = array('checkRedirectUrl');
-    $events[KernelEvents::REQUEST][] = array('sanitizeDestination', 100);
+    $events[KernelEvents::RESPONSE][] = ['checkRedirectUrl'];
+    $events[KernelEvents::REQUEST][] = ['sanitizeDestination', 100];
     return $events;
   }
 

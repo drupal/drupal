@@ -17,7 +17,7 @@ class ProfileFieldSettings extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($type, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $settings = array();
+    $settings = [];
     switch ($type) {
       case 'date':
         $settings['datetime_type'] = 'date';

@@ -65,17 +65,17 @@ class EntityDeriver implements ContainerDeriverInterface {
     if (!isset($this->derivatives)) {
       // Add in the default plugin configuration and the resource type.
       foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
-        $this->derivatives[$entity_type_id] = array(
+        $this->derivatives[$entity_type_id] = [
           'id' => 'entity:' . $entity_type_id,
           'entity_type' => $entity_type_id,
           'serialization_class' => $entity_type->getClass(),
           'label' => $entity_type->getLabel(),
-        );
+        ];
 
-        $default_uris = array(
+        $default_uris = [
           'canonical' => "/entity/$entity_type_id/" . '{' . $entity_type_id . '}',
           'https://www.drupal.org/link-relations/create' => "/entity/$entity_type_id",
-        );
+        ];
 
         foreach ($default_uris as $link_relation => $default_uri) {
           // Check if there are link templates defined for the entity type and

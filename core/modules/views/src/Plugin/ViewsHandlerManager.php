@@ -59,9 +59,9 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
 
     $this->viewsData = $views_data;
     $this->handlerType = $handler_type;
-    $this->defaults = array(
+    $this->defaults = [
       'plugin_type' => $handler_type,
-    );
+    ];
   }
 
   /**
@@ -86,7 +86,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
 
     if (isset($data[$field][$this->handlerType])) {
       $definition = $data[$field][$this->handlerType];
-      foreach (array('group', 'title', 'title short', 'label', 'help', 'real field', 'real table', 'entity type', 'entity field') as $key) {
+      foreach (['group', 'title', 'title short', 'label', 'help', 'real field', 'real table', 'entity type', 'entity field'] as $key) {
         if (!isset($definition[$key])) {
           // First check the field level.
           if (!empty($data[$field][$key])) {
@@ -111,13 +111,13 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
     }
 
     // Finally, use the 'broken' handler.
-    return $this->createInstance('broken', array('original_configuration' => $item));
+    return $this->createInstance('broken', ['original_configuration' => $item]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createInstance($plugin_id, array $configuration = array()) {
+  public function createInstance($plugin_id, array $configuration = []) {
     $instance = parent::createInstance($plugin_id, $configuration);
     if ($instance instanceof HandlerBase) {
       $instance->setModuleHandler($this->moduleHandler);
@@ -129,7 +129,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
   /**
    * {@inheritdoc}
    */
-  public function getFallbackPluginId($plugin_id, array $configuration = array()) {
+  public function getFallbackPluginId($plugin_id, array $configuration = []) {
     return 'broken';
   }
 

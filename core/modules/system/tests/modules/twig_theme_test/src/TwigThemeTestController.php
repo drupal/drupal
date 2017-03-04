@@ -14,16 +14,16 @@ class TwigThemeTestController {
    * Menu callback for testing PHP variables in a Twig template.
    */
   public function phpVariablesRender() {
-    return ['#markup' => \Drupal::theme()->render('twig_theme_test_php_variables', array())];
+    return ['#markup' => \Drupal::theme()->render('twig_theme_test_php_variables', [])];
   }
 
   /**
    * Menu callback for testing translation blocks in a Twig template.
    */
   public function transBlockRender() {
-    return array(
+    return [
       '#theme' => 'twig_theme_test_trans',
-    );
+    ];
   }
 
   /**
@@ -40,9 +40,9 @@ class TwigThemeTestController {
    * Renders for testing url_generator functions in a Twig template.
    */
   public function urlGeneratorRender() {
-    return array(
+    return [
       '#theme' => 'twig_theme_test_url_generator',
-    );
+    ];
   }
 
   /**
@@ -73,25 +73,25 @@ class TwigThemeTestController {
    * Renders for testing file_url functions in a Twig template.
    */
   public function fileUrlRender() {
-    return array(
+    return [
       '#theme' => 'twig_theme_test_file_url',
-    );
+    ];
   }
 
   /**
    * Renders for testing attach_library functions in a Twig template.
    */
   public function attachLibraryRender() {
-    return array(
+    return [
       '#theme' => 'twig_theme_test_attach_library',
-    );
+    ];
   }
 
   /**
    * Menu callback for testing the Twig registry loader.
    */
   public function registryLoaderRender() {
-    return array('#theme' => 'twig_registry_loader_test');
+    return ['#theme' => 'twig_registry_loader_test'];
   }
 
   /**

@@ -15,7 +15,7 @@ class FileSystem {
    *   suitable temporary directory can be found.
    */
   public static function getOsTemporaryDirectory() {
-    $directories = array();
+    $directories = [];
 
     // Has PHP been set with an upload_tmp_dir?
     if (ini_get('upload_tmp_dir')) {

@@ -16,16 +16,16 @@ class MenuLinkContentFormTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'menu_link_content',
-  );
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $web_user = $this->drupalCreateUser(array('administer menu'));
+    $web_user = $this->drupalCreateUser(['administer menu']);
     $this->drupalLogin($web_user);
   }
 
@@ -34,16 +34,16 @@ class MenuLinkContentFormTest extends WebTestBase {
    */
   public function testMenuLinkContentForm() {
     $this->drupalGet('admin/structure/menu/manage/admin/add');
-    $element = $this->xpath('//select[@id = :id]/option[@selected]', array(':id' => 'edit-menu-parent'));
+    $element = $this->xpath('//select[@id = :id]/option[@selected]', [':id' => 'edit-menu-parent']);
     $this->assertTrue($element, 'A default menu parent was found.');
     $this->assertEqual('admin:', $element[0]['value'], '<Administration> menu is the parent.');
 
     $this->drupalPostForm(
       NULL,
-      array(
+      [
         'title[0][value]' => t('Front page'),
         'link[0][uri]' => '<front>',
-      ),
+      ],
       t('Save')
     );
     $this->assertText(t('The menu link has been saved.'));
@@ -56,10 +56,10 @@ class MenuLinkContentFormTest extends WebTestBase {
     $this->drupalGet('admin/structure/menu/manage/admin/add');
     $this->drupalPostForm(
       NULL,
-      array(
+      [
         'title[0][value]' => t('Test page'),
         'link[0][uri]' => '<test>',
-      ),
+      ],
       t('Save')
     );
     $this->assertText(t('Manually entered paths should start with /, ? or #.'));

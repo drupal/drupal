@@ -18,33 +18,33 @@ class ConfirmFormTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = ['form_test'];
 
   function testConfirmForm() {
     // Test the building of the form.
     $this->drupalGet('form-test/confirm-form');
     $site_name = $this->config('system.site')->get('name');
-    $this->assertTitle(t('ConfirmFormTestForm::getQuestion(). | @site-name', array('@site-name' => $site_name)), 'The question was found as the page title.');
+    $this->assertTitle(t('ConfirmFormTestForm::getQuestion(). | @site-name', ['@site-name' => $site_name]), 'The question was found as the page title.');
     $this->assertText(t('ConfirmFormTestForm::getDescription().'), 'The description was used.');
     $this->assertFieldByXPath('//input[@id="edit-submit"]', t('ConfirmFormTestForm::getConfirmText().'), 'The confirm text was used.');
 
     // Test cancelling the form.
     $this->clickLink(t('ConfirmFormTestForm::getCancelText().'));
-    $this->assertUrl('form-test/autocomplete', array(), "The form's cancel link was followed.");
+    $this->assertUrl('form-test/autocomplete', [], "The form's cancel link was followed.");
 
     // Test submitting the form.
     $this->drupalPostForm('form-test/confirm-form', NULL, t('ConfirmFormTestForm::getConfirmText().'));
     $this->assertText('The ConfirmFormTestForm::submitForm() method was used for this form.');
-    $this->assertUrl('', array(), "The form's redirect was followed.");
+    $this->assertUrl('', [], "The form's redirect was followed.");
 
     // Test submitting the form with a destination.
-    $this->drupalPostForm('form-test/confirm-form', NULL, t('ConfirmFormTestForm::getConfirmText().'), array('query' => array('destination' => 'admin/config')));
-    $this->assertUrl('admin/config', array(), "The form's redirect was not followed, the destination query string was followed.");
+    $this->drupalPostForm('form-test/confirm-form', NULL, t('ConfirmFormTestForm::getConfirmText().'), ['query' => ['destination' => 'admin/config']]);
+    $this->assertUrl('admin/config', [], "The form's redirect was not followed, the destination query string was followed.");
 
     // Test cancelling the form with a complex destination.
     $this->drupalGet('form-test/confirm-form-array-path');
     $this->clickLink(t('ConfirmFormArrayPathTestForm::getCancelText().'));
-    $this->assertUrl('form-test/confirm-form', array('query' => array('destination' => 'admin/config')), "The form's complex cancel link was followed.");
+    $this->assertUrl('form-test/confirm-form', ['query' => ['destination' => 'admin/config']], "The form's complex cancel link was followed.");
   }
 
   /**
@@ -53,14 +53,14 @@ class ConfirmFormTest extends WebTestBase {
   public function testConfirmFormWithExternalDestination() {
     $this->drupalGet('form-test/confirm-form');
     $this->assertCancelLinkUrl(Url::fromRoute('form_test.route8'));
-    $this->drupalGet('form-test/confirm-form', array('query' => array('destination' => 'node')));
+    $this->drupalGet('form-test/confirm-form', ['query' => ['destination' => 'node']]);
     $this->assertCancelLinkUrl(Url::fromUri('internal:/node'));
-    $this->drupalGet('form-test/confirm-form', array('query' => array('destination' => 'http://example.com')));
+    $this->drupalGet('form-test/confirm-form', ['query' => ['destination' => 'http://example.com']]);
     $this->assertCancelLinkUrl(Url::fromRoute('form_test.route8'));
-    $this->drupalGet('form-test/confirm-form', array('query' => array('destination' => '<front>')));
+    $this->drupalGet('form-test/confirm-form', ['query' => ['destination' => '<front>']]);
     $this->assertCancelLinkUrl(Url::fromRoute('<front>'));
     // Other invalid destinations, should fall back to the form default.
-    $this->drupalGet('form-test/confirm-form', array('query' => array('destination' => '/http://example.com')));
+    $this->drupalGet('form-test/confirm-form', ['query' => ['destination' => '/http://example.com']]);
     $this->assertCancelLinkUrl(Url::fromRoute('form_test.route8'));
   }
 

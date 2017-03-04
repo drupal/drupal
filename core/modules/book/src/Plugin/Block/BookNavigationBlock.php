@@ -86,26 +86,26 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'block_mode' => "all pages",
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   function blockForm($form, FormStateInterface $form_state) {
-    $options = array(
+    $options = [
       'all pages' => $this->t('Show block on all pages'),
       'book pages' => $this->t('Show block only on book pages'),
-    );
-    $form['book_block_mode'] = array(
+    ];
+    $form['book_block_mode'] = [
       '#type' => 'radios',
       '#title' => $this->t('Book navigation block display'),
       '#options' => $options,
       '#default_value' => $this->configuration['block_mode'],
       '#description' => $this->t("If <em>Show block on all pages</em> is selected, the block will contain the automatically generated menus for all of the site's books. If <em>Show block only on book pages</em> is selected, the block will contain only the one menu corresponding to the current page's book. In this case, if the current page is not in a book, no block will be displayed. The <em>Page specific visibility settings</em> or other visibility settings can be used in addition to selectively display this block."),
-      );
+      ];
 
     return $form;
   }
@@ -127,8 +127,8 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
       $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
     }
     if ($this->configuration['block_mode'] == 'all pages') {
-      $book_menus = array();
-      $pseudo_tree = array(0 => array('below' => FALSE));
+      $book_menus = [];
+      $pseudo_tree = [0 => ['below' => FALSE]];
       foreach ($this->bookManager->getAllBooks() as $book_id => $book) {
         if ($book['bid'] == $current_bid) {
           // If the current page is a node associated with a book, the menu
@@ -146,14 +146,14 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
           $pseudo_tree[0]['link'] = $book;
           $book_menus[$book_id] = $this->bookManager->bookTreeOutput($pseudo_tree);
         }
-        $book_menus[$book_id] += array(
+        $book_menus[$book_id] += [
           '#book_title' => $book['title'],
-        );
+        ];
       }
       if ($book_menus) {
-        return array(
+        return [
           '#theme' => 'book_all_books_block',
-        ) + $book_menus;
+        ] + $book_menus;
       }
     }
     elseif ($current_bid) {
@@ -175,7 +175,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
         }
       }
     }
-    return array();
+    return [];
   }
 
   /**

@@ -5,7 +5,7 @@
  * Esperanto transliteration data for the PhpTransliteration class.
  */
 
-$overrides['eo'] = array(
+$overrides['eo'] = [
   0x18 => 'Cx',
   0x19 => 'cx',
   0x11C => 'Gx',
@@ -18,4 +18,4 @@ $overrides['eo'] = array(
   0x15D => 'sx',
   0x16C => 'Ux',
   0x16D => 'ux',
-);
+];

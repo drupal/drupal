@@ -16,11 +16,11 @@ class BatchTestController {
    *   Render array containing success message.
    */
   public function testRedirect() {
-    return array(
-      'success' => array(
+    return [
+      'success' => [
         '#markup' => 'Redirection successful.',
-      )
-    );
+      ]
+    ];
   }
 
   /**
@@ -47,9 +47,9 @@ class BatchTestController {
    */
   public function testNestedDrupalFormSubmit($value = 1) {
     // Set the batch and process it.
-    $batch['operations'] = array(
-      array('_batch_test_nested_drupal_form_submit_callback', array($value)),
-    );
+    $batch['operations'] = [
+      ['_batch_test_nested_drupal_form_submit_callback', [$value]],
+    ];
     batch_set($batch);
     return batch_process('batch-test/redirect');
   }
@@ -100,11 +100,11 @@ class BatchTestController {
       'value' => $value,
     ]);
     \Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestChainedForm', $form_state);
-    return array(
-      'success' => array(
+    return [
+      'success' => [
         '#markup' => 'Got out of a programmatic batched form.',
-      )
-    );
+      ]
+    ];
   }
 
   /**
@@ -115,11 +115,11 @@ class BatchTestController {
    */
   public function testThemeBatch() {
     batch_test_stack(NULL, TRUE);
-    $batch = array(
-      'operations' => array(
-        array('_batch_test_theme_callback', array()),
-      ),
-    );
+    $batch = [
+      'operations' => [
+        ['_batch_test_theme_callback', []],
+      ],
+    ];
     batch_set($batch);
     return batch_process('batch-test/redirect');
   }

@@ -171,10 +171,10 @@ class FormBuilderTest extends FormTestBase {
    * Provides test data for testHandleFormStateResponse().
    */
   public function formStateResponseProvider() {
-    return array(
-      array('Symfony\Component\HttpFoundation\Response', 'response'),
-      array('Symfony\Component\HttpFoundation\RedirectResponse', 'redirect'),
-    );
+    return [
+      ['Symfony\Component\HttpFoundation\Response', 'response'],
+      ['Symfony\Component\HttpFoundation\RedirectResponse', 'redirect'],
+    ];
   }
 
   /**
@@ -251,7 +251,7 @@ class FormBuilderTest extends FormTestBase {
   public function testGetFormWithClassString() {
     $form_id = '\Drupal\Tests\Core\Form\TestForm';
     $object = new TestForm();
-    $form = array();
+    $form = [];
     $form_state = new FormState();
     $expected_form = $object->buildForm($form, $form_state);
 
@@ -281,7 +281,7 @@ class FormBuilderTest extends FormTestBase {
   public function testBuildFormWithClassString() {
     $form_id = '\Drupal\Tests\Core\Form\TestForm';
     $object = new TestForm();
-    $form = array();
+    $form = [];
     $form_state = new FormState();
     $expected_form = $object->buildForm($form, $form_state);
 

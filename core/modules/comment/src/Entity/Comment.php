@@ -249,11 +249,11 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setLabel(t('Subject'))
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 64)
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'string_textfield',
         // Default comment body field has weight 20.
         'weight' => 10,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
@@ -328,7 +328,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
       $fields['entity_id']->setSetting('target_type', $comment_type->getTargetEntityTypeId());
       return $fields;
     }
-    return array();
+    return [];
   }
 
   /**

@@ -16,7 +16,7 @@ class PluginTypeListTest extends UnitTestCase {
    * Tests the plugins list is correct.
    */
   public function testPluginList() {
-    $plugin_list = array(
+    $plugin_list = [
       'access',
       'area',
       'argument',
@@ -36,7 +36,7 @@ class PluginTypeListTest extends UnitTestCase {
       'sort',
       'style',
       'wizard',
-    );
+    ];
 
     $diff = array_diff($plugin_list, ViewExecutable::getPluginTypes());
     $this->assertTrue(empty($diff), 'The plugin list is correct');

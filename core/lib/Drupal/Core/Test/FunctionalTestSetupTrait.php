@@ -37,7 +37,7 @@ trait FunctionalTestSetupTrait {
   /**
    * The config directories used in this test.
    */
-  protected $configDirectories = array();
+  protected $configDirectories = [];
 
   /**
    * Prepares site settings and services before installation.
@@ -218,7 +218,7 @@ trait FunctionalTestSetupTrait {
     // Clear the tag cache.
     \Drupal::service('cache_tags.invalidator')->resetChecksums();
     foreach (Cache::getBins() as $backend) {
-      if (is_callable(array($backend, 'reset'))) {
+      if (is_callable([$backend, 'reset'])) {
         $backend->reset();
       }
     }
@@ -244,7 +244,7 @@ trait FunctionalTestSetupTrait {
    * @return \Symfony\Component\HttpFoundation\Request
    *   The mocked request object.
    */
-  protected function prepareRequestForGenerator($clean_urls = TRUE, $override_server_vars = array()) {
+  protected function prepareRequestForGenerator($clean_urls = TRUE, $override_server_vars = []) {
     $request = Request::createFromGlobals();
     $server = $request->server->all();
     if (basename($server['SCRIPT_FILENAME']) != basename($server['SCRIPT_NAME'])) {
@@ -266,7 +266,7 @@ trait FunctionalTestSetupTrait {
     }
     $server = array_merge($server, $override_server_vars);
 
-    $request = Request::create($request_path, 'GET', array(), array(), array(), $server);
+    $request = Request::create($request_path, 'GET', [], [], [], $server);
     // Ensure the request time is REQUEST_TIME to ensure that API calls
     // in the test use the right timestamp.
     $request->server->set('REQUEST_TIME', REQUEST_TIME);
@@ -361,14 +361,14 @@ trait FunctionalTestSetupTrait {
   protected function initUserSession() {
     $password = $this->randomMachineName();
     // Define information about the user 1 account.
-    $this->rootUser = new UserSession(array(
+    $this->rootUser = new UserSession([
       'uid' => 1,
       'name' => 'admin',
       'mail' => 'admin@example.com',
       'pass_raw' => $password,
       'passRaw' => $password,
       'timezone' => date_default_timezone_get(),
-    ));
+    ]);
 
     // The child site derives its session name from the database prefix when
     // running web tests.

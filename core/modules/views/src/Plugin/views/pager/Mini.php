@@ -36,9 +36,9 @@ class Mini extends SqlBase {
    */
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {
-      return $this->formatPlural($this->options['items_per_page'], 'Mini pager, @count item, skip @skip', 'Mini pager, @count items, skip @skip', array('@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']));
+      return $this->formatPlural($this->options['items_per_page'], 'Mini pager, @count item, skip @skip', 'Mini pager, @count items, skip @skip', ['@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']]);
     }
-    return $this->formatPlural($this->options['items_per_page'], 'Mini pager, @count item', 'Mini pager, @count items', array('@count' => $this->options['items_per_page']));
+    return $this->formatPlural($this->options['items_per_page'], 'Mini pager, @count item', 'Mini pager, @count items', ['@count' => $this->options['items_per_page']]);
   }
 
   /**
@@ -89,17 +89,17 @@ class Mini extends SqlBase {
    */
   public function render($input) {
     // The 1, 3 indexes are correct, see template_preprocess_pager().
-    $tags = array(
+    $tags = [
       1 => $this->options['tags']['previous'],
       3 => $this->options['tags']['next'],
-    );
-    return array(
+    ];
+    return [
       '#theme' => $this->themeFunctions(),
       '#tags' => $tags,
       '#element' => $this->options['id'],
       '#parameters' => $input,
       '#route_name' => !empty($this->view->live_preview) ? '<current>' : '<none>',
-    );
+    ];
   }
 
 }

@@ -24,7 +24,7 @@ class PluginBaseTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->testHelperPlugin = new TestHelperPlugin(array(), 'default', array());
+    $this->testHelperPlugin = new TestHelperPlugin([], 'default', []);
   }
 
   /**
@@ -73,148 +73,148 @@ class PluginBaseTest extends UnitTestCase {
    * @return array
    */
   public function providerTestUnpackOptions() {
-    $test_parameters = array();
+    $test_parameters = [];
     // Set a storage but no value, so the storage value should be kept.
-    $test_parameters[] = array(
-      'storage' => array(
+    $test_parameters[] = [
+      'storage' => [
         'key' => 'value',
-      ),
-      'options' => array(
-      ),
-      'definition' => array(
-        'key' => array('default' => 'value2'),
-      ),
-      'expected' => array(
+      ],
+      'options' => [
+      ],
+      'definition' => [
+        'key' => ['default' => 'value2'],
+      ],
+      'expected' => [
         'key' => 'value',
-      ),
-    );
+      ],
+    ];
     // Set a storage and a option value, so the option value should be kept.
-    $test_parameters[] = array(
-      'storage' => array(
+    $test_parameters[] = [
+      'storage' => [
         'key' => 'value',
-      ),
-      'options' => array(
+      ],
+      'options' => [
         'key' => 'value2',
-      ),
-      'definition' => array(
-        'key' => array('default' => 'value3'),
-      ),
-      'expected' => array(
+      ],
+      'definition' => [
+        'key' => ['default' => 'value3'],
+      ],
+      'expected' => [
         'key' => 'value2',
-      ),
+      ],
       ''
-    );
+    ];
     // Set no storage but an options value, so the options value should be kept.
-    $test_parameters[] = array(
-      'storage' => array(),
-      'options' => array(
+    $test_parameters[] = [
+      'storage' => [],
+      'options' => [
         'key' => 'value',
-      ),
-      'definition' => array(
-        'key' => array('default' => 'value2'),
-      ),
-      'expected' => array(
+      ],
+      'definition' => [
+        'key' => ['default' => 'value2'],
+      ],
+      'expected' => [
         'key' => 'value',
-      ),
-    );
+      ],
+    ];
     // Set additional options, which aren't part of the definition, so they
     // should be ignored if all is set.
-    $test_parameters[] = array(
-      'storage' => array(),
-      'options' => array(
+    $test_parameters[] = [
+      'storage' => [],
+      'options' => [
         'key' => 'value',
         'key2' => 'value2',
-      ),
-      'definition' => array(
-        'key' => array('default' => 'value2'),
-      ),
-      'expected' => array(
+      ],
+      'definition' => [
+        'key' => ['default' => 'value2'],
+      ],
+      'expected' => [
         'key' => 'value',
-      ),
-    );
-    $test_parameters[] = array(
-      'storage' => array(),
-      'options' => array(
-        'key' => 'value',
-        'key2' => 'value2',
-      ),
-      'definition' => array(
-        'key' => array('default' => 'value2'),
-      ),
-      'expected' => array(
+      ],
+    ];
+    $test_parameters[] = [
+      'storage' => [],
+      'options' => [
         'key' => 'value',
         'key2' => 'value2',
-      ),
+      ],
+      'definition' => [
+        'key' => ['default' => 'value2'],
+      ],
+      'expected' => [
+        'key' => 'value',
+        'key2' => 'value2',
+      ],
       'all' => TRUE,
-    );
+    ];
     // Provide multiple options with their corresponding definition.
-    $test_parameters[] = array(
-      'storage' => array(),
-      'options' => array(
+    $test_parameters[] = [
+      'storage' => [],
+      'options' => [
         'key' => 'value',
         'key2' => 'value2',
-      ),
-      'definition' => array(
-        'key' => array('default' => 'value2'),
-        'key2' => array('default' => 'value3'),
-      ),
-      'expected' => array(
+      ],
+      'definition' => [
+        'key' => ['default' => 'value2'],
+        'key2' => ['default' => 'value3'],
+      ],
+      'expected' => [
         'key' => 'value',
         'key2' => 'value2',
-      ),
-    );
+      ],
+    ];
     // Set a complex definition structure with a zero and a one level structure.
-    $test_parameters[] = array(
-      'storage' => array(),
-      'options' => array(
+    $test_parameters[] = [
+      'storage' => [],
+      'options' => [
         'key0' => 'value',
-        'key1' => array('key1:1' => 'value1', 'key1:2' => 'value2'),
-      ),
-      'definition' => array(
-        'key0' => array('default' => 'value0'),
-        'key1' => array('contains' => array(
-          'key1:1' => array('default' => 'value1:1'),
-        )),
-      ),
-      'expected' => array(
+        'key1' => ['key1:1' => 'value1', 'key1:2' => 'value2'],
+      ],
+      'definition' => [
+        'key0' => ['default' => 'value0'],
+        'key1' => ['contains' => [
+          'key1:1' => ['default' => 'value1:1'],
+        ]],
+      ],
+      'expected' => [
         'key0' => 'value',
-        'key1' => array('key1:1' => 'value1'),
-      ),
-    );
+        'key1' => ['key1:1' => 'value1'],
+      ],
+    ];
     // Setup a two level structure.
-    $test_parameters[] = array(
-      'storage' => array(),
-      'options' => array(
-        'key2' => array(
-          'key2:1' => array(
+    $test_parameters[] = [
+      'storage' => [],
+      'options' => [
+        'key2' => [
+          'key2:1' => [
             'key2:1:1' => 'value0',
-            'key2:1:2' => array(
+            'key2:1:2' => [
               'key2:1:2:1' => 'value1',
-            ),
-          ),
-        ),
-      ),
-      'definition' => array(
-        'key2' => array('contains' => array(
-          'key2:1' => array('contains' => array(
-            'key2:1:1' => array('default' => 'value2:1:2:1'),
-            'key2:1:2' => array('contains' => array(
-              'key2:1:2:1' => array('default' => 'value2:1:2:1'),
-            )),
-          )),
-        )),
-      ),
-      'expected' => array(
-        'key2' => array(
-          'key2:1' => array(
+            ],
+          ],
+        ],
+      ],
+      'definition' => [
+        'key2' => ['contains' => [
+          'key2:1' => ['contains' => [
+            'key2:1:1' => ['default' => 'value2:1:2:1'],
+            'key2:1:2' => ['contains' => [
+              'key2:1:2:1' => ['default' => 'value2:1:2:1'],
+            ]],
+          ]],
+        ]],
+      ],
+      'expected' => [
+        'key2' => [
+          'key2:1' => [
             'key2:1:1' => 'value0',
-            'key2:1:2' => array(
+            'key2:1:2' => [
               'key2:1:2:1' => 'value1',
-            ),
-          ),
-        ),
-      ),
-    );
+            ],
+          ],
+        ],
+      ],
+    ];
 
     return $test_parameters;
   }
@@ -225,55 +225,55 @@ class PluginBaseTest extends UnitTestCase {
    * @return array
    */
   public function providerTestSetOptionDefault() {
-    $test_parameters = array();
+    $test_parameters = [];
     // No definition should change anything on the storage.
-    $test_parameters[] = array(
-      'storage' => array(),
-      'definition' => array(),
-      'expected' => array(),
-    );
+    $test_parameters[] = [
+      'storage' => [],
+      'definition' => [],
+      'expected' => [],
+    ];
     // Set a single definition, which should be picked up.
-    $test_parameters[] = array(
-      'storage' => array(),
-      'definition' => array(
-        'key' => array('default' => 'value'),
-      ),
-      'expected' => array(
+    $test_parameters[] = [
+      'storage' => [],
+      'definition' => [
+        'key' => ['default' => 'value'],
+      ],
+      'expected' => [
         'key' => 'value',
-      ),
-    );
+      ],
+    ];
     // Set multiple keys, all should be picked up.
-    $test_parameters[] = array(
-      'storage' => array(),
-      'definition' => array(
-        'key' => array('default' => 'value'),
-        'key2' => array('default' => 'value2'),
-        'key3' => array('default' => 'value3'),
-      ),
-      'expected' => array(
+    $test_parameters[] = [
+      'storage' => [],
+      'definition' => [
+        'key' => ['default' => 'value'],
+        'key2' => ['default' => 'value2'],
+        'key3' => ['default' => 'value3'],
+      ],
+      'expected' => [
         'key' => 'value',
         'key2' => 'value2',
         'key3' => 'value3',
-      ),
-    );
+      ],
+    ];
     // Setup a definition with multiple levels.
-    $test_parameters[] = array(
-      'storage' => array(),
-      'definition' => array(
-        'key' => array('default' => 'value'),
-        'key2' => array('contains' => array(
-          'key2:1' => array('default' => 'value2:1'),
-          'key2:2' => array('default' => 'value2:2'),
-        )),
-      ),
-      'expected' => array(
+    $test_parameters[] = [
+      'storage' => [],
+      'definition' => [
+        'key' => ['default' => 'value'],
+        'key2' => ['contains' => [
+          'key2:1' => ['default' => 'value2:1'],
+          'key2:2' => ['default' => 'value2:2'],
+        ]],
+      ],
+      'expected' => [
         'key' => 'value',
-        'key2' => array(
+        'key2' => [
           'key2:1' => 'value2:1',
           'key2:2' => 'value2:2',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     return $test_parameters;
   }

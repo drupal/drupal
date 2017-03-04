@@ -17,7 +17,7 @@ class ImageField extends CckFieldPluginBase {
    * {@inheritdoc}
    */
   public function getFieldFormatterMap() {
-    return array();
+    return [];
   }
 
   /**

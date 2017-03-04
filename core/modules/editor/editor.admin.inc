@@ -27,77 +27,77 @@ use Drupal\editor\Entity\Editor;
 function editor_image_upload_settings_form(Editor $editor) {
   // Defaults.
   $image_upload = $editor->getImageUploadSettings();
-  $image_upload += array(
+  $image_upload += [
     'status' => FALSE,
     'scheme' => file_default_scheme(),
     'directory' => 'inline-images',
     'max_size' => '',
-    'max_dimensions' => array('width' => '', 'height' => ''),
-  );
+    'max_dimensions' => ['width' => '', 'height' => ''],
+  ];
 
-  $form['status'] = array(
+  $form['status'] = [
     '#type' => 'checkbox',
     '#title' => t('Enable image uploads'),
     '#default_value' => $image_upload['status'],
-    '#attributes' => array(
+    '#attributes' => [
       'data-editor-image-upload' => 'status',
-    ),
-  );
-  $show_if_image_uploads_enabled = array(
-    'visible' => array(
-      ':input[data-editor-image-upload="status"]' => array('checked' => TRUE),
-    ),
-  );
+    ],
+  ];
+  $show_if_image_uploads_enabled = [
+    'visible' => [
+      ':input[data-editor-image-upload="status"]' => ['checked' => TRUE],
+    ],
+  ];
 
   // Any visible, writable wrapper can potentially be used for uploads,
   // including a remote file system that integrates with a CDN.
   $options = \Drupal::service('stream_wrapper_manager')->getDescriptions(StreamWrapperInterface::WRITE_VISIBLE);
   if (!empty($options)) {
-    $form['scheme'] = array(
+    $form['scheme'] = [
       '#type' => 'radios',
       '#title' => t('File storage'),
       '#default_value' => $image_upload['scheme'],
       '#options' => $options,
       '#states' => $show_if_image_uploads_enabled,
       '#access' => count($options) > 1,
-    );
+    ];
   }
   // Set data- attributes with human-readable names for all possible stream
   // wrappers, so that drupal.ckeditor.drupalimage.admin's summary rendering
   // can use that.
   foreach (\Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE) as $scheme => $name) {
-    $form['scheme'][$scheme]['#attributes']['data-label'] = t('Storage: @name', array('@name' => $name));
+    $form['scheme'][$scheme]['#attributes']['data-label'] = t('Storage: @name', ['@name' => $name]);
   }
 
-  $form['directory'] = array(
+  $form['directory'] = [
     '#type' => 'textfield',
     '#default_value' => $image_upload['directory'],
     '#title' => t('Upload directory'),
     '#description' => t("A directory relative to Drupal's files directory where uploaded images will be stored."),
     '#states' => $show_if_image_uploads_enabled,
-  );
+  ];
 
   $default_max_size = format_size(file_upload_max_size());
-  $form['max_size'] = array(
+  $form['max_size'] = [
     '#type' => 'textfield',
     '#default_value' => $image_upload['max_size'],
     '#title' => t('Maximum file size'),
-    '#description' => t('If this is left empty, then the file size will be limited by the PHP maximum upload size of @size.', array('@size' => $default_max_size)),
+    '#description' => t('If this is left empty, then the file size will be limited by the PHP maximum upload size of @size.', ['@size' => $default_max_size]),
     '#maxlength' => 20,
     '#size' => 10,
     '#placeholder' => $default_max_size,
     '#states' => $show_if_image_uploads_enabled,
-  );
+  ];
 
-  $form['max_dimensions'] = array(
+  $form['max_dimensions'] = [
     '#type' => 'item',
     '#title' => t('Maximum dimensions'),
     '#field_prefix' => '<div class="container-inline clearfix">',
     '#field_suffix' => '</div>',
     '#description' => t('Images larger than these dimensions will be scaled down.'),
     '#states' => $show_if_image_uploads_enabled,
-  );
-  $form['max_dimensions']['width'] = array(
+  ];
+  $form['max_dimensions']['width'] = [
     '#title' => t('Width'),
     '#title_display' => 'invisible',
     '#type' => 'number',
@@ -109,8 +109,8 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#placeholder' => t('width'),
     '#field_suffix' => ' x ',
     '#states' => $show_if_image_uploads_enabled,
-  );
-  $form['max_dimensions']['height'] = array(
+  ];
+  $form['max_dimensions']['height'] = [
     '#title' => t('Height'),
     '#title_display' => 'invisible',
     '#type' => 'number',
@@ -122,7 +122,7 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#placeholder' => t('height'),
     '#field_suffix' => t('pixels'),
     '#states' => $show_if_image_uploads_enabled,
-  );
+  ];
 
   return $form;
 }

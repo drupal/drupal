@@ -38,7 +38,7 @@ class ImageStylesTest extends MigrateSqlSourceTestBase {
         'isid' => 1,
         'weight' => 1,
         'name' => 'image_desaturate',
-        'data' => serialize(array()),
+        'data' => serialize([]),
       ],
     ];
 

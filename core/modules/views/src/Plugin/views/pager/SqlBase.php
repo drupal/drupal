@@ -13,28 +13,28 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['items_per_page'] = array('default' => 10);
-    $options['offset'] = array('default' => 0);
-    $options['id'] = array('default' => 0);
-    $options['total_pages'] = array('default' => '');
-    $options['expose'] = array(
-      'contains' => array(
-        'items_per_page' => array('default' => FALSE),
-        'items_per_page_label' => array('default' => $this->t('Items per page')),
-        'items_per_page_options' => array('default' => '5, 10, 25, 50'),
-        'items_per_page_options_all' => array('default' => FALSE),
-        'items_per_page_options_all_label' => array('default' => $this->t('- All -')),
+    $options['items_per_page'] = ['default' => 10];
+    $options['offset'] = ['default' => 0];
+    $options['id'] = ['default' => 0];
+    $options['total_pages'] = ['default' => ''];
+    $options['expose'] = [
+      'contains' => [
+        'items_per_page' => ['default' => FALSE],
+        'items_per_page_label' => ['default' => $this->t('Items per page')],
+        'items_per_page_options' => ['default' => '5, 10, 25, 50'],
+        'items_per_page_options_all' => ['default' => FALSE],
+        'items_per_page_options_all_label' => ['default' => $this->t('- All -')],
 
-        'offset' => array('default' => FALSE),
-        'offset_label' => array('default' => $this->t('Offset')),
-      ),
-    );
-    $options['tags'] = array(
-      'contains' => array(
-        'previous' => array('default' => $this->t('‹ Previous')),
-        'next' => array('default' => $this->t('Next ›')),
-      ),
-    );
+        'offset' => ['default' => FALSE],
+        'offset_label' => ['default' => $this->t('Offset')],
+      ],
+    ];
+    $options['tags'] = [
+      'contains' => [
+        'previous' => ['default' => $this->t('‹ Previous')],
+        'next' => ['default' => $this->t('Next ›')],
+      ],
+    ];
     return $options;
   }
 
@@ -44,135 +44,135 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $pager_text = $this->displayHandler->getPagerText();
-    $form['items_per_page'] = array(
+    $form['items_per_page'] = [
       '#title' => $pager_text['items per page title'],
       '#type' => 'number',
       '#description' => $pager_text['items per page description'],
       '#default_value' => $this->options['items_per_page'],
-    );
+    ];
 
-    $form['offset'] = array(
+    $form['offset'] = [
       '#type' => 'number',
       '#title' => $this->t('Offset (number of items to skip)'),
       '#description' => $this->t('For example, set this to 3 and the first 3 items will not be displayed.'),
       '#default_value' => $this->options['offset'],
-    );
+    ];
 
-    $form['id'] = array(
+    $form['id'] = [
       '#type' => 'number',
       '#title' => $this->t('Pager ID'),
       '#description' => $this->t("Unless you're experiencing problems with pagers related to this view, you should leave this at 0. If using multiple pagers on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add a lot of commas to your URLs, so avoid if possible."),
       '#default_value' => $this->options['id'],
-    );
+    ];
 
-    $form['total_pages'] = array(
+    $form['total_pages'] = [
       '#type' => 'number',
       '#title' => $this->t('Number of pages'),
       '#description' => $this->t('Leave empty to show all pages.'),
       '#default_value' => $this->options['total_pages'],
-    );
+    ];
 
-    $form['tags'] = array(
+    $form['tags'] = [
       '#type' => 'details',
       '#open' => TRUE,
       '#tree' => TRUE,
       '#title' => $this->t('Pager link labels'),
       '#input' => TRUE,
-    );
+    ];
 
-    $form['tags']['previous'] = array(
+    $form['tags']['previous'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Previous page link text'),
       '#default_value' => $this->options['tags']['previous'],
-    );
+    ];
 
-    $form['tags']['next'] = array(
+    $form['tags']['next'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Next page link text'),
       '#default_value' => $this->options['tags']['next'],
-    );
+    ];
 
-    $form['expose'] = array(
+    $form['expose'] = [
       '#type' => 'details',
       '#open' => TRUE,
       '#tree' => TRUE,
       '#title' => $this->t('Exposed options'),
       '#input' => TRUE,
       '#description' => $this->t('Allow user to control selected display options for this view.'),
-    );
+    ];
 
-    $form['expose']['items_per_page'] = array(
+    $form['expose']['items_per_page'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow user to control the number of items displayed in this view'),
       '#default_value' => $this->options['expose']['items_per_page'],
-    );
+    ];
 
-    $form['expose']['items_per_page_label'] = array(
+    $form['expose']['items_per_page_label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Items per page label'),
       '#required' => TRUE,
       '#default_value' => $this->options['expose']['items_per_page_label'],
-      '#states' => array(
-        'invisible' => array(
-          'input[name="pager_options[expose][items_per_page]"]' => array('checked' => FALSE),
-        ),
-      ),
-    );
+      '#states' => [
+        'invisible' => [
+          'input[name="pager_options[expose][items_per_page]"]' => ['checked' => FALSE],
+        ],
+      ],
+    ];
 
-    $form['expose']['items_per_page_options'] = array(
+    $form['expose']['items_per_page_options'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Exposed items per page options'),
       '#required' => TRUE,
       '#description' => $this->t('Set between which values the user can choose when determining the items per page. Separated by comma.'),
       '#default_value' => $this->options['expose']['items_per_page_options'],
-      '#states' => array(
-        'invisible' => array(
-          'input[name="pager_options[expose][items_per_page]"]' => array('checked' => FALSE),
-        ),
-      ),
-    );
+      '#states' => [
+        'invisible' => [
+          'input[name="pager_options[expose][items_per_page]"]' => ['checked' => FALSE],
+        ],
+      ],
+    ];
 
 
-    $form['expose']['items_per_page_options_all'] = array(
+    $form['expose']['items_per_page_options_all'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow user to display all items'),
       '#default_value' => $this->options['expose']['items_per_page_options_all'],
-    );
+    ];
 
-    $form['expose']['items_per_page_options_all_label'] = array(
+    $form['expose']['items_per_page_options_all_label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('All items label'),
       '#default_value' => $this->options['expose']['items_per_page_options_all_label'],
-      '#states' => array(
-        'invisible' => array(
-          'input[name="pager_options[expose][items_per_page_options_all]"]' => array('checked' => FALSE),
-        ),
-      ),
-    );
+      '#states' => [
+        'invisible' => [
+          'input[name="pager_options[expose][items_per_page_options_all]"]' => ['checked' => FALSE],
+        ],
+      ],
+    ];
 
-    $form['expose']['offset'] = array(
+    $form['expose']['offset'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow user to specify number of items skipped from beginning of this view.'),
       '#default_value' => $this->options['expose']['offset'],
-    );
+    ];
 
-    $form['expose']['offset_label'] = array(
+    $form['expose']['offset_label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Offset label'),
       '#required' => TRUE,
       '#default_value' => $this->options['expose']['offset_label'],
-      '#states' => array(
-        'invisible' => array(
-          'input[name="pager_options[expose][offset]"]' => array('checked' => FALSE),
-        ),
-      ),
-    );
+      '#states' => [
+        'invisible' => [
+          'input[name="pager_options[expose][offset]"]' => ['checked' => FALSE],
+        ],
+      ],
+    ];
   }
 
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Only accept integer values.
     $error = FALSE;
-    $exposed_options = $form_state->getValue(array('pager_options', 'expose', 'items_per_page_options'));
+    $exposed_options = $form_state->getValue(['pager_options', 'expose', 'items_per_page_options']);
     if (strpos($exposed_options, '.') !== FALSE) {
       $error = TRUE;
     }
@@ -192,11 +192,11 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     }
 
     // Make sure that the items_per_page is part of the expose settings.
-    if (!$form_state->isValueEmpty(array('pager_options', 'expose', 'items_per_page')) && !$form_state->isValueEmpty(array('pager_options', 'items_per_page'))) {
-      $items_per_page = $form_state->getValue(array('pager_options', 'items_per_page'));
+    if (!$form_state->isValueEmpty(['pager_options', 'expose', 'items_per_page']) && !$form_state->isValueEmpty(['pager_options', 'items_per_page'])) {
+      $items_per_page = $form_state->getValue(['pager_options', 'items_per_page']);
       if (array_search($items_per_page, $options) === FALSE) {
         $form_state->setErrorByName('pager_options][expose][items_per_page_options', $this->t("The <em>Exposed items per page</em> field's options must include the value from the <em>Items per page</em> field (@items_per_page).",
-          array('@items_per_page' => $items_per_page))
+          ['@items_per_page' => $items_per_page])
         );
       }
     }
@@ -253,13 +253,13 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     global $pager_page_array;
 
     if (empty($pager_page_array)) {
-      $pager_page_array = array();
+      $pager_page_array = [];
     }
 
     // Fill in missing values in the global page array, in case the global page
     // array hasn't been initialized before.
     $page = $this->view->getRequest()->query->get('page');
-    $page = isset($page) ? explode(',', $page) : array();
+    $page = isset($page) ? explode(',', $page) : [];
 
     for ($i = 0; $i <= $this->options['id'] || $i < count($pager_page_array); $i++) {
       $pager_page_array[$i] = empty($page[$i]) ? 0 : $page[$i];
@@ -331,7 +331,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
   public function exposedFormAlter(&$form, FormStateInterface $form_state) {
     if ($this->itemsPerPageExposed()) {
       $options = explode(',', $this->options['expose']['items_per_page_options']);
-      $sanitized_options = array();
+      $sanitized_options = [];
       if (is_array($options)) {
         foreach ($options as $option) {
           $sanitized_options[intval($option)] = intval($option);
@@ -339,23 +339,23 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
         if (!empty($this->options['expose']['items_per_page_options_all']) && !empty($this->options['expose']['items_per_page_options_all_label'])) {
           $sanitized_options['All'] = $this->options['expose']['items_per_page_options_all_label'];
         }
-        $form['items_per_page'] = array(
+        $form['items_per_page'] = [
           '#type' => 'select',
           '#title' => $this->options['expose']['items_per_page_label'],
           '#options' => $sanitized_options,
           '#default_value' => $this->getItemsPerPage(),
-        );
+        ];
       }
     }
 
     if ($this->isOffsetExposed()) {
-      $form['offset'] = array(
+      $form['offset'] = [
         '#type' => 'textfield',
         '#size' => 10,
         '#maxlength' => 10,
         '#title' => $this->options['expose']['offset_label'],
         '#default_value' => $this->getOffset(),
-      );
+      ];
     }
   }
 

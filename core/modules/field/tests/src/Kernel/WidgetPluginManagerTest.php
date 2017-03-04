@@ -33,13 +33,13 @@ class WidgetPluginManagerTest extends FieldKernelTestBase {
       // Set a name that will make isApplicable() return TRUE.
       ->setName('field_multiwidgetfield');
 
-    $widget_options = array(
+    $widget_options = [
       'field_definition' => $base_field_definition,
       'form_mode' => 'default',
-      'configuration' => array(
+      'configuration' => [
         'type' => 'test_field_widget_multiple',
-      ),
-    );
+      ],
+    ];
 
     $instance = $widget_plugin_manager->getInstance($widget_options);
     $this->assertEqual($instance->getPluginId(), 'test_field_widget_multiple');

@@ -44,7 +44,7 @@ class Analyzer {
    */
   public function getMessages(ViewExecutable $view) {
     $view->initDisplay();
-    $messages = $this->moduleHandler->invokeAll('views_analyze', array($view));
+    $messages = $this->moduleHandler->invokeAll('views_analyze', [$view]);
 
     return $messages;
   }
@@ -57,13 +57,13 @@ class Analyzer {
    */
   public function formatMessages(array $messages) {
     if (empty($messages)) {
-      $messages = array(static::formatMessage(t('View analysis can find nothing to report.'), 'ok'));
+      $messages = [static::formatMessage(t('View analysis can find nothing to report.'), 'ok')];
     }
 
-    $types = array('ok' => array(), 'warning' => array(), 'error' => array());
+    $types = ['ok' => [], 'warning' => [], 'error' => []];
     foreach ($messages as $message) {
       if (empty($types[$message['type']])) {
-        $types[$message['type']] = array();
+        $types[$message['type']] = [];
       }
       $types[$message['type']][] = $message['message'];
     }
@@ -73,10 +73,10 @@ class Analyzer {
       $type .= ' messages';
       $message = '';
       if (count($messages) > 1) {
-        $item_list = array(
+        $item_list = [
           '#theme' => 'item_list',
           '#items' => $messages,
-        );
+        ];
         $message = drupal_render($item_list);
       }
       elseif ($messages) {
@@ -116,7 +116,7 @@ class Analyzer {
    *   A single formatted message, consisting of a key message and a key type.
    */
   static function formatMessage($message, $type = 'error') {
-    return array('message' => $message, 'type' => $type);
+    return ['message' => $message, 'type' => $type];
   }
 
 }

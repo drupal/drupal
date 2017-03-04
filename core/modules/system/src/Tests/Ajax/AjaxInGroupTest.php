@@ -11,7 +11,7 @@ class AjaxInGroupTest extends AjaxTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalLogin($this->drupalCreateUser(array('access content')));
+    $this->drupalLogin($this->drupalCreateUser(['access content']));
   }
 
   /**

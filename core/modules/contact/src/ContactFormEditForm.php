@@ -72,60 +72,60 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
     $contact_form = $this->entity;
     $default_form = $this->config('contact.settings')->get('default_form');
 
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $contact_form->label(),
       '#description' => $this->t("Example: 'website feedback' or 'product information'."),
       '#required' => TRUE,
-    );
-    $form['id'] = array(
+    ];
+    $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $contact_form->id(),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
-      '#machine_name' => array(
+      '#machine_name' => [
         'exists' => '\Drupal\contact\Entity\ContactForm::load',
-      ),
+      ],
       '#disabled' => !$contact_form->isNew(),
-    );
-    $form['recipients'] = array(
+    ];
+    $form['recipients'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Recipients'),
       '#default_value' => implode(', ', $contact_form->getRecipients()),
       '#description' => $this->t("Example: 'webmaster@example.com' or 'sales@example.com,support@example.com' . To specify multiple recipients, separate each email address with a comma."),
       '#required' => TRUE,
-    );
-    $form['message'] = array(
+    ];
+    $form['message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Message'),
       '#default_value' => $contact_form->getMessage(),
       '#description' => $this->t('The message to display to the user after submission of this form. Leave blank for no message.'),
-    );
-    $form['redirect'] = array(
+    ];
+    $form['redirect'] = [
       '#type' => 'path',
       '#title' => $this->t('Redirect path'),
       '#convert_path' => PathElement::CONVERT_NONE,
       '#default_value' => $contact_form->getRedirectPath(),
       '#description' => $this->t('Path to redirect the user to after submission of this form. For example, type "/about" to redirect to that page. Use a relative path with a slash in front.'),
-    );
-    $form['reply'] = array(
+    ];
+    $form['reply'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Auto-reply'),
       '#default_value' => $contact_form->getReply(),
       '#description' => $this->t('Optional auto-reply. Leave empty if you do not want to send the user an auto-reply message.'),
-    );
-    $form['weight'] = array(
+    ];
+    $form['weight'] = [
       '#type' => 'weight',
       '#title' => $this->t('Weight'),
       '#default_value' => $contact_form->getWeight(),
       '#description' => $this->t('When listing forms, those with lighter (smaller) weights get listed before forms with heavier (larger) weights. Forms with equal weights are sorted alphabetically.'),
-    );
-    $form['selected'] = array(
+    ];
+    $form['selected'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Make this the default form'),
       '#default_value' => $default_form === $contact_form->id(),
-    );
+    ];
 
     return $form;
   }
@@ -142,7 +142,7 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
     foreach ($recipients as &$recipient) {
       $recipient = trim($recipient);
       if (!$this->emailValidator->isValid($recipient)) {
-        $form_state->setErrorByName('recipients', $this->t('%recipient is an invalid email address.', array('%recipient' => $recipient)));
+        $form_state->setErrorByName('recipients', $this->t('%recipient is an invalid email address.', ['%recipient' => $recipient]));
       }
     }
     $form_state->setValue('recipients', $recipients);
@@ -165,12 +165,12 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
     $edit_link = $this->entity->link($this->t('Edit'));
     $view_link = $contact_form->link($contact_form->label(), 'canonical');
     if ($status == SAVED_UPDATED) {
-      drupal_set_message($this->t('Contact form %label has been updated.', array('%label' => $view_link)));
-      $this->logger('contact')->notice('Contact form %label has been updated.', array('%label' => $contact_form->label(), 'link' => $edit_link));
+      drupal_set_message($this->t('Contact form %label has been updated.', ['%label' => $view_link]));
+      $this->logger('contact')->notice('Contact form %label has been updated.', ['%label' => $contact_form->label(), 'link' => $edit_link]);
     }
     else {
-      drupal_set_message($this->t('Contact form %label has been added.', array('%label' => $view_link)));
-      $this->logger('contact')->notice('Contact form %label has been added.', array('%label' => $contact_form->label(), 'link' => $edit_link));
+      drupal_set_message($this->t('Contact form %label has been added.', ['%label' => $view_link]));
+      $this->logger('contact')->notice('Contact form %label has been added.', ['%label' => $contact_form->label(), 'link' => $edit_link]);
     }
 
     // Update the default form.

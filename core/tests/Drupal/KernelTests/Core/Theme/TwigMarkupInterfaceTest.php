@@ -90,7 +90,7 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
       $elements = [
         '#type' => 'inline_template',
         '#template' => '{%- if variable is not empty -%}<span>{{ variable }}</span>{%- endif -%}',
-        '#context' => array('variable' => $variable),
+        '#context' => ['variable' => $variable],
       ];
       return $renderer->render($elements);
     });

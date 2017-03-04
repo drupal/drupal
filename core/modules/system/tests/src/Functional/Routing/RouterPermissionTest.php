@@ -16,7 +16,7 @@ class RouterPermissionTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('router_test');
+  public static $modules = ['router_test'];
 
   /**
    * Tests permission requirements on routes.
@@ -29,7 +29,7 @@ class RouterPermissionTest extends BrowserTestBase {
     $this->drupalGet('router_test/test8');
     $this->assertResponse(403, 'Access denied by default if no access specified');
 
-    $user = $this->drupalCreateUser(array('access test7'));
+    $user = $this->drupalCreateUser(['access test7']);
     $this->drupalLogin($user);
     $this->drupalGet('router_test/test7');
     $this->assertResponse(200);

@@ -12,7 +12,7 @@ use Drupal\Core\Language\LanguageInterface;
  * Implements hook_theme_suggestions_HOOK().
  */
 function search_theme_suggestions_search_result(array $variables) {
-  return array('search_result__' . $variables['plugin_id']);
+  return ['search_result__' . $variables['plugin_id']];
 }
 
 /**
@@ -42,7 +42,7 @@ function template_preprocess_search_result(&$variables) {
     $variables['content_attributes']['lang'] = $result['language'];
   }
 
-  $info = array();
+  $info = [];
   if (!empty($result['plugin_id'])) {
     $info['plugin_id'] = $result['plugin_id'];
   }
@@ -59,9 +59,9 @@ function template_preprocess_search_result(&$variables) {
   $variables['snippet'] = isset($result['snippet']) ? $result['snippet'] : '';
   // Provide separated and grouped meta information..
   $variables['info_split'] = $info;
-  $variables['info'] = array(
+  $variables['info'] = [
     '#type' => 'inline_template',
     '#template' => '{{ info|safe_join(" - ") }}',
-    '#context' => array('info' => $info),
-  );
+    '#context' => ['info' => $info],
+  ];
 }

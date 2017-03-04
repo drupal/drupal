@@ -20,7 +20,7 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
    * type, media, and browsers, if needed to accommodate other items in between.
    */
   public function group(array $css_assets) {
-    $groups = array();
+    $groups = [];
     // If a group can contain multiple items, we track the information that must
     // be the same for each item in the group, so that when we iterate the next
     // item, we can determine if it can be put into the current group, or if a
@@ -52,7 +52,7 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
           // Group file items if their 'preprocess' flag is TRUE.
           // Help ensure maximum reuse of aggregate files by only grouping
           // together items that share the same 'group' value.
-          $group_keys = $item['preprocess'] ? array($item['type'], $item['group'], $item['media'], $item['browsers']) : FALSE;
+          $group_keys = $item['preprocess'] ? [$item['type'], $item['group'], $item['media'], $item['browsers']] : FALSE;
           break;
 
         case 'external':
@@ -71,7 +71,7 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
         // the group.
         $groups[$i] = $item;
         unset($groups[$i]['data'], $groups[$i]['weight'], $groups[$i]['basename']);
-        $groups[$i]['items'] = array();
+        $groups[$i]['items'] = [];
         $current_group_keys = $group_keys ? $group_keys : NULL;
       }
 

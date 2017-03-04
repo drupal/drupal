@@ -25,22 +25,22 @@ class YamlDiscoveryTest extends UnitTestCase {
    *
    * @var array
    */
-  protected $expectedKeys = array(
+  protected $expectedKeys = [
     'test_1' => 'test_1_a',
     'another_provider_1' => 'test_1_b',
     'another_provider_2' => 'test_2_a',
     'test_2' => 'test_2_b',
-  );
+  ];
 
   protected function setUp() {
     parent::setUp();
 
     $base_path = __DIR__ . '/Fixtures';
     // Set up the directories to search.
-    $directories = array(
+    $directories = [
       'test_1' => $base_path . '/test_1',
       'test_2' => $base_path . '/test_2',
-    );
+    ];
 
     $this->discovery = new YamlDiscovery('test', $directories);
   }
@@ -59,7 +59,7 @@ class YamlDiscoveryTest extends UnitTestCase {
     }
 
     foreach ($definitions as $id => $definition) {
-      foreach (array('name', 'id', 'provider') as $key) {
+      foreach (['name', 'id', 'provider'] as $key) {
         $this->assertArrayHasKey($key, $definition);
       }
       $this->assertEquals($id, $definition['id']);

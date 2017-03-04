@@ -18,12 +18,12 @@ class RevisionRelationshipsTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('node' , 'node_test_views');
+  public static $modules = ['node' , 'node_test_views'];
 
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::createTestViews(get_class($this), array('node_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['node_test_views']);
   }
 
   /**
@@ -31,7 +31,7 @@ class RevisionRelationshipsTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_node_revision_nid', 'test_node_revision_vid');
+  public static $testViews = ['test_node_revision_nid', 'test_node_revision_vid'];
 
   /**
    * Create a node with revision and rest result count for both views.
@@ -42,40 +42,40 @@ class RevisionRelationshipsTest extends ViewTestBase {
     $node_revision = clone $node;
     $node_revision->setNewRevision();
     $node_revision->save();
-    $column_map = array(
+    $column_map = [
       'vid' => 'vid',
       'node_field_data_node_field_revision_nid' => 'node_node_revision_nid',
       'nid_1' => 'nid_1',
-    );
+    ];
 
     // Here should be two rows.
     $view_nid = Views::getView('test_node_revision_nid');
-    $this->executeView($view_nid, array($node->id()));
-    $resultset_nid = array(
-      array(
+    $this->executeView($view_nid, [$node->id()]);
+    $resultset_nid = [
+      [
         'vid' => '1',
         'node_node_revision_nid' => '1',
         'nid_1' => '1',
-      ),
-      array(
+      ],
+      [
         'vid' => '2',
         'node_revision_nid' => '1',
         'node_node_revision_nid' => '1',
         'nid_1' => '1',
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view_nid, $resultset_nid, $column_map);
 
     // There should be only one row with active revision 2.
     $view_vid = Views::getView('test_node_revision_vid');
-    $this->executeView($view_vid, array($node->id()));
-    $resultset_vid = array(
-      array(
+    $this->executeView($view_vid, [$node->id()]);
+    $resultset_vid = [
+      [
         'vid' => '2',
         'node_node_revision_nid' => '1',
         'nid_1' => '1',
-      ),
-    );
+      ],
+    ];
     $this->assertIdenticalResultset($view_vid, $resultset_vid, $column_map);
   }
 

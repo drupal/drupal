@@ -18,35 +18,35 @@ class Toolbar extends RenderElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
-      '#pre_render' => array(
-        array($class, 'preRenderToolbar'),
-      ),
+    return [
+      '#pre_render' => [
+        [$class, 'preRenderToolbar'],
+      ],
       '#theme' => 'toolbar',
-      '#attached' => array(
-        'library' => array(
+      '#attached' => [
+        'library' => [
           'toolbar/toolbar',
-        ),
-      ),
+        ],
+      ],
       // Metadata for the toolbar wrapping element.
-      '#attributes' => array(
+      '#attributes' => [
         // The id cannot be simply "toolbar" or it will clash with the
         // simpletest tests listing which produces a checkbox with attribute
         // id="toolbar".
         'id' => 'toolbar-administration',
         'role' => 'group',
         'aria-label' => $this->t('Site administration toolbar'),
-      ),
+      ],
       // Metadata for the administration bar.
-      '#bar' => array(
+      '#bar' => [
         '#heading' => $this->t('Toolbar items'),
-        '#attributes' => array(
+        '#attributes' => [
           'id' => 'toolbar-bar',
           'role' => 'navigation',
           'aria-label' => $this->t('Toolbar items'),
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -68,7 +68,7 @@ class Toolbar extends RenderElement {
     // toolbar presentation.
     $breakpoints = static::breakpointManager()->getBreakpointsByGroup('toolbar');
     if (!empty($breakpoints)) {
-      $media_queries = array();
+      $media_queries = [];
       foreach ($breakpoints as $id => $breakpoint) {
         $media_queries[$id] = $breakpoint->getMediaQuery();
       }
@@ -82,7 +82,7 @@ class Toolbar extends RenderElement {
     // Allow for altering of hook_toolbar().
     $module_handler->alter('toolbar', $items);
     // Sort the children.
-    uasort($items, array('\Drupal\Component\Utility\SortArray', 'sortByWeightProperty'));
+    uasort($items, ['\Drupal\Component\Utility\SortArray', 'sortByWeightProperty']);
 
     // Merge in the original toolbar values.
     $element = array_merge($element, $items);

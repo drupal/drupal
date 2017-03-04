@@ -81,14 +81,14 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the revision from %revision-date?', array('%revision-date' => format_date($this->revision->getRevisionCreationTime())));
+    return t('Are you sure you want to delete the revision from %revision-date?', ['%revision-date' => format_date($this->revision->getRevisionCreationTime())]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.node.version_history', array('node' => $this->revision->id()));
+    return new Url('entity.node.version_history', ['node' => $this->revision->id()]);
   }
 
   /**
@@ -114,17 +114,17 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->nodeStorage->deleteRevision($this->revision->getRevisionId());
 
-    $this->logger('content')->notice('@type: deleted %title revision %revision.', array('@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()));
+    $this->logger('content')->notice('@type: deleted %title revision %revision.', ['@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);
     $node_type = $this->nodeTypeStorage->load($this->revision->bundle())->label();
-    drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($this->revision->getRevisionCreationTime()), '@type' => $node_type, '%title' => $this->revision->label())));
+    drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', ['%revision-date' => format_date($this->revision->getRevisionCreationTime()), '@type' => $node_type, '%title' => $this->revision->label()]));
     $form_state->setRedirect(
       'entity.node.canonical',
-      array('node' => $this->revision->id())
+      ['node' => $this->revision->id()]
     );
-    if ($this->connection->query('SELECT COUNT(DISTINCT vid) FROM {node_field_revision} WHERE nid = :nid', array(':nid' => $this->revision->id()))->fetchField() > 1) {
+    if ($this->connection->query('SELECT COUNT(DISTINCT vid) FROM {node_field_revision} WHERE nid = :nid', [':nid' => $this->revision->id()])->fetchField() > 1) {
       $form_state->setRedirect(
         'entity.node.version_history',
-        array('node' => $this->revision->id())
+        ['node' => $this->revision->id()]
       );
     }
   }

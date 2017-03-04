@@ -21,18 +21,18 @@ class BlockContentRedirectTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_content', 'views');
+  public static $modules = ['block', 'block_content', 'views'];
 
   /**
    * Tests the redirect destination when editing block content.
    */
   public function testRedirectDestination() {
-    $this->drupalLogin($this->drupalCreateUser(array('administer blocks')));
+    $this->drupalLogin($this->drupalCreateUser(['administer blocks']));
     $this->drupalGet('admin/structure/block/block-content');
 
     // Create a custom block.
     $this->clickLink('custom block');
-    $edit = array();
+    $edit = [];
     $edit['info[0][value]'] = 'Test redirect destination';
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm(NULL, $edit, 'Save');

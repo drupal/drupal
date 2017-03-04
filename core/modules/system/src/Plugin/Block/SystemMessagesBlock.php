@@ -22,9 +22,9 @@ class SystemMessagesBlock extends BlockBase implements MessagesBlockPluginInterf
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'label_display' => FALSE,
-    );
+    ];
   }
 
   /**

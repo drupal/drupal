@@ -17,93 +17,93 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
   protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
     $schema = parent::getEntitySchema($entity_type, $reset = FALSE);
 
-    $schema['taxonomy_term_field_data']['indexes'] += array(
-      'taxonomy_term__tree' => array('vid', 'weight', 'name'),
-      'taxonomy_term__vid_name' => array('vid', 'name'),
-    );
+    $schema['taxonomy_term_field_data']['indexes'] += [
+      'taxonomy_term__tree' => ['vid', 'weight', 'name'],
+      'taxonomy_term__vid_name' => ['vid', 'name'],
+    ];
 
-    $schema['taxonomy_term_hierarchy'] = array(
+    $schema['taxonomy_term_hierarchy'] = [
       'description' => 'Stores the hierarchical relationship between terms.',
-      'fields' => array(
-        'tid' => array(
+      'fields' => [
+        'tid' => [
           'type' => 'int',
           'unsigned' => TRUE,
           'not null' => TRUE,
           'default' => 0,
           'description' => 'Primary Key: The {taxonomy_term_data}.tid of the term.',
-        ),
-        'parent' => array(
+        ],
+        'parent' => [
           'type' => 'int',
           'unsigned' => TRUE,
           'not null' => TRUE,
           'default' => 0,
           'description' => "Primary Key: The {taxonomy_term_data}.tid of the term's parent. 0 indicates no parent.",
-        ),
-      ),
-      'indexes' => array(
-        'parent' => array('parent'),
-      ),
-      'foreign keys' => array(
-        'taxonomy_term_data' => array(
+        ],
+      ],
+      'indexes' => [
+        'parent' => ['parent'],
+      ],
+      'foreign keys' => [
+        'taxonomy_term_data' => [
           'table' => 'taxonomy_term_data',
-          'columns' => array('tid' => 'tid'),
-        ),
-      ),
-      'primary key' => array('tid', 'parent'),
-    );
+          'columns' => ['tid' => 'tid'],
+        ],
+      ],
+      'primary key' => ['tid', 'parent'],
+    ];
 
-    $schema['taxonomy_index'] = array(
+    $schema['taxonomy_index'] = [
       'description' => 'Maintains denormalized information about node/term relationships.',
-      'fields' => array(
-        'nid' => array(
+      'fields' => [
+        'nid' => [
           'description' => 'The {node}.nid this record tracks.',
           'type' => 'int',
           'unsigned' => TRUE,
           'not null' => TRUE,
           'default' => 0,
-        ),
-        'tid' => array(
+        ],
+        'tid' => [
           'description' => 'The term ID.',
           'type' => 'int',
           'unsigned' => TRUE,
           'not null' => TRUE,
           'default' => 0,
-        ),
-        'status' => array(
+        ],
+        'status' => [
           'description' => 'Boolean indicating whether the node is published (visible to non-administrators).',
           'type' => 'int',
           'not null' => TRUE,
           'default' => 1,
-        ),
-        'sticky' => array(
+        ],
+        'sticky' => [
           'description' => 'Boolean indicating whether the node is sticky.',
           'type' => 'int',
           'not null' => FALSE,
           'default' => 0,
           'size' => 'tiny',
-        ),
-        'created' => array(
+        ],
+        'created' => [
           'description' => 'The Unix timestamp when the node was created.',
           'type' => 'int',
           'not null' => TRUE,
           'default' => 0,
-        ),
-      ),
-      'primary key' => array('nid', 'tid'),
-      'indexes' => array(
-        'term_node' => array('tid', 'status', 'sticky', 'created'),
-      ),
-      'foreign keys' => array(
-        'tracked_node' => array(
+        ],
+      ],
+      'primary key' => ['nid', 'tid'],
+      'indexes' => [
+        'term_node' => ['tid', 'status', 'sticky', 'created'],
+      ],
+      'foreign keys' => [
+        'tracked_node' => [
           'table' => 'node',
-          'columns' => array('nid' => 'nid'),
-        ),
-        'term' => array(
+          'columns' => ['nid' => 'nid'],
+        ],
+        'term' => [
           'table' => 'taxonomy_term_data',
-          'columns' => array('tid' => 'tid'),
-        ),
-      ),
-    );
+          'columns' => ['tid' => 'tid'],
+        ],
+      ],
+    ];
 
     return $schema;
   }

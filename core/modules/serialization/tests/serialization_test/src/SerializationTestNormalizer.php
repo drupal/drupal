@@ -25,7 +25,7 @@ class SerializationTestNormalizer implements NormalizerInterface {
    *   An array containing a normalized representation of $object, appropriate
    *   for encoding to the requested format.
    */
-  public function normalize($object, $format = NULL, array $context = array()) {
+  public function normalize($object, $format = NULL, array $context = []) {
     $normalized = (array) $object;
     // Add identifying value that can be used to verify that the expected
     // normalizer was invoked.

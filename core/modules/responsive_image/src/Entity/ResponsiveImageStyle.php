@@ -68,7 +68,7 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
    *
    * @var array
    */
-  protected $image_style_mappings = array();
+  protected $image_style_mappings = [];
 
   /**
    * @var array
@@ -103,18 +103,18 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
     // If there is an existing mapping, overwrite it.
     foreach ($this->image_style_mappings as &$mapping) {
       if ($mapping['breakpoint_id'] === $breakpoint_id && $mapping['multiplier'] === $multiplier) {
-        $mapping = array(
+        $mapping = [
           'breakpoint_id' => $breakpoint_id,
           'multiplier' => $multiplier,
-        ) + $image_style_mapping;
+        ] + $image_style_mapping;
         $this->keyedImageStyleMappings = NULL;
         return $this;
       }
     }
-    $this->image_style_mappings[] = array(
+    $this->image_style_mappings[] = [
       'breakpoint_id' => $breakpoint_id,
       'multiplier' => $multiplier,
-    ) + $image_style_mapping;
+    ] + $image_style_mapping;
     $this->keyedImageStyleMappings = NULL;
     return $this;
   }
@@ -132,7 +132,7 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
    */
   public function getKeyedImageStyleMappings() {
     if (!$this->keyedImageStyleMappings) {
-      $this->keyedImageStyleMappings = array();
+      $this->keyedImageStyleMappings = [];
       foreach ($this->image_style_mappings as $mapping) {
         if (!static::isEmptyImageStyleMapping($mapping)) {
           $this->keyedImageStyleMappings[$mapping['breakpoint_id']][$mapping['multiplier']] = $mapping;
@@ -188,7 +188,7 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
    * {@inheritdoc}
    */
   public function removeImageStyleMappings() {
-    $this->image_style_mappings = array();
+    $this->image_style_mappings = [];
     $this->keyedImageStyleMappings = NULL;
     return $this;
   }

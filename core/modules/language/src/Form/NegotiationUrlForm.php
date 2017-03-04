@@ -66,63 +66,63 @@ class NegotiationUrlForm extends ConfigFormBase {
     global $base_url;
     $config = $this->config('language.negotiation');
 
-    $form['language_negotiation_url_part'] = array(
+    $form['language_negotiation_url_part'] = [
       '#title' => $this->t('Part of the URL that determines language'),
       '#type' => 'radios',
-      '#options' => array(
+      '#options' => [
         LanguageNegotiationUrl::CONFIG_PATH_PREFIX => $this->t('Path prefix'),
         LanguageNegotiationUrl::CONFIG_DOMAIN => $this->t('Domain'),
-      ),
+      ],
       '#default_value' => $config->get('url.source'),
-    );
+    ];
 
-    $form['prefix'] = array(
+    $form['prefix'] = [
       '#type' => 'details',
       '#tree' => TRUE,
       '#title' => $this->t('Path prefix configuration'),
       '#open' => TRUE,
       '#description' => $this->t('Language codes or other custom text to use as a path prefix for URL language detection. For the selected fallback language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "deutsch" as the path prefix code for German results in URLs like "example.com/deutsch/contact".'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="language_negotiation_url_part"]' => array(
+      '#states' => [
+        'visible' => [
+          ':input[name="language_negotiation_url_part"]' => [
             'value' => (string) LanguageNegotiationUrl::CONFIG_PATH_PREFIX,
-          ),
-        ),
-      ),
-    );
-    $form['domain'] = array(
+          ],
+        ],
+      ],
+    ];
+    $form['domain'] = [
       '#type' => 'details',
       '#tree' => TRUE,
       '#title' => $this->t('Domain configuration'),
       '#open' => TRUE,
       '#description' => $this->t('The domain names to use for these languages. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "de.example.com" as language domain for German will result in a URL like "http://de.example.com/contact".'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="language_negotiation_url_part"]' => array(
+      '#states' => [
+        'visible' => [
+          ':input[name="language_negotiation_url_part"]' => [
             'value' => (string) LanguageNegotiationUrl::CONFIG_DOMAIN,
-          ),
-        ),
-      ),
-    );
+          ],
+        ],
+      ],
+    ];
 
     $languages = $this->languageManager->getLanguages();
     $prefixes = $config->get('url.prefixes');
     $domains = $config->get('url.domains');
     foreach ($languages as $langcode => $language) {
-      $t_args = array('%language' => $language->getName(), '%langcode' => $language->getId());
-      $form['prefix'][$langcode] = array(
+      $t_args = ['%language' => $language->getName(), '%langcode' => $language->getId()];
+      $form['prefix'][$langcode] = [
         '#type' => 'textfield',
         '#title' => $language->isDefault() ? $this->t('%language (%langcode) path prefix (Default language)', $t_args) : $this->t('%language (%langcode) path prefix', $t_args),
         '#maxlength' => 64,
         '#default_value' => isset($prefixes[$langcode]) ? $prefixes[$langcode] : '',
         '#field_prefix' => $base_url . '/',
-      );
-      $form['domain'][$langcode] = array(
+      ];
+      $form['domain'][$langcode] = [
         '#type' => 'textfield',
-        '#title' => $this->t('%language (%langcode) domain', array('%language' => $language->getName(), '%langcode' => $language->getId())),
+        '#title' => $this->t('%language (%langcode) domain', ['%language' => $language->getName(), '%langcode' => $language->getId()]),
         '#maxlength' => 128,
         '#default_value' => isset($domains[$langcode]) ? $domains[$langcode] : '',
-      );
+      ];
     }
 
     $form_state->setRedirect('language.negotiation');
@@ -143,7 +143,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       $default_langcode = $this->languageManager->getDefaultLanguage()->getId();
     }
     foreach ($languages as $langcode => $language) {
-      $value = $form_state->getValue(array('prefix', $langcode));
+      $value = $form_state->getValue(['prefix', $langcode]);
       if ($value === '') {
         if (!($default_langcode == $langcode) && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
           // Throw a form error if the prefix is blank for a non-default language,
@@ -161,35 +161,35 @@ class NegotiationUrlForm extends ConfigFormBase {
       elseif (isset($count[$value]) && $count[$value] > 1) {
         // Throw a form error if there are two languages with the same
         // domain/prefix.
-        $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix for %language, %value, is not unique.', array('%language' => $language->getName(), '%value' => $value)));
+        $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix for %language, %value, is not unique.', ['%language' => $language->getName(), '%value' => $value]));
       }
     }
 
     // Count repeated values for uniqueness check.
     $count = array_count_values($form_state->getValue('domain'));
     foreach ($languages as $langcode => $language) {
-      $value = $form_state->getValue(array('domain', $langcode));
+      $value = $form_state->getValue(['domain', $langcode]);
 
       if ($value === '') {
         if ($form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_DOMAIN) {
           // Throw a form error if the domain is blank for a non-default language,
           // although it is required for selected negotiation type.
-          $form_state->setErrorByName("domain][$langcode", $this->t('The domain may not be left blank for %language.', array('%language' => $language->getName())));
+          $form_state->setErrorByName("domain][$langcode", $this->t('The domain may not be left blank for %language.', ['%language' => $language->getName()]));
         }
       }
       elseif (isset($count[$value]) && $count[$value] > 1) {
         // Throw a form error if there are two languages with the same
         // domain/domain.
-        $form_state->setErrorByName("domain][$langcode", $this->t('The domain for %language, %value, is not unique.', array('%language' => $language->getName(), '%value' => $value)));
+        $form_state->setErrorByName("domain][$langcode", $this->t('The domain for %language, %value, is not unique.', ['%language' => $language->getName(), '%value' => $value]));
       }
     }
 
     // Domain names should not contain protocol and/or ports.
     foreach ($languages as $langcode => $language) {
-      $value = $form_state->getValue(array('domain', $langcode));
+      $value = $form_state->getValue(['domain', $langcode]);
       if (!empty($value)) {
         // Ensure we have exactly one protocol when checking the hostname.
-        $host = 'http://' . str_replace(array('http://', 'https://'), '', $value);
+        $host = 'http://' . str_replace(['http://', 'https://'], '', $value);
         if (parse_url($host, PHP_URL_HOST) != $value) {
           $form_state->setErrorByName("domain][$langcode", $this->t('The domain for %language may only contain the domain name, not a trailing slash, protocol and/or port.', ['%language' => $language->getName()]));
         }

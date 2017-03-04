@@ -16,7 +16,7 @@ class ConfigOverrideTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'config_test');
+  public static $modules = ['system', 'config_test'];
 
   protected function setUp() {
     parent::setUp();
@@ -27,11 +27,11 @@ class ConfigOverrideTest extends KernelTestBase {
    * Tests configuration override.
    */
   function testConfOverride() {
-    $expected_original_data = array(
+    $expected_original_data = [
       'foo' => 'bar',
       'baz' => NULL,
       '404' => 'herp',
-    );
+    ];
 
     // Set globals before installing to prove that the installed file does not
     // contain these values.
@@ -40,7 +40,7 @@ class ConfigOverrideTest extends KernelTestBase {
     $overrides['config_test.system']['404'] = 'derp';
     $GLOBALS['config'] = $overrides;
 
-    $this->installConfig(array('config_test'));
+    $this->installConfig(['config_test']);
 
     // Verify that the original configuration data exists. Have to read storage
     // directly otherwise overrides will apply.
@@ -90,10 +90,10 @@ class ConfigOverrideTest extends KernelTestBase {
 
     // Write file to sync.
     $sync = $this->container->get('config.storage.sync');
-    $expected_new_data = array(
+    $expected_new_data = [
       'foo' => 'barbar',
       '404' => 'herpderp',
-    );
+    ];
     $sync->write('config_test.system', $expected_new_data);
 
     // Import changed data from sync to active.

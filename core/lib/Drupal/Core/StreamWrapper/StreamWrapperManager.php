@@ -23,7 +23,7 @@ class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperMana
    *
    * @var array
    */
-  protected $info = array();
+  protected $info = [];
 
   /**
    * Contains collected stream wrappers.
@@ -41,7 +41,7 @@ class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperMana
    *
    * @var array
    */
-  protected $wrappers = array();
+  protected $wrappers = [];
 
   /**
    * {@inheritdoc}
@@ -51,7 +51,7 @@ class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperMana
       return $this->wrappers[$filter];
     }
     elseif (isset($this->wrappers[StreamWrapperInterface::ALL])) {
-      $this->wrappers[$filter] = array();
+      $this->wrappers[$filter] = [];
       foreach ($this->wrappers[StreamWrapperInterface::ALL] as $scheme => $info) {
         // Bit-wise filter.
         if (($info['type'] & $filter) == $filter) {
@@ -61,7 +61,7 @@ class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperMana
       return $this->wrappers[$filter];
     }
     else {
-      return array();
+      return [];
     }
   }
 
@@ -69,7 +69,7 @@ class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperMana
    * {@inheritdoc}
    */
   public function getNames($filter = StreamWrapperInterface::ALL) {
-    $names = array();
+    $names = [];
     foreach (array_keys($this->getWrappers($filter)) as $scheme) {
       $names[$scheme] = $this->getViaScheme($scheme)->getName();
     }
@@ -81,7 +81,7 @@ class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperMana
    * {@inheritdoc}
    */
   public function getDescriptions($filter = StreamWrapperInterface::ALL) {
-    $descriptions = array();
+    $descriptions = [];
     foreach (array_keys($this->getWrappers($filter)) as $scheme) {
       $descriptions[$scheme] = $this->getViaScheme($scheme)->getDescription();
     }
@@ -149,11 +149,11 @@ class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperMana
    *   The scheme for which the wrapper should be registered.
    */
   public function addStreamWrapper($service_id, $class, $scheme) {
-    $this->info[$scheme] = array(
+    $this->info[$scheme] = [
       'class' => $class,
       'type' => $class::getType(),
       'service_id' => $service_id,
-    );
+    ];
   }
 
   /**
@@ -200,7 +200,7 @@ class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperMana
     }
 
     // Pre-populate the static cache with the filters most typically used.
-    $info = array('type' => $type, 'class' => $class);
+    $info = ['type' => $type, 'class' => $class];
     $this->wrappers[StreamWrapperInterface::ALL][$scheme] = $info;
 
     if (($type & StreamWrapperInterface::WRITE_VISIBLE) == StreamWrapperInterface::WRITE_VISIBLE) {

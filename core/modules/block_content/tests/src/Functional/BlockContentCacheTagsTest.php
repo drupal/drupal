@@ -20,29 +20,29 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('block_content');
+  public static $modules = ['block_content'];
 
   /**
    * {@inheritdoc}
    */
   protected function createEntity() {
-    $block_content_type = BlockContentType::create(array(
+    $block_content_type = BlockContentType::create([
       'id' => 'basic',
       'label' => 'basic',
       'revision' => FALSE
-    ));
+    ]);
     $block_content_type->save();
     block_content_add_body_field($block_content_type->id());
 
     // Create a "Llama" custom block.
-    $block_content = BlockContent::create(array(
+    $block_content = BlockContent::create([
       'info' => 'Llama',
       'type' => 'basic',
-      'body' => array(
+      'body' => [
         'value' => 'The name "llama" was adopted by European settlers from native Peruvians.',
         'format' => 'plain_text',
-      ),
-    ));
+      ],
+    ]);
     $block_content->save();
 
     return $block_content;

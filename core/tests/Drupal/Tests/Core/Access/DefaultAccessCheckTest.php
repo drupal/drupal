@@ -42,15 +42,15 @@ class DefaultAccessCheckTest extends UnitTestCase {
    * Test the access method.
    */
   public function testAccess() {
-    $request = new Request(array());
+    $request = new Request([]);
 
-    $route = new Route('/test-route', array(), array('_access' => 'NULL'));
+    $route = new Route('/test-route', [], ['_access' => 'NULL']);
     $this->assertEquals(AccessResult::neutral(), $this->accessChecker->access($route, $request, $this->account));
 
-    $route = new Route('/test-route', array(), array('_access' => 'FALSE'));
+    $route = new Route('/test-route', [], ['_access' => 'FALSE']);
     $this->assertEquals(AccessResult::forbidden(), $this->accessChecker->access($route, $request, $this->account));
 
-    $route = new Route('/test-route', array(), array('_access' => 'TRUE'));
+    $route = new Route('/test-route', [], ['_access' => 'TRUE']);
     $this->assertEquals(AccessResult::allowed(), $this->accessChecker->access($route, $request, $this->account));
   }
 

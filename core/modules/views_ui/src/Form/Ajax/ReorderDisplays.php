@@ -40,10 +40,10 @@ class ReorderDisplays extends ViewsFormBase {
       'view' => $view->id(),
       'display_id' => $display_id,
     ]);
-    $form['view'] = array(
+    $form['view'] = [
       '#type' => 'value',
       '#value' => $view
-    );
+    ];
 
     $displays = $view->get('display');
     $count = count($displays);
@@ -56,82 +56,82 @@ class ReorderDisplays extends ViewsFormBase {
       return 0;
     });
 
-    $form['displays'] = array(
+    $form['displays'] = [
       '#type' => 'table',
       '#id' => 'reorder-displays',
-      '#header' => array($this->t('Display'), $this->t('Weight'), $this->t('Remove')),
+      '#header' => [$this->t('Display'), $this->t('Weight'), $this->t('Remove')],
       '#empty' => $this->t('No displays available.'),
-      '#tabledrag' => array(
-        array(
+      '#tabledrag' => [
+        [
           'action' => 'order',
           'relationship' => 'sibling',
           'group' => 'weight',
-        )
-      ),
+        ]
+      ],
       '#tree' => TRUE,
       '#prefix' => '<div class="scroll" data-drupal-views-scroll>',
       '#suffix' => '</div>',
-    );
+    ];
 
     foreach ($displays as $id => $display) {
-      $form['displays'][$id] = array(
+      $form['displays'][$id] = [
         '#display' => $display,
-        '#attributes' => array(
+        '#attributes' => [
           'id' => 'display-row-' . $id,
-        ),
+        ],
         '#weight' => $display['position'],
-      );
+      ];
 
       // Only make row draggable if it's not the default display.
       if ($id !== 'default') {
         $form['displays'][$id]['#attributes']['class'][] = 'draggable';
       }
 
-      $form['displays'][$id]['title'] = array(
+      $form['displays'][$id]['title'] = [
         '#markup' => $display['display_title'],
-      );
+      ];
 
-      $form['displays'][$id]['weight'] = array(
+      $form['displays'][$id]['weight'] = [
         '#type' => 'weight',
         '#value' => $display['position'],
         '#delta' => $count,
-        '#title' => $this->t('Weight for @display', array('@display' => $display['display_title'])),
+        '#title' => $this->t('Weight for @display', ['@display' => $display['display_title']]),
         '#title_display' => 'invisible',
-        '#attributes' => array(
-          'class' => array('weight'),
-        ),
-      );
+        '#attributes' => [
+          'class' => ['weight'],
+        ],
+      ];
 
-      $form['displays'][$id]['removed'] = array(
-        'checkbox' => array(
-          '#title' => t('Remove @id', array('@id' => $id)),
+      $form['displays'][$id]['removed'] = [
+        'checkbox' => [
+          '#title' => t('Remove @id', ['@id' => $id]),
           '#title_display' => 'invisible',
           '#type' => 'checkbox',
           '#id' => 'display-removed-' . $id,
-          '#attributes' => array(
-            'class' => array('views-remove-checkbox'),
-          ),
+          '#attributes' => [
+            'class' => ['views-remove-checkbox'],
+          ],
           '#default_value' => !empty($display['deleted']),
-        ),
-        'link' => array(
+        ],
+        'link' => [
           '#type' => 'link',
-          '#title' => SafeMarkup::format('<span>@text</span>', array('@text' => $this->t('Remove'))),
+          '#title' => SafeMarkup::format('<span>@text</span>', ['@text' => $this->t('Remove')]),
           '#url' => Url::fromRoute('<none>'),
-          '#attributes' => array(
+          '#attributes' => [
             'id' => 'display-remove-link-' . $id,
-            'class' => array('views-button-remove', 'display-remove-link'),
+            'class' => ['views-button-remove', 'display-remove-link'],
             'alt' => $this->t('Remove this display'),
             'title' => $this->t('Remove this display'),
-          ),
-        ),
+          ],
+        ],
         '#access' => ($id !== 'default'),
-      );
+      ];
 
       if (!empty($display['deleted'])) {
-        $form['displays'][$id]['deleted'] = array(
+        $form['displays'][$id]['deleted'] = [
           '#type' => 'value',
           '#value' => TRUE,
-        );
+        ];
 
         $form['displays'][$id]['#attributes']['class'][] = 'hidden';
       }
@@ -149,7 +149,7 @@ class ReorderDisplays extends ViewsFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var $view \Drupal\views_ui\ViewUI */
     $view = $form_state->get('view');
-    $order = array();
+    $order = [];
 
     $user_input = $form_state->getUserInput();
     foreach ($user_input['displays'] as $display => $info) {

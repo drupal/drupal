@@ -35,10 +35,10 @@ class PagerPluginBaseTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $options = array(
+    $options = [
       'items_per_page' => 5,
       'offset' => 1,
-    );
+    ];
 
     $this->pager->init($view, $display, $options);
 
@@ -183,20 +183,20 @@ class PagerPluginBaseTest extends UnitTestCase {
    * @see self::testHasMoreRecords
    */
   public function providerTestHasMoreRecords() {
-    return array(
+    return [
       // No items per page, so there can't be more available records.
-      array(0, 0, 0, FALSE),
-      array(0, 10, 0, FALSE),
+      [0, 0, 0, FALSE],
+      [0, 10, 0, FALSE],
       // The amount of total items equals the items per page, so there is no
       // next page available.
-      array(5, 5, 0, FALSE),
+      [5, 5, 0, FALSE],
       // There is one more item, and we are at the first page.
-      array(5, 6, 0, TRUE),
+      [5, 6, 0, TRUE],
       // Now we are on the second page, which has just a single one left.
-      array(5, 6, 1, FALSE),
+      [5, 6, 1, FALSE],
       // Increase the total items, so we have some available on the third page.
-      array(5, 12, 1, TRUE)
-    );
+      [5, 12, 1, TRUE]
+    ];
   }
 
   /**

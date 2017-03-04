@@ -17,7 +17,7 @@ class ConfigEntityStaticCacheTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test', 'config_entity_static_cache_test');
+  public static $modules = ['config_test', 'config_entity_static_cache_test'];
 
   /**
    * The type ID of the entity under test.
@@ -42,7 +42,7 @@ class ConfigEntityStaticCacheTest extends KernelTestBase {
     $this->entityId = 'test_1';
     $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId)
-      ->create(array('id' => $this->entityId, 'label' => 'Original label'))
+      ->create(['id' => $this->entityId, 'label' => 'Original label'])
       ->save();
   }
 

@@ -43,7 +43,7 @@ class BlockRegion extends StaticMap implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $regions = array();
+    $regions = [];
     foreach ($container->get('theme_handler')->listInfo() as $key => $theme) {
       $regions[$key] = $theme->info['regions'];
     }

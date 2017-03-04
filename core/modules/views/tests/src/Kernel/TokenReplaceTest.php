@@ -12,14 +12,14 @@ use Drupal\views\Views;
  */
 class TokenReplaceTest extends ViewsKernelTestBase {
 
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_tokens', 'test_invalid_tokens');
+  public static $testViews = ['test_tokens', 'test_invalid_tokens'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
@@ -37,7 +37,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
     $view->display_handler->getPlugin('pager')->setItemsPerPage(4);
     $this->executeView($view);
 
-    $expected = array(
+    $expected = [
       '[view:label]' => 'Test tokens',
       '[view:description]' => 'Test view to token replacement tests.',
       '[view:id]' => 'test_tokens',
@@ -49,7 +49,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
       '[view:items-per-page]' => '4',
       '[view:current-page]' => '1',
       '[view:page-count]' => '2',
-    );
+    ];
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($view->storage);
     $metadata_tests = [];
@@ -67,8 +67,8 @@ class TokenReplaceTest extends ViewsKernelTestBase {
 
     foreach ($expected as $token => $expected_output) {
       $bubbleable_metadata = new BubbleableMetadata();
-      $output = $token_handler->replace($token, array('view' => $view), [], $bubbleable_metadata);
-      $this->assertIdentical($output, $expected_output, format_string('Token %token replaced correctly.', array('%token' => $token)));
+      $output = $token_handler->replace($token, ['view' => $view], [], $bubbleable_metadata);
+      $this->assertIdentical($output, $expected_output, format_string('Token %token replaced correctly.', ['%token' => $token]));
       $this->assertEqual($bubbleable_metadata, $metadata_tests[$token]);
     }
   }
@@ -84,7 +84,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
 
     $this->assertSame(TRUE, $view->get_total_rows, 'The query was set to calculate the total number of rows.');
 
-    $expected = array(
+    $expected = [
       '[view:label]' => 'Test tokens',
       '[view:description]' => 'Test view to token replacement tests.',
       '[view:id]' => 'test_tokens',
@@ -98,13 +98,13 @@ class TokenReplaceTest extends ViewsKernelTestBase {
       '[view:items-per-page]' => '2',
       '[view:current-page]' => '1',
       '[view:page-count]' => '3',
-    );
+    ];
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($view->storage);
 
     foreach ($expected as $token => $expected_output) {
       $bubbleable_metadata = new BubbleableMetadata();
-      $output = $token_handler->replace($token, array('view' => $view), [], $bubbleable_metadata);
+      $output = $token_handler->replace($token, ['view' => $view], [], $bubbleable_metadata);
       $this->assertSame($expected_output, $output, sprintf('Token %s replaced correctly.', $token));
       $this->assertEquals($base_bubbleable_metadata, $bubbleable_metadata);
     }
@@ -119,13 +119,13 @@ class TokenReplaceTest extends ViewsKernelTestBase {
     $view->setDisplay('page_2');
     $this->executeView($view);
 
-    $expected = array(
+    $expected = [
       '[view:page-count]' => '1',
-    );
+    ];
 
     foreach ($expected as $token => $expected_output) {
-      $output = $token_handler->replace($token, array('view' => $view));
-      $this->assertIdentical($output, $expected_output, format_string('Token %token replaced correctly.', array('%token' => $token)));
+      $output = $token_handler->replace($token, ['view' => $view]);
+      $this->assertIdentical($output, $expected_output, format_string('Token %token replaced correctly.', ['%token' => $token]));
     }
   }
 
@@ -138,13 +138,13 @@ class TokenReplaceTest extends ViewsKernelTestBase {
     $view->setDisplay('block_1');
     $this->executeView($view);
 
-    $expected = array(
+    $expected = [
       '[view:url]' => '',
-    );
+    ];
 
     foreach ($expected as $token => $expected_output) {
-      $output = $token_handler->replace($token, array('view' => $view));
-      $this->assertIdentical($output, $expected_output, format_string('Token %token replaced correctly.', array('%token' => $token)));
+      $output = $token_handler->replace($token, ['view' => $view]);
+      $this->assertIdentical($output, $expected_output, format_string('Token %token replaced correctly.', ['%token' => $token]));
     }
   }
 

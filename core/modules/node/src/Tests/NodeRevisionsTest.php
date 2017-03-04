@@ -47,26 +47,26 @@ class NodeRevisionsTest extends NodeTestBase {
     ConfigurableLanguage::createFromLangcode('de')->save();
     ConfigurableLanguage::createFromLangcode('it')->save();
 
-    $field_storage_definition = array(
+    $field_storage_definition = [
       'field_name' => 'untranslatable_string_field',
       'entity_type' => 'node',
       'type' => 'string',
       'cardinality' => 1,
       'translatable' => FALSE,
-    );
+    ];
     $field_storage = FieldStorageConfig::create($field_storage_definition);
     $field_storage->save();
 
-    $field_definition = array(
+    $field_definition = [
       'field_storage' => $field_storage,
       'bundle' => 'page',
-    );
+    ];
     $field = FieldConfig::create($field_definition);
     $field->save();
 
     // Create and log in user.
     $web_user = $this->drupalCreateUser(
-      array(
+      [
         'view page revisions',
         'revert page revisions',
         'delete page revisions',
@@ -75,7 +75,7 @@ class NodeRevisionsTest extends NodeTestBase {
         'access contextual links',
         'translate any entity',
         'administer content types',
-      )
+      ]
     );
 
     $this->drupalLogin($web_user);
@@ -86,8 +86,8 @@ class NodeRevisionsTest extends NodeTestBase {
     $settings['revision'] = 1;
     $settings['isDefaultRevision'] = TRUE;
 
-    $nodes = array();
-    $logs = array();
+    $nodes = [];
+    $logs = [];
 
     // Get original node.
     $nodes[] = clone $node;
@@ -99,10 +99,10 @@ class NodeRevisionsTest extends NodeTestBase {
 
       // Create revision with a random title and body and update variables.
       $node->title = $this->randomMachineName();
-      $node->body = array(
+      $node->body = [
         'value' => $this->randomMachineName(32),
         'format' => filter_default_format(),
-      );
+      ];
       $node->untranslatable_string_field->value = $this->randomString();
       $node->setNewRevision();
 
@@ -167,11 +167,11 @@ class NodeRevisionsTest extends NodeTestBase {
 
 
     // Confirm that revisions revert properly.
-    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert", array(), t('Revert'));
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert", [], t('Revert'));
     $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.',
-                        array('@type' => 'Basic page', '%title' => $nodes[1]->label(),
-                              '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()))), 'Revision reverted.');
-    $node_storage->resetCache(array($node->id()));
+                        ['@type' => 'Basic page', '%title' => $nodes[1]->label(),
+                              '%revision-date' => format_date($nodes[1]->getRevisionCreationTime())]), 'Revision reverted.');
+    $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());
     $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
 
@@ -190,27 +190,27 @@ class NodeRevisionsTest extends NodeTestBase {
 
 
     // Confirm revisions delete properly.
-    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", array(), t('Delete'));
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], t('Delete'));
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
-                        array('%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
-                              '@type' => 'Basic page', '%title' => $nodes[1]->label())), 'Revision deleted.');
-    $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid', array(':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()))->fetchField() == 0, 'Revision not found.');
+                        ['%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
+                              '@type' => 'Basic page', '%title' => $nodes[1]->label()]), 'Revision deleted.');
+    $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid', [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0, 'Revision not found.');
 
     // Set the revision timestamp to an older date to make sure that the
     // confirmation message correctly displays the stored revision date.
     $old_revision_date = REQUEST_TIME - 86400;
     db_update('node_revision')
       ->condition('vid', $nodes[2]->getRevisionId())
-      ->fields(array(
+      ->fields([
         'revision_timestamp' => $old_revision_date,
-      ))
+      ])
       ->execute();
-    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert", array(), t('Revert'));
-    $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', array(
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert", [], t('Revert'));
+    $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
       '@type' => 'Basic page',
       '%title' => $nodes[2]->label(),
       '%revision-date' => format_date($old_revision_date),
-    )));
+    ]));
 
     // Make a new revision and set it to not be default.
     // This will create a new revision that is not "front facing".
@@ -232,7 +232,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // Verify that the non-default revision vid is greater than the default
     // revision vid.
     $default_revision = db_select('node', 'n')
-      ->fields('n', array('vid'))
+      ->fields('n', ['vid'])
       ->condition('nid', $node->id())
       ->execute()
       ->fetchCol();
@@ -301,7 +301,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create a node with an initial log message.
     $revision_log = $this->randomMachineName(10);
-    $node = $this->drupalCreateNode(array('revision_log' => $revision_log));
+    $node = $this->drupalCreateNode(['revision_log' => $revision_log]);
 
     // Save over the same revision and explicitly provide an empty log message
     // (for example, to mimic the case of a node form submitted with no text in
@@ -317,12 +317,12 @@ class NodeRevisionsTest extends NodeTestBase {
     $node->save();
     $this->drupalGet('node/' . $node->id());
     $this->assertText($new_title, 'New node title appears on the page.');
-    $node_storage->resetCache(array($node->id()));
+    $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
     $this->assertEqual($node_revision->revision_log->value, $revision_log, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
 
     // Create another node with an initial revision log message.
-    $node = $this->drupalCreateNode(array('revision_log' => $revision_log));
+    $node = $this->drupalCreateNode(['revision_log' => $revision_log]);
 
     // Save a new node revision without providing a log message, and check that
     // this revision has an empty log message.
@@ -336,7 +336,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $node->save();
     $this->drupalGet('node/' . $node->id());
     $this->assertText($new_title, 'New node title appears on the page.');
-    $node_storage->resetCache(array($node->id()));
+    $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
     $this->assertTrue(empty($node_revision->revision_log->value), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
   }
@@ -353,7 +353,7 @@ class NodeRevisionsTest extends NodeTestBase {
    *   The decoded JSON response body.
    */
   protected function renderContextualLinks(array $ids, $current_path) {
-    $post = array();
+    $post = [];
     for ($i = 0; $i < count($ids); $i++) {
       $post['ids[' . $i . ']'] = $ids[$i];
     }

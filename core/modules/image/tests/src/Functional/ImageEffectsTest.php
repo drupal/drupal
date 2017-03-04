@@ -17,7 +17,7 @@ class ImageEffectsTest extends ToolkitTestBase {
    *
    * @var array
    */
-  public static $modules = array('image', 'image_test', 'image_module_test');
+  public static $modules = ['image', 'image_test', 'image_module_test'];
 
   /**
    * The image effect manager.
@@ -35,11 +35,11 @@ class ImageEffectsTest extends ToolkitTestBase {
    * Test the image_resize_effect() function.
    */
   function testResizeEffect() {
-    $this->assertImageEffect('image_resize', array(
+    $this->assertImageEffect('image_resize', [
       'width' => 1,
       'height' => 2,
-    ));
-    $this->assertToolkitOperationsCalled(array('resize'));
+    ]);
+    $this->assertToolkitOperationsCalled(['resize']);
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
@@ -52,11 +52,11 @@ class ImageEffectsTest extends ToolkitTestBase {
    */
   function testScaleEffect() {
     // @todo: need to test upscaling.
-    $this->assertImageEffect('image_scale', array(
+    $this->assertImageEffect('image_scale', [
       'width' => 10,
       'height' => 10,
-    ));
-    $this->assertToolkitOperationsCalled(array('scale'));
+    ]);
+    $this->assertToolkitOperationsCalled(['scale']);
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
@@ -69,12 +69,12 @@ class ImageEffectsTest extends ToolkitTestBase {
    */
   function testCropEffect() {
     // @todo should test the keyword offsets.
-    $this->assertImageEffect('image_crop', array(
+    $this->assertImageEffect('image_crop', [
       'anchor' => 'top-1',
       'width' => 3,
       'height' => 4,
-    ));
-    $this->assertToolkitOperationsCalled(array('crop'));
+    ]);
+    $this->assertToolkitOperationsCalled(['crop']);
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
@@ -89,10 +89,10 @@ class ImageEffectsTest extends ToolkitTestBase {
    */
   function testConvertEffect() {
     // Test jpeg.
-    $this->assertImageEffect('image_convert', array(
+    $this->assertImageEffect('image_convert', [
       'extension' => 'jpeg',
-    ));
-    $this->assertToolkitOperationsCalled(array('convert'));
+    ]);
+    $this->assertToolkitOperationsCalled(['convert']);
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
@@ -103,11 +103,11 @@ class ImageEffectsTest extends ToolkitTestBase {
    * Test the image_scale_and_crop_effect() function.
    */
   function testScaleAndCropEffect() {
-    $this->assertImageEffect('image_scale_and_crop', array(
+    $this->assertImageEffect('image_scale_and_crop', [
       'width' => 5,
       'height' => 10,
-    ));
-    $this->assertToolkitOperationsCalled(array('scale_and_crop'));
+    ]);
+    $this->assertToolkitOperationsCalled(['scale_and_crop']);
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
@@ -119,8 +119,8 @@ class ImageEffectsTest extends ToolkitTestBase {
    * Test the image_desaturate_effect() function.
    */
   function testDesaturateEffect() {
-    $this->assertImageEffect('image_desaturate', array());
-    $this->assertToolkitOperationsCalled(array('desaturate'));
+    $this->assertImageEffect('image_desaturate', []);
+    $this->assertToolkitOperationsCalled(['desaturate']);
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
@@ -132,11 +132,11 @@ class ImageEffectsTest extends ToolkitTestBase {
    */
   function testRotateEffect() {
     // @todo: need to test with 'random' => TRUE
-    $this->assertImageEffect('image_rotate', array(
+    $this->assertImageEffect('image_rotate', [
       'degrees' => 90,
       'bgcolor' => '#fff',
-    ));
-    $this->assertToolkitOperationsCalled(array('rotate'));
+    ]);
+    $this->assertToolkitOperationsCalled(['rotate']);
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
@@ -195,7 +195,7 @@ class ImageEffectsTest extends ToolkitTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertImageEffect($effect_name, array $data) {
-    $effect = $this->manager->createInstance($effect_name, array('data' => $data));
+    $effect = $this->manager->createInstance($effect_name, ['data' => $data]);
     return $this->assertTrue($effect->applyEffect($this->image), 'Function returned the expected value.');
   }
 

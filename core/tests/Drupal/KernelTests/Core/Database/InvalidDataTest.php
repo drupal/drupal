@@ -18,27 +18,27 @@ class InvalidDataTest extends DatabaseTestBase {
     // Try to insert multiple records where at least one has bad data.
     try {
       db_insert('test')
-        ->fields(array('name', 'age', 'job'))
-        ->values(array(
+        ->fields(['name', 'age', 'job'])
+        ->values([
           'name' => 'Elvis',
           'age' => 63,
           'job' => 'Singer',
-        ))->values(array(
+        ])->values([
           'name' => 'John', // <-- Duplicate value on unique field.
           'age' => 17,
           'job' => 'Consultant',
-        ))
-        ->values(array(
+        ])
+        ->values([
           'name' => 'Frank',
           'age' => 75,
           'job' => 'Singer',
-        ))
+        ])
         ->execute();
       $this->fail('Insert succeeded when it should not have.');
     }
     catch (IntegrityConstraintViolationException $e) {
       // Check if the first record was inserted.
-      $name = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 63))->fetchField();
+      $name = db_query('SELECT name FROM {test} WHERE age = :age', [':age' => 63])->fetchField();
 
       if ($name == 'Elvis') {
         if (!Database::getConnection()->supportsTransactions()) {
@@ -58,8 +58,8 @@ class InvalidDataTest extends DatabaseTestBase {
 
       // Ensure the other values were not inserted.
       $record = db_select('test')
-        ->fields('test', array('name', 'age'))
-        ->condition('age', array(17, 75), 'IN')
+        ->fields('test', ['name', 'age'])
+        ->condition('age', [17, 75], 'IN')
         ->execute()->fetchObject();
 
       $this->assertFalse($record, 'The rest of the insert aborted as expected.');

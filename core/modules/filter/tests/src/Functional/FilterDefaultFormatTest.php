@@ -18,7 +18,7 @@ class FilterDefaultFormatTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter');
+  public static $modules = ['filter'];
 
   /**
    * Tests if the default text format is accessible to users.
@@ -26,26 +26,26 @@ class FilterDefaultFormatTest extends BrowserTestBase {
   function testDefaultTextFormats() {
     // Create two text formats, and two users. The first user has access to
     // both formats, but the second user only has access to the second one.
-    $admin_user = $this->drupalCreateUser(array('administer filters'));
+    $admin_user = $this->drupalCreateUser(['administer filters']);
     $this->drupalLogin($admin_user);
-    $formats = array();
+    $formats = [];
     for ($i = 0; $i < 2; $i++) {
-      $edit = array(
+      $edit = [
         'format' => Unicode::strtolower($this->randomMachineName()),
         'name' => $this->randomMachineName(),
-      );
+      ];
       $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();
       $formats[] = FilterFormat::load($edit['format']);
     }
     list($first_format, $second_format) = $formats;
     $second_format_permission = $second_format->getPermissionName();
-    $first_user = $this->drupalCreateUser(array($first_format->getPermissionName(), $second_format_permission));
-    $second_user = $this->drupalCreateUser(array($second_format_permission));
+    $first_user = $this->drupalCreateUser([$first_format->getPermissionName(), $second_format_permission]);
+    $second_user = $this->drupalCreateUser([$second_format_permission]);
 
     // Adjust the weights so that the first and second formats (in that order)
     // are the two lowest weighted formats available to any user.
-    $edit = array();
+    $edit = [];
     $edit['formats[' . $first_format->id() . '][weight]'] = -2;
     $edit['formats[' . $second_format->id() . '][weight]'] = -1;
     $this->drupalPostForm('admin/config/content/formats', $edit, t('Save'));
@@ -62,7 +62,7 @@ class FilterDefaultFormatTest extends BrowserTestBase {
 
     // Reorder the two formats, and check that both users now have the same
     // default.
-    $edit = array();
+    $edit = [];
     $edit['formats[' . $second_format->id() . '][weight]'] = -3;
     $this->drupalPostForm('admin/config/content/formats', $edit, t('Save'));
     $this->resetFilterCaches();

@@ -11,44 +11,44 @@ use Drupal\field\FieldStorageConfigInterface;
  * Implements hook_views_data_alter().
  */
 function taxonomy_views_data_alter(&$data) {
-  $data['node_field_data']['term_node_tid'] = array(
+  $data['node_field_data']['term_node_tid'] = [
     'title' => t('Taxonomy terms on node'),
     'help' => t('Relate nodes to taxonomy terms, specifying which vocabulary or vocabularies to use. This relationship will cause duplicated records if there are multiple terms.'),
-    'relationship' => array(
+    'relationship' => [
       'id' => 'node_term_data',
       'label' => t('term'),
       'base' => 'taxonomy_term_field_data',
-    ),
-    'field' => array(
+    ],
+    'field' => [
       'title' => t('All taxonomy terms'),
       'help' => t('Display all taxonomy terms associated with a node from specified vocabularies.'),
       'id' => 'taxonomy_index_tid',
       'no group by' => TRUE,
       'click sortable' => FALSE,
-    ),
-  );
+    ],
+  ];
 
-  $data['node_field_data']['term_node_tid_depth'] = array(
+  $data['node_field_data']['term_node_tid_depth'] = [
     'help' => t('Display content if it has the selected taxonomy terms, or children of the selected terms. Due to additional complexity, this has fewer options than the versions without depth.'),
     'real field' => 'nid',
-    'argument' => array(
+    'argument' => [
       'title' => t('Has taxonomy term ID (with depth)'),
       'id' => 'taxonomy_index_tid_depth',
       'accept depth modifier' => TRUE,
-    ),
-    'filter' => array(
+    ],
+    'filter' => [
       'title' => t('Has taxonomy terms (with depth)'),
       'id' => 'taxonomy_index_tid_depth',
-    ),
-  );
+    ],
+  ];
 
-  $data['node_field_data']['term_node_tid_depth_modifier'] = array(
+  $data['node_field_data']['term_node_tid_depth_modifier'] = [
     'title' => t('Has taxonomy term ID depth modifier'),
     'help' => t('Allows the "depth" for Taxonomy: Term ID (with depth) to be modified via an additional contextual filter value.'),
-    'argument' => array(
+    'argument' => [
       'id' => 'taxonomy_index_tid_depth_modifier',
-    ),
-  );
+    ],
+  ];
 }
 
 /**

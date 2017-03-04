@@ -30,7 +30,7 @@ class ContextTest extends UnitTestCase {
     // Mock a Context object.
     $mock_context = $this->getMockBuilder('Drupal\Component\Plugin\Context\Context')
       ->disableOriginalConstructor()
-      ->setMethods(array('getContextDefinition'))
+      ->setMethods(['getContextDefinition'])
       ->getMock();
 
     // If the context value exists, getContextValue() behaves like a normal
@@ -49,7 +49,7 @@ class ContextTest extends UnitTestCase {
     else {
       // Create a mock definition.
       $mock_definition = $this->getMockBuilder('Drupal\Component\Plugin\Context\ContextDefinitionInterface')
-        ->setMethods(array('isRequired', 'getDataType'))
+        ->setMethods(['isRequired', 'getDataType'])
         ->getMockForAbstractClass();
 
       // Set expectation for isRequired().
@@ -87,7 +87,7 @@ class ContextTest extends UnitTestCase {
    */
   public function testDefaultValue() {
     $mock_definition = $this->getMockBuilder('Drupal\Component\Plugin\Context\ContextDefinitionInterface')
-      ->setMethods(array('getDefaultValue'))
+      ->setMethods(['getDefaultValue'])
       ->getMockForAbstractClass();
 
     $mock_definition->expects($this->once())

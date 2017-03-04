@@ -46,18 +46,18 @@ class EntityReferenceAdminTest extends WebTestBase {
 
     // Create a content type, with underscores.
     $type_name = strtolower($this->randomMachineName(8)) . '_test';
-    $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
+    $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $this->type = $type->id();
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array(
+    $admin_user = $this->drupalCreateUser([
       'access content',
       'administer node fields',
       'administer node display',
       'administer views',
       'create ' . $type_name . ' content',
       'edit own ' . $type_name . ' content',
-    ));
+    ]);
     $this->drupalLogin($admin_user);
   }
 
@@ -74,11 +74,11 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->assertOption('edit-new-storage-type', 'field_ui:entity_reference:node');
     $this->assertOption('edit-new-storage-type', 'field_ui:entity_reference:user');
 
-    $this->drupalPostForm(NULL, array(
+    $this->drupalPostForm(NULL, [
       'label' => 'Test label',
       'field_name' => 'test',
       'new_storage_type' => 'entity_reference',
-    ), t('Save and continue'));
+    ], t('Save and continue'));
 
     // Node should be selected by default.
     $this->assertFieldByName('settings[target_type]', 'node');
@@ -87,7 +87,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->assertFieldSelectOptions('settings[target_type]', array_keys(\Drupal::entityManager()->getDefinitions()));
 
     // Second step: 'Field settings' form.
-    $this->drupalPostForm(NULL, array(), t('Save field settings'));
+    $this->drupalPostForm(NULL, [], t('Save field settings'));
 
     // The base handler should be selected by default.
     $this->assertFieldByName('settings[handler]', 'default:node');
@@ -106,7 +106,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->assertFieldByName('settings[handler_settings][sort][field]', '_none');
     $this->assertNoFieldByName('settings[handler_settings][sort][direction]');
     // Option 1: sort by field.
-    $this->drupalPostAjaxForm(NULL, array('settings[handler_settings][sort][field]' => 'nid'), 'settings[handler_settings][sort][field]');
+    $this->drupalPostAjaxForm(NULL, ['settings[handler_settings][sort][field]' => 'nid'], 'settings[handler_settings][sort][field]');
     $this->assertFieldByName('settings[handler_settings][sort][direction]', 'ASC');
 
     // Test that a non-translatable base field is a sort option.
@@ -117,14 +117,14 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->assertFieldByXPath("//select[@name='settings[handler_settings][sort][field]']/option[@value='body.value']");
 
     // Set back to no sort.
-    $this->drupalPostAjaxForm(NULL, array('settings[handler_settings][sort][field]' => '_none'), 'settings[handler_settings][sort][field]');
+    $this->drupalPostAjaxForm(NULL, ['settings[handler_settings][sort][field]' => '_none'], 'settings[handler_settings][sort][field]');
     $this->assertNoFieldByName('settings[handler_settings][sort][direction]');
 
     // Third step: confirm.
-    $this->drupalPostForm(NULL, array(
+    $this->drupalPostForm(NULL, [
       'required' => '1',
       'settings[handler_settings][target_bundles][' . key($bundles) . ']' => key($bundles),
-    ), t('Save settings'));
+    ], t('Save settings'));
 
     // Check that the field appears in the overview form.
     $this->assertFieldByXPath('//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', 'Test label', 'Field was created and appears in the overview page.');
@@ -133,14 +133,14 @@ class EntityReferenceAdminTest extends WebTestBase {
     // field is required.
     // The first 'Edit' link is for the Body field.
     $this->clickLink(t('Edit'), 1);
-    $this->drupalPostForm(NULL, array(), t('Save settings'));
+    $this->drupalPostForm(NULL, [], t('Save settings'));
 
     // Switch the target type to 'taxonomy_term' and check that the settings
     // specific to its selection handler are displayed.
     $field_name = 'node.' . $this->type . '.field_test';
-    $edit = array(
+    $edit = [
       'settings[target_type]' => 'taxonomy_term',
-    );
+    ];
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertFieldByName('settings[handler_settings][auto_create]');
@@ -148,63 +148,63 @@ class EntityReferenceAdminTest extends WebTestBase {
     // Switch the target type to 'user' and check that the settings specific to
     // its selection handler are displayed.
     $field_name = 'node.' . $this->type . '.field_test';
-    $edit = array(
+    $edit = [
       'settings[target_type]' => 'user',
-    );
+    ];
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertFieldByName('settings[handler_settings][filter][type]', '_none');
 
     // Switch the target type to 'node'.
     $field_name = 'node.' . $this->type . '.field_test';
-    $edit = array(
+    $edit = [
       'settings[target_type]' => 'node',
-    );
+    ];
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
 
     // Try to select the views handler.
-    $edit = array(
+    $edit = [
       'settings[handler]' => 'views',
-    );
+    ];
     $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'settings[handler]');
-    $this->assertRaw(t('No eligible views were found. <a href=":create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href=":existing">existing view</a>.', array(
+    $this->assertRaw(t('No eligible views were found. <a href=":create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href=":existing">existing view</a>.', [
       ':create' => \Drupal::url('views_ui.add'),
       ':existing' => \Drupal::url('entity.view.collection'),
-    )));
+    ]));
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     // If no eligible view is available we should see a message.
     $this->assertText('The views entity selection mode requires a view.');
 
     // Enable the entity_reference_test module which creates an eligible view.
-    $this->container->get('module_installer')->install(array('entity_reference_test'));
+    $this->container->get('module_installer')->install(['entity_reference_test']);
     $this->resetAll();
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'settings[handler]');
-    $edit = array(
+    $edit = [
       'settings[handler_settings][view][view_and_display]' => 'test_entity_reference:entity_reference_1',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->assertResponse(200);
 
     // Switch the target type to 'entity_test'.
-    $edit = array(
+    $edit = [
       'settings[target_type]' => 'entity_test',
-    );
+    ];
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
-    $edit = array(
+    $edit = [
       'settings[handler]' => 'views',
-    );
+    ];
     $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'settings[handler]');
-    $edit = array(
+    $edit = [
       'required' => FALSE,
       'settings[handler_settings][view][view_and_display]' => 'test_entity_reference_entity_test:entity_reference_1',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->assertResponse(200);
 
     // Create a new view and display it as a entity reference.
-    $edit = array(
+    $edit = [
       'id' => 'node_test_view',
       'label' => 'Node Test View',
       'show[wizard_key]' => 'node',
@@ -214,13 +214,13 @@ class EntityReferenceAdminTest extends WebTestBase {
       'page[path]' => 'test/node/view',
       'page[style][style_plugin]' => 'default',
       'page[style][row_plugin]' => 'fields',
-    );
+    ];
     $this->drupalPostForm('admin/structure/views/add', $edit, t('Save and edit'));
-    $this->drupalPostForm(NULL, array(), t('Duplicate as Entity Reference'));
+    $this->drupalPostForm(NULL, [], t('Duplicate as Entity Reference'));
     $this->clickLink(t('Settings'));
-    $edit = array(
+    $edit = [
       'style_options[search_fields][title]' => 'title',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Apply'));
 
     // Set sort to NID ascending.
@@ -230,33 +230,33 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/node_test_view/entity_reference_1/sort', $edit, t('Add and configure sort criteria'));
     $this->drupalPostForm(NULL, NULL, t('Apply'));
 
-    $this->drupalPostForm('admin/structure/views/view/node_test_view/edit/entity_reference_1', array(), t('Save'));
+    $this->drupalPostForm('admin/structure/views/view/node_test_view/edit/entity_reference_1', [], t('Save'));
     $this->clickLink(t('Settings'));
 
     // Create a test entity reference field.
     $field_name = 'test_entity_ref_field';
-    $edit = array(
+    $edit = [
       'new_storage_type' => 'field_ui:entity_reference:node',
       'label' => 'Test Entity Reference Field',
       'field_name' => $field_name,
-    );
+    ];
     $this->drupalPostForm($bundle_path . '/fields/add-field', $edit, t('Save and continue'));
 
     // Set to unlimited.
-    $edit = array(
+    $edit = [
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save field settings'));
 
     // Add the view to the test field.
-    $edit = array(
+    $edit = [
       'settings[handler]' => 'views',
-    );
+    ];
     $this->drupalPostAjaxForm(NULL, $edit, 'settings[handler]');
-    $edit = array(
+    $edit = [
       'required' => FALSE,
       'settings[handler_settings][view][view_and_display]' => 'node_test_view:entity_reference_1',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
 
     // Create nodes.
@@ -275,34 +275,34 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalGet('node/add/' . $this->type);
     $result = $this->xpath('//input[@name="field_test_entity_ref_field[0][target_id]" and contains(@data-autocomplete-path, "/entity_reference_autocomplete/node/views/")]');
     $target_url = $this->getAbsoluteUrl($result[0]['data-autocomplete-path']);
-    $this->drupalGet($target_url, array('query' => array('q' => 'Foo')));
+    $this->drupalGet($target_url, ['query' => ['q' => 'Foo']]);
     $this->assertRaw($node1->getTitle() . ' (' . $node1->id() . ')');
     $this->assertRaw($node2->getTitle() . ' (' . $node2->id() . ')');
 
     // Try to add a new node, fill the entity reference field and submit the
     // form.
     $this->drupalPostForm('node/add/' . $this->type, [], t('Add another item'));
-    $edit = array(
+    $edit = [
       'title[0][value]' => 'Example',
       'field_test_entity_ref_field[0][target_id]' => 'Foo Node (' . $node1->id() . ')',
       'field_test_entity_ref_field[1][target_id]' => 'Foo Node (' . $node2->id() . ')',
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertResponse(200);
 
-    $edit = array(
+    $edit = [
       'title[0][value]' => 'Example',
       'field_test_entity_ref_field[0][target_id]' => 'Test'
-    );
+    ];
     $this->drupalPostForm('node/add/' . $this->type, $edit, t('Save'));
 
     // Assert that entity reference autocomplete field is validated.
     $this->assertText(t('There are no entities matching "@entity"', ['@entity' => 'Test']));
 
-    $edit = array(
+    $edit = [
       'title[0][value]' => 'Test',
       'field_test_entity_ref_field[0][target_id]' => $node1->getTitle()
-    );
+    ];
     $this->drupalPostForm('node/add/' . $this->type, $edit, t('Save'));
 
     // Assert the results multiple times to avoid sorting problem of nodes with
@@ -312,15 +312,15 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->assertText(t("@node2", ['@node2' => $node2->getTitle() . ' (' . $node2->id() . ')']));
     $this->assertText(t('Specify the one you want by appending the id in parentheses, like "@example".', ['@example' => $node2->getTitle() . ' (' . $node2->id() . ')']));
 
-    $edit = array(
+    $edit = [
       'title[0][value]' => 'Test',
       'field_test_entity_ref_field[0][target_id]' => $node1->getTitle() . ' (' . $node1->id() . ')'
-    );
+    ];
     $this->drupalPostForm('node/add/' . $this->type, $edit, t('Save'));
     $this->assertLink($node1->getTitle());
 
     // Tests adding default values to autocomplete widgets.
-    Vocabulary::create(array('vid' => 'tags', 'name' => 'tags'))->save();
+    Vocabulary::create(['vid' => 'tags', 'name' => 'tags'])->save();
     $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', ['tags']);
     $field_path = 'node.' . $this->type . '.field_' . $taxonomy_term_field_name;
     $this->drupalGet($bundle_path . '/fields/' . $field_path . '/storage');
@@ -351,7 +351,7 @@ class EntityReferenceAdminTest extends WebTestBase {
    */
   public function testAvailableFormatters() {
     // Create a new vocabulary.
-    Vocabulary::create(array('vid' => 'tags', 'name' => 'tags'))->save();
+    Vocabulary::create(['vid' => 'tags', 'name' => 'tags'])->save();
 
     // Create entity reference field with taxonomy term as a target.
     $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', ['tags']);
@@ -370,38 +370,38 @@ class EntityReferenceAdminTest extends WebTestBase {
 
     // Check for Taxonomy Term select box values.
     // Test if Taxonomy Term Entity Reference Field has the correct formatters.
-    $this->assertFieldSelectOptions('fields[field_' . $taxonomy_term_field_name . '][type]', array(
+    $this->assertFieldSelectOptions('fields[field_' . $taxonomy_term_field_name . '][type]', [
       'entity_reference_label',
       'entity_reference_entity_id',
       'entity_reference_rss_category',
       'entity_reference_entity_view',
-    ));
+    ]);
 
     // Test if User Reference Field has the correct formatters.
     // Author should be available for this field.
     // RSS Category should not be available for this field.
-    $this->assertFieldSelectOptions('fields[field_' . $user_field_name . '][type]', array(
+    $this->assertFieldSelectOptions('fields[field_' . $user_field_name . '][type]', [
       'author',
       'entity_reference_entity_id',
       'entity_reference_entity_view',
       'entity_reference_label',
-    ));
+    ]);
 
     // Test if Node Entity Reference Field has the correct formatters.
     // RSS Category should not be available for this field.
-    $this->assertFieldSelectOptions('fields[field_' . $node_field_name . '][type]', array(
+    $this->assertFieldSelectOptions('fields[field_' . $node_field_name . '][type]', [
       'entity_reference_label',
       'entity_reference_entity_id',
       'entity_reference_entity_view',
-    ));
+    ]);
 
     // Test if Date Format Reference Field has the correct formatters.
     // RSS Category & Entity View should not be available for this field.
     // This could be any field without a ViewBuilder.
-    $this->assertFieldSelectOptions('fields[field_' . $date_format_field_name . '][type]', array(
+    $this->assertFieldSelectOptions('fields[field_' . $date_format_field_name . '][type]', [
       'entity_reference_label',
       'entity_reference_entity_id',
-    ));
+    ]);
   }
 
   /**
@@ -483,7 +483,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     // Generate a random field name, must be only lowercase characters.
     $field_name = strtolower($this->randomMachineName());
 
-    $storage_edit = $field_edit = array();
+    $storage_edit = $field_edit = [];
     $storage_edit['settings[target_type]'] = $target_type;
     foreach ($bundles as $bundle) {
       $field_edit['settings[handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
@@ -507,7 +507,7 @@ class EntityReferenceAdminTest extends WebTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertFieldSelectOptions($name, array $expected_options) {
-    $xpath = $this->buildXPathQuery('//select[@name=:name]', array(':name' => $name));
+    $xpath = $this->buildXPathQuery('//select[@name=:name]', [':name' => $name]);
     $fields = $this->xpath($xpath);
     if ($fields) {
       $field = $fields[0];
@@ -533,7 +533,7 @@ class EntityReferenceAdminTest extends WebTestBase {
    *   An array of option values as strings.
    */
   protected function getAllOptionsList(\SimpleXMLElement $element) {
-    $options = array();
+    $options = [];
     // Add all options items.
     foreach ($element->option as $option) {
       $options[] = (string) $option['value'];

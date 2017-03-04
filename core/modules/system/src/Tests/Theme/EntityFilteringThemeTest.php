@@ -85,7 +85,7 @@ class EntityFilteringThemeTest extends WebTestBase {
     \Drupal::service('theme_handler')->install(array_keys($this->themes));
 
     // Create a test user.
-    $this->user = $this->drupalCreateUser(array('access content', 'access user profiles'));
+    $this->user = $this->drupalCreateUser(['access content', 'access user profiles']);
     $this->user->name = $this->xssLabel;
     $this->user->save();
     $this->drupalLogin($this->user);
@@ -100,22 +100,22 @@ class EntityFilteringThemeTest extends WebTestBase {
     // Add a comment field.
     $this->addDefaultCommentField('node', 'article', 'comment', CommentItemInterface::OPEN);
     // Create a test node tagged with the test term.
-    $this->node = $this->drupalCreateNode(array(
+    $this->node = $this->drupalCreateNode([
       'title' => $this->xssLabel,
       'type' => 'article',
       'promote' => NodeInterface::PROMOTED,
-      'field_tags' => array(array('target_id' => $this->term->id())),
-    ));
+      'field_tags' => [['target_id' => $this->term->id()]],
+    ]);
 
     // Create a test comment on the test node.
-    $this->comment = Comment::create(array(
+    $this->comment = Comment::create([
       'entity_id' => $this->node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
       'status' => CommentInterface::PUBLISHED,
       'subject' => $this->xssLabel,
-      'comment_body' => array($this->randomMachineName()),
-    ));
+      'comment_body' => [$this->randomMachineName()],
+    ]);
     $this->comment->save();
   }
 
@@ -124,12 +124,12 @@ class EntityFilteringThemeTest extends WebTestBase {
    */
   function testThemedEntity() {
     // Check paths where various view modes of the entities are rendered.
-    $paths = array(
+    $paths = [
       'user',
       'node',
       'node/' . $this->node->id(),
       'taxonomy/term/' . $this->term->id(),
-    );
+    ];
 
     // Check each path in all available themes.
     foreach ($this->themes as $name => $theme) {

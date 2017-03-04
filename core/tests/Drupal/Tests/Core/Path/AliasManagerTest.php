@@ -85,7 +85,7 @@ class AliasManagerTest extends UnitTestCase {
   public function testGetPathByAliasNoMatch() {
     $alias = '/' . $this->randomMachineName();
 
-    $language = new Language(array('id' => 'en'));
+    $language = new Language(['id' => 'en']);
 
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
@@ -202,7 +202,7 @@ class AliasManagerTest extends UnitTestCase {
     // This needs to write out the cache.
     $this->cache->expects($this->once())
       ->method('set')
-      ->with($this->cacheKey, array($language->getId() => array($path)), (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
+      ->with($this->cacheKey, [$language->getId() => [$path]], (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
 
     $this->aliasManager->writeCache();
   }
@@ -240,7 +240,7 @@ class AliasManagerTest extends UnitTestCase {
     // This needs to write out the cache.
     $this->cache->expects($this->once())
       ->method('set')
-      ->with($this->cacheKey, array($language->getId() => array($path)), (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
+      ->with($this->cacheKey, [$language->getId() => [$path]], (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
 
     $this->aliasManager->writeCache();
   }
@@ -259,11 +259,11 @@ class AliasManagerTest extends UnitTestCase {
 
     $language = $this->setUpCurrentLanguage();
 
-    $cached_paths = array($language->getId() => array($path));
+    $cached_paths = [$language->getId() => [$path]];
     $this->cache->expects($this->once())
       ->method('get')
       ->with($this->cacheKey)
-      ->will($this->returnValue((object) array('data' => $cached_paths)));
+      ->will($this->returnValue((object) ['data' => $cached_paths]));
 
     // Simulate a request so that the preloaded paths are fetched.
     $this->aliasManager->setCacheKey($this->path);
@@ -276,7 +276,7 @@ class AliasManagerTest extends UnitTestCase {
     $this->aliasStorage->expects($this->once())
       ->method('preloadPathAlias')
       ->with($cached_paths[$language->getId()], $language->getId())
-      ->will($this->returnValue(array($path => $alias)));
+      ->will($this->returnValue([$path => $alias]));
 
     // LookupPathAlias should not be called.
     $this->aliasStorage->expects($this->never())
@@ -305,13 +305,13 @@ class AliasManagerTest extends UnitTestCase {
     $alias = $this->randomMachineName();
 
     $language = $this->setUpCurrentLanguage();
-    $cached_language = new Language(array('id' => 'de'));
+    $cached_language = new Language(['id' => 'de']);
 
-    $cached_paths = array($cached_language->getId() => array($path));
+    $cached_paths = [$cached_language->getId() => [$path]];
     $this->cache->expects($this->once())
       ->method('get')
       ->with($this->cacheKey)
-      ->will($this->returnValue((object) array('data' => $cached_paths)));
+      ->will($this->returnValue((object) ['data' => $cached_paths]));
 
     // Simulate a request so that the preloaded paths are fetched.
     $this->aliasManager->setCacheKey($this->path);
@@ -356,11 +356,11 @@ class AliasManagerTest extends UnitTestCase {
 
     $language = $this->setUpCurrentLanguage();
 
-    $cached_paths = array($language->getId() => array($cached_path, $path));
+    $cached_paths = [$language->getId() => [$cached_path, $path]];
     $this->cache->expects($this->once())
       ->method('get')
       ->with($this->cacheKey)
-      ->will($this->returnValue((object) array('data' => $cached_paths)));
+      ->will($this->returnValue((object) ['data' => $cached_paths]));
 
     // Simulate a request so that the preloaded paths are fetched.
     $this->aliasManager->setCacheKey($this->path);
@@ -373,7 +373,7 @@ class AliasManagerTest extends UnitTestCase {
     $this->aliasStorage->expects($this->once())
       ->method('preloadPathAlias')
       ->with($cached_paths[$language->getId()], $language->getId())
-      ->will($this->returnValue(array($cached_path => $cached_alias)));
+      ->will($this->returnValue([$cached_path => $cached_alias]));
 
     // LookupPathAlias() should not be called.
     $this->aliasStorage->expects($this->never())
@@ -404,11 +404,11 @@ class AliasManagerTest extends UnitTestCase {
 
     $language = $this->setUpCurrentLanguage();
 
-    $cached_paths = array($language->getId() => array($cached_path));
+    $cached_paths = [$language->getId() => [$cached_path]];
     $this->cache->expects($this->once())
       ->method('get')
       ->with($this->cacheKey)
-      ->will($this->returnValue((object) array('data' => $cached_paths)));
+      ->will($this->returnValue((object) ['data' => $cached_paths]));
 
     // Simulate a request so that the preloaded paths are fetched.
     $this->aliasManager->setCacheKey($this->path);
@@ -421,7 +421,7 @@ class AliasManagerTest extends UnitTestCase {
     $this->aliasStorage->expects($this->once())
       ->method('preloadPathAlias')
       ->with($cached_paths[$language->getId()], $language->getId())
-      ->will($this->returnValue(array($cached_path => $cached_alias)));
+      ->will($this->returnValue([$cached_path => $cached_alias]));
 
     $this->aliasStorage->expects($this->once())
       ->method('lookupPathAlias')
@@ -493,11 +493,11 @@ class AliasManagerTest extends UnitTestCase {
 
     $language = $this->setUpCurrentLanguage();
 
-    $cached_paths = array($language->getId() => array($cached_path, $cached_no_alias_path));
+    $cached_paths = [$language->getId() => [$cached_path, $cached_no_alias_path]];
     $this->cache->expects($this->once())
       ->method('get')
       ->with($this->cacheKey)
-      ->will($this->returnValue((object) array('data' => $cached_paths)));
+      ->will($this->returnValue((object) ['data' => $cached_paths]));
 
     // Simulate a request so that the preloaded paths are fetched.
     $this->aliasManager->setCacheKey($this->path);
@@ -510,7 +510,7 @@ class AliasManagerTest extends UnitTestCase {
     $this->aliasStorage->expects($this->once())
       ->method('preloadPathAlias')
       ->with($cached_paths[$language->getId()], $language->getId())
-      ->will($this->returnValue(array($cached_path => $cached_alias)));
+      ->will($this->returnValue([$cached_path => $cached_alias]));
 
     $this->aliasStorage->expects($this->once())
       ->method('lookupPathAlias')
@@ -535,7 +535,7 @@ class AliasManagerTest extends UnitTestCase {
    *   The current language object.
    */
   protected function setUpCurrentLanguage() {
-    $language = new Language(array('id' => 'en'));
+    $language = new Language(['id' => 'en']);
 
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')

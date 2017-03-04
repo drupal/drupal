@@ -54,7 +54,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       $menus = $this->getMenuOptions();
     }
 
-    $options = array();
+    $options = [];
     $depth_limit = $this->getParentDepthLimit($id);
     foreach ($menus as $menu_name => $menu_title) {
       $options[$menu_name . ':'] = '<' . $menu_title . '>';
@@ -62,11 +62,11 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       $parameters = new MenuTreeParameters();
       $parameters->setMaxDepth($depth_limit);
       $tree = $this->menuLinkTree->load($menu_name, $parameters);
-      $manipulators = array(
-        array('callable' => 'menu.default_tree_manipulators:checkNodeAccess'),
-        array('callable' => 'menu.default_tree_manipulators:checkAccess'),
-        array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
-      );
+      $manipulators = [
+        ['callable' => 'menu.default_tree_manipulators:checkNodeAccess'],
+        ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+        ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+      ];
       $tree = $this->menuLinkTree->transform($tree, $manipulators);
       $this->parentSelectOptionsTreeWalk($tree, $menu_name, '--', $options, $id, $depth_limit, $cacheability);
     }
@@ -81,10 +81,10 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
     $options = $this->getParentSelectOptions($id, $menus, $options_cacheability);
     // If no options were found, there is nothing to select.
     if ($options) {
-      $element = array(
+      $element = [
         '#type' => 'select',
         '#options' => $options,
-      );
+      ];
       if (!isset($options[$menu_parent])) {
         // The requested menu parent cannot be found in the menu anymore. Try
         // setting it to the top level in the current menu.
@@ -93,12 +93,12 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       }
       if (isset($options[$menu_parent])) {
         // Only provide the default value if it is valid among the options.
-        $element += array('#default_value' => $menu_parent);
+        $element += ['#default_value' => $menu_parent];
       }
       $options_cacheability->applyTo($element);
       return $element;
     }
-    return array();
+    return [];
   }
 
   /**
@@ -183,7 +183,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    */
   protected function getMenuOptions(array $menu_names = NULL) {
     $menus = $this->entityManager->getStorage('menu')->loadMultiple($menu_names);
-    $options = array();
+    $options = [];
     /** @var \Drupal\system\MenuInterface[] $menus */
     foreach ($menus as $menu) {
       $options[$menu->id()] = $menu->label();

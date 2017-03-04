@@ -28,7 +28,7 @@ class PagerTestController extends ControllerBase {
     ];
     $query = db_select('watchdog', 'd')->extend('Drupal\Core\Database\Query\PagerSelectExtender')->element($element);
     $result = $query
-      ->fields('d', array('wid', 'type', 'timestamp'))
+      ->fields('d', ['wid', 'type', 'timestamp'])
       ->limit($limit)
       ->orderBy('d.wid')
       ->execute();
@@ -58,19 +58,19 @@ class PagerTestController extends ControllerBase {
     // Counter of calls to the current pager.
     $query_params = pager_get_query_parameters();
     $pager_calls = isset($query_params['pager_calls']) ? ($query_params['pager_calls'] ? $query_params['pager_calls'] : 0) : 0;
-    $build['l_pager_pager_0'] = array('#markup' => $this->t('Pager calls: @pager_calls', array('@pager_calls' => $pager_calls)));
+    $build['l_pager_pager_0'] = ['#markup' => $this->t('Pager calls: @pager_calls', ['@pager_calls' => $pager_calls])];
 
     // Pager.
-    $build['pager_pager_0'] = array(
+    $build['pager_pager_0'] = [
       '#type' => 'pager',
       '#element' => 0,
-      '#parameters' => array(
+      '#parameters' => [
         'pager_calls' => ++$pager_calls,
-      ),
+      ],
       '#pre_render' => [
         'Drupal\pager_test\Controller\PagerTestController::showPagerCacheContext',
       ]
-    );
+    ];
 
     return $build;
   }
@@ -82,34 +82,34 @@ class PagerTestController extends ControllerBase {
 
     // Build three tables with same query and different pagers.
     $build['pager_table_0'] = $this->buildTestTable(0, 20);
-    $build['pager_pager_0'] = array(
+    $build['pager_pager_0'] = [
       '#type' => 'container',
       '#attributes' => ['class' => ['test-pager-0']],
       'pager' => [
         '#type' => 'pager',
         '#element' => 0,
       ],
-    );
+    ];
 
     $build['pager_table_1'] = $this->buildTestTable(1, 20);
-    $build['pager_pager_1'] = array(
+    $build['pager_pager_1'] = [
       '#type' => 'container',
       '#attributes' => ['class' => ['test-pager-1']],
       'pager' => [
         '#type' => 'pager',
         '#element' => 1,
       ],
-    );
+    ];
 
     $build['pager_table_4'] = $this->buildTestTable(4, 20);
-    $build['pager_pager_4'] = array(
+    $build['pager_pager_4'] = [
       '#type' => 'container',
       '#attributes' => ['class' => ['test-pager-4']],
       'pager' => [
         '#type' => 'pager',
         '#element' => 4,
       ],
-    );
+    ];
 
     return $build;
   }

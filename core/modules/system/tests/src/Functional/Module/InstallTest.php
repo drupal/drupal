@@ -17,7 +17,7 @@ class InstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('module_test');
+  public static $modules = ['module_test'];
 
   /**
    * Verify that drupal_get_schema() can be used during module installation.
@@ -36,7 +36,7 @@ class InstallTest extends BrowserTestBase {
    * be an array.
    */
   public function testEnableUserTwice() {
-    \Drupal::service('module_installer')->install(array('user'), FALSE);
+    \Drupal::service('module_installer')->install(['user'], FALSE);
     $this->assertIdentical($this->config('core.extension')->get('module.user'), 0);
   }
 
@@ -70,9 +70,9 @@ class InstallTest extends BrowserTestBase {
    */
   public function testModuleNameLength() {
     $module_name = 'invalid_module_name_over_the_maximum_allowed_character_length';
-    $message = format_string('Exception thrown when enabling module %name with a name length over the allowed maximum', array('%name' => $module_name));
+    $message = format_string('Exception thrown when enabling module %name with a name length over the allowed maximum', ['%name' => $module_name]);
     try {
-      $this->container->get('module_installer')->install(array($module_name));
+      $this->container->get('module_installer')->install([$module_name]);
       $this->fail($message);
     }
     catch (ExtensionNameLengthException $e) {
@@ -80,9 +80,9 @@ class InstallTest extends BrowserTestBase {
     }
 
     // Since for the UI, the submit callback uses FALSE, test that too.
-    $message = format_string('Exception thrown when enabling as if via the UI the module %name with a name length over the allowed maximum', array('%name' => $module_name));
+    $message = format_string('Exception thrown when enabling as if via the UI the module %name with a name length over the allowed maximum', ['%name' => $module_name]);
     try {
-      $this->container->get('module_installer')->install(array($module_name), FALSE);
+      $this->container->get('module_installer')->install([$module_name], FALSE);
       $this->fail($message);
     }
     catch (ExtensionNameLengthException $e) {

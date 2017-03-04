@@ -24,15 +24,15 @@ class InstallerConfigDirectorySetNoDirectoryTest extends InstallerTestBase {
    */
   protected function setUp() {
     $this->syncDirectory = $this->publicFilesDirectory . '/config_' . Crypt::randomBytesBase64() . '/sync';
-    $this->settings['config_directories'][CONFIG_SYNC_DIRECTORY] = (object) array(
+    $this->settings['config_directories'][CONFIG_SYNC_DIRECTORY] = (object) [
       'value' => $this->syncDirectory,
       'required' => TRUE,
-    );
+    ];
     // Other directories will be created too.
-    $this->settings['config_directories']['custom'] = (object) array(
+    $this->settings['config_directories']['custom'] = (object) [
       'value' => $this->publicFilesDirectory . '/config_custom',
       'required' => TRUE,
-    );
+    ];
     parent::setUp();
   }
 

@@ -16,7 +16,7 @@ class NodeHelpTest extends BrowserTestBase {
    *
    * @var array.
    */
-  public static $modules = array('block', 'node', 'help');
+  public static $modules = ['block', 'node', 'help'];
 
   /**
    * The name of the test node type to create.
@@ -39,11 +39,11 @@ class NodeHelpTest extends BrowserTestBase {
     parent::setUp();
 
     // Create user.
-    $admin_user = $this->drupalCreateUser(array(
+    $admin_user = $this->drupalCreateUser([
       'administer content types',
       'administer nodes',
       'bypass node access',
-    ));
+    ]);
 
     $this->drupalLogin($admin_user);
     $this->drupalPlaceBlock('help_block');
@@ -52,10 +52,10 @@ class NodeHelpTest extends BrowserTestBase {
     $this->testText = t('Help text to find on node forms.');
 
     // Create content type.
-    $this->drupalCreateContentType(array(
+    $this->drupalCreateContentType([
       'type' => $this->testType,
       'help' => $this->testText,
-    ));
+    ]);
   }
 
   /**
@@ -68,7 +68,7 @@ class NodeHelpTest extends BrowserTestBase {
     $this->assertText($this->testText);
 
     // Create node and check the node edit form.
-    $node = $this->drupalCreateNode(array('type' => $this->testType));
+    $node = $this->drupalCreateNode(['type' => $this->testType]);
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertResponse(200);
     $this->assertText($this->testText);

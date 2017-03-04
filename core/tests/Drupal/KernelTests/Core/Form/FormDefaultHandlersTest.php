@@ -19,7 +19,7 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
    *
    * @var array
    */
-  public static $modules = array('system');
+  public static $modules = ['system'];
 
   /**
    * {@inheritdoc}
@@ -42,7 +42,7 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#validate'][] = '::customValidateForm';
     $form['#submit'][] = '::customSubmitForm';
-    $form['submit'] = array('#type' => 'submit', '#value' => 'Save');
+    $form['submit'] = ['#type' => 'submit', '#value' => 'Save'];
     return $form;
   }
 

@@ -64,7 +64,7 @@ class BundleConfigImportValidate extends ConfigImportValidateEventSubscriberBase
             ->execute();
           if (!empty($entity_ids)) {
             $entity = $this->entityManager->getStorage($entity_type_id)->load($bundle_id);
-            $event->getConfigImporter()->logError($this->t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', array('%entity_type' => $bundle_of_entity_type->getLabel(), '%bundle_label' => $bundle_of_entity_type->getBundleLabel(), '%bundle' => $entity->label())));
+            $event->getConfigImporter()->logError($this->t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', ['%entity_type' => $bundle_of_entity_type->getLabel(), '%bundle_label' => $bundle_of_entity_type->getBundleLabel(), '%bundle' => $entity->label()]));
           }
         }
       }

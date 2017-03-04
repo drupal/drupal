@@ -16,7 +16,7 @@ class FileNormalizeTest extends NormalizerTestBase {
    *
    * @var array
    */
-  public static $modules = array('file');
+  public static $modules = ['file'];
 
   /**
    * {@inheritdoc}
@@ -31,23 +31,23 @@ class FileNormalizeTest extends NormalizerTestBase {
    * Tests the normalize function.
    */
   public function testNormalize() {
-    $file_params = array(
+    $file_params = [
       'filename' => 'test_1.txt',
       'uri' => 'public://test_1.txt',
       'filemime' => 'text/plain',
       'status' => FILE_STATUS_PERMANENT,
-    );
+    ];
     // Create a new file entity.
     $file = File::create($file_params);
     file_put_contents($file->getFileUri(), 'hello world');
     $file->save();
 
-    $expected_array = array(
-      'uri' => array(
-        array(
-          'value' => file_create_url($file->getFileUri())),
-      ),
-    );
+    $expected_array = [
+      'uri' => [
+        [
+          'value' => file_create_url($file->getFileUri())],
+      ],
+    ];
 
     $normalized = $this->serializer->normalize($file, $this->format);
     $this->assertEqual($normalized['uri'], $expected_array['uri'], 'URI is normalized.');

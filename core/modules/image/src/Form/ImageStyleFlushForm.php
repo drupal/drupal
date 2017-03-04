@@ -14,7 +14,7 @@ class ImageStyleFlushForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to apply the updated %name image effect to all images?', array('%name' => $this->entity->label()));
+    return $this->t('Are you sure you want to apply the updated %name image effect to all images?', ['%name' => $this->entity->label()]);
   }
 
   /**
@@ -43,7 +43,7 @@ class ImageStyleFlushForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->flush();
-    drupal_set_message($this->t('The image style %name has been flushed.', array('%name' => $this->entity->label())));
+    drupal_set_message($this->t('The image style %name has been flushed.', ['%name' => $this->entity->label()]));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 

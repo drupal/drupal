@@ -34,7 +34,7 @@ class ResultRow {
    * @param array $values
    *   (optional) An array of values to add as properties on the object.
    */
-  public function __construct(array $values = array()) {
+  public function __construct(array $values = []) {
     foreach ($values as $key => $value) {
       $this->{$key} = $value;
     }

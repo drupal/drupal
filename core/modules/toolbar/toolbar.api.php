@@ -45,45 +45,45 @@ use Drupal\Core\Url;
  * @ingroup toolbar_tabs
  */
 function hook_toolbar() {
-  $items = array();
+  $items = [];
 
   // Add a search field to the toolbar. The search field employs no toolbar
   // module theming functions.
-  $items['global_search'] = array(
+  $items['global_search'] = [
     '#type' => 'toolbar_item',
-    'tab' => array(
+    'tab' => [
       '#type' => 'search',
-      '#attributes' => array(
+      '#attributes' => [
         'placeholder' => t('Search the site'),
-        'class' => array('search-global'),
-      ),
-    ),
+        'class' => ['search-global'],
+      ],
+    ],
     '#weight' => 200,
     // Custom CSS, JS or a library can be associated with the toolbar item.
-    '#attached' => array(
-      'library' => array(
+    '#attached' => [
+      'library' => [
         'search/global',
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 
   // The 'Home' tab is a simple link, which is wrapped in markup associated
   // with a visual tab styling.
-  $items['home'] = array(
+  $items['home'] = [
     '#type' => 'toolbar_item',
-    'tab' => array(
+    'tab' => [
       '#type' => 'link',
       '#title' => t('Home'),
       '#url' => Url::fromRoute('<front>'),
-      '#options' => array(
-        'attributes' => array(
+      '#options' => [
+        'attributes' => [
           'title' => t('Home page'),
-          'class' => array('toolbar-icon', 'toolbar-icon-home'),
-        ),
-      ),
-    ),
+          'class' => ['toolbar-icon', 'toolbar-icon-home'],
+        ],
+      ],
+    ],
     '#weight' => -20,
-  );
+  ];
 
   // A tray may be associated with a tab.
   //
@@ -93,27 +93,27 @@ function hook_toolbar() {
   // The tray should contain a renderable array. An optional #heading property
   // can be passed. This text is written to a heading tag in the tray as a
   // landmark for accessibility.
-  $items['commerce'] = array(
+  $items['commerce'] = [
     '#type' => 'toolbar_item',
-    'tab' => array(
+    'tab' => [
       '#type' => 'link',
       '#title' => t('Shopping cart'),
       '#url' => Url::fromRoute('cart'),
-      '#options' => array(
-        'attributes' => array(
+      '#options' => [
+        'attributes' => [
           'title' => t('Shopping cart'),
-        ),
-      ),
-    ),
-    'tray' => array(
+        ],
+      ],
+    ],
+    'tray' => [
       '#heading' => t('Shopping cart actions'),
-      'shopping_cart' => array(
+      'shopping_cart' => [
         '#theme' => 'item_list',
-        '#items' => array( /* An item list renderable array */ ),
-      ),
-    ),
+        '#items' => [ /* An item list renderable array */ ],
+      ],
+    ],
     '#weight' => 150,
-  );
+  ];
 
   // The tray can be used to render arbitrary content.
   //
@@ -123,28 +123,28 @@ function hook_toolbar() {
   // If the default behavior and styling of a toolbar tray is not desired, one
   // can render content to the toolbar element and apply custom theming and
   // behaviors.
-  $items['user_messages'] = array(
+  $items['user_messages'] = [
     // Include the toolbar_tab_wrapper to style the link like a toolbar tab.
     // Exclude the theme wrapper if custom styling is desired.
     '#type' => 'toolbar_item',
-    'tab' => array(
+    'tab' => [
       '#type' => 'link',
       '#theme' => 'user_message_toolbar_tab',
-      '#theme_wrappers' => array(),
+      '#theme_wrappers' => [],
       '#title' => t('Messages'),
       '#url' => Url::fromRoute('user.message'),
-      '#options' => array(
-        'attributes' => array(
+      '#options' => [
+        'attributes' => [
           'title' => t('Messages'),
-        ),
-      ),
-    ),
-    'tray' => array(
+        ],
+      ],
+    ],
+    'tray' => [
       '#heading' => t('User messages'),
-      'messages' => array(/* renderable content */),
-    ),
+      'messages' => [/* renderable content */],
+    ],
     '#weight' => 125,
-  );
+  ];
 
   return $items;
 }

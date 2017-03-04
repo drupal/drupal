@@ -29,30 +29,30 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'entity_test', 'user');
+  public static $modules = ['comment', 'entity_test', 'user'];
 
   /**
    * Fields that only users with administer comments permissions can change.
    *
    * @var array
    */
-  protected $administrativeFields = array(
+  protected $administrativeFields = [
     'uid',
     'status',
     'created',
-  );
+  ];
 
   /**
    * These fields are automatically managed and can not be changed by any user.
    *
    * @var array
    */
-  protected $readOnlyFields = array(
+  protected $readOnlyFields = [
     'changed',
     'hostname',
     'cid',
     'thread',
-  );
+  ];
 
   /**
    * These fields can be edited on create only.
@@ -73,19 +73,19 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected $contactFields = array(
+  protected $contactFields = [
     'name',
     'mail',
     'homepage',
-  );
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('user', 'comment'));
-    $this->installSchema('comment', array('comment_entity_statistics'));
+    $this->installConfig(['user', 'comment']);
+    $this->installSchema('comment', ['comment_entity_statistics']);
   }
 
   /**

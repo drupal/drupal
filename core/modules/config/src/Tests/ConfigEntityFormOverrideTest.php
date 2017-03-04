@@ -14,7 +14,7 @@ class ConfigEntityFormOverrideTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('config_test');
+  public static $modules = ['config_test'];
 
   /**
    * Tests that overrides do not affect forms or listing screens.
@@ -29,10 +29,10 @@ class ConfigEntityFormOverrideTest extends WebTestBase {
     $config_test_storage = $this->container->get('entity.manager')->getStorage('config_test');
 
     // Set up an override.
-    $settings['config']['config_test.dynamic.dotted.default']['label'] = (object) array(
+    $settings['config']['config_test.dynamic.dotted.default']['label'] = (object) [
       'value' => $overridden_label,
       'required' => TRUE,
-    );
+    ];
     $this->writeSettings($settings);
 
     // Test that the overridden label is loaded with the entity.
@@ -50,9 +50,9 @@ class ConfigEntityFormOverrideTest extends WebTestBase {
     $this->assertNoText($overridden_label);
 
     // Change to a new label and test that the listing now has the edited label.
-    $edit = array(
+    $edit = [
       'label' => $edited_label,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->drupalGet('admin/structure/config_test');
     $this->assertNoText($overridden_label);

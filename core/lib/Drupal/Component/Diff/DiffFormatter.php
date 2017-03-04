@@ -41,10 +41,10 @@ class DiffFormatter {
    *
    * @var array
    */
-  protected $line_stats = array(
-    'counter' => array('x' => 0, 'y' => 0),
-    'offset' => array('x' => 0, 'y' => 0),
-  );
+  protected $line_stats = [
+    'counter' => ['x' => 0, 'y' => 0],
+    'offset' => ['x' => 0, 'y' => 0],
+  ];
 
   /**
    * Format a diff.
@@ -58,7 +58,7 @@ class DiffFormatter {
   public function format(Diff $diff) {
     $xi = $yi = 1;
     $block = FALSE;
-    $context = array();
+    $context = [];
 
     $nlead = $this->leading_context_lines;
     $ntrail = $this->trailing_context_lines;
@@ -87,7 +87,7 @@ class DiffFormatter {
           $context = array_slice($context, sizeof($context) - $nlead);
           $x0 = $xi - sizeof($context);
           $y0 = $yi - sizeof($context);
-          $block = array();
+          $block = [];
           if ($context) {
             $block[] = new DiffOpCopy($context);
           }

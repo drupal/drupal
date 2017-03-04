@@ -23,7 +23,7 @@ class StaticTranslation implements TranslatorInterface {
    * @param array $translations
    *   Array of override strings indexed by language and context
    */
-  public function __construct($translations = array()) {
+  public function __construct($translations = []) {
     $this->translations = $translations;
   }
 
@@ -46,7 +46,7 @@ class StaticTranslation implements TranslatorInterface {
    * {@inheritdoc}
    */
   public function reset() {
-    $this->translations = array();
+    $this->translations = [];
   }
 
   /**
@@ -66,7 +66,7 @@ class StaticTranslation implements TranslatorInterface {
     // constructor. This can be useful while testing, but it does not support
     // loading specific languages. All available languages should be passed
     // in the constructor array.
-    return array();
+    return [];
   }
 
 }

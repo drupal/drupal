@@ -15,13 +15,13 @@ class BlockContentViewBuilder extends EntityViewBuilder {
    * {@inheritdoc}
    */
   public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
-    return $this->viewMultiple(array($entity), $view_mode, $langcode)[0];
+    return $this->viewMultiple([$entity], $view_mode, $langcode)[0];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
+  public function viewMultiple(array $entities = [], $view_mode = 'full', $langcode = NULL) {
     $build_list = parent::viewMultiple($entities, $view_mode, $langcode);
     // Apply the buildMultiple() #pre_render callback immediately, to make
     // bubbling of attributes and contextual links to the actual block work.
@@ -48,10 +48,10 @@ class BlockContentViewBuilder extends EntityViewBuilder {
     parent::alterBuild($build, $entity, $display, $view_mode);
     // Add contextual links for this custom block.
     if (!$entity->isNew()) {
-      $build['#contextual_links']['block_content'] = array(
-        'route_parameters' => array('block_content' => $entity->id()),
-        'metadata' => array('changed' => $entity->getChangedTime()),
-      );
+      $build['#contextual_links']['block_content'] = [
+        'route_parameters' => ['block_content' => $entity->id()],
+        'metadata' => ['changed' => $entity->getChangedTime()],
+      ];
     }
   }
 

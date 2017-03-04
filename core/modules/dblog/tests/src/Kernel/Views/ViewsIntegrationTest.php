@@ -22,14 +22,14 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_dblog');
+  public static $testViews = ['test_dblog'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('dblog', 'dblog_test_views', 'user');
+  public static $modules = ['dblog', 'dblog_test_views', 'user'];
 
   /**
    * {@inheritdoc}
@@ -40,9 +40,9 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
     // Rebuild the router, otherwise we can't generate links.
     $this->container->get('router.builder')->rebuild();
 
-    $this->installSchema('dblog', array('watchdog'));
+    $this->installSchema('dblog', ['watchdog']);
 
-    ViewTestData::createTestViews(get_class($this), array('dblog_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['dblog_test_views']);
   }
 
   /**
@@ -53,35 +53,35 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
     // Remove the watchdog entries added by the potential batch process.
     $this->container->get('database')->truncate('watchdog')->execute();
 
-    $entries = array();
+    $entries = [];
     // Setup a watchdog entry without tokens.
-    $entries[] = array(
+    $entries[] = [
       'message' => $this->randomMachineName(),
-      'variables' => array('link' => \Drupal::l('Link', new Url('<front>'))),
-    );
+      'variables' => ['link' => \Drupal::l('Link', new Url('<front>'))],
+    ];
     // Setup a watchdog entry with one token.
-    $entries[] = array(
+    $entries[] = [
       'message' => '@token1',
-      'variables' => array('@token1' => $this->randomMachineName(), 'link' => \Drupal::l('Link', new Url('<front>'))),
-    );
+      'variables' => ['@token1' => $this->randomMachineName(), 'link' => \Drupal::l('Link', new Url('<front>'))],
+    ];
     // Setup a watchdog entry with two tokens.
-    $entries[] = array(
+    $entries[] = [
       'message' => '@token1 @token2',
       // Setup a link with a tag which is filtered by
       // \Drupal\Component\Utility\Xss::filterAdmin() in order to make sure
       // that strings which are not marked as safe get filtered.
-      'variables' => array(
+      'variables' => [
         '@token1' => $this->randomMachineName(),
         '@token2' => $this->randomMachineName(),
         'link' => '<a href="' . \Drupal::url('<front>') . '"><object>Link</object></a>',
-      ),
-    );
+      ],
+    ];
     $logger_factory = $this->container->get('logger.factory');
     foreach ($entries as $entry) {
-      $entry += array(
+      $entry += [
         'type' => 'test-views',
         'severity' => RfcLogLevel::NOTICE,
-      );
+      ];
       $logger_factory->get($entry['type'])->log($entry['severity'], $entry['message'], $entry['variables']);
     }
 

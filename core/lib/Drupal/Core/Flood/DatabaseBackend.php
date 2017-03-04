@@ -80,12 +80,12 @@ class DatabaseBackend implements FloodInterface {
    */
   protected function doInsert($name, $window, $identifier) {
     $this->connection->insert(static::TABLE_NAME)
-      ->fields(array(
+      ->fields([
         'event' => $name,
         'identifier' => $identifier,
         'timestamp' => REQUEST_TIME,
         'expiration' => REQUEST_TIME + $window,
-      ))
+      ])
       ->execute();
   }
 

@@ -26,7 +26,7 @@ class DateTimeFieldRdfaTest extends FieldRdfaTestBase {
   /**
   * {@inheritdoc}
   */
-  public static $modules = array('datetime');
+  public static $modules = ['datetime'];
 
   protected function setUp() {
     parent::setUp();
@@ -35,12 +35,12 @@ class DateTimeFieldRdfaTest extends FieldRdfaTestBase {
 
     // Add the mapping.
     $mapping = rdf_get_mapping('entity_test', 'entity_test');
-    $mapping->setFieldMapping($this->fieldName, array(
-      'properties' => array('schema:dateCreated'),
-    ))->save();
+    $mapping->setFieldMapping($this->fieldName, [
+      'properties' => ['schema:dateCreated'],
+    ])->save();
 
     // Set up test entity.
-    $this->entity = EntityTest::create(array());
+    $this->entity = EntityTest::create([]);
     $this->entity->{$this->fieldName}->value = $this->testValue;
   }
 
@@ -48,7 +48,7 @@ class DateTimeFieldRdfaTest extends FieldRdfaTestBase {
    * Tests the default formatter.
    */
   public function testDefaultFormatter() {
-    $this->assertFormatterRdfa(array('type' => 'datetime_default'), 'http://schema.org/dateCreated', array('value' => $this->testValue . 'Z', 'type' => 'literal', 'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime'));
+    $this->assertFormatterRdfa(['type' => 'datetime_default'], 'http://schema.org/dateCreated', ['value' => $this->testValue . 'Z', 'type' => 'literal', 'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime']);
   }
 
 }

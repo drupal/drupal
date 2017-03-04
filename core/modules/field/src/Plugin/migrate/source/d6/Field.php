@@ -20,7 +20,7 @@ class Field extends DrupalSqlBase {
    */
   public function query() {
     $query = $this->select('content_node_field', 'cnf')
-      ->fields('cnf', array(
+      ->fields('cnf', [
         'field_name',
         'type',
         'global_settings',
@@ -31,7 +31,7 @@ class Field extends DrupalSqlBase {
         'db_columns',
         'active',
         'locked',
-      ))
+      ])
       ->distinct();
     // Only import fields which are actually being used.
     $query->innerJoin('content_node_field_instance', 'cnfi', 'cnfi.field_name = cnf.field_name');
@@ -43,7 +43,7 @@ class Field extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'field_name' => $this->t('Field name'),
       'type' => $this->t('Type (text, integer, ....)'),
       'widget_type' => $this->t('An instance-specific widget type'),
@@ -55,7 +55,7 @@ class Field extends DrupalSqlBase {
       'db_columns' => $this->t('DB Columns'),
       'active' => $this->t('Active'),
       'locked' => $this->t('Locked'),
-    );
+    ];
   }
 
   /**
@@ -96,10 +96,10 @@ class Field extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function getIds() {
-    $ids['field_name'] = array(
+    $ids['field_name'] = [
       'type' => 'string',
       'alias' => 'cnf',
-    );
+    ];
     return $ids;
   }
 

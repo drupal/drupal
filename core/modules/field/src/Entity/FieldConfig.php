@@ -193,7 +193,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     parent::preDelete($storage, $fields);
     // Keep the field definitions in the state storage so we can use them
     // later during field_purge_batch().
-    $deleted_fields = $state->get('field.field.deleted') ?: array();
+    $deleted_fields = $state->get('field.field.deleted') ?: [];
     foreach ($fields as $field) {
       if (!$field->deleted) {
         $config = $field->toArray();
@@ -228,7 +228,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
 
     // Delete the associated field storages if they are not used anymore and are
     // not persistent.
-    $storages_to_delete = array();
+    $storages_to_delete = [];
     foreach ($fields as $field) {
       $storage_definition = $field->getFieldStorageDefinition();
       if (!$field->deleted && !$field->isUninstalling() && $storage_definition->isDeletable()) {
@@ -306,7 +306,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    */
   public function getDisplayOptions($display_context) {
     // Hide configurable fields by default.
-    return array('region' => 'hidden');
+    return ['region' => 'hidden'];
   }
 
   /**

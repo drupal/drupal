@@ -49,7 +49,7 @@ class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathP
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     // The special path '<front>' links to the default front page.
     if ($path === '/<front>') {
       $path = '/';

@@ -16,11 +16,11 @@ class NodeLoadMultipleTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('views');
+  public static $modules = ['views'];
 
   protected function setUp() {
     parent::setUp();
-    $web_user = $this->drupalCreateUser(array('create article content', 'create page content'));
+    $web_user = $this->drupalCreateUser(['create article content', 'create page content']);
     $this->drupalLogin($web_user);
   }
 
@@ -28,10 +28,10 @@ class NodeLoadMultipleTest extends NodeTestBase {
    * Creates four nodes and ensures that they are loaded correctly.
    */
   function testNodeMultipleLoad() {
-    $node1 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
-    $node2 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
-    $node3 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 0));
-    $node4 = $this->drupalCreateNode(array('type' => 'page', 'promote' => 0));
+    $node1 = $this->drupalCreateNode(['type' => 'article', 'promote' => 1]);
+    $node2 = $this->drupalCreateNode(['type' => 'article', 'promote' => 1]);
+    $node3 = $this->drupalCreateNode(['type' => 'article', 'promote' => 0]);
+    $node4 = $this->drupalCreateNode(['type' => 'page', 'promote' => 0]);
 
     // Confirm that promoted nodes appear in the default node listing.
     $this->drupalGet('node');
@@ -41,16 +41,16 @@ class NodeLoadMultipleTest extends NodeTestBase {
     $this->assertNoText($node4->label(), 'Node title does not appear in the default listing.');
     // Load nodes with only a condition. Nodes 3 and 4 will be loaded.
     $nodes = $this->container->get('entity_type.manager')->getStorage('node')
-      ->loadByProperties(array('promote' => 0));
+      ->loadByProperties(['promote' => 0]);
     $this->assertEqual($node3->label(), $nodes[$node3->id()]->label(), 'Node was loaded.');
     $this->assertEqual($node4->label(), $nodes[$node4->id()]->label(), 'Node was loaded.');
     $count = count($nodes);
-    $this->assertTrue($count == 2, format_string('@count nodes loaded.', array('@count' => $count)));
+    $this->assertTrue($count == 2, format_string('@count nodes loaded.', ['@count' => $count]));
 
     // Load nodes by nid. Nodes 1, 2 and 4 will be loaded.
-    $nodes = Node::loadMultiple(array(1, 2, 4));
+    $nodes = Node::loadMultiple([1, 2, 4]);
     $count = count($nodes);
-    $this->assertTrue(count($nodes) == 3, format_string('@count nodes loaded', array('@count' => $count)));
+    $this->assertTrue(count($nodes) == 3, format_string('@count nodes loaded', ['@count' => $count]));
     $this->assertTrue(isset($nodes[$node1->id()]), 'Node is correctly keyed in the array');
     $this->assertTrue(isset($nodes[$node2->id()]), 'Node is correctly keyed in the array');
     $this->assertTrue(isset($nodes[$node4->id()]), 'Node is correctly keyed in the array');

@@ -16,7 +16,7 @@ class FactoryTest extends PluginTestBase {
    */
   function testDefaultFactory() {
     // Ensure a non-derivative plugin can be instantiated.
-    $plugin = $this->testPluginManager->createInstance('user_login', array('title' => 'Please enter your login name and password'));
+    $plugin = $this->testPluginManager->createInstance('user_login', ['title' => 'Please enter your login name and password']);
     $this->assertIdentical(get_class($plugin), 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock', 'Correct plugin class instantiated with default factory.');
     $this->assertIdentical($plugin->getTitle(), 'Please enter your login name and password', 'Plugin instance correctly configured.');
 
@@ -46,19 +46,19 @@ class FactoryTest extends PluginTestBase {
    */
   function testReflectionFactory() {
     // Ensure a non-derivative plugin can be instantiated.
-    $plugin = $this->mockBlockManager->createInstance('user_login', array('title' => 'Please enter your login name and password'));
+    $plugin = $this->mockBlockManager->createInstance('user_login', ['title' => 'Please enter your login name and password']);
     $this->assertIdentical(get_class($plugin), 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock', 'Correct plugin class instantiated.');
     $this->assertIdentical($plugin->getTitle(), 'Please enter your login name and password', 'Plugin instance correctly configured.');
 
     // Ensure a derivative plugin can be instantiated.
-    $plugin = $this->mockBlockManager->createInstance('menu:main_menu', array('depth' => 2));
+    $plugin = $this->mockBlockManager->createInstance('menu:main_menu', ['depth' => 2]);
     $this->assertIdentical($plugin->getContent(), '<ul><li>1<ul><li>1.1</li></ul></li></ul>', 'Derived plugin instance correctly instantiated and configured.');
 
     // Ensure that attempting to instantiate non-existing plugins throws a
     // PluginException. Test this for a non-existing base plugin, a non-existing
     // derivative plugin, and a base plugin that may not be used without
     // deriving.
-    foreach (array('non_existing', 'menu:non_existing', 'menu') as $invalid_id) {
+    foreach (['non_existing', 'menu:non_existing', 'menu'] as $invalid_id) {
       try {
         $this->mockBlockManager->createInstance($invalid_id);
         $this->fail('Drupal\Component\Plugin\Exception\ExceptionInterface expected');

@@ -129,7 +129,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
     // If the recipient is a registered user with a language preference, use
     // the recipient's preferred language. Otherwise, use the system default
     // language.
-    $recipient_accounts = $this->storage->loadByProperties(array('mail' => $recipient));
+    $recipient_accounts = $this->storage->loadByProperties(['mail' => $recipient]);
     $recipient_account = reset($recipient_accounts);
     if ($recipient_account) {
       $langcode = $recipient_account->getPreferredLangcode();
@@ -137,13 +137,13 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
     else {
       $langcode = $this->languageManager->getDefaultLanguage()->getId();
     }
-    $params = array('context' => $this->configuration);
+    $params = ['context' => $this->configuration];
 
     if ($this->mailManager->mail('system', 'action_send_email', $recipient, $langcode, $params)) {
-      $this->logger->notice('Sent email to %recipient', array('%recipient' => $recipient));
+      $this->logger->notice('Sent email to %recipient', ['%recipient' => $recipient]);
     }
     else {
-      $this->logger->error('Unable to send email to %recipient', array('%recipient' => $recipient));
+      $this->logger->error('Unable to send email to %recipient', ['%recipient' => $recipient]);
     }
   }
 
@@ -151,39 +151,39 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'recipient' => '',
       'subject' => '',
       'message' => '',
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['recipient'] = array(
+    $form['recipient'] = [
       '#type' => 'textfield',
       '#title' => t('Recipient email address'),
       '#default_value' => $this->configuration['recipient'],
       '#maxlength' => '254',
       '#description' => t('You may also use tokens: [node:author:mail], [comment:author:mail], etc. Separate recipients with a comma.'),
-    );
-    $form['subject'] = array(
+    ];
+    $form['subject'] = [
       '#type' => 'textfield',
       '#title' => t('Subject'),
       '#default_value' => $this->configuration['subject'],
       '#maxlength' => '254',
       '#description' => t('The subject of the message.'),
-    );
-    $form['message'] = array(
+    ];
+    $form['message'] = [
       '#type' => 'textarea',
       '#title' => t('Message'),
       '#default_value' => $this->configuration['message'],
       '#cols' => '80',
       '#rows' => '20',
       '#description' => t('The message that should be sent. You may include placeholders like [node:title], [user:account-name], [user:display-name] and [comment:body] to represent data that will be different each time message is sent. Not all placeholders will be available in all contexts.'),
-    );
+    ];
     return $form;
   }
 
@@ -193,7 +193,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     if (!$this->emailValidator->isValid($form_state->getValue('recipient')) && strpos($form_state->getValue('recipient'), ':mail') === FALSE) {
       // We want the literal %author placeholder to be emphasized in the error message.
-      $form_state->setErrorByName('recipient', t('Enter a valid email address or use a token email address such as %author.', array('%author' => '[node:author:mail]')));
+      $form_state->setErrorByName('recipient', t('Enter a valid email address or use a token email address such as %author.', ['%author' => '[node:author:mail]']));
     }
   }
 

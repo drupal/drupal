@@ -26,18 +26,18 @@ class TRexEditor extends EditorBase {
    * {@inheritdoc}
    */
   public function getDefaultSettings() {
-    return array('stumpy_arms' => TRUE);
+    return ['stumpy_arms' => TRUE];
   }
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state, Editor $editor) {
-    $form['stumpy_arms'] = array(
+    $form['stumpy_arms'] = [
       '#title' => t('Stumpy arms'),
       '#type' => 'checkbox',
       '#default_value' => TRUE,
-    );
+    ];
     return $form;
   }
 
@@ -45,7 +45,7 @@ class TRexEditor extends EditorBase {
    * {@inheritdoc}
    */
   public function getJSSettings(Editor $editor) {
-    $js_settings = array();
+    $js_settings = [];
     $settings = $editor->getSettings();
     if ($settings['stumpy_arms']) {
       $js_settings['doMyArmsLookStumpy'] = TRUE;
@@ -57,9 +57,9 @@ class TRexEditor extends EditorBase {
    * {@inheritdoc}
    */
   public function getLibraries(Editor $editor) {
-    return array(
+    return [
       'editor_test/trex',
-    );
+    ];
   }
 
 }

@@ -58,7 +58,7 @@ class ViewsUIController extends ControllerBase {
 
     // Fetch all fieldapi fields which are used in views
     // Therefore search in all views, displays and handler-types.
-    $fields = array();
+    $fields = [];
     $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($views as $view) {
       $executable = $view->getExecutable();
@@ -81,12 +81,12 @@ class ViewsUIController extends ControllerBase {
       }
     }
 
-    $header = array(t('Field name'), t('Used in'));
-    $rows = array();
+    $header = [t('Field name'), t('Used in')];
+    $rows = [];
     foreach ($fields as $field_name => $views) {
       $rows[$field_name]['data'][0]['data']['#plain_text'] = $field_name;
       foreach ($views as $view) {
-        $rows[$field_name]['data'][1][] = $this->l($view, new Url('entity.view.edit_form', array('view' => $view)));
+        $rows[$field_name]['data'][1][] = $this->l($view, new Url('entity.view.edit_form', ['view' => $view]));
       }
       $item_list = [
         '#theme' => 'item_list',
@@ -98,12 +98,12 @@ class ViewsUIController extends ControllerBase {
 
     // Sort rows by field name.
     ksort($rows);
-    $output = array(
+    $output = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => t('No fields have been used in views yet.'),
-    );
+    ];
 
     return $output;
   }
@@ -120,7 +120,7 @@ class ViewsUIController extends ControllerBase {
       $views = [];
       // Link each view name to the view itself.
       foreach ($row['views'] as $row_name => $view) {
-        $views[] = $this->l($view, new Url('entity.view.edit_form', array('view' => $view)));
+        $views[] = $this->l($view, new Url('entity.view.edit_form', ['view' => $view]));
       }
       unset($row['views']);
       $row['views']['data'] = [
@@ -132,12 +132,12 @@ class ViewsUIController extends ControllerBase {
 
     // Sort rows by field name.
     ksort($rows);
-    return array(
+    return [
       '#type' => 'table',
-      '#header' => array(t('Type'), t('Name'), t('Provided by'), t('Used in')),
+      '#header' => [t('Type'), t('Name'), t('Provided by'), t('Used in')],
       '#rows' => $rows,
       '#empty' => t('There are no enabled views.'),
-    );
+    ];
   }
 
   /**
@@ -180,7 +180,7 @@ class ViewsUIController extends ControllerBase {
    *   A JSON response containing the autocomplete suggestions for Views tags.
    */
   public function autocompleteTag(Request $request) {
-    $matches = array();
+    $matches = [];
     $string = $request->query->get('q');
     // Get matches from default views.
     $views = $this->entityManager()->getStorage('view')->loadMultiple();
@@ -223,8 +223,8 @@ class ViewsUIController extends ControllerBase {
     }
     $build['#title'] = $name;
 
-    $build['edit'] = $this->entityFormBuilder()->getForm($view, 'edit', array('display_id' => $display_id));
-    $build['preview'] = $this->entityFormBuilder()->getForm($view, 'preview', array('display_id' => $display_id));
+    $build['edit'] = $this->entityFormBuilder()->getForm($view, 'edit', ['display_id' => $display_id]);
+    $build['preview'] = $this->entityFormBuilder()->getForm($view, 'preview', ['display_id' => $display_id]);
     return $build;
   }
 

@@ -40,7 +40,7 @@ class NodeType extends DrupalSqlBase {
    */
   public function query() {
     return $this->select('node_type', 't')
-      ->fields('t', array(
+      ->fields('t', [
         'type',
         'name',
         'module',
@@ -54,7 +54,7 @@ class NodeType extends DrupalSqlBase {
         'modified',
         'locked',
         'orig_type',
-      ))
+      ])
       ->orderBy('t.type');
   }
 
@@ -62,7 +62,7 @@ class NodeType extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'type' => $this->t('Machine name of the node type.'),
       'name' => $this->t('Human name of the node type.'),
       'module' => $this->t('The module providing the node type.'),
@@ -77,7 +77,7 @@ class NodeType extends DrupalSqlBase {
       'locked' => $this->t('Flag.'),
       'orig_type' => $this->t('The original type.'),
       'teaser_length' => $this->t('Teaser length'),
-    );
+    ];
   }
 
   /**
@@ -86,7 +86,7 @@ class NodeType extends DrupalSqlBase {
   protected function initializeIterator() {
     $this->teaserLength = $this->variableGet('teaser_length', 600);
     $this->nodePreview = $this->variableGet('node_preview', 0);
-    $this->themeSettings = $this->variableGet('theme_settings', array());
+    $this->themeSettings = $this->variableGet('theme_settings', []);
     return parent::initializeIterator();
   }
 
@@ -98,9 +98,9 @@ class NodeType extends DrupalSqlBase {
     $row->setSourceProperty('node_preview', $this->nodePreview);
 
     $type = $row->getSourceProperty('type');
-    $source_options = $this->variableGet('node_options_' . $type, array('promote', 'sticky'));
-    $options = array();
-    foreach (array('promote', 'sticky', 'status', 'revision') as $item) {
+    $source_options = $this->variableGet('node_options_' . $type, ['promote', 'sticky']);
+    $options = [];
+    foreach (['promote', 'sticky', 'status', 'revision'] as $item) {
       $options[$item] = in_array($item, $source_options);
     }
     $row->setSourceProperty('options', $options);

@@ -21,10 +21,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return array(
-      'allowed_values' => array(),
+    return [
+      'allowed_values' => [],
       'allowed_values_function' => '',
-    ) + parent::defaultStorageSettings();
+    ] + parent::defaultStorageSettings();
   }
 
   /**
@@ -85,28 +85,28 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $allowed_values = $this->getSetting('allowed_values');
     $allowed_values_function = $this->getSetting('allowed_values_function');
 
-    $element['allowed_values'] = array(
+    $element['allowed_values'] = [
       '#type' => 'textarea',
       '#title' => t('Allowed values list'),
       '#default_value' => $this->allowedValuesString($allowed_values),
       '#rows' => 10,
       '#access' => empty($allowed_values_function),
-      '#element_validate' => array(array(get_class($this), 'validateAllowedValues')),
+      '#element_validate' => [[get_class($this), 'validateAllowedValues']],
       '#field_has_data' => $has_data,
       '#field_name' => $this->getFieldDefinition()->getName(),
       '#entity_type' => $this->getEntity()->getEntityTypeId(),
       '#allowed_values' => $allowed_values,
-    );
+    ];
 
     $element['allowed_values']['#description'] = $this->allowedValuesDescription();
 
-    $element['allowed_values_function'] = array(
+    $element['allowed_values_function'] = [
       '#type' => 'item',
       '#title' => t('Allowed values list'),
-      '#markup' => t('The value of this field is being determined by the %function function and may not be changed.', array('%function' => $allowed_values_function)),
+      '#markup' => t('The value of this field is being determined by the %function function and may not be changed.', ['%function' => $allowed_values_function]),
       '#access' => !empty($allowed_values_function),
       '#value' => $allowed_values_function,
-    );
+    ];
 
     return $element;
   }
@@ -171,7 +171,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::allowedValuesString()
    */
   protected static function extractAllowedValues($string, $has_data) {
-    $values = array();
+    $values = [];
 
     $list = explode("\n", $string);
     $list = array_map('trim', $list);
@@ -180,7 +180,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $generated_keys = $explicit_keys = FALSE;
     foreach ($list as $position => $text) {
       // Check for an explicit key.
-      $matches = array();
+      $matches = [];
       if (preg_match('/(.*)\|(.*)/', $text, $matches)) {
         // Trim key and value to avoid unwanted spaces issues.
         $key = trim($matches[1]);
@@ -239,7 +239,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    *    - Each value is in the format "value|label" or "value".
    */
   protected function allowedValuesString($values) {
-    $lines = array();
+    $lines = [];
     foreach ($values as $key => $value) {
       $lines[] = "$key|$value";
     }
@@ -280,7 +280,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::structureAllowedValues()
    */
   protected static function simplifyAllowedValues(array $structured_values) {
-    $values = array();
+    $values = [];
     foreach ($structured_values as $item) {
       if (is_array($item['label'])) {
         // Nested elements are embedded in the label.
@@ -305,15 +305,15 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::simplifyAllowedValues()
    */
   protected static function structureAllowedValues(array $values) {
-    $structured_values = array();
+    $structured_values = [];
     foreach ($values as $value => $label) {
       if (is_array($label)) {
         $label = static::structureAllowedValues($label);
       }
-      $structured_values[] = array(
+      $structured_values[] = [
         'value' => static::castAllowedValue($value),
         'label' => $label,
-      );
+      ];
     }
     return $structured_values;
   }

@@ -46,12 +46,12 @@ class Dropbutton extends RenderElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
-      '#pre_render' => array(
-        array($class, 'preRenderDropbutton'),
-      ),
+    return [
+      '#pre_render' => [
+        [$class, 'preRenderDropbutton'],
+      ],
       '#theme' => 'links__dropbutton',
-    );
+    ];
   }
 
   /**
@@ -61,7 +61,7 @@ class Dropbutton extends RenderElement {
     $element['#attached']['library'][] = 'core/drupal.dropbutton';
     $element['#attributes']['class'][] = 'dropbutton';
     if (!isset($element['#theme_wrappers'])) {
-      $element['#theme_wrappers'] = array();
+      $element['#theme_wrappers'] = [];
     }
     array_unshift($element['#theme_wrappers'], 'dropbutton_wrapper');
 

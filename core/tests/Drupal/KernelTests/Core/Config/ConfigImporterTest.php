@@ -28,12 +28,12 @@ class ConfigImporterTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test', 'system', 'config_import_test');
+  public static $modules = ['config_test', 'system', 'config_import_test'];
 
   protected function setUp() {
     parent::setUp();
 
-    $this->installConfig(array('config_test'));
+    $this->installConfig(['config_test']);
     // Installing config_test's default configuration pollutes the global
     // variable being used for recording hook invocations by this test already,
     // so it has to be cleared out manually.
@@ -106,7 +106,7 @@ class ConfigImporterTest extends KernelTestBase {
     catch (ConfigImporterException $e) {
       $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
       $error_log = $this->configImporter->getErrors();
-      $expected = array('Site UUID in source storage does not match the target storage.');
+      $expected = ['Site UUID in source storage does not match the target storage.'];
       $this->assertEqual($expected, $error_log);
     }
   }
@@ -160,11 +160,11 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertIdentical($storage->exists($dynamic_name), FALSE, $dynamic_name . ' not found.');
 
     // Create new config entity.
-    $original_dynamic_data = array(
+    $original_dynamic_data = [
       'uuid' => '30df59bd-7b03-4cf7-bb35-d42fc49f0651',
       'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
       'status' => TRUE,
-      'dependencies' => array(),
+      'dependencies' => [],
       'id' => 'new',
       'label' => 'New',
       'weight' => 0,
@@ -172,7 +172,7 @@ class ConfigImporterTest extends KernelTestBase {
       'size' => '',
       'size_value' => '',
       'protected_property' => '',
-    );
+    ];
     $sync->write($dynamic_name, $original_dynamic_data);
 
     $this->assertIdentical($sync->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
@@ -211,23 +211,23 @@ class ConfigImporterTest extends KernelTestBase {
     $sync = $this->container->get('config.storage.sync');
     $uuid = $this->container->get('uuid');
 
-    $values_primary = array(
+    $values_primary = [
       'id' => 'primary',
       'label' => 'Primary',
       'weight' => 0,
       'uuid' => $uuid->generate(),
-    );
+    ];
     $sync->write($name_primary, $values_primary);
-    $values_secondary = array(
+    $values_secondary = [
       'id' => 'secondary',
       'label' => 'Secondary Sync',
       'weight' => 0,
       'uuid' => $uuid->generate(),
       // Add a dependency on primary, to ensure that is synced first.
-      'dependencies' => array(
-        'config' => array($name_primary),
-      )
-    );
+      'dependencies' => [
+        'config' => [$name_primary],
+      ]
+    ];
     $sync->write($name_secondary, $values_secondary);
 
     // Import.
@@ -245,7 +245,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 1);
-    $this->assertEqual($logs[0], SafeMarkup::format('Deleted and replaced configuration entity "@name"', array('@name' => $name_secondary)));
+    $this->assertEqual($logs[0], SafeMarkup::format('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]));
   }
 
   /**
@@ -257,23 +257,23 @@ class ConfigImporterTest extends KernelTestBase {
     $sync = $this->container->get('config.storage.sync');
     $uuid = $this->container->get('uuid');
 
-    $values_primary = array(
+    $values_primary = [
       'id' => 'primary',
       'label' => 'Primary',
       'weight' => 0,
       'uuid' => $uuid->generate(),
       // Add a dependency on secondary, so that is synced first.
-      'dependencies' => array(
-        'config' => array($name_secondary),
-      )
-    );
+      'dependencies' => [
+        'config' => [$name_secondary],
+      ]
+    ];
     $sync->write($name_primary, $values_primary);
-    $values_secondary = array(
+    $values_secondary = [
       'id' => 'secondary',
       'label' => 'Secondary Sync',
       'weight' => 0,
       'uuid' => $uuid->generate(),
-    );
+    ];
     $sync->write($name_secondary, $values_secondary);
 
     // Import.
@@ -305,52 +305,52 @@ class ConfigImporterTest extends KernelTestBase {
     $sync = $this->container->get('config.storage.sync');
     $uuid = $this->container->get('uuid');
 
-    $values_deleter = array(
+    $values_deleter = [
       'id' => 'deleter',
       'label' => 'Deleter',
       'weight' => 0,
       'uuid' => $uuid->generate(),
-    );
+    ];
     $storage->write($name_deleter, $values_deleter);
     $values_deleter['label'] = 'Updated Deleter';
     $sync->write($name_deleter, $values_deleter);
-    $values_deletee = array(
+    $values_deletee = [
       'id' => 'deletee',
       'label' => 'Deletee',
       'weight' => 0,
       'uuid' => $uuid->generate(),
       // Add a dependency on deleter, to make sure that is synced first.
-      'dependencies' => array(
-        'config' => array($name_deleter),
-      )
-    );
+      'dependencies' => [
+        'config' => [$name_deleter],
+      ]
+    ];
     $storage->write($name_deletee, $values_deletee);
     $values_deletee['label'] = 'Updated Deletee';
     $sync->write($name_deletee, $values_deletee);
 
     // Ensure that import will continue after the error.
-    $values_other = array(
+    $values_other = [
       'id' => 'other',
       'label' => 'Other',
       'weight' => 0,
       'uuid' => $uuid->generate(),
       // Add a dependency on deleter, to make sure that is synced first. This
       // will also be synced after the deletee due to alphabetical ordering.
-      'dependencies' => array(
-        'config' => array($name_deleter),
-      )
-    );
+      'dependencies' => [
+        'config' => [$name_deleter],
+      ]
+    ];
     $storage->write($name_other, $values_other);
     $values_other['label'] = 'Updated other';
     $sync->write($name_other, $values_other);
 
     // Check update changelist order.
     $updates = $this->configImporter->reset()->getStorageComparer()->getChangelist('update');
-    $expected = array(
+    $expected = [
       $name_deleter,
       $name_deletee,
       $name_other,
-    );
+    ];
     $this->assertIdentical($expected, $updates);
 
     // Import.
@@ -373,7 +373,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 1);
-    $this->assertEqual($logs[0], SafeMarkup::format('Update target "@name" is missing.', array('@name' => $name_deletee)));
+    $this->assertEqual($logs[0], SafeMarkup::format('Update target "@name" is missing.', ['@name' => $name_deletee]));
   }
 
   /**
@@ -390,25 +390,25 @@ class ConfigImporterTest extends KernelTestBase {
     $sync = $this->container->get('config.storage.sync');
     $uuid = $this->container->get('uuid');
 
-    $values_deleter = array(
+    $values_deleter = [
       'id' => 'deleter',
       'label' => 'Deleter',
       'weight' => 0,
       'uuid' => $uuid->generate(),
       // Add a dependency on deletee, to make sure that is synced first.
-      'dependencies' => array(
-        'config' => array($name_deletee),
-      ),
-    );
+      'dependencies' => [
+        'config' => [$name_deletee],
+      ],
+    ];
     $storage->write($name_deleter, $values_deleter);
     $values_deleter['label'] = 'Updated Deleter';
     $sync->write($name_deleter, $values_deleter);
-    $values_deletee = array(
+    $values_deletee = [
       'id' => 'deletee',
       'label' => 'Deletee',
       'weight' => 0,
       'uuid' => $uuid->generate(),
-    );
+    ];
     $storage->write($name_deletee, $values_deletee);
     $values_deletee['label'] = 'Updated Deletee';
     $sync->write($name_deletee, $values_deletee);
@@ -436,23 +436,23 @@ class ConfigImporterTest extends KernelTestBase {
 
     $uuid = $this->container->get('uuid');
 
-    $values_deleter = array(
+    $values_deleter = [
       'id' => 'deleter',
       'label' => 'Deleter',
       'weight' => 0,
       'uuid' => $uuid->generate(),
       // Add a dependency on deletee, to make sure this delete is synced first.
-      'dependencies' => array(
-        'config' => array($name_deletee),
-      ),
-    );
+      'dependencies' => [
+        'config' => [$name_deletee],
+      ],
+    ];
     $storage->write($name_deleter, $values_deleter);
-    $values_deletee = array(
+    $values_deletee = [
       'id' => 'deletee',
       'label' => 'Deletee',
       'weight' => 0,
       'uuid' => $uuid->generate(),
-    );
+    ];
     $storage->write($name_deletee, $values_deletee);
 
     // Import.
@@ -483,9 +483,9 @@ class ConfigImporterTest extends KernelTestBase {
 
     // Replace the file content of the existing configuration objects in the
     // sync directory.
-    $original_name_data = array(
+    $original_name_data = [
       'foo' => 'beer',
-    );
+    ];
     $sync->write($name, $original_name_data);
     $original_dynamic_data = $storage->read($dynamic_name);
     $original_dynamic_data['label'] = 'Updated';
@@ -532,7 +532,7 @@ class ConfigImporterTest extends KernelTestBase {
     $config_name = 'config_test.dynamic.isinstallable';
     $this->assertFalse($this->container->get('config.storage')->exists($config_name));
     \Drupal::state()->set('config_test.isinstallable', TRUE);
-    $this->installConfig(array('config_test'));
+    $this->installConfig(['config_test']);
     $this->assertTrue($this->container->get('config.storage')->exists($config_name));
   }
 

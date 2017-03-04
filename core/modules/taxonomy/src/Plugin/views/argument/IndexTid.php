@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\argument\ManyToOne;
 class IndexTid extends ManyToOne {
 
   public function titleQuery() {
-    $titles = array();
+    $titles = [];
     $terms = Term::loadMultiple($this->value);
     foreach ($terms as $term) {
       $titles[] = \Drupal::entityManager()->getTranslationFromContext($term)->label();

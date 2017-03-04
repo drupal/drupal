@@ -86,7 +86,7 @@ class EntityConfigBase extends Entity {
   /**
    * {@inheritdoc}
    */
-  public function import(Row $row, array $old_destination_id_values = array()) {
+  public function import(Row $row, array $old_destination_id_values = []) {
     if ($row->isStub()) {
       throw new MigrateException('Config entities can not be stubbed.');
     }
@@ -214,7 +214,7 @@ class EntityConfigBase extends Entity {
    *   The generated entity ID.
    */
   protected function generateId(Row $row, array $ids) {
-    $id_values = array();
+    $id_values = [];
     foreach ($ids as $id) {
       if ($this->isTranslationDestination() && $id == 'langcode') {
         continue;
@@ -230,7 +230,7 @@ class EntityConfigBase extends Entity {
   public function rollback(array $destination_identifier) {
     if ($this->isTranslationDestination()) {
       // The entity id does not include the langcode.
-      $id_values = array();
+      $id_values = [];
       foreach ($destination_identifier as $key => $value) {
         if ($this->isTranslationDestination() && $key == 'langcode') {
           continue;
@@ -247,7 +247,7 @@ class EntityConfigBase extends Entity {
     }
     else {
       $destination_identifier = implode('.', $destination_identifier);
-      parent::rollback(array($destination_identifier));
+      parent::rollback([$destination_identifier]);
     }
   }
 

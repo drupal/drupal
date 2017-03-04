@@ -31,7 +31,7 @@ abstract class CachePluginBase extends PluginBase {
   /**
    * Contains all data that should be written/read from cache.
    */
-  public $storage = array();
+  public $storage = [];
 
   /**
    * Which cache bin to store query results in.
@@ -104,11 +104,11 @@ abstract class CachePluginBase extends PluginBase {
         // Not supported currently, but this is certainly where we'd put it.
         break;
       case 'results':
-        $data = array(
+        $data = [
           'result' => $this->prepareViewResult($this->view->result),
           'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
           'current_page' => $this->view->getCurrentPage(),
-        );
+        ];
         $expire = ($this->cacheSetMaxAge($type) === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->view->getRequest()->server->get('REQUEST_TIME') + $this->cacheSetMaxAge($type);
         \Drupal::cache($this->resultsBin)->set($this->generateResultsKey(), $data, $expire, $this->getCacheTags());
         break;
@@ -183,16 +183,16 @@ abstract class CachePluginBase extends PluginBase {
     if (!isset($this->resultsKey)) {
       $build_info = $this->view->build_info;
 
-      foreach (array('query', 'count_query') as $index) {
+      foreach (['query', 'count_query'] as $index) {
         // If the default query back-end is used generate SQL query strings from
         // the query objects.
         if ($build_info[$index] instanceof Select) {
           $query = clone $build_info[$index];
           $query->preExecute();
-          $build_info[$index] = array(
+          $build_info[$index] = [
             'query' => (string)$query,
             'arguments' => $query->getArguments(),
-          );
+          ];
         }
       }
 

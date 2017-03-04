@@ -17,7 +17,7 @@ class HandlerFieldPermissionTest extends UserKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_field_permission');
+  public static $testViews = ['test_field_permission'];
 
   /**
    * Tests the permission field handler output.
@@ -31,9 +31,9 @@ class HandlerFieldPermissionTest extends UserKernelTestBase {
     $view->render();
     $style_plugin = $view->style_plugin;
 
-    $expected_permissions = array();
-    $expected_permissions[$this->users[0]->id()] = array();
-    $expected_permissions[$this->users[1]->id()] = array();
+    $expected_permissions = [];
+    $expected_permissions[$this->users[0]->id()] = [];
+    $expected_permissions[$this->users[1]->id()] = [];
     $expected_permissions[$this->users[2]->id()][] = t('Administer permissions');
     // View user profiles comes first, because we sort by the permission
     // machine name.

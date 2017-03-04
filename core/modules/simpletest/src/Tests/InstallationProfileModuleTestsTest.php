@@ -16,7 +16,7 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('simpletest');
+  public static $modules = ['simpletest'];
 
   /**
    * An administrative user with permission to adminsiter unit tests.
@@ -42,7 +42,7 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(array('administer unit tests'));
+    $this->adminUser = $this->drupalCreateUser(['administer unit tests']);
     $this->drupalLogin($this->adminUser);
   }
 
@@ -52,9 +52,9 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
   function testInstallationProfileTests() {
     $this->drupalGet('admin/config/development/testing');
     $this->assertText('Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest');
-    $edit = array(
+    $edit = [
       'tests[Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest]' => TRUE,
-    );
+    ];
     $this->drupalPostForm(NULL, $edit, t('Run tests'));
     $this->assertText('SystemListingCompatibleTest test executed.');
   }

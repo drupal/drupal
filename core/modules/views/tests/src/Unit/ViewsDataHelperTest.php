@@ -30,7 +30,7 @@ class ViewsDataHelperTest extends UnitTestCase {
     $data['views_test_data']['age']['area']['id'] = 'text';
     $data['views_test_data']['age']['area']['sub_type'] = 'header';
     $data['views_test_data']['job']['area']['id'] = 'text';
-    $data['views_test_data']['job']['area']['sub_type'] = array('header', 'footer');
+    $data['views_test_data']['job']['area']['sub_type'] = ['header', 'footer'];
 
     return $data;
   }
@@ -48,52 +48,52 @@ class ViewsDataHelperTest extends UnitTestCase {
 
     $data_helper = new ViewsDataHelper($views_data);
 
-    $expected = array(
-      'field' => array(
+    $expected = [
+      'field' => [
         'age',
         'created',
         'job',
         'name',
         'status',
-      ),
-      'argument' => array(
+      ],
+      'argument' => [
         'age',
         'created',
         'id',
         'job',
-      ),
-      'filter' => array(
+      ],
+      'filter' => [
         'created',
         'id',
         'job',
         'name',
         'status',
-      ),
-      'sort' => array(
+      ],
+      'sort' => [
         'age',
         'created',
         'id',
         'name',
         'status',
-      ),
-      'area' => array(
+      ],
+      'area' => [
         'age',
         'created',
         'job',
-      ),
-      'header' => array(
+      ],
+      'header' => [
         'age',
         'created',
         'job',
-      ),
-      'footer' => array(
+      ],
+      'footer' => [
         'age',
         'created',
         'job',
-      ),
-    );
+      ],
+    ];
 
-    $handler_types = array('field', 'argument', 'filter', 'sort', 'area');
+    $handler_types = ['field', 'argument', 'filter', 'sort', 'area'];
     foreach ($handler_types as $handler_type) {
       $fields = $data_helper->fetchFields('views_test_data', $handler_type);
       $expected_keys = $expected[$handler_type];
@@ -104,7 +104,7 @@ class ViewsDataHelperTest extends UnitTestCase {
     }
 
     // Check for subtype filtering, so header and footer.
-    foreach (array('header', 'footer') as $sub_type) {
+    foreach (['header', 'footer'] as $sub_type) {
       $fields = $data_helper->fetchFields('views_test_data', 'area', FALSE, $sub_type);
 
       $expected_keys = $expected[$sub_type];

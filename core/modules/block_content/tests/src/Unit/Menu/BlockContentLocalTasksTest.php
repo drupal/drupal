@@ -13,32 +13,32 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   protected function setUp() {
-    $this->directoryList = array(
+    $this->directoryList = [
       'block' => 'core/modules/block',
       'block_content' => 'core/modules/block_content',
-    );
+    ];
     parent::setUp();
 
-    $config_factory = $this->getConfigFactoryStub(array('system.theme' => array(
+    $config_factory = $this->getConfigFactoryStub(['system.theme' => [
       'default' => 'test_c',
-    )));
+    ]]);
 
-    $themes = array();
-    $themes['test_a'] = (object) array(
+    $themes = [];
+    $themes['test_a'] = (object) [
       'status' => 0,
-    );
-    $themes['test_b'] = (object) array(
+    ];
+    $themes['test_b'] = (object) [
       'status' => 1,
-      'info' => array(
+      'info' => [
         'name' => 'test_b',
-      ),
-    );
-    $themes['test_c'] = (object) array(
+      ],
+    ];
+    $themes['test_c'] = (object) [
       'status' => 1,
-      'info' => array(
+      'info' => [
         'name' => 'test_c',
-      ),
-    );
+      ],
+    ];
     $theme_handler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
     $theme_handler->expects($this->any())
       ->method('listInfo')
@@ -56,25 +56,25 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
    * @dataProvider getBlockContentListingRoutes
    */
   public function testBlockContentListLocalTasks($route) {
-    $this->assertLocalTasks($route, array(
-      0 => array(
+    $this->assertLocalTasks($route, [
+      0 => [
         'block.admin_display',
         'entity.block_content.collection',
-      ),
-      1 => array(
+      ],
+      1 => [
         'block_content.list_sub',
         'entity.block_content_type.collection',
-      ),
-    ));
+      ],
+    ]);
   }
 
   /**
    * Provides a list of routes to test.
    */
   public function getBlockContentListingRoutes() {
-    return array(
-      array('entity.block_content.collection', 'entity.block_content_type.collection'),
-    );
+    return [
+      ['entity.block_content.collection', 'entity.block_content_type.collection'],
+    ];
   }
 
 }

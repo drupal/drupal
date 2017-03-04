@@ -25,14 +25,14 @@ class TelephoneItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'value' => array(
+    return [
+      'columns' => [
+        'value' => [
           'type' => 'varchar',
           'length' => 256,
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
@@ -62,14 +62,14 @@ class TelephoneItem extends FieldItemBase {
     $constraints = parent::getConstraints();
 
     $max_length = 256;
-    $constraints[] = $constraint_manager->create('ComplexData', array(
-      'value' => array(
-        'Length' => array(
+    $constraints[] = $constraint_manager->create('ComplexData', [
+      'value' => [
+        'Length' => [
           'max' => $max_length,
-          'maxMessage' => t('%name: the telephone number may not be longer than @max characters.', array('%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length)),
-        )
-      ),
-    ));
+          'maxMessage' => t('%name: the telephone number may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
+        ]
+      ],
+    ]);
 
     return $constraints;
   }

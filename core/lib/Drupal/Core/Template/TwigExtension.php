@@ -137,12 +137,12 @@ class TwigExtension extends \Twig_Extension {
   public function getFunctions() {
     return [
       // This function will receive a renderable array, if an array is detected.
-      new \Twig_SimpleFunction('render_var', array($this, 'renderVar')),
+      new \Twig_SimpleFunction('render_var', [$this, 'renderVar']),
       // The url and path function are defined in close parallel to those found
       // in \Symfony\Bridge\Twig\Extension\RoutingExtension
-      new \Twig_SimpleFunction('url', array($this, 'getUrl'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
-      new \Twig_SimpleFunction('path', array($this, 'getPath'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
-      new \Twig_SimpleFunction('link', array($this, 'getLink')),
+      new \Twig_SimpleFunction('url', [$this, 'getUrl'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
+      new \Twig_SimpleFunction('path', [$this, 'getPath'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
+      new \Twig_SimpleFunction('link', [$this, 'getLink']),
       new \Twig_SimpleFunction('file_url', function ($uri) {
         return file_url_transform_relative(file_create_url($uri));
       }),
@@ -157,19 +157,19 @@ class TwigExtension extends \Twig_Extension {
    * {@inheritdoc}
    */
   public function getFilters() {
-    return array(
+    return [
       // Translation filters.
-      new \Twig_SimpleFilter('t', 't', array('is_safe' => array('html'))),
-      new \Twig_SimpleFilter('trans', 't', array('is_safe' => array('html'))),
+      new \Twig_SimpleFilter('t', 't', ['is_safe' => ['html']]),
+      new \Twig_SimpleFilter('trans', 't', ['is_safe' => ['html']]),
       // The "raw" filter is not detectable when parsing "trans" tags. To detect
       // which prefix must be used for translation (@, !, %), we must clone the
       // "raw" filter and give it identifiable names. These filters should only
       // be used in "trans" tags.
       // @see TwigNodeTrans::compileString()
-      new \Twig_SimpleFilter('placeholder', [$this, 'escapePlaceholder'], array('is_safe' => array('html'), 'needs_environment' => TRUE)),
+      new \Twig_SimpleFilter('placeholder', [$this, 'escapePlaceholder'], ['is_safe' => ['html'], 'needs_environment' => TRUE]),
 
       // Replace twig's escape filter with our own.
-      new \Twig_SimpleFilter('drupal_escape', [$this, 'escapeFilter'], array('needs_environment' => TRUE, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
+      new \Twig_SimpleFilter('drupal_escape', [$this, 'escapeFilter'], ['needs_environment' => TRUE, 'is_safe_callback' => 'twig_escape_filter_is_safe']),
 
       // Implements safe joining.
       // @todo Make that the default for |join? Upstream issue:
@@ -183,9 +183,9 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFilter('clean_class', '\Drupal\Component\Utility\Html::getClass'),
       new \Twig_SimpleFilter('clean_id', '\Drupal\Component\Utility\Html::getId'),
       // This filter will render a renderable array to use the string results.
-      new \Twig_SimpleFilter('render', array($this, 'renderVar')),
-      new \Twig_SimpleFilter('format_date', array($this->dateFormatter, 'format')),
-    );
+      new \Twig_SimpleFilter('render', [$this, 'renderVar']),
+      new \Twig_SimpleFilter('format_date', [$this->dateFormatter, 'format']),
+    ];
   }
 
   /**
@@ -194,18 +194,18 @@ class TwigExtension extends \Twig_Extension {
   public function getNodeVisitors() {
     // The node visitor is needed to wrap all variables with
     // render_var -> TwigExtension->renderVar() function.
-    return array(
+    return [
       new TwigNodeVisitor(),
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getTokenParsers() {
-    return array(
+    return [
       new TwigTransTokenParser(),
-    );
+    ];
   }
 
   /**
@@ -231,7 +231,7 @@ class TwigExtension extends \Twig_Extension {
    *
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    */
-  public function getPath($name, $parameters = array(), $options = array()) {
+  public function getPath($name, $parameters = [], $options = []) {
     $options['absolute'] = FALSE;
     return $this->urlGenerator->generateFromRoute($name, $parameters, $options);
   }
@@ -252,7 +252,7 @@ class TwigExtension extends \Twig_Extension {
    *
    * @todo Add an option for scheme-relative URLs.
    */
-  public function getUrl($name, $parameters = array(), $options = array()) {
+  public function getUrl($name, $parameters = [], $options = []) {
     // Generate URL.
     $options['absolute'] = TRUE;
     $generated_url = $this->urlGenerator->generateFromRoute($name, $parameters, $options, TRUE);
@@ -356,10 +356,10 @@ class TwigExtension extends \Twig_Extension {
 
     if (!isset($parameter_node) || $parameter_node instanceof \Twig_Node_Expression_Array && count($parameter_node) <= 2 &&
         (!$parameter_node->hasNode(1) || $parameter_node->getNode(1) instanceof \Twig_Node_Expression_Constant)) {
-      return array('html');
+      return ['html'];
     }
 
-    return array();
+    return [];
   }
 
   /**

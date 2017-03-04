@@ -38,14 +38,14 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_destroy', 'test_executable_displays');
+  public static $testViews = ['test_destroy', 'test_executable_displays'];
 
   /**
    * Properties that should be stored in the configuration.
    *
    * @var array
    */
-  protected $configProperties = array(
+  protected $configProperties = [
     'disabled',
     'name',
     'description',
@@ -54,14 +54,14 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     'label',
     'core',
     'display',
-  );
+  ];
 
   /**
    * Properties that should be stored in the executable.
    *
    * @var array
    */
-  protected $executableProperties = array(
+  protected $executableProperties = [
     'storage',
     'built',
     'executed',
@@ -74,14 +74,14 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     'exposed_raw_input',
     'old_view',
     'parent_views',
-  );
+  ];
 
   protected function setUpFixtures() {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
-    $this->installSchema('comment', array('comment_entity_statistics'));
-    $this->installConfig(array('system', 'field', 'node', 'comment'));
+    $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installConfig(['system', 'field', 'node', 'comment']);
 
     NodeType::create([
       'type' => 'page',
@@ -90,7 +90,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $this->addDefaultCommentField('node', 'page');
     parent::setUpFixtures();
 
-    $this->installConfig(array('filter'));
+    $this->installConfig(['filter']);
   }
 
   /**
@@ -123,7 +123,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       if ($type == 'relationship') {
         continue;
       }
-      $this->assertTrue(count($view->$type), format_string('Make sure a %type instance got instantiated.', array('%type' => $type)));
+      $this->assertTrue(count($view->$type), format_string('Make sure a %type instance got instantiated.', ['%type' => $type]));
     }
 
     // initHandlers() should create display handlers automatically as well.
@@ -256,7 +256,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $this->assertTrue($view->rowPlugin instanceof Fields);
 
     // Test the newDisplay() method.
-    $view = $this->container->get('entity.manager')->getStorage('view')->create(array('id' => 'test_executable_displays'));
+    $view = $this->container->get('entity.manager')->getStorage('view')->create(['id' => 'test_executable_displays']);
     $executable = $view->getExecutable();
 
     $executable->newDisplay('page');
@@ -289,10 +289,10 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $this->assertNull($view->usePager());
 
     // Add a pager, initialize, and test.
-    $view->displayHandlers->get('default')->overrideOption('pager', array(
+    $view->displayHandlers->get('default')->overrideOption('pager', [
       'type' => 'full',
-      'options' => array('items_per_page' => 10),
-    ));
+      'options' => ['items_per_page' => 10],
+    ]);
     $view->initPager();
     $this->assertTrue($view->usePager());
 
@@ -302,10 +302,10 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $this->assertEqual($view->getOffset(), $rand);
 
     // Test the getBaseTable() method.
-    $expected = array(
+    $expected = [
       'views_test_data' => TRUE,
       '#global' => TRUE,
-    );
+    ];
     $this->assertIdentical($view->getBaseTables(), $expected);
 
     // Test response methods.
@@ -386,7 +386,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    */
   public function testGetHandlerTypes() {
     $types = ViewExecutable::getHandlerTypes();
-    foreach (array('field', 'filter', 'argument', 'sort', 'header', 'footer', 'empty') as $type) {
+    foreach (['field', 'filter', 'argument', 'sort', 'header', 'footer', 'empty'] as $type) {
       $this->assertTrue(isset($types[$type]));
       // @todo The key on the display should be footers, headers and empties
       //   or something similar instead of the singular, but so long check for
@@ -430,7 +430,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       $match = function($value) use ($display) {
         return strpos($value, $display->display['display_title']) !== FALSE;
       };
-      $this->assertTrue(array_filter($validate[$id], $match), format_string('Error message found for @id display', array('@id' => $id)));
+      $this->assertTrue(array_filter($validate[$id], $match), format_string('Error message found for @id display', ['@id' => $id]));
       $count++;
     }
 

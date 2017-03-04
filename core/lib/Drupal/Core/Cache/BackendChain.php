@@ -26,7 +26,7 @@ class BackendChain implements CacheBackendInterface, CacheTagsInvalidatorInterfa
    *
    * @var array
    */
-  protected $backends = array();
+  protected $backends = [];
 
   /**
    * Constructs a DatabaseBackend object.
@@ -91,7 +91,7 @@ class BackendChain implements CacheBackendInterface, CacheTagsInvalidatorInterfa
    * {@inheritdoc}
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
-    $return = array();
+    $return = [];
 
     foreach ($this->backends as $index => $backend) {
       $items = $backend->getMultiple($cids, $allow_invalid);
@@ -121,7 +121,7 @@ class BackendChain implements CacheBackendInterface, CacheTagsInvalidatorInterfa
   /**
    * {@inheritdoc}
    */
-  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
     foreach ($this->backends as $backend) {
       $backend->set($cid, $data, $expire, $tags);
     }

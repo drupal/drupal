@@ -19,7 +19,7 @@ class DefaultLangcode extends Config {
   /**
    * {@inheritdoc}
    */
-  public function import(Row $row, array $old_destination_id_values = array()) {
+  public function import(Row $row, array $old_destination_id_values = []) {
     $destination = $row->getDestination();
     $langcode = $destination['default_langcode'];
 

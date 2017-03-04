@@ -17,14 +17,14 @@ class EntityViewControllerTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = ['entity_test'];
 
   /**
    * Array of test entities.
    *
    * @var array
    */
-  protected $entities = array();
+  protected $entities = [];
 
   protected function setUp() {
     parent::setUp();
@@ -86,7 +86,7 @@ class EntityViewControllerTest extends BrowserTestBase {
   public function testFieldItemAttributes() {
     // Make sure the test field will be rendered.
     entity_get_display('entity_test', 'entity_test', 'default')
-      ->setComponent('field_test_text', array('type' => 'text_default'))
+      ->setComponent('field_test_text', ['type' => 'text_default'])
       ->save();
 
     // Create an entity and save test value in field_test_text.
@@ -98,24 +98,24 @@ class EntityViewControllerTest extends BrowserTestBase {
     // Browse to the entity and verify that the attribute is rendered in the
     // field item HTML markup.
     $this->drupalGet('entity_test/' . $entity->id());
-    $xpath = $this->xpath('//div[@data-field-item-attr="foobar"]/p[text()=:value]', array(':value' => $test_value));
+    $xpath = $this->xpath('//div[@data-field-item-attr="foobar"]/p[text()=:value]', [':value' => $test_value]);
     $this->assertTrue($xpath, 'The field item attribute has been found in the rendered output of the field.');
 
     // Enable the RDF module to ensure that two modules can add attributes to
     // the same field item.
-    \Drupal::service('module_installer')->install(array('rdf'));
+    \Drupal::service('module_installer')->install(['rdf']);
     $this->resetAll();
 
     // Set an RDF mapping for the field_test_text field. This RDF mapping will
     // be turned into RDFa attributes in the field item output.
     $mapping = rdf_get_mapping('entity_test', 'entity_test');
-    $mapping->setFieldMapping('field_test_text', array(
-      'properties' => array('schema:text'),
-    ))->save();
+    $mapping->setFieldMapping('field_test_text', [
+      'properties' => ['schema:text'],
+    ])->save();
     // Browse to the entity and verify that the attributes from both modules
     // are rendered in the field item HTML markup.
     $this->drupalGet('entity_test/' . $entity->id());
-    $xpath = $this->xpath('//div[@data-field-item-attr="foobar" and @property="schema:text"]/p[text()=:value]', array(':value' => $test_value));
+    $xpath = $this->xpath('//div[@data-field-item-attr="foobar" and @property="schema:text"]/p[text()=:value]', [':value' => $test_value]);
     $this->assertTrue($xpath, 'The field item attributes from both modules have been found in the rendered output of the field.');
   }
 
@@ -139,10 +139,10 @@ class EntityViewControllerTest extends BrowserTestBase {
    *   The created entity.
    */
   protected function createTestEntity($entity_type) {
-    $data = array(
+    $data = [
       'bundle' => $entity_type,
       'name' => $this->randomMachineName(),
-    );
+    ];
     return $this->container->get('entity.manager')->getStorage($entity_type)->create($data);
   }
 

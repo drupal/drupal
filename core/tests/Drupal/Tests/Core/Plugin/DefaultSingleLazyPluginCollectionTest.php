@@ -27,7 +27,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
         return $this->pluginInstances[$id];
       });
 
-    $this->defaultPluginCollection = new DefaultSingleLazyPluginCollection($this->pluginManager, 'apple', array('id' => 'apple', 'key' => 'value'));
+    $this->defaultPluginCollection = new DefaultSingleLazyPluginCollection($this->pluginManager, 'apple', ['id' => 'apple', 'key' => 'value']);
   }
 
   /**

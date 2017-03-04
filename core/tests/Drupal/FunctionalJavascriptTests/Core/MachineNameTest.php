@@ -27,9 +27,9 @@ class MachineNameTest extends JavascriptTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $account = $this->drupalCreateUser(array(
+    $account = $this->drupalCreateUser([
       'access content',
-    ));
+    ]);
     $this->drupalLogin($account);
   }
 

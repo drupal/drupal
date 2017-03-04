@@ -24,14 +24,14 @@ class FieldEntityTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_field_get_entity');
+  public static $testViews = ['test_field_get_entity'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node', 'comment');
+  public static $modules = ['node', 'comment'];
 
   /**
    * {@inheritdoc}
@@ -39,10 +39,10 @@ class FieldEntityTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp(FALSE);
 
-    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateContentType(['type' => 'page']);
     $this->addDefaultCommentField('node', 'page');
 
-    ViewTestData::createTestViews(get_class($this), array('views_test_config'));
+    ViewTestData::createTestViews(get_class($this), ['views_test_config']);
   }
 
   /**
@@ -61,12 +61,12 @@ class FieldEntityTest extends ViewTestBase {
       'title' => $this->randomString(),
     ]);
     $node->save();
-    $comment = Comment::create(array(
+    $comment = Comment::create([
       'uid' => $account->id(),
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment'
-    ));
+    ]);
     $comment->save();
 
     $user = $this->drupalCreateUser(['access comments']);

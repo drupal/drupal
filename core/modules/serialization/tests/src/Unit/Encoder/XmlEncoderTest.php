@@ -28,7 +28,7 @@ class XmlEncoderTest extends UnitTestCase {
    *
    * @var array
    */
-  protected $testArray = array('test' => 'test');
+  protected $testArray = ['test' => 'test'];
 
   protected function setUp() {
     $this->baseEncoder = $this->getMock('Symfony\Component\Serializer\Encoder\XmlEncoder');
@@ -58,7 +58,7 @@ class XmlEncoderTest extends UnitTestCase {
   public function testEncode() {
     $this->baseEncoder->expects($this->once())
       ->method('encode')
-      ->with($this->testArray, 'test', array())
+      ->with($this->testArray, 'test', [])
       ->will($this->returnValue('test'));
 
     $this->assertEquals('test', $this->encoder->encode($this->testArray, 'test'));
@@ -70,7 +70,7 @@ class XmlEncoderTest extends UnitTestCase {
   public function testDecode() {
     $this->baseEncoder->expects($this->once())
       ->method('decode')
-      ->with('test', 'test', array())
+      ->with('test', 'test', [])
       ->will($this->returnValue($this->testArray));
 
     $this->assertEquals($this->testArray, $this->encoder->decode('test', 'test'));

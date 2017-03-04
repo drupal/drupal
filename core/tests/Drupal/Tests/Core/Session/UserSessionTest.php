@@ -18,7 +18,7 @@ class UserSessionTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Session\AccountInterface[]
    */
-  protected $users = array();
+  protected $users = [];
 
   /**
    * Provides test data for getHasPermission().
@@ -26,10 +26,10 @@ class UserSessionTest extends UnitTestCase {
    * @return array
    */
   public function providerTestHasPermission() {
-    $data = array();
-    $data[] = array('example permission', array('user_one', 'user_two'), array('user_last'));
-    $data[] = array('another example permission', array('user_two'), array('user_one', 'user_last'));
-    $data[] = array('final example permission', array(), array('user_one', 'user_two', 'user_last'));
+    $data = [];
+    $data[] = ['example permission', ['user_one', 'user_two'], ['user_last']];
+    $data[] = ['another example permission', ['user_two'], ['user_one', 'user_last']];
+    $data[] = ['final example permission', [], ['user_one', 'user_two', 'user_last']];
 
     return $data;
   }
@@ -45,9 +45,9 @@ class UserSessionTest extends UnitTestCase {
    * @return \Drupal\Core\Session\AccountInterface
    *   The created user session.
    */
-  protected function createUserSession(array $rids = array(), $authenticated = FALSE) {
+  protected function createUserSession(array $rids = [], $authenticated = FALSE) {
     array_unshift($rids, $authenticated ? RoleInterface::AUTHENTICATED_ID : RoleInterface::ANONYMOUS_ID);
-    return new UserSession(array('roles' => $rids));
+    return new UserSession(['roles' => $rids]);
   }
 
   /**
@@ -56,57 +56,57 @@ class UserSessionTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $roles = array();
+    $roles = [];
     $roles['role_one'] = $this->getMockBuilder('Drupal\user\Entity\Role')
       ->disableOriginalConstructor()
-      ->setMethods(array('hasPermission'))
+      ->setMethods(['hasPermission'])
       ->getMock();
     $roles['role_one']->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap(array(
-        array('example permission', TRUE),
-        array('another example permission', FALSE),
-        array('last example permission', FALSE),
-      )));
+      ->will($this->returnValueMap([
+        ['example permission', TRUE],
+        ['another example permission', FALSE],
+        ['last example permission', FALSE],
+      ]));
 
     $roles['role_two'] = $this->getMockBuilder('Drupal\user\Entity\Role')
       ->disableOriginalConstructor()
-      ->setMethods(array('hasPermission'))
+      ->setMethods(['hasPermission'])
       ->getMock();
     $roles['role_two']->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap(array(
-        array('example permission', TRUE),
-        array('another example permission', TRUE),
-        array('last example permission', FALSE),
-      )));
+      ->will($this->returnValueMap([
+        ['example permission', TRUE],
+        ['another example permission', TRUE],
+        ['last example permission', FALSE],
+      ]));
 
     $roles['anonymous'] = $this->getMockBuilder('Drupal\user\Entity\Role')
       ->disableOriginalConstructor()
-      ->setMethods(array('hasPermission'))
+      ->setMethods(['hasPermission'])
       ->getMock();
     $roles['anonymous']->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValueMap(array(
-        array('example permission', FALSE),
-        array('another example permission', FALSE),
-        array('last example permission', FALSE),
-      )));
+      ->will($this->returnValueMap([
+        ['example permission', FALSE],
+        ['another example permission', FALSE],
+        ['last example permission', FALSE],
+      ]));
 
     $role_storage = $this->getMockBuilder('Drupal\user\RoleStorage')
       ->disableOriginalConstructor()
-      ->setMethods(array('loadMultiple'))
+      ->setMethods(['loadMultiple'])
       ->getMock();
     $role_storage->expects($this->any())
       ->method('loadMultiple')
-      ->will($this->returnValueMap(array(
-        array(array(), array()),
-        array(NULL, $roles),
-        array(array('anonymous'), array($roles['anonymous'])),
-        array(array('anonymous', 'role_one'), array($roles['role_one'])),
-        array(array('anonymous', 'role_two'), array($roles['role_two'])),
-        array(array('anonymous', 'role_one', 'role_two'), array($roles['role_one'], $roles['role_two'])),
-      )));
+      ->will($this->returnValueMap([
+        [[], []],
+        [NULL, $roles],
+        [['anonymous'], [$roles['anonymous']]],
+        [['anonymous', 'role_one'], [$roles['role_one']]],
+        [['anonymous', 'role_two'], [$roles['role_two']]],
+        [['anonymous', 'role_one', 'role_two'], [$roles['role_one'], $roles['role_two']]],
+      ]));
 
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $entity_manager->expects($this->any())
@@ -117,9 +117,9 @@ class UserSessionTest extends UnitTestCase {
     $container->set('entity.manager', $entity_manager);
     \Drupal::setContainer($container);
 
-    $this->users['user_one'] = $this->createUserSession(array('role_one'));
-    $this->users['user_two'] = $this->createUserSession(array('role_one', 'role_two'));
-    $this->users['user_three'] = $this->createUserSession(array('role_two'), TRUE);
+    $this->users['user_one'] = $this->createUserSession(['role_one']);
+    $this->users['user_two'] = $this->createUserSession(['role_one', 'role_two']);
+    $this->users['user_three'] = $this->createUserSession(['role_two'], TRUE);
     $this->users['user_last'] = $this->createUserSession();
   }
 
@@ -153,8 +153,8 @@ class UserSessionTest extends UnitTestCase {
    * @todo Move roles constants to a class/interface
    */
   public function testUserGetRoles() {
-    $this->assertEquals(array(RoleInterface::AUTHENTICATED_ID, 'role_two'), $this->users['user_three']->getRoles());
-    $this->assertEquals(array('role_two'), $this->users['user_three']->getRoles(TRUE));
+    $this->assertEquals([RoleInterface::AUTHENTICATED_ID, 'role_two'], $this->users['user_three']->getRoles());
+    $this->assertEquals(['role_two'], $this->users['user_three']->getRoles(TRUE));
   }
 
 }

@@ -20,7 +20,7 @@ class PathProcessorTest implements InboundPathProcessorInterface, OutboundPathPr
     // Rewrite user/username to user/uid.
     if (preg_match('!^/user/([^/]+)(/.*)?!', $path, $matches)) {
       if ($account = user_load_by_name($matches[1])) {
-        $matches += array(2 => '');
+        $matches += [2 => ''];
         $path = '/user/' . $account->id() . $matches[2];
       }
     }
@@ -37,11 +37,11 @@ class PathProcessorTest implements InboundPathProcessorInterface, OutboundPathPr
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     // Rewrite user/uid to user/username.
     if (preg_match('!^/user/([0-9]+)(/.*)?!', $path, $matches)) {
       if ($account = User::load($matches[1])) {
-        $matches += array(2 => '');
+        $matches += [2 => ''];
         $path = '/user/' . $account->getUsername() . $matches[2];
         if ($bubbleable_metadata) {
           $bubbleable_metadata->addCacheTags($account->getCacheTags());

@@ -32,12 +32,12 @@ class NestedArrayTest extends UnitTestCase {
     parent::setUp();
 
     // Create a form structure with a nested element.
-    $this->form['details']['element'] = array(
+    $this->form['details']['element'] = [
      '#value' => 'Nested element',
-    );
+    ];
 
     // Set up parent array.
-    $this->parents = array('details', 'element');
+    $this->parents = ['details', 'element'];
   }
 
   /**
@@ -76,10 +76,10 @@ class NestedArrayTest extends UnitTestCase {
    * @covers ::setValue
    */
   public function testSetValue() {
-    $new_value = array(
+    $new_value = [
       '#value' => 'New value',
       '#required' => TRUE,
-    );
+    ];
 
     // Verify setting the value of a nested element.
     NestedArray::setValue($this->form, $this->parents, $new_value);
@@ -93,11 +93,11 @@ class NestedArrayTest extends UnitTestCase {
    * @covers ::setValue
    */
   public function testSetValueForce() {
-    $new_value = array(
+    $new_value = [
       'one',
-    );
+    ];
     $this->form['details']['non-array-parent'] = 'string';
-    $parents = array('details', 'non-array-parent', 'child');
+    $parents = ['details', 'non-array-parent', 'child'];
     NestedArray::setValue($this->form, $parents, $new_value, TRUE);
     $this->assertSame($new_value, $this->form['details']['non-array-parent']['child'], 'The nested element was not forced to the new value.');
   }
@@ -144,23 +144,23 @@ class NestedArrayTest extends UnitTestCase {
    * @covers ::mergeDeepArray
    */
   public function testMergeDeepArray() {
-    $link_options_1 = array(
+    $link_options_1 = [
       'fragment' => 'x',
-      'attributes' => array('title' => 'X', 'class' => array('a', 'b')),
+      'attributes' => ['title' => 'X', 'class' => ['a', 'b']],
       'language' => 'en',
-    );
-    $link_options_2 = array(
+    ];
+    $link_options_2 = [
       'fragment' => 'y',
-      'attributes' => array('title' => 'Y', 'class' => array('c', 'd')),
+      'attributes' => ['title' => 'Y', 'class' => ['c', 'd']],
       'absolute' => TRUE,
-    );
-    $expected = array(
+    ];
+    $expected = [
       'fragment' => 'y',
-      'attributes' => array('title' => 'Y', 'class' => array('a', 'b', 'c', 'd')),
+      'attributes' => ['title' => 'Y', 'class' => ['a', 'b', 'c', 'd']],
       'language' => 'en',
       'absolute' => TRUE,
-    );
-    $this->assertSame($expected, NestedArray::mergeDeepArray(array($link_options_1, $link_options_2)), 'NestedArray::mergeDeepArray() returned a properly merged array.');
+    ];
+    $this->assertSame($expected, NestedArray::mergeDeepArray([$link_options_1, $link_options_2]), 'NestedArray::mergeDeepArray() returned a properly merged array.');
     // Test wrapper function, NestedArray::mergeDeep().
     $this->assertSame($expected, NestedArray::mergeDeep($link_options_1, $link_options_2), 'NestedArray::mergeDeep() returned a properly merged array.');
   }
@@ -171,18 +171,18 @@ class NestedArrayTest extends UnitTestCase {
    * @covers ::mergeDeepArray
    */
   public function testMergeImplicitKeys() {
-    $a = array(
-      'subkey' => array('X', 'Y'),
-    );
-    $b = array(
-      'subkey' => array('X'),
-    );
+    $a = [
+      'subkey' => ['X', 'Y'],
+    ];
+    $b = [
+      'subkey' => ['X'],
+    ];
 
     // Drupal core behavior.
-    $expected = array(
-      'subkey' => array('X', 'Y', 'X'),
-    );
-    $actual = NestedArray::mergeDeepArray(array($a, $b));
+    $expected = [
+      'subkey' => ['X', 'Y', 'X'],
+    ];
+    $actual = NestedArray::mergeDeepArray([$a, $b]);
     $this->assertSame($expected, $actual, 'drupal_array_merge_deep() creates new numeric keys in the implicit sequence.');
   }
 
@@ -192,29 +192,29 @@ class NestedArrayTest extends UnitTestCase {
    * @covers ::mergeDeepArray
    */
   public function testMergeExplicitKeys() {
-    $a = array(
-      'subkey' => array(
+    $a = [
+      'subkey' => [
         0 => 'A',
         1 => 'B',
-      ),
-    );
-    $b = array(
-      'subkey' => array(
+      ],
+    ];
+    $b = [
+      'subkey' => [
         0 => 'C',
         1 => 'D',
-      ),
-    );
+      ],
+    ];
 
     // Drupal core behavior.
-    $expected = array(
-      'subkey' => array(
+    $expected = [
+      'subkey' => [
         0 => 'A',
         1 => 'B',
         2 => 'C',
         3 => 'D',
-      ),
-    );
-    $actual = NestedArray::mergeDeepArray(array($a, $b));
+      ],
+    ];
+    $actual = NestedArray::mergeDeepArray([$a, $b]);
     $this->assertSame($expected, $actual, 'drupal_array_merge_deep() creates new numeric keys in the explicit sequence.');
   }
 
@@ -228,29 +228,29 @@ class NestedArrayTest extends UnitTestCase {
    * @covers ::mergeDeepArray
    */
   public function testMergeOutOfSequenceKeys() {
-    $a = array(
-      'subkey' => array(
+    $a = [
+      'subkey' => [
         10 => 'A',
         30 => 'B',
-      ),
-    );
-    $b = array(
-      'subkey' => array(
+      ],
+    ];
+    $b = [
+      'subkey' => [
         20 => 'C',
         0 => 'D',
-      ),
-    );
+      ],
+    ];
 
     // Drupal core behavior.
-    $expected = array(
-      'subkey' => array(
+    $expected = [
+      'subkey' => [
         0 => 'A',
         1 => 'B',
         2 => 'C',
         3 => 'D',
-      ),
-    );
-    $actual = NestedArray::mergeDeepArray(array($a, $b));
+      ],
+    ];
+    $actual = NestedArray::mergeDeepArray([$a, $b]);
     $this->assertSame($expected, $actual, 'drupal_array_merge_deep() ignores numeric key order when merging.');
   }
 

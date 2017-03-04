@@ -96,7 +96,7 @@ abstract class Upsert extends Query implements \Countable {
     }
 
     $max_placeholder = 0;
-    $values = array();
+    $values = [];
     foreach ($this->insertValues as $insert_values) {
       foreach ($insert_values as $value) {
         $values[':db_insert_placeholder_' . $max_placeholder++] = $value;
@@ -106,7 +106,7 @@ abstract class Upsert extends Query implements \Countable {
     $last_insert_id = $this->connection->query((string) $this, $values, $this->queryOptions);
 
     // Re-initialize the values array so that we can re-use this query.
-    $this->insertValues = array();
+    $this->insertValues = [];
 
     return $last_insert_id;
   }

@@ -22,7 +22,7 @@ class YamlDiscovery implements DiscoverableInterface {
    *
    * @var array
    */
-  protected $directories = array();
+  protected $directories = [];
 
   /**
    * Constructs a YamlDiscovery object.
@@ -42,7 +42,7 @@ class YamlDiscovery implements DiscoverableInterface {
    * {@inheritdoc}
    */
   public function findAll() {
-    $all = array();
+    $all = [];
 
     $files = $this->findFiles();
     $provider_by_files = array_flip($files);
@@ -86,7 +86,7 @@ class YamlDiscovery implements DiscoverableInterface {
    * @return array
    */
   protected function findFiles() {
-    $files = array();
+    $files = [];
     foreach ($this->directories as $provider => $directory) {
       $file = $directory . '/' . $provider . '.' . $this->name . '.yml';
       if (file_exists($file)) {

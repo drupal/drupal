@@ -44,7 +44,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    *
    * @var array
    */
-  public $items = array();
+  public $items = [];
 
   /**
    * Does the field supports multiple field values.
@@ -232,14 +232,14 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
     if ($use_groupby) {
       // Add the fields that we're actually grouping on.
-      $options = array();
+      $options = [];
       if ($this->options['group_column'] != 'entity_id') {
-        $options = array($this->options['group_column'] => $this->options['group_column']);
+        $options = [$this->options['group_column'] => $this->options['group_column']];
       }
-      $options += is_array($this->options['group_columns']) ? $this->options['group_columns'] : array();
+      $options += is_array($this->options['group_columns']) ? $this->options['group_columns'] : [];
 
       // Go through the list and determine the actual column name from field api.
-      $fields = array();
+      $fields = [];
       $table_mapping = $this->getTableMapping();
       $field_definition = $this->getFieldStorageDefinition();
 
@@ -354,9 +354,9 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
 
     // If the field has a "value" column, we probably need that one.
-    $options['click_sort_column'] = array(
+    $options['click_sort_column'] = [
       'default' => $default_column,
-    );
+    ];
 
     if (isset($this->definition['default_formatter'])) {
       $options['type'] = ['default' => $this->definition['default_formatter']];
@@ -368,45 +368,45 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       $options['type'] = ['default' => ''];
     }
 
-    $options['settings'] = array(
+    $options['settings'] = [
       'default' => isset($this->definition['default_formatter_settings']) ? $this->definition['default_formatter_settings'] : [],
-    );
-    $options['group_column'] = array(
+    ];
+    $options['group_column'] = [
       'default' => $default_column,
-    );
-    $options['group_columns'] = array(
-      'default' => array(),
-    );
+    ];
+    $options['group_columns'] = [
+      'default' => [],
+    ];
 
     // Options used for multiple value fields.
-    $options['group_rows'] = array(
+    $options['group_rows'] = [
       'default' => TRUE,
-    );
+    ];
     // If we know the exact number of allowed values, then that can be
     // the default. Otherwise, default to 'all'.
-    $options['delta_limit'] = array(
+    $options['delta_limit'] = [
       'default' => ($field_storage_definition->getCardinality() > 1) ? $field_storage_definition->getCardinality() : 0,
-    );
-    $options['delta_offset'] = array(
+    ];
+    $options['delta_offset'] = [
       'default' => 0,
-    );
-    $options['delta_reversed'] = array(
+    ];
+    $options['delta_reversed'] = [
       'default' => FALSE,
-    );
-    $options['delta_first_last'] = array(
+    ];
+    $options['delta_first_last'] = [
       'default' => FALSE,
-    );
+    ];
 
-    $options['multi_type'] = array(
+    $options['multi_type'] = [
       'default' => 'separator'
-    );
-    $options['separator'] = array(
+    ];
+    $options['separator'] = [
       'default' => ', '
-    );
+    ];
 
-    $options['field_api_classes'] = array(
+    $options['field_api_classes'] = [
       'default' => FALSE,
-    );
+    ];
 
     return $options;
   }
@@ -428,48 +428,48 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
     // No need to ask the user anything if the field has only one column.
     if (count($field->getColumns()) == 1) {
-      $form['click_sort_column'] = array(
+      $form['click_sort_column'] = [
         '#type' => 'value',
         '#value' => isset($column_names[0]) ? $column_names[0] : '',
-      );
+      ];
     }
     else {
-      $form['click_sort_column'] = array(
+      $form['click_sort_column'] = [
         '#type' => 'select',
         '#title' => $this->t('Column used for click sorting'),
         '#options' => array_combine($column_names, $column_names),
         '#default_value' => $this->options['click_sort_column'],
         '#description' => $this->t('Used by Style: Table to determine the actual column to click sort the field on. The default is usually fine.'),
-      );
+      ];
     }
 
-    $form['type'] = array(
+    $form['type'] = [
       '#type' => 'select',
       '#title' => $this->t('Formatter'),
       '#options' => $formatters,
       '#default_value' => $this->options['type'],
-      '#ajax' => array(
+      '#ajax' => [
         'url' => views_ui_build_form_url($form_state),
-      ),
-      '#submit' => array(array($this, 'submitTemporaryForm')),
+      ],
+      '#submit' => [[$this, 'submitTemporaryForm']],
       '#executes_submit_callback' => TRUE,
-    );
+    ];
 
-    $form['field_api_classes'] = array(
+    $form['field_api_classes'] = [
       '#title' => $this->t('Use field template'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['field_api_classes'],
       '#description' => $this->t('If checked, field api classes will be added by field templates. This is not recommended unless your CSS depends upon these classes. If not checked, template will not be used.'),
       '#fieldset' => 'style_settings',
       '#weight' => 20,
-    );
+    ];
 
     if ($this->multiple) {
       $form['field_api_classes']['#description'] .= ' ' . $this->t('Checking this option will cause the group Display Type and Separator values to be ignored.');
     }
 
     // Get the settings form.
-    $settings_form = array('#value' => array());
+    $settings_form = ['#value' => []];
     $format = isset($form_state->getUserInput()['options']['type']) ? $form_state->getUserInput()['options']['type'] : $this->options['type'];
     if ($formatter = $this->getFormatterInstance($format)) {
       $settings_form = $formatter->settingsForm($form, $form_state);
@@ -500,19 +500,19 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   function multiple_options_form(&$form, FormStateInterface $form_state) {
     $field = $this->getFieldDefinition();
 
-    $form['multiple_field_settings'] = array(
+    $form['multiple_field_settings'] = [
       '#type' => 'details',
       '#title' => $this->t('Multiple field settings'),
       '#weight' => 5,
-    );
+    ];
 
-    $form['group_rows'] = array(
+    $form['group_rows'] = [
       '#title' => $this->t('Display all values in the same row'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['group_rows'],
       '#description' => $this->t('If checked, multiple values for this field will be shown in the same row. If not checked, each value in this field will create a new row. If using group by, please make sure to group by "Entity ID" for this setting to have any effect.'),
       '#fieldset' => 'multiple_field_settings',
-    );
+    ];
 
     // Make the string translatable by keeping it as a whole rather than
     // translating prefix and suffix separately.
@@ -529,37 +529,37 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       $options = array_combine($range, $range);
       $size = 1;
     }
-    $form['multi_type'] = array(
+    $form['multi_type'] = [
       '#type' => 'radios',
       '#title' => $this->t('Display type'),
-      '#options' => array(
+      '#options' => [
         'ul' => $this->t('Unordered list'),
         'ol' => $this->t('Ordered list'),
         'separator' => $this->t('Simple separator'),
-      ),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
-        ),
-      ),
+      ],
+      '#states' => [
+        'visible' => [
+          ':input[name="options[group_rows]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#default_value' => $this->options['multi_type'],
       '#fieldset' => 'multiple_field_settings',
-    );
+    ];
 
-    $form['separator'] = array(
+    $form['separator'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Separator'),
       '#default_value' => $this->options['separator'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
-          ':input[name="options[multi_type]"]' => array('value' => 'separator'),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[group_rows]"]' => ['checked' => TRUE],
+          ':input[name="options[multi_type]"]' => ['value' => 'separator'],
+        ],
+      ],
       '#fieldset' => 'multiple_field_settings',
-    );
+    ];
 
-    $form['delta_limit'] = array(
+    $form['delta_limit'] = [
       '#type' => $type,
       '#size' => $size,
       '#field_prefix' => $prefix,
@@ -567,54 +567,54 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       '#options' => $options,
       '#default_value' => $this->options['delta_limit'],
       '#prefix' => '<div class="container-inline">',
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[group_rows]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#fieldset' => 'multiple_field_settings',
-    );
+    ];
 
     list($prefix, $suffix) = explode('@count', $this->t('starting from @count'));
-    $form['delta_offset'] = array(
+    $form['delta_offset'] = [
       '#type' => 'textfield',
       '#size' => 5,
       '#field_prefix' => $prefix,
       '#field_suffix' => $suffix,
       '#default_value' => $this->options['delta_offset'],
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[group_rows]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#description' => $this->t('(first item is 0)'),
       '#fieldset' => 'multiple_field_settings',
-    );
-    $form['delta_reversed'] = array(
+    ];
+    $form['delta_reversed'] = [
       '#title' => $this->t('Reversed'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['delta_reversed'],
       '#suffix' => $suffix,
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[group_rows]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#description' => $this->t('(start from last values)'),
       '#fieldset' => 'multiple_field_settings',
-    );
-    $form['delta_first_last'] = array(
+    ];
+    $form['delta_first_last'] = [
       '#title' => $this->t('First and last only'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['delta_first_last'],
       '#suffix' => '</div>',
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[group_rows]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="options[group_rows]"]' => ['checked' => TRUE],
+        ],
+      ],
       '#fieldset' => 'multiple_field_settings',
-    );
+    ];
   }
 
   /**
@@ -626,31 +626,31 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     // and any additional grouping columns must be specified.
 
     $field_columns = array_keys($this->getFieldDefinition()->getColumns());
-    $group_columns = array(
+    $group_columns = [
       'entity_id' => $this->t('Entity ID'),
-    ) + array_map('ucfirst', array_combine($field_columns, $field_columns));
+    ] + array_map('ucfirst', array_combine($field_columns, $field_columns));
 
-    $form['group_column'] = array(
+    $form['group_column'] = [
       '#type' => 'select',
       '#title' => $this->t('Group column'),
       '#default_value' => $this->options['group_column'],
       '#description' => $this->t('Select the column of this field to apply the grouping function selected above.'),
       '#options' => $group_columns,
-    );
+    ];
 
-    $options = array(
+    $options = [
       'bundle' => 'Bundle',
       'language' => 'Language',
       'entity_type' => 'Entity_type',
-    );
+    ];
     // Add on defined fields, noting that they're prefixed with the field name.
-    $form['group_columns'] = array(
+    $form['group_columns'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Group columns (additional)'),
       '#default_value' => $this->options['group_columns'],
       '#description' => $this->t('Select any additional columns of this field to include in the query and to group on.'),
       '#options' => $options + $group_columns,
-    );
+    ];
   }
 
   public function submitGroupByForm(&$form, FormStateInterface $form_state) {
@@ -658,8 +658,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     $item = &$form_state->get('handler')->options;
 
     // Add settings for "field API" fields.
-    $item['group_column'] = $form_state->getValue(array('options', 'group_column'));
-    $item['group_columns'] = array_filter($form_state->getValue(array('options', 'group_columns')));
+    $item['group_column'] = $form_state->getValue(['options', 'group_column']);
+    $item['group_columns'] = array_filter($form_state->getValue(['options', 'group_columns']));
   }
 
   /**
@@ -680,12 +680,12 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
         ];
       }
       else {
-        $build = array(
+        $build = [
           '#theme' => 'item_list',
           '#items' => $items,
           '#title' => NULL,
           '#list_type' => $this->options['multi_type'],
-        );
+        ];
       }
       return $this->renderer->render($build);
     }
@@ -738,7 +738,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       // Determine if only the first and last values should be shown.
       $delta_first_last = $this->options['delta_first_last'];
 
-      $new_values = array();
+      $new_values = [];
       for ($i = 0; $i < $delta_limit; $i++) {
         $new_delta = $offset + $i;
 
@@ -877,7 +877,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     // cause some weirdness, but there is only so much we can hope to do.
     if (!empty($this->group_fields) && isset($entity->{$this->definition['field_name']})) {
       // first, test to see if we have a base value.
-      $base_value = array();
+      $base_value = [];
       // Note: We would copy original values here, but it can cause problems.
       // For example, text fields store cached filtered values as 'safe_value'
       // which does not appear anywhere in the field definition so we cannot
@@ -896,10 +896,10 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       if ($data) {
         // Now, overwrite the original value with our aggregated value.
         // This overwrites it so there is always just one entry.
-        $processed_entity->{$this->definition['field_name']} = array($base_value);
+        $processed_entity->{$this->definition['field_name']} = [$base_value];
       }
       else {
-        $processed_entity->{$this->definition['field_name']} = array();
+        $processed_entity->{$this->definition['field_name']} = [];
       }
     }
 
@@ -913,7 +913,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   protected function documentSelfTokens(&$tokens) {
     $field = $this->getFieldDefinition();
     foreach ($field->getColumns() as $id => $column) {
-      $tokens['{{ ' . $this->options['id'] . '__' . $id . ' }}'] = $this->t('Raw @column', array('@column' => $id));
+      $tokens['{{ ' . $this->options['id'] . '__' . $id . ' }}'] = $this->t('Raw @column', ['@column' => $id]);
     }
   }
 

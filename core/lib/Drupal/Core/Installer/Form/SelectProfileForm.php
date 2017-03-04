@@ -23,8 +23,8 @@ class SelectProfileForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $install_state = NULL) {
     $form['#title'] = $this->t('Select an installation profile');
 
-    $profiles = array();
-    $names = array();
+    $profiles = [];
+    $names = [];
     foreach ($install_state['profiles'] as $profile) {
       /** @var $profile \Drupal\Core\Extension\Extension */
       $details = install_profile_info($profile->getName());
@@ -49,34 +49,34 @@ class SelectProfileForm extends FormBase {
       // any non-core profiles rather than including it with them alphabetically,
       // since the other profiles might be intended to group together in a
       // particular way.
-      $names = array('minimal' => $names['minimal']) + $names;
+      $names = ['minimal' => $names['minimal']] + $names;
     }
     if (isset($names['standard'])) {
       // If the default ("Standard") core profile is present, put it at the very
       // top of the list. This profile will have its radio button pre-selected,
       // so we want it to always appear at the top.
-      $names = array('standard' => $names['standard']) + $names;
+      $names = ['standard' => $names['standard']] + $names;
     }
 
     // The profile name and description are extracted for translation from the
     // .info file, so we can use $this->t() on them even though they are dynamic
     // data at this point.
-    $form['profile'] = array(
+    $form['profile'] = [
       '#type' => 'radios',
       '#title' => $this->t('Select an installation profile'),
       '#title_display' => 'invisible',
-      '#options' => array_map(array($this, 't'), $names),
+      '#options' => array_map([$this, 't'], $names),
       '#default_value' => 'standard',
-    );
+    ];
     foreach (array_keys($names) as $profile_name) {
       $form['profile'][$profile_name]['#description'] = isset($profiles[$profile_name]['description']) ? $this->t($profiles[$profile_name]['description']) : '';
     }
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save and continue'),
       '#button_type' => 'primary',
-    );
+    ];
     return $form;
   }
 

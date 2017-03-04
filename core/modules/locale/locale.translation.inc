@@ -52,8 +52,8 @@ const LOCALE_TRANSLATION_SOURCE_COMPARE_GT = 1;
  *
  * @see locale_translation_build_projects()
  */
-function locale_translation_get_projects(array $project_names = array()) {
-  $projects = &drupal_static(__FUNCTION__, array());
+function locale_translation_get_projects(array $project_names = []) {
+  $projects = &drupal_static(__FUNCTION__, []);
 
   if (empty($projects)) {
     // Get project data from the database.
@@ -100,7 +100,7 @@ function locale_translation_clear_cache_projects() {
  * @see locale_translation_source_build()
  */
 function locale_translation_load_sources(array $projects = NULL, array $langcodes = NULL) {
-  $sources = array();
+  $sources = [];
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
@@ -129,8 +129,8 @@ function locale_translation_load_sources(array $projects = NULL, array $langcode
  *
  * @see locale_translation_source_build()
  */
-function locale_translation_build_sources(array $projects = array(), array $langcodes = array()) {
-  $sources = array();
+function locale_translation_build_sources(array $projects = [], array $langcodes = []) {
+  $sources = [];
   $projects = locale_translation_get_projects($projects);
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
@@ -173,7 +173,7 @@ function locale_translation_source_check_file($source) {
     $directory = $source_file->directory;
     $filename = '/' . preg_quote($source_file->filename) . '$/';
 
-    if ($files = file_scan_directory($directory, $filename, array('key' => 'name', 'recurse' => FALSE))) {
+    if ($files = file_scan_directory($directory, $filename, ['key' => 'name', 'recurse' => FALSE])) {
       $file = current($files);
       $source_file->uri = $file->uri;
       $source_file->timestamp = filemtime($file->uri);
@@ -244,35 +244,35 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
   // remote file. The local version of this file will only be checked if a
   // translations directory has been defined. If the server_pattern is a local
   // file path we will only check for a file in the local file system.
-  $files = array();
+  $files = [];
   if (_locale_translation_file_is_remote($source->server_pattern)) {
-    $files[LOCALE_TRANSLATION_REMOTE] = (object) array(
+    $files[LOCALE_TRANSLATION_REMOTE] = (object) [
       'project' => $project->name,
       'langcode' => $langcode,
       'version' => $project->version,
       'type' => LOCALE_TRANSLATION_REMOTE,
       'filename' => locale_translation_build_server_pattern($source, basename($source->server_pattern)),
       'uri' => locale_translation_build_server_pattern($source, $source->server_pattern),
-    );
-    $files[LOCALE_TRANSLATION_LOCAL] = (object) array(
+    ];
+    $files[LOCALE_TRANSLATION_LOCAL] = (object) [
       'project' => $project->name,
       'langcode' => $langcode,
       'version' => $project->version,
       'type' => LOCALE_TRANSLATION_LOCAL,
       'filename' => locale_translation_build_server_pattern($source, $filename),
       'directory' => 'translations://',
-    );
+    ];
     $files[LOCALE_TRANSLATION_LOCAL]->uri = $files[LOCALE_TRANSLATION_LOCAL]->directory . $files[LOCALE_TRANSLATION_LOCAL]->filename;
   }
   else {
-    $files[LOCALE_TRANSLATION_LOCAL] = (object) array(
+    $files[LOCALE_TRANSLATION_LOCAL] = (object) [
       'project' => $project->name,
       'langcode' => $langcode,
       'version' => $project->version,
       'type' => LOCALE_TRANSLATION_LOCAL,
       'filename' => locale_translation_build_server_pattern($source, basename($source->server_pattern)),
       'directory' => locale_translation_build_server_pattern($source, drupal_dirname($source->server_pattern)),
-    );
+    ];
     $files[LOCALE_TRANSLATION_LOCAL]->uri = $files[LOCALE_TRANSLATION_LOCAL]->directory . '/' . $files[LOCALE_TRANSLATION_LOCAL]->filename;
   }
   $source->files = $files;
@@ -310,12 +310,12 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
  *   String with replaced placeholders.
  */
 function locale_translation_build_server_pattern($project, $template) {
-  $variables = array(
+  $variables = [
     '%project' => $project->name,
     '%version' => $project->version,
     '%core' => $project->core,
     '%language' => isset($project->langcode) ? $project->langcode : '%language',
-  );
+  ];
   return strtr($template, $variables);
 }
 
@@ -323,7 +323,7 @@ function locale_translation_build_server_pattern($project, $template) {
  * Populate a queue with project to check for translation updates.
  */
 function locale_cron_fill_queue() {
-  $updates = array();
+  $updates = [];
   $config = \Drupal::config('locale.settings');
 
   // Determine which project+language should be updated.
@@ -335,7 +335,7 @@ function locale_cron_fill_queue() {
   $files = db_select('locale_file', 'f')
     ->condition('f.project', array_keys($projects), 'IN')
     ->condition('f.last_checked', $last, '<')
-    ->fields('f', array('project', 'langcode'))
+    ->fields('f', ['project', 'langcode'])
     ->execute()->fetchAll();
   foreach ($files as $file) {
     $updates[$file->project][] = $file->langcode;
@@ -343,7 +343,7 @@ function locale_cron_fill_queue() {
     // Update the last_checked timestamp of the project+language that will
     // be checked for updates.
     db_update('locale_file')
-      ->fields(array('last_checked' => REQUEST_TIME))
+      ->fields(['last_checked' => REQUEST_TIME])
       ->condition('project', $file->project)
       ->condition('langcode', $file->langcode)
       ->execute();
@@ -357,7 +357,7 @@ function locale_cron_fill_queue() {
     $queue = \Drupal::queue('locale_translation', TRUE);
 
     foreach ($updates as $project => $languages) {
-      $batch = locale_translation_batch_update_build(array($project), $languages, $options);
+      $batch = locale_translation_batch_update_build([$project], $languages, $options);
       foreach ($batch['operations'] as $item) {
         $queue->createItem($item);
       }
@@ -429,13 +429,13 @@ function _locale_translation_source_compare($source1, $source2) {
  */
 function _locale_translation_default_update_options() {
   $config = \Drupal::config('locale.settings');
-  return array(
+  return [
     'customized' => LOCALE_NOT_CUSTOMIZED,
-    'overwrite_options' => array(
+    'overwrite_options' => [
       'not_customized' => $config->get('translation.overwrite_not_customized'),
       'customized' => $config->get('translation.overwrite_customized'),
-    ),
+    ],
     'finish_feedback' => TRUE,
     'use_remote' => locale_translation_use_remote_source(),
-  );
+  ];
 }

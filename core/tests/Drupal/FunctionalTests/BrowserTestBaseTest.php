@@ -21,7 +21,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('test_page_test', 'form_test', 'system_test');
+  public static $modules = ['test_page_test', 'form_test', 'system_test'];
 
   /**
    * Tests basic page test.
@@ -58,9 +58,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Hello Drupal');
 
     // Test that setting headers with drupalGet() works.
-    $this->drupalGet('system-test/header', array(), array(
+    $this->drupalGet('system-test/header', [], [
       'Test-Header' => 'header value',
-    ));
+    ]);
     $returned_header = $this->getSession()->getResponseHeader('Test-Header');
     $this->assertSame('header value', $returned_header);
   }

@@ -21,20 +21,20 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
     $this->invalidStorage = new DatabaseStorage($this->container->get('database'), 'invalid');
 
     // ::listAll() verifications require other configuration data to exist.
-    $this->storage->write('system.performance', array());
+    $this->storage->write('system.performance', []);
   }
 
   protected function read($name) {
-    $data = db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $name))->fetchField();
+    $data = db_query('SELECT data FROM {config} WHERE name = :name', [':name' => $name])->fetchField();
     return unserialize($data);
   }
 
   protected function insert($name, $data) {
-    db_insert('config')->fields(array('name' => $name, 'data' => $data))->execute();
+    db_insert('config')->fields(['name' => $name, 'data' => $data])->execute();
   }
 
   protected function update($name, $data) {
-    db_update('config')->fields(array('data' => $data))->condition('name', $name)->execute();
+    db_update('config')->fields(['data' => $data])->condition('name', $name)->execute();
   }
 
   protected function delete($name) {

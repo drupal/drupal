@@ -114,7 +114,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
     $display_id = $request->request->get('view_display_id');
     if (isset($name) && isset($display_id)) {
       $args = $request->request->get('view_args');
-      $args = isset($args) && $args !== '' ? explode('/', $args) : array();
+      $args = isset($args) && $args !== '' ? explode('/', $args) : [];
 
       // Arguments can be empty, make sure they are passed on as NULL so that
       // argument validation is not triggered.
@@ -132,7 +132,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
 
       // Remove all of this stuff from the query of the request so it doesn't
       // end up in pagers and tablesort URLs.
-      foreach (array('view_name', 'view_display_id', 'view_args', 'view_path', 'view_dom_id', 'pager_element', 'view_base_path', AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER) as $key) {
+      foreach (['view_name', 'view_display_id', 'view_args', 'view_path', 'view_dom_id', 'pager_element', 'view_base_path', AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER] as $key) {
         $request->query->remove($key);
         $request->request->remove($key);
       }

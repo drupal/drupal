@@ -9,8 +9,8 @@
  * Implements hook_rdf_namespaces().
  */
 function rdf_test_namespaces_rdf_namespaces() {
-  return array(
+  return [
     'foaf'     => 'http://xmlns.com/foaf/0.1/',
     'foaf1'    => 'http://xmlns.com/foaf/0.1/',
-  );
+  ];
 }

@@ -64,7 +64,7 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
         $methods = explode('|', $requirements['_method']);
         // CSRF protection only applies to write operations, so we can filter
         // out any routes that require reading methods only.
-        $write_methods = array_diff($methods, array('GET', 'HEAD', 'OPTIONS', 'TRACE'));
+        $write_methods = array_diff($methods, ['GET', 'HEAD', 'OPTIONS', 'TRACE']);
         if (empty($write_methods)) {
           return FALSE;
         }
@@ -93,7 +93,7 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
     // 1. this is a write operation
     // 2. the user was successfully authenticated and
     // 3. the request comes with a session cookie.
-    if (!in_array($method, array('GET', 'HEAD', 'OPTIONS', 'TRACE'))
+    if (!in_array($method, ['GET', 'HEAD', 'OPTIONS', 'TRACE'])
       && $account->isAuthenticated()
       && $this->sessionConfiguration->hasSession($request)
     ) {

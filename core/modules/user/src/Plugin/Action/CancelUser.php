@@ -79,7 +79,7 @@ class CancelUser extends ActionBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function execute($object = NULL) {
-    $this->executeMultiple(array($object));
+    $this->executeMultiple([$object]);
   }
 
   /**

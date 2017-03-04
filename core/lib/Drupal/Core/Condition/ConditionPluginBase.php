@@ -53,11 +53,11 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
     }
     $contexts = $form_state->getTemporaryValue('gathered_contexts') ?: [];
     $form['context_mapping'] = $this->addContextAssignmentElement($this, $contexts);
-    $form['negate'] = array(
+    $form['negate'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Negate the condition'),
       '#default_value' => $this->configuration['negate'],
-    );
+    ];
     return $form;
   }
 
@@ -88,9 +88,9 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
    * {@inheritdoc}
    */
   public function getConfiguration() {
-    return array(
+    return [
       'id' => $this->getPluginId(),
-    ) + $this->configuration;
+    ] + $this->configuration;
   }
 
   /**
@@ -105,16 +105,16 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'negate' => FALSE,
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    return array();
+    return [];
   }
 
   /**

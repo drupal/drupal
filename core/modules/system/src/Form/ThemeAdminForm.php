@@ -29,24 +29,24 @@ class ThemeAdminForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, array $theme_options = NULL) {
     // Administration theme settings.
-    $form['admin_theme'] = array(
+    $form['admin_theme'] = [
       '#type' => 'details',
       '#title' => $this->t('Administration theme'),
       '#open' => TRUE,
-    );
-    $form['admin_theme']['admin_theme'] = array(
+    ];
+    $form['admin_theme']['admin_theme'] = [
       '#type' => 'select',
-      '#options' => array(0 => $this->t('Default theme')) + $theme_options,
+      '#options' => [0 => $this->t('Default theme')] + $theme_options,
       '#title' => $this->t('Administration theme'),
       '#description' => $this->t('Choose "Default theme" to always use the same theme as the rest of the site.'),
       '#default_value' => $this->config('system.theme')->get('admin'),
-    );
-    $form['admin_theme']['actions'] = array('#type' => 'actions');
-    $form['admin_theme']['actions']['submit'] = array(
+    ];
+    $form['admin_theme']['actions'] = ['#type' => 'actions'];
+    $form['admin_theme']['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save configuration'),
       '#button_type' => 'primary',
-    );
+    ];
     return $form;
   }
 

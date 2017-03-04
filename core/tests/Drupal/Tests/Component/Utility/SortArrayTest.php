@@ -43,49 +43,49 @@ class SortArrayTest extends UnitTestCase {
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByWeightElement()
    */
   public function providerSortByWeightElement() {
-    $tests = array();
+    $tests = [];
 
     // Weights set and equal.
-    $tests[] = array(
-      array('weight' => 1),
-      array('weight' => 1),
+    $tests[] = [
+      ['weight' => 1],
+      ['weight' => 1],
       0
-    );
+    ];
 
     // Weights set and $a is less (lighter) than $b.
-    $tests[] = array(
-      array('weight' => 1),
-      array('weight' => 2),
+    $tests[] = [
+      ['weight' => 1],
+      ['weight' => 2],
       -1
-    );
+    ];
 
     // Weights set and $a is greater (heavier) than $b.
-    $tests[] = array(
-      array('weight' => 2),
-      array('weight' => 1),
+    $tests[] = [
+      ['weight' => 2],
+      ['weight' => 1],
       1
-    );
+    ];
 
     // Weights not set.
-    $tests[] = array(
-      array(),
-      array(),
+    $tests[] = [
+      [],
+      [],
       0
-    );
+    ];
 
     // Weights for $b not set.
-    $tests[] = array(
-      array('weight' => 1),
-      array(),
+    $tests[] = [
+      ['weight' => 1],
+      [],
       1
-    );
+    ];
 
     // Weights for $a not set.
-    $tests[] = array(
-      array(),
-      array('weight' => 1),
+    $tests[] = [
+      [],
+      ['weight' => 1],
       -1
-    );
+    ];
 
     return $tests;
   }
@@ -119,49 +119,49 @@ class SortArrayTest extends UnitTestCase {
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByWeightProperty()
    */
   public function providerSortByWeightProperty() {
-    $tests = array();
+    $tests = [];
 
     // Weights set and equal.
-    $tests[] = array(
-      array('#weight' => 1),
-      array('#weight' => 1),
+    $tests[] = [
+      ['#weight' => 1],
+      ['#weight' => 1],
       0
-    );
+    ];
 
     // Weights set and $a is less (lighter) than $b.
-    $tests[] = array(
-      array('#weight' => 1),
-      array('#weight' => 2),
+    $tests[] = [
+      ['#weight' => 1],
+      ['#weight' => 2],
       -1
-    );
+    ];
 
     // Weights set and $a is greater (heavier) than $b.
-    $tests[] = array(
-      array('#weight' => 2),
-      array('#weight' => 1),
+    $tests[] = [
+      ['#weight' => 2],
+      ['#weight' => 1],
       1
-    );
+    ];
 
     // Weights not set.
-    $tests[] = array(
-      array(),
-      array(),
+    $tests[] = [
+      [],
+      [],
       0
-    );
+    ];
 
     // Weights for $b not set.
-    $tests[] = array(
-      array('#weight' => 1),
-      array(),
+    $tests[] = [
+      ['#weight' => 1],
+      [],
       1
-    );
+    ];
 
     // Weights for $a not set.
-    $tests[] = array(
-      array(),
-      array('#weight' => 1),
+    $tests[] = [
+      [],
+      ['#weight' => 1],
       -1
-    );
+    ];
 
     return $tests;
   }
@@ -195,42 +195,42 @@ class SortArrayTest extends UnitTestCase {
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByTitleElement()
    */
   public function providerSortByTitleElement() {
-    $tests = array();
+    $tests = [];
 
     // Titles set and equal.
-    $tests[] = array(
-      array('title' => 'test'),
-      array('title' => 'test'),
+    $tests[] = [
+      ['title' => 'test'],
+      ['title' => 'test'],
       0
-    );
+    ];
 
     // Title $a not set.
-    $tests[] = array(
-      array(),
-      array('title' => 'test'),
+    $tests[] = [
+      [],
+      ['title' => 'test'],
       -4
-    );
+    ];
 
     // Title $b not set.
-    $tests[] = array(
-      array('title' => 'test'),
-      array(),
+    $tests[] = [
+      ['title' => 'test'],
+      [],
       4
-    );
+    ];
 
     // Titles set but not equal.
-    $tests[] = array(
-      array('title' => 'test'),
-      array('title' => 'testing'),
+    $tests[] = [
+      ['title' => 'test'],
+      ['title' => 'testing'],
       -1
-    );
+    ];
 
     // Titles set but not equal.
-    $tests[] = array(
-      array('title' => 'testing'),
-      array('title' => 'test'),
+    $tests[] = [
+      ['title' => 'testing'],
+      ['title' => 'test'],
       1
-    );
+    ];
 
     return $tests;
   }
@@ -264,42 +264,42 @@ class SortArrayTest extends UnitTestCase {
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByTitleProperty()
    */
   public function providerSortByTitleProperty() {
-    $tests = array();
+    $tests = [];
 
     // Titles set and equal.
-    $tests[] = array(
-      array('#title' => 'test'),
-      array('#title' => 'test'),
+    $tests[] = [
+      ['#title' => 'test'],
+      ['#title' => 'test'],
       0
-    );
+    ];
 
     // Title $a not set.
-    $tests[] = array(
-      array(),
-      array('#title' => 'test'),
+    $tests[] = [
+      [],
+      ['#title' => 'test'],
       -4
-    );
+    ];
 
     // Title $b not set.
-    $tests[] = array(
-      array('#title' => 'test'),
-      array(),
+    $tests[] = [
+      ['#title' => 'test'],
+      [],
       4
-    );
+    ];
 
     // Titles set but not equal.
-    $tests[] = array(
-      array('#title' => 'test'),
-      array('#title' => 'testing'),
+    $tests[] = [
+      ['#title' => 'test'],
+      ['#title' => 'testing'],
       -1
-    );
+    ];
 
     // Titles set but not equal.
-    $tests[] = array(
-      array('#title' => 'testing'),
-      array('#title' => 'test'),
+    $tests[] = [
+      ['#title' => 'testing'],
+      ['#title' => 'test'],
       1
-    );
+    ];
 
     return $tests;
   }

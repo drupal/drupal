@@ -68,7 +68,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $this->config('system.theme')->set('default', 'classy')->save();
     $this->installEntitySchema('entity_test');
     // Grant the 'view test entity' permission.
-    $this->installConfig(array('user'));
+    $this->installConfig(['user']);
     Role::load(RoleInterface::ANONYMOUS_ID)
       ->grantPermission('view test entity')
       ->save();
@@ -76,16 +76,16 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     // The label formatter rendering generates links, so build the router.
     $this->container->get('router.builder')->rebuild();
 
-    $this->createEntityReferenceField($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType, 'default', array(), FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->createEntityReferenceField($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType, 'default', [], FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     // Set up a field, so that the entity that'll be referenced bubbles up a
     // cache tag when rendering it entirely.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'field_name' => 'body',
       'entity_type' => $this->entityType,
       'type' => 'text',
-      'settings' => array(),
-    ))->save();
+      'settings' => [],
+    ])->save();
     FieldConfig::create([
       'entity_type' => $this->entityType,
       'bundle' => $this->bundle,
@@ -93,35 +93,35 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
       'label' => 'Body',
     ])->save();
     entity_get_display($this->entityType, $this->bundle, 'default')
-      ->setComponent('body', array(
+      ->setComponent('body', [
         'type' => 'text_default',
-        'settings' => array(),
-      ))
+        'settings' => [],
+      ])
       ->save();
 
-    FilterFormat::create(array(
+    FilterFormat::create([
       'format' => 'full_html',
       'name' => 'Full HTML',
-    ))->save();
+    ])->save();
 
     // Create the entity to be referenced.
     $this->referencedEntity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityType)
-      ->create(array('name' => $this->randomMachineName()));
-    $this->referencedEntity->body = array(
+      ->create(['name' => $this->randomMachineName()]);
+    $this->referencedEntity->body = [
       'value' => '<p>Hello, world!</p>',
       'format' => 'full_html',
-    );
+    ];
     $this->referencedEntity->save();
 
     // Create another entity to be referenced but do not save it.
     $this->unsavedReferencedEntity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityType)
-      ->create(array('name' => $this->randomMachineName()));
-    $this->unsavedReferencedEntity->body = array(
+      ->create(['name' => $this->randomMachineName()]);
+    $this->unsavedReferencedEntity->body = [
       'value' => '<p>Hello, unsaved world!</p>',
       'format' => 'full_html',
-    );
+    ];
   }
 
   /**
@@ -137,7 +137,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
     $referencing_entity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityType)
-      ->create(array('name' => $this->randomMachineName()));
+      ->create(['name' => $this->randomMachineName()]);
     $referencing_entity->save();
     $referencing_entity->{$field_name}->entity = $this->referencedEntity;
 
@@ -150,16 +150,16 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     foreach ($formatter_manager->getOptions('entity_reference') as $formatter => $name) {
       // Set formatter type for the 'full' view mode.
       entity_get_display($this->entityType, $this->bundle, 'default')
-        ->setComponent($field_name, array(
+        ->setComponent($field_name, [
           'type' => $formatter,
-        ))
+        ])
         ->save();
 
       // Invoke entity view.
       entity_view($referencing_entity, 'default');
 
       // Verify the un-accessible item still exists.
-      $this->assertEqual($referencing_entity->{$field_name}->target_id, $this->referencedEntity->id(), format_string('The un-accessible item still exists after @name formatter was executed.', array('@name' => $name)));
+      $this->assertEqual($referencing_entity->{$field_name}->target_id, $this->referencedEntity->id(), format_string('The un-accessible item still exists after @name formatter was executed.', ['@name' => $name]));
     }
   }
 
@@ -198,7 +198,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $this->assertEqual($build[0]['#markup'], 'default | ' . $this->referencedEntity->label() . $expected_rendered_name_field_1 . $expected_rendered_body_field_1, sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
     $expected_cache_tags = Cache::mergeTags(\Drupal::entityManager()->getViewBuilder($this->entityType)->getCacheTags(), $this->referencedEntity->getCacheTags());
     $expected_cache_tags = Cache::mergeTags($expected_cache_tags, FilterFormat::load('full_html')->getCacheTags());
-    $this->assertEqual($build[0]['#cache']['tags'], $expected_cache_tags, format_string('The @formatter formatter has the expected cache tags.', array('@formatter' => $formatter)));
+    $this->assertEqual($build[0]['#cache']['tags'], $expected_cache_tags, format_string('The @formatter formatter has the expected cache tags.', ['@formatter' => $formatter]));
 
     // Test the second field item.
     $expected_rendered_name_field_2 = '
@@ -338,37 +338,37 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
       'max-age' => Cache::PERMANENT,
     ];
     $this->assertEqual($build['#cache'], $expected_field_cacheability, 'The field render array contains the entity access cacheability metadata');
-    $expected_item_1 = array(
+    $expected_item_1 = [
       '#type' => 'link',
       '#title' => $this->referencedEntity->label(),
       '#url' => $this->referencedEntity->urlInfo(),
       '#options' => $this->referencedEntity->urlInfo()->getOptions(),
-      '#cache' => array(
+      '#cache' => [
         'contexts' => [
           'user.permissions',
         ],
         'tags' => $this->referencedEntity->getCacheTags(),
-      ),
-    );
+      ],
+    ];
     $this->assertEqual($renderer->renderRoot($build[0]), $renderer->renderRoot($expected_item_1), sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
     $this->assertEqual(CacheableMetadata::createFromRenderArray($build[0]), CacheableMetadata::createFromRenderArray($expected_item_1));
 
     // The second referenced entity is "autocreated", therefore not saved and
     // lacking any URL info.
-    $expected_item_2 = array(
+    $expected_item_2 = [
       '#plain_text' => $this->unsavedReferencedEntity->label(),
-      '#cache' => array(
+      '#cache' => [
         'contexts' => [
           'user.permissions',
         ],
         'tags' => $this->unsavedReferencedEntity->getCacheTags(),
         'max-age' => Cache::PERMANENT,
-      ),
-    );
+      ],
+    ];
     $this->assertEqual($build[1], $expected_item_2, sprintf('The render array returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
 
     // Test with the 'link' setting set to FALSE.
-    $build = $this->buildRenderArray([$this->referencedEntity, $this->unsavedReferencedEntity], $formatter, array('link' => FALSE));
+    $build = $this->buildRenderArray([$this->referencedEntity, $this->unsavedReferencedEntity], $formatter, ['link' => FALSE]);
     $this->assertEqual($build[0]['#plain_text'], $this->referencedEntity->label(), sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
     $this->assertEqual($build[1]['#plain_text'], $this->unsavedReferencedEntity->label(), sprintf('The markup returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
 
@@ -379,12 +379,12 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $field_storage_config->setSetting('target_type', 'entity_test_label');
     $field_storage_config->save();
 
-    $referenced_entity_with_no_link_template = EntityTestLabel::create(array(
+    $referenced_entity_with_no_link_template = EntityTestLabel::create([
       'name' => $this->randomMachineName(),
-    ));
+    ]);
     $referenced_entity_with_no_link_template->save();
 
-    $build = $this->buildRenderArray([$referenced_entity_with_no_link_template], $formatter, array('link' => TRUE));
+    $build = $this->buildRenderArray([$referenced_entity_with_no_link_template], $formatter, ['link' => TRUE]);
     $this->assertEqual($build[0]['#plain_text'], $referenced_entity_with_no_link_template->label(), sprintf('The markup returned by the %s formatter is correct for an entity type with no valid link template.', $formatter));
   }
 
@@ -403,11 +403,11 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
    * @return array
    *   A render array.
    */
-  protected function buildRenderArray(array $referenced_entities, $formatter, $formatter_options = array()) {
+  protected function buildRenderArray(array $referenced_entities, $formatter, $formatter_options = []) {
     // Create the entity that will have the entity reference field.
     $referencing_entity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityType)
-      ->create(array('name' => $this->randomMachineName()));
+      ->create(['name' => $this->randomMachineName()]);
 
     $items = $referencing_entity->get($this->fieldName);
 
@@ -417,7 +417,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     }
 
     // Build the renderable array for the field.
-    return $items->view(array('type' => $formatter, 'settings' => $formatter_options));
+    return $items->view(['type' => $formatter, 'settings' => $formatter_options]);
   }
 
 }

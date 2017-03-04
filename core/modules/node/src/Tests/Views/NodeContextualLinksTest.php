@@ -17,27 +17,27 @@ class NodeContextualLinksTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('contextual');
+  public static $modules = ['contextual'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_contextual_links');
+  public static $testViews = ['test_contextual_links'];
 
   /**
    * Tests contextual links.
    */
   public function testNodeContextualLinks() {
-    $this->drupalCreateContentType(array('type' => 'page'));
-    $this->drupalCreateNode(array('promote' => 1));
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->drupalCreateNode(['promote' => 1]);
     $this->drupalGet('node');
 
-    $user = $this->drupalCreateUser(array('administer nodes', 'access contextual links'));
+    $user = $this->drupalCreateUser(['administer nodes', 'access contextual links']);
     $this->drupalLogin($user);
 
-    $response = $this->renderContextualLinks(array('node:node=1:'), 'node');
+    $response = $this->renderContextualLinks(['node:node=1:'], 'node');
     $this->assertResponse(200);
     $json = Json::decode($response);
     $this->setRawContent($json['node:node=1:']);
@@ -63,7 +63,7 @@ class NodeContextualLinksTest extends NodeTestBase {
    */
   protected function renderContextualLinks($ids, $current_path) {
     // Build POST values.
-    $post = array();
+    $post = [];
     for ($i = 0; $i < count($ids); $i++) {
       $post['ids[' . $i . ']'] = $ids[$i];
     }
@@ -78,15 +78,15 @@ class NodeContextualLinksTest extends NodeTestBase {
     $post = implode('&', $post);
 
     // Perform HTTP request.
-    return $this->curlExec(array(
-      CURLOPT_URL => \Drupal::url('contextual.render', [], ['absolute' => TRUE, 'query' => array('destination' => $current_path)]),
+    return $this->curlExec([
+      CURLOPT_URL => \Drupal::url('contextual.render', [], ['absolute' => TRUE, 'query' => ['destination' => $current_path]]),
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $post,
-      CURLOPT_HTTPHEADER => array(
+      CURLOPT_HTTPHEADER => [
         'Accept: application/json',
         'Content-Type: application/x-www-form-urlencoded',
-      ),
-    ));
+      ],
+    ]);
   }
 
   /**
@@ -108,8 +108,8 @@ class NodeContextualLinksTest extends NodeTestBase {
     $admin_user->pass_raw = 'new_password';
     $admin_user->save();
 
-    $this->drupalCreateContentType(array('type' => 'page'));
-    $this->drupalCreateNode(array('promote' => 1));
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->drupalCreateNode(['promote' => 1]);
 
     $this->drupalLogin($admin_user);
     $this->drupalGet('node');

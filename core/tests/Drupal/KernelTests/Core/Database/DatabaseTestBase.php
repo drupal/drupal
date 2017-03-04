@@ -12,11 +12,11 @@ use Drupal\KernelTests\KernelTestBase;
  */
 abstract class DatabaseTestBase extends KernelTestBase {
 
-  public static $modules = array('database_test');
+  public static $modules = ['database_test'];
 
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('database_test', array(
+    $this->installSchema('database_test', [
       'test',
       'test_people',
       'test_people_copy',
@@ -27,7 +27,7 @@ abstract class DatabaseTestBase extends KernelTestBase {
       'test_serialized',
       'test_special_columns',
       'TEST_UPPERCASE',
-    ));
+    ]);
     self::addSampleData();
   }
 
@@ -36,19 +36,19 @@ abstract class DatabaseTestBase extends KernelTestBase {
    */
   function ensureSampleDataNull() {
     db_insert('test_null')
-      ->fields(array('name', 'age'))
-      ->values(array(
+      ->fields(['name', 'age'])
+      ->values([
       'name' => 'Kermit',
       'age' => 25,
-    ))
-      ->values(array(
+    ])
+      ->values([
       'name' => 'Fozzie',
       'age' => NULL,
-    ))
-      ->values(array(
+    ])
+      ->values([
       'name' => 'Gonzo',
       'age' => 27,
-    ))
+    ])
       ->execute();
   }
 
@@ -58,89 +58,89 @@ abstract class DatabaseTestBase extends KernelTestBase {
   static function addSampleData() {
     // We need the IDs, so we can't use a multi-insert here.
     $john = db_insert('test')
-      ->fields(array(
+      ->fields([
         'name' => 'John',
         'age' => 25,
         'job' => 'Singer',
-      ))
+      ])
       ->execute();
 
     $george = db_insert('test')
-      ->fields(array(
+      ->fields([
         'name' => 'George',
         'age' => 27,
         'job' => 'Singer',
-      ))
+      ])
       ->execute();
 
     db_insert('test')
-      ->fields(array(
+      ->fields([
         'name' => 'Ringo',
         'age' => 28,
         'job' => 'Drummer',
-      ))
+      ])
       ->execute();
 
     $paul = db_insert('test')
-      ->fields(array(
+      ->fields([
         'name' => 'Paul',
         'age' => 26,
         'job' => 'Songwriter',
-      ))
+      ])
       ->execute();
 
     db_insert('test_people')
-      ->fields(array(
+      ->fields([
         'name' => 'Meredith',
         'age' => 30,
         'job' => 'Speaker',
-      ))
+      ])
       ->execute();
 
     db_insert('test_task')
-      ->fields(array('pid', 'task', 'priority'))
-      ->values(array(
+      ->fields(['pid', 'task', 'priority'])
+      ->values([
         'pid' => $john,
         'task' => 'eat',
         'priority' => 3,
-      ))
-      ->values(array(
+      ])
+      ->values([
         'pid' => $john,
         'task' => 'sleep',
         'priority' => 4,
-      ))
-      ->values(array(
+      ])
+      ->values([
         'pid' => $john,
         'task' => 'code',
         'priority' => 1,
-      ))
-      ->values(array(
+      ])
+      ->values([
         'pid' => $george,
         'task' => 'sing',
         'priority' => 2,
-      ))
-      ->values(array(
+      ])
+      ->values([
         'pid' => $george,
         'task' => 'sleep',
         'priority' => 2,
-      ))
-      ->values(array(
+      ])
+      ->values([
         'pid' => $paul,
         'task' => 'found new band',
         'priority' => 1,
-      ))
-      ->values(array(
+      ])
+      ->values([
         'pid' => $paul,
         'task' => 'perform at superbowl',
         'priority' => 3,
-      ))
+      ])
       ->execute();
 
     db_insert('test_special_columns')
-      ->fields(array(
+      ->fields([
         'id' => 1,
         'offset' => 'Offset value 1',
-      ))
+      ])
       ->execute();
   }
 

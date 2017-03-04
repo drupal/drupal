@@ -17,7 +17,7 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'config', 'locale', 'config_translation');
+  public static $modules = ['language', 'config', 'locale', 'config_translation'];
 
   /**
    * Tests that language can be enabled and overrides are created during a sync.
@@ -31,7 +31,7 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
     // Uninstall the language module and its dependencies so we can test
     // enabling the language module and creating overrides at the same time
     // during a configuration synchronization.
-    \Drupal::service('module_installer')->uninstall(array('language'));
+    \Drupal::service('module_installer')->uninstall(['language']);
     // Ensure that the current site has no overrides registered to the
     // ConfigFactory.
     $this->rebuildContainer();
@@ -39,8 +39,8 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
     /* @var \Drupal\Core\Config\StorageInterface $override_sync */
     $override_sync = $sync->createCollection('language.fr');
     // Create some overrides in sync.
-    $override_sync->write('system.site', array('name' => 'FR default site name'));
-    $override_sync->write('system.maintenance', array('message' => 'FR message: @site is currently under maintenance. We should be back shortly. Thank you for your patience'));
+    $override_sync->write('system.site', ['name' => 'FR default site name']);
+    $override_sync->write('system.maintenance', ['message' => 'FR message: @site is currently under maintenance. We should be back shortly. Thank you for your patience']);
 
     $this->configImporter()->import();
     $this->rebuildContainer();
@@ -61,7 +61,7 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
    */
   public function testConfigOverrideImportEvents() {
     // Enable the config_events_test module so we can record events occurring.
-    \Drupal::service('module_installer')->install(array('config_events_test'));
+    \Drupal::service('module_installer')->install(['config_events_test']);
     $this->rebuildContainer();
 
     ConfigurableLanguage::createFromLangcode('fr')->save();
@@ -73,7 +73,7 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
     /* @var \Drupal\Core\Config\StorageInterface $override_sync */
     $override_sync = $sync->createCollection('language.fr');
     // Create some overrides in sync.
-    $override_sync->write('system.site', array('name' => 'FR default site name'));
+    $override_sync->write('system.site', ['name' => 'FR default site name']);
     \Drupal::state()->set('config_events_test.event', FALSE);
 
     $this->configImporter()->import();

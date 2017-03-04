@@ -111,10 +111,10 @@ class TaggingTest extends DatabaseTestBase {
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
 
-    $data = array(
+    $data = [
       'a' => 'A',
       'b' => 'B',
-    );
+    ];
 
     $query->addMetaData('test', $data);
 

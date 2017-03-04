@@ -54,14 +54,14 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Menu\MenuLinkTreeElement[]
    */
-  protected $originalTree = array();
+  protected $originalTree = [];
 
   /**
    * Array of menu link instances
    *
    * @var \Drupal\Core\Menu\MenuLinkInterface[]
    */
-  protected $links = array();
+  protected $links = [];
 
   /**
    * {@inheritdoc}
@@ -103,30 +103,30 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    * With link 6 being the only external link.
    */
   protected function mockTree() {
-    $this->links = array(
-      1 => MenuLinkMock::create(array('id' => 'test.example1', 'route_name' => 'example1', 'title' => 'foo', 'parent' => '')),
-      2 => MenuLinkMock::create(array('id' => 'test.example2', 'route_name' => 'example2', 'title' => 'bar', 'parent' => 'test.example1', 'route_parameters' => array('foo' => 'bar'))),
-      3 => MenuLinkMock::create(array('id' => 'test.example3', 'route_name' => 'example3', 'title' => 'baz', 'parent' => 'test.example2', 'route_parameters' => array('baz' => 'qux'))),
-      4 => MenuLinkMock::create(array('id' => 'test.example4', 'route_name' => 'example4', 'title' => 'qux', 'parent' => 'test.example3')),
-      5 => MenuLinkMock::create(array('id' => 'test.example5', 'route_name' => 'example5', 'title' => 'foofoo', 'parent' => '')),
-      6 => MenuLinkMock::create(array('id' => 'test.example6', 'route_name' => '', 'url' => 'https://www.drupal.org/', 'title' => 'barbar', 'parent' => '')),
-      7 => MenuLinkMock::create(array('id' => 'test.example7', 'route_name' => 'example7', 'title' => 'bazbaz', 'parent' => '')),
-      8 => MenuLinkMock::create(array('id' => 'test.example8', 'route_name' => 'example8', 'title' => 'quxqux', 'parent' => '')),
-      9 => DynamicMenuLinkMock::create(array('id' => 'test.example9', 'parent' => ''))->setCurrentUser($this->currentUser),
-    );
-    $this->originalTree = array();
-    $this->originalTree[1] = new MenuLinkTreeElement($this->links[1], FALSE, 1, FALSE, array());
-    $this->originalTree[2] = new MenuLinkTreeElement($this->links[2], TRUE, 1, FALSE, array(
-      3 => new MenuLinkTreeElement($this->links[3], TRUE, 2, FALSE, array(
-        4 => new MenuLinkTreeElement($this->links[4], FALSE, 3, FALSE, array()),
-      )),
-    ));
-    $this->originalTree[5] = new MenuLinkTreeElement($this->links[5], TRUE, 1, FALSE, array(
-      7 => new MenuLinkTreeElement($this->links[7], FALSE, 2, FALSE, array()),
-    ));
-    $this->originalTree[6] = new MenuLinkTreeElement($this->links[6], FALSE, 1, FALSE, array());
-    $this->originalTree[8] = new MenuLinkTreeElement($this->links[8], FALSE, 1, FALSE, array());
-    $this->originalTree[9] = new MenuLinkTreeElement($this->links[9], FALSE, 1, FALSE, array());
+    $this->links = [
+      1 => MenuLinkMock::create(['id' => 'test.example1', 'route_name' => 'example1', 'title' => 'foo', 'parent' => '']),
+      2 => MenuLinkMock::create(['id' => 'test.example2', 'route_name' => 'example2', 'title' => 'bar', 'parent' => 'test.example1', 'route_parameters' => ['foo' => 'bar']]),
+      3 => MenuLinkMock::create(['id' => 'test.example3', 'route_name' => 'example3', 'title' => 'baz', 'parent' => 'test.example2', 'route_parameters' => ['baz' => 'qux']]),
+      4 => MenuLinkMock::create(['id' => 'test.example4', 'route_name' => 'example4', 'title' => 'qux', 'parent' => 'test.example3']),
+      5 => MenuLinkMock::create(['id' => 'test.example5', 'route_name' => 'example5', 'title' => 'foofoo', 'parent' => '']),
+      6 => MenuLinkMock::create(['id' => 'test.example6', 'route_name' => '', 'url' => 'https://www.drupal.org/', 'title' => 'barbar', 'parent' => '']),
+      7 => MenuLinkMock::create(['id' => 'test.example7', 'route_name' => 'example7', 'title' => 'bazbaz', 'parent' => '']),
+      8 => MenuLinkMock::create(['id' => 'test.example8', 'route_name' => 'example8', 'title' => 'quxqux', 'parent' => '']),
+      9 => DynamicMenuLinkMock::create(['id' => 'test.example9', 'parent' => ''])->setCurrentUser($this->currentUser),
+    ];
+    $this->originalTree = [];
+    $this->originalTree[1] = new MenuLinkTreeElement($this->links[1], FALSE, 1, FALSE, []);
+    $this->originalTree[2] = new MenuLinkTreeElement($this->links[2], TRUE, 1, FALSE, [
+      3 => new MenuLinkTreeElement($this->links[3], TRUE, 2, FALSE, [
+        4 => new MenuLinkTreeElement($this->links[4], FALSE, 3, FALSE, []),
+      ]),
+    ]);
+    $this->originalTree[5] = new MenuLinkTreeElement($this->links[5], TRUE, 1, FALSE, [
+      7 => new MenuLinkTreeElement($this->links[7], FALSE, 2, FALSE, []),
+    ]);
+    $this->originalTree[6] = new MenuLinkTreeElement($this->links[6], FALSE, 1, FALSE, []);
+    $this->originalTree[8] = new MenuLinkTreeElement($this->links[8], FALSE, 1, FALSE, []);
+    $this->originalTree[9] = new MenuLinkTreeElement($this->links[9], FALSE, 1, FALSE, []);
   }
 
   /**
@@ -165,13 +165,13 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     // calls will be made.
     $this->accessManager->expects($this->exactly(5))
       ->method('checkNamedRoute')
-      ->will($this->returnValueMap(array(
-        array('example1', array(), $this->currentUser, TRUE, AccessResult::forbidden()),
-        array('example2', array('foo' => 'bar'), $this->currentUser, TRUE, AccessResult::allowed()->cachePerPermissions()),
-        array('example3', array('baz' => 'qux'), $this->currentUser, TRUE, AccessResult::neutral()),
-        array('example5', array(), $this->currentUser, TRUE, AccessResult::allowed()),
-        array('user.logout', array(), $this->currentUser, TRUE, AccessResult::allowed()),
-      )));
+      ->will($this->returnValueMap([
+        ['example1', [], $this->currentUser, TRUE, AccessResult::forbidden()],
+        ['example2', ['foo' => 'bar'], $this->currentUser, TRUE, AccessResult::allowed()->cachePerPermissions()],
+        ['example3', ['baz' => 'qux'], $this->currentUser, TRUE, AccessResult::neutral()],
+        ['example5', [], $this->currentUser, TRUE, AccessResult::allowed()],
+        ['user.logout', [], $this->currentUser, TRUE, AccessResult::allowed()],
+      ]));
 
     $this->mockTree();
     $this->originalTree[5]->subtree[7]->access = AccessResult::neutral();
@@ -259,8 +259,8 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   public function testFlatten() {
     $this->mockTree();
     $tree = $this->defaultMenuTreeManipulators->flatten($this->originalTree);
-    $this->assertEquals(array(1, 2, 5, 6, 8, 9), array_keys($this->originalTree));
-    $this->assertEquals(array(1, 2, 5, 6, 8, 9, 3, 4, 7), array_keys($tree));
+    $this->assertEquals([1, 2, 5, 6, 8, 9], array_keys($this->originalTree));
+    $this->assertEquals([1, 2, 5, 6, 8, 9, 3, 4, 7], array_keys($tree));
   }
 
   /**
@@ -271,35 +271,35 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    * @covers ::checkAccess
    */
   public function testCheckNodeAccess() {
-    $links = array(
-      1 => MenuLinkMock::create(array('id' => 'node.1', 'route_name' => 'entity.node.canonical', 'title' => 'foo', 'parent' => '', 'route_parameters' => array('node' => 1))),
-      2 => MenuLinkMock::create(array('id' => 'node.2', 'route_name' => 'entity.node.canonical', 'title' => 'bar', 'parent' => '', 'route_parameters' => array('node' => 2))),
-      3 => MenuLinkMock::create(array('id' => 'node.3', 'route_name' => 'entity.node.canonical', 'title' => 'baz', 'parent' => 'node.2', 'route_parameters' => array('node' => 3))),
-      4 => MenuLinkMock::create(array('id' => 'node.4', 'route_name' => 'entity.node.canonical', 'title' => 'qux', 'parent' => 'node.3', 'route_parameters' => array('node' => 4))),
-      5 => MenuLinkMock::create(array('id' => 'test.1', 'route_name' => 'test_route', 'title' => 'qux', 'parent' => '')),
-      6 => MenuLinkMock::create(array('id' => 'test.2', 'route_name' => 'test_route', 'title' => 'qux', 'parent' => 'test.1')),
-    );
-    $tree = array();
-    $tree[1] = new MenuLinkTreeElement($links[1], FALSE, 1, FALSE, array());
-    $tree[2] = new MenuLinkTreeElement($links[2], TRUE, 1, FALSE, array(
-      3 => new MenuLinkTreeElement($links[3], TRUE, 2, FALSE, array(
-        4 => new MenuLinkTreeElement($links[4], FALSE, 3, FALSE, array()),
-      )),
-    ));
-    $tree[5] = new MenuLinkTreeElement($links[5], TRUE, 1, FALSE, array(
-      6 => new MenuLinkTreeElement($links[6], FALSE, 2, FALSE, array()),
-    ));
+    $links = [
+      1 => MenuLinkMock::create(['id' => 'node.1', 'route_name' => 'entity.node.canonical', 'title' => 'foo', 'parent' => '', 'route_parameters' => ['node' => 1]]),
+      2 => MenuLinkMock::create(['id' => 'node.2', 'route_name' => 'entity.node.canonical', 'title' => 'bar', 'parent' => '', 'route_parameters' => ['node' => 2]]),
+      3 => MenuLinkMock::create(['id' => 'node.3', 'route_name' => 'entity.node.canonical', 'title' => 'baz', 'parent' => 'node.2', 'route_parameters' => ['node' => 3]]),
+      4 => MenuLinkMock::create(['id' => 'node.4', 'route_name' => 'entity.node.canonical', 'title' => 'qux', 'parent' => 'node.3', 'route_parameters' => ['node' => 4]]),
+      5 => MenuLinkMock::create(['id' => 'test.1', 'route_name' => 'test_route', 'title' => 'qux', 'parent' => '']),
+      6 => MenuLinkMock::create(['id' => 'test.2', 'route_name' => 'test_route', 'title' => 'qux', 'parent' => 'test.1']),
+    ];
+    $tree = [];
+    $tree[1] = new MenuLinkTreeElement($links[1], FALSE, 1, FALSE, []);
+    $tree[2] = new MenuLinkTreeElement($links[2], TRUE, 1, FALSE, [
+      3 => new MenuLinkTreeElement($links[3], TRUE, 2, FALSE, [
+        4 => new MenuLinkTreeElement($links[4], FALSE, 3, FALSE, []),
+      ]),
+    ]);
+    $tree[5] = new MenuLinkTreeElement($links[5], TRUE, 1, FALSE, [
+      6 => new MenuLinkTreeElement($links[6], FALSE, 2, FALSE, []),
+    ]);
 
     $query = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
     $query->expects($this->at(0))
       ->method('condition')
-      ->with('nid', array(1, 2, 3, 4));
+      ->with('nid', [1, 2, 3, 4]);
     $query->expects($this->at(1))
       ->method('condition')
       ->with('status', NodeInterface::PUBLISHED);
     $query->expects($this->once())
       ->method('execute')
-      ->willReturn(array(1, 2, 4));
+      ->willReturn([1, 2, 4]);
     $storage = $this->getMock(EntityStorageInterface::class);
     $storage->expects($this->once())
       ->method('getQuery')

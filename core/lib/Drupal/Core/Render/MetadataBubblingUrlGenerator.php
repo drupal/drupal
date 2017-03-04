@@ -64,7 +64,7 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPathFromRoute($name, $parameters = array()) {
+  public function getPathFromRoute($name, $parameters = []) {
     return $this->urlGenerator->getPathFromRoute($name, $parameters);
   }
 
@@ -91,7 +91,7 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH) {
+  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH) {
     $options['absolute'] = is_bool($referenceType) ? $referenceType : $referenceType === self::ABSOLUTE_URL;
     $generated_url = $this->generateFromRoute($name, $parameters, $options, TRUE);
     $this->bubble($generated_url);
@@ -101,7 +101,7 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateFromRoute($name, $parameters = array(), $options = array(), $collect_bubbleable_metadata = FALSE) {
+  public function generateFromRoute($name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
     $generated_url = $this->urlGenerator->generateFromRoute($name, $parameters, $options, TRUE);
     if (!$collect_bubbleable_metadata) {
       $this->bubble($generated_url, $options);
@@ -119,7 +119,7 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRouteDebugMessage($name, array $parameters = array()) {
+  public function getRouteDebugMessage($name, array $parameters = []) {
     return $this->urlGenerator->getRouteDebugMessage($name, $parameters);
   }
 

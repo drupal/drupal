@@ -68,23 +68,23 @@ class Language extends ConditionPluginBase implements ContainerFactoryPluginInte
     if ($this->languageManager->isMultilingual()) {
       // Fetch languages.
       $languages = $this->languageManager->getLanguages();
-      $langcodes_options = array();
+      $langcodes_options = [];
       foreach ($languages as $language) {
         $langcodes_options[$language->getId()] = $language->getName();
       }
-      $form['langcodes'] = array(
+      $form['langcodes'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t('Language selection'),
         '#default_value' => $this->configuration['langcodes'],
         '#options' => $langcodes_options,
         '#description' => $this->t('Select languages to enforce. If none are selected, all languages will be allowed.'),
-      );
+      ];
     }
     else {
-      $form['langcodes'] = array(
+      $form['langcodes'] = [
         '#type' => 'value',
         '#default_value' => $this->configuration['langcodes'],
-      );
+      ];
     }
     return parent::buildConfigurationForm($form, $form_state);
   }
@@ -111,7 +111,7 @@ class Language extends ConditionPluginBase implements ContainerFactoryPluginInte
         $result[$item->getId()] = $item->getName();
       }
       return $result;
-    }, array());
+    }, []);
 
     // If we have more than one language selected, separate them by commas.
     if (count($this->configuration['langcodes']) > 1) {
@@ -122,9 +122,9 @@ class Language extends ConditionPluginBase implements ContainerFactoryPluginInte
       $languages = array_pop($language_names);
     }
     if (!empty($this->configuration['negate'])) {
-      return t('The language is not @languages.', array('@languages' => $languages));
+      return t('The language is not @languages.', ['@languages' => $languages]);
     }
-    return t('The language is @languages.', array('@languages' => $languages));
+    return t('The language is @languages.', ['@languages' => $languages]);
   }
 
   /**
@@ -144,7 +144,7 @@ class Language extends ConditionPluginBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array('langcodes' => array()) + parent::defaultConfiguration();
+    return ['langcodes' => []] + parent::defaultConfiguration();
   }
 
 }

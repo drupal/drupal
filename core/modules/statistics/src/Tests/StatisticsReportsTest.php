@@ -22,24 +22,24 @@ class StatisticsReportsTest extends StatisticsTestBase {
     $this->container->get('plugin.manager.block')->clearCachedDefinitions();
 
     // Visit a node to have something show up in the block.
-    $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->blockingUser->id()));
+    $node = $this->drupalCreateNode(['type' => 'page', 'uid' => $this->blockingUser->id()]);
     $this->drupalGet('node/' . $node->id());
     // Manually calling statistics.php, simulating ajax behavior.
     $nid = $node->id();
-    $post = http_build_query(array('nid' => $nid));
-    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    $post = http_build_query(['nid' => $nid]);
+    $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
     $client = \Drupal::httpClient();
-    $client->post($stats_path, array('headers' => $headers, 'body' => $post));
+    $client->post($stats_path, ['headers' => $headers, 'body' => $post]);
 
     // Configure and save the block.
-    $block = $this->drupalPlaceBlock('statistics_popular_block', array(
+    $block = $this->drupalPlaceBlock('statistics_popular_block', [
       'label' => 'Popular content',
       'top_day_num' => 3,
       'top_all_num' => 3,
       'top_last_num' => 3,
-    ));
+    ]);
 
     // Get some page and check if the block is displayed.
     $this->drupalGet('user');

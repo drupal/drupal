@@ -32,59 +32,59 @@ class FileItem extends EntityReferenceItem {
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return array(
+    return [
       'target_type' => 'file',
       'display_field' => FALSE,
       'display_default' => FALSE,
       'uri_scheme' => file_default_scheme(),
-    ) + parent::defaultStorageSettings();
+    ] + parent::defaultStorageSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function defaultFieldSettings() {
-    return array(
+    return [
       'file_extensions' => 'txt',
       'file_directory' => '[date:custom:Y]-[date:custom:m]',
       'max_filesize' => '',
       'description_field' => 0,
-    ) + parent::defaultFieldSettings();
+    ] + parent::defaultFieldSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return array(
-      'columns' => array(
-        'target_id' => array(
+    return [
+      'columns' => [
+        'target_id' => [
           'description' => 'The ID of the file entity.',
           'type' => 'int',
           'unsigned' => TRUE,
-        ),
-        'display' => array(
+        ],
+        'display' => [
           'description' => 'Flag to control whether this file should be displayed when viewing content.',
           'type' => 'int',
           'size' => 'tiny',
           'unsigned' => TRUE,
           'default' => 1,
-        ),
-        'description' => array(
+        ],
+        'description' => [
           'description' => 'A description of the file.',
           'type' => 'text',
-        ),
-      ),
-      'indexes' => array(
-        'target_id' => array('target_id'),
-      ),
-      'foreign keys' => array(
-        'target_id' => array(
+        ],
+      ],
+      'indexes' => [
+        'target_id' => ['target_id'],
+      ],
+      'foreign keys' => [
+        'target_id' => [
           'table' => 'file_managed',
-          'columns' => array('target_id' => 'fid'),
-        ),
-      ),
-    );
+          'columns' => ['target_id' => 'fid'],
+        ],
+      ],
+    ];
   }
 
   /**
@@ -107,37 +107,37 @@ class FileItem extends EntityReferenceItem {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $element = array();
+    $element = [];
 
     $element['#attached']['library'][] = 'file/drupal.file';
 
-    $element['display_field'] = array(
+    $element['display_field'] = [
       '#type' => 'checkbox',
       '#title' => t('Enable <em>Display</em> field'),
       '#default_value' => $this->getSetting('display_field'),
       '#description' => t('The display option allows users to choose if a file should be shown when viewing the content.'),
-    );
-    $element['display_default'] = array(
+    ];
+    $element['display_default'] = [
       '#type' => 'checkbox',
       '#title' => t('Files displayed by default'),
       '#default_value' => $this->getSetting('display_default'),
       '#description' => t('This setting only has an effect if the display option is enabled.'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="settings[display_field]"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
+      '#states' => [
+        'visible' => [
+          ':input[name="settings[display_field]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
 
     $scheme_options = \Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE);
-    $element['uri_scheme'] = array(
+    $element['uri_scheme'] = [
       '#type' => 'radios',
       '#title' => t('Upload destination'),
       '#options' => $scheme_options,
       '#default_value' => $this->getSetting('uri_scheme'),
       '#description' => t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
       '#disabled' => $has_data,
-    );
+    ];
 
     return $element;
   }
@@ -146,50 +146,50 @@ class FileItem extends EntityReferenceItem {
    * {@inheritdoc}
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
-    $element = array();
+    $element = [];
     $settings = $this->getSettings();
 
-    $element['file_directory'] = array(
+    $element['file_directory'] = [
       '#type' => 'textfield',
       '#title' => t('File directory'),
       '#default_value' => $settings['file_directory'],
       '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
-      '#element_validate' => array(array(get_class($this), 'validateDirectory')),
+      '#element_validate' => [[get_class($this), 'validateDirectory']],
       '#weight' => 3,
-    );
+    ];
 
     // Make the extension list a little more human-friendly by comma-separation.
     $extensions = str_replace(' ', ', ', $settings['file_extensions']);
-    $element['file_extensions'] = array(
+    $element['file_extensions'] = [
       '#type' => 'textfield',
       '#title' => t('Allowed file extensions'),
       '#default_value' => $extensions,
       '#description' => t('Separate extensions with a space or comma and do not include the leading dot.'),
-      '#element_validate' => array(array(get_class($this), 'validateExtensions')),
+      '#element_validate' => [[get_class($this), 'validateExtensions']],
       '#weight' => 1,
       '#maxlength' => 256,
       // By making this field required, we prevent a potential security issue
       // that would allow files of any type to be uploaded.
       '#required' => TRUE,
-    );
+    ];
 
-    $element['max_filesize'] = array(
+    $element['max_filesize'] = [
       '#type' => 'textfield',
       '#title' => t('Maximum upload size'),
       '#default_value' => $settings['max_filesize'],
-      '#description' => t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', array('%limit' => format_size(file_upload_max_size()))),
+      '#description' => t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', ['%limit' => format_size(file_upload_max_size())]),
       '#size' => 10,
-      '#element_validate' => array(array(get_class($this), 'validateMaxFilesize')),
+      '#element_validate' => [[get_class($this), 'validateMaxFilesize']],
       '#weight' => 5,
-    );
+    ];
 
-    $element['description_field'] = array(
+    $element['description_field'] = [
       '#type' => 'checkbox',
       '#title' => t('Enable <em>Description</em> field'),
       '#default_value' => isset($settings['description_field']) ? $settings['description_field'] : '',
       '#description' => t('The description field allows users to enter a description about the uploaded file.'),
       '#weight' => 11,
-    );
+    ];
 
     return $element;
   }
@@ -245,7 +245,7 @@ class FileItem extends EntityReferenceItem {
    */
   public static function validateMaxFilesize($element, FormStateInterface $form_state) {
     if (!empty($element['#value']) && !is_numeric(Bytes::toInt($element['#value']))) {
-      $form_state->setError($element, t('The "@name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', array('@name' => $element['title'])));
+      $form_state->setError($element, t('The "@name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', ['@name' => $element['title']]));
     }
   }
 
@@ -261,7 +261,7 @@ class FileItem extends EntityReferenceItem {
    *
    * @see \Drupal\Core\Utility\Token::replace()
    */
-  public function getUploadLocation($data = array()) {
+  public function getUploadLocation($data = []) {
     return static::doGetUploadLocation($this->getSettings(), $data);
   }
 
@@ -296,7 +296,7 @@ class FileItem extends EntityReferenceItem {
    *   element's '#upload_validators' property.
    */
   public function getUploadValidators() {
-    $validators = array();
+    $validators = [];
     $settings = $this->getSettings();
 
     // Cap the upload size according to the PHP limit.
@@ -306,11 +306,11 @@ class FileItem extends EntityReferenceItem {
     }
 
     // There is always a file size limit due to the PHP server limit.
-    $validators['file_validate_size'] = array($max_filesize);
+    $validators['file_validate_size'] = [$max_filesize];
 
     // Add the extension check if necessary.
     if (!empty($settings['file_extensions'])) {
-      $validators['file_validate_extensions'] = array($settings['file_extensions']);
+      $validators['file_validate_extensions'] = [$settings['file_extensions']];
     }
 
     return $validators;
@@ -331,11 +331,11 @@ class FileItem extends EntityReferenceItem {
     $destination = $dirname . '/' . $random->name(10, TRUE) . '.txt';
     $data = $random->paragraphs(3);
     $file = file_save_data($data, $destination, FILE_EXISTS_ERROR);
-    $values = array(
+    $values = [
       'target_id' => $file->id(),
       'display' => (int)$settings['display_default'],
       'description' => $random->sentences(10),
-    );
+    ];
     return $values;
   }
 

@@ -20,12 +20,12 @@ class ItemViewBuilder extends EntityViewBuilder {
       $display = $displays[$bundle];
 
       if ($display->getComponent('description')) {
-        $build[$id]['description'] = array(
+        $build[$id]['description'] = [
           '#markup' => $entity->getDescription(),
           '#allowed_tags' => _aggregator_allowed_tags(),
           '#prefix' => '<div class="item-description">',
           '#suffix' => '</div>',
-        );
+        ];
       }
     }
   }

@@ -52,47 +52,47 @@ class BanAdmin extends FormBase {
    *   address form field.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $default_ip = '') {
-    $rows = array();
-    $header = array($this->t('banned IP addresses'), $this->t('Operations'));
+    $rows = [];
+    $header = [$this->t('banned IP addresses'), $this->t('Operations')];
     $result = $this->ipManager->findAll();
     foreach ($result as $ip) {
-      $row = array();
+      $row = [];
       $row[] = $ip->ip;
-      $links = array();
-      $links['delete'] = array(
+      $links = [];
+      $links['delete'] = [
         'title' => $this->t('Delete'),
         'url' => Url::fromRoute('ban.delete', ['ban_id' => $ip->iid]),
-      );
-      $row[] = array(
-        'data' => array(
+      ];
+      $row[] = [
+        'data' => [
           '#type' => 'operations',
           '#links' => $links,
-        ),
-      );
+        ],
+      ];
       $rows[] = $row;
     }
 
-    $form['ip'] = array(
+    $form['ip'] = [
       '#title' => $this->t('IP address'),
       '#type' => 'textfield',
       '#size' => 48,
       '#maxlength' => 40,
       '#default_value' => $default_ip,
       '#description' => $this->t('Enter a valid IP address.'),
-    );
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    ];
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Add'),
-    );
+    ];
 
-    $form['ban_ip_banning_table'] = array(
+    $form['ban_ip_banning_table'] = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => $this->t('No blocked IP addresses available.'),
       '#weight' => 120,
-    );
+    ];
     return $form;
   }
 
@@ -118,7 +118,7 @@ class BanAdmin extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $ip = trim($form_state->getValue('ip'));
     $this->ipManager->banIp($ip);
-    drupal_set_message($this->t('The IP address %ip has been banned.', array('%ip' => $ip)));
+    drupal_set_message($this->t('The IP address %ip has been banned.', ['%ip' => $ip]));
     $form_state->setRedirect('ban.admin_page');
   }
 

@@ -149,7 +149,7 @@ class BubbleableMetadata extends CacheableMetadata implements AttachmentsInterfa
     // correctly; adding the same settings multiple times needs to behave
     // idempotently.
     if (!empty($a['drupalSettings']) && !empty($b['drupalSettings'])) {
-      $drupalSettings = NestedArray::mergeDeepArray(array($a['drupalSettings'], $b['drupalSettings']), TRUE);
+      $drupalSettings = NestedArray::mergeDeepArray([$a['drupalSettings'], $b['drupalSettings']], TRUE);
       // No need for re-merging them.
       unset($a['drupalSettings']);
       unset($b['drupalSettings']);

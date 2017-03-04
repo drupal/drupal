@@ -17,12 +17,12 @@ class TwigTransTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'theme_test',
     'twig_theme_test',
     'locale',
     'language'
-  );
+  ];
 
   /**
    * An administrative user for testing.
@@ -36,10 +36,10 @@ class TwigTransTest extends WebTestBase {
    *
    * @var array
    */
-  protected $languages = array(
+  protected $languages = [
     'xx' => 'Lolspeak',
     'zz' => 'Lolspeak2',
-  );
+  ];
 
   /**
    * {@inheritdoc}
@@ -48,16 +48,16 @@ class TwigTransTest extends WebTestBase {
     parent::setUp();
 
     // Setup test_theme.
-    \Drupal::service('theme_handler')->install(array('test_theme'));
+    \Drupal::service('theme_handler')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
 
     // Create and log in as admin.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'administer languages',
       'access administration pages',
       'administer site configuration',
       'translate interface'
-    ));
+    ]);
     $this->drupalLogin($this->adminUser);
 
     // Install languages.
@@ -77,7 +77,7 @@ class TwigTransTest extends WebTestBase {
   public function testTwigTransTags() {
     // Run this once without and once with Twig debug because trans can work
     // differently depending on that setting.
-    $this->drupalGet('twig-theme-test/trans', array('language' => \Drupal::languageManager()->getLanguage('xx')));
+    $this->drupalGet('twig-theme-test/trans', ['language' => \Drupal::languageManager()->getLanguage('xx')]);
     $this->assertTwigTransTags();
 
     // Enable debug, rebuild the service container, and clear all caches.
@@ -87,7 +87,7 @@ class TwigTransTest extends WebTestBase {
     $this->rebuildContainer();
     $this->resetAll();
 
-    $this->drupalGet('twig-theme-test/trans', array('language' => \Drupal::languageManager()->getLanguage('xx')));
+    $this->drupalGet('twig-theme-test/trans', ['language' => \Drupal::languageManager()->getLanguage('xx')]);
     $this->assertTwigTransTags();
   }
 
@@ -197,12 +197,12 @@ class TwigTransTest extends WebTestBase {
       $contents = $this->poFileContents($langcode);
       if ($contents) {
         // Add test language for translation testing.
-        $edit = array(
+        $edit = [
           'predefined_langcode' => 'custom',
           'langcode' => $langcode,
           'label' => $name,
           'direction' => LanguageInterface::DIRECTION_LTR,
-        );
+        ];
 
         // Install the language in Drupal.
         $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -211,11 +211,11 @@ class TwigTransTest extends WebTestBase {
         // Import the custom .po contents for the language.
         $filename = \Drupal::service('file_system')->tempnam('temporary://', "po_") . '.po';
         file_put_contents($filename, $contents);
-        $options = array(
+        $options = [
           'files[file]' => $filename,
           'langcode' => $langcode,
           'customized' => TRUE,
-        );
+        ];
         $this->drupalPostForm('admin/config/regional/translate/import', $options, t('Import'));
         drupal_unlink($filename);
       }

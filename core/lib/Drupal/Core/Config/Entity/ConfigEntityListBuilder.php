@@ -21,7 +21,7 @@ class ConfigEntityListBuilder extends EntityListBuilder {
 
     // Sort the entities using the entity class's sort() method.
     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
-    uasort($entities, array($this->entityType->getClass(), 'sort'));
+    uasort($entities, [$this->entityType->getClass(), 'sort']);
     return $entities;
   }
 
@@ -34,18 +34,18 @@ class ConfigEntityListBuilder extends EntityListBuilder {
 
     if ($this->entityType->hasKey('status')) {
       if (!$entity->status() && $entity->hasLinkTemplate('enable')) {
-        $operations['enable'] = array(
+        $operations['enable'] = [
           'title' => t('Enable'),
           'weight' => -10,
           'url' => $entity->urlInfo('enable'),
-        );
+        ];
       }
       elseif ($entity->hasLinkTemplate('disable')) {
-        $operations['disable'] = array(
+        $operations['disable'] = [
           'title' => t('Disable'),
           'weight' => 40,
           'url' => $entity->urlInfo('disable'),
-        );
+        ];
       }
     }
 

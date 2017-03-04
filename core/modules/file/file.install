@@ -9,51 +9,51 @@
  * Implements hook_schema().
  */
 function file_schema() {
-  $schema['file_usage'] = array(
+  $schema['file_usage'] = [
     'description' => 'Track where a file is used.',
-    'fields' => array(
-      'fid' => array(
+    'fields' => [
+      'fid' => [
         'description' => 'File ID.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'module' => array(
+      ],
+      'module' => [
         'description' => 'The name of the module that is using the file.',
         'type' => 'varchar_ascii',
         'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'type' => array(
+      ],
+      'type' => [
         'description' => 'The name of the object type in which the file is used.',
         'type' => 'varchar_ascii',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'id' => array(
+      ],
+      'id' => [
         'description' => 'The primary key of the object using the file.',
         'type' => 'varchar_ascii',
         'length' => 64,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'count' => array(
+      ],
+      'count' => [
         'description' => 'The number of times this file is used by this object.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-    ),
-    'primary key' => array('fid', 'type', 'id', 'module'),
-    'indexes' => array(
-      'type_id' => array('type', 'id'),
-      'fid_count' => array('fid', 'count'),
-      'fid_module' => array('fid', 'module'),
-    ),
-  );
+      ],
+    ],
+    'primary key' => ['fid', 'type', 'id', 'module'],
+    'indexes' => [
+      'type_id' => ['type', 'id'],
+      'fid_count' => ['fid', 'count'],
+      'fid_module' => ['fid', 'module'],
+    ],
+  ];
   return $schema;
 }
 
@@ -63,7 +63,7 @@ function file_schema() {
  * Display information about getting upload progress bars working.
  */
 function file_requirements($phase) {
-  $requirements = array();
+  $requirements = [];
 
   // Check the server's ability to indicate upload progress.
   if ($phase == 'runtime') {
@@ -107,11 +107,11 @@ function file_requirements($phase) {
     elseif ($implementation == 'uploadprogress') {
       $value = t('Enabled (<a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>)');
     }
-    $requirements['file_progress'] = array(
+    $requirements['file_progress'] = [
       'title' => t('Upload progress'),
       'value' => $value,
       'description' => $description,
-    );
+    ];
   }
 
   return $requirements;

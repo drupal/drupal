@@ -23,13 +23,13 @@ class AfterCommand extends InsertCommand {
    */
   public function render() {
 
-    return array(
+    return [
       'command' => 'insert',
       'method' => 'after',
       'selector' => $this->selector,
       'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
-    );
+    ];
   }
 
 }

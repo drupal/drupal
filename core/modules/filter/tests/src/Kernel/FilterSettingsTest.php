@@ -17,7 +17,7 @@ class FilterSettingsTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter');
+  public static $modules = ['filter'];
 
   /**
    * Tests explicit and implicit default settings for filters.
@@ -26,21 +26,21 @@ class FilterSettingsTest extends KernelTestBase {
     $filter_info = $this->container->get('plugin.manager.filter')->getDefinitions();
 
     // Create text format using filter default settings.
-    $filter_defaults_format = FilterFormat::create(array(
+    $filter_defaults_format = FilterFormat::create([
       'format' => 'filter_defaults',
       'name' => 'Filter defaults',
-    ));
+    ]);
     $filter_defaults_format->save();
 
     // Verify that default weights defined in hook_filter_info() were applied.
-    $saved_settings = array();
+    $saved_settings = [];
     foreach ($filter_defaults_format->filters() as $name => $filter) {
       $expected_weight = $filter_info[$name]['weight'];
-      $this->assertEqual($filter->weight, $expected_weight, format_string('@name filter weight %saved equals %default', array(
+      $this->assertEqual($filter->weight, $expected_weight, format_string('@name filter weight %saved equals %default', [
         '@name' => $name,
         '%saved' => $filter->weight,
         '%default' => $expected_weight,
-      )));
+      ]));
       $saved_settings[$name]['weight'] = $expected_weight;
     }
 
@@ -51,11 +51,11 @@ class FilterSettingsTest extends KernelTestBase {
 
     // Verify that saved filter settings have not been changed.
     foreach ($filter_defaults_format->filters() as $name => $filter) {
-      $this->assertEqual($filter->weight, $saved_settings[$name]['weight'], format_string('@name filter weight %saved equals %previous', array(
+      $this->assertEqual($filter->weight, $saved_settings[$name]['weight'], format_string('@name filter weight %saved equals %previous', [
         '@name' => $name,
         '%saved' => $filter->weight,
         '%previous' => $saved_settings[$name]['weight'],
-      )));
+      ]));
     }
   }
 

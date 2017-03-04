@@ -26,7 +26,7 @@ abstract class LocalReadOnlyStream extends LocalStream {
    * {@inheritdoc}
    */
   public function stream_open($uri, $mode, $options, &$opened_path) {
-    if (!in_array($mode, array('r', 'rb', 'rt'))) {
+    if (!in_array($mode, ['r', 'rb', 'rt'])) {
       if ($options & STREAM_REPORT_ERRORS) {
         trigger_error('stream_open() write modes not supported for read-only stream wrappers', E_USER_WARNING);
       }
@@ -58,11 +58,11 @@ abstract class LocalReadOnlyStream extends LocalStream {
    */
   public function stream_lock($operation) {
     // Disallow exclusive lock or non-blocking lock requests
-    if (in_array($operation, array(LOCK_EX, LOCK_EX | LOCK_NB))) {
+    if (in_array($operation, [LOCK_EX, LOCK_EX | LOCK_NB])) {
       trigger_error('stream_lock() exclusive lock operations not supported for read-only stream wrappers', E_USER_WARNING);
       return FALSE;
     }
-    if (in_array($operation, array(LOCK_SH, LOCK_UN, LOCK_SH | LOCK_NB))) {
+    if (in_array($operation, [LOCK_SH, LOCK_UN, LOCK_SH | LOCK_NB])) {
       return flock($this->handle, $operation);
     }
 

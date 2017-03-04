@@ -91,7 +91,7 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
         return $this->getToolkitOperationPluginId($base_toolkit, $operation);
       }
 
-      $message = SafeMarkup::format("No image operation plugin for '@toolkit' toolkit and '@operation' operation.", array('@toolkit' => $toolkit_id, '@operation' => $operation));
+      $message = SafeMarkup::format("No image operation plugin for '@toolkit' toolkit and '@operation' operation.", ['@toolkit' => $toolkit_id, '@operation' => $operation]);
       throw new PluginNotFoundException($toolkit_id . '.' . $operation, $message);
     }
     else {
@@ -106,7 +106,7 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
   /**
    * {@inheritdoc}
    */
-  public function createInstance($plugin_id, array $configuration = array(), ImageToolkitInterface $toolkit = NULL) {
+  public function createInstance($plugin_id, array $configuration = [], ImageToolkitInterface $toolkit = NULL) {
     $plugin_definition = $this->getDefinition($plugin_id);
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
     return new $plugin_class($configuration, $plugin_id, $plugin_definition, $toolkit, $this->logger);
@@ -117,7 +117,7 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
    */
   public function getToolkitOperation(ImageToolkitInterface $toolkit, $operation) {
     $plugin_id = $this->getToolkitOperationPluginId($toolkit, $operation);
-    return $this->createInstance($plugin_id, array(), $toolkit);
+    return $this->createInstance($plugin_id, [], $toolkit);
   }
 
 }

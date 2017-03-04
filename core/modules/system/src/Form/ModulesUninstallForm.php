@@ -85,28 +85,28 @@ class ModulesUninstallForm extends FormBase {
     // Include system.admin.inc so we can use the sort callbacks.
     $this->moduleHandler->loadInclude('system', 'inc', 'system.admin');
 
-    $form['filters'] = array(
+    $form['filters'] = [
       '#type' => 'container',
-      '#attributes' => array(
-        'class' => array('table-filter', 'js-show'),
-      ),
-    );
+      '#attributes' => [
+        'class' => ['table-filter', 'js-show'],
+      ],
+    ];
 
-    $form['filters']['text'] = array(
+    $form['filters']['text'] = [
       '#type' => 'search',
       '#title' => $this->t('Filter modules'),
       '#title_display' => 'invisible',
       '#size' => 30,
       '#placeholder' => $this->t('Filter by name or description'),
       '#description' => $this->t('Enter a part of the module name or description'),
-      '#attributes' => array(
-        'class' => array('table-filter-text'),
+      '#attributes' => [
+        'class' => ['table-filter-text'],
         'data-table' => '#system-modules-uninstall',
         'autocomplete' => 'off',
-      ),
-    );
+      ],
+    ];
 
-    $form['modules'] = array();
+    $form['modules'] = [];
 
     // Only build the rest of the form if there are any modules available to
     // uninstall;
@@ -120,18 +120,18 @@ class ModulesUninstallForm extends FormBase {
     uasort($uninstallable, 'system_sort_modules_by_info_name');
     $validation_reasons = $this->moduleInstaller->validateUninstall(array_keys($uninstallable));
 
-    $form['uninstall'] = array('#tree' => TRUE);
+    $form['uninstall'] = ['#tree' => TRUE];
     foreach ($uninstallable as $module_key => $module) {
       $name = $module->info['name'] ?: $module->getName();
       $form['modules'][$module->getName()]['#module_name'] = $name;
       $form['modules'][$module->getName()]['name']['#markup'] = $name;
       $form['modules'][$module->getName()]['description']['#markup'] = $this->t($module->info['description']);
 
-      $form['uninstall'][$module->getName()] = array(
+      $form['uninstall'][$module->getName()] = [
         '#type' => 'checkbox',
-        '#title' => $this->t('Uninstall @module module', array('@module' => $name)),
+        '#title' => $this->t('Uninstall @module module', ['@module' => $name]),
         '#title_display' => 'invisible',
-      );
+      ];
 
       // If a validator returns reasons not to uninstall a module,
       // list the reasons and disable the check box.
@@ -152,11 +152,11 @@ class ModulesUninstallForm extends FormBase {
     }
 
     $form['#attached']['library'][] = 'system/drupal.system.modules';
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Uninstall'),
-    );
+    ];
 
     return $form;
   }

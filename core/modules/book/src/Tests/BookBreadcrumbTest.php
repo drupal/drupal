@@ -16,7 +16,7 @@ class BookBreadcrumbTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('book', 'block', 'book_breadcrumb_test');
+  public static $modules = ['book', 'block', 'book_breadcrumb_test'];
 
   /**
    * A book node.
@@ -48,8 +48,8 @@ class BookBreadcrumbTest extends WebTestBase {
     $this->drupalPlaceBlock('page_title_block');
 
     // Create users.
-    $this->bookAuthor = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
-    $this->adminUser = $this->drupalCreateUser(array('create new books', 'create book content', 'edit any book content', 'delete any book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'administer content types', 'administer site configuration'));
+    $this->bookAuthor = $this->drupalCreateUser(['create new books', 'create book content', 'edit own book content', 'add content to books']);
+    $this->adminUser = $this->drupalCreateUser(['create new books', 'create book content', 'edit any book content', 'delete any book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'administer content types', 'administer site configuration']);
   }
 
   /**
@@ -76,7 +76,7 @@ class BookBreadcrumbTest extends WebTestBase {
      *      |- Node 5
      *  |- Node 6
      */
-    $nodes = array();
+    $nodes = [];
     $nodes[0] = $this->createBookNode($book->id());
     $nodes[1] = $this->createBookNode($book->id(), $nodes[0]->id());
     $nodes[2] = $this->createBookNode($book->id(), $nodes[0]->id());
@@ -107,7 +107,7 @@ class BookBreadcrumbTest extends WebTestBase {
     // that when sorted nodes stay in same order.
     static $number = 0;
 
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = str_pad($number, 2, '0', STR_PAD_LEFT) . ' - SimpleTest test node ' . $this->randomMachineName(10);
     $edit['body[0][value]'] = 'SimpleTest test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
     $edit['book[bid]'] = $book_nid;
@@ -146,7 +146,7 @@ class BookBreadcrumbTest extends WebTestBase {
     $this->drupalGet($nodes[4]->toUrl());
     // Fetch each node title in the current breadcrumb.
     $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
-    $got_breadcrumb = array();
+    $got_breadcrumb = [];
     foreach ($links as $link) {
       $got_breadcrumb[] = (string) $link;
     }
@@ -160,7 +160,7 @@ class BookBreadcrumbTest extends WebTestBase {
     $this->drupalGet($nodes[4]->toUrl());
     // Fetch each node title in the current breadcrumb.
     $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
-    $got_breadcrumb = array();
+    $got_breadcrumb = [];
     foreach ($links as $link) {
       $got_breadcrumb[] = (string) $link;
     }
@@ -181,7 +181,7 @@ class BookBreadcrumbTest extends WebTestBase {
     $this->drupalPostForm($nodes[3]->toUrl('edit-form'), $edit, 'Save');
     $this->drupalGet($nodes[4]->toUrl());
     $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
-    $got_breadcrumb = array();
+    $got_breadcrumb = [];
     foreach ($links as $link) {
       $got_breadcrumb[] = (string) $link;
     }
@@ -191,7 +191,7 @@ class BookBreadcrumbTest extends WebTestBase {
     $config->set('hide', TRUE)->save();
     $this->drupalGet($nodes[4]->toUrl());
     $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
-    $got_breadcrumb = array();
+    $got_breadcrumb = [];
     foreach ($links as $link) {
       $got_breadcrumb[] = (string) $link;
     }

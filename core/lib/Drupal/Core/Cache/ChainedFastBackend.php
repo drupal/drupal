@@ -99,7 +99,7 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
    * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE) {
-    $cids = array($cid);
+    $cids = [$cid];
     $cache = $this->getMultiple($cids, $allow_invalid);
     return reset($cache);
   }
@@ -109,7 +109,7 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
     $cids_copy = $cids;
-    $cache = array();
+    $cache = [];
 
     // If we can determine the time at which the last write to the consistent
     // backend occurred (we might not be able to if it has been recently
@@ -142,7 +142,7 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
       }
       catch (\Exception $e) {
         $cids = $cids_copy;
-        $items = array();
+        $items = [];
       }
 
       // Even if items were successfully fetched from the fast backend, they
@@ -176,7 +176,7 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
   /**
    * {@inheritdoc}
    */
-  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
     $this->consistentBackend->set($cid, $data, $expire, $tags);
     $this->markAsOutdated();
     // Don't write the cache tags to the fast backend as any cache tag
@@ -202,7 +202,7 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
    * {@inheritdoc}
    */
   public function delete($cid) {
-    $this->consistentBackend->deleteMultiple(array($cid));
+    $this->consistentBackend->deleteMultiple([$cid]);
     $this->markAsOutdated();
   }
 
@@ -226,7 +226,7 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
    * {@inheritdoc}
    */
   public function invalidate($cid) {
-    $this->invalidateMultiple(array($cid));
+    $this->invalidateMultiple([$cid]);
   }
 
   /**

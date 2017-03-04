@@ -18,7 +18,7 @@ class PoMemoryWriter implements PoWriterInterface {
    * Constructor, initialize empty items.
    */
   function __construct() {
-    $this->_items = array();
+    $this->_items = [];
   }
 
   /**

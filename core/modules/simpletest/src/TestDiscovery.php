@@ -91,7 +91,7 @@ class TestDiscovery {
     if (isset($this->testNamespaces)) {
       return $this->testNamespaces;
     }
-    $this->testNamespaces = array();
+    $this->testNamespaces = [];
 
     $existing = $this->classLoader->getPrefixesPsr4();
 
@@ -101,7 +101,7 @@ class TestDiscovery {
     $this->testNamespaces['Drupal\\FunctionalTests\\'] = [$this->root . '/core/tests/Drupal/FunctionalTests'];
     $this->testNamespaces['Drupal\\FunctionalJavascriptTests\\'] = [$this->root . '/core/tests/Drupal/FunctionalJavascriptTests'];
 
-    $this->availableExtensions = array();
+    $this->availableExtensions = [];
     foreach ($this->getExtensions() as $name => $extension) {
       $this->availableExtensions[$extension->getType()][$name] = $name;
 
@@ -164,7 +164,7 @@ class TestDiscovery {
         return $cache->data;
       }
     }
-    $list = array();
+    $list = [];
 
     $classmap = $this->findAllClassFiles($extension);
 
@@ -238,7 +238,7 @@ class TestDiscovery {
    *   fully-qualified classnames to pathnames.
    */
   public function findAllClassFiles($extension = NULL) {
-    $classmap = array();
+    $classmap = [];
     $namespaces = $this->registerTestNamespaces();
     if (isset($extension)) {
       // Include tests in the \Drupal\Tests\{$extension} namespace.
@@ -294,7 +294,7 @@ class TestDiscovery {
       return $current->isFile() && $current->getExtension() === 'php';
     });
     $files = new \RecursiveIteratorIterator($filter);
-    $classes = array();
+    $classes = [];
     foreach ($files as $fileinfo) {
       $class = $namespace_prefix;
       if ('' !== $subpath = $fileinfo->getSubPath()) {
@@ -332,10 +332,10 @@ class TestDiscovery {
       $reflection = new \ReflectionClass($classname);
       $doc_comment = $reflection->getDocComment();
     }
-    $info = array(
+    $info = [
       'name' => $classname,
-    );
-    $annotations = array();
+    ];
+    $annotations = [];
     // Look for annotations, allow an arbitrary amount of spaces before the
     // * but nothing else.
     preg_match_all('/^[ ]*\* \@([^\s]*) (.*$)/m', $doc_comment, $matches);
@@ -479,7 +479,7 @@ class TestDiscovery {
   protected function getExtensions() {
     $listing = new ExtensionDiscovery($this->root);
     // Ensure that tests in all profiles are discovered.
-    $listing->setProfileDirectories(array());
+    $listing->setProfileDirectories([]);
     $extensions = $listing->scan('module', TRUE);
     $extensions += $listing->scan('profile', TRUE);
     $extensions += $listing->scan('theme', TRUE);

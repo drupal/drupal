@@ -39,12 +39,12 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
   /**
    * {@inheritdoc}
    */
-  protected $defaults = array(
+  protected $defaults = [
     'title' => '',
-    'names' => array(),
+    'names' => [],
     'weight' => 20,
     'class' => '\Drupal\config_translation\ConfigNamesMapper',
-  );
+  ];
 
   /**
    * Constructs a ConfigMapperManager.
@@ -72,7 +72,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     $this->alterInfo('config_translation_info');
     // Config translation only uses an info hook discovery, cache by language.
     $cache_key = 'config_translation_info_plugins' . ':' . $language_manager->getCurrentLanguage()->getId();
-    $this->setCacheBackend($cache_backend, $cache_key, array('config_translation_info_plugins'));
+    $this->setCacheBackend($cache_backend, $cache_key, ['config_translation_info_plugins']);
   }
 
   /**
@@ -90,7 +90,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
       //   request; when routes are being rebuilt at the end of the request,
       //   this service only happens to get instantiated with the updated list
       //   of installed themes.
-      $directories = array();
+      $directories = [];
       foreach ($this->moduleHandler->getModuleList() as $name => $module) {
         $directories[$name] = $module->getPath();
       }
@@ -111,7 +111,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
    * {@inheritdoc}
    */
   public function getMappers(RouteCollection $collection = NULL) {
-    $mappers = array();
+    $mappers = [];
     foreach ($this->getDefinitions() as $id => $definition) {
       $mappers[$id] = $this->createInstance($id);
       if ($collection) {
@@ -155,7 +155,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     // If this plugin was provided by a module that does not exist, remove the
     // plugin definition.
     foreach ($definitions as $plugin_id => $plugin_definition) {
-      if (isset($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array('core', 'component')) && (!$this->moduleHandler->moduleExists($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array_keys($this->themeHandler->listInfo())))) {
+      if (isset($plugin_definition['provider']) && !in_array($plugin_definition['provider'], ['core', 'component']) && (!$this->moduleHandler->moduleExists($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array_keys($this->themeHandler->listInfo())))) {
         unset($definitions[$plugin_id]);
       }
     }

@@ -24,7 +24,7 @@ class LocalePluralFormatTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale');
+  public static $modules = ['locale'];
 
   /**
    * {@inheritdoc}
@@ -32,7 +32,7 @@ class LocalePluralFormatTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
+    $this->adminUser = $this->drupalCreateUser(['administer languages', 'translate interface', 'access administration pages']);
     $this->drupalLogin($this->adminUser);
   }
 
@@ -43,23 +43,23 @@ class LocalePluralFormatTest extends WebTestBase {
   public function testGetPluralFormat() {
     // Import some .po files with formulas to set up the environment.
     // These will also add the languages to the system.
-    $this->importPoFile($this->getPoFileWithSimplePlural(), array(
+    $this->importPoFile($this->getPoFileWithSimplePlural(), [
       'langcode' => 'fr',
-    ));
-    $this->importPoFile($this->getPoFileWithComplexPlural(), array(
+    ]);
+    $this->importPoFile($this->getPoFileWithComplexPlural(), [
       'langcode' => 'hr',
-    ));
+    ]);
 
     // Attempt to import some broken .po files as well to prove that these
     // will not overwrite the proper plural formula imported above.
-    $this->importPoFile($this->getPoFileWithMissingPlural(), array(
+    $this->importPoFile($this->getPoFileWithMissingPlural(), [
       'langcode' => 'fr',
       'overwrite_options[not_customized]' => TRUE,
-    ));
-    $this->importPoFile($this->getPoFileWithBrokenPlural(), array(
+    ]);
+    $this->importPoFile($this->getPoFileWithBrokenPlural(), [
       'langcode' => 'hr',
       'overwrite_options[not_customized]' => TRUE,
-    ));
+    ]);
 
     // Reset static caches from locale_get_plural() to ensure we get fresh data.
     drupal_static_reset('locale_get_plural');
@@ -67,49 +67,49 @@ class LocalePluralFormatTest extends WebTestBase {
     drupal_static_reset('locale');
 
     // Expected plural translation strings for each plural index.
-    $plural_strings = array(
+    $plural_strings = [
       // English is not imported in this case, so we assume built-in text
       // and formulas.
-      'en' => array(
+      'en' => [
         0 => '1 hour',
         1 => '@count hours',
-      ),
-      'fr' => array(
+      ],
+      'fr' => [
         0 => '@count heure',
         1 => '@count heures',
-      ),
-      'hr' => array(
+      ],
+      'hr' => [
         0 => '@count sat',
         1 => '@count sata',
         2 => '@count sati',
-      ),
+      ],
       // Hungarian is not imported, so it should assume the same text as
       // English, but it will always pick the plural form as per the built-in
       // logic, so only index -1 is relevant with the plural value.
-      'hu' => array(
+      'hu' => [
         0 => '1 hour',
         -1 => '@count hours',
-      ),
-    );
+      ],
+    ];
 
     // Expected plural indexes precomputed base on the plural formulas with
     // given $count value.
-    $plural_tests = array(
-      'en' => array(
+    $plural_tests = [
+      'en' => [
         1 => 0,
         0 => 1,
         5 => 1,
         123 => 1,
         235 => 1,
-      ),
-      'fr' => array(
+      ],
+      'fr' => [
         1 => 0,
         0 => 0,
         5 => 1,
         123 => 1,
         235 => 1,
-      ),
-      'hr' => array(
+      ],
+      'hr' => [
         1 => 0,
         21 => 0,
         0 => 2,
@@ -117,13 +117,13 @@ class LocalePluralFormatTest extends WebTestBase {
         8 => 2,
         123 => 1,
         235 => 2,
-      ),
-      'hu' => array(
+      ],
+      'hu' => [
         1 => -1,
         21 => -1,
         0 => -1,
-      ),
-    );
+      ],
+    ];
 
     foreach ($plural_tests as $langcode => $tests) {
       foreach ($tests as $count => $expected_plural_index) {
@@ -133,14 +133,14 @@ class LocalePluralFormatTest extends WebTestBase {
         // expected index as per the logic for translation lookups.
         $expected_plural_index = ($count == 1) ? 0 : $expected_plural_index;
         $expected_plural_string = str_replace('@count', $count, $plural_strings[$langcode][$expected_plural_index]);
-        $this->assertIdentical(\Drupal::translation()->formatPlural($count, '1 hour', '@count hours', array(), array('langcode' => $langcode))->render(), $expected_plural_string, 'Plural translation of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
+        $this->assertIdentical(\Drupal::translation()->formatPlural($count, '1 hour', '@count hours', [], ['langcode' => $langcode])->render(), $expected_plural_string, 'Plural translation of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
         // DO NOT use translation to pass translated strings into
         // PluralTranslatableMarkup::createFromTranslatedString() this way. It
         // is designed to be used with *already* translated text like settings
         // from configuration. We use PHP translation here just because we have
         // the expected result data in that format.
-        $translated_string = \Drupal::translation()->translate('1 hour' . PluralTranslatableMarkup::DELIMITER . '@count hours', array(), array('langcode' => $langcode));
-        $plural = PluralTranslatableMarkup::createFromTranslatedString($count, $translated_string, array(), array('langcode' => $langcode));
+        $translated_string = \Drupal::translation()->translate('1 hour' . PluralTranslatableMarkup::DELIMITER . '@count hours', [], ['langcode' => $langcode]);
+        $plural = PluralTranslatableMarkup::createFromTranslatedString($count, $translated_string, [], ['langcode' => $langcode]);
         $this->assertIdentical($plural->render(), $expected_plural_string);
       }
     }
@@ -153,9 +153,9 @@ class LocalePluralFormatTest extends WebTestBase {
 
     // Import some .po files with formulas to set up the environment.
     // These will also add the languages to the system.
-    $this->importPoFile($this->getPoFileWithSimplePlural(), array(
+    $this->importPoFile($this->getPoFileWithSimplePlural(), [
       'langcode' => 'fr',
-    ));
+    ]);
 
     // Set French as the site default language.
     $this->config('system.site')->set('default_langcode', 'fr')->save();
@@ -170,12 +170,12 @@ class LocalePluralFormatTest extends WebTestBase {
     $this->assertText("seconde", "'Member for' text is translated.");
 
     $path = 'admin/config/regional/translate/';
-    $search = array(
+    $search = [
       'langcode' => 'fr',
       // Limit to only translated strings to ensure that database ordering does
       // not break the test.
       'translation' => 'translated',
-    );
+    ];
     $this->drupalPostForm($path, $search, t('Filter'));
     // Plural values for the langcode fr.
     $this->assertText('@count seconde');
@@ -185,20 +185,20 @@ class LocalePluralFormatTest extends WebTestBase {
     // langcode here because the language will be English by default and will
     // not save our source string for performance optimization if we do not ask
     // specifically for a language.
-    \Drupal::translation()->formatPlural(1, '1 second', '@count seconds', array(), array('langcode' => 'fr'))->render();
-    $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", array(':source' => "1 second" . LOCALE_PLURAL_DELIMITER . "@count seconds"))->fetchField();
+    \Drupal::translation()->formatPlural(1, '1 second', '@count seconds', [], ['langcode' => 'fr'])->render();
+    $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", [':source' => "1 second" . LOCALE_PLURAL_DELIMITER . "@count seconds"])->fetchField();
     // Look up editing page for this plural string and check fields.
-    $search = array(
+    $search = [
       'string' => '1 second',
       'langcode' => 'fr',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
 
     // Save complete translations for the string in langcode fr.
-    $edit = array(
+    $edit = [
       "strings[$lid][translations][0]" => '1 seconde updated',
       "strings[$lid][translations][1]" => '@count secondes updated',
-    );
+    ];
     $this->drupalPostForm($path, $edit, t('Save translations'));
 
     // User interface input for translating seconds should not be duplicated
@@ -218,17 +218,17 @@ class LocalePluralFormatTest extends WebTestBase {
   public function testPluralEditExport() {
     // Import some .po files with formulas to set up the environment.
     // These will also add the languages to the system.
-    $this->importPoFile($this->getPoFileWithSimplePlural(), array(
+    $this->importPoFile($this->getPoFileWithSimplePlural(), [
       'langcode' => 'fr',
-    ));
-    $this->importPoFile($this->getPoFileWithComplexPlural(), array(
+    ]);
+    $this->importPoFile($this->getPoFileWithComplexPlural(), [
       'langcode' => 'hr',
-    ));
+    ]);
 
     // Get the French translations.
-    $this->drupalPostForm('admin/config/regional/translate/export', array(
+    $this->drupalPostForm('admin/config/regional/translate/export', [
       'langcode' => 'fr',
-    ), t('Export'));
+    ], t('Export'));
     // Ensure we have a translation file.
     $this->assertRaw('# French translation of Drupal', 'Exported French translation file.');
     // Ensure our imported translations exist in the file.
@@ -237,9 +237,9 @@ class LocalePluralFormatTest extends WebTestBase {
     $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count heure\"\nmsgstr[1] \"@count heures\"", 'Plural translations exported properly.');
 
     // Get the Croatian translations.
-    $this->drupalPostForm('admin/config/regional/translate/export', array(
+    $this->drupalPostForm('admin/config/regional/translate/export', [
       'langcode' => 'hr',
-    ), t('Export'));
+    ], t('Export'));
     // Ensure we have a translation file.
     $this->assertRaw('# Croatian translation of Drupal', 'Exported Croatian translation file.');
     // Ensure our imported translations exist in the file.
@@ -254,9 +254,9 @@ class LocalePluralFormatTest extends WebTestBase {
 
     // Look up editing page for this plural string and check fields.
     $path = 'admin/config/regional/translate/';
-    $search = array(
+    $search = [
       'langcode' => 'hr',
-    );
+    ];
     $this->drupalPostForm($path, $search, t('Filter'));
     // Labels for plural editing elements.
     $this->assertText('Singular form');
@@ -270,15 +270,15 @@ class LocalePluralFormatTest extends WebTestBase {
     $this->assertText('@count sati');
 
     // Edit langcode hr translations and see if that took effect.
-    $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", array(':source' => "1 hour" . LOCALE_PLURAL_DELIMITER . "@count hours"))->fetchField();
-    $edit = array(
+    $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", [':source' => "1 hour" . LOCALE_PLURAL_DELIMITER . "@count hours"])->fetchField();
+    $edit = [
       "strings[$lid][translations][1]" => '@count sata edited',
-    );
+    ];
     $this->drupalPostForm($path, $edit, t('Save translations'));
 
-    $search = array(
+    $search = [
       'langcode' => 'fr',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     // Plural values for the langcode fr.
     $this->assertText('@count heure');
@@ -286,57 +286,57 @@ class LocalePluralFormatTest extends WebTestBase {
     $this->assertNoText('2. plural form');
 
     // Edit langcode fr translations and see if that took effect.
-    $edit = array(
+    $edit = [
       "strings[$lid][translations][0]" => '@count heure edited',
-    );
+    ];
     $this->drupalPostForm($path, $edit, t('Save translations'));
 
     // Inject a plural source string to the database. We need to use a specific
     // langcode here because the language will be English by default and will
     // not save our source string for performance optimization if we do not ask
     // specifically for a language.
-    \Drupal::translation()->formatPlural(1, '1 day', '@count days', array(), array('langcode' => 'fr'))->render();
-    $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", array(':source' => "1 day" . LOCALE_PLURAL_DELIMITER . "@count days"))->fetchField();
+    \Drupal::translation()->formatPlural(1, '1 day', '@count days', [], ['langcode' => 'fr'])->render();
+    $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", [':source' => "1 day" . LOCALE_PLURAL_DELIMITER . "@count days"])->fetchField();
     // Look up editing page for this plural string and check fields.
-    $search = array(
+    $search = [
       'string' => '1 day',
       'langcode' => 'fr',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
 
     // Save complete translations for the string in langcode fr.
-    $edit = array(
+    $edit = [
       "strings[$lid][translations][0]" => '1 jour',
       "strings[$lid][translations][1]" => '@count jours',
-    );
+    ];
     $this->drupalPostForm($path, $edit, t('Save translations'));
 
     // Save complete translations for the string in langcode hr.
-    $search = array(
+    $search = [
       'string' => '1 day',
       'langcode' => 'hr',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
 
-    $edit = array(
+    $edit = [
       "strings[$lid][translations][0]" => '@count dan',
       "strings[$lid][translations][1]" => '@count dana',
       "strings[$lid][translations][2]" => '@count dana',
-    );
+    ];
     $this->drupalPostForm($path, $edit, t('Save translations'));
 
     // Get the French translations.
-    $this->drupalPostForm('admin/config/regional/translate/export', array(
+    $this->drupalPostForm('admin/config/regional/translate/export', [
       'langcode' => 'fr',
-    ), t('Export'));
+    ], t('Export'));
     // Check for plural export specifically.
     $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count heure edited\"\nmsgstr[1] \"@count heures\"", 'Edited French plural translations for hours exported properly.');
     $this->assertRaw("msgid \"1 day\"\nmsgid_plural \"@count days\"\nmsgstr[0] \"1 jour\"\nmsgstr[1] \"@count jours\"", 'Added French plural translations for days exported properly.');
 
     // Get the Croatian translations.
-    $this->drupalPostForm('admin/config/regional/translate/export', array(
+    $this->drupalPostForm('admin/config/regional/translate/export', [
       'langcode' => 'hr',
-    ), t('Export'));
+    ], t('Export'));
     // Check for plural export specifically.
     $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count sat\"\nmsgstr[1] \"@count sata edited\"\nmsgstr[2] \"@count sati\"", 'Edited Croatian plural translations exported properly.');
     $this->assertRaw("msgid \"1 day\"\nmsgid_plural \"@count days\"\nmsgstr[0] \"@count dan\"\nmsgstr[1] \"@count dana\"\nmsgstr[2] \"@count dana\"", 'Added Croatian plural translations exported properly.');
@@ -350,7 +350,7 @@ class LocalePluralFormatTest extends WebTestBase {
    * @param array $options
    *   Additional options to pass to the translation import form.
    */
-  public function importPoFile($contents, array $options = array()) {
+  public function importPoFile($contents, array $options = []) {
     $name = \Drupal::service('file_system')->tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $contents);
     $options['files[file]'] = $name;

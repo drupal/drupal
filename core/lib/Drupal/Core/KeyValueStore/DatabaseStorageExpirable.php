@@ -34,11 +34,11 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * {@inheritdoc}
    */
   public function has($key) {
-    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key AND expire > :now', array(
+    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key AND expire > :now', [
       ':collection' => $this->collection,
       ':key' => $key,
       ':now' => REQUEST_TIME,
-    ))->fetchField();
+    ])->fetchField();
   }
 
   /**
@@ -47,12 +47,12 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   public function getMultiple(array $keys) {
     $values = $this->connection->query(
       'SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE expire > :now AND name IN ( :keys[] ) AND collection = :collection',
-      array(
+      [
         ':now' => REQUEST_TIME,
         ':keys[]' => $keys,
         ':collection' => $this->collection,
-      ))->fetchAllKeyed();
-    return array_map(array($this->serializer, 'decode'), $values);
+      ])->fetchAllKeyed();
+    return array_map([$this->serializer, 'decode'], $values);
   }
 
   /**
@@ -61,11 +61,11 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   public function getAll() {
     $values = $this->connection->query(
       'SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND expire > :now',
-      array(
+      [
         ':collection' => $this->collection,
         ':now' => REQUEST_TIME
-      ))->fetchAllKeyed();
-    return array_map(array($this->serializer, 'decode'), $values);
+      ])->fetchAllKeyed();
+    return array_map([$this->serializer, 'decode'], $values);
   }
 
   /**
@@ -73,14 +73,14 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    */
   function setWithExpire($key, $value, $expire) {
     $this->connection->merge($this->table)
-      ->keys(array(
+      ->keys([
         'name' => $key,
         'collection' => $this->collection,
-      ))
-      ->fields(array(
+      ])
+      ->fields([
         'value' => $this->serializer->encode($value),
         'expire' => REQUEST_TIME + $expire,
-      ))
+      ])
       ->execute();
   }
 
@@ -89,12 +89,12 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    */
   function setWithExpireIfNotExists($key, $value, $expire) {
     $result = $this->connection->merge($this->table)
-      ->insertFields(array(
+      ->insertFields([
         'collection' => $this->collection,
         'name' => $key,
         'value' => $this->serializer->encode($value),
         'expire' => REQUEST_TIME + $expire,
-      ))
+      ])
       ->condition('collection', $this->collection)
       ->condition('name', $key)
       ->execute();

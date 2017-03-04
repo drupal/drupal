@@ -45,7 +45,7 @@ class Serializer extends StylePluginBase implements CacheableDependencyInterface
    *
    * @var array
    */
-  protected $formats = array();
+  protected $formats = [];
 
   /**
    * The serialization format providers, keyed by format.
@@ -85,7 +85,7 @@ class Serializer extends StylePluginBase implements CacheableDependencyInterface
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['formats'] = array('default' => array());
+    $options['formats'] = ['default' => []];
 
     return $options;
   }
@@ -96,13 +96,13 @@ class Serializer extends StylePluginBase implements CacheableDependencyInterface
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['formats'] = array(
+    $form['formats'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Accepted request formats'),
       '#description' => $this->t('Request formats that will be allowed in responses. If none are selected all formats will be allowed.'),
       '#options' => $this->getFormatOptions(),
       '#default_value' => $this->options['formats'],
-    );
+    ];
   }
 
   /**
@@ -111,15 +111,15 @@ class Serializer extends StylePluginBase implements CacheableDependencyInterface
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
 
-    $formats = $form_state->getValue(array('style_options', 'formats'));
-    $form_state->setValue(array('style_options', 'formats'), array_filter($formats));
+    $formats = $form_state->getValue(['style_options', 'formats']);
+    $form_state->setValue(['style_options', 'formats'], array_filter($formats));
   }
 
   /**
    * {@inheritdoc}
    */
   public function render() {
-    $rows = array();
+    $rows = [];
     // If the Data Entity row plugin is used, this will be an array of entities
     // which will pass through Serializer to one of the registered Normalizers,
     // which will transform it to arrays/scalars. If the Data field row plugin

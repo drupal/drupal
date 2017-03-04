@@ -129,7 +129,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
     // Output a notice that user 1 cannot be canceled.
     if (isset($root)) {
       $redirect = (count($accounts) == 1);
-      $message = $this->t('The user account %name cannot be canceled.', array('%name' => $root->label()));
+      $message = $this->t('The user account %name cannot be canceled.', ['%name' => $root->label()]);
       drupal_set_message($message, $redirect ? 'error' : 'warning');
       // If only user 1 was selected, redirect to the overview.
       if ($redirect) {
@@ -137,30 +137,30 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
       }
     }
 
-    $form['operation'] = array('#type' => 'hidden', '#value' => 'cancel');
+    $form['operation'] = ['#type' => 'hidden', '#value' => 'cancel'];
 
-    $form['user_cancel_method'] = array(
+    $form['user_cancel_method'] = [
       '#type' => 'radios',
       '#title' => $this->t('When cancelling these accounts'),
-    );
+    ];
 
     $form['user_cancel_method'] += user_cancel_methods();
 
     // Allow to send the account cancellation confirmation mail.
-    $form['user_cancel_confirm'] = array(
+    $form['user_cancel_confirm'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Require email confirmation to cancel account'),
       '#default_value' => FALSE,
       '#description' => $this->t('When enabled, the user must confirm the account cancellation via email.'),
-    );
+    ];
     // Also allow to send account canceled notification mail, if enabled.
-    $form['user_cancel_notify'] = array(
+    $form['user_cancel_notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is canceled'),
       '#default_value' => FALSE,
       '#access' => $this->config('user.settings')->get('notify.status_canceled'),
       '#description' => $this->t('When enabled, the user will receive an email notification after the account has been canceled.'),
-    );
+    ];
 
     $form = parent::buildForm($form, $form_state);
 
@@ -183,7 +183,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
         }
         // Prevent user administrators from deleting themselves without confirmation.
         if ($uid == $current_user_id) {
-          $admin_form_mock = array();
+          $admin_form_mock = [];
           $admin_form_state = $form_state;
           $admin_form_state->unsetValue('user_cancel_confirm');
           // The $user global is not a complete user entity, so load the full

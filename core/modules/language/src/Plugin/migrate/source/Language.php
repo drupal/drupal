@@ -17,7 +17,7 @@ class Language extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return array(
+    return [
       'language' => $this->t('The language code.'),
       'name' => $this->t('The English name of the language.'),
       'native' => $this->t('The native name of the language.'),
@@ -29,18 +29,18 @@ class Language extends DrupalSqlBase {
       'prefix' => $this->t('Path prefix used for this language.'),
       'weight' => $this->t('The language weight when listed.'),
       'javascript' => $this->t('Location of the JavaScript translation file.'),
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getIds() {
-    return array(
-      'language' => array(
+    return [
+      'language' => [
         'type' => 'string',
-      ),
-    );
+      ],
+    ];
   }
 
   /**

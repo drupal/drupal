@@ -12,7 +12,7 @@ trait DependencyTrait {
    *
    * @var array
    */
-  protected $dependencies = array();
+  protected $dependencies = [];
 
   /**
    * Adds a dependency.
@@ -30,7 +30,7 @@ trait DependencyTrait {
    */
   protected function addDependency($type, $name) {
     if (empty($this->dependencies[$type])) {
-      $this->dependencies[$type] = array($name);
+      $this->dependencies[$type] = [$name];
       if (count($this->dependencies) > 1) {
         // Ensure a consistent order of type keys.
         ksort($this->dependencies);

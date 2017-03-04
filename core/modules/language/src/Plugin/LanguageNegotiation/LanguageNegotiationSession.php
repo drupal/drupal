@@ -81,7 +81,7 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($path, &$options = array(), Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
     if ($request) {
       // The following values are not supposed to change during a single page
       // request processing.
@@ -124,24 +124,24 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
    * {@inheritdoc}
    */
   public function getLanguageSwitchLinks(Request $request, $type, Url $url) {
-    $links = array();
+    $links = [];
     $config = $this->config->get('language.negotiation')->get('session');
     $param = $config['parameter'];
     $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : $this->languageManager->getCurrentLanguage($type)->getId();
-    $query = array();
+    $query = [];
     parse_str($request->getQueryString(), $query);
 
     foreach ($this->languageManager->getNativeLanguages() as $language) {
       $langcode = $language->getId();
-      $links[$langcode] = array(
+      $links[$langcode] = [
         // We need to clone the $url object to avoid using the same one for all
         // links. When the links are rendered, options are set on the $url
         // object, so if we use the same one, they would be set for all links.
         'url' => clone $url,
         'title' => $language->getName(),
-        'attributes' => array('class' => array('language-link')),
+        'attributes' => ['class' => ['language-link']],
         'query' => $query,
-      );
+      ];
       if ($language_query != $langcode) {
         $links[$langcode]['query'][$param] = $langcode;
       }

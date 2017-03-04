@@ -17,7 +17,7 @@ class ConfigEntityNormalizerTest extends UnitTestCase {
    * @covers ::normalize
    */
   public function testNormalize() {
-    $test_export_properties = array('test' => 'test');
+    $test_export_properties = ['test' => 'test'];
 
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $normalizer = new ConfigEntityNormalizer($entity_manager);

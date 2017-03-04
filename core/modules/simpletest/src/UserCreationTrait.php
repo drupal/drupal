@@ -43,7 +43,7 @@ trait UserCreationTrait {
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */
-  protected function createUser(array $permissions = array(), $name = NULL, $admin = FALSE) {
+  protected function createUser(array $permissions = [], $name = NULL, $admin = FALSE) {
     // Create a role with the given permission set, if any.
     $rid = FALSE;
     if ($permissions) {
@@ -54,13 +54,13 @@ trait UserCreationTrait {
     }
 
     // Create a user assigned to that role.
-    $edit = array();
+    $edit = [];
     $edit['name'] = !empty($name) ? $name : $this->randomMachineName();
     $edit['mail'] = $edit['name'] . '@example.com';
     $edit['pass'] = user_password();
     $edit['status'] = 1;
     if ($rid) {
-      $edit['roles'] = array($rid);
+      $edit['roles'] = [$rid];
     }
 
     if ($admin) {
@@ -70,7 +70,7 @@ trait UserCreationTrait {
     $account = User::create($edit);
     $account->save();
 
-    $this->assertTrue($account->id(), SafeMarkup::format('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), 'User login');
+    $this->assertTrue($account->id(), SafeMarkup::format('User created with name %name and pass %pass', ['%name' => $edit['name'], '%pass' => $edit['pass']]), 'User login');
     if (!$account->id()) {
       return FALSE;
     }
@@ -141,19 +141,19 @@ trait UserCreationTrait {
     }
 
     // Create new role.
-    $role = Role::create(array(
+    $role = Role::create([
       'id' => $rid,
       'label' => $name,
-    ));
+    ]);
     if (isset($weight)) {
       $role->set('weight', $weight);
     }
     $result = $role->save();
 
-    $this->assertIdentical($result, SAVED_NEW, SafeMarkup::format('Created role ID @rid with name @name.', array(
+    $this->assertIdentical($result, SAVED_NEW, SafeMarkup::format('Created role ID @rid with name @name.', [
       '@name' => var_export($role->label(), TRUE),
       '@rid' => var_export($role->id(), TRUE),
-    )), 'Role');
+    ]), 'Role');
 
     if ($result === SAVED_NEW) {
       // Grant the specified permissions to the role, if any.
@@ -162,10 +162,10 @@ trait UserCreationTrait {
         $assigned_permissions = Role::load($role->id())->getPermissions();
         $missing_permissions = array_diff($permissions, $assigned_permissions);
         if (!$missing_permissions) {
-          $this->pass(SafeMarkup::format('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), 'Role');
+          $this->pass(SafeMarkup::format('Created permissions: @perms', ['@perms' => implode(', ', $permissions)]), 'Role');
         }
         else {
-          $this->fail(SafeMarkup::format('Failed to create permissions: @perms', array('@perms' => implode(', ', $missing_permissions))), 'Role');
+          $this->fail(SafeMarkup::format('Failed to create permissions: @perms', ['@perms' => implode(', ', $missing_permissions)]), 'Role');
         }
       }
       return $role->id();
@@ -189,7 +189,7 @@ trait UserCreationTrait {
     $valid = TRUE;
     foreach ($permissions as $permission) {
       if (!in_array($permission, $available)) {
-        $this->fail(SafeMarkup::format('Invalid permission %permission.', array('%permission' => $permission)), 'Role');
+        $this->fail(SafeMarkup::format('Invalid permission %permission.', ['%permission' => $permission]), 'Role');
         $valid = FALSE;
       }
     }

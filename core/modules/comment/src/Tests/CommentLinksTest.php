@@ -27,7 +27,7 @@ class CommentLinksTest extends CommentTestBase {
    *
    * @var array
    */
-  protected $seen = array();
+  protected $seen = [];
 
   /**
    * Use the main node listing to test rendering on teasers.
@@ -36,14 +36,14 @@ class CommentLinksTest extends CommentTestBase {
    *
    * @todo Remove this dependency.
    */
-  public static $modules = array('views');
+  public static $modules = ['views'];
 
   /**
    * Tests that comment links are output and can be hidden.
    */
   public function testCommentLinks() {
     // Bartik theme alters comment links, so use a different theme.
-    \Drupal::service('theme_handler')->install(array('stark'));
+    \Drupal::service('theme_handler')->install(['stark']);
     $this->config('system.theme')
       ->set('default', 'stark')
       ->save();
@@ -51,11 +51,11 @@ class CommentLinksTest extends CommentTestBase {
     // Remove additional user permissions from $this->webUser added by setUp(),
     // since this test is limited to anonymous and authenticated roles only.
     $roles = $this->webUser->getRoles();
-    entity_delete_multiple('user_role', array(reset($roles)));
+    entity_delete_multiple('user_role', [reset($roles)]);
 
     // Create a comment via CRUD API functionality, since
     // $this->postComment() relies on actual user permissions.
-    $comment = Comment::create(array(
+    $comment = Comment::create([
       'cid' => NULL,
       'entity_id' => $this->node->id(),
       'entity_type' => 'node',
@@ -66,8 +66,8 @@ class CommentLinksTest extends CommentTestBase {
       'subject' => $this->randomMachineName(),
       'hostname' => '127.0.0.1',
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'comment_body' => array(array('value' => $this->randomMachineName())),
-    ));
+      'comment_body' => [['value' => $this->randomMachineName()]],
+    ]);
     $comment->save();
     $this->comment = $comment;
 
@@ -78,19 +78,19 @@ class CommentLinksTest extends CommentTestBase {
     $this->node->save();
 
     // Change user permissions.
-    $perms = array(
+    $perms = [
       'access comments' => 1,
       'post comments' => 1,
       'skip comment approval' => 1,
       'edit own comments' => 1,
-    );
+    ];
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, $perms);
 
     $nid = $this->node->id();
 
     // Assert basic link is output, actual functionality is unit-tested in
     // \Drupal\comment\Tests\CommentLinkBuilderTest.
-    foreach (array('node', "node/$nid") as $path) {
+    foreach (['node', "node/$nid"] as $path) {
       $this->drupalGet($path);
 
       // In teaser view, a link containing the comment count is always
@@ -103,7 +103,7 @@ class CommentLinksTest extends CommentTestBase {
 
     // Change weight to make links go before comment body.
     entity_get_display('comment', 'comment', 'default')
-      ->setComponent('links', array('weight' => -100))
+      ->setComponent('links', ['weight' => -100])
       ->save();
     $this->drupalGet($this->node->urlInfo());
     $element = $this->cssSelect('article.js-comment > div');
@@ -113,7 +113,7 @@ class CommentLinksTest extends CommentTestBase {
 
     // Change weight to make links go after comment body.
     entity_get_display('comment', 'comment', 'default')
-      ->setComponent('links', array('weight' => 100))
+      ->setComponent('links', ['weight' => 100])
       ->save();
     $this->drupalGet($this->node->urlInfo());
     $element = $this->cssSelect('article.js-comment > div');

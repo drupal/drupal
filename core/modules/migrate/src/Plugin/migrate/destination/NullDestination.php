@@ -19,20 +19,20 @@ class NullDestination extends DestinationBase {
    * {@inheritdoc}
    */
   public function getIds() {
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function fields(MigrationInterface $migration = NULL) {
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function import(Row $row, array $old_destination_id_values = array()) {
+  public function import(Row $row, array $old_destination_id_values = []) {
   }
 
 }

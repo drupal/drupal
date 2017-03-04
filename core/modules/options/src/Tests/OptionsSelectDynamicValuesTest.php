@@ -16,7 +16,7 @@ class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTestBase {
     $this->entity->save();
 
     // Create a web user.
-    $web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));
+    $web_user = $this->drupalCreateUser(['view test entity', 'administer entity_test content']);
     $this->drupalLogin($web_user);
 
     // Display form.

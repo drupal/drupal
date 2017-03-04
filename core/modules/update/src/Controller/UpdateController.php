@@ -44,9 +44,9 @@ class UpdateController extends ControllerBase {
    *   A build array with the update status of projects.
    */
   public function updateStatus() {
-    $build = array(
+    $build = [
       '#theme' => 'update_report'
-    );
+    ];
     if ($available = update_get_available(TRUE)) {
       $this->moduleHandler()->loadInclude('update', 'compare.inc');
       $build['#data'] = update_calculate_project_data($available);
@@ -59,15 +59,15 @@ class UpdateController extends ControllerBase {
    */
   public function updateStatusManually() {
     $this->updateManager->refreshUpdateData();
-    $batch = array(
-      'operations' => array(
-        array(array($this->updateManager, 'fetchDataBatch'), array()),
-      ),
+    $batch = [
+      'operations' => [
+        [[$this->updateManager, 'fetchDataBatch'], []],
+      ],
       'finished' => 'update_fetch_data_finished',
       'title' => t('Checking available update data'),
       'progress_message' => t('Trying to check available update data ...'),
       'error_message' => t('Error checking available update data.'),
-    );
+    ];
     batch_set($batch);
     return batch_process('admin/reports/updates');
   }

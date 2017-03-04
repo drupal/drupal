@@ -21,7 +21,7 @@ class TaggedWithTest extends WizardTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy');
+  public static $modules = ['taxonomy'];
 
   /**
    * Node type with an autocomplete tagging field.
@@ -83,31 +83,31 @@ class TaggedWithTest extends WizardTestBase {
     // Create the tag field itself.
     $this->tagFieldName = 'field_views_testing_tags';
 
-    $handler_settings = array(
-      'target_bundles' => array(
+    $handler_settings = [
+      'target_bundles' => [
         $this->tagVocabulary->id() => $this->tagVocabulary->id(),
-      ),
+      ],
       'auto_create' => TRUE,
-    );
+    ];
     $this->createEntityReferenceField('node', $this->nodeTypeWithTags->id(), $this->tagFieldName, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', $this->nodeTypeWithTags->id(), 'default')
-      ->setComponent($this->tagFieldName, array(
+      ->setComponent($this->tagFieldName, [
         'type' => 'entity_reference_autocomplete_tags',
-      ))
+      ])
       ->save();
 
     entity_get_display('node', $this->nodeTypeWithTags->id(), 'default')
-      ->setComponent($this->tagFieldName, array(
+      ->setComponent($this->tagFieldName, [
         'type' => 'entity_reference_label',
         'weight' => 10,
-      ))
+      ])
       ->save();
     entity_get_display('node', $this->nodeTypeWithTags->id(), 'teaser')
-      ->setComponent('field_views_testing_tags', array(
+      ->setComponent('field_views_testing_tags', [
         'type' => 'entity_reference_label',
         'weight' => 10,
-      ))
+      ])
       ->save();
   }
 
@@ -120,21 +120,21 @@ class TaggedWithTest extends WizardTestBase {
     $node_add_path = 'node/add/' . $this->nodeTypeWithTags->id();
 
     // Create three nodes, with different tags.
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $node_tag1_title = $this->randomMachineName();
     $edit[$this->tagFieldName . '[target_id]'] = 'tag1';
     $this->drupalPostForm($node_add_path, $edit, t('Save'));
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $node_tag1_tag2_title = $this->randomMachineName();
     $edit[$this->tagFieldName . '[target_id]'] = 'tag1, tag2';
     $this->drupalPostForm($node_add_path, $edit, t('Save'));
-    $edit = array();
+    $edit = [];
     $edit['title[0][value]'] = $node_no_tags_title = $this->randomMachineName();
     $this->drupalPostForm($node_add_path, $edit, t('Save'));
 
     // Create a view that filters by taxonomy term "tag1". It should show only
     // the two nodes from above that are tagged with "tag1".
-    $view1 = array();
+    $view1 = [];
     // First select the node type and update the form so the correct tag field
     // is used.
     $view1['show[type]'] = $this->nodeTypeWithTags->id();
@@ -158,7 +158,7 @@ class TaggedWithTest extends WizardTestBase {
 
     // Create a view that filters by taxonomy term "tag2". It should show only
     // the one node from above that is tagged with "tag2".
-    $view2 = array();
+    $view2 = [];
     $view2['show[type]'] = $this->nodeTypeWithTags->id();
     $this->drupalPostForm('admin/structure/views/add', $view2, t('Update "of type" choice'));
     $this->assertResponse(200);
@@ -202,20 +202,20 @@ class TaggedWithTest extends WizardTestBase {
       'field_name' => $this->tagFieldName,
       'entity_type' => 'node',
       'bundle' => $this->nodeTypeWithoutTags->id(),
-      'settings' => array(
+      'settings' => [
         'handler' => 'default',
-        'handler_settings' => array(
-          'target_bundles' => array(
+        'handler_settings' => [
+          'target_bundles' => [
             $this->tagVocabulary->id() => $this->tagVocabulary->id(),
-          ),
+          ],
           'auto_create' => TRUE,
-        ),
-      ),
+        ],
+      ],
     ])->save();
     entity_get_form_display('node', $this->nodeTypeWithoutTags->id(), 'default')
-      ->setComponent($this->tagFieldName, array(
+      ->setComponent($this->tagFieldName, [
         'type' => 'entity_reference_autocomplete_tags',
-      ))
+      ])
       ->save();
 
     $view['show[type]'] = $this->nodeTypeWithTags->id();

@@ -19,7 +19,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('path', 'forum', 'url_alter_test');
+  public static $modules = ['path', 'forum', 'url_alter_test'];
 
   /**
    * Test that URL altering works and that it occurs in the correct order.
@@ -30,7 +30,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
 
     // User names can have quotes and plus signs so we should ensure that URL
     // altering works with this.
-    $account = $this->drupalCreateUser(array('administer url aliases'), "a'foo+bar");
+    $account = $this->drupalCreateUser(['administer url aliases'], "a'foo+bar");
     $this->drupalLogin($account);
 
     $uid = $account->id();
@@ -42,14 +42,14 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     $this->assertUrlOutboundAlter("/user/$uid", "/user/$name");
 
     // Test that a path always uses its alias.
-    $path = array('source' => "/user/$uid/test1", 'alias' => '/alias/test1');
+    $path = ['source' => "/user/$uid/test1", 'alias' => '/alias/test1'];
     $this->container->get('path.alias_storage')->save($path['source'], $path['alias']);
     $this->rebuildContainer();
     $this->assertUrlInboundAlter('/alias/test1', "/user/$uid/test1");
     $this->assertUrlOutboundAlter("/user/$uid/test1", '/alias/test1');
 
     // Test adding an alias via the UI.
-    $edit = array('source' => "/user/$uid/edit", 'alias' => '/alias/test2');
+    $edit = ['source' => "/user/$uid/edit", 'alias' => '/alias/test2'];
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
     $this->assertText(t('The alias has been saved.'));
     $this->drupalGet('alias/test2');
@@ -95,7 +95,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   protected function assertUrlOutboundAlter($original, $final) {
     // Test outbound altering.
     $result = $this->container->get('path_processor_manager')->processOutbound($original);
-    return $this->assertIdentical($result, $final, format_string('Altered outbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
+    return $this->assertIdentical($result, $final, format_string('Altered outbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
   }
 
   /**
@@ -112,7 +112,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   protected function assertUrlInboundAlter($original, $final) {
     // Test inbound altering.
     $result = $this->container->get('path.alias_manager')->getPathByAlias($original);
-    return $this->assertIdentical($result, $final, format_string('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
+    return $this->assertIdentical($result, $final, format_string('Altered inbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
   }
 
 }

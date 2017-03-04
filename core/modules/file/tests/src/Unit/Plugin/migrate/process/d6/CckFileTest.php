@@ -25,26 +25,26 @@ class CckFileTest extends UnitTestCase {
     $migration_plugin = $this->prophesize(MigrateProcessInterface::class);
     $migration_plugin->transform(1, $executable, $row, 'foo')->willReturn(1);
 
-    $plugin = new CckFile(array(), 'd6_cck_file', array(), $migration, $migration_plugin->reveal());
+    $plugin = new CckFile([], 'd6_cck_file', [], $migration, $migration_plugin->reveal());
 
-    $options = array(
+    $options = [
       'alt' => 'Foobaz',
       'title' => 'Wambooli',
-    );
-    $value = array(
+    ];
+    $value = [
       'fid' => 1,
       'list' => TRUE,
       'data' => serialize($options),
-    );
+    ];
 
     $transformed = $plugin->transform($value, $executable, $row, 'foo');
-    $expected = array(
+    $expected = [
       'target_id' => 1,
       'display' => TRUE,
       'description' => '',
       'alt' => 'Foobaz',
       'title' => 'Wambooli',
-    );
+    ];
     $this->assertSame($expected, $transformed);
   }
 

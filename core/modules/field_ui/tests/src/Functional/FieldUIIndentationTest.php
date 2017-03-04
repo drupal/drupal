@@ -16,7 +16,7 @@ class FieldUIIndentationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'field_ui_test');
+  public static $modules = ['node', 'field_ui', 'field_ui_test'];
 
   /**
    * {@inheritdoc}
@@ -25,11 +25,11 @@ class FieldUIIndentationTest extends BrowserTestBase {
     parent::setUp();
 
     // Create a test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node display'));
+    $admin_user = $this->drupalCreateUser(['access content', 'administer content types', 'administer node display']);
     $this->drupalLogin($admin_user);
 
     // Create Basic page node type.
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
   }
 

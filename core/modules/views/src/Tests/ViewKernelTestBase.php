@@ -26,7 +26,7 @@ abstract class ViewKernelTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'views', 'views_test_config', 'views_test_data', 'user');
+  public static $modules = ['system', 'views', 'views_test_config', 'views_test_data', 'user'];
 
   /**
    * {@inheritdoc}
@@ -39,11 +39,11 @@ abstract class ViewKernelTestBase extends KernelTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp();
 
-    $this->installSchema('system', array('sequences'));
+    $this->installSchema('system', ['sequences']);
     $this->setUpFixtures();
 
     if ($import_test_views) {
-      ViewTestData::createTestViews(get_class($this), array('views_test_config'));
+      ViewTestData::createTestViews(get_class($this), ['views_test_config']);
     }
   }
 
@@ -56,13 +56,13 @@ abstract class ViewKernelTestBase extends KernelTestBase {
   protected function setUpFixtures() {
     // First install the system module. Many Views have Page displays have menu
     // links, and for those to work, the system menus must already be present.
-    $this->installConfig(array('system'));
+    $this->installConfig(['system']);
 
     // Define the schema and views data variable before enabling the test module.
     \Drupal::state()->set('views_test_data_schema', $this->schemaDefinition());
     \Drupal::state()->set('views_test_data_views_data', $this->viewsData());
 
-    $this->installConfig(array('views', 'views_test_config', 'views_test_data'));
+    $this->installConfig(['views', 'views_test_config', 'views_test_data']);
     foreach ($this->schemaDefinition() as $table => $schema) {
       $this->installSchema('views_test_data', $table);
     }
@@ -113,7 +113,7 @@ abstract class ViewKernelTestBase extends KernelTestBase {
    * @param array $args
    *   (optional) An array of the view arguments to use for the view.
    */
-  protected function executeView($view, array $args = array()) {
+  protected function executeView($view, array $args = []) {
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();

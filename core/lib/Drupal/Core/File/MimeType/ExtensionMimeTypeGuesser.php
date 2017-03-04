@@ -16,8 +16,8 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    * @var array
    *   Array of mimetypes correlated to the extensions that relate to them.
    */
-  protected $defaultMapping = array(
-    'mimetypes' => array(
+  protected $defaultMapping = [
+    'mimetypes' => [
       0 => 'application/andrew-inset',
       1 => 'application/atom',
       2 => 'application/atomcat+xml',
@@ -377,10 +377,10 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       343 => 'x-conference/x-cooltalk',
       344 => 'x-epoc/x-sisx-app',
       345 => 'x-world/x-vrml',
-    ),
+    ],
 
     // Extensions added to this list MUST be lower-case.
-    'extensions' => array(
+    'extensions' => [
       'ez' => 0,
       'atom' => 1,
       'atomcat' => 2,
@@ -856,8 +856,8 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'weba' => 356,
       'webm' => 357,
       'vtt' => 358,
-    ),
-  );
+    ],
+  ];
 
   /**
    * The MIME types mapping array after going through the module handler.

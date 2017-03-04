@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'toels', 'toelt', 'toelp', 'toelh', 'toem', 'toeb', 'toebs', 'toes', 'toess', 'toeng', 'toej', 'toech', 'toek', 'toet', 'toep', 'toeh',
   0x10 => 'tyo', 'tyog', 'tyokk', 'tyogs', 'tyon', 'tyonj', 'tyonh', 'tyod', 'tyol', 'tyolg', 'tyolm', 'tyolb', 'tyols', 'tyolt', 'tyolp', 'tyolh',
   0x20 => 'tyom', 'tyob', 'tyobs', 'tyos', 'tyoss', 'tyong', 'tyoj', 'tyoch', 'tyok', 'tyot', 'tyop', 'tyoh', 'tu', 'tug', 'tukk', 'tugs',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'teuk', 'teut', 'teup', 'teuh', 'tui', 'tuig', 'tuikk', 'tuigs', 'tuin', 'tuinj', 'tuinh', 'tuid', 'tuil', 'tuilg', 'tuilm', 'tuilb',
   0xE0 => 'tuils', 'tuilt', 'tuilp', 'tuilh', 'tuim', 'tuib', 'tuibs', 'tuis', 'tuiss', 'tuing', 'tuij', 'tuich', 'tuik', 'tuit', 'tuip', 'tuih',
   0xF0 => 'ti', 'tig', 'tikk', 'tigs', 'tin', 'tinj', 'tinh', 'tid', 'til', 'tilg', 'tilm', 'tilb', 'tils', 'tilt', 'tilp', 'tilh',
-);
+];

@@ -31,7 +31,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $generatedIds = array();
+  protected $generatedIds = [];
 
   /**
    * The state service.
@@ -62,7 +62,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
         // Only check the modules, if the $modules property was not inherited.
         $rp = new \ReflectionProperty($class, 'modules');
         if ($rp->class == $class) {
-          foreach (array_intersect(array('node', 'comment'), $class::$modules) as $module) {
+          foreach (array_intersect(['node', 'comment'], $class::$modules) as $module) {
             $this->installEntitySchema($module);
           }
           if (in_array('forum', $class::$modules, TRUE)) {
@@ -79,7 +79,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
       $class = get_parent_class($class);
     }
 
-    $this->installConfig(array('field'));
+    $this->installConfig(['field']);
   }
 
   /**
@@ -93,22 +93,22 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    * @return \Drupal\user\Entity\User
    *   The created user entity.
    */
-  protected function createUser($values = array(), $permissions = array()) {
+  protected function createUser($values = [], $permissions = []) {
     if ($permissions) {
       // Create a new role and apply permissions to it.
-      $role = Role::create(array(
+      $role = Role::create([
         'id' => strtolower($this->randomMachineName(8)),
         'label' => $this->randomMachineName(8),
-      ));
+      ]);
       $role->save();
       user_role_grant_permissions($role->id(), $permissions);
       $values['roles'][] = $role->id();
     }
 
-    $account = User::create($values + array(
+    $account = User::create($values + [
       'name' => $this->randomMachineName(),
       'status' => 1,
-    ));
+    ]);
     $account->enforceIsNew();
     $account->save();
     return $account;
@@ -125,7 +125,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    */
   protected function reloadEntity(EntityInterface $entity) {
     $controller = $this->entityManager->getStorage($entity->getEntityTypeId());
-    $controller->resetCache(array($entity->id()));
+    $controller->resetCache([$entity->id()]);
     return $controller->load($entity->id());
   }
 
@@ -138,7 +138,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
   protected function getHooksInfo() {
     $key = 'entity_test.hooks';
     $hooks = $this->state->get($key);
-    $this->state->set($key, array());
+    $this->state->set($key, []);
     return $hooks;
   }
 
@@ -149,7 +149,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    *   The module to install.
    */
   protected function installModule($module) {
-    $this->enableModules(array($module));
+    $this->enableModules([$module]);
     $this->refreshServices();
   }
 
@@ -160,7 +160,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    *   The module to uninstall.
    */
   protected function uninstallModule($module) {
-    $this->disableModules(array($module));
+    $this->disableModules([$module]);
     $this->refreshServices();
   }
 

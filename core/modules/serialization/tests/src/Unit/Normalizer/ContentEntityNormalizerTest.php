@@ -40,7 +40,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
     $this->contentEntityNormalizer = new ContentEntityNormalizer($this->entityManager);
     $this->serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')
       ->disableOriginalConstructor()
-      ->setMethods(array('normalize'))
+      ->setMethods(['normalize'])
       ->getMock();
     $this->contentEntityNormalizer->setSerializer($this->serializer);
   }
@@ -66,10 +66,10 @@ class ContentEntityNormalizerTest extends UnitTestCase {
       ->with($this->containsOnlyInstancesOf('Drupal\Core\Field\FieldItemListInterface'), 'test_format', ['account' => NULL])
       ->will($this->returnValue('test'));
 
-    $definitions = array(
+    $definitions = [
       'field_1' => $this->createMockFieldListItem(),
       'field_2' => $this->createMockFieldListItem(FALSE),
-    );
+    ];
     $content_entity_mock = $this->createMockForContentEntity($definitions);
 
     $normalized = $this->contentEntityNormalizer->normalize($content_entity_mock, 'test_format');
@@ -98,10 +98,10 @@ class ContentEntityNormalizerTest extends UnitTestCase {
 
     // The mock account should get passed directly into the access() method on
     // field items from $context['account'].
-    $definitions = array(
+    $definitions = [
       'field_1' => $this->createMockFieldListItem(TRUE, $mock_account),
       'field_2' => $this->createMockFieldListItem(FALSE, $mock_account),
-    );
+    ];
     $content_entity_mock = $this->createMockForContentEntity($definitions);
 
     $normalized = $this->contentEntityNormalizer->normalize($content_entity_mock, 'test_format', $context);
@@ -121,7 +121,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
   public function createMockForContentEntity($definitions) {
     $content_entity_mock = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
-      ->setMethods(array('getFields'))
+      ->setMethods(['getFields'])
       ->getMockForAbstractClass();
     $content_entity_mock->expects($this->once())
       ->method('getFields')

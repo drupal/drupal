@@ -103,7 +103,7 @@ class Permission extends AccessPluginBase implements CacheableDependencyInterfac
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['perm'] = array('default' => 'access content');
+    $options['perm'] = ['default' => 'access content'];
 
     return $options;
   }
@@ -119,13 +119,13 @@ class Permission extends AccessPluginBase implements CacheableDependencyInterfac
       $perms[$display_name][$perm] = strip_tags($perm_item['title']);
     }
 
-    $form['perm'] = array(
+    $form['perm'] = [
       '#type' => 'select',
       '#options' => $perms,
       '#title' => $this->t('Permission'),
       '#default_value' => $this->options['perm'],
       '#description' => $this->t('Only users with the selected permission flag will be able to access this display.'),
-    );
+    ];
   }
 
   /**

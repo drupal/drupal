@@ -16,14 +16,14 @@ class ArgumentStringTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_glossary');
+  public static $testViews = ['test_glossary'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = ['node'];
 
   /**
    * Tests the glossary feature.
@@ -31,11 +31,11 @@ class ArgumentStringTest extends HandlerTestBase {
   function testGlossary() {
     // Setup some nodes, one with a, two with b and three with c.
     $counter = 1;
-    foreach (array('a', 'b', 'c') as $char) {
+    foreach (['a', 'b', 'c'] as $char) {
       for ($i = 0; $i < $counter; $i++) {
-        $edit = array(
+        $edit = [
           'title' => $char . $this->randomMachineName(),
-        );
+        ];
         $this->drupalCreateNode($edit);
       }
     }

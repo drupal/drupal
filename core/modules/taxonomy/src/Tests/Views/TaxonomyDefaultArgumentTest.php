@@ -19,7 +19,7 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $testViews = array('taxonomy_default_argument_test');
+  public static $testViews = ['taxonomy_default_argument_test'];
 
   /**
    * Tests the relationship.
@@ -37,7 +37,7 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
     $view->setResponse($response);
 
     $view->initHandlers();
-    $expected = implode(',', array($this->term1->id(), $this->term2->id()));
+    $expected = implode(',', [$this->term1->id(), $this->term2->id()]);
     $this->assertEqual($expected, $view->argument['tid']->getDefaultArgument());
     $view->destroy();
   }
@@ -68,7 +68,7 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
     $view->setResponse($response);
 
     $view->initHandlers();
-    $expected = implode(',', array($this->term1->id(), $this->term2->id()));
+    $expected = implode(',', [$this->term1->id(), $this->term2->id()]);
     $this->assertEqual($expected, $view->argument['tid']->getDefaultArgument());
   }
 

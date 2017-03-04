@@ -15,73 +15,73 @@ class CustomDirectoryAnnotatedClassDiscoveryTest extends DiscoveryTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->expectedDefinitions = array(
-      'custom_example_1' => array(
+    $this->expectedDefinitions = [
+      'custom_example_1' => [
         'id' => 'custom_example_1',
         'custom' => 'Tim',
         'class' => 'Drupal\plugin_test\CustomDirectoryExample1',
         'provider' => 'plugin_test',
-      ),
-      'custom_example_2' => array(
+      ],
+      'custom_example_2' => [
         'id' => 'custom_example_2',
         'custom' => 'Meghan',
         'class' => 'Drupal\plugin_test\CustomDirectoryExample2',
         'provider' => 'plugin_test',
-      ),
-      'apple' => array(
+      ],
+      'apple' => [
         'id' => 'apple',
         'label' => 'Apple',
         'color' => 'green',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Apple',
         'provider' => 'plugin_test',
-      ),
-      'banana' => array(
+      ],
+      'banana' => [
         'id' => 'banana',
         'label' => 'Banana',
         'color' => 'yellow',
-        'uses' => array(
+        'uses' => [
           'bread' => t('Banana bread'),
-          'loaf' => array(
+          'loaf' => [
             'singular' => '@count loaf',
             'plural' => '@count loaves',
             'context' => NULL,
-          ),
-        ),
+          ],
+        ],
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Banana',
         'provider' => 'plugin_test',
-      ),
-      'cherry' => array(
+      ],
+      'cherry' => [
         'id' => 'cherry',
         'label' => 'Cherry',
         'color' => 'red',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry',
         'provider' => 'plugin_test',
-      ),
-      'kale' => array(
+      ],
+      'kale' => [
         'id' => 'kale',
         'label' => 'Kale',
         'color' => 'green',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Kale',
         'provider' => 'plugin_test',
-      ),
-      'orange' => array(
+      ],
+      'orange' => [
         'id' => 'orange',
         'label' => 'Orange',
         'color' => 'orange',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Orange',
         'provider' => 'plugin_test',
-      ),
-      'extending_non_installed_class' => array(
+      ],
+      'extending_non_installed_class' => [
         'id' => 'extending_non_installed_class',
         'label' => 'A plugin whose class is extending from a non-installed module class',
         'color' => 'pink',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\ExtendingNonInstalledClass',
         'provider' => 'plugin_test',
-      ),
-    );
+      ],
+    ];
 
     $base_directory = \Drupal::root() . '/core/modules/system/tests/modules/plugin_test/src';
-    $namespaces = new \ArrayObject(array('Drupal\plugin_test' => $base_directory));
+    $namespaces = new \ArrayObject(['Drupal\plugin_test' => $base_directory]);
 
     $this->discovery = new AnnotatedClassDiscovery('', $namespaces);
     $empty_namespaces = new \ArrayObject();

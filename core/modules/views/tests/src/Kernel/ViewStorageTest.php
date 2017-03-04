@@ -21,7 +21,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected $configProperties = array(
+  protected $configProperties = [
     'status',
     'module',
     'id',
@@ -31,7 +31,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     'label',
     'core',
     'display',
-  );
+  ];
 
   /**
    * The entity type definition.
@@ -52,7 +52,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view_storage');
+  public static $testViews = ['test_view_storage'];
 
   /**
    * Tests CRUD operations.
@@ -85,11 +85,11 @@ class ViewStorageTest extends ViewsKernelTestBase {
     // expected properties.
     $this->assertTrue($view instanceof View, 'Single View instance loaded.');
     foreach ($this->configProperties as $property) {
-      $this->assertTrue($view->get($property) !== NULL, format_string('Property: @property loaded onto View.', array('@property' => $property)));
+      $this->assertTrue($view->get($property) !== NULL, format_string('Property: @property loaded onto View.', ['@property' => $property]));
     }
 
     // Check the displays have been loaded correctly from config display data.
-    $expected_displays = array('default', 'block_1', 'page_1');
+    $expected_displays = ['default', 'block_1', 'page_1'];
     $this->assertEqual(array_keys($view->get('display')), $expected_displays, 'The correct display names are present.');
 
     // Check each ViewDisplay object and confirm that it has the correct key and
@@ -101,7 +101,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
       // exists.
       $original_options = $data['display'][$key];
       foreach ($original_options as $orig_key => $value) {
-        $this->assertIdentical($display[$orig_key], $value, format_string('@key is identical to saved data', array('@key' => $key)));
+        $this->assertIdentical($display[$orig_key], $value, format_string('@key is identical to saved data', ['@key' => $key]));
       }
     }
 
@@ -115,12 +115,12 @@ class ViewStorageTest extends ViewsKernelTestBase {
    */
   protected function createTests() {
     // Create a new View instance with empty values.
-    $created = $this->controller->create(array());
+    $created = $this->controller->create([]);
 
     $this->assertTrue($created instanceof View, 'Created object is a View.');
     // Check that the View contains all of the properties.
     foreach ($this->configProperties as $property) {
-      $this->assertTrue(property_exists($created, $property), format_string('Property: @property created on View.', array('@property' => $property)));
+      $this->assertTrue(property_exists($created, $property), format_string('Property: @property created on View.', ['@property' => $property]));
     }
 
     // Create a new View instance with config values.
@@ -137,8 +137,8 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     // Test all properties except displays.
     foreach ($properties as $property) {
-      $this->assertTrue($created->get($property) !== NULL, format_string('Property: @property created on View.', array('@property' => $property)));
-      $this->assertIdentical($values[$property], $created->get($property), format_string('Property value: @property matches configuration value.', array('@property' => $property)));
+      $this->assertTrue($created->get($property) !== NULL, format_string('Property: @property created on View.', ['@property' => $property]));
+      $this->assertIdentical($values[$property], $created->get($property), format_string('Property value: @property matches configuration value.', ['@property' => $property]));
     }
 
     // Check the UUID of the loaded View.
@@ -177,44 +177,44 @@ class ViewStorageTest extends ViewsKernelTestBase {
    * Tests the display related functions like getDisplaysList().
    */
   protected function displayMethodTests() {
-    $config['display'] = array(
-      'page_1' => array(
-        'display_options' => array('path' => 'test'),
+    $config['display'] = [
+      'page_1' => [
+        'display_options' => ['path' => 'test'],
         'display_plugin' => 'page',
         'id' => 'page_2',
         'display_title' => 'Page 1',
         'position' => 1
-      ),
-      'feed_1' => array(
-        'display_options' => array('path' => 'test.xml'),
+      ],
+      'feed_1' => [
+        'display_options' => ['path' => 'test.xml'],
         'display_plugin' => 'feed',
         'id' => 'feed',
         'display_title' => 'Feed',
         'position' => 2
-      ),
-      'page_2' => array(
-        'display_options' => array('path' => 'test/%/extra'),
+      ],
+      'page_2' => [
+        'display_options' => ['path' => 'test/%/extra'],
         'display_plugin' => 'page',
         'id' => 'page_2',
         'display_title' => 'Page 2',
         'position' => 3
-      )
-    );
+      ]
+    ];
     $view = $this->controller->create($config);
 
     // Tests Drupal\views\Entity\View::addDisplay()
-    $view = $this->controller->create(array());
+    $view = $this->controller->create([]);
     $random_title = $this->randomMachineName();
 
     $id = $view->addDisplay('page', $random_title);
-    $this->assertEqual($id, 'page_1', format_string('Make sure the first display (%id_new) has the expected ID (%id)', array('%id_new' => $id, '%id' => 'page_1')));
+    $this->assertEqual($id, 'page_1', format_string('Make sure the first display (%id_new) has the expected ID (%id)', ['%id_new' => $id, '%id' => 'page_1']));
     $display = $view->get('display');
     $this->assertEqual($display[$id]['display_title'], $random_title);
 
     $random_title = $this->randomMachineName();
     $id = $view->addDisplay('page', $random_title);
     $display = $view->get('display');
-    $this->assertEqual($id, 'page_2', format_string('Make sure the second display (%id_new) has the expected ID (%id)', array('%id_new' => $id, '%id' => 'page_2')));
+    $this->assertEqual($id, 'page_2', format_string('Make sure the second display (%id_new) has the expected ID (%id)', ['%id_new' => $id, '%id' => 'page_2']));
     $this->assertEqual($display[$id]['display_title'], $random_title);
 
     $id = $view->addDisplay('page');
@@ -233,7 +233,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     // Tests Drupal\views\Entity\View::generateDisplayId(). Since
     // generateDisplayId() is protected, we have to use reflection to unit-test
     // it.
-    $view = $this->controller->create(array());
+    $view = $this->controller->create([]);
     $ref_generate_display_id = new \ReflectionMethod($view, 'generateDisplayId');
     $ref_generate_display_id->setAccessible(TRUE);
     $this->assertEqual(
@@ -254,38 +254,38 @@ class ViewStorageTest extends ViewsKernelTestBase {
     );
 
     // Tests item related methods().
-    $view = $this->controller->create(array('base_table' => 'views_test_data'));
+    $view = $this->controller->create(['base_table' => 'views_test_data']);
     $view->addDisplay('default');
     $view = $view->getExecutable();
 
     $display_id = 'default';
-    $expected_items = array();
+    $expected_items = [];
     // Tests addHandler with getItem.
     // Therefore add one item without any options and one item with some
     // options.
     $id1 = $view->addHandler($display_id, 'field', 'views_test_data', 'id');
     $item1 = $view->getHandler($display_id, 'field', 'id');
-    $expected_items[$id1] = $expected_item = array(
+    $expected_items[$id1] = $expected_item = [
       'id' => 'id',
       'table' => 'views_test_data',
       'field' => 'id',
       'plugin_id' => 'numeric',
-    );
+    ];
     $this->assertEqual($item1, $expected_item);
 
-    $options = array(
-      'alter' => array(
+    $options = [
+      'alter' => [
         'text' => $this->randomMachineName()
-      )
-    );
+      ]
+    ];
     $id2 = $view->addHandler($display_id, 'field', 'views_test_data', 'name', $options);
     $item2 = $view->getHandler($display_id, 'field', 'name');
-    $expected_items[$id2] = $expected_item = array(
+    $expected_items[$id2] = $expected_item = [
       'id' => 'name',
       'table' => 'views_test_data',
       'field' => 'name',
       'plugin_id' => 'standard',
-    ) + $options;
+    ] + $options;
     $this->assertEqual($item2, $expected_item);
 
     // Tests the expected fields from the previous additions.
@@ -293,11 +293,11 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     // Alter an existing item via setItem and check the result via getItem
     // and getItems.
-    $item = array(
-      'alter' => array(
+    $item = [
+      'alter' => [
         'text' => $this->randomMachineName(),
-      )
-    ) + $item1;
+      ]
+    ] + $item1;
     $expected_items[$id1] = $item;
     $view->setHandler($display_id, 'field', $id1, $item);
     $this->assertEqual($view->getHandler($display_id, 'field', 'id'), $item);
@@ -327,24 +327,24 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     // Check the other properties.
     // @todo Create a reusable property on the base test class for these?
-    $config_properties = array(
+    $config_properties = [
       'disabled',
       'description',
       'tag',
       'base_table',
       'label',
       'core',
-    );
+    ];
 
     foreach ($config_properties as $property) {
-      $this->assertIdentical($view->storage->get($property), $copy->get($property), format_string('@property property is identical.', array('@property' => $property)));
+      $this->assertIdentical($view->storage->get($property), $copy->get($property), format_string('@property property is identical.', ['@property' => $property]));
     }
 
     // Check the displays are the same.
     $copy_display = $copy->get('display');
     foreach ($view->storage->get('display') as $id => $display) {
       // assertIdentical will not work here.
-      $this->assertEqual($display, $copy_display[$id], format_string('The @display display has been copied correctly.', array('@display' => $id)));
+      $this->assertEqual($display, $copy_display[$id], format_string('The @display display has been copied correctly.', ['@display' => $id]));
     }
   }
 

@@ -16,7 +16,7 @@ class ViewElementTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view_embed');
+  public static $testViews = ['test_view_embed'];
 
   protected function setUp() {
     parent::setUp();
@@ -60,23 +60,23 @@ class ViewElementTest extends ViewTestBase {
     $this->assertEqual(count($xpath), 5);
 
     // Add an argument and save the view.
-    $view->displayHandlers->get('default')->overrideOption('arguments', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('arguments', [
+      'age' => [
         'default_action' => 'ignore',
         'title' => '',
         'default_argument_type' => 'fixed',
-        'validate' => array(
+        'validate' => [
           'type' => 'none',
           'fail' => 'not found',
-        ),
+        ],
         'break_phrase' => FALSE,
         'not' => FALSE,
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'plugin_id' => 'numeric',
-      )
-    ));
+      ]
+    ]);
     $view->save();
 
     // Test the render array again.
@@ -129,23 +129,23 @@ class ViewElementTest extends ViewTestBase {
     $this->assertEqual(count($xpath), 5);
 
     // Add an argument and save the view.
-    $view->displayHandlers->get('default')->overrideOption('arguments', array(
-      'age' => array(
+    $view->displayHandlers->get('default')->overrideOption('arguments', [
+      'age' => [
         'default_action' => 'ignore',
         'title' => '',
         'default_argument_type' => 'fixed',
-        'validate' => array(
+        'validate' => [
           'type' => 'none',
           'fail' => 'not found',
-        ),
+        ],
         'break_phrase' => FALSE,
         'not' => FALSE,
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
         'plugin_id' => 'numeric',
-      )
-    ));
+      ]
+    ]);
     $view->save();
 
     // Test the render array again.

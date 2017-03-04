@@ -47,7 +47,7 @@ class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
    */
   public function onRouterRebuild(Event $event) {
     $this->menuLinksRebuild();
-    Cache::invalidateTags(array('local_task'));
+    Cache::invalidateTags(['local_task']);
   }
 
   /**
@@ -82,7 +82,7 @@ class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
    */
   static function getSubscribedEvents() {
     // Run after CachedRouteRebuildSubscriber.
-    $events[RoutingEvents::FINISHED][] = array('onRouterRebuild', 100);
+    $events[RoutingEvents::FINISHED][] = ['onRouterRebuild', 100];
     return $events;
   }
 

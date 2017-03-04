@@ -70,15 +70,15 @@ class ThemeHandlerTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->configFactory = $this->getConfigFactoryStub(array(
-      'core.extension' => array(
-        'module' => array(),
-        'theme' => array(),
-        'disabled' => array(
-          'theme' => array(),
-        ),
-      ),
-    ));
+    $this->configFactory = $this->getConfigFactoryStub([
+      'core.extension' => [
+        'module' => [],
+        'theme' => [],
+        'disabled' => [
+          'theme' => [],
+        ],
+      ],
+    ]);
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->state = new State(new KeyValueMemoryFactory(), new MemoryBackend('test'), new NullLockBackend());
     $this->infoParser = $this->getMock('Drupal\Core\Extension\InfoParserInterface');
@@ -100,15 +100,15 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->extensionDiscovery->expects($this->at(0))
       ->method('scan')
       ->with('theme')
-      ->will($this->returnValue(array(
+      ->will($this->returnValue([
         'seven' => new Extension($this->root, 'theme', $this->root . '/core/themes/seven/seven.info.yml', 'seven.theme'),
-      )));
+      ]));
     $this->extensionDiscovery->expects($this->at(1))
       ->method('scan')
       ->with('theme_engine')
-      ->will($this->returnValue(array(
+      ->will($this->returnValue([
         'twig' => new Extension($this->root, 'theme_engine', $this->root . '/core/themes/engines/twig/twig.info.yml', 'twig.engine'),
-      )));
+      ]));
     $this->infoParser->expects($this->once())
       ->method('parse')
       ->with($this->root . '/core/themes/seven/seven.info.yml')
@@ -136,7 +136,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->assertEquals('twig', $info->prefix);
 
     $this->assertEquals('twig', $info->info['engine']);
-    $this->assertEquals(array('seven/global-styling'), $info->info['libraries']);
+    $this->assertEquals(['seven/global-styling'], $info->info['libraries']);
   }
 
   /**
@@ -160,16 +160,16 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->extensionDiscovery->expects($this->at(0))
       ->method('scan')
       ->with('theme')
-      ->will($this->returnValue(array(
+      ->will($this->returnValue([
         'test_subtheme' => new Extension($this->root, 'theme', $this->root . '/core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml', 'test_subtheme.info.yml'),
         'test_basetheme' => new Extension($this->root, 'theme', $this->root . '/core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml', 'test_basetheme.info.yml'),
-      )));
+      ]));
     $this->extensionDiscovery->expects($this->at(1))
       ->method('scan')
       ->with('theme_engine')
-      ->will($this->returnValue(array(
+      ->will($this->returnValue([
         'twig' => new Extension($this->root, 'theme_engine', $this->root . '/core/themes/engines/twig/twig.info.yml', 'twig.engine'),
-      )));
+      ]));
     $this->infoParser->expects($this->at(0))
       ->method('parse')
       ->with($this->root . '/core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml')
@@ -202,7 +202,7 @@ class ThemeHandlerTest extends UnitTestCase {
 
     // Test the parent/child-theme properties.
     $info_subtheme->info['base theme'] = 'test_basetheme';
-    $info_basetheme->sub_themes = array('test_subtheme');
+    $info_basetheme->sub_themes = ['test_subtheme'];
 
     $this->assertEquals($this->root . '/core/themes/engines/twig/twig.engine', $info_basetheme->owner);
     $this->assertEquals('twig', $info_basetheme->prefix);
@@ -234,73 +234,73 @@ class ThemeHandlerTest extends UnitTestCase {
    *   An array of theme test data.
    */
   public function providerTestGetBaseThemes() {
-    $data = array();
+    $data = [];
 
     // Tests a theme without any base theme.
-    $themes = array();
-    $themes['test_1'] = (object) array(
+    $themes = [];
+    $themes['test_1'] = (object) [
       'name' => 'test_1',
-      'info' => array(
+      'info' => [
         'name' => 'test_1',
-      ),
-    );
-    $data[] = array($themes, 'test_1', array());
+      ],
+    ];
+    $data[] = [$themes, 'test_1', []];
 
     // Tests a theme with a non existing base theme.
-    $themes = array();
-    $themes['test_1'] = (object) array(
+    $themes = [];
+    $themes['test_1'] = (object) [
       'name' => 'test_1',
-      'info' => array(
+      'info' => [
         'name' => 'test_1',
         'base theme' => 'test_2',
-      ),
-    );
-    $data[] = array($themes, 'test_1', array('test_2' => NULL));
+      ],
+    ];
+    $data[] = [$themes, 'test_1', ['test_2' => NULL]];
 
     // Tests a theme with a single existing base theme.
-    $themes = array();
-    $themes['test_1'] = (object) array(
+    $themes = [];
+    $themes['test_1'] = (object) [
       'name' => 'test_1',
-      'info' => array(
+      'info' => [
         'name' => 'test_1',
         'base theme' => 'test_2',
-      ),
-    );
-    $themes['test_2'] = (object) array(
+      ],
+    ];
+    $themes['test_2'] = (object) [
       'name' => 'test_2',
-      'info' => array(
+      'info' => [
         'name' => 'test_2',
-      ),
-    );
-    $data[] = array($themes, 'test_1', array('test_2' => 'test_2'));
+      ],
+    ];
+    $data[] = [$themes, 'test_1', ['test_2' => 'test_2']];
 
     // Tests a theme with multiple base themes.
-    $themes = array();
-    $themes['test_1'] = (object) array(
+    $themes = [];
+    $themes['test_1'] = (object) [
       'name' => 'test_1',
-      'info' => array(
+      'info' => [
         'name' => 'test_1',
         'base theme' => 'test_2',
-      ),
-    );
-    $themes['test_2'] = (object) array(
+      ],
+    ];
+    $themes['test_2'] = (object) [
       'name' => 'test_2',
-      'info' => array(
+      'info' => [
         'name' => 'test_2',
         'base theme' => 'test_3',
-      ),
-    );
-    $themes['test_3'] = (object) array(
+      ],
+    ];
+    $themes['test_3'] = (object) [
       'name' => 'test_3',
-      'info' => array(
+      'info' => [
         'name' => 'test_3',
-      ),
-    );
-    $data[] = array(
+      ],
+    ];
+    $data[] = [
       $themes,
       'test_1',
-      array('test_2' => 'test_2', 'test_3' => 'test_3'),
-    );
+      ['test_2' => 'test_2', 'test_3' => 'test_3'],
+    ];
 
     return $data;
   }

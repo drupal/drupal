@@ -38,8 +38,8 @@ class User extends Entity {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['restrict_roles'] = array('default' => FALSE);
-    $options['roles'] = array('default' => array());
+    $options['restrict_roles'] = ['default' => FALSE];
+    $options['roles'] = ['default' => []];
 
     return $options;
   }
@@ -51,30 +51,30 @@ class User extends Entity {
     parent::buildOptionsForm($form, $form_state);
     $sanitized_id = ArgumentPluginBase::encodeValidatorId($this->definition['id']);
 
-    $form['restrict_roles'] = array(
+    $form['restrict_roles'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Restrict user based on role'),
       '#default_value' => $this->options['restrict_roles'],
-    );
+    ];
 
-    $form['roles'] = array(
+    $form['roles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Restrict to the selected roles'),
-      '#options' => array_map(array('\Drupal\Component\Utility\Html', 'escape'), user_role_names(TRUE)),
+      '#options' => array_map(['\Drupal\Component\Utility\Html', 'escape'], user_role_names(TRUE)),
       '#default_value' => $this->options['roles'],
       '#description' => $this->t('If no roles are selected, users from any role will be allowed.'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[validate][options][' . $sanitized_id . '][restrict_roles]"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
+      '#states' => [
+        'visible' => [
+          ':input[name="options[validate][options][' . $sanitized_id . '][restrict_roles]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = array()) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = []) {
     // filter trash out of the options so we don't store giant unnecessary arrays
     $options['roles'] = array_filter($options['roles']);
   }

@@ -15,11 +15,11 @@ class ConfigOverrider implements ConfigFactoryOverrideInterface {
    * {@inheritdoc}
    */
   public function loadOverrides($names) {
-    return array(
-      'config_test.dynamic.test_1' => array(
+    return [
+      'config_test.dynamic.test_1' => [
         'label' => 'Overridden label',
-      )
-    );
+      ]
+    ];
   }
 
   /**

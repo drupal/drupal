@@ -14,7 +14,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_schema_test');
+  public static $modules = ['entity_schema_test'];
 
   /**
    * The module handler.
@@ -35,7 +35,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('user', array('users_data'));
+    $this->installSchema('user', ['users_data']);
     $this->moduleHandler = $this->container->get('module_handler');
     $this->database = $this->container->get('database');
   }

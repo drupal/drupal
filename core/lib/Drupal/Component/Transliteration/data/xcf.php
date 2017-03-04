@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'ke', 'keg', 'kekk', 'kegs', 'ken', 'kenj', 'kenh', 'ked', 'kel', 'kelg', 'kelm', 'kelb', 'kels', 'kelt', 'kelp', 'kelh',
   0x10 => 'kem', 'keb', 'kebs', 'kes', 'kess', 'keng', 'kej', 'kech', 'kek', 'ket', 'kep', 'keh', 'kyeo', 'kyeog', 'kyeokk', 'kyeogs',
   0x20 => 'kyeon', 'kyeonj', 'kyeonh', 'kyeod', 'kyeol', 'kyeolg', 'kyeolm', 'kyeolb', 'kyeols', 'kyeolt', 'kyeolp', 'kyeolh', 'kyeom', 'kyeob', 'kyeobs', 'kyeos',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'kyols', 'kyolt', 'kyolp', 'kyolh', 'kyom', 'kyob', 'kyobs', 'kyos', 'kyoss', 'kyong', 'kyoj', 'kyoch', 'kyok', 'kyot', 'kyop', 'kyoh',
   0xE0 => 'ku', 'kug', 'kukk', 'kugs', 'kun', 'kunj', 'kunh', 'kud', 'kul', 'kulg', 'kulm', 'kulb', 'kuls', 'kult', 'kulp', 'kulh',
   0xF0 => 'kum', 'kub', 'kubs', 'kus', 'kuss', 'kung', 'kuj', 'kuch', 'kuk', 'kut', 'kup', 'kuh', 'kwo', 'kwog', 'kwokk', 'kwogs',
-);
+];

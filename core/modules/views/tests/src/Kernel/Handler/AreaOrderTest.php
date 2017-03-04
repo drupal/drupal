@@ -21,14 +21,14 @@ class AreaOrderTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('user', 'block');
+  public static $modules = ['user', 'block'];
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_area_order');
+  public static $testViews = ['test_area_order'];
 
   /**
    * {@inheritdoc}

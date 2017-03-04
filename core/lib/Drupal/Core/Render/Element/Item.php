@@ -17,7 +17,7 @@ class Item extends FormElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    return array(
+    return [
       // Forms that show author fields to both anonymous and authenticated users
       // need to dynamically switch between #type 'textfield' and #type 'item'
       // to automatically take over the authenticated user's information.
@@ -25,8 +25,8 @@ class Item extends FormElement {
       // assigned by Form API based on the #default_value or #value properties.
       '#input' => TRUE,
       '#markup' => '',
-      '#theme_wrappers' => array('form_element'),
-    );
+      '#theme_wrappers' => ['form_element'],
+    ];
   }
 
 }

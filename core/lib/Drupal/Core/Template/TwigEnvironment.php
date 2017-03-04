@@ -42,19 +42,19 @@ class TwigEnvironment extends \Twig_Environment {
    * @param array $options
    *   The options for the Twig environment.
    */
-  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, StateInterface $state, \Twig_LoaderInterface $loader = NULL, $options = array()) {
+  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, StateInterface $state, \Twig_LoaderInterface $loader = NULL, $options = []) {
     // Ensure that twig.engine is loaded, given that it is needed to render a
     // template because functions like TwigExtension::escapeFilter() are called.
     require_once $root . '/core/themes/engines/twig/twig.engine';
 
-    $this->templateClasses = array();
+    $this->templateClasses = [];
 
-    $options += array(
+    $options += [
       // @todo Ensure garbage collection of expired files.
       'cache' => TRUE,
       'debug' => FALSE,
       'auto_reload' => NULL,
-    );
+    ];
     // Ensure autoescaping is always on.
     $options['autoescape'] = 'html';
 
@@ -137,7 +137,7 @@ class TwigEnvironment extends \Twig_Environment {
    *
    * @see \Drupal\Core\Template\Loader\StringLoader::exists()
    */
-  public function renderInline($template_string, array $context = array()) {
+  public function renderInline($template_string, array $context = []) {
     // Prefix all inline templates with a special comment.
     $template_string = '{# inline_template_start #}' . $template_string;
     return Markup::create($this->loadTemplate($template_string, NULL)->render($context));

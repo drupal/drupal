@@ -57,7 +57,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
   /**
    * {@inheritdoc}
    */
-  public function getTypeUri($entity_type, $bundle, $context = array()) {
+  public function getTypeUri($entity_type, $bundle, $context = []) {
     // Per the interface documentation of this method, the returned URI may
     // optionally also serve as the URL of a documentation page about this
     // bundle. However, Drupal does not currently implement such a documentation
@@ -80,7 +80,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
   /**
    * {@inheritdoc}
    */
-  public function getTypeInternalIds($type_uri, $context = array()) {
+  public function getTypeInternalIds($type_uri, $context = []) {
     $types = $this->getTypes($context);
     if (isset($types[$type_uri])) {
       return $types[$type_uri];
@@ -98,7 +98,7 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
    *   An array of typed data ids (entity_type and bundle) keyed by
    *   corresponding type URI.
    */
-  protected function getTypes($context = array()) {
+  protected function getTypes($context = []) {
     $cid = 'hal:links:types';
     $cache = $this->cache->get($cid);
     if (!$cache) {
@@ -120,8 +120,8 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
    *   An array of typed data ids (entity_type and bundle) keyed by
    *   corresponding type URI.
    */
-  protected function writeCache($context = array()) {
-    $data = array();
+  protected function writeCache($context = []) {
+    $data = [];
 
     // Type URIs correspond to bundles. Iterate through the bundles to get the
     // URI and data for them.
@@ -135,15 +135,15 @@ class TypeLinkManager extends LinkManagerBase implements TypeLinkManagerInterfac
       foreach ($bundles as $bundle => $bundle_info) {
         // Get a type URI for the bundle.
         $bundle_uri = $this->getTypeUri($entity_type_id, $bundle, $context);
-        $data[$bundle_uri] = array(
+        $data[$bundle_uri] = [
           'entity_type' => $entity_type_id,
           'bundle' => $bundle,
-        );
+        ];
       }
     }
     // These URIs only change when entity info changes, so cache it permanently
     // and only clear it when entity_info is cleared.
-    $this->cache->set('hal:links:types', $data, Cache::PERMANENT, array('entity_types'));
+    $this->cache->set('hal:links:types', $data, Cache::PERMANENT, ['entity_types']);
     return $data;
   }
 

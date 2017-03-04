@@ -19,7 +19,7 @@ class ViewsBlock implements ContainerDeriverInterface {
    *
    * @var array
    */
-  protected $derivatives = array();
+  protected $derivatives = [];
 
   /**
    * The base plugin ID.
@@ -101,15 +101,15 @@ class ViewsBlock implements ContainerDeriverInterface {
             }
           }
 
-          $this->derivatives[$delta] = array(
+          $this->derivatives[$delta] = [
             'category' => $display->getOption('block_category'),
             'admin_label' => $admin_label,
-            'config_dependencies' => array(
-              'config' => array(
+            'config_dependencies' => [
+              'config' => [
                 $view->getConfigDependencyName(),
-              ),
-            ),
-          );
+              ],
+            ],
+          ];
 
           // Look for arguments and expose them as context.
           foreach ($display->getHandlers('argument') as $argument_name => $argument) {

@@ -51,7 +51,7 @@ class Iterator extends ProcessPluginBase {
    *   The transformed key.
    */
   protected function transformKey($key, MigrateExecutableInterface $migrate_executable, Row $row) {
-    $process = array('key' => $this->configuration['key']);
+    $process = ['key' => $this->configuration['key']];
     $migrate_executable->processRow($row, $process, $key);
     return $row->getDestinationProperty('key');
   }

@@ -11,12 +11,12 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LanguageBlockSettingsVisibilityTest extends BrowserTestBase {
 
-  public static $modules = array('block', 'language');
+  public static $modules = ['block', 'language'];
 
   public function testUnnecessaryLanguageSettingsVisibility() {
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'administer blocks'));
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'administer blocks']);
     $this->drupalLogin($admin_user);
-    $this->drupalPostForm('admin/config/regional/language/add', array('predefined_langcode' => 'hu'), t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'hu'], t('Add language'));
     $this->drupalGet('admin/structure/block/add/system_menu_block:admin/stark');
     $this->assertNoFieldByXPath('//input[@id="edit-visibility-language-langcodes-und"]', NULL, '\'Not specified\' option does not appear at block config, language settings section.');
     $this->assertNoFieldByXpath('//input[@id="edit-visibility-language-langcodes-zxx"]', NULL, '\'Not applicable\' option does not appear at block config, language settings section.');

@@ -16,7 +16,7 @@ class LanguageSelectorTranslatableTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'language',
     'content_translation',
     'node',
@@ -24,7 +24,7 @@ class LanguageSelectorTranslatableTest extends WebTestBase {
     'field_ui',
     'entity_test',
     'locale',
-  );
+  ];
 
   /**
    * The user with administrator privileges.
@@ -49,13 +49,13 @@ class LanguageSelectorTranslatableTest extends WebTestBase {
    */
   protected function getAdministratorPermissions() {
     return array_filter(
-      array('translate interface',
+      ['translate interface',
         'administer content translation',
         'create content translations',
         'update content translations',
         'delete content translations',
         'administer languages',
-      )
+      ]
     );
   }
 
@@ -64,7 +64,7 @@ class LanguageSelectorTranslatableTest extends WebTestBase {
    */
   public function testLanguageStringSelector() {
     // Add another language.
-    $edit = array('predefined_langcode' => 'es');
+    $edit = ['predefined_langcode' => 'es'];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Translate the string English in Spanish (Inglés). Override config entity.
@@ -79,7 +79,7 @@ class LanguageSelectorTranslatableTest extends WebTestBase {
     $this->drupalGet($path);
 
     // Get en language from selector.
-    $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => 'edit-settings-user-user-settings-language-langcode', ':option' => 'en'));
+    $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => 'edit-settings-user-user-settings-language-langcode', ':option' => 'en']);
 
     // Check that the language text is translated.
     $this->assertEqual((string) $elements[0], $name_translation, 'Checking the option string English is translated to Spanish.');

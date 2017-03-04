@@ -39,7 +39,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('language', 'simpletest', 'common_test', 'system');
+  public static $modules = ['language', 'simpletest', 'common_test', 'system'];
 
   /**
    * {@inheritdoc}
@@ -57,10 +57,10 @@ class AttachedAssetsTest extends KernelTestBase {
    */
   function testDefault() {
     $assets = new AttachedAssets();
-    $this->assertEqual(array(), $this->assetResolver->getCssAssets($assets, FALSE), 'Default CSS is empty.');
+    $this->assertEqual([], $this->assetResolver->getCssAssets($assets, FALSE), 'Default CSS is empty.');
     list($js_assets_header, $js_assets_footer) = $this->assetResolver->getJsAssets($assets, FALSE);
-    $this->assertEqual(array(), $js_assets_header, 'Default header JavaScript is empty.');
-    $this->assertEqual(array(), $js_assets_footer, 'Default footer JavaScript is empty.');
+    $this->assertEqual([], $js_assets_header, 'Default header JavaScript is empty.');
+    $this->assertEqual([], $js_assets_footer, 'Default footer JavaScript is empty.');
   }
 
   /**
@@ -187,7 +187,7 @@ class AttachedAssetsTest extends KernelTestBase {
    * Tests JavaScript settings.
    */
   function testSettings() {
-    $build = array();
+    $build = [];
     $build['#attached']['library'][] = 'core/drupalSettings';
     // Nonsensical value to verify if it's possible to override path settings.
     $build['#attached']['drupalSettings']['path']['pathPrefix'] = 'yarhar';
@@ -311,12 +311,12 @@ class AttachedAssetsTest extends KernelTestBase {
     $js = $this->assetResolver->getJsAssets($assets, FALSE)[1];
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
     $rendered_js = $this->renderer->renderPlain($js_render_array);
-    $matches = array();
+    $matches = [];
     if (preg_match_all('/weight_([-0-9]+_[0-9]+)/', $rendered_js, $matches)) {
       $result = $matches[1];
     }
     else {
-      $result = array();
+      $result = [];
     }
     $this->assertIdentical($result, $expected_order_js, 'JavaScript is added in the expected weight order.');
 
@@ -353,12 +353,12 @@ class AttachedAssetsTest extends KernelTestBase {
     $css = $this->assetResolver->getCssAssets($assets, FALSE);
     $css_render_array = \Drupal::service('asset.css.collection_renderer')->render($css);
     $rendered_css = $this->renderer->renderPlain($css_render_array);
-    $matches = array();
+    $matches = [];
     if (preg_match_all('/([a-z]+)_weight_([-0-9]+_[0-9]+)/', $rendered_css, $matches)) {
       $result = $matches[0];
     }
     else {
-      $result = array();
+      $result = [];
     }
     $this->assertIdentical($result, $expected_order_css, 'CSS is added in the expected weight order.');
   }

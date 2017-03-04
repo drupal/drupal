@@ -16,7 +16,7 @@ class UserBlocksTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'views');
+  public static $modules = ['block', 'views'];
 
   /**
    * A user with the 'administer blocks' permission.
@@ -28,7 +28,7 @@ class UserBlocksTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(array('administer blocks'));
+    $this->adminUser = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('user_login_block');
     $this->drupalLogout($this->adminUser);
@@ -63,10 +63,10 @@ class UserBlocksTest extends WebTestBase {
    */
   function testUserLoginBlock() {
     // Create a user with some permission that anonymous users lack.
-    $user = $this->drupalCreateUser(array('administer permissions'));
+    $user = $this->drupalCreateUser(['administer permissions']);
 
     // Log in using the block.
-    $edit = array();
+    $edit = [];
     $edit['name'] = $user->getUsername();
     $edit['pass'] = $user->pass_raw;
     $this->drupalPostForm('admin/people/permissions', $edit, t('Log in'));
@@ -84,14 +84,14 @@ class UserBlocksTest extends WebTestBase {
     // Check that the user login block is not vulnerable to information
     // disclosure to third party sites.
     $this->drupalLogout();
-    $this->drupalPostForm('http://example.com/', $edit, t('Log in'), array('external' => FALSE));
+    $this->drupalPostForm('http://example.com/', $edit, t('Log in'), ['external' => FALSE]);
     // Check that we remain on the site after login.
     $this->assertUrl($user->url('canonical', ['absolute' => TRUE]), [], 'Redirected to user profile page after login from the frontpage');
 
     // Verify that form validation errors are displayed immediately for forms
     // in blocks and not on subsequent page requests.
     $this->drupalLogout();
-    $edit = array();
+    $edit = [];
     $edit['name'] = 'foo';
     $edit['pass'] = 'invalid password';
     $this->drupalPostForm('filter/tips', $edit, t('Log in'));
@@ -107,9 +107,9 @@ class UserBlocksTest extends WebTestBase {
     $block = $this->drupalPlaceBlock('views_block:who_s_online-who_s_online_block');
 
     // Generate users.
-    $user1 = $this->drupalCreateUser(array('access user profiles'));
-    $user2 = $this->drupalCreateUser(array());
-    $user3 = $this->drupalCreateUser(array());
+    $user1 = $this->drupalCreateUser(['access user profiles']);
+    $user2 = $this->drupalCreateUser([]);
+    $user3 = $this->drupalCreateUser([]);
 
     // Update access of two users to be within the active timespan.
     $this->updateAccess($user1->id());
@@ -138,7 +138,7 @@ class UserBlocksTest extends WebTestBase {
   private function updateAccess($uid, $access = REQUEST_TIME) {
     db_update('users_field_data')
       ->condition('uid', $uid)
-      ->fields(array('access' => $access))
+      ->fields(['access' => $access])
       ->execute();
   }
 

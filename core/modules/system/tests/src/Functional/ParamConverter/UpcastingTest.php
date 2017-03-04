@@ -12,7 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  */
 class UpcastingTest extends BrowserTestBase {
 
-  public static $modules = array('paramconverter_test', 'node', 'language');
+  public static $modules = ['paramconverter_test', 'node', 'language'];
 
   /**
    * Confirms that all parameters are converted as expected.
@@ -25,8 +25,8 @@ class UpcastingTest extends BrowserTestBase {
    * happening.
    */
   public function testUpcasting() {
-    $node = $this->drupalCreateNode(array('title' => $this->randomMachineName(8)));
-    $user = $this->drupalCreateUser(array('access content'));
+    $node = $this->drupalCreateNode(['title' => $this->randomMachineName(8)]);
+    $user = $this->drupalCreateUser(['access content']);
     $foo = 'bar';
 
     // paramconverter_test/test_user_node_foo/{user}/{node}/{foo}
@@ -48,8 +48,8 @@ class UpcastingTest extends BrowserTestBase {
    * Confirms we can upcast to controller arguments of the same type.
    */
   public function testSameTypes() {
-    $node = $this->drupalCreateNode(array('title' => $this->randomMachineName(8)));
-    $parent = $this->drupalCreateNode(array('title' => $this->randomMachineName(8)));
+    $node = $this->drupalCreateNode(['title' => $this->randomMachineName(8)]);
+    $parent = $this->drupalCreateNode(['title' => $this->randomMachineName(8)]);
     // paramconverter_test/node/{node}/set/parent/{parent}
     // options.parameters.parent.type = entity:node
     $this->drupalGet("paramconverter_test/node/" . $node->id() . "/set/parent/" . $parent->id());
@@ -63,19 +63,19 @@ class UpcastingTest extends BrowserTestBase {
     $language = ConfigurableLanguage::createFromLangcode('de');
     $language->save();
     \Drupal::configFactory()->getEditable('language.negotiation')
-      ->set('url.prefixes', array('de' => 'de'))
+      ->set('url.prefixes', ['de' => 'de'])
       ->save();
 
     // The container must be recreated after adding a new language.
     $this->rebuildContainer();
 
-    $node = $this->drupalCreateNode(array('title' => 'English label'));
+    $node = $this->drupalCreateNode(['title' => 'English label']);
     $translation = $node->addTranslation('de');
     $translation->setTitle('Deutscher Titel')->save();
 
     $this->drupalGet("/paramconverter_test/node/" . $node->id() . "/test_language");
     $this->assertRaw("English label");
-    $this->drupalGet("paramconverter_test/node/" . $node->id() . "/test_language", array('language' => $language));
+    $this->drupalGet("paramconverter_test/node/" . $node->id() . "/test_language", ['language' => $language]);
     $this->assertRaw("Deutscher Titel");
   }
 

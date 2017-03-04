@@ -57,10 +57,10 @@ function locale_test_locale_translation_projects_alter(&$projects) {
     $remote_url = $url . PublicStream::basePath() . '/remote/';
 
     // Completely replace the project data with a set of test projects.
-    $projects = array(
-      'contrib_module_one' => array(
+    $projects = [
+      'contrib_module_one' => [
         'name' => 'contrib_module_one',
-        'info' => array(
+        'info' => [
           'name' => 'Contributed module one',
           'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
           'package' => 'Other',
@@ -68,14 +68,14 @@ function locale_test_locale_translation_projects_alter(&$projects) {
           'project' => 'contrib_module_one',
           'datestamp' => '1344471537',
           '_info_file_ctime' => 1348767306,
-        ),
+        ],
         'datestamp' => '1344471537',
         'project_type' => 'module',
         'project_status' => TRUE,
-      ),
-      'contrib_module_two' => array(
+      ],
+      'contrib_module_two' => [
         'name' => 'contrib_module_two',
-        'info' => array(
+        'info' => [
           'name' => 'Contributed module two',
           'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
           'package' => 'Other',
@@ -83,14 +83,14 @@ function locale_test_locale_translation_projects_alter(&$projects) {
           'project' => 'contrib_module_two',
           'datestamp' => '1344471537',
           '_info_file_ctime' => 1348767306,
-        ),
+        ],
         'datestamp' => '1344471537',
         'project_type' => 'module',
         'project_status' => TRUE,
-      ),
-      'contrib_module_three' => array(
+      ],
+      'contrib_module_three' => [
         'name' => 'contrib_module_three',
-        'info' => array(
+        'info' => [
           'name' => 'Contributed module three',
           'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
           'package' => 'Other',
@@ -98,14 +98,14 @@ function locale_test_locale_translation_projects_alter(&$projects) {
           'project' => 'contrib_module_three',
           'datestamp' => '1344471537',
           '_info_file_ctime' => 1348767306,
-        ),
+        ],
         'datestamp' => '1344471537',
         'project_type' => 'module',
         'project_status' => TRUE,
-      ),
-      'locale_test' => array(
+      ],
+      'locale_test' => [
         'name' => 'locale_test',
-        'info' => array(
+        'info' => [
           'name' => 'Locale test',
           'interface translation project' => 'locale_test',
           'interface translation server pattern' => 'core/modules/locale/tests/test.%language.po',
@@ -114,14 +114,14 @@ function locale_test_locale_translation_projects_alter(&$projects) {
           'project' => 'locale_test',
           '_info_file_ctime' => 1348767306,
           'datestamp' => 0,
-        ),
+        ],
         'datestamp' => 0,
         'project_type' => 'module',
         'project_status' => TRUE,
-      ),
-      'custom_module_one' => array(
+      ],
+      'custom_module_one' => [
         'name' => 'custom_module_one',
-        'info' => array(
+        'info' => [
           'name' => 'Custom module one',
           'interface translation project' => 'custom_module_one',
           'interface translation server pattern' => 'translations://custom_module_one.%language.po',
@@ -130,12 +130,12 @@ function locale_test_locale_translation_projects_alter(&$projects) {
           'project' => 'custom_module_one',
           '_info_file_ctime' => 1348767306,
           'datestamp' => 0,
-        ),
+        ],
         'datestamp' => 0,
         'project_type' => 'module',
         'project_status' => TRUE,
-      ),
-    );
+      ],
+    ];
   }
 }
 

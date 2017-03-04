@@ -23,13 +23,13 @@ class ToolbarHookToolbarTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('toolbar', 'toolbar_test', 'test_page_test');
+  public static $modules = ['toolbar', 'toolbar_test', 'test_page_test'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create an administrative user and log it in.
-    $this->adminUser = $this->drupalCreateUser(array('access toolbar'));
+    $this->adminUser = $this->drupalCreateUser(['access toolbar']);
     $this->drupalLogin($this->adminUser);
   }
 

@@ -30,20 +30,20 @@ class Color extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
+    return [
       '#input' => TRUE,
-      '#process' => array(
-        array($class, 'processAjaxForm'),
-      ),
-      '#element_validate' => array(
-        array($class, 'validateColor'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderColor'),
-      ),
+      '#process' => [
+        [$class, 'processAjaxForm'],
+      ],
+      '#element_validate' => [
+        [$class, 'validateColor'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderColor'],
+      ],
       '#theme' => 'input__color',
-      '#theme_wrappers' => array('form_element'),
-    );
+      '#theme_wrappers' => ['form_element'],
+    ];
   }
 
   /**
@@ -63,7 +63,7 @@ class Color extends FormElement {
         $form_state->setValueForElement($element, ColorUtility::rgbToHex(ColorUtility::hexToRgb($value)));
       }
       catch (\InvalidArgumentException $e) {
-        $form_state->setError($element, t('%name must be a valid color.', array('%name' => empty($element['#title']) ? $element['#parents'][0] : $element['#title'])));
+        $form_state->setError($element, t('%name must be a valid color.', ['%name' => empty($element['#title']) ? $element['#parents'][0] : $element['#title']]));
       }
     }
   }
@@ -80,8 +80,8 @@ class Color extends FormElement {
    */
   public static function preRenderColor($element) {
     $element['#attributes']['type'] = 'color';
-    Element::setAttributes($element, array('id', 'name', 'value'));
-    static::setAttributes($element, array('form-color'));
+    Element::setAttributes($element, ['id', 'name', 'value']);
+    static::setAttributes($element, ['form-color']);
 
     return $element;
   }

@@ -70,9 +70,9 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *   on the content of the dialog. If left empty, the settings will be
    *   populated automatically from the current request.
    */
-  public function __construct($selector, $title, $content, array $dialog_options = array(), $settings = NULL) {
+  public function __construct($selector, $title, $content, array $dialog_options = [], $settings = NULL) {
     $title = PlainTextOutput::renderFromHtml($title);
-    $dialog_options += array('title' => $title);
+    $dialog_options += ['title' => $title];
     $this->selector = $selector;
     $this->content = $content;
     $this->dialogOptions = $dialog_options;
@@ -128,13 +128,13 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
   public function render() {
     // For consistency ensure the modal option is set to TRUE or FALSE.
     $this->dialogOptions['modal'] = isset($this->dialogOptions['modal']) && $this->dialogOptions['modal'];
-    return array(
+    return [
       'command' => 'openDialog',
       'selector' => $this->selector,
       'settings' => $this->settings,
       'data' => $this->getRenderedContent(),
       'dialogOptions' => $this->dialogOptions,
-    );
+    ];
   }
 
 }

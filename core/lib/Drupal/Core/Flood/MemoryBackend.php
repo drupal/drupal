@@ -19,7 +19,7 @@ class MemoryBackend implements FloodInterface {
   /**
    * An array holding flood events, keyed by event name and identifier.
    */
-  protected $events = array();
+  protected $events = [];
 
   /**
    * Construct the MemoryBackend.

@@ -53,12 +53,12 @@ class ToolbarAdminMenuTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'block', 'menu_ui', 'user', 'taxonomy', 'toolbar', 'language', 'test_page_test', 'locale');
+  public static $modules = ['node', 'block', 'menu_ui', 'user', 'taxonomy', 'toolbar', 'language', 'test_page_test', 'locale'];
 
   protected function setUp() {
     parent::setUp();
 
-    $perms = array(
+    $perms = [
       'access toolbar',
       'access administration pages',
       'administer site configuration',
@@ -75,7 +75,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
       'administer taxonomy',
       'administer languages',
       'translate interface',
-    );
+    ];
 
     // Create an administrative user and log it in.
     $this->adminUser = $this->drupalCreateUser($perms);
@@ -99,11 +99,11 @@ class ToolbarAdminMenuTest extends WebTestBase {
    */
   function testModuleStatusChangeSubtreesHashCacheClear() {
     // Uninstall a module.
-    $edit = array();
+    $edit = [];
     $edit['uninstall[taxonomy]'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
     // Confirm the uninstall form.
-    $this->drupalPostForm(NULL, array(), t('Uninstall'));
+    $this->drupalPostForm(NULL, [], t('Uninstall'));
     $this->rebuildContainer();
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -111,7 +111,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $this->assertDifferentHash();
 
     // Enable a module.
-    $edit = array();
+    $edit = [];
     $edit['modules[taxonomy][enable]'] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, t('Install'));
     $this->rebuildContainer();
@@ -129,7 +129,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $admin_menu_link_id = 'system.admin_config_development';
 
     // Disable the link.
-    $edit = array();
+    $edit = [];
     $edit['enabled'] = FALSE;
     $this->drupalPostForm("admin/structure/menu/link/" . $admin_menu_link_id . "/edit", $edit, t('Save'));
     $this->assertResponse(200);
@@ -150,7 +150,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     unset($all_rids[array_search(RoleInterface::AUTHENTICATED_ID, $all_rids)]);
     $rid = reset($all_rids);
 
-    $edit = array();
+    $edit = [];
     $edit[$rid . '[administer taxonomy]'] = FALSE;
     $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
 
@@ -179,10 +179,10 @@ class ToolbarAdminMenuTest extends WebTestBase {
 
     $this->hash = $this->getSubtreesHash();
 
-    $rid = $this->drupalCreateRole(array('administer content types',));
+    $rid = $this->drupalCreateRole(['administer content types',]);
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $this->adminUser->id() . '/edit', array("roles[$rid]" => $rid), t('Save'));
+    $this->drupalPostForm('user/' . $this->adminUser->id() . '/edit', ["roles[$rid]" => $rid], t('Save'));
     $this->assertText(t('The changes have been saved.'));
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -214,7 +214,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
 
     // adminUser2 will add a role to adminUser.
     $this->drupalLogin($this->adminUser2);
-    $rid = $this->drupalCreateRole(array('administer content types',));
+    $rid = $this->drupalCreateRole(['administer content types',]);
 
     // Get the subtree hash for adminUser2 to check later that it has not
     // changed. Request a new page to refresh the drupalSettings object.
@@ -223,7 +223,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $admin_user_2_hash = $this->getSubtreesHash();
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $admin_user_id . '/edit', array("roles[$rid]" => $rid), t('Save'));
+    $this->drupalPostForm('user/' . $admin_user_id . '/edit', ["roles[$rid]" => $rid], t('Save'));
     $this->assertText(t('The changes have been saved.'));
 
     // Log in adminUser and assert that the subtrees hash has changed.
@@ -246,7 +246,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
   function testLocaleTranslationSubtreesHashCacheClear() {
     $admin_user = $this->adminUser;
     // User to translate and delete string.
-    $translate_user = $this->drupalCreateUser(array('translate interface', 'access administration pages'));
+    $translate_user = $this->drupalCreateUser(['translate interface', 'access administration pages']);
 
     // Create a new language with the langcode 'xx'.
     $langcode = 'xx';
@@ -257,14 +257,14 @@ class ToolbarAdminMenuTest extends WebTestBase {
 
     // Add custom language.
     $this->drupalLogin($admin_user);
-    $edit = array(
+    $edit = [
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
-    t($name, array(), array('langcode' => $langcode));
+    t($name, [], ['langcode' => $langcode]);
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
     $this->assertRaw('"edit-languages-' . $langcode . '-weight"', 'Language code found.');
@@ -285,11 +285,11 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // should create a new menu hash if the toolbar subtrees cache is correctly
     // invalidated.
     $this->drupalLogin($translate_user);
-    $search = array(
+    $search = [
       'string' => 'Search and metadata',
       'langcode' => $langcode,
       'translation' => 'untranslated',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available'));
     $this->assertText($name, 'Search found the string as untranslated.');
@@ -298,9 +298,9 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // Translate the string to a random string.
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
-    $edit = array(
+    $edit = [
       $lid => $translation,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
     $this->assertText(t('The strings have been saved.'), 'The strings have been saved.');
     $this->assertUrl(\Drupal::url('locale.translate_page', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
@@ -350,7 +350,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $this->rebuildContainer();
 
     // Get a page with the new language langcode in the URL.
-    $this->drupalGet('test-page', array('language' => $language));
+    $this->drupalGet('test-page', ['language' => $language]);
     // Assert different hash.
     $new_subtree_hash = $this->getSubtreesHash();
 

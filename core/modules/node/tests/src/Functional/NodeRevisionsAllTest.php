@@ -20,13 +20,13 @@ class NodeRevisionsAllTest extends NodeTestBase {
 
     // Create and log in user.
     $web_user = $this->drupalCreateUser(
-      array(
+      [
         'view page revisions',
         'revert page revisions',
         'delete page revisions',
         'edit any page content',
         'delete any page content'
-      )
+      ]
     );
     $this->drupalLogin($web_user);
 
@@ -36,8 +36,8 @@ class NodeRevisionsAllTest extends NodeTestBase {
     $settings = get_object_vars($node);
     $settings['revision'] = 1;
 
-    $nodes = array();
-    $logs = array();
+    $nodes = [];
+    $logs = [];
 
     // Get the original node.
     $nodes[] = clone $node;
@@ -67,10 +67,10 @@ class NodeRevisionsAllTest extends NodeTestBase {
   protected function createNodeRevision(NodeInterface $node) {
     // Create revision with a random title and body and update variables.
     $node->title = $this->randomMachineName();
-    $node->body = array(
+    $node->body = [
       'value' => $this->randomMachineName(32),
       'format' => filter_default_format(),
-    );
+    ];
     $node->setNewRevision();
     $node->save();
 
@@ -90,13 +90,13 @@ class NodeRevisionsAllTest extends NodeTestBase {
 
     // Create and log in user.
     $content_admin = $this->drupalCreateUser(
-      array(
+      [
         'view all revisions',
         'revert all revisions',
         'delete all revisions',
         'edit any page content',
         'delete any page content'
-      )
+      ]
     );
     $this->drupalLogin($content_admin);
 
@@ -115,15 +115,15 @@ class NodeRevisionsAllTest extends NodeTestBase {
     $this->assertTrue($node->isDefaultRevision(), 'Third node revision is the current one.');
 
     // Confirm that revisions revert properly.
-    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/revert", array(), t('Revert'));
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/revert", [], t('Revert'));
     $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.',
-      array(
+      [
         '@type' => 'Basic page',
         '%title' => $nodes[1]->getTitle(),
         '%revision-date' => format_date($nodes[1]->getRevisionCreationTime())
-      )),
+      ]),
       'Revision reverted.');
-    $node_storage->resetCache(array($node->id()));
+    $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());
     $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
 
@@ -132,16 +132,16 @@ class NodeRevisionsAllTest extends NodeTestBase {
     $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the current one.');
 
     // Confirm revisions delete properly.
-    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", array(), t('Delete'));
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], t('Delete'));
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
-      array(
+      [
         '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
         '@type' => 'Basic page',
         '%title' => $nodes[1]->getTitle(),
-      )),
+      ]),
       'Revision deleted.');
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid',
-      array(':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()))->fetchField() == 0,
+      [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0,
       'Revision not found.');
 
     // Set the revision timestamp to an older date to make sure that the
@@ -149,16 +149,16 @@ class NodeRevisionsAllTest extends NodeTestBase {
     $old_revision_date = REQUEST_TIME - 86400;
     db_update('node_revision')
       ->condition('vid', $nodes[2]->getRevisionId())
-      ->fields(array(
+      ->fields([
         'revision_timestamp' => $old_revision_date,
-      ))
+      ])
       ->execute();
-    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert", array(), t('Revert'));
-    $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', array(
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert", [], t('Revert'));
+    $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
       '@type' => 'Basic page',
       '%title' => $nodes[2]->getTitle(),
       '%revision-date' => format_date($old_revision_date),
-    )));
+    ]));
 
     // Create 50 more revisions in order to trigger paging on the revisions
     // overview screen.

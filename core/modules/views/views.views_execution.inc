@@ -18,10 +18,10 @@ use Drupal\views\Plugin\views\PluginBase;
  *   \Drupal\views\Plugin\views\PluginBase::listLanguages().
  */
 function views_views_query_substitutions(ViewExecutable $view) {
-  $substitutions = array(
+  $substitutions = [
     '***CURRENT_VERSION***' => \Drupal::VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
-  ) + PluginBase::queryLanguageSubstitutions();
+  ] + PluginBase::queryLanguageSubstitutions();
 
   return $substitutions;
 }

@@ -17,7 +17,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
    *
    * @var \Drupal\node\NodeInterface[]
    */
-  protected $searchableNodes = array();
+  protected $searchableNodes = [];
 
   /**
    * Node search plugin.
@@ -26,14 +26,14 @@ class SearchMultilingualEntityTest extends SearchTestBase {
    */
   protected $plugin;
 
-  public static $modules = array('language', 'locale', 'comment');
+  public static $modules = ['language', 'locale', 'comment'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create a user who can administer search, do searches, see the status
     // report, and administer cron. Log in.
-    $user = $this->drupalCreateUser(array('administer search', 'search content', 'use advanced search', 'access content', 'access site reports', 'administer site configuration'));
+    $user = $this->drupalCreateUser(['administer search', 'search content', 'use advanced search', 'access content', 'access site reports', 'administer site configuration']);
     $this->drupalLogin($user);
 
     // Set up the search plugin.
@@ -56,53 +56,53 @@ class SearchMultilingualEntityTest extends SearchTestBase {
 
     // Create a few page nodes with multilingual body values.
     $default_format = filter_default_format();
-    $nodes = array(
-      array(
+    $nodes = [
+      [
         'title' => 'First node en',
         'type' => 'page',
-        'body' => array(array('value' => $this->randomMachineName(32), 'format' => $default_format)),
+        'body' => [['value' => $this->randomMachineName(32), 'format' => $default_format]],
         'langcode' => 'en',
-      ),
-      array(
+      ],
+      [
         'title' => 'Second node this is the English title',
         'type' => 'page',
-        'body' => array(array('value' => $this->randomMachineName(32), 'format' => $default_format)),
+        'body' => [['value' => $this->randomMachineName(32), 'format' => $default_format]],
         'langcode' => 'en',
-      ),
-      array(
+      ],
+      [
         'title' => 'Third node en',
         'type' => 'page',
-        'body' => array(array('value' => $this->randomMachineName(32), 'format' => $default_format)),
+        'body' => [['value' => $this->randomMachineName(32), 'format' => $default_format]],
         'langcode' => 'en',
-      ),
+      ],
       // After the third node, we don't care what the settings are. But we
       // need to have at least 5 to make sure the throttling is working
       // correctly. So, let's make 8 total.
-      array(
-      ),
-      array(
-      ),
-      array(
-      ),
-      array(
-      ),
-      array(
-      ),
-    );
-    $this->searchableNodes = array();
+      [
+      ],
+      [
+      ],
+      [
+      ],
+      [
+      ],
+      [
+      ],
+    ];
+    $this->searchableNodes = [];
     foreach ($nodes as $setting) {
       $this->searchableNodes[] = $this->drupalCreateNode($setting);
     }
 
     // Add a single translation to the second node.
-    $translation = $this->searchableNodes[1]->addTranslation('hu', array('title' => 'Second node hu'));
+    $translation = $this->searchableNodes[1]->addTranslation('hu', ['title' => 'Second node hu']);
     $translation->body->value = $this->randomMachineName(32);
     $this->searchableNodes[1]->save();
 
     // Add two translations to the third node.
-    $translation = $this->searchableNodes[2]->addTranslation('hu', array('title' => 'Third node this is the Hungarian title'));
+    $translation = $this->searchableNodes[2]->addTranslation('hu', ['title' => 'Third node this is the Hungarian title']);
     $translation->body->value = $this->randomMachineName(32);
-    $translation = $this->searchableNodes[2]->addTranslation('sv', array('title' => 'Third node sv'));
+    $translation = $this->searchableNodes[2]->addTranslation('sv', ['title' => 'Third node sv']);
     $translation->body->value = $this->randomMachineName(32);
     $this->searchableNodes[2]->save();
 
@@ -132,7 +132,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
 
     // Now index the rest of the nodes.
     // Make sure index throttle is high enough, via the UI.
-    $this->drupalPostForm('admin/config/search/pages', array('cron_limit' => 20), t('Save configuration'));
+    $this->drupalPostForm('admin/config/search/pages', ['cron_limit' => 20], t('Save configuration'));
     $this->assertEqual(20, $this->config('search.settings')->get('index.cron_limit', 100), 'Config setting was saved correctly');
     // Get a new search plugin, to make sure it has this setting.
     $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
@@ -143,8 +143,8 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $this->assertDatabaseCounts(8, 0, 'after updating fully');
 
     // Click the reindex button on the admin page, verify counts, and reindex.
-    $this->drupalPostForm('admin/config/search/pages', array(), t('Re-index site'));
-    $this->drupalPostForm(NULL, array(), t('Re-index site'));
+    $this->drupalPostForm('admin/config/search/pages', [], t('Re-index site'));
+    $this->drupalPostForm(NULL, [], t('Re-index site'));
     $this->assertIndexCounts(8, 8, 'after reindex');
     $this->assertDatabaseCounts(8, 0, 'after reindex');
     $this->plugin->updateIndex();
@@ -153,30 +153,30 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     // Test search results.
 
     // This should find two results for the second and third node.
-    $this->plugin->setSearch('English OR Hungarian', array(), array());
+    $this->plugin->setSearch('English OR Hungarian', [], []);
     $search_result = $this->plugin->execute();
     $this->assertEqual(count($search_result), 2, 'Found two results.');
     // Nodes are saved directly after each other and have the same created time
     // so testing for the order is not possible.
-    $results = array($search_result[0]['title'], $search_result[1]['title']);
+    $results = [$search_result[0]['title'], $search_result[1]['title']];
     $this->assertTrue(in_array('Third node this is the Hungarian title', $results), 'The search finds the correct Hungarian title.');
     $this->assertTrue(in_array('Second node this is the English title', $results), 'The search finds the correct English title.');
 
     // Now filter for Hungarian results only.
-    $this->plugin->setSearch('English OR Hungarian', array('f' => array('language:hu')), array());
+    $this->plugin->setSearch('English OR Hungarian', ['f' => ['language:hu']], []);
     $search_result = $this->plugin->execute();
 
     $this->assertEqual(count($search_result), 1, 'The search found only one result');
     $this->assertEqual($search_result[0]['title'], 'Third node this is the Hungarian title', 'The search finds the correct Hungarian title.');
 
     // Test for search with common key word across multiple languages.
-    $this->plugin->setSearch('node', array(), array());
+    $this->plugin->setSearch('node', [], []);
     $search_result = $this->plugin->execute();
 
     $this->assertEqual(count($search_result), 6, 'The search found total six results');
 
     // Test with language filters and common key word.
-    $this->plugin->setSearch('node', array('f' => array('language:hu')), array());
+    $this->plugin->setSearch('node', ['f' => ['language:hu']], []);
     $search_result = $this->plugin->execute();
 
     $this->assertEqual(count($search_result), 2, 'The search found 2 results');
@@ -207,14 +207,14 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $current = REQUEST_TIME;
     $old = $current - 10;
     db_update('search_dataset')
-      ->fields(array('reindex' => $old))
+      ->fields(['reindex' => $old])
       ->condition('reindex', $current, '>=')
       ->execute();
 
     // Save the node again. Verify that the request time on it is not updated.
     $this->searchableNodes[1]->save();
     $result = db_select('search_dataset', 'd')
-      ->fields('d', array('reindex'))
+      ->fields('d', ['reindex'])
       ->condition('type', 'node_search')
       ->condition('sid', $this->searchableNodes[1]->id())
       ->execute()
@@ -302,7 +302,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
   protected function assertDatabaseCounts($count_node, $count_foo, $message) {
     // Count number of distinct nodes by ID.
     $results = db_select('search_dataset', 'i')
-      ->fields('i', array('sid'))
+      ->fields('i', ['sid'])
       ->condition('type', 'node_search')
       ->groupBy('sid')
       ->execute()
@@ -311,7 +311,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
 
     // Count number of "foo" records.
     $results = db_select('search_dataset', 'i')
-      ->fields('i', array('sid'))
+      ->fields('i', ['sid'])
       ->condition('type', 'foo')
       ->execute()
       ->fetchCol();

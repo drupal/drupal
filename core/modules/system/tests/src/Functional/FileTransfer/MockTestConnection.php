@@ -7,7 +7,7 @@ namespace Drupal\Tests\system\Functional\FileTransfer;
  */
 class MockTestConnection {
 
-  protected $commandsRun = array();
+  protected $commandsRun = [];
   public $connectionString;
 
   function run($cmd) {
@@ -16,7 +16,7 @@ class MockTestConnection {
 
   function flushCommands() {
     $out = $this->commandsRun;
-    $this->commandsRun = array();
+    $this->commandsRun = [];
     return $out;
   }
 

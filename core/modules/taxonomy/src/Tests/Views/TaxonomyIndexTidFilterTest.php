@@ -58,7 +58,7 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
     $term->save();
     $this->terms[$term->id()] = $term;
 
-    ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
+    ViewTestData::createTestViews(get_class($this), ['taxonomy_test_views']);
   }
 
   /**

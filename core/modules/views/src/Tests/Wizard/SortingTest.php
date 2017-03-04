@@ -21,13 +21,13 @@ class SortingTest extends WizardTestBase {
   function testSorting() {
     // Create nodes, each with a different creation time so that we can do a
     // meaningful sort.
-    $this->drupalCreateContentType(array('type' => 'page'));
-    $node1 = $this->drupalCreateNode(array('created' => REQUEST_TIME));
-    $node2 = $this->drupalCreateNode(array('created' => REQUEST_TIME + 1));
-    $node3 = $this->drupalCreateNode(array('created' => REQUEST_TIME + 2));
+    $this->drupalCreateContentType(['type' => 'page']);
+    $node1 = $this->drupalCreateNode(['created' => REQUEST_TIME]);
+    $node2 = $this->drupalCreateNode(['created' => REQUEST_TIME + 1]);
+    $node3 = $this->drupalCreateNode(['created' => REQUEST_TIME + 2]);
 
     // Create a view that sorts oldest first.
-    $view1 = array();
+    $view1 = [];
     $view1['label'] = $this->randomMachineName(16);
     $view1['id'] = strtolower($this->randomMachineName(16));
     $view1['description'] = $this->randomMachineName(16);
@@ -52,7 +52,7 @@ class SortingTest extends WizardTestBase {
     $this->assertTrue($pos1 < $pos2 && $pos2 < $pos3, 'The nodes appear in the expected order in a view that sorts by oldest first.');
 
     // Create a view that sorts newest first.
-    $view2 = array();
+    $view2 = [];
     $view2['label'] = $this->randomMachineName(16);
     $view2['id'] = strtolower($this->randomMachineName(16));
     $view2['description'] = $this->randomMachineName(16);

@@ -23,13 +23,13 @@ class ToolbarMenuTranslationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('toolbar', 'toolbar_test', 'locale', 'locale_test');
+  public static $modules = ['toolbar', 'toolbar_test', 'locale', 'locale_test'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create an administrative user and log it in.
-    $this->adminUser = $this->drupalCreateUser(array('access toolbar', 'translate interface', 'administer languages', 'access administration pages'));
+    $this->adminUser = $this->drupalCreateUser(['access toolbar', 'translate interface', 'administer languages', 'access administration pages']);
     $this->drupalLogin($this->adminUser);
   }
 
@@ -50,11 +50,11 @@ class ToolbarMenuTranslationTest extends WebTestBase {
     $this->drupalGet($langcode . '/admin/structure');
 
     // Search for the menu item.
-    $search = array(
+    $search = [
       'string' => $menu_item,
       'langcode' => $langcode,
       'translation' => 'untranslated',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     // Make sure will be able to translate the menu item.
     $this->assertNoText('No strings available.', 'Search found the menu item as untranslated.');
@@ -67,17 +67,17 @@ class ToolbarMenuTranslationTest extends WebTestBase {
     $menu_item_translated = $this->randomMachineName();
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
-    $edit = array(
+    $edit = [
       $lid => $menu_item_translated,
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
     // Search for the translated menu item.
-    $search = array(
+    $search = [
       'string' => $menu_item,
       'langcode' => $langcode,
       'translation' => 'translated',
-    );
+    ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     // Make sure the menu item string was translated.
     $this->assertText($menu_item_translated, 'Search found the menu item as translated: ' . $menu_item_translated . '.');

@@ -12,12 +12,12 @@ use Drupal\filter\Entity\FilterFormat;
  */
 class TextSummaryTest extends KernelTestBase {
 
-  public static $modules = array('system', 'user', 'filter', 'text');
+  public static $modules = ['system', 'user', 'filter', 'text'];
 
   protected function setUp() {
     parent::setUp();
 
-    $this->installConfig(array('text'));
+    $this->installConfig(['text']);
   }
 
   /**
@@ -50,25 +50,25 @@ class TextSummaryTest extends KernelTestBase {
    * Test various summary length edge cases.
    */
   function testLength() {
-    FilterFormat::create(array(
+    FilterFormat::create([
       'format' => 'autop',
-      'filters' => array(
-        'filter_autop' => array(
+      'filters' => [
+        'filter_autop' => [
           'status' => 1,
-        ),
-      ),
-    ))->save();
-    FilterFormat::create(array(
+        ],
+      ],
+    ])->save();
+    FilterFormat::create([
       'format' => 'autop_correct',
-      'filters' => array(
-        'filter_autop' => array(
+      'filters' => [
+        'filter_autop' => [
           'status' => 1,
-        ),
-        'filter_htmlcorrector' => array(
+        ],
+        'filter_htmlcorrector' => [
           'status' => 1,
-        ),
-      ),
-    ))->save();
+        ],
+      ],
+    ])->save();
 
     // This string tests a number of edge cases.
     $text = "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>";
@@ -207,10 +207,10 @@ class TextSummaryTest extends KernelTestBase {
    */
   function assertTextSummary($text, $expected, $format = NULL, $size = NULL) {
     $summary = text_summary($text, $format, $size);
-    $this->assertIdentical($summary, $expected, format_string('<pre style="white-space: pre-wrap">@actual</pre> is identical to <pre style="white-space: pre-wrap">@expected</pre>', array(
+    $this->assertIdentical($summary, $expected, format_string('<pre style="white-space: pre-wrap">@actual</pre> is identical to <pre style="white-space: pre-wrap">@expected</pre>', [
       '@actual' => $summary,
       '@expected' => $expected,
-    )));
+    ]));
   }
 
 }

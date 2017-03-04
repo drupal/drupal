@@ -75,7 +75,7 @@ class ConnectionUnitTest extends KernelTestBase {
    */
   protected function assertConnection($id) {
     $list = $this->monitor->query('SHOW PROCESSLIST')->fetchAllKeyed(0, 0);
-    return $this->assertTrue(isset($list[$id]), format_string('Connection ID @id found.', array('@id' => $id)));
+    return $this->assertTrue(isset($list[$id]), format_string('Connection ID @id found.', ['@id' => $id]));
   }
 
   /**
@@ -86,7 +86,7 @@ class ConnectionUnitTest extends KernelTestBase {
    */
   protected function assertNoConnection($id) {
     $list = $this->monitor->query('SHOW PROCESSLIST')->fetchAllKeyed(0, 0);
-    return $this->assertFalse(isset($list[$id]), format_string('Connection ID @id not found.', array('@id' => $id)));
+    return $this->assertFalse(isset($list[$id]), format_string('Connection ID @id not found.', ['@id' => $id]));
   }
 
   /**
@@ -186,18 +186,18 @@ class ConnectionUnitTest extends KernelTestBase {
 
     // Create a table.
     $name = 'foo';
-    Database::getConnection($this->target, $this->key)->schema()->createTable($name, array(
-      'fields' => array(
-        'name' => array(
+    Database::getConnection($this->target, $this->key)->schema()->createTable($name, [
+      'fields' => [
+        'name' => [
           'type' => 'varchar',
           'length' => 255,
-        ),
-      ),
-    ));
+        ],
+      ],
+    ]);
 
     // Execute a query.
     Database::getConnection($this->target, $this->key)->select('foo', 'f')
-      ->fields('f', array('name'))
+      ->fields('f', ['name'])
       ->execute()
       ->fetchAll();
 

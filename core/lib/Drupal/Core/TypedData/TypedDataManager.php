@@ -40,7 +40,7 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
    *
    * @var array
    */
-  protected $prototypes = array();
+  protected $prototypes = [];
 
   /**
    * The class resolver.
@@ -73,7 +73,7 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
   /**
    * {@inheritdoc}
    */
-  public function createInstance($data_type, array $configuration = array()) {
+  public function createInstance($data_type, array $configuration = []) {
     $data_definition = $configuration['data_definition'];
     $type_definition = $this->getDefinition($data_type);
 
@@ -97,11 +97,11 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
    * {@inheritdoc}
    */
   public function create(DataDefinitionInterface $definition, $value = NULL, $name = NULL, $parent = NULL) {
-    $typed_data = $this->createInstance($definition->getDataType(), array(
+    $typed_data = $this->createInstance($definition->getDataType(), [
       'data_definition' => $definition,
       'name' => $name,
       'parent' => $parent,
-    ));
+    ]);
     if (isset($value)) {
       $typed_data->setValue($value, FALSE);
     }
@@ -239,12 +239,12 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
    * {@inheritdoc}
    */
   public function getDefaultConstraints(DataDefinitionInterface $definition) {
-    $constraints = array();
+    $constraints = [];
     $type_definition = $this->getDefinition($definition->getDataType());
     // Auto-generate a constraint for data types implementing a primitive
     // interface.
     if (is_subclass_of($type_definition['class'], '\Drupal\Core\TypedData\PrimitiveInterface')) {
-      $constraints['PrimitiveType'] = array();
+      $constraints['PrimitiveType'] = [];
     }
     // Add in constraints specified by the data type.
     if (isset($type_definition['constraints'])) {
@@ -252,11 +252,11 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
     }
     // Add the NotNull constraint for required data.
     if ($definition->isRequired()) {
-      $constraints['NotNull'] = array();
+      $constraints['NotNull'] = [];
     }
     // Check if the class provides allowed values.
     if (is_subclass_of($definition->getClass(), 'Drupal\Core\TypedData\OptionsProviderInterface')) {
-      $constraints['AllowedValues'] = array();
+      $constraints['AllowedValues'] = [];
     }
     return $constraints;
   }
@@ -266,7 +266,7 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
    */
   public function clearCachedDefinitions() {
     parent::clearCachedDefinitions();
-    $this->prototypes = array();
+    $this->prototypes = [];
   }
 
   /**

@@ -14,12 +14,12 @@ class UpdateTest extends DatabaseTestBase {
    */
   function testSimpleUpdate() {
     $num_updated = db_update('test')
-      ->fields(array('name' => 'Tiffany'))
+      ->fields(['name' => 'Tiffany'])
       ->condition('id', 1)
       ->execute();
     $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
-    $saved_name = db_query('SELECT name FROM {test} WHERE id = :id', array(':id' => 1))->fetchField();
+    $saved_name = db_query('SELECT name FROM {test} WHERE id = :id', [':id' => 1])->fetchField();
     $this->assertIdentical($saved_name, 'Tiffany', 'Updated name successfully.');
   }
 
@@ -29,12 +29,12 @@ class UpdateTest extends DatabaseTestBase {
   function testSimpleNullUpdate() {
     $this->ensureSampleDataNull();
     $num_updated = db_update('test_null')
-      ->fields(array('age' => NULL))
+      ->fields(['age' => NULL])
       ->condition('name', 'Kermit')
       ->execute();
     $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
-    $saved_age = db_query('SELECT age FROM {test_null} WHERE name = :name', array(':name' => 'Kermit'))->fetchField();
+    $saved_age = db_query('SELECT age FROM {test_null} WHERE name = :name', [':name' => 'Kermit'])->fetchField();
     $this->assertNull($saved_age, 'Updated name successfully.');
   }
 
@@ -43,12 +43,12 @@ class UpdateTest extends DatabaseTestBase {
    */
   function testMultiUpdate() {
     $num_updated = db_update('test')
-      ->fields(array('job' => 'Musician'))
+      ->fields(['job' => 'Musician'])
       ->condition('job', 'Singer')
       ->execute();
     $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
-    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', [':job' => 'Musician'])->fetchField();
     $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
@@ -57,12 +57,12 @@ class UpdateTest extends DatabaseTestBase {
    */
   function testMultiGTUpdate() {
     $num_updated = db_update('test')
-      ->fields(array('job' => 'Musician'))
+      ->fields(['job' => 'Musician'])
       ->condition('age', 26, '>')
       ->execute();
     $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
-    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', [':job' => 'Musician'])->fetchField();
     $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
@@ -71,12 +71,12 @@ class UpdateTest extends DatabaseTestBase {
    */
   function testWhereUpdate() {
     $num_updated = db_update('test')
-      ->fields(array('job' => 'Musician'))
-      ->where('age > :age', array(':age' => 26))
+      ->fields(['job' => 'Musician'])
+      ->where('age > :age', [':age' => 26])
       ->execute();
     $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
-    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', [':job' => 'Musician'])->fetchField();
     $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
@@ -85,13 +85,13 @@ class UpdateTest extends DatabaseTestBase {
    */
   function testWhereAndConditionUpdate() {
     $update = db_update('test')
-      ->fields(array('job' => 'Musician'))
-      ->where('age > :age', array(':age' => 26))
+      ->fields(['job' => 'Musician'])
+      ->where('age > :age', [':age' => 26])
       ->condition('name', 'Ringo');
     $num_updated = $update->execute();
     $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
-    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', [':job' => 'Musician'])->fetchField();
     $this->assertIdentical($num_matches, '1', 'Updated fields successfully.');
   }
 
@@ -106,7 +106,7 @@ class UpdateTest extends DatabaseTestBase {
       ->execute();
     $this->assertIdentical($num_rows, 4, 'Updated 4 records.');
 
-    $saved_name = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => pow(26, 2)))->fetchField();
+    $saved_name = db_query('SELECT name FROM {test} WHERE age = :age', [':age' => pow(26, 2)])->fetchField();
     $this->assertIdentical($saved_name, 'Paul', 'Successfully updated values using an algebraic expression.');
   }
 
@@ -122,7 +122,7 @@ class UpdateTest extends DatabaseTestBase {
     // because that's cross-db expected behavior.
     $num_rows = db_update('test_task')
       ->condition('priority', 1, '<>')
-      ->fields(array('task' => 'sleep'))
+      ->fields(['task' => 'sleep'])
       ->execute();
     $this->assertIdentical($num_rows, 5, 'Correctly returned 5 affected rows.');
   }
@@ -132,12 +132,12 @@ class UpdateTest extends DatabaseTestBase {
    */
   function testPrimaryKeyUpdate() {
     $num_updated = db_update('test')
-      ->fields(array('id' => 42, 'name' => 'John'))
+      ->fields(['id' => 42, 'name' => 'John'])
       ->condition('id', 1)
       ->execute();
     $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
-    $saved_name = db_query('SELECT name FROM {test} WHERE id = :id', array(':id' => 42))->fetchField();
+    $saved_name = db_query('SELECT name FROM {test} WHERE id = :id', [':id' => 42])->fetchField();
     $this->assertIdentical($saved_name, 'John', 'Updated primary key successfully.');
   }
 
@@ -146,12 +146,12 @@ class UpdateTest extends DatabaseTestBase {
    */
   function testSpecialColumnUpdate() {
     $num_updated = db_update('test_special_columns')
-      ->fields(array('offset' => 'New offset value'))
+      ->fields(['offset' => 'New offset value'])
       ->condition('id', 1)
       ->execute();
     $this->assertIdentical($num_updated, 1, 'Updated 1 special column record.');
 
-    $saved_value = db_query('SELECT "offset" FROM {test_special_columns} WHERE id = :id', array(':id' => 1))->fetchField();
+    $saved_value = db_query('SELECT "offset" FROM {test_special_columns} WHERE id = :id', [':id' => 1])->fetchField();
     $this->assertIdentical($saved_value, 'New offset value', 'Updated special column name value successfully.');
   }
 

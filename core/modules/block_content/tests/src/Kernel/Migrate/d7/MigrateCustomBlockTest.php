@@ -13,11 +13,11 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateCustomBlockTest extends MigrateDrupal7TestBase {
 
-  public static $modules = array(
+  public static $modules = [
     'block_content',
     'filter',
     'text',
-  );
+  ];
 
   /**
    * {@inheritdoc}

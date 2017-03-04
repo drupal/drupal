@@ -100,7 +100,7 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
    * {@inheritdoc}
    */
   public function getRequirements() {
-    return array();
+    return [];
   }
 
   /**
@@ -119,17 +119,17 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
   /**
    * {@inheritdoc}
    */
-  public function apply($operation, array $arguments = array()) {
+  public function apply($operation, array $arguments = []) {
     try {
       // Get the plugin to use for the operation and apply the operation.
       return $this->getToolkitOperation($operation)->apply($arguments);
     }
     catch (PluginNotFoundException $e) {
-      $this->logger->error("The selected image handling toolkit '@toolkit' can not process operation '@operation'.", array('@toolkit' => $this->getPluginId(), '@operation' => $operation));
+      $this->logger->error("The selected image handling toolkit '@toolkit' can not process operation '@operation'.", ['@toolkit' => $this->getPluginId(), '@operation' => $operation]);
       return FALSE;
     }
     catch (\InvalidArgumentException $e) {
-      $this->logger->warning($e->getMessage(), array());
+      $this->logger->warning($e->getMessage(), []);
       return FALSE;
     }
   }

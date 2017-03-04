@@ -19,7 +19,7 @@ class ItemCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('aggregator');
+  public static $modules = ['aggregator'];
 
   /**
    * {@inheritdoc}
@@ -39,21 +39,21 @@ class ItemCacheTagsTest extends EntityCacheTagsTestBase {
    */
   protected function createEntity() {
     // Create a "Camelids" feed.
-    $feed = Feed::create(array(
+    $feed = Feed::create([
       'title' => 'Camelids',
       'url' => 'https://groups.drupal.org/not_used/167169',
       'refresh' => 900,
       'checked' => 1389919932,
       'description' => 'Drupal Core Group feed',
-    ));
+    ]);
     $feed->save();
 
     // Create a "Llama" aggregator feed item.
-    $item = Item::create(array(
+    $item = Item::create([
       'fid' => $feed->id(),
       'title' => t('Llama'),
       'path' => 'https://www.drupal.org/',
-    ));
+    ]);
     $item->save();
 
     return $item;
@@ -67,14 +67,14 @@ class ItemCacheTagsTest extends EntityCacheTagsTestBase {
     \Drupal::cache('render')->set('foo', 'bar', CacheBackendInterface::CACHE_PERMANENT, $this->entity->getCacheTags());
 
     // Verify a cache hit.
-    $this->verifyRenderCache('foo', array('aggregator_feed:1'));
+    $this->verifyRenderCache('foo', ['aggregator_feed:1']);
 
     // Now create a feed item in that feed.
-    Item::create(array(
+    Item::create([
       'fid' => $this->entity->getFeedId(),
       'title' => t('Llama 2'),
       'path' => 'https://groups.drupal.org/',
-    ))->save();
+    ])->save();
 
     // Verify a cache miss.
     $this->assertFalse(\Drupal::cache('render')->get('foo'), 'Creating a new feed item invalidates the cache tag of the feed.');

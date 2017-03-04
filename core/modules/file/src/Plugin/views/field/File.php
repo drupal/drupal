@@ -33,7 +33,7 @@ class File extends FieldPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['link_to_file'] = array('default' => FALSE);
+    $options['link_to_file'] = ['default' => FALSE];
     return $options;
   }
 
@@ -41,12 +41,12 @@ class File extends FieldPluginBase {
    * Provide link to file option
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $form['link_to_file'] = array(
+    $form['link_to_file'] = [
       '#title' => $this->t('Link this field to download the file'),
       '#description' => $this->t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_file']),
-    );
+    ];
     parent::buildOptionsForm($form, $form_state);
   }
 

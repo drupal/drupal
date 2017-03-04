@@ -28,9 +28,9 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
    */
   public function testMissingTable() {
     $this->sourceDatabase->update('system')
-      ->fields(array(
+      ->fields([
         'status' => 0,
-      ))
+      ])
       ->condition('name', 'imagecache')
       ->condition('type', 'module')
       ->execute();

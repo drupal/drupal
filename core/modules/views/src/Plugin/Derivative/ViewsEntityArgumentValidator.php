@@ -38,7 +38,7 @@ class ViewsEntityArgumentValidator extends DeriverBase implements ContainerDeriv
    *
    * @var array
    */
-  protected $derivatives = array();
+  protected $derivatives = [];
 
   /**
    * Constructs an ViewsEntityArgumentValidator object.
@@ -72,16 +72,16 @@ class ViewsEntityArgumentValidator extends DeriverBase implements ContainerDeriv
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     $entity_types = $this->entityManager->getDefinitions();
-    $this->derivatives = array();
+    $this->derivatives = [];
     foreach ($entity_types as $entity_type_id => $entity_type) {
-      $this->derivatives[$entity_type_id] = array(
+      $this->derivatives[$entity_type_id] = [
         'id' => 'entity:' . $entity_type_id,
         'provider' => 'views',
         'title' => $entity_type->getLabel(),
-        'help' => $this->t('Validate @label', array('@label' => $entity_type->getLabel())),
+        'help' => $this->t('Validate @label', ['@label' => $entity_type->getLabel()]),
         'entity_type' => $entity_type_id,
         'class' => $base_plugin_definition['class'],
-      );
+      ];
     }
 
     return $this->derivatives;

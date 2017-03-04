@@ -16,17 +16,17 @@ class UserAttributesTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'node');
+  public static $modules = ['rdf', 'node'];
 
   protected function setUp() {
     parent::setUp();
     rdf_get_mapping('user', 'user')
-      ->setBundleMapping(array(
-        'types' => array('sioc:UserAccount'),
-      ))
-      ->setFieldMapping('name', array(
-        'properties' => array('foaf:name'),
-      ))
+      ->setBundleMapping([
+        'types' => ['sioc:UserAccount'],
+      ])
+      ->setFieldMapping('name', [
+        'properties' => ['foaf:name'],
+      ])
       ->save();
   }
 
@@ -40,17 +40,17 @@ class UserAttributesTest extends BrowserTestBase {
     // Creates users that should and should not be truncated
     // by template_preprocess_username (20 characters)
     // one of these users tests right on the cusp (20).
-    $user1 = $this->drupalCreateUser(array('access user profiles'));
+    $user1 = $this->drupalCreateUser(['access user profiles']);
 
-    $authors = array(
-      $this->drupalCreateUser(array(), $this->randomMachineName(30)),
-      $this->drupalCreateUser(array(), $this->randomMachineName(20)),
-      $this->drupalCreateUser(array(), $this->randomMachineName(5))
-    );
+    $authors = [
+      $this->drupalCreateUser([], $this->randomMachineName(30)),
+      $this->drupalCreateUser([], $this->randomMachineName(20)),
+      $this->drupalCreateUser([], $this->randomMachineName(5))
+    ];
 
     $this->drupalLogin($user1);
 
-    $this->drupalCreateContentType(array('type' => 'article'));
+    $this->drupalCreateContentType(['type' => 'article']);
 
     /** @var \Drupal\user\UserInterface[] $authors */
     foreach ($authors as $author) {
@@ -65,21 +65,21 @@ class UserAttributesTest extends BrowserTestBase {
 
       // Inspects RDF graph output.
       // User type.
-      $expected_value = array(
+      $expected_value = [
         'type' => 'uri',
         'value' => 'http://rdfs.org/sioc/ns#UserAccount',
-      );
+      ];
       $this->assertTrue($graph->hasProperty($account_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'User type found in RDF output (sioc:UserAccount).');
       // User name.
-      $expected_value = array(
+      $expected_value = [
         'type' => 'literal',
         'value' => $author->getUsername(),
-      );
+      ];
       $this->assertTrue($graph->hasProperty($account_uri, 'http://xmlns.com/foaf/0.1/name', $expected_value), 'User name found in RDF output (foaf:name).');
 
       // User creates a node.
       $this->drupalLogin($author);
-      $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+      $node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1]);
       $this->drupalLogin($user1);
 
       // Parses the node created by the user.
@@ -90,16 +90,16 @@ class UserAttributesTest extends BrowserTestBase {
 
       // Ensures the default bundle mapping for user is used on the Authored By
       // information on the node.
-      $expected_value = array(
+      $expected_value = [
         'type' => 'uri',
         'value' => 'http://rdfs.org/sioc/ns#UserAccount',
-      );
+      ];
       $this->assertTrue($graph->hasProperty($account_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'User type found in RDF output (sioc:UserAccount).');
       // User name.
-      $expected_value = array(
+      $expected_value = [
         'type' => 'literal',
         'value' => $author->getUsername(),
-      );
+      ];
       $this->assertTrue($graph->hasProperty($account_uri, 'http://xmlns.com/foaf/0.1/name', $expected_value), 'User name found in RDF output (foaf:name).');
 
     }

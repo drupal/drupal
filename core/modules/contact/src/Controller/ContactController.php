@@ -64,9 +64,9 @@ class ContactController extends ControllerBase {
       // If there are no forms, do not display the form.
       if (empty($contact_form)) {
         if ($this->currentUser()->hasPermission('administer contact forms')) {
-          drupal_set_message($this->t('The contact form has not been configured. <a href=":add">Add one or more forms</a> .', array(
-            ':add' => $this->url('contact.form_add'))), 'error');
-          return array();
+          drupal_set_message($this->t('The contact form has not been configured. <a href=":add">Add one or more forms</a> .', [
+            ':add' => $this->url('contact.form_add')]), 'error');
+          return [];
         }
         else {
           throw new NotFoundHttpException();
@@ -76,9 +76,9 @@ class ContactController extends ControllerBase {
 
     $message = $this->entityManager()
       ->getStorage('contact_message')
-      ->create(array(
+      ->create([
         'contact_form' => $contact_form->id(),
-      ));
+      ]);
 
     $form = $this->entityFormBuilder()->getForm($message);
     $form['#title'] = $contact_form->label();
@@ -106,13 +106,13 @@ class ContactController extends ControllerBase {
       throw new NotFoundHttpException();
     }
 
-    $message = $this->entityManager()->getStorage('contact_message')->create(array(
+    $message = $this->entityManager()->getStorage('contact_message')->create([
       'contact_form' => 'personal',
       'recipient' => $user->id(),
-    ));
+    ]);
 
     $form = $this->entityFormBuilder()->getForm($message);
-    $form['#title'] = $this->t('Contact @username', array('@username' => $user->getDisplayName()));
+    $form['#title'] = $this->t('Contact @username', ['@username' => $user->getDisplayName()]);
     $form['#cache']['contexts'][] = 'user.permissions';
     return $form;
   }

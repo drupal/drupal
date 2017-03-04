@@ -32,9 +32,9 @@ class RouteMatchTest extends RouteMatchTestBase {
     $route_match = RouteMatch::createFromRequest($request);
     $this->assertNull($route_match->getRouteName());
     $this->assertNull($route_match->getRouteObject());
-    $this->assertSame(array(), $route_match->getParameters()->all());
+    $this->assertSame([], $route_match->getParameters()->all());
     $this->assertNull($route_match->getParameter('foo'));
-    $this->assertSame(array(), $route_match->getRawParameters()->all());
+    $this->assertSame([], $route_match->getRawParameters()->all());
     $this->assertNull($route_match->getRawParameter('foo'));
 
     // A routed request without parameter upcasting.
@@ -45,17 +45,17 @@ class RouteMatchTest extends RouteMatchTestBase {
     $route_match = RouteMatch::createFromRequest($request);
     $this->assertSame('test_route', $route_match->getRouteName());
     $this->assertSame($route, $route_match->getRouteObject());
-    $this->assertSame(array('foo' => '1'), $route_match->getParameters()->all());
-    $this->assertSame(array(), $route_match->getRawParameters()->all());
+    $this->assertSame(['foo' => '1'], $route_match->getParameters()->all());
+    $this->assertSame([], $route_match->getRawParameters()->all());
 
     // A routed request with parameter upcasting.
     $foo = new \stdClass();
     $foo->value = 1;
     $request->attributes->set('foo', $foo);
-    $request->attributes->set('_raw_variables', new ParameterBag(array('foo' => '1')));
+    $request->attributes->set('_raw_variables', new ParameterBag(['foo' => '1']));
     $route_match = RouteMatch::createFromRequest($request);
-    $this->assertSame(array('foo' => $foo), $route_match->getParameters()->all());
-    $this->assertSame(array('foo' => '1'), $route_match->getRawParameters()->all());
+    $this->assertSame(['foo' => $foo], $route_match->getParameters()->all());
+    $this->assertSame(['foo' => '1'], $route_match->getRawParameters()->all());
   }
 
 }

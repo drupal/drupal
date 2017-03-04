@@ -86,14 +86,14 @@ class DateTimeDefaultWidget extends DateTimeWidgetBase implements ContainerFacto
         break;
     }
 
-    $element['value'] += array(
+    $element['value'] += [
       '#date_date_format' => $date_format,
       '#date_date_element' => $date_type,
-      '#date_date_callbacks' => array(),
+      '#date_date_callbacks' => [],
       '#date_time_format' => $time_format,
       '#date_time_element' => $time_type,
-      '#date_time_callbacks' => array(),
-    );
+      '#date_time_callbacks' => [],
+    ];
 
     return $element;
   }

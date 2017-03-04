@@ -16,7 +16,7 @@ class DrupalSetMessageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('system_test');
+  public static $modules = ['system_test'];
 
   /**
    * Tests drupal_set_message().

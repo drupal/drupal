@@ -241,102 +241,102 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @covers ::mergeAttachments
    */
   function testMergeAttachmentsLibraryMerging() {
-    $a['#attached'] = array(
-      'library' => array(
+    $a['#attached'] = [
+      'library' => [
         'core/drupal',
         'core/drupalSettings',
-      ),
+      ],
       'drupalSettings' => [
         'foo' => ['d'],
       ],
-    );
-    $b['#attached'] = array(
-      'library' => array(
+    ];
+    $b['#attached'] = [
+      'library' => [
         'core/jquery',
-      ),
+      ],
       'drupalSettings' => [
         'bar' => ['a', 'b', 'c'],
       ],
-    );
-    $expected['#attached'] = array(
-      'library' => array(
+    ];
+    $expected['#attached'] = [
+      'library' => [
         'core/drupal',
         'core/drupalSettings',
         'core/jquery',
-      ),
+      ],
       'drupalSettings' => [
         'foo' => ['d'],
         'bar' => ['a', 'b', 'c'],
       ],
-    );
+    ];
     $this->assertSame($expected['#attached'], BubbleableMetadata::mergeAttachments($a['#attached'], $b['#attached']), 'Attachments merged correctly.');
 
     // Merging in the opposite direction yields the opposite library order.
-    $expected['#attached'] = array(
-      'library' => array(
+    $expected['#attached'] = [
+      'library' => [
         'core/jquery',
         'core/drupal',
         'core/drupalSettings',
-      ),
+      ],
       'drupalSettings' => [
         'bar' => ['a', 'b', 'c'],
         'foo' => ['d'],
       ],
-    );
+    ];
     $this->assertSame($expected['#attached'], BubbleableMetadata::mergeAttachments($b['#attached'], $a['#attached']), 'Attachments merged correctly; opposite merging yields opposite order.');
 
     // Merging with duplicates: duplicates are simply retained, it's up to the
     // rest of the system to handle duplicates.
     $b['#attached']['library'][] = 'core/drupalSettings';
-    $expected['#attached'] = array(
-      'library' => array(
+    $expected['#attached'] = [
+      'library' => [
         'core/drupal',
         'core/drupalSettings',
         'core/jquery',
         'core/drupalSettings',
-      ),
+      ],
       'drupalSettings' => [
         'foo' => ['d'],
         'bar' => ['a', 'b', 'c'],
       ],
-    );
+    ];
     $this->assertSame($expected['#attached'], BubbleableMetadata::mergeAttachments($a['#attached'], $b['#attached']), 'Attachments merged correctly; duplicates are retained.');
 
     // Merging with duplicates (simple case).
     $b['#attached']['drupalSettings']['foo'] = ['a', 'b', 'c'];
-    $expected['#attached'] = array(
-      'library' => array(
+    $expected['#attached'] = [
+      'library' => [
         'core/drupal',
         'core/drupalSettings',
         'core/jquery',
         'core/drupalSettings',
-      ),
+      ],
       'drupalSettings' => [
         'foo' => ['a', 'b', 'c'],
         'bar' => ['a', 'b', 'c'],
       ],
-    );
+    ];
     $this->assertSame($expected['#attached'], BubbleableMetadata::mergeAttachments($a['#attached'], $b['#attached']));
 
     // Merging with duplicates (simple case) in the opposite direction yields
     // the opposite JS setting asset order, but also opposite overriding order.
-    $expected['#attached'] = array(
-      'library' => array(
+    $expected['#attached'] = [
+      'library' => [
         'core/jquery',
         'core/drupalSettings',
         'core/drupal',
         'core/drupalSettings',
-      ),
+      ],
       'drupalSettings' => [
         'bar' => ['a', 'b', 'c'],
         'foo' => ['d', 'b', 'c'],
       ],
-    );
+    ];
     $this->assertSame($expected['#attached'], BubbleableMetadata::mergeAttachments($b['#attached'], $a['#attached']));
 
     // Merging with duplicates: complex case.
     // Only the second of these two entries should appear in drupalSettings.
-    $build = array();
+    $build = [];
     $build['a']['#attached']['drupalSettings']['commonTest'] = 'firstValue';
     $build['b']['#attached']['drupalSettings']['commonTest'] = 'secondValue';
     // Only the second of these entries should appear in drupalSettings.
@@ -348,12 +348,12 @@ class BubbleableMetadataTest extends UnitTestCase {
     // Real world test case: multiple elements in a render array are adding the
     // same (or nearly the same) JavaScript settings. When merged, they should
     // contain all settings and not duplicate some settings.
-    $settings_one = array('moduleName' => array('ui' => array('button A', 'button B'), 'magical flag' => 3.14159265359));
+    $settings_one = ['moduleName' => ['ui' => ['button A', 'button B'], 'magical flag' => 3.14159265359]];
     $build['a']['#attached']['drupalSettings']['commonTestRealWorldIdentical'] = $settings_one;
     $build['b']['#attached']['drupalSettings']['commonTestRealWorldIdentical'] = $settings_one;
-    $settings_two_a = array('moduleName' => array('ui' => array('button A', 'button B', 'button C'), 'magical flag' => 3.14159265359, 'thingiesOnPage' => array('id1' => array())));
+    $settings_two_a = ['moduleName' => ['ui' => ['button A', 'button B', 'button C'], 'magical flag' => 3.14159265359, 'thingiesOnPage' => ['id1' => []]]];
     $build['a']['#attached']['drupalSettings']['commonTestRealWorldAlmostIdentical'] = $settings_two_a;
-    $settings_two_b = array('moduleName' => array('ui' => array('button D', 'button E'), 'magical flag' => 3.14, 'thingiesOnPage' => array('id2' => array())));
+    $settings_two_b = ['moduleName' => ['ui' => ['button D', 'button E'], 'magical flag' => 3.14, 'thingiesOnPage' => ['id2' => []]]];
     $build['b']['#attached']['drupalSettings']['commonTestRealWorldAlmostIdentical'] = $settings_two_b;
 
     $merged = BubbleableMetadata::mergeAttachments($build['a']['#attached'], $build['b']['#attached']);
@@ -373,7 +373,7 @@ class BubbleableMetadataTest extends UnitTestCase {
     // adds the exact same settings twice and hence tests idempotency, the
     // second adds *almost* the same settings twice: the second time, some
     // values are altered, and some key-value pairs are added.
-    $settings_two['moduleName']['thingiesOnPage']['id1'] = array();
+    $settings_two['moduleName']['thingiesOnPage']['id1'] = [];
     $this->assertSame($settings_one, $merged['drupalSettings']['commonTestRealWorldIdentical']);
     $expected_settings_two = $settings_two_a;
     $expected_settings_two['moduleName']['ui'][0] = 'button D';

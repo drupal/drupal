@@ -59,12 +59,12 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
-    $migration_configuration = array(
-      'migration' => array(
+    $migration_configuration = [
+      'migration' => [
         'd6_user_role',
         'd7_user_role',
-      ),
-    );
+      ],
+    ];
     return new static(
       $configuration,
       $plugin_id,
@@ -80,18 +80,18 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     list($old_visibility, $pages, $roles) = $value;
 
-    $visibility = array();
+    $visibility = [];
 
     // If the block is assigned to specific roles, add the user_role condition.
     if ($roles) {
-      $visibility['user_role'] = array(
+      $visibility['user_role'] = [
         'id' => 'user_role',
-        'roles' => array(),
-        'context_mapping' => array(
+        'roles' => [],
+        'context_mapping' => [
           'user' => '@user.current_user_context:current_user',
-        ),
+        ],
         'negate' => FALSE,
-      );
+      ];
 
       foreach ($roles as $key => $role_id) {
         $roles[$key] = $this->migrationPlugin->transform($role_id, $migrate_executable, $row, $destination_property);
@@ -104,12 +104,12 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
       if ($old_visibility == 2) {
         // If the PHP module is present, migrate the visibility code unaltered.
         if ($this->moduleHandler->moduleExists('php')) {
-          $visibility['php'] = array(
+          $visibility['php'] = [
             'id' => 'php',
             // PHP code visibility could not be negated in Drupal 6 or 7.
             'negate' => FALSE,
             'php' => $pages,
-          );
+          ];
         }
         // Skip the row if we're configured to. If not, we don't need to do
         // anything else -- the block will simply have no PHP or request_path
@@ -123,11 +123,11 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
         foreach ($paths as $key => $path) {
           $paths[$key] = $path === '<front>' ? $path : '/' . ltrim($path, '/');
         }
-        $visibility['request_path'] = array(
+        $visibility['request_path'] = [
           'id' => 'request_path',
           'negate' => !$old_visibility,
           'pages' => implode("\n", $paths),
-        );
+        ];
       }
     }
 

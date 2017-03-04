@@ -18,7 +18,7 @@ class FilterFormTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $modules = array('filter', 'filter_test');
+  protected static $modules = ['filter', 'filter_test'];
 
   /**
    * An administrative user account that can administer text formats.
@@ -48,17 +48,17 @@ class FilterFormTest extends WebTestBase {
     $full_html_format = FilterFormat::load('full_html');
 
     // Create users.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'administer filters',
       $filtered_html_format->getPermissionName(),
       $full_html_format->getPermissionName(),
       $filter_test_format->getPermissionName(),
-    ));
+    ]);
 
-    $this->webUser = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser([
       $filtered_html_format->getPermissionName(),
       $filter_test_format->getPermissionName(),
-    ));
+    ]);
   }
 
   /**
@@ -83,7 +83,7 @@ class FilterFormTest extends WebTestBase {
     $this->drupalGet('filter-test/text-format');
 
     // Test a text format element with all formats.
-    $formats = array('filtered_html', 'full_html', 'filter_test');
+    $formats = ['filtered_html', 'full_html', 'filter_test'];
     $this->assertEnabledTextarea('edit-all-formats-no-default-value');
     // If no default is given, the format with the lowest weight becomes the
     // default.
@@ -98,7 +98,7 @@ class FilterFormTest extends WebTestBase {
     $this->assertRequiredSelectAndOptions('edit-all-formats-default-missing-format--2', $formats);
 
     // Test a text format element with a predefined list of formats.
-    $formats = array('full_html', 'filter_test');
+    $formats = ['full_html', 'filter_test'];
     $this->assertEnabledTextarea('edit-restricted-formats-no-default-value');
     $this->assertOptions('edit-restricted-formats-no-default-format--2', $formats, 'full_html');
     $this->assertEnabledTextarea('edit-restricted-formats-default-value');
@@ -109,7 +109,7 @@ class FilterFormTest extends WebTestBase {
     $this->assertRequiredSelectAndOptions('edit-restricted-formats-default-disallowed-format--2', $formats);
 
     // Test a text format element with a fixed format.
-    $formats = array('filter_test');
+    $formats = ['filter_test'];
     // When there is only a single option there is no point in choosing.
     $this->assertEnabledTextarea('edit-single-format-no-default-value');
     $this->assertNoSelect('edit-single-format-no-default-format--2');
@@ -132,7 +132,7 @@ class FilterFormTest extends WebTestBase {
 
     // Test a text format element with all formats. Only formats the user has
     // access to are shown.
-    $formats = array('filtered_html', 'filter_test');
+    $formats = ['filtered_html', 'filter_test'];
     $this->assertEnabledTextarea('edit-all-formats-no-default-value');
     // If no default is given, the format with the lowest weight becomes the
     // default. This happens to be 'filtered_html'.
@@ -178,10 +178,10 @@ class FilterFormTest extends WebTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertNoSelect($id) {
-    $select = $this->xpath('//select[@id=:id]', array(':id' => $id));
-    return $this->assertFalse($select, SafeMarkup::format('Field @id does not exist.', array(
+    $select = $this->xpath('//select[@id=:id]', [':id' => $id]);
+    return $this->assertFalse($select, SafeMarkup::format('Field @id does not exist.', [
       '@id' => $id,
-    )));
+    ]));
   }
 
   /**
@@ -198,20 +198,20 @@ class FilterFormTest extends WebTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertOptions($id, array $expected_options, $selected) {
-    $select = $this->xpath('//select[@id=:id]', array(':id' => $id));
+    $select = $this->xpath('//select[@id=:id]', [':id' => $id]);
     $select = reset($select);
-    $passed = $this->assertTrue($select instanceof \SimpleXMLElement, SafeMarkup::format('Field @id exists.', array(
+    $passed = $this->assertTrue($select instanceof \SimpleXMLElement, SafeMarkup::format('Field @id exists.', [
       '@id' => $id,
-    )));
+    ]));
 
     $found_options = $this->getAllOptions($select);
     foreach ($found_options as $found_key => $found_option) {
       $expected_key = array_search($found_option->attributes()->value, $expected_options);
       if ($expected_key !== FALSE) {
-        $this->pass(SafeMarkup::format('Option @option for field @id exists.', array(
+        $this->pass(SafeMarkup::format('Option @option for field @id exists.', [
           '@option' => $expected_options[$expected_key],
           '@id' => $id,
-        )));
+        ]));
         unset($found_options[$found_key]);
         unset($expected_options[$expected_key]);
       }
@@ -220,17 +220,17 @@ class FilterFormTest extends WebTestBase {
     // Make sure that all expected options were found and that there are no
     // unexpected options.
     foreach ($expected_options as $expected_option) {
-      $this->fail(SafeMarkup::format('Option @option for field @id exists.', array(
+      $this->fail(SafeMarkup::format('Option @option for field @id exists.', [
         '@option' => $expected_option,
         '@id' => $id,
-      )));
+      ]));
       $passed = FALSE;
     }
     foreach ($found_options as $found_option) {
-      $this->fail(SafeMarkup::format('Option @option for field @id does not exist.', array(
+      $this->fail(SafeMarkup::format('Option @option for field @id does not exist.', [
         '@option' => $found_option->attributes()->value,
         '@id' => $id,
-      )));
+      ]));
       $passed = FALSE;
     }
 
@@ -250,13 +250,13 @@ class FilterFormTest extends WebTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertRequiredSelectAndOptions($id, array $options) {
-    $select = $this->xpath('//select[@id=:id and contains(@required, "required")]', array(
+    $select = $this->xpath('//select[@id=:id and contains(@required, "required")]', [
       ':id' => $id,
-    ));
+    ]);
     $select = reset($select);
-    $passed = $this->assertTrue($select instanceof \SimpleXMLElement, SafeMarkup::format('Required field @id exists.', array(
+    $passed = $this->assertTrue($select instanceof \SimpleXMLElement, SafeMarkup::format('Required field @id exists.', [
       '@id' => $id,
-    )));
+    ]));
     // A required select element has a "- Select -" option whose key is an empty
     // string.
     $options[] = '';
@@ -273,13 +273,13 @@ class FilterFormTest extends WebTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertEnabledTextarea($id) {
-    $textarea = $this->xpath('//textarea[@id=:id and not(contains(@disabled, "disabled"))]', array(
+    $textarea = $this->xpath('//textarea[@id=:id and not(contains(@disabled, "disabled"))]', [
       ':id' => $id,
-    ));
+    ]);
     $textarea = reset($textarea);
-    return $this->assertTrue($textarea instanceof \SimpleXMLElement, SafeMarkup::format('Enabled field @id exists.', array(
+    return $this->assertTrue($textarea instanceof \SimpleXMLElement, SafeMarkup::format('Enabled field @id exists.', [
       '@id' => $id,
-    )));
+    ]));
   }
 
   /**
@@ -292,17 +292,17 @@ class FilterFormTest extends WebTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertDisabledTextarea($id) {
-    $textarea = $this->xpath('//textarea[@id=:id and contains(@disabled, "disabled")]', array(
+    $textarea = $this->xpath('//textarea[@id=:id and contains(@disabled, "disabled")]', [
       ':id' => $id,
-    ));
+    ]);
     $textarea = reset($textarea);
-    $passed = $this->assertTrue($textarea instanceof \SimpleXMLElement, SafeMarkup::format('Disabled field @id exists.', array(
+    $passed = $this->assertTrue($textarea instanceof \SimpleXMLElement, SafeMarkup::format('Disabled field @id exists.', [
       '@id' => $id,
-    )));
+    ]));
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $passed = $passed && $this->assertEqual((string) $textarea, $expected, SafeMarkup::format('Disabled textarea @id hides text in an inaccessible text format.', array(
+    $passed = $passed && $this->assertEqual((string) $textarea, $expected, SafeMarkup::format('Disabled textarea @id hides text in an inaccessible text format.', [
       '@id' => $id,
-    )));
+    ]));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
     return $passed && $this->assertNoSelect($select_id);

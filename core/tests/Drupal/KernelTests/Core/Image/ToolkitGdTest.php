@@ -23,16 +23,16 @@ class ToolkitGdTest extends KernelTestBase {
   protected $imageFactory;
 
   // Colors that are used in testing.
-  protected $black       = array(0, 0, 0, 0);
-  protected $red         = array(255, 0, 0, 0);
-  protected $green       = array(0, 255, 0, 0);
-  protected $blue        = array(0, 0, 255, 0);
-  protected $yellow      = array(255, 255, 0, 0);
-  protected $white       = array(255, 255, 255, 0);
-  protected $transparent = array(0, 0, 0, 127);
+  protected $black       = [0, 0, 0, 0];
+  protected $red         = [255, 0, 0, 0];
+  protected $green       = [0, 255, 0, 0];
+  protected $blue        = [0, 0, 255, 0];
+  protected $yellow      = [255, 255, 0, 0];
+  protected $white       = [255, 255, 255, 0];
+  protected $transparent = [0, 0, 0, 127];
   // Used as rotate background colors.
-  protected $fuchsia            = array(255, 0, 255, 0);
-  protected $rotateTransparent = array(255, 255, 255, 127);
+  protected $fuchsia            = [255, 0, 255, 0];
+  protected $rotateTransparent = [255, 255, 255, 127];
 
   protected $width = 40;
   protected $height = 20;
@@ -42,7 +42,7 @@ class ToolkitGdTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'simpletest');
+  public static $modules = ['system', 'simpletest'];
 
   /**
    * {@inheritdoc}
@@ -57,9 +57,9 @@ class ToolkitGdTest extends KernelTestBase {
   protected function checkRequirements() {
     // GD2 support is available.
     if (!function_exists('imagegd2')) {
-      return array(
+      return [
         'Image manipulations for the GD toolkit cannot run because the GD toolkit is not available.',
-      );
+      ];
     }
     return parent::checkRequirements();
   }
@@ -91,7 +91,7 @@ class ToolkitGdTest extends KernelTestBase {
 
     $transparent_index = imagecolortransparent($toolkit->getResource());
     if ($color_index == $transparent_index) {
-      return array(0, 0, 0, 127);
+      return [0, 0, 0, 127];
     }
 
     return array_values(imagecolorsforindex($toolkit->getResource(), $color_index));
@@ -129,143 +129,143 @@ class ToolkitGdTest extends KernelTestBase {
 
     // Typically the corner colors will be unchanged. These colors are in the
     // order of top-left, top-right, bottom-right, bottom-left.
-    $default_corners = array($this->red, $this->green, $this->blue, $this->transparent);
+    $default_corners = [$this->red, $this->green, $this->blue, $this->transparent];
 
     // A list of files that will be tested.
-    $files = array(
+    $files = [
       'image-test.png',
       'image-test.gif',
       'image-test-no-transparency.gif',
       'image-test.jpg',
-    );
+    ];
 
     // Setup a list of tests to perform on each type.
-    $operations = array(
-      'resize' => array(
+    $operations = [
+      'resize' => [
         'function' => 'resize',
-        'arguments' => array('width' => 20, 'height' => 10),
+        'arguments' => ['width' => 20, 'height' => 10],
         'width' => 20,
         'height' => 10,
         'corners' => $default_corners,
-      ),
-      'scale_x' => array(
+      ],
+      'scale_x' => [
         'function' => 'scale',
-        'arguments' => array('width' => 20),
+        'arguments' => ['width' => 20],
         'width' => 20,
         'height' => 10,
         'corners' => $default_corners,
-      ),
-      'scale_y' => array(
+      ],
+      'scale_y' => [
         'function' => 'scale',
-        'arguments' => array('height' => 10),
+        'arguments' => ['height' => 10],
         'width' => 20,
         'height' => 10,
         'corners' => $default_corners,
-      ),
-      'upscale_x' => array(
+      ],
+      'upscale_x' => [
         'function' => 'scale',
-        'arguments' => array('width' => 80, 'upscale' => TRUE),
+        'arguments' => ['width' => 80, 'upscale' => TRUE],
         'width' => 80,
         'height' => 40,
         'corners' => $default_corners,
-      ),
-      'upscale_y' => array(
+      ],
+      'upscale_y' => [
         'function' => 'scale',
-        'arguments' => array('height' => 40, 'upscale' => TRUE),
+        'arguments' => ['height' => 40, 'upscale' => TRUE],
         'width' => 80,
         'height' => 40,
         'corners' => $default_corners,
-      ),
-      'crop' => array(
+      ],
+      'crop' => [
         'function' => 'crop',
-        'arguments' => array('x' => 12, 'y' => 4, 'width' => 16, 'height' => 12),
+        'arguments' => ['x' => 12, 'y' => 4, 'width' => 16, 'height' => 12],
         'width' => 16,
         'height' => 12,
         'corners' => array_fill(0, 4, $this->white),
-      ),
-      'scale_and_crop' => array(
+      ],
+      'scale_and_crop' => [
         'function' => 'scale_and_crop',
-        'arguments' => array('width' => 10, 'height' => 8),
+        'arguments' => ['width' => 10, 'height' => 8],
         'width' => 10,
         'height' => 8,
         'corners' => array_fill(0, 4, $this->black),
-      ),
-      'convert_jpg' => array(
+      ],
+      'convert_jpg' => [
         'function' => 'convert',
         'width' => 40,
         'height' => 20,
-        'arguments' => array('extension' => 'jpeg'),
+        'arguments' => ['extension' => 'jpeg'],
         'corners' => $default_corners,
-      ),
-      'convert_gif' => array(
+      ],
+      'convert_gif' => [
         'function' => 'convert',
         'width' => 40,
         'height' => 20,
-        'arguments' => array('extension' => 'gif'),
+        'arguments' => ['extension' => 'gif'],
         'corners' => $default_corners,
-      ),
-      'convert_png' => array(
+      ],
+      'convert_png' => [
         'function' => 'convert',
         'width' => 40,
         'height' => 20,
-        'arguments' => array('extension' => 'png'),
+        'arguments' => ['extension' => 'png'],
         'corners' => $default_corners,
-      ),
-    );
+      ],
+    ];
 
     // Systems using non-bundled GD2 don't have imagerotate. Test if available.
     if (function_exists('imagerotate')) {
-      $operations += array(
-        'rotate_5' => array(
+      $operations += [
+        'rotate_5' => [
           'function' => 'rotate',
-          'arguments' => array('degrees' => 5, 'background' => '#FF00FF'), // Fuchsia background.
+          'arguments' => ['degrees' => 5, 'background' => '#FF00FF'], // Fuchsia background.
           'width' => 41,
           'height' => 23,
           'corners' => array_fill(0, 4, $this->fuchsia),
-        ),
-        'rotate_90' => array(
+        ],
+        'rotate_90' => [
           'function' => 'rotate',
-          'arguments' => array('degrees' => 90, 'background' => '#FF00FF'), // Fuchsia background.
+          'arguments' => ['degrees' => 90, 'background' => '#FF00FF'], // Fuchsia background.
           'width' => 20,
           'height' => 40,
-          'corners' => array($this->transparent, $this->red, $this->green, $this->blue),
-        ),
-        'rotate_transparent_5' => array(
+          'corners' => [$this->transparent, $this->red, $this->green, $this->blue],
+        ],
+        'rotate_transparent_5' => [
           'function' => 'rotate',
-          'arguments' => array('degrees' => 5),
+          'arguments' => ['degrees' => 5],
           'width' => 41,
           'height' => 23,
           'corners' => array_fill(0, 4, $this->rotateTransparent),
-        ),
-        'rotate_transparent_90' => array(
+        ],
+        'rotate_transparent_90' => [
           'function' => 'rotate',
-          'arguments' => array('degrees' => 90),
+          'arguments' => ['degrees' => 90],
           'width' => 20,
           'height' => 40,
-          'corners' => array($this->transparent, $this->red, $this->green, $this->blue),
-        ),
-      );
+          'corners' => [$this->transparent, $this->red, $this->green, $this->blue],
+        ],
+      ];
     }
 
     // Systems using non-bundled GD2 don't have imagefilter. Test if available.
     if (function_exists('imagefilter')) {
-      $operations += array(
-        'desaturate' => array(
+      $operations += [
+        'desaturate' => [
           'function' => 'desaturate',
-          'arguments' => array(),
+          'arguments' => [],
           'height' => 20,
           'width' => 40,
           // Grayscale corners are a bit funky. Each of the corners are a shade of
           // gray. The values of these were determined simply by looking at the
           // final image to see what desaturated colors end up being.
-          'corners' => array(
-            array_fill(0, 3, 76) + array(3 => 0),
-            array_fill(0, 3, 149) + array(3 => 0),
-            array_fill(0, 3, 29) + array(3 => 0),
-            array_fill(0, 3, 225) + array(3 => 127)
-          ),
-        ),
-      );
+          'corners' => [
+            array_fill(0, 3, 76) + [3 => 0],
+            array_fill(0, 3, 149) + [3 => 0],
+            array_fill(0, 3, 29) + [3 => 0],
+            array_fill(0, 3, 225) + [3 => 127]
+          ],
+        ],
+      ];
     }
 
     // Prepare a directory for test file results.
@@ -278,14 +278,14 @@ class ToolkitGdTest extends KernelTestBase {
         $image = $this->imageFactory->get(drupal_get_path('module', 'simpletest') . '/files/' . $file);
         $toolkit = $image->getToolkit();
         if (!$image->isValid()) {
-          $this->fail(SafeMarkup::format('Could not load image %file.', array('%file' => $file)));
+          $this->fail(SafeMarkup::format('Could not load image %file.', ['%file' => $file]));
           continue 2;
         }
         $image_original_type = $image->getToolkit()->getType();
 
         // All images should be converted to truecolor when loaded.
         $image_truecolor = imageistruecolor($toolkit->getResource());
-        $this->assertTrue($image_truecolor, SafeMarkup::format('Image %file after load is a truecolor image.', array('%file' => $file)));
+        $this->assertTrue($image_truecolor, SafeMarkup::format('Image %file after load is a truecolor image.', ['%file' => $file]));
 
         // Store the original GD resource.
         $old_res = $toolkit->getResource();
@@ -317,8 +317,8 @@ class ToolkitGdTest extends KernelTestBase {
         $file_path = $directory . '/' . $op . image_type_to_extension($image->getToolkit()->getType());
         $image->save($file_path);
 
-        $this->assertTrue($correct_dimensions_real, SafeMarkup::format('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
-        $this->assertTrue($correct_dimensions_object, SafeMarkup::format('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
+        $this->assertTrue($correct_dimensions_real, SafeMarkup::format('Image %file after %action action has proper dimensions.', ['%file' => $file, '%action' => $op]));
+        $this->assertTrue($correct_dimensions_object, SafeMarkup::format('Image %file object after %action action is reporting the proper height and width values.', ['%file' => $file, '%action' => $op]));
 
         // JPEG colors will always be messed up due to compression. So we skip
         // these tests if the original or the result is in jpeg format.
@@ -365,7 +365,7 @@ class ToolkitGdTest extends KernelTestBase {
             if ($image->getToolkit()->getType() == $image_original_type || $corner != $this->transparent) {
               $correct_colors = $this->colorsAreEqual($color, $corner);
               $this->assertTrue($correct_colors, SafeMarkup::format('Image %file object after %action action has the correct color placement at corner %corner.',
-                array('%file'   => $file, '%action' => $op, '%corner' => $key)));
+                ['%file'   => $file, '%action' => $op, '%corner' => $key]));
             }
           }
         }
@@ -377,30 +377,30 @@ class ToolkitGdTest extends KernelTestBase {
     }
 
     // Test creation of image from scratch, and saving to storage.
-    foreach (array(IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_JPEG) as $type) {
+    foreach ([IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_JPEG] as $type) {
       $image = $this->imageFactory->get();
       $image->createNew(50, 20, image_type_to_extension($type, FALSE), '#ffff00');
       $file = 'from_null' . image_type_to_extension($type);
       $file_path = $directory . '/' . $file ;
-      $this->assertEqual(50, $image->getWidth(), SafeMarkup::format('Image file %file has the correct width.', array('%file' => $file)));
-      $this->assertEqual(20, $image->getHeight(), SafeMarkup::format('Image file %file has the correct height.', array('%file' => $file)));
-      $this->assertEqual(image_type_to_mime_type($type), $image->getMimeType(), SafeMarkup::format('Image file %file has the correct MIME type.', array('%file' => $file)));
-      $this->assertTrue($image->save($file_path), SafeMarkup::format('Image %file created anew from a null image was saved.', array('%file' => $file)));
+      $this->assertEqual(50, $image->getWidth(), SafeMarkup::format('Image file %file has the correct width.', ['%file' => $file]));
+      $this->assertEqual(20, $image->getHeight(), SafeMarkup::format('Image file %file has the correct height.', ['%file' => $file]));
+      $this->assertEqual(image_type_to_mime_type($type), $image->getMimeType(), SafeMarkup::format('Image file %file has the correct MIME type.', ['%file' => $file]));
+      $this->assertTrue($image->save($file_path), SafeMarkup::format('Image %file created anew from a null image was saved.', ['%file' => $file]));
 
       // Reload saved image.
       $image_reloaded = $this->imageFactory->get($file_path);
       if (!$image_reloaded->isValid()) {
-        $this->fail(SafeMarkup::format('Could not load image %file.', array('%file' => $file)));
+        $this->fail(SafeMarkup::format('Could not load image %file.', ['%file' => $file]));
         continue;
       }
-      $this->assertEqual(50, $image_reloaded->getWidth(), SafeMarkup::format('Image file %file has the correct width.', array('%file' => $file)));
-      $this->assertEqual(20, $image_reloaded->getHeight(), SafeMarkup::format('Image file %file has the correct height.', array('%file' => $file)));
-      $this->assertEqual(image_type_to_mime_type($type), $image_reloaded->getMimeType(), SafeMarkup::format('Image file %file has the correct MIME type.', array('%file' => $file)));
+      $this->assertEqual(50, $image_reloaded->getWidth(), SafeMarkup::format('Image file %file has the correct width.', ['%file' => $file]));
+      $this->assertEqual(20, $image_reloaded->getHeight(), SafeMarkup::format('Image file %file has the correct height.', ['%file' => $file]));
+      $this->assertEqual(image_type_to_mime_type($type), $image_reloaded->getMimeType(), SafeMarkup::format('Image file %file has the correct MIME type.', ['%file' => $file]));
       if ($image_reloaded->getToolkit()->getType() == IMAGETYPE_GIF) {
-        $this->assertEqual('#ffff00', $image_reloaded->getToolkit()->getTransparentColor(), SafeMarkup::format('Image file %file has the correct transparent color channel set.', array('%file' => $file)));
+        $this->assertEqual('#ffff00', $image_reloaded->getToolkit()->getTransparentColor(), SafeMarkup::format('Image file %file has the correct transparent color channel set.', ['%file' => $file]));
       }
       else {
-        $this->assertEqual(NULL, $image_reloaded->getToolkit()->getTransparentColor(), SafeMarkup::format('Image file %file has no color channel set.', array('%file' => $file)));
+        $this->assertEqual(NULL, $image_reloaded->getToolkit()->getTransparentColor(), SafeMarkup::format('Image file %file has no color channel set.', ['%file' => $file]));
       }
     }
 
@@ -496,12 +496,12 @@ class ToolkitGdTest extends KernelTestBase {
     $toolkit = $image->getToolkit();
 
     if (!$image->isValid()) {
-      $this->fail(SafeMarkup::format('Could not load image %file.', array('%file' => $file)));
+      $this->fail(SafeMarkup::format('Could not load image %file.', ['%file' => $file]));
     }
     else {
       // All images should be converted to truecolor when loaded.
       $image_truecolor = imageistruecolor($toolkit->getResource());
-      $this->assertTrue($image_truecolor, SafeMarkup::format('Image %file after load is a truecolor image.', array('%file' => $file)));
+      $this->assertTrue($image_truecolor, SafeMarkup::format('Image %file after load is a truecolor image.', ['%file' => $file]));
     }
   }
 
@@ -519,11 +519,11 @@ class ToolkitGdTest extends KernelTestBase {
     // Load up a fresh image.
     $image = $this->imageFactory->get(drupal_get_path('module', 'simpletest') . '/files/' . $file);
     if (!$image->isValid()) {
-      $this->fail(SafeMarkup::format('Could not load image %file.', array('%file' => $file)));
+      $this->fail(SafeMarkup::format('Could not load image %file.', ['%file' => $file]));
     }
 
     // Try perform a missing toolkit operation.
-    $this->assertFalse($image->apply('missing_op', array()), 'Calling a missing image toolkit operation plugin fails.');
+    $this->assertFalse($image->apply('missing_op', []), 'Calling a missing image toolkit operation plugin fails.');
   }
 
 }

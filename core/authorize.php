@@ -116,10 +116,10 @@ if ($is_allowed) {
       drupal_set_message($results['page_message']['message'], $results['page_message']['type']);
     }
 
-    $content['authorize_report'] = array(
+    $content['authorize_report'] = [
       '#theme' => 'authorize_report',
       '#messages' => $results['messages'],
-    );
+    ];
 
     if (is_array($results['tasks'])) {
       $links = $results['tasks'];
@@ -148,11 +148,11 @@ if ($is_allowed) {
       ];
     }
 
-    $content['next_steps'] = array(
+    $content['next_steps'] = [
       '#theme' => 'item_list',
       '#items' => $links,
       '#title' => t('Next steps'),
-    );
+    ];
   }
   // If a batch is running, let it run.
   elseif ($request->query->has('batch')) {
@@ -189,9 +189,9 @@ else {
 }
 
 $bare_html_page_renderer = \Drupal::service('bare_html_page_renderer');
-$response = $bare_html_page_renderer->renderBarePage($content, $page_title, 'maintenance_page', array(
+$response = $bare_html_page_renderer->renderBarePage($content, $page_title, 'maintenance_page', [
   '#show_messages' => $show_messages,
-));
+]);
 if (!$is_allowed) {
   $response->setStatusCode(403);
 }

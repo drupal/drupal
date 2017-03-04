@@ -81,11 +81,11 @@ class PrivateTempStoreTest extends UnitTestCase {
 
     $this->tempStore = new PrivateTempStore($this->keyValue, $this->lock, $this->currentUser, $this->requestStack, 604800);
 
-    $this->ownObject = (object) array(
+    $this->ownObject = (object) [
       'data' => 'test_data',
       'owner' => $this->currentUser->id(),
       'updated' => (int) $request->server->get('REQUEST_TIME'),
-    );
+    ];
 
     // Clone the object but change the owner.
     $this->otherObject = clone $this->ownObject;

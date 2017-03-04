@@ -79,13 +79,13 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    */
   public function buildDataDefinition(array $definition, $value, $name = NULL, $parent = NULL) {
     // Add default values for data type and replace variables.
-    $definition += array('type' => 'undefined');
+    $definition += ['type' => 'undefined'];
 
     $replace = [];
     $type = $definition['type'];
     if (strpos($type, ']')) {
       // Replace variable names in definition.
-      $replace = is_array($value) ? $value : array();
+      $replace = is_array($value) ? $value : [];
       if (isset($parent)) {
         $replace['%parent'] = $parent;
       }
@@ -161,7 +161,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       $merge = $this->getDefinition($definition['type'], $exception_on_invalid);
       // Preserve integer keys on merge, so sequence item types can override
       // parent settings as opposed to adding unused second, third, etc. items.
-      $definition = NestedArray::mergeDeepArray(array($merge, $definition), TRUE);
+      $definition = NestedArray::mergeDeepArray([$merge, $definition], TRUE);
 
       // Replace dynamic portions of the definition type.
       if (!empty($replacements) && strpos($definition['type'], ']')) {
@@ -181,10 +181,10 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       $this->definitions[$type] = $definition;
     }
     // Add type and default definition class.
-    $definition += array(
+    $definition += [
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
       'type' => $type,
-    );
+    ];
     return $definition;
   }
 
@@ -270,7 +270,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   protected function replaceName($name, $data) {
     if (preg_match_all("/\[(.*)\]/U", $name, $matches)) {
       // Build our list of '[value]' => replacement.
-      $replace = array();
+      $replace = [];
       foreach (array_combine($matches[0], $matches[1]) as $key => $value) {
         $replace[$key] = $this->replaceVariable($value, $data);
       }

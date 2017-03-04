@@ -79,7 +79,7 @@ class MenuLinkTreeElement {
    * \Drupal\Core\Menu\MenuLinkInterface::getOptions(), to allow menu link tree
    * manipulators to add or override link options.
    */
-  public $options = array();
+  public $options = [];
 
   /**
    * Constructs a new \Drupal\Core\Menu\MenuLinkTreeElement.

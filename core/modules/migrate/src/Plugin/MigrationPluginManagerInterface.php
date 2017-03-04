@@ -26,7 +26,7 @@ interface MigrationPluginManagerInterface extends PluginManagerInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    *   If an instance cannot be created, such as if the ID is invalid.
    */
-  public function createInstances($id, array $configuration = array());
+  public function createInstances($id, array $configuration = []);
 
   /**
    * Creates a stub migration plugin from a definition array.

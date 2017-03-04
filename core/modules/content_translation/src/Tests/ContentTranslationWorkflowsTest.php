@@ -26,7 +26,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'entity_test');
+  public static $modules = ['language', 'content_translation', 'entity_test'];
 
   protected function setUp() {
     parent::setUp();
@@ -47,7 +47,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    * {@inheritdoc}
    */
   protected function getEditorPermissions() {
-    return array('administer entity_test content');
+    return ['administer entity_test content'];
   }
 
   /**
@@ -58,11 +58,11 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
 
     // Create a test entity.
     $user = $this->drupalCreateUser();
-    $values = array(
+    $values = [
       'name' => $this->randomMachineName(),
       'user_id' => $user->id(),
-      $this->fieldName => array(array('value' => $this->randomMachineName(16))),
-    );
+      $this->fieldName => [['value' => $this->randomMachineName(16)]],
+    ];
     $id = $this->createEntity($values, $default_langcode);
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
@@ -72,7 +72,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     // Create a translation.
     $this->drupalLogin($this->translator);
     $add_translation_url = Url::fromRoute("entity.$this->entityTypeId.content_translation_add", [$this->entityTypeId => $this->entity->id(), 'source' => $default_langcode, 'target' => $this->langcodes[2]]);
-    $this->drupalPostForm($add_translation_url, array(), t('Save'));
+    $this->drupalPostForm($add_translation_url, [], t('Save'));
     $this->rebuildContainer();
   }
 
@@ -114,10 +114,10 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     $this->doTestWorkflows($this->administrator, $expected_status);
 
     // Check that translation permissions allow the associated operations.
-    $ops = array('create' => t('Add'), 'update' => t('Edit'), 'delete' => t('Delete'));
+    $ops = ['create' => t('Add'), 'update' => t('Edit'), 'delete' => t('Delete')];
     $translations_url = $this->entity->urlInfo('drupal:content-translation-overview');
     foreach ($ops as $current_op => $item) {
-      $user = $this->drupalCreateUser(array($this->getTranslatePermission(), "$current_op content translations", 'view test entity'));
+      $user = $this->drupalCreateUser([$this->getTranslatePermission(), "$current_op content translations", 'view test entity']);
       $this->drupalLogin($user);
       $this->drupalGet($translations_url);
 
@@ -130,10 +130,10 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
 
       foreach ($ops as $op => $label) {
         if ($op != $current_op) {
-          $this->assertNoLink($label, format_string('No %op link found.', array('%op' => $label)));
+          $this->assertNoLink($label, format_string('No %op link found.', ['%op' => $label]));
         }
         else {
-          $this->assertLink($label, 0, format_string('%op link found.', array('%op' => $label)));
+          $this->assertLink($label, 0, format_string('%op link found.', ['%op' => $label]));
         }
       }
     }

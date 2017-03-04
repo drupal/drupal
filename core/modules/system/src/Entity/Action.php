@@ -57,7 +57,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
    *
    * @var array
    */
-  protected $configuration = array();
+  protected $configuration = [];
 
   /**
    * The plugin ID of the action.
@@ -90,7 +90,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
    * {@inheritdoc}
    */
   public function getPluginCollections() {
-    return array('configuration' => $this->getPluginCollection());
+    return ['configuration' => $this->getPluginCollection()];
   }
 
   /**

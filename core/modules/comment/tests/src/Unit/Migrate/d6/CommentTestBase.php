@@ -14,20 +14,20 @@ abstract class CommentTestBase extends MigrateSqlSourceTestCase {
   const PLUGIN_CLASS = 'Drupal\comment\Plugin\migrate\source\d6\Comment';
 
   // The fake Migration configuration entity.
-  protected $migrationConfiguration = array(
+  protected $migrationConfiguration = [
     // The ID of the entity, can be any string.
     'id' => 'test',
     // This needs to be the identifier of the actual key: cid for comment, nid
     // for node and so on.
-    'source' => array(
+    'source' => [
       'plugin' => 'd6_comment',
-    ),
-  );
+    ],
+  ];
 
   // We need to set up the database contents; it's easier to do that below.
 
-  protected $expectedResults = array(
-    array(
+  protected $expectedResults = [
+    [
       'cid' => 1,
       'pid' => 0,
       'nid' => 2,
@@ -43,8 +43,8 @@ abstract class CommentTestBase extends MigrateSqlSourceTestCase {
       'homepage' => '',
       'format' => 'testformat1',
       'type' => 'story',
-    ),
-    array(
+    ],
+    [
       'cid' => 2,
       'pid' => 1,
       'nid' => 3,
@@ -60,8 +60,8 @@ abstract class CommentTestBase extends MigrateSqlSourceTestCase {
       'homepage' => '',
       'format' => 'testformat2',
       'type' => 'page',
-    ),
-  );
+    ],
+  ];
 
   /**
    * {@inheritdoc}
@@ -72,8 +72,8 @@ abstract class CommentTestBase extends MigrateSqlSourceTestCase {
       $this->databaseContents['comments'][$k]['status'] = 1 - $this->databaseContents['comments'][$k]['status'];
     }
     // Add node table data.
-    $this->databaseContents['node'][] = array('nid' => 2, 'type' => 'story');
-    $this->databaseContents['node'][] = array('nid' => 3, 'type' => 'page');
+    $this->databaseContents['node'][] = ['nid' => 2, 'type' => 'story'];
+    $this->databaseContents['node'][] = ['nid' => 3, 'type' => 'page'];
     parent::setUp();
   }
 

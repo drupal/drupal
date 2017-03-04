@@ -19,7 +19,7 @@ function field_test_entity_type_alter(array &$entity_types) {
  * Helper function to enable entity translations.
  */
 function field_test_entity_info_translatable($entity_type_id = NULL, $translatable = NULL) {
-  $stored_value = &drupal_static(__FUNCTION__, array());
+  $stored_value = &drupal_static(__FUNCTION__, []);
   if (isset($entity_type_id)) {
     $entity_manager = \Drupal::entityManager();
     $original = $entity_manager->getDefinition($entity_type_id);

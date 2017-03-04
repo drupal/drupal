@@ -23,25 +23,25 @@ class TestFieldEmptyFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'test_empty_string' => '**EMPTY FIELD**',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     if ($items->isEmpty()) {
       // For fields with no value, just add the configured "empty" value.
-      $elements[0] = array('#markup' => $this->getSetting('test_empty_string'));
+      $elements[0] = ['#markup' => $this->getSetting('test_empty_string')];
     }
     else {
       foreach ($items as $delta => $item) {
         // This formatter only needs to output raw for testing.
-        $elements[$delta] = array('#markup' => $item->value);
+        $elements[$delta] = ['#markup' => $item->value];
       }
     }
 

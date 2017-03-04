@@ -17,14 +17,14 @@ class BlockHookOperationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'entity_test');
+  public static $modules = ['block', 'entity_test'];
 
   protected function setUp() {
     parent::setUp();
 
-    $permissions = array(
+    $permissions = [
       'administer blocks',
-    );
+    ];
 
     // Create and log in user.
     $admin_user = $this->drupalCreateUser($permissions);
@@ -38,7 +38,7 @@ class BlockHookOperationTest extends BrowserTestBase {
     // Add a test block, any block will do.
     // Set the machine name so the test_operation link can be built later.
     $block_id = Unicode::strtolower($this->randomMachineName(16));
-    $this->drupalPlaceBlock('system_powered_by_block', array('id' => $block_id));
+    $this->drupalPlaceBlock('system_powered_by_block', ['id' => $block_id]);
 
     // Get the Block listing.
     $this->drupalGet('admin/structure/block');

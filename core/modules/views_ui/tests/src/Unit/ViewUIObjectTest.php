@@ -18,14 +18,14 @@ class ViewUIObjectTest extends UnitTestCase {
    * Tests entity method decoration.
    */
   public function testEntityDecoration() {
-    $method_args = array();
-    $method_args['setOriginalId'] = array(12);
-    $method_args['setStatus'] = array(TRUE);
-    $method_args['enforceIsNew'] = array(FALSE);
-    $method_args['label'] = array(LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    $method_args = [];
+    $method_args['setOriginalId'] = [12];
+    $method_args['setStatus'] = [TRUE];
+    $method_args['enforceIsNew'] = [FALSE];
+    $method_args['label'] = [LanguageInterface::LANGCODE_NOT_SPECIFIED];
 
     $reflection = new \ReflectionClass('Drupal\Core\Config\Entity\ConfigEntityInterface');
-    $interface_methods = array();
+    $interface_methods = [];
     foreach ($reflection->getMethods() as $reflection_method) {
       $interface_methods[] = $reflection_method->getName();
 
@@ -38,15 +38,15 @@ class ViewUIObjectTest extends UnitTestCase {
       // dependency management.
       if (!in_array($reflection_method->getName(), ['isNew', 'isSyncing', 'isUninstalling', 'getConfigDependencyKey', 'getConfigDependencyName', 'calculateDependencies'])) {
         if (count($reflection_method->getParameters()) == 0) {
-          $method_args[$reflection_method->getName()] = array();
+          $method_args[$reflection_method->getName()] = [];
         }
       }
     }
 
-    $storage = $this->getMock('Drupal\views\Entity\View', $interface_methods, array(array(), 'view'));
+    $storage = $this->getMock('Drupal\views\Entity\View', $interface_methods, [[], 'view']);
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
-      ->setConstructorArgs(array($storage))
+      ->setConstructorArgs([$storage])
       ->getMock();
     $storage->set('executable', $executable);
 
@@ -58,7 +58,7 @@ class ViewUIObjectTest extends UnitTestCase {
       foreach ($args as $arg) {
         $method_mock->with($this->equalTo($arg));
       }
-      call_user_func_array(array($view_ui, $method), $args);
+      call_user_func_array([$view_ui, $method], $args);
     }
 
     $storage->expects($this->once())
@@ -70,10 +70,10 @@ class ViewUIObjectTest extends UnitTestCase {
    * Tests the isLocked method.
    */
   public function testIsLocked() {
-    $storage = $this->getMock('Drupal\views\Entity\View', array(), array(array(), 'view'));
+    $storage = $this->getMock('Drupal\views\Entity\View', [], [[], 'view']);
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
-      ->setConstructorArgs(array($storage))
+      ->setConstructorArgs([$storage])
       ->getMock();
     $storage->set('executable', $executable);
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
@@ -91,20 +91,20 @@ class ViewUIObjectTest extends UnitTestCase {
     $this->assertFalse($view_ui->isLocked());
 
     // Set the lock object with a different owner than the mocked account above.
-    $lock = (object) array(
+    $lock = (object) [
       'owner' => 2,
-      'data' => array(),
+      'data' => [],
       'updated' => (int) $_SERVER['REQUEST_TIME'],
-    );
+    ];
     $view_ui->lock = $lock;
     $this->assertTrue($view_ui->isLocked());
 
     // Set a different lock object with the same object as the mocked account.
-    $lock = (object) array(
+    $lock = (object) [
       'owner' => 1,
-      'data' => array(),
+      'data' => [],
       'updated' => (int) $_SERVER['REQUEST_TIME'],
-    );
+    ];
     $view_ui->lock = $lock;
     $this->assertFalse($view_ui->isLocked());
   }

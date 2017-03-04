@@ -11,12 +11,12 @@ abstract class ConditionBase extends ConditionFundamentals implements ConditionI
    * {@inheritdoc}
    */
   public function condition($field, $value = NULL, $operator = NULL, $langcode = NULL) {
-    $this->conditions[] = array(
+    $this->conditions[] = [
       'field' => $field,
       'value' => $value,
       'operator' => $operator,
       'langcode' => $langcode,
-    );
+    ];
 
     return $this;
   }

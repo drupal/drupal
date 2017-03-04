@@ -45,16 +45,16 @@ class Container extends RenderElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
-      '#process' => array(
-        array($class, 'processGroup'),
-        array($class, 'processContainer'),
-      ),
-      '#pre_render' => array(
-        array($class, 'preRenderGroup'),
-      ),
-      '#theme_wrappers' => array('container'),
-    );
+    return [
+      '#process' => [
+        [$class, 'processGroup'],
+        [$class, 'processContainer'],
+      ],
+      '#pre_render' => [
+        [$class, 'preRenderGroup'],
+      ],
+      '#theme_wrappers' => ['container'],
+    ];
   }
 
   /**

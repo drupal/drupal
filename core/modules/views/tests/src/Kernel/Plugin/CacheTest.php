@@ -21,14 +21,14 @@ class CacheTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view', 'test_cache', 'test_groupwise_term_ui', 'test_display', 'test_filter');
+  public static $testViews = ['test_view', 'test_cache', 'test_groupwise_term_ui', 'test_display', 'test_filter'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'text', 'user', 'node');
+  public static $modules = ['taxonomy', 'text', 'user', 'node'];
 
   /**
    * {@inheritdoc}
@@ -70,13 +70,13 @@ class CacheTest extends ViewsKernelTestBase {
   public function testTimeResultCaching() {
     $view = Views::getView('test_cache');
     $view->setDisplay();
-    $view->display_handler->overrideOption('cache', array(
+    $view->display_handler->overrideOption('cache', [
       'type' => 'time',
-      'options' => array(
+      'options' => [
         'results_lifespan' => '3600',
         'output_lifespan' => '3600',
-      )
-    ));
+      ]
+    ]);
 
     // Test the default (non-paged) display.
     $this->executeView($view);
@@ -84,11 +84,11 @@ class CacheTest extends ViewsKernelTestBase {
     $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
 
     // Add another man to the beatles.
-    $record = array(
+    $record = [
       'name' => 'Rod Davis',
       'age' => 29,
       'job' => 'Banjo',
-    );
+    ];
     db_insert('views_test_data')->fields($record)->execute();
 
     // The result should be the same as before, because of the caching. (Note
@@ -112,25 +112,25 @@ class CacheTest extends ViewsKernelTestBase {
 
     $view = Views::getView('test_filter');
     $view->initDisplay();
-    $view->display_handler->overrideOption('cache', array(
+    $view->display_handler->overrideOption('cache', [
       'type' => 'time',
-      'options' => array(
+      'options' => [
         'results_lifespan' => '3600',
         'output_lifespan' => '3600',
-      ),
-    ));
+      ],
+    ]);
 
     // Change the filtering.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'test_filter' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'test_filter' => [
         'id' => 'test_filter',
         'table' => 'views_test_data',
         'field' => 'name',
         'operator' => '=',
         'value' => 'John',
         'group' => 0,
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
 
@@ -138,29 +138,29 @@ class CacheTest extends ViewsKernelTestBase {
     $cid1 = $view->display_handler->getPlugin('cache')->generateResultsKey();
 
     // Build the expected result.
-    $dataset = array(array('name' => 'John'));
+    $dataset = [['name' => 'John']];
 
     // Verify the result.
     $this->assertEqual(1, count($view->result), 'The number of returned rows match.');
-    $this->assertIdenticalResultSet($view, $dataset, array(
+    $this->assertIdenticalResultSet($view, $dataset, [
       'views_test_data_name' => 'name',
-    ));
+    ]);
 
     $view->destroy();
 
     $view->initDisplay();
 
     // Change the filtering.
-    $view->displayHandlers->get('default')->overrideOption('filters', array(
-      'test_filter' => array(
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'test_filter' => [
         'id' => 'test_filter',
         'table' => 'views_test_data',
         'field' => 'name',
         'operator' => '=',
         'value' => 'Ringo',
         'group' => 0,
-      ),
-    ));
+      ],
+    ]);
 
     $this->executeView($view);
 
@@ -169,13 +169,13 @@ class CacheTest extends ViewsKernelTestBase {
     $this->assertNotEqual($cid1, $cid2, "Results keys are different.");
 
     // Build the expected result.
-    $dataset = array(array('name' => 'Ringo'));
+    $dataset = [['name' => 'Ringo']];
 
     // Verify the result.
     $this->assertEqual(1, count($view->result), 'The number of returned rows match.');
-    $this->assertIdenticalResultSet($view, $dataset, array(
+    $this->assertIdenticalResultSet($view, $dataset, [
       'views_test_data_name' => 'name',
-    ));
+    ]);
   }
 
   /**
@@ -184,13 +184,13 @@ class CacheTest extends ViewsKernelTestBase {
   public function testTimeResultCachingWithPager() {
     $view = Views::getView('test_cache');
     $view->setDisplay();
-    $view->display_handler->overrideOption('cache', array(
+    $view->display_handler->overrideOption('cache', [
       'type' => 'time',
-      'options' => array(
+      'options' => [
         'results_lifespan' => '3600',
         'output_lifespan' => '3600',
-      )
-    ));
+      ]
+    ]);
 
     $mapping = ['views_test_data_name' => 'name'];
 
@@ -228,30 +228,30 @@ class CacheTest extends ViewsKernelTestBase {
     // Create a basic result which just 2 results.
     $view = Views::getView('test_cache');
     $view->setDisplay();
-    $view->display_handler->overrideOption('cache', array(
+    $view->display_handler->overrideOption('cache', [
       'type' => 'none',
-      'options' => array(),
-    ));
+      'options' => [],
+    ]);
 
     $this->executeView($view);
     // Verify the result.
     $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
 
     // Add another man to the beatles.
-    $record = array(
+    $record = [
       'name' => 'Rod Davis',
       'age' => 29,
       'job' => 'Banjo',
-    );
+    ];
     db_insert('views_test_data')->fields($record)->execute();
 
     // The Result changes, because the view is not cached.
     $view = Views::getView('test_cache');
     $view->setDisplay();
-    $view->display_handler->overrideOption('cache', array(
+    $view->display_handler->overrideOption('cache', [
       'type' => 'none',
-      'options' => array(),
-    ));
+      'options' => [],
+    ]);
 
     $this->executeView($view);
     // Verify the result.
@@ -268,12 +268,12 @@ class CacheTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->setDisplay();
     $view->storage->set('id', 'test_cache_header_storage');
-    $view->display_handler->overrideOption('cache', array(
+    $view->display_handler->overrideOption('cache', [
       'type' => 'time',
-      'options' => array(
+      'options' => [
         'output_lifespan' => '3600',
-      )
-    ));
+      ]
+    ]);
 
     $output = $view->buildRenderable();
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
@@ -326,13 +326,13 @@ class CacheTest extends ViewsKernelTestBase {
 
     $view = Views::getView('test_display');
     $view->setDisplay();
-    $view->display_handler->overrideOption('cache', array(
+    $view->display_handler->overrideOption('cache', [
       'type' => 'time',
-      'options' => array(
+      'options' => [
         'results_lifespan' => '3600',
         'output_lifespan' => '3600',
-      )
-    ));
+      ]
+    ]);
     $this->executeView($view);
 
     // Get the cache item.
@@ -390,13 +390,13 @@ class CacheTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
 
     // Add a new argument and set the test plugin for the argument_default.
-    $options = array(
+    $options = [
       'default_argument_type' => 'argument_default_test',
-      'default_argument_options' => array(
+      'default_argument_options' => [
         'value' => 'John'
-      ),
+      ],
       'default_action' => 'default'
-    );
+    ];
     $view->addHandler('default', 'argument', 'views_test_data', 'name', $options);
     $view->initHandlers();
 

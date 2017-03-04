@@ -18,16 +18,16 @@ class ArgumentDateTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_argument_date');
+  public static $testViews = ['test_argument_date'];
 
   /**
    * Stores the column map for this testCase.
    *
    * @var array
    */
-  protected $columnMap = array(
+  protected $columnMap = [
     'id' => 'id',
-  );
+  ];
 
   /**
    * {@inheritdoc}
@@ -35,14 +35,14 @@ class ArgumentDateTest extends ViewsKernelTestBase {
   public function viewsData() {
     $data = parent::viewsData();
 
-    $date_plugins = array(
+    $date_plugins = [
       'date_fulldate',
       'date_day',
       'date_month',
       'date_week',
       'date_year',
       'date_year_month',
-    );
+    ];
     foreach ($date_plugins as $plugin_id) {
       $data['views_test_data'][$plugin_id] = $data['views_test_data']['created'];
       $data['views_test_data'][$plugin_id]['real field'] = 'created';
@@ -59,25 +59,25 @@ class ArgumentDateTest extends ViewsKernelTestBase {
   public function testCreatedFullDateHandler() {
     $view = Views::getView('test_argument_date');
     $view->setDisplay('default');
-    $this->executeView($view, array('20000102'));
-    $expected = array();
-    $expected[] = array('id' => 2);
+    $this->executeView($view, ['20000102']);
+    $expected = [];
+    $expected[] = ['id' => 2];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('default');
-    $this->executeView($view, array('20000101'));
-    $expected = array();
-    $expected[] = array('id' => 1);
-    $expected[] = array('id' => 3);
-    $expected[] = array('id' => 4);
-    $expected[] = array('id' => 5);
+    $this->executeView($view, ['20000101']);
+    $expected = [];
+    $expected[] = ['id' => 1];
+    $expected[] = ['id' => 3];
+    $expected[] = ['id' => 4];
+    $expected[] = ['id' => 5];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('default');
-    $this->executeView($view, array('20001023'));
-    $expected = array();
+    $this->executeView($view, ['20001023']);
+    $expected = [];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
   }
@@ -90,25 +90,25 @@ class ArgumentDateTest extends ViewsKernelTestBase {
   public function testDayHandler() {
     $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_1');
-    $this->executeView($view, array('02'));
-    $expected = array();
-    $expected[] = array('id' => 2);
+    $this->executeView($view, ['02']);
+    $expected = [];
+    $expected[] = ['id' => 2];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_1');
-    $this->executeView($view, array('01'));
-    $expected = array();
-    $expected[] = array('id' => 1);
-    $expected[] = array('id' => 3);
-    $expected[] = array('id' => 4);
-    $expected[] = array('id' => 5);
+    $this->executeView($view, ['01']);
+    $expected = [];
+    $expected[] = ['id' => 1];
+    $expected[] = ['id' => 3];
+    $expected[] = ['id' => 4];
+    $expected[] = ['id' => 5];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_1');
-    $this->executeView($view, array('23'));
-    $expected = array();
+    $this->executeView($view, ['23']);
+    $expected = [];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
   }
 
@@ -120,19 +120,19 @@ class ArgumentDateTest extends ViewsKernelTestBase {
   public function testMonthHandler() {
     $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_2');
-    $this->executeView($view, array('01'));
-    $expected = array();
-    $expected[] = array('id' => 1);
-    $expected[] = array('id' => 2);
-    $expected[] = array('id' => 3);
-    $expected[] = array('id' => 4);
-    $expected[] = array('id' => 5);
+    $this->executeView($view, ['01']);
+    $expected = [];
+    $expected[] = ['id' => 1];
+    $expected[] = ['id' => 2];
+    $expected[] = ['id' => 3];
+    $expected[] = ['id' => 4];
+    $expected[] = ['id' => 5];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_2');
-    $this->executeView($view, array('12'));
-    $expected = array();
+    $this->executeView($view, ['12']);
+    $expected = [];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
   }
 
@@ -143,27 +143,27 @@ class ArgumentDateTest extends ViewsKernelTestBase {
    */
   public function testWeekHandler() {
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 9, 26, 2008)))
+      ->fields(['created' => gmmktime(0, 0, 0, 9, 26, 2008)])
       ->condition('id', 1)
       ->execute();
 
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 2, 29, 2004)))
+      ->fields(['created' => gmmktime(0, 0, 0, 2, 29, 2004)])
       ->condition('id', 2)
       ->execute();
 
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 1, 1, 2000)))
+      ->fields(['created' => gmmktime(0, 0, 0, 1, 1, 2000)])
       ->condition('id', 3)
       ->execute();
 
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 1, 10, 2000)))
+      ->fields(['created' => gmmktime(0, 0, 0, 1, 10, 2000)])
       ->condition('id', 4)
       ->execute();
 
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 2, 1, 2000)))
+      ->fields(['created' => gmmktime(0, 0, 0, 2, 1, 2000)])
       ->condition('id', 5)
       ->execute();
 
@@ -171,46 +171,46 @@ class ArgumentDateTest extends ViewsKernelTestBase {
     $view->setDisplay('embed_3');
     // Check the week calculation for a leap year.
     // @see http://wikipedia.org/wiki/ISO_week_date#Calculation
-    $this->executeView($view, array('39'));
-    $expected = array();
-    $expected[] = array('id' => 1);
+    $this->executeView($view, ['39']);
+    $expected = [];
+    $expected[] = ['id' => 1];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_3');
     // Check the week calculation for the 29th of February in a leap year.
     // @see http://wikipedia.org/wiki/ISO_week_date#Calculation
-    $this->executeView($view, array('09'));
-    $expected = array();
-    $expected[] = array('id' => 2);
+    $this->executeView($view, ['09']);
+    $expected = [];
+    $expected[] = ['id' => 2];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_3');
     // The first jan 2000 was still in the last week of the previous year.
-    $this->executeView($view, array('52'));
-    $expected = array();
-    $expected[] = array('id' => 3);
+    $this->executeView($view, ['52']);
+    $expected = [];
+    $expected[] = ['id' => 3];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_3');
-    $this->executeView($view, array('02'));
-    $expected = array();
-    $expected[] = array('id' => 4);
+    $this->executeView($view, ['02']);
+    $expected = [];
+    $expected[] = ['id' => 4];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_3');
-    $this->executeView($view, array('05'));
-    $expected = array();
-    $expected[] = array('id' => 5);
+    $this->executeView($view, ['05']);
+    $expected = [];
+    $expected[] = ['id' => 5];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_3');
-    $this->executeView($view, array('23'));
-    $expected = array();
+    $this->executeView($view, ['23']);
+    $expected = [];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
   }
 
@@ -221,47 +221,47 @@ class ArgumentDateTest extends ViewsKernelTestBase {
    */
   public function testYearHandler() {
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 1, 1, 2001)))
+      ->fields(['created' => gmmktime(0, 0, 0, 1, 1, 2001)])
       ->condition('id', 3)
       ->execute();
 
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 1, 1, 2002)))
+      ->fields(['created' => gmmktime(0, 0, 0, 1, 1, 2002)])
       ->condition('id', 4)
       ->execute();
 
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 1, 1, 2002)))
+      ->fields(['created' => gmmktime(0, 0, 0, 1, 1, 2002)])
       ->condition('id', 5)
       ->execute();
 
     $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_4');
-    $this->executeView($view, array('2000'));
-    $expected = array();
-    $expected[] = array('id' => 1);
-    $expected[] = array('id' => 2);
+    $this->executeView($view, ['2000']);
+    $expected = [];
+    $expected[] = ['id' => 1];
+    $expected[] = ['id' => 2];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_4');
-    $this->executeView($view, array('2001'));
-    $expected = array();
-    $expected[] = array('id' => 3);
+    $this->executeView($view, ['2001']);
+    $expected = [];
+    $expected[] = ['id' => 3];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_4');
-    $this->executeView($view, array('2002'));
-    $expected = array();
-    $expected[] = array('id' => 4);
-    $expected[] = array('id' => 5);
+    $this->executeView($view, ['2002']);
+    $expected = [];
+    $expected[] = ['id' => 4];
+    $expected[] = ['id' => 5];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_4');
-    $this->executeView($view, array('23'));
-    $expected = array();
+    $this->executeView($view, ['23']);
+    $expected = [];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
   }
 
@@ -272,47 +272,47 @@ class ArgumentDateTest extends ViewsKernelTestBase {
    */
   public function testYearMonthHandler() {
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 1, 1, 2001)))
+      ->fields(['created' => gmmktime(0, 0, 0, 1, 1, 2001)])
       ->condition('id', 3)
       ->execute();
 
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 4, 1, 2001)))
+      ->fields(['created' => gmmktime(0, 0, 0, 4, 1, 2001)])
       ->condition('id', 4)
       ->execute();
 
     $this->container->get('database')->update('views_test_data')
-      ->fields(array('created' => gmmktime(0, 0, 0, 4, 1, 2001)))
+      ->fields(['created' => gmmktime(0, 0, 0, 4, 1, 2001)])
       ->condition('id', 5)
       ->execute();
 
     $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_5');
-    $this->executeView($view, array('200001'));
-    $expected = array();
-    $expected[] = array('id' => 1);
-    $expected[] = array('id' => 2);
+    $this->executeView($view, ['200001']);
+    $expected = [];
+    $expected[] = ['id' => 1];
+    $expected[] = ['id' => 2];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_5');
-    $this->executeView($view, array('200101'));
-    $expected = array();
-    $expected[] = array('id' => 3);
+    $this->executeView($view, ['200101']);
+    $expected = [];
+    $expected[] = ['id' => 3];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_5');
-    $this->executeView($view, array('200104'));
-    $expected = array();
-    $expected[] = array('id' => 4);
-    $expected[] = array('id' => 5);
+    $this->executeView($view, ['200104']);
+    $expected = [];
+    $expected[] = ['id' => 4];
+    $expected[] = ['id' => 5];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
 
     $view->setDisplay('embed_5');
-    $this->executeView($view, array('201301'));
-    $expected = array();
+    $this->executeView($view, ['201301']);
+    $expected = [];
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
   }
 

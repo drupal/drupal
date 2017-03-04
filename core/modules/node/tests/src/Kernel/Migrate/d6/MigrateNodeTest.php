@@ -172,11 +172,11 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertIdentical('full_html', $node->body->format);
 
     // Now insert a row indicating a failure and set to update later.
-    $title = $this->rerunMigration(array(
+    $title = $this->rerunMigration([
       'sourceid1' => 2,
       'destid1' => NULL,
       'source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
-    ));
+    ]);
     $node = Node::load(2);
     $this->assertIdentical($title, $node->getTitle());
   }
@@ -194,10 +194,10 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $title = $this->randomString();
     $source_connection = Database::getConnection('default', 'migrate');
     $source_connection->update('node_revisions')
-      ->fields(array(
+      ->fields([
         'title' => $title,
         'format' => 2,
-      ))
+      ])
       ->condition('vid', 3)
       ->execute();
     $migration = $this->getMigration('d6_node:story');

@@ -16,7 +16,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
   /**
    * Set up required modules.
    */
-  public static $modules = array();
+  public static $modules = [];
 
   /**
    * Test setup.
@@ -30,11 +30,11 @@ class DrupalDateTimeTest extends BrowserTestBase {
    * Test that the AJAX Timezone Callback can deal with various formats.
    */
   public function testSystemTimezone() {
-    $options = array(
-      'query' => array(
+    $options = [
+      'query' => [
         'date' => 'Tue+Sep+17+2013+21%3A35%3A31+GMT%2B0100+(BST)#',
-      )
-    );
+      ]
+    ];
     // Query the AJAX Timezone Callback with a long-format date.
     $response = $this->drupalGet('system/timezone/BST/3600/1', $options);
     $this->assertEqual($response, '"Europe\/London"', 'Timezone AJAX callback successfully identifies and responds to a long-format date.');
@@ -80,11 +80,11 @@ class DrupalDateTimeTest extends BrowserTestBase {
 
     // Create user.
     $this->config('system.date')->set('timezone.user.configurable', 1)->save();
-    $test_user = $this->drupalCreateUser(array());
+    $test_user = $this->drupalCreateUser([]);
     $this->drupalLogin($test_user);
 
     // Set up the user with a different timezone than the site.
-    $edit = array('mail' => $test_user->getEmail(), 'timezone' => 'Asia/Manila');
+    $edit = ['mail' => $test_user->getEmail(), 'timezone' => 'Asia/Manila'];
     $this->drupalPostForm('user/' . $test_user->id() . '/edit', $edit, t('Save'));
 
     // Reload the user and reset the timezone in AccountProxy::setAccount().
@@ -109,7 +109,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
     $this->assertEqual($date->format('Y/m/d H:i:s e'), '1972/10/11 12:25:21 UTC', 'Date has default UTC time zone and correct date/time.');
 
     // Verify that the format method can override the time zone.
-    $this->assertEqual($date->format('Y/m/d H:i:s e', array('timezone' => 'America/New_York')), '1972/10/11 08:25:21 America/New_York', 'Date displayed overidden time zone and correct date/time');
+    $this->assertEqual($date->format('Y/m/d H:i:s e', ['timezone' => 'America/New_York']), '1972/10/11 08:25:21 America/New_York', 'Date displayed overidden time zone and correct date/time');
 
     // Verify that the date format method still displays the default time zone
     // for the date object.

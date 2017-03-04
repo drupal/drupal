@@ -82,7 +82,7 @@ class MenuRouterTest extends WebTestBase {
   protected function doTestTitleCallbackFalse() {
     $this->drupalGet('test-page');
     $this->assertText('A title with @placeholder', 'Raw text found on the page');
-    $this->assertNoText(t('A title with @placeholder', array('@placeholder' => 'some other text')), 'Text with placeholder substitutions not found.');
+    $this->assertNoText(t('A title with @placeholder', ['@placeholder' => 'some other text']), 'Text with placeholder substitutions not found.');
   }
 
   /**
@@ -110,7 +110,7 @@ class MenuRouterTest extends WebTestBase {
    * Tests for menu_name parameter for default menu links.
    */
   protected function doTestMenuName() {
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
     $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
@@ -179,7 +179,7 @@ class MenuRouterTest extends WebTestBase {
    * Tests a menu on a router page.
    */
   protected function doTestMenuOnRoute() {
-    \Drupal::service('module_installer')->install(array('router_test'));
+    \Drupal::service('module_installer')->install(['router_test']);
     \Drupal::service('router.builder')->rebuild();
     $this->resetAll();
 
@@ -210,7 +210,7 @@ class MenuRouterTest extends WebTestBase {
   public function testMaintenanceModeLoginPaths() {
     $this->container->get('state')->set('system.maintenance_mode', TRUE);
 
-    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => $this->config('system.site')->get('name')));
+    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', ['@site' => $this->config('system.site')->get('name')]);
     $this->drupalGet('test-page');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');
@@ -224,7 +224,7 @@ class MenuRouterTest extends WebTestBase {
    * 'user' and 'user/register' gets redirected to the user edit page.
    */
   public function testAuthUserUserLogin() {
-    $web_user = $this->drupalCreateUser(array());
+    $web_user = $this->drupalCreateUser([]);
     $this->drupalLogin($web_user);
 
     $this->drupalGet('user/login');
@@ -282,7 +282,7 @@ class MenuRouterTest extends WebTestBase {
     $this->assertRaw('bartik/css/base/elements.css', "The maintenance theme's CSS appears on the page.");
 
     // An administrator, however, should continue to see the requested theme.
-    $admin_user = $this->drupalCreateUser(array('access site in maintenance mode'));
+    $admin_user = $this->drupalCreateUser(['access site in maintenance mode']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     $this->assertText('Active theme: seven. Actual theme: seven.', 'The theme negotiation system is correctly triggered for an administrator when the site is in maintenance mode.');
@@ -302,13 +302,13 @@ class MenuRouterTest extends WebTestBase {
 
     // Now install the theme and request it again.
     $theme_handler = $this->container->get('theme_handler');
-    $theme_handler->install(array('test_theme'));
+    $theme_handler->install(['test_theme']);
 
     $this->drupalGet('menu-test/theme-callback/use-test-theme');
     $this->assertText('Active theme: test_theme. Actual theme: test_theme.', 'The theme negotiation system uses an optional theme once it has been installed.');
     $this->assertRaw('test_theme/kitten.css', "The optional theme's CSS appears on the page.");
 
-    $theme_handler->uninstall(array('test_theme'));
+    $theme_handler->uninstall(['test_theme']);
   }
 
   /**

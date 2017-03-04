@@ -21,11 +21,11 @@ class Ajax extends RenderElement {
     // an HTML page, so we don't provide defaults for #theme or #theme_wrappers.
     // However, modules can set these properties (for example, to provide an
     // HTML debugging page that displays rather than executes Ajax commands).
-    return array(
+    return [
       '#header' => TRUE,
-      '#commands' => array(),
+      '#commands' => [],
       '#error' => NULL,
-    );
+    ];
   }
 
 }

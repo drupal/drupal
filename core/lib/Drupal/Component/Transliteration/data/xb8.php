@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'leoss', 'leong', 'leoj', 'leoch', 'leok', 'leot', 'leop', 'leoh', 'le', 'leg', 'lekk', 'legs', 'len', 'lenj', 'lenh', 'led',
   0x10 => 'lel', 'lelg', 'lelm', 'lelb', 'lels', 'lelt', 'lelp', 'lelh', 'lem', 'leb', 'lebs', 'les', 'less', 'leng', 'lej', 'lech',
   0x20 => 'lek', 'let', 'lep', 'leh', 'lyeo', 'lyeog', 'lyeokk', 'lyeogs', 'lyeon', 'lyeonj', 'lyeonh', 'lyeod', 'lyeol', 'lyeolg', 'lyeolm', 'lyeolb',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'lyon', 'lyonj', 'lyonh', 'lyod', 'lyol', 'lyolg', 'lyolm', 'lyolb', 'lyols', 'lyolt', 'lyolp', 'lyolh', 'lyom', 'lyob', 'lyobs', 'lyos',
   0xE0 => 'lyoss', 'lyong', 'lyoj', 'lyoch', 'lyok', 'lyot', 'lyop', 'lyoh', 'lu', 'lug', 'lukk', 'lugs', 'lun', 'lunj', 'lunh', 'lud',
   0xF0 => 'lul', 'lulg', 'lulm', 'lulb', 'luls', 'lult', 'lulp', 'lulh', 'lum', 'lub', 'lubs', 'lus', 'luss', 'lung', 'luj', 'luch',
-);
+];

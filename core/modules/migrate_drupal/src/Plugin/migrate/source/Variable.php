@@ -37,7 +37,7 @@ class Variable extends DrupalSqlBase {
    * {@inheritdoc}
    */
   protected function initializeIterator() {
-    return new \ArrayIterator(array($this->values()));
+    return new \ArrayIterator([$this->values()]);
   }
 
   /**
@@ -75,7 +75,7 @@ class Variable extends DrupalSqlBase {
   public function query() {
     return $this->getDatabase()
       ->select('variable', 'v')
-      ->fields('v', array('name', 'value'))
+      ->fields('v', ['name', 'value'])
       ->condition('name', $this->variables, 'IN');
   }
 

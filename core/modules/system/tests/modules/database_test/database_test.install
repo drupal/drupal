@@ -14,281 +14,281 @@
  * like any other, not directly in the test file.
  */
 function database_test_schema() {
-  $schema['test'] = array(
+  $schema['test'] = [
     'description' => 'Basic test table for the database unit tests.',
-    'fields' => array(
-      'id' => array(
+    'fields' => [
+      'id' => [
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'name' => array(
+      ],
+      'name' => [
         'description' => "A person's name",
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'binary' => TRUE,
-      ),
-      'age' => array(
+      ],
+      'age' => [
         'description' => "The person's age",
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'job' => array(
+      ],
+      'job' => [
         'description' => "The person's job",
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => 'Undefined',
-      ),
-    ),
-    'primary key' => array('id'),
-    'unique keys' => array(
-      'name' => array('name')
-    ),
-    'indexes' => array(
-      'ages' => array('age'),
-    ),
-  );
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'name' => ['name']
+    ],
+    'indexes' => [
+      'ages' => ['age'],
+    ],
+  ];
 
   // This is an alternate version of the same table that is structured the same
   // but has a non-serial Primary Key.
-  $schema['test_people'] = array(
+  $schema['test_people'] = [
     'description' => 'A duplicate version of the test table, used for additional tests.',
-    'fields' => array(
-      'name' => array(
+    'fields' => [
+      'name' => [
         'description' => "A person's name",
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'age' => array(
+      ],
+      'age' => [
         'description' => "The person's age",
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'job' => array(
+      ],
+      'job' => [
         'description' => "The person's job",
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-    ),
-    'primary key' => array('job'),
-    'indexes' => array(
-      'ages' => array('age'),
-    ),
-  );
+      ],
+    ],
+    'primary key' => ['job'],
+    'indexes' => [
+      'ages' => ['age'],
+    ],
+  ];
 
-  $schema['test_people_copy'] = array(
+  $schema['test_people_copy'] = [
     'description' => 'A duplicate version of the test_people table, used for additional tests.',
-    'fields' => array(
-      'name' => array(
+    'fields' => [
+      'name' => [
         'description' => "A person's name",
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'age' => array(
+      ],
+      'age' => [
         'description' => "The person's age",
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'job' => array(
+      ],
+      'job' => [
         'description' => "The person's job",
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-    ),
-    'primary key' => array('job'),
-    'indexes' => array(
-      'ages' => array('age'),
-    ),
-  );
+      ],
+    ],
+    'primary key' => ['job'],
+    'indexes' => [
+      'ages' => ['age'],
+    ],
+  ];
 
-  $schema['test_one_blob'] = array(
+  $schema['test_one_blob'] = [
     'description' => 'A simple table including a BLOB field for testing BLOB behavior.',
-    'fields' => array(
-      'id' => array(
+    'fields' => [
+      'id' => [
         'description' => 'Simple unique ID.',
         'type' => 'serial',
         'not null' => TRUE,
-      ),
-      'blob1' => array(
+      ],
+      'blob1' => [
         'description' => 'A BLOB field.',
         'type' => 'blob',
-      ),
-    ),
-    'primary key' => array('id'),
-    );
+      ],
+    ],
+    'primary key' => ['id'],
+    ];
 
-  $schema['test_two_blobs'] = array(
+  $schema['test_two_blobs'] = [
     'description' => 'A simple test table with two BLOB fields.',
-    'fields' => array(
-      'id' => array(
+    'fields' => [
+      'id' => [
         'description' => 'Simple unique ID.',
         'type' => 'serial',
         'not null' => TRUE,
-      ),
-      'blob1' => array(
+      ],
+      'blob1' => [
         'description' => 'A dummy BLOB field.',
         'type' => 'blob',
-      ),
-      'blob2' => array(
+      ],
+      'blob2' => [
         'description' => 'A second BLOB field.',
         'type' => 'blob'
-      ),
-    ),
-    'primary key' => array('id'),
-    );
+      ],
+    ],
+    'primary key' => ['id'],
+    ];
 
-  $schema['test_task'] = array(
+  $schema['test_task'] = [
     'description' => 'A task list for people in the test table.',
-    'fields' => array(
-      'tid' => array(
+    'fields' => [
+      'tid' => [
         'description' => 'Task ID, primary key.',
         'type' => 'serial',
         'not null' => TRUE,
-      ),
-      'pid' => array(
+      ],
+      'pid' => [
         'description' => 'The {test_people}.pid, foreign key for the test table.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'task' => array(
+      ],
+      'task' => [
         'description' => 'The task to be completed.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'priority' => array(
+      ],
+      'priority' => [
         'description' => 'The priority of the task.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-    ),
-    'primary key' => array('tid'),
-  );
+      ],
+    ],
+    'primary key' => ['tid'],
+  ];
 
-  $schema['test_null'] = array(
+  $schema['test_null'] = [
     'description' => 'Basic test table for NULL value handling.',
-    'fields' => array(
-      'id' => array(
+    'fields' => [
+      'id' => [
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'name' => array(
+      ],
+      'name' => [
         'description' => "A person's name.",
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => FALSE,
         'default' => '',
-      ),
-      'age' => array(
+      ],
+      'age' => [
         'description' => "The person's age.",
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
-        'default' => 0),
-    ),
-    'primary key' => array('id'),
-    'unique keys' => array(
-      'name' => array('name')
-    ),
-    'indexes' => array(
-      'ages' => array('age'),
-    ),
-  );
+        'default' => 0],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'name' => ['name']
+    ],
+    'indexes' => [
+      'ages' => ['age'],
+    ],
+  ];
 
-  $schema['test_serialized'] = array(
+  $schema['test_serialized'] = [
     'description' => 'Basic test table for NULL value handling.',
-    'fields' => array(
-      'id' => array(
+    'fields' => [
+      'id' => [
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'name' => array(
+      ],
+      'name' => [
         'description' => "A person's name.",
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => FALSE,
         'default' => '',
-      ),
-      'info' => array(
+      ],
+      'info' => [
         'description' => "The person's data in serialized form.",
         'type' => 'blob',
         'serialize' => TRUE,
-      ),
-    ),
-    'primary key' => array('id'),
-    'unique keys' => array(
-      'name' => array('name')
-    ),
-  );
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'name' => ['name']
+    ],
+  ];
 
-  $schema['test_composite_primary'] = array(
+  $schema['test_composite_primary'] = [
     'description' => 'Basic test table with a composite primary key',
-    'fields' => array(
-      'name' => array(
+    'fields' => [
+      'name' => [
         'description' => "A person's name",
         'type' => 'varchar',
         'length' => 50,
         'not null' => TRUE,
         'default' => '',
         'binary' => TRUE,
-      ),
-      'age' => array(
+      ],
+      'age' => [
         'description' => "The person's age",
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'job' => array(
+      ],
+      'job' => [
         'description' => "The person's job",
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => 'Undefined',
-      ),
-    ),
-    'primary key' => array('name', 'age'),
-  );
+      ],
+    ],
+    'primary key' => ['name', 'age'],
+  ];
 
-  $schema['test_special_columns'] = array(
+  $schema['test_special_columns'] = [
     'description' => 'A simple test table with special column names.',
-    'fields' => array(
-      'id' => array(
+    'fields' => [
+      'id' => [
         'description' => 'Simple unique ID.',
         'type' => 'int',
         'not null' => TRUE,
-      ),
-      'offset' => array(
+      ],
+      'offset' => [
         'description' => 'A column with preserved name.',
         'type' => 'text',
-      ),
-    ),
-    'primary key' => array('id'),
-  );
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
 
   $schema['TEST_UPPERCASE'] = $schema['test'];
 

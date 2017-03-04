@@ -31,10 +31,10 @@ class RedirectCommand implements CommandInterface {
    * Implements \Drupal\Core\Ajax\CommandInterface:render().
    */
   public function render() {
-    return array(
+    return [
       'command' => 'redirect',
       'url' => $this->url,
-    );
+    ];
   }
 
 }

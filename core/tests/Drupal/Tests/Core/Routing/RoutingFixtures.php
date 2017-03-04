@@ -47,32 +47,32 @@ class RoutingFixtures {
    * Returns a static version of the routes.
    */
   public function staticSampleRouteCollection() {
-    $routes = array();
-    $routes['route_a'] = array(
+    $routes = [];
+    $routes['route_a'] = [
       'path' => '/path/one',
-      'methods' => array('GET'),
-    );
-    $routes['route_b'] = array(
+      'methods' => ['GET'],
+    ];
+    $routes['route_b'] = [
       'path' => '/path/one',
-      'methods' => array('PUT'),
-    );
-    $routes['route_c'] = array(
+      'methods' => ['PUT'],
+    ];
+    $routes['route_c'] = [
       'path' => '/path/two',
-      'methods' => array('GET'),
-      'requirements' => array(
+      'methods' => ['GET'],
+      'requirements' => [
         '_format' => 'json'
-      ),
-    );
-    $routes['route_d'] = array(
+      ],
+    ];
+    $routes['route_d'] = [
       'path' => '/path/three',
-    );
-    $routes['route_e'] = array(
+    ];
+    $routes['route_e'] = [
       'path' => '/path/two',
-      'methods' => array('GET', 'HEAD'),
-      'requirements' => array(
+      'methods' => ['GET', 'HEAD'],
+      'requirements' => [
         '_format' => 'html'
-      ),
-    );
+      ],
+    ];
 
     return $routes;
   }
@@ -235,74 +235,74 @@ class RoutingFixtures {
    */
   public function routingTableDefinition() {
 
-    $tables['test_routes'] = array(
+    $tables['test_routes'] = [
       'description' => 'Maps paths to various callbacks (access, page and title)',
-      'fields' => array(
-        'name' => array(
+      'fields' => [
+        'name' => [
           'description' => 'Primary Key: Machine name of this route',
           'type' => 'varchar_ascii',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
-        ),
-        'path' => array(
+        ],
+        'path' => [
           'description' => 'The path for this URI',
           'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
-        ),
-        'pattern_outline' => array(
+        ],
+        'pattern_outline' => [
           'description' => 'The pattern',
           'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
-        ),
-        'provider' => array(
+        ],
+        'provider' => [
           'description' => 'The provider grouping to which a route belongs.',
           'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
-        ),
-        'access_callback' => array(
+        ],
+        'access_callback' => [
           'description' => 'The callback which determines the access to this router path. Defaults to \Drupal\Core\Session\AccountInterface::hasPermission.',
           'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
-        ),
-        'access_arguments' => array(
+        ],
+        'access_arguments' => [
           'description' => 'A serialized array of arguments for the access callback.',
           'type' => 'blob',
           'not null' => FALSE,
-        ),
-        'fit' => array(
+        ],
+        'fit' => [
           'description' => 'A numeric representation of how specific the path is.',
           'type' => 'int',
           'not null' => TRUE,
           'default' => 0,
-        ),
-        'number_parts' => array(
+        ],
+        'number_parts' => [
           'description' => 'Number of parts in this router path.',
           'type' => 'int',
           'not null' => TRUE,
           'default' => 0,
           'size' => 'small',
-        ),
-        'route' => array(
+        ],
+        'route' => [
           'description' => 'A serialized Route object',
           'type' => 'text',
-        ),
-      ),
-      'indexes' => array(
-        'fit' => array('fit'),
-        'pattern_outline' => array('pattern_outline'),
-        'provider' => array('provider'),
-      ),
-      'primary key' => array('name'),
-    );
+        ],
+      ],
+      'indexes' => [
+        'fit' => ['fit'],
+        'pattern_outline' => ['pattern_outline'],
+        'provider' => ['provider'],
+      ],
+      'primary key' => ['name'],
+    ];
 
     return $tables;
   }

@@ -32,10 +32,10 @@ class CommentTokenReplaceTest extends CommentTestBase {
   function testCommentTokenReplacement() {
     $token_service = \Drupal::token();
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-    $url_options = array(
+    $url_options = [
       'absolute' => TRUE,
       'language' => $language_interface,
-    );
+    ];
 
     // Setup vocabulary.
     Vocabulary::create([
@@ -65,7 +65,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $comment->setSubject('<blink>Blinking Comment</blink>');
 
     // Generate and test tokens.
-    $tests = array();
+    $tests = [];
     $tests['[comment:cid]'] = $comment->id();
     $tests['[comment:hostname]'] = $comment->getHostname();
     $tests['[comment:author]'] = Html::escape($comment->getAuthorName());
@@ -74,11 +74,11 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:title]'] = Html::escape($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
     $tests['[comment:langcode]'] = $comment->language()->getId();
-    $tests['[comment:url]'] = $comment->url('canonical', $url_options + array('fragment' => 'comment-' . $comment->id()));
+    $tests['[comment:url]'] = $comment->url('canonical', $url_options + ['fragment' => 'comment-' . $comment->id()]);
     $tests['[comment:edit-url]'] = $comment->url('edit-form', $url_options);
-    $tests['[comment:created]'] = \Drupal::service('date.formatter')->format($comment->getCreatedTime(), 'medium', array('langcode' => $language_interface->getId()));
-    $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getCreatedTime(), array('langcode' => $language_interface->getId()));
-    $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getChangedTimeAcrossTranslations(), array('langcode' => $language_interface->getId()));
+    $tests['[comment:created]'] = \Drupal::service('date.formatter')->format($comment->getCreatedTime(), 'medium', ['langcode' => $language_interface->getId()]);
+    $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getCreatedTime(), ['langcode' => $language_interface->getId()]);
+    $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getChangedTimeAcrossTranslations(), ['langcode' => $language_interface->getId()]);
     $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;
     $tests['[comment:parent:title]'] = $parent_comment->getSubject();
     $tests['[comment:entity]'] = Html::escape($node->getTitle());
@@ -127,7 +127,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
-      $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->getId()), $bubbleable_metadata);
+      $output = $token_service->replace($input, ['comment' => $comment], ['langcode' => $language_interface->getId()], $bubbleable_metadata);
       $this->assertEqual($output, $expected, new FormattableMarkup('Comment token %token replaced.', ['%token' => $input]));
       $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
     }
@@ -136,8 +136,8 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $author_name = 'This is a random & " > string';
     $comment->setOwnerId(0)->setAuthorName($author_name);
     $input = '[comment:author]';
-    $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->getId()));
-    $this->assertEqual($output, Html::escape($author_name), format_string('Comment author token %token replaced.', array('%token' => $input)));
+    $output = $token_service->replace($input, ['comment' => $comment], ['langcode' => $language_interface->getId()]);
+    $this->assertEqual($output, Html::escape($author_name), format_string('Comment author token %token replaced.', ['%token' => $input]));
     // Add comment field to user and term entities.
     $this->addDefaultCommentField('user', 'user', 'comment', CommentItemInterface::OPEN, 'comment_user');
     $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'comment_term');
@@ -162,7 +162,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     // Generate comment tokens for node (it has 2 comments, both new),
     // user and term.
-    $tests = array();
+    $tests = [];
     $tests['[entity:comment-count]'] = 2;
     $tests['[entity:comment-count-new]'] = 2;
     $tests['[node:comment-count]'] = 2;

@@ -40,7 +40,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
    * @see ::prepareView()
    */
   protected function getEntitiesToView(EntityReferenceFieldItemListInterface $items, $langcode) {
-    $entities = array();
+    $entities = [];
 
     foreach ($items as $delta => $item) {
       // Ignore items where no entity could be loaded in prepareView().
@@ -120,7 +120,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
     // "multiple entity load" to load all the entities for the multiple
     // "entity reference item lists" being displayed. We thus cannot use
     // \Drupal\Core\Field\EntityReferenceFieldItemList::referencedEntities().
-    $ids = array();
+    $ids = [];
     foreach ($entities_items as $items) {
       foreach ($items as $item) {
         // To avoid trying to reload non-existent entities in

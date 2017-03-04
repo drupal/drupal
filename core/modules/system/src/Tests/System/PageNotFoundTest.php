@@ -26,12 +26,12 @@ class PageNotFoundTest extends WebTestBase {
     parent::setUp();
 
     // Create an administrative user.
-    $this->adminUser = $this->drupalCreateUser(array('administer site configuration', 'link to any page'));
+    $this->adminUser = $this->drupalCreateUser(['administer site configuration', 'link to any page']);
     $this->adminUser->roles[] = 'administrator';
     $this->adminUser->save();
 
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access user profiles'));
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access user profiles'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access user profiles']);
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access user profiles']);
   }
 
   function testPageNotFound() {
@@ -47,9 +47,9 @@ class PageNotFoundTest extends WebTestBase {
     $this->assertRaw(SafeMarkup::format("The path '%path' has to start with a slash.", ['%path' => $edit['site_404']]));
 
     // Use a custom 404 page.
-    $edit = array(
+    $edit = [
       'site_404' => '/user/' . $this->adminUser->id(),
-    );
+    ];
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
 
     $this->drupalGet($this->randomMachineName(10));

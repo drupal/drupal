@@ -5,7 +5,7 @@
  * Generic transliteration data for the PhpTransliteration class.
  */
 
-$base = array(
+$base = [
   0x00 => 'geul', 'geulg', 'geulm', 'geulb', 'geuls', 'geult', 'geulp', 'geulh', 'geum', 'geub', 'geubs', 'geus', 'geuss', 'geung', 'geuj', 'geuch',
   0x10 => 'geuk', 'geut', 'geup', 'geuh', 'gui', 'guig', 'guikk', 'guigs', 'guin', 'guinj', 'guinh', 'guid', 'guil', 'guilg', 'guilm', 'guilb',
   0x20 => 'guils', 'guilt', 'guilp', 'guilh', 'guim', 'guib', 'guibs', 'guis', 'guiss', 'guing', 'guij', 'guich', 'guik', 'guit', 'guip', 'guih',
@@ -22,4 +22,4 @@ $base = array(
   0xD0 => 'kkeoss', 'kkeong', 'kkeoj', 'kkeoch', 'kkeok', 'kkeot', 'kkeop', 'kkeoh', 'kke', 'kkeg', 'kkekk', 'kkegs', 'kken', 'kkenj', 'kkenh', 'kked',
   0xE0 => 'kkel', 'kkelg', 'kkelm', 'kkelb', 'kkels', 'kkelt', 'kkelp', 'kkelh', 'kkem', 'kkeb', 'kkebs', 'kkes', 'kkess', 'kkeng', 'kkej', 'kkech',
   0xF0 => 'kkek', 'kket', 'kkep', 'kkeh', 'kkyeo', 'kkyeog', 'kkyeokk', 'kkyeogs', 'kkyeon', 'kkyeonj', 'kkyeonh', 'kkyeod', 'kkyeol', 'kkyeolg', 'kkyeolm', 'kkyeolb',
-);
+];

@@ -17,13 +17,13 @@ class DateTimeWidgetBase extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $element['value'] = array(
+    $element['value'] = [
       '#type' => 'datetime',
       '#default_value' => NULL,
       '#date_increment' => 1,
       '#date_timezone' => drupal_get_user_timezone(),
       '#required' => $element['#required'],
-    );
+    ];
 
     if ($this->getFieldSetting('datetime_type') == DateTimeItem::DATETIME_TYPE_DATE) {
       // A date-only field should have no timezone conversion performed, so

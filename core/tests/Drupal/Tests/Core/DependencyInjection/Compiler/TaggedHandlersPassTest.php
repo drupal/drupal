@@ -52,9 +52,9 @@ class TaggedHandlersPassTest extends UnitTestCase {
     $container = $this->buildContainer();
     $container
       ->register('consumer_id', __NAMESPACE__ . '\ValidConsumer')
-      ->addTag('service_collector', array(
+      ->addTag('service_collector', [
         'required' => TRUE,
-      ));
+      ]);
 
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);
@@ -121,9 +121,9 @@ class TaggedHandlersPassTest extends UnitTestCase {
       ->addTag('consumer_id');
     $container
       ->register('handler2', __NAMESPACE__ . '\ValidHandler')
-      ->addTag('consumer_id', array(
+      ->addTag('consumer_id', [
         'priority' => 10,
-      ));
+      ]);
 
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);
@@ -145,18 +145,18 @@ class TaggedHandlersPassTest extends UnitTestCase {
     $container = $this->buildContainer();
     $container
       ->register('consumer_id', __NAMESPACE__ . '\ValidConsumer')
-      ->addTag('service_collector', array(
+      ->addTag('service_collector', [
         'call' => 'addNoPriority',
-      ));
+      ]);
 
     $container
       ->register('handler1', __NAMESPACE__ . '\ValidHandler')
       ->addTag('consumer_id');
     $container
       ->register('handler2', __NAMESPACE__ . '\ValidHandler')
-      ->addTag('consumer_id', array(
+      ->addTag('consumer_id', [
         'priority' => 10,
-      ));
+      ]);
 
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);
@@ -178,18 +178,18 @@ class TaggedHandlersPassTest extends UnitTestCase {
     $container = $this->buildContainer();
     $container
       ->register('consumer_id', __NAMESPACE__ . '\ValidConsumer')
-      ->addTag('service_collector', array(
+      ->addTag('service_collector', [
         'call' => 'addWithId',
-      ));
+      ]);
 
     $container
       ->register('handler1', __NAMESPACE__ . '\ValidHandler')
       ->addTag('consumer_id');
     $container
       ->register('handler2', __NAMESPACE__ . '\ValidHandler')
-      ->addTag('consumer_id', array(
+      ->addTag('consumer_id', [
         'priority' => 10,
-      ));
+      ]);
 
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);
@@ -221,9 +221,9 @@ class TaggedHandlersPassTest extends UnitTestCase {
       ->addTag('consumer_id');
     $container
       ->register('handler2', __NAMESPACE__ . '\ValidHandler')
-      ->addTag('consumer_id', array(
+      ->addTag('consumer_id', [
         'priority' => 10,
-      ));
+      ]);
 
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);
@@ -243,10 +243,10 @@ class TaggedHandlersPassTest extends UnitTestCase {
 
     $container
       ->register('handler1', __NAMESPACE__ . '\ValidHandler')
-      ->addTag('consumer_id', array(
+      ->addTag('consumer_id', [
           'extra1' => 'extra1',
           'extra2' => 'extra2',
-        ));
+        ]);
 
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);
@@ -269,15 +269,15 @@ class TaggedHandlersPassTest extends UnitTestCase {
 
     $container
       ->register('consumer_id', __NAMESPACE__ . '\ValidConsumerWithExtraArguments')
-      ->addTag('service_collector', array(
+      ->addTag('service_collector', [
         'call' => 'addNoPriority'
-      ));
+      ]);
 
     $container
       ->register('handler1', __NAMESPACE__ . '\ValidHandler')
-      ->addTag('consumer_id', array(
+      ->addTag('consumer_id', [
         'extra' => 'extra',
-      ));
+      ]);
 
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);
@@ -298,15 +298,15 @@ class TaggedHandlersPassTest extends UnitTestCase {
 
     $container
       ->register('consumer_id', __NAMESPACE__ . '\ValidConsumerWithExtraArguments')
-      ->addTag('service_collector', array(
+      ->addTag('service_collector', [
         'call' => 'addWithId'
-      ));
+      ]);
 
     $container
       ->register('handler1', __NAMESPACE__ . '\ValidHandler')
-      ->addTag('consumer_id', array(
+      ->addTag('consumer_id', [
         'extra1' => 'extra1',
-      ));
+      ]);
 
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);
@@ -330,17 +330,17 @@ class TaggedHandlersPassTest extends UnitTestCase {
 
     $container
       ->register('consumer_id', __NAMESPACE__ . '\ValidConsumerWithExtraArguments')
-      ->addTag('service_collector', array(
+      ->addTag('service_collector', [
         'call' => 'addWithDifferentOrder'
-      ));
+      ]);
 
     $container
       ->register('handler1', __NAMESPACE__ . '\ValidHandler')
-      ->addTag('consumer_id', array(
+      ->addTag('consumer_id', [
         'priority' => 0,
         'extra1' => 'extra1',
         'extra3' => 'extra3'
-      ));
+      ]);
 
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);

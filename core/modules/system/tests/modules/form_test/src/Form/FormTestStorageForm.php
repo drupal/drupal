@@ -28,7 +28,7 @@ class FormTestStorageForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     if ($form_state->isRebuilding()) {
-      $form_state->setUserInput(array());
+      $form_state->setUserInput([]);
     }
     // Initialize
     $storage = $form_state->getStorage();
@@ -50,32 +50,32 @@ class FormTestStorageForm extends FormBase {
     $_SESSION['constructions']++;
     drupal_set_message("Form constructions: " . $_SESSION['constructions']);
 
-    $form['title'] = array(
+    $form['title'] = [
       '#type' => 'textfield',
       '#title' => 'Title',
       '#default_value' => $storage['thing']['title'],
       '#required' => TRUE,
-    );
-    $form['value'] = array(
+    ];
+    $form['value'] = [
       '#type' => 'textfield',
       '#title' => 'Value',
       '#default_value' => $storage['thing']['value'],
-      '#element_validate' => array('::elementValidateValueCached'),
-    );
-    $form['continue_button'] = array(
+      '#element_validate' => ['::elementValidateValueCached'],
+    ];
+    $form['continue_button'] = [
       '#type' => 'button',
       '#value' => 'Reset',
       // Rebuilds the form without keeping the values.
-    );
-    $form['continue_submit'] = array(
+    ];
+    $form['continue_submit'] = [
       '#type' => 'submit',
       '#value' => 'Continue submit',
-      '#submit' => array('::continueSubmitForm'),
-    );
-    $form['submit'] = array(
+      '#submit' => ['::continueSubmitForm'],
+    ];
+    $form['submit'] = [
       '#type' => 'submit',
       '#value' => 'Save',
-    );
+    ];
 
     // @todo Remove this in https://www.drupal.org/node/2524408, because form
     //   cache immutability is no longer necessary, because we no longer cache

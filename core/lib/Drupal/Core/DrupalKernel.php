@@ -142,7 +142,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @var \Drupal\Core\Extension\Extension[]
    */
-  protected $moduleData = array();
+  protected $moduleData = [];
 
   /**
    * The class loader object.
@@ -387,7 +387,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
     $http_host = $request->getHttpHost();
 
-    $sites = array();
+    $sites = [];
     include $app_root . '/sites/sites.php';
 
     $uri = explode('/', $script_name);
@@ -480,7 +480,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->booted = FALSE;
     $this->container = NULL;
     $this->moduleList = NULL;
-    $this->moduleData = array();
+    $this->moduleData = [];
   }
 
   /**
@@ -569,21 +569,21 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    */
   public function discoverServiceProviders() {
-    $this->serviceYamls = array(
-      'app' => array(),
-      'site' => array(),
-    );
-    $this->serviceProviderClasses = array(
-      'app' => array(),
-      'site' => array(),
-    );
+    $this->serviceYamls = [
+      'app' => [],
+      'site' => [],
+    ];
+    $this->serviceProviderClasses = [
+      'app' => [],
+      'site' => [],
+    ];
     $this->serviceYamls['app']['core'] = 'core/core.services.yml';
     $this->serviceProviderClasses['app']['core'] = 'Drupal\Core\CoreServiceProvider';
 
     // Retrieve enabled modules and register their namespaces.
     if (!isset($this->moduleList)) {
       $extensions = $this->getConfigStorage()->read('core.extension');
-      $this->moduleList = isset($extensions['module']) ? $extensions['module'] : array();
+      $this->moduleList = isset($extensions['module']) ? $extensions['module'] : [];
     }
     $module_filenames = $this->getModuleFileNames();
     $this->classLoaderAddMultiplePsr4($this->getModuleNamespacesPsr4($module_filenames));
@@ -732,7 +732,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (!$this->moduleData) {
       // First, find profiles.
       $listing = new ExtensionDiscovery($this->root);
-      $listing->setProfileDirectories(array());
+      $listing->setProfileDirectories([]);
       $all_profiles = $listing->scan('profile');
       $profiles = array_intersect_key($all_profiles, $this->moduleList);
 
@@ -743,7 +743,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       if ($parent_profile && !isset($profiles[$parent_profile])) {
         // In case both profile directories contain the same extension, the
         // actual profile always has precedence.
-        $profiles = array($parent_profile => $all_profiles[$parent_profile]) + $profiles;
+        $profiles = [$parent_profile => $all_profiles[$parent_profile]] + $profiles;
       }
 
       $profile_directories = array_map(function ($profile) {
@@ -763,7 +763,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @todo Remove obsolete $module_list parameter. Only $module_filenames is
    *   needed.
    */
-  public function updateModules(array $module_list, array $module_filenames = array()) {
+  public function updateModules(array $module_list, array $module_filenames = []) {
     $pre_existing_module_namespaces = [];
     if ($this->booted && is_array($this->moduleList)) {
       $pre_existing_module_namespaces = $this->getModuleNamespacesPsr4($this->getModuleFileNames());
@@ -814,7 +814,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   The cache key used for the service container.
    */
   protected function getContainerCacheKey() {
-    $parts = array('service_container', $this->environment, \Drupal::VERSION, Settings::get('deployment_identifier'), PHP_OS, serialize(Settings::get('container_yamls')));
+    $parts = ['service_container', $this->environment, \Drupal::VERSION, Settings::get('deployment_identifier'), PHP_OS, serialize(Settings::get('container_yamls'))];
     return implode(':', $parts);
   }
 
@@ -824,9 +824,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return array An array of kernel parameters
    */
   protected function getKernelParameters() {
-    return array(
+    return [
       'kernel.environment' => $this->environment,
-    );
+    ];
   }
 
   /**
@@ -1023,7 +1023,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Initialize our list of trusted HTTP Host headers to protect against
     // header attacks.
-    $host_patterns = Settings::get('trusted_host_patterns', array());
+    $host_patterns = Settings::get('trusted_host_patterns', []);
     if (PHP_SAPI !== 'cli' && !empty($host_patterns)) {
       if (static::setupTrustedHosts($request, $host_patterns) === FALSE) {
         throw new BadRequestHttpException('The provided host name is not valid for this server.');
@@ -1109,7 +1109,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Returns service instances to persist from an old container to a new one.
    */
   protected function getServicesToPersist(ContainerInterface $container) {
-    $persist = array();
+    $persist = [];
     foreach ($container->getParameter('persist_ids') as $id) {
       // It's pointless to persist services not yet initialized.
       if ($container->initialized($id)) {
@@ -1138,7 +1138,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   public function rebuildContainer() {
     // Empty module properties and for them to be reloaded from scratch.
     $this->moduleList = NULL;
-    $this->moduleData = array();
+    $this->moduleData = [];
     $this->containerNeedsRebuild = TRUE;
     return $this->initializeContainer();
   }
@@ -1170,7 +1170,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return ContainerInterface
    */
   protected function attachSynthetic(ContainerInterface $container) {
-    $persist = array();
+    $persist = [];
     if (isset($this->container)) {
       $persist = $this->getServicesToPersist($this->container);
     }
@@ -1213,7 +1213,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // - Element
     // - Entity
     // - Plugin
-    foreach (array('Core', 'Component') as $parent_directory) {
+    foreach (['Core', 'Component'] as $parent_directory) {
       $path = 'core/lib/Drupal/' . $parent_directory;
       $parent_namespace = 'Drupal\\' . $parent_directory;
       foreach (new \DirectoryIterator($this->root . '/' . $path) as $component) {
@@ -1238,7 +1238,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $default_language_values = Language::$defaultValues;
     if ($system = $this->getConfigStorage()->read('system.site')) {
       if ($default_language_values['id'] != $system['langcode']) {
-        $default_language_values = array('id' => $system['langcode']);
+        $default_language_values = ['id' => $system['langcode']];
       }
     }
     $container->setParameter('language.default_values', $default_language_values);
@@ -1272,7 +1272,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // the container during the lifetime of the kernel (e.g., during a kernel
     // reboot). Include synthetic services, because by definition, they cannot
     // be automatically reinstantiated. Also include services tagged to persist.
-    $persist_ids = array();
+    $persist_ids = [];
     foreach ($container->getDefinitions() as $id => $definition) {
       // It does not make sense to persist the container itself, exclude it.
       if ($id !== 'service_container' && ($definition->isSynthetic() || $definition->getTag('persist'))) {
@@ -1292,10 +1292,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function initializeServiceProviders() {
     $this->discoverServiceProviders();
-    $this->serviceProviders = array(
-      'app' => array(),
-      'site' => array(),
-    );
+    $this->serviceProviders = [
+      'app' => [],
+      'site' => [],
+    ];
     foreach ($this->serviceProviderClasses as $origin => $classes) {
       foreach ($classes as $name => $class) {
         if (!is_object($class)) {
@@ -1375,14 +1375,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return array
    */
   protected function getModulesParameter() {
-    $extensions = array();
+    $extensions = [];
     foreach ($this->moduleList as $name => $weight) {
       if ($data = $this->moduleData($name)) {
-        $extensions[$name] = array(
+        $extensions[$name] = [
           'type' => $data->getType(),
           'pathname' => $data->getPathname(),
           'filename' => $data->getExtensionFilename(),
-        );
+        ];
       }
     }
     return $extensions;
@@ -1396,7 +1396,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   respective *.info.yml file.
    */
   protected function getModuleFileNames() {
-    $filenames = array();
+    $filenames = [];
     foreach ($this->moduleList as $module => $weight) {
       if ($data = $this->moduleData($module)) {
         $filenames[$module] = $data->getPathname();
@@ -1417,7 +1417,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   value is the PSR-4 base directory associated with the module namespace.
    */
   protected function getModuleNamespacesPsr4($module_file_names) {
-    $namespaces = array();
+    $namespaces = [];
     foreach ($module_file_names as $module => $filename) {
       $namespaces["Drupal\\$module"] = dirname($filename) . '/src';
     }
@@ -1436,7 +1436,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   the front controller, but may also be decorated; e.g.,
    *   \Symfony\Component\ClassLoader\ApcClassLoader.
    */
-  protected function classLoaderAddMultiplePsr4(array $namespaces = array(), $class_loader = NULL) {
+  protected function classLoaderAddMultiplePsr4(array $namespaces = [], $class_loader = NULL) {
     if ($class_loader === NULL) {
       $class_loader = $this->classLoader;
     }

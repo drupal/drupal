@@ -22,7 +22,7 @@ class BrokenSetUpTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('simpletest');
+  public static $modules = ['simpletest'];
 
   /**
    * The path to the shared trigger file.
@@ -39,7 +39,7 @@ class BrokenSetUpTest extends WebTestBase {
       $this->sharedTriggerFile = $this->publicFilesDirectory . '/trigger';
 
       // Create and log in user.
-      $admin_user = $this->drupalCreateUser(array('administer unit tests'));
+      $admin_user = $this->drupalCreateUser(['administer unit tests']);
       $this->drupalLogin($admin_user);
     }
     // If the test is being run from within simpletest, set up the broken test.

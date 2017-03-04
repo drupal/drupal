@@ -30,7 +30,7 @@ class SqlBaseTest extends MigrateTestBase {
 
     $target = 'test_db_target';
     $key = 'test_migrate_connection';
-    $config = array('target' => $target, 'key' => $key);
+    $config = ['target' => $target, 'key' => $key];
     $sql_base->setConfiguration($config);
     Database::addConnectionInfo($key, $target, Database::getConnectionInfo('default')['default']);
 
@@ -44,7 +44,7 @@ class SqlBaseTest extends MigrateTestBase {
     $target = 'test_db_target2';
     $key = 'test_migrate_connection2';
     $database = Database::getConnectionInfo('default')['default'];
-    $config = array('target' => $target, 'key' => $key, 'database' => $database);
+    $config = ['target' => $target, 'key' => $key, 'database' => $database];
     $sql_base->setConfiguration($config);
 
     // Call getDatabase() to get the connection defined.

@@ -90,17 +90,17 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
    */
   public function testCalculateDependencies() {
     $format_id = 'filter.format.test';
-    $values = array('editor' => $this->editorId, 'format' => $format_id);
+    $values = ['editor' => $this->editorId, 'format' => $format_id];
 
     $plugin = $this->getMockBuilder('Drupal\editor\Plugin\EditorPluginInterface')
       ->disableOriginalConstructor()
       ->getMock();
     $plugin->expects($this->once())
       ->method('getPluginDefinition')
-      ->will($this->returnValue(array('provider' => 'test_module')));
+      ->will($this->returnValue(['provider' => 'test_module']));
     $plugin->expects($this->once())
       ->method('getDefaultSettings')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue([]));
 
     $this->editorPluginManager->expects($this->any())
       ->method('createInstance')

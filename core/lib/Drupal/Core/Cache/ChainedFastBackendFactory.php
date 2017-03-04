@@ -43,7 +43,7 @@ class ChainedFastBackendFactory implements CacheFactoryInterface {
   public function __construct(Settings $settings = NULL, $consistent_service_name = NULL, $fast_service_name = NULL) {
     // Default the consistent backend to the site's default backend.
     if (!isset($consistent_service_name)) {
-      $cache_settings = isset($settings) ? $settings->get('cache') : array();
+      $cache_settings = isset($settings) ? $settings->get('cache') : [];
       $consistent_service_name = isset($cache_settings['default']) ? $cache_settings['default'] : 'cache.backend.database';
     }
 

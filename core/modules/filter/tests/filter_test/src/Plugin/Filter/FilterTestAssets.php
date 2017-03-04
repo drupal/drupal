@@ -22,11 +22,11 @@ class FilterTestAssets extends FilterBase {
    */
   public function process($text, $langcode) {
     $result = new FilterProcessResult($text);
-    $result->addAttachments(array(
-      'library' => array(
+    $result->addAttachments([
+      'library' => [
         'filter/caption',
-      ),
-    ));
+      ],
+    ]);
     return $result;
   }
 

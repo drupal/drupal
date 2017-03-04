@@ -38,7 +38,7 @@ class EntityTestController extends ControllerBase {
       ->getStorage($referenced_entity_type)
       ->load($referenced_entity_id);
     if ($referenced_entity === NULL) {
-      return array();
+      return [];
     }
 
     $query = $this->entityTypeManager()->getStorage('entity_test')->getQuery()

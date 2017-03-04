@@ -18,17 +18,17 @@ use Drupal\views\ViewExecutable;
  * )
  */
 class QueryTest extends QueryPluginBase {
-  protected $conditions = array();
-  protected $fields = array();
-  protected $allItems = array();
-  protected $orderBy = array();
+  protected $conditions = [];
+  protected $fields = [];
+  protected $allItems = [];
+  protected $orderBy = [];
 
   /**
    * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['test_setting'] = array('default' => '');
+    $options['test_setting'] = ['default' => ''];
 
     return $options;
   }
@@ -39,11 +39,11 @@ class QueryTest extends QueryPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $form['test_setting'] = array(
+    $form['test_setting'] = [
       '#title' => $this->t('Test setting'),
       '#type' => 'textfield',
       '#default_value' => $this->options['test_setting'],
-    );
+    ];
   }
 
   /**
@@ -57,21 +57,21 @@ class QueryTest extends QueryPluginBase {
   }
 
   public function addWhere($group, $field, $value = NULL, $operator = NULL) {
-    $this->conditions[] = array(
+    $this->conditions[] = [
       'field' => $field,
       'value' => $value,
       'operator' => $operator
-    );
+    ];
 
   }
 
-  public function addField($table, $field, $alias = '', $params = array()) {
+  public function addField($table, $field, $alias = '', $params = []) {
     $this->fields[$field] = $field;
     return $field;
   }
 
-  public function addOrderBy($table, $field = NULL, $order = 'ASC', $alias = '', $params = array()) {
-    $this->orderBy = array('field' => $field, 'order' => $order);
+  public function addOrderBy($table, $field = NULL, $order = 'ASC', $alias = '', $params = []) {
+    $this->orderBy = ['field' => $field, 'order' => $order];
   }
 
 
@@ -96,7 +96,7 @@ class QueryTest extends QueryPluginBase {
    * {@inheritdoc}
    */
   public function execute(ViewExecutable $view) {
-    $result = array();
+    $result = [];
     foreach ($this->allItems as $element) {
       // Run all conditions on the element, and add it to the result if they
       // match.

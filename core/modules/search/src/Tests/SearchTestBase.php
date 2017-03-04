@@ -18,15 +18,15 @@ abstract class SearchTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'search', 'dblog');
+  public static $modules = ['node', 'search', 'dblog'];
 
   protected function setUp() {
     parent::setUp();
 
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-      $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+      $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
+      $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     }
   }
 
@@ -71,13 +71,13 @@ abstract class SearchTestBase extends WebTestBase {
       foreach ($forms as $form) {
         // Try to set the fields of this form as specified in $edit.
         $edit = $edit_save;
-        $post = array();
-        $upload = array();
+        $post = [];
+        $upload = [];
         $submit_matches = $this->handleForm($post, $edit, $upload, $submit, $form);
         if (!$edit && $submit_matches) {
           // Everything matched, so "submit" the form.
           $action = isset($form['action']) ? $this->getAbsoluteUrl((string) $form['action']) : NULL;
-          $this->drupalGet($action, array('query' => $post));
+          $this->drupalGet($action, ['query' => $post]);
           return;
         }
       }
@@ -85,10 +85,10 @@ abstract class SearchTestBase extends WebTestBase {
       // We have not found a form which contained all fields of $edit and
       // the submit button.
       foreach ($edit as $name => $value) {
-        $this->fail(SafeMarkup::format('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
+        $this->fail(SafeMarkup::format('Failed to set field @name to @value', ['@name' => $name, '@value' => $value]));
       }
-      $this->assertTrue($submit_matches, format_string('Found the @submit button', array('@submit' => $submit)));
-      $this->fail(format_string('Found the requested form fields at @path', array('@path' => $path)));
+      $this->assertTrue($submit_matches, format_string('Found the @submit button', ['@submit' => $submit]));
+      $this->fail(format_string('Found the requested form fields at @path', ['@path' => $path]));
     }
   }
 

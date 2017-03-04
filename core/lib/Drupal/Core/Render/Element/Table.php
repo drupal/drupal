@@ -65,9 +65,9 @@ class Table extends FormElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    return array(
-      '#header' => array(),
-      '#rows' => array(),
+    return [
+      '#header' => [],
+      '#rows' => [],
       '#empty' => '',
       // Properties for tableselect support.
       '#input' => TRUE,
@@ -77,24 +77,24 @@ class Table extends FormElement {
       '#responsive' => TRUE,
       '#multiple' => TRUE,
       '#js_select' => TRUE,
-      '#process' => array(
-        array($class, 'processTable'),
-      ),
-      '#element_validate' => array(
-        array($class, 'validateTable'),
-      ),
+      '#process' => [
+        [$class, 'processTable'],
+      ],
+      '#element_validate' => [
+        [$class, 'validateTable'],
+      ],
       // Properties for tabledrag support.
       // The value is a list of arrays that are passed to
       // drupal_attach_tabledrag(). Table::preRenderTable() prepends the HTML ID
       // of the table to each set of options.
       // @see drupal_attach_tabledrag()
-      '#tabledrag' => array(),
+      '#tabledrag' => [],
       // Render properties.
-      '#pre_render' => array(
-        array($class, 'preRenderTable'),
-      ),
+      '#pre_render' => [
+        [$class, 'preRenderTable'],
+      ],
       '#theme' => 'table',
-    );
+    ];
   }
 
   /**
@@ -108,12 +108,12 @@ class Table extends FormElement {
       // #default_value property.
       // @todo D8: Remove this inconsistency.
       if ($input === FALSE) {
-        $element += array('#default_value' => array());
+        $element += ['#default_value' => []];
         $value = array_keys(array_filter($element['#default_value']));
         return array_combine($value, $value);
       }
       else {
-        return is_array($input) ? array_combine($input, $input) : array();
+        return is_array($input) ? array_combine($input, $input) : [];
       }
     }
   }
@@ -135,7 +135,7 @@ class Table extends FormElement {
   public static function processTable(&$element, FormStateInterface $form_state, &$complete_form) {
     if ($element['#tableselect']) {
       if ($element['#multiple']) {
-        $value = is_array($element['#value']) ? $element['#value'] : array();
+        $value = is_array($element['#value']) ? $element['#value'] : [];
       }
       // Advanced selection behavior makes no sense for radios.
       else {
@@ -145,7 +145,7 @@ class Table extends FormElement {
       // @todo D8: Rename into #select_all?
       if ($element['#js_select']) {
         $element['#attached']['library'][] = 'core/drupal.tableselect';
-        array_unshift($element['#header'], array('class' => array('select-all')));
+        array_unshift($element['#header'], ['class' => ['select-all']]);
       }
       // Add an empty header column for radio buttons or when a "Select all"
       // checkbox is not desired.
@@ -154,7 +154,7 @@ class Table extends FormElement {
       }
 
       if (!isset($element['#default_value']) || $element['#default_value'] === 0) {
-        $element['#default_value'] = array();
+        $element['#default_value'] = [];
       }
       // Create a checkbox or radio for each row in a way that the value of the
       // tableselect element behaves as if it had been of #type checkboxes or
@@ -165,7 +165,7 @@ class Table extends FormElement {
         // Their values have to be located in child keys (#tree is ignored),
         // since Table::validateTable() has to be able to validate whether input
         // (for the parent #type 'table' element) has been submitted.
-        $element_parents = array_merge($element['#parents'], array($key));
+        $element_parents = array_merge($element['#parents'], [$key]);
 
         // Since the #parents of the tableselect form element will equal the
         // #parents of the row element, prevent FormBuilder from auto-generating
@@ -202,23 +202,23 @@ class Table extends FormElement {
               }
             }
             if (isset($title) && $title !== '') {
-              $title = t('Update @title', array('@title' => $title));
+              $title = t('Update @title', ['@title' => $title]);
             }
           }
 
           // Prepend the select column to existing columns.
-          $row = array('select' => array()) + $row;
-          $row['select'] += array(
+          $row = ['select' => []] + $row;
+          $row['select'] += [
             '#type' => $element['#multiple'] ? 'checkbox' : 'radio',
             '#id' => HtmlUtility::getUniqueId('edit-' . implode('-', $element_parents)),
             // @todo If rows happen to use numeric indexes instead of string keys,
             //   this results in a first row with $key === 0, which is always FALSE.
             '#return_value' => $key,
             '#attributes' => $element['#attributes'],
-            '#wrapper_attributes' => array(
-              'class' => array('table-select'),
-            ),
-          );
+            '#wrapper_attributes' => [
+              'class' => ['table-select'],
+            ],
+          ];
           if ($element['#multiple']) {
             $row['select']['#default_value'] = isset($value[$key]) ? $key : NULL;
             $row['select']['#parents'] = $element_parents;
@@ -339,7 +339,7 @@ class Table extends FormElement {
    */
   public static function preRenderTable($element) {
     foreach (Element::children($element) as $first) {
-      $row = array('data' => array());
+      $row = ['data' => []];
       // Apply attributes of first-level elements as table row attributes.
       if (isset($element[$first]['#attributes'])) {
         $row += $element[$first]['#attributes'];
@@ -350,7 +350,7 @@ class Table extends FormElement {
       foreach (Element::children($element[$first]) as $second) {
         // Assign the element by reference, so any potential changes to the
         // original element are taken over.
-        $column = array('data' => &$element[$first][$second]);
+        $column = ['data' => &$element[$first][$second]];
 
         // Apply wrapper attributes of second-level elements as table cell
         // attributes.
@@ -364,7 +364,7 @@ class Table extends FormElement {
     }
 
     // Take over $element['#id'] as HTML ID attribute, if not already set.
-    Element::setAttributes($element, array('id'));
+    Element::setAttributes($element, ['id']);
 
     // Add sticky headers, if applicable.
     if (count($element['#header']) && $element['#sticky']) {

@@ -66,7 +66,7 @@ class ContextHandler implements ContextHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = array()) {
+  public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = []) {
     /** @var $contexts \Drupal\Core\Plugin\Context\ContextInterface[] */
     $mappings += $plugin->getContextMapping();
     // Loop through each of the expected contexts.

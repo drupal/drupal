@@ -31,7 +31,7 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter', 'text', 'node', 'user');
+  public static $modules = ['filter', 'text', 'node', 'user'];
 
   protected function setUp() {
     parent::setup();
@@ -51,14 +51,14 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
     $this->assertTrue($field_item_definition instanceof ComplexDataDefinitionInterface);
 
     // Derive metadata about field item properties.
-    $this->assertEqual(array_keys($field_item_definition->getPropertyDefinitions()), array('value'));
+    $this->assertEqual(array_keys($field_item_definition->getPropertyDefinitions()), ['value']);
     $this->assertEqual($field_item_definition->getPropertyDefinition('value')->getDataType(), 'integer');
     $this->assertEqual($field_item_definition->getMainPropertyName(), 'value');
     $this->assertNull($field_item_definition->getPropertyDefinition('invalid'));
 
     // Test accessing field item property metadata via the field definition.
     $this->assertTrue($field_definition instanceof FieldDefinitionInterface);
-    $this->assertEqual(array_keys($field_definition->getPropertyDefinitions()), array('value'));
+    $this->assertEqual(array_keys($field_definition->getPropertyDefinitions()), ['value']);
     $this->assertEqual($field_definition->getPropertyDefinition('value')->getDataType(), 'integer');
     $this->assertEqual($field_definition->getMainPropertyName(), 'value');
     $this->assertNull($field_definition->getPropertyDefinition('invalid'));
@@ -106,7 +106,7 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
 
     // Config entities don't support typed data.
     $entity_definition = EntityDataDefinition::create('node_type');
-    $this->assertEqual(array(), $entity_definition->getPropertyDefinitions());
+    $this->assertEqual([], $entity_definition->getPropertyDefinitions());
   }
 
   /**

@@ -62,7 +62,7 @@ abstract class AreaPluginBase extends HandlerBase {
     $this->definition['field'] = !empty($this->definition['field']) ? $this->definition['field'] : '';
     $label = !empty($this->definition['label']) ? $this->definition['label'] : $this->definition['field'];
     $options['admin_label']['default'] = $label;
-    $options['empty'] = array('default' => FALSE);
+    $options['empty'] = ['default' => FALSE];
 
     return $options;
   }
@@ -81,11 +81,11 @@ abstract class AreaPluginBase extends HandlerBase {
     parent::buildOptionsForm($form, $form_state);
 
     if ($form_state->get('type') != 'empty') {
-      $form['empty'] = array(
+      $form['empty'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Display even if view has no result'),
         '#default_value' => isset($this->options['empty']) ? $this->options['empty'] : 0,
-      );
+      ];
     }
   }
 

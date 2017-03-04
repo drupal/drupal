@@ -17,7 +17,7 @@ class FeedValidationTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('aggregator', 'options');
+  public static $modules = ['aggregator', 'options'];
 
   /**
    * {@inheritdoc}

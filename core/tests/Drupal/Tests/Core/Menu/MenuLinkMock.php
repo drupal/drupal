@@ -10,18 +10,18 @@ use Drupal\Core\Menu\MenuLinkBase;
  */
 class MenuLinkMock extends MenuLinkBase {
 
-  protected static $defaults = array(
+  protected static $defaults = [
     'menu_name' => 'mock',
     'route_name' => 'MUST BE PROVIDED',
-    'route_parameters' => array(),
+    'route_parameters' => [],
     'url' => '',
     'title' => 'MUST BE PROVIDED',
-    'title_arguments' => array(),
+    'title_arguments' => [],
     'title_context' => '',
     'description' => '',
     'parent' => 'MUST BE PROVIDED',
     'weight' => '0',
-    'options' => array(),
+    'options' => [],
     'expanded' => '0',
     'enabled' => '1',
     'provider' => 'simpletest',
@@ -33,13 +33,13 @@ class MenuLinkMock extends MenuLinkBase {
     'class' => 'Drupal\\Tests\\Core\Menu\\MenuLinkMock',
     'form_class' => 'Drupal\\Core\\Menu\\Form\\MenuLinkDefaultForm',
     'id' => 'MUST BE PROVIDED',
-  );
+  ];
 
   /**
    * Create an instance from a definition with at least id, title, route_name.
    */
   public static function create($definition) {
-    return new static(array(), $definition['id'], $definition + static::$defaults);
+    return new static([], $definition['id'], $definition + static::$defaults);
   }
 
   /**

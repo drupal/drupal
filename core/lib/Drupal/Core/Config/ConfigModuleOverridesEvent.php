@@ -43,7 +43,7 @@ class ConfigModuleOverridesEvent extends Event {
   public function __construct(array $names, LanguageInterface $language = NULL) {
     $this->names = $names;
     $this->language = $language;
-    $this->overrides = array();
+    $this->overrides = [];
   }
 
   /**
@@ -91,7 +91,7 @@ class ConfigModuleOverridesEvent extends Event {
       if (isset($this->overrides[$name])) {
         // Existing overrides take precedence since these will have been added
         // by events with a higher priority.
-        $this->overrides[$name] = NestedArray::mergeDeepArray(array($values, $this->overrides[$name]), TRUE);
+        $this->overrides[$name] = NestedArray::mergeDeepArray([$values, $this->overrides[$name]], TRUE);
       }
       else {
         $this->overrides[$name] = $values;

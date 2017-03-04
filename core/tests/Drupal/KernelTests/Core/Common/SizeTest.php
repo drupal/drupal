@@ -18,7 +18,7 @@ class SizeTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
     $kb = Bytes::KILOBYTE;
-    $this->exactTestCases = array(
+    $this->exactTestCases = [
       '1 byte' => 1,
       '1 KB'   => $kb,
       '1 MB'   => $kb * $kb,
@@ -28,21 +28,21 @@ class SizeTest extends KernelTestBase {
       '1 EB'   => $kb * $kb * $kb * $kb * $kb * $kb,
       '1 ZB'   => $kb * $kb * $kb * $kb * $kb * $kb * $kb,
       '1 YB'   => $kb * $kb * $kb * $kb * $kb * $kb * $kb * $kb,
-    );
-    $this->roundedTestCases = array(
+    ];
+    $this->roundedTestCases = [
       '2 bytes' => 2,
       '1 MB' => ($kb * $kb) - 1, // rounded to 1 MB (not 1000 or 1024 kilobyte!)
       round(3623651 / ($this->exactTestCases['1 MB']), 2) . ' MB' => 3623651, // megabytes
       round(67234178751368124 / ($this->exactTestCases['1 PB']), 2) . ' PB' => 67234178751368124, // petabytes
       round(235346823821125814962843827 / ($this->exactTestCases['1 YB']), 2) . ' YB' => 235346823821125814962843827, // yottabytes
-    );
+    ];
   }
 
   /**
    * Checks that format_size() returns the expected string.
    */
   function testCommonFormatSize() {
-    foreach (array($this->exactTestCases, $this->roundedTestCases) as $test_cases) {
+    foreach ([$this->exactTestCases, $this->roundedTestCases] as $test_cases) {
       foreach ($test_cases as $expected => $input) {
         $this->assertEqual(
           ($result = format_size($input, NULL)),

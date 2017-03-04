@@ -16,35 +16,35 @@ abstract class NormalizerTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('serialization', 'system', 'field', 'entity_test', 'text', 'filter', 'user');
+  public static $modules = ['serialization', 'system', 'field', 'entity_test', 'text', 'filter', 'user'];
 
   protected function setUp() {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_mulrev');
     $this->installEntitySchema('user');
-    $this->installConfig(array('field'));
+    $this->installConfig(['field']);
     \Drupal::service('router.builder')->rebuild();
     \Drupal::moduleHandler()->invoke('rest', 'install');
 
     // Auto-create a field for testing.
-    FieldStorageConfig::create(array(
+    FieldStorageConfig::create([
       'entity_type' => 'entity_test_mulrev',
       'field_name' => 'field_test_text',
       'type' => 'text',
       'cardinality' => 1,
       'translatable' => FALSE,
-    ))->save();
-    FieldConfig::create(array(
+    ])->save();
+    FieldConfig::create([
       'entity_type' => 'entity_test_mulrev',
       'field_name' => 'field_test_text',
       'bundle' => 'entity_test_mulrev',
       'label' => 'Test text-field',
-      'widget' => array(
+      'widget' => [
         'type' => 'text_textfield',
         'weight' => 0,
-      ),
-    ))->save();
+      ],
+    ])->save();
   }
 
 }

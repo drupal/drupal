@@ -9,27 +9,27 @@
  * Implements hook_schema().
  */
 function ban_schema() {
-  $schema['ban_ip'] = array(
+  $schema['ban_ip'] = [
     'description' => 'Stores banned IP addresses.',
-    'fields' => array(
-      'iid' => array(
+    'fields' => [
+      'iid' => [
         'description' => 'Primary Key: unique ID for IP addresses.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'ip' => array(
+      ],
+      'ip' => [
         'description' => 'IP address',
         'type' => 'varchar_ascii',
         'length' => 40,
         'not null' => TRUE,
         'default' => '',
-      ),
-    ),
-    'indexes' => array(
-      'ip' => array('ip'),
-    ),
-    'primary key' => array('iid'),
-  );
+      ],
+    ],
+    'indexes' => [
+      'ip' => ['ip'],
+    ],
+    'primary key' => ['iid'],
+  ];
   return $schema;
 }

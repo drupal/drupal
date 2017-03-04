@@ -16,20 +16,20 @@ class FileManagedAccessTest extends FileManagedTestBase {
    */
   function testFileAccess() {
     // Create a new file entity.
-    $file = File::create(array(
+    $file = File::create([
       'uid' => 1,
       'filename' => 'drupal.txt',
       'uri' => 'public://drupal.txt',
       'filemime' => 'text/plain',
       'status' => FILE_STATUS_PERMANENT,
-    ));
+    ]);
     file_put_contents($file->getFileUri(), 'hello world');
 
     // Save it, inserting a new record.
     $file->save();
 
     // Create authenticated user to check file access.
-    $account = $this->createUser(array('access site reports'));
+    $account = $this->createUser(['access site reports']);
 
     $this->assertTrue($file->access('view', $account), 'Public file is viewable to authenticated user');
     $this->assertTrue($file->access('download', $account), 'Public file is downloadable to authenticated user');
@@ -41,20 +41,20 @@ class FileManagedAccessTest extends FileManagedTestBase {
     $this->assertTrue($file->access('download', $account), 'Public file is downloadable to anonymous user');
 
     // Create a new file entity.
-    $file = File::create(array(
+    $file = File::create([
       'uid' => 1,
       'filename' => 'drupal.txt',
       'uri' => 'private://drupal.txt',
       'filemime' => 'text/plain',
       'status' => FILE_STATUS_PERMANENT,
-    ));
+    ]);
     file_put_contents($file->getFileUri(), 'hello world');
 
     // Save it, inserting a new record.
     $file->save();
 
     // Create authenticated user to check file access.
-    $account = $this->createUser(array('access site reports'));
+    $account = $this->createUser(['access site reports']);
 
     $this->assertFalse($file->access('view', $account), 'Private file is not viewable to authenticated user');
     $this->assertFalse($file->access('download', $account), 'Private file is not downloadable to authenticated user');

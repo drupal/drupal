@@ -82,7 +82,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $request->headers->set('HOST', 'example.com');
 
     $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext);
-    $dispatcher->addListener(KernelEvents::RESPONSE, array($listener, 'checkRedirectUrl'));
+    $dispatcher->addListener(KernelEvents::RESPONSE, [$listener, 'checkRedirectUrl']);
     $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $response);
     $dispatcher->dispatch(KernelEvents::RESPONSE, $event);
 
@@ -101,16 +101,16 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\EventSubscriber\RedirectResponseSubscriberTest::testDestinationRedirect()
    */
   public static function providerTestDestinationRedirect() {
-    return array(
-      array(new Request(), FALSE),
-      array(new Request(array('destination' => 'test')), 'http://example.com/drupal/test'),
-      array(new Request(array('destination' => '/drupal/test')), 'http://example.com/drupal/test'),
-      array(new Request(array('destination' => 'example.com')), 'http://example.com/drupal/example.com'),
-      array(new Request(array('destination' => 'example:com')), 'http://example.com/drupal/example:com'),
-      array(new Request(array('destination' => 'javascript:alert(0)')), 'http://example.com/drupal/javascript:alert(0)'),
-      array(new Request(array('destination' => 'http://example.com/drupal/')), 'http://example.com/drupal/'),
-      array(new Request(array('destination' => 'http://example.com/drupal/test')), 'http://example.com/drupal/test'),
-    );
+    return [
+      [new Request(), FALSE],
+      [new Request(['destination' => 'test']), 'http://example.com/drupal/test'],
+      [new Request(['destination' => '/drupal/test']), 'http://example.com/drupal/test'],
+      [new Request(['destination' => 'example.com']), 'http://example.com/drupal/example.com'],
+      [new Request(['destination' => 'example:com']), 'http://example.com/drupal/example:com'],
+      [new Request(['destination' => 'javascript:alert(0)']), 'http://example.com/drupal/javascript:alert(0)'],
+      [new Request(['destination' => 'http://example.com/drupal/']), 'http://example.com/drupal/'],
+      [new Request(['destination' => 'http://example.com/drupal/test']), 'http://example.com/drupal/test'],
+    ];
   }
 
   /**
@@ -124,7 +124,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $response = new RedirectResponse('http://other-example.com');
 
     $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext);
-    $dispatcher->addListener(KernelEvents::RESPONSE, array($listener, 'checkRedirectUrl'));
+    $dispatcher->addListener(KernelEvents::RESPONSE, [$listener, 'checkRedirectUrl']);
     $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $response);
     $dispatcher->dispatch(KernelEvents::RESPONSE, $event);
 
@@ -142,7 +142,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $request->headers->set('HOST', 'example.com');
 
     $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext);
-    $dispatcher->addListener(KernelEvents::RESPONSE, array($listener, 'checkRedirectUrl'));
+    $dispatcher->addListener(KernelEvents::RESPONSE, [$listener, 'checkRedirectUrl']);
     $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $response);
     $dispatcher->dispatch(KernelEvents::RESPONSE, $event);
 
@@ -175,7 +175,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $response = new RedirectResponse('http://example.com/drupal');
 
     $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext);
-    $dispatcher->addListener(KernelEvents::RESPONSE, array($listener, 'checkRedirectUrl'));
+    $dispatcher->addListener(KernelEvents::RESPONSE, [$listener, 'checkRedirectUrl']);
     $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $response);
     $dispatcher->dispatch(KernelEvents::RESPONSE, $event);
 
@@ -187,8 +187,8 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
    */
   public function providerTestDestinationRedirectWithInvalidUrl() {
     $data = [];
-    $data[] = [new Request(array('destination' => '//example:com'))];
-    $data[] = [new Request(array('destination' => '//example:com/test'))];
+    $data[] = [new Request(['destination' => '//example:com'])];
+    $data[] = [new Request(['destination' => '//example:com/test'])];
     $data['absolute external url'] = [new Request(['destination' => 'http://example.com'])];
     $data['absolute external url with folder'] = [new Request(['destination' => 'http://example.ca/drupal'])];
     $data['path without drupal basepath'] = [new Request(['destination' => '/test'])];

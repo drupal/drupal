@@ -126,7 +126,7 @@ class ConfigDependencyManager {
    *
    * @var \Drupal\Core\Config\Entity\ConfigEntityDependency[]
    */
-  protected $data = array();
+  protected $data = [];
 
   /**
    * The directed acyclic graph.
@@ -150,9 +150,9 @@ class ConfigDependencyManager {
    *   An array of config entity dependency objects that are dependent.
    */
   public function getDependentEntities($type, $name) {
-    $dependent_entities = array();
+    $dependent_entities = [];
 
-    $entities_to_check = array();
+    $entities_to_check = [];
     if ($type == 'config') {
       $entities_to_check[] = $name;
     }
@@ -281,7 +281,7 @@ class ConfigDependencyManager {
    *   supplied entities to check.
    */
   protected function createGraphConfigEntityDependencies($entities_to_check) {
-    $dependent_entities = array();
+    $dependent_entities = [];
     $graph = $this->getGraph();
 
     foreach ($entities_to_check as $entity) {
@@ -304,7 +304,7 @@ class ConfigDependencyManager {
    */
   protected function getGraph() {
     if (!isset($this->graph)) {
-      $graph = array();
+      $graph = [];
       foreach ($this->data as $entity) {
         $graph_key = $entity->getConfigDependencyName();
         if (!isset($graph[$graph_key])) {

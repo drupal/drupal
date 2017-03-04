@@ -11,9 +11,9 @@
  * @see update_test_2_update_dependencies()
  */
 function update_test_3_update_dependencies() {
-  $dependencies['update_test_3'][8001] = array(
+  $dependencies['update_test_3'][8001] = [
     'update_test_2' => 8001,
-  );
+  ];
   return $dependencies;
 }
 

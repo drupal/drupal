@@ -61,46 +61,46 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   public function testUrlAlias() {
     $id_map = $this->getMigration('d6_url_alias')->getIdMap();
     // Test that the field exists.
-    $conditions = array(
+    $conditions = [
       'source' => '/node/1',
       'alias' => '/alias-one',
       'langcode' => 'af',
-    );
+    ];
     $path = \Drupal::service('path.alias_storage')->load($conditions);
     $this->assertPath('1', $conditions, $path);
-    $this->assertIdentical($id_map->lookupDestinationID(array($path['pid'])), array('1'), "Test IdMap");
+    $this->assertIdentical($id_map->lookupDestinationID([$path['pid']]), ['1'], "Test IdMap");
 
-    $conditions = array(
+    $conditions = [
       'source' => '/node/2',
       'alias' => '/alias-two',
       'langcode' => 'en',
-    );
+    ];
     $path = \Drupal::service('path.alias_storage')->load($conditions);
     $this->assertPath('2', $conditions, $path);
 
     // Test that we can re-import using the UrlAlias destination.
     Database::getConnection('default', 'migrate')
       ->update('url_alias')
-      ->fields(array('dst' => 'new-url-alias'))
+      ->fields(['dst' => 'new-url-alias'])
       ->condition('src', 'node/2')
       ->execute();
 
     \Drupal::database()
       ->update($id_map->mapTableName())
-      ->fields(array('source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE))
+      ->fields(['source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE])
       ->execute();
     $migration = $this->getMigration('d6_url_alias');
     $this->executeMigration($migration);
 
-    $path = \Drupal::service('path.alias_storage')->load(array('pid' => $path['pid']));
+    $path = \Drupal::service('path.alias_storage')->load(['pid' => $path['pid']]);
     $conditions['alias'] = '/new-url-alias';
     $this->assertPath('2', $conditions, $path);
 
-    $conditions = array(
+    $conditions = [
       'source' => '/node/3',
       'alias' => '/alias-three',
       'langcode' => 'und',
-    );
+    ];
     $path = \Drupal::service('path.alias_storage')->load($conditions);
     $this->assertPath('3', $conditions, $path);
   }

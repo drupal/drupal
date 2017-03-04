@@ -21,8 +21,8 @@ class FieldItemNormalizerDenormalizeExceptionsUnitTest extends NormalizerDenorma
    */
   public function testFieldItemNormalizerDenormalizeExceptions($context) {
     $field_item_normalizer = new FieldItemNormalizer();
-    $data = array();
-    $class = array();
+    $data = [];
+    $class = [];
     $field_item_normalizer->denormalize($data, $class, NULL, $context);
   }
 

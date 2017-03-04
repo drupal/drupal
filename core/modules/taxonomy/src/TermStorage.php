@@ -15,49 +15,49 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    *
    * @var array
    */
-  protected $parents = array();
+  protected $parents = [];
 
   /**
    * Array of all loaded term ancestry keyed by ancestor term ID.
    *
    * @var array
    */
-  protected $parentsAll = array();
+  protected $parentsAll = [];
 
   /**
    * Array of child terms keyed by parent term ID.
    *
    * @var array
    */
-  protected $children = array();
+  protected $children = [];
 
   /**
    * Array of term parents keyed by vocabulary ID and child term ID.
    *
    * @var array
    */
-  protected $treeParents = array();
+  protected $treeParents = [];
 
   /**
    * Array of term ancestors keyed by vocabulary ID and parent term ID.
    *
    * @var array
    */
-  protected $treeChildren = array();
+  protected $treeChildren = [];
 
   /**
    * Array of terms in a tree keyed by vocabulary ID and term ID.
    *
    * @var array
    */
-  protected $treeTerms = array();
+  protected $treeTerms = [];
 
   /**
    * Array of loaded trees keyed by a cache id matching tree arguments.
    *
    * @var array
    */
-  protected $trees = array();
+  protected $trees = [];
 
   /**
    * {@inheritdoc}
@@ -66,10 +66,10 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    *   An array of values to set, keyed by property name. A value for the
    *   vocabulary ID ('vid') is required.
    */
-  public function create(array $values = array()) {
+  public function create(array $values = []) {
     // Save new terms with no parents by default.
     if (empty($values['parent'])) {
-      $values['parent'] = array(0);
+      $values['parent'] = [0];
     }
     $entity = parent::create($values);
     return $entity;
@@ -80,13 +80,13 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function resetCache(array $ids = NULL) {
     drupal_static_reset('taxonomy_term_count_nodes');
-    $this->parents = array();
-    $this->parentsAll = array();
-    $this->children = array();
-    $this->treeChildren = array();
-    $this->treeParents = array();
-    $this->treeTerms = array();
-    $this->trees = array();
+    $this->parents = [];
+    $this->parentsAll = [];
+    $this->children = [];
+    $this->treeChildren = [];
+    $this->treeParents = [];
+    $this->treeTerms = [];
+    $this->trees = [];
     parent::resetCache($ids);
   }
 
@@ -104,13 +104,13 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function updateTermHierarchy(EntityInterface $term) {
     $query = $this->database->insert('taxonomy_term_hierarchy')
-      ->fields(array('tid', 'parent'));
+      ->fields(['tid', 'parent']);
 
     foreach ($term->parent as $parent) {
-      $query->values(array(
+      $query->values([
         'tid' => $term->id(),
         'parent' => (int) $parent->target_id,
-      ));
+      ]);
     }
     $query->execute();
   }
@@ -120,7 +120,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function loadParents($tid) {
     if (!isset($this->parents[$tid])) {
-      $parents = array();
+      $parents = [];
       $query = $this->database->select('taxonomy_term_field_data', 't');
       $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
       $query->addField('t', 'tid');
@@ -142,7 +142,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function loadAllParents($tid) {
     if (!isset($this->parentsAll[$tid])) {
-      $parents = array();
+      $parents = [];
       if ($term = $this->load($tid)) {
         $parents[$term->id()] = $term;
         $terms_to_search[] = $term->id();
@@ -169,7 +169,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function loadChildren($tid, $vid = NULL) {
     if (!isset($this->children[$tid])) {
-      $children = array();
+      $children = [];
       $query = $this->database->select('taxonomy_term_field_data', 't');
       $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
       $query->addField('t', 'tid');
@@ -198,15 +198,15 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       // We cache trees, so it's not CPU-intensive to call on a term and its
       // children, too.
       if (!isset($this->treeChildren[$vid])) {
-        $this->treeChildren[$vid] = array();
-        $this->treeParents[$vid] = array();
-        $this->treeTerms[$vid] = array();
+        $this->treeChildren[$vid] = [];
+        $this->treeParents[$vid] = [];
+        $this->treeTerms[$vid] = [];
         $query = $this->database->select('taxonomy_term_field_data', 't');
         $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
         $result = $query
           ->addTag('taxonomy_term_access')
           ->fields('t')
-          ->fields('h', array('parent'))
+          ->fields('h', ['parent'])
           ->condition('t.vid', $vid)
           ->condition('t.default_langcode', 1)
           ->orderBy('t.weight')
@@ -221,17 +221,17 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
 
       // Load full entities, if necessary. The entity controller statically
       // caches the results.
-      $term_entities = array();
+      $term_entities = [];
       if ($load_entities) {
         $term_entities = $this->loadMultiple(array_keys($this->treeTerms[$vid]));
       }
 
       $max_depth = (!isset($max_depth)) ? count($this->treeChildren[$vid]) : $max_depth;
-      $tree = array();
+      $tree = [];
 
       // Keeps track of the parents we have to process, the last entry is used
       // for the next processing step.
-      $process_parents = array();
+      $process_parents = [];
       $process_parents[] = $parent;
 
       // Loops over the parent terms and adds its children to the tree array.
@@ -304,7 +304,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function resetWeights($vid) {
     $this->database->update('taxonomy_term_field_data')
-      ->fields(array('weight' => 0))
+      ->fields(['weight' => 0])
       ->condition('vid', $vid)
       ->execute();
   }
@@ -312,10 +312,10 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function getNodeTerms(array $nids, array $vocabs = array(), $langcode = NULL) {
+  public function getNodeTerms(array $nids, array $vocabs = [], $langcode = NULL) {
     $query = db_select('taxonomy_term_field_data', 'td');
     $query->innerJoin('taxonomy_index', 'tn', 'td.tid = tn.tid');
-    $query->fields('td', array('tid'));
+    $query->fields('td', ['tid']);
     $query->addField('tn', 'nid', 'node_nid');
     $query->orderby('td.weight');
     $query->orderby('td.name');
@@ -328,15 +328,15 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       $query->condition('td.langcode', $langcode);
     }
 
-    $results = array();
-    $all_tids = array();
+    $results = [];
+    $all_tids = [];
     foreach ($query->execute() as $term_record) {
       $results[$term_record->node_nid][] = $term_record->tid;
       $all_tids[] = $term_record->tid;
     }
 
     $all_terms = $this->loadMultiple($all_tids);
-    $terms = array();
+    $terms = [];
     foreach ($results as $nid => $tids) {
       foreach ($tids as $tid) {
         $terms[$nid][$tid] = $all_terms[$tid];
@@ -361,13 +361,13 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   public function __wakeup() {
     parent::__wakeup();
     // Initialize static caches.
-    $this->parents = array();
-    $this->parentsAll = array();
-    $this->children = array();
-    $this->treeChildren = array();
-    $this->treeParents = array();
-    $this->treeTerms = array();
-    $this->trees = array();
+    $this->parents = [];
+    $this->parentsAll = [];
+    $this->children = [];
+    $this->treeChildren = [];
+    $this->treeParents = [];
+    $this->treeTerms = [];
+    $this->trees = [];
   }
 
 }

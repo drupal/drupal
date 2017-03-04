@@ -95,7 +95,7 @@ interface TranslatableInterface {
    * @throws \InvalidArgumentException
    *   If an invalid or existing translation language is specified.
    */
-  public function addTranslation($langcode, array $values = array());
+  public function addTranslation($langcode, array $values = []);
 
   /**
    * Removes the translation identified by the given language code.

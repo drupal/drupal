@@ -18,12 +18,12 @@ class UpdateScriptTestController extends ControllerBase {
     // @todo Simplify with https://www.drupal.org/node/2548095
     $base_url = str_replace('/update.php', '', $request->getBaseUrl());
     $url = (new Url('system.db_update'))->setOption('base_url', $base_url);
-    $build['main'] = array(
+    $build['main'] = [
       '#type' => 'link',
       '#title' => $this->t('Run database updates'),
       '#url' => $url,
       '#access' => $url->access($this->currentUser()),
-    );
+    ];
 
     return $build;
   }

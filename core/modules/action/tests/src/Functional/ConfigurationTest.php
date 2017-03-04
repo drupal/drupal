@@ -19,24 +19,24 @@ class ConfigurationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = array('action');
+  public static $modules = ['action'];
 
   /**
    * Tests configuration of advanced actions through administration interface.
    */
   function testActionConfiguration() {
     // Create a user with permission to view the actions administration pages.
-    $user = $this->drupalCreateUser(array('administer actions'));
+    $user = $this->drupalCreateUser(['administer actions']);
     $this->drupalLogin($user);
 
     // Make a POST request to admin/config/system/actions.
-    $edit = array();
+    $edit = [];
     $edit['action'] = Crypt::hashBase64('action_goto_action');
     $this->drupalPostForm('admin/config/system/actions', $edit, t('Create'));
     $this->assertResponse(200);
 
     // Make a POST request to the individual action configuration page.
-    $edit = array();
+    $edit = [];
     $action_label = $this->randomMachineName();
     $edit['label'] = $action_label;
     $edit['id'] = strtolower($action_label);
@@ -52,7 +52,7 @@ class ConfigurationTest extends BrowserTestBase {
     $this->clickLink(t('Configure'));
     preg_match('|admin/config/system/actions/configure/(.+)|', $this->getUrl(), $matches);
     $aid = $matches[1];
-    $edit = array();
+    $edit = [];
     $new_action_label = $this->randomMachineName();
     $edit['label'] = $new_action_label;
     $edit['url'] = 'admin';
@@ -72,12 +72,12 @@ class ConfigurationTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/actions');
     $this->clickLink(t('Delete'));
     $this->assertResponse(200);
-    $edit = array();
+    $edit = [];
     $this->drupalPostForm("admin/config/system/actions/configure/$aid/delete", $edit, t('Delete'));
     $this->assertResponse(200);
 
     // Make sure that the action was actually deleted.
-    $this->assertRaw(t('The action %action has been deleted.', array('%action' => $new_action_label)), 'Make sure that we get a delete confirmation message.');
+    $this->assertRaw(t('The action %action has been deleted.', ['%action' => $new_action_label]), 'Make sure that we get a delete confirmation message.');
     $this->drupalGet('admin/config/system/actions');
     $this->assertResponse(200);
     $this->assertNoText($new_action_label, "Make sure the action label does not appear on the overview page after we've deleted the action.");

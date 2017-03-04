@@ -57,7 +57,7 @@ class MenuDeleteForm extends EntityDeleteForm {
     $caption = '';
     $num_links = $this->menuLinkManager->countMenuLinks($this->entity->id());
     if ($num_links) {
-      $caption .= '<p>' . $this->formatPlural($num_links, '<strong>Warning:</strong> There is currently 1 menu link in %title. It will be deleted (system-defined items will be reset).', '<strong>Warning:</strong> There are currently @count menu links in %title. They will be deleted (system-defined links will be reset).', array('%title' => $this->entity->label())) . '</p>';
+      $caption .= '<p>' . $this->formatPlural($num_links, '<strong>Warning:</strong> There is currently 1 menu link in %title. It will be deleted (system-defined items will be reset).', '<strong>Warning:</strong> There are currently @count menu links in %title. They will be deleted (system-defined links will be reset).', ['%title' => $this->entity->label()]) . '</p>';
     }
     $caption .= '<p>' . t('This action cannot be undone.') . '</p>';
     return $caption;
@@ -67,7 +67,7 @@ class MenuDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   protected function logDeletionMessage() {
-    $this->logger('menu')->notice('Deleted custom menu %title and all its menu links.', array('%title' => $this->entity->label()));
+    $this->logger('menu')->notice('Deleted custom menu %title and all its menu links.', ['%title' => $this->entity->label()]);
   }
 
   /**
@@ -85,7 +85,7 @@ class MenuDeleteForm extends EntityDeleteForm {
     //   parameter that is being removed. Also, consider moving this to
     //   menu_ui.module as part of a generic response to entity deletion.
     //   https://www.drupal.org/node/2310329
-    $menu_links = $this->menuLinkManager->loadLinksByRoute('entity.menu.edit_form', array('menu' => $this->entity->id()), TRUE);
+    $menu_links = $this->menuLinkManager->loadLinksByRoute('entity.menu.edit_form', ['menu' => $this->entity->id()], TRUE);
     foreach ($menu_links as $id => $link) {
       $this->menuLinkManager->removeDefinition($id);
     }
