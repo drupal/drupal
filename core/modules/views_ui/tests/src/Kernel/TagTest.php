@@ -36,7 +36,7 @@ class TagTest extends ViewsKernelTestBase {
       View::create(['tag' => $tag, 'id' => $this->randomMachineName()])->save();
     }
 
-    // Make sure just ten results are returns.
+    // Make sure just ten results are returned.
     $controller = ViewsUIController::create($this->container);
     $request = $this->container->get('request_stack')->getCurrentRequest();
     $request->query->set('q', 'autocomplete_tag_test');
