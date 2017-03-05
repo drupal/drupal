@@ -132,14 +132,12 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   /**
    * Initialize the cache backend.
    *
-   * Plugin definitions are cached using the provided cache backend. The
-   * interface language is added as a suffix to the cache key.
+   * Plugin definitions are cached using the provided cache backend.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
    * @param string $cache_key
-   *   Cache key prefix to use, the language code will be appended
-   *   automatically.
+   *   Cache key prefix to use.
    * @param array $cache_tags
    *   (optional) When providing a list of cache tags, the cached plugin
    *   definitions are tagged with the provided cache tags. These cache tags can
