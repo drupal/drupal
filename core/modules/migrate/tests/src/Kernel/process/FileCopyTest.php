@@ -75,6 +75,32 @@ class FileCopyTest extends FileTestBase {
   }
 
   /**
+   * Test successful file reuse.
+   */
+  public function testSuccessfulReuse() {
+    $source_path = $this->root . '/core/modules/simpletest/files/image-test.jpg';
+    $destination_path = 'public://file1.jpg';
+    $file_reuse = file_unmanaged_copy($source_path, $destination_path);
+    $timestamp = (new \SplFileInfo($file_reuse))->getMTime();
+    $this->assertInternalType('int', $timestamp);
+
+    // We need to make sure the modified timestamp on the file is sooner than
+    // the attempted migration.
+    sleep(1);
+    $configuration = ['reuse' => TRUE];
+    $this->doTransform($source_path, $destination_path, $configuration);
+    clearstatcache(TRUE, $destination_path);
+    $modified_timestamp = (new \SplFileInfo($destination_path))->getMTime();
+    $this->assertEquals($timestamp, $modified_timestamp);
+
+    $configuration = ['reuse' => FALSE];
+    $this->doTransform($source_path, $destination_path, $configuration);
+    clearstatcache(TRUE, $destination_path);
+    $modified_timestamp = (new \SplFileInfo($destination_path))->getMTime();
+    $this->assertGreaterThan($timestamp, $modified_timestamp);
+  }
+
+  /**
    * Test successful moves.
    */
   public function testSuccessfulMoves() {
