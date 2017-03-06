@@ -33,7 +33,7 @@ class UserCancelTest extends WebTestBase {
   /**
    * Attempt to cancel account without permission.
    */
-  function testUserCancelWithoutPermission() {
+  public function testUserCancelWithoutPermission() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     $user_storage = $this->container->get('entity.manager')->getStorage('user');
@@ -94,7 +94,7 @@ class UserCancelTest extends WebTestBase {
    * This should never be possible, or the site owner would become unable to
    * administer the site.
    */
-  function testUserCancelUid1() {
+  public function testUserCancelUid1() {
     $user_storage = $this->container->get('entity.manager')->getStorage('user');
 
     \Drupal::service('module_installer')->install(['views']);
@@ -135,7 +135,7 @@ class UserCancelTest extends WebTestBase {
   /**
    * Attempt invalid account cancellations.
    */
-  function testUserCancelInvalid() {
+  public function testUserCancelInvalid() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     $user_storage = $this->container->get('entity.manager')->getStorage('user');
@@ -183,7 +183,7 @@ class UserCancelTest extends WebTestBase {
   /**
    * Disable account and keep all content.
    */
-  function testUserBlock() {
+  public function testUserBlock() {
     $this->config('user.settings')->set('cancel_method', 'user_cancel_block')->save();
     $user_storage = $this->container->get('entity.manager')->getStorage('user');
 
@@ -221,7 +221,7 @@ class UserCancelTest extends WebTestBase {
   /**
    * Disable account and unpublish all content.
    */
-  function testUserBlockUnpublish() {
+  public function testUserBlockUnpublish() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_block_unpublish')->save();
     // Create comment field on page.
@@ -291,7 +291,7 @@ class UserCancelTest extends WebTestBase {
   /**
    * Delete account and anonymize all content.
    */
-  function testUserAnonymize() {
+  public function testUserAnonymize() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     // Create comment field on page.
@@ -418,7 +418,7 @@ class UserCancelTest extends WebTestBase {
   /**
    * Delete account and remove all content.
    */
-  function testUserDelete() {
+  public function testUserDelete() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
     \Drupal::service('module_installer')->install(['comment']);
@@ -489,7 +489,7 @@ class UserCancelTest extends WebTestBase {
   /**
    * Create an administrative user and delete another user.
    */
-  function testUserCancelByAdmin() {
+  public function testUserCancelByAdmin() {
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a regular user.
@@ -514,7 +514,7 @@ class UserCancelTest extends WebTestBase {
   /**
    * Tests deletion of a user account without an email address.
    */
-  function testUserWithoutEmailCancelByAdmin() {
+  public function testUserWithoutEmailCancelByAdmin() {
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a regular user.
@@ -542,7 +542,7 @@ class UserCancelTest extends WebTestBase {
   /**
    * Create an administrative user and mass-delete other users.
    */
-  function testMassUserCancelByAdmin() {
+  public function testMassUserCancelByAdmin() {
     \Drupal::service('module_installer')->install(['views']);
     \Drupal::service('router.builder')->rebuild();
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
@@ -597,7 +597,7 @@ class UserCancelTest extends WebTestBase {
   /**
    * Tests user cancel with node access.
    */
-  function testUserDeleteWithContentAndNodeAccess() {
+  public function testUserDeleteWithContentAndNodeAccess() {
 
     \Drupal::service('module_installer')->install(['node_access_test']);
     // Rebuild node access.

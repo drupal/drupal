@@ -47,7 +47,7 @@ class ReplicaDatabaseIgnoreSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = ['checkReplicaServer'];
     return $events;
   }

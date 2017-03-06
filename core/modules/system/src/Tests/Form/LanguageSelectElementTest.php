@@ -25,7 +25,7 @@ class LanguageSelectElementTest extends WebTestBase {
   /**
    * Tests that the options printed by the language select element are correct.
    */
-  function testLanguageSelectElementOptions() {
+  public function testLanguageSelectElementOptions() {
     // Add some languages.
     ConfigurableLanguage::create([
       'id' => 'aaa',
@@ -68,7 +68,7 @@ class LanguageSelectElementTest extends WebTestBase {
    *
    * This happens when the language module is disabled.
    */
-  function testHiddenLanguageSelectElement() {
+  public function testHiddenLanguageSelectElement() {
     // Disable the language module, so that the language select field will not
     // be rendered.
     $this->container->get('module_installer')->uninstall(['language']);

@@ -68,7 +68,7 @@ class FileReadOnlyStorage implements PhpStorageInterface {
   /**
    * {@inheritdoc}
    */
-  function writeable() {
+  public function writeable() {
     return FALSE;
   }
 

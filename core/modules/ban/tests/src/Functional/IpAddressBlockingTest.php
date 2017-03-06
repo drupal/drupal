@@ -23,7 +23,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
   /**
    * Tests various user input to confirm correct validation and saving of data.
    */
-  function testIPAddressValidation() {
+  public function testIPAddressValidation() {
     // Create user.
     $admin_user = $this->drupalCreateUser(['ban IP addresses']);
     $this->drupalLogin($admin_user);

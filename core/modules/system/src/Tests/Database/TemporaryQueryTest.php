@@ -19,14 +19,14 @@ class TemporaryQueryTest extends DatabaseWebTestBase {
   /**
    * Returns the number of rows of a table.
    */
-  function countTableRows($table_name) {
+  public function countTableRows($table_name) {
     return db_select($table_name)->countQuery()->execute()->fetchField();
   }
 
   /**
    * Confirms that temporary tables work and are limited to one request.
    */
-  function testTemporaryQuery() {
+  public function testTemporaryQuery() {
     $this->drupalGet('database_test/db_query_temporary');
     $data = json_decode($this->getRawContent());
     if ($data) {

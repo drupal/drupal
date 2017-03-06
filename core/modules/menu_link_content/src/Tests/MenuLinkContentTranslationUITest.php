@@ -79,7 +79,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests that translation page inherits admin status of edit page.
    */
-  function testTranslationLinkTheme() {
+  public function testTranslationLinkTheme() {
     $this->drupalLogin($this->administrator);
     $entityId = $this->createEntity([], 'en');
 

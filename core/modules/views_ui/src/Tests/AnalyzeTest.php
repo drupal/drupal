@@ -37,7 +37,7 @@ class AnalyzeTest extends ViewTestBase {
   /**
    * Tests that analyze works in general.
    */
-  function testAnalyzeBasic() {
+  public function testAnalyzeBasic() {
     $this->drupalLogin($this->admin);
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');

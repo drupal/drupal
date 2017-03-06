@@ -20,7 +20,7 @@ class PrefixInfoTest extends DatabaseTestBase {
    * The other two by Drupal core supported databases do not have this variable
    * set in the return array.
    */
-  function testGetPrefixInfo() {
+  public function testGetPrefixInfo() {
     $connection_info = Database::getConnectionInfo('default');
     if ($connection_info['default']['driver'] == 'mysql') {
       // Copy the default connection info to the 'extra' key.

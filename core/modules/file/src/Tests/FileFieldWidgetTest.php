@@ -73,7 +73,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   /**
    * Tests upload and remove buttons for a single-valued File field.
    */
-  function testSingleValuedWidget() {
+  public function testSingleValuedWidget() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
@@ -131,7 +131,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   /**
    * Tests upload and remove buttons for multiple multi-valued File fields.
    */
-  function testMultiValuedWidget() {
+  public function testMultiValuedWidget() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     // Use explicit names instead of random names for those fields, because of a
@@ -301,7 +301,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   /**
    * Tests a file field with a "Private files" upload destination setting.
    */
-  function testPrivateFileSetting() {
+  public function testPrivateFileSetting() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Grant the admin user required permissions.
     user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
@@ -341,7 +341,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   /**
    * Tests that download restrictions on private files work on comments.
    */
-  function testPrivateFileComment() {
+  public function testPrivateFileComment() {
     $user = $this->drupalCreateUser(['access comments']);
 
     // Grant the admin user required comment permissions.
@@ -413,7 +413,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   /**
    * Tests validation with the Upload button.
    */
-  function testWidgetValidation() {
+  public function testWidgetValidation() {
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
     $this->createFileField($field_name, 'node', $type_name);

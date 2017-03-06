@@ -22,7 +22,7 @@ class UserTimeZoneTest extends WebTestBase {
   /**
    * Tests the display of dates and time when user-configurable time zones are set.
    */
-  function testUserTimeZone() {
+  public function testUserTimeZone() {
     // Setup date/time settings for Los Angeles time.
     $this->config('system.date')
       ->set('timezone.user.configurable', 1)

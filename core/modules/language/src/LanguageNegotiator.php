@@ -245,7 +245,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
   /**
    * {@inheritdoc}
    */
-  function saveConfiguration($type, $enabled_methods) {
+  public function saveConfiguration($type, $enabled_methods) {
     // As configurable language types might have changed, we reset the cache.
     $this->languageManager->reset();
     $definitions = $this->getNegotiationMethods();
@@ -274,7 +274,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
   /**
    * {@inheritdoc}
    */
-  function purgeConfiguration() {
+  public function purgeConfiguration() {
     // Ensure that we are getting the defined language negotiation information.
     // An invocation of \Drupal\Core\Extension\ModuleInstaller::install() or
     // \Drupal\Core\Extension\ModuleInstaller::uninstall() could invalidate the
@@ -289,7 +289,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
   /**
    * {@inheritdoc}
    */
-  function updateConfiguration(array $types) {
+  public function updateConfiguration(array $types) {
     // Ensure that we are getting the defined language negotiation information.
     // An invocation of \Drupal\Core\Extension\ModuleInstaller::install() or
     // \Drupal\Core\Extension\ModuleInstaller::uninstall() could invalidate the

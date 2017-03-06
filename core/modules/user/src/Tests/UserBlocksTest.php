@@ -37,7 +37,7 @@ class UserBlocksTest extends WebTestBase {
   /**
    * Tests that user login block is hidden from user/login.
    */
-  function testUserLoginBlockVisibility() {
+  public function testUserLoginBlockVisibility() {
     // Array keyed list where key being the URL address and value being expected
     // visibility as boolean type.
     $paths = [
@@ -61,7 +61,7 @@ class UserBlocksTest extends WebTestBase {
   /**
    * Test the user login block.
    */
-  function testUserLoginBlock() {
+  public function testUserLoginBlock() {
     // Create a user with some permission that anonymous users lack.
     $user = $this->drupalCreateUser(['administer permissions']);
 
@@ -103,7 +103,7 @@ class UserBlocksTest extends WebTestBase {
   /**
    * Test the Who's Online block.
    */
-  function testWhosOnlineBlock() {
+  public function testWhosOnlineBlock() {
     $block = $this->drupalPlaceBlock('views_block:who_s_online-who_s_online_block');
 
     // Generate users.

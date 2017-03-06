@@ -35,7 +35,7 @@ class SystemListingCompatibleTest extends WebTestBase {
   /**
    * Non-empty test* method required to executed the test case class.
    */
-  function testSystemListing() {
+  public function testSystemListing() {
     $this->pass(__CLASS__ . ' test executed.');
   }
 

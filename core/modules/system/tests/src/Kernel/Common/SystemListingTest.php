@@ -14,7 +14,7 @@ class SystemListingTest extends KernelTestBase {
   /**
    * Tests that files in different directories take precedence as expected.
    */
-  function testDirectoryPrecedence() {
+  public function testDirectoryPrecedence() {
     // Define the module files we will search for, and the directory precedence
     // we expect.
     $expected_directories = [

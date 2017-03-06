@@ -64,7 +64,7 @@ class OptionsFieldUITest extends FieldTestBase {
   /**
    * Options (integer) : test 'allowed values' input.
    */
-  function testOptionsAllowedValuesInteger() {
+  public function testOptionsAllowedValuesInteger() {
     $this->fieldName = 'field_options_integer';
     $this->createOptionsField('list_integer');
 
@@ -120,7 +120,7 @@ class OptionsFieldUITest extends FieldTestBase {
   /**
    * Options (float) : test 'allowed values' input.
    */
-  function testOptionsAllowedValuesFloat() {
+  public function testOptionsAllowedValuesFloat() {
     $this->fieldName = 'field_options_float';
     $this->createOptionsField('list_float');
 
@@ -180,7 +180,7 @@ class OptionsFieldUITest extends FieldTestBase {
   /**
    * Options (text) : test 'allowed values' input.
    */
-  function testOptionsAllowedValuesText() {
+  public function testOptionsAllowedValuesText() {
     $this->fieldName = 'field_options_text';
     $this->createOptionsField('list_string');
 
@@ -245,7 +245,7 @@ class OptionsFieldUITest extends FieldTestBase {
   /**
    * Options (text) : test 'trimmed values' input.
    */
-  function testOptionsTrimmedValuesText() {
+  public function testOptionsTrimmedValuesText() {
     $this->fieldName = 'field_options_trimmed_text';
     $this->createOptionsField('list_string');
 
@@ -291,7 +291,7 @@ class OptionsFieldUITest extends FieldTestBase {
    * @param $message
    *   Message to display.
    */
-  function assertAllowedValuesInput($input_string, $result, $message) {
+  public function assertAllowedValuesInput($input_string, $result, $message) {
     $edit = ['settings[allowed_values]' => $input_string];
     $this->drupalPostForm($this->adminPath, $edit, t('Save field settings'));
     $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
@@ -308,7 +308,7 @@ class OptionsFieldUITest extends FieldTestBase {
   /**
    * Tests normal and key formatter display on node display.
    */
-  function testNodeDisplay() {
+  public function testNodeDisplay() {
     $this->fieldName = strtolower($this->randomMachineName());
     $this->createOptionsField('list_integer');
     $node = $this->drupalCreateNode(['type' => $this->type]);

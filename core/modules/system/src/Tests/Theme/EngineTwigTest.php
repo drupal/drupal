@@ -28,7 +28,7 @@ class EngineTwigTest extends WebTestBase {
   /**
    * Tests that the Twig engine handles PHP data correctly.
    */
-  function testTwigVariableDataTypes() {
+  public function testTwigVariableDataTypes() {
     $this->config('system.theme')
       ->set('default', 'test_theme')
       ->save();

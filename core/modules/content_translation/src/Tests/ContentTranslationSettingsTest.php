@@ -43,7 +43,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
   /**
    * Tests that the settings UI works as expected.
    */
-  function testSettingsUI() {
+  public function testSettingsUI() {
     // Check for the content_translation_menu_links_discovered_alter() changes.
     $this->drupalGet('admin/config');
     $this->assertLink('Content language and translation');
@@ -200,7 +200,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
   /**
    * Tests the language settings checkbox on account settings page.
    */
-  function testAccountLanguageSettingsUI() {
+  public function testAccountLanguageSettingsUI() {
     // Make sure the checkbox is available and not checked by default.
     $this->drupalGet('admin/config/people/accounts');
     $this->assertField('language[content_translation]');
@@ -245,7 +245,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
   /**
    * Tests that field setting depends on bundle translatability.
    */
-  function testFieldTranslatableSettingsUI() {
+  public function testFieldTranslatableSettingsUI() {
     // At least one field needs to be translatable to enable article for
     // translation. Create an extra field to be used for this purpose. We use
     // the UI to test our form alterations.
@@ -280,7 +280,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
   /**
    * Tests the translatable settings checkbox for untranslatable entities.
    */
-  function testNonTranslatableTranslationSettingsUI() {
+  public function testNonTranslatableTranslationSettingsUI() {
     $this->drupalGet('admin/config/regional/content-language');
     $this->assertNoField('settings[entity_test][entity_test][translatable]');
   }

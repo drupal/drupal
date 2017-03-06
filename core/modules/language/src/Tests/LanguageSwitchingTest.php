@@ -33,7 +33,7 @@ class LanguageSwitchingTest extends WebTestBase {
   /**
    * Functional tests for the language switcher block.
    */
-  function testLanguageBlock() {
+  public function testLanguageBlock() {
     // Add language.
     $edit = [
       'predefined_langcode' => 'fr',
@@ -160,7 +160,7 @@ class LanguageSwitchingTest extends WebTestBase {
   /**
    * Test language switcher links for domain based negotiation.
    */
-  function testLanguageBlockWithDomain() {
+  public function testLanguageBlockWithDomain() {
     // Add the Italian language.
     ConfigurableLanguage::createFromLangcode('it')->save();
 
@@ -222,7 +222,7 @@ class LanguageSwitchingTest extends WebTestBase {
   /**
    * Test active class on links when switching languages.
    */
-  function testLanguageLinkActiveClass() {
+  public function testLanguageLinkActiveClass() {
     // Add language.
     $edit = [
       'predefined_langcode' => 'fr',
@@ -240,7 +240,7 @@ class LanguageSwitchingTest extends WebTestBase {
   /**
    * Check the path-admin class, as same as on default language.
    */
-  function testLanguageBodyClass() {
+  public function testLanguageBodyClass() {
     $searched_class = 'path-admin';
 
     // Add language.

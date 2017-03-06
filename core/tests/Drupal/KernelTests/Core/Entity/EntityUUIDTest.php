@@ -23,7 +23,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
   /**
    * Tests UUID generation in entity CRUD operations.
    */
-  function testCRUD() {
+  public function testCRUD() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
       $this->assertCRUD($entity_type);

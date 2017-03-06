@@ -50,7 +50,7 @@ class SearchPageCacheTagsTest extends SearchTestBase {
   /**
    * Tests the presence of the expected cache tag in various situations.
    */
-  function testSearchText() {
+  public function testSearchText() {
     $this->drupalLogin($this->searchingUser);
 
     // Initial page for searching nodes.

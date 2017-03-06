@@ -14,7 +14,7 @@ class DirectoryTest extends FileTestBase {
   /**
    * Test local directory handling functions.
    */
-  function testFileCheckLocalDirectoryHandling() {
+  public function testFileCheckLocalDirectoryHandling() {
     $site_path = $this->container->get('site.path');
     $directory = $site_path . '/files';
 
@@ -53,7 +53,7 @@ class DirectoryTest extends FileTestBase {
   /**
    * Test directory handling functions.
    */
-  function testFileCheckDirectoryHandling() {
+  public function testFileCheckDirectoryHandling() {
     // A directory to operate on.
     $directory = file_default_scheme() . '://' . $this->randomMachineName() . '/' . $this->randomMachineName();
     $this->assertFalse(is_dir($directory), 'Directory does not exist prior to testing.');
@@ -99,7 +99,7 @@ class DirectoryTest extends FileTestBase {
    * This will take a directory and path, and find a valid filepath that is not
    * taken by another file.
    */
-  function testFileCreateNewFilepath() {
+  public function testFileCreateNewFilepath() {
     // First we test against an imaginary file that does not exist in a
     // directory.
     $basename = 'xyz.txt';
@@ -130,7 +130,7 @@ class DirectoryTest extends FileTestBase {
    * If the file doesn't currently exist, then it will simply return the
    * filepath.
    */
-  function testFileDestination() {
+  public function testFileDestination() {
     // First test for non-existent file.
     $destination = 'core/misc/xyz.txt';
     $path = file_destination($destination, FILE_EXISTS_REPLACE);
@@ -152,7 +152,7 @@ class DirectoryTest extends FileTestBase {
   /**
    * Ensure that the file_directory_temp() function always returns a value.
    */
-  function testFileDirectoryTemp() {
+  public function testFileDirectoryTemp() {
     // Start with an empty variable to ensure we have a clean slate.
     $config = $this->config('system.file');
     $config->set('path.temporary', '')->save();

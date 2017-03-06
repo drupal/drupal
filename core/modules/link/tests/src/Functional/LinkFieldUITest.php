@@ -44,7 +44,7 @@ class LinkFieldUITest extends BrowserTestBase {
   /**
    * Tests the link field UI.
    */
-  function testFieldUI() {
+  public function testFieldUI() {
     // Add a content type.
     $type = $this->drupalCreateContentType();
     $type_path = 'admin/structure/types/manage/' . $type->id();

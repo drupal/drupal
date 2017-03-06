@@ -18,7 +18,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Tests \Drupal\file\FileUsage\DatabaseFileUsageBackend::listUsage().
    */
-  function testGetUsage() {
+  public function testGetUsage() {
     $file = $this->createFile();
     db_insert('file_usage')
       ->fields([
@@ -51,7 +51,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Tests \Drupal\file\FileUsage\DatabaseFileUsageBackend::add().
    */
-  function testAddUsage() {
+  public function testAddUsage() {
     $file = $this->createFile();
     $file_usage = $this->container->get('file.usage');
     $file_usage->add($file, 'testing', 'foo', 1);
@@ -77,7 +77,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Tests \Drupal\file\FileUsage\DatabaseFileUsageBackend::delete().
    */
-  function testRemoveUsage() {
+  public function testRemoveUsage() {
     $file = $this->createFile();
     $file_usage = $this->container->get('file.usage');
     db_insert('file_usage')
@@ -124,7 +124,7 @@ class UsageTest extends FileManagedUnitTestBase {
    * We are using UPDATE statements because using the API would set the
    * timestamp.
    */
-  function createTempFiles() {
+  public function createTempFiles() {
     // Temporary file that is old.
     $temp_old = file_save_data('');
     db_update('file_managed')
@@ -161,7 +161,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Ensure that temporary files are removed by default.
    */
-  function testTempFileCleanupDefault() {
+  public function testTempFileCleanupDefault() {
     list($temp_old, $temp_new, $perm_old, $perm_new) = $this->createTempFiles();
 
     // Run cron and then ensure that only the old, temp file was deleted.
@@ -175,7 +175,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Ensure that temporary files are kept as configured.
    */
-  function testTempFileNoCleanup() {
+  public function testTempFileNoCleanup() {
     list($temp_old, $temp_new, $perm_old, $perm_new) = $this->createTempFiles();
 
     // Set the max age to 0, meaning no temporary files will be deleted.
@@ -194,7 +194,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Ensure that temporary files are kept as configured.
    */
-  function testTempFileCustomCleanup() {
+  public function testTempFileCustomCleanup() {
     list($temp_old, $temp_new, $perm_old, $perm_new) = $this->createTempFiles();
 
     // Set the max age to older than default.

@@ -13,7 +13,7 @@ class DeleteTest extends FileManagedUnitTestBase {
   /**
    * Tries deleting a normal file (as opposed to a directory, symlink, etc).
    */
-  function testUnused() {
+  public function testUnused() {
     $file = $this->createFile();
 
     // Check that deletion removes the file and database record.
@@ -27,7 +27,7 @@ class DeleteTest extends FileManagedUnitTestBase {
   /**
    * Tries deleting a file that is in use.
    */
-  function testInUse() {
+  public function testInUse() {
     $file = $this->createFile();
     $file_usage = $this->container->get('file.usage');
     $file_usage->add($file, 'testing', 'test', 1);

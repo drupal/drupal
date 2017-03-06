@@ -25,7 +25,7 @@ class AccessRoleTest extends AccessTestBase {
   /**
    * Tests role access plugin.
    */
-  function testAccessRole() {
+  public function testAccessRole() {
     /** @var \Drupal\views\ViewEntityInterface $view */
     $view = \Drupal::entityManager()->getStorage('view')->load('test_access_role');
     $display = &$view->getDisplay('default');

@@ -27,7 +27,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
   /**
    * Tests that hooks to provide theme suggestions work.
    */
-  function testTemplateSuggestions() {
+  public function testTemplateSuggestions() {
     $this->drupalGet('theme-test/suggestion-provided');
     $this->assertText('Template for testing suggestions provided by the module declaring the theme hook.');
 
@@ -44,7 +44,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
   /**
    * Tests hook_theme_suggestions_alter().
    */
-  function testGeneralSuggestionsAlter() {
+  public function testGeneralSuggestionsAlter() {
     $this->drupalGet('theme-test/general-suggestion-alter');
     $this->assertText('Original template for testing hook_theme_suggestions_alter().');
 
@@ -66,7 +66,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
   /**
    * Tests that theme suggestion alter hooks work for templates.
    */
-  function testTemplateSuggestionsAlter() {
+  public function testTemplateSuggestionsAlter() {
     $this->drupalGet('theme-test/suggestion-alter');
     $this->assertText('Original template for testing hook_theme_suggestions_HOOK_alter().');
 
@@ -88,7 +88,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
   /**
    * Tests that theme suggestion alter hooks work for specific theme calls.
    */
-  function testSpecificSuggestionsAlter() {
+  public function testSpecificSuggestionsAlter() {
     // Test that the default template is rendered.
     $this->drupalGet('theme-test/specific-suggestion-alter');
     $this->assertText('Template for testing specific theme calls.');
@@ -113,7 +113,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
   /**
    * Tests that theme suggestion alter hooks work for theme functions.
    */
-  function testThemeFunctionSuggestionsAlter() {
+  public function testThemeFunctionSuggestionsAlter() {
     $this->drupalGet('theme-test/function-suggestion-alter');
     $this->assertText('Original theme function.');
 
@@ -157,7 +157,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
    * hook_theme_suggestions_alter() should fire before
    * hook_theme_suggestions_HOOK_alter() within an extension (module or theme).
    */
-  function testExecutionOrder() {
+  public function testExecutionOrder() {
     // Install our test theme and module.
     $this->config('system.theme')
       ->set('default', 'test_theme')

@@ -12,7 +12,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests updates with OR conditionals.
    */
-  function testOrConditionUpdate() {
+  public function testOrConditionUpdate() {
     $update = db_update('test')
       ->fields(['job' => 'Musician'])
       ->condition(db_or()
@@ -29,7 +29,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests WHERE IN clauses.
    */
-  function testInConditionUpdate() {
+  public function testInConditionUpdate() {
     $num_updated = db_update('test')
       ->fields(['job' => 'Musician'])
       ->condition('name', ['John', 'Paul'], 'IN')
@@ -43,7 +43,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests WHERE NOT IN clauses.
    */
-  function testNotInConditionUpdate() {
+  public function testNotInConditionUpdate() {
     // The o is lowercase in the 'NoT IN' operator, to make sure the operators
     // work in mixed case.
     $num_updated = db_update('test')
@@ -59,7 +59,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests BETWEEN conditional clauses.
    */
-  function testBetweenConditionUpdate() {
+  public function testBetweenConditionUpdate() {
     $num_updated = db_update('test')
       ->fields(['job' => 'Musician'])
       ->condition('age', [25, 26], 'BETWEEN')
@@ -73,7 +73,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests LIKE conditionals.
    */
-  function testLikeConditionUpdate() {
+  public function testLikeConditionUpdate() {
     $num_updated = db_update('test')
       ->fields(['job' => 'Musician'])
       ->condition('name', '%ge%', 'LIKE')
@@ -87,7 +87,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests UPDATE with expression values.
    */
-  function testUpdateExpression() {
+  public function testUpdateExpression() {
     $before_age = db_query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo'])->fetchField();
     $num_updated = db_update('test')
       ->condition('name', 'Ringo')
@@ -108,7 +108,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests UPDATE with only expression values.
    */
-  function testUpdateOnlyExpression() {
+  public function testUpdateOnlyExpression() {
     $before_age = db_query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo'])->fetchField();
     $num_updated = db_update('test')
       ->condition('name', 'Ringo')
@@ -123,7 +123,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Test UPDATE with a subselect value.
    */
-  function testSubSelectUpdate() {
+  public function testSubSelectUpdate() {
     $subselect = db_select('test_task', 't');
     $subselect->addExpression('MAX(priority) + :increment', 'max_priority', [':increment' => 30]);
     // Clone this to make sure we are running a different query when

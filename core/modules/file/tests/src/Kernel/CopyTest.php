@@ -13,7 +13,7 @@ class CopyTest extends FileManagedUnitTestBase {
   /**
    * Test file copying in the normal, base case.
    */
-  function testNormal() {
+  public function testNormal() {
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
     $desired_uri = 'public://' . $this->randomMachineName();
@@ -42,7 +42,7 @@ class CopyTest extends FileManagedUnitTestBase {
   /**
    * Test renaming when copying over a file that already exists.
    */
-  function testExistingRename() {
+  public function testExistingRename() {
     // Setup a file to overwrite.
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
@@ -82,7 +82,7 @@ class CopyTest extends FileManagedUnitTestBase {
   /**
    * Test replacement when copying over a file that already exists.
    */
-  function testExistingReplace() {
+  public function testExistingReplace() {
     // Setup a file to overwrite.
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
@@ -121,7 +121,7 @@ class CopyTest extends FileManagedUnitTestBase {
    * Test that copying over an existing file fails when FILE_EXISTS_ERROR is
    * specified.
    */
-  function testExistingError() {
+  public function testExistingError() {
     $contents = $this->randomMachineName(10);
     $source = $this->createFile();
     $target = $this->createFile(NULL, $contents);

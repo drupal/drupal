@@ -35,7 +35,7 @@ class StringFilter extends FilterPluginBase {
    * to add or remove functionality by overriding this function and
    * adding/removing items from this array.
    */
-  function operators() {
+  public function operators() {
     $operators = [
       '=' => [
         'title' => $this->t('Is equal to'),
@@ -235,7 +235,7 @@ class StringFilter extends FilterPluginBase {
     }
   }
 
-  function operator() {
+  public function operator() {
     return $this->operator == '=' ? 'LIKE' : 'NOT LIKE';
   }
 

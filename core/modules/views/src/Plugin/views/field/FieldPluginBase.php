@@ -1725,7 +1725,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   /**
    * {@inheritdoc}
    */
-  function theme(ResultRow $values) {
+  public function theme(ResultRow $values) {
     $renderer = $this->getRenderer();
     $build = [
       '#theme' => $this->themeFunctions(),

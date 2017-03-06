@@ -24,7 +24,7 @@ class CommentFieldsTest extends CommentTestBase {
   /**
    * Tests that the default 'comment_body' field is correctly added.
    */
-  function testCommentDefaultFields() {
+  public function testCommentDefaultFields() {
     // Do not make assumptions on default node types created by the test
     // installation profile, and create our own.
     $this->drupalCreateContentType(['type' => 'test_node_type']);
@@ -183,7 +183,7 @@ class CommentFieldsTest extends CommentTestBase {
   /**
    * Tests that comment module works when installed after a content module.
    */
-  function testCommentInstallAfterContentModule() {
+  public function testCommentInstallAfterContentModule() {
     // Create a user to do module administration.
     $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer modules']);
     $this->drupalLogin($this->adminUser);

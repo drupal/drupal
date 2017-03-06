@@ -37,7 +37,7 @@ class BrowserTest extends WebTestBase {
   /**
    * Test \Drupal\simpletest\WebTestBase::getAbsoluteUrl().
    */
-  function testGetAbsoluteUrl() {
+  public function testGetAbsoluteUrl() {
     $url = 'user/login';
 
     $this->drupalGet($url);
@@ -58,7 +58,7 @@ class BrowserTest extends WebTestBase {
   /**
    * Tests XPath escaping.
    */
-  function testXPathEscaping() {
+  public function testXPathEscaping() {
     $testpage = <<< EOF
 <html>
 <body>

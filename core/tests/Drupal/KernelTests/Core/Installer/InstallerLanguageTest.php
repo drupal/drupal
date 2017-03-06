@@ -15,7 +15,7 @@ class InstallerLanguageTest extends KernelTestBase {
   /**
    * Tests that the installer can find translation files.
    */
-  function testInstallerTranslationFiles() {
+  public function testInstallerTranslationFiles() {
     // Different translation files would be found depending on which language
     // we are looking for.
     $expected_translation_files = [
@@ -40,7 +40,7 @@ class InstallerLanguageTest extends KernelTestBase {
   /**
    * Tests profile info caching in non-English languages.
    */
-  function testInstallerTranslationCache() {
+  public function testInstallerTranslationCache() {
     require_once 'core/includes/install.inc';
 
     // Prime the drupal_get_filename() static cache with the location of the

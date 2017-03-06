@@ -21,7 +21,7 @@ class ConfigDiffTest extends KernelTestBase {
   /**
    * Tests calculating the difference between two sets of configuration.
    */
-  function testDiff() {
+  public function testDiff() {
     $active = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
     $config_name = 'config_test.system';
@@ -108,7 +108,7 @@ class ConfigDiffTest extends KernelTestBase {
   /**
    * Tests calculating the difference between two sets of config collections.
    */
-  function testCollectionDiff() {
+  public function testCollectionDiff() {
     /** @var \Drupal\Core\Config\StorageInterface $active */
     $active = $this->container->get('config.storage');
     /** @var \Drupal\Core\Config\StorageInterface $sync */

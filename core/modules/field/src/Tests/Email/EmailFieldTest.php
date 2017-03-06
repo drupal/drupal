@@ -49,7 +49,7 @@ class EmailFieldTest extends WebTestBase {
   /**
    * Tests email field.
    */
-  function testEmailField() {
+  public function testEmailField() {
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
     $this->fieldStorage = FieldStorageConfig::create([

@@ -140,7 +140,7 @@ class ConfigSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents() {
     $events[ConfigEvents::SAVE][] = ['onConfigSave', 0];
     return $events;
   }

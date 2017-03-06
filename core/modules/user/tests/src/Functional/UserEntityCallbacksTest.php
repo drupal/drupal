@@ -44,7 +44,7 @@ class UserEntityCallbacksTest extends BrowserTestBase {
   /**
    * Test label callback.
    */
-  function testLabelCallback() {
+  public function testLabelCallback() {
     $this->assertEqual($this->account->label(), $this->account->getUsername(), 'The username should be used as label');
 
     // Setup a random anonymous name to be sure the name is used.

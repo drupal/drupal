@@ -48,7 +48,7 @@ class CKEditorAdminTest extends WebTestBase {
   /**
    * Tests configuring a text editor for an existing text format.
    */
-  function testExistingFormat() {
+  public function testExistingFormat() {
     $ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
 
     $this->drupalLogin($this->adminUser);
@@ -222,7 +222,7 @@ class CKEditorAdminTest extends WebTestBase {
    * This test only needs to ensure that the basics of the CKEditor
    * configuration form work; details are tested in testExistingFormat().
    */
-  function testNewFormat() {
+  public function testNewFormat() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/content/formats/add');
 

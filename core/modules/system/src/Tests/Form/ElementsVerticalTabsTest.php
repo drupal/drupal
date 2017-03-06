@@ -47,7 +47,7 @@ class ElementsVerticalTabsTest extends WebTestBase {
    *
    * Otherwise, collapse.js adds "SHOW" or "HIDE" labels to the tabs.
    */
-  function testJavaScriptOrdering() {
+  public function testJavaScriptOrdering() {
     $this->drupalGet('form_test/vertical-tabs');
     $position1 = strpos($this->content, 'core/misc/vertical-tabs.js');
     $position2 = strpos($this->content, 'core/misc/collapse.js');
@@ -57,7 +57,7 @@ class ElementsVerticalTabsTest extends WebTestBase {
   /**
    * Ensures that vertical tab markup is not shown if user has no tab access.
    */
-  function testWrapperNotShownWhenEmpty() {
+  public function testWrapperNotShownWhenEmpty() {
     // Test admin user can see vertical tabs and wrapper.
     $this->drupalGet('form_test/vertical-tabs');
     $wrapper = $this->xpath("//div[@data-vertical-tabs-panes]");
@@ -73,7 +73,7 @@ class ElementsVerticalTabsTest extends WebTestBase {
   /**
    * Ensures that default vertical tab is correctly selected.
    */
-  function testDefaultTab() {
+  public function testDefaultTab() {
     $this->drupalGet('form_test/vertical-tabs');
     $this->assertFieldByName('vertical_tabs__active_tab', 'edit-tab3', t('The default vertical tab is correctly selected.'));
   }
@@ -81,7 +81,7 @@ class ElementsVerticalTabsTest extends WebTestBase {
   /**
    * Ensures that vertical tab form values are cleaned.
    */
-  function testDefaultTabCleaned() {
+  public function testDefaultTabCleaned() {
     $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
     $this->assertFalse(isset($values['vertical_tabs__active_tab']), SafeMarkup::format('%element was removed.', ['%element' => 'vertical_tabs__active_tab']));
   }

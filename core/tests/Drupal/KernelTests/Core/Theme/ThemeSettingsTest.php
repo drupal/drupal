@@ -41,7 +41,7 @@ class ThemeSettingsTest extends KernelTestBase {
   /**
    * Tests that $theme.settings are imported and used as default theme settings.
    */
-  function testDefaultConfig() {
+  public function testDefaultConfig() {
     $name = 'test_basetheme';
     $path = $this->availableThemes[$name]->getPath();
     $this->assertTrue(file_exists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml"));
@@ -52,7 +52,7 @@ class ThemeSettingsTest extends KernelTestBase {
   /**
    * Tests that the $theme.settings default config file is optional.
    */
-  function testNoDefaultConfig() {
+  public function testNoDefaultConfig() {
     $name = 'stark';
     $path = $this->availableThemes[$name]->getPath();
     $this->assertFalse(file_exists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml"));

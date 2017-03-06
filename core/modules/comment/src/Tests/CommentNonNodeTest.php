@@ -108,7 +108,7 @@ class CommentNonNodeTest extends WebTestBase {
    * @return \Drupal\comment\CommentInterface
    *   The new comment entity.
    */
-  function postComment(EntityInterface $entity, $comment, $subject = '', $contact = NULL) {
+  public function postComment(EntityInterface $entity, $comment, $subject = '', $contact = NULL) {
     $edit = [];
     $edit['comment_body[0][value]'] = $comment;
 
@@ -180,7 +180,7 @@ class CommentNonNodeTest extends WebTestBase {
    * @return bool
    *   Boolean indicating whether the comment was found.
    */
-  function commentExists(CommentInterface $comment = NULL, $reply = FALSE) {
+  public function commentExists(CommentInterface $comment = NULL, $reply = FALSE) {
     if ($comment) {
       $regex = '/' . ($reply ? '<div class="indented">(.*?)' : '');
       $regex .= '<a id="comment-' . $comment->id() . '"(.*?)';
@@ -201,7 +201,7 @@ class CommentNonNodeTest extends WebTestBase {
    * @return bool
    *   Contact info is available.
    */
-  function commentContactInfoAvailable() {
+  public function commentContactInfoAvailable() {
     return preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getRawContent());
   }
 
@@ -215,7 +215,7 @@ class CommentNonNodeTest extends WebTestBase {
    * @param bool $approval
    *   Operation is found on approval page.
    */
-  function performCommentOperation($comment, $operation, $approval = FALSE) {
+  public function performCommentOperation($comment, $operation, $approval = FALSE) {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
@@ -239,7 +239,7 @@ class CommentNonNodeTest extends WebTestBase {
    * @return int
    *   Comment ID.
    */
-  function getUnapprovedComment($subject) {
+  public function getUnapprovedComment($subject) {
     $this->drupalGet('admin/content/comment/approval');
     preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getRawContent(), $match);
 
@@ -249,7 +249,7 @@ class CommentNonNodeTest extends WebTestBase {
   /**
    * Tests anonymous comment functionality.
    */
-  function testCommentFunctionality() {
+  public function testCommentFunctionality() {
     $limited_user = $this->drupalCreateUser([
       'administer entity_test fields'
     ]);

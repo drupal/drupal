@@ -59,7 +59,7 @@ class AggregatorAdminTest extends AggregatorTestBase {
   /**
    * Tests the overview page.
    */
-  function testOverviewPage() {
+  public function testOverviewPage() {
     $feed = $this->createFeed($this->getRSS091Sample());
     $this->drupalGet('admin/config/services/aggregator');
 

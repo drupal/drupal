@@ -1274,7 +1274,7 @@ abstract class Connection {
    * @return string
    *   The name of the temporary table.
    */
-  abstract function queryTemporary($query, array $args = [], array $options = []);
+  abstract public function queryTemporary($query, array $args = [], array $options = []);
 
   /**
    * Returns the type of database driver.

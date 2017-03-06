@@ -21,7 +21,7 @@ class SyslogTest extends WebTestBase {
   /**
    * Tests the syslog settings page.
    */
-  function testSettings() {
+  public function testSettings() {
     $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
 

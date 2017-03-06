@@ -54,7 +54,7 @@ class MenuNodeTest extends WebTestBase {
   /**
    * Test creating, editing, deleting menu links via node form widget.
    */
-  function testMenuNodeFormWidget() {
+  public function testMenuNodeFormWidget() {
     // Verify that cacheability metadata is bubbled from the menu link tree
     // access checking that is performed when determining the "default parent
     // item" options in menu_ui_form_node_type_form_alter(). The "log out" link
@@ -240,7 +240,7 @@ class MenuNodeTest extends WebTestBase {
   /**
    * Testing correct loading and saving of menu links via node form widget in a multilingual environment.
    */
-  function testMultilingualMenuNodeFormWidget() {
+  public function testMultilingualMenuNodeFormWidget() {
     // Setup languages.
     $langcodes = ['de'];
     foreach ($langcodes as $langcode) {

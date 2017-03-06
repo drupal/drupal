@@ -25,7 +25,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface {
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
    */
-  function __construct(CsrfTokenGenerator $csrf_token) {
+  public function __construct(CsrfTokenGenerator $csrf_token) {
     $this->csrfToken = $csrf_token;
   }
 

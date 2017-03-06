@@ -184,7 +184,7 @@ abstract class CommentTestBase extends WebTestBase {
    * @return bool
    *   Boolean indicating whether the comment was found.
    */
-  function commentExists(CommentInterface $comment = NULL, $reply = FALSE) {
+  public function commentExists(CommentInterface $comment = NULL, $reply = FALSE) {
     if ($comment) {
       $comment_element = $this->cssSelect('.comment-wrapper ' . ($reply ? '.indented ' : '') . '#comment-' . $comment->id() . ' ~ article');
       if (empty($comment_element)) {
@@ -214,7 +214,7 @@ abstract class CommentTestBase extends WebTestBase {
    * @param \Drupal\comment\CommentInterface $comment
    *   Comment to delete.
    */
-  function deleteComment(CommentInterface $comment) {
+  public function deleteComment(CommentInterface $comment) {
     $this->drupalPostForm('comment/' . $comment->id() . '/delete', [], t('Delete'));
     $this->assertText(t('The comment and all its replies have been deleted.'), 'Comment deleted.');
   }
@@ -289,7 +289,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   - 1: Contact information allowed but not required.
    *   - 2: Contact information required.
    */
-  function setCommentAnonymous($level) {
+  public function setCommentAnonymous($level) {
     $this->setCommentSettings('anonymous', $level, format_string('Anonymous commenting set to level @level.', ['@level' => $level]));
   }
 
@@ -333,7 +333,7 @@ abstract class CommentTestBase extends WebTestBase {
    * @return bool
    *   Contact info is available.
    */
-  function commentContactInfoAvailable() {
+  public function commentContactInfoAvailable() {
     return preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getRawContent());
   }
 
@@ -347,7 +347,7 @@ abstract class CommentTestBase extends WebTestBase {
    * @param bool $approval
    *   Operation is found on approval page.
    */
-  function performCommentOperation(CommentInterface $comment, $operation, $approval = FALSE) {
+  public function performCommentOperation(CommentInterface $comment, $operation, $approval = FALSE) {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
@@ -371,7 +371,7 @@ abstract class CommentTestBase extends WebTestBase {
    * @return int
    *   Comment id.
    */
-  function getUnapprovedComment($subject) {
+  public function getUnapprovedComment($subject) {
     $this->drupalGet('admin/content/comment/approval');
     preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getRawContent(), $match);
 

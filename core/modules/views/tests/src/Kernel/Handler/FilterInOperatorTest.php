@@ -31,7 +31,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     'views_test_data_age' => 'age',
   ];
 
-  function viewsData() {
+  public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['age']['filter']['id'] = 'in_operator';
     return $data;

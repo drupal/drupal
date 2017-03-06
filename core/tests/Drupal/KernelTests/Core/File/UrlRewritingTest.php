@@ -21,7 +21,7 @@ class UrlRewritingTest extends FileTestBase {
   /**
    * Tests the rewriting of shipped file URLs by hook_file_url_alter().
    */
-  function testShippedFileURL()  {
+  public function testShippedFileURL()  {
     // Test generating a URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
 
@@ -68,7 +68,7 @@ class UrlRewritingTest extends FileTestBase {
   /**
    * Tests the rewriting of public managed file URLs by hook_file_url_alter().
    */
-  function testPublicManagedFileURL() {
+  public function testPublicManagedFileURL() {
     // Test generating a URL to a managed file.
 
     // Test alteration of file URLs to use a CDN.
@@ -94,7 +94,7 @@ class UrlRewritingTest extends FileTestBase {
   /**
    * Test file_url_transform_relative().
    */
-  function testRelativeFileURL() {
+  public function testRelativeFileURL() {
     // Disable file_test.module's hook_file_url_alter() implementation.
     \Drupal::state()->set('file_test.hook_file_url_alter', NULL);
 

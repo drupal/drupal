@@ -49,7 +49,7 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
   /**
    * Tests existence of test case located in an installation profile module.
    */
-  function testInstallationProfileTests() {
+  public function testInstallationProfileTests() {
     $this->drupalGet('admin/config/development/testing');
     $this->assertText('Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest');
     $edit = [

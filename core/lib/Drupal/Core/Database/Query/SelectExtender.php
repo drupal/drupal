@@ -440,7 +440,7 @@ class SelectExtender implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  function isNull($field) {
+  public function isNull($field) {
     $this->query->isNull($field);
     return $this;
   }
@@ -448,7 +448,7 @@ class SelectExtender implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  function isNotNull($field) {
+  public function isNotNull($field) {
     $this->query->isNotNull($field);
     return $this;
   }

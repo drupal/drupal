@@ -42,7 +42,7 @@ class CrudTest extends KernelTestBase {
   /**
    * Tests creation of RDF mapping.
    */
-  function testMappingCreation() {
+  public function testMappingCreation() {
     $mapping_config_name = "{$this->prefix}.{$this->entityType}.{$this->bundle}";
 
     // Save bundle mapping config.
@@ -55,7 +55,7 @@ class CrudTest extends KernelTestBase {
   /**
    * Test the handling of bundle mappings.
    */
-  function testBundleMapping() {
+  public function testBundleMapping() {
     // Test that the bundle mapping can be saved.
     $types = ['sioc:Post', 'foaf:Document'];
     rdf_get_mapping($this->entityType, $this->bundle)
@@ -78,7 +78,7 @@ class CrudTest extends KernelTestBase {
   /**
    * Test the handling of field mappings.
    */
-  function testFieldMapping() {
+  public function testFieldMapping() {
     $field_name = 'created';
 
     // Test that the field mapping can be saved.

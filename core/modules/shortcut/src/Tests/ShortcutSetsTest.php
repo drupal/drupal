@@ -30,7 +30,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests creating a shortcut set.
    */
-  function testShortcutSetAdd() {
+  public function testShortcutSetAdd() {
     $this->drupalGet('admin/config/user-interface/shortcut');
     $this->clickLink(t('Add shortcut set'));
     $edit = [
@@ -47,7 +47,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests editing a shortcut set.
    */
-  function testShortcutSetEdit() {
+  public function testShortcutSetEdit() {
     $set = $this->set;
     $shortcuts = $set->getShortcuts();
 
@@ -100,7 +100,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests switching a user's own shortcut set.
    */
-  function testShortcutSetSwitchOwn() {
+  public function testShortcutSetSwitchOwn() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
 
     // Attempt to switch the default shortcut set to the newly created shortcut
@@ -114,7 +114,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests switching another user's shortcut set.
    */
-  function testShortcutSetAssign() {
+  public function testShortcutSetAssign() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
 
     \Drupal::entityManager()->getStorage('shortcut_set')->assignUser($new_set, $this->shortcutUser);
@@ -125,7 +125,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests switching a user's shortcut set and creating one at the same time.
    */
-  function testShortcutSetSwitchCreate() {
+  public function testShortcutSetSwitchCreate() {
     $edit = [
       'set' => 'new',
       'id' => strtolower($this->randomMachineName()),
@@ -140,7 +140,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests switching a user's shortcut set without providing a new set name.
    */
-  function testShortcutSetSwitchNoSetName() {
+  public function testShortcutSetSwitchNoSetName() {
     $edit = ['set' => 'new'];
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, t('Change set'));
     $this->assertText(t('The new set label is required.'));
@@ -152,7 +152,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests renaming a shortcut set.
    */
-  function testShortcutSetRename() {
+  public function testShortcutSetRename() {
     $set = $this->set;
 
     $new_label = $this->randomMachineName();
@@ -166,7 +166,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests unassigning a shortcut set.
    */
-  function testShortcutSetUnassign() {
+  public function testShortcutSetUnassign() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
 
     $shortcut_set_storage = \Drupal::entityManager()->getStorage('shortcut_set');
@@ -180,7 +180,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests deleting a shortcut set.
    */
-  function testShortcutSetDelete() {
+  public function testShortcutSetDelete() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
 
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $new_set->id() . '/delete', [], t('Delete'));
@@ -191,7 +191,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests deleting the default shortcut set.
    */
-  function testShortcutSetDeleteDefault() {
+  public function testShortcutSetDeleteDefault() {
     $this->drupalGet('admin/config/user-interface/shortcut/manage/default/delete');
     $this->assertResponse(403);
   }
@@ -199,7 +199,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   /**
    * Tests creating a new shortcut set with a defined set name.
    */
-  function testShortcutSetCreateWithSetName() {
+  public function testShortcutSetCreateWithSetName() {
     $random_name = $this->randomMachineName();
     $new_set = $this->generateShortcutSet($random_name, $random_name);
     $sets = ShortcutSet::loadMultiple();

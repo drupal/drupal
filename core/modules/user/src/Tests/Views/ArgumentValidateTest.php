@@ -36,7 +36,7 @@ class ArgumentValidateTest extends UserTestBase {
   /**
    * Tests the User (ID) argument validator.
    */
-  function testArgumentValidateUserUid() {
+  public function testArgumentValidateUserUid() {
     $account = $this->account;
 
     $view = Views::getView('test_view_argument_validate_user');

@@ -144,7 +144,7 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @return bool
    */
-  function usesRowPlugin() {
+  public function usesRowPlugin() {
     return $this->usesRowPlugin;
 
   }
@@ -154,7 +154,7 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @return bool
    */
-  function usesRowClass() {
+  public function usesRowClass() {
     return $this->usesRowClass;
   }
 
@@ -163,7 +163,7 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @return bool
    */
-  function usesGrouping() {
+  public function usesGrouping() {
     return $this->usesGrouping;
   }
 
@@ -172,7 +172,7 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @return bool
    */
-  function usesFields() {
+  public function usesFields() {
     // If we use a row plugin, ask the row plugin. Chances are, we don't
     // care, it does.
     $row_uses_fields = FALSE;

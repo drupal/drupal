@@ -42,7 +42,7 @@ class UserPermissionsTest extends WebTestBase {
   /**
    * Test changing user permissions through the permissions page.
    */
-  function testUserPermissionChanges() {
+  public function testUserPermissionChanges() {
     $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
 
     $storage = $this->container->get('entity.manager')->getStorage('user_role');
@@ -92,7 +92,7 @@ class UserPermissionsTest extends WebTestBase {
   /**
    * Test assigning of permissions for the administrator role.
    */
-  function testAdministratorRole() {
+  public function testAdministratorRole() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/people/accounts');
 
@@ -135,7 +135,7 @@ class UserPermissionsTest extends WebTestBase {
   /**
    * Verify proper permission changes by user_role_change_permissions().
    */
-  function testUserRoleChangePermissions() {
+  public function testUserRoleChangePermissions() {
     $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
 
     $rid = $this->rid;

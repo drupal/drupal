@@ -61,7 +61,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
   /**
    * Tests general revision access permissions.
    */
-  function testNodeRevisionAccessAnyType() {
+  public function testNodeRevisionAccessAnyType() {
     // Create three users, one with each revision permission.
     foreach ($this->map as $op => $permission) {
       // Create the user.
@@ -119,7 +119,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
   /**
    * Tests revision access permissions for a specific content type.
    */
-  function testNodeRevisionAccessPerType() {
+  public function testNodeRevisionAccessPerType() {
     // Create three users, one with each revision permission.
     foreach ($this->typeMap as $op => $permission) {
       // Create the user.

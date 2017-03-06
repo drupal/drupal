@@ -37,7 +37,7 @@ class ConfigCRUDTest extends KernelTestBase {
   /**
    * Tests CRUD operations.
    */
-  function testCRUD() {
+  public function testCRUD() {
     $storage = $this->container->get('config.storage');
     $config_factory = $this->container->get('config.factory');
     $name = 'config_test.crud';
@@ -157,7 +157,7 @@ class ConfigCRUDTest extends KernelTestBase {
   /**
    * Tests the validation of configuration object names.
    */
-  function testNameValidation() {
+  public function testNameValidation() {
     // Verify that an object name without namespace causes an exception.
     $name = 'nonamespace';
     $message = 'Expected ConfigNameException was thrown for a name without a namespace.';
@@ -213,7 +213,7 @@ class ConfigCRUDTest extends KernelTestBase {
   /**
    * Tests the validation of configuration object values.
    */
-  function testValueValidation() {
+  public function testValueValidation() {
     // Verify that setData() will catch dotted keys.
     $message = 'Expected ConfigValueException was thrown from setData() for value with dotted keys.';
     try {

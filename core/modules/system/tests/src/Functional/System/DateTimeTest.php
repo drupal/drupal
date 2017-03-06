@@ -39,7 +39,7 @@ class DateTimeTest extends BrowserTestBase {
   /**
    * Test time zones and DST handling.
    */
-  function testTimeZoneHandling() {
+  public function testTimeZoneHandling() {
     // Setup date/time settings for Honolulu time.
     $config = $this->config('system.date')
       ->set('timezone.default', 'Pacific/Honolulu')
@@ -76,7 +76,7 @@ class DateTimeTest extends BrowserTestBase {
   /**
    * Test date format configuration.
    */
-  function testDateFormatConfiguration() {
+  public function testDateFormatConfiguration() {
     // Confirm 'no custom date formats available' message appears.
     $this->drupalGet('admin/config/regional/date-time');
 
@@ -167,7 +167,7 @@ class DateTimeTest extends BrowserTestBase {
   /**
    * Test handling case with invalid data in selectors (like February, 31st).
    */
-  function testEnteringDateTimeViaSelectors() {
+  public function testEnteringDateTimeViaSelectors() {
 
     $this->drupalCreateContentType(['type' => 'page_with_date', 'name' => 'Page with date']);
 

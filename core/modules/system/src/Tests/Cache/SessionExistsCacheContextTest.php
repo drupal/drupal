@@ -58,7 +58,7 @@ class SessionExistsCacheContextTest extends WebTestBase {
   /**
    * Asserts whether a session cookie is present on the client or not.
    */
-  function assertSessionCookieOnClient($expected_present) {
+  public function assertSessionCookieOnClient($expected_present) {
     $non_deleted_cookies = array_filter($this->cookies, function ($item) { return $item['value'] !== 'deleted'; });
     $this->assertEqual($expected_present, isset($non_deleted_cookies[$this->getSessionName()]), 'Session cookie exists.');
   }

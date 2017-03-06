@@ -52,7 +52,7 @@ class ExposedFormUITest extends UITestBase {
   /**
    * Tests the admin interface of exposed filter and sort items.
    */
-  function testExposedAdminUi() {
+  public function testExposedAdminUi() {
     $edit = [];
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
@@ -134,7 +134,7 @@ class ExposedFormUITest extends UITestBase {
   /**
    * Tests the admin interface of exposed grouped filters.
    */
-  function testGroupedFilterAdminUi() {
+  public function testGroupedFilterAdminUi() {
     $edit = [];
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');

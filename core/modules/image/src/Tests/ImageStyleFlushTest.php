@@ -14,7 +14,7 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
   /**
    * Given an image style and a wrapper, generate an image.
    */
-  function createSampleImage($style, $wrapper) {
+  public function createSampleImage($style, $wrapper) {
     static $file;
 
     if (!isset($file)) {
@@ -34,14 +34,14 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
   /**
    * Count the number of images currently created for a style in a wrapper.
    */
-  function getImageCount($style, $wrapper) {
+  public function getImageCount($style, $wrapper) {
     return count(file_scan_directory($wrapper . '://styles/' . $style->id(), '/.*/'));
   }
 
   /**
    * General test to flush a style.
    */
-  function testFlush() {
+  public function testFlush() {
 
     // Setup a style to be created and effects to add to it.
     $style_name = strtolower($this->randomMachineName(10));

@@ -19,7 +19,7 @@ abstract class FieldTestBase extends BrowserTestBase {
    * @return
    *   An array of random values, in the format expected for field values.
    */
-  function _generateTestFieldValues($cardinality) {
+  public function _generateTestFieldValues($cardinality) {
     $values = [];
     for ($i = 0; $i < $cardinality; $i++) {
       // field_test fields treat 0 as 'empty value'.
@@ -45,7 +45,7 @@ abstract class FieldTestBase extends BrowserTestBase {
    * @param $column
    *   (Optional) The name of the column to check. Defaults to 'value'.
    */
-  function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_DEFAULT, $column = 'value') {
+  public function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_DEFAULT, $column = 'value') {
     // Re-load the entity to make sure we have the latest changes.
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($entity->getEntityTypeId());

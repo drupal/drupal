@@ -21,7 +21,7 @@ class ContentTranslationUISkipTest extends BrowserTestBase {
   /**
    * Tests the content_translation_ui_skip key functionality.
    */
-  function testUICheckSkip() {
+  public function testUICheckSkip() {
     $admin_user = $this->drupalCreateUser([
       'translate any entity',
       'administer content translation',

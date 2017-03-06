@@ -21,7 +21,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
    *  - When the last revision that uses a file is deleted, the original file
    *    should be deleted also.
    */
-  function testRevisions() {
+  public function testRevisions() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());

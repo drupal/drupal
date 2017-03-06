@@ -23,7 +23,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
    * @return array
    *   A form with a tableselect element and a submit button.
    */
-  function tableselectFormBuilder($form, FormStateInterface $form_state, $element_properties) {
+  public function tableselectFormBuilder($form, FormStateInterface $form_state, $element_properties) {
     list($header, $options) = _form_test_tableselect_get_data();
 
     $form['tableselect'] = $element_properties;

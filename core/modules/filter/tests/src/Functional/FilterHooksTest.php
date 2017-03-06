@@ -26,7 +26,7 @@ class FilterHooksTest extends BrowserTestBase {
    * Tests that hooks run correctly on creating, editing, and deleting a text
    * format.
    */
-  function testFilterHooks() {
+  public function testFilterHooks() {
     // Create content type, with underscores.
     $type_name = 'test_' . strtolower($this->randomMachineName());
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);

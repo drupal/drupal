@@ -87,7 +87,7 @@ class StyleTest extends ViewTestBase {
     $this->assertTrue(strpos($output, $random_text) !== FALSE, 'Make sure that the rendering of the style plugin appears in the output of the view.');
   }
 
-  function testGrouping() {
+  public function testGrouping() {
     $this->_testGrouping(FALSE);
     $this->_testGrouping(TRUE);
   }
@@ -95,7 +95,7 @@ class StyleTest extends ViewTestBase {
   /**
    * Tests the grouping features of styles.
    */
-  function _testGrouping($stripped = FALSE) {
+  public function _testGrouping($stripped = FALSE) {
     $view = Views::getView('test_view');
     $view->setDisplay();
     // Setup grouping by the job and the age field.
@@ -256,7 +256,7 @@ class StyleTest extends ViewTestBase {
   /**
    * Tests custom css classes.
    */
-  function testCustomRowClasses() {
+  public function testCustomRowClasses() {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

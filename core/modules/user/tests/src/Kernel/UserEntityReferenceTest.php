@@ -54,7 +54,7 @@ class UserEntityReferenceTest extends EntityKernelTestBase {
   /**
    * Tests user selection by roles.
    */
-  function testUserSelectionByRole() {
+  public function testUserSelectionByRole() {
     $field_definition = FieldConfig::loadByName('user', 'user', 'user_reference');
     $handler_settings = $field_definition->getSetting('handler_settings');
     $handler_settings['filter']['role'] = [

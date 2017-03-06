@@ -26,7 +26,7 @@ class FastTest extends BrowserTestBase {
   /**
    * Tests access to user autocompletion and verify the correct results.
    */
-  function testUserAutocomplete() {
+  public function testUserAutocomplete() {
     $this->drupalLogin($this->account);
     $this->drupalGet('user/autocomplete', ['query' => ['q' => $this->account->getUsername()]]);
     $this->assertRaw($this->account->getUsername());

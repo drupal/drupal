@@ -56,7 +56,7 @@ class Theme extends Updater implements UpdaterInterface {
   /**
    * {@inheritdoc}
    */
-  static function canUpdateDirectory($directory) {
+  public static function canUpdateDirectory($directory) {
     $info = static::getExtensionInfo($directory);
 
     return (isset($info['type']) && $info['type'] == 'theme');

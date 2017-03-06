@@ -54,7 +54,7 @@ class EntityResolverTest extends NormalizerTestBase {
   /**
    * Test that fields referencing UUIDs can be denormalized.
    */
-  function testUuidEntityResolver() {
+  public function testUuidEntityResolver() {
     // Create an entity to get the UUID from.
     $entity = EntityTestMulRev::create(['type' => 'entity_test_mulrev']);
     $entity->set('name', 'foobar');

@@ -82,7 +82,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   /**
    * Tests image field field synchronization.
    */
-  function testImageFieldSync() {
+  public function testImageFieldSync() {
     // Check that the alt and title fields are enabled for the image field.
     $this->drupalLogin($this->editor);
     $this->drupalGet('entity_test_mul/structure/' . $this->entityTypeId . '/fields/' . $this->entityTypeId . '.' . $this->entityTypeId . '.' . $this->fieldName);

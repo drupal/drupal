@@ -75,7 +75,7 @@ class FieldAccessTest extends FieldTestBase {
   /**
    * Test that hook_entity_field_access() is called.
    */
-  function testFieldAccess() {
+  public function testFieldAccess() {
 
     // Assert the text is visible.
     $this->drupalGet('node/' . $this->node->id());

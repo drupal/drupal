@@ -54,7 +54,7 @@ class ManyToOne extends InOperator {
     return $options;
   }
 
-  function operators() {
+  public function operators() {
     $operators = [
       'or' => [
         'title' => $this->t('Is one of'),

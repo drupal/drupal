@@ -16,7 +16,7 @@ class FormHelperTest extends UnitTestCase {
    *
    * @covers ::rewriteStatesSelector
    */
-  function testRewriteStatesSelector() {
+  public function testRewriteStatesSelector() {
 
     // Simple selectors.
     $value = ['value' => 'medium'];

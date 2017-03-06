@@ -55,7 +55,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests that default CSS and JavaScript is empty.
    */
-  function testDefault() {
+  public function testDefault() {
     $assets = new AttachedAssets();
     $this->assertEqual([], $this->assetResolver->getCssAssets($assets, FALSE), 'Default CSS is empty.');
     list($js_assets_header, $js_assets_footer) = $this->assetResolver->getJsAssets($assets, FALSE);
@@ -66,7 +66,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests non-existing libraries.
    */
-  function testLibraryUnknown() {
+  public function testLibraryUnknown() {
     $build['#attached']['library'][] = 'core/unknown';
     $assets = AttachedAssets::createFromRenderArray($build);
 
@@ -76,7 +76,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests adding a CSS and a JavaScript file.
    */
-  function testAddFiles() {
+  public function testAddFiles() {
     $build['#attached']['library'][] = 'common_test/files';
     $assets = AttachedAssets::createFromRenderArray($build);
 
@@ -97,7 +97,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests adding JavaScript settings.
    */
-  function testAddJsSettings() {
+  public function testAddJsSettings() {
     // Add a file in order to test default settings.
     $build['#attached']['library'][] = 'core/drupalSettings';
     $assets = AttachedAssets::createFromRenderArray($build);
@@ -116,7 +116,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests adding external CSS and JavaScript files.
    */
-  function testAddExternalFiles() {
+  public function testAddExternalFiles() {
     $build['#attached']['library'][] = 'common_test/external';
     $assets = AttachedAssets::createFromRenderArray($build);
 
@@ -136,7 +136,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests adding JavaScript files with additional attributes.
    */
-  function testAttributes() {
+  public function testAttributes() {
     $build['#attached']['library'][] = 'common_test/js-attributes';
     $assets = AttachedAssets::createFromRenderArray($build);
 
@@ -152,7 +152,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests that attributes are maintained when JS aggregation is enabled.
    */
-  function testAggregatedAttributes() {
+  public function testAggregatedAttributes() {
     $build['#attached']['library'][] = 'common_test/js-attributes';
     $assets = AttachedAssets::createFromRenderArray($build);
 
@@ -168,7 +168,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Integration test for CSS/JS aggregation.
    */
-  function testAggregation() {
+  public function testAggregation() {
     $build['#attached']['library'][] = 'core/drupal.timezone';
     $build['#attached']['library'][] = 'core/drupal.vertical-tabs';
     $assets = AttachedAssets::createFromRenderArray($build);
@@ -186,7 +186,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests JavaScript settings.
    */
-  function testSettings() {
+  public function testSettings() {
     $build = [];
     $build['#attached']['library'][] = 'core/drupalSettings';
     // Nonsensical value to verify if it's possible to override path settings.
@@ -226,7 +226,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests JS assets depending on the 'core/<head>' virtual library.
    */
-  function testHeaderHTML() {
+  public function testHeaderHTML() {
     $build['#attached']['library'][] = 'common_test/js-header';
     $assets = AttachedAssets::createFromRenderArray($build);
 
@@ -242,7 +242,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests that for assets with cache = FALSE, Drupal sets preprocess = FALSE.
    */
-  function testNoCache() {
+  public function testNoCache() {
     $build['#attached']['library'][] = 'common_test/no-cache';
     $assets = AttachedAssets::createFromRenderArray($build);
 
@@ -255,7 +255,7 @@ class AttachedAssetsTest extends KernelTestBase {
    *
    * @see \Drupal\Core\Render\Element\HtmlTag::preRenderConditionalComments()
    */
-  function testBrowserConditionalComments() {
+  public function testBrowserConditionalComments() {
     $default_query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
 
     $build['#attached']['library'][] = 'common_test/browsers';
@@ -274,7 +274,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests JavaScript versioning.
    */
-  function testVersionQueryString() {
+  public function testVersionQueryString() {
     $build['#attached']['library'][] = 'core/backbone';
     $build['#attached']['library'][] = 'core/domready';
     $assets = AttachedAssets::createFromRenderArray($build);
@@ -289,7 +289,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests JavaScript and CSS asset ordering.
    */
-  function testRenderOrder() {
+  public function testRenderOrder() {
     $build['#attached']['library'][] = 'common_test/order';
     $assets = AttachedAssets::createFromRenderArray($build);
 
@@ -366,7 +366,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests rendering the JavaScript with a file's weight above jQuery's.
    */
-  function testRenderDifferentWeight() {
+  public function testRenderDifferentWeight() {
     // If a library contains assets A and B, and A is listed first, then B can
     // still make itself appear first by defining a lower weight.
     $build['#attached']['library'][] = 'core/jquery';
@@ -386,7 +386,7 @@ class AttachedAssetsTest extends KernelTestBase {
    *
    * @see simpletest_js_alter()
    */
-  function testAlter() {
+  public function testAlter() {
     // Add both tableselect.js and simpletest.js.
     $build['#attached']['library'][] = 'core/drupal.tableselect';
     $build['#attached']['library'][] = 'simpletest/drupal.simpletest';
@@ -406,7 +406,7 @@ class AttachedAssetsTest extends KernelTestBase {
    *
    * @see common_test_library_info_alter()
    */
-  function testLibraryAlter() {
+  public function testLibraryAlter() {
     // Verify that common_test altered the title of Farbtastic.
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
@@ -425,7 +425,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Dynamically defines an asset library and alters it.
    */
-  function testDynamicLibrary() {
+  public function testDynamicLibrary() {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
     // Retrieve a dynamic library definition.
@@ -449,7 +449,7 @@ class AttachedAssetsTest extends KernelTestBase {
    *
    * @see common_test.library.yml
    */
-  function testLibraryNameConflicts() {
+  public function testLibraryNameConflicts() {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
     $farbtastic = $library_discovery->getLibraryByName('common_test', 'jquery.farbtastic');
@@ -459,7 +459,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests JavaScript files that have querystrings attached get added right.
    */
-  function testAddJsFileWithQueryString() {
+  public function testAddJsFileWithQueryString() {
     $build['#attached']['library'][] = 'common_test/querystring';
     $assets = AttachedAssets::createFromRenderArray($build);
 

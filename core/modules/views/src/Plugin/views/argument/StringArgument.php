@@ -278,7 +278,7 @@ class StringArgument extends ArgumentPluginBase {
     return $this->t('Alphabetical', [], ['context' => 'Sort order']);
   }
 
-  function title() {
+  public function title() {
     // Support case-insensitive title comparisons for PostgreSQL by converting
     // the title to lowercase.
     if ($this->options['case'] != 'none' && Database::getConnection()->databaseType() == 'pgsql') {

@@ -21,7 +21,7 @@ class BlockAdminThemeTest extends WebTestBase {
   /**
    * Check for the accessibility of the admin theme on the block admin page.
    */
-  function testAdminTheme() {
+  public function testAdminTheme() {
     // Create administrative user.
     $admin_user = $this->drupalCreateUser(['administer blocks', 'administer themes']);
     $this->drupalLogin($admin_user);
@@ -42,7 +42,7 @@ class BlockAdminThemeTest extends WebTestBase {
   /**
    * Ensure contextual links are disabled in Seven theme.
    */
-  function testSevenAdminTheme() {
+  public function testSevenAdminTheme() {
     // Create administrative user.
     $admin_user = $this->drupalCreateUser([
       'access administration pages',

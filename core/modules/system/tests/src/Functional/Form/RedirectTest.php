@@ -21,7 +21,7 @@ class RedirectTest extends BrowserTestBase {
   /**
    * Tests form redirection.
    */
-  function testRedirect() {
+  public function testRedirect() {
     $path = 'form-test/redirect';
     $options = ['query' => ['foo' => 'bar']];
     $options['absolute'] = TRUE;

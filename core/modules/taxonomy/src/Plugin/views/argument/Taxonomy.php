@@ -45,7 +45,7 @@ class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterfac
   /**
    * Override the behavior of title(). Get the title of the node.
    */
-  function title() {
+  public function title() {
     // There might be no valid argument.
     if ($this->argument) {
       $term = $this->termStorage->load($this->argument);

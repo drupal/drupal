@@ -24,7 +24,7 @@ class AccessPermissionTest extends AccessTestBase {
   /**
    * Tests perm access plugin.
    */
-  function testAccessPerm() {
+  public function testAccessPerm() {
     $view = Views::getView('test_access_perm');
     $view->setDisplay();
 

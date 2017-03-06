@@ -71,7 +71,7 @@ class PathLanguageTest extends PathTestBase {
   /**
    * Test alias functionality through the admin interfaces.
    */
-  function testAliasTranslation() {
+  public function testAliasTranslation() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $english_node = $this->drupalCreateNode(['type' => 'page', 'langcode' => 'en']);
     $english_alias = $this->randomMachineName();

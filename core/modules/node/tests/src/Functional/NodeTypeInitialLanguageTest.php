@@ -31,7 +31,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    * The default initial language must be the site's default, and the language
    * locked option must be on.
    */
-  function testNodeTypeInitialLanguageDefaults() {
+  public function testNodeTypeInitialLanguageDefaults() {
     $this->drupalGet('admin/structure/types/manage/article');
     $this->assertOptionSelected('edit-language-configuration-langcode', LanguageInterface::LANGCODE_SITE_DEFAULT, 'The default initial language is the site default.');
     $this->assertNoFieldChecked('edit-language-configuration-language-alterable', 'Language selector is hidden by default.');
@@ -89,7 +89,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
   /**
    * Tests language field visibility features.
    */
-  function testLanguageFieldVisibility() {
+  public function testLanguageFieldVisibility() {
     // Creates a node to test Language field visibility feature.
     $edit = [
       'title[0][value]' => $this->randomMachineName(8),

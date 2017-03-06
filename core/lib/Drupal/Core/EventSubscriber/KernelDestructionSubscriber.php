@@ -58,7 +58,7 @@ class KernelDestructionSubscriber implements EventSubscriberInterface, Container
    * @return array
    *   An array of event listener definitions.
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents() {
     // Run this subscriber after others as those might use services that need
     // to be terminated as well or run code that needs to run before
     // termination.

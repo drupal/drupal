@@ -41,7 +41,7 @@ class reEnableModuleFieldTest extends WebTestBase {
    *
    * @see field_system_info_alter()
    */
-  function testReEnabledField() {
+  public function testReEnabledField() {
 
     // Add a telephone field to the article content type.
     $field_storage = FieldStorageConfig::create([

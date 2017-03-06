@@ -31,7 +31,7 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
   /**
    * Tests that simpletest collects errors from the tested site.
    */
-  function testErrorCollect() {
+  public function testErrorCollect() {
     $this->collectedErrors = [];
     $this->drupalGet('error-test/generate-warnings-with-report');
     $this->assertEqual(count($this->collectedErrors), 3, 'Three errors were collected');
@@ -82,7 +82,7 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
   /**
    * Asserts that a collected error matches what we are expecting.
    */
-  function assertError($error, $group, $function, $file, $message = NULL) {
+  public function assertError($error, $group, $function, $file, $message = NULL) {
     $this->assertEqual($error['group'], $group, format_string("Group was %group", ['%group' => $group]));
     $this->assertEqual($error['caller']['function'], $function, format_string("Function was %function", ['%function' => $function]));
     $this->assertEqual(drupal_basename($error['caller']['file']), $file, format_string("File was %file", ['%file' => $file]));

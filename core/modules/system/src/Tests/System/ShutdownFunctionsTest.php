@@ -29,7 +29,7 @@ class ShutdownFunctionsTest extends WebTestBase {
   /**
    * Test shutdown functions.
    */
-  function testShutdownFunctions() {
+  public function testShutdownFunctions() {
     $arg1 = $this->randomMachineName();
     $arg2 = $this->randomMachineName();
     $this->drupalGet('system-test/shutdown-functions/' . $arg1 . '/' . $arg2);

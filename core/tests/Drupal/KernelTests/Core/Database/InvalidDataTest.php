@@ -14,7 +14,7 @@ class InvalidDataTest extends DatabaseTestBase {
   /**
    * Tests aborting of traditional SQL database systems with invalid data.
    */
-  function testInsertDuplicateData() {
+  public function testInsertDuplicateData() {
     // Try to insert multiple records where at least one has bad data.
     try {
       db_insert('test')

@@ -41,7 +41,7 @@ abstract class ModuleTestBase extends WebTestBase {
    *   (optional) Whether or not to assert that there are tables that match the
    *   specified base table. Defaults to TRUE.
    */
-  function assertTableCount($base_table, $count = TRUE) {
+  public function assertTableCount($base_table, $count = TRUE) {
     $tables = db_find_tables(Database::getConnection()->prefixTables('{' . $base_table . '}') . '%');
 
     if ($count) {
@@ -56,7 +56,7 @@ abstract class ModuleTestBase extends WebTestBase {
    * @param $module
    *   The name of the module.
    */
-  function assertModuleTablesExist($module) {
+  public function assertModuleTablesExist($module) {
     $tables = array_keys(drupal_get_module_schema($module));
     $tables_exist = TRUE;
     foreach ($tables as $table) {
@@ -73,7 +73,7 @@ abstract class ModuleTestBase extends WebTestBase {
    * @param $module
    *   The name of the module.
    */
-  function assertModuleTablesDoNotExist($module) {
+  public function assertModuleTablesDoNotExist($module) {
     $tables = array_keys(drupal_get_module_schema($module));
     $tables_exist = FALSE;
     foreach ($tables as $table) {
@@ -93,7 +93,7 @@ abstract class ModuleTestBase extends WebTestBase {
    * @return bool
    *   TRUE if configuration has been installed, FALSE otherwise.
    */
-  function assertModuleConfig($module) {
+  public function assertModuleConfig($module) {
     $module_config_dir = drupal_get_path('module', $module) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
     if (!is_dir($module_config_dir)) {
       return;
@@ -135,7 +135,7 @@ abstract class ModuleTestBase extends WebTestBase {
    * @return bool
    *   TRUE if no configuration was found, FALSE otherwise.
    */
-  function assertNoModuleConfig($module) {
+  public function assertNoModuleConfig($module) {
     $names = \Drupal::configFactory()->listAll($module . '.');
     return $this->assertFalse($names, format_string('No configuration found for @module module.', ['@module' => $module]));
   }
@@ -148,7 +148,7 @@ abstract class ModuleTestBase extends WebTestBase {
    * @param $enabled
    *   Expected module state.
    */
-  function assertModules(array $modules, $enabled) {
+  public function assertModules(array $modules, $enabled) {
     $this->rebuildContainer();
     foreach ($modules as $module) {
       if ($enabled) {
@@ -181,7 +181,7 @@ abstract class ModuleTestBase extends WebTestBase {
    * @param $link
    *   A link to associate with the message.
    */
-  function assertLogMessage($type, $message, $variables = [], $severity = RfcLogLevel::NOTICE, $link = '') {
+  public function assertLogMessage($type, $message, $variables = [], $severity = RfcLogLevel::NOTICE, $link = '') {
     $count = db_select('watchdog', 'w')
       ->condition('type', $type)
       ->condition('message', $message)

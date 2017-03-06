@@ -30,7 +30,7 @@ class FilterAPITest extends EntityKernelTestBase {
   /**
    * Tests that the filter order is respected.
    */
-  function testCheckMarkupFilterOrder() {
+  public function testCheckMarkupFilterOrder() {
     // Create crazy HTML format.
     $crazy_format = FilterFormat::create([
       'format' => 'crazy',
@@ -61,7 +61,7 @@ class FilterAPITest extends EntityKernelTestBase {
   /**
    * Tests the ability to apply only a subset of filters.
    */
-  function testCheckMarkupFilterSubset() {
+  public function testCheckMarkupFilterSubset() {
     $text = "Text with <marquee>evil content and</marquee> a URL: https://www.drupal.org!";
     $expected_filtered_text = "Text with evil content and a URL: <a href=\"https://www.drupal.org\">https://www.drupal.org</a>!";
     $expected_filter_text_without_html_generators = "Text with evil content and a URL: https://www.drupal.org!";
@@ -98,7 +98,7 @@ class FilterAPITest extends EntityKernelTestBase {
    *   - \Drupal\filter\Entity\FilterFormatInterface::getHtmlRestrictions()
    *   - \Drupal\filter\Entity\FilterFormatInterface::getFilterTypes()
    */
-  function testFilterFormatAPI() {
+  public function testFilterFormatAPI() {
     // Test on filtered_html.
     $filtered_html_format = FilterFormat::load('filtered_html');
     $this->assertIdentical(
@@ -249,7 +249,7 @@ class FilterAPITest extends EntityKernelTestBase {
    * #lazy_builder callbacks.
    * This test focuses solely on those advanced features.
    */
-  function testProcessedTextElement() {
+  public function testProcessedTextElement() {
     FilterFormat::create([
       'format' => 'element_test',
       'name' => 'processed_text element test format',
@@ -327,7 +327,7 @@ class FilterAPITest extends EntityKernelTestBase {
   /**
    * Tests the function of the typed data type.
    */
-  function testTypedDataAPI() {
+  public function testTypedDataAPI() {
     $definition = DataDefinition::create('filter_format');
     $data = \Drupal::typedDataManager()->create($definition);
 

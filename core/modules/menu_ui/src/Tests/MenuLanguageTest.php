@@ -40,7 +40,7 @@ class MenuLanguageTest extends MenuWebTestBase {
   /**
    * Tests menu language settings and the defaults for menu link items.
    */
-  function testMenuLanguage() {
+  public function testMenuLanguage() {
     // Create a test menu to test the various language-related settings.
     // Machine name has to be lowercase.
     $menu_name = Unicode::strtolower($this->randomMachineName(16));

@@ -30,7 +30,7 @@ class NodeFieldFilterTest extends NodeTestBase {
    */
   public $nodeTitles = [];
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Create Page content type.

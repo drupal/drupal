@@ -66,7 +66,7 @@ class TriggeringElementProgrammedTest extends KernelTestBase implements FormInte
   /**
    * Tests that #limit_validation_errors of the only submit button takes effect.
    */
-  function testLimitValidationErrors() {
+  public function testLimitValidationErrors() {
     // Programmatically submit the form.
     $form_state = new FormState();
     $form_state->setValue('section', 'one');

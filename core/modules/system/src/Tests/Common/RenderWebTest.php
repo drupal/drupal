@@ -24,7 +24,7 @@ class RenderWebTest extends WebTestBase {
   /**
    * Asserts the cache context for the wrapper format is always present.
    */
-  function testWrapperFormatCacheContext() {
+  public function testWrapperFormatCacheContext() {
     $this->drupalGet('common-test/type-link-active-class');
     $this->assertIdentical(0, strpos($this->getRawContent(), "<!DOCTYPE html>\n<html"));
     $this->assertIdentical('text/html; charset=UTF-8', $this->drupalGetHeader('Content-Type'));
@@ -43,7 +43,7 @@ class RenderWebTest extends WebTestBase {
    * Tests rendering form elements without passing through
    * \Drupal::formBuilder()->doBuildForm().
    */
-  function testDrupalRenderFormElements() {
+  public function testDrupalRenderFormElements() {
     // Define a series of form elements.
     $element = [
       '#type' => 'button',

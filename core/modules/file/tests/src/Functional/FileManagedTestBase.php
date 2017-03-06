@@ -33,7 +33,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    *   An array of strings containing with the hook name; for example, 'load',
    *   'save', 'insert', etc.
    */
-  function assertFileHooksCalled($expected) {
+  public function assertFileHooksCalled($expected) {
     \Drupal::state()->resetCache();
 
     // Determine which hooks were called.
@@ -68,7 +68,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    * @param string|null $message
    *   Optional translated string message.
    */
-  function assertFileHookCalled($hook, $expected_count = 1, $message = NULL) {
+  public function assertFileHookCalled($hook, $expected_count = 1, $message = NULL) {
     $actual_count = count(file_test_get_calls($hook));
 
     if (!isset($message)) {
@@ -93,7 +93,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    * @param \Drupal\file\FileInterface $after
    *   File object to compare.
    */
-  function assertFileUnchanged(FileInterface $before, FileInterface $after) {
+  public function assertFileUnchanged(FileInterface $before, FileInterface $after) {
     $this->assertEqual($before->id(), $after->id(), t('File id is the same: %file1 == %file2.', ['%file1' => $before->id(), '%file2' => $after->id()]), 'File unchanged');
     $this->assertEqual($before->getOwner()->id(), $after->getOwner()->id(), t('File owner is the same: %file1 == %file2.', ['%file1' => $before->getOwner()->id(), '%file2' => $after->getOwner()->id()]), 'File unchanged');
     $this->assertEqual($before->getFilename(), $after->getFilename(), t('File name is the same: %file1 == %file2.', ['%file1' => $before->getFilename(), '%file2' => $after->getFilename()]), 'File unchanged');
@@ -111,7 +111,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    * @param \Drupal\file\FileInterface $file2
    *   File object to compare.
    */
-  function assertDifferentFile(FileInterface $file1, FileInterface $file2) {
+  public function assertDifferentFile(FileInterface $file1, FileInterface $file2) {
     $this->assertNotEqual($file1->id(), $file2->id(), t('Files have different ids: %file1 != %file2.', ['%file1' => $file1->id(), '%file2' => $file2->id()]), 'Different file');
     $this->assertNotEqual($file1->getFileUri(), $file2->getFileUri(), t('Files have different paths: %file1 != %file2.', ['%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri()]), 'Different file');
   }
@@ -124,7 +124,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    * @param \Drupal\file\FileInterface $file2
    *   File object to compare.
    */
-  function assertSameFile(FileInterface $file1, FileInterface $file2) {
+  public function assertSameFile(FileInterface $file1, FileInterface $file2) {
     $this->assertEqual($file1->id(), $file2->id(), t('Files have the same ids: %file1 == %file2.', ['%file1' => $file1->id(), '%file2-fid' => $file2->id()]), 'Same file');
     $this->assertEqual($file1->getFileUri(), $file2->getFileUri(), t('Files have the same path: %file1 == %file2.', ['%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri()]), 'Same file');
   }
@@ -145,7 +145,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    * @return \Drupal\file\FileInterface
    *   File entity.
    */
-  function createFile($filepath = NULL, $contents = NULL, $scheme = NULL) {
+  public function createFile($filepath = NULL, $contents = NULL, $scheme = NULL) {
     // Don't count hook invocations caused by creating the file.
     \Drupal::state()->set('file_test.count_hook_invocations', FALSE);
     $file = File::create([
@@ -177,7 +177,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    * @return string
    *   File URI.
    */
-  function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
+  public function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
     if (!isset($filepath)) {
       // Prefix with non-latin characters to ensure that all file-related
       // tests work with international filenames.

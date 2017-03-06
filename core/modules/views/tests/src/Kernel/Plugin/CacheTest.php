@@ -224,7 +224,7 @@ class CacheTest extends ViewsKernelTestBase {
    *
    * @see views_plugin_cache_time
    */
-  function testNoneResultCaching() {
+  public function testNoneResultCaching() {
     // Create a basic result which just 2 results.
     $view = Views::getView('test_cache');
     $view->setDisplay();
@@ -261,7 +261,7 @@ class CacheTest extends ViewsKernelTestBase {
   /**
    * Tests css/js storage and restoring mechanism.
    */
-  function testHeaderStorage() {
+  public function testHeaderStorage() {
     // Create a view with output caching enabled.
     // Some hook_views_pre_render in views_test_data.module adds the test css/js file.
     // so they should be added to the css/js storage.

@@ -75,7 +75,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    *   Array with string containing with the operation name, e.g. 'load',
    *   'save', 'crop', etc.
    */
-  function assertToolkitOperationsCalled(array $expected) {
+  public function assertToolkitOperationsCalled(array $expected) {
     // If one of the image operations is expected, apply should be expected as
     // well.
     $operations = [
@@ -120,7 +120,7 @@ abstract class ToolkitTestBase extends WebTestBase {
   /**
    * Resets/initializes the history of calls to the test toolkit functions.
    */
-  function imageTestReset() {
+  public function imageTestReset() {
     // Keep track of calls to these operations
     $results = [
       'parseFile' => [],
@@ -147,7 +147,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    *   'resize', 'rotate', 'crop', 'desaturate') with values being arrays of
    *   parameters passed to each call.
    */
-  function imageTestGetAllCalls() {
+  public function imageTestGetAllCalls() {
     return \Drupal::state()->get('image_test.results') ?: [];
   }
 

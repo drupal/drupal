@@ -32,7 +32,7 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
   /**
    * Tests CRUD operations.
    */
-  function testCRUD() {
+  public function testCRUD() {
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     // Verify default properties on a newly created empty entity.
     $empty = EntityTestLabel::create();

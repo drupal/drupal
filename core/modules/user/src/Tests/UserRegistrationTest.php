@@ -23,7 +23,7 @@ class UserRegistrationTest extends WebTestBase {
    */
   public static $modules = ['field_test'];
 
-  function testRegistrationWithEmailVerification() {
+  public function testRegistrationWithEmailVerification() {
     $config = $this->config('user.settings');
     // Require email verification.
     $config->set('verify_mail', TRUE)->save();
@@ -62,7 +62,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertFalse($new_user->isActive(), 'New account is blocked until approved by an administrator.');
   }
 
-  function testRegistrationWithoutEmailVerification() {
+  public function testRegistrationWithoutEmailVerification() {
     $config = $this->config('user.settings');
     // Don't require email verification and allow registration by site visitors
     // without administrator approval.
@@ -128,7 +128,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertText(t('Member for'), 'User can log in after administrator approval.');
   }
 
-  function testRegistrationEmailDuplicates() {
+  public function testRegistrationEmailDuplicates() {
     // Don't require email verification and allow registration by site visitors
     // without administrator approval.
     $this->config('user.settings')
@@ -223,7 +223,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertTrue($user_storage->loadByProperties(['name' => $edit['name']]));
   }
 
-  function testRegistrationDefaultValues() {
+  public function testRegistrationDefaultValues() {
     // Don't require email verification and allow registration by site visitors
     // without administrator approval.
     $config_user_settings = $this->config('user.settings')
@@ -283,7 +283,7 @@ class UserRegistrationTest extends WebTestBase {
   /**
    * Tests Field API fields on user registration forms.
    */
-  function testRegistrationWithUserFields() {
+  public function testRegistrationWithUserFields() {
     // Create a field on 'user' entity type.
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_user_field',

@@ -11,7 +11,7 @@ class UnmanagedDeleteTest extends FileTestBase {
   /**
    * Delete a normal file.
    */
-  function testNormal() {
+  public function testNormal() {
     // Create a file for testing
     $uri = $this->createUri();
 
@@ -23,7 +23,7 @@ class UnmanagedDeleteTest extends FileTestBase {
   /**
    * Try deleting a missing file.
    */
-  function testMissing() {
+  public function testMissing() {
     // Try to delete a non-existing file
     $this->assertTrue(file_unmanaged_delete(file_default_scheme() . '/' . $this->randomMachineName()), 'Returns true when deleting a non-existent file.');
   }
@@ -31,7 +31,7 @@ class UnmanagedDeleteTest extends FileTestBase {
   /**
    * Try deleting a directory.
    */
-  function testDirectory() {
+  public function testDirectory() {
     // A directory to operate on.
     $directory = $this->createDirectory();
 

@@ -12,7 +12,7 @@ class SearchSimplifyTest extends SearchTestBase {
   /**
    * Tests that all Unicode characters simplify correctly.
    */
-  function testSearchSimplifyUnicode() {
+  public function testSearchSimplifyUnicode() {
     // This test uses a file that was constructed so that the even lines are
     // boundary characters, and the odd lines are valid word characters. (It
     // was generated as a sequence of all the Unicode characters, and then the
@@ -64,7 +64,7 @@ class SearchSimplifyTest extends SearchTestBase {
   /**
    * Tests that search_simplify() does the right thing with punctuation.
    */
-  function testSearchSimplifyPunctuation() {
+  public function testSearchSimplifyPunctuation() {
     $cases = [
       ['20.03/94-28,876', '20039428876', 'Punctuation removed from numbers'],
       ['great...drupal--module', 'great drupal module', 'Multiple dot and dashes are word boundaries'],

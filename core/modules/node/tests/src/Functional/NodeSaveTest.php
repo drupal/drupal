@@ -42,7 +42,7 @@ class NodeSaveTest extends NodeTestBase {
    *  - save the content
    *  - check if node exists
    */
-  function testImport() {
+  public function testImport() {
     // Node ID must be a number that is not in the database.
     $nids = \Drupal::entityManager()->getStorage('node')->getQuery()
       ->sort('nid', 'DESC')
@@ -76,7 +76,7 @@ class NodeSaveTest extends NodeTestBase {
   /**
    * Verifies accuracy of the "created" and "changed" timestamp functionality.
    */
-  function testTimestamps() {
+  public function testTimestamps() {
     // Use the default timestamps.
     $edit = [
       'uid' => $this->webUser->id(),
@@ -137,7 +137,7 @@ class NodeSaveTest extends NodeTestBase {
    * This test determines changes in hook_ENTITY_TYPE_presave() and verifies
    * that the static node load cache is cleared upon save.
    */
-  function testDeterminingChanges() {
+  public function testDeterminingChanges() {
     // Initial creation.
     $node = Node::create([
       'uid' => $this->webUser->id(),
@@ -172,7 +172,7 @@ class NodeSaveTest extends NodeTestBase {
    *
    * @see node_test_node_insert()
    */
-  function testNodeSaveOnInsert() {
+  public function testNodeSaveOnInsert() {
     // node_test_node_insert() triggers a save on insert if the title equals
     // 'new'.
     $node = $this->drupalCreateNode(['title' => 'new']);

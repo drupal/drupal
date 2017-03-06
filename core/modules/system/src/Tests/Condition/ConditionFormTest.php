@@ -21,7 +21,7 @@ class ConditionFormTest extends WebTestBase {
   /**
    * Submit the condition_node_type_test_form to test condition forms.
    */
-  function testConfigForm() {
+  public function testConfigForm() {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 

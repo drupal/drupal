@@ -65,7 +65,7 @@ class QuickEditImageControllerTest extends WebTestBase {
   /**
    * Tests that routes restrict access for un-privileged users.
    */
-  function testAccess() {
+  public function testAccess() {
     // Create an anonymous user.
     $user = $this->createUser();
     $this->drupalLogin($user);
@@ -84,7 +84,7 @@ class QuickEditImageControllerTest extends WebTestBase {
   /**
    * Tests that the field info route returns expected data.
    */
-  function testFieldInfo() {
+  public function testFieldInfo() {
     // Create a test Node.
     $node = $this->drupalCreateNode([
       'type' => 'article',
@@ -100,7 +100,7 @@ class QuickEditImageControllerTest extends WebTestBase {
   /**
    * Tests that uploading a valid image works.
    */
-  function testValidImageUpload() {
+  public function testValidImageUpload() {
     // Create a test Node.
     $node = $this->drupalCreateNode([
       'type' => 'article',
@@ -125,7 +125,7 @@ class QuickEditImageControllerTest extends WebTestBase {
   /**
    * Tests that uploading a invalid image does not work.
    */
-  function testInvalidUpload() {
+  public function testInvalidUpload() {
     // Create a test Node.
     $node = $this->drupalCreateNode([
       'type' => 'article',
@@ -164,7 +164,7 @@ class QuickEditImageControllerTest extends WebTestBase {
    * @return mixed
    *   The content returned from the call to $this->curlExec().
    */
-  function uploadImage($image, $nid, $field_name, $langcode) {
+  public function uploadImage($image, $nid, $field_name, $langcode) {
     $filepath = $this->container->get('file_system')->realpath($image->uri);
     $data = [
       'files[image]' => curl_file_create($filepath),

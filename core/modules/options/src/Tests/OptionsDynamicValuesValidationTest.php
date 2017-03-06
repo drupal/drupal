@@ -11,7 +11,7 @@ class OptionsDynamicValuesValidationTest extends OptionsDynamicValuesTestBase {
   /**
    * Test that allowed values function gets the entity.
    */
-  function testDynamicAllowedValues() {
+  public function testDynamicAllowedValues() {
     // Verify that validation passes against every value we had.
     foreach ($this->test as $key => $value) {
       $this->entity->test_options->value = $value;

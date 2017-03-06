@@ -43,7 +43,7 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
   /**
    * Tests the editor file reference filter.
    */
-  function testEditorFileReferenceFilter() {
+  public function testEditorFileReferenceFilter() {
     $filter = $this->filters['editor_file_reference'];
 
     $test = function($input) use ($filter) {

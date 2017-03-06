@@ -13,7 +13,7 @@ class FileFieldPathTest extends FileFieldTestBase {
   /**
    * Tests the normal formatter display on node display.
    */
-  function testUploadPath() {
+  public function testUploadPath() {
     /** @var \Drupal\node\NodeStorageInterface $node_storage */
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $field_name = strtolower($this->randomMachineName());
@@ -79,7 +79,7 @@ class FileFieldPathTest extends FileFieldTestBase {
    * @param string $message
    *   The message to display with this assertion.
    */
-  function assertPathMatch($expected_path, $actual_path, $message) {
+  public function assertPathMatch($expected_path, $actual_path, $message) {
     // Strip off the extension of the expected path to allow for _0, _1, etc.
     // suffixes when the file hits a duplicate name.
     $pos = strrpos($expected_path, '.');

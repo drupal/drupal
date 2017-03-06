@@ -58,7 +58,7 @@ class ContactPersonalTest extends WebTestBase {
   /**
    * Tests that mails for contact messages are correctly sent.
    */
-  function testSendPersonalContactMessage() {
+  public function testSendPersonalContactMessage() {
     // Ensure that the web user's email needs escaping.
     $mail = $this->webUser->getUsername() . '&escaped@example.com';
     $this->webUser->setEmail($mail)->save();
@@ -103,7 +103,7 @@ class ContactPersonalTest extends WebTestBase {
   /**
    * Tests access to the personal contact form.
    */
-  function testPersonalContactAccess() {
+  public function testPersonalContactAccess() {
     // Test allowed access to admin user's contact form.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
@@ -223,7 +223,7 @@ class ContactPersonalTest extends WebTestBase {
   /**
    * Tests the personal contact form flood protection.
    */
-  function testPersonalContactFlood() {
+  public function testPersonalContactFlood() {
     $flood_limit = 3;
     $this->config('contact.settings')->set('flood.limit', $flood_limit)->save();
 
@@ -248,7 +248,7 @@ class ContactPersonalTest extends WebTestBase {
   /**
    * Tests the personal contact form based access when an admin adds users.
    */
-  function testAdminContact() {
+  public function testAdminContact() {
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access user contact forms']);
     $this->checkContactAccess(200);
     $this->checkContactAccess(403, FALSE);

@@ -39,7 +39,7 @@ class UserValidationTest extends KernelTestBase {
   /**
    * Tests user name validation.
    */
-  function testUsernames() {
+  public function testUsernames() {
     $test_cases = [ // '<username>' => array('<description>', 'assert<testName>'),
       'foo'                    => ['Valid username', 'assertNull'],
       'FOO'                    => ['Valid username', 'assertNull'],
@@ -69,7 +69,7 @@ class UserValidationTest extends KernelTestBase {
   /**
    * Runs entity validation checks.
    */
-  function testValidation() {
+  public function testValidation() {
     $user = User::create([
       'name' => 'test',
       'mail' => 'test@example.com',

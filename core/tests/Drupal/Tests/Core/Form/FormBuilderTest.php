@@ -886,7 +886,7 @@ class FormBuilderTest extends FormTestBase {
    *
    * @return array
    */
-  function providerTestFormTokenCacheability() {
+  public function providerTestFormTokenCacheability() {
     return [
       'token:none,authenticated:true' => [NULL, TRUE, ['contexts' => ['user.roles:authenticated']], ['max-age' => 0], 'post'],
       'token:none,authenticated:false' => [NULL, FALSE, ['contexts' => ['user.roles:authenticated']], NULL, 'post'],

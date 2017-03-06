@@ -19,7 +19,7 @@ class MessageTest extends KernelTestBase {
   /**
    * Tests setting messages output.
    */
-  function testMessages() {
+  public function testMessages() {
     // Enable the Classy theme.
     \Drupal::service('theme_handler')->install(['classy']);
     $this->config('system.theme')->set('default', 'classy')->save();

@@ -17,7 +17,7 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
   /**
    * Tests the default settings convenience methods.
    */
-  function testDefaultSettings() {
+  public function testDefaultSettings() {
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     foreach (['test_field', 'shape', 'hidden_test_field'] as $type) {
       $definition = $field_type_manager->getDefinition($type);

@@ -85,7 +85,7 @@ abstract class FileTestBase extends KernelTestBase {
    * @param $message
    *   Optional message.
    */
-  function assertFilePermissions($filepath, $expected_mode, $message = NULL) {
+  public function assertFilePermissions($filepath, $expected_mode, $message = NULL) {
     // Clear out PHP's file stat cache to be sure we see the current value.
     clearstatcache(TRUE, $filepath);
 
@@ -120,7 +120,7 @@ abstract class FileTestBase extends KernelTestBase {
    * @param $message
    *   Optional message.
    */
-  function assertDirectoryPermissions($directory, $expected_mode, $message = NULL) {
+  public function assertDirectoryPermissions($directory, $expected_mode, $message = NULL) {
     // Clear out PHP's file stat cache to be sure we see the current value.
     clearstatcache(TRUE, $directory);
 
@@ -155,7 +155,7 @@ abstract class FileTestBase extends KernelTestBase {
    * @return
    *   The path to the directory.
    */
-  function createDirectory($path = NULL) {
+  public function createDirectory($path = NULL) {
     // A directory to operate on.
     if (!isset($path)) {
       $path = file_default_scheme() . '://' . $this->randomMachineName();
@@ -179,7 +179,7 @@ abstract class FileTestBase extends KernelTestBase {
    * @return
    *   File URI.
    */
-  function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
+  public function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
     if (!isset($filepath)) {
       // Prefix with non-latin characters to ensure that all file-related
       // tests work with international filenames.

@@ -497,7 +497,7 @@ interface DisplayPluginInterface {
    *
    * Also might be used for some other AJAXy reason.
    */
-  function preview();
+  public function preview();
 
   /**
    * Returns the display type that this display requires.

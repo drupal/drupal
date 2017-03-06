@@ -94,7 +94,7 @@ class BlockUiTest extends WebTestBase {
   /**
    * Test block admin page exists and functions correctly.
    */
-  function testBlockAdminUiPage() {
+  public function testBlockAdminUiPage() {
     // Visit the blocks admin ui.
     $this->drupalGet('admin/structure/block');
     // Look for the blocks table.

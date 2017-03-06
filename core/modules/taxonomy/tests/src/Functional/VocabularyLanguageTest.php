@@ -36,7 +36,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
   /**
    * Tests language settings for vocabularies.
    */
-  function testVocabularyLanguage() {
+  public function testVocabularyLanguage() {
     $this->drupalGet('admin/structure/taxonomy/add');
 
     // Check that we have the language selector available.
@@ -67,7 +67,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
   /**
    * Tests term language settings for vocabulary terms are saved and updated.
    */
-  function testVocabularyDefaultLanguageForTerms() {
+  public function testVocabularyDefaultLanguageForTerms() {
     // Add a new vocabulary and check that the default language settings are for
     // the terms are saved.
     $edit = [

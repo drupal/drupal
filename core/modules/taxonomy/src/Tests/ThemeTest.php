@@ -29,7 +29,7 @@ class ThemeTest extends TaxonomyTestBase {
   /**
    * Test the theme used when adding, viewing and editing taxonomy terms.
    */
-  function testTaxonomyTermThemes() {
+  public function testTaxonomyTermThemes() {
     // Adding a term to a vocabulary is considered an administrative action and
     // should use the administrative theme.
     $vocabulary = $this->createVocabulary();

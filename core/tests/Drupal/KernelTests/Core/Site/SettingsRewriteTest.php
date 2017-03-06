@@ -15,7 +15,7 @@ class SettingsRewriteTest extends KernelTestBase {
   /**
    * Tests the drupal_rewrite_settings() function.
    */
-  function testDrupalRewriteSettings() {
+  public function testDrupalRewriteSettings() {
     include_once \Drupal::root() . '/core/includes/install.inc';
     $site_path = $this->container->get('site.path');
     $tests = [

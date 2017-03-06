@@ -23,7 +23,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    * @param \Drupal\Core\Database\Connection $database
    *   The current database connection.
    */
-  function __construct(Connection $database) {
+  public function __construct(Connection $database) {
     $this->database = $database;
   }
 

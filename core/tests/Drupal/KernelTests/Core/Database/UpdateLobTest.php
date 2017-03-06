@@ -12,7 +12,7 @@ class UpdateLobTest extends DatabaseTestBase {
   /**
    * Confirms that we can update a blob column.
    */
-  function testUpdateOneBlob() {
+  public function testUpdateOneBlob() {
     $data = "This is\000a test.";
     $this->assertTrue(strlen($data) === 15, 'Test data contains a NULL.');
     $id = db_insert('test_one_blob')
@@ -32,7 +32,7 @@ class UpdateLobTest extends DatabaseTestBase {
   /**
    * Confirms that we can update two blob columns in the same table.
    */
-  function testUpdateMultipleBlob() {
+  public function testUpdateMultipleBlob() {
     $id = db_insert('test_two_blobs')
       ->fields([
         'blob1' => 'This is',

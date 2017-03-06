@@ -27,7 +27,7 @@ class DummyRemoteStreamWrapper extends PublicStream {
     return t('Dummy wrapper for simpletest (remote).');
   }
 
-  function realpath() {
+  public function realpath() {
     return FALSE;
   }
 

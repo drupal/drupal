@@ -44,7 +44,7 @@ class PageCacheTest extends WebTestBase {
    * Since tag based invalidation works, we know that our tag properly
    * persisted.
    */
-  function testPageCacheTags() {
+  public function testPageCacheTags() {
     $config = $this->config('system.performance');
     $config->set('cache.page.max_age', 300);
     $config->save();
@@ -78,7 +78,7 @@ class PageCacheTest extends WebTestBase {
   /**
    * Test that the page cache doesn't depend on cacheability headers.
    */
-  function testPageCacheTagsIndependentFromCacheabilityHeaders() {
+  public function testPageCacheTagsIndependentFromCacheabilityHeaders() {
     $this->setHttpResponseDebugCacheabilityHeaders(FALSE);
 
     $path = 'system-test/cache_tags_page';
@@ -111,7 +111,7 @@ class PageCacheTest extends WebTestBase {
    * Tests support for different cache items with different request formats
    * specified via a query parameter.
    */
-  function testQueryParameterFormatRequests() {
+  public function testQueryParameterFormatRequests() {
     $config = $this->config('system.performance');
     $config->set('cache.page.max_age', 300);
     $config->save();
@@ -175,7 +175,7 @@ class PageCacheTest extends WebTestBase {
   /**
    * Tests support of requests with If-Modified-Since and If-None-Match headers.
    */
-  function testConditionalRequests() {
+  public function testConditionalRequests() {
     $config = $this->config('system.performance');
     $config->set('cache.page.max_age', 300);
     $config->save();
@@ -219,7 +219,7 @@ class PageCacheTest extends WebTestBase {
   /**
    * Tests cache headers.
    */
-  function testPageCache() {
+  public function testPageCache() {
     $config = $this->config('system.performance');
     $config->set('cache.page.max_age', 300);
     $config->set('response.gzip', 1);
@@ -332,7 +332,7 @@ class PageCacheTest extends WebTestBase {
   /**
    * Tests the 4xx-response cache tag is added and invalidated.
    */
-  function testPageCacheAnonymous403404() {
+  public function testPageCacheAnonymous403404() {
     $admin_url = Url::fromRoute('system.admin');
     $invalid_url = 'foo/does_not_exist';
     $tests = [

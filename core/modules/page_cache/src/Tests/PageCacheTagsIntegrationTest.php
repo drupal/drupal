@@ -36,7 +36,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
   /**
    * Test that cache tags are properly bubbled up to the page level.
    */
-  function testPageCacheTags() {
+  public function testPageCacheTags() {
     // Create two nodes.
     $author_1 = $this->drupalCreateUser();
     $node_1 = $this->drupalCreateNode([

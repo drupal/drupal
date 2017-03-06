@@ -50,7 +50,7 @@ class MultiFormTest extends AjaxTestBase {
   /**
    * Tests that pages with the 'node_page_form' included twice work correctly.
    */
-  function testMultiForm() {
+  public function testMultiForm() {
     // HTML IDs for elements within the field are potentially modified with
     // each Ajax submission, but these variables are stable and help target the
     // desired elements.

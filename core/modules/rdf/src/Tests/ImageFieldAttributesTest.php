@@ -71,7 +71,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
   /**
    * Tests that image fields in teasers have correct resources.
    */
-  function testNodeTeaser() {
+  public function testNodeTeaser() {
     // Set the display options for the teaser.
     $display_options = [
       'type' => 'image',

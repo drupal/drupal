@@ -75,7 +75,7 @@ class SaveUploadTest extends FileManagedTestBase {
   /**
    * Test the file_save_upload() function.
    */
-  function testNormal() {
+  public function testNormal() {
     $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
     $this->assertTrue($max_fid_after > $this->maxFidBefore, 'A new file was created.');
     $file1 = File::load($max_fid_after);
@@ -124,7 +124,7 @@ class SaveUploadTest extends FileManagedTestBase {
   /**
    * Test extension handling.
    */
-  function testHandleExtension() {
+  public function testHandleExtension() {
     // The file being tested is a .gif which is in the default safe list
     // of extensions to allow when the extension validator isn't used. This is
     // implicitly tested at the testNormal() test. Here we tell
@@ -185,7 +185,7 @@ class SaveUploadTest extends FileManagedTestBase {
   /**
    * Test dangerous file handling.
    */
-  function testHandleDangerousFile() {
+  public function testHandleDangerousFile() {
     $config = $this->config('system.file');
     // Allow the .php extension and make sure it gets renamed to .txt for
     // safety. Also check to make sure its MIME type was changed.
@@ -228,7 +228,7 @@ class SaveUploadTest extends FileManagedTestBase {
   /**
    * Test file munge handling.
    */
-  function testHandleFileMunge() {
+  public function testHandleFileMunge() {
     // Ensure insecure uploads are disabled for this test.
     $this->config('system.file')->set('allow_insecure_uploads', 0)->save();
     $this->image = file_move($this->image, $this->image->getFileUri() . '.foo.' . $this->imageExtension);
@@ -277,7 +277,7 @@ class SaveUploadTest extends FileManagedTestBase {
   /**
    * Test renaming when uploading over a file that already exists.
    */
-  function testExistingRename() {
+  public function testExistingRename() {
     $edit = [
       'file_test_replace' => FILE_EXISTS_RENAME,
       'files[file_test_upload]' => drupal_realpath($this->image->getFileUri())
@@ -293,7 +293,7 @@ class SaveUploadTest extends FileManagedTestBase {
   /**
    * Test replacement when uploading over a file that already exists.
    */
-  function testExistingReplace() {
+  public function testExistingReplace() {
     $edit = [
       'file_test_replace' => FILE_EXISTS_REPLACE,
       'files[file_test_upload]' => drupal_realpath($this->image->getFileUri())
@@ -309,7 +309,7 @@ class SaveUploadTest extends FileManagedTestBase {
   /**
    * Test for failure when uploading over a file that already exists.
    */
-  function testExistingError() {
+  public function testExistingError() {
     $edit = [
       'file_test_replace' => FILE_EXISTS_ERROR,
       'files[file_test_upload]' => drupal_realpath($this->image->getFileUri())
@@ -325,7 +325,7 @@ class SaveUploadTest extends FileManagedTestBase {
   /**
    * Test for no failures when not uploading a file.
    */
-  function testNoUpload() {
+  public function testNoUpload() {
     $this->drupalPostForm('file-test/upload', [], t('Submit'));
     $this->assertNoRaw(t('Epic upload FAIL!'), 'Failure message not found.');
   }
@@ -333,7 +333,7 @@ class SaveUploadTest extends FileManagedTestBase {
   /**
    * Tests for log entry on failing destination.
    */
-  function testDrupalMovingUploadedFileError() {
+  public function testDrupalMovingUploadedFileError() {
     // Create a directory and make it not writable.
     $test_directory = 'test_drupal_move_uploaded_file_fail';
     drupal_mkdir('temporary://' . $test_directory, 0000);

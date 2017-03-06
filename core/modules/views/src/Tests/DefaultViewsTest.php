@@ -143,7 +143,7 @@ class DefaultViewsTest extends ViewTestBase {
   /**
    * Returns a new term with random properties in vocabulary $vid.
    */
-  function createTerm($vocabulary) {
+  public function createTerm($vocabulary) {
     $filter_formats = filter_formats();
     $format = array_pop($filter_formats);
     $term = Term::create([

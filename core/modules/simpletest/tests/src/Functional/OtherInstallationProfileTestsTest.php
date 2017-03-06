@@ -50,7 +50,7 @@ class OtherInstallationProfileTestsTest extends BrowserTestBase {
   /**
    * Tests that tests located in another installation profile appear.
    */
-  function testOtherInstallationProfile() {
+  public function testOtherInstallationProfile() {
     // Assert the existence of a test in a different installation profile than
     // the current.
     $this->drupalGet('admin/config/development/testing');

@@ -22,7 +22,7 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
   /**
    * Tests changing the default values of basic options to ensure they persist.
    */
-  function testMultiStepNodeFormBasicOptions() {
+  public function testMultiStepNodeFormBasicOptions() {
     // Prepare a user to create the node.
     $web_user = $this->drupalCreateUser(['administer nodes', 'create page content']);
     $this->drupalLogin($web_user);

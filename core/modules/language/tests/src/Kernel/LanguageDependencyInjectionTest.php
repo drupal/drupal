@@ -18,7 +18,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
    *
    * @see \Drupal\Core\Language\LanguageInterface
    */
-  function testDependencyInjectedNewLanguage() {
+  public function testDependencyInjectedNewLanguage() {
     $expected = $this->languageManager->getDefaultLanguage();
     $result = $this->languageManager->getCurrentLanguage();
     foreach ($expected as $property => $value) {
@@ -32,7 +32,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
    *
    * @see \Drupal\Core\Language\Language
    */
-  function testDependencyInjectedNewDefaultLanguage() {
+  public function testDependencyInjectedNewDefaultLanguage() {
     $default_language = ConfigurableLanguage::load(\Drupal::languageManager()->getDefaultLanguage()->getId());
     // Change the language default object to different values.
     ConfigurableLanguage::createFromLangcode('fr')->save();

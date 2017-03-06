@@ -21,7 +21,7 @@ class PageTest extends WebTestBase {
   /**
    * Tests that the batch API progress page uses the correct theme.
    */
-  function testBatchProgressPageTheme() {
+  public function testBatchProgressPageTheme() {
     // Make sure that the page which starts the batch (an administrative page)
     // is using a different theme than would normally be used by the batch API.
     $this->container->get('theme_handler')->install(['seven', 'bartik']);
@@ -46,7 +46,7 @@ class PageTest extends WebTestBase {
   /**
    * Tests that the batch API progress page shows the title correctly.
    */
-  function testBatchProgressPageTitle() {
+  public function testBatchProgressPageTitle() {
     // Visit an administrative page that runs a test batch, and check that the
     // title shown during batch execution (which the batch callback function
     // saved as a variable) matches the theme used on the administrative page.
@@ -59,7 +59,7 @@ class PageTest extends WebTestBase {
   /**
    * Tests that the progress messages are correct.
    */
-  function testBatchProgressMessages() {
+  public function testBatchProgressMessages() {
     // Go to the initial step only.
     $this->maximumMetaRefreshCount = 0;
     $this->drupalGet('batch-test/test-title');

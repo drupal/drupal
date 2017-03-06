@@ -131,7 +131,7 @@ class EventSubscriber implements EventSubscriberInterface {
    * @return array
    *   An array of event listener definitions.
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents() {
     $events[ConfigEvents::SAVE][] = ['onConfigSave', 40];
     $events[ConfigEvents::DELETE][] = ['onConfigDelete', 40];
     $events[ConfigEvents::IMPORT_VALIDATE] = ['onConfigImporterValidate'];

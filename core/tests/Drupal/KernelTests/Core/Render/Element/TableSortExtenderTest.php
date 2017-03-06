@@ -16,7 +16,7 @@ class TableSortExtenderTest extends KernelTestBase {
   /**
    * Tests tablesort_init().
    */
-  function testTableSortInit() {
+  public function testTableSortInit() {
 
     // Test simple table headers.
 

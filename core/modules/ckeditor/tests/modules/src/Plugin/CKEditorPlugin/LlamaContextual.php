@@ -18,7 +18,7 @@ class LlamaContextual extends Llama implements CKEditorPluginContextualInterface
   /**
    * {@inheritdoc}
    */
-  function isEnabled(Editor $editor) {
+  public function isEnabled(Editor $editor) {
     // Automatically enable this plugin if the Underline button is enabled.
     $settings = $editor->getSettings();
     foreach ($settings['toolbar']['rows'] as $row) {
@@ -34,7 +34,7 @@ class LlamaContextual extends Llama implements CKEditorPluginContextualInterface
   /**
    * {@inheritdoc}
    */
-  function getFile() {
+  public function getFile() {
     return drupal_get_path('module', 'ckeditor_test') . '/js/llama_contextual.js';
   }
 

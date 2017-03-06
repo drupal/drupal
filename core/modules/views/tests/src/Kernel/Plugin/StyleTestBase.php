@@ -20,7 +20,7 @@ abstract class StyleTestBase extends ViewsKernelTestBase {
   /**
    * Stores a view output in the elements.
    */
-  function storeViewPreview($output) {
+  public function storeViewPreview($output) {
     $html5 = new HTML5();
     $htmlDom = $html5->loadHTML('<html><body>' . $output . '</body></html>');
     if ($htmlDom) {

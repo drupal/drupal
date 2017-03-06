@@ -22,7 +22,7 @@ class FieldUrlTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
-  function viewsData() {
+  public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['name']['field']['id'] = 'url';
     return $data;

@@ -117,7 +117,7 @@ class ForumTest extends BrowserTestBase {
   /**
    * Tests forum functionality through the admin and user interfaces.
    */
-  function testForum() {
+  public function testForum() {
     //Check that the basic forum install creates a default forum topic
     $this->drupalGet('/forum');
     // Look for the "General discussion" default forum
@@ -251,7 +251,7 @@ class ForumTest extends BrowserTestBase {
    * Verifies that forum nodes are not created without choosing "forum" from the
    * select list.
    */
-  function testAddOrphanTopic() {
+  public function testAddOrphanTopic() {
     // Must remove forum topics to test creating orphan topics.
     $vid = $this->config('forum.settings')->get('vocabulary');
     $tids = \Drupal::entityQuery('taxonomy_term')
@@ -356,7 +356,7 @@ class ForumTest extends BrowserTestBase {
   /**
    * Edits the forum taxonomy.
    */
-  function editForumVocabulary() {
+  public function editForumVocabulary() {
     // Backup forum taxonomy.
     $vid = $this->config('forum.settings')->get('vocabulary');
     $original_vocabulary = Vocabulary::load($vid);
@@ -399,7 +399,7 @@ class ForumTest extends BrowserTestBase {
    * @return \Drupal\Core\Database\StatementInterface
    *   The created taxonomy term data.
    */
-  function createForum($type, $parent = 0) {
+  public function createForum($type, $parent = 0) {
     // Generate a random name/description.
     $name = $this->randomMachineName(10);
     $description = $this->randomMachineName(100);
@@ -447,7 +447,7 @@ class ForumTest extends BrowserTestBase {
    * @param int $tid
    *   The forum ID.
    */
-  function deleteForum($tid) {
+  public function deleteForum($tid) {
     // Delete the forum.
     $this->drupalGet('admin/structure/forum/edit/forum/' . $tid);
     $this->clickLink(t('Delete'));
@@ -483,7 +483,7 @@ class ForumTest extends BrowserTestBase {
   /**
    * Tests a forum with a new post displays properly.
    */
-  function testForumWithNewPost() {
+  public function testForumWithNewPost() {
     // Log in as the first user.
     $this->drupalLogin($this->adminUser);
     // Create a forum container.
@@ -528,7 +528,7 @@ class ForumTest extends BrowserTestBase {
    * @return object
    *   The created topic node.
    */
-  function createForumTopic($forum, $container = FALSE) {
+  public function createForumTopic($forum, $container = FALSE) {
     // Generate a random subject/body.
     $title = $this->randomMachineName(20);
     $body = $this->randomMachineName(200);

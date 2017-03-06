@@ -54,7 +54,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
   /**
    * Check that non-installed languages are not considered.
    */
-  function testUrlRewritingEdgeCases() {
+  public function testUrlRewritingEdgeCases() {
     // Check URL rewriting with a non-installed language.
     $non_existing = new Language(['id' => $this->randomMachineName()]);
     $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.', 'URL language negotiation does not work with non-installed languages');
@@ -101,7 +101,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
   /**
    * Check URL rewriting when using a domain name and a non-standard port.
    */
-  function testDomainNameNegotiationPort() {
+  public function testDomainNameNegotiationPort() {
     global $base_url;
     $language_domain = 'example.fr';
     // Get the current host URI we're running on.

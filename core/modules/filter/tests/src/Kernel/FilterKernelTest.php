@@ -41,7 +41,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the align filter.
    */
-  function testAlignFilter() {
+  public function testAlignFilter() {
     $filter = $this->filters['filter_align'];
 
     $test = function($input) use ($filter) {
@@ -96,7 +96,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the caption filter.
    */
-  function testCaptionFilter() {
+  public function testCaptionFilter() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
     $filter = $this->filters['filter_caption'];
@@ -260,7 +260,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the combination of the align and caption filters.
    */
-  function testAlignAndCaptionFilters() {
+  public function testAlignAndCaptionFilters() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
     $align_filter = $this->filters['filter_align'];
@@ -315,7 +315,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the line break filter.
    */
-  function testLineBreakFilter() {
+  public function testLineBreakFilter() {
     // Get FilterAutoP object.
     $filter = $this->filters['filter_autop'];
 
@@ -403,7 +403,7 @@ class FilterKernelTest extends KernelTestBase {
    * @todo Class, id, name and xmlns should be added to disallowed attributes,
    *   or better a whitelist approach should be used for that too.
    */
-  function testHtmlFilter() {
+  public function testHtmlFilter() {
     // Get FilterHtml object.
     $filter = $this->filters['filter_html'];
     $filter->setConfiguration([
@@ -493,7 +493,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the spam deterrent.
    */
-  function testNoFollowFilter() {
+  public function testNoFollowFilter() {
     // Get FilterHtml object.
     $filter = $this->filters['filter_html'];
     $filter->setConfiguration([
@@ -526,7 +526,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the HTML escaping filter.
    */
-  function testHtmlEscapeFilter() {
+  public function testHtmlEscapeFilter() {
     // Get FilterHtmlEscape object.
     $filter = $this->filters['filter_html_escape'];
 
@@ -543,7 +543,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the URL filter.
    */
-  function testUrlFilter() {
+  public function testUrlFilter() {
     // Get FilterUrl object.
     $filter = $this->filters['filter_url'];
     $filter->setConfiguration([
@@ -871,7 +871,7 @@ www.example.com with a newline in comments -->
    *   );
    *   @endcode
    */
-  function assertFilteredString($filter, $tests) {
+  public function assertFilteredString($filter, $tests) {
     foreach ($tests as $source => $tasks) {
       $result = $filter->process($source, $filter)->getProcessedText();
       foreach ($tasks as $value => $is_expected) {
@@ -918,7 +918,7 @@ www.example.com with a newline in comments -->
    * - Empty HTML tags (BR, IMG).
    * - Mix of absolute and partial URLs, and email addresses in one content.
    */
-  function testUrlFilterContent() {
+  public function testUrlFilterContent() {
     // Get FilterUrl object.
     $filter = $this->filters['filter_url'];
     $filter->setConfiguration([
@@ -939,7 +939,7 @@ www.example.com with a newline in comments -->
    *
    * @todo This test could really use some validity checking function.
    */
-  function testHtmlCorrectorFilter() {
+  public function testHtmlCorrectorFilter() {
     // Tag closing.
     $f = Html::normalize('<p>text');
     $this->assertEqual($f, '<p>text</p>', 'HTML corrector -- tag closing at the end of input.');
@@ -1146,7 +1146,7 @@ body {color:red}
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
+  public function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
     return $this->assertTrue(strpos(strtolower(Html::decodeEntities($haystack)), $needle) !== FALSE, $message, $group);
   }
 
@@ -1171,7 +1171,7 @@ body {color:red}
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
+  public function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
     return $this->assertTrue(strpos(strtolower(Html::decodeEntities($haystack)), $needle) === FALSE, $message, $group);
   }
 

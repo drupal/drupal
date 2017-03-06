@@ -60,7 +60,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  function setupBundle() {
+  public function setupBundle() {
     parent::setupBundle();
     $this->drupalCreateContentType(['type' => $this->nodeBundle, 'name' => $this->nodeBundle]);
     // Add a comment field to the article content type.
@@ -181,7 +181,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests translate link on comment content admin page.
    */
-  function testTranslateLinkCommentAdminPage() {
+  public function testTranslateLinkCommentAdminPage() {
     $this->adminUser = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer comments', 'skip comment approval']));
     $this->drupalLogin($this->adminUser);
 

@@ -23,7 +23,7 @@ class FileMoveTest extends WebTestBase {
   /**
    * Tests moving a randomly generated image.
    */
-  function testNormal() {
+  public function testNormal() {
     // Pick a file for testing.
     $file = File::create((array) current($this->drupalGetTestFiles('image')));
 

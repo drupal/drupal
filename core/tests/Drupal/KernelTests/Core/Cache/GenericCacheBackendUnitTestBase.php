@@ -491,7 +491,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    * Test Drupal\Core\Cache\CacheBackendInterface::invalidate() and
    * Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple().
    */
-  function testInvalidate() {
+  public function testInvalidate() {
     $backend = $this->getCacheBackend();
     $backend->set('test1', 1);
     $backend->set('test2', 2);
@@ -523,7 +523,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Tests Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
    */
-  function testInvalidateTags() {
+  public function testInvalidateTags() {
     $backend = $this->getCacheBackend();
 
     // Create two cache entries with the same tag and tag value.

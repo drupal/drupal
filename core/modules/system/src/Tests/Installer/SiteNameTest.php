@@ -31,7 +31,7 @@ class SiteNameTest extends WebTestBase {
   /**
    * Tests that the desired site name appears on the page after installation.
    */
-  function testSiteName() {
+  public function testSiteName() {
     $this->drupalGet('');
     $this->assertRaw($this->siteName, 'The site name that was set during the installation appears on the front page after installation.');
   }

@@ -63,7 +63,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests omission of module APIs for bare configuration operations.
    */
-  function testNoImport() {
+  public function testNoImport() {
     $dynamic_name = 'config_test.dynamic.dotted.default';
 
     // Verify the default configuration values exist.
@@ -78,7 +78,7 @@ class ConfigImporterTest extends KernelTestBase {
    * Tests that trying to import from an empty sync configuration directory
    * fails.
    */
-  function testEmptyImportFails() {
+  public function testEmptyImportFails() {
     try {
       $this->container->get('config.storage.sync')->deleteAll();
       $this->configImporter->reset()->import();
@@ -92,7 +92,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests verification of site UUID before importing configuration.
    */
-  function testSiteUuidValidate() {
+  public function testSiteUuidValidate() {
     $sync = \Drupal::service('config.storage.sync');
     // Create updated configuration object.
     $config_data = $this->config('system.site')->get();
@@ -114,7 +114,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests deletion of configuration during import.
    */
-  function testDeleted() {
+  public function testDeleted() {
     $dynamic_name = 'config_test.dynamic.dotted.default';
     $storage = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
@@ -151,7 +151,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests creation of configuration during import.
    */
-  function testNew() {
+  public function testNew() {
     $dynamic_name = 'config_test.dynamic.new';
     $storage = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
@@ -205,7 +205,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that secondary writes are overwritten.
    */
-  function testSecondaryWritePrimaryFirst() {
+  public function testSecondaryWritePrimaryFirst() {
     $name_primary = 'config_test.dynamic.primary';
     $name_secondary = 'config_test.dynamic.secondary';
     $sync = $this->container->get('config.storage.sync');
@@ -251,7 +251,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that secondary writes are overwritten.
    */
-  function testSecondaryWriteSecondaryFirst() {
+  public function testSecondaryWriteSecondaryFirst() {
     $name_primary = 'config_test.dynamic.primary';
     $name_secondary = 'config_test.dynamic.secondary';
     $sync = $this->container->get('config.storage.sync');
@@ -297,7 +297,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that secondary updates for deleted files work as expected.
    */
-  function testSecondaryUpdateDeletedDeleterFirst() {
+  public function testSecondaryUpdateDeletedDeleterFirst() {
     $name_deleter = 'config_test.dynamic.deleter';
     $name_deletee = 'config_test.dynamic.deletee';
     $name_other = 'config_test.dynamic.other';
@@ -383,7 +383,7 @@ class ConfigImporterTest extends KernelTestBase {
    * configuration tree imports. Therefore, any configuration updates that cause
    * secondary deletes should be reflected already in the staged configuration.
    */
-  function testSecondaryUpdateDeletedDeleteeFirst() {
+  public function testSecondaryUpdateDeletedDeleteeFirst() {
     $name_deleter = 'config_test.dynamic.deleter';
     $name_deletee = 'config_test.dynamic.deletee';
     $storage = $this->container->get('config.storage');
@@ -429,7 +429,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that secondary deletes for deleted files work as expected.
    */
-  function testSecondaryDeletedDeleteeSecond() {
+  public function testSecondaryDeletedDeleteeSecond() {
     $name_deleter = 'config_test.dynamic.deleter';
     $name_deletee = 'config_test.dynamic.deletee';
     $storage = $this->container->get('config.storage');
@@ -471,7 +471,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests updating of configuration during import.
    */
-  function testUpdated() {
+  public function testUpdated() {
     $name = 'config_test.system';
     $dynamic_name = 'config_test.dynamic.dotted.default';
     $storage = $this->container->get('config.storage');
@@ -528,7 +528,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests the isInstallable method()
    */
-  function testIsInstallable() {
+  public function testIsInstallable() {
     $config_name = 'config_test.dynamic.isinstallable';
     $this->assertFalse($this->container->get('config.storage')->exists($config_name));
     \Drupal::state()->set('config_test.isinstallable', TRUE);

@@ -158,7 +158,7 @@ class PagePreviewTest extends NodeTestBase {
   /**
    * Checks the node preview functionality.
    */
-  function testPagePreview() {
+  public function testPagePreview() {
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
     $term_key = $this->fieldName . '[target_id]';
@@ -394,7 +394,7 @@ class PagePreviewTest extends NodeTestBase {
   /**
    * Checks the node preview functionality, when using revisions.
    */
-  function testPagePreviewWithRevisions() {
+  public function testPagePreviewWithRevisions() {
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
     $term_key = $this->fieldName . '[target_id]';

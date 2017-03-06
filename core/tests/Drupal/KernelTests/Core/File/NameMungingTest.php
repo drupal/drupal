@@ -34,7 +34,7 @@ class NameMungingTest extends FileTestBase {
   /**
    * Create a file and munge/unmunge the name.
    */
-  function testMunging() {
+  public function testMunging() {
     // Disable insecure uploads.
     $this->config('system.file')->set('allow_insecure_uploads', 0)->save();
     $munged_name = file_munge_filename($this->name, '', TRUE);
@@ -46,7 +46,7 @@ class NameMungingTest extends FileTestBase {
   /**
    * Tests munging with a null byte in the filename.
    */
-  function testMungeNullByte() {
+  public function testMungeNullByte() {
     $prefix = $this->randomMachineName();
     $filename = $prefix . '.' . $this->badExtension . "\0.txt";
     $this->assertEqual(file_munge_filename($filename, ''), $prefix . '.' . $this->badExtension . '_.txt', 'A filename with a null byte is correctly munged to remove the null byte.');
@@ -56,7 +56,7 @@ class NameMungingTest extends FileTestBase {
    * If the system.file.allow_insecure_uploads setting evaluates to true, the file should
    * come out untouched, no matter how evil the filename.
    */
-  function testMungeIgnoreInsecure() {
+  public function testMungeIgnoreInsecure() {
     $this->config('system.file')->set('allow_insecure_uploads', 1)->save();
     $munged_name = file_munge_filename($this->name, '');
     $this->assertIdentical($munged_name, $this->name, format_string('The original filename (%original) matches the munged filename (%munged) when insecure uploads are enabled.', ['%munged' => $munged_name, '%original' => $this->name]));
@@ -65,7 +65,7 @@ class NameMungingTest extends FileTestBase {
   /**
    * White listed extensions are ignored by file_munge_filename().
    */
-  function testMungeIgnoreWhitelisted() {
+  public function testMungeIgnoreWhitelisted() {
     // Declare our extension as whitelisted. The declared extensions should
     // be case insensitive so test using one with a different case.
     $munged_name = file_munge_filename($this->nameWithUcExt, $this->badExtension);
@@ -78,7 +78,7 @@ class NameMungingTest extends FileTestBase {
   /**
    * Ensure that unmunge gets your name back.
    */
-  function testUnMunge() {
+  public function testUnMunge() {
     $munged_name = file_munge_filename($this->name, '', FALSE);
     $unmunged_name = file_unmunge_filename($munged_name);
     $this->assertIdentical($unmunged_name, $this->name, format_string('The unmunged (%unmunged) filename matches the original (%original)', ['%unmunged' => $unmunged_name, '%original' => $this->name]));

@@ -51,7 +51,7 @@ class LegacyTest extends TaxonomyTestBase {
   /**
    * Test taxonomy functionality with nodes prior to 1970.
    */
-  function testTaxonomyLegacyNode() {
+  public function testTaxonomyLegacyNode() {
     // Posts an article with a taxonomy term and a date prior to 1970.
     $date = new DrupalDateTime('1969-01-01 00:00:00');
     $edit = [];

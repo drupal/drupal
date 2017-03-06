@@ -21,7 +21,7 @@ class ContactAuthenticatedUserTest extends BrowserTestBase {
   /**
    * Tests that name and email fields are not present for authenticated users.
    */
-  function testContactSiteWideTextfieldsLoggedInTestCase() {
+  public function testContactSiteWideTextfieldsLoggedInTestCase() {
     $this->drupalLogin($this->drupalCreateUser(['access site-wide contact form']));
     $this->drupalGet('contact');
 

@@ -44,7 +44,7 @@ class UserPictureTest extends WebTestBase {
   /**
    * Tests creation, display, and deletion of user pictures.
    */
-  function testCreateDeletePicture() {
+  public function testCreateDeletePicture() {
     $this->drupalLogin($this->webUser);
 
     // Save a new picture.
@@ -81,7 +81,7 @@ class UserPictureTest extends WebTestBase {
   /**
    * Tests embedded users on node pages.
    */
-  function testPictureOnNodeComment() {
+  public function testPictureOnNodeComment() {
     $this->drupalLogin($this->webUser);
 
     // Save a new picture.
@@ -129,7 +129,7 @@ class UserPictureTest extends WebTestBase {
   /**
    * Edits the user picture for the test user.
    */
-  function saveUserPicture($image) {
+  public function saveUserPicture($image) {
     $edit = ['files[user_picture_0]' => drupal_realpath($image->uri)];
     $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $edit, t('Save'));
 

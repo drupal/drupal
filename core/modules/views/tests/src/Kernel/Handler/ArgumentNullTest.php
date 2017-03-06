@@ -19,7 +19,7 @@ class ArgumentNullTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
-  function viewsData() {
+  public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['id']['argument']['id'] = 'null';
 

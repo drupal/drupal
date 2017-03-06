@@ -63,7 +63,7 @@ class TrackerTest extends WebTestBase {
   /**
    * Tests for the presence of nodes on the global tracker listing.
    */
-  function testTrackerAll() {
+  public function testTrackerAll() {
     $this->drupalLogin($this->user);
 
     $unpublished = $this->drupalCreateNode([
@@ -129,7 +129,7 @@ class TrackerTest extends WebTestBase {
   /**
    * Tests for the presence of nodes on a user's tracker listing.
    */
-  function testTrackerUser() {
+  public function testTrackerUser() {
     $this->drupalLogin($this->user);
 
     $unpublished = $this->drupalCreateNode([
@@ -223,7 +223,7 @@ class TrackerTest extends WebTestBase {
   /**
    * Tests the metadata for the "new"/"updated" indicators.
    */
-  function testTrackerHistoryMetadata() {
+  public function testTrackerHistoryMetadata() {
     $this->drupalLogin($this->user);
 
     // Create a page node.
@@ -274,7 +274,7 @@ class TrackerTest extends WebTestBase {
   /**
    * Tests for ordering on a users tracker listing when comments are posted.
    */
-  function testTrackerOrderingNewComments() {
+  public function testTrackerOrderingNewComments() {
     $this->drupalLogin($this->user);
 
     $node_one = $this->drupalCreateNode([
@@ -340,7 +340,7 @@ class TrackerTest extends WebTestBase {
   /**
    * Tests that existing nodes are indexed by cron.
    */
-  function testTrackerCronIndexing() {
+  public function testTrackerCronIndexing() {
     $this->drupalLogin($this->user);
 
     // Create 3 nodes.
@@ -393,7 +393,7 @@ class TrackerTest extends WebTestBase {
   /**
    * Tests that publish/unpublish works at admin/content/node.
    */
-  function testTrackerAdminUnpublish() {
+  public function testTrackerAdminUnpublish() {
     \Drupal::service('module_installer')->install(['views']);
     \Drupal::service('router.builder')->rebuild();
     $admin_user = $this->drupalCreateUser(['access content overview', 'administer nodes', 'bypass node access']);
@@ -438,7 +438,7 @@ class TrackerTest extends WebTestBase {
    * @param bool $library_is_present
    *   Whether the drupal.tracker-history library should be present or not.
    */
-  function assertHistoryMetadata($node_id, $node_timestamp, $node_last_comment_timestamp, $library_is_present = TRUE) {
+  public function assertHistoryMetadata($node_id, $node_timestamp, $node_last_comment_timestamp, $library_is_present = TRUE) {
     $settings = $this->getDrupalSettings();
     $this->assertIdentical($library_is_present, isset($settings['ajaxPageState']) && in_array('tracker/history', explode(',', $settings['ajaxPageState']['libraries'])), 'drupal.tracker-history library is present.');
     $this->assertIdentical(1, count($this->xpath('//table/tbody/tr/td[@data-history-node-id="' . $node_id . '" and @data-history-node-timestamp="' . $node_timestamp . '"]')), 'Tracker table cell contains the data-history-node-id and data-history-node-timestamp attributes for the node.');

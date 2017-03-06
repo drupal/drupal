@@ -34,7 +34,7 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Test text field validation.
    */
-  function testTextFieldValidation() {
+  public function testTextFieldValidation() {
     // Create a field with settings to validate.
     $max_length = 3;
     $field_name = Unicode::strtolower($this->randomMachineName());
@@ -69,7 +69,7 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Test required long text with file upload.
    */
-  function testRequiredLongTextWithFileUpload() {
+  public function testRequiredLongTextWithFileUpload() {
     // Create a text field.
     $text_field_name = 'text_long';
     $field_storage = FieldStorageConfig::create([
@@ -128,7 +128,7 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Test widgets.
    */
-  function testTextfieldWidgets() {
+  public function testTextfieldWidgets() {
     $this->_testTextfieldWidgets('text', 'text_textfield');
     $this->_testTextfieldWidgets('text_long', 'text_textarea');
   }
@@ -136,7 +136,7 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Test widgets + 'formatted_text' setting.
    */
-  function testTextfieldWidgetsFormatted() {
+  public function testTextfieldWidgetsFormatted() {
     $this->_testTextfieldWidgetsFormatted('text', 'text_textfield');
     $this->_testTextfieldWidgetsFormatted('text_long', 'text_textarea');
   }
@@ -144,7 +144,7 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Helper function for testTextfieldWidgetsFormatted().
    */
-  function _testTextfieldWidgetsFormatted($field_type, $widget_type) {
+  public function _testTextfieldWidgetsFormatted($field_type, $widget_type) {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 

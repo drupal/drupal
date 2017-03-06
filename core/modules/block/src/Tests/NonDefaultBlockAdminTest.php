@@ -30,7 +30,7 @@ class NonDefaultBlockAdminTest extends WebTestBase {
   /**
    * Test non-default theme admin.
    */
-  function testNonDefaultBlockAdmin() {
+  public function testNonDefaultBlockAdmin() {
     $admin_user = $this->drupalCreateUser(['administer blocks', 'administer themes']);
     $this->drupalLogin($admin_user);
     $new_theme = 'bartik';

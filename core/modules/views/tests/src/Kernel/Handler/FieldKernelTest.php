@@ -412,7 +412,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
   /**
    * Tests everything related to empty output of a field.
    */
-  function testEmpty() {
+  public function testEmpty() {
     $this->_testHideIfEmpty();
     $this->_testEmptyText();
   }
@@ -423,7 +423,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
    * This tests alters the result to get easier and less coupled results. It is
    * important that assertIdentical() is used in this test since in PHP 0 == ''.
    */
-  function _testHideIfEmpty() {
+  public function _testHideIfEmpty() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
@@ -704,7 +704,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
   /**
    * Tests the usage of the empty text.
    */
-  function _testEmptyText() {
+  public function _testEmptyText() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
@@ -754,7 +754,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
   /**
    * Tests views_handler_field::isValueEmpty().
    */
-  function testIsValueEmpty() {
+  public function testIsValueEmpty() {
     $view = Views::getView('test_view');
     $view->initHandlers();
     $field = $view->field['name'];

@@ -29,7 +29,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
   /**
    * Tests core token replacements generated from a view.
    */
-  function testTokenReplacement() {
+  public function testTokenReplacement() {
     $token_handler = \Drupal::token();
     $view = Views::getView('test_tokens');
     $view->setDisplay('page_1');
@@ -76,7 +76,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
   /**
    * Tests core token replacements generated from a view.
    */
-  function testTokenReplacementWithMiniPager() {
+  public function testTokenReplacementWithMiniPager() {
     $token_handler = \Drupal::token();
     $view = Views::getView('test_tokens');
     $view->setDisplay('page_3');
@@ -113,7 +113,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
   /**
    * Tests core token replacements generated from a view without results.
    */
-  function testTokenReplacementNoResults() {
+  public function testTokenReplacementNoResults() {
     $token_handler = \Drupal::token();
     $view = Views::getView('test_tokens');
     $view->setDisplay('page_2');
@@ -132,7 +132,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
   /**
    * Tests path token replacements generated from a view without a path.
    */
-  function testTokenReplacementNoPath() {
+  public function testTokenReplacementNoPath() {
     $token_handler = \Drupal::token();
     $view = Views::getView('test_invalid_tokens');
     $view->setDisplay('block_1');

@@ -34,7 +34,7 @@ class PageNotFoundTest extends WebTestBase {
     user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access user profiles']);
   }
 
-  function testPageNotFound() {
+  public function testPageNotFound() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet($this->randomMachineName(10));
     $this->assertText(t('Page not found'), 'Found the default 404 page');

@@ -27,7 +27,7 @@ class FieldEntityOperationsTest extends HandlerTestBase {
    */
   public static $modules = ['node', 'language', 'views_ui'];
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Create Article content type.

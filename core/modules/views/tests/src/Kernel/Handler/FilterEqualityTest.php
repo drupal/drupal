@@ -30,13 +30,13 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     'views_test_data_name' => 'name',
   ];
 
-  function viewsData() {
+  public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['name']['filter']['id'] = 'equality';
     return $data;
   }
 
-  function testEqual() {
+  public function testEqual() {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -82,7 +82,7 @@ class FilterEqualityTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  function testNotEqual() {
+  public function testNotEqual() {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

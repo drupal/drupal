@@ -22,7 +22,7 @@ class QueueDatabaseFactory {
    * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
    */
-  function __construct(Connection $connection) {
+  public function __construct(Connection $connection) {
     $this->connection = $connection;
   }
 

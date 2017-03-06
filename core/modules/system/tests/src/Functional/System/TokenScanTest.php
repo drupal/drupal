@@ -14,7 +14,7 @@ class TokenScanTest extends BrowserTestBase {
   /**
    * Scans dummy text, then tests the output.
    */
-  function testTokenScan() {
+  public function testTokenScan() {
     // Define text with valid and not valid, fake and existing token-like
     // strings.
     $text = 'First a [valid:simple], but dummy token, and a dummy [valid:token with: spaces].';

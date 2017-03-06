@@ -24,7 +24,7 @@ class UrlTest extends WebTestBase {
   /**
    * Tests that #type 'url' fields are properly validated and trimmed.
    */
-  function testFormUrl() {
+  public function testFormUrl() {
     $edit = [];
     $edit['url'] = 'http://';
     $edit['url_required'] = ' ';

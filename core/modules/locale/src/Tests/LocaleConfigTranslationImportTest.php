@@ -130,7 +130,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
   /**
    * Test removing a string from Locale deletes configuration translations.
    */
-  function testLocaleRemovalAndConfigOverrideDelete() {
+  public function testLocaleRemovalAndConfigOverrideDelete() {
     // Enable the locale module.
     $this->container->get('module_installer')->install(['locale']);
     $this->resetAll();
@@ -167,7 +167,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
   /**
    * Test removing a string from Locale changes configuration translations.
    */
-  function testLocaleRemovalAndConfigOverridePreserve() {
+  public function testLocaleRemovalAndConfigOverridePreserve() {
     // Enable the locale module.
     $this->container->get('module_installer')->install(['locale']);
     $this->resetAll();

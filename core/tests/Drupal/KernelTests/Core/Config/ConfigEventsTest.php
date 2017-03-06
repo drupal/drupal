@@ -23,7 +23,7 @@ class ConfigEventsTest extends KernelTestBase {
   /**
    * Tests configuration events.
    */
-  function testConfigEvents() {
+  public function testConfigEvents() {
     $name = 'config_events_test.test';
 
     $config = new Config($name, \Drupal::service('config.storage'), \Drupal::service('event_dispatcher'), \Drupal::service('config.typed'));
@@ -55,7 +55,7 @@ class ConfigEventsTest extends KernelTestBase {
   /**
    * Tests configuration rename event that is fired from the ConfigFactory.
    */
-  function testConfigRenameEvent() {
+  public function testConfigRenameEvent() {
     $name = 'config_events_test.test';
     $new_name = 'config_events_test.test_rename';
     $GLOBALS['config'][$name] = ['key' => 'overridden'];

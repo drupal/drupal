@@ -128,7 +128,7 @@ class NodeRevisionsTest extends NodeTestBase {
   /**
    * Checks node revision related operations.
    */
-  function testRevisions() {
+  public function testRevisions() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $nodes = $this->nodes;
     $logs = $this->revisionLogs;
@@ -297,7 +297,7 @@ class NodeRevisionsTest extends NodeTestBase {
   /**
    * Checks that revisions are correctly saved without log messages.
    */
-  function testNodeRevisionWithoutLogMessage() {
+  public function testNodeRevisionWithoutLogMessage() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create a node with an initial log message.
     $revision_log = $this->randomMachineName(10);

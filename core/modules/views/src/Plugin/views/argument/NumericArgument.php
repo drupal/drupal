@@ -57,7 +57,7 @@ class NumericArgument extends ArgumentPluginBase {
     ];
   }
 
-  function title() {
+  public function title() {
     if (!$this->argument) {
       return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : $this->t('Uncategorized');
     }

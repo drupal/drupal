@@ -19,7 +19,7 @@ class FormValuesTest extends AjaxTestBase {
   /**
    * Submits forms with select and checkbox elements via Ajax.
    */
-  function testSimpleAjaxFormValue() {
+  public function testSimpleAjaxFormValue() {
     // Verify form values of a select element.
     foreach (['red', 'green', 'blue'] as $item) {
       $edit = [

@@ -24,7 +24,7 @@ class LanguageListTest extends WebTestBase {
   /**
    * Functional tests for adding, editing and deleting languages.
    */
-  function testLanguageList() {
+  public function testLanguageList() {
 
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
@@ -186,7 +186,7 @@ class LanguageListTest extends WebTestBase {
   /**
    * Functional tests for the language states (locked or configurable).
    */
-  function testLanguageStates() {
+  public function testLanguageStates() {
     // Add some languages, and also lock some of them.
     ConfigurableLanguage::create(['label' => $this->randomMachineName(), 'id' => 'l1'])->save();
     ConfigurableLanguage::create(['label' => $this->randomMachineName(), 'id' => 'l2', 'locked' => TRUE])->save();

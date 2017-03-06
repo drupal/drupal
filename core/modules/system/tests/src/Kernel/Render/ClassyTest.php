@@ -36,7 +36,7 @@ class ClassyTest extends KernelTestBase {
   /**
    * Test the classy theme.
    */
-  function testClassyTheme() {
+  public function testClassyTheme() {
     drupal_set_message('An error occurred', 'error');
     drupal_set_message('But then something nice happened');
     $messages = [

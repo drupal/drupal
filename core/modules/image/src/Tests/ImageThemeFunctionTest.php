@@ -62,7 +62,7 @@ class ImageThemeFunctionTest extends WebTestBase {
   /**
    * Tests usage of the image field formatters.
    */
-  function testImageFormatterTheme() {
+  public function testImageFormatterTheme() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
@@ -124,7 +124,7 @@ class ImageThemeFunctionTest extends WebTestBase {
   /**
    * Tests usage of the image style theme function.
    */
-  function testImageStyleTheme() {
+  public function testImageStyleTheme() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
@@ -161,7 +161,7 @@ class ImageThemeFunctionTest extends WebTestBase {
   /**
    * Tests image alt attribute functionality.
    */
-  function testImageAltFunctionality() {
+  public function testImageAltFunctionality() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 

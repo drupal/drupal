@@ -235,7 +235,7 @@ class EntityUnitTest extends UnitTestCase {
   /**
    * Setup for the tests of the ::load() method.
    */
-  function setupTestLoad() {
+  public function setupTestLoad() {
     // Base our mocked entity on a real entity class so we can test if calling
     // Entity::load() on the base class will bubble up to an actual entity.
     $this->entityTypeId = 'entity_test_mul';

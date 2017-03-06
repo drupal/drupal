@@ -128,7 +128,7 @@ class UserSession implements AccountInterface {
   /**
    * {@inheritdoc}
    */
-  function getPreferredLangcode($fallback_to_default = TRUE) {
+  public function getPreferredLangcode($fallback_to_default = TRUE) {
     $language_list = \Drupal::languageManager()->getLanguages();
     if (!empty($this->preferred_langcode) && isset($language_list[$this->preferred_langcode])) {
       return $language_list[$this->preferred_langcode]->getId();
@@ -141,7 +141,7 @@ class UserSession implements AccountInterface {
   /**
    * {@inheritdoc}
    */
-  function getPreferredAdminLangcode($fallback_to_default = TRUE) {
+  public function getPreferredAdminLangcode($fallback_to_default = TRUE) {
     $language_list = \Drupal::languageManager()->getLanguages();
     if (!empty($this->preferred_admin_langcode) && isset($language_list[$this->preferred_admin_langcode])) {
       return $language_list[$this->preferred_admin_langcode]->getId();

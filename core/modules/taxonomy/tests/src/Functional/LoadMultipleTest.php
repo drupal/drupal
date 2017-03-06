@@ -20,7 +20,7 @@ class LoadMultipleTest extends TaxonomyTestBase {
    * Create a vocabulary and some taxonomy terms, ensuring they're loaded
    * correctly using entity_load_multiple().
    */
-  function testTaxonomyTermMultipleLoad() {
+  public function testTaxonomyTermMultipleLoad() {
     // Create a vocabulary.
     $vocabulary = $this->createVocabulary();
 

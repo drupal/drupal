@@ -44,7 +44,7 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
   /**
    * Test permissions on nodes status field.
    */
-  function testAccessToAdministrativeFields() {
+  public function testAccessToAdministrativeFields() {
 
     // Create the page node type with revisions disabled.
     $page = NodeType::create([

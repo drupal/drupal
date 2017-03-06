@@ -85,7 +85,7 @@ class PoHeader {
    *   Plural form component from the header, for example:
    *   'nplurals=2; plural=(n > 1);'.
    */
-  function getPluralForms() {
+  public function getPluralForms() {
     return $this->_pluralForms;
   }
 
@@ -95,7 +95,7 @@ class PoHeader {
    * @param string $languageName
    *   Human readable language name.
    */
-  function setLanguageName($languageName) {
+  public function setLanguageName($languageName) {
     $this->_languageName = $languageName;
   }
 
@@ -105,7 +105,7 @@ class PoHeader {
    * @return string
    *   The human readable language name.
    */
-  function getLanguageName() {
+  public function getLanguageName() {
     return $this->_languageName;
   }
 
@@ -115,7 +115,7 @@ class PoHeader {
    * @param string $projectName
    *   Human readable project name.
    */
-  function setProjectName($projectName) {
+  public function setProjectName($projectName) {
     $this->_projectName = $projectName;
   }
 
@@ -125,7 +125,7 @@ class PoHeader {
    * @return string
    *   The human readable project name.
    */
-  function getProjectName() {
+  public function getProjectName() {
     return $this->_projectName;
   }
 
@@ -190,7 +190,7 @@ class PoHeader {
    *
    * @throws Exception
    */
-  function parsePluralForms($pluralforms) {
+  public function parsePluralForms($pluralforms) {
     $plurals = [];
     // First, delete all whitespace.
     $pluralforms = strtr($pluralforms, [" " => "", "\t" => ""]);

@@ -25,7 +25,7 @@ class NextIdTest extends KernelTestBase {
   /**
    * Tests that the sequences API works.
    */
-  function testDbNextId() {
+  public function testDbNextId() {
     $first = db_next_id();
     $second = db_next_id();
     // We can test for exact increase in here because we know there is no

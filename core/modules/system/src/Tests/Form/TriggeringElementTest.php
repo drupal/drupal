@@ -23,7 +23,7 @@ class TriggeringElementTest extends WebTestBase {
    * information is included in the POST data, as is sometimes the case when
    * the ENTER key is pressed in a textfield in Internet Explorer.
    */
-  function testNoButtonInfoInPost() {
+  public function testNoButtonInfoInPost() {
     $path = 'form-test/clicked-button';
     $edit = [];
     $form_html_id = 'form-test-clicked-button';
@@ -70,7 +70,7 @@ class TriggeringElementTest extends WebTestBase {
    * Test that the triggering element does not get set to a button with
    * #access=FALSE.
    */
-  function testAttemptAccessControlBypass() {
+  public function testAttemptAccessControlBypass() {
     $path = 'form-test/clicked-button';
     $form_html_id = 'form-test-clicked-button';
 

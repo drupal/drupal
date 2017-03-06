@@ -14,7 +14,7 @@ class UserEditTest extends WebTestBase {
   /**
    * Test user edit page.
    */
-  function testUserEdit() {
+  public function testUserEdit() {
     // Test user edit functionality.
     $user1 = $this->drupalCreateUser(['change own username']);
     $user2 = $this->drupalCreateUser([]);
@@ -131,7 +131,7 @@ class UserEditTest extends WebTestBase {
   /**
    * Tests editing of a user account without an email address.
    */
-  function testUserWithoutEmailEdit() {
+  public function testUserWithoutEmailEdit() {
     // Test that an admin can edit users without an email address.
     $admin = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($admin);

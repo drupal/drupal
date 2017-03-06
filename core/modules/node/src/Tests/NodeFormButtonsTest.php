@@ -37,7 +37,7 @@ class NodeFormButtonsTest extends NodeTestBase {
   /**
    * Tests that the right buttons are displayed for saving nodes.
    */
-  function testNodeFormButtons() {
+  public function testNodeFormButtons() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Log in as administrative user.
     $this->drupalLogin($this->adminUser);

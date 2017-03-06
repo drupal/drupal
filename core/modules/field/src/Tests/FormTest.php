@@ -91,7 +91,7 @@ class FormTest extends FieldTestBase {
     ];
   }
 
-  function testFieldFormSingle() {
+  public function testFieldFormSingle() {
     $field_storage = $this->fieldStorageSingle;
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
@@ -165,7 +165,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests field widget default values on entity forms.
    */
-  function testFieldFormDefaultValue() {
+  public function testFieldFormDefaultValue() {
     $field_storage = $this->fieldStorageSingle;
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
@@ -194,7 +194,7 @@ class FormTest extends FieldTestBase {
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field is now empty.');
   }
 
-  function testFieldFormSingleRequired() {
+  public function testFieldFormSingleRequired() {
     $field_storage = $this->fieldStorageSingle;
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
@@ -231,7 +231,7 @@ class FormTest extends FieldTestBase {
     $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]), 'Required field with no value fails validation');
   }
 
-  function testFieldFormUnlimited() {
+  public function testFieldFormUnlimited() {
     $field_storage = $this->fieldStorageUnlimited;
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
@@ -341,7 +341,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests widget handling of multiple required radios.
    */
-  function testFieldFormMultivalueWithRequiredRadio() {
+  public function testFieldFormMultivalueWithRequiredRadio() {
     // Create a multivalue test field.
     $field_storage = $this->fieldStorageUnlimited;
     $field_name = $field_storage['field_name'];
@@ -389,7 +389,7 @@ class FormTest extends FieldTestBase {
     $this->assertNoField("{$field_name}[2][value]", 'No extraneous widget is displayed');
   }
 
-  function testFieldFormJSAddMore() {
+  public function testFieldFormJSAddMore() {
     $field_storage = $this->fieldStorageUnlimited;
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
@@ -448,7 +448,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests widgets handling multiple values.
    */
-  function testFieldFormMultipleWidget() {
+  public function testFieldFormMultipleWidget() {
     // Create a field with fixed cardinality, configure the form to use a
     // "multiple" widget.
     $field_storage = $this->fieldStorageMultiple;
@@ -493,7 +493,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests fields with no 'edit' access.
    */
-  function testFieldFormAccess() {
+  public function testFieldFormAccess() {
     $entity_type = 'entity_test_rev';
     // Create a "regular" field.
     $field_storage = $this->fieldStorageSingle;
@@ -585,7 +585,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests hiding a field in a form.
    */
-  function testHiddenField() {
+  public function testHiddenField() {
     $entity_type = 'entity_test_rev';
     $field_storage = $this->fieldStorageSingle;
     $field_storage['entity_type'] = $entity_type;

@@ -49,7 +49,7 @@ class Query extends QueryBase implements QueryInterface {
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  function __construct(EntityTypeInterface $entity_type, $conjunction, ConfigFactoryInterface $config_factory, KeyValueFactoryInterface $key_value_factory, array $namespaces) {
+  public function __construct(EntityTypeInterface $entity_type, $conjunction, ConfigFactoryInterface $config_factory, KeyValueFactoryInterface $key_value_factory, array $namespaces) {
     parent::__construct($entity_type, $conjunction, $namespaces);
     $this->configFactory = $config_factory;
     $this->keyValueFactory = $key_value_factory;

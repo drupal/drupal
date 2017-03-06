@@ -240,7 +240,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @covers ::mergeAttachments
    */
-  function testMergeAttachmentsLibraryMerging() {
+  public function testMergeAttachmentsLibraryMerging() {
     $a['#attached'] = [
       'library' => [
         'core/drupal',
@@ -391,7 +391,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @dataProvider providerTestMergeAttachmentsFeedMerging
    */
-  function testMergeAttachmentsFeedMerging($a, $b, $expected) {
+  public function testMergeAttachmentsFeedMerging($a, $b, $expected) {
     $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
   }
 
@@ -450,7 +450,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @dataProvider providerTestMergeAttachmentsHtmlHeadMerging
    */
-  function testMergeAttachmentsHtmlHeadMerging($a, $b, $expected) {
+  public function testMergeAttachmentsHtmlHeadMerging($a, $b, $expected) {
     $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
   }
 
@@ -523,7 +523,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @dataProvider providerTestMergeAttachmentsHtmlHeadLinkMerging
    */
-  function testMergeAttachmentsHtmlHeadLinkMerging($a, $b, $expected) {
+  public function testMergeAttachmentsHtmlHeadLinkMerging($a, $b, $expected) {
     $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
   }
 
@@ -589,7 +589,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @dataProvider providerTestMergeAttachmentsHttpHeaderMerging
    */
-  function testMergeAttachmentsHttpHeaderMerging($a, $b, $expected) {
+  public function testMergeAttachmentsHttpHeaderMerging($a, $b, $expected) {
     $this->assertSame($expected, BubbleableMetadata::mergeAttachments($a, $b));
   }
 

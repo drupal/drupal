@@ -28,7 +28,7 @@ class ArgumentStringTest extends HandlerTestBase {
   /**
    * Tests the glossary feature.
    */
-  function testGlossary() {
+  public function testGlossary() {
     // Setup some nodes, one with a, two with b and three with c.
     $counter = 1;
     foreach (['a', 'b', 'c'] as $char) {

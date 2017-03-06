@@ -87,7 +87,7 @@ class TermIndexTest extends TaxonomyTestBase {
   /**
    * Tests that the taxonomy index is maintained properly.
    */
-  function testTaxonomyIndex() {
+  public function testTaxonomyIndex() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create terms in the vocabulary.
     $term_1 = $this->createTerm($this->vocabulary);
@@ -197,7 +197,7 @@ class TermIndexTest extends TaxonomyTestBase {
   /**
    * Tests that there is a link to the parent term on the child term page.
    */
-  function testTaxonomyTermHierarchyBreadcrumbs() {
+  public function testTaxonomyTermHierarchyBreadcrumbs() {
     // Create two taxonomy terms and set term2 as the parent of term1.
     $term1 = $this->createTerm($this->vocabulary);
     $term2 = $this->createTerm($this->vocabulary);

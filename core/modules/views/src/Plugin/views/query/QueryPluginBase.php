@@ -199,7 +199,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    *
    * Query plugins that don't support entities can leave the method empty.
    */
-  function loadEntities(&$results) {}
+  public function loadEntities(&$results) {}
 
   /**
    * Returns a Unix timestamp to database native timestamp expression.

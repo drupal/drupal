@@ -17,7 +17,7 @@ class ResettableStaticTest extends KernelTestBase {
    * Tests that a variable reference returned by drupal_static() gets reset when
    * drupal_static_reset() is called.
    */
-  function testDrupalStatic() {
+  public function testDrupalStatic() {
     $name = __CLASS__ . '_' . __METHOD__;
     $var = &drupal_static($name, 'foo');
     $this->assertEqual($var, 'foo', 'Variable returned by drupal_static() was set to its default.');

@@ -21,7 +21,7 @@ class NewDefaultThemeBlocksTest extends BrowserTestBase {
   /**
    * Check the enabled Bartik blocks are correctly copied over.
    */
-  function testNewDefaultThemeBlocks() {
+  public function testNewDefaultThemeBlocks() {
     $default_theme = $this->config('system.theme')->get('default');
 
     // Add two instances of the user login block.

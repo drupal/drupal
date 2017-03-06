@@ -44,7 +44,7 @@ class MatcherDumperTest extends KernelTestBase {
   /**
    * Confirms that the dumper can be instantiated successfully.
    */
-  function testCreate() {
+  public function testCreate() {
     $connection = Database::getConnection();
     $dumper = new MatcherDumper($connection, $this->state);
 
@@ -55,7 +55,7 @@ class MatcherDumperTest extends KernelTestBase {
   /**
    * Confirms that we can add routes to the dumper.
    */
-  function testAddRoutes() {
+  public function testAddRoutes() {
     $connection = Database::getConnection();
     $dumper = new MatcherDumper($connection, $this->state);
 
@@ -76,7 +76,7 @@ class MatcherDumperTest extends KernelTestBase {
   /**
    * Confirms that we can add routes to the dumper when it already has some.
    */
-  function testAddAdditionalRoutes() {
+  public function testAddAdditionalRoutes() {
     $connection = Database::getConnection();
     $dumper = new MatcherDumper($connection, $this->state);
 

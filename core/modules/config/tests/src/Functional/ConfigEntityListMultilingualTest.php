@@ -34,7 +34,7 @@ class ConfigEntityListMultilingualTest extends BrowserTestBase {
   /**
    * Tests the listing UI with different language scenarios.
    */
-  function testListUI() {
+  public function testListUI() {
     // Log in as an administrative user to access the full menu trail.
     $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer site configuration']));
 

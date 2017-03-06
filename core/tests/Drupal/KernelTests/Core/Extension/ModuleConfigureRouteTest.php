@@ -45,7 +45,7 @@ class ModuleConfigureRouteTest extends KernelTestBase {
    *
    * @dataProvider coreModuleListDataProvider
    */
-  function testModuleConfigureRoutes($module) {
+  public function testModuleConfigureRoutes($module) {
     $module_info = $this->moduleInfo[$module]->info;
     if (isset($module_info['configure'])) {
       $this->container->get('module_installer')->install([$module]);

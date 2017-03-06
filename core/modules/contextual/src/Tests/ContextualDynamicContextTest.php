@@ -64,7 +64,7 @@ class ContextualDynamicContextTest extends WebTestBase {
    * Ensures that contextual link placeholders always exist, even if the user is
    * not allowed to use contextual links.
    */
-  function testDifferentPermissions() {
+  public function testDifferentPermissions() {
     $this->drupalLogin($this->editorUser);
 
     // Create three nodes in the following order:

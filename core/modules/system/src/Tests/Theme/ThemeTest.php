@@ -39,7 +39,7 @@ class ThemeTest extends WebTestBase {
    *   - the render element's #attributes
    *   - any attributes set in the template's preprocessing function
    */
-  function testAttributeMerging() {
+  public function testAttributeMerging() {
     $theme_test_render_element = [
       'elements' => [
         '#attributes' => ['data-foo' => 'bar'],
@@ -54,7 +54,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Test that ThemeManager renders the expected data types.
    */
-  function testThemeDataTypes() {
+  public function testThemeDataTypes() {
     // theme_test_false is an implemented theme hook so \Drupal::theme() service
     // should return a string or an object that implements MarkupInterface,
     // even though the theme function itself can return anything.
@@ -79,7 +79,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Test function theme_get_suggestions() for SA-CORE-2009-003.
    */
-  function testThemeSuggestions() {
+  public function testThemeSuggestions() {
     // Set the front page as something random otherwise the CLI
     // test runner fails.
     $this->config('system.site')->set('page.front', '/nobody-home')->save();
@@ -110,7 +110,7 @@ class ThemeTest extends WebTestBase {
    * separate file, so this test also ensures that that file is correctly loaded
    * when needed.
    */
-  function testPreprocessForSuggestions() {
+  public function testPreprocessForSuggestions() {
     // Test with both an unprimed and primed theme registry.
     drupal_theme_rebuild();
     for ($i = 0; $i < 2; $i++) {
@@ -142,7 +142,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Ensure page-front template suggestion is added when on front page.
    */
-  function testFrontPageThemeSuggestion() {
+  public function testFrontPageThemeSuggestion() {
     // Set the current route to user.login because theme_get_suggestions() will
     // query it to see if we are on the front page.
     $request = Request::create('/user/login');
@@ -161,7 +161,7 @@ class ThemeTest extends WebTestBase {
    *
    * @see test_theme.info.yml
    */
-  function testCSSOverride() {
+  public function testCSSOverride() {
     // Reuse the same page as in testPreprocessForSuggestions(). We're testing
     // what is output to the HTML HEAD based on what is in a theme's .info.yml
     // file, so it doesn't matter what page we get, as long as it is themed with
@@ -186,7 +186,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Ensures a themes template is overridable based on the 'template' filename.
    */
-  function testTemplateOverride() {
+  public function testTemplateOverride() {
     $this->config('system.theme')
       ->set('default', 'test_theme')
       ->save();
@@ -197,7 +197,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Ensures a theme template can override a theme function.
    */
-  function testFunctionOverride() {
+  public function testFunctionOverride() {
     $this->drupalGet('theme-test/function-template-overridden');
     $this->assertText('Success: Template overrides theme function.', 'Theme function overridden by test_theme template.');
   }
@@ -205,7 +205,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Test the listInfo() function.
    */
-  function testListThemes() {
+  public function testListThemes() {
     $theme_handler = $this->container->get('theme_handler');
     $theme_handler->install(['test_subtheme']);
     $themes = $theme_handler->listInfo();
@@ -230,7 +230,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Tests child element rendering for 'render element' theme hooks.
    */
-  function testDrupalRenderChildren() {
+  public function testDrupalRenderChildren() {
     $element = [
       '#theme' => 'theme_test_render_element_children',
       'child' => [
@@ -251,7 +251,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Tests theme can provide classes.
    */
-  function testClassLoading() {
+  public function testClassLoading() {
     new ThemeClass();
   }
 
@@ -270,7 +270,7 @@ class ThemeTest extends WebTestBase {
    * Some modules check the page array in template_preprocess_html(), so we
    * ensure that it has not been rendered prematurely.
    */
-  function testPreprocessHtml() {
+  public function testPreprocessHtml() {
     $this->drupalGet('');
     $attributes = $this->xpath('/html/body[@theme_test_page_variable="Page variable is an array."]');
     $this->assertTrue(count($attributes) == 1, 'In template_preprocess_html(), the page variable is still an array (not rendered yet).');

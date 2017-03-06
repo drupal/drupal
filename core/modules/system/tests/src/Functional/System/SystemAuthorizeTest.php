@@ -36,14 +36,14 @@ class SystemAuthorizeTest extends BrowserTestBase {
    *
    * @see system_authorized_init()
    */
-  function drupalGetAuthorizePHP($page_title = 'system-test-auth') {
+  public function drupalGetAuthorizePHP($page_title = 'system-test-auth') {
     $this->drupalGet('system-test/authorize-init/' . $page_title);
   }
 
   /**
    * Tests the FileTransfer hooks
    */
-  function testFileTransferHooks() {
+  public function testFileTransferHooks() {
     $page_title = $this->randomMachineName(16);
     $this->drupalGetAuthorizePHP($page_title);
     $this->assertTitle(strtr('@title | Drupal', ['@title' => $page_title]), 'authorize.php page title is correct.');

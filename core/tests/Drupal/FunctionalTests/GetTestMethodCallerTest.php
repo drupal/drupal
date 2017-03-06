@@ -14,7 +14,7 @@ class GetTestMethodCallerTest extends BrowserTestBase {
   /**
    * Tests BrowserTestBase::getTestMethodCaller().
    */
-  function testGetTestMethodCaller() {
+  public function testGetTestMethodCaller() {
     $method_caller = $this->getTestMethodCaller();
     $expected = [
       'file' => __FILE__,

@@ -110,7 +110,7 @@ class FilterAdminTest extends WebTestBase {
   /**
    * Tests the format administration functionality.
    */
-  function testFormatAdmin() {
+  public function testFormatAdmin() {
     // Add text format.
     $this->drupalGet('admin/config/content/formats');
     $this->clickLink('Add text format');
@@ -185,7 +185,7 @@ class FilterAdminTest extends WebTestBase {
   /**
    * Tests filter administration functionality.
    */
-  function testFilterAdmin() {
+  public function testFilterAdmin() {
     $first_filter = 'filter_autop';
     $second_filter = 'filter_url';
 
@@ -356,7 +356,7 @@ class FilterAdminTest extends WebTestBase {
   /**
    * Tests the URL filter settings form is properly validated.
    */
-  function testUrlFilterAdmin() {
+  public function testUrlFilterAdmin() {
     // The form does not save with an invalid filter URL length.
     $edit = [
       'filters[filter_url][settings][filter_url_length]' => $this->randomMachineName(4),
@@ -368,7 +368,7 @@ class FilterAdminTest extends WebTestBase {
   /**
    * Tests whether filter tips page is not HTML escaped.
    */
-  function testFilterTipHtmlEscape() {
+  public function testFilterTipHtmlEscape() {
     $this->drupalLogin($this->adminUser);
     global $base_url;
 

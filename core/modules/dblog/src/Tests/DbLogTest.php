@@ -58,7 +58,7 @@ class DbLogTest extends WebTestBase {
    * Database Logging module functionality through both the admin and user
    * interfaces.
    */
-  function testDbLog() {
+  public function testDbLog() {
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
 

@@ -25,7 +25,7 @@ class TextSummaryTest extends KernelTestBase {
    * subsequent sentences are not. This edge case is documented at
    * https://www.drupal.org/node/180425.
    */
-  function testFirstSentenceQuestion() {
+  public function testFirstSentenceQuestion() {
     $text = 'A question? A sentence. Another sentence.';
     $expected = 'A question? A sentence.';
     $this->assertTextSummary($text, $expected, NULL, 30);
@@ -34,7 +34,7 @@ class TextSummaryTest extends KernelTestBase {
   /**
    * Test summary with long example.
    */
-  function testLongSentence() {
+  public function testLongSentence() {
     $text = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' . // 125
             'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ' . // 108
             'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ' . // 103
@@ -49,7 +49,7 @@ class TextSummaryTest extends KernelTestBase {
   /**
    * Test various summary length edge cases.
    */
-  function testLength() {
+  public function testLength() {
     FilterFormat::create([
       'format' => 'autop',
       'filters' => [
@@ -205,7 +205,7 @@ class TextSummaryTest extends KernelTestBase {
   /**
    * Calls text_summary() and asserts that the expected teaser is returned.
    */
-  function assertTextSummary($text, $expected, $format = NULL, $size = NULL) {
+  public function assertTextSummary($text, $expected, $format = NULL, $size = NULL) {
     $summary = text_summary($text, $format, $size);
     $this->assertIdentical($summary, $expected, format_string('<pre style="white-space: pre-wrap">@actual</pre> is identical to <pre style="white-space: pre-wrap">@expected</pre>', [
       '@actual' => $summary,

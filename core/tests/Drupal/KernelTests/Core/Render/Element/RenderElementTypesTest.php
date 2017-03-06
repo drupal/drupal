@@ -51,7 +51,7 @@ class RenderElementTypesTest extends KernelTestBase {
   /**
    * Tests system #type 'container'.
    */
-  function testContainer() {
+  public function testContainer() {
     // Basic container with no attributes.
     $this->assertElements([
       '#type' => 'container',
@@ -79,7 +79,7 @@ class RenderElementTypesTest extends KernelTestBase {
   /**
    * Tests system #type 'html_tag'.
    */
-  function testHtmlTag() {
+  public function testHtmlTag() {
     // Test void element.
     $this->assertElements([
       '#type' => 'html_tag',
@@ -117,7 +117,7 @@ class RenderElementTypesTest extends KernelTestBase {
   /**
    * Tests system #type 'more_link'.
    */
-  function testMoreLink() {
+  public function testMoreLink() {
     $elements = [
       [
         'name' => "#type 'more_link' anchor tag generation without extra classes",
@@ -197,7 +197,7 @@ class RenderElementTypesTest extends KernelTestBase {
   /**
    * Tests system #type 'system_compact_link'.
    */
-  function testSystemCompactLink() {
+  public function testSystemCompactLink() {
     $elements = [
       [
         'name' => "#type 'system_compact_link' when admin compact mode is off",

@@ -22,7 +22,7 @@ class ErrorHandlerTest extends WebTestBase {
   /**
    * Test the error handler.
    */
-  function testErrorHandler() {
+  public function testErrorHandler() {
     $config = $this->config('system.logging');
     $error_notice = [
       '%type' => 'Notice',
@@ -121,7 +121,7 @@ class ErrorHandlerTest extends WebTestBase {
   /**
    * Test the exception handler.
    */
-  function testExceptionHandler() {
+  public function testExceptionHandler() {
     // Ensure the test error log is empty before these tests.
     $this->assertNoErrorsLogged();
 
@@ -183,7 +183,7 @@ class ErrorHandlerTest extends WebTestBase {
   /**
    * Helper function: assert that the error message is found.
    */
-  function assertErrorMessage(array $error) {
+  public function assertErrorMessage(array $error) {
     $message = new FormattableMarkup('%type: @message in %function (line ', $error);
     $this->assertRaw($message, format_string('Found error message: @message.', ['@message' => $message]));
   }
@@ -191,7 +191,7 @@ class ErrorHandlerTest extends WebTestBase {
   /**
    * Helper function: assert that the error message is not found.
    */
-  function assertNoErrorMessage(array $error) {
+  public function assertNoErrorMessage(array $error) {
     $message = new FormattableMarkup('%type: @message in %function (line ', $error);
     $this->assertNoRaw($message, format_string('Did not find error message: @message.', ['@message' => $message]));
   }

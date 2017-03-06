@@ -30,7 +30,7 @@ class DefaultViewsTest extends UITestBase {
   /**
    * Tests default views.
    */
-  function testDefaultViews() {
+  public function testDefaultViews() {
     // Make sure the view starts off as disabled (does not appear on the listing
     // page).
     $edit_href = 'admin/structure/views/view/glossary';
@@ -159,7 +159,7 @@ class DefaultViewsTest extends UITestBase {
   /**
    * Tests that enabling views moves them to the correct table.
    */
-  function testSplitListing() {
+  public function testSplitListing() {
     // Build a re-usable xpath query.
     $xpath = '//div[@id="views-entity-list"]/div[@class = :status]/table//td/text()[contains(., :title)]';
 
@@ -227,7 +227,7 @@ class DefaultViewsTest extends UITestBase {
    *   The page content that results from clicking on the link, or FALSE on
    *   failure. Failure also results in a failed assertion.
    */
-  function clickViewsOperationLink($label, $unique_href_part) {
+  public function clickViewsOperationLink($label, $unique_href_part) {
     $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
     foreach ($links as $link_index => $link) {
       $position = strpos($link['href'], $unique_href_part);

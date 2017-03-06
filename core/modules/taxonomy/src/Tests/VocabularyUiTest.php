@@ -31,7 +31,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
   /**
    * Create, edit and delete a vocabulary via the user interface.
    */
-  function testVocabularyInterface() {
+  public function testVocabularyInterface() {
     // Visit the main taxonomy administration page.
     $this->drupalGet('admin/structure/taxonomy');
 
@@ -84,7 +84,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
   /**
    * Changing weights on the vocabulary overview with two or more vocabularies.
    */
-  function testTaxonomyAdminChangingWeights() {
+  public function testTaxonomyAdminChangingWeights() {
     // Create some vocabularies.
     for ($i = 0; $i < 10; $i++) {
       $this->createVocabulary();
@@ -113,7 +113,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
   /**
    * Test the vocabulary overview with no vocabularies.
    */
-  function testTaxonomyAdminNoVocabularies() {
+  public function testTaxonomyAdminNoVocabularies() {
     // Delete all vocabularies.
     $vocabularies = Vocabulary::loadMultiple();
     foreach ($vocabularies as $key => $vocabulary) {
@@ -129,7 +129,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
   /**
    * Deleting a vocabulary.
    */
-  function testTaxonomyAdminDeletingVocabulary() {
+  public function testTaxonomyAdminDeletingVocabulary() {
     // Create a vocabulary.
     $vid = Unicode::strtolower($this->randomMachineName());
     $edit = [

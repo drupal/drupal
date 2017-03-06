@@ -27,7 +27,7 @@ class RegistryTest extends KernelTestBase {
   /**
    * Tests the behavior of the theme registry class.
    */
-  function testRaceCondition() {
+  public function testRaceCondition() {
     // The theme registry is not marked as persistable in case we don't have a
     // proper request.
     \Drupal::request()->setMethod('GET');

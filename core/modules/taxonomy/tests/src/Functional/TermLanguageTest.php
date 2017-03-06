@@ -39,7 +39,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     }
   }
 
-  function testTermLanguage() {
+  public function testTermLanguage() {
     // Configure the vocabulary to not hide the language selector.
     $edit = [
       'default_language[language_alterable]' => TRUE,
@@ -73,7 +73,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     $this->assertOptionSelected('edit-langcode-0-value', $edit['langcode[0][value]'], 'The term language was correctly selected.');
   }
 
-  function testDefaultTermLanguage() {
+  public function testDefaultTermLanguage() {
     // Configure the vocabulary to not hide the language selector, and make the
     // default language of the terms fixed.
     $edit = [

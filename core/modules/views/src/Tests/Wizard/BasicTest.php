@@ -20,7 +20,7 @@ class BasicTest extends WizardTestBase {
     $this->drupalPlaceBlock('page_title_block');
   }
 
-  function testViewsWizardAndListing() {
+  public function testViewsWizardAndListing() {
     $this->drupalCreateContentType(['type' => 'article']);
     $this->drupalCreateContentType(['type' => 'page']);
 

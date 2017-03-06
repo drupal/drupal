@@ -23,7 +23,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
   /**
    * Tests the root user account form section in the "Configure site" form.
    */
-  function testInstallConfigureForm() {
+  public function testInstallConfigureForm() {
     require_once \Drupal::root() . '/core/includes/install.core.inc';
     require_once \Drupal::root() . '/core/includes/install.inc';
     $install_state = install_state_defaults();
@@ -45,7 +45,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
   /**
    * Tests the user registration form.
    */
-  function testUserRegistrationForm() {
+  public function testUserRegistrationForm() {
     // Install default configuration; required for AccountFormController.
     $this->installConfig(['user']);
 
@@ -69,7 +69,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
   /**
    * Tests the user edit form.
    */
-  function testUserEditForm() {
+  public function testUserEditForm() {
     // Install default configuration; required for AccountFormController.
     $this->installConfig(['user']);
 

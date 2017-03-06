@@ -26,7 +26,7 @@ class UpdateDeleteFileIfStaleTest extends UpdateTestBase {
   /**
    * Tests the deletion of stale files.
    */
-  function testUpdateDeleteFileIfStale() {
+  public function testUpdateDeleteFileIfStale() {
     $file_name = file_unmanaged_save_data($this->randomMachineName());
     $this->assertNotNull($file_name);
 

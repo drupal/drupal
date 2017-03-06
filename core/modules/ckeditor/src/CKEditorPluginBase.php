@@ -33,21 +33,21 @@ abstract class CKEditorPluginBase extends PluginBase implements CKEditorPluginIn
   /**
    * {@inheritdoc}
    */
-  function isInternal() {
+  public function isInternal() {
     return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  function getDependencies(Editor $editor) {
+  public function getDependencies(Editor $editor) {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  function getLibraries(Editor $editor) {
+  public function getLibraries(Editor $editor) {
     return [];
   }
 

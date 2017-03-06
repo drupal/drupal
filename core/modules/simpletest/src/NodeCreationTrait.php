@@ -22,7 +22,7 @@ trait NodeCreationTrait {
    * @return \Drupal\node\NodeInterface
    *   A node entity matching $title.
    */
-  function getNodeByTitle($title, $reset = FALSE) {
+  public function getNodeByTitle($title, $reset = FALSE) {
     if ($reset) {
       \Drupal::entityTypeManager()->getStorage('node')->resetCache();
     }

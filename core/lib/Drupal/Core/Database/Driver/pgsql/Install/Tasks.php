@@ -132,7 +132,7 @@ class Tasks extends InstallTasks {
    *
    * Unserializing does not work on Postgresql 9 when bytea_output is 'hex'.
    */
-  function checkBinaryOutput() {
+  public function checkBinaryOutput() {
     // PostgreSQL < 9 doesn't support bytea_output, so verify we are running
     // at least PostgreSQL 9.
     $database_connection = Database::getConnection();
@@ -236,7 +236,7 @@ class Tasks extends InstallTasks {
   /**
    * Make PostgreSQL Drupal friendly.
    */
-  function initializeDatabase() {
+  public function initializeDatabase() {
     // We create some functions using global names instead of prefixing them
     // like we do with table names. This is so that we don't double up if more
     // than one instance of Drupal is running on a single database. We therefore

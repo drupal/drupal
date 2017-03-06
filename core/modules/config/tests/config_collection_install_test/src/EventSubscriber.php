@@ -42,7 +42,7 @@ class EventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents() {
     $events[ConfigEvents::COLLECTION_INFO][] = ['addCollections'];
     return $events;
   }

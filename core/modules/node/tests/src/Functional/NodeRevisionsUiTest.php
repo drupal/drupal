@@ -36,7 +36,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
   /**
    * Checks that unchecking 'Create new revision' works when editing a node.
    */
-  function testNodeFormSaveWithoutRevision() {
+  public function testNodeFormSaveWithoutRevision() {
     $this->drupalLogin($this->editor);
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
 

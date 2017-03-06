@@ -27,7 +27,7 @@ class SearchExcerptTest extends KernelTestBase {
    * contains either highlighted keywords or the original marked
    * up string if no keywords matched the string.
    */
-  function testSearchExcerpt() {
+  public function testSearchExcerpt() {
     // Make some text with entities and tags.
     $text = 'The <strong>quick</strong> <a href="#">brown</a> fox &amp; jumps <h2>over</h2> the lazy dog';
     $expected = 'The quick brown fox &amp; jumps over the lazy dog';
@@ -74,7 +74,7 @@ class SearchExcerptTest extends KernelTestBase {
    * search_simplify(). This test passes keywords that match simplified words
    * and compares them with strings that contain the original unsimplified word.
    */
-  function testSearchExcerptSimplified() {
+  public function testSearchExcerptSimplified() {
     $start_time = microtime(TRUE);
 
     $lorem1 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae arcu at leo cursus laoreet. Curabitur dui tortor, adipiscing malesuada tempor in, bibendum ac diam. Cras non tellus a libero pellentesque condimentum. What is a Drupalism? Suspendisse ac lacus libero. Ut non est vel nisl faucibus interdum nec sed leo. Pellentesque sem risus, vulputate eu semper eget, auctor in libero.';

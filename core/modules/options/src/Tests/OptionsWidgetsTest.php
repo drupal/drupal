@@ -84,7 +84,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   /**
    * Tests the 'options_buttons' widget (single select).
    */
-  function testRadioButtons() {
+  public function testRadioButtons() {
     // Create an instance of the 'single value' field.
     $field = FieldConfig::create([
       'field_storage' => $this->card1,
@@ -141,7 +141,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   /**
    * Tests the 'options_buttons' widget (multiple select).
    */
-  function testCheckBoxes() {
+  public function testCheckBoxes() {
     // Create an instance of the 'multiple values' field.
     $field = FieldConfig::create([
       'field_storage' => $this->card2,
@@ -230,7 +230,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   /**
    * Tests the 'options_select' widget (single select).
    */
-  function testSelectListSingle() {
+  public function testSelectListSingle() {
     // Create an instance of the 'single value' field.
     $field = FieldConfig::create([
       'field_storage' => $this->card1,
@@ -330,7 +330,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   /**
    * Tests the 'options_select' widget (multiple select).
    */
-  function testSelectListMultiple() {
+  public function testSelectListMultiple() {
     // Create an instance of the 'multiple values' field.
     $field = FieldConfig::create([
       'field_storage' => $this->card2,
@@ -451,7 +451,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   /**
    * Tests the 'options_select' and 'options_button' widget for empty value.
    */
-  function testEmptyValue() {
+  public function testEmptyValue() {
     // Create an instance of the 'single value' field.
     $field = FieldConfig::create([
       'field_storage' => $this->card1,

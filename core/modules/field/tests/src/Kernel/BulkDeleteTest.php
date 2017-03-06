@@ -58,7 +58,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
    * @param $actual_hooks
    *   The array of actual hook invocations recorded by field_test_memorize().
    */
-  function checkHooksInvocations($expected_hooks, $actual_hooks) {
+  public function checkHooksInvocations($expected_hooks, $actual_hooks) {
     foreach ($expected_hooks as $hook => $invocations) {
       $actual_invocations = $actual_hooks[$hook];
 
@@ -158,7 +158,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
    * This tests how EntityFieldQuery interacts with field deletion and could be
    * moved to FieldCrudTestCase, but depends on this class's setUp().
    */
-  function testDeleteField() {
+  public function testDeleteField() {
     $bundle = reset($this->bundles);
     $field_storage = reset($this->fieldStorages);
     $field_name = $field_storage->getName();
@@ -307,7 +307,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
    * Verify that field data items and fields are purged when a field storage is
    * deleted.
    */
-  function testPurgeField() {
+  public function testPurgeField() {
     // Start recording hook invocations.
     field_test_memorize();
 
@@ -368,7 +368,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
    * Verify that field storages are preserved and purged correctly as multiple
    * fields are deleted and purged.
    */
-  function testPurgeFieldStorage() {
+  public function testPurgeFieldStorage() {
     // Start recording hook invocations.
     field_test_memorize();
 

@@ -60,7 +60,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   /**
    * Tests for language switching by URL path.
    */
-  function testUILanguageNegotiation() {
+  public function testUILanguageNegotiation() {
     // A few languages to switch to.
     // This one is unknown, should get the default lang version.
     $langcode_unknown = 'blah-blah';
@@ -364,7 +364,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   /**
    * Test URL language detection when the requested URL has no language.
    */
-  function testUrlLanguageFallback() {
+  public function testUrlLanguageFallback() {
     // Add the Italian language.
     $langcode_browser_fallback = 'it';
     ConfigurableLanguage::createFromLangcode($langcode_browser_fallback)->save();
@@ -416,7 +416,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   /**
    * Tests URL handling when separate domains are used for multiple languages.
    */
-  function testLanguageDomain() {
+  public function testLanguageDomain() {
     global $base_url;
 
     // Get the current host URI we're running on.

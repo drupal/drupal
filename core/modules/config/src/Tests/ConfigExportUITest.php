@@ -39,7 +39,7 @@ class ConfigExportUITest extends WebTestBase {
   /**
    * Tests export of configuration.
    */
-  function testExport() {
+  public function testExport() {
     // Verify the export page with export submit button is available.
     $this->drupalGet('admin/config/development/configuration/full/export');
     $this->assertFieldById('edit-submit', t('Export'));

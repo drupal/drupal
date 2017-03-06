@@ -105,7 +105,7 @@ class Permissions extends PrerenderList {
     }
   }
 
-  function render_item($count, $item) {
+  public function render_item($count, $item) {
     return $item['permission'];
   }
 

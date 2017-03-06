@@ -132,7 +132,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
    *   (optional) The ID of the test. Tests with the same id are reported
    *   together.
    */
-  function __construct($test_id = NULL) {
+  public function __construct($test_id = NULL) {
     parent::__construct($test_id);
     $this->zlibInstalled = function_exists('gzopen');
   }

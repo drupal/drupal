@@ -54,7 +54,7 @@ abstract class RowPluginBase extends PluginBase {
    *
    * @return bool
    */
-  function usesFields() {
+  public function usesFields() {
     return $this->usesFields;
   }
 

@@ -31,7 +31,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
     'views_test_data_age' => 'age',
   ];
 
-  function viewsData() {
+  public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['age']['filter']['allow empty'] = TRUE;
     $data['views_test_data']['id']['filter']['allow empty'] = FALSE;

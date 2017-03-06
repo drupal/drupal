@@ -71,7 +71,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   /**
    * {@inheritdoc}
    */
-  function setWithExpire($key, $value, $expire) {
+  public function setWithExpire($key, $value, $expire) {
     $this->connection->merge($this->table)
       ->keys([
         'name' => $key,
@@ -87,7 +87,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   /**
    * {@inheritdoc}
    */
-  function setWithExpireIfNotExists($key, $value, $expire) {
+  public function setWithExpireIfNotExists($key, $value, $expire) {
     $result = $this->connection->merge($this->table)
       ->insertFields([
         'collection' => $this->collection,
@@ -104,7 +104,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   /**
    * {@inheritdoc}
    */
-  function setMultipleWithExpire(array $data, $expire) {
+  public function setMultipleWithExpire(array $data, $expire) {
     foreach ($data as $key => $value) {
       $this->setWithExpire($key, $value, $expire);
     }

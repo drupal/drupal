@@ -22,7 +22,7 @@ class ProgrammaticTest extends WebTestBase {
   /**
    * Test the programmatic form submission workflow.
    */
-  function testSubmissionWorkflow() {
+  public function testSubmissionWorkflow() {
     // Backup the current batch status and reset it to avoid conflicts while
     // processing the dummy form submit handler.
     $current_batch = $batch =& batch_get();

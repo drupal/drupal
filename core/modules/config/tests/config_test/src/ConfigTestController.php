@@ -33,7 +33,7 @@ class ConfigTestController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response to the config_test listing page.
    */
-  function enable(ConfigTest $config_test) {
+  public function enable(ConfigTest $config_test) {
     $config_test->enable()->save();
     return new RedirectResponse($config_test->url('collection', ['absolute' => TRUE]));
   }
@@ -47,7 +47,7 @@ class ConfigTestController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response to the config_test listing page.
    */
-  function disable(ConfigTest $config_test) {
+  public function disable(ConfigTest $config_test) {
     $config_test->disable()->save();
     return new RedirectResponse($config_test->url('collection', ['absolute' => TRUE]));
   }

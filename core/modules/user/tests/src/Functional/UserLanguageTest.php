@@ -22,7 +22,7 @@ class UserLanguageTest extends BrowserTestBase {
   /**
    * Test if user can change their default language.
    */
-  function testUserLanguageConfiguration() {
+  public function testUserLanguageConfiguration() {
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
     // User to change their default language.

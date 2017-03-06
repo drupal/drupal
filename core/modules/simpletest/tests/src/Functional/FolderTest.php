@@ -19,7 +19,7 @@ class FolderTest extends BrowserTestBase {
    */
   public static $modules = ['image'];
 
-  function testFolderSetup() {
+  public function testFolderSetup() {
     $directory = file_default_scheme() . '://styles';
     $this->assertTrue(file_prepare_directory($directory, FALSE), 'Directory created.');
   }

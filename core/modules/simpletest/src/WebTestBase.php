@@ -203,7 +203,7 @@ abstract class WebTestBase extends TestBase {
   /**
    * Constructor for \Drupal\simpletest\WebTestBase.
    */
-  function __construct($test_id = NULL) {
+  public function __construct($test_id = NULL) {
     parent::__construct($test_id);
     $this->skipClasses[__CLASS__] = TRUE;
     $this->classLoader = require DRUPAL_ROOT . '/autoload.php';

@@ -18,7 +18,7 @@ class OverrideDisplaysTest extends UITestBase {
   /**
    * Tests that displays can be overridden via the UI.
    */
-  function testOverrideDisplays() {
+  public function testOverrideDisplays() {
     // Create a basic view that shows all content, with a page and a block
     // display.
     $view['label'] = $this->randomMachineName(16);
@@ -77,7 +77,7 @@ class OverrideDisplaysTest extends UITestBase {
   /**
    * Tests that the wizard correctly sets up default and overridden displays.
    */
-  function testWizardMixedDefaultOverriddenDisplays() {
+  public function testWizardMixedDefaultOverriddenDisplays() {
     // Create a basic view with a page, block, and feed. Give the page and feed
     // identical titles, but give the block a different one, so we expect the
     // page and feed to inherit their titles from the default display, but the
@@ -172,7 +172,7 @@ class OverrideDisplaysTest extends UITestBase {
   /**
    * Tests that the revert to all displays select-option works as expected.
    */
-  function testRevertAllDisplays() {
+  public function testRevertAllDisplays() {
     // Create a basic view with a page, block.
     // Because there is both a title on page and block we expect the title on
     // the block be overridden.

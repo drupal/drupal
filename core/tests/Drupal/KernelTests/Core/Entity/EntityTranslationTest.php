@@ -309,7 +309,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests the Entity Translation API behavior.
    */
-  function testEntityTranslationAPI() {
+  public function testEntityTranslationAPI() {
     // Test all entity variations with data table support.
     foreach (entity_test_entity_types(ENTITY_TEST_TYPES_MULTILINGUAL) as $entity_type) {
       $this->doTestEntityTranslationAPI($entity_type);
@@ -586,7 +586,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests language fallback applied to field and entity translations.
    */
-  function testLanguageFallback() {
+  public function testLanguageFallback() {
     // Test all entity variations with data table support.
     foreach (entity_test_entity_types(ENTITY_TEST_TYPES_MULTILINGUAL) as $entity_type) {
       $this->doTestLanguageFallback($entity_type);
@@ -682,7 +682,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Check that field translatability is handled properly.
    */
-  function testFieldDefinitions() {
+  public function testFieldDefinitions() {
     // Check that field translatability can be altered to be enabled or disabled
     // in field definitions.
     $entity_type = 'entity_test_mulrev';
@@ -789,7 +789,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests how entity adapters work with translations.
    */
-  function testEntityAdapter() {
+  public function testEntityAdapter() {
     $entity_type = 'entity_test';
     $default_langcode = 'en';
     $values[$default_langcode] = ['name' => $this->randomString()];

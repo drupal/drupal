@@ -23,7 +23,7 @@ class FieldCustomTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  function viewsData() {
+  public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['name']['field']['id'] = 'custom';
     return $data;

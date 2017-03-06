@@ -74,7 +74,7 @@ abstract class CacheTestBase extends WebTestBase {
    * @param $bin
    *   The bin the cache item was stored in.
    */
-  function assertCacheRemoved($message, $cid = NULL, $bin = NULL) {
+  public function assertCacheRemoved($message, $cid = NULL, $bin = NULL) {
     if ($bin == NULL) {
       $bin = $this->defaultBin;
     }

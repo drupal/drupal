@@ -56,7 +56,7 @@ class SafeMarkupTest extends UnitTestCase {
    * @param string $message
    *   The message to provide as output for the test.
    */
-  function testCheckPlain($text, $expected, $message) {
+  public function testCheckPlain($text, $expected, $message) {
     $result = SafeMarkup::checkPlain($text);
     $this->assertTrue($result instanceof HtmlEscapedText);
     $this->assertEquals($expected, $result, $message);
@@ -77,7 +77,7 @@ class SafeMarkupTest extends UnitTestCase {
    * @param string $message
    *   The message to provide as output for the test.
    */
-  function testHtmlEscapedText($text, $expected, $message) {
+  public function testHtmlEscapedText($text, $expected, $message) {
     $result = new HtmlEscapedText($text);
     $this->assertEquals($expected, $result, $message);
   }
@@ -87,7 +87,7 @@ class SafeMarkupTest extends UnitTestCase {
    *
    * @see testCheckPlain()
    */
-  function providerCheckPlain() {
+  public function providerCheckPlain() {
     // Checks that invalid multi-byte sequences are escaped.
     $tests[] = ["Foo\xC0barbaz", 'Foo�barbaz', 'Escapes invalid sequence "Foo\xC0barbaz"'];
     $tests[] = ["\xc2\"", '�&quot;', 'Escapes invalid sequence "\xc2\""'];
@@ -136,7 +136,7 @@ class SafeMarkupTest extends UnitTestCase {
    *
    * @see testFormat()
    */
-  function providerFormat() {
+  public function providerFormat() {
     $tests[] = ['Simple text', [], 'Simple text', 'SafeMarkup::format leaves simple text alone.', TRUE];
     $tests[] = ['Escaped text: @value', ['@value' => '<script>'], 'Escaped text: &lt;script&gt;', 'SafeMarkup::format replaces and escapes string.', TRUE];
     $tests[] = ['Escaped text: @value', ['@value' => SafeMarkupTestMarkup::create('<span>Safe HTML</span>')], 'Escaped text: <span>Safe HTML</span>', 'SafeMarkup::format does not escape an already safe string.', TRUE];

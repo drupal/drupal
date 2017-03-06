@@ -155,7 +155,7 @@ interface StatementInterface extends \Traversable {
    * @return
    *   An array of results.
    */
-  function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL);
+  public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL);
 
   /**
    * Returns an entire single column of a result set as an indexed array.

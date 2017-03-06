@@ -29,7 +29,7 @@ class ForumIndexTest extends BrowserTestBase {
   /**
    * Tests the forum index for published and unpublished nodes.
    */
-  function testForumIndexStatus() {
+  public function testForumIndexStatus() {
     // The forum ID to use.
     $tid = 1;
 

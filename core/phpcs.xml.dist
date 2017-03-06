@@ -78,6 +78,7 @@
   <rule ref="Drupal.InfoFiles.ClassFiles"/>
   <rule ref="Drupal.InfoFiles.DuplicateEntry"/>
   <rule ref="Drupal.InfoFiles.Required"/>
+  <rule ref="Drupal.Scope.MethodScope"/>
   <rule ref="Drupal.Semantics.EmptyInstall"/>
   <rule ref="Drupal.Semantics.FunctionT">
     <exclude name="Drupal.Semantics.FunctionT.BackslashSingleQuote"/>

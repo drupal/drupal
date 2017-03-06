@@ -40,7 +40,7 @@ class ColorConfigSchemaTest extends BrowserTestBase {
   /**
    * Tests whether the color config schema is valid.
    */
-  function testValidColorConfigSchema() {
+  public function testValidColorConfigSchema() {
     $settings_path = 'admin/appearance/settings/bartik';
     $edit['scheme'] = '';
     $edit['palette[bg]'] = '#123456';

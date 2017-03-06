@@ -29,7 +29,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests when there is no available release data for a contrib module.
    */
-  function testNoReleasesAvailable() {
+  public function testNoReleasesAvailable() {
     $system_info = [
       '#all' => [
         'version' => '8.0.0',
@@ -60,7 +60,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests the basic functionality of a contrib module on the status report.
    */
-  function testUpdateContribBasic() {
+  public function testUpdateContribBasic() {
     $project_link = \Drupal::l(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'));
     $system_info = [
       '#all' => [
@@ -122,7 +122,7 @@ class UpdateContribTest extends UpdateTestBase {
    * if you sort alphabetically by module name (which is the order we see things
    * inside system_rebuild_module_data() for example).
    */
-  function testUpdateContribOrder() {
+  public function testUpdateContribOrder() {
     // We want core to be version 8.0.0.
     $system_info = [
       '#all' => [
@@ -184,7 +184,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests that subthemes are notified about security updates for base themes.
    */
-  function testUpdateBaseThemeSecurityUpdate() {
+  public function testUpdateBaseThemeSecurityUpdate() {
     // @todo https://www.drupal.org/node/2338175 base themes have to be
     //  installed.
     // Only install the subtheme, not the base theme.
@@ -226,7 +226,7 @@ class UpdateContribTest extends UpdateTestBase {
    * @todo https://www.drupal.org/node/2338175 extensions can not be hidden and
    *   base themes have to be installed.
    */
-  function testUpdateShowDisabledThemes() {
+  public function testUpdateShowDisabledThemes() {
     $update_settings = $this->config('update.settings');
     // Make sure all the update_test_* themes are disabled.
     $extension_config = $this->config('core.extension');
@@ -291,7 +291,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests updates with a hidden base theme.
    */
-  function testUpdateHiddenBaseTheme() {
+  public function testUpdateHiddenBaseTheme() {
     module_load_include('compare.inc', 'update');
 
     // Install the subtheme.
@@ -322,7 +322,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Makes sure that if we fetch from a broken URL, sane things happen.
    */
-  function testUpdateBrokenFetchURL() {
+  public function testUpdateBrokenFetchURL() {
     $system_info = [
       '#all' => [
         'version' => '8.0.0',
@@ -386,7 +386,7 @@ class UpdateContribTest extends UpdateTestBase {
    * hook_update_status_alter() to try to mark this as missing a security
    * update, then assert if we see the appropriate warnings on the right pages.
    */
-  function testHookUpdateStatusAlter() {
+  public function testHookUpdateStatusAlter() {
     $update_test_config = $this->config('update_test.settings');
     $update_admin_user = $this->drupalCreateUser(['administer site configuration', 'administer software updates']);
     $this->drupalLogin($update_admin_user);

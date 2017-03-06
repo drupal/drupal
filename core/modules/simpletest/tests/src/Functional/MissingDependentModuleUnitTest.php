@@ -15,7 +15,7 @@ class MissingDependentModuleUnitTest extends BrowserTestBase {
   /**
    * Ensure that this test will not be loaded despite its dependency.
    */
-  function testFail() {
+  public function testFail() {
     $this->fail('Running test with missing required module.');
   }
 

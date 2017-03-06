@@ -15,7 +15,7 @@ class AddFeedTest extends WebTestBase {
   /**
    * Tests attaching feeds with paths, URLs, and titles.
    */
-  function testBasicFeedAddNoTitle() {
+  public function testBasicFeedAddNoTitle() {
     $path = $this->randomMachineName(12);
     $external_url = 'http://' . $this->randomMachineName(12) . '/' . $this->randomMachineName(12);
     $fully_qualified_local_url = Url::fromUri('base:' . $this->randomMachineName(12), ['absolute' => TRUE])->toString();
@@ -70,7 +70,7 @@ class AddFeedTest extends WebTestBase {
   /**
    * Creates a pattern representing the RSS feed in the page.
    */
-  function urlToRSSLinkPattern($url, $title = '') {
+  public function urlToRSSLinkPattern($url, $title = '') {
     // Escape any regular expression characters in the URL ('?' is the worst).
     $url = preg_replace('/([+?.*])/', '[$0]', $url);
     $generated_pattern = '%<link +href="' . $url . '" +rel="alternate" +title="' . $title . '" +type="application/rss.xml" */>%';
@@ -82,7 +82,7 @@ class AddFeedTest extends WebTestBase {
    *
    * @see https://www.drupal.org/node/1211668
    */
-  function testFeedIconEscaping() {
+  public function testFeedIconEscaping() {
     $variables = [
       '#theme' => 'feed_icon',
       '#url' => 'node',

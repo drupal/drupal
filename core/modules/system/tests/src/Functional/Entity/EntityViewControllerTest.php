@@ -41,7 +41,7 @@ class EntityViewControllerTest extends BrowserTestBase {
   /**
    * Tests EntityViewController.
    */
-  function testEntityViewController() {
+  public function testEntityViewController() {
     $get_label_markup = function($label) {
       return '<h1 class="page-title">
             <div class="field field--name-name field--type-string field--label-hidden field__item">' . $label . '</div>

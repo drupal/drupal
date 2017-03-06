@@ -38,7 +38,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
   /**
    * Tests that hook_search_preprocess() returns the correct langcode.
    */
-  function testPreprocessLangcode() {
+  public function testPreprocessLangcode() {
     // Create a node.
     $this->node = $this->drupalCreateNode(['body' => [[]], 'langcode' => 'en']);
 
@@ -63,7 +63,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
   /**
    * Tests stemming for hook_search_preprocess().
    */
-  function testPreprocessStemming() {
+  public function testPreprocessStemming() {
     // Create a node.
     $this->node = $this->drupalCreateNode([
       'title' => 'we are testing',

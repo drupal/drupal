@@ -32,7 +32,7 @@ class ForumNodeAccessTest extends BrowserTestBase {
    * Adds both active forum topics and new forum topics blocks to the sidebar.
    * Tests to ensure private node/public node access is respected on blocks.
    */
-  function testForumNodeAccess() {
+  public function testForumNodeAccess() {
     // Create some users.
     $access_user = $this->drupalCreateUser(['node test view']);
     $no_access_user = $this->drupalCreateUser();

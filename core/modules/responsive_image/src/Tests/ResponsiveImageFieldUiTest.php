@@ -42,7 +42,7 @@ class ResponsiveImageFieldUiTest extends WebTestBase {
   /**
    * Tests formatter settings.
    */
-  function testResponsiveImageFormatterUI() {
+  public function testResponsiveImageFormatterUI() {
     $manage_fields = 'admin/structure/types/manage/' . $this->type;
     $manage_display = $manage_fields . '/display';
 

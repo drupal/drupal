@@ -20,7 +20,7 @@ use Drupal\views\Plugin\views\HandlerBase;
  */
 class ManyToOneHelper {
 
-  function __construct($handler) {
+  public function __construct($handler) {
     $this->handler = $handler;
   }
 

@@ -39,7 +39,7 @@ class ProjectInfo {
    *   (optional) Array of additional elements to be collected from the .info.yml
    *   file. Defaults to array().
    */
-  function processInfoList(array &$projects, array $list, $project_type, $status, array $additional_whitelist = []) {
+  public function processInfoList(array &$projects, array $list, $project_type, $status, array $additional_whitelist = []) {
     foreach ($list as $file) {
       // Just projects with a matching status should be listed.
       if ($file->status != $status) {
@@ -148,7 +148,7 @@ class ProjectInfo {
    * @return string
    *   The canonical project short name.
    */
-  function getProjectName(Extension $file) {
+  public function getProjectName(Extension $file) {
     $project_name = '';
     if (isset($file->info['project'])) {
       $project_name = $file->info['project'];
@@ -174,7 +174,7 @@ class ProjectInfo {
    *
    * @see \Drupal\Core\Utility\ProjectInfo::processInfoList()
    */
-  function filterProjectInfo($info, $additional_whitelist = []) {
+  public function filterProjectInfo($info, $additional_whitelist = []) {
     $whitelist = [
       '_info_file_ctime',
       'datestamp',

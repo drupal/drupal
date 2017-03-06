@@ -53,7 +53,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests the basic translation UI.
    */
-  function testTranslationUI() {
+  public function testTranslationUI() {
     $this->doTestBasicTranslation();
     $this->doTestTranslationOverview();
     $this->doTestOutdatedStatus();

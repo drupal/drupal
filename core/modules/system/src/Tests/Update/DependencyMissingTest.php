@@ -25,7 +25,7 @@ class DependencyMissingTest extends WebTestBase {
     require_once \Drupal::root() . '/core/includes/update.inc';
   }
 
-  function testMissingUpdate() {
+  public function testMissingUpdate() {
     $starting_updates = [
       'update_test_2' => 8001,
     ];

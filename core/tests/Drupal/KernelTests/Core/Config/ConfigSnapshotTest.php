@@ -33,7 +33,7 @@ class ConfigSnapshotTest extends KernelTestBase {
   /**
    * Tests config snapshot creation and updating.
    */
-  function testSnapshot() {
+  public function testSnapshot() {
     $active = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
     $snapshot = $this->container->get('config.storage.snapshot');

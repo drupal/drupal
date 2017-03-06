@@ -18,7 +18,7 @@ class SearchQueryAlterTest extends SearchTestBase {
   /**
    * Tests that the query alter works.
    */
-  function testQueryAlter() {
+  public function testQueryAlter() {
     // Log in with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(['create page content', 'search content']));
 

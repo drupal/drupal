@@ -26,7 +26,7 @@ class FieldCounterTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
-  function testSimple() {
+  public function testSimple() {
     $view = Views::getView('test_view');
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('fields', [
@@ -87,7 +87,7 @@ class FieldCounterTest extends ViewsKernelTestBase {
   /**
    * @todo: Write tests for pager.
    */
-  function testPager() {
+  public function testPager() {
   }
 
 }
