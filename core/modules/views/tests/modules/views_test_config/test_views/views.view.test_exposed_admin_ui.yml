@@ -31,7 +31,7 @@ display:
           field: type
           id: type
           table: node_field_data
-          plugin_id: node_type
+          plugin_id: bundle
           entity_type: node
           entity_field: type
         body_value:
@@ -76,6 +76,72 @@ display:
           plugin_id: string
           entity_type: node
           entity_field: body
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: created_op
+            label: 'Authored on'
+            description: null
+            use_operator: false
+            operator: created_op
+            identifier: created
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: true
+          group_info:
+            label: 'Authored on'
+            description: ''
+            identifier: created
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1:
+                title: Between
+                operator: between
+                value:
+                  type: date
+                  value: ''
+                  min: '2015-01-01'
+                  max: '2016-01-01'
+              2:
+                title: 'Not Between'
+                operator: 'not between'
+                value:
+                  type: date
+                  value: ''
+                  min: '2015-01-01'
+                  max: '2016-01-01'
+              3:
+                title: Equal
+                operator: '='
+                value:
+                  type: date
+                  value: '2016-01-01'
+                  min: ''
+                  max: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
       pager:
         type: full
       sorts:

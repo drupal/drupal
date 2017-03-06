@@ -265,4 +265,56 @@ class ExposedFormUITest extends UITestBase {
     return TRUE;
   }
 
+  /**
+  * Tests the configuration of grouped exposed filters.
+  */
+  public function testExposedGroupedFilter() {
+    // Click the Expose filter button.
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type', [], t('Expose filter'));
+    // Select 'Grouped filters' radio button.
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type', [], t('Grouped filters'));
+    // Add 3 groupings.
+    $edit = [
+      'options[group_button][radios][radios]' => 1,
+      'options[group_info][group_items][1][title]' => '1st',
+      'options[group_info][group_items][1][value][all]' => 'all',
+      'options[group_info][group_items][2][title]' => '2nd',
+      'options[group_info][group_items][2][value][article]' => 'article',
+      'options[group_info][group_items][3][title]' => '3rd',
+      'options[group_info][group_items][3][value][page]' => 'page',
+    ];
+    // Apply the filter settings.
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    // Check that the view is saved without errors.
+    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->assertResponse(200);
+
+    // Click the Expose filter button.
+    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_exposed_admin_ui/default/filter', ['name[node_field_data.status]' => 1], t('Add and configure filter criteria'));
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/status', [], t('Expose filter'));
+    // Select 'Grouped filters' radio button.
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/status', [], t('Grouped filters'));
+    // Add 3 groupings.
+    $edit = [
+      'options[group_button][radios][radios]' => 1,
+      'options[group_info][group_items][1][title]' => 'Any',
+      'options[group_info][group_items][1][value]' => 'All',
+      'options[group_info][group_items][2][title]' => 'Published',
+      'options[group_info][group_items][2][value]' => 1,
+      'options[group_info][group_items][3][title]' => 'Unpublished',
+      'options[group_info][group_items][3][value]' => 0,
+    ];
+    // Apply the filter settings.
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    // Check that the view is saved without errors.
+    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->assertResponse(200);
+
+    $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/status');
+    // Assert the same settings defined before still are there.
+    $this->assertFieldChecked('edit-options-group-info-group-items-1-value-all');
+    $this->assertFieldChecked('edit-options-group-info-group-items-2-value-1');
+    $this->assertFieldChecked('edit-options-group-info-group-items-3-value-0');
+  }
+
 }

@@ -194,3 +194,10 @@ function views_post_update_boolean_filter_values() {
     }
   }
 }
+
+/**
+ * Rebuild caches to ensure schema changes are read in.
+ */
+function views_post_update_grouped_filters() {
+  // Empty update to cause a cache rebuild so that the schema changes are read.
+}

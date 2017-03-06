@@ -122,7 +122,15 @@ class Date extends NumericFilter {
     }
 
     // Store this because it will get overwritten.
-    $type = $this->value['type'];
+    $type = NULL;
+    if ($this->isAGroup()) {
+      if (is_array($this->group_info)) {
+        $type = $this->group_info['type'];
+      }
+    }
+    else {
+      $type = $this->value['type'];
+    }
     $rc = parent::acceptExposedInput($input);
 
     // Don't filter if value(s) are empty.
@@ -145,8 +153,11 @@ class Date extends NumericFilter {
       }
     }
 
-    // restore what got overwritten by the parent.
-    $this->value['type'] = $type;
+    // Restore what got overwritten by the parent.
+    if (!is_null($type)) {
+      $this->value['type'] = $type;
+    }
+
     return $rc;
   }
 
