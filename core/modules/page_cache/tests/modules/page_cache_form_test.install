@@ -5,6 +5,9 @@
  * Install hooks for page_cache_form_test.
  */
 
+/**
+ * Implements hook_install().
+ */
 function page_cache_form_test_install() {
   // Set an explicit module weight, to ensure that the form alter hook is
   // always called after page_cache_form_alter().
