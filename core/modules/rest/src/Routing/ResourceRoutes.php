@@ -59,13 +59,14 @@ class ResourceRoutes extends RouteSubscriberBase {
    * @return array
    */
   protected function alterRoutes(RouteCollection $collection) {
-    // Iterate over all enabled REST resource configs.
+    // Iterate over all enabled REST resource config entities.
     /** @var \Drupal\rest\RestResourceConfigInterface[] $resource_configs */
     $resource_configs = $this->resourceConfigStorage->loadMultiple();
-    // Iterate over all enabled resource plugins.
     foreach ($resource_configs as $resource_config) {
-      $resource_routes = $this->getRoutesForResourceConfig($resource_config);
-      $collection->addCollection($resource_routes);
+      if ($resource_config->status()) {
+        $resource_routes = $this->getRoutesForResourceConfig($resource_config);
+        $collection->addCollection($resource_routes);
+      }
     }
   }
 

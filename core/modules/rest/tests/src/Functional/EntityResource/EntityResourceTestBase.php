@@ -131,22 +131,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   public static $modules = ['rest_test', 'text'];
 
   /**
-   * {@inheritdoc}
+   * Provides an entity resource.
    */
   protected function provisionEntityResource() {
     // It's possible to not have any authentication providers enabled, when
     // testing public (anonymous) usage of a REST resource.
     $auth = isset(static::$auth) ? [static::$auth] : [];
-    $this->provisionResource('entity.' . static::$entityTypeId, [static::$format], $auth);
-  }
-
-  /**
-   * Deprovisions the tested entity resource.
-   */
-  protected function deprovisionEntityResource() {
-    $this->resourceConfigStorage->load('entity.' . static::$entityTypeId)
-      ->delete();
-    $this->refreshTestStateAfterRestConfigChange();
+    $this->provisionResource([static::$format], $auth);
   }
 
   /**
@@ -154,6 +145,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    */
   public function setUp() {
     parent::setUp();
+
+    // Calculate REST Resource config entity ID.
+    static::$resourceConfigId = 'entity.' . static::$entityTypeId;
 
     $this->serializer = $this->container->get('serializer');
     $this->entityStorage = $this->container->get('entity_type.manager')
@@ -498,17 +492,29 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assertResourceResponse(200, FALSE, $response);
 
 
-    $this->deprovisionEntityResource();
+    $this->resourceConfigStorage->load(static::$resourceConfigId)->disable()->save();
+    $this->refreshTestStateAfterRestConfigChange();
 
 
-    // DX: upon deprovisioning, immediate 404 if no route, 406 otherwise.
+    // DX: upon disabling a resource, it's immediately no longer available.
+    $this->assertResourceNotAvailable($url, $request_options);
+
+
+    $this->resourceConfigStorage->load(static::$resourceConfigId)->enable()->save();
+    $this->refreshTestStateAfterRestConfigChange();
+
+
+    // DX: upon re-enabling a resource, immediate 200.
     $response = $this->request('GET', $url, $request_options);
-    if (!$has_canonical_url) {
-      $this->assertSame(404, $response->getStatusCode());
-    }
-    else {
-      $this->assert406Response($response);
-    }
+    $this->assertResourceResponse(200, FALSE, $response);
+
+
+    $this->resourceConfigStorage->load(static::$resourceConfigId)->delete();
+    $this->refreshTestStateAfterRestConfigChange();
+
+
+    // DX: upon deleting a resource, it's immediately no longer available.
+    $this->assertResourceNotAvailable($url, $request_options);
 
 
     $this->provisionEntityResource();
@@ -1175,6 +1181,25 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     else {
       // This is the desired response.
       $this->assertSame(406, $response->getStatusCode());
+    }
+  }
+
+  /**
+   * Asserts that a resource is unavailable: 404, 406 if it has canonical route.
+   *
+   * @param \Drupal\Core\Url $url
+   *   URL to request.
+   * @param array $request_options
+   *   Request options to apply.
+   */
+  protected function assertResourceNotAvailable(Url $url, array $request_options) {
+    $has_canonical_url = $this->entity->hasLinkTemplate('canonical');
+    $response = $this->request('GET', $url, $request_options);
+    if (!$has_canonical_url) {
+      $this->assertSame(404, $response->getStatusCode());
+    }
+    else {
+      $this->assert406Response($response);
     }
   }
 
