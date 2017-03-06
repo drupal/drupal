@@ -115,8 +115,8 @@ class DbLogController extends ControllerBase {
    * @return array
    *   A render array as expected by drupal_render().
    *
-   * @see dblog_clear_log_form()
-   * @see dblog_event()
+   * @see Drupal\dblog\Form\DblogClearLogConfirmForm
+   * @see Drupal\dblog\Controller\DbLogController::eventDetails()
    */
   public function overview() {
 
@@ -368,8 +368,6 @@ class DbLogController extends ControllerBase {
    *
    * Messages are not truncated on this page because events detailed herein do
    * not have links to a detailed view.
-   *
-   * Use one of the above *Report() methods.
    *
    * @param string $type
    *   Type of database log events to display (e.g., 'search').
