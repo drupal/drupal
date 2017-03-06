@@ -293,6 +293,42 @@ class FilterStringTest extends ViewsKernelTestBase {
       ],
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
+    $view->destroy();
+
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+
+    // Change the filtering to a sting containing only illegal characters.
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'description' => [
+        'id' => 'description',
+        'table' => 'views_test_data',
+        'field' => 'description',
+        'relationship' => 'none',
+        'operator' => 'allwords',
+        'value' => ':-)',
+      ],
+    ]);
+
+    $this->executeView($view);
+    $resultset = [
+      [
+        'name' => 'Ringo',
+      ],
+      [
+        'name' => 'John',
+      ],
+      [
+        'name' => 'George',
+      ],
+      [
+        'name' => 'Paul',
+      ],
+      [
+        'name' => 'Meredith',
+      ],
+    ];
+    $this->assertIdenticalResultset($view, $resultset);
   }
 
 

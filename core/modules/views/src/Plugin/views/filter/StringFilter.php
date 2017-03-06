@@ -287,7 +287,7 @@ class StringFilter extends FilterPluginBase {
       }
     }
 
-    if (!$where) {
+    if ($where->count() === 0) {
       return;
     }
 
