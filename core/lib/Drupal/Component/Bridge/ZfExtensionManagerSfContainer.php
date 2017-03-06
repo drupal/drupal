@@ -55,7 +55,7 @@ class ZfExtensionManagerSfContainer implements ReaderManagerInterface, WriterMan
    *   The prefix to be used when retrieving plugins from the container.
    */
   public function __construct($prefix = '') {
-    return $this->prefix = $prefix;
+    $this->prefix = $prefix;
   }
 
   /**
