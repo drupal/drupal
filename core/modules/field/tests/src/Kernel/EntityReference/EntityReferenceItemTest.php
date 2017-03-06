@@ -183,6 +183,15 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity->field_test_taxonomy_term->generateSampleItems();
     $entity->field_test_taxonomy_vocabulary->generateSampleItems();
     $this->entityValidateAndSave($entity);
+
+    // Tests that setting an integer target ID together with an entity object
+    // succeeds and does not cause any exceptions. There is no assertion here,
+    // as the assignment should not throw any exceptions and if it does the
+    // test will fail.
+    // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::setValue().
+    $user = User::create(['name' => $this->randomString()]);
+    $user->save();
+    $entity = EntityTest::create(['user_id' => ['target_id' => (int) $user->id(), 'entity' => $user]]);
   }
 
   /**
