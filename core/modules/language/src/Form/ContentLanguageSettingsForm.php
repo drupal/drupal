@@ -143,9 +143,13 @@ class ContentLanguageSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $entity_types = $form_state->getValue('entity_types');
     foreach ($form_state->getValue('settings') as $entity_type => $entity_settings) {
       foreach ($entity_settings as $bundle => $bundle_settings) {
         $config = ContentLanguageSettings::loadByEntityTypeBundle($entity_type, $bundle);
+        if (empty($entity_types[$entity_type])) {
+          $bundle_settings['settings']['language']['language_alterable'] = FALSE;
+        }
         $config->setDefaultLangcode($bundle_settings['settings']['language']['langcode'])
           ->setLanguageAlterable($bundle_settings['settings']['language']['language_alterable'])
           ->save();
