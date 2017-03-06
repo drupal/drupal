@@ -45,7 +45,7 @@ class PagerTest extends WebTestBase {
   /**
    * Tests markup and CSS classes of pager links.
    */
-  function testActiveClass() {
+  public function testActiveClass() {
     // Verify first page.
     $this->drupalGet('admin/reports/dblog');
     $current_page = 0;

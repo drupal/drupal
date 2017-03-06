@@ -56,7 +56,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
   /**
    * Creates some terms and a node, then tests the tokens generated from them.
    */
-  function testTaxonomyTokenReplacement() {
+  public function testTaxonomyTokenReplacement() {
     $token_service = \Drupal::token();
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 

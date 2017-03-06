@@ -28,7 +28,7 @@ class XssUnitTest extends KernelTestBase {
   /**
    * Tests t() functionality.
    */
-  function testT() {
+  public function testT() {
     $text = t('Simple text');
     $this->assertEqual($text, 'Simple text', 't leaves simple text alone.');
     $text = t('Escaped text: @value', ['@value' => '<script>']);
@@ -40,7 +40,7 @@ class XssUnitTest extends KernelTestBase {
   /**
    * Checks that harmful protocols are stripped.
    */
-  function testBadProtocolStripping() {
+  public function testBadProtocolStripping() {
     // Ensure that check_url() strips out harmful protocols, and encodes for
     // HTML.
     // Ensure \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() can

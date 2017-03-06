@@ -40,7 +40,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   /**
    * Test the file_validate_extensions() function.
    */
-  function testFileValidateExtensions() {
+  public function testFileValidateExtensions() {
     $file = File::create(['filename' => 'asdf.txt']);
     $errors = file_validate_extensions($file, 'asdf txt pork');
     $this->assertEqual(count($errors), 0, 'Valid extension accepted.', 'File');
@@ -53,7 +53,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   /**
    * This ensures a specific file is actually an image.
    */
-  function testFileValidateIsImage() {
+  public function testFileValidateIsImage() {
     $this->assertTrue(file_exists($this->image->getFileUri()), 'The image being tested exists.', 'File');
     $errors = file_validate_is_image($this->image);
     $this->assertEqual(count($errors), 0, 'No error reported for our image file.', 'File');
@@ -68,7 +68,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
    *
    * The image will be resized if it's too large.
    */
-  function testFileValidateImageResolution() {
+  public function testFileValidateImageResolution() {
     // Non-images.
     $errors = file_validate_image_resolution($this->nonImage);
     $this->assertEqual(count($errors), 0, 'Should not get any errors for a non-image file.', 'File');
@@ -116,7 +116,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   /**
    * This will ensure the filename length is valid.
    */
-  function testFileValidateNameLength() {
+  public function testFileValidateNameLength() {
     // Create a new file entity.
     $file = File::create();
 
@@ -141,7 +141,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   /**
    * Test file_validate_size().
    */
-  function testFileValidateSize() {
+  public function testFileValidateSize() {
     // Create a file with a size of 1000 bytes, and quotas of only 1 byte.
     $file = File::create(['filesize' => 1000]);
     $errors = file_validate_size($file, 0, 0);

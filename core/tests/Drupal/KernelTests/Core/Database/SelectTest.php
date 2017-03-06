@@ -14,7 +14,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests rudimentary SELECT statements.
    */
-  function testSimpleSelect() {
+  public function testSimpleSelect() {
     $query = db_select('test');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
@@ -26,7 +26,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests rudimentary SELECT statement with a COMMENT.
    */
-  function testSimpleComment() {
+  public function testSimpleComment() {
     $query = db_select('test')->comment('Testing query comments');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
@@ -44,7 +44,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests query COMMENT system against vulnerabilities.
    */
-  function testVulnerableComment() {
+  public function testVulnerableComment() {
     $query = db_select('test')->comment('Testing query comments */ SELECT nid FROM {node}; --');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
@@ -68,7 +68,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Provides expected and input values for testVulnerableComment().
    */
-  function makeCommentsProvider() {
+  public function makeCommentsProvider() {
     return [
       [
         '/*  */ ',
@@ -99,7 +99,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests basic conditionals on SELECT statements.
    */
-  function testSimpleSelectConditional() {
+  public function testSimpleSelectConditional() {
     $query = db_select('test');
     $name_field = $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
@@ -119,7 +119,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests SELECT statements with expressions.
    */
-  function testSimpleSelectExpression() {
+  public function testSimpleSelectExpression() {
     $query = db_select('test');
     $name_field = $query->addField('test', 'name');
     $age_field = $query->addExpression("age*2", 'double_age');
@@ -139,7 +139,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests SELECT statements with multiple expressions.
    */
-  function testSimpleSelectExpressionMultiple() {
+  public function testSimpleSelectExpressionMultiple() {
     $query = db_select('test');
     $name_field = $query->addField('test', 'name');
     $age_double_field = $query->addExpression("age*2");
@@ -161,7 +161,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests adding multiple fields to a SELECT statement at the same time.
    */
-  function testSimpleSelectMultipleFields() {
+  public function testSimpleSelectMultipleFields() {
     $record = db_select('test')
       ->fields('test', ['id', 'name', 'age', 'job'])
       ->condition('age', 27)
@@ -184,7 +184,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests adding all fields from a given table to a SELECT statement.
    */
-  function testSimpleSelectAllFields() {
+  public function testSimpleSelectAllFields() {
     $record = db_select('test')
       ->fields('test')
       ->condition('age', 27)
@@ -207,7 +207,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests that a comparison with NULL is always FALSE.
    */
-  function testNullCondition() {
+  public function testNullCondition() {
     $this->ensureSampleDataNull();
 
     $names = db_select('test_null', 'tn')
@@ -221,7 +221,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests that we can find a record with a NULL value.
    */
-  function testIsNullCondition() {
+  public function testIsNullCondition() {
     $this->ensureSampleDataNull();
 
     $names = db_select('test_null', 'tn')
@@ -236,7 +236,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests that we can find a record without a NULL value.
    */
-  function testIsNotNullCondition() {
+  public function testIsNotNullCondition() {
     $this->ensureSampleDataNull();
 
     $names = db_select('test_null', 'tn')
@@ -256,7 +256,7 @@ class SelectTest extends DatabaseTestBase {
    * This is semantically equal to UNION DISTINCT, so we don't explicitly test
    * that.
    */
-  function testUnion() {
+  public function testUnion() {
     $query_1 = db_select('test', 't')
       ->fields('t', ['name'])
       ->condition('age', [27, 28], 'IN');
@@ -279,7 +279,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests that we can UNION ALL multiple SELECT queries together.
    */
-  function testUnionAll() {
+  public function testUnionAll() {
     $query_1 = db_select('test', 't')
       ->fields('t', ['name'])
       ->condition('age', [27, 28], 'IN');
@@ -303,7 +303,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests that we can get a count query for a UNION Select query.
    */
-  function testUnionCount() {
+  public function testUnionCount() {
     $query_1 = db_select('test', 't')
       ->fields('t', ['name', 'age'])
       ->condition('age', [27, 28], 'IN');
@@ -325,7 +325,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests that we can UNION multiple Select queries together and set the ORDER.
    */
-  function testUnionOrder() {
+  public function testUnionOrder() {
     // This gives George and Ringo.
     $query_1 = db_select('test', 't')
       ->fields('t', ['name'])
@@ -354,7 +354,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests that we can UNION multiple Select queries together with and a LIMIT.
    */
-  function testUnionOrderLimit() {
+  public function testUnionOrderLimit() {
     // This gives George and Ringo.
     $query_1 = db_select('test', 't')
       ->fields('t', ['name'])
@@ -395,7 +395,7 @@ class SelectTest extends DatabaseTestBase {
    * order each time, the only way this could happen is if we have successfully
    * triggered the database's random ordering functionality.
    */
-  function testRandomOrder() {
+  public function testRandomOrder() {
     // Use 52 items, so the chance that this test fails by accident will be the
     // same as the chance that a deck of cards will come out in the same order
     // after shuffling it (in other words, nearly impossible).
@@ -521,7 +521,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests that aliases are renamed when they are duplicates.
    */
-  function testSelectDuplicateAlias() {
+  public function testSelectDuplicateAlias() {
     $query = db_select('test', 't');
     $alias1 = $query->addField('t', 'name', 'the_alias');
     $alias2 = $query->addField('t', 'age', 'the_alias');
@@ -531,7 +531,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests that an invalid merge query throws an exception.
    */
-  function testInvalidSelectCount() {
+  public function testInvalidSelectCount() {
     try {
       // This query will fail because the table does not exist.
       // Normally it would throw an exception but we are suppressing
@@ -566,7 +566,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests thrown exception for IN query conditions with an empty array.
    */
-  function testEmptyInCondition() {
+  public function testEmptyInCondition() {
     try {
       db_select('test', 't')
         ->fields('t')

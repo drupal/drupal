@@ -110,7 +110,7 @@ EOD;
   /**
    * Ensures the tests selected through the web interface are run and displayed.
    */
-  function testWebTestRunner() {
+  public function testWebTestRunner() {
     $this->passMessage = t('SimpleTest pass.');
     $this->failMessage = t('SimpleTest fail.');
     $this->validPermission = 'access administration pages';
@@ -148,7 +148,7 @@ EOD;
    * Here we force test results which must match the expected results from
    * confirmStubResults().
    */
-  function stubTest() {
+  public function stubTest() {
     // Ensure the .htkey file exists since this is only created just before a
     // request. This allows the stub test to make requests. The event does not
     // fire here and drupal_generate_test_ua() can not generate a key for a
@@ -232,14 +232,14 @@ EOD;
   /**
    * Assert nothing.
    */
-  function assertNothing() {
+  public function assertNothing() {
     $this->pass("This is nothing.");
   }
 
   /**
    * Confirm that the stub test produced the desired results.
    */
-  function confirmStubTestResults() {
+  public function confirmStubTestResults() {
     $this->assertAssertion(t('Unable to install modules %modules due to missing modules %missing.', ['%modules' => 'non_existent_module', '%missing' => 'non_existent_module']), 'Other', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->setUp()');
 
     $this->assertAssertion($this->passMessage, 'Other', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
@@ -274,7 +274,7 @@ EOD;
   /**
    * Fetch the test id from the test results.
    */
-  function getTestIdFromResults() {
+  public function getTestIdFromResults() {
     foreach ($this->childTestResults['assertions'] as $assertion) {
       if (preg_match('@^Test ID is ([0-9]*)\.$@', $assertion['message'], $matches)) {
         return $matches[1];
@@ -299,7 +299,7 @@ EOD;
    *
    * @return Assertion result.
    */
-  function assertAssertion($message, $type, $status, $file, $function) {
+  public function assertAssertion($message, $type, $status, $file, $function) {
     $message = trim(strip_tags($message));
     $found = FALSE;
     foreach ($this->childTestResults['assertions'] as $assertion) {
@@ -318,7 +318,7 @@ EOD;
   /**
    * Get the results from a test and store them in the class array $results.
    */
-  function getTestResults() {
+  public function getTestResults() {
     $results = [];
     if ($this->parse()) {
       if ($details = $this->getResultFieldSet()) {
@@ -347,7 +347,7 @@ EOD;
   /**
    * Get the details containing the results for group this test is in.
    */
-  function getResultFieldSet() {
+  public function getResultFieldSet() {
     $all_details = $this->xpath('//details');
     foreach ($all_details as $details) {
       if ($this->asText($details->summary) == __CLASS__) {
@@ -366,7 +366,7 @@ EOD;
    * @return
    *   Extracted text.
    */
-  function asText(\SimpleXMLElement $element) {
+  public function asText(\SimpleXMLElement $element) {
     if (!is_object($element)) {
       return $this->fail('The element is not an element.');
     }

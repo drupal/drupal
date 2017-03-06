@@ -49,7 +49,7 @@ abstract class FileTransfer {
    *   be restricted to. This prevents the FileTransfer classes from being
    *   able to touch other parts of the filesystem.
    */
-  function __construct($jail) {
+  public function __construct($jail) {
     $this->jail = $jail;
   }
 
@@ -73,7 +73,7 @@ abstract class FileTransfer {
    *
    * @throws \Drupal\Core\FileTransfer\FileTransferException
    */
-  static function factory($jail, $settings) {
+  public static function factory($jail, $settings) {
     throw new FileTransferException('FileTransfer::factory() static method not overridden by FileTransfer subclass.');
   }
 
@@ -90,7 +90,7 @@ abstract class FileTransfer {
    * @return string|bool
    *   The variable specified in $name.
    */
-  function __get($name) {
+  public function __get($name) {
     if ($name == 'connection') {
       $this->connect();
       return $this->connection;
@@ -249,7 +249,7 @@ abstract class FileTransfer {
    * @return string
    *   The modified path.
    */
-  function sanitizePath($path) {
+  public function sanitizePath($path) {
     $path = str_replace('\\', '/', $path); // Windows path sanitization.
     if (substr($path, -1) == '/') {
       $path = substr($path, 0, -1);
@@ -347,7 +347,7 @@ abstract class FileTransfer {
    * @return string|bool
    *   If successful, the chroot path for this connection, otherwise FALSE.
    */
-  function findChroot() {
+  public function findChroot() {
     // If the file exists as is, there is no chroot.
     $path = __FILE__;
     $path = $this->fixRemotePath($path, FALSE);
@@ -373,7 +373,7 @@ abstract class FileTransfer {
   /**
    * Sets the chroot and changes the jail to match the correct path scheme.
    */
-  function setChroot() {
+  public function setChroot() {
     $this->chroot = $this->findChroot();
     $this->jail = $this->fixRemotePath($this->jail);
   }

@@ -59,7 +59,7 @@ class FileListingTest extends FileFieldTestBase {
   /**
    * Tests file overview with different user permissions.
    */
-  function testFileListingPages() {
+  public function testFileListingPages() {
     $file_usage = $this->container->get('file.usage');
     // Users without sufficient permissions should not see file listing.
     $this->drupalLogin($this->baseUser);
@@ -148,7 +148,7 @@ class FileListingTest extends FileFieldTestBase {
   /**
    * Tests file listing usage page for entities with no canonical link template.
    */
-  function testFileListingUsageNoLink() {
+  public function testFileListingUsageNoLink() {
     // Login with user with right permissions and test listing.
     $this->drupalLogin($this->adminUser);
 

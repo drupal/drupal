@@ -13,7 +13,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Move a normal file.
    */
-  function testNormal() {
+  public function testNormal() {
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
     $desired_filepath = 'public://' . $this->randomMachineName();
@@ -43,7 +43,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Test renaming when moving onto a file that already exists.
    */
-  function testExistingRename() {
+  public function testExistingRename() {
     // Setup a file to overwrite.
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
@@ -78,7 +78,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Test replacement when moving onto a file that already exists.
    */
-  function testExistingReplace() {
+  public function testExistingReplace() {
     // Setup a file to overwrite.
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
@@ -110,7 +110,7 @@ class MoveTest extends FileManagedUnitTestBase {
   /**
    * Test replacement when moving onto itself.
    */
-  function testExistingReplaceSelf() {
+  public function testExistingReplaceSelf() {
     // Setup a file to overwrite.
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
@@ -133,7 +133,7 @@ class MoveTest extends FileManagedUnitTestBase {
    * Test that moving onto an existing file fails when FILE_EXISTS_ERROR is
    * specified.
    */
-  function testExistingError() {
+  public function testExistingError() {
     $contents = $this->randomMachineName(10);
     $source = $this->createFile();
     $target = $this->createFile(NULL, $contents);

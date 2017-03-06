@@ -58,7 +58,7 @@ class BreadcrumbTest extends MenuTestBase {
   /**
    * Tests breadcrumbs on node and administrative paths.
    */
-  function testBreadCrumbs() {
+  public function testBreadCrumbs() {
     // Prepare common base breadcrumb elements.
     $home = ['' => 'Home'];
     $admin = $home + ['admin' => t('Administration')];

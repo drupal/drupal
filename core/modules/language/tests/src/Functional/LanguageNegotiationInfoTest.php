@@ -61,7 +61,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
   /**
    * Tests alterations to language types/negotiation info.
    */
-  function testInfoAlterations() {
+  public function testInfoAlterations() {
     $this->stateSet([
       // Enable language_test type info.
       'language_test.language_types' => TRUE,

@@ -610,7 +610,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * Validates the submitted content translation metadata.
    */
-  function entityFormValidate($form, FormStateInterface $form_state) {
+  public function entityFormValidate($form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('content_translation')) {
       $translation = $form_state->getValue('content_translation');
       // Validate the "authored by" field.
@@ -630,7 +630,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    * Updates metadata fields, which should be updated only after the validation
    * has run and before the entity is saved.
    */
-  function entityFormSubmit($form, FormStateInterface $form_state) {
+  public function entityFormSubmit($form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
     $form_object = $form_state->getFormObject();
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -673,7 +673,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * Takes care of entity deletion.
    */
-  function entityFormDelete($form, FormStateInterface $form_state) {
+  public function entityFormDelete($form, FormStateInterface $form_state) {
     $form_object = $form_state->getFormObject()->getEntity();
     $entity = $form_object->getEntity();
     if (count($entity->getTranslationLanguages()) > 1) {
@@ -686,7 +686,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * Takes care of content translation deletion.
    */
-  function entityFormDeleteTranslation($form, FormStateInterface $form_state) {
+  public function entityFormDeleteTranslation($form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
     $form_object = $form_state->getFormObject();
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */

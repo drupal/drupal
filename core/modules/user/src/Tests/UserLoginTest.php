@@ -15,7 +15,7 @@ class UserLoginTest extends WebTestBase {
   /**
    * Tests login with destination.
    */
-  function testLoginCacheTagsAndDestination() {
+  public function testLoginCacheTagsAndDestination() {
     $this->drupalGet('user/login');
     // The user login form says "Enter your <site name> username.", hence it
     // depends on config:system.site, and its cache tags should be present.
@@ -31,7 +31,7 @@ class UserLoginTest extends WebTestBase {
   /**
    * Test the global login flood control.
    */
-  function testGlobalLoginFloodControl() {
+  public function testGlobalLoginFloodControl() {
     $this->config('user.flood')
       ->set('ip_limit', 10)
       // Set a high per-user limit out so that it is not relevant in the test.
@@ -68,7 +68,7 @@ class UserLoginTest extends WebTestBase {
   /**
    * Test the per-user login flood control.
    */
-  function testPerUserLoginFloodControl() {
+  public function testPerUserLoginFloodControl() {
     $this->config('user.flood')
       // Set a high global limit out so that it is not relevant in the test.
       ->set('ip_limit', 4000)
@@ -108,7 +108,7 @@ class UserLoginTest extends WebTestBase {
   /**
    * Test that user password is re-hashed upon login after changing $count_log2.
    */
-  function testPasswordRehashOnLogin() {
+  public function testPasswordRehashOnLogin() {
     // Determine default log2 for phpass hashing algorithm
     $default_count_log2 = 16;
 
@@ -154,7 +154,7 @@ class UserLoginTest extends WebTestBase {
    *   .
    *   - Set to NULL to expect a failed login.
    */
-  function assertFailedLogin($account, $flood_trigger = NULL) {
+  public function assertFailedLogin($account, $flood_trigger = NULL) {
     $edit = [
       'name' => $account->getUsername(),
       'pass' => $account->pass_raw,

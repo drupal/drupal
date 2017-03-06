@@ -36,7 +36,7 @@ class ToolbarHookToolbarTest extends BrowserTestBase {
   /**
    * Tests for a tab and tray provided by a module implementing hook_toolbar().
    */
-  function testHookToolbar() {
+  public function testHookToolbar() {
     $this->drupalGet('test-page');
     $this->assertResponse(200);
 

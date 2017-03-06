@@ -14,7 +14,7 @@ class FactoryTest extends PluginTestBase {
   /**
    * Test that DefaultFactory can create a plugin instance.
    */
-  function testDefaultFactory() {
+  public function testDefaultFactory() {
     // Ensure a non-derivative plugin can be instantiated.
     $plugin = $this->testPluginManager->createInstance('user_login', ['title' => 'Please enter your login name and password']);
     $this->assertIdentical(get_class($plugin), 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock', 'Correct plugin class instantiated with default factory.');
@@ -44,7 +44,7 @@ class FactoryTest extends PluginTestBase {
    * reflection factory and it provides some additional variety in plugin
    * object creation.
    */
-  function testReflectionFactory() {
+  public function testReflectionFactory() {
     // Ensure a non-derivative plugin can be instantiated.
     $plugin = $this->mockBlockManager->createInstance('user_login', ['title' => 'Please enter your login name and password']);
     $this->assertIdentical(get_class($plugin), 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock', 'Correct plugin class instantiated.');

@@ -39,7 +39,7 @@ class ColorSafePreviewTest extends BrowserTestBase {
   /**
    * Ensures color preview.html is sanitized.
    */
-  function testColorPreview() {
+  public function testColorPreview() {
     // Install the color test theme.
     \Drupal::service('theme_handler')->install(['color_test_theme']);
     $this->drupalLogin($this->bigUser);

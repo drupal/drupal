@@ -28,7 +28,7 @@ class SearchNodeDiacriticsTest extends SearchTestBase {
   /**
    * Tests that search returns results with diacritics in the search phrase.
    */
-  function testPhraseSearchPunctuation() {
+  public function testPhraseSearchPunctuation() {
     $body_text = 'The Enricþment Center is cómmīŦŧęđ to the well BɆĬŇĜ of æll påŔťıçȉpǎǹţș. ';
     $body_text .= 'Also meklēt (see #731298)';
     $this->drupalCreateNode(['body' => [['value' => $body_text]]]);

@@ -43,7 +43,7 @@ class EntityTranslationFormTest extends WebTestBase {
   /**
    * Tests entity form language.
    */
-  function testEntityFormLanguage() {
+  public function testEntityFormLanguage() {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     $web_user = $this->drupalCreateUser(['create page content', 'edit own page content', 'administer content types']);

@@ -107,7 +107,7 @@ class InOperator extends FilterPluginBase {
    * to add or remove functionality by overriding this function and
    * adding/removing items from this array.
    */
-  function operators() {
+  public function operators() {
     $operators = [
       'in' => [
         'title' => $this->t('Is one of'),

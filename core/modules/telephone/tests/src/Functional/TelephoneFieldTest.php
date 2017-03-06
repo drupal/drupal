@@ -44,7 +44,7 @@ class TelephoneFieldTest extends BrowserTestBase {
   /**
    * Helper function for testTelephoneField().
    */
-  function testTelephoneField() {
+  public function testTelephoneField() {
 
     // Add the telephone field to the article content type.
     FieldStorageConfig::create([

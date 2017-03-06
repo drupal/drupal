@@ -22,7 +22,7 @@ class LanguageListModuleInstallTest extends BrowserTestBase {
   /**
    * Tests enabling Language.
    */
-  function testModuleInstallLanguageList() {
+  public function testModuleInstallLanguageList() {
     // Since LanguageManager::getLanguages() uses static caches we need to do
     // this by enabling the module using the UI.
     $admin_user = $this->drupalCreateUser(['access administration pages', 'administer modules']);

@@ -22,7 +22,7 @@ class ValidationTest extends WebTestBase {
   /**
    * Tests #element_validate and #validate.
    */
-  function testValidate() {
+  public function testValidate() {
     $this->drupalGet('form-test/validate');
     // Verify that #element_validate handlers can alter the form and submitted
     // form values.
@@ -72,7 +72,7 @@ class ValidationTest extends WebTestBase {
   /**
    * Tests that a form with a disabled CSRF token can be validated.
    */
-  function testDisabledToken() {
+  public function testDisabledToken() {
     $this->drupalPostForm('form-test/validate-no-token', [], 'Save');
     $this->assertText('The form_test_validate_no_token form has been submitted successfully.');
   }
@@ -80,7 +80,7 @@ class ValidationTest extends WebTestBase {
   /**
    * Tests partial form validation through #limit_validation_errors.
    */
-  function testValidateLimitErrors() {
+  public function testValidateLimitErrors() {
     $edit = [
       'test' => 'invalid',
       'test_numeric_index[0]' => 'invalid',
@@ -141,7 +141,7 @@ class ValidationTest extends WebTestBase {
   /**
    * Tests #pattern validation.
    */
-  function testPatternValidation() {
+  public function testPatternValidation() {
     $textfield_error = t('%name field is not in the right format.', ['%name' => 'One digit followed by lowercase letters']);
     $tel_error = t('%name field is not in the right format.', ['%name' => 'Everything except numbers']);
     $password_error = t('%name field is not in the right format.', ['%name' => 'Password']);
@@ -202,7 +202,7 @@ class ValidationTest extends WebTestBase {
    *
    * @see \Drupal\form_test\Form\FormTestValidateRequiredForm
    */
-  function testCustomRequiredError() {
+  public function testCustomRequiredError() {
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestValidateRequiredForm');
 
     // Verify that a custom #required error can be set.

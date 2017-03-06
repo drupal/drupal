@@ -34,7 +34,7 @@ class StorageTest extends WebTestBase {
   /**
    * Tests using the form in a usual way.
    */
-  function testForm() {
+  public function testForm() {
     $this->drupalGet('form_test/form-storage');
     $this->assertText('Form constructions: 1');
 
@@ -60,7 +60,7 @@ class StorageTest extends WebTestBase {
   /**
    * Tests using the form after calling $form_state->setCached().
    */
-  function testFormCached() {
+  public function testFormCached() {
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1]]);
     $this->assertText('Form constructions: 1');
 
@@ -87,7 +87,7 @@ class StorageTest extends WebTestBase {
   /**
    * Tests validation when form storage is used.
    */
-  function testValidation() {
+  public function testValidation() {
     $this->drupalPostForm('form_test/form-storage', ['title' => '', 'value' => 'value_is_set'], 'Continue submit');
     $this->assertPattern('/value_is_set/', 'The input values have been kept.');
   }
@@ -102,7 +102,7 @@ class StorageTest extends WebTestBase {
    * during form validation, while another, required element in the form
    * triggers a form validation error.
    */
-  function testCachedFormStorageValidation() {
+  public function testCachedFormStorageValidation() {
     // Request the form with 'cache' query parameter to enable form caching.
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1]]);
 

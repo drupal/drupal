@@ -61,7 +61,7 @@ class AccessTest extends PluginTestBase {
   /**
    * Tests none access plugin.
    */
-  function testAccessNone() {
+  public function testAccessNone() {
     $view = Views::getView('test_access_none');
     $view->setDisplay();
 
@@ -78,7 +78,7 @@ class AccessTest extends PluginTestBase {
    *
    * @see \Drupal\views_test\Plugin\views\access\StaticTest
    */
-  function testStaticAccessPlugin() {
+  public function testStaticAccessPlugin() {
     $view = Views::getView('test_access_static');
     $view->setDisplay();
 

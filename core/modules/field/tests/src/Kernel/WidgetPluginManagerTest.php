@@ -13,7 +13,7 @@ class WidgetPluginManagerTest extends FieldKernelTestBase {
   /**
    * Tests that the widget definitions alter hook works.
    */
-  function testWidgetDefinitionAlter() {
+  public function testWidgetDefinitionAlter() {
     $widget_definition = \Drupal::service('plugin.manager.field.widget')->getDefinition('test_field_widget_multiple');
 
     // Test if hook_field_widget_info_alter is being called.

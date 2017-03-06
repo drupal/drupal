@@ -12,7 +12,7 @@ class NodeTemplateSuggestionsTest extends NodeTestBase {
   /**
    * Tests if template_preprocess_node() generates the correct suggestions.
    */
-  function testNodeThemeHookSuggestions() {
+  public function testNodeThemeHookSuggestions() {
     // Create node to be rendered.
     $node = $this->drupalCreateNode();
     $view_mode = 'full';

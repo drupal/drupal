@@ -10,7 +10,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   /**
    * {@inheritdoc}
    */
-  function __construct($jail, $username, $password, $hostname = "localhost", $port = 22) {
+  public function __construct($jail, $username, $password, $hostname = "localhost", $port = 22) {
     $this->username = $username;
     $this->password = $password;
     $this->hostname = $hostname;
@@ -34,7 +34,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   /**
    * {@inheritdoc}
    */
-  static function factory($jail, $settings) {
+  public static function factory($jail, $settings) {
     $username = empty($settings['username']) ? '' : $settings['username'];
     $password = empty($settings['password']) ? '' : $settings['password'];
     $hostname = empty($settings['advanced']['hostname']) ? 'localhost' : $settings['advanced']['hostname'];
@@ -127,7 +127,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   /**
    * {@inheritdoc}
    */
-  function chmodJailed($path, $mode, $recursive) {
+  public function chmodJailed($path, $mode, $recursive) {
     $cmd = sprintf("chmod %s%o %s", $recursive ? '-R ' : '', $mode, escapeshellarg($path));
     if (@!ssh2_exec($this->connection, $cmd)) {
       throw new FileTransferException('Cannot change permissions of @path.', NULL, ['@path' => $path]);

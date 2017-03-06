@@ -75,7 +75,7 @@ class BasicAuthTest extends WebTestBase {
   /**
    * Test the global login flood control.
    */
-  function testGlobalLoginFloodControl() {
+  public function testGlobalLoginFloodControl() {
     $this->config('user.flood')
       ->set('ip_limit', 2)
       // Set a high per-user limit out so that it is not relevant in the test.
@@ -100,7 +100,7 @@ class BasicAuthTest extends WebTestBase {
   /**
    * Test the per-user login flood control.
    */
-  function testPerUserLoginFloodControl() {
+  public function testPerUserLoginFloodControl() {
     $this->config('user.flood')
       // Set a high global limit out so that it is not relevant in the test.
       ->set('ip_limit', 4000)
@@ -138,7 +138,7 @@ class BasicAuthTest extends WebTestBase {
   /**
    * Tests compatibility with locale/UI translation.
    */
-  function testLocale() {
+  public function testLocale() {
     ConfigurableLanguage::createFromLangcode('de')->save();
     $this->config('system.site')->set('default_langcode', 'de')->save();
 
@@ -154,7 +154,7 @@ class BasicAuthTest extends WebTestBase {
   /**
    * Tests if a comprehensive message is displayed when the route is denied.
    */
-  function testUnauthorizedErrorMessage() {
+  public function testUnauthorizedErrorMessage() {
     $account = $this->drupalCreateUser();
     $url = Url::fromRoute('router_test.11');
 

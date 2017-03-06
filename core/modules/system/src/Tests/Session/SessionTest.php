@@ -24,7 +24,7 @@ class SessionTest extends WebTestBase {
    * Tests for \Drupal\Core\Session\WriteSafeSessionHandler::setSessionWritable()
    * ::isSessionWritable and \Drupal\Core\Session\SessionManager::regenerate().
    */
-  function testSessionSaveRegenerate() {
+  public function testSessionSaveRegenerate() {
     $session_handler = $this->container->get('session_handler.write_safe');
     $this->assertTrue($session_handler->isSessionWritable(), 'session_handler->isSessionWritable() initially returns TRUE.');
     $session_handler->setSessionWritable(FALSE);
@@ -74,7 +74,7 @@ class SessionTest extends WebTestBase {
   /**
    * Test data persistence via the session_test module callbacks.
    */
-  function testDataPersistence() {
+  public function testDataPersistence() {
     $user = $this->drupalCreateUser([]);
     // Enable sessions.
     $this->sessionReset($user->id());
@@ -147,7 +147,7 @@ class SessionTest extends WebTestBase {
   /**
    * Test that empty anonymous sessions are destroyed.
    */
-  function testEmptyAnonymousSession() {
+  public function testEmptyAnonymousSession() {
     // Disable the dynamic_page_cache module; it'd cause session_test's debug
     // output (that is added in
     // SessionTestSubscriber::onKernelResponseSessionTest()) to not be added.
@@ -210,7 +210,7 @@ class SessionTest extends WebTestBase {
   /**
    * Test that sessions are only saved when necessary.
    */
-  function testSessionWrite() {
+  public function testSessionWrite() {
     $user = $this->drupalCreateUser([]);
     $this->drupalLogin($user);
 
@@ -258,7 +258,7 @@ class SessionTest extends WebTestBase {
   /**
    * Test that empty session IDs are not allowed.
    */
-  function testEmptySessionID() {
+  public function testEmptySessionID() {
     $user = $this->drupalCreateUser([]);
     $this->drupalLogin($user);
     $this->drupalGet('session-test/is-logged-in');
@@ -284,7 +284,7 @@ class SessionTest extends WebTestBase {
    *
    * @param $uid User id to set as the active session.
    */
-  function sessionReset($uid = 0) {
+  public function sessionReset($uid = 0) {
     // Close the internal browser.
     $this->curlClose();
     $this->loggedInUser = FALSE;
@@ -300,7 +300,7 @@ class SessionTest extends WebTestBase {
   /**
    * Assert whether the SimpleTest browser sent a session cookie.
    */
-  function assertSessionCookie($sent) {
+  public function assertSessionCookie($sent) {
     if ($sent) {
       $this->assertNotNull($this->sessionId, 'Session cookie was sent.');
     }
@@ -312,7 +312,7 @@ class SessionTest extends WebTestBase {
   /**
    * Assert whether $_SESSION is empty at the beginning of the request.
    */
-  function assertSessionEmpty($empty) {
+  public function assertSessionEmpty($empty) {
     if ($empty) {
       $this->assertIdentical($this->drupalGetHeader('X-Session-Empty'), '1', 'Session was empty.');
     }

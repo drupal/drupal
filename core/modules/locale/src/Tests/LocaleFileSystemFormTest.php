@@ -30,7 +30,7 @@ class LocaleFileSystemFormTest extends WebTestBase {
   /**
    * Tests translation directory settings on the file settings form.
    */
-  function testFileConfigurationPage() {
+  public function testFileConfigurationPage() {
     // By default there should be no setting for the translation directory.
     $this->drupalGet('admin/config/media/file-system');
     $this->assertNoFieldByName('translation_path');

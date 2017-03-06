@@ -134,7 +134,7 @@ class UpdateApiEntityDefinitionUpdateTest extends WebTestBase {
   /**
    * Tests that entity updates are correctly reported in the status report page.
    */
-  function testStatusReport() {
+  public function testStatusReport() {
     // Create a test entity.
     $entity = EntityTest::create(['name' => $this->randomString(), 'user_id' => mt_rand()]);
     $entity->save();

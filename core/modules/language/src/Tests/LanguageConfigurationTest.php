@@ -23,7 +23,7 @@ class LanguageConfigurationTest extends WebTestBase {
   /**
    * Functional tests for adding, editing and deleting languages.
    */
-  function testLanguageConfiguration() {
+  public function testLanguageConfiguration() {
     // Ensure the after installing the language module the weight of the English
     // language is still 0.
     $this->assertEqual(ConfigurableLanguage::load('en')->getWeight(), 0, 'The English language has a weight of 0.');
@@ -148,7 +148,7 @@ class LanguageConfigurationTest extends WebTestBase {
   /**
    * Functional tests for setting system language weight on adding, editing and deleting languages.
    */
-  function testLanguageConfigurationWeight() {
+  public function testLanguageConfigurationWeight() {
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
     $this->drupalLogin($admin_user);

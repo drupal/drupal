@@ -84,7 +84,7 @@ class ColorTest extends BrowserTestBase {
   /**
    * Tests the Color module functionality.
    */
-  function testColor() {
+  public function testColor() {
     foreach ($this->themes as $theme => $test_values) {
       $this->_testColor($theme, $test_values);
     }
@@ -99,7 +99,7 @@ class ColorTest extends BrowserTestBase {
    *   An associative array of test settings (i.e. 'Main background', 'Text
    *   color', 'Color set', etc) for the theme which being tested.
    */
-  function _testColor($theme, $test_values) {
+  public function _testColor($theme, $test_values) {
     $this->config('system.theme')
       ->set('default', $theme)
       ->save();
@@ -151,7 +151,7 @@ class ColorTest extends BrowserTestBase {
   /**
    * Tests whether the provided color is valid.
    */
-  function testValidColor() {
+  public function testValidColor() {
     $this->config('system.theme')
       ->set('default', 'bartik')
       ->save();
@@ -176,7 +176,7 @@ class ColorTest extends BrowserTestBase {
   /**
    * Test whether the custom logo is used in the color preview.
    */
-  function testLogoSettingOverride() {
+  public function testLogoSettingOverride() {
     $this->drupalLogin($this->bigUser);
     $edit = [
       'default_logo' => FALSE,
@@ -192,7 +192,7 @@ class ColorTest extends BrowserTestBase {
   /**
    * Test whether the scheme can be set, viewed anonymously and reset.
    */
-  function testOverrideAndResetScheme() {
+  public function testOverrideAndResetScheme() {
     $settings_path = 'admin/appearance/settings/bartik';
     $this->config('system.theme')
       ->set('default', 'bartik')

@@ -36,7 +36,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
   /**
    * Tests that toolbar classes don't change when adding a translation.
    */
-  function testToolbarClasses() {
+  public function testToolbarClasses() {
     $langcode = 'es';
 
     // Add Spanish.

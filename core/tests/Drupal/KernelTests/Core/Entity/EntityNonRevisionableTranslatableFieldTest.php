@@ -28,7 +28,7 @@ class EntityNonRevisionableTranslatableFieldTest extends EntityKernelTestBase {
   /**
    * Tests translating a non-revisionable field.
    */
-  function testTranslatingNonRevisionableField() {
+  public function testTranslatingNonRevisionableField() {
     /** @var \Drupal\Core\Entity\ContentEntityBase $entity */
     $entity = EntityTestMulRev::create();
     $entity->set('non_rev_field', 'Hello');

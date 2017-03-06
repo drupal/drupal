@@ -24,7 +24,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
   /**
    * Test that allowed values can be updated.
    */
-  function testUpdateAllowedValues() {
+  public function testUpdateAllowedValues() {
     // All three options appear.
     $entity = EntityTest::create();
     $form = \Drupal::service('entity.form_builder')->getForm($entity);

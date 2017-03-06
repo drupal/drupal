@@ -23,7 +23,7 @@ class UserLanguageCreationTest extends WebTestBase {
   /**
    * Functional test for language handling during user creation.
    */
-  function testLocalUserCreation() {
+  public function testLocalUserCreation() {
     // User to add and remove language and create new users.
     $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'administer users']);
     $this->drupalLogin($admin_user);

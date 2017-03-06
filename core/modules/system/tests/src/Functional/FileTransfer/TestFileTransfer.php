@@ -19,11 +19,11 @@ class TestFileTransfer extends FileTransfer {
    */
   public $shouldIsDirectoryReturnTrue = FALSE;
 
-  function __construct($jail, $username, $password, $hostname = 'localhost', $port = 9999) {
+  public function __construct($jail, $username, $password, $hostname = 'localhost', $port = 9999) {
     parent::__construct($jail, $username, $password, $hostname, $port);
   }
 
-  static function factory($jail, $settings) {
+  public static function factory($jail, $settings) {
     return new TestFileTransfer($jail, $settings['username'], $settings['password'], $settings['hostname'], $settings['port']);
   }
 
@@ -32,7 +32,7 @@ class TestFileTransfer extends FileTransfer {
     $this->connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
   }
 
-  function copyFileJailed($source, $destination) {
+  public function copyFileJailed($source, $destination) {
     $this->connection->run("copyFile $source $destination");
   }
 
@@ -40,25 +40,25 @@ class TestFileTransfer extends FileTransfer {
     $this->connection->run("rmdir $directory");
   }
 
-  function createDirectoryJailed($directory) {
+  public function createDirectoryJailed($directory) {
     $this->connection->run("mkdir $directory");
   }
 
-  function removeFileJailed($destination) {
+  public function removeFileJailed($destination) {
     if (!ftp_delete($this->connection, $item)) {
       throw new FileTransferException('Unable to remove to file @file.', NULL, ['@file' => $item]);
     }
   }
 
-  function isDirectory($path) {
+  public function isDirectory($path) {
     return $this->shouldIsDirectoryReturnTrue;
   }
 
-  function isFile($path) {
+  public function isFile($path) {
     return FALSE;
   }
 
-  function chmodJailed($path, $mode, $recursive) {
+  public function chmodJailed($path, $mode, $recursive) {
     return;
   }
 

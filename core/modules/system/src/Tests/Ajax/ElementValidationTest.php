@@ -16,7 +16,7 @@ class ElementValidationTest extends AjaxTestBase {
    * filled in, and we want to see if the activation of the "drivertext"
    * Ajax-enabled field fails due to the required field being empty.
    */
-  function testAjaxElementValidation() {
+  public function testAjaxElementValidation() {
     $edit = ['drivertext' => t('some dumb text')];
 
     // Post with 'drivertext' as the triggering element.

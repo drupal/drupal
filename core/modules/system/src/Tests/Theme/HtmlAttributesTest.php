@@ -21,7 +21,7 @@ class HtmlAttributesTest extends WebTestBase {
   /**
    * Tests that attributes in the 'html' and 'body' elements can be altered.
    */
-  function testThemeHtmlAttributes() {
+  public function testThemeHtmlAttributes() {
     $this->drupalGet('');
     $attributes = $this->xpath('/html[@theme_test_html_attribute="theme test html attribute value"]');
     $this->assertTrue(count($attributes) == 1, "Attribute set in the 'html' element via hook_preprocess_HOOK() found.");

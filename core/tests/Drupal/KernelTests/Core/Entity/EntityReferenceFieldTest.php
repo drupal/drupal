@@ -241,7 +241,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
   /**
    * Tests all the possible ways to autocreate an entity via the API.
    */
-  function testAutocreateApi() {
+  public function testAutocreateApi() {
     $entity = $this->entityManager
       ->getStorage($this->entityType)
       ->create(['name' => $this->randomString()]);

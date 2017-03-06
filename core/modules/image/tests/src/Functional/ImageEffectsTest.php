@@ -34,7 +34,7 @@ class ImageEffectsTest extends ToolkitTestBase {
   /**
    * Test the image_resize_effect() function.
    */
-  function testResizeEffect() {
+  public function testResizeEffect() {
     $this->assertImageEffect('image_resize', [
       'width' => 1,
       'height' => 2,
@@ -50,7 +50,7 @@ class ImageEffectsTest extends ToolkitTestBase {
   /**
    * Test the image_scale_effect() function.
    */
-  function testScaleEffect() {
+  public function testScaleEffect() {
     // @todo: need to test upscaling.
     $this->assertImageEffect('image_scale', [
       'width' => 10,
@@ -67,7 +67,7 @@ class ImageEffectsTest extends ToolkitTestBase {
   /**
    * Test the image_crop_effect() function.
    */
-  function testCropEffect() {
+  public function testCropEffect() {
     // @todo should test the keyword offsets.
     $this->assertImageEffect('image_crop', [
       'anchor' => 'top-1',
@@ -87,7 +87,7 @@ class ImageEffectsTest extends ToolkitTestBase {
   /**
    * Tests the ConvertImageEffect plugin.
    */
-  function testConvertEffect() {
+  public function testConvertEffect() {
     // Test jpeg.
     $this->assertImageEffect('image_convert', [
       'extension' => 'jpeg',
@@ -102,7 +102,7 @@ class ImageEffectsTest extends ToolkitTestBase {
   /**
    * Test the image_scale_and_crop_effect() function.
    */
-  function testScaleAndCropEffect() {
+  public function testScaleAndCropEffect() {
     $this->assertImageEffect('image_scale_and_crop', [
       'width' => 5,
       'height' => 10,
@@ -118,7 +118,7 @@ class ImageEffectsTest extends ToolkitTestBase {
   /**
    * Test the image_desaturate_effect() function.
    */
-  function testDesaturateEffect() {
+  public function testDesaturateEffect() {
     $this->assertImageEffect('image_desaturate', []);
     $this->assertToolkitOperationsCalled(['desaturate']);
 
@@ -130,7 +130,7 @@ class ImageEffectsTest extends ToolkitTestBase {
   /**
    * Test the image_rotate_effect() function.
    */
-  function testRotateEffect() {
+  public function testRotateEffect() {
     // @todo: need to test with 'random' => TRUE
     $this->assertImageEffect('image_rotate', [
       'degrees' => 90,
@@ -147,7 +147,7 @@ class ImageEffectsTest extends ToolkitTestBase {
   /**
    * Test image effect caching.
    */
-  function testImageEffectsCaching() {
+  public function testImageEffectsCaching() {
     $image_effect_definitions_called = &drupal_static('image_module_test_image_effect_info_alter');
 
     // First call should grab a fresh copy of the data.

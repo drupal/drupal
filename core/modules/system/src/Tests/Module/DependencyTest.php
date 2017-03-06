@@ -12,7 +12,7 @@ class DependencyTest extends ModuleTestBase {
   /**
    * Checks functionality of project namespaces for dependencies.
    */
-  function testProjectNamespaceForDependencies() {
+  public function testProjectNamespaceForDependencies() {
     $edit = [
       'modules[filter][enable]' => TRUE,
     ];
@@ -28,7 +28,7 @@ class DependencyTest extends ModuleTestBase {
   /**
    * Attempts to enable the Content Translation module without Language enabled.
    */
-  function testEnableWithoutDependency() {
+  public function testEnableWithoutDependency() {
     // Attempt to enable Content Translation without Language enabled.
     $edit = [];
     $edit['modules[content_translation][enable]'] = 'content_translation';
@@ -52,7 +52,7 @@ class DependencyTest extends ModuleTestBase {
   /**
    * Attempts to enable a module with a missing dependency.
    */
-  function testMissingModules() {
+  public function testMissingModules() {
     // Test that the system_dependencies_test module is marked
     // as missing a dependency.
     $this->drupalGet('admin/modules');
@@ -64,7 +64,7 @@ class DependencyTest extends ModuleTestBase {
   /**
    * Tests enabling a module that depends on an incompatible version of a module.
    */
-  function testIncompatibleModuleVersionDependency() {
+  public function testIncompatibleModuleVersionDependency() {
     // Test that the system_incompatible_module_version_dependencies_test is
     // marked as having an incompatible dependency.
     $this->drupalGet('admin/modules');
@@ -79,7 +79,7 @@ class DependencyTest extends ModuleTestBase {
   /**
    * Tests enabling a module that depends on a module with an incompatible core version.
    */
-  function testIncompatibleCoreVersionDependency() {
+  public function testIncompatibleCoreVersionDependency() {
     // Test that the system_incompatible_core_version_dependencies_test is
     // marked as having an incompatible dependency.
     $this->drupalGet('admin/modules');
@@ -93,7 +93,7 @@ class DependencyTest extends ModuleTestBase {
   /**
    * Tests enabling a module that depends on a module which fails hook_requirements().
    */
-  function testEnableRequirementsFailureDependency() {
+  public function testEnableRequirementsFailureDependency() {
     \Drupal::service('module_installer')->install(['comment']);
 
     $this->assertModules(['requirements1_test'], FALSE);
@@ -120,7 +120,7 @@ class DependencyTest extends ModuleTestBase {
    *
    * Dependencies should be enabled before their dependents.
    */
-  function testModuleEnableOrder() {
+  public function testModuleEnableOrder() {
     \Drupal::service('module_installer')->install(['module_test'], FALSE);
     $this->resetAll();
     $this->assertModules(['module_test'], TRUE);
@@ -153,7 +153,7 @@ class DependencyTest extends ModuleTestBase {
   /**
    * Tests attempting to uninstall a module that has installed dependents.
    */
-  function testUninstallDependents() {
+  public function testUninstallDependents() {
     // Enable the forum module.
     $edit = ['modules[forum][enable]' => 'forum'];
     $this->drupalPostForm('admin/modules', $edit, t('Install'));

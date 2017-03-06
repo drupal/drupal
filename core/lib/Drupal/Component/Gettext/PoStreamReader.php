@@ -547,7 +547,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    * @return
    *   The string parsed from inside the quotes.
    */
-  function parseQuoted($string) {
+  public function parseQuoted($string) {
     if (substr($string, 0, 1) != substr($string, -1, 1)) {
       // Start and end quotes must be the same.
       return FALSE;

@@ -27,7 +27,7 @@ class NodeLoadMultipleTest extends NodeTestBase {
   /**
    * Creates four nodes and ensures that they are loaded correctly.
    */
-  function testNodeMultipleLoad() {
+  public function testNodeMultipleLoad() {
     $node1 = $this->drupalCreateNode(['type' => 'article', 'promote' => 1]);
     $node2 = $this->drupalCreateNode(['type' => 'article', 'promote' => 1]);
     $node3 = $this->drupalCreateNode(['type' => 'article', 'promote' => 0]);

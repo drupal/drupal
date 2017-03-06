@@ -15,7 +15,7 @@ class SelectTableSortDefaultTest extends DatabaseWebTestBase {
    * Note that we have to make an HTTP request to a test page handler
    * because the pager depends on GET parameters.
    */
-  function testTableSortQuery() {
+  public function testTableSortQuery() {
     $sorts = [
       ['field' => t('Task ID'), 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'],
       ['field' => t('Task ID'), 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'],
@@ -43,7 +43,7 @@ class SelectTableSortDefaultTest extends DatabaseWebTestBase {
    * If a tablesort's orderByHeader is called before another orderBy, then its
    * header happens first.
    */
-  function testTableSortQueryFirst() {
+  public function testTableSortQueryFirst() {
     $sorts = [
       ['field' => t('Task ID'), 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'],
       ['field' => t('Task ID'), 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'],
@@ -71,7 +71,7 @@ class SelectTableSortDefaultTest extends DatabaseWebTestBase {
    * Specifically that no sort is set in a tableselect, and that header links
    * are correct.
    */
-  function testTableSortDefaultSort() {
+  public function testTableSortDefaultSort() {
     $this->drupalGet('database_test/tablesort_default_sort');
 
     // Verify that the table was displayed. Just the header is checked for

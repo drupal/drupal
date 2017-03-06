@@ -61,7 +61,7 @@ class PrivateTempStoreFactory {
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lock_backend, AccountProxyInterface $current_user, RequestStack $request_stack, $expire = 604800) {
+  public function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lock_backend, AccountProxyInterface $current_user, RequestStack $request_stack, $expire = 604800) {
     $this->storageFactory = $storage_factory;
     $this->lockBackend = $lock_backend;
     $this->currentUser = $current_user;
@@ -79,7 +79,7 @@ class PrivateTempStoreFactory {
    * @return \Drupal\user\PrivateTempStore
    *   An instance of the key/value store.
    */
-  function get($collection) {
+  public function get($collection) {
     // Store the data for this collection in the database.
     $storage = $this->storageFactory->get("user.private_tempstore.$collection");
     return new PrivateTempStore($storage, $this->lockBackend, $this->currentUser, $this->requestStack, $this->expire);

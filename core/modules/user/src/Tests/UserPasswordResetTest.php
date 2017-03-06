@@ -69,7 +69,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
   /**
    * Tests password reset functionality.
    */
-  function testUserPasswordReset() {
+  public function testUserPasswordReset() {
     // Verify that accessing the password reset form without having the session
     // variables set results in an access denied message.
     $this->drupalGet(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
@@ -300,7 +300,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
   /**
    * Make sure that users cannot forge password reset URLs of other users.
    */
-  function testResetImpersonation() {
+  public function testResetImpersonation() {
     // Create two identical user accounts except for the user name. They must
     // have the same empty password, so we can't use $this->drupalCreateUser().
     $edit = [];

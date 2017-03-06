@@ -80,7 +80,7 @@ class BookTest extends WebTestBase {
    *
    * @return \Drupal\node\NodeInterface[]
    */
-  function createBook() {
+  public function createBook() {
     // Create new book.
     $this->drupalLogin($this->bookAuthor);
 
@@ -151,7 +151,7 @@ class BookTest extends WebTestBase {
   /**
    * Tests saving the book outline on an empty book.
    */
-  function testEmptyBook() {
+  public function testEmptyBook() {
     // Create a new empty book.
     $this->drupalLogin($this->bookAuthor);
     $book = $this->createBookNode('new');
@@ -166,7 +166,7 @@ class BookTest extends WebTestBase {
   /**
    * Tests book functionality through node interfaces.
    */
-  function testBook() {
+  public function testBook() {
     // Create new book.
     $nodes = $this->createBook();
     $book = $this->book;
@@ -247,7 +247,7 @@ class BookTest extends WebTestBase {
    * @param array $breadcrumb
    *   The nodes that should be displayed in the breadcrumb.
    */
-  function checkBookNode(EntityInterface $node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
+  public function checkBookNode(EntityInterface $node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
     // $number does not use drupal_static as it should not be reset
     // since it uniquely identifies each call to checkBookNode().
     static $number = 0;
@@ -319,7 +319,7 @@ class BookTest extends WebTestBase {
    * @return string
    *   A regular expression that locates sub-nodes of the outline.
    */
-  function generateOutlinePattern($nodes) {
+  public function generateOutlinePattern($nodes) {
     $outline = '';
     foreach ($nodes as $node) {
       $outline .= '(node\/' . $node->id() . ')(.*?)(' . $node->label() . ')(.*?)';
@@ -339,7 +339,7 @@ class BookTest extends WebTestBase {
    * @return \Drupal\node\NodeInterface
    *   The created node.
    */
-  function createBookNode($book_nid, $parent = NULL) {
+  public function createBookNode($book_nid, $parent = NULL) {
     // $number does not use drupal_static as it should not be reset
     // since it uniquely identifies each call to createBookNode().
     static $number = 0; // Used to ensure that when sorted nodes stay in same order.
@@ -373,7 +373,7 @@ class BookTest extends WebTestBase {
   /**
    * Tests book export ("printer-friendly version") functionality.
    */
-  function testBookExport() {
+  public function testBookExport() {
     // Create a book.
     $nodes = $this->createBook();
 
@@ -418,7 +418,7 @@ class BookTest extends WebTestBase {
   /**
    * Tests the functionality of the book navigation block.
    */
-  function testBookNavigationBlock() {
+  public function testBookNavigationBlock() {
     $this->drupalLogin($this->adminUser);
 
     // Enable the block.
@@ -495,7 +495,7 @@ class BookTest extends WebTestBase {
   /**
    * Tests the book navigation block when an access module is installed.
    */
-  function testNavigationBlockOnAccessModuleInstalled() {
+  public function testNavigationBlockOnAccessModuleInstalled() {
     $this->drupalLogin($this->adminUser);
     $block = $this->drupalPlaceBlock('book_navigation', ['block_mode' => 'book pages']);
 
@@ -526,7 +526,7 @@ class BookTest extends WebTestBase {
   /**
    * Tests the access for deleting top-level book nodes.
    */
-  function testBookDelete() {
+  public function testBookDelete() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $nodes = $this->createBook();
     $this->drupalLogin($this->adminUser);

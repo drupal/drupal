@@ -29,7 +29,7 @@ class NumericFilter extends FilterPluginBase {
     return $options;
   }
 
-  function operators() {
+  public function operators() {
     $operators = [
       '<' => [
         'title' => $this->t('Is less than'),

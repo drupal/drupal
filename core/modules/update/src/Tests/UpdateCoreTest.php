@@ -44,7 +44,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Tests the Update Manager module when no updates are available.
    */
-  function testNoUpdatesAvailable() {
+  public function testNoUpdatesAvailable() {
     foreach ([0, 1] as $minor_version) {
       foreach ([0, 1] as $patch_version) {
         foreach (['-alpha1', '-beta1', ''] as $extra_version) {
@@ -63,7 +63,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Tests the Update Manager module when one normal update is available.
    */
-  function testNormalUpdateAvailable() {
+  public function testNormalUpdateAvailable() {
     $this->setSystemInfo('8.0.0');
 
     // Ensure that the update check requires a token.
@@ -130,7 +130,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Tests the Update Manager module when a major update is available.
    */
-  function testMajorUpdateAvailable() {
+  public function testMajorUpdateAvailable() {
     foreach ([0, 1] as $minor_version) {
       foreach ([0, 1] as $patch_version) {
         foreach (['-alpha1', '-beta1', ''] as $extra_version) {
@@ -156,7 +156,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Tests the Update Manager module when a security update is available.
    */
-  function testSecurityUpdateAvailable() {
+  public function testSecurityUpdateAvailable() {
     foreach ([0, 1] as $minor_version) {
       $this->setSystemInfo("8.$minor_version.0");
       $this->refreshUpdateStatus(['drupal' => "$minor_version.2-sec"]);
@@ -174,7 +174,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Ensures proper results where there are date mismatches among modules.
    */
-  function testDatestampMismatch() {
+  public function testDatestampMismatch() {
     $system_info = [
       '#all' => [
         // We need to think we're running a -dev snapshot to see dates.
@@ -197,7 +197,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Checks that running cron updates the list of available updates.
    */
-  function testModulePageRunCron() {
+  public function testModulePageRunCron() {
     $this->setSystemInfo('8.0.0');
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
@@ -214,7 +214,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Checks the messages at admin/modules when the site is up to date.
    */
-  function testModulePageUpToDate() {
+  public function testModulePageUpToDate() {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
@@ -235,7 +235,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Checks the messages at admin/modules when an update is missing.
    */
-  function testModulePageRegularUpdate() {
+  public function testModulePageRegularUpdate() {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
@@ -256,7 +256,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Checks the messages at admin/modules when a security update is missing.
    */
-  function testModulePageSecurityUpdate() {
+  public function testModulePageSecurityUpdate() {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
@@ -295,7 +295,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Tests the Update Manager module when the update server returns 503 errors.
    */
-  function testServiceUnavailable() {
+  public function testServiceUnavailable() {
     $this->refreshUpdateStatus([], '503-error');
     // Ensure that no "Warning: SimpleXMLElement..." parse errors are found.
     $this->assertNoText('SimpleXMLElement');
@@ -305,7 +305,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Tests that exactly one fetch task per project is created and not more.
    */
-  function testFetchTasks() {
+  public function testFetchTasks() {
     $projecta = [
       'name' => 'aaa_update_test',
     ];
@@ -331,7 +331,7 @@ class UpdateCoreTest extends UpdateTestBase {
   /**
    * Checks language module in core package at admin/reports/updates.
    */
-  function testLanguageModuleUpdate() {
+  public function testLanguageModuleUpdate() {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')

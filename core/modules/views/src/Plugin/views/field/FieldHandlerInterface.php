@@ -265,6 +265,6 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    *   is safe it will be wrapped in an object that implements
    *   MarkupInterface. If it is empty or unsafe it will be a string.
    */
-  function theme(ResultRow $values);
+  public function theme(ResultRow $values);
 
 }

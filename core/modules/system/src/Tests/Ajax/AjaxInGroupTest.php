@@ -17,7 +17,7 @@ class AjaxInGroupTest extends AjaxTestBase {
   /**
    * Submits forms with select and checkbox elements via Ajax.
    */
-  function testSimpleAjaxFormValue() {
+  public function testSimpleAjaxFormValue() {
     $this->drupalGet('/ajax_forms_test_get_form');
     $this->assertText('Test group');
     $this->assertText('AJAX checkbox in a group');

@@ -16,7 +16,7 @@ class HtaccessTest extends KernelTestBase {
   /**
    * Tests file_save_htaccess().
    */
-  function testHtaccessSave() {
+  public function testHtaccessSave() {
     // Prepare test directories.
     $public = Settings::get('file_public_path') . '/test/public';
     $private = Settings::get('file_public_path') . '/test/private';

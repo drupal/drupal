@@ -249,7 +249,7 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents() {
     $events[ConfigEvents::SAVE][] = ['onConfigSave', 128];
     $events[ConfigEvents::DELETE][] = ['onConfigDelete', 128];
     return $events;

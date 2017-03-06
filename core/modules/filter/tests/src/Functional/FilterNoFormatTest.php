@@ -24,7 +24,7 @@ class FilterNoFormatTest extends BrowserTestBase {
    * Tests if text with no format is filtered the same way as text in the
    * fallback format.
    */
-  function testCheckMarkupNoFormat() {
+  public function testCheckMarkupNoFormat() {
     // Create some text. Include some HTML and line breaks, so we get a good
     // test of the filtering that is applied to it.
     $text = "<strong>" . $this->randomMachineName(32) . "</strong>\n\n<div>" . $this->randomMachineName(32) . "</div>";

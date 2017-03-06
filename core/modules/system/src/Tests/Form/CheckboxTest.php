@@ -19,7 +19,7 @@ class CheckboxTest extends WebTestBase {
    */
   public static $modules = ['form_test'];
 
-  function testFormCheckbox() {
+  public function testFormCheckbox() {
     // Ensure that the checked state is determined and rendered correctly for
     // tricky combinations of default and return values.
     foreach ([FALSE, NULL, TRUE, 0, '0', '', 1, '1', 'foobar', '1foobar'] as $default_value) {

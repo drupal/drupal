@@ -114,7 +114,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
   /**
    * Tests the indexing throttle and search results with multilingual nodes.
    */
-  function testMultilingualSearch() {
+  public function testMultilingualSearch() {
     // Index only 2 nodes per cron run. We cannot do this setting in the UI,
     // because it doesn't go this low.
     $this->config('search.settings')->set('index.cron_limit', 2)->save();

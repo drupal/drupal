@@ -35,7 +35,7 @@ class BlockHtmlTest extends BrowserTestBase {
   /**
    * Tests for valid HTML for a block.
    */
-  function testHtml() {
+  public function testHtml() {
     $this->drupalGet('');
 
     // Ensure that a block's ID is converted to an HTML valid ID, and that

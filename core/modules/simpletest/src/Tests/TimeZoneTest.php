@@ -28,7 +28,7 @@ class TimeZoneTest extends WebTestBase {
   /**
    * Tests that user accounts have the default time zone set.
    */
-  function testAccountTimeZones() {
+  public function testAccountTimeZones() {
     $expected = 'Australia/Sydney';
     $this->assertEqual($this->rootUser->getTimeZone(), $expected, 'Root user has correct time zone.');
     $this->assertEqual($this->adminUser->getTimeZone(), $expected, 'Admin user has correct time zone.');

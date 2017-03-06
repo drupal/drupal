@@ -41,7 +41,7 @@ class InvalidUpdateHookTest extends WebTestBase {
     $this->updateUser = $this->drupalCreateUser(['administer software updates']);
   }
 
-  function testInvalidUpdateHook() {
+  public function testInvalidUpdateHook() {
     // Confirm that a module with hook_update_8000() cannot be updated.
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl);

@@ -29,7 +29,7 @@ class ContentTranslationSettingsApiTest extends KernelTestBase {
   /**
    * Tests that enabling translation via the API triggers schema updates.
    */
-  function testSettingsApi() {
+  public function testSettingsApi() {
     $this->container->get('content_translation.manager')->setEnabled('entity_test_mul', 'entity_test_mul', TRUE);
     $result =
       db_field_exists('entity_test_mul_property_data', 'content_translation_source') &&

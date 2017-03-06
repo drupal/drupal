@@ -146,7 +146,7 @@ class TransactionTest extends DatabaseTestBase {
    * If the active connection does not support transactions, this test does
    * nothing.
    */
-  function testTransactionRollBackSupported() {
+  public function testTransactionRollBackSupported() {
     // This test won't work right if transactions are not supported.
     if (!Database::getConnection()->supportsTransactions()) {
       return;
@@ -172,7 +172,7 @@ class TransactionTest extends DatabaseTestBase {
    *
    * If the active driver supports transactions, this test does nothing.
    */
-  function testTransactionRollBackNotSupported() {
+  public function testTransactionRollBackNotSupported() {
     // This test won't work right if transactions are supported.
     if (Database::getConnection()->supportsTransactions()) {
       return;
@@ -199,7 +199,7 @@ class TransactionTest extends DatabaseTestBase {
    * The behavior of this test should be identical for connections that support
    * transactions and those that do not.
    */
-  function testCommittedTransaction() {
+  public function testCommittedTransaction() {
     try {
       // Create two nested transactions. The changes should be committed.
       $this->transactionOuterLayer('A');
@@ -218,7 +218,7 @@ class TransactionTest extends DatabaseTestBase {
   /**
    * Tests the compatibility of transactions with DDL statements.
    */
-  function testTransactionWithDdlStatement() {
+  public function testTransactionWithDdlStatement() {
     // First, test that a commit works normally, even with DDL statements.
     $transaction = db_transaction();
     $this->insertRow('row');
@@ -351,7 +351,7 @@ class TransactionTest extends DatabaseTestBase {
    * @param $message
    *   The message to log for the assertion.
    */
-  function assertRowPresent($name, $message = NULL) {
+  public function assertRowPresent($name, $message = NULL) {
     if (!isset($message)) {
       $message = format_string('Row %name is present.', ['%name' => $name]);
     }
@@ -367,7 +367,7 @@ class TransactionTest extends DatabaseTestBase {
    * @param $message
    *   The message to log for the assertion.
    */
-  function assertRowAbsent($name, $message = NULL) {
+  public function assertRowAbsent($name, $message = NULL) {
     if (!isset($message)) {
       $message = format_string('Row %name is absent.', ['%name' => $name]);
     }
@@ -378,7 +378,7 @@ class TransactionTest extends DatabaseTestBase {
   /**
    * Tests transaction stacking, commit, and rollback.
    */
-  function testTransactionStacking() {
+  public function testTransactionStacking() {
     // This test won't work right if transactions are not supported.
     if (!Database::getConnection()->supportsTransactions()) {
       return;

@@ -32,7 +32,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
   /**
    * Tests term indentation.
    */
-  function testTermIndentation() {
+  public function testTermIndentation() {
     // Create three taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);
     $term2 = $this->createTerm($this->vocabulary);

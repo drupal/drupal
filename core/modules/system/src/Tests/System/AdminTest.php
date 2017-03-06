@@ -51,7 +51,7 @@ class AdminTest extends WebTestBase {
   /**
    * Tests output on administrative listing pages.
    */
-  function testAdminPages() {
+  public function testAdminPages() {
     // Go to Administration.
     $this->drupalGet('admin');
 
@@ -143,7 +143,7 @@ class AdminTest extends WebTestBase {
   /**
    * Test compact mode.
    */
-  function testCompactMode() {
+  public function testCompactMode() {
     // The front page defaults to 'user/login', which redirects to 'user/{user}'
     // for authenticated users. We cannot use '<front>', since this does not
     // match the redirected url.

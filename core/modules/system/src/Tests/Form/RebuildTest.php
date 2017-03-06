@@ -42,7 +42,7 @@ class RebuildTest extends WebTestBase {
   /**
    * Tests preservation of values.
    */
-  function testRebuildPreservesValues() {
+  public function testRebuildPreservesValues() {
     $edit = [
       'checkbox_1_default_off' => TRUE,
       'checkbox_1_default_on' => FALSE,
@@ -67,7 +67,7 @@ class RebuildTest extends WebTestBase {
    * The 'action' attribute of a form should not change after an Ajax submission
    * followed by a non-Ajax submission, which triggers a validation error.
    */
-  function testPreserveFormActionAfterAJAX() {
+  public function testPreserveFormActionAfterAJAX() {
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';
     FieldStorageConfig::create([

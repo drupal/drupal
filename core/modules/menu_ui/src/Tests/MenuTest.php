@@ -77,7 +77,7 @@ class MenuTest extends MenuWebTestBase {
   /**
    * Tests menu functionality using the admin and user interfaces.
    */
-  function testMenu() {
+  public function testMenu() {
     // Log in the user.
     $this->drupalLogin($this->adminUser);
     $this->items = [];
@@ -148,7 +148,7 @@ class MenuTest extends MenuWebTestBase {
   /**
    * Adds a custom menu using CRUD functions.
    */
-  function addCustomMenuCRUD() {
+  public function addCustomMenuCRUD() {
     // Add a new custom menu.
     $menu_name = substr(hash('sha256', $this->randomMachineName(16)), 0, MENU_MAX_MENU_NAME_LENGTH_UI);
     $label = $this->randomMachineName(16);
@@ -178,7 +178,7 @@ class MenuTest extends MenuWebTestBase {
    * @return \Drupal\system\Entity\Menu
    *   The custom menu that has been created.
    */
-  function addCustomMenu() {
+  public function addCustomMenu() {
     // Try adding a menu using a menu_name that is too long.
     $this->drupalGet('admin/structure/menu/add');
     $menu_name = substr(hash('sha256', $this->randomMachineName(16)), 0, MENU_MAX_MENU_NAME_LENGTH_UI + 1);
@@ -231,7 +231,7 @@ class MenuTest extends MenuWebTestBase {
    * This deletes the custom menu that is stored in $this->menu and performs
    * tests on the menu delete user interface.
    */
-  function deleteCustomMenu() {
+  public function deleteCustomMenu() {
     $menu_name = $this->menu->id();
     $label = $this->menu->label();
 
@@ -257,7 +257,7 @@ class MenuTest extends MenuWebTestBase {
   /**
    * Tests menu functionality.
    */
-  function doMenuTests() {
+  public function doMenuTests() {
     $menu_name = $this->menu->id();
 
     // Test the 'Add link' local action.
@@ -489,7 +489,7 @@ class MenuTest extends MenuWebTestBase {
   /**
    * Adds and removes a menu link with a query string and fragment.
    */
-  function testMenuQueryAndFragment() {
+  public function testMenuQueryAndFragment() {
     $this->drupalLogin($this->adminUser);
 
     // Make a path with query and fragment on.
@@ -521,7 +521,7 @@ class MenuTest extends MenuWebTestBase {
   /**
    * Tests renaming the built-in menu.
    */
-  function testSystemMenuRename() {
+  public function testSystemMenuRename() {
     $this->drupalLogin($this->adminUser);
     $edit = [
       'label' => $this->randomMachineName(16),
@@ -538,7 +538,7 @@ class MenuTest extends MenuWebTestBase {
   /**
    * Tests that menu items pointing to unpublished nodes are editable.
    */
-  function testUnpublishedNodeMenuItem() {
+  public function testUnpublishedNodeMenuItem() {
     $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer blocks', 'administer menu', 'create article content', 'bypass node access']));
     // Create an unpublished node.
     $node = $this->drupalCreateNode([
@@ -602,7 +602,7 @@ class MenuTest extends MenuWebTestBase {
    * @return \Drupal\menu_link_content\Entity\MenuLinkContent
    *   A menu link entity.
    */
-  function addMenuLink($parent = '', $path = '/', $menu_name = 'tools', $expanded = FALSE, $weight = '0') {
+  public function addMenuLink($parent = '', $path = '/', $menu_name = 'tools', $expanded = FALSE, $weight = '0') {
     // View add menu link page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
     $this->assertResponse(200);
@@ -635,7 +635,7 @@ class MenuTest extends MenuWebTestBase {
   /**
    * Attempts to add menu link with invalid path or no access permission.
    */
-  function addInvalidMenuLink() {
+  public function addInvalidMenuLink() {
     foreach (['access' => '/admin/people/permissions'] as $type => $link_path) {
       $edit = [
         'link[0][uri]' => $link_path,
@@ -649,7 +649,7 @@ class MenuTest extends MenuWebTestBase {
   /**
    * Tests that parent options are limited by depth when adding menu links.
    */
-  function checkInvalidParentMenuLinks() {
+  public function checkInvalidParentMenuLinks() {
     $last_link = NULL;
     $created_links = [];
 
@@ -700,7 +700,7 @@ class MenuTest extends MenuWebTestBase {
    * @param object $parent_node
    *   Parent menu link content node.
    */
-  function verifyMenuLink(MenuLinkContent $item, $item_node, MenuLinkContent $parent = NULL, $parent_node = NULL) {
+  public function verifyMenuLink(MenuLinkContent $item, $item_node, MenuLinkContent $parent = NULL, $parent_node = NULL) {
     // View home page.
     $this->drupalGet('');
     $this->assertResponse(200);
@@ -737,7 +737,7 @@ class MenuTest extends MenuWebTestBase {
    * @param string $menu_name
    *   The menu the menu link will be moved to.
    */
-  function moveMenuLink(MenuLinkContent $item, $parent, $menu_name) {
+  public function moveMenuLink(MenuLinkContent $item, $parent, $menu_name) {
     $mlid = $item->id();
 
     $edit = [
@@ -753,7 +753,7 @@ class MenuTest extends MenuWebTestBase {
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   Menu link entity.
    */
-  function modifyMenuLink(MenuLinkContent $item) {
+  public function modifyMenuLink(MenuLinkContent $item) {
     $item->title->value = $this->randomMachineName(16);
 
     $mlid = $item->id();
@@ -778,7 +778,7 @@ class MenuTest extends MenuWebTestBase {
    * @param int $old_weight
    *   Original title for menu link.
    */
-  function resetMenuLink(MenuLinkInterface $menu_link, $old_weight) {
+  public function resetMenuLink(MenuLinkInterface $menu_link, $old_weight) {
     // Reset menu link.
     $this->drupalPostForm("admin/structure/menu/link/{$menu_link->getPluginId()}/reset", [], t('Reset'));
     $this->assertResponse(200);
@@ -795,7 +795,7 @@ class MenuTest extends MenuWebTestBase {
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   Menu link.
    */
-  function deleteMenuLink(MenuLinkContent $item) {
+  public function deleteMenuLink(MenuLinkContent $item) {
     $mlid = $item->id();
     $title = $item->getTitle();
 
@@ -815,7 +815,7 @@ class MenuTest extends MenuWebTestBase {
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   Menu link.
    */
-  function toggleMenuLink(MenuLinkContent $item) {
+  public function toggleMenuLink(MenuLinkContent $item) {
     $this->disableMenuLink($item);
 
     // Verify menu link is absent.
@@ -834,7 +834,7 @@ class MenuTest extends MenuWebTestBase {
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   Menu link.
    */
-  function disableMenuLink(MenuLinkContent $item) {
+  public function disableMenuLink(MenuLinkContent $item) {
     $mlid = $item->id();
     $edit['enabled[value]'] = FALSE;
     $this->drupalPostForm("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
@@ -850,7 +850,7 @@ class MenuTest extends MenuWebTestBase {
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   Menu link.
    */
-  function enableMenuLink(MenuLinkContent $item) {
+  public function enableMenuLink(MenuLinkContent $item) {
     $mlid = $item->id();
     $edit['enabled[value]'] = TRUE;
     $this->drupalPostForm("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));

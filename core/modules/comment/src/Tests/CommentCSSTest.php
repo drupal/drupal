@@ -27,7 +27,7 @@ class CommentCSSTest extends CommentTestBase {
   /**
    * Tests CSS classes on comments.
    */
-  function testCommentClasses() {
+  public function testCommentClasses() {
     // Create all permutations for comments, users, and nodes.
     $parameters = [
       'node_uid' => [0, $this->webUser->id()],

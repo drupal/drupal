@@ -46,7 +46,7 @@ class LinksTest extends BrowserTestBase {
   /**
    * Create a simple hierarchy of links.
    */
-  function createLinkHierarchy($module = 'menu_test') {
+  public function createLinkHierarchy($module = 'menu_test') {
     // First remove all the menu links in the menu.
     $this->menuLinkManager->deleteLinksInMenu('menu_test');
 
@@ -107,7 +107,7 @@ class LinksTest extends BrowserTestBase {
   /**
    * Assert that at set of links is properly parented.
    */
-  function assertMenuLinkParents($links, $expected_hierarchy) {
+  public function assertMenuLinkParents($links, $expected_hierarchy) {
     foreach ($expected_hierarchy as $id => $parent) {
       /* @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
       $menu_link_plugin = $this->menuLinkManager->createInstance($links[$id]);
@@ -143,7 +143,7 @@ class LinksTest extends BrowserTestBase {
   /**
    * Test automatic reparenting of menu links.
    */
-  function testMenuLinkReparenting($module = 'menu_test') {
+  public function testMenuLinkReparenting($module = 'menu_test') {
     // Check the initial hierarchy.
     $links = $this->createLinkHierarchy($module);
 

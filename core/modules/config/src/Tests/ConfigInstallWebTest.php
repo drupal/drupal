@@ -36,7 +36,7 @@ class ConfigInstallWebTest extends WebTestBase {
   /**
    * Tests module re-installation.
    */
-  function testIntegrationModuleReinstallation() {
+  public function testIntegrationModuleReinstallation() {
     $default_config = 'config_integration_test.settings';
     $default_configuration_entity = 'config_test.dynamic.config_integration_test';
 

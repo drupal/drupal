@@ -75,7 +75,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    *
    * @see testRender
    */
-  function providerTestRender() {
+  public function providerTestRender() {
     $create_link_element = function($href, $media = 'all', $browsers = []) {
       return [
         '#type' => 'html_tag',
@@ -437,7 +437,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    *
    * @dataProvider providerTestRender
    */
-  function testRender(array $css_assets, array $render_elements) {
+  public function testRender(array $css_assets, array $render_elements) {
     $this->state->expects($this->once())
       ->method('get')
       ->with('system.css_js_query_string')
@@ -448,7 +448,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
   /**
    * Tests a CSS asset group with the invalid 'type' => 'internal'.
    */
-  function testRenderInvalidType() {
+  public function testRenderInvalidType() {
     $this->state->expects($this->once())
       ->method('get')
       ->with('system.css_js_query_string')

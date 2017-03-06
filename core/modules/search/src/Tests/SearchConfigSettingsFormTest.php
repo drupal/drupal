@@ -61,7 +61,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
   /**
    * Verifies the search settings form.
    */
-  function testSearchSettingsPage() {
+  public function testSearchSettingsPage() {
 
     // Test that the settings form displays the correct count of items left to index.
     $this->drupalGet('admin/config/search/pages');
@@ -105,7 +105,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
   /**
    * Verifies plugin-supplied settings form.
    */
-  function testSearchModuleSettingsPage() {
+  public function testSearchModuleSettingsPage() {
     $this->drupalGet('admin/config/search/pages');
     $this->clickLink(t('Edit'), 1);
 
@@ -127,7 +127,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
   /**
    * Verifies that you can disable individual search plugins.
    */
-  function testSearchModuleDisabling() {
+  public function testSearchModuleDisabling() {
     // Array of search plugins to test: 'keys' are the keywords to search for,
     // and 'text' is the text to assert is on the results page.
     $plugin_info = [

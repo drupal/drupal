@@ -34,7 +34,7 @@ class ConfigEntityListTest extends WebTestBase {
   /**
    * Tests entity list builder methods.
    */
-  function testList() {
+  public function testList() {
     $controller = \Drupal::entityManager()->getListBuilder('config_test');
 
     // Test getStorage() method.
@@ -147,7 +147,7 @@ class ConfigEntityListTest extends WebTestBase {
   /**
    * Tests the listing UI.
    */
-  function testListUI() {
+  public function testListUI() {
     // Log in as an administrative user to access the full menu trail.
     $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer site configuration']));
 

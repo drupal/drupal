@@ -21,7 +21,7 @@ class ElementTest extends WebTestBase {
   /**
    * Tests placeholder text for elements that support placeholders.
    */
-  function testPlaceHolderText() {
+  public function testPlaceHolderText() {
     $this->drupalGet('form-test/placeholder-text');
     $expected = 'placeholder-text';
     // Test to make sure non-textarea elements have the proper placeholder text.
@@ -44,7 +44,7 @@ class ElementTest extends WebTestBase {
   /**
    * Tests expansion of #options for #type checkboxes and radios.
    */
-  function testOptions() {
+  public function testOptions() {
     $this->drupalGet('form-test/checkboxes-radios');
 
     // Verify that all options appear in their defined order.
@@ -91,7 +91,7 @@ class ElementTest extends WebTestBase {
   /**
    * Tests wrapper ids for checkboxes and radios.
    */
-  function testWrapperIds() {
+  public function testWrapperIds() {
     $this->drupalGet('form-test/checkboxes-radios');
 
     // Verify that wrapper id is different from element id.
@@ -106,7 +106,7 @@ class ElementTest extends WebTestBase {
   /**
    * Tests button classes.
    */
-  function testButtonClasses() {
+  public function testButtonClasses() {
     $this->drupalGet('form-test/button-class');
     // Just contains(@class, "button") won't do because then
     // "button--foo" would contain "button". Instead, check
@@ -120,7 +120,7 @@ class ElementTest extends WebTestBase {
   /**
    * Tests the #group property.
    */
-  function testGroupElements() {
+  public function testGroupElements() {
     $this->drupalGet('form-test/group-details');
     $elements = $this->xpath('//div[@class="details-wrapper"]//div[@class="details-wrapper"]//label');
     $this->assertTrue(count($elements) == 1);

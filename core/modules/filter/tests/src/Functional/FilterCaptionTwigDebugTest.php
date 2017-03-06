@@ -76,7 +76,7 @@ class FilterCaptionTwigDebugTest extends BrowserTestBase {
   /**
    * Test the caption filter with Twig debugging on.
    */
-  function testCaptionFilter() {
+  public function testCaptionFilter() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
     $filter = $this->filters['filter_caption'];

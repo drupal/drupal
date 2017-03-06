@@ -15,7 +15,7 @@ class UserDeleteTest extends BrowserTestBase {
   /**
    * Test deleting multiple users.
    */
-  function testUserDeleteMultiple() {
+  public function testUserDeleteMultiple() {
     // Create a few users with permissions, so roles will be created.
     $user_a = $this->drupalCreateUser(['access user profiles']);
     $user_b = $this->drupalCreateUser(['access user profiles']);

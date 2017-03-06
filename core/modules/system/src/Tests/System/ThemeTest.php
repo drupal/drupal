@@ -41,7 +41,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Test the theme settings form.
    */
-  function testThemeSettings() {
+  public function testThemeSettings() {
     // Ensure invalid theme settings form URLs return a proper 404.
     $this->drupalGet('admin/appearance/settings/bartik');
     $this->assertResponse(404, 'The theme settings form URL for a uninstalled theme could not be found.');
@@ -218,7 +218,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Test the theme settings logo form.
    */
-  function testThemeSettingsLogo() {
+  public function testThemeSettingsLogo() {
     // Visit Bartik's theme settings page to replace the logo.
     $this->container->get('theme_handler')->install(['bartik']);
     $this->drupalGet('admin/appearance/settings/bartik');
@@ -241,7 +241,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Test the administration theme functionality.
    */
-  function testAdministrationTheme() {
+  public function testAdministrationTheme() {
     $this->container->get('theme_handler')->install(['seven']);
 
     // Install an administration theme and show it on the node admin pages.
@@ -300,7 +300,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Test switching the default theme.
    */
-  function testSwitchDefaultTheme() {
+  public function testSwitchDefaultTheme() {
     /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
     $theme_handler = \Drupal::service('theme_handler');
     // First, install Stark and set it as the default theme programmatically.
@@ -330,7 +330,7 @@ class ThemeTest extends WebTestBase {
    * Include test for themes that have a missing base theme somewhere further up
    * the chain than the immediate base theme.
    */
-  function testInvalidTheme() {
+  public function testInvalidTheme() {
     // theme_page_test_system_info_alter() un-hides all hidden themes.
     $this->container->get('module_installer')->install(['theme_page_test']);
     // Clear the system_list() and theme listing cache to pick up the change.
@@ -348,7 +348,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Test uninstalling of themes works.
    */
-  function testUninstallingThemes() {
+  public function testUninstallingThemes() {
     // Install Bartik and set it as the default theme.
     \Drupal::service('theme_handler')->install(['bartik']);
     // Set up seven as the admin theme.
@@ -408,7 +408,7 @@ class ThemeTest extends WebTestBase {
   /**
    * Tests installing a theme and setting it as default.
    */
-  function testInstallAndSetAsDefault() {
+  public function testInstallAndSetAsDefault() {
     $this->drupalGet('admin/appearance');
     // Bartik is uninstalled in the test profile and has the third "Install and
     // set as default" link.

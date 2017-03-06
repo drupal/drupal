@@ -31,7 +31,7 @@ class EntityFormTest extends WebTestBase {
   /**
    * Tests basic form CRUD functionality.
    */
-  function testFormCRUD() {
+  public function testFormCRUD() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
       $this->doTestFormCRUD($entity_type);
@@ -53,7 +53,7 @@ class EntityFormTest extends WebTestBase {
    *
    * @see entity_test_entity_form_display_alter()
    */
-  function testEntityFormDisplayAlter() {
+  public function testEntityFormDisplayAlter() {
     $this->drupalGet('entity_test/add');
     $altered_field = $this->xpath('//input[@name="field_test_text[0][value]" and @size="42"]');
     $this->assertTrue(count($altered_field) === 1, 'The altered field has the correct size value.');

@@ -31,7 +31,7 @@ class UserAccountLinksTest extends WebTestBase {
   /**
    * Tests the secondary menu.
    */
-  function testSecondaryMenu() {
+  public function testSecondaryMenu() {
     // Create a regular user.
     $user = $this->drupalCreateUser([]);
 
@@ -71,7 +71,7 @@ class UserAccountLinksTest extends WebTestBase {
   /**
    * Tests disabling the 'My account' link.
    */
-  function testDisabledAccountLink() {
+  public function testDisabledAccountLink() {
     // Create an admin user and log in.
     $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer menu']));
 
@@ -110,7 +110,7 @@ class UserAccountLinksTest extends WebTestBase {
   /**
    * Tests page title is set correctly on user account tabs.
    */
-  function testAccountPageTitles() {
+  public function testAccountPageTitles() {
     // Default page titles are suffixed with the site name - Drupal.
     $title_suffix = ' | Drupal';
 

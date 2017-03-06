@@ -87,35 +87,35 @@ class ThemeTestController extends ControllerBase {
   /**
    * Menu callback for testing suggestion alter hooks with template files.
    */
-  function suggestionProvided() {
+  public function suggestionProvided() {
     return ['#theme' => 'theme_test_suggestion_provided'];
   }
 
   /**
    * Menu callback for testing suggestion alter hooks with template files.
    */
-  function suggestionAlter() {
+  public function suggestionAlter() {
     return ['#theme' => 'theme_test_suggestions'];
   }
 
   /**
    * Menu callback for testing hook_theme_suggestions_alter().
    */
-  function generalSuggestionAlter() {
+  public function generalSuggestionAlter() {
     return ['#theme' => 'theme_test_general_suggestions'];
   }
 
   /**
    * Menu callback for testing suggestion alter hooks with specific suggestions.
    */
-  function specificSuggestionAlter() {
+  public function specificSuggestionAlter() {
     return ['#theme' => 'theme_test_specific_suggestions__variant'];
   }
 
   /**
    * Menu callback for testing suggestion alter hooks with theme functions.
    */
-  function functionSuggestionAlter() {
+  public function functionSuggestionAlter() {
     return ['#theme' => 'theme_test_function_suggestions'];
   }
 
@@ -123,7 +123,7 @@ class ThemeTestController extends ControllerBase {
   /**
    * Menu callback for testing includes with suggestion alter hooks.
    */
-  function suggestionAlterInclude() {
+  public function suggestionAlterInclude() {
     return ['#theme' => 'theme_test_suggestions_include'];
   }
 

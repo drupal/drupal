@@ -52,7 +52,7 @@ class FormCacheTest extends KernelTestBase {
   /**
    * Tests the form cache with a logged-in user.
    */
-  function testCacheToken() {
+  public function testCacheToken() {
     \Drupal::currentUser()->setAccount(new UserSession(['uid' => 1]));
     \Drupal::formBuilder()->setCache($this->formBuildId, $this->form, $this->formState);
 
@@ -83,7 +83,7 @@ class FormCacheTest extends KernelTestBase {
   /**
    * Tests the form cache without a logged-in user.
    */
-  function testNoCacheToken() {
+  public function testNoCacheToken() {
     // Switch to a anonymous user account.
     $account_switcher = \Drupal::service('account_switcher');
     $account_switcher->switchTo(new AnonymousUserSession());

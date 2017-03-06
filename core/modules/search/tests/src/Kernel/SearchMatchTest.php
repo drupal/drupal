@@ -37,7 +37,7 @@ class SearchMatchTest extends KernelTestBase {
   /**
    * Test search indexing.
    */
-  function testMatching() {
+  public function testMatching() {
     $this->_setup();
     $this->_testQueries();
   }
@@ -45,7 +45,7 @@ class SearchMatchTest extends KernelTestBase {
   /**
    * Set up a small index of items to test against.
    */
-  function _setup() {
+  public function _setup() {
     $this->config('search.settings')->set('index.minimum_word_size', 3)->save();
 
     for ($i = 1; $i <= 7; ++$i) {
@@ -77,7 +77,7 @@ class SearchMatchTest extends KernelTestBase {
    *   6  enim am minim veniam es cillum
    *   7  am minim veniam es cillum dolore eu
    */
-  function getText($n) {
+  public function getText($n) {
     $words = explode(' ', "Ipsum dolore sit am. Ut enim am minim veniam. Es cillum dolore eu.");
     return implode(' ', array_slice($words, $n - 1, $n));
   }
@@ -92,7 +92,7 @@ class SearchMatchTest extends KernelTestBase {
    *   11 came over from germany
    *   12 over from germany swimming
    */
-  function getText2($n) {
+  public function getText2($n) {
     $words = explode(' ', "Dear King Philip came over from Germany swimming.");
     return implode(' ', array_slice($words, $n - 1, $n));
   }
@@ -100,7 +100,7 @@ class SearchMatchTest extends KernelTestBase {
   /**
    * Run predefine queries looking for indexed terms.
    */
-  function _testQueries() {
+  public function _testQueries() {
     // Note: OR queries that include short words in OR groups are only accepted
     // if the ORed terms are ANDed with at least one long word in the rest of
     // the query. Examples:
@@ -218,7 +218,7 @@ class SearchMatchTest extends KernelTestBase {
    *
    * Verify if a query produces the correct results.
    */
-  function _testQueryMatching($query, $set, $results) {
+  public function _testQueryMatching($query, $set, $results) {
     // Get result IDs.
     $found = [];
     foreach ($set as $item) {
@@ -236,7 +236,7 @@ class SearchMatchTest extends KernelTestBase {
    *
    * Verify if a query produces normalized, monotonous scores.
    */
-  function _testQueryScores($query, $set, $results) {
+  public function _testQueryScores($query, $set, $results) {
     // Get result scores.
     $scores = [];
     foreach ($set as $item) {

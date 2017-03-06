@@ -36,7 +36,7 @@ class CommentUninstallTest extends WebTestBase {
    *
    * @throws \Drupal\Core\Extension\ModuleUninstallValidatorException
    */
-  function testCommentUninstallWithField() {
+  public function testCommentUninstallWithField() {
     // Ensure that the field exists before uninstallation.
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
     $this->assertNotNull($field_storage, 'The comment_body field exists.');
@@ -55,7 +55,7 @@ class CommentUninstallTest extends WebTestBase {
   /**
    * Tests if uninstallation succeeds if the field has been deleted beforehand.
    */
-  function testCommentUninstallWithoutField() {
+  public function testCommentUninstallWithoutField() {
     // Manually delete the comment_body field before module uninstallation.
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
     $this->assertNotNull($field_storage, 'The comment_body field exists.');

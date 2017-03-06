@@ -14,7 +14,7 @@ class LoggingTest extends DatabaseTestBase {
   /**
    * Tests that we can log the existence of a query.
    */
-  function testEnableLogging() {
+  public function testEnableLogging() {
     Database::startLog('testing');
 
     db_query('SELECT name FROM {test} WHERE age > :age', [':age' => 25])->fetchCol();
@@ -35,7 +35,7 @@ class LoggingTest extends DatabaseTestBase {
   /**
    * Tests that we can run two logs in parallel.
    */
-  function testEnableMultiLogging() {
+  public function testEnableMultiLogging() {
     Database::startLog('testing1');
 
     db_query('SELECT name FROM {test} WHERE age > :age', [':age' => 25])->fetchCol();
@@ -54,7 +54,7 @@ class LoggingTest extends DatabaseTestBase {
   /**
    * Tests logging queries against multiple targets on the same connection.
    */
-  function testEnableTargetLogging() {
+  public function testEnableTargetLogging() {
     // Clone the primary credentials to a replica connection and to another fake
     // connection.
     $connection_info = Database::getConnectionInfo('default');
@@ -80,7 +80,7 @@ class LoggingTest extends DatabaseTestBase {
    * a fake target so the query should fall back to running on the default
    * target.
    */
-  function testEnableTargetLoggingNoTarget() {
+  public function testEnableTargetLoggingNoTarget() {
     Database::startLog('testing1');
 
     db_query('SELECT name FROM {test} WHERE age > :age', [':age' => 25])->fetchCol();
@@ -102,7 +102,7 @@ class LoggingTest extends DatabaseTestBase {
   /**
    * Tests that we can log queries separately on different connections.
    */
-  function testEnableMultiConnectionLogging() {
+  public function testEnableMultiConnectionLogging() {
     // Clone the primary credentials to a fake connection.
     // That both connections point to the same physical database is irrelevant.
     $connection_info = Database::getConnectionInfo('default');
@@ -129,7 +129,7 @@ class LoggingTest extends DatabaseTestBase {
   /**
    * Tests that getLog with a wrong key return an empty array.
    */
-  function testGetLoggingWrongKey() {
+  public function testGetLoggingWrongKey() {
     $result = Database::getLog('wrong');
 
     $this->assertEqual($result, [], 'The function getLog with a wrong key returns an empty array.');

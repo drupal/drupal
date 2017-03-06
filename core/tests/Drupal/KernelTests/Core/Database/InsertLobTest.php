@@ -12,7 +12,7 @@ class InsertLobTest extends DatabaseTestBase {
   /**
    * Tests that we can insert a single blob field successfully.
    */
-  function testInsertOneBlob() {
+  public function testInsertOneBlob() {
     $data = "This is\000a test.";
     $this->assertTrue(strlen($data) === 15, 'Test data contains a NULL.');
     $id = db_insert('test_one_blob')
@@ -25,7 +25,7 @@ class InsertLobTest extends DatabaseTestBase {
   /**
    * Tests that we can insert multiple blob fields in the same query.
    */
-  function testInsertMultipleBlob() {
+  public function testInsertMultipleBlob() {
     $id = db_insert('test_two_blobs')
       ->fields([
         'blob1' => 'This is',

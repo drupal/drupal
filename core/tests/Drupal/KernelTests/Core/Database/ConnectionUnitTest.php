@@ -94,7 +94,7 @@ class ConnectionUnitTest extends KernelTestBase {
    *
    * @todo getConnectionID() executes a query.
    */
-  function testOpenClose() {
+  public function testOpenClose() {
     if ($this->skipTest) {
       return;
     }
@@ -118,7 +118,7 @@ class ConnectionUnitTest extends KernelTestBase {
   /**
    * Tests Database::closeConnection() with a query.
    */
-  function testOpenQueryClose() {
+  public function testOpenQueryClose() {
     if ($this->skipTest) {
       return;
     }
@@ -145,7 +145,7 @@ class ConnectionUnitTest extends KernelTestBase {
   /**
    * Tests Database::closeConnection() with a query and custom prefetch method.
    */
-  function testOpenQueryPrefetchClose() {
+  public function testOpenQueryPrefetchClose() {
     if ($this->skipTest) {
       return;
     }
@@ -172,7 +172,7 @@ class ConnectionUnitTest extends KernelTestBase {
   /**
    * Tests Database::closeConnection() with a select query.
    */
-  function testOpenSelectQueryClose() {
+  public function testOpenSelectQueryClose() {
     if ($this->skipTest) {
       return;
     }

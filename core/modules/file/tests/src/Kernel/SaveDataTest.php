@@ -13,7 +13,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
   /**
    * Test the file_save_data() function when no filename is provided.
    */
-  function testWithoutFilename() {
+  public function testWithoutFilename() {
     $contents = $this->randomMachineName(8);
 
     $result = file_save_data($contents);
@@ -35,7 +35,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
   /**
    * Test the file_save_data() function when a filename is provided.
    */
-  function testWithFilename() {
+  public function testWithFilename() {
     $contents = $this->randomMachineName(8);
 
     // Using filename with non-latin characters.
@@ -60,7 +60,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
   /**
    * Test file_save_data() when renaming around an existing file.
    */
-  function testExistingRename() {
+  public function testExistingRename() {
     // Setup a file to overwrite.
     $existing = $this->createFile();
     $contents = $this->randomMachineName(8);
@@ -88,7 +88,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
   /**
    * Test file_save_data() when replacing an existing file.
    */
-  function testExistingReplace() {
+  public function testExistingReplace() {
     // Setup a file to overwrite.
     $existing = $this->createFile();
     $contents = $this->randomMachineName(8);
@@ -115,7 +115,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
   /**
    * Test that file_save_data() fails overwriting an existing file.
    */
-  function testExistingError() {
+  public function testExistingError() {
     $contents = $this->randomMachineName(8);
     $existing = $this->createFile(NULL, $contents);
 

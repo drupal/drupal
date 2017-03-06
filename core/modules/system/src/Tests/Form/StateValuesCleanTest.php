@@ -24,7 +24,7 @@ class StateValuesCleanTest extends WebTestBase {
   /**
    * Tests \Drupal\Core\Form\FormState::cleanValues().
    */
-  function testFormStateValuesClean() {
+  public function testFormStateValuesClean() {
     $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
 
     // Setup the expected result.

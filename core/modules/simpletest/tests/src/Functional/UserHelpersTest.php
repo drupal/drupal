@@ -14,7 +14,7 @@ class UserHelpersTest extends BrowserTestBase {
   /**
    * Tests WebTestBase::drupalUserIsLoggedIn().
    */
-  function testDrupalUserIsLoggedIn() {
+  public function testDrupalUserIsLoggedIn() {
     $first_user = $this->drupalCreateUser();
     $second_user = $this->drupalCreateUser();
 

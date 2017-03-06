@@ -106,7 +106,7 @@ class TranslationTest extends FieldKernelTestBase {
   /**
    * Test translatable fields storage/retrieval.
    */
-  function testTranslatableFieldSaveLoad() {
+  public function testTranslatableFieldSaveLoad() {
     // Enable field translations for nodes.
     field_test_entity_info_translatable('node', TRUE);
     $entity_type = \Drupal::entityManager()->getDefinition('node');

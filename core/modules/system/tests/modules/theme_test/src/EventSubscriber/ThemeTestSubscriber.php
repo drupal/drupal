@@ -91,7 +91,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = ['onRequest'];
     $events[KernelEvents::VIEW][] = ['onView', -1000];
     return $events;

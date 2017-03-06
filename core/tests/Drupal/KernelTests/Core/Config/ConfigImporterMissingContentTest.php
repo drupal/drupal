@@ -66,7 +66,7 @@ class ConfigImporterMissingContentTest extends KernelTestBase {
    * @see \Drupal\Core\Config\ConfigImporter::processMissingContent()
    * @see \Drupal\config_import_test\EventSubscriber
    */
-  function testMissingContent() {
+  public function testMissingContent() {
     \Drupal::state()->set('config_import_test.config_import_missing_content', TRUE);
 
     // Update a configuration entity in the sync directory to have a dependency

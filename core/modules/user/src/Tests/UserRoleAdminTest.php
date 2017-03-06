@@ -39,7 +39,7 @@ class UserRoleAdminTest extends WebTestBase {
   /**
    * Test adding, renaming and deleting roles.
    */
-  function testRoleAdministration() {
+  public function testRoleAdministration() {
     $this->drupalLogin($this->adminUser);
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     // Test presence of tab.
@@ -98,7 +98,7 @@ class UserRoleAdminTest extends WebTestBase {
   /**
    * Test user role weight change operation and ordering.
    */
-  function testRoleWeightOrdering() {
+  public function testRoleWeightOrdering() {
     $this->drupalLogin($this->adminUser);
     $roles = user_roles();
     $weight = count($roles);

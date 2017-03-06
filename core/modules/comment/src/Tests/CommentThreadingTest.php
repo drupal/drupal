@@ -13,7 +13,7 @@ class CommentThreadingTest extends CommentTestBase {
   /**
    * Tests the comment threading.
    */
-  function testCommentThreading() {
+  public function testCommentThreading() {
     // Set comments to have a subject with preview disabled.
     $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_DISABLED);

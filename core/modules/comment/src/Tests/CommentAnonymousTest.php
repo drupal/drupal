@@ -30,7 +30,7 @@ class CommentAnonymousTest extends CommentTestBase {
   /**
    * Tests anonymous comment functionality.
    */
-  function testAnonymous() {
+  public function testAnonymous() {
     $this->drupalLogin($this->adminUser);
     $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAYNOT_CONTACT);
     $this->drupalLogout();

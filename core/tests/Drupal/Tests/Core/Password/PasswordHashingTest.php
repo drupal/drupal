@@ -177,7 +177,7 @@ class PasswordHashingTest extends UnitTestCase {
  */
 class FakePhpassHashedPassword extends PhpassHashedPassword {
 
-  function __construct() {
+  public function __construct() {
     // Noop.
   }
 

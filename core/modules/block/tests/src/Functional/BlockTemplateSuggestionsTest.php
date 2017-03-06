@@ -22,7 +22,7 @@ class BlockTemplateSuggestionsTest extends BrowserTestBase {
   /**
    * Tests template suggestions from block_theme_suggestions_block().
    */
-  function testBlockThemeHookSuggestions() {
+  public function testBlockThemeHookSuggestions() {
     // Define a block with a derivative to be preprocessed, which includes both
     // an underscore (not transformed) and a hyphen (transformed to underscore),
     // and generates possibilities for each level of derivative.

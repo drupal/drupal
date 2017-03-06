@@ -33,7 +33,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Check the format of the returned values.
    */
-  function testReturn() {
+  public function testReturn() {
     // Grab a listing of all the JavaScript files and check that they're
     // passed to the callback.
     $all_files = file_scan_directory($this->path, '/^javascript-/');
@@ -58,7 +58,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Check that the callback function is called correctly.
    */
-  function testOptionCallback() {
+  public function testOptionCallback() {
 
     // When nothing is matched nothing should be passed to the callback.
     $all_files = file_scan_directory($this->path, '/^NONEXISTINGFILENAME/', ['callback' => 'file_test_file_scan_callback']);
@@ -79,7 +79,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Check that the no-mask parameter is honored.
    */
-  function testOptionNoMask() {
+  public function testOptionNoMask() {
     // Grab a listing of all the JavaScript files.
     $all_files = file_scan_directory($this->path, '/^javascript-/');
     $this->assertEqual(2, count($all_files), 'Found two, expected javascript files.');
@@ -92,7 +92,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Check that key parameter sets the return value's key.
    */
-  function testOptionKey() {
+  public function testOptionKey() {
     // "filename", for the path starting with $dir.
     $expected = [$this->path . '/javascript-1.txt', $this->path . '/javascript-2.script'];
     $actual = array_keys(file_scan_directory($this->path, '/^javascript-/', ['key' => 'filepath']));
@@ -121,7 +121,7 @@ class ScanDirectoryTest extends FileTestBase {
   /**
    * Check that the recurse option descends into subdirectories.
    */
-  function testOptionRecurse() {
+  public function testOptionRecurse() {
     $files = file_scan_directory($this->path . '/..', '/^javascript-/', ['recurse' => FALSE]);
     $this->assertTrue(empty($files), "Without recursion couldn't find javascript files.");
 
@@ -134,7 +134,7 @@ class ScanDirectoryTest extends FileTestBase {
    * Check that the min_depth options lets us ignore files in the starting
    * directory.
    */
-  function testOptionMinDepth() {
+  public function testOptionMinDepth() {
     $files = file_scan_directory($this->path, '/^javascript-/', ['min_depth' => 0]);
     $this->assertEqual(2, count($files), 'No minimum-depth gets files in current directory.');
 

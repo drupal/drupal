@@ -26,7 +26,7 @@ class CommentPreviewTest extends CommentTestBase {
   /**
    * Tests comment preview.
    */
-  function testCommentPreview() {
+  public function testCommentPreview() {
     // As admin user, configure comment settings.
     $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
@@ -123,7 +123,7 @@ class CommentPreviewTest extends CommentTestBase {
   /**
    * Tests comment edit, preview, and save.
    */
-  function testCommentEditPreviewSave() {
+  public function testCommentEditPreviewSave() {
     $web_user = $this->drupalCreateUser(['access comments', 'post comments', 'skip comment approval', 'edit own comments']);
     $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_OPTIONAL);

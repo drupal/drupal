@@ -40,7 +40,7 @@ class PageTitleTest extends WebTestBase {
   /**
    * Tests the handling of HTML in node titles.
    */
-  function testTitleTags() {
+  public function testTitleTags() {
     $title = "string with <em>HTML</em>";
     // Generate node content.
     $edit = [
@@ -60,7 +60,7 @@ class PageTitleTest extends WebTestBase {
   /**
    * Test if the title of the site is XSS proof.
    */
-  function testTitleXSS() {
+  public function testTitleXSS() {
     // Set some title with JavaScript and HTML chars to escape.
     $title = '</title><script type="text/javascript">alert("Title XSS!");</script> & < > " \' ';
     $title_filtered = Html::escape($title);

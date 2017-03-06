@@ -48,7 +48,7 @@ class FormTest extends WebTestBase {
    *
    * If the form field is found in $form_state->getErrors() then the test pass.
    */
-  function testRequiredFields() {
+  public function testRequiredFields() {
     // Originates from https://www.drupal.org/node/117748.
     // Sets of empty strings and arrays.
     $empty_strings = ['""' => "", '"\n"' => "\n", '" "' => " ", '"\t"' => "\t", '" \n\t "' => " \n\t ", '"\n\n\n\n\n"' => "\n\n\n\n\n"];
@@ -163,7 +163,7 @@ class FormTest extends WebTestBase {
    *
    * @see \Drupal\form_test\Form\FormTestValidateRequiredForm
    */
-  function testRequiredCheckboxesRadio() {
+  public function testRequiredCheckboxesRadio() {
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestValidateRequiredForm');
 
     // Attempt to submit the form with no required fields set.
@@ -312,7 +312,7 @@ class FormTest extends WebTestBase {
    *
    * @see \Drupal\form_test\Form\FormTestValidateRequiredNoTitleForm
    */
-  function testRequiredTextfieldNoTitle() {
+  public function testRequiredTextfieldNoTitle() {
     // Attempt to submit the form with no required field set.
     $edit = [];
     $this->drupalPostForm('form-test/validate-required-no-title', $edit, 'Submit');
@@ -339,7 +339,7 @@ class FormTest extends WebTestBase {
    *
    * @see _form_test_checkbox()
    */
-  function testCheckboxProcessing() {
+  public function testCheckboxProcessing() {
     // First, try to submit without the required checkbox.
     $edit = [];
     $this->drupalPostForm('form-test/checkbox', $edit, t('Submit'));
@@ -367,7 +367,7 @@ class FormTest extends WebTestBase {
   /**
    * Tests validation of #type 'select' elements.
    */
-  function testSelect() {
+  public function testSelect() {
     $form = \Drupal::formBuilder()->getForm('Drupal\form_test\Form\FormTestSelectForm');
     $this->drupalGet('form-test/select');
 
@@ -444,7 +444,7 @@ class FormTest extends WebTestBase {
   /**
    * Tests a select element when #options is not set.
    */
-  function testEmptySelect() {
+  public function testEmptySelect() {
     $this->drupalGet('form-test/empty-select');
     $this->assertFieldByXPath("//select[1]", NULL, 'Select element found.');
     $this->assertNoFieldByXPath("//select[1]/option", NULL, 'No option element found.');
@@ -453,7 +453,7 @@ class FormTest extends WebTestBase {
   /**
    * Tests validation of #type 'number' and 'range' elements.
    */
-  function testNumber() {
+  public function testNumber() {
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestNumberForm');
 
     // Array with all the error messages to be checked.
@@ -517,7 +517,7 @@ class FormTest extends WebTestBase {
   /**
    * Tests default value handling of #type 'range' elements.
    */
-  function testRange() {
+  public function testRange() {
     $values = json_decode($this->drupalPostForm('form-test/range', [], 'Submit'));
     $this->assertEqual($values->with_default_value, 18);
     $this->assertEqual($values->float, 10.5);
@@ -531,7 +531,7 @@ class FormTest extends WebTestBase {
   /**
    * Tests validation of #type 'color' elements.
    */
-  function testColorValidation() {
+  public function testColorValidation() {
     // Keys are inputs, values are expected results.
     $values = [
       '' => '#000000',
@@ -568,7 +568,7 @@ class FormTest extends WebTestBase {
    *
    * @see _form_test_disabled_elements()
    */
-  function testDisabledElements() {
+  public function testDisabledElements() {
     // Get the raw form in its original state.
     $form_state = new FormState();
     $form = (new FormTestDisabledElementsForm())->buildForm([], $form_state);
@@ -626,7 +626,7 @@ class FormTest extends WebTestBase {
   /**
    * Assert that the values submitted to a form matches the default values of the elements.
    */
-  function assertFormValuesDefault($values, $form) {
+  public function assertFormValuesDefault($values, $form) {
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#default_value'])) {
         if (isset($form[$key]['#expected_value'])) {
@@ -653,7 +653,7 @@ class FormTest extends WebTestBase {
    *
    * @see _form_test_disabled_elements()
    */
-  function testDisabledMarkup() {
+  public function testDisabledMarkup() {
     $this->drupalGet('form-test/disabled-elements');
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestDisabledElementsForm');
     $type_map = [
@@ -715,7 +715,7 @@ class FormTest extends WebTestBase {
    *
    * @see _form_test_input_forgery()
    */
-  function testInputForgery() {
+  public function testInputForgery() {
     $this->drupalGet('form-test/input-forgery');
     $checkbox = $this->xpath('//input[@name="checkboxes[two]"]');
     $checkbox[0]['value'] = 'FORGERY';
@@ -726,7 +726,7 @@ class FormTest extends WebTestBase {
   /**
    * Tests required attribute.
    */
-  function testRequiredAttribute() {
+  public function testRequiredAttribute() {
     $this->drupalGet('form-test/required-attribute');
     $expected = 'required';
     // Test to make sure the elements have the proper required attribute.

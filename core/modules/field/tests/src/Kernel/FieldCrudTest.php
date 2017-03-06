@@ -37,7 +37,7 @@ class FieldCrudTest extends FieldKernelTestBase {
    */
   protected $fieldDefinition;
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->fieldStorageDefinition = [
@@ -63,7 +63,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Test the creation of a field.
    */
-  function testCreateField() {
+  public function testCreateField() {
     // Set a state flag so that field_test.module knows to add an in-memory
     // constraint for this field.
     \Drupal::state()->set('field_test_add_constraint', $this->fieldStorage->getName());
@@ -174,7 +174,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Test reading back a field definition.
    */
-  function testReadField() {
+  public function testReadField() {
     FieldConfig::create($this->fieldDefinition)->save();
 
     // Read the field back.
@@ -187,7 +187,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Test the update of a field.
    */
-  function testUpdateField() {
+  public function testUpdateField() {
     FieldConfig::create($this->fieldDefinition)->save();
 
     // Check that basic changes are saved.
@@ -209,7 +209,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Test the deletion of a field.
    */
-  function testDeleteField() {
+  public function testDeleteField() {
     // TODO: Test deletion of the data stored in the field also.
     // Need to check that data for a 'deleted' field / storage doesn't get loaded
     // Need to check data marked deleted is cleaned on cron (not implemented yet...)
@@ -243,7 +243,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Tests the cross deletion behavior between field storages and fields.
    */
-  function testDeleteFieldCrossDeletion() {
+  public function testDeleteFieldCrossDeletion() {
     $field_definition_2 = $this->fieldDefinition;
     $field_definition_2['bundle'] .= '_another_bundle';
     entity_test_create_bundle($field_definition_2['bundle']);

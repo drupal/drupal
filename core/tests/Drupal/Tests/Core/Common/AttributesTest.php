@@ -52,7 +52,7 @@ class AttributesTest extends UnitTestCase {
    *
    * @dataProvider providerTestAttributeData
    */
-  function testDrupalAttributes($attributes, $expected, $message) {
+  public function testDrupalAttributes($attributes, $expected, $message) {
     $this->assertSame($expected, (string) new Attribute($attributes), $message);
   }
 

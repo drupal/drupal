@@ -31,7 +31,7 @@ class FilePrivateTest extends FileFieldTestBase {
   /**
    * Tests file access for file uploaded to a private node.
    */
-  function testPrivateFile() {
+  public function testPrivateFile() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());

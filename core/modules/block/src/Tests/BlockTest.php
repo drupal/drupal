@@ -18,7 +18,7 @@ class BlockTest extends BlockTestBase {
   /**
    * Tests block visibility.
    */
-  function testBlockVisibility() {
+  public function testBlockVisibility() {
     $block_name = 'system_powered_by_block';
     // Create a random title for the block.
     $title = $this->randomMachineName(8);
@@ -99,7 +99,7 @@ class BlockTest extends BlockTestBase {
   /**
    * Test block visibility when leaving "pages" textarea empty.
    */
-  function testBlockVisibilityListedEmpty() {
+  public function testBlockVisibilityListedEmpty() {
     $block_name = 'system_powered_by_block';
     // Create a random title for the block.
     $title = $this->randomMachineName(8);
@@ -176,7 +176,7 @@ class BlockTest extends BlockTestBase {
   /**
    * Test configuring and moving a module-define block to specific regions.
    */
-  function testBlock() {
+  public function testBlock() {
     // Place page title block to test error messages.
     $this->drupalPlaceBlock('page_title_block');
 
@@ -268,7 +268,7 @@ class BlockTest extends BlockTestBase {
   /**
    * Test block display of theme titles.
    */
-  function testThemeName() {
+  public function testThemeName() {
     // Enable the help block.
     $this->drupalPlaceBlock('help_block', ['region' => 'help']);
     $this->drupalPlaceBlock('local_tasks_block');
@@ -285,7 +285,7 @@ class BlockTest extends BlockTestBase {
   /**
    * Test block title display settings.
    */
-  function testHideBlockTitle() {
+  public function testHideBlockTitle() {
     $block_name = 'system_powered_by_block';
     // Create a random title for the block.
     $title = $this->randomMachineName(8);
@@ -328,7 +328,7 @@ class BlockTest extends BlockTestBase {
    *   The machine name of the theme region to move the block to, for example
    *   'header' or 'sidebar_first'.
    */
-  function moveBlockToRegion(array $block, $region) {
+  public function moveBlockToRegion(array $block, $region) {
     // Set the created block to a specific region.
     $block += ['theme' => $this->config('system.theme')->get('default')];
     $edit = [];

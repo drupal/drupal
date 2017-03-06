@@ -38,7 +38,7 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * The basic functionality of retrieving enabled modules.
    */
-  function testModuleList() {
+  public function testModuleList() {
     $module_list = ['system'];
 
     $this->assertModuleList($module_list, 'Initial');
@@ -92,7 +92,7 @@ class ModuleHandlerTest extends KernelTestBase {
    * @see module_test_system_info_alter()
    * @see https://www.drupal.org/files/issues/dep.gv__0.png
    */
-  function testDependencyResolution() {
+  public function testDependencyResolution() {
     $this->enableModules(['module_test']);
     $this->assertTrue($this->moduleHandler()->moduleExists('module_test'), 'Test module is enabled.');
 
@@ -171,7 +171,7 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * Tests uninstalling a module that is a "dependency" of a profile.
    */
-  function testUninstallProfileDependency() {
+  public function testUninstallProfileDependency() {
     $profile = 'minimal';
     $dependency = 'dblog';
     $this->setSetting('install_profile', $profile);
@@ -204,7 +204,7 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * Tests uninstalling a module that has content.
    */
-  function testUninstallContentDependency() {
+  public function testUninstallContentDependency() {
     $this->enableModules(['module_test', 'entity_test', 'text', 'user', 'help']);
     $this->assertTrue($this->moduleHandler()->moduleExists('entity_test'), 'Test module is enabled.');
     $this->assertTrue($this->moduleHandler()->moduleExists('module_test'), 'Test module is enabled.');
@@ -258,7 +258,7 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * Tests whether the correct module metadata is returned.
    */
-  function testModuleMetaData() {
+  public function testModuleMetaData() {
     // Generate the list of available modules.
     $modules = system_rebuild_module_data();
     // Check that the mtime field exists for the system module.
@@ -289,7 +289,7 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * Tests whether the correct theme metadata is returned.
    */
-  function testThemeMetaData() {
+  public function testThemeMetaData() {
     // Generate the list of available themes.
     $themes = \Drupal::service('theme_handler')->rebuildThemeData();
     // Check that the mtime field exists for the bartik theme.

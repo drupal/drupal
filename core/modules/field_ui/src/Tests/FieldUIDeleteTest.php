@@ -48,7 +48,7 @@ class FieldUIDeleteTest extends WebTestBase {
   /**
    * Tests that deletion removes field storages and fields as expected.
    */
-  function testDeleteField() {
+  public function testDeleteField() {
     $field_label = $this->randomMachineName();
     $field_name_input = 'test';
     $field_name = 'field_test';

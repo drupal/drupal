@@ -28,7 +28,7 @@ class SearchNodePunctuationTest extends SearchTestBase {
   /**
    * Tests that search works with punctuation and HTML entities.
    */
-  function testPhraseSearchPunctuation() {
+  public function testPhraseSearchPunctuation() {
     $node = $this->drupalCreateNode(['body' => [['value' => "The bunny's ears were fluffy."]]]);
     $node2 = $this->drupalCreateNode(['body' => [['value' => 'Dignissim Aliquam &amp; Quieligo meus natu quae quia te. Damnum&copy; erat&mdash; neo pneum. Facilisi feugiat ibidem ratis.']]]);
 

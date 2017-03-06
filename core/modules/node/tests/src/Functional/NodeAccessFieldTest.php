@@ -72,7 +72,7 @@ class NodeAccessFieldTest extends NodeTestBase {
   /**
    * Tests administering fields when node access is restricted.
    */
-  function testNodeAccessAdministerField() {
+  public function testNodeAccessAdministerField() {
     // Create a page node.
     $fieldData = [];
     $value = $fieldData[0]['value'] = $this->randomMachineName();

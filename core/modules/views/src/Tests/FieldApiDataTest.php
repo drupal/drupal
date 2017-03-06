@@ -50,7 +50,7 @@ class FieldApiDataTest extends FieldTestBase {
    *
    * We check data structure for both node and node revision tables.
    */
-  function testViewsData() {
+  public function testViewsData() {
     $table_mapping = \Drupal::entityManager()->getStorage('node')->getTableMapping();
     $field_storage = $this->fieldStorages[0];
     $current_table = $table_mapping->getDedicatedDataTableName($field_storage);

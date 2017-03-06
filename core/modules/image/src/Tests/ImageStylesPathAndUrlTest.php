@@ -34,7 +34,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
   /**
    * Tests \Drupal\image\ImageStyleInterface::buildUri().
    */
-  function testImageStylePath() {
+  public function testImageStylePath() {
     $scheme = 'public';
     $actual = $this->style->buildUri("$scheme://foo/bar.gif");
     $expected = "$scheme://styles/" . $this->style->id() . "/$scheme/foo/bar.gif";
@@ -48,42 +48,42 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
   /**
    * Tests an image style URL using the "public://" scheme.
    */
-  function testImageStyleUrlAndPathPublic() {
+  public function testImageStyleUrlAndPathPublic() {
     $this->doImageStyleUrlAndPathTests('public');
   }
 
   /**
    * Tests an image style URL using the "private://" scheme.
    */
-  function testImageStyleUrlAndPathPrivate() {
+  public function testImageStyleUrlAndPathPrivate() {
     $this->doImageStyleUrlAndPathTests('private');
   }
 
   /**
    * Tests an image style URL with the "public://" scheme and unclean URLs.
    */
-  function testImageStyleUrlAndPathPublicUnclean() {
+  public function testImageStyleUrlAndPathPublicUnclean() {
     $this->doImageStyleUrlAndPathTests('public', FALSE);
   }
 
   /**
    * Tests an image style URL with the "private://" schema and unclean URLs.
    */
-  function testImageStyleUrlAndPathPrivateUnclean() {
+  public function testImageStyleUrlAndPathPrivateUnclean() {
     $this->doImageStyleUrlAndPathTests('private', FALSE);
   }
 
   /**
    * Tests an image style URL with a file URL that has an extra slash in it.
    */
-  function testImageStyleUrlExtraSlash() {
+  public function testImageStyleUrlExtraSlash() {
     $this->doImageStyleUrlAndPathTests('public', TRUE, TRUE);
   }
 
   /**
    * Tests that an invalid source image returns a 404.
    */
-  function testImageStyleUrlForMissingSourceImage() {
+  public function testImageStyleUrlForMissingSourceImage() {
     $non_existent_uri = 'public://foo.png';
     $generated_url = $this->style->buildUrl($non_existent_uri);
     $this->drupalGet($generated_url);
@@ -93,7 +93,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
   /**
    * Tests building an image style URL.
    */
-  function doImageStyleUrlAndPathTests($scheme, $clean_url = TRUE, $extra_slash = FALSE) {
+  public function doImageStyleUrlAndPathTests($scheme, $clean_url = TRUE, $extra_slash = FALSE) {
     $this->prepareRequestForGenerator($clean_url);
 
     // Make the default scheme neither "public" nor "private" to verify the

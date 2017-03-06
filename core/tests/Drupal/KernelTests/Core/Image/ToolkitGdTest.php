@@ -67,7 +67,7 @@ class ToolkitGdTest extends KernelTestBase {
   /**
    * Function to compare two colors by RGBa.
    */
-  function colorsAreEqual($color_a, $color_b) {
+  public function colorsAreEqual($color_a, $color_b) {
     // Fully transparent pixels are equal, regardless of RGB.
     if ($color_a[3] == 127 && $color_b[3] == 127) {
       return TRUE;
@@ -85,7 +85,7 @@ class ToolkitGdTest extends KernelTestBase {
   /**
    * Function for finding a pixel's RGBa values.
    */
-  function getPixelColor(ImageInterface $image, $x, $y) {
+  public function getPixelColor(ImageInterface $image, $x, $y) {
     $toolkit = $image->getToolkit();
     $color_index = imagecolorat($toolkit->getResource(), $x, $y);
 
@@ -102,7 +102,7 @@ class ToolkitGdTest extends KernelTestBase {
    * properly, build a list of expected color values for each of the corners and
    * the expected height and widths for the final images.
    */
-  function testManipulations() {
+  public function testManipulations() {
 
     // Test that the image factory is set to use the GD toolkit.
     $this->assertEqual($this->imageFactory->getToolkitId(), 'gd', 'The image factory is set to use the \'gd\' image toolkit.');
@@ -443,7 +443,7 @@ class ToolkitGdTest extends KernelTestBase {
   /**
    * Tests for GIF images with transparency.
    */
-  function testGifTransparentImages() {
+  public function testGifTransparentImages() {
     // Prepare a directory for test file results.
     $directory = Settings::get('file_public_path') . '/imagetest';
     file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
@@ -508,7 +508,7 @@ class ToolkitGdTest extends KernelTestBase {
   /**
    * Tests calling a missing image operation plugin.
    */
-  function testMissingOperation() {
+  public function testMissingOperation() {
 
     // Test that the image factory is set to use the GD toolkit.
     $this->assertEqual($this->imageFactory->getToolkitId(), 'gd', 'The image factory is set to use the \'gd\' image toolkit.');

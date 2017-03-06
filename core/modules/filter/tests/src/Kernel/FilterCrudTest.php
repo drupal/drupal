@@ -22,7 +22,7 @@ class FilterCrudTest extends KernelTestBase {
   /**
    * Tests CRUD operations for text formats and filters.
    */
-  function testTextFormatCrud() {
+  public function testTextFormatCrud() {
     // Add a text format with minimum data only.
     $format = FilterFormat::create([
       'format' => 'empty_format',
@@ -88,7 +88,7 @@ class FilterCrudTest extends KernelTestBase {
   /**
    * Verifies that a text format is properly stored.
    */
-  function verifyTextFormat($format) {
+  public function verifyTextFormat($format) {
     $t_args = ['%format' => $format->label()];
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 

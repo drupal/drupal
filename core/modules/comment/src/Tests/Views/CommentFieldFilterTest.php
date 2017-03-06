@@ -31,7 +31,7 @@ class CommentFieldFilterTest extends CommentTestBase {
    */
   public $commentTitles = [];
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser(['access comments']));
 

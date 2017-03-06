@@ -26,7 +26,7 @@ class TermTranslationHandler extends ContentTranslationHandler {
    *
    * @see \Drupal\Core\Entity\EntityForm::build()
    */
-  function entityFormSave(array $form, FormStateInterface $form_state) {
+  public function entityFormSave(array $form, FormStateInterface $form_state) {
     if ($this->getSourceLangcode($form_state)) {
       $entity = $form_state->getFormObject()->getEntity();
       // We need a redirect here, otherwise we would get an access denied page,

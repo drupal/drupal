@@ -47,7 +47,7 @@ class PhpassHashedPassword implements PasswordInterface {
    *   The number of times is calculated by raising 2 to the power of the given
    *   value.
    */
-  function __construct($countLog2) {
+  public function __construct($countLog2) {
     // Ensure that $countLog2 is within set bounds.
     $this->countLog2 = $this->enforceLog2Boundaries($countLog2);
   }

@@ -15,7 +15,7 @@ use Drupal\Core\Path\AliasWhitelist;
  */
 class AliasTest extends PathUnitTestBase {
 
-  function testCRUD() {
+  public function testCRUD() {
     //Prepare database table.
     $connection = Database::getConnection();
     $this->fixtures->createTables($connection);
@@ -73,7 +73,7 @@ class AliasTest extends PathUnitTestBase {
     }
   }
 
-  function testLookupPath() {
+  public function testLookupPath() {
     //Prepare database table.
     $connection = Database::getConnection();
     $this->fixtures->createTables($connection);
@@ -155,7 +155,7 @@ class AliasTest extends PathUnitTestBase {
   /**
    * Tests the alias whitelist.
    */
-  function testWhitelist() {
+  public function testWhitelist() {
     // Prepare database table.
     $connection = Database::getConnection();
     $this->fixtures->createTables($connection);

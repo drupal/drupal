@@ -570,7 +570,7 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * @covers ::getExtraFields
    */
-  function testGetExtraFields() {
+  public function testGetExtraFields() {
     $this->setUpEntityTypeDefinitions();
 
     $entity_type_id = $this->randomMachineName();

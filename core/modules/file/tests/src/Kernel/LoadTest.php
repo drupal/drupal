@@ -13,7 +13,7 @@ class LoadTest extends FileManagedUnitTestBase {
   /**
    * Try to load a non-existent file by fid.
    */
-  function testLoadMissingFid() {
+  public function testLoadMissingFid() {
     $this->assertFalse(File::load(-1), 'Try to load an invalid fid fails.');
     $this->assertFileHooksCalled([]);
   }
@@ -21,7 +21,7 @@ class LoadTest extends FileManagedUnitTestBase {
   /**
    * Try to load a non-existent file by URI.
    */
-  function testLoadMissingFilepath() {
+  public function testLoadMissingFilepath() {
     $files = entity_load_multiple_by_properties('file', ['uri' => 'foobar://misc/druplicon.png']);
     $this->assertFalse(reset($files), "Try to load a file that doesn't exist in the database fails.");
     $this->assertFileHooksCalled([]);
@@ -30,7 +30,7 @@ class LoadTest extends FileManagedUnitTestBase {
   /**
    * Try to load a non-existent file by status.
    */
-  function testLoadInvalidStatus() {
+  public function testLoadInvalidStatus() {
     $files = entity_load_multiple_by_properties('file', ['status' => -99]);
     $this->assertFalse(reset($files), 'Trying to load a file with an invalid status fails.');
     $this->assertFileHooksCalled([]);
@@ -39,7 +39,7 @@ class LoadTest extends FileManagedUnitTestBase {
   /**
    * Load a single file and ensure that the correct values are returned.
    */
-  function testSingleValues() {
+  public function testSingleValues() {
     // Create a new file entity from scratch so we know the values.
     $file = $this->createFile('druplicon.txt', NULL, 'public');
     $by_fid_file = File::load($file->id());
@@ -56,7 +56,7 @@ class LoadTest extends FileManagedUnitTestBase {
   /**
    * This will test loading file data from the database.
    */
-  function testMultiple() {
+  public function testMultiple() {
     // Create a new file entity.
     $file = $this->createFile('druplicon.txt', NULL, 'public');
 

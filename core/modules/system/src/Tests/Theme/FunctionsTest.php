@@ -26,7 +26,7 @@ class FunctionsTest extends WebTestBase {
   /**
    * Tests item-list.html.twig.
    */
-  function testItemList() {
+  public function testItemList() {
     // Verify that empty items produce no output.
     $variables = [];
     $expected = '';
@@ -166,7 +166,7 @@ class FunctionsTest extends WebTestBase {
   /**
    * Tests links.html.twig.
    */
-  function testLinks() {
+  public function testLinks() {
     // Turn off the query for the
     // \Drupal\Core\Utility\LinkGeneratorInterface::generate() method to compare
     // the active link correctly.
@@ -287,7 +287,7 @@ class FunctionsTest extends WebTestBase {
   /**
    * Tests links.html.twig using links with indexed keys.
    */
-  function testIndexedKeyedLinks() {
+  public function testIndexedKeyedLinks() {
     // Turn off the query for the
     // \Drupal\Core\Utility\LinkGeneratorInterface::generate() method to compare
     // the active link correctly.
@@ -408,7 +408,7 @@ class FunctionsTest extends WebTestBase {
   /**
    * Test the use of drupal_pre_render_links() on a nested array of links.
    */
-  function testDrupalPreRenderLinks() {
+  public function testDrupalPreRenderLinks() {
     // Define the base array to be rendered, containing a variety of different
     // kinds of links.
     $base_array = [
@@ -506,7 +506,7 @@ class FunctionsTest extends WebTestBase {
   /**
    * Tests theme_image().
    */
-  function testImage() {
+  public function testImage() {
     // Test that data URIs work with theme_image().
     $variables = [];
     $variables['uri'] = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';

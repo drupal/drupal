@@ -76,7 +76,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Test terms in a single and multiple hierarchy.
    */
-  function testTaxonomyTermHierarchy() {
+  public function testTaxonomyTermHierarchy() {
     // Create two taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);
     $term2 = $this->createTerm($this->vocabulary);
@@ -116,7 +116,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Tests that many terms with parents show on each page
    */
-  function testTaxonomyTermChildTerms() {
+  public function testTaxonomyTermChildTerms() {
     // Set limit to 10 terms per page. Set variable to 9 so 10 terms appear.
     $this->config('taxonomy.settings')->set('terms_per_page_admin', '9')->save();
     $term1 = $this->createTerm($this->vocabulary);
@@ -171,7 +171,7 @@ class TermTest extends TaxonomyTestBase {
    *
    * Save & edit a node and assert that taxonomy terms are saved/loaded properly.
    */
-  function testTaxonomyNode() {
+  public function testTaxonomyNode() {
     // Create two taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);
     $term2 = $this->createTerm($this->vocabulary);
@@ -210,7 +210,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Test term creation with a free-tagging vocabulary from the node form.
    */
-  function testNodeTermCreationAndDeletion() {
+  public function testNodeTermCreationAndDeletion() {
     // Enable tags in the vocabulary.
     $field = $this->field;
     entity_get_form_display($field->getTargetEntityTypeId(), $field->getTargetBundle(), 'default')
@@ -303,7 +303,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Save, edit and delete a term using the user interface.
    */
-  function testTermInterface() {
+  public function testTermInterface() {
     \Drupal::service('module_installer')->install(['views']);
     $edit = [
       'name[0][value]' => $this->randomMachineName(12),
@@ -380,7 +380,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Save, edit and delete a term using the user interface.
    */
-  function testTermReorder() {
+  public function testTermReorder() {
     $this->createTerm($this->vocabulary);
     $this->createTerm($this->vocabulary);
     $this->createTerm($this->vocabulary);
@@ -437,7 +437,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Test saving a term with multiple parents through the UI.
    */
-  function testTermMultipleParentsInterface() {
+  public function testTermMultipleParentsInterface() {
     // Add a new term to the vocabulary so that we can have multiple parents.
     $parent = $this->createTerm($this->vocabulary);
 
@@ -466,7 +466,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Test taxonomy_term_load_multiple_by_name().
    */
-  function testTaxonomyGetTermByName() {
+  public function testTaxonomyGetTermByName() {
     $term = $this->createTerm($this->vocabulary);
 
     // Load the term with the exact name.
@@ -526,7 +526,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Tests that editing and saving a node with no changes works correctly.
    */
-  function testReSavingTags() {
+  public function testReSavingTags() {
     // Enable tags in the vocabulary.
     $field = $this->field;
     entity_get_form_display($field->getTargetEntityTypeId(), $field->getTargetBundle(), 'default')

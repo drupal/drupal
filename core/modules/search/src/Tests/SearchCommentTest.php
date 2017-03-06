@@ -83,7 +83,7 @@ class SearchCommentTest extends SearchTestBase {
   /**
    * Verify that comments are rendered using proper format in search results.
    */
-  function testSearchResultsComment() {
+  public function testSearchResultsComment() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Create basic_html format that escapes all HTML.
     $basic_html_format = FilterFormat::create([
@@ -215,7 +215,7 @@ class SearchCommentTest extends SearchTestBase {
   /**
    * Verify access rules for comment indexing with different permissions.
    */
-  function testSearchResultsCommentAccess() {
+  public function testSearchResultsCommentAccess() {
     $comment_body = 'Test comment body';
     $this->commentSubject = 'Test comment subject';
     $roles = $this->adminUser->getRoles(TRUE);
@@ -276,7 +276,7 @@ class SearchCommentTest extends SearchTestBase {
   /**
    * Set permissions for role.
    */
-  function setRolePermissions($rid, $access_comments = FALSE, $search_content = TRUE) {
+  public function setRolePermissions($rid, $access_comments = FALSE, $search_content = TRUE) {
     $permissions = [
       'access comments' => $access_comments,
       'search content' => $search_content,
@@ -287,7 +287,7 @@ class SearchCommentTest extends SearchTestBase {
   /**
    * Update search index and search for comment.
    */
-  function assertCommentAccess($assume_access, $message) {
+  public function assertCommentAccess($assume_access, $message) {
     // Invoke search index update.
     search_mark_for_reindex('node_search', $this->node->id());
     $this->cronRun();
@@ -312,7 +312,7 @@ class SearchCommentTest extends SearchTestBase {
   /**
    * Verify that 'add new comment' does not appear in search results or index.
    */
-  function testAddNewComment() {
+  public function testAddNewComment() {
     // Create a node with a short body.
     $settings = [
       'type' => 'article',

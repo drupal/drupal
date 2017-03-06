@@ -21,7 +21,7 @@ class StyleUnformattedTest extends StyleTestBase {
   /**
    * Make sure that the default css classes works as expected.
    */
-  function testDefaultRowClasses() {
+  public function testDefaultRowClasses() {
     $view = Views::getView('test_view');
     $view->setDisplay();
     $output = $view->preview();

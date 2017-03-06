@@ -50,7 +50,7 @@ EOS;
   /**
    * Tests expected behavior of setUp().
    */
-  function testSetUp() {
+  public function testSetUp() {
     $modules = ['entity_test'];
     $table = 'entity_test';
 
@@ -79,7 +79,7 @@ EOS;
   /**
    * Tests expected load behavior of enableModules().
    */
-  function testEnableModulesLoad() {
+  public function testEnableModulesLoad() {
     $module = 'field_test';
 
     // Verify that the module does not exist yet.
@@ -103,7 +103,7 @@ EOS;
   /**
    * Tests expected installation behavior of enableModules().
    */
-  function testEnableModulesInstall() {
+  public function testEnableModulesInstall() {
     $module = 'module_test';
     $table = 'module_test';
 
@@ -134,7 +134,7 @@ EOS;
   /**
    * Tests installing modules with DependencyInjection services.
    */
-  function testEnableModulesInstallContainer() {
+  public function testEnableModulesInstallContainer() {
     // Install Node module.
     $this->enableModules(['user', 'field', 'node']);
 
@@ -151,7 +151,7 @@ EOS;
   /**
    * Tests expected behavior of installSchema().
    */
-  function testInstallSchema() {
+  public function testInstallSchema() {
     $module = 'entity_test';
     $table = 'entity_test_example';
     // Verify that we can install a table from the module schema.
@@ -200,7 +200,7 @@ EOS;
   /**
    * Tests expected behavior of installEntitySchema().
    */
-  function testInstallEntitySchema() {
+  public function testInstallEntitySchema() {
     $entity = 'entity_test';
     // The entity_test Entity has a field that depends on the User module.
     $this->enableModules(['user']);
@@ -212,7 +212,7 @@ EOS;
   /**
    * Tests expected behavior of installConfig().
    */
-  function testInstallConfig() {
+  public function testInstallConfig() {
     // The user module has configuration that depends on system.
     $this->enableModules(['system']);
     $module = 'user';
@@ -237,7 +237,7 @@ EOS;
   /**
    * Tests that the module list is retained after enabling/installing/disabling.
    */
-  function testEnableModulesFixedList() {
+  public function testEnableModulesFixedList() {
     // Install system module.
     $this->container->get('module_installer')->install(['system', 'menu_link_content']);
     $entity_manager = \Drupal::entityManager();
@@ -290,7 +290,7 @@ EOS;
   /**
    * Tests that ThemeManager works right after loading a module.
    */
-  function testEnableModulesTheme() {
+  public function testEnableModulesTheme() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $original_element = $element = [
@@ -311,7 +311,7 @@ EOS;
   /**
    * Tests that there is no theme by default.
    */
-  function testNoThemeByDefault() {
+  public function testNoThemeByDefault() {
     $themes = $this->config('core.extension')->get('theme');
     $this->assertEqual($themes, []);
 

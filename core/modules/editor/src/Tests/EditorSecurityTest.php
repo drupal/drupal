@@ -222,7 +222,7 @@ class EditorSecurityTest extends WebTestBase {
    *
    * Tests 8 scenarios. Tests only with a text editor that is not XSS-safe.
    */
-  function testInitialSecurity() {
+  public function testInitialSecurity() {
     $expected = [
       [
         'node_id' => 1,
@@ -302,7 +302,7 @@ class EditorSecurityTest extends WebTestBase {
    * format and contains a <script> tag to the Full HTML text format, the
    * <script> tag would be executed. Unless we apply appropriate filtering.
    */
-  function testSwitchingSecurity() {
+  public function testSwitchingSecurity() {
     $expected = [
       [
         'node_id' => 1,
@@ -415,7 +415,7 @@ class EditorSecurityTest extends WebTestBase {
   /**
    * Tests the standard text editor XSS filter being overridden.
    */
-  function testEditorXssFilterOverride() {
+  public function testEditorXssFilterOverride() {
     // First: the Standard text editor XSS filter.
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('node/2/edit');

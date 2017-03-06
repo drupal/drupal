@@ -34,7 +34,7 @@ class ConfigInstallTest extends KernelTestBase {
   /**
    * Tests module installation.
    */
-  function testModuleInstallation() {
+  public function testModuleInstallation() {
     $default_config = 'config_test.system';
     $default_configuration_entity = 'config_test.dynamic.dotted.default';
 
@@ -224,7 +224,7 @@ class ConfigInstallTest extends KernelTestBase {
   /**
    * Tests imported configuration entities with and without language information.
    */
-  function testLanguage() {
+  public function testLanguage() {
     $this->installModules(['config_test_language']);
     // Test imported configuration with implicit language code.
     $storage = new InstallStorage();

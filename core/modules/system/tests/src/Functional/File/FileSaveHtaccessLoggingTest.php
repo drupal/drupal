@@ -17,7 +17,7 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
   /**
    * Tests file_save_htaccess().
    */
-  function testHtaccessSave() {
+  public function testHtaccessSave() {
     // Prepare test directories.
     $private = $this->publicFilesDirectory . '/test/private';
 

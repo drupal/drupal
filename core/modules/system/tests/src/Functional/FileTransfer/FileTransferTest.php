@@ -23,7 +23,7 @@ class FileTransferTest extends BrowserTestBase {
     $this->testConnection = TestFileTransfer::factory(\Drupal::root(), ['hostname' => $this->hostname, 'username' => $this->username, 'password' => $this->password, 'port' => $this->port]);
   }
 
-  function _getFakeModuleFiles() {
+  public function _getFakeModuleFiles() {
     $files = [
       'fake.module',
       'fake.info.yml',
@@ -37,7 +37,7 @@ class FileTransferTest extends BrowserTestBase {
     return $files;
   }
 
-  function _buildFakeModule() {
+  public function _buildFakeModule() {
     $location = 'temporary://fake';
     if (is_dir($location)) {
       $ret = 0;
@@ -53,7 +53,7 @@ class FileTransferTest extends BrowserTestBase {
     return $location;
   }
 
-  function _writeDirectory($base, $files = []) {
+  public function _writeDirectory($base, $files = []) {
     mkdir($base);
     foreach ($files as $key => $file) {
       if (is_array($file)) {
@@ -66,7 +66,7 @@ class FileTransferTest extends BrowserTestBase {
     }
   }
 
-  function testJail() {
+  public function testJail() {
     $source = $this->_buildFakeModule();
 
     // This convoluted piece of code is here because our testing framework does

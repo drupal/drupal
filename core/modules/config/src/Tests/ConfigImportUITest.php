@@ -39,7 +39,7 @@ class ConfigImportUITest extends WebTestBase {
   /**
    * Tests importing configuration.
    */
-  function testImport() {
+  public function testImport() {
     $name = 'system.site';
     $dynamic_name = 'config_test.dynamic.new';
     /** @var \Drupal\Core\Config\StorageInterface $sync */
@@ -221,7 +221,7 @@ class ConfigImportUITest extends WebTestBase {
   /**
    * Tests concurrent importing of configuration.
    */
-  function testImportLock() {
+  public function testImportLock() {
     // Create updated configuration object.
     $new_site_name = 'Config import test ' . $this->randomString();
     $this->prepareSiteNameUpdate($new_site_name);
@@ -248,7 +248,7 @@ class ConfigImportUITest extends WebTestBase {
   /**
    * Tests verification of site UUID before importing configuration.
    */
-  function testImportSiteUuidValidation() {
+  public function testImportSiteUuidValidation() {
     $sync = \Drupal::service('config.storage.sync');
     // Create updated configuration object.
     $config_data = $this->config('system.site')->get();
@@ -265,7 +265,7 @@ class ConfigImportUITest extends WebTestBase {
   /**
    * Tests the screen that shows differences between active and sync.
    */
-  function testImportDiff() {
+  public function testImportDiff() {
     $sync = $this->container->get('config.storage.sync');
     $config_name = 'config_test.system';
     $change_key = 'foo';
@@ -377,7 +377,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertText('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.');
   }
 
-  function prepareSiteNameUpdate($new_site_name) {
+  public function prepareSiteNameUpdate($new_site_name) {
     $sync = $this->container->get('config.storage.sync');
     // Create updated configuration object.
     $config_data = $this->config('system.site')->get();
@@ -388,7 +388,7 @@ class ConfigImportUITest extends WebTestBase {
   /**
    * Tests an import that results in an error.
    */
-  function testImportErrorLog() {
+  public function testImportErrorLog() {
     $name_primary = 'config_test.dynamic.primary';
     $name_secondary = 'config_test.dynamic.secondary';
     $sync = $this->container->get('config.storage.sync');

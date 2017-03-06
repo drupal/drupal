@@ -22,7 +22,7 @@ class ThemeEarlyInitializationTest extends BrowserTestBase {
   /**
    * Test that the theme system can generate output in a request listener.
    */
-  function testRequestListener() {
+  public function testRequestListener() {
     $this->drupalGet('theme-test/request-listener');
     // Verify that themed output generated in the request listener appears.
     $this->assertRaw('Themed output generated in a KernelEvents::REQUEST listener');

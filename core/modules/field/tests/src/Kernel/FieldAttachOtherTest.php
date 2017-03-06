@@ -23,7 +23,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
   /**
    * Test rendering fields with EntityDisplay build().
    */
-  function testEntityDisplayBuild() {
+  public function testEntityDisplayBuild() {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
@@ -133,7 +133,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
   /**
    * Tests rendering fields with EntityDisplay::buildMultiple().
    */
-  function testEntityDisplayViewMultiple() {
+  public function testEntityDisplayViewMultiple() {
     // Use a formatter that has a prepareView() step.
     $display = entity_get_display('entity_test', 'entity_test', 'full')
       ->setComponent($this->fieldTestData->field_name, [
@@ -160,7 +160,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
    * Complements unit test coverage in
    * \Drupal\Tests\Core\Entity\Sql\SqlContentEntityStorageTest.
    */
-  function testEntityCache() {
+  public function testEntityCache() {
     // Initialize random values and a test entity.
     $entity_init = EntityTest::create(['type' => $this->fieldTestData->field->getTargetBundle()]);
     $values = $this->_generateTestFieldValues($this->fieldTestData->field_storage->getCardinality());
@@ -243,7 +243,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
    * This could be much more thorough, but it does verify that the correct
    * widgets show up.
    */
-  function testEntityFormDisplayBuildForm() {
+  public function testEntityFormDisplayBuildForm() {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
@@ -288,7 +288,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
   /**
    * Tests \Drupal\Core\Entity\Display\EntityFormDisplayInterface::extractFormValues().
    */
-  function testEntityFormDisplayExtractFormValues() {
+  public function testEntityFormDisplayExtractFormValues() {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';

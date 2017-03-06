@@ -341,7 +341,7 @@ class Condition implements ConditionInterface, \Countable {
    * Only copies fields that implement Drupal\Core\Database\Query\ConditionInterface. Also sets
    * $this->changed to TRUE.
    */
-  function __clone() {
+  public function __clone() {
     $this->changed = TRUE;
     foreach ($this->conditions as $key => $condition) {
       if ($key !== '#conjunction') {

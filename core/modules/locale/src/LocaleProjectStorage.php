@@ -36,7 +36,7 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
    *   The key value store to use.
    */
-  function __construct(KeyValueFactoryInterface $key_value_factory) {
+  public function __construct(KeyValueFactoryInterface $key_value_factory) {
     $this->keyValueStore = $key_value_factory->get('locale.project');
   }
 

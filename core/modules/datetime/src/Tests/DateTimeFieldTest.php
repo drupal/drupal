@@ -36,7 +36,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Tests date field functionality.
    */
-  function testDateField() {
+  public function testDateField() {
     $field_name = $this->fieldStorage->getName();
 
     // Loop through defined timezones to test that date-only fields work at the
@@ -205,7 +205,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Tests date and time field.
    */
-  function testDatetimeField() {
+  public function testDatetimeField() {
     $field_name = $this->fieldStorage->getName();
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', 'datetime');
@@ -348,7 +348,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Tests Date List Widget functionality.
    */
-  function testDatelistWidget() {
+  public function testDatelistWidget() {
     $field_name = $this->fieldStorage->getName();
 
     // Ensure field is set to a date only field.
@@ -593,7 +593,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Test default value functionality.
    */
-  function testDefaultValue() {
+  public function testDefaultValue() {
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'date_content']);
 
@@ -715,7 +715,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Test that invalid values are caught and marked as invalid.
    */
-  function testInvalidField() {
+  public function testInvalidField() {
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();

@@ -71,7 +71,7 @@ class BrokenSetUpTest extends WebTestBase {
   /**
    * Runs this test case from within the simpletest child site.
    */
-  function testMethod() {
+  public function testMethod() {
     // If the test is being run from the main site, run it again from the web
     // interface within the simpletest child site.
     if (!$this->isInChildSite()) {

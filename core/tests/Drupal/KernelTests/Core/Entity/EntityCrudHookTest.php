@@ -535,7 +535,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
   /**
    * Tests rollback from failed entity save.
    */
-  function testEntityRollback() {
+  public function testEntityRollback() {
     // Create a block.
     try {
       EntityTest::create(['name' => 'fail_insert'])->save();

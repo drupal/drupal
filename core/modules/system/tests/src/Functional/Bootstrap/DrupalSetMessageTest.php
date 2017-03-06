@@ -21,7 +21,7 @@ class DrupalSetMessageTest extends BrowserTestBase {
   /**
    * Tests drupal_set_message().
    */
-  function testDrupalSetMessage() {
+  public function testDrupalSetMessage() {
     // The page at system-test/drupal-set-message sets two messages and then
     // removes the first before it is displayed.
     $this->drupalGet('system-test/drupal-set-message');

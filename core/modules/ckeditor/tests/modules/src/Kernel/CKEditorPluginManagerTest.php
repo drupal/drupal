@@ -50,7 +50,7 @@ class CKEditorPluginManagerTest extends KernelTestBase {
   /**
    * Tests the enabling of plugins.
    */
-  function testEnabledPlugins() {
+  public function testEnabledPlugins() {
     $this->manager = $this->container->get('plugin.manager.ckeditor.plugin');
     $editor = Editor::load('filtered_html');
 
@@ -132,7 +132,7 @@ class CKEditorPluginManagerTest extends KernelTestBase {
   /**
    * Tests the iframe instance CSS files of plugins.
    */
-  function testCssFiles() {
+  public function testCssFiles() {
     $this->manager = $this->container->get('plugin.manager.ckeditor.plugin');
     $editor = Editor::load('filtered_html');
 

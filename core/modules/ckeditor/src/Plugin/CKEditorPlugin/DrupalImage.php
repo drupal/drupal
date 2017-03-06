@@ -79,7 +79,7 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
    * @see \Drupal\editor\Form\EditorImageDialog
    * @see editor_image_upload_settings_form()
    */
-  function validateImageUploadSettings(array $element, FormStateInterface $form_state) {
+  public function validateImageUploadSettings(array $element, FormStateInterface $form_state) {
     $settings = &$form_state->getValue(['editor', 'settings', 'plugins', 'drupalimage', 'image_upload']);
     $form_state->get('editor')->setImageUploadSettings($settings);
     $form_state->unsetValue(['editor', 'settings', 'plugins', 'drupalimage']);

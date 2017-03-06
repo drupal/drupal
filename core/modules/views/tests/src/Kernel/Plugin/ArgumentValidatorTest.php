@@ -20,7 +20,7 @@ class ArgumentValidatorTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view_argument_validate_numeric', 'test_view'];
 
-  function testArgumentValidateNumeric() {
+  public function testArgumentValidateNumeric() {
     $view = Views::getView('test_view_argument_validate_numeric');
     $view->initHandlers();
     $this->assertFalse($view->argument['null']->validateArgument($this->randomString()));

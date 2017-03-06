@@ -74,7 +74,7 @@ class CKEditorLoadingTest extends WebTestBase {
   /**
    * Tests loading of CKEditor CSS, JS and JS settings.
    */
-  function testLoading() {
+  public function testLoading() {
     // The untrusted user:
     // - has access to 1 text format (plain_text);
     // - doesn't have access to the filtered_html text format, so: no text editor.
@@ -197,7 +197,7 @@ class CKEditorLoadingTest extends WebTestBase {
   /**
    * Tests loading of theme's CKEditor stylesheets defined in the .info file.
    */
-  function testExternalStylesheets() {
+  public function testExternalStylesheets() {
     $theme_handler = \Drupal::service('theme_handler');
     // Case 1: Install theme which has an absolute external CSS URL.
     $theme_handler->install(['test_ckeditor_stylesheets_external']);

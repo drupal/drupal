@@ -308,7 +308,7 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  function getPreferredLangcode($fallback_to_default = TRUE) {
+  public function getPreferredLangcode($fallback_to_default = TRUE) {
     $language_list = $this->languageManager()->getLanguages();
     $preferred_langcode = $this->get('preferred_langcode')->value;
     if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
@@ -322,7 +322,7 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  function getPreferredAdminLangcode($fallback_to_default = TRUE) {
+  public function getPreferredAdminLangcode($fallback_to_default = TRUE) {
     $language_list = $this->languageManager()->getLanguages();
     $preferred_langcode = $this->get('preferred_admin_langcode')->value;
     if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {

@@ -53,7 +53,7 @@ class ThemeInfoTest extends BrowserTestBase {
   /**
    * Tests stylesheets-remove.
    */
-  function testStylesheets() {
+  public function testStylesheets() {
     $this->themeHandler->install(['test_basetheme', 'test_subtheme']);
     $this->config('system.theme')
       ->set('default', 'test_subtheme')

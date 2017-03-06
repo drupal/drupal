@@ -17,7 +17,7 @@ class IndexPhpTest extends BrowserTestBase {
   /**
    * Test index.php handling.
    */
-  function testIndexPhpHandling() {
+  public function testIndexPhpHandling() {
     $index_php = $GLOBALS['base_url'] . '/index.php';
 
     $this->drupalGet($index_php, ['external' => TRUE]);

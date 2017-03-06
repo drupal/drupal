@@ -33,7 +33,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
    *
    * @todo Coverage: Trigger PDOExceptions / Database exceptions.
    */
-  function testCRUD() {
+  public function testCRUD() {
     $name = 'config_test.storage';
 
     // Checking whether a non-existing name exists returns FALSE.
@@ -160,7 +160,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
   /**
    * Tests storage writing and reading data preserving data type.
    */
-  function testDataTypes() {
+  public function testDataTypes() {
     $name = 'config_test.types';
     $data = [
       'array' => [],

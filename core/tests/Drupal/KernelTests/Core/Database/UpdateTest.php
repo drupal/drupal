@@ -12,7 +12,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can update a single record successfully.
    */
-  function testSimpleUpdate() {
+  public function testSimpleUpdate() {
     $num_updated = db_update('test')
       ->fields(['name' => 'Tiffany'])
       ->condition('id', 1)
@@ -26,7 +26,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms updating to NULL.
    */
-  function testSimpleNullUpdate() {
+  public function testSimpleNullUpdate() {
     $this->ensureSampleDataNull();
     $num_updated = db_update('test_null')
       ->fields(['age' => NULL])
@@ -41,7 +41,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can update multiple records successfully.
    */
-  function testMultiUpdate() {
+  public function testMultiUpdate() {
     $num_updated = db_update('test')
       ->fields(['job' => 'Musician'])
       ->condition('job', 'Singer')
@@ -55,7 +55,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can update multiple records with a non-equality condition.
    */
-  function testMultiGTUpdate() {
+  public function testMultiGTUpdate() {
     $num_updated = db_update('test')
       ->fields(['job' => 'Musician'])
       ->condition('age', 26, '>')
@@ -69,7 +69,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can update multiple records with a where call.
    */
-  function testWhereUpdate() {
+  public function testWhereUpdate() {
     $num_updated = db_update('test')
       ->fields(['job' => 'Musician'])
       ->where('age > :age', [':age' => 26])
@@ -83,7 +83,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can stack condition and where calls.
    */
-  function testWhereAndConditionUpdate() {
+  public function testWhereAndConditionUpdate() {
     $update = db_update('test')
       ->fields(['job' => 'Musician'])
       ->where('age > :age', [':age' => 26])
@@ -98,7 +98,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Tests updating with expressions.
    */
-  function testExpressionUpdate() {
+  public function testExpressionUpdate() {
     // Ensure that expressions are handled properly. This should set every
     // record's age to a square of itself.
     $num_rows = db_update('test')
@@ -113,7 +113,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Tests return value on update.
    */
-  function testUpdateAffectedRows() {
+  public function testUpdateAffectedRows() {
     // At 5am in the morning, all band members but those with a priority 1 task
     // are sleeping. So we set their tasks to 'sleep'. 5 records match the
     // condition and therefore are affected by the query, even though two of
@@ -130,7 +130,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirm that we can update the primary key of a record successfully.
    */
-  function testPrimaryKeyUpdate() {
+  public function testPrimaryKeyUpdate() {
     $num_updated = db_update('test')
       ->fields(['id' => 42, 'name' => 'John'])
       ->condition('id', 1)
@@ -144,7 +144,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirm that we can update values in a column with special name.
    */
-  function testSpecialColumnUpdate() {
+  public function testSpecialColumnUpdate() {
     $num_updated = db_update('test_special_columns')
       ->fields(['offset' => 'New offset value'])
       ->condition('id', 1)

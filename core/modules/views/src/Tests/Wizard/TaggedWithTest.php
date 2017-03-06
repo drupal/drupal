@@ -114,7 +114,7 @@ class TaggedWithTest extends WizardTestBase {
   /**
    * Tests the "tagged with" functionality.
    */
-  function testTaggedWith() {
+  public function testTaggedWith() {
     // In this test we will only create nodes that have an instance of the tag
     // field.
     $node_add_path = 'node/add/' . $this->nodeTypeWithTags->id();
@@ -180,7 +180,7 @@ class TaggedWithTest extends WizardTestBase {
   /**
    * Tests that the "tagged with" form element only shows for node types that support it.
    */
-  function testTaggedWithByNodeType() {
+  public function testTaggedWithByNodeType() {
     // The tagging field is associated with one of our node types only. So the
     // "tagged with" form element on the view wizard should appear on the form
     // by default (when the wizard is configured to display all content) and

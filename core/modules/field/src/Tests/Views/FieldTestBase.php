@@ -54,7 +54,7 @@ abstract class FieldTestBase extends ViewTestBase {
     ViewTestData::createTestViews(get_class($this), ['field_test_views']);
   }
 
-  function setUpFieldStorages($amount = 3, $type = 'string') {
+  public function setUpFieldStorages($amount = 3, $type = 'string') {
     // Create three fields.
     $field_names = [];
     for ($i = 0; $i < $amount; $i++) {
@@ -69,7 +69,7 @@ abstract class FieldTestBase extends ViewTestBase {
     return $field_names;
   }
 
-  function setUpFields($bundle = 'page') {
+  public function setUpFields($bundle = 'page') {
     foreach ($this->fieldStorages as $key => $field_storage) {
       $this->fields[$key] = FieldConfig::create([
         'field_storage' => $field_storage,

@@ -28,7 +28,7 @@ class StateValuesCleanAdvancedTest extends WebTestBase {
   /**
    * Tests \Drupal\Core\Form\FormState::cleanValues().
    */
-  function testFormStateValuesCleanAdvanced() {
+  public function testFormStateValuesCleanAdvanced() {
 
     // Get an image for uploading.
     $image_files = $this->drupalGetTestFiles('image');

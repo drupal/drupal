@@ -68,7 +68,7 @@ class CKEditorTest extends KernelTestBase {
   /**
    * Tests CKEditor::getJSSettings().
    */
-  function testGetJSSettings() {
+  public function testGetJSSettings() {
     $editor = Editor::load('filtered_html');
 
     // Default toolbar.
@@ -216,7 +216,7 @@ class CKEditorTest extends KernelTestBase {
   /**
    * Tests CKEditor::buildToolbarJSSetting().
    */
-  function testBuildToolbarJSSetting() {
+  public function testBuildToolbarJSSetting() {
     $editor = Editor::load('filtered_html');
 
     // Default toolbar.
@@ -247,7 +247,7 @@ class CKEditorTest extends KernelTestBase {
   /**
    * Tests CKEditor::buildContentsCssJSSetting().
    */
-  function testBuildContentsCssJSSetting() {
+  public function testBuildContentsCssJSSetting() {
     $editor = Editor::load('filtered_html');
 
     // Default toolbar.
@@ -284,7 +284,7 @@ class CKEditorTest extends KernelTestBase {
   /**
    * Tests Internal::getConfig().
    */
-  function testInternalGetConfig() {
+  public function testInternalGetConfig() {
     $editor = Editor::load('filtered_html');
     $internal_plugin = $this->container->get('plugin.manager.ckeditor.plugin')->createInstance('internal');
 
@@ -305,7 +305,7 @@ class CKEditorTest extends KernelTestBase {
   /**
    * Tests StylesCombo::getConfig().
    */
-  function testStylesComboGetConfig() {
+  public function testStylesComboGetConfig() {
     $editor = Editor::load('filtered_html');
     $stylescombo_plugin = $this->container->get('plugin.manager.ckeditor.plugin')->createInstance('stylescombo');
 
@@ -364,7 +364,7 @@ class CKEditorTest extends KernelTestBase {
   /**
    * Tests language list availability in CKEditor.
    */
-  function testLanguages() {
+  public function testLanguages() {
     // Get CKEditor supported language codes and spot-check.
     $this->enableModules(['language']);
     $this->installConfig(['language']);
@@ -389,7 +389,7 @@ class CKEditorTest extends KernelTestBase {
   /**
    * Tests that CKEditor plugins participate in JS translation.
    */
-  function testJSTranslation() {
+  public function testJSTranslation() {
     $this->enableModules(['language', 'locale']);
     $this->installSchema('locale', 'locales_source');
     $this->installSchema('locale', 'locales_location');

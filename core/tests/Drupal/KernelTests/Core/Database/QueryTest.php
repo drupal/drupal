@@ -12,7 +12,7 @@ class QueryTest extends DatabaseTestBase {
   /**
    * Tests that we can pass an array of values directly in the query.
    */
-  function testArraySubstitution() {
+  public function testArraySubstitution() {
     $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => [25, 26, 27]])->fetchAll();
     $this->assertEqual(count($names), 3, 'Correct number of names returned');
 
@@ -23,7 +23,7 @@ class QueryTest extends DatabaseTestBase {
   /**
    * Tests that we can not pass a scalar value when an array is expected.
    */
-  function testScalarSubstitution() {
+  public function testScalarSubstitution() {
     try {
       $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', [':ages[]' => 25])->fetchAll();
       $this->fail('Array placeholder with scalar argument should result in an exception.');

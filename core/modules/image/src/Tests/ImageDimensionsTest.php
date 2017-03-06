@@ -24,7 +24,7 @@ class ImageDimensionsTest extends WebTestBase {
   /**
    * Test styled image dimensions cumulatively.
    */
-  function testImageDimensions() {
+  public function testImageDimensions() {
     $image_factory = $this->container->get('image.factory');
     // Create a working copy of the file.
     $files = $this->drupalGetTestFiles('image');

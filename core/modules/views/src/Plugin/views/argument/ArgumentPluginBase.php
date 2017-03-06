@@ -775,7 +775,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   /**
    * Determine if the argument is set to provide a default argument.
    */
-  function hasDefaultArgument() {
+  public function hasDefaultArgument() {
     $info = $this->defaultActions($this->options['default_action']);
     return !empty($info['has default argument']);
   }
@@ -960,7 +960,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    *
    * This usually needs to be overridden to provide a proper title.
    */
-  function title() {
+  public function title() {
     return $this->argument;
   }
 

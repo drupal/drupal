@@ -16,7 +16,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
    * Note that we have to make an HTTP request to a test page handler
    * because the pager depends on GET parameters.
    */
-  function testEvenPagerQuery() {
+  public function testEvenPagerQuery() {
     // To keep the test from being too brittle, we determine up front
     // what the page count should be dynamically, and pass the control
     // information forward to the actual query on the other side of the
@@ -50,7 +50,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
    * Note that we have to make an HTTP request to a test page handler
    * because the pager depends on GET parameters.
    */
-  function testOddPagerQuery() {
+  public function testOddPagerQuery() {
     // To keep the test from being too brittle, we determine up front
     // what the page count should be dynamically, and pass the control
     // information forward to the actual query on the other side of the
@@ -83,7 +83,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
    *
    * This is a regression test for #467984.
    */
-  function testInnerPagerQuery() {
+  public function testInnerPagerQuery() {
     $query = db_select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query
@@ -105,7 +105,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
    *
    * This is a regression test for #467984.
    */
-  function testHavingPagerQuery() {
+  public function testHavingPagerQuery() {
     $query = db_select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query
@@ -124,7 +124,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
   /**
    * Confirms that every pager gets a valid, non-overlapping element ID.
    */
-  function testElementNumbers() {
+  public function testElementNumbers() {
 
     $request = Request::createFromGlobals();
     $request->query->replace([

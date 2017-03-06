@@ -21,7 +21,7 @@ class TwigDebugMarkupTest extends WebTestBase {
   /**
    * Tests debug markup added to Twig template output.
    */
-  function testTwigDebugMarkup() {
+  public function testTwigDebugMarkup() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $extension = twig_extension();

@@ -14,7 +14,7 @@ class PageRenderTest extends KernelTestBase {
   /**
    * Tests hook_page_attachments() exceptions.
    */
-  function testHookPageAttachmentsExceptions() {
+  public function testHookPageAttachmentsExceptions() {
     $this->enableModules(['common_test', 'system']);
     \Drupal::service('router.builder')->rebuild();
 
@@ -24,7 +24,7 @@ class PageRenderTest extends KernelTestBase {
   /**
    * Tests hook_page_attachments_alter() exceptions.
    */
-  function testHookPageAlter() {
+  public function testHookPageAlter() {
     $this->enableModules(['common_test', 'system']);
     \Drupal::service('router.builder')->rebuild();
 
@@ -39,7 +39,7 @@ class PageRenderTest extends KernelTestBase {
    * @param string $hook
    *   The page render hook to assert expected exceptions for.
    */
-  function assertPageRenderHookExceptions($module, $hook) {
+  public function assertPageRenderHookExceptions($module, $hook) {
     $html_renderer = \Drupal::getContainer()->get('main_content_renderer.html');
 
     // Assert a valid hook implementation doesn't trigger an exception.

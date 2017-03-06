@@ -94,7 +94,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  function blockForm($form, FormStateInterface $form_state) {
+  public function blockForm($form, FormStateInterface $form_state) {
     $options = [
       'all pages' => $this->t('Show block on all pages'),
       'book pages' => $this->t('Show block only on book pages'),

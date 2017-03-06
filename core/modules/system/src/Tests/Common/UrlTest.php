@@ -25,7 +25,7 @@ class UrlTest extends WebTestBase {
   /**
    * Confirms that invalid URLs are filtered in link generating functions.
    */
-  function testLinkXSS() {
+  public function testLinkXSS() {
     // Test \Drupal::l().
     $text = $this->randomMachineName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
@@ -42,7 +42,7 @@ class UrlTest extends WebTestBase {
   /**
    * Tests that #type=link bubbles outbound route/path processors' metadata.
    */
-  function testLinkBubbleableMetadata() {
+  public function testLinkBubbleableMetadata() {
     $cases = [
       ['Regular link', 'internal:/user', [], ['contexts' => [], 'tags' => [], 'max-age' => Cache::PERMANENT], []],
       ['Regular link, absolute', 'internal:/user', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => [], 'max-age' => Cache::PERMANENT], []],
@@ -71,7 +71,7 @@ class UrlTest extends WebTestBase {
   /**
    * Tests that default and custom attributes are handled correctly on links.
    */
-  function testLinkAttributes() {
+  public function testLinkAttributes() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
@@ -160,7 +160,7 @@ class UrlTest extends WebTestBase {
   /**
    * Tests that link functions support render arrays as 'text'.
    */
-  function testLinkRenderArrayText() {
+  public function testLinkRenderArrayText() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
@@ -211,7 +211,7 @@ class UrlTest extends WebTestBase {
   /**
    * Tests UrlHelper::filterQueryParameters().
    */
-  function testDrupalGetQueryParameters() {
+  public function testDrupalGetQueryParameters() {
     $original = [
       'a' => 1,
       'b' => [
@@ -247,7 +247,7 @@ class UrlTest extends WebTestBase {
   /**
    * Tests UrlHelper::parse().
    */
-  function testDrupalParseUrl() {
+  public function testDrupalParseUrl() {
     // Relative, absolute, and external URLs, without/with explicit script path,
     // without/with Drupal path.
     foreach (['', '/', 'https://www.drupal.org/'] as $absolute) {
@@ -285,7 +285,7 @@ class UrlTest extends WebTestBase {
   /**
    * Tests external URL handling.
    */
-  function testExternalUrls() {
+  public function testExternalUrls() {
     $test_url = 'https://www.drupal.org/';
 
     // Verify external URL can contain a fragment.

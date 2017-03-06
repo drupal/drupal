@@ -23,7 +23,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
   /**
    * Asserts entity access correctly grants or denies access.
    */
-  function assertEntityAccess($ops, AccessibleInterface $object, AccountInterface $account = NULL) {
+  public function assertEntityAccess($ops, AccessibleInterface $object, AccountInterface $account = NULL) {
     foreach ($ops as $op => $result) {
       $message = format_string("Entity access returns @result with operation '@op'.", [
         '@result' => !isset($result) ? 'null' : ($result ? 'true' : 'false'),
@@ -91,7 +91,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
   /**
    * Ensures entity access is properly working.
    */
-  function testEntityAccess() {
+  public function testEntityAccess() {
     // Set up a non-admin user that is allowed to view test entities.
     \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['view test entity']));
 
@@ -134,7 +134,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
    * @see \Drupal\entity_test\EntityTestAccessControlHandler::checkAccess()
    * @see entity_test_entity_access()
    */
-  function testDefaultEntityAccess() {
+  public function testDefaultEntityAccess() {
     // Set up a non-admin user that is allowed to view test entities.
     \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['view test entity']));
     $entity = EntityTest::create([
@@ -153,7 +153,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
   /**
    * Ensures that the default handler is used as a fallback.
    */
-  function testEntityAccessDefaultController() {
+  public function testEntityAccessDefaultController() {
     // The implementation requires that the global user id can be loaded.
     \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2]));
 
@@ -174,7 +174,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
   /**
    * Ensures entity access for entity translations is properly working.
    */
-  function testEntityTranslationAccess() {
+  public function testEntityTranslationAccess() {
 
     // Set up a non-admin user that is allowed to view test entity translations.
     \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['view test entity translations']));

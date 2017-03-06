@@ -57,7 +57,7 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
   /**
    * Verifies that links do not have language prefixes in them.
    */
-  function testPageLinks() {
+  public function testPageLinks() {
     // Navigate to 'admin/config' path.
     $this->drupalGet('admin/config');
 

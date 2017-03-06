@@ -39,7 +39,7 @@ class ToolkitSetupFormTest extends WebTestBase {
   /**
    * Test Image toolkit setup form.
    */
-  function testToolkitSetupForm() {
+  public function testToolkitSetupForm() {
     // Get form.
     $this->drupalGet('admin/config/media/image-toolkit');
 

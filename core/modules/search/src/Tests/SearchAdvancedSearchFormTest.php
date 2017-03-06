@@ -37,7 +37,7 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
   /**
    * Tests advanced search by node type.
    */
-  function testNodeType() {
+  public function testNodeType() {
     // Verify some properties of the node that was created.
     $this->assertTrue($this->node->getType() == 'page', 'Node type is Basic page.');
     $dummy_title = 'Lorem ipsum';
@@ -67,7 +67,7 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
   /**
    * Tests that after submitting the advanced search form, the form is refilled.
    */
-  function testFormRefill() {
+  public function testFormRefill() {
     $edit = [
       'keys' => 'cat',
       'or' => 'dog gerbil',

@@ -22,7 +22,7 @@ class FilterSettingsTest extends KernelTestBase {
   /**
    * Tests explicit and implicit default settings for filters.
    */
-  function testFilterDefaults() {
+  public function testFilterDefaults() {
     $filter_info = $this->container->get('plugin.manager.filter')->getDefinitions();
 
     // Create text format using filter default settings.

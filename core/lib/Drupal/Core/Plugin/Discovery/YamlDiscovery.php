@@ -47,7 +47,7 @@ class YamlDiscovery implements DiscoveryInterface {
    * @param array $directories
    *   An array of directories to scan.
    */
-  function __construct($name, array $directories) {
+  public function __construct($name, array $directories) {
     $this->discovery = new CoreYamlDiscovery($name, $directories);
   }
 

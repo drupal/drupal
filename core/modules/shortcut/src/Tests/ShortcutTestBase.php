@@ -93,7 +93,7 @@ abstract class ShortcutTestBase extends WebTestBase {
   /**
    * Creates a generic shortcut set.
    */
-  function generateShortcutSet($label = '', $id = NULL) {
+  public function generateShortcutSet($label = '', $id = NULL) {
     $set = ShortcutSet::create([
       'id' => isset($id) ? $id : strtolower($this->randomMachineName()),
       'label' => empty($label) ? $this->randomString() : $label,
@@ -116,7 +116,7 @@ abstract class ShortcutTestBase extends WebTestBase {
    * @return array
    *   Array of the requested information from each link.
    */
-  function getShortcutInformation(ShortcutSetInterface $set, $key) {
+  public function getShortcutInformation(ShortcutSetInterface $set, $key) {
     $info = [];
     \Drupal::entityManager()->getStorage('shortcut')->resetCache();
     foreach ($set->getShortcuts() as $shortcut) {

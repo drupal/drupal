@@ -42,7 +42,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    *
    * @return \Drupal\file\FileInterface
    */
-  function getTestFile($type_name, $size = NULL) {
+  public function getTestFile($type_name, $size = NULL) {
     // Get a file to upload.
     $file = current($this->drupalGetTestFiles($type_name, $size));
 
@@ -56,7 +56,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Retrieves the fid of the last inserted file.
    */
-  function getLastFileId() {
+  public function getLastFileId() {
     return (int) db_query('SELECT MAX(fid) FROM {file_managed}')->fetchField();
   }
 
@@ -76,7 +76,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * @param array $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
-  function createFileField($name, $entity_type, $bundle, $storage_settings = [], $field_settings = [], $widget_settings = []) {
+  public function createFileField($name, $entity_type, $bundle, $storage_settings = [], $field_settings = [], $widget_settings = []) {
     $field_storage = FieldStorageConfig::create([
       'entity_type' => $entity_type,
       'field_name' => $name,
@@ -104,7 +104,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * @param array $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
-  function attachFileField($name, $entity_type, $bundle, $field_settings = [], $widget_settings = []) {
+  public function attachFileField($name, $entity_type, $bundle, $field_settings = [], $widget_settings = []) {
     $field = [
       'field_name' => $name,
       'label' => $name,
@@ -133,7 +133,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Updates an existing file field with new settings.
    */
-  function updateFileField($name, $type_name, $field_settings = [], $widget_settings = []) {
+  public function updateFileField($name, $type_name, $field_settings = [], $widget_settings = []) {
     $field = FieldConfig::loadByName('node', $type_name, $name);
     $field->setSettings(array_merge($field->getSettings(), $field_settings));
     $field->save();
@@ -163,7 +163,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * @return int
    *   The node id.
    */
-  function uploadNodeFile(FileInterface $file, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
+  public function uploadNodeFile(FileInterface $file, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
     return $this->uploadNodeFiles([$file], $field_name, $nid_or_type, $new_revision, $extras);
   }
 
@@ -185,7 +185,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * @return int
    *   The node id.
    */
-  function uploadNodeFiles(array $files, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
+  public function uploadNodeFiles(array $files, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
       'revision' => (string) (int) $new_revision,
@@ -237,7 +237,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    *
    * Note that if replacing a file, it must first be removed then added again.
    */
-  function removeNodeFile($nid, $new_revision = TRUE) {
+  public function removeNodeFile($nid, $new_revision = TRUE) {
     $edit = [
       'revision' => (string) (int) $new_revision,
     ];
@@ -249,7 +249,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Replaces a file within a node.
    */
-  function replaceNodeFile($file, $field_name, $nid, $new_revision = TRUE) {
+  public function replaceNodeFile($file, $field_name, $nid, $new_revision = TRUE) {
     $edit = [
       'files[' . $field_name . '_0]' => drupal_realpath($file->getFileUri()),
       'revision' => (string) (int) $new_revision,
@@ -262,7 +262,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Asserts that a file exists physically on disk.
    */
-  function assertFileExists($file, $message = NULL) {
+  public function assertFileExists($file, $message = NULL) {
     $message = isset($message) ? $message : format_string('File %file exists on the disk.', ['%file' => $file->getFileUri()]);
     $this->assertTrue(is_file($file->getFileUri()), $message);
   }
@@ -270,7 +270,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Asserts that a file exists in the database.
    */
-  function assertFileEntryExists($file, $message = NULL) {
+  public function assertFileEntryExists($file, $message = NULL) {
     $this->container->get('entity.manager')->getStorage('file')->resetCache();
     $db_file = File::load($file->id());
     $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
@@ -280,7 +280,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Asserts that a file does not exist on disk.
    */
-  function assertFileNotExists($file, $message = NULL) {
+  public function assertFileNotExists($file, $message = NULL) {
     $message = isset($message) ? $message : format_string('File %file exists on the disk.', ['%file' => $file->getFileUri()]);
     $this->assertFalse(is_file($file->getFileUri()), $message);
   }
@@ -288,7 +288,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Asserts that a file does not exist in the database.
    */
-  function assertFileEntryNotExists($file, $message) {
+  public function assertFileEntryNotExists($file, $message) {
     $this->container->get('entity.manager')->getStorage('file')->resetCache();
     $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
     $this->assertFalse(File::load($file->id()), $message);
@@ -297,7 +297,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   /**
    * Asserts that a file's status is set to permanent in the database.
    */
-  function assertFileIsPermanent(FileInterface $file, $message = NULL) {
+  public function assertFileIsPermanent(FileInterface $file, $message = NULL) {
     $message = isset($message) ? $message : format_string('File %file is permanent.', ['%file' => $file->getFileUri()]);
     $this->assertTrue($file->isPermanent(), $message);
   }

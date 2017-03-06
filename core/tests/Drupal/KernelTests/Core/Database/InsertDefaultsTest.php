@@ -14,7 +14,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
   /**
    * Tests that we can run a query that uses default values for everything.
    */
-  function testDefaultInsert() {
+  public function testDefaultInsert() {
     $query = db_insert('test')->useDefaults(['job']);
     $id = $query->execute();
 
@@ -27,7 +27,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
   /**
    * Tests that no action will be preformed if no fields are specified.
    */
-  function testDefaultEmptyInsert() {
+  public function testDefaultEmptyInsert() {
     $num_records_before = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     try {
@@ -46,7 +46,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
   /**
    * Tests that we can insert fields with values and defaults in the same query.
    */
-  function testDefaultInsertWithFields() {
+  public function testDefaultInsertWithFields() {
     $query = db_insert('test')
       ->fields(['name' => 'Bob'])
       ->useDefaults(['job']);

@@ -32,7 +32,7 @@ class Element {
   /**
    * Additional #pre_render callback for 'text_format' elements.
    */
-  function preRenderTextFormat(array $element) {
+  public function preRenderTextFormat(array $element) {
     // Allow modules to programmatically enforce no client-side editor by
     // setting the #editor property to FALSE.
     if (isset($element['#editor']) && !$element['#editor']) {

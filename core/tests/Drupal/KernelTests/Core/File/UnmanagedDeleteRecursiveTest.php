@@ -11,7 +11,7 @@ class UnmanagedDeleteRecursiveTest extends FileTestBase {
   /**
    * Delete a normal file.
    */
-  function testSingleFile() {
+  public function testSingleFile() {
     // Create a file for testing
     $filepath = file_default_scheme() . '://' . $this->randomMachineName();
     file_put_contents($filepath, '');
@@ -24,7 +24,7 @@ class UnmanagedDeleteRecursiveTest extends FileTestBase {
   /**
    * Try deleting an empty directory.
    */
-  function testEmptyDirectory() {
+  public function testEmptyDirectory() {
     // A directory to operate on.
     $directory = $this->createDirectory();
 
@@ -36,7 +36,7 @@ class UnmanagedDeleteRecursiveTest extends FileTestBase {
   /**
    * Try deleting a directory with some files.
    */
-  function testDirectory() {
+  public function testDirectory() {
     // A directory to operate on.
     $directory = $this->createDirectory();
     $filepathA = $directory . '/A';
@@ -54,7 +54,7 @@ class UnmanagedDeleteRecursiveTest extends FileTestBase {
   /**
    * Try deleting subdirectories with some files.
    */
-  function testSubDirectory() {
+  public function testSubDirectory() {
     // A directory to operate on.
     $directory = $this->createDirectory();
     $subdirectory = $this->createDirectory($directory . '/sub');

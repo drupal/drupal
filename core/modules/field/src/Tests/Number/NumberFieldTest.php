@@ -38,7 +38,7 @@ class NumberFieldTest extends WebTestBase {
   /**
    * Test decimal field.
    */
-  function testNumberDecimalField() {
+  public function testNumberDecimalField() {
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
     FieldStorageConfig::create([
@@ -125,7 +125,7 @@ class NumberFieldTest extends WebTestBase {
   /**
    * Test integer field.
    */
-  function testNumberIntegerField() {
+  public function testNumberIntegerField() {
     $minimum = rand(-4000, -2000);
     $maximum = rand(2000, 4000);
 
@@ -271,7 +271,7 @@ class NumberFieldTest extends WebTestBase {
   /**
   * Test float field.
   */
-  function testNumberFloatField() {
+  public function testNumberFloatField() {
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
     FieldStorageConfig::create([
@@ -361,7 +361,7 @@ class NumberFieldTest extends WebTestBase {
   /**
    * Test default formatter behavior
    */
-  function testNumberFormatter() {
+  public function testNumberFormatter() {
     $type = Unicode::strtolower($this->randomMachineName());
     $float_field = Unicode::strtolower($this->randomMachineName());
     $integer_field = Unicode::strtolower($this->randomMachineName());
@@ -492,7 +492,7 @@ class NumberFieldTest extends WebTestBase {
   /**
    * Tests setting the minimum value of a float field through the interface.
    */
-  function testCreateNumberFloatField() {
+  public function testCreateNumberFloatField() {
     // Create a float field.
     $field_name = Unicode::strtolower($this->randomMachineName());
     FieldStorageConfig::create([
@@ -517,7 +517,7 @@ class NumberFieldTest extends WebTestBase {
   /**
    * Tests setting the minimum value of a decimal field through the interface.
    */
-  function testCreateNumberDecimalField() {
+  public function testCreateNumberDecimalField() {
     // Create a decimal field.
     $field_name = Unicode::strtolower($this->randomMachineName());
     FieldStorageConfig::create([
@@ -542,7 +542,7 @@ class NumberFieldTest extends WebTestBase {
   /**
    * Helper function to set the minimum value of a field.
    */
-  function assertSetMinimumValue($field, $minimum_value) {
+  public function assertSetMinimumValue($field, $minimum_value) {
     $field_configuration_url = 'entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field->getName();
 
     // Set the minimum value.

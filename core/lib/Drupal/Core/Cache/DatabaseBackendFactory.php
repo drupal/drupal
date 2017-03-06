@@ -28,7 +28,7 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
    *   The cache tags checksum provider.
    */
-  function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider) {
+  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider) {
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
   }
@@ -42,7 +42,7 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    * @return \Drupal\Core\Cache\DatabaseBackend
    *   The cache backend object for the specified cache bin.
    */
-  function get($bin) {
+  public function get($bin) {
     return new DatabaseBackend($this->connection, $this->checksumProvider, $bin);
   }
 

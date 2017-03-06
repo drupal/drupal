@@ -73,7 +73,7 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    * Ensure that file fields have the correct resource as the object in RDFa
    * when displayed as a teaser.
    */
-  function testNodeTeaser() {
+  public function testNodeTeaser() {
     // Render the teaser.
     $node_render_array = entity_view_multiple([$this->node], 'teaser');
     $html = \Drupal::service('renderer')->renderRoot($node_render_array);

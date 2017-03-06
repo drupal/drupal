@@ -12,7 +12,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests very basic insert functionality.
    */
-  function testSimpleInsert() {
+  public function testSimpleInsert() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     $query = db_insert('test');
@@ -34,7 +34,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that we can insert multiple records in one query object.
    */
-  function testMultiInsert() {
+  public function testMultiInsert() {
     $num_records_before = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     $query = db_insert('test');
@@ -73,7 +73,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that an insert object can be reused with new data after it executes.
    */
-  function testRepeatedInsert() {
+  public function testRepeatedInsert() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     $query = db_insert('test');
@@ -115,7 +115,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that we can specify fields without values and specify values later.
    */
-  function testInsertFieldOnlyDefinition() {
+  public function testInsertFieldOnlyDefinition() {
     // This is useful for importers, when we want to create a query and define
     // its fields once, then loop over a multi-insert execution.
     db_insert('test')
@@ -135,7 +135,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that inserts return the proper auto-increment ID.
    */
-  function testInsertLastInsertID() {
+  public function testInsertLastInsertID() {
     $id = db_insert('test')
       ->fields([
         'name' => 'Larry',
@@ -149,7 +149,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that the INSERT INTO ... SELECT (fields) ... syntax works.
    */
-  function testInsertSelectFields() {
+  public function testInsertSelectFields() {
     $query = db_select('test_people', 'tp');
     // The query builder will always append expressions after fields.
     // Add the expression first to test that the insert fields are correctly
@@ -175,7 +175,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that the INSERT INTO ... SELECT * ... syntax works.
    */
-  function testInsertSelectAll() {
+  public function testInsertSelectAll() {
     $query = db_select('test_people', 'tp')
       ->fields('tp')
       ->condition('tp.name', 'Meredith');
@@ -196,7 +196,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that we can INSERT INTO a special named column.
    */
-  function testSpecialColumnInsert() {
+  public function testSpecialColumnInsert() {
     $id = db_insert('test_special_columns')
       ->fields([
         'id' => 2,

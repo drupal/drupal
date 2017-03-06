@@ -22,7 +22,7 @@ class ElementsTableSelectTest extends WebTestBase {
   /**
    * Test the display of checkboxes when #multiple is TRUE.
    */
-  function testMultipleTrue() {
+  public function testMultipleTrue() {
 
     $this->drupalGet('form_test/tableselect/multiple-true');
 
@@ -40,7 +40,7 @@ class ElementsTableSelectTest extends WebTestBase {
   /**
    * Test the presence of ajax functionality for all options.
    */
-  function testAjax() {
+  public function testAjax() {
     $rows = ['row1', 'row2', 'row3'];
     // Test checkboxes (#multiple == TRUE).
     foreach ($rows as $row) {
@@ -61,7 +61,7 @@ class ElementsTableSelectTest extends WebTestBase {
   /**
    * Test the display of radios when #multiple is FALSE.
    */
-  function testMultipleFalse() {
+  public function testMultipleFalse() {
     $this->drupalGet('form_test/tableselect/multiple-false');
 
     $this->assertNoText(t('Empty text.'), 'Empty text should not be displayed.');
@@ -78,7 +78,7 @@ class ElementsTableSelectTest extends WebTestBase {
   /**
    * Tests the display when #colspan is set.
    */
-  function testTableselectColSpan() {
+  public function testTableselectColSpan() {
     $this->drupalGet('form_test/tableselect/colspan');
 
     $this->assertText(t('Three'), 'Presence of the third column');
@@ -103,7 +103,7 @@ class ElementsTableSelectTest extends WebTestBase {
   /**
    * Test the display of the #empty text when #options is an empty array.
    */
-  function testEmptyText() {
+  public function testEmptyText() {
     $this->drupalGet('form_test/tableselect/empty-text');
     $this->assertText(t('Empty text.'), 'Empty text should be displayed.');
   }
@@ -111,7 +111,7 @@ class ElementsTableSelectTest extends WebTestBase {
   /**
    * Test the submission of single and multiple values when #multiple is TRUE.
    */
-  function testMultipleTrueSubmit() {
+  public function testMultipleTrueSubmit() {
 
     // Test a submission with one checkbox checked.
     $edit = [];
@@ -136,7 +136,7 @@ class ElementsTableSelectTest extends WebTestBase {
   /**
    * Test submission of values when #multiple is FALSE.
    */
-  function testMultipleFalseSubmit() {
+  public function testMultipleFalseSubmit() {
     $edit['tableselect'] = 'row1';
     $this->drupalPostForm('form_test/tableselect/multiple-false', $edit, 'Submit');
     $this->assertText(t('Submitted: row1'), 'Selected radio button');
@@ -145,7 +145,7 @@ class ElementsTableSelectTest extends WebTestBase {
   /**
    * Test the #js_select property.
    */
-  function testAdvancedSelect() {
+  public function testAdvancedSelect() {
     // When #multiple = TRUE a Select all checkbox should be displayed by default.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-default');
     $this->assertFieldByXPath('//th[@class="select-all"]', NULL, 'Display a "Select all" checkbox by default when #multiple is TRUE.');
@@ -166,7 +166,7 @@ class ElementsTableSelectTest extends WebTestBase {
   /**
    * Test the whether the option checker gives an error on invalid tableselect values for checkboxes.
    */
-  function testMultipleTrueOptionchecker() {
+  public function testMultipleTrueOptionchecker() {
 
     list($header, $options) = _form_test_tableselect_get_data();
 
@@ -190,7 +190,7 @@ class ElementsTableSelectTest extends WebTestBase {
   /**
    * Test the whether the option checker gives an error on invalid tableselect values for radios.
    */
-  function testMultipleFalseOptionchecker() {
+  public function testMultipleFalseOptionchecker() {
 
     list($header, $options) = _form_test_tableselect_get_data();
 

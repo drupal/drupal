@@ -24,7 +24,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
    * Works independently of the underlying field storage backend. Inserts or
    * updates random field data and then loads and verifies the data.
    */
-  function testFieldAttachSaveLoad() {
+  public function testFieldAttachSaveLoad() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithStorage('', $entity_type);
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
@@ -72,7 +72,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   /**
    * Test the 'multiple' load feature.
    */
-  function testFieldAttachLoadMultiple() {
+  public function testFieldAttachLoadMultiple() {
     $entity_type = 'entity_test_rev';
 
     // Define 2 bundles.
@@ -144,7 +144,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   /**
    * Tests insert and update with empty or NULL fields.
    */
-  function testFieldAttachSaveEmptyData() {
+  public function testFieldAttachSaveEmptyData() {
     $entity_type = 'entity_test';
     $this->createFieldWithStorage('', $entity_type);
 
@@ -192,7 +192,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   /**
    * Test insert with empty or NULL fields, with default value.
    */
-  function testFieldAttachSaveEmptyDataDefaultValue() {
+  public function testFieldAttachSaveEmptyDataDefaultValue() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithStorage('', $entity_type);
 
@@ -225,7 +225,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   /**
    * Test entity deletion.
    */
-  function testFieldAttachDelete() {
+  public function testFieldAttachDelete() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithStorage('', $entity_type);
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
@@ -285,7 +285,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   /**
    * Test entity_bundle_create().
    */
-  function testEntityCreateBundle() {
+  public function testEntityCreateBundle() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithStorage('', $entity_type);
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
@@ -313,7 +313,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   /**
    * Test entity_bundle_delete().
    */
-  function testEntityDeleteBundle() {
+  public function testEntityDeleteBundle() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithStorage('', $entity_type);
 

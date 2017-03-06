@@ -45,7 +45,7 @@ class PreviewTest extends UITestBase {
   /**
    * Tests arguments in the preview form.
    */
-  function testPreviewUI() {
+  public function testPreviewUI() {
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertResponse(200);
 

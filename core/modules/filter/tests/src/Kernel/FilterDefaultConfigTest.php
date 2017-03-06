@@ -30,7 +30,7 @@ class FilterDefaultConfigTest extends KernelTestBase {
   /**
    * Tests installation of default formats.
    */
-  function testInstallation() {
+  public function testInstallation() {
     // Verify that the format was installed correctly.
     $format = FilterFormat::load('filter_test');
     $this->assertTrue((bool) $format);
@@ -70,7 +70,7 @@ class FilterDefaultConfigTest extends KernelTestBase {
   /**
    * Tests that changes to FilterFormat::$roles do not have an effect.
    */
-  function testUpdateRoles() {
+  public function testUpdateRoles() {
     // Verify role permissions declared in default config.
     $format = FilterFormat::load('filter_test');
     $this->assertEqual(array_keys(filter_get_roles_by_format($format)), [

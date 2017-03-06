@@ -42,7 +42,7 @@ class ContactSitewideTest extends WebTestBase {
   /**
    * Tests configuration options and the site-wide contact form.
    */
-  function testSiteWideContact() {
+  public function testSiteWideContact() {
     // Create and log in administrative user.
     $admin_user = $this->drupalCreateUser([
       'access site-wide contact form',
@@ -349,7 +349,7 @@ class ContactSitewideTest extends WebTestBase {
   /**
    * Tests auto-reply on the site-wide contact form.
    */
-  function testAutoReply() {
+  public function testAutoReply() {
     // Create and log in administrative user.
     $admin_user = $this->drupalCreateUser([
       'access site-wide contact form',
@@ -431,7 +431,7 @@ class ContactSitewideTest extends WebTestBase {
    * @param array $third_party_settings
    *   Array of third party settings to be added to the posted form data.
    */
-  function addContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $third_party_settings = []) {
+  public function addContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $third_party_settings = []) {
     $edit = [];
     $edit['label'] = $label;
     $edit['id'] = $id;
@@ -463,7 +463,7 @@ class ContactSitewideTest extends WebTestBase {
    * @param string $redirect
    *   The path where user will be redirect after this form has been submitted..
    */
-  function updateContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $redirect = '/') {
+  public function updateContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $redirect = '/') {
     $edit = [];
     $edit['label'] = $label;
     $edit['recipients'] = $recipients;
@@ -488,7 +488,7 @@ class ContactSitewideTest extends WebTestBase {
    * @param string $message
    *   The message body.
    */
-  function submitContact($name, $mail, $subject, $id, $message) {
+  public function submitContact($name, $mail, $subject, $id, $message) {
     $edit = [];
     $edit['name'] = $name;
     $edit['mail'] = $mail;
@@ -505,7 +505,7 @@ class ContactSitewideTest extends WebTestBase {
   /**
    * Deletes all forms.
    */
-  function deleteContactForms() {
+  public function deleteContactForms() {
     $contact_forms = ContactForm::loadMultiple();;
     foreach ($contact_forms as $id => $contact_form) {
       if ($id == 'personal') {

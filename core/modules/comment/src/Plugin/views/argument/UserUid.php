@@ -49,7 +49,7 @@ class UserUid extends ArgumentPluginBase {
     return new static($configuration, $plugin_id, $plugin_definition, $container->get('database'));
   }
 
-  function title() {
+  public function title() {
     if (!$this->argument) {
       $title = \Drupal::config('user.settings')->get('anonymous');
     }

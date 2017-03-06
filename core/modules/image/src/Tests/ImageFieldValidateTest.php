@@ -11,7 +11,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   /**
    * Test min/max resolution settings.
    */
-  function testResolution() {
+  public function testResolution() {
     $field_names = [
       0 => strtolower($this->randomMachineName()),
       1 => strtolower($this->randomMachineName()),
@@ -85,7 +85,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   /**
    * Test that required alt/title fields gets validated right.
    */
-  function testRequiredAttributes() {
+  public function testRequiredAttributes() {
     $field_name = strtolower($this->randomMachineName());
     $field_settings = [
       'alt_field' => 1,

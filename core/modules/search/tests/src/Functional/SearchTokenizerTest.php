@@ -18,7 +18,7 @@ class SearchTokenizerTest extends SearchTestBase {
    * character classes are tokenized properly. See PREG_CLASS_CKJ for more
    * information.
    */
-  function testTokenizer() {
+  public function testTokenizer() {
     // Set the minimum word size to 1 (to split all CJK characters) and make
     // sure CJK tokenizing is turned on.
     $this->config('search.settings')
@@ -106,7 +106,7 @@ class SearchTokenizerTest extends SearchTestBase {
    * This is just a sanity check - it verifies that strings of letters are
    * not tokenized.
    */
-  function testNoTokenizer() {
+  public function testNoTokenizer() {
     // Set the minimum word size to 1 (to split all CJK characters) and make
     // sure CJK tokenizing is turned on.
     $this->config('search.settings')
@@ -128,7 +128,7 @@ class SearchTokenizerTest extends SearchTestBase {
    * converts a number to the corresponding unicode character. Adapted from
    * functions supplied in comments on several functions on php.net.
    */
-  function code2utf($num) {
+  public function code2utf($num) {
     if ($num < 128) {
       return chr($num);
     }

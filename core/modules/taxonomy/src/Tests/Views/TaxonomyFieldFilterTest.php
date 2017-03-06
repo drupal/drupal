@@ -45,7 +45,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
    */
   public $termNames = [];
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Add two new languages.

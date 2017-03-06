@@ -51,7 +51,7 @@ class SharedTempStoreFactory {
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lock_backend, RequestStack $request_stack, $expire = 604800) {
+  public function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lock_backend, RequestStack $request_stack, $expire = 604800) {
     $this->storageFactory = $storage_factory;
     $this->lockBackend = $lock_backend;
     $this->requestStack = $request_stack;
@@ -72,7 +72,7 @@ class SharedTempStoreFactory {
    * @return \Drupal\user\SharedTempStore
    *   An instance of the key/value store.
    */
-  function get($collection, $owner = NULL) {
+  public function get($collection, $owner = NULL) {
     // Use the currently authenticated user ID or the active user ID unless
     // the owner is overridden.
     if (!isset($owner)) {

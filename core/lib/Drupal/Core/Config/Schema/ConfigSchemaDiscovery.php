@@ -26,7 +26,7 @@ class ConfigSchemaDiscovery implements DiscoveryInterface {
    * @param $schema_storage
    *   The storage object to use for reading schema data.
    */
-  function __construct(StorageInterface $schema_storage) {
+  public function __construct(StorageInterface $schema_storage) {
     $this->schemaStorage = $schema_storage;
   }
 

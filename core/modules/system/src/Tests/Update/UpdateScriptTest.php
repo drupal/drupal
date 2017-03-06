@@ -49,7 +49,7 @@ class UpdateScriptTest extends WebTestBase {
   /**
    * Tests access to the update script.
    */
-  function testUpdateAccess() {
+  public function testUpdateAccess() {
     // Try accessing update.php without the proper permission.
     $regular_user = $this->drupalCreateUser();
     $this->drupalLogin($regular_user);
@@ -93,7 +93,7 @@ class UpdateScriptTest extends WebTestBase {
   /**
    * Tests that requirements warnings and errors are correctly displayed.
    */
-  function testRequirements() {
+  public function testRequirements() {
     $update_script_test_config = $this->config('update_script_test.settings');
     $this->drupalLogin($this->updateUser);
 
@@ -146,7 +146,7 @@ class UpdateScriptTest extends WebTestBase {
   /**
    * Tests the effect of using the update script on the theme system.
    */
-  function testThemeSystem() {
+  public function testThemeSystem() {
     // Since visiting update.php triggers a rebuild of the theme system from an
     // unusual maintenance mode environment, we check that this rebuild did not
     // put any incorrect information about the themes into the database.
@@ -160,7 +160,7 @@ class UpdateScriptTest extends WebTestBase {
   /**
    * Tests update.php when there are no updates to apply.
    */
-  function testNoUpdateFunctionality() {
+  public function testNoUpdateFunctionality() {
     // Click through update.php with 'administer software updates' permission.
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
@@ -186,7 +186,7 @@ class UpdateScriptTest extends WebTestBase {
   /**
    * Tests update.php after performing a successful update.
    */
-  function testSuccessfulUpdateFunctionality() {
+  public function testSuccessfulUpdateFunctionality() {
     $initial_maintenance_mode = $this->container->get('state')->get('system.maintenance_mode');
     $this->assertFalse($initial_maintenance_mode, 'Site is not in maintenance mode.');
     $this->updateScriptTest($initial_maintenance_mode);
@@ -220,7 +220,7 @@ class UpdateScriptTest extends WebTestBase {
   /**
    * Tests update.php while in maintenance mode.
    */
-  function testMaintenanceModeUpdateFunctionality() {
+  public function testMaintenanceModeUpdateFunctionality() {
     $this->container->get('state')
       ->set('system.maintenance_mode', TRUE);
     $initial_maintenance_mode = $this->container->get('state')
@@ -235,7 +235,7 @@ class UpdateScriptTest extends WebTestBase {
   /**
    * Tests perfoming updates with update.php in a multilingual environment.
    */
-  function testSuccessfulMultilingualUpdateFunctionality() {
+  public function testSuccessfulMultilingualUpdateFunctionality() {
     // Add some custom languages.
     foreach (['aa', 'bb'] as $language_code) {
       ConfigurableLanguage::create([

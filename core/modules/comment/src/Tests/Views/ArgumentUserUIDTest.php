@@ -20,7 +20,7 @@ class ArgumentUserUIDTest extends CommentTestBase {
    */
   public static $testViews = ['test_comment_user_uid'];
 
-  function testCommentUserUIDTest() {
+  public function testCommentUserUIDTest() {
     // Add an additional comment which is not created by the user.
     $new_user = User::create(['name' => 'new user']);
     $new_user->save();

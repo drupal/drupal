@@ -34,7 +34,7 @@ class SearchNodeUpdateAndDeletionTest extends SearchTestBase {
   /**
    * Tests that the search index info is properly updated when a node changes.
    */
-  function testSearchIndexUpdateOnNodeChange() {
+  public function testSearchIndexUpdateOnNodeChange() {
     // Create a node.
     $node = $this->drupalCreateNode([
       'title' => 'Someone who says Ni!',
@@ -68,7 +68,7 @@ class SearchNodeUpdateAndDeletionTest extends SearchTestBase {
   /**
    * Tests that the search index info is updated when a node is deleted.
    */
-  function testSearchIndexUpdateOnNodeDeletion() {
+  public function testSearchIndexUpdateOnNodeDeletion() {
     // Create a node.
     $node = $this->drupalCreateNode([
       'title' => 'No dragons here',

@@ -26,7 +26,7 @@ class UninstallTest extends BrowserTestBase {
   /**
    * Tests the hook_modules_uninstalled() of the user module.
    */
-  function testUserPermsUninstalled() {
+  public function testUserPermsUninstalled() {
     // Uninstalls the module_test module, so hook_modules_uninstalled()
     // is executed.
     $this->container->get('module_installer')->uninstall(['module_test']);
@@ -38,7 +38,7 @@ class UninstallTest extends BrowserTestBase {
   /**
    * Tests the Uninstall page and Uninstall confirmation page.
    */
-  function testUninstallPage() {
+  public function testUninstallPage() {
     $account = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($account);
 

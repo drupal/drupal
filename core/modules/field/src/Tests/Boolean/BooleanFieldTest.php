@@ -58,7 +58,7 @@ class BooleanFieldTest extends WebTestBase {
   /**
    * Tests boolean field.
    */
-  function testBooleanField() {
+  public function testBooleanField() {
     $on = $this->randomMachineName();
     $off = $this->randomMachineName();
     $label = $this->randomMachineName();

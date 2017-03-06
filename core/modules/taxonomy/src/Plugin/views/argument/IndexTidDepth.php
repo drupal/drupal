@@ -131,7 +131,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
     $this->query->addWhere(0, "$this->tableAlias.$this->realField", $subquery, 'IN');
   }
 
-  function title() {
+  public function title() {
     $term = $this->termStorage->load($this->argument);
     if (!empty($term)) {
       return $term->getName();

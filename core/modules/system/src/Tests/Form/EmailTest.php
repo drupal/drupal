@@ -24,7 +24,7 @@ class EmailTest extends WebTestBase {
   /**
    * Tests that #type 'email' fields are properly validated.
    */
-  function testFormEmail() {
+  public function testFormEmail() {
     $edit = [];
     $edit['email'] = 'invalid';
     $edit['email_required'] = ' ';

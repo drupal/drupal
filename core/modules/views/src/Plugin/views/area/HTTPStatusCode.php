@@ -57,7 +57,7 @@ class HTTPStatusCode extends AreaPluginBase {
   /**
    * {@inheritdoc}
    */
-  function render($empty = FALSE) {
+  public function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
       $build['#attached']['http_header'][] = ['Status', $this->options['status_code']];
       return $build;

@@ -12,7 +12,7 @@ class InspectionTest extends PluginTestBase {
   /**
    * Ensure the test plugins correctly implement getPluginId() and getPluginDefinition().
    */
-  function testInspection() {
+  public function testInspection() {
     foreach (['user_login'] as $id) {
       $plugin = $this->testPluginManager->createInstance($id);
       $expected_definition = $this->testPluginExpectedDefinitions[$id];

@@ -42,7 +42,7 @@ class SearchPageTextTest extends SearchTestBase {
    *
    * This is a regression test for https://www.drupal.org/node/2338081
    */
-  function testSearchLabelXSS() {
+  public function testSearchLabelXSS() {
     $this->drupalLogin($this->drupalCreateUser(['administer search']));
 
     $keys['label'] = '<script>alert("Dont Panic");</script>';
@@ -56,7 +56,7 @@ class SearchPageTextTest extends SearchTestBase {
   /**
    * Tests the failed search text, and various other text on the search page.
    */
-  function testSearchText() {
+  public function testSearchText() {
     $this->drupalLogin($this->searchingUser);
     $this->drupalGet('search/node');
     $this->assertText(t('Enter your keywords'));

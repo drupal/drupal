@@ -35,7 +35,7 @@ class StreamWrapperTest extends FileTestBase {
    */
   protected $classname = 'Drupal\file_test\StreamWrapper\DummyStreamWrapper';
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Add file_private_path setting.
@@ -47,7 +47,7 @@ class StreamWrapperTest extends FileTestBase {
   /**
    * Test the getClassName() function.
    */
-  function testGetClassName() {
+  public function testGetClassName() {
     // Check the dummy scheme.
     $this->assertEqual($this->classname, \Drupal::service('stream_wrapper_manager')->getClass($this->scheme), 'Got correct class name for dummy scheme.');
     // Check core's scheme.
@@ -57,7 +57,7 @@ class StreamWrapperTest extends FileTestBase {
   /**
    * Test the getViaScheme() method.
    */
-  function testGetInstanceByScheme() {
+  public function testGetInstanceByScheme() {
     $instance = \Drupal::service('stream_wrapper_manager')->getViaScheme($this->scheme);
     $this->assertEqual($this->classname, get_class($instance), 'Got correct class type for dummy scheme.');
 
@@ -68,7 +68,7 @@ class StreamWrapperTest extends FileTestBase {
   /**
    * Test the getViaUri() and getViaScheme() methods and target functions.
    */
-  function testUriFunctions() {
+  public function testUriFunctions() {
     $config = $this->config('system.file');
 
     $instance = \Drupal::service('stream_wrapper_manager')->getViaUri($this->scheme . '://foo');
@@ -104,7 +104,7 @@ class StreamWrapperTest extends FileTestBase {
   /**
    * Test some file handle functions.
    */
-  function testFileFunctions() {
+  public function testFileFunctions() {
     $filename = 'public://' . $this->randomMachineName();
     file_put_contents($filename, str_repeat('d', 1000));
 
@@ -136,7 +136,7 @@ class StreamWrapperTest extends FileTestBase {
   /**
    * Test the scheme functions.
    */
-  function testGetValidStreamScheme() {
+  public function testGetValidStreamScheme() {
     $this->assertEqual('foo', file_uri_scheme('foo://pork//chops'), 'Got the correct scheme from foo://asdf');
     $this->assertEqual('data', file_uri_scheme('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), 'Got the correct scheme from a data URI.');
     $this->assertFalse(file_uri_scheme('foo/bar.txt'), 'foo/bar.txt is not a valid stream.');

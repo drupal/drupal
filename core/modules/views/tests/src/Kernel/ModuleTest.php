@@ -208,7 +208,7 @@ class ModuleTest extends ViewsKernelTestBase {
   /**
    * Tests view enable and disable procedural wrapper functions.
    */
-  function testStatusFunctions() {
+  public function testStatusFunctions() {
     $view = Views::getView('test_view_status')->storage;
 
     $this->assertFalse($view->status(), 'The view status is disabled.');
@@ -360,7 +360,7 @@ class ModuleTest extends ViewsKernelTestBase {
   /**
    * Ensure that a certain handler is a instance of a certain table/field.
    */
-  function assertInstanceHandler($handler, $table, $field, $id) {
+  public function assertInstanceHandler($handler, $table, $field, $id) {
     $table_data = $this->container->get('views.views_data')->get($table);
     $field_data = $table_data[$field][$id];
 

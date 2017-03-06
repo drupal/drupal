@@ -22,7 +22,7 @@ class CommentActionsTest extends CommentTestBase {
   /**
    * Tests comment publish and unpublish actions.
    */
-  function testCommentPublishUnpublishActions() {
+  public function testCommentPublishUnpublishActions() {
     $this->drupalLogin($this->webUser);
     $comment_text = $this->randomMachineName();
     $subject = $this->randomMachineName();
@@ -42,7 +42,7 @@ class CommentActionsTest extends CommentTestBase {
   /**
    * Tests the unpublish comment by keyword action.
    */
-  function testCommentUnpublishByKeyword() {
+  public function testCommentUnpublishByKeyword() {
     $this->drupalLogin($this->adminUser);
     $keyword_1 = $this->randomMachineName();
     $keyword_2 = $this->randomMachineName();

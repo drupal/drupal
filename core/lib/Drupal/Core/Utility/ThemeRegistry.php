@@ -46,7 +46,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
    * @param bool $modules_loaded
    *   Whether all modules have already been loaded.
    */
-  function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, $tags = [], $modules_loaded = FALSE) {
+  public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, $tags = [], $modules_loaded = FALSE) {
     $this->cid = $cid;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -81,7 +81,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
    *   An array with the keys of the full theme registry, but the values
    *   initialized to NULL.
    */
-  function initializeRegistry() {
+  public function initializeRegistry() {
     // @todo DIC this.
     $this->completeRegistry = \Drupal::service('theme.registry')->get();
 

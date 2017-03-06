@@ -68,7 +68,7 @@ class SearchNumberMatchingTest extends SearchTestBase {
   /**
    * Tests that all the numbers can be searched.
    */
-  function testNumberSearching() {
+  public function testNumberSearching() {
     for ($i = 0; $i < count($this->numbers); $i++) {
       $node = $this->nodes[$i];
 

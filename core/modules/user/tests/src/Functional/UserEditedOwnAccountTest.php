@@ -18,7 +18,7 @@ class UserEditedOwnAccountTest extends BrowserTestBase {
    */
   public static $modules = ['user_form_test'];
 
-  function testUserEditedOwnAccount() {
+  public function testUserEditedOwnAccount() {
     // Change account setting 'Who can register accounts?' to Administrators
     // only.
     $this->config('user.settings')->set('register', USER_REGISTER_ADMINISTRATORS_ONLY)->save();

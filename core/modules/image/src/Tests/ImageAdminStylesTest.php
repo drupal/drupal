@@ -19,7 +19,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   /**
    * Given an image style, generate an image.
    */
-  function createSampleImage(ImageStyleInterface $style) {
+  public function createSampleImage(ImageStyleInterface $style) {
     static $file_path;
 
     // First, we need to make sure we have an image in our testing
@@ -36,7 +36,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   /**
    * Count the number of images currently create for a style.
    */
-  function getImageCount(ImageStyleInterface $style) {
+  public function getImageCount(ImageStyleInterface $style) {
     return count(file_scan_directory('public://styles/' . $style->id(), '/.*/'));
   }
 
@@ -44,7 +44,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
    * Test creating an image style with a numeric name and ensuring it can be
    * applied to an image.
    */
-  function testNumericStyleName() {
+  public function testNumericStyleName() {
     $style_name = rand();
     $style_label = $this->randomString();
     $edit = [
@@ -60,7 +60,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   /**
    * General test to add a style, add/remove/edit effects to it, then delete it.
    */
-  function testStyle() {
+  public function testStyle() {
     $admin_path = 'admin/config/media/image-styles';
 
     // Setup a style to be created and effects to add to it.
@@ -330,7 +330,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   /**
    * Test deleting a style and choosing a replacement style.
    */
-  function testStyleReplacement() {
+  public function testStyleReplacement() {
     // Create a new style.
     $style_name = strtolower($this->randomMachineName(10));
     $style_label = $this->randomString();
@@ -392,7 +392,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   /**
    * Verifies that editing an image effect does not cause it to be duplicated.
    */
-  function testEditEffect() {
+  public function testEditEffect() {
     // Add a scale effect.
     $style_name = 'test_style_effect_edit';
     $this->drupalGet('admin/config/media/image-styles/add');
@@ -465,7 +465,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   /**
    * Tests image style configuration import that does a delete.
    */
-  function testConfigImport() {
+  public function testConfigImport() {
     // Create a new style.
     $style_name = strtolower($this->randomMachineName(10));
     $style_label = $this->randomString();

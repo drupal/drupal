@@ -42,7 +42,7 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
   /**
    * Creates a random term and ensures the RDF output is correct.
    */
-  function testTaxonomyTermRdfaAttributes() {
+  public function testTaxonomyTermRdfaAttributes() {
     $term = $this->createTerm($this->vocabulary);
     $term_uri = $term->url('canonical', ['absolute' => TRUE]);
 

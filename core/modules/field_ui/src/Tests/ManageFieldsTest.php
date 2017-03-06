@@ -111,7 +111,7 @@ class ManageFieldsTest extends WebTestBase {
    * In order to act on the same fields, and not create the fields over and over
    * again the following tests create, update and delete the same fields.
    */
-  function testCRUDFields() {
+  public function testCRUDFields() {
     $this->manageFieldsPage();
     $this->createField();
     $this->updateField();
@@ -128,7 +128,7 @@ class ManageFieldsTest extends WebTestBase {
    * @param string $type
    *   (optional) The name of a content type.
    */
-  function manageFieldsPage($type = '') {
+  public function manageFieldsPage($type = '') {
     $type = empty($type) ? $this->contentType : $type;
     $this->drupalGet('admin/structure/types/manage/' . $type . '/fields');
     // Check all table columns.
@@ -178,7 +178,7 @@ class ManageFieldsTest extends WebTestBase {
    * @todo Assert properties can bet set in the form and read back in
    * $field_storage and $fields.
    */
-  function createField() {
+  public function createField() {
     // Create a test field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
   }
@@ -186,7 +186,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests editing an existing field.
    */
-  function updateField() {
+  public function updateField() {
     $field_id = 'node.' . $this->contentType . '.' . $this->fieldName;
     // Go to the field edit page.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id . '/storage');
@@ -217,7 +217,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests adding an existing field in another content type.
    */
-  function addExistingField() {
+  public function addExistingField() {
     // Check "Re-use existing field" appears.
     $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
     $this->assertRaw(t('Re-use an existing field'), '"Re-use existing field" was found.');
@@ -238,7 +238,7 @@ class ManageFieldsTest extends WebTestBase {
    * We do not test if the number can be submitted with anything else than a
    * numeric value. That is tested already in FormTest::testNumber().
    */
-  function cardinalitySettings() {
+  public function cardinalitySettings() {
     $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/storage';
 
     // Assert the cardinality other field cannot be empty when cardinality is
@@ -364,7 +364,7 @@ class ManageFieldsTest extends WebTestBase {
    * @param $entity_type
    *   The entity type for the field.
    */
-  function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
+  public function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
     // Assert field storage settings.
     $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
     $this->assertTrue($field_storage->getSetting('test_field_storage_setting') == $string, 'Field storage settings were found.');
@@ -377,7 +377,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests that the 'field_prefix' setting works on Field UI.
    */
-  function testFieldPrefix() {
+  public function testFieldPrefix() {
     // Change default field prefix.
     $field_prefix = strtolower($this->randomMachineName(10));
     $this->config('field_ui.settings')->set('field_prefix', $field_prefix)->save();
@@ -403,7 +403,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests that default value is correctly validated and saved.
    */
-  function testDefaultValue() {
+  public function testDefaultValue() {
     // Create a test field storage and field.
     $field_name = 'test';
     FieldStorageConfig::create([
@@ -479,7 +479,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests that deletion removes field storages and fields as expected.
    */
-  function testDeleteField() {
+  public function testDeleteField() {
     // Create a new field.
     $bundle_path1 = 'admin/structure/types/manage/' . $this->contentType;
     $this->fieldUIAddNewField($bundle_path1, $this->fieldNameInput, $this->fieldLabel);
@@ -513,7 +513,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests that Field UI respects disallowed field names.
    */
-  function testDisallowedFieldNames() {
+  public function testDisallowedFieldNames() {
     // Reset the field prefix so we can test properly.
     $this->config('field_ui.settings')->set('field_prefix', '')->save();
 
@@ -539,7 +539,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests that Field UI respects locked fields.
    */
-  function testLockedField() {
+  public function testLockedField() {
     // Create a locked field and attach it to a bundle. We need to do this
     // programmatically as there's no way to create a locked field through UI.
     $field_name = strtolower($this->randomMachineName(8));
@@ -576,7 +576,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests that Field UI respects the 'no_ui' flag in the field type definition.
    */
-  function testHiddenFields() {
+  public function testHiddenFields() {
     // Check that the field type is not available in the 'add new field' row.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
     $this->assertFalse($this->xpath('//select[@id="edit-new-storage-type"]//option[@value="hidden_test_field"]'), "The 'add new field' select respects field types 'no_ui' property.");
@@ -627,7 +627,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests that a duplicate field name is caught by validation.
    */
-  function testDuplicateFieldName() {
+  public function testDuplicateFieldName() {
     // field_tags already exists, so we're expecting an error when trying to
     // create a new field with the same name.
     $edit = [
@@ -659,7 +659,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests that deletion removes field storages and fields as expected for a term.
    */
-  function testDeleteTaxonomyField() {
+  public function testDeleteTaxonomyField() {
     // Create a new field.
     $bundle_path = 'admin/structure/taxonomy/manage/tags/overview';
 
@@ -677,7 +677,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests that help descriptions render valid HTML.
    */
-  function testHelpDescriptions() {
+  public function testHelpDescriptions() {
     // Create an image field
     FieldStorageConfig::create([
       'field_name' => 'field_image',
@@ -717,7 +717,7 @@ class ManageFieldsTest extends WebTestBase {
   /**
    * Tests that the field list administration page operates correctly.
    */
-  function fieldListAdminPage() {
+  public function fieldListAdminPage() {
     $this->drupalGet('admin/reports/fields');
     $this->assertText($this->fieldName, 'Field name is displayed in field list.');
     $this->assertTrue($this->assertLinkByHref('admin/structure/types/manage/' . $this->contentType . '/fields'), 'Link to content type using field is displayed in field list.');

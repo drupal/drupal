@@ -65,7 +65,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
    * @param string $type
    *   The type of node to create.
    */
-  function previewNodeImage($image, $field_name, $type) {
+  public function previewNodeImage($image, $field_name, $type) {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];
@@ -85,7 +85,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
    * @param $alt
    *   The alt text for the image. Use if the field settings require alt text.
    */
-  function uploadNodeImage($image, $field_name, $type, $alt = '') {
+  public function uploadNodeImage($image, $field_name, $type, $alt = '') {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];

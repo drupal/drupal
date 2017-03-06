@@ -80,7 +80,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
   /**
    * Checks node revision operations.
    */
-  function testRevisions() {
+  public function testRevisions() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $nodes = $this->nodes;
     $logs = $this->revisionLogs;

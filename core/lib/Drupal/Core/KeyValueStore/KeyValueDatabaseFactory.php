@@ -32,7 +32,7 @@ class KeyValueDatabaseFactory implements KeyValueFactoryInterface {
    * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
    */
-  function __construct(SerializationInterface $serializer, Connection $connection) {
+  public function __construct(SerializationInterface $serializer, Connection $connection) {
     $this->serializer = $serializer;
     $this->connection = $connection;
   }

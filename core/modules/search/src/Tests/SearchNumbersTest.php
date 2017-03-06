@@ -75,7 +75,7 @@ class SearchNumbersTest extends SearchTestBase {
   /**
    * Tests that all the numbers can be searched.
    */
-  function testNumberSearching() {
+  public function testNumberSearching() {
     $types = array_keys($this->numbers);
 
     foreach ($types as $type) {

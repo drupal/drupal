@@ -21,7 +21,7 @@ class CommentAdminTest extends CommentTestBase {
   /**
    * Test comment approval functionality through admin/content/comment.
    */
-  function testApprovalAdminInterface() {
+  public function testApprovalAdminInterface() {
     // Set anonymous comments to require approval.
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
@@ -103,7 +103,7 @@ class CommentAdminTest extends CommentTestBase {
   /**
    * Tests comment approval functionality through the node interface.
    */
-  function testApprovalNodeInterface() {
+  public function testApprovalNodeInterface() {
     // Set anonymous comments to require approval.
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,

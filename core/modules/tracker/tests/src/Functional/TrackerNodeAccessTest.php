@@ -35,7 +35,7 @@ class TrackerNodeAccessTest extends BrowserTestBase {
   /**
    * Ensure private node on /tracker is only visible to users with permission.
    */
-  function testTrackerNodeAccess() {
+  public function testTrackerNodeAccess() {
     // Create user with node test view permission.
     $access_user = $this->drupalCreateUser(['node test view', 'access user profiles']);
 

@@ -40,7 +40,7 @@ class NoBigPipeRouteAlterSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents() {
     $events[RoutingEvents::ALTER][] = ['onRoutingRouteAlterSetNoBigPipe'];
     return $events;
   }

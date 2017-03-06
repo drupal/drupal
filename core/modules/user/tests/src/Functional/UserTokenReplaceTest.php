@@ -34,7 +34,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
   /**
    * Creates a user, then tests the tokens generated from it.
    */
-  function testUserTokenReplacement() {
+  public function testUserTokenReplacement() {
     $token_service = \Drupal::token();
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $url_options = [

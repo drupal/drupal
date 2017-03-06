@@ -10,11 +10,11 @@ class MockTestConnection {
   protected $commandsRun = [];
   public $connectionString;
 
-  function run($cmd) {
+  public function run($cmd) {
     $this->commandsRun[] = $cmd;
   }
 
-  function flushCommands() {
+  public function flushCommands() {
     $out = $this->commandsRun;
     $this->commandsRun = [];
     return $out;

@@ -33,7 +33,7 @@ class ResponseGeneratorTest extends RESTTestBase {
   /**
    * Test to see if generator header is added.
    */
-  function testGeneratorHeaderAdded() {
+  public function testGeneratorHeaderAdded() {
 
     $node = $this->drupalCreateNode();
 

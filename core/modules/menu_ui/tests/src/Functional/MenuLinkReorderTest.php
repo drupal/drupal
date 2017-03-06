@@ -28,7 +28,7 @@ class MenuLinkReorderTest extends BrowserTestBase {
   /**
    * Test creating, editing, deleting menu links via node form widget.
    */
-  function testDefaultMenuLinkReorder() {
+  public function testDefaultMenuLinkReorder() {
 
     // Add the main menu block.
     $this->drupalPlaceBlock('system_menu_block:main');

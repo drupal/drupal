@@ -36,7 +36,7 @@ class UpdatesWith7xTest extends WebTestBase {
     $this->updateUser = $this->drupalCreateUser(['administer software updates']);
   }
 
-  function testWith7x() {
+  public function testWith7x() {
     // Ensure that the minimum schema version is 8000, despite 7200 update
     // hooks and a 7XXX hook_update_last_removed().
     $this->assertEqual(drupal_get_installed_schema_version('update_test_with_7x'), 8000);

@@ -13,7 +13,7 @@ class RetrieveFileTest extends BrowserTestBase {
   /**
    * Invokes system_retrieve_file() in several scenarios.
    */
-  function testFileRetrieving() {
+  public function testFileRetrieving() {
     // Test 404 handling by trying to fetch a randomly named file.
     drupal_mkdir($sourcedir = 'public://' . $this->randomMachineName());
     $filename = 'Файл для тестирования ' . $this->randomMachineName();

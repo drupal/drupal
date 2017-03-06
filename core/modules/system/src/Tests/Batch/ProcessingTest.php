@@ -22,7 +22,7 @@ class ProcessingTest extends WebTestBase {
   /**
    * Tests batches triggered outside of form submission.
    */
-  function testBatchNoForm() {
+  public function testBatchNoForm() {
     // Displaying the page triggers batch 1.
     $this->drupalGet('batch-test/no-form');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 2 performed successfully.');
@@ -33,7 +33,7 @@ class ProcessingTest extends WebTestBase {
   /**
    * Tests batches that redirect in the batch finished callback.
    */
-  function testBatchRedirectFinishedCallback() {
+  public function testBatchRedirectFinishedCallback() {
     // Displaying the page triggers batch 1.
     $this->drupalGet('batch-test/finish-redirect');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 2 performed successfully.');
@@ -45,7 +45,7 @@ class ProcessingTest extends WebTestBase {
   /**
    * Tests batches defined in a form submit handler.
    */
-  function testBatchForm() {
+  public function testBatchForm() {
     // Batch 0: no operation.
     $edit = ['batch' => 'batch_0'];
     $this->drupalPostForm('batch-test', $edit, 'Submit');
@@ -89,7 +89,7 @@ class ProcessingTest extends WebTestBase {
   /**
    * Tests batches defined in a multistep form.
    */
-  function testBatchFormMultistep() {
+  public function testBatchFormMultistep() {
     $this->drupalGet('batch-test/multistep');
     $this->assertNoEscaped('<', 'No escaped markup is present.');
     $this->assertText('step 1', 'Form is displayed in step 1.');
@@ -119,7 +119,7 @@ class ProcessingTest extends WebTestBase {
   /**
    * Tests batches defined in different submit handlers on the same form.
    */
-  function testBatchFormMultipleBatches() {
+  public function testBatchFormMultipleBatches() {
     // Batches 1, 2 and 3 are triggered in sequence by different submit
     // handlers. Each submit handler modify the submitted 'value'.
     $value = rand(0, 255);
@@ -138,7 +138,7 @@ class ProcessingTest extends WebTestBase {
    *
    * Same as above, but the form is submitted through drupal_form_execute().
    */
-  function testBatchFormProgrammatic() {
+  public function testBatchFormProgrammatic() {
     // Batches 1, 2 and 3 are triggered in sequence by different submit
     // handlers. Each submit handler modify the submitted 'value'.
     $value = rand(0, 255);
@@ -154,7 +154,7 @@ class ProcessingTest extends WebTestBase {
   /**
    * Test form submission during a batch operation.
    */
-  function testDrupalFormSubmitInBatch() {
+  public function testDrupalFormSubmitInBatch() {
     // Displaying the page triggers a batch that programmatically submits a
     // form.
     $value = rand(0, 255);
@@ -167,7 +167,7 @@ class ProcessingTest extends WebTestBase {
    *
    * @see https://www.drupal.org/node/600836
    */
-  function testBatchLargePercentage() {
+  public function testBatchLargePercentage() {
     // Displaying the page triggers batch 5.
     $this->drupalGet('batch-test/large-percentage');
     $this->assertBatchMessages($this->_resultMessages('batch_5'), 'Batch for step 2 performed successfully.');
@@ -187,7 +187,7 @@ class ProcessingTest extends WebTestBase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  function assertBatchMessages($texts, $message) {
+  public function assertBatchMessages($texts, $message) {
     $pattern = '|' . implode('.*', $texts) . '|s';
     return $this->assertPattern($pattern, $message);
   }
@@ -195,7 +195,7 @@ class ProcessingTest extends WebTestBase {
   /**
    * Returns expected execution stacks for the test batches.
    */
-  function _resultStack($id, $value = 0) {
+  public function _resultStack($id, $value = 0) {
     $stack = [];
     switch ($id) {
       case 'batch_1':
@@ -262,7 +262,7 @@ class ProcessingTest extends WebTestBase {
   /**
    * Returns expected result messages for the test batches.
    */
-  function _resultMessages($id) {
+  public function _resultMessages($id) {
     $messages = [];
 
     switch ($id) {

@@ -39,7 +39,7 @@ class NodeAttributesTest extends NodeTestBase {
   /**
    * Creates a node of type article and tests its RDFa markup.
    */
-  function testNodeAttributes() {
+  public function testNodeAttributes() {
     // Create node with single quotation mark title to ensure it does not get
     // escaped more than once.
     $node = $this->drupalCreateNode([

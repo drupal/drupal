@@ -31,7 +31,7 @@ class HtmlEscapedTextTest extends UnitTestCase {
    *
    * @see testToString()
    */
-  function providerToString() {
+  public function providerToString() {
     // Checks that invalid multi-byte sequences are escaped.
     $tests[] = ["Foo\xC0barbaz", 'Foo�barbaz', 'Escapes invalid sequence "Foo\xC0barbaz"'];
     $tests[] = ["\xc2\"", '�&quot;', 'Escapes invalid sequence "\xc2\""'];

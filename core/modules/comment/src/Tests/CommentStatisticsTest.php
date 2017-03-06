@@ -38,7 +38,7 @@ class CommentStatisticsTest extends CommentTestBase {
   /**
    * Tests the node comment statistics.
    */
-  function testCommentNodeCommentStatistics() {
+  public function testCommentNodeCommentStatistics() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     // Set comments to have subject and preview disabled.
     $this->drupalLogin($this->adminUser);

@@ -88,7 +88,7 @@ class StatisticsLoggingTest extends WebTestBase {
   /**
    * Verifies node hit counter logging and script placement.
    */
-  function testLogging() {
+  public function testLogging() {
     $path = 'node/' . $this->node->id();
     $module_path = drupal_get_path('module', 'statistics');
     $stats_path = base_path() . $module_path . '/statistics.php';

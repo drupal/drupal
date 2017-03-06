@@ -60,7 +60,7 @@ class ManageDisplayTest extends WebTestBase {
   /**
    * Tests formatter settings.
    */
-  function testFormatterUI() {
+  public function testFormatterUI() {
     $manage_fields = 'admin/structure/types/manage/' . $this->type;
     $manage_display = $manage_fields . '/display';
 
@@ -327,7 +327,7 @@ class ManageDisplayTest extends WebTestBase {
   /**
    * Tests switching view modes to use custom or 'default' settings'.
    */
-  function testViewModeCustom() {
+  public function testViewModeCustom() {
     // Create a field, and a node with some data for the field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test field');
     \Drupal::entityManager()->clearCachedFieldDefinitions();
@@ -410,7 +410,7 @@ class ManageDisplayTest extends WebTestBase {
   /**
    * Tests that fields with no explicit display settings do not break.
    */
-  function testNonInitializedFields() {
+  public function testNonInitializedFields() {
     // Create a test field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test');
 
@@ -423,7 +423,7 @@ class ManageDisplayTest extends WebTestBase {
   /**
    * Tests hiding the view modes fieldset when there's only one available.
    */
-  function testSingleViewMode() {
+  public function testSingleViewMode() {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary . '/display');
     $this->assertNoText('Use custom display settings for the following view modes', 'Custom display settings fieldset found.');
 
@@ -434,7 +434,7 @@ class ManageDisplayTest extends WebTestBase {
   /**
    * Tests that a message is shown when there are no fields.
    */
-  function testNoFieldsDisplayOverview() {
+  public function testNoFieldsDisplayOverview() {
     // Create a fresh content type without any fields.
     NodeType::create([
       'type' => 'no_fields',
@@ -460,7 +460,7 @@ class ManageDisplayTest extends WebTestBase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNodeViewText(EntityInterface $node, $view_mode, $text, $message) {
+  public function assertNodeViewText(EntityInterface $node, $view_mode, $text, $message) {
     return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, FALSE);
   }
 
@@ -478,7 +478,7 @@ class ManageDisplayTest extends WebTestBase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNodeViewNoText(EntityInterface $node, $view_mode, $text, $message) {
+  public function assertNodeViewNoText(EntityInterface $node, $view_mode, $text, $message) {
     return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, TRUE);
   }
 
@@ -502,7 +502,7 @@ class ManageDisplayTest extends WebTestBase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  function assertNodeViewTextHelper(EntityInterface $node, $view_mode, $text, $message, $not_exists) {
+  public function assertNodeViewTextHelper(EntityInterface $node, $view_mode, $text, $message, $not_exists) {
     // Make sure caches on the tester side are refreshed after changes
     // submitted on the tested side.
     \Drupal::entityManager()->clearCachedFieldDefinitions();

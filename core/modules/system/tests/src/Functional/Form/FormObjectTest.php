@@ -37,7 +37,7 @@ class FormObjectTest extends SystemConfigFormTestBase {
    *
    * @see \Drupal\form_test\EventSubscriber\FormTestEventSubscriber::onKernelRequest()
    */
-  function testObjectFormCallback() {
+  public function testObjectFormCallback() {
     $config_factory = $this->container->get('config.factory');
 
     $this->drupalGet('form-test/object-builder');

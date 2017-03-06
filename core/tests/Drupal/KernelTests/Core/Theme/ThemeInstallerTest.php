@@ -39,7 +39,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Verifies that no themes are installed by default.
    */
-  function testEmpty() {
+  public function testEmpty() {
     $this->assertFalse($this->extensionConfig()->get('theme'));
 
     $this->assertFalse(array_keys($this->themeHandler()->listInfo()));
@@ -55,7 +55,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests installing a theme.
    */
-  function testInstall() {
+  public function testInstall() {
     $name = 'test_basetheme';
 
     $themes = $this->themeHandler()->listInfo();
@@ -80,7 +80,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests installing a sub-theme.
    */
-  function testInstallSubTheme() {
+  public function testInstallSubTheme() {
     $name = 'test_subtheme';
     $base_name = 'test_basetheme';
 
@@ -103,7 +103,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests installing a non-existing theme.
    */
-  function testInstallNonExisting() {
+  public function testInstallNonExisting() {
     $name = 'non_existing_theme';
 
     $themes = $this->themeHandler()->listInfo();
@@ -125,7 +125,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests installing a theme with a too long name.
    */
-  function testInstallNameTooLong() {
+  public function testInstallNameTooLong() {
     $name = 'test_theme_having_veery_long_name_which_is_too_long';
 
     try {
@@ -141,7 +141,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests uninstalling the default theme.
    */
-  function testUninstallDefault() {
+  public function testUninstallDefault() {
     $name = 'stark';
     $other_name = 'bartik';
     $this->themeInstaller()->install([$name, $other_name]);
@@ -168,7 +168,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests uninstalling the admin theme.
    */
-  function testUninstallAdmin() {
+  public function testUninstallAdmin() {
     $name = 'stark';
     $other_name = 'bartik';
     $this->themeInstaller()->install([$name, $other_name]);
@@ -195,7 +195,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests uninstalling a sub-theme.
    */
-  function testUninstallSubTheme() {
+  public function testUninstallSubTheme() {
     $name = 'test_subtheme';
     $base_name = 'test_basetheme';
 
@@ -210,7 +210,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests uninstalling a base theme before its sub-theme.
    */
-  function testUninstallBaseBeforeSubTheme() {
+  public function testUninstallBaseBeforeSubTheme() {
     $name = 'test_basetheme';
     $sub_name = 'test_subtheme';
 
@@ -240,7 +240,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests uninstalling a non-existing theme.
    */
-  function testUninstallNonExisting() {
+  public function testUninstallNonExisting() {
     $name = 'non_existing_theme';
 
     $themes = $this->themeHandler()->listInfo();
@@ -262,7 +262,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests uninstalling a theme.
    */
-  function testUninstall() {
+  public function testUninstall() {
     $name = 'test_basetheme';
 
     $this->themeInstaller()->install([$name]);
@@ -287,7 +287,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Tests uninstalling a theme that is not installed.
    */
-  function testUninstallNotInstalled() {
+  public function testUninstallNotInstalled() {
     $name = 'test_basetheme';
 
     try {
@@ -305,7 +305,7 @@ class ThemeInstallerTest extends KernelTestBase {
    *
    * @see module_test_system_info_alter()
    */
-  function testThemeInfoAlter() {
+  public function testThemeInfoAlter() {
     $name = 'seven';
     $this->container->get('state')->set('module_test.hook_system_info_alter', TRUE);
 

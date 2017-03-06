@@ -13,7 +13,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
   /**
    * Tests the managed_file element type.
    */
-  function testManagedFile() {
+  public function testManagedFile() {
     // Check that $element['#size'] is passed to the child upload element.
     $this->drupalGet('file/test');
     $this->assertFieldByXpath('//input[@name="files[nested_file]" and @size="13"]', NULL, 'The custom #size attribute is passed to the child upload element.');

@@ -32,7 +32,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
   /**
    * Test deleting a taxonomy that contains terms.
    */
-  function testTaxonomyVocabularyDeleteWithTerms() {
+  public function testTaxonomyVocabularyDeleteWithTerms() {
     // Delete any existing vocabularies.
     foreach (Vocabulary::loadMultiple() as $vocabulary) {
       $vocabulary->delete();
@@ -65,7 +65,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
   /**
    * Ensure that the vocabulary static reset works correctly.
    */
-  function testTaxonomyVocabularyLoadStaticReset() {
+  public function testTaxonomyVocabularyLoadStaticReset() {
     $original_vocabulary = Vocabulary::load($this->vocabulary->id());
     $this->assertTrue(is_object($original_vocabulary), 'Vocabulary loaded successfully.');
     $this->assertEqual($this->vocabulary->label(), $original_vocabulary->label(), 'Vocabulary loaded successfully.');
@@ -89,7 +89,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
   /**
    * Tests for loading multiple vocabularies.
    */
-  function testTaxonomyVocabularyLoadMultiple() {
+  public function testTaxonomyVocabularyLoadMultiple() {
 
     // Delete any existing vocabularies.
     foreach (Vocabulary::loadMultiple() as $vocabulary) {
@@ -141,7 +141,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
   /**
    * Test uninstall and reinstall of the taxonomy module.
    */
-  function testUninstallReinstall() {
+  public function testUninstallReinstall() {
     // Field storages and fields attached to taxonomy term bundles should be
     // removed when the module is uninstalled.
     $field_name = Unicode::strtolower($this->randomMachineName() . '_field_name');

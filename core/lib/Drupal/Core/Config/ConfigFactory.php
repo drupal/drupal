@@ -365,7 +365,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   /**
    * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents() {
     $events[ConfigEvents::SAVE][] = ['onConfigSave', 255];
     $events[ConfigEvents::DELETE][] = ['onConfigDelete', 255];
     return $events;

@@ -101,7 +101,7 @@ class HistoryTest extends WebTestBase {
   /**
    * Verifies that the history endpoints work.
    */
-  function testHistory() {
+  public function testHistory() {
     $nid = $this->testNode->id();
 
     // Retrieve "last read" timestamp for test node, for the current user.

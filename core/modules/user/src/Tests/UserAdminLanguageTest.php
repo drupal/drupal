@@ -44,7 +44,7 @@ class UserAdminLanguageTest extends WebTestBase {
   /**
    * Tests that admin language is not configurable in single language sites.
    */
-  function testUserAdminLanguageConfigurationNotAvailableWithOnlyOneLanguage() {
+  public function testUserAdminLanguageConfigurationNotAvailableWithOnlyOneLanguage() {
     $this->drupalLogin($this->adminUser);
     $this->setLanguageNegotiation();
     $path = 'user/' . $this->adminUser->id() . '/edit';
@@ -56,7 +56,7 @@ class UserAdminLanguageTest extends WebTestBase {
   /**
    * Tests that admin language negotiation is configurable only if enabled.
    */
-  function testUserAdminLanguageConfigurationAvailableWithAdminLanguageNegotiation() {
+  public function testUserAdminLanguageConfigurationAvailableWithAdminLanguageNegotiation() {
     $this->drupalLogin($this->adminUser);
     $this->addCustomLanguage();
     $path = 'user/' . $this->adminUser->id() . '/edit';
@@ -83,7 +83,7 @@ class UserAdminLanguageTest extends WebTestBase {
    * have a setting for pages they cannot access, so they should not be able to
    * set a language for those pages.
    */
-  function testUserAdminLanguageConfigurationAvailableIfAdminLanguageNegotiationIsEnabled() {
+  public function testUserAdminLanguageConfigurationAvailableIfAdminLanguageNegotiationIsEnabled() {
     $this->drupalLogin($this->adminUser);
     // Adds a new language, because with only one language, setting won't show.
     $this->addCustomLanguage();
@@ -103,7 +103,7 @@ class UserAdminLanguageTest extends WebTestBase {
   /**
    * Tests the actual language negotiation.
    */
-  function testActualNegotiation() {
+  public function testActualNegotiation() {
     $this->drupalLogin($this->adminUser);
     $this->addCustomLanguage();
     $this->setLanguageNegotiation();
@@ -155,7 +155,7 @@ class UserAdminLanguageTest extends WebTestBase {
    * @param bool $admin_first
    *   Whether the admin negotiation should be first.
    */
-  function setLanguageNegotiation($admin_first = FALSE) {
+  public function setLanguageNegotiation($admin_first = FALSE) {
     $edit = [
       'language_interface[enabled][language-user-admin]' => TRUE,
       'language_interface[enabled][language-url]' => TRUE,
@@ -168,7 +168,7 @@ class UserAdminLanguageTest extends WebTestBase {
   /**
    * Helper method for adding a custom language.
    */
-  function addCustomLanguage() {
+  public function addCustomLanguage() {
     $langcode = 'xx';
     // The English name for the language.
     $name = $this->randomMachineName(16);

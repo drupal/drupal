@@ -56,7 +56,7 @@ abstract class NodeTestBase extends BrowserTestBase {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account for which to check access.
    */
-  function assertNodeAccess(array $ops, NodeInterface $node, AccountInterface $account) {
+  public function assertNodeAccess(array $ops, NodeInterface $node, AccountInterface $account) {
     foreach ($ops as $op => $result) {
       $this->assertEqual($result, $this->accessHandler->access($node, $op, $account), $this->nodeAccessAssertMessage($op, $result, $node->language()->getId()));
     }
@@ -75,7 +75,7 @@ abstract class NodeTestBase extends BrowserTestBase {
    *   (optional) The language code indicating which translation of the node
    *   to check. If NULL, the untranslated (fallback) access is checked.
    */
-  function assertNodeCreateAccess($bundle, $result, AccountInterface $account, $langcode = NULL) {
+  public function assertNodeCreateAccess($bundle, $result, AccountInterface $account, $langcode = NULL) {
     $this->assertEqual($result, $this->accessHandler->createAccess($bundle, $account, [
       'langcode' => $langcode,
     ]), $this->nodeAccessAssertMessage('create', $result, $langcode));
@@ -96,7 +96,7 @@ abstract class NodeTestBase extends BrowserTestBase {
    *   An assert message string which contains information in plain English
    *   about the node access permission test that was performed.
    */
-  function nodeAccessAssertMessage($operation, $result, $langcode = NULL) {
+  public function nodeAccessAssertMessage($operation, $result, $langcode = NULL) {
     return format_string(
       'Node access returns @result with operation %op, language code %langcode.',
       [

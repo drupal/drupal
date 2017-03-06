@@ -25,7 +25,7 @@ class EfqTest extends TaxonomyTestBase {
   /**
    * Tests that a basic taxonomy entity query works.
    */
-  function testTaxonomyEfq() {
+  public function testTaxonomyEfq() {
     $terms = [];
     for ($i = 0; $i < 5; $i++) {
       $term = $this->createTerm($this->vocabulary);

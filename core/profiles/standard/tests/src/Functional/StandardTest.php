@@ -31,7 +31,7 @@ class StandardTest extends BrowserTestBase {
   /**
    * Tests Standard installation profile.
    */
-  function testStandard() {
+  public function testStandard() {
     $this->drupalGet('');
     $this->assertLink(t('Contact'));
     $this->clickLink(t('Contact'));

@@ -17,7 +17,7 @@ class TestServiceProvider implements ServiceProviderInterface, ServiceModifierIn
   /**
    * {@inheritdoc}
    */
-  function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container) {
     if (static::$currentTest && method_exists(static::$currentTest, 'containerBuild')) {
       static::$currentTest->containerBuild($container);
     }

@@ -42,7 +42,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
    * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
    */
-  function __construct($name, Connection $connection) {
+  public function __construct($name, Connection $connection) {
     $this->name = $name;
     $this->connection = $connection;
   }

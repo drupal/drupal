@@ -93,9 +93,9 @@ class RequestHandlerTest extends KernelTestBase {
  */
 class StubRequestHandlerResourcePlugin extends ResourceBase {
 
-  function get() {}
-  function post() {}
-  function patch() {}
-  function delete() {}
+  public function get() {}
+  public function post() {}
+  public function patch() {}
+  public function delete() {}
 
 }

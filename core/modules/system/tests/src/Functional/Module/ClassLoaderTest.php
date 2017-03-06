@@ -21,7 +21,7 @@ class ClassLoaderTest extends BrowserTestBase {
    *
    * @see \Drupal\module_autoload_test\SomeClass
    */
-  function testClassLoading() {
+  public function testClassLoading() {
     // Enable the module_test and module_autoload_test modules.
     \Drupal::service('module_installer')->install(['module_test', 'module_autoload_test'], FALSE);
     $this->resetAll();
@@ -38,7 +38,7 @@ class ClassLoaderTest extends BrowserTestBase {
    *
    * @see \Drupal\module_autoload_test\SomeClass
    */
-  function testClassLoadingNotInstalledModules() {
+  public function testClassLoadingNotInstalledModules() {
     // Enable the module_test module.
     \Drupal::service('module_installer')->install(['module_test'], FALSE);
     $this->resetAll();
@@ -55,7 +55,7 @@ class ClassLoaderTest extends BrowserTestBase {
    *
    * @see \Drupal\module_autoload_test\SomeClass
    */
-  function testClassLoadingDisabledModules() {
+  public function testClassLoadingDisabledModules() {
     // Enable the module_test and module_autoload_test modules.
     \Drupal::service('module_installer')->install(['module_test', 'module_autoload_test'], FALSE);
     $this->resetAll();

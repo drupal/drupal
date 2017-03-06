@@ -16,7 +16,7 @@ class LargeQueryTest extends DatabaseTestBase {
   /**
    * Tests truncation of messages when max_allowed_packet exception occurs.
    */
-  function testMaxAllowedPacketQueryTruncating() {
+  public function testMaxAllowedPacketQueryTruncating() {
     // This test only makes sense if we are running on a MySQL database.
     // Test if we are.
     $database = Database::getConnectionInfo('default');

@@ -145,7 +145,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   /**
    * Test basic functionality.
    */
-  function testEntityQuery() {
+  public function testEntityQuery() {
     $greetings = $this->greetings;
     $figures = $this->figures;
     $this->queryResults = $this->factory->get('entity_test_mulrev')
@@ -318,7 +318,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    *
    * Warning: this is complicated.
    */
-  function testSort() {
+  public function testSort() {
     $greetings = $this->greetings;
     $figures = $this->figures;
     // Order up and down on a number.

@@ -25,7 +25,7 @@ class NodeTypeTest extends NodeTestBase {
    *
    * Load available node types and validate the returned data.
    */
-  function testNodeTypeGetFunctions() {
+  public function testNodeTypeGetFunctions() {
     $node_types = NodeType::loadMultiple();
     $node_names = node_type_get_names();
 
@@ -42,7 +42,7 @@ class NodeTypeTest extends NodeTestBase {
   /**
    * Tests creating a content type programmatically and via a form.
    */
-  function testNodeTypeCreation() {
+  public function testNodeTypeCreation() {
     // Create a content type programmatically.
     $type = $this->drupalCreateContentType();
 
@@ -83,7 +83,7 @@ class NodeTypeTest extends NodeTestBase {
   /**
    * Tests editing a node type using the UI.
    */
-  function testNodeTypeEditing() {
+  public function testNodeTypeEditing() {
     $web_user = $this->drupalCreateUser(['bypass node access', 'administer content types', 'administer node fields']);
     $this->drupalLogin($web_user);
 
@@ -142,7 +142,7 @@ class NodeTypeTest extends NodeTestBase {
   /**
    * Tests deleting a content type that still has content.
    */
-  function testNodeTypeDeletion() {
+  public function testNodeTypeDeletion() {
     // Create a content type programmatically.
     $type = $this->drupalCreateContentType();
 

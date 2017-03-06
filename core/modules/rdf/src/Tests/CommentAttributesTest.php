@@ -251,7 +251,7 @@ class CommentAttributesTest extends CommentTestBase {
    * @param $account
    *   An array containing information about an anonymous user.
    */
-  function _testBasicCommentRdfaMarkup($graph, CommentInterface $comment, $account = []) {
+  public function _testBasicCommentRdfaMarkup($graph, CommentInterface $comment, $account = []) {
     $comment_uri = $comment->url('canonical', ['absolute' => TRUE]);
 
     // Comment type.
@@ -353,7 +353,7 @@ class CommentAttributesTest extends CommentTestBase {
    * @return \Drupal\comment\Entity\Comment
    *   The saved comment.
    */
-  function saveComment($nid, $uid, $contact = NULL, $pid = 0) {
+  public function saveComment($nid, $uid, $contact = NULL, $pid = 0) {
     $values = [
       'entity_id' => $nid,
       'entity_type' => 'node',

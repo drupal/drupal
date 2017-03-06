@@ -24,7 +24,7 @@ class ConfigFileContentTest extends KernelTestBase {
   /**
    * Tests setting, writing, and reading of a configuration setting.
    */
-  function testReadWriteConfig() {
+  public function testReadWriteConfig() {
     $storage = $this->container->get('config.storage');
 
     $name = 'foo.bar';
@@ -187,7 +187,7 @@ class ConfigFileContentTest extends KernelTestBase {
   /**
    * Tests serialization of configuration to file.
    */
-  function testSerialization() {
+  public function testSerialization() {
     $name = $this->randomMachineName(10) . '.' . $this->randomMachineName(10);
     $config_data = [
       // Indexed arrays; the order of elements is essential.

@@ -22,7 +22,7 @@ class UserAdminTest extends WebTestBase {
   /**
    * Registers a user and deletes it.
    */
-  function testUserAdmin() {
+  public function testUserAdmin() {
     $config = $this->config('user.settings');
     $user_a = $this->drupalCreateUser();
     $user_a->name = 'User A';
@@ -149,7 +149,7 @@ class UserAdminTest extends WebTestBase {
   /**
    * Tests the alternate notification email address for user mails.
    */
-  function testNotificationEmailAddress() {
+  public function testNotificationEmailAddress() {
     // Test that the Notification Email address field is on the config page.
     $admin_user = $this->drupalCreateUser(['administer users', 'administer account settings']);
     $this->drupalLogin($admin_user);

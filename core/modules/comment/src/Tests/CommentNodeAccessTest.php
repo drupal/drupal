@@ -43,7 +43,7 @@ class CommentNodeAccessTest extends CommentTestBase {
   /**
    * Test that threaded comments can be viewed.
    */
-  function testThreadedCommentView() {
+  public function testThreadedCommentView() {
     // Set comments to have subject required and preview disabled.
     $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_DISABLED);

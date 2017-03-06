@@ -32,7 +32,7 @@ class ConfigEntityTest extends WebTestBase {
   /**
    * Tests CRUD operations.
    */
-  function testCRUD() {
+  public function testCRUD() {
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     // Verify default properties on a newly created empty entity.
     $empty = entity_create('config_test');
@@ -230,7 +230,7 @@ class ConfigEntityTest extends WebTestBase {
   /**
    * Tests CRUD operations through the UI.
    */
-  function testCRUDUI() {
+  public function testCRUDUI() {
     $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
 
     $id = strtolower($this->randomMachineName());

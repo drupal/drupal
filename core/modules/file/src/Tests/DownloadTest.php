@@ -17,7 +17,7 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * Test the public file transfer system.
    */
-  function testPublicFileTransfer() {
+  public function testPublicFileTransfer() {
     // Test generating a URL to a created file.
     $file = $this->createFile();
     $url = file_create_url($file->getFileUri());
@@ -86,7 +86,7 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * Test file_create_url().
    */
-  function testFileCreateUrl() {
+  public function testFileCreateUrl() {
 
     // Tilde (~) is excluded from this test because it is encoded by
     // rawurlencode() in PHP 5.2 but not in PHP 5.3, as per RFC 3986.

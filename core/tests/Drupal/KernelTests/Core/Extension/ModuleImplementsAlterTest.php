@@ -22,7 +22,7 @@ class ModuleImplementsAlterTest extends KernelTestBase {
    * @see \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo()
    * @see module_test_module_implements_alter()
    */
-  function testModuleImplementsAlter() {
+  public function testModuleImplementsAlter() {
 
     // Get an instance of the module handler, to observe how it is going to be
     // replaced.
@@ -73,7 +73,7 @@ class ModuleImplementsAlterTest extends KernelTestBase {
    * @see \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo()
    * @see module_test_module_implements_alter()
    */
-  function testModuleImplementsAlterNonExistingImplementation() {
+  public function testModuleImplementsAlterNonExistingImplementation() {
 
     // Install the module_test module.
     \Drupal::service('module_installer')->install(['module_test']);

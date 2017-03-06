@@ -59,7 +59,7 @@ class CKEditorStylesComboAdminTest extends WebTestBase {
   /**
    * Tests StylesCombo settings for an existing text format.
    */
-  function testExistingFormat() {
+  public function testExistingFormat() {
     $ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $default_settings = $ckeditor->getDefaultSettings();
 

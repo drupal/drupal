@@ -41,7 +41,7 @@ class StringFieldTest extends WebTestBase {
   /**
    * Test widgets.
    */
-  function testTextfieldWidgets() {
+  public function testTextfieldWidgets() {
     $this->_testTextfieldWidgets('string', 'string_textfield');
     $this->_testTextfieldWidgets('string_long', 'string_textarea');
   }
@@ -49,7 +49,7 @@ class StringFieldTest extends WebTestBase {
   /**
    * Helper function for testTextfieldWidgets().
    */
-  function _testTextfieldWidgets($field_type, $widget_type) {
+  public function _testTextfieldWidgets($field_type, $widget_type) {
     // Create a field.
     $field_name = Unicode::strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([

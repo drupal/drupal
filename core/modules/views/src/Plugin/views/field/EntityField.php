@@ -263,7 +263,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   /**
    * Determine if the field table should be added to the query.
    */
-  function add_field_table($use_groupby) {
+  public function add_field_table($use_groupby) {
     // Grouping is enabled.
     if ($use_groupby) {
       return TRUE;
@@ -497,7 +497,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   /**
    * Provide options for multiple value fields.
    */
-  function multiple_options_form(&$form, FormStateInterface $form_state) {
+  public function multiple_options_form(&$form, FormStateInterface $form_state) {
     $field = $this->getFieldDefinition();
 
     $form['multiple_field_settings'] = [
@@ -906,7 +906,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     return $processed_entity;
   }
 
-  function render_item($count, $item) {
+  public function render_item($count, $item) {
     return render($item['rendered']);
   }
 

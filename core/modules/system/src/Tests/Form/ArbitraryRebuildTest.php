@@ -48,7 +48,7 @@ class ArbitraryRebuildTest extends WebTestBase {
   /**
    * Tests a basic rebuild with the user registration form.
    */
-  function testUserRegistrationRebuild() {
+  public function testUserRegistrationRebuild() {
     $edit = [
       'name' => 'foo',
       'mail' => 'bar@example.com',
@@ -62,7 +62,7 @@ class ArbitraryRebuildTest extends WebTestBase {
   /**
    * Tests a rebuild caused by a multiple value field.
    */
-  function testUserRegistrationMultipleField() {
+  public function testUserRegistrationMultipleField() {
     $edit = [
       'name' => 'foo',
       'mail' => 'bar@example.com',

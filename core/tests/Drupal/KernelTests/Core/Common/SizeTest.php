@@ -41,7 +41,7 @@ class SizeTest extends KernelTestBase {
   /**
    * Checks that format_size() returns the expected string.
    */
-  function testCommonFormatSize() {
+  public function testCommonFormatSize() {
     foreach ([$this->exactTestCases, $this->roundedTestCases] as $test_cases) {
       foreach ($test_cases as $expected => $input) {
         $this->assertEqual(
@@ -56,7 +56,7 @@ class SizeTest extends KernelTestBase {
   /**
    * Cross-tests Bytes::toInt() and format_size().
    */
-  function testCommonParseSizeFormatSize() {
+  public function testCommonParseSizeFormatSize() {
     foreach ($this->exactTestCases as $size) {
       $this->assertEqual(
         $size,

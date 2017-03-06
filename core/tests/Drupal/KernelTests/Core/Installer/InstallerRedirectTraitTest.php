@@ -66,7 +66,7 @@ class InstallerRedirectTraitTest extends KernelTestBase {
    * @covers ::shouldRedirectToInstaller
    * @dataProvider providerShouldRedirectToInstaller
    */
-  function testShouldRedirectToInstaller($expected, $exception, $connection, $connection_info, $session_table_exists = TRUE) {
+  public function testShouldRedirectToInstaller($expected, $exception, $connection, $connection_info, $session_table_exists = TRUE) {
     try {
       throw new $exception();
     }

@@ -19,7 +19,7 @@ class FieldBooleanTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
-  function dataSet() {
+  public function dataSet() {
     // Use default dataset but remove the age from john and paul
     $data = parent::dataSet();
     $data[0]['age'] = 0;
@@ -27,7 +27,7 @@ class FieldBooleanTest extends ViewsKernelTestBase {
     return $data;
   }
 
-  function viewsData() {
+  public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['age']['field']['id'] = 'boolean';
     return $data;

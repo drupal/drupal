@@ -15,7 +15,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   /**
    * Tests string concatenation.
    */
-  function testConcatLiterals() {
+  public function testConcatLiterals() {
     $result = db_query('SELECT CONCAT(:a1, CONCAT(:a2, CONCAT(:a3, CONCAT(:a4, :a5))))', [
       ':a1' => 'This',
       ':a2' => ' ',
@@ -29,7 +29,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   /**
    * Tests string concatenation with field values.
    */
-  function testConcatFields() {
+  public function testConcatFields() {
     $result = db_query('SELECT CONCAT(:a1, CONCAT(name, CONCAT(:a2, CONCAT(age, :a3)))) FROM {test} WHERE age = :age', [
       ':a1' => 'The age of ',
       ':a2' => ' is ',
@@ -42,7 +42,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   /**
    * Tests string concatenation with separator.
    */
-  function testConcatWsLiterals() {
+  public function testConcatWsLiterals() {
     $result = db_query("SELECT CONCAT_WS(', ', :a1, NULL, :a2, :a3, :a4)", [
       ':a1' => 'Hello',
       ':a2' => NULL,
@@ -55,7 +55,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   /**
    * Tests string concatenation with separator, with field values.
    */
-  function testConcatWsFields() {
+  public function testConcatWsFields() {
     $result = db_query("SELECT CONCAT_WS('-', :a1, name, :a2, age) FROM {test} WHERE age = :age", [
       ':a1' => 'name',
       ':a2' => 'age',
@@ -67,7 +67,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   /**
    * Tests escaping of LIKE wildcards.
    */
-  function testLikeEscape() {
+  public function testLikeEscape() {
     db_insert('test')
       ->fields([
         'name' => 'Ring_',
@@ -93,7 +93,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   /**
    * Tests a LIKE query containing a backslash.
    */
-  function testLikeBackslash() {
+  public function testLikeBackslash() {
     db_insert('test')
       ->fields(['name'])
       ->values([

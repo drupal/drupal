@@ -40,7 +40,7 @@ class ContentTranslationManager implements ContentTranslationManagerInterface {
   /**
    * {@inheritdoc}
    */
-  function getTranslationHandler($entity_type_id) {
+  public function getTranslationHandler($entity_type_id) {
     return $this->entityManager->getHandler($entity_type_id, 'translation');
   }
 

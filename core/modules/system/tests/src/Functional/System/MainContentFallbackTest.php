@@ -39,7 +39,7 @@ class MainContentFallbackTest extends BrowserTestBase {
   /**
    * Test availability of main content: Drupal falls back to SimplePageVariant.
    */
-  function testMainContentFallback() {
+  public function testMainContentFallback() {
     $edit = [];
     // Uninstall the block module.
     $edit['uninstall[block]'] = 'block';
