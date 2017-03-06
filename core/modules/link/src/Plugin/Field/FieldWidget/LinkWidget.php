@@ -175,6 +175,7 @@ class LinkWidget extends WidgetBase {
       '#element_validate' => [[get_called_class(), 'validateUriElement']],
       '#maxlength' => 2048,
       '#required' => $element['#required'],
+      '#link_type' => $this->getFieldSetting('link_type'),
     ];
 
     // If the field is configured to support internal links, it cannot use the
