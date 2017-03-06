@@ -63,6 +63,12 @@ views.filter.in_operator:
         reduce:
           type: boolean
           label: 'Reduce'
+    group_info:
+      mapping:
+        group_items:
+          sequence:
+            type: views.filter.group_item.in_operator
+            label: 'Group item'
 
 views.filter.string:
   type: views_filter
@@ -93,8 +99,12 @@ views.filter_value.numeric:
       type: string
       label: 'Value'
 
+views.filter_value.*:
+  type: string
+  label: 'Filter value'
+
 views.filter_value.equality:
-  type: views.filter_value.numeric
+  type: string
   label: 'Equality'
 
 views.filter.many_to_one:
@@ -109,18 +119,26 @@ views.filter.standard:
   type: views_filter
   label: 'Standard'
 
+# Schema for the views group items.
 views.filter.group_item.*:
   type: views_filter_group_item
-  label: 'Default'
+  label: 'Group item'
 
-views.filter.group_item.numeric:
+views.filter.group_item.boolean:
   type: views_filter_group_item
-  label: 'Group items'
   mapping:
     value:
-      type: views.filter_value.numeric
+      type: views.filter_value.string
+
+views.filter.group_item.in_operator:
+  type: views_filter_group_item
+  mapping:
+    value:
+      type: views.filter_value.in_operator
 
 # Schema for the views filter value.
+views.filter_value.string:
+  type: string
 
 views.filter_value.boolean:
   type: string
@@ -131,3 +149,26 @@ views.filter_value.combine:
 views.filter.language:
   type: views.filter.in_operator
   label: 'Language'
+
+views.filter_value.date:
+  type: views.filter_value.numeric
+  label: 'Date'
+  mapping:
+    type:
+      type: string
+      label: 'Type'
+
+views.filter_value.datetime:
+  type: views.filter_value.numeric
+  label: 'Date'
+  mapping:
+    type:
+      type: string
+      label: 'Type'
+
+views.filter_value.in_operator:
+  type: sequence
+  label: 'Values'
+  sequence:
+    type: string
+    label: 'Value'

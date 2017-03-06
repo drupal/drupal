@@ -777,7 +777,7 @@ views_filter_group_item:
       type: string
       label: 'Operator'
     value:
-      type: label
+      type: views.filter_value.[%parent.%parent.%parent.%parent.plugin_id]
       label: 'Value'
 
 views_relationship:
