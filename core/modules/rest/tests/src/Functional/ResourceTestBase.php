@@ -57,6 +57,15 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected static $auth = FALSE;
 
   /**
+   * The REST Resource Config entity ID under test (i.e. a resource type).
+   *
+   * The REST Resource plugin ID can be calculated from this.
+   *
+   * @var string
+   */
+  protected static $resourceConfigId = NULL;
+
+  /**
    * The account to use for authentication, if any.
    *
    * @var null|\Drupal\Core\Session\AccountInterface
@@ -133,24 +142,23 @@ abstract class ResourceTestBase extends BrowserTestBase {
   }
 
   /**
-   * Provisions a REST resource.
+   * Provisions the REST resource under test.
    *
-   * @param string $resource_type
-   *   The resource type (REST resource plugin ID).
    * @param string[] $formats
    *   The allowed formats for this resource.
    * @param string[] $authentication
    *   The allowed authentication providers for this resource.
    */
-  protected function provisionResource($resource_type, $formats = [], $authentication = []) {
+  protected function provisionResource($formats = [], $authentication = []) {
     $this->resourceConfigStorage->create([
-      'id' => $resource_type,
+      'id' => static::$resourceConfigId,
       'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
       'configuration' => [
         'methods' => ['GET', 'POST', 'PATCH', 'DELETE'],
         'formats' => $formats,
         'authentication' => $authentication,
-      ]
+      ],
+      'status' => TRUE,
     ])->save();
     $this->refreshTestStateAfterRestConfigChange();
   }
