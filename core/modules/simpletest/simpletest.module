@@ -692,7 +692,9 @@ function simpletest_clean_temporary_directories() {
     foreach ($files as $file) {
       if ($file[0] != '.') {
         $path = DRUPAL_ROOT . '/sites/simpletest/' . $file;
-        file_unmanaged_delete_recursive($path, ['Drupal\simpletest\TestBase', 'filePreDeleteCallback']);
+        file_unmanaged_delete_recursive($path, function ($any_path) {
+          @chmod($any_path, 0700);
+        });
         $count++;
       }
     }
