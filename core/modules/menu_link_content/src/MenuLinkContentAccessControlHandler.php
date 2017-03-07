@@ -56,7 +56,7 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
 
       case 'update':
         if (!$account->hasPermission('administer menu')) {
-          return AccessResult::neutral()->cachePerPermissions();
+          return AccessResult::neutral("The 'administer menu' permission is required.")->cachePerPermissions();
         }
         else {
           // If there is a URL, this is an external link so always accessible.
