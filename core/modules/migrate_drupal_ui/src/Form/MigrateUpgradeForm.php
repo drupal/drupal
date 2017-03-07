@@ -526,10 +526,6 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'taxonomy',
       'destination_module' => 'taxonomy',
     ],
-    'd6_i18n_taxonomy_vocabulary' => [
-      'source_module' => 'i18n',
-      'destination_module' => 'taxonomy',
-    ],
     'd6_term_node' => [
       'source_module' => 'taxonomy',
       'destination_module' => 'taxonomy',
