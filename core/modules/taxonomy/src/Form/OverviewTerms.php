@@ -22,13 +22,6 @@ class OverviewTerms extends FormBase {
   protected $moduleHandler;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * The term storage handler.
    *
    * @var \Drupal\taxonomy\TermStorageInterface
@@ -45,7 +38,6 @@ class OverviewTerms extends FormBase {
    */
   public function __construct(ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager) {
     $this->moduleHandler = $module_handler;
-    $this->entityManager = $entity_manager;
     $this->storageController = $entity_manager->getStorage('taxonomy_term');
   }
 
@@ -217,7 +209,6 @@ class OverviewTerms extends FormBase {
     ];
     foreach ($current_page as $key => $term) {
       /** @var $term \Drupal\Core\Entity\EntityInterface */
-      $term = $this->entityManager->getTranslationFromContext($term);
       $form['terms'][$key]['#term'] = $term;
       $indentation = [];
       if (isset($term->depth) && $term->depth > 0) {
