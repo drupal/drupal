@@ -54,6 +54,7 @@ function tour_toolbar() {
       '#attributes' => [
         'class' => ['toolbar-icon', 'toolbar-icon-help'],
         'aria-pressed' => 'false',
+        'type' => 'button',
       ],
     ],
     '#wrapper_attributes' => [

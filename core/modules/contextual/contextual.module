@@ -36,6 +36,7 @@ function contextual_toolbar() {
       '#attributes' => [
         'class' => ['toolbar-icon', 'toolbar-icon-edit'],
         'aria-pressed' => 'false',
+        'type' => 'button',
       ],
     ],
     '#wrapper_attributes' => [
