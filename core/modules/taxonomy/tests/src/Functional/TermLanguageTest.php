@@ -107,4 +107,37 @@ class TermLanguageTest extends TaxonomyTestBase {
     $this->assertOptionSelected('edit-langcode-0-value', 'cc', "The expected langcode, 'cc', was selected.");
   }
 
+  /**
+   * Tests that translated terms are displayed correctly on the term overview.
+   */
+  public function testTermTranslatedOnOverviewPage() {
+    // Configure the vocabulary to not hide the language selector.
+    $edit = [
+      'default_language[language_alterable]' => TRUE,
+    ];
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
+
+    // Add a term.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
+    // Submit the term.
+    $edit = [
+      'name[0][value]' => $this->randomMachineName(),
+      'langcode[0][value]' => 'aa',
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
+    $term = reset($terms);
+
+    // Add a translation for that term.
+    $translated_title = $this->randomMachineName();
+    $term->addTranslation('bb', [
+      'name' => $translated_title,
+    ]);
+    $term->save();
+
+    // Overview page in the other language shows the translated term
+    $this->drupalGet('bb/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->assertPattern('|<a[^>]*>' . $translated_title . '</a>|', 'The term language is correct');
+  }
+
 }
