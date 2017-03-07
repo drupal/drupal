@@ -74,14 +74,14 @@ class BooleanOperator extends FilterPluginBase {
         'method' => 'queryOpBoolean',
         'short' => $this->t('='),
         'values' => 1,
-        'query_operator' => static::EQUAL,
+        'query_operator' => self::EQUAL,
       ],
       '!=' => [
         'title' => $this->t('Is not equal to'),
         'method' => 'queryOpBoolean',
         'short' => $this->t('!='),
         'values' => 1,
-        'query_operator' => static::NOT_EQUAL,
+        'query_operator' => self::NOT_EQUAL,
       ],
     ];
   }
@@ -231,13 +231,13 @@ class BooleanOperator extends FilterPluginBase {
    * @param string $field
    *   The field name to add the where condition for.
    * @param string $query_operator
-   *   (optional) Either static::EQUAL or static::NOT_EQUAL. Defaults to
-   *   static::EQUAL.
+   *   (optional) Either self::EQUAL or self::NOT_EQUAL. Defaults to
+   *   self::EQUAL.
    */
-  protected function queryOpBoolean($field, $query_operator = EQUAL) {
+  protected function queryOpBoolean($field, $query_operator = self::EQUAL) {
     if (empty($this->value)) {
       if ($this->accept_null) {
-        if ($query_operator == static::EQUAL) {
+        if ($query_operator === self::EQUAL) {
           $condition = (new Condition('OR'))
             ->condition($field, 0, $query_operator)
             ->isNull($field);
@@ -255,12 +255,13 @@ class BooleanOperator extends FilterPluginBase {
     }
     else {
       if (!empty($this->definition['use_equal'])) {
-        // Forces an '=' operator instead of a '<>' for performance reasons.
-        if ($query_operator == static::EQUAL) {
-          $this->query->addWhere($this->options['group'], $field, 1, static::EQUAL);
+        // Forces a self::EQUAL operator instead of a self::NOT_EQUAL for
+        // performance reasons.
+        if ($query_operator === self::EQUAL) {
+          $this->query->addWhere($this->options['group'], $field, 1, self::EQUAL);
         }
         else {
-          $this->query->addWhere($this->options['group'], $field, 0, static::EQUAL);
+          $this->query->addWhere($this->options['group'], $field, 0, self::EQUAL);
         }
       }
       else {
