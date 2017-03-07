@@ -1034,7 +1034,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // 204 for well-formed request.
     $response = $this->request('DELETE', $url, $request_options);
     $this->assertSame(204, $response->getStatusCode());
-    // @todo Uncomment the following line when https://www.drupal.org/node/2821711 is fixed.
+    // DELETE responses should not include a Content-Type header. But Apache
+    // sets it to 'text/html' by default. We also cannot detect the presence of
+    // Apache either here in the CLI. For now having this documented here is all
+    // we can do.
     // $this->assertSame(FALSE, $response->hasHeader('Content-Type'));
     $this->assertSame('', (string) $response->getBody());
     $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
