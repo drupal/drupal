@@ -120,6 +120,7 @@ class PathProcessorTest extends UnitTestCase {
         'language.negotiation' => [
           'url' => [
             'prefixes' => ['fr' => 'fr'],
+            'source' => LanguageNegotiationUrl::CONFIG_PATH_PREFIX,
           ],
         ],
       ]
