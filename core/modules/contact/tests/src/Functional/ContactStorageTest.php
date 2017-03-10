@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\contact\Tests;
+namespace Drupal\Tests\contact\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\contact\Entity\Message;

@@ -1,26 +1,27 @@
 <?php
 
-namespace Drupal\contact\Tests;
+namespace Drupal\Tests\contact\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Mail\MailFormatHelper;
-use Drupal\Core\Url;
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\RoleInterface;
 
 /**
  * Tests site-wide contact form functionality.
  *
- * @see \Drupal\contact\Tests\ContactStorageTest
+ * @see \Drupal\Tests\contact\Functional\ContactStorageTest
  *
  * @group contact
  */
-class ContactSitewideTest extends WebTestBase {
+class ContactSitewideTest extends BrowserTestBase {
 
   use FieldUiTestTrait;
+  use AssertMailTrait;
 
   /**
    * Modules to enable.
@@ -265,15 +266,13 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertTrue(!empty($view_link), 'Contact listing links to contact form.');
 
     // Find out in which row the form we want to add a field to is.
-    $i = 0;
     foreach ($this->xpath('//table/tbody/tr') as $row) {
-      if (((string) $row->td[0]->a) == $label) {
+      if ($row->findLink($label)) {
+        $row->clickLink('Manage fields');
         break;
       }
-      $i++;
     }
 
-    $this->clickLink(t('Manage fields'), $i);
     $this->assertResponse(200);
     $this->clickLink(t('Add field'));
     $this->assertResponse(200);
@@ -299,7 +298,7 @@ class ContactSitewideTest extends WebTestBase {
       $field_name . '[0][value]' => $this->randomMachineName(),
     ];
     $this->drupalPostForm(NULL, $edit, t('Send message'));
-    $mails = $this->drupalGetMails();
+    $mails = $this->getMails();
     $mail = array_pop($mails);
     $this->assertEqual($mail['subject'], t('[@label] @subject', ['@label' => $label, '@subject' => $edit['subject[0][value]']]));
     $this->assertTrue(strpos($mail['body'], $field_label));
@@ -377,7 +376,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->submitContact($this->randomMachineName(16), $email, $subject, 'foo', $this->randomString(128));
 
     // We are testing the auto-reply, so there should be one email going to the sender.
-    $captured_emails = $this->drupalGetMails(['id' => 'contact_page_autoreply', 'to' => $email]);
+    $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
     $this->assertEqual(count($captured_emails), 1);
     $this->assertEqual(trim($captured_emails[0]['body']), trim(MailFormatHelper::htmlToText($foo_autoreply)));
 
@@ -386,14 +385,14 @@ class ContactSitewideTest extends WebTestBase {
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'bar', $this->randomString(128));
 
     // Auto-reply for form 'bar' should result in one auto-reply email to the sender.
-    $captured_emails = $this->drupalGetMails(['id' => 'contact_page_autoreply', 'to' => $email]);
+    $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
     $this->assertEqual(count($captured_emails), 1);
     $this->assertEqual(trim($captured_emails[0]['body']), trim(MailFormatHelper::htmlToText($bar_autoreply)));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomMachineName(32) . '@example.com';
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'no_autoreply', $this->randomString(128));
-    $captured_emails = $this->drupalGetMails(['id' => 'contact_page_autoreply', 'to' => $email]);
+    $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
     $this->assertEqual(count($captured_emails), 0);
 
     // Verify that the current error message doesn't show, that the auto-reply
@@ -404,7 +403,7 @@ class ContactSitewideTest extends WebTestBase {
       ->save();
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'foo', $this->randomString(128));
     $this->assertNoText('Unable to send email. Contact the site administrator if the problem persists.');
-    $captured_emails = $this->drupalGetMails(['id' => 'contact_page_autoreply', 'to' => $email]);
+    $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
     $this->assertEqual(count($captured_emails), 0);
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/reports/dblog');
