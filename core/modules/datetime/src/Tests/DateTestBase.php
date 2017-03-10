@@ -5,7 +5,7 @@ namespace Drupal\datetime\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -114,7 +114,7 @@ abstract class DateTestBase extends WebTestBase {
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => $type,
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATE],
+      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],
     ]);
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([
