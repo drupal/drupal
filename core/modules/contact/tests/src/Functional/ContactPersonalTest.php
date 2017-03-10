@@ -1,11 +1,13 @@
 <?php
 
-namespace Drupal\contact\Tests;
+namespace Drupal\Tests\contact\Functional;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Test\AssertMailTrait;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 
 /**
@@ -13,7 +15,10 @@ use Drupal\user\RoleInterface;
  *
  * @group contact
  */
-class ContactPersonalTest extends WebTestBase {
+class ContactPersonalTest extends BrowserTestBase {
+
+  use AssertMailTrait;
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Modules to enable.
@@ -67,7 +72,7 @@ class ContactPersonalTest extends WebTestBase {
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
     $this->assertEscaped($mail);
     $message = $this->submitPersonalContact($this->contactUser);
-    $mails = $this->drupalGetMails();
+    $mails = $this->getMails();
     $this->assertEqual(1, count($mails));
     $mail = $mails[0];
     $this->assertEqual($mail['to'], $this->contactUser->getEmail());
