@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\book\Tests;
+namespace Drupal\Tests\book\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Create a book, add pages, and test book interface.
  *
  * @group book
  */
-class BookBreadcrumbTest extends WebTestBase {
+class BookBreadcrumbTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -148,7 +148,7 @@ class BookBreadcrumbTest extends WebTestBase {
     $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
     $got_breadcrumb = [];
     foreach ($links as $link) {
-      $got_breadcrumb[] = (string) $link;
+      $got_breadcrumb[] = $link->getText();
     }
     // Home link and four parent book nodes should be in the breadcrumb.
     $this->assertEqual(5, count($got_breadcrumb));
@@ -162,7 +162,7 @@ class BookBreadcrumbTest extends WebTestBase {
     $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
     $got_breadcrumb = [];
     foreach ($links as $link) {
-      $got_breadcrumb[] = (string) $link;
+      $got_breadcrumb[] = $link->getText();
     }
     $this->assertEqual(5, count($got_breadcrumb));
     $this->assertEqual($edit['title[0][value]'], end($got_breadcrumb));
@@ -183,7 +183,7 @@ class BookBreadcrumbTest extends WebTestBase {
     $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
     $got_breadcrumb = [];
     foreach ($links as $link) {
-      $got_breadcrumb[] = (string) $link;
+      $got_breadcrumb[] = $link->getText();
     }
     $this->assertEqual(5, count($got_breadcrumb));
     $this->assertEqual($edit['title[0][value]'], end($got_breadcrumb));
@@ -193,7 +193,7 @@ class BookBreadcrumbTest extends WebTestBase {
     $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
     $got_breadcrumb = [];
     foreach ($links as $link) {
-      $got_breadcrumb[] = (string) $link;
+      $got_breadcrumb[] = $link->getText();
     }
     $this->assertEqual(4, count($got_breadcrumb));
     $this->assertEqual($nodes[2]->getTitle(), end($got_breadcrumb));
