@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\syslog\Tests;
+namespace Drupal\Tests\syslog\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests syslog settings.
  *
  * @group syslog
  */
-class SyslogTest extends WebTestBase {
+class SyslogTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -31,10 +31,9 @@ class SyslogTest extends WebTestBase {
       $this->assertText(t('The configuration options have been saved.'));
 
       $this->drupalGet('admin/config/development/logging');
-      if ($this->parse()) {
-        $field = $this->xpath('//option[@value=:value]', [':value' => LOG_LOCAL6]); // Should be one field.
-        $this->assertTrue($field[0]['selected'] == 'selected', 'Facility value saved.');
-      }
+      // Should be one field.
+      $field = $this->xpath('//option[@value=:value]', [':value' => LOG_LOCAL6]);
+      $this->assertSame('selected', $field[0]->getAttribute('selected'), 'Facility value saved.');
     }
   }
 
