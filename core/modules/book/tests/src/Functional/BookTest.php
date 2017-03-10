@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\book\Tests;
+namespace Drupal\Tests\book\Functional;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 
 /**
@@ -13,7 +13,7 @@ use Drupal\user\RoleInterface;
  *
  * @group book
  */
-class BookTest extends WebTestBase {
+class BookTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -296,7 +296,7 @@ class BookTest extends WebTestBase {
     $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
     $got_breadcrumb = [];
     foreach ($links as $link) {
-      $got_breadcrumb[] = (string) $link['href'];
+      $got_breadcrumb[] = $link->getAttribute('href');
     }
 
     // Compare expected and got breadcrumbs.
@@ -690,7 +690,7 @@ class BookTest extends WebTestBase {
     $this->assertText($this->book->label(), 'The book title is displayed on the administrative book listing page.');
 
     $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a');
-    $this->assertEqual((string) $elements[0], 'View', 'View link is found from the list.');
+    $this->assertEqual($elements[0]->getText(), 'View', 'View link is found from the list.');
   }
 
   /**
