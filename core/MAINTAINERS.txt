@@ -30,8 +30,14 @@ Drupal 8
   (Framework Manager - Frontend)
 
 Provisional membership:
+- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+  (Framework Manager - Frontend)
+- Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
+  (Product Manager)
 - Chris McCafferty 'cilefen' https://www.drupal.org/u/cilefen
   (Release Manager)
+- Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
+  (Product Manager)
 
 Drupal 7
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
