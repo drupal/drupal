@@ -290,6 +290,7 @@ class ConfigImportUITest extends WebTestBase {
 
     // Load the diff UI and verify that the diff reflects the change.
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
+    $this->assertNoRaw('&amp;nbsp;');
     $this->assertTitle(format_string('View changes of @config_name | Drupal', ['@config_name' => $config_name]));
 
     // The following assertions do not use $this::assertEscaped() because
