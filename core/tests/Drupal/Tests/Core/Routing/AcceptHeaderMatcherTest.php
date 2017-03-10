@@ -1,9 +1,8 @@
 <?php
 
-namespace Drupal\Tests\accept_header_routing_teste\Unit\Routing;
+namespace Drupal\Tests\Core\Routing;
 
 use Drupal\accept_header_routing_test\Routing\AcceptHeaderMatcher;
-use Drupal\Tests\Core\Routing\RoutingFixtures;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -88,7 +87,7 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
    * Confirms that the AcceptHeaderMatcher throws an exception for no-route.
    *
    * @expectedException \Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException
-   * @expectedExceptionMessage No route found for the specified formats application/json text/xml.
+   * @expectedExceptionMessage No route found for the specified formats application/json text/xml
    */
   public function testNoRouteFound() {
     // Remove the sample routes that would match any method.
