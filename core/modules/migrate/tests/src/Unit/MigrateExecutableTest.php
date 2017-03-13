@@ -3,6 +3,7 @@
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Component\Utility\Html;
+use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\MigrateException;
@@ -417,6 +418,25 @@ class MigrateExecutableTest extends MigrateTestCase {
     $row = new Row();
     $this->executable->processRow($row);
     $this->assertSame($row->getDestination(), []);
+  }
+
+  /**
+   * Tests the processRow pipeline exception.
+   */
+  public function testProcessRowPipelineException() {
+    $row = new Row();
+    $plugin = $this->prophesize(MigrateProcessInterface::class);
+    $plugin->getPluginDefinition()->willReturn(['handle_multiples' => FALSE]);
+    $plugin->transform(NULL, $this->executable, $row, 'destination_id')
+      ->willReturn('transform_return_string');
+    $plugin->multiple()->willReturn(TRUE);
+    $plugin->getPluginId()->willReturn('plugin_id');
+    $plugin = $plugin->reveal();
+    $plugins['destination_id'] = [$plugin, $plugin];
+    $this->migration->method('getProcessPlugins')->willReturn($plugins);
+
+    $this->setExpectedException(MigrateException::class, 'Pipeline failed at plugin_id plugin for destination destination_id: transform_return_string received instead of an array,');
+    $this->executable->processRow($row);
   }
 
   /**
