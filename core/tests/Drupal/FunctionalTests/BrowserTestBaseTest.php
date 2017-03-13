@@ -187,6 +187,29 @@ class BrowserTestBaseTest extends BrowserTestBase {
     catch (ExpectationException $e) {
       $this->pass('The "name" field was found.');
     }
+
+    $this->assertNoFieldByName('name');
+    $this->assertNoFieldByName('name', 'not the value');
+    $this->assertNoFieldByName('notexisting');
+    $this->assertNoFieldByName('notexisting', NULL);
+
+    // Test that the assertion fails correctly if no value is passed in.
+    try {
+      $this->assertNoFieldByName('description');
+      $this->fail('The "description" field, with no value was not found.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass('The "description" field, with no value was found.');
+    }
+
+    // Test that the assertion fails correctly if a NULL value is passed in.
+    try {
+      $this->assertNoFieldByName('name', NULL);
+      $this->fail('The "name" field was not found.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass('The "name" field was found.');
+    }
   }
 
   /**
