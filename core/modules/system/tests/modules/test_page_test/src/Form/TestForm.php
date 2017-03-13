@@ -35,6 +35,12 @@ class TestForm extends FormBase {
       '#default_value' => 'Test name',
     ];
 
+    $form['description'] = [
+      '#type' => 'textfield',
+      '#title' => 'Description',
+      '#default_value' => '',
+    ];
+
     $form['options'] = [
       '#type' => 'select',
       '#title' => 'Options',

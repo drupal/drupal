@@ -412,7 +412,7 @@ trait AssertLegacyTrait {
    *   $this->assertSession()->fieldValueNotEquals() instead.
    */
   protected function assertNoFieldById($id, $value = '') {
-    if ($this->getSession()->getPage()->findField($id)) {
+    if ($this->getSession()->getPage()->findField($id) && isset($value)) {
       $this->assertSession()->fieldValueNotEquals($id, (string) $value);
     }
     else {
