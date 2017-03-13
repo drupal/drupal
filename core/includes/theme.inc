@@ -240,8 +240,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     // Match templates based on the 'template' filename.
     foreach ($cache as $hook => $info) {
       if (isset($info['template'])) {
-        $template_candidates = [$info['template'], str_replace($info['theme path'] . '/templates/', '', $info['template'])];
-        if (in_array($template, $template_candidates)) {
+        if ($template === $info['template']) {
           $implementations[$hook] = [
             'template' => $template,
             'path' => dirname($file->uri),
