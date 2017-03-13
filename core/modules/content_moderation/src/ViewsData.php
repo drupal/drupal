@@ -193,14 +193,10 @@ class ViewsData {
           'base' => $content_moderation_state_entity_base_table,
           'base field' => 'content_entity_id',
           'relationship field' => $entity_type->getKey('id'),
-          'join_extra' => [
+          'extra' => [
             [
               'field' => 'content_entity_type_id',
               'value' => $entity_type_id,
-            ],
-            [
-              'field' => 'content_entity_revision_id',
-              'left_field' => $entity_type->getKey('revision'),
             ],
           ],
         ],
@@ -216,7 +212,7 @@ class ViewsData {
           'base' => $content_moderation_state_entity_revision_base_table,
           'base field' => 'content_entity_revision_id',
           'relationship field' => $entity_type->getKey('revision'),
-          'join_extra' => [
+          'extra' => [
             [
               'field' => 'content_entity_type_id',
               'value' => $entity_type_id,
