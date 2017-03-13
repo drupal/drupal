@@ -6,11 +6,6 @@
  */
 
 /**
- * @addtogroup updates-8.0.0-beta
- * @{
- */
-
-/**
  * Disable all blocks with missing context IDs in block_update_8001().
  */
 function block_post_update_disable_blocks_with_missing_contexts() {
@@ -82,15 +77,6 @@ function block_post_update_disabled_region_update() {
 }
 
 /**
- * @} End of "addtogroup updates-8.0.0-beta".
- */
-
-/**
- * @addtogroup updates-8.2.x
- * @{
- */
-
-/**
  * Fix invalid 'negate' values in block visibility conditions.
  */
 function block_post_update_fix_negate_in_conditions() {
@@ -113,7 +99,3 @@ function block_post_update_fix_negate_in_conditions() {
     }
   }
 }
-
-/**
- * @} End of "addtogroup updates-8.2.x".
- */

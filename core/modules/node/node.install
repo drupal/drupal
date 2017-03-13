@@ -222,11 +222,6 @@ function node_update_8003() {
 }
 
 /**
- * @addtogroup updates-8.3.x
- * @{
- */
-
-/**
  * Change {node_access}.fallback from an int to a tinyint as it is a boolean.
  */
 function node_update_8300() {
@@ -251,7 +246,3 @@ function node_update_8301() {
   $entity_type->set('entity_keys', $keys);
   $definition_update_manager->updateEntityType($entity_type);
 }
-
-/**
- * @} End of "addtogroup updates-8.3.x".
- */

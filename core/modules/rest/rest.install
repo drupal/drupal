@@ -26,12 +26,6 @@ function rest_requirements($phase) {
 }
 
 /**
- * @defgroup updates-8.1.x-to-8.2.x Updates from 8.1.x to 8.2.x
- * @{
- * Update functions from 8.1.x to 8.2.x.
- */
-
-/**
  * Install the REST config entity type and fix old settings-based config.
  *
  * @see rest_post_update_create_rest_resource_config_entities()
@@ -90,7 +84,3 @@ function rest_update_8203() {
   $rest_settings->set('bc_entity_resource_permissions', TRUE)
     ->save(TRUE);
 }
-
-/**
- * @} End of "defgroup updates-8.1.x-to-8.2.x".
- */

@@ -8,11 +8,6 @@
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 
 /**
- * @addtogroup updates-8.4.0
- * @{
- */
-
-/**
  * Add the 'include_locked' settings to the 'language_select' widget.
  */
 function language_post_update_language_select_widget() {
@@ -31,7 +26,3 @@ function language_post_update_language_select_widget() {
     }
   }
 }
-
-/**
- * @} End of "addtogroup updates-8.4.0".
- */

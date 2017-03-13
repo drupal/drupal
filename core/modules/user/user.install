@@ -87,11 +87,6 @@ function user_install() {
 }
 
 /**
- * @addtogroup updates-8.1.0-beta
- * @{
- */
-
-/**
  * Fix invalid token in the status_blocked email body.
  */
 function user_update_8100() {
@@ -103,7 +98,3 @@ function user_update_8100() {
     $config->set('status_blocked', $mail)->save(TRUE);
   }
 }
-
-/**
- * @} End of "addtogroup updates-8.1.0-beta".
- */

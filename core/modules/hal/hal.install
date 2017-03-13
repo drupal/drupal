@@ -6,11 +6,6 @@
  */
 
 /**
- * @addtogroup updates-8.2.x-to-8.3.x
- * @{
- */
-
-/**
  * Move 'link_domain' from 'rest.settings' to 'hal.settings'.
  */
 function hal_update_8301() {
@@ -36,7 +31,3 @@ function hal_update_8301() {
   $hal_settings->set('link_domain', $link_domain);
   $hal_settings->save(TRUE);
 }
-
-/**
- * @} End of "addtogroup updates-8.2.x-to-8.3.x".
- */

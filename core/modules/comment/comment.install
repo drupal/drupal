@@ -114,11 +114,6 @@ function comment_schema() {
 }
 
 /**
- * @addtogroup updates-8.0.0-rc
- * @{
- */
-
-/**
  * Clear caches to fix Comment entity list builder and operations Views field.
  */
 function comment_update_8001() {
@@ -127,20 +122,11 @@ function comment_update_8001() {
 }
 
 /**
- * @} End of "addtogroup updates-8.0.0-rc".
- */
-
-/**
  * Clear caches to fix Comment Views context filter.
  */
 function comment_update_8002() {
   // Empty update to cause a cache flush.
 }
-
-/**
- * @addtogroup updates-8.2.x
- * @{
- */
 
 /**
  * Add the 'view_mode' setting to displays having 'comment_default' formatter.
@@ -177,15 +163,6 @@ function comment_update_8200() {
 }
 
 /**
- * @} End of "addtogroup updates-8.2.x".
- */
-
-/**
- * @addtogroup updates-8.3.x
- * @{
- */
-
-/**
  * Update status field.
  */
 function comment_update_8300() {
@@ -207,7 +184,3 @@ function comment_update_8301() {
   $entity_type->set('entity_keys', $keys);
   $definition_update_manager->updateEntityType($entity_type);
 }
-
-/**
- * @} End of "addtogroup updates-8.3.x".
- */

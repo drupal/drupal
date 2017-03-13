@@ -23,25 +23,11 @@ function aggregator_requirements($phase) {
 }
 
 /**
- * @addtogroup updates-8.0.0-rc
- * @{
- */
-
-/**
  * The simple presence of this update function clears cached field definitions.
  */
 function aggregator_update_8001() {
   // Feed ID base field is now required.
 }
-
-/**
- * @} End of "addtogroup updates-8.0.0-rc".
- */
-
-/**
- * @addtogroup updates-8.2.x
- * @{
- */
 
 /**
  * Make the 'Source feed' field for aggregator items required.
@@ -54,7 +40,3 @@ function aggregator_update_8200() {
   $field_definition->setRequired(TRUE);
   $definition_update_manager->updateFieldStorageDefinition($field_definition);
 }
-
-/**
- * @} End of "addtogroup updates-8.2.x".
- */
