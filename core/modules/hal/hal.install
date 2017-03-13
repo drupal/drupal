@@ -6,9 +6,8 @@
  */
 
 /**
- * @defgroup updates-8.2.x-to-8.3.x Updates from 8.2.x to 8.3.x
+ * @addtogroup updates-8.2.x-to-8.3.x
  * @{
- * Update functions from 8.2.x to 8.3.x.
  */
 
 /**
@@ -39,5 +38,5 @@ function hal_update_8301() {
 }
 
 /**
- * @} End of "defgroup updates-8.2.x-to-8.3.x".
+ * @} End of "addtogroup updates-8.2.x-to-8.3.x".
  */
