@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalTests;
 
+use Behat\Mink\Exception\ExpectationException;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -148,9 +149,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
-   * Tests legacy XPath asserts.
+   * Tests legacy field asserts.
    */
-  public function testLegacyXPathAsserts() {
+  public function testLegacyFieldAsserts() {
     $this->drupalGet('test-field-xpath');
     $this->assertFieldsByValue($this->xpath("//h1[@class = 'page-title']"), NULL);
     $this->assertFieldsByValue($this->xpath('//table/tbody/tr[2]/td[1]'), 'one');
@@ -163,6 +164,29 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     $this->assertNoFieldByXPath('//notexisting');
     $this->assertNoFieldByXPath("//input[@id = 'edit-name']", 'wrong value');
+
+    $this->assertNoFieldById('name');
+    $this->assertNoFieldById('name', 'not the value');
+    $this->assertNoFieldById('notexisting');
+    $this->assertNoFieldById('notexisting', NULL);
+
+    // Test that the assertion fails correctly if no value is passed in.
+    try {
+      $this->assertNoFieldById('description');
+      $this->fail('The "description" field, with no value was not found.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass('The "description" field, with no value was found.');
+    }
+
+    // Test that the assertion fails correctly if a NULL value is passed in.
+    try {
+      $this->assertNoFieldById('name', NULL);
+      $this->fail('The "name" field was not found.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass('The "name" field was found.');
+    }
   }
 
   /**
