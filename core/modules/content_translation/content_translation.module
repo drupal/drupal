@@ -572,10 +572,10 @@ function content_translation_page_attachments(&$page) {
     }
 
     $entity = $route_match->getParameter($name);
-    if ($entity instanceof ContentEntityInterface) {
+    if ($entity instanceof ContentEntityInterface && $entity->hasLinkTemplate('canonical')) {
       // Current route represents a content entity. Build hreflang links.
       foreach ($entity->getTranslationLanguages() as $language) {
-        $url = $entity->urlInfo()
+        $url = $entity->toUrl('canonical')
           ->setOption('language', $language)
           ->setAbsolute()
           ->toString();

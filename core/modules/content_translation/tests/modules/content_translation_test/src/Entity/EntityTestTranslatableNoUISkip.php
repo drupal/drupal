@@ -10,6 +10,14 @@ use Drupal\entity_test\Entity\EntityTest;
  * @ContentEntityType(
  *   id = "entity_test_translatable_no_skip",
  *   label = @Translation("Test entity - Translatable check UI"),
+ *   handlers = {
+ *     "form" = {
+ *       "default" = "Drupal\entity_test\EntityTestForm",
+ *      },
+ *     "route_provider" = {
+ *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *     },
+ *   },
  *   base_table = "entity_test_mul",
  *   data_table = "entity_test_mul_property_data",
  *   entity_keys = {
@@ -20,6 +28,10 @@ use Drupal\entity_test\Entity\EntityTest;
  *     "langcode" = "langcode",
  *   },
  *   translatable = TRUE,
+ *   admin_permission = "administer entity_test content",
+ *   links = {
+ *     "edit-form" = "/entity_test_translatable_no_skip/{entity_test_translatable_no_skip}/edit",
+ *   },
  * )
  */
 class EntityTestTranslatableNoUISkip extends EntityTest {
