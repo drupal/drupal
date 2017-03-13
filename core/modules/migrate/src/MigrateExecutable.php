@@ -358,7 +358,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         if ($multiple && !$definition['handle_multiples']) {
           $new_value = [];
           if (!is_array($value)) {
-            throw new MigrateException(sprintf('Pipeline failed for destination %s: %s got instead of an array,', $destination, $value));
+            throw new MigrateException(sprintf('Pipeline failed at %s plugin for destination %s: %s received instead of an array,', $plugin->getPluginId(), $destination, $value));
           }
           $break = FALSE;
           foreach ($value as $scalar_value) {
