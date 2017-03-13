@@ -11,10 +11,47 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
+ * Sets the destination route information based on the source link_path.
  *
- * @link https://www.drupal.org/node/2750777 Online handbook documentation for route process plugin @endlink
+ * The source value is an array of two values:
+ * - link_path: The path or URL of the route.
+ * - options: An array of URL options, e.g. query string, attributes, etc.
  *
- * * @MigrateProcessPlugin(
+ * Example:
+ *
+ * @code
+ * process:
+ *   new_route_field:
+ *     plugin: route
+ *     source:
+ *       - 'https://www.drupal.org'
+ *       -
+ *         attributes:
+ *           title: Drupal
+ * @endcode
+ *
+ * This will set new_route_field to be a route with the URL
+ * "https://www.drupal.org" and title attribute "Drupal".
+ *
+ * Example:
+ *
+ * @code
+ * process:
+ *   another_route_field:
+ *     plugin: route
+ *     source:
+ *       - 'user/login'
+ *       -
+ *         query:
+ *           destination: 'node/1'
+ * @endcode
+ *
+ * This will set another_route_field to be a route to the user login page
+ * (user/login) with a query string of "destination=node/1".
+ *
+ * @see \Drupal\migrate\Plugin\MigrateProcessInterface
+ *
+ * @MigrateProcessPlugin(
  *   id = "route"
  * )
  */
