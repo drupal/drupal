@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 
 /**
@@ -103,6 +104,10 @@ class Actions extends Container {
         $dropbuttons[$dropbutton]['#links'][$key] = [
           'title' => $button,
         ];
+        // Merge metadata like drupalSettings.
+        BubbleableMetadata::createFromRenderArray($dropbuttons[$dropbutton])
+          ->merge(BubbleableMetadata::createFromRenderArray($element[$key]))
+          ->applyTo($dropbuttons[$dropbutton]);
       }
     }
     // @todo For now, all dropbuttons appear first. Consider to invent a more
