@@ -228,23 +228,26 @@ trait AssertLegacyTrait {
   }
 
   /**
-   * Asserts that a field exists with the given name and value.
+   * Asserts that a field does not exist with the given name and value.
    *
    * @param string $name
    *   Name of field to assert.
    * @param string $value
-   *   (optional) Value of the field to assert. You may pass in NULL (default)
-   *   to skip checking the actual value, while still checking that the field
-   *   exists.
+   *   (optional) Value for the field, to assert that the field's value on the
+   *   page does not match it. You may pass in NULL to skip checking the
+   *   value, while still checking that the field does not exist. However, the
+   *   default value ('') asserts that the field value is not an empty string.
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
    *   Use $this->assertSession()->fieldNotExists() or
    *   $this->assertSession()->fieldValueNotEquals() instead.
    */
-  protected function assertNoFieldByName($name, $value = NULL) {
-    $this->assertSession()->fieldNotExists($name);
-    if ($value !== NULL) {
+  protected function assertNoFieldByName($name, $value = '') {
+    if ($this->getSession()->getPage()->findField($name) && isset($value)) {
       $this->assertSession()->fieldValueNotEquals($name, (string) $value);
+    }
+    else {
+      $this->assertSession()->fieldNotExists($name);
     }
   }
 
