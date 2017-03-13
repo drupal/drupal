@@ -23,7 +23,7 @@ trait DateTimeRangeTrait {
         /** @var \Drupal\Core\Datetime\DrupalDateTime $end_date */
         $end_date = $item->end_date;
 
-        if ($start_date->format('U') !== $end_date->format('U')) {
+        if ($start_date->getTimestamp() !== $end_date->getTimestamp()) {
           $elements[$delta] = [
             'start_date' => $this->buildDateWithIsoAttribute($start_date),
             'separator' => ['#plain_text' => ' ' . $separator . ' '],
