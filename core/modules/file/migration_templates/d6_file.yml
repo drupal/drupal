@@ -40,7 +40,8 @@ process:
       - '@source_full_path'
       - '@destination_full_path'
   filemime: filemime
-  filesize: filesize
+  # No need to migrate filesize, it is computed when file entities are saved.
+  # filesize: filesize
   status: status
   changed: timestamp
   uid: uid
