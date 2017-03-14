@@ -137,6 +137,64 @@ class HighWaterTest extends MigrateTestBase {
   }
 
   /**
+   * Tests high water property of SqlBase when rows marked for update.
+   */
+  public function testHighWaterUpdate() {
+    // Assert all of the nodes have been imported.
+    $this->assertNodeExists('Item 1');
+    $this->assertNodeExists('Item 2');
+    $this->assertNodeExists('Item 3');
+
+    // Update Item 1 setting its high_water_property to value that is below
+    // current high water mark.
+    $this->sourceDatabase->update('high_water_node')
+      ->fields([
+        'title' => 'Item 1 updated',
+        'changed' => 2,
+      ])
+      ->condition('title', 'Item 1')
+      ->execute();
+
+    // Update Item 2 setting its high_water_property to value equal to
+    // current high water mark.
+    $this->sourceDatabase->update('high_water_node')
+      ->fields([
+        'title' => 'Item 2 updated',
+        'changed' => 3,
+      ])
+      ->condition('title', 'Item 2')
+      ->execute();
+
+    // Update Item 3 setting its high_water_property to value that is above
+    // current high water mark.
+    $this->sourceDatabase->update('high_water_node')
+      ->fields([
+        'title' => 'Item 3 updated',
+        'changed' => 4,
+      ])
+      ->condition('title', 'Item 3')
+      ->execute();
+
+    // Set all rows as needing an update.
+    $id_map = $this->getMigration('high_water_test')->getIdMap();
+    $id_map->prepareUpdate();
+
+    $this->executeMigration('high_water_test');
+
+    // Item with lower highwater should be updated.
+    $this->assertNodeExists('Item 1 updated');
+    $this->assertNodeDoesNotExist('Item 1');
+
+    // Item with equal highwater should be updated.
+    $this->assertNodeExists('Item 2 updated');
+    $this->assertNodeDoesNotExist('Item 2');
+
+    // Item with greater highwater should be updated.
+    $this->assertNodeExists('Item 3 updated');
+    $this->assertNodeDoesNotExist('Item 3');
+  }
+
+  /**
    * Assert that node with given title exists.
    *
    * @param string $title

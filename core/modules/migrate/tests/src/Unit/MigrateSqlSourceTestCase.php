@@ -106,9 +106,12 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
     \Drupal::setContainer($container);
 
     $migration = $this->getMigration();
-    $migration->expects($this->any())
-      ->method('getHighWater')
-      ->will($this->returnValue(static::ORIGINAL_HIGH_WATER));
+
+    // Set the high water value.
+    \Drupal::keyValue('migrate:high_water')
+      ->expects($this->any())
+      ->method('get')
+      ->willReturn(static::ORIGINAL_HIGH_WATER);
 
     // Setup the plugin.
     $plugin_class = static::PLUGIN_CLASS;

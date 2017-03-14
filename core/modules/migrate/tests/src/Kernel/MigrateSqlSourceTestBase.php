@@ -63,12 +63,14 @@ abstract class MigrateSqlSourceTestBase extends MigrateSourceTestBase {
    *   (optional) How many rows the source plugin is expected to return.
    * @param array $configuration
    *   (optional) Configuration for the source plugin.
+   * @param mixed $high_water
+   *   (optional) The value of the high water field.
    *
    * @dataProvider providerSource
    *
    * @requires extension pdo_sqlite
    */
-  public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = []) {
+  public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL) {
     $plugin = $this->getPlugin($configuration);
 
     // Since we don't yet inject the database connection, we need to use a
@@ -78,7 +80,7 @@ abstract class MigrateSqlSourceTestBase extends MigrateSourceTestBase {
     $property->setAccessible(TRUE);
     $property->setValue($plugin, $this->getDatabase($source_data));
 
-    parent::testSource($source_data, $expected_data, $expected_count, $configuration);
+    parent::testSource($source_data, $expected_data, $expected_count, $configuration, $high_water);
   }
 
 }
