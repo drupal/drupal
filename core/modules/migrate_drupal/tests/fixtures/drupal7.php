@@ -2512,7 +2512,7 @@ $connection->insert('comment')
   'nid' => '1',
   'uid' => '1',
   'subject' => 'A comment',
-  'hostname' => '::1',
+  'hostname' => '2001:db8:ffff:ffff:ffff:ffff:ffff:ffff',
   'created' => '1421727536',
   'changed' => '1421727536',
   'status' => '1',
