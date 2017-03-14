@@ -5,6 +5,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\ChangedFieldItemList;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -1326,8 +1327,14 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       if (in_array($field_name, $skip_fields, TRUE)) {
         continue;
       }
-      if (!$definition->isComputed()) {
-        $items = $this->get($field_name)->filterEmptyItems();
+      $field = $this->get($field_name);
+      // When saving entities in the user interface, the changed timestamp is
+      // automatically incremented by ContentEntityForm::submitForm() even if
+      // nothing was actually changed. Thus, the changed time needs to be
+      // ignored when determining whether there are any actual changes in the
+      // entity.
+      if (!($field instanceof ChangedFieldItemList) && !$definition->isComputed()) {
+        $items = $field->filterEmptyItems();
         $original_items = $translation->get($field_name)->filterEmptyItems();
         if (!$items->equals($original_items)) {
           return TRUE;
