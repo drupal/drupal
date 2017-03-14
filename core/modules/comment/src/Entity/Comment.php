@@ -151,9 +151,11 @@ class Comment extends ContentEntityBase implements CommentInterface {
       if ($this->getOwnerId() === \Drupal::currentUser()->id() && \Drupal::currentUser()->isAuthenticated()) {
         $this->setAuthorName(\Drupal::currentUser()->getUsername());
       }
-      // Add the values which aren't passed into the function.
       $this->setThread($thread);
-      $this->setHostname(\Drupal::request()->getClientIP());
+      if (!$this->getHostname()) {
+        // Ensure a client host from the current request.
+        $this->setHostname(\Drupal::request()->getClientIP());
+      }
     }
   }
 

@@ -61,6 +61,7 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $this->assertIdentical('admin@local.host', $comment->getAuthorEmail());
     $this->assertIdentical('This is a comment', $comment->comment_body->value);
     $this->assertIdentical('filtered_html', $comment->comment_body->format);
+    $this->assertEquals('2001:db8:ffff:ffff:ffff:ffff:ffff:ffff', $comment->getHostname());
 
     $node = $comment->getCommentedEntity();
     $this->assertTrue($node instanceof NodeInterface);

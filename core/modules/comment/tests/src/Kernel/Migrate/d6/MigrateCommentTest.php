@@ -61,14 +61,17 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('node', $comment->getCommentedEntityTypeId());
     $this->assertIdentical('en', $comment->language()->getId());
     $this->assertIdentical('comment_no_subject', $comment->getTypeId());
+    $this->assertEquals('203.0.113.1', $comment->getHostname());
 
     $comment = $comment_storage->load(2);
     $this->assertIdentical('The response to the second comment.', $comment->subject->value);
     $this->assertIdentical('3', $comment->pid->target_id);
+    $this->assertEquals('203.0.113.2', $comment->getHostname());
 
     $comment = $comment_storage->load(3);
     $this->assertIdentical('The second comment.', $comment->subject->value);
     $this->assertIdentical(NULL, $comment->pid->target_id);
+    $this->assertEquals('203.0.113.3', $comment->getHostname());
   }
 
 }
