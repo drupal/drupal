@@ -172,6 +172,8 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * The human-readable name of the type.
    *
    * @var string
+   *
+   * @see \Drupal\Core\Entity\EntityTypeInterface::getLabel()
    */
   protected $label = '';
 
@@ -179,6 +181,8 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * The human-readable label for a collection of entities of the type.
    *
    * @var string
+   *
+   * @see \Drupal\Core\Entity\EntityTypeInterface::getCollectionLabel()
    */
   protected $label_collection = '';
 
@@ -186,6 +190,8 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * The indefinite singular name of the type.
    *
    * @var string
+   *
+   * @see \Drupal\Core\Entity\EntityTypeInterface::getSingularLabel()
    */
   protected $label_singular = '';
 
@@ -193,6 +199,8 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * The indefinite plural name of the type.
    *
    * @var string
+   *
+   * @see \Drupal\Core\Entity\EntityTypeInterface::getPluralLabel()
    */
   protected $label_plural = '';
 
@@ -202,6 +210,8 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * Needed keys: "singular" and "plural".
    *
    * @var string[]
+   *
+   * @see \Drupal\Core\Entity\EntityTypeInterface::getCountLabel()
    */
   protected $label_count = [];
 
