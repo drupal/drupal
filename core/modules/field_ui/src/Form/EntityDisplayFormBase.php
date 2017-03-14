@@ -497,7 +497,14 @@ abstract class EntityDisplayFormBase extends EntityForm {
         '#default_value' => $display_options ? $display_options['region'] : 'hidden',
         '#attributes' => ['class' => ['field-region']],
       ],
-      'plugin' => [],
+      'plugin' => [
+        'type' => [
+          '#type' => 'hidden',
+          '#value' => $display_options ? 'visible' : 'hidden',
+          '#parents' => ['fields', $field_id, 'type'],
+          '#attributes' => ['class' => ['field-plugin-type']],
+        ],
+      ],
       'settings_summary' => [],
       'settings_edit' => [],
     ];
