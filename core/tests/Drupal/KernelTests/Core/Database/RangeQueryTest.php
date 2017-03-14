@@ -10,13 +10,6 @@ namespace Drupal\KernelTests\Core\Database;
 class RangeQueryTest extends DatabaseTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = ['database_test'];
-
-  /**
    * Confirms that range queries work and return the correct result.
    */
   public function testRangeQuery() {
