@@ -50,6 +50,7 @@ class ContactSitewideTest extends BrowserTestBase {
       'administer contact forms',
       'administer users',
       'administer account settings',
+      'administer contact_message display',
       'administer contact_message fields',
       'administer contact_message form display',
     ]);
@@ -343,6 +344,35 @@ class ContactSitewideTest extends BrowserTestBase {
     $result = $this->xpath('//div[@role=:role]', [':role' => 'contentinfo']);
     $this->assertEqual(count($result), 0, 'Messages not found.');
     $this->assertUrl('user/' . $admin_user->id());
+
+    // Test preview and visibility of the message field and label. Submit the
+    // contact form and verify the content.
+    $edit = [
+      'subject[0][value]' => $this->randomMachineName(),
+      'message[0][value]' => $this->randomMachineName(),
+      $field_name . '[0][value]' => $this->randomMachineName(),
+    ];
+    $this->drupalPostForm($form->toUrl('canonical'), $edit, t('Preview'));
+
+    // Message is now by default displayed twice, once for the form element and
+    // once for the viewed message.
+    $page_text = $this->getSession()->getPage()->getText();
+    $this->assertGreaterThan(1, substr_count($page_text, t('Message')));
+    $this->assertSession()->responseContains('class="field field--name-message field--type-string-long field--label-above');
+    $this->assertSession()->pageTextContains($edit['message[0][value]']);
+
+    // Hide the message field label.
+    $display_edit = [
+      'fields[message][label]' => 'hidden',
+    ];
+    $this->drupalPostForm('admin/structure/contact/manage/' . $contact_form . '/display', $display_edit, t('Save'));
+
+    $this->drupalPostForm($form->toUrl('canonical'), $edit, t('Preview'));
+    // Message should only be displayed once now.
+    $page_text = $this->getSession()->getPage()->getText();
+    $this->assertEquals(1, substr_count($page_text, t('Message')));
+    $this->assertSession()->responseContains('class="field field--name-message field--type-string-long field--label-hidden field__item">');
+    $this->assertSession()->pageTextContains($edit['message[0][value]']);
   }
 
   /**
