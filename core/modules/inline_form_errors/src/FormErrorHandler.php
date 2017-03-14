@@ -53,6 +53,13 @@ class FormErrorHandler extends CoreFormErrorHandler {
    *   The current state of the form.
    */
   protected function displayErrorMessages(array $form, FormStateInterface $form_state) {
+    // Use the original error display for Quick Edit forms, because in this case
+    // the errors are already near the form element.
+    if ($form['#form_id'] === 'quickedit_field_form') {
+      parent::displayErrorMessages($form, $form_state);
+      return;
+    }
+
     $error_links = [];
     $errors = $form_state->getErrors();
     // Loop through all form errors and check if we need to display a link.
