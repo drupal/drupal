@@ -135,14 +135,24 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    *   value (like FALSE or 'nope'), the source plugin will not be counted.
    * @param array $configuration
    *   (optional) Configuration for the source plugin.
+   * @param mixed $high_water
+   *   (optional) The value of the high water field.
    *
    * @dataProvider providerSource
    */
-  public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = []) {
+  public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL) {
     $plugin = $this->getPlugin($configuration);
 
     // All source plugins must define IDs.
     $this->assertNotEmpty($plugin->getIds());
+
+    // If there is a high water mark, set it in the high water storage.
+    if (isset($high_water)) {
+      $this->container
+        ->get('keyvalue')
+        ->get('migrate:high_water')
+        ->set($this->migration->reveal()->id(), $high_water);
+    }
 
     if (is_null($expected_count)) {
       $expected_count = count($expected_data);
@@ -150,8 +160,8 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
     // If an expected count was given, assert it only if the plugin is
     // countable.
     if (is_numeric($expected_count)) {
-      $this->assertInstanceOf('\Countable', $plugin);
-      $this->assertCount($expected_count, $plugin);
+      $this->assertInstanceOf('\Iterator', $plugin);
+      $this->assertSame($expected_count, iterator_count($plugin));
     }
 
     $i = 0;

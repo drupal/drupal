@@ -274,6 +274,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
         $high_water_field = $this->getHighWaterField();
         $conditions->condition($high_water_field, $high_water, '>');
         $this->query->orderBy($high_water_field);
+        $condition_added = TRUE;
       }
       if ($condition_added) {
         $this->query->condition($conditions);
