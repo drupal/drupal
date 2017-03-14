@@ -35,6 +35,7 @@ use Drupal\user\UserInterface;
  *   base_table = "block_content",
  *   revision_table = "block_content_revision",
  *   data_table = "block_content_field_data",
+ *   revision_data_table = "block_content_field_revision",
  *   show_revision_ui = TRUE,
  *   links = {
  *     "canonical" = "/block/{block_content}",

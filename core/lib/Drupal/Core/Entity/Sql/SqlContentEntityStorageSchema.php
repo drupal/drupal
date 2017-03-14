@@ -162,11 +162,19 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   Returns TRUE if there have been changes.
    */
   protected function hasSharedTableNameChanges(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    $base_table = $this->database->schema()->tableExists($entity_type->getBaseTable());
+    $data_table = $this->database->schema()->tableExists($entity_type->getDataTable());
+    $revision_table = $this->database->schema()->tableExists($entity_type->getRevisionTable());
+    $revision_data_table = $this->database->schema()->tableExists($entity_type->getRevisionDataTable());
+
+    // We first check if the new table already exists because the storage might
+    // have created it even though it wasn't specified in the entity type
+    // definition.
     return
-      $entity_type->getBaseTable() != $original->getBaseTable() ||
-      $entity_type->getDataTable() != $original->getDataTable() ||
-      $entity_type->getRevisionTable() != $original->getRevisionTable() ||
-      $entity_type->getRevisionDataTable() != $original->getRevisionDataTable();
+      (!$base_table && $entity_type->getBaseTable() != $original->getBaseTable()) ||
+      (!$data_table && $entity_type->getDataTable() != $original->getDataTable()) ||
+      (!$revision_table && $entity_type->getRevisionTable() != $original->getRevisionTable()) ||
+      (!$revision_data_table && $entity_type->getRevisionDataTable() != $original->getRevisionDataTable());
   }
 
   /**

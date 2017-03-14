@@ -61,3 +61,14 @@ function block_content_update_8003() {
   \Drupal::entityDefinitionUpdateManager()
     ->installFieldStorageDefinition('revision_user', 'block_content', 'block_content', $revision_user);
 }
+
+/**
+ * Fix the block_content entity type to specify its revision data table.
+ */
+function block_content_update_8300() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $definition_update_manager->getEntityType('block_content');
+  $entity_type->set('revision_data_table', 'block_content_field_revision');
+  $definition_update_manager->updateEntityType($entity_type);
+
+}
