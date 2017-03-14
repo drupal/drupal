@@ -268,7 +268,7 @@
     this.defaultPlugin = data.defaultPlugin;
 
     // Attach change listener to the 'plugin type' select.
-    this.$pluginSelect = $(row).find('select.field-plugin-type');
+    this.$pluginSelect = $(row).find('.field-plugin-type');
     this.$pluginSelect.on('change', Drupal.fieldUIOverview.onChange);
 
     // Attach change listener to the 'region' select.

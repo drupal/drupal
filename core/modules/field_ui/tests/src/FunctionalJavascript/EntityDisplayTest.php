@@ -86,4 +86,21 @@ class EntityDisplayTest extends JavascriptTestBase {
     $this->assertSession()->elementExists('css', '.field--name-field-test-text');
   }
 
+  /**
+   * Tests extra fields.
+   */
+  public function testExtraFields() {
+    entity_test_create_bundle('bundle_with_extra_fields');
+    $this->drupalGet('entity_test/structure/bundle_with_extra_fields/display');
+
+    $extra_field_row = $this->getSession()->getPage()->find('css', '#display-extra-field');
+    $disabled_region_row = $this->getSession()->getPage()->find('css', '.region-hidden-title');
+
+    $extra_field_row->find('css', '.handle')->dragTo($disabled_region_row);
+    $this->assertSession()->assertWaitOnAjaxRequest();
+
+    $this->submitForm([], 'Save');
+    $this->assertSession()->pageTextContains('Your settings have been saved.');
+  }
+
 }
