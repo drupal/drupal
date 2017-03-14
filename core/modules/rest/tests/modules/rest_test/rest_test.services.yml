@@ -3,3 +3,7 @@ services:
     class: Drupal\rest_test\Authentication\Provider\TestAuth
     tags:
       - { name: authentication_provider, provider_id: 'rest_test_auth' }
+  rest_test.authentication.test_auth_global:
+    class: Drupal\rest_test\Authentication\Provider\TestAuthGlobal
+    tags:
+      - { name: authentication_provider, provider_id: 'rest_test_auth_global', global: TRUE }
