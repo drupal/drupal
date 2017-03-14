@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * ViewsUI Test field module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter() for views_ui_add_handler_form.
+ *
+ * Changes the label for one of the tests fields to validate this label is not
+ * searched on.
+ */
+function views_ui_test_field_form_views_ui_add_handler_form_alter(&$form, FormStateInterface $form_state) {
+  $form['options']['name']['#options']['views.views_test_field_1']['title']['data']['#title'] .= ' FIELD_1_LABEL';
+}

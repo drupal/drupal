@@ -1,0 +1,8 @@
+name: 'Views test field'
+type: module
+description: 'Add custom global field for testing purposes.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - views_ui
