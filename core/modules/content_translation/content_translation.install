@@ -32,11 +32,6 @@ function content_translation_install() {
 }
 
 /**
- * @addtogroup updates-8.0.0-rc
- * @{
- */
-
-/**
  * Rebuild the routes as the content translation routes have now new names.
  */
 function content_translation_update_8001() {
@@ -44,21 +39,8 @@ function content_translation_update_8001() {
 }
 
 /**
- * @} End of "addtogroup updates-8.0.0-rc".
- */
-
-/**
- * @addtogroup updates-8.0.x
- * @{
- */
-
-/**
  * Clear field type plugin caches to fix image field translatability.
  */
 function content_translation_update_8002() {
   \Drupal::service('plugin.manager.field.field_type')->clearCachedDefinitions();
 }
-
-/**
- * @} End of "addtogroup updates-8.0.x".
- */

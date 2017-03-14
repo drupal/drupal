@@ -13,11 +13,6 @@ function views_install() {
 }
 
 /**
- * @addtogroup updates-8.0.0-beta
- * @{
- */
-
-/**
  * Update views field plugins.
  */
 function views_update_8001(&$sandbox) {
@@ -311,15 +306,6 @@ function _views_update_argument_map($displays) {
 }
 
 /**
- * @} End of "addtogroup updates-8.0.0-beta".
- */
-
-/**
- * @addtogroup updates-8.0.0-rc
- * @{
- */
-
-/**
  * Clear caches to fix entity operations field.
  */
 function views_update_8003() {
@@ -329,29 +315,11 @@ function views_update_8003() {
 }
 
 /**
- * @} End of "addtogroup updates-8.0.0-rc".
- */
-
-/**
- * @addtogroup updates-8.0.x
- * @{
- */
-
-/**
  * Clear caches due to updated entity views data.
  */
 function views_update_8004() {
   // Empty update to cause a cache flush so that views data is rebuilt.
 }
-
-/**
- * @} End of "addtogroup updates-8.0.x".
- */
-
-/**
- * @addtogroup updates-8.1.0
- * @{
- */
 
 /**
  * Clear views data cache.
@@ -390,15 +358,6 @@ function views_update_8101() {
 }
 
 /**
- * @} End of "addtogroup updates-8.1.0".
- */
-
-/**
- * @addtogroup updates-8.2.0
- * @{
- */
-
-/**
  * Rebuild the container to add a new container parameter.
  */
 function views_update_8200() {
@@ -411,7 +370,3 @@ function views_update_8200() {
 function views_update_8201() {
   // Empty update to cause a cache rebuild so that config schema get refreshed.
 }
-
-/**
- * @} End of "addtogroup updates-8.2.0".
- */

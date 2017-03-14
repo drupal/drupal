@@ -9,10 +9,6 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 
-/**
- * @addtogroup updates-8.0.0-beta
- * @{
- */
 
 /**
  * Re-save all field storage config objects to add 'custom_storage' property.
@@ -43,15 +39,6 @@ function field_post_update_entity_reference_handler_setting() {
 }
 
 /**
- * @} End of "addtogroup updates-8.0.0-beta".
- */
-
-/**
- * @addtogroup updates-8.1.0
- * @{
- */
-
-/**
  * Adds the 'size' setting for email widgets.
  */
 function field_post_update_email_widget_size_setting() {
@@ -72,7 +59,3 @@ function field_post_update_email_widget_size_setting() {
 
   return t('The new size setting for email widgets has been added.');
 }
-
-/**
- * @} End of "addtogroup updates-8.1.0".
- */

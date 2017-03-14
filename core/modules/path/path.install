@@ -6,11 +6,6 @@
  */
 
 /**
- * @addtogroup updates-8.2.0
- * @{
- */
-
-/**
  * Change the path field to computed for node and taxonomy_term.
  */
 function path_update_8200() {
@@ -26,7 +21,3 @@ function path_update_8200() {
     }
   }
 }
-
-/**
- * @} End of "addtogroup updates-8.2.0".
- */

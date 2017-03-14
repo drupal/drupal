@@ -1088,11 +1088,6 @@ function system_schema() {
 }
 
 /**
- * @addtogroup updates-8.0.0-beta
- * @{
- */
-
-/**
  * Change two fields on the default menu link storage to be serialized data.
  */
 function system_update_8001(&$sandbox = NULL) {
@@ -1722,15 +1717,6 @@ function system_update_8013() {
 }
 
 /**
- * @} End of "addtogroup updates-8.0.0-beta".
- */
-
-/**
- * @addtogroup updates-8.0.0-rc
- * @{
- */
-
-/**
  * Install the Stable base theme if needed.
  */
 function system_update_8014() {
@@ -1748,15 +1734,6 @@ function system_update_8014() {
     }
   }
 }
-
-/**
- * @} End of "addtogroup updates-8.0.0-rc".
- */
-
-/**
- * @addtogroup updates-8.2.0
- * @{
- */
 
 /**
  * Fix configuration overrides to not override non existing keys.
@@ -1789,29 +1766,11 @@ function system_update_8201() {
 }
 
 /**
- * @} End of "addtogroup updates-8.2.0".
- */
-
-/**
- * @addtogroup updates-8.2.3
- * @{
- */
-
-/**
  * Clear caches due to behavior change in MachineName element.
  */
 function system_update_8202() {
   // Empty update to cause a cache rebuild.
 }
-
-/**
- * @} End of "addtogroup updates-8.2.3".
- */
-
-/**
- * @addtogroup updates-8.3.0
- * @{
- */
 
 /**
  * Add detailed cron logging configuration.
@@ -1830,7 +1789,3 @@ function system_update_8301() {
     ->set('profile', \Drupal::installProfile())
     ->save();
 }
-
-/**
- * @} End of "addtogroup updates-8.3.0".
- */

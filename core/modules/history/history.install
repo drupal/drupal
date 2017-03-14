@@ -44,12 +44,6 @@ function history_schema() {
 }
 
 /**
- * @defgroup updates-8.0.x-to-8.1.x Updates from 8.0.x to 8.1.x
- * @{
- * Update functions from 8.0.x to 8.1.x.
- */
-
-/**
  * Change {history}.nid to an unsigned int in order to match {node}.nid.
  */
 function history_update_8101() {
@@ -94,7 +88,3 @@ function history_update_8101() {
   ];
   $schema->addIndex('history', 'nid', ['nid'], $spec);
 }
-
-/**
- * @} End of "defgroup updates-8.0.x-to-8.1.x".
- */

@@ -296,11 +296,6 @@ function locale_requirements($phase) {
 }
 
 /**
- * @addtogroup updates-8.3.x
- * @{
- */
-
-/**
  * Delete translation status data in state.
  */
 function locale_update_8300() {
@@ -308,7 +303,3 @@ function locale_update_8300() {
   // the new key value collection.
   \Drupal::state()->delete('locale.translation_status');
 }
-
-/**
- * @} End of "addtogroup updates-8.3.x".
- */
