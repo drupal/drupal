@@ -312,4 +312,18 @@ class BlockUiTest extends WebTestBase {
     $this->assertTrue($error_class, 'Plugin error class found in parent form.');
   }
 
+  /**
+   * Tests that the enable/disable routes are protected from CSRF.
+   */
+  public function testRouteProtection() {
+    // Get the first block generated in our setUp method.
+    /** @var \Drupal\block\BlockInterface $block */
+    $block = reset($this->blocks);
+    // Ensure that the enable and disable routes are protected.
+    $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/disable');
+    $this->assertResponse(403);
+    $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/enable');
+    $this->assertResponse(403);
+  }
+
 }

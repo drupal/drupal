@@ -68,9 +68,18 @@ class EditorPrivateFileReferenceFilterTest extends BrowserTestBase {
     $file->setPermanent();
     $file->save();
 
+    // Create some nodes to ensure file usage count does not match the ID's
+    // of the nodes we are going to check.
+    for ($i = 0; $i < 5; $i++) {
+      $this->drupalCreateNode([
+        'type' => 'page',
+        'uid' => $author->id(),
+      ]);
+    }
+
     // Create a node with its body field properly pointing to the just-created
     // file.
-    $node = $this->drupalCreateNode([
+    $published_node = $this->drupalCreateNode([
       'type' => 'page',
       'body' => [
         'value' => '<img alt="alt" data-entity-type="file" data-entity-uuid="' . $file->uuid() . '" src="' . $src . '" />',
@@ -79,19 +88,44 @@ class EditorPrivateFileReferenceFilterTest extends BrowserTestBase {
       'uid' => $author->id(),
     ]);
 
+    // Create an unpublished node with its body field properly pointing to the
+    // just-created file.
+    $unpublished_node = $this->drupalCreateNode([
+      'type' => 'page',
+      'status' => NODE_NOT_PUBLISHED,
+      'body' => [
+        'value' => '<img alt="alt" data-entity-type="file" data-entity-uuid="' . $file->uuid() . '" src="' . $src . '" />',
+        'format' => 'private_images',
+      ],
+      'uid' => $author->id(),
+    ]);
+
     // Do the actual test. The image should be visible for anonymous users,
-    // because they can view the referencing entity.
-    $this->drupalGet($node->toUrl());
+    // because they can view the published node. Even though they can't view
+    // the unpublished node.
+    $this->drupalGet($published_node->toUrl());
     $this->assertSession()->statusCodeEquals(200);
+    $this->drupalGet($unpublished_node->toUrl());
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet($src);
     $this->assertSession()->statusCodeEquals(200);
 
+    // When the published node is also unpublished, the image should also
+    // become inaccessible to anonymous users.
+    $published_node->setPublished(FALSE)->save();
+
+    $this->drupalGet($published_node->toUrl());
+    $this->assertSession()->statusCodeEquals(403);
+    $this->drupalGet($src);
+    $this->assertSession()->statusCodeEquals(403);
+
     // Disallow anonymous users to view the entity, which then should also
     // disallow them to view the image.
+    $published_node->setPublished(TRUE)->save();
     Role::load(RoleInterface::ANONYMOUS_ID)
       ->revokePermission('access content')
       ->save();
-    $this->drupalGet($node->toUrl());
+    $this->drupalGet($published_node->toUrl());
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet($src);
     $this->assertSession()->statusCodeEquals(403);

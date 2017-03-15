@@ -37,6 +37,7 @@ entity.search_page.enable:
     op: 'enable'
   requirements:
     _entity_access: 'search_page.update'
+    _csrf_token: 'TRUE'
 
 entity.search_page.disable:
   path: '/admin/config/search/pages/manage/{search_page}/disable'
@@ -45,6 +46,7 @@ entity.search_page.disable:
     op: 'disable'
   requirements:
     _entity_access: 'search_page.disable'
+    _csrf_token: 'TRUE'
 
 entity.search_page.set_default:
   path: '/admin/config/search/pages/manage/{search_page}/set-default'
@@ -52,6 +54,7 @@ entity.search_page.set_default:
     _controller: '\Drupal\search\Controller\SearchController::setAsDefault'
   requirements:
     _entity_access: 'search_page.update'
+    _csrf_token: 'TRUE'
 
 entity.search_page.delete_form:
   path: '/admin/config/search/pages/manage/{search_page}/delete'
