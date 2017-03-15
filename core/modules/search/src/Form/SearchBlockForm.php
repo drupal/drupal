@@ -75,6 +75,16 @@ class SearchBlockForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Set up the form to submit using GET to the correct search page.
     $entity_id = $this->searchPageRepository->getDefaultSearchPage();
+
+    $form = [];
+
+    // SearchPageRepository::getDefaultSearchPage() depends on search.settings.
+    // The dependency needs to be added before the conditional return, otherwise
+    // the block would get cached without the necessary cacheablity metadata in
+    // case there is no default search page and would not be invalidated if that
+    // changes.
+    $this->renderer->addCacheableDependency($form, $this->configFactory->get('search.settings'));
+
     if (!$entity_id) {
       $form['message'] = array(
         '#markup' => $this->t('Search is currently disabled'),
@@ -102,9 +112,6 @@ class SearchBlockForm extends FormBase {
       // Prevent op from showing up in the query string.
       '#name' => '',
     );
-
-    // SearchPageRepository::getDefaultSearchPage() depends on search.settings.
-    $this->renderer->addCacheableDependency($form, $this->configFactory->get('search.settings'));
 
     return $form;
   }

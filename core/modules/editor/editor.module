@@ -519,8 +519,8 @@ function editor_file_download($uri) {
   if ($file->isPermanent()) {
     $referencing_entity_is_accessible = FALSE;
     $references = empty($usage_list['editor']) ? [] : $usage_list['editor'];
-    foreach ($references as $entity_type => $entity_ids) {
-      $referencing_entities = entity_load_multiple($entity_type, $entity_ids);
+    foreach ($references as $entity_type => $entity_ids_usage_count) {
+      $referencing_entities = entity_load_multiple($entity_type, array_keys($entity_ids_usage_count));
       /** @var \Drupal\Core\Entity\EntityInterface $referencing_entity */
       foreach ($referencing_entities as $referencing_entity) {
         if ($referencing_entity->access('view', NULL, TRUE)->isAllowed()) {

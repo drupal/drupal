@@ -154,8 +154,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
 
     // Test each plugin if it's enabled as the only search plugin.
     foreach ($entities as $entity_id => $entity) {
-      // Set this as default.
-      $this->drupalGet("admin/config/search/pages/manage/$entity_id/set-default");
+      $this->setDefaultThroughUi($entity_id);
 
       // Run a search from the correct search URL.
       $info = $plugin_info[$entity_id];
@@ -187,13 +186,16 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       $entity->disable()->save();
     }
 
+    // Set the node search as default.
+    $this->setDefaultThroughUi('node_search');
+
     // Test with all search plugins enabled. When you go to the search
     // page or run search, all plugins should be shown.
     foreach ($entities as $entity) {
       $entity->enable()->save();
     }
-    // Set the node search as default.
-    $this->drupalGet('admin/config/search/pages/manage/node_search/set-default');
+
+    \Drupal::service('router.builder')->rebuild();
 
     $paths = array(
       array('path' => 'search/node', 'options' => array('query' => array('keys' => 'pizza'))),
@@ -317,6 +319,19 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
   }
 
   /**
+   * Tests that the enable/disable/default routes are protected from CSRF.
+   */
+  public function testRouteProtection() {
+    // Ensure that the enable and disable routes are protected.
+    $this->drupalGet('admin/config/search/pages/manage/node_search/enable');
+    $this->assertResponse(403);
+    $this->drupalGet('admin/config/search/pages/manage/node_search/disable');
+    $this->assertResponse(403);
+    $this->drupalGet('admin/config/search/pages/manage/node_search/set-default');
+    $this->assertResponse(403);
+  }
+
+  /**
    * Checks that the search page operations match expectations.
    *
    * @param string $id
@@ -371,6 +386,19 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
     $search_page_repository = \Drupal::service('search.search_page_repository');
     $this->assertIdentical($search_page_repository->getDefaultSearchPage(), $expected, $message, $group);
+  }
+
+  /**
+   * Sets a search page as the default in the UI.
+   *
+   * @param string $entity_id
+   *   The search page entity ID to enable.
+   */
+  protected function setDefaultThroughUi($entity_id) {
+    $this->drupalGet('admin/config/search/pages');
+    preg_match('|href="([^"]+' . $entity_id . '/set-default[^"]+)"|', $this->getRawContent(), $matches);
+
+    $this->drupalGet($this->getAbsoluteUrl($matches[1]));
   }
 
 }
