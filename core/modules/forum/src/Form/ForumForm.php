@@ -29,8 +29,9 @@ class ForumForm extends TermForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    // Build the bulk of the form from the parent form.
-    $form = parent::form($form, $form_state);
+    $taxonomy_term = $this->entity;
+    // Build the bulk of the form from the parent taxonomy term form.
+    $form = parent::form($form, $form_state, $taxonomy_term);
 
     // Set the title and description of the name field.
     $form['name']['#title'] = $this->t('Forum name');
@@ -47,7 +48,7 @@ class ForumForm extends TermForm {
 
     // Our parent field is different to the taxonomy term.
     $form['parent']['#tree'] = TRUE;
-    $form['parent'][0] = $this->forumParentSelect($this->entity->id(), $this->t('Parent'));
+    $form['parent'][0] = $this->forumParentSelect($taxonomy_term->id(), $this->t('Parent'));
 
     $form['#theme_wrappers'] = ['form__forum'];
     $this->forumFormType = $this->t('forum');
