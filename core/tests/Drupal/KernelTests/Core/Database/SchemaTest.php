@@ -143,6 +143,28 @@ class SchemaTest extends KernelTestBase {
     $count = db_query('SELECT COUNT(*) FROM {test_table}')->fetchField();
     $this->assertEqual($count, 2, 'There were two rows.');
 
+    // Test adding a serial field to an existing table.
+    db_drop_table('test_table');
+    db_create_table('test_table', $table_specification);
+    db_field_set_default('test_table', 'test_field', 0);
+    db_add_field('test_table', 'test_serial', ['type' => 'serial', 'not null' => TRUE], ['primary key' => ['test_serial']]);
+
+    $this->assertPrimaryKeyColumns('test_table', ['test_serial']);
+
+    $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
+    $max1 = db_query('SELECT MAX(test_serial) FROM {test_table}')->fetchField();
+    $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
+    $max2 = db_query('SELECT MAX(test_serial) FROM {test_table}')->fetchField();
+    $this->assertTrue($max2 > $max1, 'The serial is monotone.');
+
+    $count = db_query('SELECT COUNT(*) FROM {test_table}')->fetchField();
+    $this->assertEqual($count, 2, 'There were two rows.');
+
+    // Test adding a new column and form a composite primary key with it.
+    db_add_field('test_table', 'test_composite_primary_key', ['type' => 'int', 'not null' => TRUE, 'default' => 0], ['primary key' => ['test_serial', 'test_composite_primary_key']]);
+
+    $this->assertPrimaryKeyColumns('test_table', ['test_serial', 'test_composite_primary_key']);
+
     // Test renaming of keys and constraints.
     db_drop_table('test_table');
     $table_specification = [
@@ -802,6 +824,48 @@ class SchemaTest extends KernelTestBase {
 
     // Go back to the initial connection.
     Database::setActiveConnection('default');
+  }
+
+  /**
+   * Tests the primary keys of a table.
+   *
+   * @param string $table_name
+   *   The name of the table to check.
+   * @param array $primary_key
+   *   The expected key column specifier for a table's primary key.
+   */
+  protected function assertPrimaryKeyColumns($table_name, array $primary_key = []) {
+    $db_type = Database::getConnection()->databaseType();
+
+    switch ($db_type) {
+      case 'mysql':
+        $result = Database::getConnection()->query("SHOW KEYS FROM {" . $table_name . "} WHERE Key_name = 'PRIMARY'")->fetchAllAssoc('Column_name');
+        $this->assertSame($primary_key, array_keys($result));
+
+        break;
+      case 'pgsql':
+        $result = Database::getConnection()->query("SELECT a.attname, format_type(a.atttypid, a.atttypmod) AS data_type
+          FROM pg_index i
+          JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
+          WHERE i.indrelid = '{" . $table_name . "}'::regclass AND i.indisprimary")
+          ->fetchAllAssoc('attname');
+        $this->assertSame($primary_key, array_keys($result));
+
+        break;
+      case 'sqlite':
+        // For SQLite we need access to the protected
+        // \Drupal\Core\Database\Driver\sqlite\Schema::introspectSchema() method
+        // because we have no other way of getting the table prefixes needed for
+        // running a straight PRAGMA query.
+        $schema_object = Database::getConnection()->schema();
+        $reflection = new \ReflectionMethod($schema_object, 'introspectSchema');
+        $reflection->setAccessible(TRUE);
+
+        $table_info = $reflection->invoke($schema_object, $table_name);
+        $this->assertSame($primary_key, $table_info['primary key']);
+
+        break;
+    }
   }
 
 }

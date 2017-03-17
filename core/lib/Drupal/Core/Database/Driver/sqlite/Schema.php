@@ -353,7 +353,7 @@ class Schema extends DatabaseSchema {
       }
 
       // Add the new indexes.
-      $new_schema += $keys_new;
+      $new_schema = array_merge($new_schema, $keys_new);
 
       $this->alterTable($table, $old_schema, $new_schema, $mapping);
     }
