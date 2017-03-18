@@ -47,7 +47,7 @@ trait DependencyTrait {
   /**
    * Adds multiple dependencies.
    *
-   * @param array $dependencies.
+   * @param array $dependencies
    *   An array of dependencies keyed by the type of dependency. One example:
    *   @code
    *   array(

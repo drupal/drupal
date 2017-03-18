@@ -375,7 +375,7 @@ function hook_local_tasks_alter(&$local_tasks) {
  *   links.
  * @param string $group
  *   The group of contextual links being rendered.
- * @param array $route_parameters.
+ * @param array $route_parameters
  *   The route parameters passed to each route_name of the contextual links.
  *   For example:
  *   @code

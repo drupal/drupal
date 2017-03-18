@@ -114,7 +114,7 @@ interface QueryInterface extends AlterableInterface {
   /**
    * Queries for an empty field.
    *
-   * @param $field.
+   * @param $field
    *   Name of a field.
    * @param $langcode
    *   Language code (optional).

@@ -85,7 +85,7 @@ interface QueryAggregateInterface extends QueryInterface {
   /**
    * Queries for the nonexistence of a field.
    *
-   * @param string $field.
+   * @param string $field
    *   The name of a field.
    * @param string $function
    *   The aggregate function.

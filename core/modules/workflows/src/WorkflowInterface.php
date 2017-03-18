@@ -118,7 +118,7 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @param string $id
    *   The transition ID.
-   * @param string $label.
+   * @param string $label
    *   The transition's label.
    * @param array $from_state_ids
    *   The state IDs to transition from.

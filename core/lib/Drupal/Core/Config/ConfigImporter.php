@@ -542,7 +542,7 @@ class ConfigImporter {
   /**
    * Processes extensions as a batch operation.
    *
-   * @param array|\ArrayAccess $context.
+   * @param array|\ArrayAccess $context
    *   The batch context.
    */
   protected function processExtensions(&$context) {
@@ -562,7 +562,7 @@ class ConfigImporter {
   /**
    * Processes configuration as a batch operation.
    *
-   * @param array|\ArrayAccess $context.
+   * @param array|\ArrayAccess $context
    *   The batch context.
    */
   protected function processConfigurations(&$context) {
@@ -605,7 +605,7 @@ class ConfigImporter {
   /**
    * Handles processing of missing content.
    *
-   * @param array|\ArrayAccess $context.
+   * @param array|\ArrayAccess $context
    *   Standard batch context.
    */
   protected function processMissingContent(&$context) {
@@ -637,7 +637,7 @@ class ConfigImporter {
   /**
    * Finishes the batch.
    *
-   * @param array|\ArrayAccess $context.
+   * @param array|\ArrayAccess $context
    *   The batch context.
    */
   protected function finish(&$context) {

@@ -379,7 +379,7 @@ class TestDiscovery {
   /**
    * Parses the phpDoc summary line of a test class.
    *
-   * @param string $doc_comment.
+   * @param string $doc_comment
    *
    * @return string
    *   The parsed phpDoc summary line. An empty string is returned if no summary

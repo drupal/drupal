@@ -185,7 +185,7 @@ function locale_translate_batch_build(array $files, array $options) {
  *     LOCALE_NOT_CUSTOMIZED.
  *   - 'message': Alternative message to display during import. Note, this must
  *     be sanitized text.
- * @param array|\ArrayAccess $context.
+ * @param array|\ArrayAccess $context
  *   Contains a list of files imported.
  */
 function locale_translate_batch_import($file, array $options, &$context) {
@@ -268,7 +268,7 @@ function locale_translate_batch_import($file, array $options, &$context) {
  *
  * Save data of imported files.
  *
- * @param array|\ArrayAccess $context.
+ * @param array|\ArrayAccess $context
  *   Contains a list of imported files.
  */
 function locale_translate_batch_import_save($context) {
@@ -293,7 +293,7 @@ function locale_translate_batch_import_save($context) {
  *
  * Refreshes translations after importing strings.
  *
- * @param array|\ArrayAccess $context.
+ * @param array|\ArrayAccess $context
  *   Contains a list of strings updated and information about the progress.
  */
 function locale_translate_batch_refresh(&$context) {
@@ -597,7 +597,7 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
  *   An array of names of configuration objects to update.
  * @param array $langcodes
  *   (optional) Array of language codes to update. Defaults to all languages.
- * @param array|\ArrayAccess $context.
+ * @param array|\ArrayAccess $context
  *   Contains a list of files imported.
  *
  * @see locale_config_batch_build()

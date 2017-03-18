@@ -111,7 +111,7 @@ function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode
  * @param bool $revisions
  *   (optional) TRUE if $nodes contains an array of revision IDs instead of
  *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
- * @param array|\ArrayAccess $context.
+ * @param array|\ArrayAccess $context
  *   An array of contextual key/values.
  */
 function _node_mass_update_batch_process(array $nodes, array $updates, $langcode, $load, $revisions, &$context) {
