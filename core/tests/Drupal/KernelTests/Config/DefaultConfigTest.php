@@ -32,7 +32,7 @@ class DefaultConfigTest extends KernelTestBase {
   /**
    * The following config entries are changed on module install.
    *
-   * Compare them does not make sense.
+   * Comparing them does not make sense.
    *
    * @todo Figure out why simpletest.settings is not installed.
    *
@@ -88,7 +88,7 @@ class DefaultConfigTest extends KernelTestBase {
     }
 
     // Work out any additional modules and themes that need installing to create
-    // and optional config.
+    // an optional config.
     $optional_config_storage = new FileStorage($module_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
     $modules_to_install = [$module];
     $themes_to_install = [];
