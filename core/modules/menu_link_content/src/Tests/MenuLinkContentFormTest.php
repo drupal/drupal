@@ -2,6 +2,7 @@
 
 namespace Drupal\menu_link_content\Tests;
 
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -21,12 +22,52 @@ class MenuLinkContentFormTest extends WebTestBase {
   ];
 
   /**
+   * User with 'administer menu' and 'link to any page' permission.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+
+  protected $adminUser;
+
+  /**
+   * User with only 'administer menu' permission.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+
+  protected $basicUser;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $web_user = $this->drupalCreateUser(['administer menu']);
-    $this->drupalLogin($web_user);
+    $this->adminUser = $this->drupalCreateUser(['administer menu', 'link to any page']);
+    $this->basicUser = $this->drupalCreateUser(['administer menu']);
+    $this->drupalLogin($this->adminUser);
+  }
+
+  /**
+   * Tests the 'link to any page' permission for a restricted page.
+   */
+  public function testMenuLinkContentFormLinkToAnyPage() {
+    $menu_link = MenuLinkContent::create([
+      'title' => 'Menu link test',
+      'provider' => 'menu_link_content',
+      'menu_name' => 'admin',
+      'link' => ['uri' => 'internal:/user/login'],
+    ]);
+    $menu_link->save();
+
+    // The user should be able to edit a menu link to the page, even though
+    // the user cannot access the page itself.
+    $this->drupalGet('/admin/structure/menu/item/' . $menu_link->id() . '/edit');
+    $this->assertResponse(200);
+
+    $this->drupalLogin($this->basicUser);
+
+    $this->drupalGet('/admin/structure/menu/item/' . $menu_link->id() . '/edit');
+    $this->assertResponse(403);
   }
 
   /**

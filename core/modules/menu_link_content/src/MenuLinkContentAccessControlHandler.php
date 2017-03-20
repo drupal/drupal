@@ -59,11 +59,12 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
           return AccessResult::neutral("The 'administer menu' permission is required.")->cachePerPermissions();
         }
         else {
-          // If there is a URL, this is an external link so always accessible.
+          // Assume that access is allowed.
           $access = AccessResult::allowed()->cachePerPermissions()->addCacheableDependency($entity);
           /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
-          // We allow access, but only if the link is accessible as well.
-          if (($url_object = $entity->getUrlObject()) && $url_object->isRouted()) {
+          // If the link is routed determine whether the user has access unless
+          // they have the 'link to any page' permission.
+          if (!$account->hasPermission('link to any page') && ($url_object = $entity->getUrlObject()) && $url_object->isRouted()) {
             $link_access = $this->accessManager->checkNamedRoute($url_object->getRouteName(), $url_object->getRouteParameters(), $account, TRUE);
             $access = $access->andIf($link_access);
           }
