@@ -133,6 +133,11 @@ class Date extends NumericFilter {
     }
     $rc = parent::acceptExposedInput($input);
 
+    // Restore what got overwritten by the parent.
+    if (!is_null($type)) {
+      $this->value['type'] = $type;
+    }
+
     // Don't filter if value(s) are empty.
     $operators = $this->operators();
     if (!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id'])) {
@@ -151,11 +156,6 @@ class Date extends NumericFilter {
       if ($this->value['min'] == '' || $this->value['max'] == '') {
         return FALSE;
       }
-    }
-
-    // Restore what got overwritten by the parent.
-    if (!is_null($type)) {
-      $this->value['type'] = $type;
     }
 
     return $rc;

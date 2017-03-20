@@ -292,4 +292,22 @@ class FilterDateTest extends HandlerTestBase {
     $this->assertConfigSchemaByName('views.view.test_filter_date_between');
   }
 
+  /**
+   * Tests that the exposed date filter is displayed without errors.
+   */
+  public function testExposedFilter() {
+    $this->drupalLogin($this->drupalCreateUser(['administer views']));
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created', [], t('Expose filter'));
+    $this->drupalPostForm('admin/structure/views/view/test_filter_date_between/edit', [], t('Add Page'));
+    $edit = [
+      'path' => 'exposed-date-filter',
+    ];
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_filter_date_between/page_1/path', $edit, t('Apply'));
+
+    $this->drupalPostForm(NULL, [], t('Save'));
+
+    $this->drupalGet('exposed-date-filter');
+    $this->assertField('created');
+  }
+
 }
