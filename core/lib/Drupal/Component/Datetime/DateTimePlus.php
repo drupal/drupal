@@ -268,10 +268,11 @@ class DateTimePlus {
     $prepared_timezone = $this->prepareTimezone($timezone);
 
     try {
+      $this->errors = [];
       if (!empty($prepared_time)) {
         $test = date_parse($prepared_time);
         if (!empty($test['errors'])) {
-          $this->errors[] = $test['errors'];
+          $this->errors = $test['errors'];
         }
       }
 
@@ -285,7 +286,6 @@ class DateTimePlus {
 
     // Clean up the error messages.
     $this->checkErrors();
-    $this->errors = array_unique($this->errors);
   }
 
   /**
@@ -442,7 +442,7 @@ class DateTimePlus {
   public function checkErrors() {
     $errors = \DateTime::getLastErrors();
     if (!empty($errors['errors'])) {
-      $this->errors += $errors['errors'];
+      $this->errors = array_merge($this->errors, $errors['errors']);
     }
     // Most warnings are messages that the date could not be parsed
     // which causes it to be altered. For validation purposes, a warning
@@ -451,6 +451,8 @@ class DateTimePlus {
     if (!empty($errors['warnings'])) {
       $this->errors[] = 'The date is invalid.';
     }
+
+    $this->errors = array_values(array_unique($this->errors));
   }
 
   /**
