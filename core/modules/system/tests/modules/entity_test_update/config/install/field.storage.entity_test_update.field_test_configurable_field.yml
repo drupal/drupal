@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_test_update
+id: entity_test_update.field_test_configurable_field
+field_name: field_test_configurable_field
+entity_type: entity_test_update
+type: multi_value_test
+settings: {  }
+module: entity_test_update
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
