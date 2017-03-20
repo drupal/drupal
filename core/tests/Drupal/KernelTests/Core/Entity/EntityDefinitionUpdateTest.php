@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionEvents;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\entity_test\Entity\EntityTestUpdate;
+use Drupal\entity_test_update\Entity\EntityTestUpdate;
 use Drupal\system\Tests\Entity\EntityDefinitionTestTrait;
 
 /**
@@ -38,6 +38,13 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
    * @var \Drupal\Core\Database\Connection
    */
   protected $database;
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = ['entity_test_update'];
 
   /**
    * {@inheritdoc}

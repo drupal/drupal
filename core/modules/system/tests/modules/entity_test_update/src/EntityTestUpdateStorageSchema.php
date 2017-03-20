@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\entity_test;
+namespace Drupal\entity_test_update;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
@@ -9,7 +9,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 /**
  * Defines the entity_test_update storage_schema handler.
  */
-class EntityTestStorageSchema extends SqlContentEntityStorageSchema {
+class EntityTestUpdateStorageSchema extends SqlContentEntityStorageSchema {
 
   /**
    * {@inheritdoc}
