@@ -103,7 +103,7 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
    *
    * This is a PHP implementation of the drupal.active-link JavaScript library.
    *
-   * @param string $html_markup.
+   * @param string $html_markup
    *   The HTML markup to update.
    * @param string $current_path
    *   The system path of the currently active page.

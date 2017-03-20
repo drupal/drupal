@@ -18,7 +18,7 @@
  * @param $MULTIPLE_PARAMS
  *   Additional parameters specific to the batch. These are specified in the
  *   array passed to batch_set().
- * @param array|\ArrayAccess $context.
+ * @param array|\ArrayAccess $context
  *   The batch context array, passed by reference. This contains the following
  *   properties:
  *   - 'finished': A float number between 0 and 1 informing the processing

@@ -33,7 +33,7 @@ require_once __DIR__ . '/locale.translation.inc';
  *     batch is finished. Optional, defaults to TRUE.
  *   - 'use_remote': Whether or not to check the remote translation file.
  *     Optional, defaults to TRUE.
- * @param array|\ArrayAccess $context.
+ * @param array|\ArrayAccess $context
  *   The batch context.
  */
 function locale_translation_batch_status_check($project, $langcode, array $options, &$context) {

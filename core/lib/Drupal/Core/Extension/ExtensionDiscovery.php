@@ -274,7 +274,7 @@ class ExtensionDiscovery {
   /**
    * Filters out extensions not belonging to the scanned installation profiles.
    *
-   * @param \Drupal\Core\Extension\Extension[] $all_files.
+   * @param \Drupal\Core\Extension\Extension[] $all_files
    *   The list of all extensions.
    *
    * @return \Drupal\Core\Extension\Extension[]
@@ -307,7 +307,7 @@ class ExtensionDiscovery {
   /**
    * Sorts the discovered extensions.
    *
-   * @param \Drupal\Core\Extension\Extension[] $all_files.
+   * @param \Drupal\Core\Extension\Extension[] $all_files
    *   The list of all extensions.
    * @param array $weights
    *   An array of weights, keyed by originating directory.

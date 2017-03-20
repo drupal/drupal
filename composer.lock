@@ -3043,16 +3043,16 @@
         },
         {
             "name": "drupal/coder",
-            "version": "8.2.11",
+            "version": "8.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klausi/coder.git",
-                "reference": "564a361274d8234d36385766f063ca89c4184479"
+                "reference": "984c54a7b1e8f27ff1c32348df69712afd86b17f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klausi/coder/zipball/564a361274d8234d36385766f063ca89c4184479",
-                "reference": "564a361274d8234d36385766f063ca89c4184479",
+                "url": "https://api.github.com/repos/klausi/coder/zipball/984c54a7b1e8f27ff1c32348df69712afd86b17f",
+                "reference": "984c54a7b1e8f27ff1c32348df69712afd86b17f",
                 "shasum": ""
             },
             "require": {
@@ -3076,7 +3076,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2017-03-02T08:57:31+00:00"
+            "time": "2017-03-18T10:28:49+00:00"
         },
         {
             "name": "fabpot/goutte",
