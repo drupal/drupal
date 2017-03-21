@@ -1094,7 +1094,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
     // Ensure that the following properties are actually cloned by
     // overwriting the original references with ones pointing to copies of
-    // them: enforceIsNew, newRevision, loadedRevisionId and fields.
+    // them: enforceIsNew, newRevision, loadedRevisionId, fields, entityKeys and
+    // translatableEntityKeys.
     $enforce_is_new = $this->enforceIsNew;
     $this->enforceIsNew = &$enforce_is_new;
 
@@ -1106,6 +1107,12 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
     $fields = $this->fields;
     $this->fields = &$fields;
+
+    $entity_keys = $this->entityKeys;
+    $this->entityKeys = &$entity_keys;
+
+    $translatable_entity_keys = $this->translatableEntityKeys;
+    $this->translatableEntityKeys = &$translatable_entity_keys;
 
     foreach ($this->fields as $name => $values) {
       $this->fields[$name] = [];
