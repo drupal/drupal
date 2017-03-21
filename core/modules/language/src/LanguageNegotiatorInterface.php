@@ -91,7 +91,6 @@ use Drupal\Core\Session\AccountInterface;
  *     }
  *   }
  * }
- * ?>
  * @endcode
  *
  * For more information, see
