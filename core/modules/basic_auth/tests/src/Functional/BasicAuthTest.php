@@ -1,19 +1,19 @@
 <?php
 
-namespace Drupal\basic_auth\Tests\Authentication;
+namespace Drupal\Tests\basic_auth\Functional;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
-use Drupal\basic_auth\Tests\BasicAuthTestTrait;
+use Drupal\Tests\basic_auth\Traits\BasicAuthTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests for BasicAuth authentication provider.
  *
  * @group basic_auth
  */
-class BasicAuthTest extends WebTestBase {
+class BasicAuthTest extends BrowserTestBase {
 
   use BasicAuthTestTrait;
 
@@ -39,14 +39,14 @@ class BasicAuthTest extends WebTestBase {
     $this->basicAuthGet($url, $account->getUsername(), $account->pass_raw);
     $this->assertText($account->getUsername(), 'Account name is displayed.');
     $this->assertResponse('200', 'HTTP response is OK');
-    $this->curlClose();
+    $this->mink->resetSessions();
     $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'));
     $this->assertIdentical(strpos($this->drupalGetHeader('Cache-Control'), 'public'), FALSE, 'Cache-Control is not set to public');
 
     $this->basicAuthGet($url, $account->getUsername(), $this->randomMachineName());
     $this->assertNoText($account->getUsername(), 'Bad basic auth credentials do not authenticate the user.');
     $this->assertResponse('403', 'Access is not granted.');
-    $this->curlClose();
+    $this->mink->resetSessions();
 
     $this->drupalGet($url);
     $this->assertEqual($this->drupalGetHeader('WWW-Authenticate'), SafeMarkup::format('Basic realm="@realm"', ['@realm' => \Drupal::config('system.site')->get('name')]));
@@ -60,7 +60,7 @@ class BasicAuthTest extends WebTestBase {
     $this->basicAuthGet(Url::fromRoute('system.admin'), $account->getUsername(), $account->pass_raw);
     $this->assertNoLink('Log out', 'User is not logged in');
     $this->assertResponse('403', 'No basic authentication for routes not explicitly defining authentication providers.');
-    $this->curlClose();
+    $this->mink->resetSessions();
 
     // Ensure that pages already in the page cache aren't returned from page
     // cache if basic auth credentials are provided.
@@ -148,7 +148,6 @@ class BasicAuthTest extends WebTestBase {
     $this->basicAuthGet($url, $account->getUsername(), $account->pass_raw);
     $this->assertText($account->getUsername(), 'Account name is displayed.');
     $this->assertResponse('200', 'HTTP response is OK');
-    $this->curlClose();
   }
 
   /**
@@ -197,6 +196,8 @@ class BasicAuthTest extends WebTestBase {
     $this->basicAuthGet('/basic_auth_test/state/modify', $account->getUsername(), $account->pass_raw);
     $this->assertResponse(200);
     $this->assertRaw('Done');
+
+    $this->mink->resetSessions();
     $this->drupalGet('/basic_auth_test/state/read');
     $this->assertResponse(200);
     $this->assertRaw('yep');
