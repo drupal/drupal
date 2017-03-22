@@ -718,4 +718,15 @@ trait AssertLegacyTrait {
     return $this->assertSession()->buildXPathQuery($xpath, $args);
   }
 
+  /**
+   * Gets the current raw content.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->getSession()->getPage()->getContent() instead.
+   */
+  protected function getRawContent() {
+    @trigger_error('AssertLegacyTrait::getRawContent() is scheduled for removal in Drupal 9.0.0. Use $this->getSession()->getPage()->getContent() instead.', E_USER_DEPRECATED);
+    return $this->getSession()->getPage()->getContent();
+  }
+
 }

@@ -146,6 +146,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $sanitized = Html::escape($dangerous);
     $this->assertNoText($dangerous);
     $this->assertText($sanitized);
+
+    // Test getRawContent().
+    $this->assertSame($this->getSession()->getPage()->getContent(), $this->getRawContent());
   }
 
   /**
