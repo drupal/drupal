@@ -213,6 +213,15 @@ class BrowserTestBaseTest extends BrowserTestBase {
     catch (ExpectationException $e) {
       $this->pass('The "name" field was found.');
     }
+
+    $this->assertOptionByText('options', 'one');
+    try {
+      $this->assertOptionByText('options', 'four');
+      $this->fail('The select option "four" was found.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass($e->getMessage());
+    }
   }
 
   /**
