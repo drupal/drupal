@@ -14,7 +14,6 @@ use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Plugin\DependentWithRemovalPluginInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
@@ -35,7 +34,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsField("field")
  */
-class EntityField extends FieldPluginBase implements CacheableDependencyInterface, MultiItemsFieldHandlerInterface, DependentWithRemovalPluginInterface {
+class EntityField extends FieldPluginBase implements CacheableDependencyInterface, MultiItemsFieldHandlerInterface {
 
   use FieldAPIHandlerTrait;
   use PluginDependencyTrait;
@@ -1076,31 +1075,6 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     else {
       return $values;
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function onDependencyRemoval(array $dependencies) {
-    // See if this handler is responsible for any of the dependencies being
-    // removed. If this is the case, indicate that this handler needs to be
-    // removed from the View.
-    $remove = FALSE;
-    // Get all the current dependencies for this handler.
-    $current_dependencies = $this->calculateDependencies();
-    foreach ($current_dependencies as $group => $dependency_list) {
-      // Check if any of the handler dependencies match the dependencies being
-      // removed.
-      foreach ($dependency_list as $config_key) {
-        if (isset($dependencies[$group]) && array_key_exists($config_key, $dependencies[$group])) {
-          // This handlers dependency matches a dependency being removed,
-          // indicate that this handler needs to be removed.
-          $remove = TRUE;
-          break 2;
-        }
-      }
-    }
-    return $remove;
   }
 
 }
