@@ -9,6 +9,7 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Plugin\DependentWithRemovalPluginInterface;
 use Drupal\views\Views;
 use Drupal\views\ViewEntityInterface;
 
@@ -510,6 +511,63 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     // Invalidate cache tags for cached rows.
     $tags = $this->getCacheTags();
     \Drupal::service('cache_tags.invalidator')->invalidateTags($tags);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    $changed = FALSE;
+
+    // Don't intervene if the views module is removed.
+    if (isset($dependencies['module']) && in_array('views', $dependencies['module'])) {
+      return FALSE;
+    }
+
+    // If the base table for the View is provided by a module being removed, we
+    // delete the View because this is not something that can be fixed manually.
+    $views_data = Views::viewsData();
+    $base_table = $this->get('base_table');
+    $base_table_data = $views_data->get($base_table);
+    if (!empty($base_table_data['table']['provider']) && in_array($base_table_data['table']['provider'], $dependencies['module'])) {
+      return FALSE;
+    }
+
+    $current_display = $this->getExecutable()->current_display;
+    $handler_types = Views::getHandlerTypes();
+
+    // Find all the handlers and check whether they want to do something on
+    // dependency removal.
+    foreach ($this->display as $display_id => $display_plugin_base) {
+      $this->getExecutable()->setDisplay($display_id);
+      $display = $this->getExecutable()->getDisplay();
+
+      foreach (array_keys($handler_types) as $handler_type) {
+        $handlers = $display->getHandlers($handler_type);
+        foreach ($handlers as $handler_id => $handler) {
+          if ($handler instanceof DependentWithRemovalPluginInterface) {
+            if ($handler->onDependencyRemoval($dependencies)) {
+              // Remove the handler and indicate we made changes.
+              unset($this->display[$display_id]['display_options'][$handler_types[$handler_type]['plural']][$handler_id]);
+              $changed = TRUE;
+            }
+          }
+        }
+      }
+    }
+
+    // Disable the View if we made changes.
+    // @todo https://www.drupal.org/node/2832558 Give better feedback for
+    // disabled config.
+    if ($changed) {
+      // Force a recalculation of the dependencies if we made changes.
+      $this->getExecutable()->current_display = NULL;
+      $this->calculateDependencies();
+      $this->disable();
+    }
+
+    $this->getExecutable()->setDisplay($current_display);
+    return $changed;
   }
 
 }
