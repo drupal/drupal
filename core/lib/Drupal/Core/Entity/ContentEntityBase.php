@@ -1094,8 +1094,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
     // Ensure that the following properties are actually cloned by
     // overwriting the original references with ones pointing to copies of
-    // them: enforceIsNew, newRevision, loadedRevisionId, fields, entityKeys and
-    // translatableEntityKeys.
+    // them: enforceIsNew, newRevision, loadedRevisionId, fields, entityKeys,
+    // translatableEntityKeys and values.
     $enforce_is_new = $this->enforceIsNew;
     $this->enforceIsNew = &$enforce_is_new;
 
@@ -1114,16 +1114,19 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $translatable_entity_keys = $this->translatableEntityKeys;
     $this->translatableEntityKeys = &$translatable_entity_keys;
 
-    foreach ($this->fields as $name => $values) {
+    $values = $this->values;
+    $this->values = &$values;
+
+    foreach ($this->fields as $name => $fields_by_langcode) {
       $this->fields[$name] = [];
       // Untranslatable fields may have multiple references for the same field
       // object keyed by language. To avoid creating different field objects
       // we retain just the original value, as references will be recreated
       // later as needed.
-      if (!$definitions[$name]->isTranslatable() && count($values) > 1) {
-        $values = array_intersect_key($values, [LanguageInterface::LANGCODE_DEFAULT => TRUE]);
+      if (!$definitions[$name]->isTranslatable() && count($fields_by_langcode) > 1) {
+        $fields_by_langcode = array_intersect_key($fields_by_langcode, [LanguageInterface::LANGCODE_DEFAULT => TRUE]);
       }
-      foreach ($values as $langcode => $items) {
+      foreach ($fields_by_langcode as $langcode => $items) {
         $this->fields[$name][$langcode] = clone $items;
         $this->fields[$name][$langcode]->setContext($name, $this->getTranslation($langcode)->getTypedData());
       }

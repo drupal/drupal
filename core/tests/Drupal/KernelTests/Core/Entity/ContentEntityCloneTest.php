@@ -219,4 +219,36 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     $this->assertEquals('clone-name', $clone->label());
   }
 
+  /**
+   * Tests the field values after serializing an entity and its clone.
+   */
+  public function testFieldValuesAfterSerialize() {
+    // Create a test entity with a translation, which will internally trigger
+    // entity cloning for the new translation and create references for some of
+    // the entity properties.
+    $entity = EntityTestMulRev::create([
+      'name' => 'original',
+      'language' => 'en',
+    ]);
+    $entity->addTranslation('de');
+    $entity->save();
+
+    // Clone the entity.
+    $clone = clone $entity;
+
+    // Alter the name field value of the cloned entity object.
+    $clone->setName('clone');
+
+    // Serialize the entity and the cloned object in order to destroy the field
+    // objects and put the field values into the entity property $values, so
+    // that on accessing a field again it will be newly created with the value
+    // from the $values property.
+    serialize($entity);
+    serialize($clone);
+
+    // Assert that the original and the cloned entity both have different names.
+    $this->assertEquals('original', $entity->getName());
+    $this->assertEquals('clone', $clone->getName());
+  }
+
 }
