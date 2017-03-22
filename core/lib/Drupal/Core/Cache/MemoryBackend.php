@@ -10,6 +10,11 @@ namespace Drupal\Core\Cache;
  * Should be used for unit tests and specialist use-cases only, does not
  * store cached items between requests.
  *
+ * The functions ::prepareItem()/::set() use unserialize()/serialize(). It
+ * behaves as an external cache backend to avoid changing the cached data by
+ * reference. In ::prepareItem(), the object is not modified by the call to
+ * unserialize() because we make a clone of it.
+ *
  * @ingroup cache
  */
 class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterface {
