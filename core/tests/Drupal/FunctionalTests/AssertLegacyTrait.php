@@ -452,6 +452,21 @@ trait AssertLegacyTrait {
   }
 
   /**
+   * Asserts that a select option with the visible text exists.
+   *
+   * @param string $id
+   *   The ID of the select field to assert.
+   * @param string $text
+   *   The text for the option tag to assert.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->optionExists() instead.
+   */
+  protected function assertOptionByText($id, $text) {
+    return $this->assertSession()->optionExists($id, $text);
+  }
+
+  /**
    * Asserts that a select option does NOT exist in the current page.
    *
    * @param string $id
