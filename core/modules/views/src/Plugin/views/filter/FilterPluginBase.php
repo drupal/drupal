@@ -1082,7 +1082,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
           '#title' => $this->t('Weight'),
           '#title_display' => 'invisible',
           '#type' => 'weight',
-          '#delta' => 10,
+          '#delta' => count($this->options['group_info']['group_items']),
           '#default_value' => $default_weight++,
           '#attributes' => ['class' => ['weight']],
         ],
