@@ -182,7 +182,7 @@ Database API
   - ?
 
 Database Logging
-- ?
+- Mariano D'Agostino 'dagmar' https://www.drupal.org/u/dagmar
 
 Database Update API
 - ?
