@@ -376,7 +376,7 @@ Statistics
 - Tim Millwood 'timmillwood' https://www.drupal.org/u/timmillwood
 
 Syslog
-- Khalid Baheyeldin 'kbahey' https://www.drupal.org/u/kbahey
+- ?
 
 System (module)
 - ?
