@@ -33,8 +33,6 @@
 .ui-state-active,
 .ui-widget-content .ui-state-active {
   color: #840;
-  background: #fe6;
-  border: solid 1px #ed5;
 }
 .ui-state-error,
 .ui-widget-content .ui-state-error {
