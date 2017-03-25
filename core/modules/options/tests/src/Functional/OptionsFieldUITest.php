@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\options\Tests;
+namespace Drupal\Tests\options\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;

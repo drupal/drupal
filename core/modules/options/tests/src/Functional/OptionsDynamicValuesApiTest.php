@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\options\Tests;
+namespace Drupal\Tests\options\Functional;
 
 /**
 * Tests the options allowed values api.

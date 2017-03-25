@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\options\Tests;
+namespace Drupal\Tests\options\Functional;
 
 /**
  * Tests an options select with a dynamic allowed values function.
