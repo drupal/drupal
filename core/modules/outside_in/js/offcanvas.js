@@ -100,48 +100,61 @@
     }
   }
 
-  $(window).on({
-    'dialog:aftercreate': function (event, dialog, $element, settings) {
-      if ($element.is('#drupal-offcanvas')) {
-        var eventData = {settings: settings, $element: $element};
-        $('.ui-dialog-offcanvas, .ui-dialog-offcanvas .ui-dialog-titlebar').toggleClass('ui-dialog-empty-title', !settings.title);
+  /**
+   * Attaches off-canvas dialog behaviors.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches event listeners for off-canvas dialogs.
+   */
+  Drupal.behaviors.offCanvasEvents = {
+    attach: function () {
+      $(window).once('off-canvas').on({
+        'dialog:aftercreate': function (event, dialog, $element, settings) {
+          if ($element.is('#drupal-offcanvas')) {
+            var eventData = {settings: settings, $element: $element};
+            $('.ui-dialog-offcanvas, .ui-dialog-offcanvas .ui-dialog-titlebar').toggleClass('ui-dialog-empty-title', !settings.title);
 
-        $element
-          .on('dialogresize.offcanvas', eventData, debounce(bodyPadding, 100))
-          .on('dialogContentResize.offcanvas', eventData, handleDialogResize)
-          .on('dialogContentResize.offcanvas', eventData, debounce(bodyPadding, 100))
-          .trigger('dialogresize.offcanvas');
+            $element
+              .on('dialogresize.offcanvas', eventData, debounce(bodyPadding, 100))
+              .on('dialogContentResize.offcanvas', eventData, handleDialogResize)
+              .on('dialogContentResize.offcanvas', eventData, debounce(bodyPadding, 100))
+              .trigger('dialogresize.offcanvas');
 
-        $element.dialog('widget').attr('data-offset-' + edge, '');
+            $element.dialog('widget').attr('data-offset-' + edge, '');
 
-        $(window)
-          .on('resize.offcanvas scroll.offcanvas', eventData, debounce(resetSize, 100))
-          .trigger('resize.offcanvas');
-      }
-    },
-    'dialog:beforecreate': function (event, dialog, $element, settings) {
-      if ($element.is('#drupal-offcanvas')) {
-        $('body').addClass('js-tray-open');
-        // @see http://api.jqueryui.com/position/
-        settings.position = {
-          my: 'left top',
-          at: edge + ' top',
-          of: window
-        };
-        settings.dialogClass += ' ui-dialog-offcanvas';
-        // Applies initial height to dialog based on window height.
-        // See http://api.jqueryui.com/dialog for all dialog options.
-        settings.height = $(window).height();
-      }
-    },
-    'dialog:beforeclose': function (event, dialog, $element) {
-      if ($element.is('#drupal-offcanvas')) {
-        $('body').removeClass('js-tray-open');
-        $(document).off('.offcanvas');
-        $(window).off('.offcanvas');
-        $mainCanvasWrapper.css('padding-' + edge, 0);
-      }
+            $(window)
+              .on('resize.offcanvas scroll.offcanvas', eventData, debounce(resetSize, 100))
+              .trigger('resize.offcanvas');
+          }
+        },
+        'dialog:beforecreate': function (event, dialog, $element, settings) {
+          if ($element.is('#drupal-offcanvas')) {
+            $('body').addClass('js-tray-open');
+            // @see http://api.jqueryui.com/position/
+            settings.position = {
+              my: 'left top',
+              at: edge + ' top',
+              of: window
+            };
+            settings.dialogClass += ' ui-dialog-offcanvas';
+            // Applies initial height to dialog based on window height.
+            // See http://api.jqueryui.com/dialog for all dialog options.
+            settings.height = $(window).height();
+          }
+        },
+        'dialog:beforeclose': function (event, dialog, $element) {
+          if ($element.is('#drupal-offcanvas')) {
+            $('body').removeClass('js-tray-open');
+            // Remove all *.offcanvas events
+            $(document).off('.offcanvas');
+            $(window).off('.offcanvas');
+            $mainCanvasWrapper.css('padding-' + edge, 0);
+          }
+        }
+      });
     }
-  });
+  };
 
 })(jQuery, Drupal, Drupal.debounce, Drupal.displace);
