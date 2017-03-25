@@ -35,7 +35,7 @@
     data.$el.find(blockConfigureSelector)
       .on('click.outsidein', function () {
         if (!isInEditMode()) {
-          $(toggleEditSelector).trigger('click.outsidein');
+          $(toggleEditSelector).trigger('click').trigger('click.outside_in');
         }
         // Always disable QuickEdit regardless of whether "EditMode" was just enabled.
         disableQuickEdit();
