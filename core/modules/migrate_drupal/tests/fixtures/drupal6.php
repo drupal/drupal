@@ -3018,7 +3018,7 @@ $connection->insert('content_node_field_instance')
   'label' => 'Text Single Checkbox Field',
   'widget_type' => 'text_textfield',
   'widget_settings' => 'a:4:{s:13:"default_value";a:1:{i:0;a:2:{s:5:"value";s:1:"0";s:14:"_error_element";s:63:"default_value_widget][field_test_text_single_checkbox][0][value";}}s:17:"default_value_php";N;s:4:"rows";i:5;s:4:"size";s:3:"255";}',
-  'display_settings' => 'a:7:{s:6:"weight";s:2:"17";s:6:"parent";s:0:"";i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:5:"label";a:1:{s:6:"format";s:5:"above";}s:6:"teaser";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
+  'display_settings' => 'a:7:{s:6:"weight";s:2:"32";s:6:"parent";s:0:"";s:5:"label";a:1:{s:6:"format";s:5:"above";}s:6:"teaser";a:2:{s:6:"format";s:6:"hidden";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
   'description' => 'An example text field using a single on/off checkbox.',
   'widget_module' => 'text',
   'widget_active' => '1',
