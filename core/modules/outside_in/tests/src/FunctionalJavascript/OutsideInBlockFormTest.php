@@ -11,8 +11,6 @@ use Drupal\user\Entity\Role;
  */
 class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
 
-  const TOOLBAR_EDIT_LINK_SELECTOR = '#toolbar-bar div.contextual-toolbar-tab button';
-
   /**
    * {@inheritdoc}
    */
@@ -75,7 +73,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       $page->find('css', $toolbar_item)->click();
       $web_assert->waitForElementVisible('css', "{$toolbar_item}.is-active");
     }
-    $this->enableEditMode();
+    $this->toggleEditingMode();
     if (isset($toolbar_item)) {
       $this->waitForNoElement("{$toolbar_item}.is-active");
     }
@@ -106,11 +104,12 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
 
     $this->openBlockForm($block_selector);
 
-    $this->disableEditMode();
+    $this->toggleEditingMode();
     // Canvas should close when editing module is closed.
     $this->waitForOffCanvasToClose();
 
-    $this->enableEditMode();
+    // Go into Edit mode again.
+    $this->toggleEditingMode();
 
     $element_selector = "$block_selector {$element_selector}";
     // Open block form by clicking a element inside the block.
@@ -125,7 +124,6 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $this->getSession()->executeScript('jQuery("body").trigger(jQuery.Event("keyup", { keyCode: 27 }));');
     $this->waitForOffCanvasToClose();
     $this->getSession()->wait(100);
-    $this->assertEditModeDisabled();
     $web_assert->elementTextContains('css', '#drupal-live-announce', 'Exited edit mode.');
     $web_assert->elementTextNotContains('css', '.contextual-toolbar-tab button', 'Editing');
     $web_assert->elementAttributeNotContains('css', '.dialog-offcanvas__main-canvas', 'class', 'js-outside-in-edit-mode');
@@ -165,19 +163,18 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
   }
 
   /**
-   * Enables edit mode by pressing edit button in the toolbar.
+   * Enables Editing mode by pressing "Edit" button in the toolbar.
    */
-  protected function enableEditMode() {
-    $this->pressToolbarEditButton();
-    $this->assertEditModeEnabled();
-  }
+  protected function toggleEditingMode() {
+    $this->assertSession()->waitForElementVisible('css', 'div[data-contextual-id="block:block=powered:langcode=en|outside_in::langcode=en"] .contextual-links a', 10000);
+    // Waiting for QuickEdit icon animation.
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
-  /**
-   * Disables edit mode by pressing edit button in the toolbar.
-   */
-  protected function disableEditMode() {
-    $this->pressToolbarEditButton();
-    $this->assertEditModeDisabled();
+    $edit_button = $this->getSession()->getPage()->find('css', '#toolbar-bar div.contextual-toolbar-tab button');
+
+    $edit_button->press();
+    // Waiting for Toolbar animation.
+    $this->assertSession()->assertWaitOnAjaxRequest();
   }
 
   /**
@@ -243,20 +240,21 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       $web_assert->assertWaitOnAjaxRequest();
       // The 2nd page load we should already be in edit mode.
       if ($page_load_times == 1) {
-        $this->enableEditMode();
+        $this->toggleEditingMode();
       }
       // In Edit mode clicking field should open QuickEdit toolbar.
       $page->find('css', $body_selector)->click();
       $web_assert->waitForElementVisible('css', $quick_edit_selector);
-
-      $this->disableEditMode();
+      // Exit Edit mode.
+      $this->toggleEditingMode();
       // Exiting Edit mode should close QuickEdit toolbar.
       $web_assert->elementNotExists('css', $quick_edit_selector);
       // When not in Edit mode QuickEdit toolbar should not open.
       $page->find('css', $body_selector)->click();
       $web_assert->elementNotExists('css', $quick_edit_selector);
 
-      $this->enableEditMode();
+      // Enter Edit mode.
+      $this->toggleEditingMode();
       $this->openBlockForm($block_selector);
       $page->find('css', $body_selector)->click();
       $web_assert->waitForElementVisible('css', $quick_edit_selector);
@@ -271,7 +269,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     // Check using contextual links to invoke QuickEdit and open the tray.
     $this->drupalGet('node/' . $node->id());
     $web_assert->assertWaitOnAjaxRequest();
-    $this->disableEditMode();
+    $this->toggleEditingMode();
     // Open QuickEdit toolbar before going into Edit mode.
     $this->clickContextualLink('.node', "Quick edit");
     $web_assert->waitForElementVisible('css', $quick_edit_selector);
@@ -284,84 +282,6 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $this->clickContextualLink('.node', "Quick edit", FALSE);
     $this->waitForOffCanvasToClose();
     $web_assert->waitForElementVisible('css', $quick_edit_selector);
-  }
-
-  /**
-   * Tests enabling and disabling Edit Mode.
-   */
-  public function testEditModeEnableDisable() {
-    foreach (['contextual_link', 'toolbar_link'] as $enable_option) {
-      $this->drupalGet('user');
-      $this->assertEditModeDisabled();
-      switch ($enable_option) {
-        // Enable Edit mode.
-        case 'contextual_link':
-          $this->clickContextualLink('#block-powered', "Quick edit");
-          $this->waitForOffCanvasToOpen();
-          $this->assertEditModeEnabled();
-          break;
-
-        case 'toolbar_link':
-          $this->enableEditMode();
-          break;
-      }
-      $this->disableEditMode();
-
-      // Make another page request to ensure Edit mode is still disabled.
-      $this->drupalGet('user');
-      $this->assertEditModeDisabled();
-      // Make sure on this page request it also re-enables and disables
-      // correctly.
-      $this->enableEditMode();
-      $this->disableEditMode();
-    }
-  }
-
-  /**
-   * Assert that edit mode has been properly enabled.
-   */
-  protected function assertEditModeEnabled() {
-    $web_assert = $this->assertSession();
-    // No contextual triggers should be hidden.
-    $web_assert->elementNotExists('css', '.contextual .trigger.visually-hidden');
-    // The toolbar edit button should read "Editing".
-    $web_assert->elementContains('css', static::TOOLBAR_EDIT_LINK_SELECTOR, 'Editing');
-    // The main canvas element should have the "js-outside-in-edit-mode" class.
-    $web_assert->elementExists('css', '.dialog-offcanvas__main-canvas.js-outside-in-edit-mode');
-  }
-
-  /**
-   * Assert that edit mode has been properly disabled.
-   */
-  protected function assertEditModeDisabled() {
-    $web_assert = $this->assertSession();
-    // Contextual triggers should be hidden.
-    $web_assert->elementExists('css', '.contextual .trigger.visually-hidden');
-    // No contextual triggers should be not hidden.
-    $web_assert->elementNotExists('css', '.contextual .trigger:not(.visually-hidden)');
-    // The toolbar edit button should read "Edit".
-    $web_assert->elementContains('css', static::TOOLBAR_EDIT_LINK_SELECTOR, 'Edit');
-    // The main canvas element should NOT have the "js-outside-in-edit-mode"
-    // class.
-    $web_assert->elementNotExists('css', '.dialog-offcanvas__main-canvas.js-outside-in-edit-mode');
-  }
-
-  /**
-   * Press the toolbar Edit button provided by the contextual module.
-   */
-  protected function pressToolbarEditButton() {
-    $this->assertSession()
-      ->waitForElementVisible('css', 'div[data-contextual-id="block:block=powered:langcode=en|outside_in::langcode=en"] .contextual-links a', 10000);
-    // Waiting for QuickEdit icon animation.
-    $this->assertSession()->assertWaitOnAjaxRequest();
-
-    $edit_button = $this->getSession()
-      ->getPage()
-      ->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR);
-
-    $edit_button->press();
-    // Waiting for Toolbar animation.
-    $this->assertSession()->assertWaitOnAjaxRequest();
   }
 
 }
