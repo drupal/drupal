@@ -21,6 +21,19 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
   }
 
   /**
+   * Asserts that a particular component is NOT included in a display.
+   *
+   * @param string $display_id
+   *   The display ID.
+   * @param string $component_id
+   *   The component ID.
+   */
+  protected function assertComponentNotExists($display_id, $component_id) {
+    $component = EntityViewDisplay::load($display_id)->getComponent($component_id);
+    $this->assertNull($component);
+  }
+
+  /**
    * Test that migrated entity display settings can be loaded using D8 API's.
    */
   public function testEntityDisplaySettings() {
@@ -177,6 +190,9 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $this->assertIdentical($expected, $component);
     // Test that our Id map has the correct data.
     $this->assertIdentical(['node', 'story', 'teaser', 'field_test'], $this->getMigration('d6_field_formatter_settings')->getIdMap()->lookupDestinationID(['story', 'teaser', 'node', 'field_test']));
+
+    // Test hidden field.
+    $this->assertComponentNotExists('node.test_planet.teaser', 'field_test_text_single_checkbox');
   }
 
 }
