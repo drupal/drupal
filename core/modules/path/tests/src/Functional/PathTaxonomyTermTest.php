@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\path\Tests;
+namespace Drupal\Tests\path\Functional;
 
 use Drupal\taxonomy\Entity\Vocabulary;
 
