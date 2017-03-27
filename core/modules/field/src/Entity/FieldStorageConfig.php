@@ -18,6 +18,7 @@ use Drupal\field\FieldStorageConfigInterface;
  *   id = "field_storage_config",
  *   label = @Translation("Field storage"),
  *   handlers = {
+ *     "access" = "Drupal\field\FieldStorageConfigAccessControlHandler",
  *     "storage" = "Drupal\field\FieldStorageConfigStorage"
  *   },
  *   config_prefix = "storage",
