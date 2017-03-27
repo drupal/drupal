@@ -9,6 +9,8 @@ use Drupal\views\Controller\ViewAjaxController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @coversDefaultClass \Drupal\views\Controller\ViewAjaxController
@@ -113,18 +115,15 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
   /**
    * Tests missing view_name and view_display_id
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function testMissingViewName() {
     $request = new Request();
+    $this->setExpectedException(NotFoundHttpException::class);
     $this->viewAjaxController->ajaxView($request);
   }
 
   /**
    * Tests with view_name and view_display_id but not existing view.
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function testMissingView() {
     $request = new Request();
@@ -136,13 +135,12 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with('test_view')
       ->will($this->returnValue(FALSE));
 
+    $this->setExpectedException(NotFoundHttpException::class);
     $this->viewAjaxController->ajaxView($request);
   }
 
   /**
    * Tests a view without having access to it.
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
   public function testAccessDeniedView() {
     $request = new Request();
@@ -170,6 +168,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with($view)
       ->will($this->returnValue($executable));
 
+    $this->setExpectedException(AccessDeniedHttpException::class);
     $this->viewAjaxController->ajaxView($request);
   }
 

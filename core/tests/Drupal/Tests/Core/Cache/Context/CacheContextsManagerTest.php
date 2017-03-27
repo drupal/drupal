@@ -105,20 +105,17 @@ class CacheContextsManagerTest extends UnitTestCase {
 
   /**
    * @covers ::convertTokensToKeys
-   *
-   * @expectedException \AssertionError
    */
   public function testInvalidContext() {
     $container = $this->getMockContainer();
     $cache_contexts_manager = new CacheContextsManager($container, $this->getContextsFixture());
 
+    $this->setExpectedException(\AssertionError::class);
     $cache_contexts_manager->convertTokensToKeys(["non-cache-context"]);
   }
 
   /**
    * @covers ::convertTokensToKeys
-   *
-   * @expectedException \Exception
    *
    * @dataProvider providerTestInvalidCalculatedContext
    */
@@ -126,6 +123,7 @@ class CacheContextsManagerTest extends UnitTestCase {
     $container = $this->getMockContainer();
     $cache_contexts_manager = new CacheContextsManager($container, $this->getContextsFixture());
 
+    $this->setExpectedException(\Exception::class);
     $cache_contexts_manager->convertTokensToKeys([$context_token]);
   }
 

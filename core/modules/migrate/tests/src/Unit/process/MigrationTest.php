@@ -3,6 +3,7 @@
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\Migration;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
@@ -89,8 +90,6 @@ class MigrationTest extends MigrateProcessTestCase {
 
   /**
    * Tests that processing is skipped when the input value is empty.
-   *
-   * @expectedException \Drupal\migrate\MigrateSkipProcessException
    */
   public function testSkipOnEmpty() {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
@@ -102,6 +101,7 @@ class MigrationTest extends MigrateProcessTestCase {
     ];
     $migration_plugin->id()->willReturn(uniqid());
     $migration = new Migration($configuration, 'migration', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
+    $this->setExpectedException(MigrateSkipProcessException::class);
     $migration->transform(0, $this->migrateExecutable, $this->row, 'foo');
   }
 

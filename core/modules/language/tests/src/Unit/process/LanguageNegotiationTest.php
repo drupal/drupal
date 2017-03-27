@@ -4,6 +4,7 @@ namespace Drupal\Tests\language\Unit\process;
 
 use Drupal\language\Plugin\migrate\process\LanguageNegotiation;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
+use Drupal\migrate\MigrateException;
 
 /**
  * @coversDefaultClass \Drupal\language\Plugin\migrate\process\LanguageNegotiation
@@ -75,12 +76,10 @@ class LanguageNegotiationTest extends MigrateProcessTestCase {
 
   /**
    * Tests string input.
-   *
-   * @expectedException \Drupal\migrate\MigrateException
-   * @expectedExceptionMessage The input should be an array
    */
   public function testStringInput() {
     $this->plugin = new LanguageNegotiation([], 'map', []);
+    $this->setExpectedException(MigrateException::class, 'The input should be an array');
     $this->plugin->transform('foo', $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 

@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use Drupal\migrate\MigrateException;
+use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\process\StaticMap;
 
 /**
@@ -38,19 +40,17 @@ class StaticMapTest extends MigrateProcessTestCase {
 
   /**
    * Tests when the source is empty.
-   *
-   * @expectedException \Drupal\migrate\MigrateException
    */
   public function testMapwithEmptySource() {
+    $this->setExpectedException(MigrateException::class);
     $this->plugin->transform([], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 
   /**
    * Tests when the source is invalid.
-   *
-   * @expectedException \Drupal\migrate\MigrateSkipRowException
    */
   public function testMapwithInvalidSource() {
+    $this->setExpectedException(MigrateSkipRowException::class);
     $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 
@@ -78,15 +78,13 @@ class StaticMapTest extends MigrateProcessTestCase {
 
   /**
    * Tests when the source is invalid and bypass is enabled.
-   *
-   * @expectedException \Drupal\migrate\MigrateException
-   * @expectedExceptionMessage Setting both default_value and bypass is invalid.
    */
   public function testMapWithInvalidSourceAndBypass() {
     $configuration['map']['foo']['bar'] = 'baz';
     $configuration['default_value'] = 'test';
     $configuration['bypass'] = TRUE;
     $this->plugin = new StaticMap($configuration, 'map', []);
+    $this->setExpectedException(MigrateException::class, 'Setting both default_value and bypass is invalid.');
     $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 

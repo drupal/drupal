@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Component\Serialization;
 
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\YamlPecl;
 
 /**
@@ -74,9 +75,9 @@ foo:
    * Tests that invalid YAML throws an exception.
    *
    * @covers ::errorHandler
-   * @expectedException \Drupal\Component\Serialization\Exception\InvalidDataTypeException
    */
   public function testError() {
+    $this->setExpectedException(InvalidDataTypeException::class);
     YamlPecl::decode('foo: [ads');
   }
 

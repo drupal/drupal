@@ -14,11 +14,10 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
 
   /**
    * @covers ::invalidateTags
-   *
-   * @expectedException \AssertionError
    */
   public function testInvalidateTagsWithInvalidTags() {
     $cache_tags_invalidator = new CacheTagsInvalidator();
+    $this->setExpectedException(\AssertionError::class);
     $cache_tags_invalidator->invalidateTags(['node' => [2, 3, 5, 8, 13]]);
   }
 

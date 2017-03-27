@@ -56,17 +56,17 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
 
   /**
    * @covers ::assemble
-   * @expectedException \InvalidArgumentException
    */
   public function testAssembleWithNeitherExternalNorDomainLocalUri() {
+    $this->setExpectedException(\InvalidArgumentException::class);
     $this->unroutedUrlAssembler->assemble('wrong-url');
   }
 
   /**
    * @covers ::assemble
-   * @expectedException \InvalidArgumentException
    */
   public function testAssembleWithLeadingSlash() {
+    $this->setExpectedException(\InvalidArgumentException::class);
     $this->unroutedUrlAssembler->assemble('/drupal.org');
   }
 

@@ -8,6 +8,7 @@
 namespace Drupal\Tests\system\Kernel\Scripts;
 
 use Drupal\Core\Command\DbCommandBase;
+use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,8 +43,6 @@ class DbCommandBaseTest extends KernelTestBase {
 
   /**
    * Invalid database names will throw a useful exception.
-   *
-   * @expectedException \Drupal\Core\Database\ConnectionNotDefinedException
    */
   public function testSpecifyDatabaseDoesNotExist() {
     $command = new DbCommandBaseTester();
@@ -51,6 +50,7 @@ class DbCommandBaseTest extends KernelTestBase {
     $command_tester->execute([
       '--database' => 'dne'
     ]);
+    $this->setExpectedException(ConnectionNotDefinedException::class);
     $command->getDatabaseConnection($command_tester->getInput());
   }
 

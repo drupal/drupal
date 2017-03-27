@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Plugin;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 
 /**
@@ -43,11 +44,10 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
 
   /**
    * @covers ::get
-   * @expectedException \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @expectedExceptionMessage Plugin ID 'pear' was not found.
    */
   public function testGetNotExistingPlugin() {
     $this->setupPluginCollection();
+    $this->setExpectedException(PluginNotFoundException::class, "Plugin ID 'pear' was not found.");
     $this->defaultPluginCollection->get('pear');
   }
 

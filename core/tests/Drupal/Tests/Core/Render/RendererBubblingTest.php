@@ -571,9 +571,6 @@ class RendererBubblingTest extends RendererTestBase {
 
   /**
    * Tests that an element's cache keys cannot be changed during its rendering.
-   *
-   * @expectedException \LogicException
-   * @expectedExceptionMessage Cache keys may not be changed after initial setup. Use the contexts property instead to bubble additional metadata.
    */
   public function testOverWriteCacheKeys() {
     $this->setUpRequest();
@@ -586,6 +583,7 @@ class RendererBubblingTest extends RendererTestBase {
        ],
       '#pre_render' => [__NAMESPACE__ . '\\BubblingTest::bubblingCacheOverwritePrerender'],
     ];
+    $this->setExpectedException(\LogicException::class, 'Cache keys may not be changed after initial setup. Use the contexts property instead to bubble additional metadata.');
     $this->renderer->renderRoot($data);
   }
 

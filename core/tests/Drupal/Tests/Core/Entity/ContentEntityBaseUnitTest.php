@@ -358,9 +358,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::setValidationRequired
    * @covers ::save
    * @covers ::preSave
-   *
-   * @expectedException \LogicException
-   * @expectedExceptionMessage Entity validation was skipped.
    */
   public function testRequiredValidation() {
     $validator = $this->getMock('\Symfony\Component\Validator\ValidatorInterface');
@@ -405,6 +402,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     // that trying to save a non-validated entity when validation is required
     // results in an exception.
     $this->assertTrue($this->entity->isValidationRequired());
+    $this->setExpectedException(\LogicException::class, 'Entity validation was skipped.');
     $this->entity->save();
   }
 

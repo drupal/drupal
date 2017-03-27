@@ -87,8 +87,6 @@ class AccessAwareRouterTest extends UnitTestCase {
 
   /**
    * Tests the matchRequest() function for access denied.
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
   public function testMatchRequestDenied() {
     $this->setupRouter();
@@ -98,12 +96,8 @@ class AccessAwareRouterTest extends UnitTestCase {
       ->method('checkRequest')
       ->with($request)
       ->willReturn($access_result);
-    $parameters = $this->router->matchRequest($request);
-    $expected = [
-      AccessAwareRouterInterface::ACCESS_RESULT => $access_result,
-    ];
-    $this->assertSame($expected, $request->attributes->all());
-    $this->assertSame($expected, $parameters);
+    $this->setExpectedException(AccessDeniedHttpException::class);
+    $this->router->matchRequest($request);
   }
 
   /**

@@ -98,6 +98,9 @@
   <rule ref="Drupal.WhiteSpace.OperatorSpacing"/>
   <rule ref="Drupal.WhiteSpace.ScopeIndent"/>
 
+  <!-- Drupal Practice sniffs -->
+  <rule ref="DrupalPractice.Commenting.ExpectedException"/>
+
   <!-- Generic sniffs -->
   <rule ref="Generic.Files.LineEndings"/>
   <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>

@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Entity\ConfigEntityType;
+use Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityType
@@ -79,11 +80,9 @@ class ConfigEntityTypeTest extends UnitTestCase {
 
   /**
    * @covers ::__construct
-   *
-   * @expectedException \Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException
-   * @expectedExceptionMessage \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it
    */
   public function testConstructBadStorage() {
+    $this->setExpectedException(ConfigEntityStorageClassException::class, '\Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it');
     new ConfigEntityType([
       'id' => 'example_config_entity_type',
       'handlers' => ['storage' => '\Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage']
@@ -92,12 +91,10 @@ class ConfigEntityTypeTest extends UnitTestCase {
 
   /**
    * @covers ::setStorageClass
-   *
-   * @expectedException \Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException
-   * @expectedExceptionMessage \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it
    */
   public function testSetStorageClass() {
     $config_entity = $this->setUpConfigEntityType([]);
+    $this->setExpectedException(ConfigEntityStorageClassException::class, '\Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it');
     $config_entity->setStorageClass('\Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage');
   }
 

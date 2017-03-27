@@ -35,43 +35,38 @@ class ContainerBuilderTest extends UnitTestCase {
 
   /**
    * @covers ::set
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage Service ID names must be lowercase: Bar
    */
   public function testSetException() {
     $container = new ContainerBuilder();
     $class = new BarClass();
+    $this->setExpectedException(\InvalidArgumentException::class, 'Service ID names must be lowercase: Bar');
     $container->set('Bar', $class);
-    $this->assertNotEquals('bar', $class->_serviceId);
   }
 
   /**
    * @covers ::setParameter
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage Parameter names must be lowercase: Buzz
    */
   public function testSetParameterException() {
     $container = new ContainerBuilder();
+    $this->setExpectedException(\InvalidArgumentException::class, 'Parameter names must be lowercase: Buzz');
     $container->setParameter('Buzz', 'buzz');
   }
 
   /**
    * @covers ::register
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage Service ID names must be lowercase: Bar
    */
   public function testRegisterException() {
     $container = new ContainerBuilder();
+    $this->setExpectedException(\InvalidArgumentException::class, 'Service ID names must be lowercase: Bar');
     $container->register('Bar');
   }
 
   /**
    * Tests serialization.
-   *
-   * @expectedException \AssertionError
    */
   public function testSerialize() {
     $container = new ContainerBuilder();
+    $this->setExpectedException(\AssertionError::class);
     serialize($container);
   }
 

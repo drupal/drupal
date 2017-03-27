@@ -7,6 +7,9 @@
 
 namespace Drupal\Tests\Core\Asset;
 
+use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
+use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
+use Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException;
 use Drupal\Core\Asset\LibraryDiscoveryParser;
 use Drupal\Tests\UnitTestCase;
 
@@ -143,8 +146,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests that an exception is thrown when a libraries file couldn't be parsed.
    *
-   * @expectedException \Drupal\Core\Asset\Exception\InvalidLibraryFileException
-   *
    * @covers ::buildByExtension
    */
   public function testInvalidLibrariesFile() {
@@ -157,14 +158,12 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'invalid_file', $path);
 
+    $this->setExpectedException(InvalidLibraryFileException::class);
     $this->libraryDiscoveryParser->buildByExtension('invalid_file');
   }
 
   /**
    * Tests that an exception is thrown when no CSS/JS/setting is specified.
-   *
-   * @expectedException \Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException
-   * @expectedExceptionMessage Incomplete library definition for definition 'example' in extension 'example_module_missing_information'
    *
    * @covers ::buildByExtension
    */
@@ -178,6 +177,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'example_module_missing_information', $path);
 
+    $this->setExpectedException(IncompleteLibraryDefinitionException::class, "Incomplete library definition for definition 'example' in extension 'example_module_missing_information'");
     $this->libraryDiscoveryParser->buildByExtension('example_module_missing_information');
   }
 
@@ -276,8 +276,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Ensures that you cannot provide positive weights for JavaScript libraries.
    *
-   * @expectedException \UnexpectedValueException
-   *
    * @covers ::buildByExtension
    */
   public function testJsWithPositiveWeight() {
@@ -290,6 +288,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'js_positive_weight', $path);
 
+    $this->setExpectedException(\UnexpectedValueException::class);
     $this->libraryDiscoveryParser->buildByExtension('js_positive_weight');
   }
 
@@ -403,9 +402,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests that an exception is thrown when license is missing when 3rd party.
    *
-   * @expectedException \Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException
-   * @expectedExceptionMessage Missing license information in library definition for definition 'no-license-info-but-remote' extension 'licenses_missing_information': it has a remote, but no license.
-   *
    * @covers ::buildByExtension
    */
   public function testLibraryThirdPartyWithMissingLicense() {
@@ -418,6 +414,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'licenses_missing_information', $path);
 
+    $this->setExpectedException(LibraryDefinitionMissingLicenseException::class, "Missing license information in library definition for definition 'no-license-info-but-remote' extension 'licenses_missing_information': it has a remote, but no license.");
     $this->libraryDiscoveryParser->buildByExtension('licenses_missing_information');
   }
 
