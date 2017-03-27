@@ -189,8 +189,12 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       // 201 Created responses return the newly created entity in the response
       // body. These responses are not cacheable, so we add no cacheability
       // metadata here.
-      $url = $entity->urlInfo('canonical', ['absolute' => TRUE])->toString(TRUE);
-      return new ModifiedResourceResponse($entity, 201, ['Location' => $url->getGeneratedUrl()]);
+      $headers = [];
+      if (in_array('canonical', $entity->uriRelationships(), TRUE)) {
+        $url = $entity->urlInfo('canonical', ['absolute' => TRUE])->toString(TRUE);
+        $headers['Location'] = $url->getGeneratedUrl();
+      }
+      return new ModifiedResourceResponse($entity, 201, $headers);
     }
     catch (EntityStorageException $e) {
       throw new HttpException(500, 'Internal Server Error', $e);
