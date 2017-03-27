@@ -69,11 +69,30 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     $this->assertEntity(1, 'Image1.png', '39325', 'public://image-1.png', 'image/png', '1');
     $this->assertEntity(2, 'Image2.jpg', '1831', 'public://image-2.jpg', 'image/jpeg', '1');
     $this->assertEntity(3, 'Image-test.gif', '183', 'public://image-test.gif', 'image/jpeg', '1');
-    $this->assertEntity(5, 'html-1.txt', '24', 'public://html-1.txt', 'text/plain', '1');
+    $this->assertEntity(4, 'html-1.txt', '24', 'public://html-1.txt', 'text/plain', '1');
+
+    $map_table = $this->getMigration('d6_file')->getIdMap()->mapTableName();
+    $map = \Drupal::database()
+      ->select($map_table, 'm')
+      ->fields('m', ['sourceid1', 'destid1'])
+      ->execute()
+      ->fetchAllKeyed();
+    $map_expected = [
+      // The 4 files from the fixture.
+      1 => '1',
+      2 => '2',
+      3 => '3',
+      5 => '4',
+      // The file updated in migrateDumpAlter().
+      6 => NULL,
+      // The file created in migrateDumpAlter().
+      7 => '4',
+    ];
+    $this->assertEquals($map_expected, $map);
 
     // Test that we can re-import and also test with file_directory_path set.
     \Drupal::database()
-      ->truncate($this->getMigration('d6_file')->getIdMap()->mapTableName())
+      ->truncate($map_table)
       ->execute();
 
     // Update the file_directory_path.
@@ -90,12 +109,37 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
 
     $this->executeMigration('d6_file');
 
-    $file = File::load(2);
+    // File 2, when migrated for the second time, is treated as a different file
+    // (due to having a different uri this time) and is given fid 6.
+    $file = File::load(6);
     $this->assertIdentical('public://core/modules/simpletest/files/image-2.jpg', $file->getFileUri());
 
-    // File 7, created in static::migrateDumpAlter(), shares a path with
-    // file 5, which means it should be skipped entirely.
-    $this->assertNull(File::load(7));
+    $map_table = $this->getMigration('d6_file')->getIdMap()->mapTableName();
+    $map = \Drupal::database()
+      ->select($map_table, 'm')
+      ->fields('m', ['sourceid1', 'destid1'])
+      ->execute()
+      ->fetchAllKeyed();
+    $map_expected = [
+      // The 4 files from the fixture.
+      1 => '5',
+      2 => '6',
+      3 => '7',
+      5 => '8',
+      // The file updated in migrateDumpAlter().
+      6 => NULL,
+      // The files created in migrateDumpAlter().
+      7 => '8',
+      8 => '8',
+    ];
+    $this->assertEquals($map_expected, $map);
+
+    // File 6, created in static::migrateDumpAlter(), shares a path with
+    // file 4, which means it should be skipped entirely. If it was migrated
+    // then it would have an fid of 9.
+    $this->assertNull(File::load(9));
+
+    $this->assertEquals(8, count(File::loadMultiple()));
   }
 
   /**
