@@ -12,6 +12,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
@@ -149,10 +150,10 @@ class MigrateSourceTest extends MigrateTestCase {
 
   /**
    * @covers ::__construct
-   * @expectedException \Drupal\migrate\MigrateException
    */
   public function testHighwaterTrackChangesIncompatible() {
     $source_config = ['track_changes' => TRUE, 'high_water_property' => ['name' => 'something']];
+    $this->setExpectedException(MigrateException::class);
     $this->getSource($source_config);
   }
 

@@ -82,10 +82,9 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
 
   /**
    * Ensures invalid content is handled correctly.
-   *
-   * @expectedException \Exception
    */
   public function testThemeEscapeAndRenderNotPrintable() {
+    $this->setExpectedException(\Exception::class);
     theme_render_and_autoescape(new NonPrintable());
   }
 

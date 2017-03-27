@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Menu;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Menu\ContextualLinkDefault;
@@ -204,8 +205,6 @@ class ContextualLinkManagerTest extends UnitTestCase {
    * Tests processDefinition() by passing a plugin definition without a route.
    *
    * @see \Drupal\Core\Menu\ContextualLinkManager::processDefinition()
-   *
-   * @expectedException \Drupal\Component\Plugin\Exception\PluginException
    */
   public function testProcessDefinitionWithoutRoute() {
     $definition = [
@@ -213,6 +212,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
       'group' => 'example',
       'id' => 'test_plugin',
     ];
+    $this->setExpectedException(PluginException::class);
     $this->contextualLinkManager->processDefinition($definition, 'test_plugin');
   }
 
@@ -220,8 +220,6 @@ class ContextualLinkManagerTest extends UnitTestCase {
    * Tests processDefinition() by passing a plugin definition without a group.
    *
    * @see \Drupal\Core\Menu\ContextualLinkManager::processDefinition()
-   *
-   * @expectedException \Drupal\Component\Plugin\Exception\PluginException
    */
   public function testProcessDefinitionWithoutGroup() {
     $definition = [
@@ -229,6 +227,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
       'route_name' => 'example',
       'id' => 'test_plugin',
     ];
+    $this->setExpectedException(PluginException::class);
     $this->contextualLinkManager->processDefinition($definition, 'test_plugin');
   }
 

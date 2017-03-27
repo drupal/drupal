@@ -63,7 +63,6 @@ class ChainRequestPolicyTest extends UnitTestCase {
   /**
    * Asserts that check() throws an exception if a rule returns an invalid value.
    *
-   * @expectedException \UnexpectedValueException
    * @dataProvider providerChainExceptionOnInvalidReturnValue
    * @covers ::check
    */
@@ -76,6 +75,7 @@ class ChainRequestPolicyTest extends UnitTestCase {
 
     $this->policy->addPolicy($rule);
 
+    $this->setExpectedException(\UnexpectedValueException::class);
     $this->policy->check($this->request);
   }
 

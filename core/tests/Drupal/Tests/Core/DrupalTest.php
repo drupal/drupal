@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core;
 
+use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryAggregateInterface;
@@ -47,11 +48,9 @@ class DrupalTest extends UnitTestCase {
 
   /**
    * @covers ::getContainer
-   *
-   * @expectedException \Drupal\Core\DependencyInjection\ContainerNotInitializedException
-   * @expectedExceptionMessage \Drupal::$container is not initialized yet. \Drupal::setContainer() must be called with a real container.
    */
   public function testGetContainerException() {
+    $this->setExpectedException(ContainerNotInitializedException::class, '\Drupal::$container is not initialized yet. \Drupal::setContainer() must be called with a real container.');
     \Drupal::getContainer();
   }
 

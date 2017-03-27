@@ -146,10 +146,9 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * @covers ::getModule
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testGetModuleWithNonExistingModule() {
+    $this->setExpectedException(\InvalidArgumentException::class);
     $this->moduleHandler->getModule('claire_alice_watch_my_little_pony_module_that_does_not_exist');
   }
 

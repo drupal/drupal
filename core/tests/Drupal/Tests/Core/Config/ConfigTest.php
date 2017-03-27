@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Render\Markup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ConfigValueException;
 
 /**
  * Tests the Config.
@@ -230,21 +231,21 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * @covers ::set
-   * @expectedException \Drupal\Core\Config\ConfigValueException
    */
   public function testSetValidation() {
+    $this->setExpectedException(ConfigValueException::class);
     $this->config->set('testData', ['dot.key' => 1]);
   }
 
   /**
    * @covers ::set
-   * @expectedException PHPUnit_Framework_Error_Warning
    */
   public function testSetIllegalOffsetValue() {
     // Set a single value.
     $this->config->set('testData', 1);
 
     // Attempt to treat the single value as a nested item.
+    $this->setExpectedException(\PHPUnit_Framework_Error_Warning::class);
     $this->config->set('testData.illegalOffset', 1);
   }
 
@@ -383,7 +384,6 @@ class ConfigTest extends UnitTestCase {
 
   /**
    * @covers ::validateName
-   * @expectedException \Drupal\Core\Config\ConfigNameException
    * @dataProvider validateNameProvider
    */
   public function testValidateNameException($name, $exception_message) {

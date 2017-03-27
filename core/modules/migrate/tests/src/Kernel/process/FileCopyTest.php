@@ -139,13 +139,10 @@ class FileCopyTest extends FileTestBase {
 
   /**
    * Test that non-existent files throw an exception.
-   *
-   * @expectedException \Drupal\migrate\MigrateException
-   *
-   * @expectedExceptionMessage File '/non/existent/file' does not exist
    */
   public function testNonExistentSourceFile() {
     $source = '/non/existent/file';
+    $this->setExpectedException(MigrateException::class, "File '/non/existent/file' does not exist");
     $this->doTransform($source, 'public://wontmatter.jpg');
   }
 

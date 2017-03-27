@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\ParamConverter;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\ParamConverter\EntityConverter;
+use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
 
@@ -110,8 +111,6 @@ class EntityConverterTest extends UnitTestCase {
 
   /**
    * Tests the convert() method with an invalid entity type.
-   *
-   * @expectedException \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function testConvertWithInvalidEntityType() {
     $this->entityManager->expects($this->once())
@@ -119,16 +118,15 @@ class EntityConverterTest extends UnitTestCase {
       ->with('invalid_id')
       ->willThrowException(new InvalidPluginDefinitionException('invalid_id'));
 
+    $this->setExpectedException(InvalidPluginDefinitionException::class);
     $this->entityConverter->convert('id', ['type' => 'entity:invalid_id'], 'foo', ['foo' => 'id']);
   }
 
   /**
    * Tests the convert() method with an invalid dynamic entity type.
-   *
-   * @expectedException \Drupal\Core\ParamConverter\ParamNotConvertedException
-   * @expectedExceptionMessage The "foo" parameter was not converted because the "invalid_id" parameter is missing
    */
   public function testConvertWithInvalidDynamicEntityType() {
+    $this->setExpectedException(ParamNotConvertedException::class, 'The "foo" parameter was not converted because the "invalid_id" parameter is missing');
     $this->entityConverter->convert('id', ['type' => 'entity:{invalid_id}'], 'foo', ['foo' => 'id']);
   }
 

@@ -120,19 +120,17 @@ class ControllerResolverTest extends UnitTestCase {
 
   /**
    * Tests createController() with a non-existent class.
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testCreateControllerNonExistentClass() {
+    $this->setExpectedException(\InvalidArgumentException::class);
     $this->controllerResolver->getControllerFromDefinition('Class::method');
   }
 
   /**
    * Tests createController() with an invalid name.
-   *
-   * @expectedException \LogicException
    */
   public function testCreateControllerInvalidName() {
+    $this->setExpectedException(\LogicException::class);
     $this->controllerResolver->getControllerFromDefinition('ClassWithoutMethod');
   }
 
@@ -191,10 +189,9 @@ class ControllerResolverTest extends UnitTestCase {
   }
   /**
    * Tests getControllerFromDefinition() without a callable.
-   *
-   * @expectedException \InvalidArgumentException
    */
   public function testGetControllerFromDefinitionNotCallable() {
+    $this->setExpectedException(\InvalidArgumentException::class);
     $this->controllerResolver->getControllerFromDefinition('Drupal\Tests\Core\Controller\MockController::bananas');
   }
 

@@ -96,8 +96,8 @@ class QueryFactoryTest extends UnitTestCase {
   }
 
   /**
-   * @expectedException \LogicException
-   * @expectedExceptionMessage test_config_entity_type lookup key test.* ends with a wildcard this can not be used as a lookup
+   * @covers ::getKeys
+   * @covers ::getValues
    */
   public function testGetKeysWildCardEnd() {
     $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
@@ -111,6 +111,7 @@ class QueryFactoryTest extends UnitTestCase {
 
     $method = new \ReflectionMethod($query_factory, 'getKeys');
     $method->setAccessible(TRUE);
+    $this->setExpectedException(\LogicException::class, 'test_config_entity_type lookup key test.* ends with a wildcard this can not be used as a lookup');
     $method->invoke($query_factory, $this->getConfigObject('test'), 'test.*', 'get', $config_entity_type);
   }
 

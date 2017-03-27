@@ -27,9 +27,6 @@ class MigrationTest extends UnitTestCase {
    * Tests checking requirements for source plugins.
    *
    * @covers ::checkRequirements
-   *
-   * @expectedException \Drupal\migrate\Exception\RequirementsException
-   * @expectedExceptionMessage Missing source requirement
    */
   public function testRequirementsForSourcePlugin() {
     $migration = new TestMigration();
@@ -43,6 +40,7 @@ class MigrationTest extends UnitTestCase {
     $migration->setSourcePlugin($source_plugin);
     $migration->setDestinationPlugin($destination_plugin);
 
+    $this->setExpectedException(RequirementsException::class, 'Missing source requirement');
     $migration->checkRequirements();
   }
 
@@ -50,9 +48,6 @@ class MigrationTest extends UnitTestCase {
    * Tests checking requirements for destination plugins.
    *
    * @covers ::checkRequirements
-   *
-   * @expectedException \Drupal\migrate\Exception\RequirementsException
-   * @expectedExceptionMessage Missing destination requirement
    */
   public function testRequirementsForDestinationPlugin() {
     $migration = new TestMigration();
@@ -66,6 +61,7 @@ class MigrationTest extends UnitTestCase {
     $migration->setSourcePlugin($source_plugin);
     $migration->setDestinationPlugin($destination_plugin);
 
+    $this->setExpectedException(RequirementsException::class, 'Missing destination requirement');
     $migration->checkRequirements();
   }
 
@@ -73,9 +69,6 @@ class MigrationTest extends UnitTestCase {
    * Tests checking requirements for destination plugins.
    *
    * @covers ::checkRequirements
-   *
-   * @expectedException \Drupal\migrate\Exception\RequirementsException
-   * @expectedExceptionMessage Missing migrations test_a, test_c
    */
   public function testRequirementsForMigrations() {
     $migration = new TestMigration();
@@ -112,6 +105,7 @@ class MigrationTest extends UnitTestCase {
       ->with(['test_a', 'test_b', 'test_c', 'test_d'])
       ->willReturn(['test_b' => $migration_b, 'test_c' => $migration_c, 'test_d' => $migration_d]);
 
+    $this->setExpectedException(RequirementsException::class, 'Missing migrations test_a, test_c');
     $migration->checkRequirements();
   }
 

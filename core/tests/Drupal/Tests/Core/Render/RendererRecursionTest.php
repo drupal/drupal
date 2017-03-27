@@ -31,8 +31,6 @@ class RendererRecursionTest extends RendererTestBase {
    * @covers ::renderRoot
    * @covers ::render
    * @covers ::doRender
-   *
-   * @expectedException \LogicException
    */
   public function testRenderRecursionWithNestedRenderRoot() {
     list($complex_child_markup, $parent_markup, $complex_child_template) = $this->setUpRenderRecursionComplexElements();
@@ -41,6 +39,7 @@ class RendererRecursionTest extends RendererTestBase {
 
     $complex_child = $complex_child_template;
     $callable = function () use ($renderer, $complex_child) {
+      $this->setExpectedException(\LogicException::class);
       $renderer->renderRoot($complex_child);
     };
 

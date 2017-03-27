@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\Concat;
 
 /**
@@ -34,10 +35,9 @@ class ConcatTest extends MigrateProcessTestCase {
 
   /**
    * Test concat fails properly on non-arrays.
-   *
-   * @expectedException \Drupal\migrate\MigrateException
    */
   public function testConcatWithNonArray() {
+    $this->setExpectedException(MigrateException::class);
     $this->plugin->transform('foo', $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 

@@ -50,9 +50,6 @@ class InfoParserUnitTest extends UnitTestCase {
    * Test if correct exception is thrown for a broken info file.
    *
    * @covers ::parse
-   *
-   * @expectedException \Drupal\Core\Extension\InfoParserException
-   * @expectedExceptionMessageRegExp #broken\.info\.txt#
    */
   public function testInfoParserBroken() {
     $broken_info = <<<BROKEN_INFO
@@ -74,6 +71,7 @@ BROKEN_INFO;
       ],
     ]);
     $filename = vfsStream::url('modules/fixtures/broken.info.txt');
+    $this->setExpectedException('\Drupal\Core\Extension\InfoParserException', 'broken.info.txt');
     $this->infoParser->parse($filename);
   }
 
@@ -81,9 +79,6 @@ BROKEN_INFO;
    * Tests that missing required keys are detected.
    *
    * @covers ::parse
-   *
-   * @expectedException \Drupal\Core\Extension\InfoParserException
-   * @expectedExceptionMessageRegExp #Missing required keys \(type, core, name\) in .+?missing_keys\.info\.txt#
    */
   public function testInfoParserMissingKeys() {
     $missing_keys = <<<MISSINGKEYS
@@ -101,6 +96,7 @@ MISSINGKEYS;
       ],
     ]);
     $filename = vfsStream::url('modules/fixtures/missing_keys.info.txt');
+    $this->setExpectedException('\Drupal\Core\Extension\InfoParserException', 'Missing required keys (type, core, name) in vfs://modules/fixtures/missing_keys.info.txt');
     $this->infoParser->parse($filename);
   }
 
@@ -108,9 +104,6 @@ MISSINGKEYS;
    * Tests that missing required key is detected.
    *
    * @covers ::parse
-   *
-   * @expectedException \Drupal\Core\Extension\InfoParserException
-   * @expectedExceptionMessageRegExp #Missing required keys \(type\) in .+?missing_key\.info\.txt#
    */
   public function testInfoParserMissingKey() {
     $missing_key = <<<MISSINGKEY
@@ -131,6 +124,7 @@ MISSINGKEY;
       ],
     ]);
     $filename = vfsStream::url('modules/fixtures/missing_key.info.txt');
+    $this->setExpectedException('\Drupal\Core\Extension\InfoParserException', 'Missing required keys (type) in vfs://modules/fixtures/missing_key.info.txt');
     $this->infoParser->parse($filename);
   }
 

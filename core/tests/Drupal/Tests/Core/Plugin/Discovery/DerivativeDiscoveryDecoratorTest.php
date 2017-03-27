@@ -134,9 +134,6 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
    * Tests the getDerivativeFetcher method with a non-existent class.
    *
    * @see \Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator::getDeriver().\
-   *
-   * @expectedException \Drupal\Component\Plugin\Exception\InvalidDeriverException
-   * @expectedExceptionMessage Plugin (non_existent_discovery) deriver "\Drupal\system\Tests\Plugin\NonExistentDeriver" does not exist.
    */
   public function testNonExistentDerivativeFetcher() {
     $definitions = [];
@@ -150,6 +147,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
       ->will($this->returnValue($definitions));
 
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
+    $this->setExpectedException(InvalidDeriverException::class, 'Plugin (non_existent_discovery) deriver "\Drupal\system\Tests\Plugin\NonExistentDeriver" does not exist.');
     $discovery->getDefinitions();
   }
 
@@ -157,9 +155,6 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
    * Tests the getDerivativeFetcher method with an invalid class.
    *
    * @see \Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator::getDeriver().\
-   *
-   * @expectedException \Drupal\Component\Plugin\Exception\InvalidDeriverException
-   * @expectedExceptionMessage Plugin (invalid_discovery) deriver "\Drupal\KernelTests\Core\Plugin\DerivativeTest" must implement \Drupal\Component\Plugin\Derivative\DeriverInterface.
    */
   public function testInvalidDerivativeFetcher() {
     $definitions = [];
@@ -173,6 +168,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
       ->will($this->returnValue($definitions));
 
     $discovery = new DerivativeDiscoveryDecorator($this->discoveryMain);
+    $this->setExpectedException(InvalidDeriverException::class, 'Plugin (invalid_discovery) deriver "\Drupal\KernelTests\Core\Plugin\DerivativeTest" must implement \Drupal\Component\Plugin\Derivative\DeriverInterface.');
     $discovery->getDefinitions();
   }
 

@@ -107,10 +107,10 @@ class SafeMarkupKernelTest extends KernelTestBase {
 
   /**
    * @dataProvider providerTestSafeMarkupUriWithException
-   * @expectedException \InvalidArgumentException
    */
   public function testSafeMarkupUriWithExceptionUri($string, $uri) {
     // Should throw an \InvalidArgumentException, due to Uri::toString().
+    $this->setExpectedException(\InvalidArgumentException::class);
     $args = self::getSafeMarkupUriArgs($uri);
 
     SafeMarkup::format($string, $args);

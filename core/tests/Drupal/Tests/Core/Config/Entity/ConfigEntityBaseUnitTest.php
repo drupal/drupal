@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\DefaultLazyPluginCollection;
@@ -567,13 +568,12 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * @covers ::toArray
-   *
-   * @expectedException \Drupal\Core\Config\Schema\SchemaIncompleteException
    */
   public function testToArrayFallback() {
     $this->entityType->expects($this->any())
       ->method('getPropertiesToExport')
       ->willReturn([]);
+    $this->setExpectedException(SchemaIncompleteException::class);
     $this->entity->toArray();
   }
 

@@ -132,13 +132,11 @@ class FormStateTest extends UnitTestCase {
    * Tests that form errors during submission throw an exception.
    *
    * @covers ::setErrorByName
-   *
-   * @expectedException \LogicException
-   * @expectedExceptionMessage Form errors cannot be set after form validation has finished.
    */
   public function testFormErrorsDuringSubmission() {
     $form_state = new FormState();
     $form_state->setValidationComplete();
+    $this->setExpectedException(\LogicException::class, 'Form errors cannot be set after form validation has finished.');
     $form_state->setErrorByName('test', 'message');
   }
 
@@ -315,13 +313,11 @@ class FormStateTest extends UnitTestCase {
 
   /**
    * @covers ::setCached
-   *
-   * @expectedException \LogicException
-   * @expectedExceptionMessage Form state caching on GET requests is not allowed.
    */
   public function testSetCachedGet() {
     $form_state = new FormState();
     $form_state->setRequestMethod('GET');
+    $this->setExpectedException(\LogicException::class, 'Form state caching on GET requests is not allowed.');
     $form_state->setCached();
   }
 

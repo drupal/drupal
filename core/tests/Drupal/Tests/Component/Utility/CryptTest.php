@@ -69,7 +69,6 @@ class CryptTest extends UnitTestCase {
    * Tests the hmacBase64 method with invalid parameters.
    *
    * @dataProvider providerTestHmacBase64Invalid
-   * @expectedException InvalidArgumentException
    * @covers ::hmacBase64
    *
    * @param string $data
@@ -78,6 +77,7 @@ class CryptTest extends UnitTestCase {
    *   Key to use in hashing process.
    */
   public function testHmacBase64Invalid($data, $key) {
+    $this->setExpectedException(\InvalidArgumentException::class);
     Crypt::hmacBase64($data, $key);
   }
 

@@ -80,12 +80,11 @@ class SettingsTest extends UnitTestCase {
    * @covers ::getHashSalt
    *
    * @dataProvider providerTestGetHashSaltEmpty
-   *
-   * @expectedException \RuntimeException
    */
   public function testGetHashSaltEmpty(array $config) {
     // Re-create settings with no 'hash_salt' key.
     $settings = new Settings($config);
+    $this->setExpectedException(\RuntimeException::class);
     $settings->getHashSalt();
   }
 
@@ -106,10 +105,9 @@ class SettingsTest extends UnitTestCase {
    * Ensures settings cannot be serialized.
    *
    * @covers ::__sleep
-   *
-   * @expectedException \LogicException
    */
   public function testSerialize() {
+    $this->setExpectedException(\LogicException::class);
     serialize(new Settings([]));
   }
 

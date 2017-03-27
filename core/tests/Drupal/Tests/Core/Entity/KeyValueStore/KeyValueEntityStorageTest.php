@@ -5,6 +5,8 @@ namespace Drupal\Tests\Core\Entity\KeyValueStore;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage;
@@ -439,29 +441,24 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   /**
    * @covers ::save
    * @covers ::doSave
-   *
-   * @expectedException \Drupal\Core\Entity\EntityMalformedException
-   * @expectedExceptionMessage The entity does not have an ID.
    */
   public function testSaveInvalid() {
     $this->setUpKeyValueEntityStorage();
 
     $entity = $this->getMockEntity('Drupal\Core\Config\Entity\ConfigEntityBase');
-    $this->entityStorage->save($entity);
     $this->keyValueStore->expects($this->never())
       ->method('has');
     $this->keyValueStore->expects($this->never())
       ->method('set');
     $this->keyValueStore->expects($this->never())
       ->method('delete');
+    $this->setExpectedException(EntityMalformedException::class, 'The entity does not have an ID.');
+    $this->entityStorage->save($entity);
   }
 
   /**
    * @covers ::save
    * @covers ::doSave
-   *
-   * @expectedException \Drupal\Core\Entity\EntityStorageException
-   * @expectedExceptionMessage 'test_entity_type' entity with ID 'foo' already exists
    */
   public function testSaveDuplicate() {
     $this->setUpKeyValueEntityStorage();
@@ -475,6 +472,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->method('set');
     $this->keyValueStore->expects($this->never())
       ->method('delete');
+    $this->setExpectedException(EntityStorageException::class, "'test_entity_type' entity with ID 'foo' already exists");
     $this->entityStorage->save($entity);
   }
 

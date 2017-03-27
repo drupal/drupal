@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Config\ImmutableConfigException;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -28,37 +29,33 @@ class ImmutableConfigTest extends UnitTestCase {
 
   /**
    * @covers ::set
-   * @expectedException \Drupal\Core\Config\ImmutableConfigException
-   * @expectedExceptionMessage Can not set values on immutable configuration test:name. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object
    */
   public function testSet() {
+    $this->setExpectedException(ImmutableConfigException::class, 'Can not set values on immutable configuration test:name. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object');
     $this->config->set('name', 'value');
   }
 
   /**
    * @covers ::clear
-   * @expectedException \Drupal\Core\Config\ImmutableConfigException
-   * @expectedExceptionMessage Can not clear name key in immutable configuration test. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object
    */
   public function testClear() {
+    $this->setExpectedException(ImmutableConfigException::class, 'Can not clear name key in immutable configuration test. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object');
     $this->config->clear('name');
   }
 
   /**
    * @covers ::save
-   * @expectedException \Drupal\Core\Config\ImmutableConfigException
-   * @expectedExceptionMessage Can not save immutable configuration test. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object
    */
   public function testSave() {
+    $this->setExpectedException(ImmutableConfigException::class, 'Can not save immutable configuration test. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object');
     $this->config->save();
   }
 
   /**
    * @covers ::delete
-   * @expectedException \Drupal\Core\Config\ImmutableConfigException
-   * @expectedExceptionMessage Can not delete immutable configuration test. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object
    */
   public function testDelete() {
+    $this->setExpectedException(ImmutableConfigException::class, 'Can not delete immutable configuration test. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object');
     $this->config->delete();
   }
 

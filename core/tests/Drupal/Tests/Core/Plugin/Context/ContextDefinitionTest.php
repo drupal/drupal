@@ -107,7 +107,6 @@ class ContextDefinitionTest extends UnitTestCase {
   }
 
   /**
-   * @expectedException \Exception
    * @dataProvider providerGetDataDefinition
    * @covers ::getDataDefinition
    * @uses \Drupal
@@ -155,10 +154,8 @@ class ContextDefinitionTest extends UnitTestCase {
       ->method('getDataType')
       ->willReturn($data_type);
 
-    $this->assertSame(
-      $mock_data_definition,
-      $mock_context_definition->getDataDefinition()
-    );
+    $this->setExpectedException(\Exception::class);
+    $mock_context_definition->getDataDefinition();
   }
 
   /**

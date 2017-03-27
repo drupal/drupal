@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Access;
 
 use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\AccessException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\CheckProvider;
 use Drupal\Core\Cache\Context\CacheContextsManager;
@@ -474,8 +475,6 @@ class AccessManagerTest extends UnitTestCase {
    * Tests that an access checker throws an exception for not allowed values.
    *
    * @dataProvider providerCheckException
-   *
-   * @expectedException \Drupal\Core\Access\AccessException
    */
   public function testCheckException($return_value) {
     $route_provider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
@@ -515,6 +514,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->checkProvider->setContainer($container);
     $this->checkProvider->addCheckService('test_incorrect_value', 'access');
 
+    $this->setExpectedException(AccessException::class);
     $access_manager->checkNamedRoute('test_incorrect_value', [], $this->account);
   }
 

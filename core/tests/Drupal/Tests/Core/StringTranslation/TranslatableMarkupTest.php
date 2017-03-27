@@ -82,25 +82,20 @@ class TranslatableMarkupTest extends UnitTestCase {
   }
 
   /**
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage $string ("foo") must be a string.
-   *
    * @covers ::__construct
    */
   public function testIsStringAssertion() {
     $translation = $this->getStringTranslationStub();
+    $this->setExpectedException(\InvalidArgumentException::class, '$string ("foo") must be a string.');
     new TranslatableMarkup(new TranslatableMarkup('foo', [], [], $translation));
   }
 
   /**
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage $string ("foo") must be a string.
-   *
    * @covers ::__construct
    */
   public function testIsStringAssertionWithFormattableMarkup() {
-    $translation = $this->getStringTranslationStub();
     $formattable_string = new FormattableMarkup('@bar', ['@bar' => 'foo']);
+    $this->setExpectedException(\InvalidArgumentException::class, '$string ("foo") must be a string.');
     new TranslatableMarkup($formattable_string);
   }
 

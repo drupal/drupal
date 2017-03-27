@@ -182,8 +182,6 @@ class ViewExecutableTest extends UnitTestCase {
   }
 
   /**
-   * @expectedException \InvalidArgumentException
-   *
    * @covers ::getUrl
    */
   public function testGetUrlWithoutRouterDisplay() {
@@ -193,6 +191,7 @@ class ViewExecutableTest extends UnitTestCase {
       ->willReturn($this->displayHandler);
     $this->executable->display_handler = $this->displayHandler;
 
+    $this->setExpectedException(\InvalidArgumentException::class);
     $this->executable->getUrl();
   }
 

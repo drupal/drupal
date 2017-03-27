@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextHandler;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
@@ -279,9 +280,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * @covers ::applyContextMapping
-   *
-   * @expectedException \Drupal\Component\Plugin\Exception\ContextException
-   * @expectedExceptionMessage Required contexts without a value: hit.
    */
   public function testApplyContextMappingMissingRequired() {
     $context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -311,6 +309,7 @@ class ContextHandlerTest extends UnitTestCase {
     $plugin->expects($this->never())
       ->method('getContext');
 
+    $this->setExpectedException(ContextException::class, 'Required contexts without a value: hit.');
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
 
@@ -350,9 +349,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * @covers ::applyContextMapping
-   *
-   * @expectedException \Drupal\Component\Plugin\Exception\ContextException
-   * @expectedExceptionMessage Required contexts without a value: hit.
    */
   public function testApplyContextMappingNoValueRequired() {
     $context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -381,6 +377,7 @@ class ContextHandlerTest extends UnitTestCase {
     $plugin->expects($this->never())
       ->method('setContextValue');
 
+    $this->setExpectedException(ContextException::class, 'Required contexts without a value: hit.');
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
 
@@ -464,9 +461,6 @@ class ContextHandlerTest extends UnitTestCase {
 
   /**
    * @covers ::applyContextMapping
-   *
-   * @expectedException \Drupal\Component\Plugin\Exception\ContextException
-   * @expectedExceptionMessage Assigned contexts were not satisfied: miss
    */
   public function testApplyContextMappingConfigurableAssignedMiss() {
     $context = $this->getMock('Drupal\Core\Plugin\Context\ContextInterface');
@@ -489,6 +483,7 @@ class ContextHandlerTest extends UnitTestCase {
     $plugin->expects($this->never())
       ->method('setContextValue');
 
+    $this->setExpectedException(ContextException::class, 'Assigned contexts were not satisfied: miss');
     $this->contextHandler->applyContextMapping($plugin, $contexts, ['miss' => 'name']);
   }
 

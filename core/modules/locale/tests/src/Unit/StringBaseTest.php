@@ -3,6 +3,7 @@
 namespace Drupal\Tests\locale\Unit;
 
 use Drupal\locale\SourceString;
+use Drupal\locale\StringStorageException;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -13,22 +14,20 @@ class StringBaseTest extends UnitTestCase {
 
   /**
    * @covers ::save
-   * @expectedException \Drupal\locale\StringStorageException
-   * @expectedExceptionMessage The string cannot be saved because its not bound to a storage: test
    */
   public function testSaveWithoutStorage() {
     $string = new SourceString(['source' => 'test']);
+    $this->setExpectedException(StringStorageException::class, 'The string cannot be saved because its not bound to a storage: test');
     $string->save();
   }
 
 
   /**
    * @covers ::delete
-   * @expectedException \Drupal\locale\StringStorageException
-   * @expectedExceptionMessage The string cannot be deleted because its not bound to a storage: test
    */
   public function testDeleteWithoutStorage() {
     $string = new SourceString(['lid' => 1, 'source' => 'test']);
+    $this->setExpectedException(StringStorageException::class, 'The string cannot be deleted because its not bound to a storage: test');
     $string->delete();
   }
 

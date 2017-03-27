@@ -55,12 +55,10 @@ class FileCacheFactoryTest extends UnitTestCase {
 
   /**
    * @covers ::get
-   *
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage Required prefix configuration is missing
    */
   public function testGetNoPrefix() {
     FileCacheFactory::setPrefix(NULL);
+    $this->setExpectedException(\InvalidArgumentException::class, 'Required prefix configuration is missing');
     FileCacheFactory::get('test_foo_settings', []);
   }
 

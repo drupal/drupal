@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * @coversDefaultClass \Drupal\Core\Form\FormAjaxResponseBuilder
@@ -43,8 +44,6 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
 
   /**
    * @covers ::buildResponse
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
    */
   public function testBuildResponseNoTriggeringElement() {
     $this->renderer->expects($this->never())
@@ -56,13 +55,12 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
     $commands = [];
 
     $expected = [];
-    $this->assertSame($expected, $this->formAjaxResponseBuilder->buildResponse($request, $form, $form_state, $commands));
+    $this->setExpectedException(HttpException::class);
+    $this->formAjaxResponseBuilder->buildResponse($request, $form, $form_state, $commands);
   }
 
   /**
    * @covers ::buildResponse
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
    */
   public function testBuildResponseNoCallable() {
     $this->renderer->expects($this->never())
@@ -76,7 +74,8 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
     $commands = [];
 
     $expected = [];
-    $this->assertSame($expected, $this->formAjaxResponseBuilder->buildResponse($request, $form, $form_state, $commands));
+    $this->setExpectedException(HttpException::class);
+    $this->formAjaxResponseBuilder->buildResponse($request, $form, $form_state, $commands);
   }
 
   /**

@@ -13,6 +13,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\EnforcedResponseException;
+use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormInterface;
@@ -52,19 +53,12 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * Tests the getFormId() method with a string based form ID.
-   *
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage The form argument foo is not a valid form.
    */
   public function testGetFormIdWithString() {
     $form_arg = 'foo';
-
-    $clean_form_state = new FormState();
     $form_state = new FormState();
-    $form_id = $this->formBuilder->getFormId($form_arg, $form_state);
-
-    $this->assertSame($form_arg, $form_id);
-    $this->assertSame($clean_form_state, $form_state);
+    $this->setExpectedException(\InvalidArgumentException::class, 'The form argument foo is not a valid form.');
+    $this->formBuilder->getFormId($form_arg, $form_state);
   }
 
   /**
@@ -218,17 +212,11 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * Tests the getForm() method with a string based form ID.
-   *
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage The form argument test_form_id is not a valid form.
    */
   public function testGetFormWithString() {
     $form_id = 'test_form_id';
-    $expected_form = $form_id();
-
-    $form = $this->formBuilder->getForm($form_id);
-    $this->assertFormElement($expected_form, $form, 'test');
-    $this->assertSame('test-form-id', $form['#id']);
+    $this->setExpectedException(\InvalidArgumentException::class, 'The form argument test_form_id is not a valid form.');
+    $this->formBuilder->getForm($form_id);
   }
 
   /**
@@ -262,17 +250,11 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * Tests the buildForm() method with a string based form ID.
-   *
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage The form argument test_form_id is not a valid form.
    */
   public function testBuildFormWithString() {
     $form_id = 'test_form_id';
-    $expected_form = $form_id();
-
-    $form = $this->formBuilder->getForm($form_id);
-    $this->assertFormElement($expected_form, $form, 'test');
-    $this->assertArrayHasKey('#id', $form);
+    $this->setExpectedException(\InvalidArgumentException::class, 'The form argument test_form_id is not a valid form.');
+    $this->formBuilder->getForm($form_id);
   }
 
   /**
@@ -547,8 +529,6 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * @covers ::buildForm
-   *
-   * @expectedException \Drupal\Core\Form\Exception\BrokenPostRequestException
    */
   public function testExceededFileSize() {
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
@@ -565,6 +545,7 @@ class FormBuilderTest extends FormTestBase {
     $form_arg = $this->getMockForm('test_form_id');
     $form_state = new FormState();
 
+    $this->setExpectedException(BrokenPostRequestException::class);
     $this->formBuilder->buildForm($form_arg, $form_state);
   }
 

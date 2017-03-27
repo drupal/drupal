@@ -57,12 +57,12 @@ class RandomTest extends UnitTestCase {
    * Tests infinite loop prevention whilst generating random names.
    *
    * @covers ::name
-   * @expectedException \RuntimeException
    */
   public function testRandomNameException() {
     // There are fewer than 100 possibilities so an exception should occur to
     // prevent infinite loops.
     $random = new Random();
+    $this->setExpectedException(\RuntimeException::class);
     for ($i = 0; $i <= 100; $i++) {
       $str = $random->name(1, TRUE);
       $names[$str] = TRUE;
@@ -73,12 +73,12 @@ class RandomTest extends UnitTestCase {
    * Tests infinite loop prevention whilst generating random strings.
    *
    * @covers ::string
-   * @expectedException \RuntimeException
    */
   public function testRandomStringException() {
     // There are fewer than 100 possibilities so an exception should occur to
     // prevent infinite loops.
     $random = new Random();
+    $this->setExpectedException(\RuntimeException::class);
     for ($i = 0; $i <= 100; $i++) {
       $str = $random->string(1, TRUE);
       $names[$str] = TRUE;

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\hal\Unit;
 
 use Drupal\hal\Normalizer\FieldItemNormalizer;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
 /**
  * @coversDefaultClass \Drupal\hal\Normalizer\FieldItemNormalizer
@@ -17,12 +18,12 @@ class FieldItemNormalizerDenormalizeExceptionsUnitTest extends NormalizerDenorma
    *   Context for FieldItemNormalizer::denormalize().
    *
    * @dataProvider providerNormalizerDenormalizeExceptions
-   * @expectedException \Symfony\Component\Serializer\Exception\InvalidArgumentException
    */
   public function testFieldItemNormalizerDenormalizeExceptions($context) {
     $field_item_normalizer = new FieldItemNormalizer();
     $data = [];
     $class = [];
+    $this->setExpectedException(InvalidArgumentException::class);
     $field_item_normalizer->denormalize($data, $class, NULL, $context);
   }
 

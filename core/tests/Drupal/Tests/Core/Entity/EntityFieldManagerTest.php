@@ -310,9 +310,6 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @covers ::getBaseFieldDefinitions
    * @covers ::buildBaseFieldDefinitions
    *
-   * @expectedException \LogicException
-   * @expectedExceptionMessage The Test entity type cannot be translatable as it does not define a translatable "langcode" field.
-   *
    * @dataProvider providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode
    */
   public function testGetBaseFieldDefinitionsTranslatableEntityTypeLangcode($provide_key, $provide_field, $translatable) {
@@ -333,6 +330,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->entityType->isTranslatable()->willReturn(TRUE);
     $this->entityType->getLabel()->willReturn('Test');
 
+    $this->setExpectedException(\LogicException::class, 'The Test entity type cannot be translatable as it does not define a translatable "langcode" field.');
     $this->entityFieldManager->getBaseFieldDefinitions('test_entity_type');
   }
 
@@ -452,8 +450,6 @@ class EntityFieldManagerTest extends UnitTestCase {
    *
    * @covers ::getBaseFieldDefinitions
    * @covers ::buildBaseFieldDefinitions
-   *
-   * @expectedException \LogicException
    */
   public function testGetBaseFieldDefinitionsInvalidDefinition() {
     $this->setUpEntityWithFieldDefinition(FALSE, 'langcode', ['langcode' => 'langcode']);
@@ -461,6 +457,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->entityType->isTranslatable()->willReturn(TRUE);
     $this->entityType->getLabel()->willReturn('the_label');
 
+    $this->setExpectedException(\LogicException::class);
     $this->entityFieldManager->getBaseFieldDefinitions('test_entity_type');
   }
 
