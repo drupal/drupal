@@ -79,7 +79,7 @@ class MigrateNodeTest extends MigrateNodeTestBase {
 
     // Test the file field meta.
     $this->assertIdentical('desc', $node->field_test_filefield->description);
-    $this->assertIdentical('5', $node->field_test_filefield->target_id);
+    $this->assertIdentical('4', $node->field_test_filefield->target_id);
 
     $node = Node::load(2);
     $this->assertIdentical('Test title rev 3', $node->getTitle());
