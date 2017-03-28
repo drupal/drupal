@@ -695,8 +695,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
     // DX: 422 when invalid entity: UUID field too long.
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nuuid.0.value: UUID: may not be longer than 128 characters.\n", $response);
+    // @todo Fix this in https://www.drupal.org/node/2149851.
+    if ($this->entity->getEntityType()->hasKey('uuid')) {
+      $response = $this->request('POST', $url, $request_options);
+      $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nuuid.0.value: UUID: may not be longer than 128 characters.\n", $response);
+    }
 
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_3;
