@@ -30,6 +30,9 @@ reset-form:
 cancel-form:
   uri: https://drupal.org/link-relations/cancel-form
   description: A form where a resource of this type can be canceled.
+flush-form:
+  uri: https://drupal.org/link-relations/flush-form
+  description: A form where a resource of this type can be flushed.
 
 # All registered relation types.
 # See https://tools.ietf.org/html/rfc5988#section-4.1.
