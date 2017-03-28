@@ -163,7 +163,7 @@
       // Update all contextual links placeholders whose HTML is cached.
       var uncachedIDs = _.filter(ids, function initIfCached(contextualID) {
         var html = storage.getItem('Drupal.contextual.' + contextualID);
-        if (html !== null) {
+        if (html && html.length) {
           // Initialize after the current execution cycle, to make the AJAX
           // request for retrieving the uncached contextual links as soon as
           // possible, but also to ensure that other Drupal behaviors have had
