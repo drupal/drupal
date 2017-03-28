@@ -41,31 +41,41 @@ class AjaxCssTest extends JavascriptTestBase {
    * Tests adding style sheets dynamically to CKEditor.
    */
   public function testCkeditorAjaxAddCss() {
-    // Skip test until #2843693 is fixed.
-    $this->markTestSkipped();
-
     $this->drupalGet('/ckeditor_test/ajax_css');
 
     $session = $this->getSession();
-    $assert = $this->assertSession();
+    $page = $session->getPage();
+
+    $this->waitOnCkeditorInstance('edit-iframe-value');
+    $this->waitOnCkeditorInstance('edit-inline');
 
     $style_color = 'rgb(255, 0, 0)';
 
     // Add the inline CSS and assert that the style is applied to the main body,
     // but not the iframe.
-    $session->getPage()->pressButton('Add CSS to inline CKEditor instance');
-    $assert->assertWaitOnAjaxRequest();
-    $this->assertEquals($style_color, $this->getEditorStyle('edit-inline', 'color'));
-    $this->assertNotEquals($style_color, $this->getEditorStyle('edit-iframe-value', 'color'));
+    $page->pressButton('Add CSS to inline CKEditor instance');
+
+    $result = $page->waitFor(10, function() use ($style_color) {
+      return ($this->getEditorStyle('edit-inline', 'color') == $style_color)
+        && ($this->getEditorStyle('edit-iframe-value', 'color') != $style_color);
+    });
+    $this->assertTrue($result);
 
     $session->reload();
 
+    $this->waitOnCkeditorInstance('edit-iframe-value');
+    $this->waitOnCkeditorInstance('edit-inline');
+
     // Add the iframe CSS and assert that the style is applied to the iframe,
     // but not the main body.
-    $session->getPage()->pressButton('Add CSS to iframe CKEditor instance');
-    $assert->assertWaitOnAjaxRequest();
-    $this->assertNotEquals($style_color, $this->getEditorStyle('edit-inline', 'color'));
-    $this->assertEquals($style_color, $this->getEditorStyle('edit-iframe-value', 'color'));
+    $page->pressButton('Add CSS to iframe CKEditor instance');
+
+    $result = $page->waitFor(10, function() use ($style_color) {
+      return ($this->getEditorStyle('edit-inline', 'color') != $style_color)
+        && ($this->getEditorStyle('edit-iframe-value', 'color') == $style_color);
+    });
+
+    $this->assertTrue($result);
   }
 
   /**
@@ -86,6 +96,28 @@ class AjaxCssTest extends JavascriptTestBase {
       $attribute
     );
     return $this->getSession()->evaluateScript($js);
+  }
+
+  /**
+   * Wait for a CKEditor instance to finish loading and initializing.
+   *
+   * @param string $instance_id
+   *   The CKEditor instance ID.
+   * @param int $timeout
+   *   (optional) Timeout in milliseconds, defaults to 10000.
+   */
+  protected function waitOnCkeditorInstance($instance_id, $timeout = 10000) {
+    $condition = <<<JS
+      (function() {
+        return (
+          typeof CKEDITOR !== 'undefined'
+          && typeof CKEDITOR.instances["$instance_id"] !== 'undefined'
+          && CKEDITOR.instances["$instance_id"].instanceReady
+        );
+      }());
+JS;
+
+    $this->getSession()->wait($timeout, $condition);
   }
 
 }
