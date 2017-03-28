@@ -232,6 +232,9 @@ section:
 self:
   description: "Conveys an identifier for the link's context."
   reference: '[RFC4287]'
+set-default:
+  description: "Indicates a URI that can be used to set a resource as the default."
+  reference: '[RFC5023]'
 service:
   description: "Indicates a URI that can be used to retrieve a service document."
   reference: '[RFC5023]'
