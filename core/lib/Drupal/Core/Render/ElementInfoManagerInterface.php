@@ -10,8 +10,8 @@ interface ElementInfoManagerInterface {
   /**
    * Retrieves the default properties for the defined element type.
    *
-   * Each of the form element types defined by this hook is assumed to have
-   * a matching theme hook, which should be registered with hook_theme() as
+   * Each of the element types defined by this hook is assumed to have a
+   * matching theme hook, which should be registered with hook_theme() as
    * normal.
    *
    * For more information about custom element types see the explanation at
