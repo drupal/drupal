@@ -37,7 +37,11 @@ abstract class FileTestBase extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-
+    // \Drupal\KernelTests\KernelTestBase::bootKernel() sets a global override
+    // for the default scheme because core relies on it in
+    // file_default_scheme(). As we are creating the configuration here remove
+    // the global override.
+    unset($GLOBALS['config']['system.file']);
     \Drupal::configFactory()->getEditable('system.file')->set('default_scheme', 'public')->save();
   }
 
