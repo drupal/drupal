@@ -110,7 +110,7 @@ interface SearchInterface extends PluginInspectionInterface {
    *
    * The core search module only invokes this method on active module plugins
    * when building a form for them in
-   * \Drupal\search\Form\SearchPageForm::form(). A plugin implementing this
+   * \Drupal\search\Form\SearchPageForm::buildForm(). A plugin implementing this
    * will also need to implement the buildSearchUrlQuery() method.
    *
    * @param array $form
