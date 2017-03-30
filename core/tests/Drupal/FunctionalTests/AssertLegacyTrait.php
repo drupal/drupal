@@ -380,7 +380,7 @@ trait AssertLegacyTrait {
    *   Link position counting from zero.
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
-   *   Use $this->assertSession()->linkByHref() instead.
+   *   Use $this->assertSession()->linkByHrefExists() instead.
    */
   protected function assertLinkByHref($href, $index = 0) {
     $this->assertSession()->linkByHrefExists($href, $index);
