@@ -406,6 +406,11 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // While this should be enforced via settings.php prior to installation,
     // some tests expect to be able to test mail system implementations.
     $GLOBALS['config']['system.mail']['interface']['default'] = 'test_mail_collector';
+
+    // Manually configure the default file scheme so that modules that use file
+    // functions don't have to install system and its configuration.
+    // @see file_default_scheme()
+    $GLOBALS['config']['system.file']['default_scheme'] = 'public';
   }
 
   /**
