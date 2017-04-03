@@ -2,6 +2,8 @@
 
 namespace Drupal\FunctionalTests;
 
+use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Selector\Xpath\Escaper;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
@@ -262,12 +264,23 @@ trait AssertLegacyTrait {
    *   However, the default value ('') asserts that the field value is an empty
    *   string.
    *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
    *   Use $this->assertSession()->fieldExists() or
    *   $this->assertSession()->fieldValueEquals() instead.
    */
-  protected function assertFieldById($id, $value = NULL) {
-    $this->assertFieldByName($id, $value);
+  protected function assertFieldById($id, $value = '') {
+    $xpath = $this->assertSession()->buildXPathQuery('//textarea[@id=:value]|//input[@id=:value]|//select[@id=:value]', [':value' => $id]);
+    $field = $this->getSession()->getPage()->find('xpath', $xpath);
+
+    if (empty($field)) {
+      throw new ElementNotFoundException($this->getSession()->getDriver(), 'form field', 'id', $field);
+    }
+
+    if ($value !== NULL) {
+      $this->assertEquals($value, $field->getValue());
+    }
   }
 
   /**
@@ -410,16 +423,26 @@ trait AssertLegacyTrait {
    *   while still checking that the field doesn't exist. However, the default
    *   value ('') asserts that the field value is not an empty string.
    *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
    *   Use $this->assertSession()->fieldNotExists() or
    *   $this->assertSession()->fieldValueNotEquals() instead.
    */
   protected function assertNoFieldById($id, $value = '') {
-    if ($this->getSession()->getPage()->findField($id) && isset($value)) {
-      $this->assertSession()->fieldValueNotEquals($id, (string) $value);
+    $xpath = $this->assertSession()->buildXPathQuery('//textarea[@id=:value]|//input[@id=:value]|//select[@id=:value]', [':value' => $id]);
+    $field = $this->getSession()->getPage()->find('xpath', $xpath);
+
+    // Return early if the field could not be found as expected.
+    if ($field === NULL) {
+      return;
     }
-    else {
-      $this->assertSession()->fieldNotExists($id);
+
+    if (!isset($value)) {
+      throw new ExpectationException(sprintf('Id "%s" appears on this page, but it should not.', $id), $this->getSession()->getDriver());
+    }
+    elseif ($value === $field->getValue()) {
+      throw new ExpectationException(sprintf('Failed asserting that %s is not equal to %s', $field->getValue(), $value), $this->getSession()->getDriver());
     }
   }
 
