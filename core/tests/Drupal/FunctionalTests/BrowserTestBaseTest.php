@@ -175,7 +175,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test that the assertion fails correctly if no value is passed in.
     try {
-      $this->assertNoFieldById('description');
+      $this->assertNoFieldById('edit-description');
       $this->fail('The "description" field, with no value was not found.');
     }
     catch (ExpectationException $e) {
@@ -184,11 +184,34 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test that the assertion fails correctly if a NULL value is passed in.
     try {
-      $this->assertNoFieldById('name', NULL);
+      $this->assertNoFieldById('edit-name', NULL);
       $this->fail('The "name" field was not found.');
     }
     catch (ExpectationException $e) {
       $this->pass('The "name" field was found.');
+    }
+
+    $this->assertFieldById('edit-name', NULL);
+    $this->assertFieldById('edit-name', 'Test name');
+    $this->assertFieldById('edit-description', NULL);
+    $this->assertFieldById('edit-description');
+
+    // Test that the assertion fails correctly if no value is passed in.
+    try {
+      $this->assertFieldById('edit-name');
+      $this->fail('The "edit-name" field with no value was found.');
+    }
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+      $this->pass('The "edit-name" field with no value was not found.');
+    }
+
+    // Test that the assertion fails correctly if NULL is passed in.
+    try {
+      $this->assertFieldById('name', NULL);
+      $this->fail('The "name" field was found.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass('The "name" field was not found.');
     }
 
     $this->assertNoFieldByName('name');
@@ -218,6 +241,28 @@ class BrowserTestBaseTest extends BrowserTestBase {
     try {
       $this->assertOptionByText('options', 'four');
       $this->fail('The select option "four" was found.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass($e->getMessage());
+    }
+
+    $this->assertFieldById('edit-save', NULL);
+    // Test that the assertion fails correctly if the field value is passed in
+    // rather than the id.
+    try {
+      $this->assertFieldById('Save', NULL);
+      $this->fail('The field with id of "Save" was found.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass($e->getMessage());
+    }
+
+    $this->assertNoFieldById('Save', NULL);
+    // Test that the assertion fails correctly if the id of an actual field is
+    // passed in.
+    try {
+      $this->assertNoFieldById('edit-save', NULL);
+      $this->fail('The field with id of "edit-save" was not found.');
     }
     catch (ExpectationException $e) {
       $this->pass($e->getMessage());

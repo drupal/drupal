@@ -52,6 +52,11 @@ class TestForm extends FormBase {
       '#default_value' => 2,
     ];
 
+    $form['save'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Save'),
+    ];
+
     return $form;
   }
 
