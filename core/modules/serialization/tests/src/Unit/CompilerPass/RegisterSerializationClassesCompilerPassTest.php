@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\serialization\Tests;
+namespace Drupal\Tests\serialization\Unit\CompilerPass;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\serialization\RegisterSerializationClassesCompilerPass;
