@@ -668,6 +668,22 @@ trait AssertLegacyTrait {
   }
 
   /**
+   * Triggers a pass if the Perl regex pattern is not found in the raw content.
+   *
+   * @param string $pattern
+   *   Perl regex to look for including the regex delimiters.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->responseNotMatches() instead.
+   *
+   * @see https://www.drupal.org/node/2864262
+   */
+  protected function assertNoPattern($pattern) {
+    @trigger_error('assertNoPattern() is deprecated and scheduled for removal in Drupal 9.0.0. Use $this->assertSession()->responseNotMatches($pattern) instead. See https://www.drupal.org/node/2864262.', E_USER_DEPRECATED);
+    $this->assertSession()->responseNotMatches($pattern);
+  }
+
+  /**
    * Asserts whether an expected cache tag was present in the last response.
    *
    * @param string $expected_cache_tag
