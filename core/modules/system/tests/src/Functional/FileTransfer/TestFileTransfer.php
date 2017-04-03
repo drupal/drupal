@@ -46,7 +46,7 @@ class TestFileTransfer extends FileTransfer {
 
   public function removeFileJailed($destination) {
     if (!ftp_delete($this->connection, $item)) {
-      throw new FileTransferException('Unable to remove to file @file.', NULL, ['@file' => $item]);
+      throw new FileTransferException('Unable to remove the file @file.', NULL, ['@file' => $item]);
     }
   }
 

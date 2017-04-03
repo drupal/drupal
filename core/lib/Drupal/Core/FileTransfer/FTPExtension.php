@@ -45,7 +45,7 @@ class FTPExtension extends FTP implements ChmodInterface {
   protected function removeDirectoryJailed($directory) {
     $pwd = ftp_pwd($this->connection);
     if (!ftp_chdir($this->connection, $directory)) {
-      throw new FileTransferException("Unable to change to directory @directory", NULL, ['@directory' => $directory]);
+      throw new FileTransferException("Unable to change the current directory to @directory", NULL, ['@directory' => $directory]);
     }
     $list = @ftp_nlist($this->connection, '.');
     if (!$list) {
@@ -65,7 +65,7 @@ class FTPExtension extends FTP implements ChmodInterface {
     }
     ftp_chdir($this->connection, $pwd);
     if (!ftp_rmdir($this->connection, $directory)) {
-      throw new FileTransferException("Unable to remove to directory @directory", NULL, ['@directory' => $directory]);
+      throw new FileTransferException("Unable to remove the directory @directory", NULL, ['@directory' => $directory]);
     }
   }
 
@@ -74,7 +74,7 @@ class FTPExtension extends FTP implements ChmodInterface {
    */
   protected function removeFileJailed($destination) {
     if (!ftp_delete($this->connection, $destination)) {
-      throw new FileTransferException("Unable to remove to file @file", NULL, ['@file' => $destination]);
+      throw new FileTransferException("Unable to remove the file @file", NULL, ['@file' => $destination]);
     }
   }
 
