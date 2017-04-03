@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\datetime\Tests;
-
-@trigger_error('\Drupal\datetime\Tests\DateTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use \Drupal\Tests\BrowserTestBase instead. See https://www.drupal.org/node/2780063.', E_USER_DEPRECATED);
+namespace Drupal\Tests\datetime\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -11,15 +9,12 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Provides a base class for testing Datetime field functionality.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Tests\BrowserTestBase instead.
  */
-abstract class DateTestBase extends WebTestBase {
+abstract class DateTestBase extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -158,6 +153,9 @@ abstract class DateTestBase extends WebTestBase {
    * @param bool $reset
    *   (optional) Whether to reset the entity_test controller cache. Defaults to
    *   TRUE to simplify testing.
+   *
+   * @return string
+   *   The rendered HTML output.
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
     if ($reset) {
@@ -166,9 +164,7 @@ abstract class DateTestBase extends WebTestBase {
     $entity = EntityTest::load($id);
     $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
     $build = $display->build($entity);
-    $output = $this->container->get('renderer')->renderRoot($build);
-    $this->setRawContent($output);
-    $this->verbose($output);
+    return (string) $this->container->get('renderer')->renderRoot($build);
   }
 
   /**

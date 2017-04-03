@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\datetime\Tests;
+namespace Drupal\Tests\datetime\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\SafeMarkup;
@@ -67,7 +67,7 @@ class DateTimeFieldTest extends DateTestBase {
         "{$field_name}[0][value][date]" => $date->format($date_format),
       ];
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+      preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
       $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
       $this->assertRaw($date->format($date_format));
@@ -115,8 +115,9 @@ class DateTimeFieldTest extends DateTestBase {
               // field, it is expected to display the time as 00:00:00.
               $expected = format_date($date->getTimestamp(), $new_value, '', DATETIME_STORAGE_TIMEZONE);
               $expected_iso = format_date($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DATETIME_STORAGE_TIMEZONE);
-              $this->renderTestEntity($id);
-              $this->assertFieldByXPath('//time[@datetime="' . $expected_iso . '"]', $expected, SafeMarkup::format('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => $new_value, '%expected' => $expected, '%expected_iso' => $expected_iso]));
+              $output = $this->renderTestEntity($id);
+              $expected_markup = '<time datetime="' . $expected_iso . '" class="datetime">' . $expected . '</time>';
+              $this->assertContains($expected_markup, $output, SafeMarkup::format('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => $new_value, '%expected' => $expected, '%expected_iso' => $expected_iso]));
               break;
           }
         }
@@ -129,8 +130,8 @@ class DateTimeFieldTest extends DateTestBase {
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = $date->format(DATETIME_DATE_STORAGE_FORMAT);
-      $this->renderTestEntity($id);
-      $this->assertText($expected, SafeMarkup::format('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
+      $output = $this->renderTestEntity($id);
+      $this->assertContains($expected, $output, SafeMarkup::format('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
 
       // Verify that the 'datetime_custom' formatter works.
       $this->displayOptions['type'] = 'datetime_custom';
@@ -139,8 +140,8 @@ class DateTimeFieldTest extends DateTestBase {
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = $date->format($this->displayOptions['settings']['date_format']);
-      $this->renderTestEntity($id);
-      $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
+      $output = $this->renderTestEntity($id);
+      $this->assertContains($expected, $output, SafeMarkup::format('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
 
       // Test that allowed markup in custom format is preserved and XSS is
       // removed.
@@ -149,8 +150,8 @@ class DateTimeFieldTest extends DateTestBase {
         ->setComponent($field_name, $this->displayOptions)
         ->save();
       $expected = '<strong>' . $date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83))';
-      $this->renderTestEntity($id);
-      $this->assertRaw($expected, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
+      $output = $this->renderTestEntity($id);
+      $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
 
       // Verify that the 'datetime_time_ago' formatter works for intervals in the
       // past.  First update the test entity so that the date difference always
@@ -176,8 +177,8 @@ class DateTimeFieldTest extends DateTestBase {
       $expected = SafeMarkup::format($this->displayOptions['settings']['past_format'], [
         '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
       ]);
-      $this->renderTestEntity($id);
-      $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
+      $output = $this->renderTestEntity($id);
+      $this->assertContains((string) $expected, $output, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
 
       // Verify that the 'datetime_time_ago' formatter works for intervals in the
       // future.  First update the test entity so that the date difference always
@@ -197,8 +198,8 @@ class DateTimeFieldTest extends DateTestBase {
       $expected = SafeMarkup::format($this->displayOptions['settings']['future_format'], [
         '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
       ]);
-      $this->renderTestEntity($id);
-      $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
+      $output = $this->renderTestEntity($id);
+      $this->assertContains((string) $expected, $output, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
     }
   }
 
@@ -215,7 +216,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
     $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
-    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend//text()', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_name, 'Fieldset and label found');
     $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
     $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
@@ -235,7 +236,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $date->format($time_format),
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
     $this->assertRaw($date->format($date_format));
@@ -259,8 +260,9 @@ class DateTimeFieldTest extends DateTestBase {
             // Verify that a date is displayed.
             $expected = format_date($date->getTimestamp(), $new_value);
             $expected_iso = format_date($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
-            $this->renderTestEntity($id);
-            $this->assertFieldByXPath('//time[@datetime="' . $expected_iso . '"]', $expected, SafeMarkup::format('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => $new_value, '%expected' => $expected, '%expected_iso' => $expected_iso]));
+            $output = $this->renderTestEntity($id);
+            $expected_markup = '<time datetime="' . $expected_iso . '" class="datetime">' . $expected . '</time>';
+            $this->assertContains($expected_markup, $output, SafeMarkup::format('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => $new_value, '%expected' => $expected, '%expected_iso' => $expected_iso]));
             break;
         }
       }
@@ -273,8 +275,8 @@ class DateTimeFieldTest extends DateTestBase {
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = $date->format(DATETIME_DATETIME_STORAGE_FORMAT);
-    $this->renderTestEntity($id);
-    $this->assertText($expected, SafeMarkup::format('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
+    $output = $this->renderTestEntity($id);
+    $this->assertContains($expected, $output, SafeMarkup::format('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
 
     // Verify that the 'datetime_custom' formatter works.
     $this->displayOptions['type'] = 'datetime_custom';
@@ -283,8 +285,8 @@ class DateTimeFieldTest extends DateTestBase {
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = $date->format($this->displayOptions['settings']['date_format']);
-    $this->renderTestEntity($id);
-    $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
+    $output = $this->renderTestEntity($id);
+    $this->assertContains($expected, $output, SafeMarkup::format('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
 
     // Verify that the 'timezone_override' setting works.
     $this->displayOptions['type'] = 'datetime_custom';
@@ -293,8 +295,8 @@ class DateTimeFieldTest extends DateTestBase {
       ->setComponent($field_name, $this->displayOptions)
       ->save();
     $expected = $date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
-    $this->renderTestEntity($id);
-    $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
+    $output = $this->renderTestEntity($id);
+    $this->assertContains($expected, $output, SafeMarkup::format('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
 
     // Verify that the 'datetime_time_ago' formatter works for intervals in the
     // past.  First update the test entity so that the date difference always
@@ -320,8 +322,8 @@ class DateTimeFieldTest extends DateTestBase {
     $expected = SafeMarkup::format($this->displayOptions['settings']['past_format'], [
       '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
     ]);
-    $this->renderTestEntity($id);
-    $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
+    $output = $this->renderTestEntity($id);
+    $this->assertContains((string) $expected, $output, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
 
     // Verify that the 'datetime_time_ago' formatter works for intervals in the
     // future.  First update the test entity so that the date difference always
@@ -341,8 +343,8 @@ class DateTimeFieldTest extends DateTestBase {
     $expected = SafeMarkup::format($this->displayOptions['settings']['future_format'], [
       '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
     ]);
-    $this->renderTestEntity($id);
-    $this->assertText($expected, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
+    $output = $this->renderTestEntity($id);
+    $this->assertContains((string) $expected, $output, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
   }
 
   /**
@@ -368,7 +370,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend//text()', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_name, 'Fieldset and label found');
     $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
     $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
@@ -381,7 +383,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet($fieldEditUrl);
 
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostAjaxForm(NULL, [], $field_name . "_settings_edit");
+    $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
     $xpathIncr = "//select[starts-with(@id, \"edit-fields-$field_name-settings-edit-form-settings-increment\")]";
     $this->assertNoFieldByXPath($xpathIncr, NULL, 'Increment element not found for Date Only.');
 
@@ -407,7 +409,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet($fieldEditUrl);
 
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostAjaxForm(NULL, [], $field_name . "_settings_edit");
+    $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
     $this->assertFieldByXPath($xpathIncr, NULL, 'Increment element found for Date and time.');
 
     // Display creation form.
@@ -444,7 +446,7 @@ class DateTimeFieldTest extends DateTestBase {
     }
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
@@ -485,7 +487,7 @@ class DateTimeFieldTest extends DateTestBase {
     }
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
@@ -539,7 +541,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertResponse(200);
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
