@@ -759,4 +759,23 @@ class DateTimePlusTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Tests the $settings['validate_format'] parameter in ::createFromFormat().
+   */
+  public function testValidateFormat() {
+    // Check that an input that does not strictly follow the input format will
+    // produce the desired date. In this case the year string '11' doesn't
+    // precisely match the 'Y' formater parameter, but PHP will parse it
+    // regardless. However, when formatted with the same string, the year will
+    // be output with four digits. With the ['validate_format' => FALSE]
+    // $settings, this will not thrown an exception.
+    $date = DateTimePlus::createFromFormat('Y-m-d H:i:s', '11-03-31 17:44:00', 'UTC', ['validate_format' => FALSE]);
+    $this->assertEquals('0011-03-31 17:44:00', $date->format('Y-m-d H:i:s'));
+
+    // Parse the same date with ['validate_format' => TRUE] and make sure we
+    // get the expected exception.
+    $this->setExpectedException(\UnexpectedValueException::class);
+    $date = DateTimePlus::createFromFormat('Y-m-d H:i:s', '11-03-31 17:44:00', 'UTC', ['validate_format' => TRUE]);
+  }
+
 }
