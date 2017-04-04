@@ -79,6 +79,9 @@ create-form:
 current:
   description: "Refers to a resource containing the most recent item(s) in a collection of resources."
   reference: '[RFC5005]'
+customize-form:
+  description: "The target URI points to a resource where a submission form for customizing associated resource can be obtained."
+  reference: '[RFC6861]'
 derivedfrom:
   description: 'The target IRI points to a resource from which this material was derived.'
   reference: '[draft-hoffman-xml2rfc]'
