@@ -1,44 +1,30 @@
 <?php
 
-namespace Drupal\Tests\comment\Unit\Migrate\d7;
+namespace Drupal\Tests\comment\Kernel\Plugin\migrate\source\d7;
 
-use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
+use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D7 comment type source plugin.
  *
+ * @covers \Drupal\comment\Plugin\migrate\source\d7\CommentType
  * @group comment
  */
-class CommentTypeTest extends MigrateSqlSourceTestCase {
-
-  const PLUGIN_CLASS = 'Drupal\comment\Plugin\migrate\source\d7\CommentType';
-
-  protected $migrationConfiguration = [
-    'id' => 'test',
-    'source' => [
-      'plugin' => 'd7_comment_type',
-    ],
-  ];
-
-  protected $expectedResults = [
-    [
-      'bundle' => 'comment_node_article',
-      'node_type' => 'article',
-      'default_mode' => '1',
-      'per_page' => '50',
-      'anonymous' => '0',
-      'form_location' => '1',
-      'preview' => '0',
-      'subject' => '1',
-      'label' => 'Article comment',
-    ],
-  ];
+class CommentTypeTest extends MigrateSqlSourceTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    $this->databaseContents['node_type'] = [
+  public static $modules = ['comment', 'migrate_drupal'];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function providerSource() {
+    $tests = [];
+
+    // The source data.
+    $tests[0]['source_data']['node_type'] = [
       [
         'type' => 'article',
         'name' => 'Article',
@@ -55,7 +41,7 @@ class CommentTypeTest extends MigrateSqlSourceTestCase {
         'orig_type' => 'article',
       ],
     ];
-    $this->databaseContents['field_config_instance'] = [
+    $tests[0]['source_data']['field_config_instance'] = [
       [
         'id' => '14',
         'field_id' => '1',
@@ -66,7 +52,7 @@ class CommentTypeTest extends MigrateSqlSourceTestCase {
         'deleted' => '0',
       ],
     ];
-    $this->databaseContents['variable'] = [
+    $tests[0]['source_data']['variable'] = [
       [
         'name' => 'comment_default_mode_article',
         'value' => serialize(1),
@@ -92,7 +78,22 @@ class CommentTypeTest extends MigrateSqlSourceTestCase {
         'value' => serialize(1),
       ],
     ];
-    parent::setUp();
+
+    // The expected results.
+    $tests[0]['expected_data'] = [
+      [
+        'bundle' => 'comment_node_article',
+        'node_type' => 'article',
+        'default_mode' => '1',
+        'per_page' => '50',
+        'anonymous' => '0',
+        'form_location' => '1',
+        'preview' => '0',
+        'subject' => '1',
+        'label' => 'Article comment',
+      ],
+    ];
+    return $tests;
   }
 
 }
