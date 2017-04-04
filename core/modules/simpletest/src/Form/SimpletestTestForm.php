@@ -71,7 +71,7 @@ class SimpletestTestForm extends FormBase {
     $form['clean'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Clean test environment'),
-      '#description' => $this->t('Remove tables with the prefix "simpletest" and temporary directories that are left over from tests that crashed. This is intended for developers when creating tests.'),
+      '#description' => $this->t('Remove tables with the prefix "test" followed by digits and temporary directories that are left over from tests that crashed. This is intended for developers when creating tests.'),
       '#weight' => 200,
     ];
     $form['clean']['op'] = [
