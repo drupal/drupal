@@ -10,9 +10,98 @@ use Drupal\migrate\Row;
 use Drupal\migrate\MigrateSkipRowException;
 
 /**
- * This plugin changes the current value based on a static lookup map.
+ * Changes the source value based on a static lookup map.
  *
- * @link https://www.drupal.org/node/2143521 Online handbook documentation for static_map process plugin @endlink
+ * Maps the input value to another value using an associative array specified in
+ * the configuration.
+ *
+ * Available configuration keys:
+ * - source: The input value - either a scalar or an array.
+ * - map: An array (of 1 or more dimensions) that identifies the mapping between
+ *   source values and destination values.
+ * - bypass: (optional) Whether the plugin should proceed when the source is not
+ *   found in the map array. Defaults to FALSE.
+ *   - TRUE: Return the unmodified input value, or another default value, if one
+ *     is specified.
+ *   - FALSE: Throw a MigrateSkipRowException.
+ * - default_value: (optional) The value to return if the source is not found in
+ *   the map array.
+ *
+ * Examples:
+ *
+ * @code
+ * process:
+ *   bar:
+ *     plugin: static_map
+ *     source: foo
+ *     map:
+ *       from: to
+ *       this: that
+ * @endcode
+ *
+ * If the value of the source property foo was "from" then the value of the
+ * destination property bar will be "to". Similarly "this" becomes "that".
+ * static_map can do a lot more than this: it supports a list of source
+ * properties. This is super useful in module-delta to machine name conversions.
+ *
+ * @code
+ * process:
+ *   id:
+ *     plugin: static_map
+ *       source:
+ *         - module
+ *         - delta
+ *        map:
+ *          filter:
+ *            0: filter_html_escape
+ *            1: filter_autop
+ *            2: filter_url
+ *            3: filter_htmlcorrector
+ *            4: filter_html_escape
+ *          php:
+ *            0: php_code
+ * @endcode
+ *
+ * If the value of the source properties module and delta are "filter" and "2"
+ * respectively, then the returned value will be "filter_url". By default, if a
+ * value is not found in the map, an exception is thrown.
+ *
+ * When static_map is used to just rename a few things and leave the others, a
+ * "bypass: true" option can be added. In this case, the source value is used
+ * unchanged, e.g.:
+ *
+ * @code
+ * process:
+ *   bar:
+ *     plugin: static_map
+ *     source: foo
+ *       map:
+ *         from: to
+ *         this: that
+ *       bypass: TRUE
+ * @endcode
+ *
+ * If the value of the source property "foo" is "from" then the returned value
+ * will be "to", but if the value of "foo" is "another" (a value that is not in
+ * the map) then the source value is used unchanged so the returned value will
+ * be "from" because "bypass" is set to TRUE.
+ *
+ * @code
+ * process:
+ *   bar:
+ *     plugin: static_map
+ *     source: foo
+ *       map:
+ *         from: to
+ *         this: that
+ *       default_value: bar
+ * @endcode
+ *
+ * If the value of the source property "foo" is "yet_another" (a value that is
+ * not in the map) then the default_value is used so the returned value will
+ * be "bar".
+ *
+ * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
  * @MigrateProcessPlugin(
  *   id = "static_map"
