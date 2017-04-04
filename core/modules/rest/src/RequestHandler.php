@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
@@ -89,42 +88,32 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     if (!empty($received)) {
       $format = $request->getContentType();
 
-      // Only allow serialization formats that are explicitly configured. If no
-      // formats are configured allow all and hope that the serializer knows the
-      // format. If the serializer cannot handle it an exception will be thrown
-      // that bubbles up to the client.
-      $request_method = $request->getMethod();
-      if (in_array($format, $resource_config->getFormats($request_method))) {
-        $definition = $resource->getPluginDefinition();
+      $definition = $resource->getPluginDefinition();
 
-        // First decode the request data. We can then determine if the
-        // serialized data was malformed.
-        try {
-          $unserialized = $serializer->decode($received, $format, ['request_method' => $method]);
-        }
-        catch (UnexpectedValueException $e) {
-          // If an exception was thrown at this stage, there was a problem
-          // decoding the data. Throw a 400 http exception.
-          throw new BadRequestHttpException($e->getMessage());
-        }
-
-        // Then attempt to denormalize if there is a serialization class.
-        if (!empty($definition['serialization_class'])) {
-          try {
-            $unserialized = $serializer->denormalize($unserialized, $definition['serialization_class'], $format, ['request_method' => $method]);
-          }
-          // These two serialization exception types mean there was a problem
-          // with the structure of the decoded data and it's not valid.
-          catch (UnexpectedValueException $e) {
-            throw new UnprocessableEntityHttpException($e->getMessage());
-          }
-          catch (InvalidArgumentException $e) {
-            throw new UnprocessableEntityHttpException($e->getMessage());
-          }
-        }
+      // First decode the request data. We can then determine if the
+      // serialized data was malformed.
+      try {
+        $unserialized = $serializer->decode($received, $format, ['request_method' => $method]);
       }
-      else {
-        throw new UnsupportedMediaTypeHttpException();
+      catch (UnexpectedValueException $e) {
+        // If an exception was thrown at this stage, there was a problem
+        // decoding the data. Throw a 400 http exception.
+        throw new BadRequestHttpException($e->getMessage());
+      }
+
+      // Then attempt to denormalize if there is a serialization class.
+      if (!empty($definition['serialization_class'])) {
+        try {
+          $unserialized = $serializer->denormalize($unserialized, $definition['serialization_class'], $format, ['request_method' => $method]);
+        }
+        // These two serialization exception types mean there was a problem
+        // with the structure of the decoded data and it's not valid.
+        catch (UnexpectedValueException $e) {
+          throw new UnprocessableEntityHttpException($e->getMessage());
+        }
+        catch (InvalidArgumentException $e) {
+          throw new UnprocessableEntityHttpException($e->getMessage());
+        }
       }
     }
 
