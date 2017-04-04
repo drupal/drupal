@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Component\DependencyInjection;
 
 use Drupal\Component\Utility\Crypt;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
@@ -21,7 +22,7 @@ use Prophecy\Argument;
  * @coversDefaultClass \Drupal\Component\DependencyInjection\Container
  * @group DependencyInjection
  */
-class ContainerTest extends \PHPUnit_Framework_TestCase {
+class ContainerTest extends TestCase {
 
   /**
    * The tested container.

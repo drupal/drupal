@@ -4,6 +4,7 @@ namespace Drupal\Tests\serialization\Unit\CompilerPass;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\serialization\RegisterSerializationClassesCompilerPass;
+use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Serializer\Serializer;
 
@@ -11,7 +12,7 @@ use Symfony\Component\Serializer\Serializer;
  * @coversDefaultClass \Drupal\serialization\RegisterSerializationClassesCompilerPass
  * @group serialization
  */
-class RegisterSerializationClassesCompilerPassTest extends \PHPUnit_Framework_TestCase {
+class RegisterSerializationClassesCompilerPassTest extends UnitTestCase {
 
   /**
    * @covers ::process

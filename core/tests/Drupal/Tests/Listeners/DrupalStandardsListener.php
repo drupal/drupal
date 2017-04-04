@@ -2,23 +2,26 @@
 
 namespace Drupal\Tests\Listeners;
 
+use PHPUnit\Framework\BaseTestListener;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Listens for PHPUnit tests and fails those with invalid coverage annotations.
  *
  * Enforces various coding standards within test runs.
  */
-class DrupalStandardsListener extends \PHPUnit_Framework_BaseTestListener {
+class DrupalStandardsListener extends BaseTestListener {
 
   /**
    * Signals a coding standards failure to the user.
    *
-   * @param \PHPUnit_Framework_TestCase $test
+   * @param \PHPUnit\Framework\TestCase $test
    *   The test where we should insert our test failure.
    * @param string $message
    *   The message to add to the failure notice. The test class name and test
    *   name will be appended to this message automatically.
    */
-  protected function fail(\PHPUnit_Framework_TestCase $test, $message) {
+  protected function fail(TestCase $test, $message) {
     // Add the report to the test's results.
     $message .= ': ' . get_class($test) . '::' . $test->getName();
     $fail = new \PHPUnit_Framework_AssertionFailedError($message);
@@ -44,10 +47,10 @@ class DrupalStandardsListener extends \PHPUnit_Framework_BaseTestListener {
    *
    * This method is called from $this::endTest().
    *
-   * @param \PHPUnit_Framework_TestCase $test
+   * @param \PHPUnit\Framework\TestCase $test
    *   The test to examine.
    */
-  public function checkValidCoversForTest(\PHPUnit_Framework_TestCase $test) {
+  public function checkValidCoversForTest(TestCase $test) {
     // If we're generating a coverage report already, don't do anything here.
     if ($test->getTestResultObject() && $test->getTestResultObject()->getCollectCodeCoverageInformation()) {
       return;
@@ -144,7 +147,7 @@ class DrupalStandardsListener extends \PHPUnit_Framework_BaseTestListener {
     // \PHPUnit_Framework_Test does not have any useful methods of its own for
     // our purpose, so we have to distinguish between the different known
     // subclasses.
-    if ($test instanceof \PHPUnit_Framework_TestCase) {
+    if ($test instanceof TestCase) {
       $this->checkValidCoversForTest($test);
     }
     elseif ($test instanceof \PHPUnit_Framework_TestSuite) {

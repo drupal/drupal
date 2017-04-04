@@ -13,6 +13,7 @@ use Drupal\simpletest\TestBase;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\simpletest\TestDiscovery;
 use Drupal\Tests\Listeners\SimpletestUiPrinter;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Drupal\Core\Test\TestStatus;
 
@@ -412,7 +413,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
 
   // Perform the next test.
   $test_class = array_shift($test_list);
-  if (is_subclass_of($test_class, \PHPUnit_Framework_TestCase::class)) {
+  if (is_subclass_of($test_class, TestCase::class)) {
     $phpunit_results = simpletest_run_phpunit_tests($test_id, [$test_class]);
     simpletest_process_phpunit_results($phpunit_results);
     $test_results[$test_class] = simpletest_summarize_phpunit_result($phpunit_results)[$test_class];

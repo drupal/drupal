@@ -259,7 +259,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   /**
    * Asserts that a file exists physically on disk.
    *
-   * Overrides PHPUnit_Framework_Assert::assertFileExists() to also work with
+   * Overrides PHPUnit\Framework\Assert::assertFileExists() to also work with
    * file entities.
    *
    * @param \Drupal\File\FileInterface|string $file
@@ -286,7 +286,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   /**
    * Asserts that a file does not exist on disk.
    *
-   * Overrides PHPUnit_Framework_Assert::assertFileExists() to also work with
+   * Overrides PHPUnit\Framework\Assert::assertFileExists() to also work with
    * file entities.
    *
    * @param \Drupal\File\FileInterface|string $file

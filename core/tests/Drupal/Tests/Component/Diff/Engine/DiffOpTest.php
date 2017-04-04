@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Component\Diff\Engine;
 
 use Drupal\Component\Diff\Engine\DiffOp;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test DiffOp base class.
@@ -15,7 +16,7 @@ use Drupal\Component\Diff\Engine\DiffOp;
  *
  * @group Diff
  */
-class DiffOpTest extends \PHPUnit_Framework_TestCase {
+class DiffOpTest extends TestCase {
 
   /**
    * DiffOp::reverse() always throws an error.

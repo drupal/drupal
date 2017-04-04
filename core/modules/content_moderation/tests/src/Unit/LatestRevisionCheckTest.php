@@ -9,13 +9,14 @@ use Drupal\Core\Routing\RouteMatch;
 use Drupal\node\Entity\Node;
 use Drupal\content_moderation\Access\LatestRevisionCheck;
 use Drupal\content_moderation\ModerationInformation;
+use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\Access\LatestRevisionCheck
  * @group content_moderation
  */
-class LatestRevisionCheckTest extends \PHPUnit_Framework_TestCase {
+class LatestRevisionCheckTest extends UnitTestCase {
 
   /**
    * Test the access check of the LatestRevisionCheck service.

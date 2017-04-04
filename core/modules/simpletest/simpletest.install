@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Environment;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Minimum value of PHP memory_limit for SimpleTest.
@@ -18,7 +19,7 @@ const SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT = '128M';
 function simpletest_requirements($phase) {
   $requirements = [];
 
-  $has_phpunit = class_exists('\PHPUnit_Framework_TestCase');
+  $has_phpunit = class_exists(TestCase::class);
   $has_curl = function_exists('curl_init');
   $open_basedir = ini_get('open_basedir');
 

@@ -3,12 +3,13 @@
 namespace Drupal\Tests\migrate\Unit\Event;
 
 use Drupal\migrate\Event\EventBase;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\migrate\Event\EventBase
  * @group migrate
  */
-class EventBaseTest extends \PHPUnit_Framework_TestCase {
+class EventBaseTest extends UnitTestCase {
 
   /**
    * Test getMigration method.

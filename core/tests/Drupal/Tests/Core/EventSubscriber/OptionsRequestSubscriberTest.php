@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Core\EventSubscriber\OptionsRequestSubscriber;
+use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -14,7 +15,7 @@ use Symfony\Component\Routing\RouteCollection;
  * @coversDefaultClass \Drupal\Core\EventSubscriber\OptionsRequestSubscriber
  * @group EventSubscriber
  */
-class OptionsRequestSubscriberTest extends \PHPUnit_Framework_TestCase {
+class OptionsRequestSubscriberTest extends UnitTestCase {
 
   /**
    * @covers ::onRequest

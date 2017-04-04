@@ -4,15 +4,19 @@ namespace Drupal\Tests\simpletest\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\File\FileSystemInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests simpletest_run_phpunit_tests() handles PHPunit fatals correctly.
+ *
+ * We don't extend Drupal\Tests\UnitTestCase here because its $root property is
+ * not static and we need it to be static here.
  *
  * @group simpletest
  *
  * @runTestsInSeparateProcesses
  */
-class SimpletestPhpunitRunCommandTest extends \PHPUnit_Framework_TestCase {
+class SimpletestPhpunitRunCommandTest extends TestCase {
 
   /**
    * Path to the app root.

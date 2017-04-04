@@ -6,7 +6,7 @@ namespace Drupal\KernelTests;
  * Translates Simpletest assertion methods to PHPUnit.
  *
  * Protected methods are custom. Public static methods override methods of
- * \PHPUnit_Framework_Assert.
+ * \PHPUnit\Framework\Assert.
  *
  * @deprecated Scheduled for removal in Drupal 9.0.0. Use PHPUnit's native
  *   assert methods instead.

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\TestSuites;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
 // The test suite class is not part of the autoloader, we need to include it
 // manually.
@@ -13,7 +14,7 @@ require_once __DIR__ . '/../../../TestSuites/TestSuiteBase.php';
  *
  * @group TestSuite
  */
-class TestSuiteBaseTest extends \PHPUnit_Framework_TestCase {
+class TestSuiteBaseTest extends TestCase {
 
   /**
    * Helper method to set up the file system.

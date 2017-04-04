@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\DependencyInjection\Compiler;
 
 use Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Serializer\Serializer;
 
@@ -11,7 +12,7 @@ use Symfony\Component\Serializer\Serializer;
  * @coversDefaultClass \Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass
  * @group DependencyInjection
  */
-class AuthenticationProviderPassTest extends \PHPUnit_Framework_TestCase {
+class AuthenticationProviderPassTest extends UnitTestCase {
 
   /**
    * @covers ::process

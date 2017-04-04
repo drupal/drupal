@@ -7,6 +7,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\content_moderation\StateTransitionValidation;
+use Drupal\Tests\UnitTestCase;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\workflows\WorkflowTypeInterface;
 use Drupal\workflows\WorkflowTypeManager;
@@ -16,7 +17,7 @@ use Prophecy\Argument;
  * @coversDefaultClass \Drupal\content_moderation\StateTransitionValidation
  * @group content_moderation
  */
-class StateTransitionValidationTest extends \PHPUnit_Framework_TestCase {
+class StateTransitionValidationTest extends UnitTestCase {
 
   /**
    * Verifies user-aware transition validation.

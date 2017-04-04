@@ -22,6 +22,7 @@ use Drupal\simpletest\AssertHelperTrait;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\simpletest\TestServiceProvider;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use org\bovigo\vfs\vfsStream;
@@ -49,7 +50,7 @@ use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
  * @todo Extend ::setRequirementsFromAnnotation() and ::checkRequirements() to
  *   account for '@requires module'.
  */
-abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements ServiceProviderInterface {
+abstract class KernelTestBase extends TestCase implements ServiceProviderInterface {
 
   use AssertLegacyTrait;
   use AssertContentTrait;

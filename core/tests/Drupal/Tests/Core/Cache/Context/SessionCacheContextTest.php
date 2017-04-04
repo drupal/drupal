@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Cache\Context;
 
 use Drupal\Core\Cache\Context\SessionCacheContext;
+use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -10,7 +11,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @coversDefaultClass \Drupal\Core\Cache\Context\SessionCacheContext
  * @group Cache
  */
-class SessionCacheContextTest extends \PHPUnit_Framework_TestCase {
+class SessionCacheContextTest extends UnitTestCase {
 
   /**
    * The request stack.

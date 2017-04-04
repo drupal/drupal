@@ -5,13 +5,14 @@ namespace Drupal\Tests\content_moderation\Unit;
 use Drupal\content_moderation\ContentPreprocess;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\content_moderation\ContentPreprocess
  *
  * @group content_moderation
  */
-class ContentPreprocessTest extends \PHPUnit_Framework_TestCase {
+class ContentPreprocessTest extends UnitTestCase {
 
   /**
    * @covers ::isLatestVersionPage

@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\simpletest\Unit;
 
+use Drupal\Tests\UnitTestCase;
+
 /**
  * This test crashes PHP.
  *
@@ -11,7 +13,7 @@ namespace Drupal\Tests\simpletest\Unit;
  *
  * @see \Drupal\Tests\simpletest\Unit\SimpletestPhpunitRunCommandTest::testSimpletestPhpUnitRunCommand()
  */
-class SimpletestPhpunitRunCommandTestWillDie extends \PHPUnit_Framework_TestCase {
+class SimpletestPhpunitRunCommandTestWillDie extends UnitTestCase {
 
   /**
    * Performs the status specified by SimpletestPhpunitRunCommandTestWillDie.

@@ -6,12 +6,13 @@ use Drupal\Core\Config\ConfigCollectionInfo;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigFactoryOverrideBase;
 use Drupal\Core\Config\ConfigRenameEvent;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\ConfigFactoryOverrideBase
  * @group config
  */
-class ConfigFactoryOverrideBaseTest extends \PHPUnit_Framework_TestCase {
+class ConfigFactoryOverrideBaseTest extends UnitTestCase {
 
   /**
    * @dataProvider providerTestFilterNestedArray
