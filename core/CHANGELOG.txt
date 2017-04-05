@@ -1,3 +1,114 @@
+Drupal 8.3.0, 2017-04-05
+------------------------
+- Added modules:
+    * Added the Workflows module (experimental) which abstracts transitions and
+      states from Content Moderation into a separate component for reuse by
+      other modules implementing non-publishing workflows.
+    * Added the Layout Discovery module (experimental) which provides an API for
+      modules or themes to register layouts.
+    * Added the Field Layout module (experimental) which provides the ability
+      for site builders to rearrange fields on content types, block types, etc.
+      into new regions, for both the form and display, on the same forms
+      provided by the normal field user interface.
+- Updated vendor libraries:
+    * Updated to Twig 1.25.
+    * Updated to jQuery 2.2.4.
+    * Updated to CKEditor 4.6.2 (with new Moono-Lisa skin).
+    * Updated Symfony components to 2.8.18.
+    * Updated PHPUnit to 4.8.35.
+    * Applied patch-level updates to the latest versions for all dependencies
+      wherever possible. Minor updates applied for Symfony PSR-7 Bridge and
+      Zend Stdlib, which Drupal does not depend on directly.
+- Browser support:
+    * Advance notice: Internet Explore 9 and 10 will no longer supported from
+      8.4.x, scheduled for October 2017. Microsoft has now ended support for
+      these browsers. Drupal will still support Internet Explorer 11 and its
+      replacement, Edge.
+- Raised stability levels of experimental modules:
+    * Updated the BigPipe module from beta to stable.
+    * Updated the Migrate module from alpha to beta.
+    * See https://www.drupal.org/core/experimental#versions for more
+      information about the stability levels of experimental modules.
+- Improved authoring features:
+    * Can now drag and drop images into image fields in Quick Edit mode.
+    * Image fields are now limited to only accepting images, so that users on
+      mobile clients are not offered a confusing and non-functional video
+      upload option.
+    * CKEditor now utilizes the AutoGrow plugin to better take advantage of
+      larger screen sizes.
+- Improved site building and administration:
+    * Redesigned status report.
+    * Standardized display of Views overview page to more closely match that of
+      other administrative overview pages.
+    * Views filter order now matches the table column order below in Content
+      and People overview pages.
+    * The "Allowed HTML tags" input has been converted to a textarea, which
+      significantly improves the usability of HTML filter configuration.
+    * Removed the 'disabled' region from block administration.
+    * Incoming paths are again case-insensitive for routing, similar to earlier
+      major Drupal versions.
+- Content Moderation improvements (experimental):
+    * Refactored to use new experimental Workflows module.
+    * Now supports moderation of non-translatable entity types.
+    * When reverting a moderated revision, the moderation state is now
+      reverted too.
+    * Added an API to create and enforce default workflow states and
+      transitions.
+    * Allow moderation of entity types without bundles, as long as they have
+      revisions.
+    * Publishes any entity type that implements EntityPublishedInterface, not
+      just Nodes.
+- Migration improvements (experimental):
+    * Drupal 7 core node translations are now migrated to Drupal 8.
+    * Configuration translation support is added to migrations in general and
+      implemented for Drupal 6 user profile fields.
+- Improved REST API and decoupled site features:
+    * REST API now supports the registering of users.
+    * Anonymous REST API performance increased by 60% by utilizing the internal
+      page cache.
+    * Improved the response bodies and status codes for requests with incorrect
+      request headers or request bodies, in dozens of situations.
+    * Massive overhaul of the test coverage.
+    * 403 responses now return reason why access was denied.
+    * Serialized values for Booleans and integers are now returned as the
+      correct data type, rather than incorrectly typed as strings.
+- Improved performance/scalability:
+    * Optimized class loader detection made more generic to support class
+      loaders other than ApcClassLoader.
+    * ViewsData and Token info cache now use the default cache bin to prevent
+      APCu memory from being filled too quickly.
+    * Improve statistics performance by adding a swappable backend.
+- Improved developer APIs:
+    * Deprecated several routing services in favor of two more unified services.
+    * Replaced the deprecated Symfony ExecutionContextInterface by subclassing
+      from ConstraintValidator to prepare for an update to Symfony 3.
+    * EntityPublishedInterface and EntityPublishedTrait have been added to give
+      a generic publishing API, and are being used by Node and Comment entity
+      types.
+    * Added a collection label to EntityType. This is a plural uppercase label
+      for a collection of entities - e.g. "Workflows".
+- Changed coding standards:
+    * Officially adopted short array syntax and updated all of core accordingly.
+    * PHP CodeSniffer and Drupal Coder have been added as composer dev
+      requirements, so they can be installed automatically with
+      `composer install --dev` rather than requiring separate installation. (Do
+      not use `composer install --dev` for production sites.)
+    * Most global constants in Drupal 8 have been deprecated in favor of class
+      constants. As a best practice, use appropriate class constants rather than
+      global constants.
+- Testing improvements:
+    * Integrated PHPUnit verbose output in SimpleTest UI.
+    * Improved backward compatibility with WebTestBase.
+    * Improved backward compatibility between BrowserTestBase and WebTestBase.
+    * Many old WebTestBase tests have been moved to BrowserTestBase.
+    * Expanded automated test coverage for JavaScript.
+- Package management:
+    * composer.json now uses the new official endpoint for modules and themes,
+      packages.drupal.org.
+    * Custom modules and themes can now be installed to correct locations using
+      composer.
+    * Added Package.json enabling new JavaScript language features.
+
 Drupal 8.2.0, 2016-10-05
 ------------------------
 - Updated the git repository configuration to not normalize line endings for
