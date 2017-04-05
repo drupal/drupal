@@ -42,7 +42,7 @@ function serialization_update_8302() {
   $config_factory = \Drupal::configFactory();
   $config_factory->getEditable('serialization.settings')
     ->set('bc_primitives_as_strings', FALSE)
-    ->save(FALSE);
+    ->save(TRUE);
 
   return t('The REST API will no longer output all values as strings. Integers/booleans will be used where appropriate. If your site depends on these value being strings, <a href="https://www.drupal.org/node/2837696">read the change record to learn how to enable the BC mode.</a>');
 }
