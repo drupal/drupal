@@ -131,7 +131,7 @@ class CronForm extends FormBase {
       '#type' => 'checkbox',
       '#title' => t('Detailed cron logging'),
       '#default_value' => $this->config('system.cron')->get('logging'),
-      '#description' => $this->t('Run times of individual cron jobs will be written to watchdog'),
+      '#description' => 'Run times of individual cron jobs will be written to watchdog',
     ];
 
     $form['actions']['#type'] = 'actions';
