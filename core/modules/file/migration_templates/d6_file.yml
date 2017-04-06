@@ -7,7 +7,7 @@ migration_tags:
 source:
   plugin: d6_file
   constants:
-    # source_base_path must be set by the tool configuring this migration. It
+    # The tool configuring this migration must set source_base_path. It
     # represents the fully qualified path relative to which URIs in the files
     # table are specified, and must end with a /. See source_full_path
     # configuration in this migration's process pipeline as an example.
