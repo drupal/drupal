@@ -7,8 +7,8 @@ migration_tags:
 source:
   plugin: d7_file
   constants:
-    # source_base_path must be set by the tool configuring this migration. It
-    # represents the fully qualified path relative to which uris in the files
+    # The tool configuring this migration must set source_base_path. It
+    # represents the fully qualified path relative to which URIs in the files
     # table are specified, and must end with a /. See source_full_path
     # configuration in this migration's process pipeline as an example.
     source_base_path: ''
@@ -32,8 +32,7 @@ process:
       - '@source_full_path'
       - uri
   filemime: filemime
-  # filesize is dynamically computed when file entities are saved, so there is
-  # no point in migrating it.
+  # No need to migrate filesize, it is computed when file entities are saved.
   # filesize: filesize
   status: status
   # Drupal 7 didn't keep track of the file's creation or update time -- all it
