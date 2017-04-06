@@ -3,12 +3,12 @@
 namespace Drupal\user\Plugin\migrate;
 
 use Drupal\migrate\Exception\RequirementsException;
-use Drupal\migrate_drupal\Plugin\migrate\CckMigration;
+use Drupal\migrate_drupal\Plugin\migrate\FieldMigration;
 
 /**
  * Plugin class for Drupal 7 user migrations dealing with fields and profiles.
  */
-class User extends CckMigration {
+class User extends FieldMigration {
 
   /**
    * {@inheritdoc}
@@ -30,16 +30,26 @@ class User extends CckMigration {
           if (empty($field_type)) {
             continue;
           }
-          if ($this->cckPluginManager->hasDefinition($field_type)) {
-            if (!isset($this->cckPluginCache[$field_type])) {
-              $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($field_type, [], $this);
+          if ($this->fieldPluginManager->hasDefinition($field_type)) {
+            if (!isset($this->fieldPluginCache[$field_type])) {
+              $this->fieldPluginCache[$field_type] = $this->fieldPluginManager->createInstance($field_type, [], $this);
             }
             $info = $row->getSource();
-            $this->cckPluginCache[$field_type]
-              ->processCckFieldValues($this, $field_name, $info);
+            $this->fieldPluginCache[$field_type]
+              ->processFieldValues($this, $field_name, $info);
           }
           else {
-            $this->process[$field_name] = $field_name;
+            if ($this->cckPluginManager->hasDefinition($field_type)) {
+              if (!isset($this->cckPluginCache[$field_type])) {
+                $this->cckPluginCache[$field_type] = $this->cckPluginManager->createInstance($field_type, [], $this);
+              }
+              $info = $row->getSource();
+              $this->cckPluginCache[$field_type]
+                ->processCckFieldValues($this, $field_name, $info);
+            }
+            else {
+              $this->process[$field_name] = $field_name;
+            }
           }
         }
       }

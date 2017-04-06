@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Module for Migrate Field Plugin Manager testing.
+ */
+
+use Drupal\migrate_field_plugin_manager_test\Plugin\migrate\cckfield\d6\FileField;
+
+function migrate_field_plugin_manager_test_migrate_field_info_alter(array &$definitions) {
+  if (isset($definitions['filefield'])) {
+    $definitions['filefield']['class'] = FileField::class;
+  }
+}
