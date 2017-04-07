@@ -3,6 +3,7 @@
 namespace Drupal\statistics\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests request logging for cached and uncached pages.
@@ -125,6 +126,17 @@ class StatisticsLoggingTest extends WebTestBase {
     $this->client->post($base_root . $stats_path, ['form_params' => $post]);
     $node_counter = statistics_get($this->node->id());
     $this->assertIdentical($node_counter['totalcount'], '1');
+
+    // Try fetching statistics for an invalid node ID and verify it returns
+    // FALSE.
+    $node_id = 10000000000000000;
+    $node = Node::load($node_id);
+    $this->assertNull($node);
+
+    // This is a test specifically for the deprecated statistics_get() function
+    // and so should remain unconverted until that function is removed.
+    $result = statistics_get($node_id);
+    $this->assertIdentical($result, FALSE);
   }
 
 }
