@@ -27,7 +27,10 @@ interface StatisticsStorageInterface {
    * @param array $ids
    *   An array of IDs of entities to fetch the views for.
    *
-   * @return array \Drupal\statistics\StatisticsViewsResult
+   * @return \Drupal\statistics\StatisticsViewsResult[]
+   *   An array of value objects representing the number of times each entity
+   *   has been viewed. The array is keyed by entity ID. If an ID does not
+   *   exist, it will not be present in the array.
    */
   public function fetchViews($ids);
 
@@ -37,7 +40,9 @@ interface StatisticsStorageInterface {
    * @param int $id
    *   The ID of the entity to fetch the views for.
    *
-   * @return \Drupal\statistics\StatisticsViewsResult
+   * @return \Drupal\statistics\StatisticsViewsResult|false
+   *   If the entity exists, a value object representing the number of times if
+   *   has been viewed. If it does not exist, FALSE is returned.
    */
   public function fetchView($id);
 
