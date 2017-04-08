@@ -129,7 +129,7 @@ class StatisticsLoggingTest extends WebTestBase {
 
     // Try fetching statistics for an invalid node ID and verify it returns
     // FALSE.
-    $node_id = 10000000000000000;
+    $node_id = 1000000;
     $node = Node::load($node_id);
     $this->assertNull($node);
 
