@@ -18,9 +18,9 @@ Note: functional tests have to be invoked with a user in the same group as the
 web server user. You can either configure Apache (or nginx) to run as your own
 system user or run tests as a privileged user instead.
 
-To develop locally, a straigtforward - but also less secure - approach is to run
-tests as your own system user. To achieve that, change the default Apache user
-to run as your system user. Typically, you'd need to modify
+To develop locally, a straightforward - but also less secure - approach is to
+run tests as your own system user. To achieve that, change the default Apache
+user to run as your system user. Typically, you'd need to modify
 `/etc/apache2/envvars` on Linux or `/etc/apache2/httpd.conf` on Mac.
 
 Example for Linux:
