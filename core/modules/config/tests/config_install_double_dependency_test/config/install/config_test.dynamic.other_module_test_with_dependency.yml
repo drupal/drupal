@@ -1,0 +1,13 @@
+id: other_module_test_with_dependency
+label: 'Other module test with dependency'
+weight: 0
+style: ''
+status: true
+langcode: en
+protected_property: Default
+dependencies:
+  enforced:
+    module:
+      - config_other_module_config_test
+    config:
+      - config_test.dynamic.dotted.english
