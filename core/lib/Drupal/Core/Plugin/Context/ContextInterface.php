@@ -6,7 +6,10 @@ use Drupal\Component\Plugin\Context\ContextInterface as ComponentContextInterfac
 use Drupal\Core\Cache\CacheableDependencyInterface;
 
 /**
- * Interface for context.
+ * Context data and definitions for plugins supporting caching and return docs.
+ *
+ * @see \Drupal\Component\Plugin\Context\ContextInterface
+ * @see \Drupal\Core\Plugin\Context\ContextDefinitionInterface
  */
 interface ContextInterface extends ComponentContextInterface, CacheableDependencyInterface {
 
