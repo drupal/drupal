@@ -14,10 +14,6 @@
 # Core's dependencies are managed with Composer.
 vendor
 
-# Ignore node_modules folder created when installing core's JavaScript
-# dependencies.
-core/node_modules
-
 # Ignore configuration files that may contain sensitive information.
 sites/*/settings*.php
 sites/*/services*.yml
@@ -41,7 +37,3 @@ sites/simpletest
 
 # Ignore SimpleTest multi-site environment.
 # simpletest
-
-# Ignore core phpcs.xml and phpunit.xml.
-core/phpcs.xml
-core/phpunit.xml

@@ -1,0 +1,7 @@
+# Ignore node_modules folder created when installing core's JavaScript
+# dependencies.
+node_modules
+
+# Ignore overrides of core's phpcs.xml.dist and phpunit.xml.dist.
+phpcs.xml
+phpunit.xml
