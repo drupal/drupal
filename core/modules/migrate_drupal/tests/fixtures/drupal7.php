@@ -42953,6 +42953,15 @@ $connection->insert('taxonomy_vocabulary')
   'module' => 'taxonomy',
   'weight' => '0',
 ))
+->values(array(
+  'vid' => '4',
+  'name' => 'vocabulary name much longer than thirty two characters',
+  'machine_name' => 'vocabulary_name_much_longer_than_thirty_two_characters',
+  'description' => 'description of vocabulary name much longer than thirty two characters',
+  'hierarchy' => '1',
+  'module' => 'taxonomy',
+  'weight' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('tracker_node', array(

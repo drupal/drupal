@@ -57,6 +57,7 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
     $this->assertEntity('tags', 'Tags', 'Use tags to group articles on similar topics into categories.', VocabularyInterface::HIERARCHY_DISABLED, 0);
     $this->assertEntity('forums', 'Forums', 'Forum navigation vocabulary', VocabularyInterface::HIERARCHY_SINGLE, -10);
     $this->assertEntity('test_vocabulary', 'Test Vocabulary', 'This is the vocabulary description', VocabularyInterface::HIERARCHY_SINGLE, 0);
+    $this->assertEntity('vocabulary_name_much_longer_than', 'vocabulary name much longer than thirty two characters', 'description of vocabulary name much longer than thirty two characters', VocabularyInterface::HIERARCHY_SINGLE, 0);
   }
 
 }
