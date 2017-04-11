@@ -9,7 +9,7 @@ migrate_drupal_ui.upgrade:
     _admin_route: TRUE
 
 migrate_drupal_ui.log:
-  path: '/upgrade/log'
+  path: '/admin/reports/upgrade'
   defaults:
       _controller: '\Drupal\migrate_drupal_ui\Controller\MigrateController::showLog'
   requirements:
