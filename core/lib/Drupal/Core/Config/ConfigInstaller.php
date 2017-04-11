@@ -466,7 +466,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     // Check the dependencies of configuration provided by the module.
     list($invalid_default_config, $missing_dependencies) = $this->findDefaultConfigWithUnmetDependencies($storage, $enabled_extensions, $profile_storages);
     if (!empty($invalid_default_config)) {
-      throw UnmetDependenciesException::create($name, array_unique($missing_dependencies));
+      throw UnmetDependenciesException::create($name, array_unique($missing_dependencies, SORT_REGULAR));
     }
 
     // Install profiles can not have config clashes. Configuration that
