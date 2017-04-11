@@ -23,7 +23,6 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
-    'uid',
     'created',
     'changed',
     'promote',

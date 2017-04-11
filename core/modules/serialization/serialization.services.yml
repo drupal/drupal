@@ -33,6 +33,7 @@ services:
       # this modules generic field item normalizer.
       # @todo Find a better way for this in https://www.drupal.org/node/2575761.
       - { name: normalizer, priority: 8 }
+    arguments: ['@entity.repository']
   serialization.normalizer.field_item:
     class: Drupal\serialization\Normalizer\FieldItemNormalizer
     tags:
