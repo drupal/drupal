@@ -11,7 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
@@ -89,29 +88,19 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     if (!empty($received)) {
       $format = $request->getContentType();
 
-      // Only allow serialization formats that are explicitly configured. If no
-      // formats are configured allow all and hope that the serializer knows the
-      // format. If the serializer cannot handle it an exception will be thrown
-      // that bubbles up to the client.
-      $request_method = $request->getMethod();
-      if (in_array($format, $resource_config->getFormats($request_method))) {
-        $definition = $resource->getPluginDefinition();
-        try {
-          if (!empty($definition['serialization_class'])) {
-            $unserialized = $serializer->deserialize($received, $definition['serialization_class'], $format, ['request_method' => $method]);
-          }
-          // If the plugin does not specify a serialization class just decode
-          // the received data.
-          else {
-            $unserialized = $serializer->decode($received, $format, ['request_method' => $method]);
-          }
+      $definition = $resource->getPluginDefinition();
+      try {
+        if (!empty($definition['serialization_class'])) {
+          $unserialized = $serializer->deserialize($received, $definition['serialization_class'], $format, ['request_method' => $method]);
         }
-        catch (UnexpectedValueException $e) {
-          throw new BadRequestHttpException($e->getMessage());
+        // If the plugin does not specify a serialization class just decode
+        // the received data.
+        else {
+          $unserialized = $serializer->decode($received, $format, ['request_method' => $method]);
         }
       }
-      else {
-        throw new UnsupportedMediaTypeHttpException();
+      catch (UnexpectedValueException $e) {
+        throw new BadRequestHttpException($e->getMessage());
       }
     }
 
