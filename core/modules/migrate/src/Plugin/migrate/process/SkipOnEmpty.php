@@ -21,6 +21,9 @@ use Drupal\migrate\MigrateSkipRowException;
  *   - row: Skips the entire row when an empty value is encountered.
  *   - process: Prevents further processing of the input property when the value
  *     is empty.
+ * - message: (optional) A message to be logged in the {migrate_message_*} table
+ *   for this row. Messages are only logged for the 'row' skip level. If not
+ *   set, nothing is logged in the message table.
  *
  * Examples:
  *
@@ -30,9 +33,11 @@ use Drupal\migrate\MigrateSkipRowException;
  *     plugin: skip_on_empty
  *     method: row
  *     source: field_name
+ *     message: 'Field field_name is missed'
  * @endcode
  *
- * If field_name is empty, skips the entire row.
+ * If field_name is empty, skips the entire row and the message 'Field
+ * field_name is missed' is logged in the message table.
  *
  * @code
  * process:
@@ -79,7 +84,8 @@ class SkipOnEmpty extends ProcessPluginBase {
    */
   public function row($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (!$value) {
-      throw new MigrateSkipRowException();
+      $message = !empty($this->configuration['message']) ? $this->configuration['message'] : '';
+      throw new MigrateSkipRowException($message);
     }
     return $value;
   }
