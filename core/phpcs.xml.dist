@@ -12,16 +12,16 @@
 
   <!-- Only include specific sniffs that pass. This ensures that, if new sniffs are added, HEAD does not fail.-->
   <!-- Drupal sniffs -->
-  <rule ref="Drupal.Classes.ClassCreateInstance"/>
-  <rule ref="Drupal.Classes.ClassDeclaration"/>
-  <rule ref="Drupal.Classes.FullyQualifiedNamespace"/>
-  <rule ref="Drupal.Classes.UnusedUseStatement"/>
-  <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>
-  <rule ref="Drupal.CSS.ColourDefinition"/>
-  <rule ref="Drupal.Commenting.ClassComment">
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Classes/ClassCreateInstanceSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Classes/ClassDeclarationSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Classes/FullyQualifiedNamespaceSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Classes/UnusedUseStatementSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/CSS/ClassDefinitionNameSpacingSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/CSS/ColourDefinitionSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/ClassCommentSniff.php">
     <exclude name="Drupal.Commenting.ClassComment.Missing"/>
   </rule>
-  <rule ref="Drupal.Commenting.DocComment">
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/DocCommentSniff.php">
     <!-- Sniff for these errors: SpacingAfterTagGroup, WrongEnd, SpacingBetween,
       ContentAfterOpen, SpacingBeforeShort, TagValueIndent, ShortStartSpace,
       SpacingAfter -->
@@ -41,9 +41,9 @@
     <exclude name="Drupal.Commenting.DocComment.TagGroupSpacing"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
   </rule>
-  <rule ref="Drupal.Commenting.DocCommentStar"/>
-  <rule ref="Drupal.Commenting.FileComment"/>
-  <rule ref="Drupal.Commenting.FunctionComment">
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/DocCommentStarSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/FileCommentSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/FunctionCommentSniff.php">
     <exclude name="Drupal.Commenting.FunctionComment.IncorrectTypeHint"/>
     <exclude name="Drupal.Commenting.FunctionComment.InvalidNoReturn"/>
     <exclude name="Drupal.Commenting.FunctionComment.InvalidReturnNotVoid"/>
@@ -65,41 +65,40 @@
     <exclude name="Drupal.Commenting.FunctionComment.ReturnTypeSpaces"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
-  <rule ref="Drupal.ControlStructures.ElseIf"/>
-  <rule ref="Drupal.ControlStructures.ControlSignature"/>
-  <rule ref="Drupal.Files.EndFileNewline"/>
-  <rule ref="Drupal.Files.TxtFileLineLength"/>
-  <rule ref="Drupal.Formatting.SpaceInlineIf"/>
-  <rule ref="Drupal.Formatting.SpaceUnaryOperator"/>
-  <rule ref="Drupal.Functions.DiscouragedFunctions"/>
-  <rule ref="Drupal.Functions.FunctionDeclaration.SpaceAfter"/>
-  <rule ref="Drupal.Functions.FunctionDeclaration.SpaceBeforeParenthesis"/>
-  <rule ref="Drupal.InfoFiles.AutoAddedKeys"/>
-  <rule ref="Drupal.InfoFiles.ClassFiles"/>
-  <rule ref="Drupal.InfoFiles.DuplicateEntry"/>
-  <rule ref="Drupal.InfoFiles.Required"/>
-  <rule ref="Drupal.Scope.MethodScope"/>
-  <rule ref="Drupal.Semantics.EmptyInstall"/>
-  <rule ref="Drupal.Semantics.FunctionT">
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ElseIfSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ControlSignatureSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Files/EndFileNewlineSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Files/TxtFileLineLengthSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Formatting/SpaceInlineIfSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Formatting/SpaceUnaryOperatorSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Functions/DiscouragedFunctionsSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Functions/FunctionDeclarationSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/InfoFiles/AutoAddedKeysSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/InfoFiles/ClassFilesSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/InfoFiles/DuplicateEntrySniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/InfoFiles/RequiredSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Scope/MethodScopeSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/EmptyInstallSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/FunctionTSniff.php">
     <exclude name="Drupal.Semantics.FunctionT.BackslashSingleQuote"/>
     <exclude name="Drupal.Semantics.FunctionT.NotLiteralString"/>
     <exclude name="Drupal.Semantics.FunctionT.ConcatString"/>
   </rule>
-  <rule ref="Drupal.Semantics.FunctionWatchdog"/>
-  <rule ref="Drupal.Semantics.InstallHooks"/>
-  <rule ref="Drupal.Semantics.LStringTranslatable"/>
-  <rule ref="Drupal.Semantics.PregSecurity"/>
-  <rule ref="Drupal.Semantics.TInHookMenu"/>
-  <rule ref="Drupal.Semantics.TInHookSchema"/>
-  <rule ref="Drupal.WhiteSpace.Comma"/>
-  <rule ref="Drupal.WhiteSpace.ObjectOperatorIndent"/>
-  <rule ref="Drupal.WhiteSpace.ObjectOperatorSpacing"/>
-  <rule ref="Drupal.WhiteSpace.OpenTagNewline"/>
-  <rule ref="Drupal.WhiteSpace.OperatorSpacing"/>
-  <rule ref="Drupal.WhiteSpace.ScopeIndent"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/FunctionWatchdogSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/InstallHooksSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/LStringTranslatableSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/PregSecuritySniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/TInHookMenuSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/TInHookSchemaSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/CommaSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/ObjectOperatorIndentSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/ObjectOperatorSpacingSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/OpenTagNewlineSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/OperatorSpacingSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/ScopeIndentSniff.php"/>
 
   <!-- Drupal Practice sniffs -->
-  <rule ref="DrupalPractice.Commenting.ExpectedException"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/DrupalPractice/Sniffs/Commenting/ExpectedExceptionSniff.php"/>
 
   <!-- Generic sniffs -->
   <rule ref="Generic.Files.LineEndings"/>
