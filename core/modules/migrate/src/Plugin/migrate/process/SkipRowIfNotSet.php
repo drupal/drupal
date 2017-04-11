@@ -16,6 +16,8 @@ use Drupal\migrate\MigrateSkipRowException;
  *
  * Available configuration keys:
  * - index: The source property to check for.
+ * - message: (optional) A message to be logged in the {migrate_message_*} table
+ *   for this row. If not set, nothing is logged in the message table.
  *
  * Example:
  *
@@ -26,10 +28,12 @@ use Drupal\migrate\MigrateSkipRowException;
  *      plugin: skip_row_if_not_set
  *      index: contact
  *      source: data
+ *      message: "Missed the 'data' key"
  * @endcode
  *
  * This will return $data['contact'] if it exists. Otherwise, the row will be
- * skipped.
+ * skipped and the message "Missed the 'data' key" will be logged in the
+ * message table.
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
@@ -45,7 +49,8 @@ class SkipRowIfNotSet extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (!isset($value[$this->configuration['index']])) {
-      throw new MigrateSkipRowException();
+      $message = !empty($this->configuration['message']) ? $this->configuration['message'] : '';
+      throw new MigrateSkipRowException($message);
     }
     return $value[$this->configuration['index']];
   }
