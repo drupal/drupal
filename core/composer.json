@@ -34,6 +34,9 @@
         "paragonie/random_compat": "^1.0|^2.0",
         "asm89/stack-cors": "~1.0"
     },
+    "conflict": {
+        "drush/drush": "<8.1.10"
+    },
     "require-dev": {
         "behat/mink": "1.7.x-dev",
         "behat/mink-goutte-driver": "~1.2",
