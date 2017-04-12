@@ -10,7 +10,6 @@ use Drupal\content_moderation\EntityTypeInfo;
 use Drupal\content_moderation\ContentPreprocess;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutPublishNode;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublishNode;
-use Drupal\content_moderation\Plugin\Menu\EditTab;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -97,22 +96,6 @@ function content_moderation_entity_update(EntityInterface $entity) {
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityOperations::class)
     ->entityUpdate($entity);
-}
-
-/**
- * Implements hook_local_tasks_alter().
- */
-function content_moderation_local_tasks_alter(&$local_tasks) {
-  $content_entity_type_ids = array_keys(array_filter(\Drupal::entityTypeManager()->getDefinitions(), function (EntityTypeInterface $entity_type) {
-    return $entity_type->isRevisionable();
-  }));
-
-  foreach ($content_entity_type_ids as $content_entity_type_id) {
-    if (isset($local_tasks["entity.$content_entity_type_id.edit_form"])) {
-      $local_tasks["entity.$content_entity_type_id.edit_form"]['class'] = EditTab::class;
-      $local_tasks["entity.$content_entity_type_id.edit_form"]['entity_type_id'] = $content_entity_type_id;
-    }
-  }
 }
 
 /**
