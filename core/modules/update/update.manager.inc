@@ -99,10 +99,10 @@ function _update_manager_check_backends(&$form, $operation) {
   $available_backends = drupal_get_filetransfer_info();
   if (empty($available_backends)) {
     if ($operation == 'update') {
-      $form['available_backends']['#markup'] = t('Your server does not support updating modules and themes from this interface. Instead, update modules and themes by uploading the new versions directly to the server, as described in the <a href=":handbook_url">handbook</a>.', [':handbook_url' => 'https://www.drupal.org/getting-started/install-contrib']);
+      $form['available_backends']['#markup'] = t('Your server does not support updating modules and themes from this interface. Instead, update modules and themes by uploading the new versions directly to the server, as documented in <a href=":doc_url">Extending Drupal 8</a>.', [':doc_url' => 'https://www.drupal.org/docs/8/extending-drupal-8/overview']);
     }
     else {
-      $form['available_backends']['#markup'] = t('Your server does not support installing modules and themes from this interface. Instead, install modules and themes by uploading them directly to the server, as described in the <a href=":handbook_url">handbook</a>.', [':handbook_url' => 'https://www.drupal.org/getting-started/install-contrib']);
+      $form['available_backends']['#markup'] = t('Your server does not support installing modules and themes from this interface. Instead, install modules and themes by uploading them directly to the server, as documented in <a href=":doc_url">Extending Drupal 8</a>.', [':doc_url' => 'https://www.drupal.org/docs/8/extending-drupal-8/overview']);
     }
     return FALSE;
   }
@@ -114,21 +114,21 @@ function _update_manager_check_backends(&$form, $operation) {
   if ($operation == 'update') {
     $form['available_backends']['#markup'] = \Drupal::translation()->formatPlural(
       count($available_backends),
-      'Updating modules and themes requires <strong>@backends access</strong> to your server. See the <a href=":handbook_url">handbook</a> for other update methods.',
-      'Updating modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See the <a href=":handbook_url">handbook</a> for other update methods.',
+      'Updating modules and themes requires <strong>@backends access</strong> to your server. See <a href=":doc_url">Extending Drupal 8</a> for other update methods.',
+      'Updating modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See <a href=":doc_url">Extending Drupal 8</a> for other update methods.',
       [
         '@backends' => implode(', ', $backend_names),
-        ':handbook_url' => 'https://www.drupal.org/getting-started/install-contrib',
+        ':doc_url' => 'https://www.drupal.org/docs/8/extending-drupal-8/overview',
       ]);
   }
   else {
     $form['available_backends']['#markup'] = \Drupal::translation()->formatPlural(
       count($available_backends),
-      'Installing modules and themes requires <strong>@backends access</strong> to your server. See the <a href=":handbook_url">handbook</a> for other installation methods.',
-      'Installing modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See the <a href=":handbook_url">handbook</a> for other installation methods.',
+      'Installing modules and themes requires <strong>@backends access</strong> to your server. See <a href=":doc_url">Extending Drupal 8</a> for other installation methods.',
+      'Installing modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See <a href=":doc_url">Extending Drupal 8</a> for other installation methods.',
       [
         '@backends' => implode(', ', $backend_names),
-        ':handbook_url' => 'https://www.drupal.org/getting-started/install-contrib',
+        ':doc_url' => 'https://www.drupal.org/docs/8/extending-drupal-8/overview',
       ]);
   }
   return TRUE;
