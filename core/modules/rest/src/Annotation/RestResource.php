@@ -23,14 +23,14 @@ use \Drupal\Component\Annotation\Plugin;
 class RestResource extends Plugin {
 
   /**
-   * The resource plugin ID.
+   * The REST resource plugin ID.
    *
    * @var string
    */
   public $id;
 
   /**
-   * The human-readable name of the resource plugin.
+   * The human-readable name of the REST resource plugin.
    *
    * @ingroup plugin_translatable
    *
@@ -41,8 +41,22 @@ class RestResource extends Plugin {
   /**
    * The serialization class to deserialize serialized data into.
    *
+   * @see \Symfony\Component\Serializer\SerializerInterface's "type" parameter.
+   *
    * @var string (optional)
    */
   public $serialization_class;
+
+  /**
+   * The URI paths that this REST resource plugin provides.
+   *
+   * Key-value pairs, with link relation type plugin IDs as keys, and URL
+   * templates as values.
+   *
+   * @see core/core.link_relation_types.yml
+   *
+   * @var string[]
+   */
+  public $uri_paths = [];
 
 }
