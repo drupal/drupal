@@ -22,6 +22,13 @@ class MenuLinkTree implements MenuLinkTreeInterface {
   protected $treeStorage;
 
   /**
+   * The menu link plugin manager.
+   *
+   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
+   */
+  protected $menuLinkManager;
+
+  /**
    * The route provider to load routes by name.
    *
    * @var \Drupal\Core\Routing\RouteProviderInterface
