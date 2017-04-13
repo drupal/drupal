@@ -55,7 +55,9 @@ class HighWaterNotJoinableTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
-    $tests[0]['expected_count'] = NULL;
+    // The expected count is the count returned by the query before the query
+    // is modified by SqlBase::initializeIterator().
+    $tests[0]['expected_count'] = 3;
     $tests[0]['configuration'] = [
       'high_water_property' => [
         'name' => 'changed',

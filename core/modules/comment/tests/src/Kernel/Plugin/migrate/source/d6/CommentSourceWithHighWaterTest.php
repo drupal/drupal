@@ -94,8 +94,9 @@ class CommentSourceWithHighWaterTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
-    // The expected count.
-    $tests[0]['expected_count'] = NULL;
+    // The expected count is the count returned by the query before the query
+    // is modified by SqlBase::initializeIterator().
+    $tests[0]['expected_count'] = 2;
 
     $tests[0]['configuration']['high_water_property']['name'] = 'timestamp';
     $tests[0]['high_water'] = $tests[0]['source_data']['comments'][0]['timestamp'];
