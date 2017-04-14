@@ -10,6 +10,12 @@ namespace Drupal\Core\Config\Schema;
  *
  * Read https://www.drupal.org/node/1905070 for more details about configuration
  * schema, types and type resolution.
+ *
+ * Note that sequences implement the typed data ComplexDataInterface (via the
+ * parent ArrayElement) rather than the ListInterface. This is because sequences
+ * may have named keys, which is not supported by ListInterface. From the typed
+ * data API perspective sequences are handled as ordered mappings without
+ * metadata about existing properties.
  */
 class Sequence extends ArrayElement {
 

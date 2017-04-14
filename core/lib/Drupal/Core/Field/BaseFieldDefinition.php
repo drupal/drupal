@@ -585,7 +585,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   public function __sleep() {
     // Do not serialize the statically cached property definitions.
     $vars = get_object_vars($this);
-    unset($vars['propertyDefinitions']);
+    unset($vars['propertyDefinitions'], $vars['typedDataManager']);
     return array_keys($vars);
   }
 

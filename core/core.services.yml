@@ -331,9 +331,11 @@ services:
     arguments: ['@config.storage', 'config/schema', '', true, '%install_profile%']
   config.typed:
     class: Drupal\Core\Config\TypedConfigManager
-    arguments: ['@config.storage', '@config.storage.schema', '@cache.discovery', '@module_handler']
+    arguments: ['@config.storage', '@config.storage.schema', '@cache.discovery', '@module_handler', '@class_resolver']
     tags:
       - { name: plugin_manager_cache_clear }
+    calls:
+      - [setValidationConstraintManager, ['@validation.constraint']]
   context.handler:
     class: Drupal\Core\Plugin\Context\ContextHandler
     arguments: ['@typed_data_manager']

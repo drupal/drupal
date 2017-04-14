@@ -77,7 +77,7 @@ class TypedDataDefinitionTest extends KernelTestBase {
     $map_definition2->setPropertyDefinition('one', DataDefinition::create('string'))
       ->setPropertyDefinition('two', DataDefinition::create('string'))
       ->setPropertyDefinition('three', DataDefinition::create('string'));
-    $this->assertEqual($map_definition, $map_definition2);
+    $this->assertEqual(serialize($map_definition), serialize($map_definition2));
   }
 
   /**
@@ -93,7 +93,7 @@ class TypedDataDefinitionTest extends KernelTestBase {
     // Test using the definition factory.
     $language_reference_definition2 = $this->typedDataManager->createDataDefinition('language_reference');
     $this->assertTrue($language_reference_definition2 instanceof DataReferenceDefinitionInterface);
-    $this->assertEqual($language_reference_definition, $language_reference_definition2);
+    $this->assertEqual(serialize($language_reference_definition), serialize($language_reference_definition2));
   }
 
 }

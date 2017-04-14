@@ -101,8 +101,8 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
 
     // Test that the definition factory creates the right definitions for all
     // entity data types variants.
-    $this->assertEqual($this->typedDataManager->createDataDefinition('entity'), EntityDataDefinition::create());
-    $this->assertEqual($this->typedDataManager->createDataDefinition('entity:node'), EntityDataDefinition::create('node'));
+    $this->assertEqual(serialize($this->typedDataManager->createDataDefinition('entity')), serialize(EntityDataDefinition::create()));
+    $this->assertEqual(serialize($this->typedDataManager->createDataDefinition('entity:node')), serialize(EntityDataDefinition::create('node')));
 
     // Config entities don't support typed data.
     $entity_definition = EntityDataDefinition::create('node_type');
@@ -123,7 +123,7 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
     // Test that the definition factory creates the right definition object.
     $reference_definition2 = $this->typedDataManager->createDataDefinition('entity_reference');
     $this->assertTrue($reference_definition2 instanceof DataReferenceDefinitionInterface);
-    $this->assertEqual($reference_definition2, $reference_definition);
+    $this->assertEqual(serialize($reference_definition2), serialize($reference_definition));
   }
 
 }

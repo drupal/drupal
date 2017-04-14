@@ -1,0 +1,7 @@
+llama: llama
+cat:
+  type: kitten
+  count: 2
+giraffe:
+  hum1: hum1
+  hum2: hum2

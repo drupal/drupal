@@ -158,3 +158,39 @@ config_test.foo:
 
 config_test.bar:
   type: config_test.foo
+
+config_test.validation:
+  type: config_object
+  label: 'Configuration type'
+  constraints:
+    Callback:
+      callback: [\Drupal\config_test\ConfigValidation, validateMapping]
+  mapping:
+    llama:
+      type: string
+      constraints:
+        Callback:
+          callback: [\Drupal\config_test\ConfigValidation, validateLlama]
+    cat:
+      type: mapping
+      mapping:
+        type:
+          type: string
+          constraints:
+            Callback:
+              callback: [\Drupal\config_test\ConfigValidation, validateCats]
+        count:
+          type: integer
+          constraints:
+            Callback:
+              callback: [\Drupal\config_test\ConfigValidation, validateCatCount]
+    giraffe:
+      type: sequence
+      constraints:
+        Callback:
+          callback: [\Drupal\config_test\ConfigValidation, validateSequence]
+      sequence:
+        type: string
+        constraints:
+          Callback:
+            callback: [\Drupal\config_test\ConfigValidation, validateGiraffes]
