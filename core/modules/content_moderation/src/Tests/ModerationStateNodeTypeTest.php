@@ -2,7 +2,6 @@
 
 namespace Drupal\content_moderation\Tests;
 
-
 /**
  * Tests moderation state node type integration.
  *
@@ -30,10 +29,25 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
    * Tests enabling moderation on an existing node-type, with content.
    */
   public function testEnablingOnExistingContent() {
+    $editor_permissions = [
+      'administer content moderation',
+      'access administration pages',
+      'administer content types',
+      'administer nodes',
+      'view latest version',
+      'view any unpublished content',
+      'access content overview',
+      'use editorial transition create_new_draft',
+    ];
+    $publish_permissions = array_merge($editor_permissions, ['use editorial transition publish']);
+    $editor = $this->drupalCreateUser($editor_permissions);
+    $editor_with_publish = $this->drupalCreateUser($publish_permissions);
+
     // Create a node type that is not moderated.
-    $this->drupalLogin($this->adminUser);
+    $this->drupalLogin($editor);
     $this->createContentTypeFromUi('Not moderated', 'not_moderated');
-    $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'not_moderated');
+    $this->grantUserPermissionToCreateContentOfType($editor, 'not_moderated');
+    $this->grantUserPermissionToCreateContentOfType($editor_with_publish, 'not_moderated');
 
     // Create content.
     $this->drupalGet('node/add/not_moderated');
@@ -68,7 +82,13 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertResponse(200);
     $this->assertRaw('Save and Create New Draft');
-    $this->assertNoRaw('Save and publish');
+    $this->assertNoRaw('Save and Publish');
+
+    $this->drupalLogin($editor_with_publish);
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertResponse(200);
+    $this->assertRaw('Save and Create New Draft');
+    $this->assertRaw('Save and Publish');
   }
 
 }
