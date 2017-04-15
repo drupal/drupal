@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\outside_in\FunctionalJavascript;
 
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\block_content\Entity\BlockContentType;
 use Drupal\user\Entity\Role;
 
 /**
@@ -26,6 +28,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     'outside_in',
     'quickedit',
     'search',
+    'block_content',
     // Add test module to override CSS pointer-events properties because they
     // cause test failures.
     'outside_in_test_css',
@@ -36,6 +39,10 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->createBlockContentType('basic', TRUE);
+    $block_content = $this->createBlockContent('Custom Block', 'basic', TRUE);
+
     // @todo Ensure that this test class works against bartik and stark:
     //   https://www.drupal.org/node/2784881.
     $this->enableTheme('bartik');
@@ -49,6 +56,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     ]);
     $this->drupalLogin($user);
 
+    $this->placeBlock('block_content:' . $block_content->uuid(), ['id' => 'custom']);
     $this->placeBlock('system_powered_by_block', ['id' => 'powered']);
     $this->placeBlock('system_branding_block', ['id' => 'branding']);
     $this->placeBlock('search_form_block', ['id' => 'search']);
@@ -367,6 +375,82 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $edit_button->press();
     // Waiting for Toolbar animation.
     $this->assertSession()->assertWaitOnAjaxRequest();
+  }
+
+  /**
+   * Creates a custom block.
+   *
+   * @param bool|string $title
+   *   (optional) Title of block. When no value is given uses a random name.
+   *   Defaults to FALSE.
+   * @param string $bundle
+   *   (optional) Bundle name. Defaults to 'basic'.
+   * @param bool $save
+   *   (optional) Whether to save the block. Defaults to TRUE.
+   *
+   * @return \Drupal\block_content\Entity\BlockContent
+   *   Created custom block.
+   */
+  protected function createBlockContent($title = FALSE, $bundle = 'basic', $save = TRUE) {
+    $title = $title ?: $this->randomName();
+    $block_content = BlockContent::create([
+      'info' => $title,
+      'type' => $bundle,
+      'langcode' => 'en',
+      'body' => [
+        'value' => 'The name "llama" was adopted by European settlers from native Peruvians.',
+        'format' => 'plain_text',
+      ],
+    ]);
+    if ($block_content && $save === TRUE) {
+      $block_content->save();
+    }
+    return $block_content;
+  }
+
+  /**
+   * Creates a custom block type (bundle).
+   *
+   * @param string $label
+   *   The block type label.
+   * @param bool $create_body
+   *   Whether or not to create the body field.
+   *
+   * @return \Drupal\block_content\Entity\BlockContentType
+   *   Created custom block type.
+   */
+  protected function createBlockContentType($label, $create_body = FALSE) {
+    $bundle = BlockContentType::create([
+      'id' => $label,
+      'label' => $label,
+      'revision' => FALSE,
+    ]);
+    $bundle->save();
+    if ($create_body) {
+      block_content_add_body_field($bundle->id());
+    }
+    return $bundle;
+  }
+
+  /**
+   * Tests that contextual links in custom blocks are changed.
+   *
+   * "Quick edit" is quickedit.module link.
+   * "Quick edit settings" is outside_in.module link.
+   */
+  public function testCustomBlockLinks() {
+    $this->drupalGet('user');
+    $page = $this->getSession()->getPage();
+    $links = $page->findAll('css', "#block-custom .contextual-links li a");
+    $link_labels = [];
+    /** @var \Behat\Mink\Element\NodeElement $link */
+    foreach ($links as $link) {
+      $link_labels[$link->getAttribute('href')] = $link->getText();
+    }
+    $href = array_search('Quick edit', $link_labels);
+    $this->assertEquals('', $href);
+    $href = array_search('Quick edit settings', $link_labels);
+    $this->assertTrue(strstr($href, '/admin/structure/block/manage/custom/offcanvas?destination=user/2') !== FALSE);
   }
 
 }
