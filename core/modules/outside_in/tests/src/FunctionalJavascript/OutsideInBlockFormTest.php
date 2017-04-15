@@ -62,8 +62,13 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
   public function testBlocks($block_id, $new_page_text, $element_selector, $label_selector, $button_text, $toolbar_item) {
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $block_selector = '#' . $block_id;
+    $block_selector = '#block-' . $block_id;
     $this->drupalGet('user');
+
+    $link = $page->find('css', "$block_selector .contextual-links li a");
+    $this->assertEquals('Quick edit', $link->getText(), "'Quick edit' is the first contextual link for the block.");
+    $this->assertContains("/admin/structure/block/manage/$block_id/offcanvas?destination=user/2", $link->getAttribute('href'));
+
     if (isset($toolbar_item)) {
       // Check that you can open a toolbar tray and it will be closed after
       // entering edit mode.
@@ -83,13 +88,13 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $this->openBlockForm($block_selector);
 
     switch ($block_id) {
-      case 'block-powered':
+      case 'powered':
         // Fill out form, save the form.
         $page->fillField('settings[label]', $new_page_text);
         $page->checkField('settings[label_display]');
         break;
 
-      case 'block-branding':
+      case 'branding':
         // Fill out form, save the form.
         $page->fillField('settings[site_information][site_name]', $new_page_text);
         break;
@@ -137,7 +142,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
   public function providerTestBlocks() {
     $blocks = [
       'block-powered' => [
-        'id' => 'block-powered',
+        'id' => 'powered',
         'new_page_text' => 'Can you imagine anyone showing the label on this block?',
         'element_selector' => '.content a',
         'label_selector' => 'h2',
@@ -145,7 +150,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
         'toolbar_item' => '#toolbar-item-user',
       ],
       'block-branding' => [
-        'id' => 'block-branding',
+        'id' => 'branding',
         'new_page_text' => 'The site that will live a very short life.',
         'element_selector' => 'a[rel="home"]:nth-child(2)',
         'label_selector' => '.site-branding__name a',
@@ -153,7 +158,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
         'toolbar_item' => '#toolbar-item-administration',
       ],
       'block-search' => [
-        'id' => 'block-search',
+        'id' => 'search',
         'new_page_text' => NULL,
         'element_selector' => '#edit-submit',
         'label_selector' => 'h2',
