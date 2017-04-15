@@ -45,6 +45,10 @@ function outside_in_contextual_links_view_alter(&$element, $items) {
       'data-dialog-renderer' => 'offcanvas',
       'data-outside-in-edit' => TRUE,
     ];
+    // If this is content block change title to avoid duplicate "Quick Edit".
+    if (isset($element['#links']['block-contentblock-edit'])) {
+      $element['#links']['outside-inblock-configure']['title'] = t('Quick edit settings');
+    }
 
     $element['#attached']['library'][] = 'outside_in/drupal.off_canvas';
   }
