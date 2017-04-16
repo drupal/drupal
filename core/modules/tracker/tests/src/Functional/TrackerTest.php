@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\tracker\Tests;
+namespace Drupal\Tests\tracker\Functional;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
@@ -9,15 +9,15 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
-use Drupal\simpletest\WebTestBase;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Create and delete nodes and check for their display in the tracker listings.
  *
  * @group tracker
  */
-class TrackerTest extends WebTestBase {
+class TrackerTest extends BrowserTestBase {
 
   use CommentTestTrait;
   use AssertPageCacheContextsAndTagsTrait;
