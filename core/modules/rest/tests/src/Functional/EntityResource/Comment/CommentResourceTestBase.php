@@ -281,7 +281,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     // @todo Uncomment, remove next 3 lines in https://www.drupal.org/node/2820364.
     $this->assertSame(500, $response->getStatusCode());
     $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
-    $this->assertSame('Internal Server Error', (string) $response->getBody());
+    $this->assertStringStartsWith('The website encountered an unexpected error. Please try again later.</br></br><em class="placeholder">Symfony\Component\HttpKernel\Exception\HttpException</em>: Internal Server Error in <em class="placeholder">Drupal\rest\Plugin\rest\resource\EntityResource-&gt;post()</em>', (string) $response->getBody());
     //$this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nentity_type: This value should not be null.\n", $response);
 
     // DX: 422 when missing 'entity_id' field.

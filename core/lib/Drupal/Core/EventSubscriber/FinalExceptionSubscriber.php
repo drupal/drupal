@@ -7,19 +7,31 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Last-chance handler for exceptions.
+ * Last-chance handler for exceptions: the final exception subscriber.
  *
  * This handler will catch any exceptions not caught elsewhere and report
  * them as an error page.
+ *
+ * Each format has its own way of handling exceptions:
+ * - html: exception.default_html, exception.custom_page_html and
+ *   exception.fast_404_html
+ * - json: exception.default_json
+ *
+ * And when the serialization module is installed, all serialization formats are
+ * handled by a single exception subscriber:: serialization.exception.default.
+ *
+ * This exception subscriber runs after all the above (it has a lower priority),
+ * which makes it the last-chance exception handler. It always sends a plain
+ * text response. If it's a displayable error and the error level is configured
+ * to be verbose, then a helpful backtrace is also printed.
  */
-class DefaultExceptionSubscriber implements EventSubscriberInterface {
+class FinalExceptionSubscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
@@ -37,7 +49,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
   protected $configFactory;
 
   /**
-   * Constructs a new DefaultExceptionSubscriber.
+   * Constructs a new FinalExceptionSubscriber.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
@@ -59,19 +71,19 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Handles any exception as a generic error page for HTML.
+   * Handles exceptions for this subscriber.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
    *   The event to process.
    */
-  protected function onHtml(GetResponseForExceptionEvent $event) {
+  public function onException(GetResponseForExceptionEvent $event) {
     $exception = $event->getException();
     $error = Error::decodeException($exception);
 
     // Display the message if the current error reporting level allows this type
     // of message to be displayed, and unconditionally in update.php.
     $message = '';
-    if (error_displayable($error)) {
+    if ($this->isErrorDisplayable($error)) {
       // If error type is 'User notice' then treat it as debug information
       // instead of an error message.
       // @see debug()
@@ -79,16 +91,11 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
         $error['%type'] = 'Debug';
       }
 
-      // Attempt to reduce verbosity by removing DRUPAL_ROOT from the file path
-      // in the message. This does not happen for (false) security.
-      $root_length = strlen(DRUPAL_ROOT);
-      if (substr($error['%file'], 0, $root_length) == DRUPAL_ROOT) {
-        $error['%file'] = substr($error['%file'], $root_length + 1);
-      }
+      $error = $this->simplifyFileInError($error);
 
       unset($error['backtrace']);
 
-      if ($this->getErrorLevel() != ERROR_REPORTING_DISPLAY_VERBOSE) {
+      if (!$this->isErrorLevelVerbose()) {
         // Without verbose logging, use a simple message.
 
         // We call SafeMarkup::format directly here, rather than use t() since
@@ -132,75 +139,57 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Handles an HttpExceptionInterface exception for unknown formats.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  protected function onFormatUnknown(GetResponseForExceptionEvent $event) {
-    /** @var \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface|\Exception $exception */
-    $exception = $event->getException();
-
-    $response = new Response($exception->getMessage(), $exception->getStatusCode(), $exception->getHeaders());
-    $event->setResponse($response);
-  }
-
-  /**
-   * Handles errors for this subscriber.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-   *   The event to process.
-   */
-  public function onException(GetResponseForExceptionEvent $event) {
-    $format = $this->getFormat($event->getRequest());
-    $exception = $event->getException();
-
-    $method = 'on' . $format;
-    if (!method_exists($this, $method)) {
-      if ($exception instanceof HttpExceptionInterface) {
-        $this->onFormatUnknown($event);
-        $response = $event->getResponse();
-        $response->headers->set('Content-Type', 'text/plain');
-      }
-      else {
-        $this->onHtml($event);
-      }
-    }
-    else {
-      $this->$method($event);
-    }
-  }
-
-  /**
-   * Gets the error-relevant format from the request.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return string
-   *   The format as which to treat the exception.
-   */
-  protected function getFormat(Request $request) {
-    $format = $request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT, $request->getRequestFormat());
-
-    // These are all JSON errors for our purposes. Any special handling for
-    // them can/should happen in earlier listeners if desired.
-    if (in_array($format, ['drupal_modal', 'drupal_dialog', 'drupal_ajax'])) {
-      $format = 'json';
-    }
-
-    return $format;
-  }
-
-  /**
-   * Registers the methods in this class that should be listeners.
-   *
-   * @return array
-   *   An array of event listener definitions.
+   * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
+    // Run as the final (very late) KernelEvents::EXCEPTION subscriber.
     $events[KernelEvents::EXCEPTION][] = ['onException', -256];
     return $events;
+  }
+
+  /**
+   * Checks whether the error level is verbose or not.
+   *
+   * @return bool
+   */
+  protected function isErrorLevelVerbose() {
+    return $this->getErrorLevel() === ERROR_REPORTING_DISPLAY_VERBOSE;
+  }
+
+  /**
+   * Wrapper for error_displayable().
+   *
+   * @param $error
+   *   Optional error to examine for ERROR_REPORTING_DISPLAY_SOME.
+   *
+   * @return bool
+   *
+   * @see \error_displayable
+   */
+  protected function isErrorDisplayable($error) {
+    return error_displayable($error);
+  }
+
+  /**
+   * Attempts to reduce error verbosity in the error message's file path.
+   *
+   * Attempts to reduce verbosity by removing DRUPAL_ROOT from the file path in
+   * the message. This does not happen for (false) security.
+   *
+   * @param $error
+   *   Optional error to examine for ERROR_REPORTING_DISPLAY_SOME.
+   *
+   * @return
+   *   The updated $error.
+   */
+  protected function simplifyFileInError($error) {
+    // Attempt to reduce verbosity by removing DRUPAL_ROOT from the file path
+    // in the message. This does not happen for (false) security.
+    $root_length = strlen(DRUPAL_ROOT);
+    if (substr($error['%file'], 0, $root_length) == DRUPAL_ROOT) {
+      $error['%file'] = substr($error['%file'], $root_length + 1);
+    }
+    return $error;
   }
 
 }

@@ -1232,8 +1232,8 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@http_kernel', '@logger.channel.php', '@redirect.destination', '@router.no_access_checks']
-  exception.default:
-    class: Drupal\Core\EventSubscriber\DefaultExceptionSubscriber
+  exception.final:
+    class: Drupal\Core\EventSubscriber\FinalExceptionSubscriber
     tags:
       - { name: event_subscriber }
     arguments: ['@config.factory']
