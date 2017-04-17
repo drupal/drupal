@@ -87,7 +87,6 @@ Base system
 - ?
 
 Basic Auth
-- Klaus Purer 'klausi' https://www.drupal.org/u/klausi
 - Juampy Novillo Requena 'juampy' https://www.drupal.org/u/juampy
 
 Batch API
@@ -340,7 +339,6 @@ Request Processing
 - Larry Garfield 'Crell' https://www.drupal.org/u/crell
 
 REST
-- Klaus Purer 'klausi' https://www.drupal.org/u/klausi
 - Larry Garfield 'Crell' https://www.drupal.org/u/crell
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
@@ -391,7 +389,6 @@ Telephone
 Testing framework
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
 - Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
-- Klaus Purer 'klausi' https://www.drupal.org/u/klausi
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
 
 Text Field
@@ -481,7 +478,6 @@ Workflow Initiative
 - Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
 
 PHPUnit Initiative
-- Klaus Purer 'klausi' https://www.drupal.org/u/klausi
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
 
 Layout Initiative
