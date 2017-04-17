@@ -132,4 +132,29 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $this->assertEquals($forward_revision->getTranslation('de')->name->value, 'forward revision - de');
   }
 
+  /**
+   * Tests changing the default revision flag is propagated to all translations.
+   */
+  public function testDefaultRevision() {
+    // Create a test entity with a translation, which will internally trigger
+    // entity cloning for the new translation and create references for some of
+    // the entity properties.
+    $entity = EntityTestMulRev::create([
+      'name' => 'original',
+      'language' => 'en',
+    ]);
+    $translation = $entity->addTranslation('de');
+    $entity->save();
+
+    // Assert that the entity is in the default revision.
+    $this->assertTrue($entity->isDefaultRevision());
+    $this->assertTrue($translation->isDefaultRevision());
+
+    // Change the default revision flag on one of the entity translations and
+    // assert that the change is propagated to all entity translation objects.
+    $translation->isDefaultRevision(FALSE);
+    $this->assertFalse($entity->isDefaultRevision());
+    $this->assertFalse($translation->isDefaultRevision());
+  }
+
 }
