@@ -38,9 +38,9 @@ class MigrateForumConfigsTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(1, $config->get('topics.order'));
     $this->assertIdentical('vocabulary_1_i_0_', $config->get('vocabulary'));
     // This is 'forum_block_num_0' in D6, but block:active:limit' in D8.
-    $this->assertIdentical(5, $config->get('block.active.limit'));
+    $this->assertSame(3, $config->get('block.active.limit'));
     // This is 'forum_block_num_1' in D6, but 'block:new:limit' in D8.
-    $this->assertIdentical(5, $config->get('block.new.limit'));
+    $this->assertSame(4, $config->get('block.new.limit'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'forum.settings', $config->get());
   }
 

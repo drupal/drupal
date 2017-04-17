@@ -30,7 +30,16 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation', 'migrate_drupal_ui', 'telephone'];
+  public static $modules = [
+    'language',
+    'content_translation',
+    'migrate_drupal_ui',
+    'telephone',
+    'aggregator',
+    'book',
+    'forum',
+    'statistics',
+  ];
 
   /**
    * {@inheritdoc}
@@ -143,8 +152,9 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
     $this->resetAll();
 
     $expected_counts = $this->getEntityCounts();
-    foreach (array_keys(\Drupal::entityTypeManager()->getDefinitions()) as $entity_type) {
-      $real_count = count(\Drupal::entityTypeManager()->getStorage($entity_type)->loadMultiple());
+    foreach (array_keys(\Drupal::entityTypeManager()
+      ->getDefinitions()) as $entity_type) {
+      $real_count = \Drupal::entityQuery($entity_type)->count()->execute();
       $expected_count = isset($expected_counts[$entity_type]) ? $expected_counts[$entity_type] : 0;
       $this->assertEqual($expected_count, $real_count, "Found $real_count $entity_type entities, expected $expected_count.");
     }

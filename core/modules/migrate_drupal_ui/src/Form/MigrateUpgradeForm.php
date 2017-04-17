@@ -426,7 +426,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'simpletest',
       'destination_module' => 'simpletest',
     ],
-    'd6_statistics_settings' => [
+    'statistics_settings' => [
       'source_module' => 'statistics',
       'destination_module' => 'statistics',
     ],
