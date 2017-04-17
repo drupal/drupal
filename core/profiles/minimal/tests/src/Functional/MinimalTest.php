@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\minimal\Tests;
+namespace Drupal\Tests\minimal\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests Minimal installation profile expectations.
  *
  * @group minimal
  */
-class MinimalTest extends WebTestBase {
+class MinimalTest extends BrowserTestBase {
 
   protected $profile = 'minimal';
 
