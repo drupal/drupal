@@ -35,8 +35,9 @@ interface CKEditorPluginButtonsInterface extends CKEditorPluginInterface {
    * @return array
    *   An array of buttons that are provided by this plugin. This will
    *   only be used in the administrative section for assembling the toolbar.
-   *   Each button should by keyed by its CKEditor button name, and should
-   *   contain an array of button properties, including:
+   *   Each button should be keyed by its CKEditor button name (you can look up
+   *   the button name up in the plugin.js file), and should contain an array of
+   *   button properties, including:
    *   - label: A human-readable, translated button name.
    *   - image: An image for the button to be used in the toolbar.
    *   - image_rtl: If the image needs to have a right-to-left version, specify
