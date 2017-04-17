@@ -60,4 +60,14 @@ class FeedAdminDisplayTest extends AggregatorTestBase {
     $this->assertNoText('left', 'The feed is not scheduled. It does not show a timeframe "x x left" for next update.');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function randomMachineName($length = 8) {
+    $value = parent::randomMachineName($length);
+    // See expected values in testFeedUpdateFields().
+    $value = str_replace(['never', 'imminently', 'ago', 'left'], 'x', $value);
+    return $value;
+  }
+
 }
