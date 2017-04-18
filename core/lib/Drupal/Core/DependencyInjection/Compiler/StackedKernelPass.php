@@ -10,9 +10,9 @@ use Symfony\Component\DependencyInjection\Reference;
  * Provides a compiler pass for stacked HTTP kernels.
  *
  * Builds the HTTP kernel by collecting all services tagged 'http_middleware'
- * and assembling them into a StackedKernel. The middleware with the lowest
- * priority ends up as the outermost while the highest priority middleware
- * wraps the actual HTTP kernel defined by the http_kernel.basic service.
+ * and assembling them into a StackedKernel. The middleware with the highest
+ * priority ends up as the outermost while the lowest priority middleware wraps
+ * the actual HTTP kernel defined by the http_kernel.basic service.
  *
  * The 'http_middleware' service tag additionally accepts a 'responder'
  * parameter. It should be set to TRUE if many or most requests will be handled
