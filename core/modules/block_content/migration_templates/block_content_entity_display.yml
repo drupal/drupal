@@ -1,0 +1,39 @@
+id: block_content_entity_display
+label: Body field display configuration
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: embedded_data
+  data_rows:
+    -
+      entity_type: block_content
+      bundle: basic
+      view_mode: default
+      field_name: body
+      options:
+        label: hidden
+  ids:
+    entity_type:
+      type: string
+    bundle:
+      type: string
+    view_mode:
+      type: string
+    field_name:
+      type: string
+process:
+  entity_type: entity_type
+  bundle: bundle
+  view_mode: view_mode
+  field_name: field_name
+  options: options
+destination:
+  plugin: component_entity_display
+migration_dependencies:
+  required:
+    - block_content_body_field
+provider:
+  - block_content
+  - migrate_drupal
+

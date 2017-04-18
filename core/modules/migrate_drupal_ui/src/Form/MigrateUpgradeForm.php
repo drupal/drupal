@@ -70,6 +70,14 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'block',
       'destination_module' => 'block',
     ],
+    'block_content_entity_form_display' => [
+      'source_module' => 'block',
+      'destination_module' => 'block_content',
+    ],
+    'block_content_entity_display' => [
+      'source_module' => 'block',
+      'destination_module' => 'block_content',
+    ],
     'block_content_body_field' => [
       'source_module' => 'block',
       'destination_module' => 'block_content',
