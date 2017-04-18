@@ -14,7 +14,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateCommentFieldTest extends MigrateDrupal7TestBase {
 
-  public static $modules = ['node', 'comment', 'text'];
+  public static $modules = ['node', 'comment', 'text', 'menu_ui'];
 
   /**
    * {@inheritdoc}

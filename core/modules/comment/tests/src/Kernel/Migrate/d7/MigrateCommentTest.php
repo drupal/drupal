@@ -14,7 +14,7 @@ use Drupal\node\NodeInterface;
  */
 class MigrateCommentTest extends MigrateDrupal7TestBase {
 
-  public static $modules = ['filter', 'node', 'comment', 'text'];
+  public static $modules = ['filter', 'node', 'comment', 'text', 'menu_ui'];
 
   /**
    * {@inheritdoc}

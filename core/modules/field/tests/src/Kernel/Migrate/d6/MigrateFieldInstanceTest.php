@@ -15,6 +15,11 @@ use Drupal\node\Entity\Node;
 class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public static $modules = ['menu_ui'];
+
+  /**
    * Tests migration of file variables to file.settings.yml.
    */
   public function testFieldInstanceMigration() {
