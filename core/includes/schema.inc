@@ -119,7 +119,7 @@ function drupal_install_schema($module) {
   _drupal_schema_initialize($schema, $module, FALSE);
 
   foreach ($schema as $name => $table) {
-    db_create_table($name, $table);
+    \Drupal::database()->schema()->createTable($name, $table);
   }
 }
 
