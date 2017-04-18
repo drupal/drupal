@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\ckeditor\Tests;
+namespace Drupal\Tests\ckeditor\Functional;
 
 use Drupal\editor\Entity\Editor;
-use Drupal\simpletest\WebTestBase;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests administration of the CKEditor StylesCombo plugin.
  *
  * @group ckeditor
  */
-class CKEditorStylesComboAdminTest extends WebTestBase {
+class CKEditorStylesComboAdminTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
