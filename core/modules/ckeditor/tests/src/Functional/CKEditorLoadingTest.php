@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\ckeditor\Tests;
+namespace Drupal\Tests\ckeditor\Functional;
 
 use Drupal\editor\Entity\Editor;
-use Drupal\simpletest\WebTestBase;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests loading of CKEditor.
  *
  * @group ckeditor
  */
-class CKEditorLoadingTest extends WebTestBase {
+class CKEditorLoadingTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

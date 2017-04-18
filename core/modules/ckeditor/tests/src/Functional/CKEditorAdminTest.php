@@ -1,19 +1,19 @@
 <?php
 
-namespace Drupal\ckeditor\Tests;
+namespace Drupal\Tests\ckeditor\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\FilterFormatInterface;
-use Drupal\simpletest\WebTestBase;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests administration of CKEditor.
  *
  * @group ckeditor
  */
-class CKEditorAdminTest extends WebTestBase {
+class CKEditorAdminTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -62,12 +62,12 @@ class CKEditorAdminTest extends WebTestBase {
     $select = $this->xpath('//select[@name="editor[editor]"]');
     $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
     $options = $this->xpath('//select[@name="editor[editor]"]/option');
-    $this->assertTrue(count($select) === 1, 'The Text Editor select exists.');
-    $this->assertTrue(count($select_is_disabled) === 0, 'The Text Editor select is not disabled.');
-    $this->assertTrue(count($options) === 2, 'The Text Editor select has two options.');
-    $this->assertTrue(((string) $options[0]) === 'None', 'Option 1 in the Text Editor select is "None".');
-    $this->assertTrue(((string) $options[1]) === 'CKEditor', 'Option 2 in the Text Editor select is "CKEditor".');
-    $this->assertTrue(((string) $options[0]['selected']) === 'selected', 'Option 1 ("None") is selected.');
+    $this->assertCount(1, $select, 'The Text Editor select exists.');
+    $this->assertCount(0, $select_is_disabled, 'The Text Editor select is not disabled.');
+    $this->assertCount(2, $options, 'The Text Editor select has two options.');
+    $this->assertSame('None', $options[0]->getText(), 'Option 1 in the Text Editor select is "None".');
+    $this->assertSame('CKEditor', $options[1]->getText(), 'Option 2 in the Text Editor select is "CKEditor".');
+    $this->assertSame('selected', $options[0]->getAttribute('selected'), 'Option 1 ("None") is selected.');
 
     // Select the "CKEditor" editor and click the "Save configuration" button.
     $edit = [
@@ -110,7 +110,7 @@ class CKEditorAdminTest extends WebTestBase {
     $this->assertIdentical($this->castSafeStrings($ckeditor->getDefaultSettings()), $expected_default_settings);
 
     // Keep the "CKEditor" editor selected and click the "Configure" button.
-    $this->drupalPostAjaxForm(NULL, $edit, 'editor_configure');
+    $this->drupalPostForm(NULL, $edit, 'editor_configure');
     $editor = Editor::load('filtered_html');
     $this->assertFalse($editor, 'No Editor config entity exists yet.');
 
@@ -120,8 +120,10 @@ class CKEditorAdminTest extends WebTestBase {
       '#editor' => Editor::create(['editor' => 'ckeditor']),
       '#plugins' => $this->container->get('plugin.manager.ckeditor.plugin')->getButtons(),
     ];
+    $settings = $this->getDrupalSettings();
+    $expected = $settings['ckeditor']['toolbarAdmin'];
     $this->assertEqual(
-      $this->drupalSettings['ckeditor']['toolbarAdmin'],
+      $expected,
       $this->container->get('renderer')->renderPlain($ckeditor_settings_toolbar),
       'CKEditor toolbar settings are rendered as part of drupalSettings.'
     );
@@ -230,12 +232,12 @@ class CKEditorAdminTest extends WebTestBase {
     $select = $this->xpath('//select[@name="editor[editor]"]');
     $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
     $options = $this->xpath('//select[@name="editor[editor]"]/option');
-    $this->assertTrue(count($select) === 1, 'The Text Editor select exists.');
-    $this->assertTrue(count($select_is_disabled) === 0, 'The Text Editor select is not disabled.');
-    $this->assertTrue(count($options) === 2, 'The Text Editor select has two options.');
-    $this->assertTrue(((string) $options[0]) === 'None', 'Option 1 in the Text Editor select is "None".');
-    $this->assertTrue(((string) $options[1]) === 'CKEditor', 'Option 2 in the Text Editor select is "CKEditor".');
-    $this->assertTrue(((string) $options[0]['selected']) === 'selected', 'Option 1 ("None") is selected.');
+    $this->assertCount(1, $select, 'The Text Editor select exists.');
+    $this->assertCount(0, $select_is_disabled, 'The Text Editor select is not disabled.');
+    $this->assertCount(2, $options, 'The Text Editor select has two options.');
+    $this->assertSame('None', $options[0]->getText(), 'Option 1 in the Text Editor select is "None".');
+    $this->assertSame('CKEditor', $options[1]->getText(), 'Option 2 in the Text Editor select is "CKEditor".');
+    $this->assertSame('selected', $options[0]->getAttribute('selected'), 'Option 1 ("None") is selected.');
 
     // Name our fancy new text format, select the "CKEditor" editor and click
     // the "Configure" button.
@@ -244,7 +246,7 @@ class CKEditorAdminTest extends WebTestBase {
       'format' => 'amazing_format',
       'editor[editor]' => 'ckeditor',
     ];
-    $this->drupalPostAjaxForm(NULL, $edit, 'editor_configure');
+    $this->drupalPostForm(NULL, $edit, 'editor_configure');
     $filter_format = FilterFormat::load('amazing_format');
     $this->assertFalse($filter_format, 'No FilterFormat config entity exists yet.');
     $editor = Editor::load('amazing_format');
@@ -258,7 +260,9 @@ class CKEditorAdminTest extends WebTestBase {
     $this->assertFieldByName('editor[settings][toolbar][button_groups]', $expected_buttons_value);
 
     // Regression test for https://www.drupal.org/node/2606460.
-    $this->assertTrue(strpos($this->drupalSettings['ckeditor']['toolbarAdmin'], '<li data-drupal-ckeditor-button-name="Bold" class="ckeditor-button"><a href="#" class="cke-icon-only cke_ltr" role="button" title="bold" aria-label="bold"><span class="cke_button_icon cke_button__bold_icon">bold</span></a></li>') !== FALSE);
+    $settings = $this->getDrupalSettings();
+    $expected = $settings['ckeditor']['toolbarAdmin'];
+    $this->assertTrue(strpos($expected, '<li data-drupal-ckeditor-button-name="Bold" class="ckeditor-button"><a href="#" class="cke-icon-only cke_ltr" role="button" title="bold" aria-label="bold"><span class="cke_button_icon cke_button__bold_icon">bold</span></a></li>') !== FALSE);
 
     // Ensure the styles textarea exists and is initialized empty.
     $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');
