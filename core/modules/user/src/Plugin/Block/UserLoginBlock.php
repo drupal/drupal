@@ -6,7 +6,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Block\BlockBase;
@@ -23,7 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
-  use UrlGeneratorTrait;
   use RedirectDestinationTrait;
 
   /**
@@ -94,7 +92,24 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
     unset($form['pass']['#attributes']['aria-describedby']);
     $form['name']['#size'] = 15;
     $form['pass']['#size'] = 15;
-    $form['#action'] = $this->url('<current>', [], ['query' => $this->getDestinationArray(), 'external' => FALSE]);
+
+    // Instead of setting an actual action URL, we set the placeholder, which
+    // will be replaced at the very last moment. This ensures forms with
+    // dynamically generated action URLs don't have poor cacheability.
+    // Use the proper API to generate the placeholder, when we have one. See
+    // https://www.drupal.org/node/2562341. The placholder uses a fixed string
+    // that is
+    // Crypt::hashBase64('\Drupal\user\Plugin\Block\UserLoginBlock::build');
+    // This is based on the implementation in
+    // \Drupal\Core\Form\FormBuilder::prepareForm(), but the user login block
+    // requires different behavior for the destination query argument.
+    $placeholder = 'form_action_p_4r8ITd22yaUvXM6SzwrSe9rnQWe48hz9k1Sxto3pBvE';
+
+    $form['#attached']['placeholders'][$placeholder] = [
+      '#lazy_builder' => ['\Drupal\user\Plugin\Block\UserLoginBlock::renderPlaceholderFormAction', []],
+    ];
+    $form['#action'] = $placeholder;
+
     // Build action links.
     $items = [];
     if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
@@ -125,6 +140,22 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
         '#theme' => 'item_list',
         '#items' => $items,
       ],
+    ];
+  }
+
+  /**
+   * #lazy_builder callback; renders a form action URL including destination.
+   *
+   * @return array
+   *   A renderable array representing the form action.
+   *
+   * @see \Drupal\Core\Form\FormBuilder::renderPlaceholderFormAction()
+   */
+  public static function renderPlaceholderFormAction() {
+    return [
+      '#type' => 'markup',
+      '#markup' => Url::fromRoute('<current>', [], ['query' => \Drupal::destination()->getAsArray(), 'external' => FALSE])->toString(),
+      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
     ];
   }
 
