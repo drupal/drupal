@@ -731,7 +731,7 @@ services:
      class: Asm89\Stack\Cors
      arguments: ['%cors.config%']
      tags:
-       - { name: http_middleware }
+       - { name: http_middleware, priority: 250 }
   psr7.http_foundation_factory:
     class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
   psr7.http_message_factory:
