@@ -757,6 +757,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
     // 201 for well-formed request.
+    // Delete the first created entity in case there is a uniqueness constraint.
+    $this->entityStorage->load(static::$firstCreatedEntityId)->delete();
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceResponse(201, FALSE, $response);
     if ($has_canonical_url) {
