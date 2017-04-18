@@ -46082,6 +46082,10 @@ $connection->insert('variable')
   'value',
 ))
 ->values(array(
+  'name' => 'menu_default_node_menu',
+  'value' => 's:10:"navigation";',
+))
+->values(array(
   'name' => 'actions_max_stack',
   'value' => 'i:35;',
 ))

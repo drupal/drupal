@@ -101,6 +101,12 @@ class NodeType extends DrupalSqlBase {
 
     $row->setSourceProperty('display_submitted', $this->variableGet('node_submitted_' . $type, TRUE));
 
+    if ($menu_options = $this->variableGet('menu_options_' . $type, NULL)) {
+      $row->setSourceProperty('available_menus', $menu_options);
+    }
+    if ($parent = $this->variableGet('menu_parent_' . $type, NULL)) {
+      $row->setSourceProperty('parent', $parent . ':');
+    }
     return parent::prepareRow($row);
   }
 

@@ -16,7 +16,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language', 'content_translation', 'path'];
+  public static $modules = ['language', 'content_translation', 'path', 'menu_ui'];
 
   /**
    * {@inheritdoc}

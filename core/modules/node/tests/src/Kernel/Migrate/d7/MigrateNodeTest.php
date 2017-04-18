@@ -24,6 +24,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     'image',
     'language',
     'link',
+    'menu_ui',
     'node',
     'taxonomy',
     'telephone',

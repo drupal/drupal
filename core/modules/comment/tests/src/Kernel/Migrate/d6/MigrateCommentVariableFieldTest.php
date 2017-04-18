@@ -15,7 +15,7 @@ class MigrateCommentVariableFieldTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['comment'];
+  public static $modules = ['comment', 'menu_ui'];
 
   /**
    * {@inheritdoc}

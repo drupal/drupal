@@ -20,5 +20,7 @@ process:
   'settings/node/options': options
   create_body: has_body
   create_body_label: body_label
+  'third_party_settings/menu_ui/available_menus': available_menus
+  'third_party_settings/menu_ui/parent': parent
 destination:
   plugin: entity:node_type
