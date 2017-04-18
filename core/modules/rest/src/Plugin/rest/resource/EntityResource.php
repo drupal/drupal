@@ -432,7 +432,10 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    */
   protected function addLinkHeaders(EntityInterface $entity, Response $response) {
     foreach ($entity->getEntityType()->getLinkTemplates() as $relation_name => $link_template) {
-      if ($definition = $this->linkRelationTypeManager->getDefinition($relation_name, FALSE)) {
+      if ($this->linkRelationTypeManager->hasDefinition($relation_name)) {
+        /** @var \Drupal\Core\Http\LinkRelationTypeInterface $link_relation_type */
+        $link_relation_type = $this->linkRelationTypeManager->createInstance($relation_name);
+
         $generator_url = $entity->toUrl($relation_name)
           ->setAbsolute(TRUE)
           ->toString(TRUE);
@@ -440,10 +443,10 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
           $response->addCacheableDependency($generator_url);
         }
         $uri = $generator_url->getGeneratedUrl();
-        $relationship = $relation_name;
-        if (!empty($definition['uri'])) {
-          $relationship = $definition['uri'];
-        }
+
+        $relationship = $link_relation_type->isRegistered()
+          ? $link_relation_type->getRegisteredName()
+          : $link_relation_type->getExtensionUri();
 
         $link_header = '<' . $uri . '>; rel="' . $relationship . '"';
         $response->headers->set('Link', $link_header, FALSE);

@@ -424,11 +424,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     if ($this->entity->getEntityType()->getLinkTemplates()) {
       $this->assertArrayHasKey('Link', $response->getHeaders());
       $link_relation_type_manager = $this->container->get('plugin.manager.link_relation_type');
-      $expected_link_relation_headers = array_map(function ($rel) use ($link_relation_type_manager) {
-        $definition = $link_relation_type_manager->getDefinition($rel, FALSE);
-        return (!empty($definition['uri']))
-          ? $definition['uri']
-          : $rel;
+      $expected_link_relation_headers = array_map(function ($relation_name) use ($link_relation_type_manager) {
+        $link_relation_type = $link_relation_type_manager->createInstance($relation_name);
+        return $link_relation_type->isRegistered()
+          ? $link_relation_type->getRegisteredName()
+          : $link_relation_type->getExtensionUri();
       }, array_keys($this->entity->getEntityType()->getLinkTemplates()));
       $parse_rel_from_link_header = function ($value) use ($link_relation_type_manager) {
         $matches = [];
