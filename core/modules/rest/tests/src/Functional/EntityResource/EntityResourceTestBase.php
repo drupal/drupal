@@ -900,19 +900,15 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
     // DX: 403 when sending PATCH request with read-only fields.
-    // First send all fields (the "maximum normalization"). Assert the expected
-    // error message for the first PATCH-protected field. Remove that field from
-    // the normalization, send another request, assert the next PATCH-protected
-    // field error message. And so on.
-    $max_normalization = $this->getNormalizedPatchEntity() + $this->serializer->normalize($this->entity, static::$format);
-    for ($i = 0; $i < count(static::$patchProtectedFieldNames); $i++) {
-      $max_normalization = $this->removeFieldsFromNormalization($max_normalization, array_slice(static::$patchProtectedFieldNames, 0, $i));
-      $request_options[RequestOptions::BODY] = $this->serializer->serialize($max_normalization, static::$format);
+    foreach (static::$patchProtectedFieldNames as $field_name) {
+      $normalization = $this->getNormalizedPatchEntity() + [$field_name => [['value' => $this->randomString()]]];
+      $request_options[RequestOptions::BODY] = $this->serializer->serialize($normalization, static::$format);
       $response = $this->request('PATCH', $url, $request_options);
-      $this->assertResourceErrorResponse(403, "Access denied on updating field '" . static::$patchProtectedFieldNames[$i] . "'.", $response);
+      $this->assertResourceErrorResponse(403, "Access denied on updating field '$field_name'.", $response);
     }
 
     // 200 for well-formed request that sends the maximum number of fields.
+    $max_normalization = $this->getNormalizedPatchEntity() + $this->serializer->normalize($this->entity, static::$format);
     $max_normalization = $this->removeFieldsFromNormalization($max_normalization, static::$patchProtectedFieldNames);
     $request_options[RequestOptions::BODY] = $this->serializer->serialize($max_normalization, static::$format);
     $response = $this->request('PATCH', $url, $request_options);

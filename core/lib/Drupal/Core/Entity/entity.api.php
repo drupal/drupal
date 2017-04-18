@@ -271,6 +271,11 @@ use Drupal\node\Entity\NodeType;
  *   either \Drupal\Core\Config\Entity\ConfigEntityBase or
  *   \Drupal\Core\Entity\ContentEntityBase, with annotation for
  *   \@ConfigEntityType or \@ContentEntityType in its documentation block.
+ *   If you are defining a content entity type, it is recommended to extend the
+ *   \Drupal\Core\Entity\EditorialContentEntityBase base class in order to get
+ *   out-of-the-box support for Entity API's revisioning and publishing
+ *   features, which will allow your entity type to be used with Drupal's
+ *   editorial workflow provided by the Content Moderation module.
  * - The 'id' annotation gives the entity type ID, and the 'label' annotation
  *   gives the human-readable name of the entity type. If you are defining a
  *   content entity type that uses bundles, the 'bundle_label' annotation gives
