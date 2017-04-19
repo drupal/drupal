@@ -1,3 +1,7 @@
+Drupal 8.3.1, 2017-04-19
+------------------------
+- Fixed security issues. See SA-CORE-2017-002.
+
 Drupal 8.3.0, 2017-04-05
 ------------------------
 - Added modules:
