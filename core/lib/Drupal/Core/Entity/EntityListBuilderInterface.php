@@ -22,7 +22,9 @@ interface EntityListBuilderInterface {
    * sorting the loaded entities.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
-   *   An array of entities implementing \Drupal\Core\Entity\EntityInterface.
+   *   An array of entities implementing \Drupal\Core\Entity\EntityInterface
+   *   indexed by their IDs. Returns an empty array if no matching entities are
+   *   found.
    */
   public function load();
 
