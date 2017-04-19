@@ -597,6 +597,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $this->database->delete($this->revisionTable)
       ->condition($this->revisionKey, $revision->getRevisionId())
       ->execute();
+
+    if ($this->revisionDataTable) {
+      $this->database->delete($this->revisionDataTable)
+        ->condition($this->revisionKey, $revision->getRevisionId())
+        ->execute();
+    }
+
     $this->deleteRevisionFromDedicatedTables($revision);
   }
 
