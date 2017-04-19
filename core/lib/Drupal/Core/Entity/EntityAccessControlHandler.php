@@ -303,6 +303,19 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     // Get the default access restriction that lives within this field.
     $default = $items ? $items->defaultAccess($operation, $account) : AccessResult::allowed();
 
+    // Explicitly disallow changing the entity ID and entity UUID.
+    if ($operation === 'edit') {
+      if ($field_definition->getName() === $this->entityType->getKey('id')) {
+        return $return_as_object ? AccessResult::forbidden('The entity ID cannot be changed') : FALSE;
+      }
+      elseif ($field_definition->getName() === $this->entityType->getKey('uuid')) {
+        // UUIDs can be set when creating an entity.
+        if ($items && ($entity = $items->getEntity()) && !$entity->isNew()) {
+          return $return_as_object ? AccessResult::forbidden('The entity UUID cannot be changed')->addCacheableDependency($entity) : FALSE;
+        }
+      }
+    }
+
     // Get the default access restriction as specified by the access control
     // handler.
     $entity_default = $this->checkFieldAccess($operation, $field_definition, $account, $items);
