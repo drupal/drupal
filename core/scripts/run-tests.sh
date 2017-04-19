@@ -1062,12 +1062,12 @@ function simpletest_script_get_test_list() {
         $content = file_get_contents($file);
         // Extract a potential namespace.
         $namespace = FALSE;
-        if (preg_match('@^namespace ([^ ;]+)@m', $content, $matches)) {
+        if (preg_match('@^\s*namespace ([^ ;]+)@m', $content, $matches)) {
           $namespace = $matches[1];
         }
         // Extract all class names.
         // Abstract classes are excluded on purpose.
-        preg_match_all('@^class ([^ ]+)@m', $content, $matches);
+        preg_match_all('@^\s*class ([^ ]+)@m', $content, $matches);
         if (!$namespace) {
           $test_list = array_merge($test_list, $matches[1]);
         }
