@@ -5,7 +5,7 @@ namespace Drupal\Tests\migrate\Kernel;
 /**
  * Tests the high water handling.
  *
- * @covers \Drupal\migrate_sql_test\Plugin\migrate\source\HighWaterTest
+ * @covers \Drupal\migrate_high_water_test\Plugin\migrate\source\HighWaterTest
  * @group migrate
  */
 class HighWaterNotJoinableTest extends MigrateSqlSourceTestBase {
@@ -13,7 +13,7 @@ class HighWaterNotJoinableTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['migrate', 'migrate_drupal', 'migrate_sql_test'];
+  public static $modules = ['migrate', 'migrate_drupal', 'migrate_high_water_test'];
 
   /**
    * {@inheritdoc}

@@ -1,7 +1,0 @@
-type: module
-name: Migrate SQL Source test
-description: 'Provides a database table and records for SQL import testing.'
-package: Testing
-core: 8.x
-dependencies:
-  - migrate

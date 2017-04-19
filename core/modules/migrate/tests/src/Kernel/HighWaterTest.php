@@ -17,7 +17,7 @@ class HighWaterTest extends MigrateTestBase {
     'user',
     'node',
     'migrate',
-    'migrate_sql_test',
+    'migrate_high_water_test',
     'field',
   ];
 
