@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\migrate_sql_test\Plugin\migrate\source;
+namespace Drupal\migrate_high_water_test\Plugin\migrate\source;
 
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 
