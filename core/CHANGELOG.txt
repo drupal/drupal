@@ -1,3 +1,7 @@
+Drupal 8.2.8, 2017-04-19
+------------------------
+- Fixed security issues. See SA-CORE-2017-002.
+
 Drupal 8.2.7, 2017-03-15
 ------------------------
 - Fixed security issues. See SA-CORE-2017-001.
