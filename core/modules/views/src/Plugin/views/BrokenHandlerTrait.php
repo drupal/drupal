@@ -59,7 +59,7 @@ trait BrokenHandlerTrait {
       }
     }
 
-    $description_bottom = t('Enabling the appropriate module will may solve this issue. Otherwise, check to see if there is a module update available.');
+    $description_bottom = t('Enabling the appropriate module may solve this issue. Otherwise, check to see if there is a module update available.');
 
     $form['description'] = [
       '#type' => 'container',
