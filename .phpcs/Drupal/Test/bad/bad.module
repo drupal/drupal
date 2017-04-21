@@ -1,0 +1,51 @@
+<?php
+/**
+ * @file
+ * Bad examples of install hooks in a module file.
+ */
+
+define('UNPREFIXED_CONSTANT', 'invalid');
+
+/**
+ * Implements hook_install().
+ */
+function bad_install() {
+  return TRUE;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function bad_uninstall() {
+  return TRUE;
+}
+
+/**
+ * Implements hook_install().
+ */
+function bad_schema() {
+  return TRUE;
+}
+
+/**
+ * Implements hook_install().
+ */
+function bad_requirements() {
+  return TRUE;
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * Menu title and description should be untranslated.
+ */
+function bad_menu() {
+  $items['example'] = array(
+    'title' => t('Example Page'),
+    'description' => t('My example module page that does something.'),
+    'page callback' => 'example_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  return $items;
+}

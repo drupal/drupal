@@ -1,0 +1,10 @@
+<?php
+
+namespace Blah;
+
+/**
+ * Bla.
+ */
+trait Pum {
+
+}

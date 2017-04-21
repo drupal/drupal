@@ -1,0 +1,36 @@
+---
+engines:
+  phpmd:
+    enabled: true
+    config:
+      file_extensions: "php,inc,module"
+      rulesets: ".phpmd.xml"
+  phpcodesniffer:
+    enabled: true
+    config:
+      file_extensions: "php,inc,module"
+      encoding: utf-8
+      standard: ".phpcs/Drupal/ruleset.xml"
+      ignore_warnings: true
+ratings:
+  paths:
+  - "core/lib/Drupal/Core/**.php"
+  - "core/lib/Drupal/Core/**.inc"
+  - "core/lib/Drupal/Core/**.module"
+exclude_paths:
+- .phpcs
+- "**/Test/**/*"
+- core/assets
+- core/config
+- core/includes
+- core/lib/Drupal/Component
+- core/misc
+- core/modules
+- core/profiles
+- core/scripts
+- core/tests
+- core/themes
+- modules
+- profiles
+- sites
+- themes

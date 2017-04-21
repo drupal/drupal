@@ -1,0 +1,3 @@
+name = Test
+core = 7.x
+files[] = trait.php

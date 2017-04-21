@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ */
+
+// Comment should be on the line before.
+test();

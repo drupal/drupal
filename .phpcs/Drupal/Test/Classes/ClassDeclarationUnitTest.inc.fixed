@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Contains Test.
+ */
+
+/**
+ * Test class.
+ */
+class Test extends OtherClass {
+
+}
+
+namespace FirstNamespace{
+  /**
+   * FirstClass for the test.
+   */
+  class FirstClass {
+
+  }
+}
+
+namespace SecondNamespace{
+  /**
+   * SecondClass for the test.
+   */
+  class SecondClass {
+
+  }
+}
+
+namespace {
+  // Global namespace.
+}
+
+/**
+ * Testing an empty class body with comment.
+ */
+class ThirdClass {
+  // No-op.
+}

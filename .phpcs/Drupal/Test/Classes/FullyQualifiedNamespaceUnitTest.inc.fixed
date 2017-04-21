@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * @file
+ */
+
+use Drupal\my_module\Example\MyUrlHelper;
+
+$x = new MyUrlHelper();

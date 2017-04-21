@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ruleset xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PMD Ruleset for Drupal" xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+  <description>
+    A PMD Ruleset for Drupal coding standards.
+  </description>
+
+  <!--
+    Include each rule explicitly so we know what we have.
+    @see https://github.com/phpmd/phpmd/blob/master/src/main/resources/rulesets/
+  -->
+
+  <!-- Clean Code -->
+  <!--
+  These don't align with Drupal standards, so they are excluded.
+  @todo Static calls are hard to test and extend, is there a way to whitelist the ones that are OK?
+  <rule ref="rulesets/cleancode.xml/BooleanArgumentFlag"/>
+  <rule ref="rulesets/cleancode.xml/ElseExpression"/>
+  <rule ref="rulesets/cleancode.xml/StaticAccess"/>
+  -->
+
+  <!-- Code Size -->
+  <rule ref="rulesets/codesize.xml/CyclomaticComplexity"/>
+  <rule ref="rulesets/codesize.xml/NPathComplexity"/>
+  <rule ref="rulesets/codesize.xml/ExcessiveMethodLength"/>
+  <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>
+  <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>
+  <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>
+  <rule ref="rulesets/codesize.xml/TooManyFields"/>
+
+  <!-- Controversial -->
+  <rule ref="rulesets/controversial.xml/Superglobals"/>
+  <!--
+  These checks do not need to be included since PHPCS will check for style.
+  <rule ref="rulesets/controversial.xml/CamelCaseClassName"/>
+  <rule ref="rulesets/controversial.xml/CamelCasePropertyName"/>
+  <rule ref="rulesets/controversial.xml/CamelCaseMethodName"/>
+  <rule ref="rulesets/controversial.xml/CamelCaseParameterName"/>
+  <rule ref="rulesets/controversial.xml/CamelCaseVariableName"/>
+  -->
+
+  <!-- Design -->
+  <rule ref="rulesets/design.xml/ExitExpression"/>
+  <rule ref="rulesets/design.xml/EvalExpression"/>
+  <rule ref="rulesets/design.xml/GotoStatement"/>
+  <rule ref="rulesets/design.xml/NumberOfChildren"/>
+  <rule ref="rulesets/design.xml/DepthOfInheritance"/>
+  <rule ref="rulesets/design.xml/CouplingBetweenObjects"/>
+  <rule ref="rulesets/design.xml/DevelopmentCodeFragment"/>
+
+  <!-- Naming -->
+  <rule ref="rulesets/naming.xml/ShortVariable">
+    <properties>
+      <!-- Allow $id as a variable name. -->
+      <property name="exceptions" description="Comma-separated list of exceptions" value="id"/>
+    </properties>
+  </rule>
+  <rule ref="rulesets/naming.xml/LongVariable">
+    <properties>
+      <!-- Bump variable length to a more reasonable number. -->
+      <property name="maximum" description="The variable length reporting threshold" value="35"/>
+    </properties>
+  </rule>
+  <rule ref="rulesets/naming.xml/ShortMethodName"/>
+  <rule ref="rulesets/naming.xml/ConstructorWithNameAsEnclosingClass"/>
+  <rule ref="rulesets/naming.xml/ConstantNamingConventions"/>
+  <rule ref="rulesets/naming.xml/BooleanGetMethodName"/>
+
+  <!-- Unused Code -->
+  <rule ref="rulesets/unusedcode.xml/UnusedPrivateField"/>
+  <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/>
+  <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod"/>
+  <!--
+  Hooks often have unused parameters, so ignore this warning.
+  @todo is there a way to allow unused parameters in hooks but not elsewhere?
+  <rule ref="rulesets/unusedcode.xml/UnusedFormalParameter"/>
+  -->
+
+</ruleset>

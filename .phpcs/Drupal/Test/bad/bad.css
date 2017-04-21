@@ -1,0 +1,39 @@
+#forum .description{
+  color: #EFEFEF; /* Colors should be lower case. Blank lines in class definitions are not allowed. */
+  
+  font-size:0.9em; /* There should be a space after the colon. */
+    margin: 0.5em; /* Indentation error. */
+  background: ; /* Empty style definitions are not allowed. */
+  font-weight normal; /* Missing colon. */
+  font-family: helvetica, sans-serif /* Mising semicolon. */
+  padding-left: 2em ; /* Space before semicolon. */
+}
+
+.testselector {display: table; border: none;}
+
+/* Blank lines between selectors are not allowed. */
+#forum td.posts,
+
+#forum td.pager {
+}
+
+/* Empty definitions are not allowed. */
+.book-navigation .page-previous {
+}
+
+/* Missing colon in style definition */
+.selector {
+
+  foobar;
+}
+
+/* Multiple selectors should be on separate lines. */
+#forum td.posts, #forum td.pager {
+  font-size: 0.9em;
+}
+
+/* Selectors must be on a single line. */
+.book-navigation
+.page-previous {
+  font-size: 0.9em;
+}

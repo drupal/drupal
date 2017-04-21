@@ -1,0 +1,5 @@
+name = Bad2
+description = Bad example of an info file.
+core = 7.x
+; Specifying a lower PHP version than Drupal core requires anyway.
+php = "5.1"
