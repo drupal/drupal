@@ -5,6 +5,7 @@ namespace Drupal\field_ui\Tests;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
+use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -74,6 +75,13 @@ class FieldUIDeleteTest extends WebTestBase {
     \Drupal::service('module_installer')->install(['views']);
     ViewTestData::createTestViews(get_class($this), ['field_test_views']);
 
+    $view = View::load('test_view_field_delete');
+    $this->assertNotNull($view);
+    $this->assertTrue($view->status());
+    // Test that the View depends on the field.
+    $dependencies = $view->getDependencies() + ['config' => []];
+    $this->assertTrue(in_array("field.storage.node.$field_name", $dependencies['config']));
+
     // Check the config dependencies of the first field, the field storage must
     // not be shown as being deleted yet.
     $this->drupalGet("$bundle_path1/fields/node.$type_name1.$field_name/delete");
@@ -91,13 +99,13 @@ class FieldUIDeleteTest extends WebTestBase {
 
     // Check the config dependencies of the first field.
     $this->drupalGet("$bundle_path2/fields/node.$type_name2.$field_name/delete");
-    $this->assertText(t('The listed configuration will be deleted.'));
+    $this->assertText(t('The listed configuration will be updated.'));
     $this->assertText(t('View'));
     $this->assertText('test_view_field_delete');
 
     $xml = $this->cssSelect('#edit-entity-deletes');
-    // Remove the wrapping HTML.
-    $this->assertIdentical(FALSE, strpos($xml[0]->asXml(), $field_label), 'The currently being deleted field is not shown in the entity deletions.');
+    // Test that nothing is scheduled for deletion.
+    $this->assertFalse(isset($xml[0]), 'The field currently being deleted is not shown in the entity deletions.');
 
     // Delete the second field.
     $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$field_name", $field_label, $type_name2);
@@ -106,6 +114,14 @@ class FieldUIDeleteTest extends WebTestBase {
     $this->assertNull(FieldConfig::loadByName('node', $type_name2, $field_name), 'Field was deleted.');
     // Check that the field storage was deleted too.
     $this->assertNull(FieldStorageConfig::loadByName('node', $field_name), 'Field storage was deleted.');
+
+    // Test that the View isn't deleted and has been disabled.
+    $view = View::load('test_view_field_delete');
+    $this->assertNotNull($view);
+    $this->assertFalse($view->status());
+    // Test that the View no longer depends on the deleted field.
+    $dependencies = $view->getDependencies() + ['config' => []];
+    $this->assertFalse(in_array("field.storage.node.$field_name", $dependencies['config']));
   }
 
 }
