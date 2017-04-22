@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalTests\HttpKernel;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -72,6 +73,19 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
+
+    // Verify POST still functions with 'Origin' header set to site's domain.
+    $origin = \Drupal::request()->getSchemeAndHttpHost();
+
+    /** @var \GuzzleHttp\ClientInterface $httpClient */
+    $httpClient = $this->getSession()->getDriver()->getClient()->getClient();
+    $url = Url::fromUri('base:/test-page');
+    $response = $httpClient->request('POST', $url->setAbsolute()->toString(), [
+      'headers' => [
+        'Origin' => $origin,
+      ]
+    ]);
+    $this->assertEquals(200, $response->getStatusCode());
   }
 
 }

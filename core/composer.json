@@ -32,7 +32,7 @@
         "zendframework/zend-diactoros": "~1.1",
         "composer/semver": "~1.0",
         "paragonie/random_compat": "^1.0|^2.0",
-        "asm89/stack-cors": "~1.0"
+        "asm89/stack-cors": "~1.1"
     },
     "conflict": {
         "drush/drush": "<8.1.10"
