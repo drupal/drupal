@@ -660,8 +660,17 @@ function views_query_views_alter(AlterableInterface $query) {
   // Replaces substitutions in tables.
   foreach ($tables as $table_name => $table_metadata) {
     foreach ($table_metadata['arguments'] as $replacement_key => $value) {
-      if (isset($substitutions[$value])) {
-        $tables[$table_name]['arguments'][$replacement_key] = $substitutions[$value];
+      if (!is_array($value)) {
+        if (isset($substitutions[$value])) {
+          $tables[$table_name]['arguments'][$replacement_key] = $substitutions[$value];
+        }
+      }
+      else {
+        foreach ($value as $sub_key => $sub_value) {
+          if (isset($substitutions[$sub_value])) {
+            $tables[$table_name]['arguments'][$replacement_key][$sub_key] = $substitutions[$sub_value];
+          }
+        }
       }
     }
   }
