@@ -10,6 +10,7 @@ drupal.ckeditor:
     - core/drupal
     - core/drupalSettings
     - core/drupal.debounce
+    - core/drupal.displace
     - core/ckeditor
     - editor/drupal.editor
     # Ensure to run after core/matchmedia.
