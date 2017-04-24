@@ -20,20 +20,40 @@ use Prophecy\Argument;
 class MigrationTest extends MigrateProcessTestCase {
 
   /**
+   * @var \Drupal\migrate\Plugin\MigrationInterface
+   */
+  protected $migration_plugin;
+
+  /**
+   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
+   */
+  protected $migration_plugin_manager;
+
+  /**
+   * @var \Drupal\migrate\Plugin\MigratePluginManager
+   */
+  protected $process_plugin_manager;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->migration_plugin = $this->prophesize(MigrationInterface::class);
+    $this->migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
+    $this->process_plugin_manager = $this->prophesize(MigratePluginManager::class);
+  }
+
+  /**
    * @covers ::transform
    */
   public function testTransformWithStubSkipping() {
-    $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
-    $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
-
-    $destination_id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $destination_migration = $this->prophesize(MigrationInterface::class);
-    $destination_migration->getIdMap()->willReturn($destination_id_map->reveal());
-    $destination_id_map->lookupDestinationId([1])->willReturn(NULL);
+    $destination_migration = $this->getMigration();
+    $destination_migration->getDestinationPlugin(TRUE)->shouldNotBeCalled();
 
     // Ensure the migration plugin manager returns our migration.
-    $migration_plugin_manager->createInstances(Argument::exact(['destination_migration']))
+    $this->migration_plugin_manager->createInstances(Argument::exact(['destination_migration']))
       ->willReturn(['destination_migration' => $destination_migration->reveal()]);
 
     $configuration = [
@@ -41,10 +61,9 @@ class MigrationTest extends MigrateProcessTestCase {
       'migration' => 'destination_migration',
     ];
 
-    $migration_plugin->id()->willReturn('actual_migration');
-    $destination_migration->getDestinationPlugin(TRUE)->shouldNotBeCalled();
+    $this->migration_plugin->id()->willReturn('actual_migration');
 
-    $migration = new Migration($configuration, '', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
+    $migration = new Migration($configuration, '', [], $this->migration_plugin->reveal(), $this->migration_plugin_manager->reveal(), $this->process_plugin_manager->reveal());
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertNull($result);
   }
@@ -53,24 +72,16 @@ class MigrationTest extends MigrateProcessTestCase {
    * @covers ::transform
    */
   public function testTransformWithStubbing() {
-    $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
-    $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
-
-    $destination_id_map = $this->prophesize(MigrateIdMapInterface::class);
-    $destination_migration = $this->prophesize('Drupal\migrate\Plugin\Migration');
-    $destination_migration->getIdMap()->willReturn($destination_id_map->reveal());
-    $migration_plugin_manager->createInstances(['destination_migration'])
+    $destination_migration = $this->getMigration();
+    $this->migration_plugin_manager->createInstances(['destination_migration'])
       ->willReturn(['destination_migration' => $destination_migration->reveal()]);
-    $destination_id_map->lookupDestinationId([1])->willReturn(NULL);
-    $destination_id_map->saveIdMapping(Argument::any(), Argument::any(), MigrateIdMapInterface::STATUS_NEEDS_UPDATE)->willReturn(NULL);
 
     $configuration = [
       'no_stub' => FALSE,
       'migration' => 'destination_migration',
     ];
 
-    $migration_plugin->id()->willReturn('actual_migration');
+    $this->migration_plugin->id()->willReturn('actual_migration');
     $destination_migration->id()->willReturn('destination_migration');
     $destination_migration->getDestinationPlugin(TRUE)->shouldBeCalled();
     $destination_migration->getProcess()->willReturn([]);
@@ -83,24 +94,36 @@ class MigrationTest extends MigrateProcessTestCase {
     $destination_plugin->import(Argument::any())->willReturn([2]);
     $destination_migration->getDestinationPlugin(TRUE)->willReturn($destination_plugin->reveal());
 
-    $migration = new Migration($configuration, '', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
+    $migration = new Migration($configuration, '', [], $this->migration_plugin->reveal(), $this->migration_plugin_manager->reveal(), $this->process_plugin_manager->reveal());
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertEquals(2, $result);
+  }
+
+  /**
+   * Creates a mock Migration instance.
+   *
+   * @return \Prophecy\Prophecy\ObjectProphecy
+   *   A mock Migration instance.
+   */
+  protected function getMigration() {
+    $id_map = $this->prophesize(MigrateIdMapInterface::class);
+    $id_map->lookupDestinationId([1])->willReturn(NULL);
+    $id_map->saveIdMapping(Argument::any(), Argument::any(), MigrateIdMapInterface::STATUS_NEEDS_UPDATE)->willReturn(NULL);
+
+    $migration = $this->prophesize(MigrationInterface::class);
+    $migration->getIdMap()->willReturn($id_map->reveal());
+    return $migration;
   }
 
   /**
    * Tests that processing is skipped when the input value is empty.
    */
   public function testSkipOnEmpty() {
-    $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
-    $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
-
     $configuration = [
       'migration' => 'foobaz',
     ];
-    $migration_plugin->id()->willReturn(uniqid());
-    $migration = new Migration($configuration, 'migration', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
+    $this->migration_plugin->id()->willReturn(uniqid());
+    $migration = new Migration($configuration, 'migration', [], $this->migration_plugin->reveal(), $this->migration_plugin_manager->reveal(), $this->process_plugin_manager->reveal());
     $this->setExpectedException(MigrateSkipProcessException::class);
     $migration->transform(0, $this->migrateExecutable, $this->row, 'foo');
   }
@@ -120,28 +143,24 @@ class MigrationTest extends MigrateProcessTestCase {
    *   The expected value(s) of the migration process plugin.
    */
   public function testSuccessfulLookup($source_id_values, $destination_id_values, $source_value, $expected_value) {
-    $migration_plugin = $this->prophesize(MigrationInterface::class);
-    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
-    $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
-
     $configuration = [
       'migration' => 'foobaz',
     ];
-    $migration_plugin->id()->willReturn(uniqid());
+    $this->migration_plugin->id()->willReturn(uniqid());
 
     $id_map = $this->prophesize(MigrateIdMapInterface::class);
     $id_map->lookupDestinationId($source_id_values)->willReturn($destination_id_values);
-    $migration_plugin->getIdMap()->willReturn($id_map->reveal());
+    $this->migration_plugin->getIdMap()->willReturn($id_map->reveal());
 
-    $migration_plugin_manager->createInstances(['foobaz'])
-      ->willReturn(['foobaz' => $migration_plugin->reveal()]);
+    $this->migration_plugin_manager->createInstances(['foobaz'])
+      ->willReturn(['foobaz' => $this->migration_plugin->reveal()]);
 
     $migrationStorage = $this->prophesize(EntityStorageInterface::class);
     $migrationStorage
       ->loadMultiple(['foobaz'])
-      ->willReturn([$migration_plugin->reveal()]);
+      ->willReturn([$this->migration_plugin->reveal()]);
 
-    $migration = new Migration($configuration, 'migration', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
+    $migration = new Migration($configuration, 'migration', [], $this->migration_plugin->reveal(), $this->migration_plugin_manager->reveal(), $this->process_plugin_manager->reveal());
     $this->assertSame($expected_value, $migration->transform($source_value, $this->migrateExecutable, $this->row, 'foo'));
   }
 
@@ -152,49 +171,29 @@ class MigrationTest extends MigrateProcessTestCase {
    */
   public function successfulLookupDataProvider() {
     return [
-      // Test data for scalar to scalar.
-      [
-        // Source ID of the migration map.
-        [1],
-        // Destination ID of the migration map.
-        [3],
-        // Input value for the migration plugin.
-        1,
-        // Expected output value of the migration plugin.
-        3,
+      'scalar_to_scalar' => [
+        'source_ids' => [1],
+        'destination_ids' => [3],
+        'input_value' => 1,
+        'expected_value' => 3,
       ],
-      // Test data for scalar to array.
-      [
-        // Source ID of the migration map.
-        [1],
-        // Destination IDs of the migration map.
-        [3, 'foo'],
-        // Input value for the migration plugin.
-        1,
-        // Expected output values of the migration plugin.
-        [3, 'foo'],
+      'scalar_to_array' => [
+        'source_ids' => [1],
+        'destination_ids' => [3, 'foo'],
+        'input_value' => 1,
+        'expected_value' => [3, 'foo'],
       ],
-      // Test data for array to scalar.
-      [
-        // Source IDs of the migration map.
-        [1, 3],
-        // Destination ID of the migration map.
-        ['foo'],
-        // Input values for the migration plugin.
-        [1, 3],
-        // Expected output value of the migration plugin.
-        'foo',
+      'array_to_scalar' => [
+        'source_ids' => [1, 3],
+        'destination_ids' => ['foo'],
+        'input_value' => [1, 3],
+        'expected_value' => 'foo',
       ],
-      // Test data for array to array.
-      [
-        // Source IDs of the migration map.
-        [1, 3],
-        // Destination IDs of the migration map.
-        [3, 'foo'],
-        // Input values for the migration plugin.
-        [1, 3],
-        // Expected output values of the migration plugin.
-        [3, 'foo'],
+      'array_to_array' => [
+        'source_ids' => [1, 3],
+        'destination_ids' => [3, 'foo'],
+        'input_value' => [1, 3],
+        'expected_value' => [3, 'foo'],
       ],
     ];
   }
