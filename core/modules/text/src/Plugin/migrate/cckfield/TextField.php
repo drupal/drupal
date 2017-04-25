@@ -100,27 +100,29 @@ class TextField extends CckFieldPluginBase {
    */
   public function getFieldType(Row $row) {
     $widget_type = $row->getSourceProperty('widget_type');
+    $settings = $row->getSourceProperty('global_settings');
 
     if ($widget_type == 'text_textfield') {
-      $settings = $row->getSourceProperty('global_settings');
       $field_type = $settings['text_processing'] ? 'text' : 'string';
       if (empty($settings['max_length']) || $settings['max_length'] > 255) {
         $field_type .= '_long';
       }
       return $field_type;
     }
-    else {
-      switch ($widget_type) {
-        case 'optionwidgets_buttons':
-        case 'optionwidgets_select':
-          return 'list_string';
-        case 'optionwidgets_onoff':
-          return 'boolean';
-        case 'text_textarea':
-          return 'text_long';
-        default:
-          return parent::getFieldType($row);
-      }
+
+    if ($widget_type == 'text_textarea') {
+      $field_type = $settings['text_processing'] ? 'text_long' : 'string_long';
+      return $field_type;
+    }
+
+    switch ($widget_type) {
+      case 'optionwidgets_buttons':
+      case 'optionwidgets_select':
+        return 'list_string';
+      case 'optionwidgets_onoff':
+        return 'boolean';
+      default:
+        return parent::getFieldType($row);
     }
   }
 
