@@ -81,9 +81,6 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertIdentical('desc', $node->field_test_filefield->description);
     $this->assertIdentical('4', $node->field_test_filefield->target_id);
 
-    // Test that an email field is migrated.
-    $this->assertSame('PrincessRuwenne@example.com', $node->field_test_email->value);
-
     $node = Node::load(2);
     $this->assertIdentical('Test title rev 3', $node->getTitle());
     $this->assertIdentical('test rev 3', $node->body->value);

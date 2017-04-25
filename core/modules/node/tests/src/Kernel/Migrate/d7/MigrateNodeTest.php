@@ -150,9 +150,6 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertIdentical('93', $node->field_images->height);
     $this->assertIdentical('http://google.com', $node->field_link->uri);
     $this->assertIdentical('Click Here', $node->field_link->title);
-    // Test that an email field is migrated.
-    $this->assertSame('default@example.com', $node->field_email->value);
-    $this->assertSame('another@example.com', $node->field_email[1]->value);
 
     $node = Node::load(2);
     $this->assertSame('en', $node->langcode->value);
