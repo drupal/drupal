@@ -4,6 +4,7 @@ namespace Drupal\serialization\Encoder;
 
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Component\Serializer\Encoder\SerializerAwareEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder as BaseXmlEncoder;
 
 /**
@@ -12,7 +13,7 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder as BaseXmlEncoder;
  * This acts as a wrapper class for Symfony's XmlEncoder so that it is not
  * implementing NormalizationAwareInterface, and can be normalized externally.
  */
-class XmlEncoder implements EncoderInterface, DecoderInterface {
+class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, DecoderInterface {
 
   /**
    * The formats that this Encoder supports.
@@ -37,6 +38,7 @@ class XmlEncoder implements EncoderInterface, DecoderInterface {
   public function getBaseEncoder() {
     if (!isset($this->baseEncoder)) {
       $this->baseEncoder = new BaseXmlEncoder();
+      $this->baseEncoder->setSerializer($this->serializer);
     }
 
     return $this->baseEncoder;
