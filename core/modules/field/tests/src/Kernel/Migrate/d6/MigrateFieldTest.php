@@ -70,6 +70,10 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('1.2', $field_storage->getSetting('allowed_values')['1.2'], t('First allowed value is set to 1.2'));
     $this->assertIdentical('2.1', $field_storage->getSetting('allowed_values')['2.1'], t('Second allowed value is set to 1.2'));
 
+    // Email field.
+    $field_storage = FieldStorageConfig::load('node.field_test_email');
+    $this->assertSame("email", $field_storage->getType(), t('Field type is @fieldtype. It should be email.', ['@fieldtype' => $field_storage->getType()]));
+
     // Float field with a single checkbox.
     $field_storage = FieldStorageConfig::load('node.field_test_float_single_checkbox');
     $this->assertIdentical("boolean", $field_storage->getType(), t('Field type is @fieldtype. It should be boolean.', ['@fieldtype' => $field_storage->getType()]));
