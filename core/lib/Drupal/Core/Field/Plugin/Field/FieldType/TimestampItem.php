@@ -2,8 +2,9 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -51,6 +52,16 @@ class TimestampItem extends FieldItemBase {
         ],
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    // Pick a random timestamp in the past year.
+    $timestamp = \Drupal::time()->getRequestTime() - mt_rand(0, 86400 * 365);
+    $values['value'] = $timestamp;
+    return $values;
   }
 
 }
