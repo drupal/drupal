@@ -3,13 +3,13 @@
 namespace Drupal\Core\Layout;
 
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator;
-use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator;
 use Drupal\Core\Layout\Annotation\Layout;
 
@@ -66,7 +66,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
       $discovery = new AnnotatedClassDiscovery($this->subdir, $this->namespaces, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces);
       $discovery = new YamlDiscoveryDecorator($discovery, 'layouts', $this->moduleHandler->getModuleDirectories() + $this->themeHandler->getThemeDirectories());
       $discovery = new AnnotationBridgeDecorator($discovery, $this->pluginDefinitionAnnotationName);
-      $discovery = new DerivativeDiscoveryDecorator($discovery);
+      $discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
       $this->discovery = $discovery;
     }
     return $this->discovery;
