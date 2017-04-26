@@ -285,8 +285,15 @@ function simpletest_phpunit_xml_filepath($test_id) {
  *
  * @return string
  *   The path to core's phpunit.xml.dist configuration file.
+ *
+ * @deprecated in Drupal 8.4.x for removal before Drupal 9.0.0. PHPUnit test
+ *   runners should change directory into core/ and then run the phpunit tool.
+ *   See simpletest_phpunit_run_command() for an example.
+ *
+ * @see simpletest_phpunit_run_command()
  */
 function simpletest_phpunit_configuration_filepath() {
+  @trigger_error('The ' . __FUNCTION__ . ' function is deprecated since version 8.4.x and will be removed in 9.0.0.', E_USER_DEPRECATED);
   return \Drupal::root() . '/core/phpunit.xml.dist';
 }
 
