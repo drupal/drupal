@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\responsive_image\Tests;
+namespace Drupal\Tests\responsive_image\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Thoroughly test the administrative interface of the Responsive Image module.
  *
  * @group responsive_image
  */
-class ResponsiveImageAdminUITest extends WebTestBase {
+class ResponsiveImageAdminUITest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -78,11 +78,11 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     );
     foreach ($cases as $case) {
       // Check if the radio buttons are present.
-      $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_mapping_type]', '');
+      $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_mapping_type]', NULL);
       // Check if the image style dropdowns are present.
-      $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_style]', '');
+      $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_style]', NULL);
       // Check if the sizes textfields are present.
-      $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][sizes]', '');
+      $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][sizes]', NULL);
 
       foreach ($image_styles as $image_style_name) {
         // Check if the image styles are available in the dropdowns.
