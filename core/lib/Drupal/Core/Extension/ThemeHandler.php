@@ -216,10 +216,16 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function refreshInfo() {
-    $this->reset();
     $extension_config = $this->configFactory->get('core.extension');
     $installed = $extension_config->get('theme');
+    // Only refresh the info if a theme has been installed. Modules are
+    // installed before themes by the installer and this method is called during
+    // module installation.
+    if (empty($installed) && empty($this->list)) {
+      return;
+    }
 
+    $this->reset();
     // @todo Avoid re-scanning all themes by retaining the original (unaltered)
     //   theme info somewhere.
     $list = $this->rebuildThemeData();
