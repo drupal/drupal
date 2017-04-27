@@ -61,13 +61,15 @@ class Html {
    * Do not pass one string containing multiple classes as they will be
    * incorrectly concatenated with dashes, i.e. "one two" will become "one-two".
    *
-   * @param string $class
-   *   The class name to clean.
+   * @param mixed $class
+   *   The class name to clean. It can be a string or anything that can be cast
+   *   to string.
    *
    * @return string
    *   The cleaned class name.
    */
   public static function getClass($class) {
+    $class = (string) $class;
     if (!isset(static::$classes[$class])) {
       static::$classes[$class] = static::cleanCssIdentifier(Unicode::strtolower($class));
     }
