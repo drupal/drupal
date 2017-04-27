@@ -40,12 +40,6 @@ process:
       filefield:
         imagefield_widget: image
         filefield_widget: file
-      date:
-        date_select: datetime
-      datestamp:
-        date_select: datetime
-      datetime:
-        date_select: datetime
       fr_phone:
         phone_textfield: telephone
       be_phone:

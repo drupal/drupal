@@ -101,6 +101,44 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('default link title', $entity->field_test_link->title, 'Field field_test_link default title is correct.');
     $this->assertIdentical('https://www.drupal.org', $entity->field_test_link->url, 'Field field_test_link default title is correct.');
     $this->assertIdentical([], $entity->field_test_link->options['attributes']);
+
+    // Test date field.
+    $field = FieldConfig::load('node.story.field_test_date');
+    $this->assertInstanceOf(FieldConfig::class, $field);
+    $this->assertSame('Date Field', $field->label());
+    $this->assertSame('An example date field.', $field->getDescription());
+    $expected = ['datetime_type' => 'datetime'];
+    $this->assertSame($expected, $field->getSettings());
+    $expected = [
+      [
+        'default_date_type' => 'relative',
+        'default_date' => 'blank',
+      ],
+    ];
+    $this->assertSame($expected, $field->getDefaultValueLiteral());
+    $this->assertTrue($field->isTranslatable());
+
+    // Test datetime field.
+    $field = FieldConfig::load('node.story.field_test_datetime');
+    $this->assertInstanceOf(FieldConfig::class, $field);
+    $this->assertSame('Datetime Field', $field->label());
+    $this->assertSame('An example datetime field.', $field->getDescription());
+    $expected = ['datetime_type' => 'datetime'];
+    $this->assertSame($expected, $field->getSettings());
+    $expected = [];
+    $this->assertSame($expected, $field->getDefaultValueLiteral());
+    $this->assertTrue($field->isTranslatable());
+
+    // Test datestamp field.
+    $field = FieldConfig::load('node.story.field_test_datestamp');
+    $this->assertInstanceOf(FieldConfig::class, $field);
+    $this->assertSame('Date Stamp Field', $field->label());
+    $this->assertSame('An example date stamp field.', $field->getDescription());
+    $expected = [];
+    $this->assertSame($expected, $field->getSettings());
+    $expected = [];
+    $this->assertSame($expected, $field->getDefaultValueLiteral());
+    $this->assertTrue($field->isTranslatable());
   }
 
   /**
