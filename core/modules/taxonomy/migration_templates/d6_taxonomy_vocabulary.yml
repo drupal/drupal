@@ -10,7 +10,7 @@ process:
       plugin: machine_name
       source: name
     -
-      plugin: dedupe_entity
+      plugin: make_unique_entity_field
       entity_type: taxonomy_vocabulary
       field: vid
       length: 32
