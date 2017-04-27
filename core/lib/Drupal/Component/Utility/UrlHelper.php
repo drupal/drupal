@@ -142,7 +142,12 @@ class UrlHelper {
 
     // External URLs: not using parse_url() here, so we do not have to rebuild
     // the scheme, host, and path without having any use for it.
-    if (strpos($url, '://') !== FALSE) {
+    // The URL is considered external if it contains the '://' delimiter. Since
+    // a URL can also be passed as a query argument, we check if this delimiter
+    // appears in front of the '?' query argument delimiter.
+    $scheme_delimiter_position = strpos($url, '://');
+    $query_delimiter_position = strpos($url, '?');
+    if ($scheme_delimiter_position !== FALSE && ($query_delimiter_position === FALSE || $scheme_delimiter_position < $query_delimiter_position)) {
       // Split off everything before the query string into 'path'.
       $parts = explode('?', $url);
 
