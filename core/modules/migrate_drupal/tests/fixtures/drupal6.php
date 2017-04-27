@@ -2602,24 +2602,24 @@ $connection->insert('content_node_field')
 ->values(array(
   'field_name' => 'field_test_datestamp',
   'type' => 'datestamp',
-  'global_settings' => 'a:7:{s:11:"granularity";a:5:{s:4:"year";s:4:"year";s:5:"month";s:5:"month";s:3:"day";s:3:"day";s:4:"hour";s:4:"hour";s:6:"minute";s:6:"minute";}s:11:"timezone_db";s:3:"UTC";s:11:"tz_handling";s:4:"site";s:6:"todate";s:0:"";s:6:"repeat";i:0;s:16:"repeat_collapsed";s:0:"";s:14:"default_format";s:6:"medium";}',
+  'global_settings' => 'a:13:{s:11:"granularity";a:6:{s:4:"year";s:4:"year";s:5:"month";s:5:"month";s:3:"day";s:3:"day";s:4:"hour";s:4:"hour";s:6:"minute";s:6:"minute";s:6:"second";i:0;}s:11:"timezone_db";s:3:"UTC";s:11:"tz_handling";s:4:"site";s:6:"todate";s:0:"";s:6:"repeat";i:0;s:18:"output_format_date";s:5:"m/d/Y";s:20:"output_format_custom";s:0:"";s:23:"output_format_date_long";s:5:"m/d/Y";s:25:"output_format_custom_long";s:0:"";s:25:"output_format_date_medium";s:5:"m/d/Y";s:27:"output_format_custom_medium";s:0:"";s:24:"output_format_date_short";s:5:"m/d/Y";s:26:"output_format_custom_short";s:0:"";}',
   'required' => '0',
   'multiple' => '0',
   'db_storage' => '1',
   'module' => 'date',
-  'db_columns' => 'a:1:{s:5:"value";a:4:{s:4:"type";s:3:"int";s:8:"not null";b:0;s:8:"sortable";b:1;s:5:"views";b:1;}}',
+  'db_columns' => 'a:2:{s:5:"value";a:4:{s:4:"type";s:3:"int";s:6:"length";i:11;s:8:"not null";b:0;s:8:"sortable";b:1;}s:6:"value2";a:4:{s:4:"type";s:3:"int";s:6:"length";i:11;s:8:"not null";b:0;s:8:"sortable";b:1;}}',
   'active' => '1',
   'locked' => '0',
 ))
 ->values(array(
   'field_name' => 'field_test_datetime',
   'type' => 'datetime',
-  'global_settings' => 'a:7:{s:11:"granularity";a:5:{s:4:"year";s:4:"year";s:5:"month";s:5:"month";s:3:"day";s:3:"day";s:4:"hour";s:4:"hour";s:6:"minute";s:6:"minute";}s:11:"timezone_db";s:3:"UTC";s:11:"tz_handling";s:4:"site";s:6:"todate";s:0:"";s:6:"repeat";i:0;s:16:"repeat_collapsed";s:0:"";s:14:"default_format";s:6:"medium";}',
+  'global_settings' => 'a:13:{s:11:"granularity";a:6:{s:4:"year";s:4:"year";s:5:"month";s:5:"month";s:3:"day";s:3:"day";s:4:"hour";s:4:"hour";s:6:"minute";s:6:"minute";s:6:"second";i:0;}s:11:"timezone_db";s:3:"UTC";s:11:"tz_handling";s:4:"site";s:6:"todate";s:0:"";s:6:"repeat";i:0;s:18:"output_format_date";s:5:"m/d/Y";s:20:"output_format_custom";s:0:"";s:23:"output_format_date_long";s:5:"m/d/Y";s:25:"output_format_custom_long";s:0:"";s:25:"output_format_date_medium";s:5:"m/d/Y";s:27:"output_format_custom_medium";s:0:"";s:24:"output_format_date_short";s:5:"m/d/Y";s:26:"output_format_custom_short";s:0:"";}',
   'required' => '0',
   'multiple' => '0',
   'db_storage' => '1',
   'module' => 'date',
-  'db_columns' => 'a:1:{s:5:"value";a:4:{s:4:"type";s:8:"datetime";s:8:"not null";b:0;s:8:"sortable";b:1;s:5:"views";b:1;}}',
+  'db_columns' => 'a:2:{s:5:"value";a:3:{s:4:"type";s:8:"datetime";s:8:"not null";b:0;s:8:"sortable";b:1;}s:6:"value2";a:3:{s:4:"type";s:8:"datetime";s:8:"not null";b:0;s:8:"sortable";b:1;}}',
   'active' => '1',
   'locked' => '0',
 ))
@@ -2950,7 +2950,7 @@ $connection->insert('content_node_field_instance')
   'type_name' => 'story',
   'weight' => '11',
   'label' => 'Date Stamp Field',
-  'widget_type' => 'date_select',
+  'widget_type' => 'date_text',
   'widget_settings' => 'a:10:{s:13:"default_value";s:5:"blank";s:18:"default_value_code";s:0:"";s:14:"default_value2";s:4:"same";s:19:"default_value_code2";s:0:"";s:12:"input_format";s:13:"m/d/Y - H:i:s";s:19:"input_format_custom";s:0:"";s:9:"increment";s:1:"1";s:10:"text_parts";a:0:{}s:10:"year_range";s:5:"-3:+3";s:14:"label_position";s:5:"above";}',
   'display_settings' => 'a:7:{s:6:"weight";s:2:"11";s:6:"parent";s:0:"";i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:5:"label";a:1:{s:6:"format";s:5:"above";}s:6:"teaser";a:2:{s:6:"format";s:6:"medium";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
   'description' => 'An example date stamp field.',
@@ -2962,8 +2962,8 @@ $connection->insert('content_node_field_instance')
   'type_name' => 'story',
   'weight' => '12',
   'label' => 'Datetime Field',
-  'widget_type' => 'date_select',
-  'widget_settings' => 'a:10:{s:13:"default_value";s:5:"blank";s:18:"default_value_code";s:0:"";s:14:"default_value2";s:4:"same";s:19:"default_value_code2";s:0:"";s:12:"input_format";s:13:"m/d/Y - H:i:s";s:19:"input_format_custom";s:0:"";s:9:"increment";s:1:"1";s:10:"text_parts";a:0:{}s:10:"year_range";s:5:"-3:+3";s:14:"label_position";s:5:"above";}',
+  'widget_type' => 'date_popup',
+  'widget_settings' => 'a:10:{s:13:"default_value";s:5:"blank";s:18:"default_value_code";s:0:"";s:14:"default_value2";s:4:"same";s:19:"default_value_code2";s:0:"";s:12:"input_format";s:11:"d/m/Y H:i:s";s:19:"input_format_custom";s:0:"";s:9:"increment";s:1:"1";s:10:"text_parts";a:0:{}s:10:"year_range";s:5:"-3:+3";s:14:"label_position";s:5:"above";}',
   'display_settings' => 'a:7:{s:6:"weight";s:2:"12";s:6:"parent";s:0:"";i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:5:"label";a:1:{s:6:"format";s:5:"above";}s:6:"teaser";a:2:{s:6:"format";s:5:"short";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
   'description' => 'An example datetime field.',
   'widget_module' => 'date',
@@ -3351,6 +3351,16 @@ $connection->schema()->createTable('content_type_story', array(
       'not null' => FALSE,
       'size' => 'big',
     ),
+    'field_test_datestamp_value2' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+    'field_test_datetime_value2' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '100',
+    ),
   ),
   'primary key' => array(
     'vid',
@@ -3392,6 +3402,8 @@ $connection->insert('content_type_story')
   'field_test_imagefield_list',
   'field_test_imagefield_data',
   'field_test_text_single_checkbox2_value',
+  'field_test_datestamp_value2',
+  'field_test_datetime_value2',
 ))
 ->values(array(
   'nid' => '1',
@@ -3403,9 +3415,9 @@ $connection->insert('content_type_story')
   'field_test_link_url' => 'https://www.drupal.org/project/drupal',
   'field_test_link_title' => 'Drupal project page',
   'field_test_link_attributes' => 's:32:"a:1:{s:6:"target";s:6:"_blank";}";',
-  'field_test_date_value' => NULL,
-  'field_test_datestamp_value' => NULL,
-  'field_test_datetime_value' => NULL,
+  'field_test_date_value' => '2013-01-02T04:05:00',
+  'field_test_datestamp_value' => '1391357160',
+  'field_test_datetime_value' => '2015-03-04 06:07:00',
   'field_test_email_email' => 'PrincessRuwenne@example.com',
   'field_test_filefield_fid' => '5',
   'field_test_filefield_list' => '1',
@@ -3421,6 +3433,8 @@ $connection->insert('content_type_story')
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
   'field_test_text_single_checkbox2_value' => 'Hello',
+  'field_test_datestamp_value2' => NULL,
+  'field_test_datetime_value2' => NULL,
 ))
 ->values(array(
   'nid' => '1',
@@ -3432,9 +3446,9 @@ $connection->insert('content_type_story')
   'field_test_link_url' => 'https://www.drupal.org/project/drupal',
   'field_test_link_title' => 'Drupal project page',
   'field_test_link_attributes' => 's:32:"a:1:{s:6:"target";s:6:"_blank";}";',
-  'field_test_date_value' => NULL,
-  'field_test_datestamp_value' => NULL,
-  'field_test_datetime_value' => NULL,
+  'field_test_date_value' => '2013-01-02T04:05:00',
+  'field_test_datestamp_value' => '1391357160',
+  'field_test_datetime_value' => '2015-03-04 06:07:00',
   'field_test_email_email' => 'PrincessRuwenne@example.com',
   'field_test_filefield_fid' => NULL,
   'field_test_filefield_list' => NULL,
@@ -3450,6 +3464,8 @@ $connection->insert('content_type_story')
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
   'field_test_text_single_checkbox2_value' => NULL,
+  'field_test_datestamp_value2' => NULL,
+  'field_test_datetime_value2' => NULL,
 ))
 ->values(array(
   'nid' => '2',
@@ -3479,6 +3495,8 @@ $connection->insert('content_type_story')
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
   'field_test_text_single_checkbox2_value' => NULL,
+  'field_test_datestamp_value2' => NULL,
+  'field_test_datetime_value2' => NULL,
 ))
 ->values(array(
   'nid' => '2',
@@ -3508,6 +3526,8 @@ $connection->insert('content_type_story')
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
   'field_test_text_single_checkbox2_value' => NULL,
+  'field_test_datestamp_value2' => NULL,
+  'field_test_datetime_value2' => NULL,
 ))
 ->values(array(
   'nid' => '9',
@@ -3536,7 +3556,9 @@ $connection->insert('content_type_story')
   'field_test_imagefield_fid' => NULL,
   'field_test_imagefield_list' => NULL,
   'field_test_imagefield_data' => NULL,
-  'field_test_text_single_checkbox2_value' => NULL,
+  'field_test_text_single_checkbox2_value' => 'Off',
+  'field_test_datestamp_value2' => '1391357160',
+  'field_test_datetime_value2' => '2015-03-04 06:07:00',
 ))
 ->execute();
 

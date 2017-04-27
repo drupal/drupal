@@ -72,6 +72,11 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertIdentical('1', $node->field_test_identical2->value, 'Integer value is correct');
     $this->assertIdentical('This is a field with exclude unset.', $node->field_test_exclude_unset->value, 'Field with exclude unset is correct.');
 
+    // Test that date fields are migrated.
+    $this->assertSame('2013-01-02T04:05:00', $node->field_test_date->value, 'Date field is correct');
+    $this->assertSame('1391357160', $node->field_test_datestamp->value, 'Datestamp field is correct');
+    $this->assertSame('2015-03-04T06:07:00', $node->field_test_datetime->value, 'Datetime field is correct');
+
     // Test that link fields are migrated.
     $this->assertIdentical('https://www.drupal.org/project/drupal', $node->field_test_link->uri);
     $this->assertIdentical('Drupal project page', $node->field_test_link->title);
