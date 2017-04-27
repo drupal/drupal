@@ -2,20 +2,17 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-@trigger_error('The ' . __NAMESPACE__ . '\DedupeEntityTest is deprecated in
-Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use ' . __NAMESPACE__ . '\MakeUniqueEntityFieldTest', E_USER_DEPRECATED);
-
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
-use Drupal\migrate\Plugin\migrate\process\DedupeEntity;
+use Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField;
 use Drupal\Component\Utility\Unicode;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\DedupeEntity
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField
  * @group migrate
  */
-class DedupeEntityTest extends MigrateProcessTestCase {
+class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
 
   /**
    * The mock entity query.
@@ -62,11 +59,11 @@ class DedupeEntityTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests entity based deduplication based on providerTestDedupe() values.
+   * Tests making an entity field value unique.
    *
-   * @dataProvider providerTestDedupe
+   * @dataProvider providerTestMakeUniqueEntityField
    */
-  public function testDedupe($count, $postfix = '', $start = NULL, $length = NULL) {
+  public function testMakeUniqueEntityField($count, $postfix = '', $start = NULL, $length = NULL) {
     $configuration = [
       'entity_type' => 'test_entity_type',
       'field' => 'test_field',
@@ -76,7 +73,7 @@ class DedupeEntityTest extends MigrateProcessTestCase {
     }
     $configuration['start'] = isset($start) ? $start : NULL;
     $configuration['length'] = isset($length) ? $length : NULL;
-    $plugin = new DedupeEntity($configuration, 'dedupe_entity', [], $this->getMigration(), $this->entityTypeManager);
+    $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
     $this->entityQueryExpects($count);
     $value = $this->randomMachineName(32);
     $actual = $plugin->transform($value, $this->migrateExecutable, $this->row, 'testproperty');
@@ -88,13 +85,13 @@ class DedupeEntityTest extends MigrateProcessTestCase {
   /**
    * Tests that invalid start position throws an exception.
    */
-  public function testDedupeEntityInvalidStart() {
+  public function testMakeUniqueEntityFieldEntityInvalidStart() {
     $configuration = [
       'entity_type' => 'test_entity_type',
       'field' => 'test_field',
       'start' => 'foobar',
     ];
-    $plugin = new DedupeEntity($configuration, 'dedupe_entity', [], $this->getMigration(), $this->entityTypeManager);
+    $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
     $this->setExpectedException('Drupal\migrate\MigrateException', 'The start position configuration key should be an integer. Omit this key to capture from the beginning of the string.');
     $plugin->transform('test_start', $this->migrateExecutable, $this->row, 'testproperty');
   }
@@ -102,21 +99,21 @@ class DedupeEntityTest extends MigrateProcessTestCase {
   /**
    * Tests that invalid length option throws an exception.
    */
-  public function testDedupeEntityInvalidLength() {
+  public function testMakeUniqueEntityFieldEntityInvalidLength() {
     $configuration = [
       'entity_type' => 'test_entity_type',
       'field' => 'test_field',
       'length' => 'foobar',
     ];
-    $plugin = new DedupeEntity($configuration, 'dedupe_entity', [], $this->getMigration(), $this->entityTypeManager);
+    $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
     $this->setExpectedException('Drupal\migrate\MigrateException', 'The character length configuration key should be an integer. Omit this key to capture the entire string.');
     $plugin->transform('test_length', $this->migrateExecutable, $this->row, 'testproperty');
   }
 
   /**
-   * Data provider for testDedupe().
+   * Data provider for testMakeUniqueEntityField().
    */
-  public function providerTestDedupe() {
+  public function providerTestMakeUniqueEntityField() {
     return [
       // Tests no duplication.
       [0],
@@ -157,7 +154,7 @@ class DedupeEntityTest extends MigrateProcessTestCase {
    * Helper function to add expectations to the mock entity query object.
    *
    * @param int $count
-   *   The number of deduplications to be set up.
+   *   The number of unique values to be set up.
    */
   protected function entityQueryExpects($count) {
     $this->entityQuery->expects($this->exactly($count + 1))
@@ -172,19 +169,19 @@ class DedupeEntityTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test deduplicating only migrated entities.
+   * Tests making an entity field value unique only for migrated entities.
    */
-  public function testDedupeMigrated() {
+  public function testMakeUniqueEntityFieldMigrated() {
     $configuration = [
       'entity_type' => 'test_entity_type',
       'field' => 'test_field',
       'migrated' => TRUE,
     ];
-    $plugin = new DedupeEntity($configuration, 'dedupe_entity', [], $this->getMigration(), $this->entityTypeManager);
+    $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
 
-    // Setup the entityQuery used in DedupeEntity::exists. The map, $map, is
-    // an array consisting of the four input parameters to the query condition
-    // method and then the query to return. Both 'forum' and
+    // Setup the entityQuery used in MakeUniqueEntityFieldEntity::exists. The
+    // map, $map, is an array consisting of the four input parameters to the
+    // query condition method and then the query to return. Both 'forum' and
     // 'test_vocab' are existing entities. There is no 'test_vocab1'.
     $map = [];
     foreach (['forums', 'test_vocab', 'test_vocab1'] as $id) {
@@ -205,11 +202,11 @@ class DedupeEntityTest extends MigrateProcessTestCase {
         [['test_field' => 'test_vocab'], ['source_id' => 42]],
       ]));
 
-    // Existing entity 'forums' was not migrated, it should not be deduplicated.
+    // Existing entity 'forums' was not migrated, value should not be unique.
     $actual = $plugin->transform('forums', $this->migrateExecutable, $this->row, 'testproperty');
     $this->assertEquals('forums', $actual, 'Pre-existing name is re-used');
 
-    // Entity 'test_vocab' was migrated, should be deduplicated.
+    // Entity 'test_vocab' was migrated, value should be unique.
     $actual = $plugin->transform('test_vocab', $this->migrateExecutable, $this->row, 'testproperty');
     $this->assertEquals('test_vocab1', $actual, 'Migrated name is deduplicated');
   }

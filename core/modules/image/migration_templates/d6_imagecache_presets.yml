@@ -10,7 +10,7 @@ process:
       plugin: machine_name
       source: presetname
     -
-      plugin: dedupe_entity
+      plugin: make_unique_entity_field
       entity_type: image_style
       field: name
       length: 32
