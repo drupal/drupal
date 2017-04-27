@@ -736,6 +736,7 @@ class UrlTest extends UnitTestCase {
       ['/?page=1000'],
       ['?page=1000'],
       ['?breed=bengal&page=1000'],
+      ['?referrer=https://kittenfacts'],
       // Paths with various token formats but no leading slash.
       ['/[duckies]'],
       ['/%bunnies'],
