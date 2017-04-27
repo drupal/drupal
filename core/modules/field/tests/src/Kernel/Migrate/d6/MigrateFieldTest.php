@@ -62,6 +62,14 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
     $field_storage = FieldStorageConfig::load('node.field_test_datetime');
     $this->assertIdentical("datetime", $field_storage->getType(), t('Field type is @fieldtype. It should be datetime.', ['@fieldtype' => $field_storage->getType()]));
 
+    // Date fields.
+    $field_storage = FieldStorageConfig::load('node.field_test_datetime');
+    $this->assertSame("datetime", $field_storage->getType(), t('Field type is @fieldtype. It should be datetime.', ['@fieldtype' => $field_storage->getType()]));
+    $field_storage = FieldStorageConfig::load('node.field_test_datestamp');
+    $this->assertSame("timestamp", $field_storage->getType(), t('Field type is @fieldtype. It should be timestamp.', ['@fieldtype' => $field_storage->getType()]));
+    $field_storage = FieldStorageConfig::load('node.field_test_date');
+    $this->assertSame("datetime", $field_storage->getType(), t('Field type is @fieldtype. It should be datetime.', ['@fieldtype' => $field_storage->getType()]));
+
     // Decimal field with radio buttons.
     $field_storage = FieldStorageConfig::load('node.field_test_decimal_radio_buttons');
     $this->assertIdentical("list_float", $field_storage->getType(), t('Field type is @fieldtype. It should be list_float.', ['@fieldtype' => $field_storage->getType()]));
