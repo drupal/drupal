@@ -85,7 +85,7 @@ interface TermInterface extends ContentEntityInterface, EntityChangedInterface {
   /**
    * Get the taxonomy vocabulary id this term belongs to.
    *
-   * @return int
+   * @return string
    *   The id of the vocabulary.
    *
    * @deprecated Scheduled for removal before Drupal 9.0.0. Use
