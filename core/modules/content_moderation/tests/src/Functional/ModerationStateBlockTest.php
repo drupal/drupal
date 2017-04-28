@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_moderation\Tests;
+namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_moderation\Tests;
+namespace Drupal\Tests\content_moderation\Functional;
 
 /**
  * Tests moderation state node type integration.

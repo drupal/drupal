@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_moderation\Tests;
+namespace Drupal\Tests\content_moderation\Functional;
 
 /**
  * Tests the moderation form, specifically on nodes.
@@ -27,7 +27,7 @@ class ModerationFormTest extends ModerationStateTestBase {
    * the default revision is not a published moderation state.
    *
    * @see \Drupal\content_moderation\EntityOperations
-   * @see \Drupal\content_moderation\Tests\ModerationStateBlockTest::testCustomBlockModeration
+   * @see \Drupal\Tests\content_moderation\Functional\ModerationStateBlockTest::testCustomBlockModeration
    */
   public function testModerationForm() {
     // Create new moderated content in draft.
