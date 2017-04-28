@@ -1,0 +1,13 @@
+render_array_non_html_subscriber_test.raw_string:
+  path: '/render_array_non_html_subscriber_test/raw_string'
+  defaults:
+    _controller: '\Drupal\render_array_non_html_subscriber_test\RenderArrayNonHtmlSubscriberTestController::rawString'
+  requirements:
+    _access: 'TRUE'
+
+render_array_non_html_subscriber_test.render_array:
+  path: '/render_array_non_html_subscriber_test/render_array'
+  defaults:
+    _controller: '\Drupal\render_array_non_html_subscriber_test\RenderArrayNonHtmlSubscriberTestController::renderArray'
+  requirements:
+    _access: 'TRUE'

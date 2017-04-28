@@ -1,0 +1,6 @@
+name: 'Array rendering for non-HTML requests subscriber test'
+type: module
+description: 'Support module for RenderArrayNonHtmlSubscriberTest.'
+package: Testing
+version: VERSION
+core: 8.x

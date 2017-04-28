@@ -1044,8 +1044,8 @@ services:
     arguments: ['@class_resolver', '@current_route_match', '%main_content_renderers%']
     tags:
       - { name: event_subscriber }
-  accept_negotiation_406:
-    class: Drupal\Core\EventSubscriber\AcceptNegotiation406
+  renderer_non_html:
+    class: Drupal\Core\EventSubscriber\RenderArrayNonHtmlSubscriber
     tags:
       - { name: event_subscriber }
   main_content_renderer.html:

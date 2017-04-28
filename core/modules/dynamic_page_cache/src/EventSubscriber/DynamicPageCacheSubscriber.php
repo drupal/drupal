@@ -82,7 +82,7 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
         // may be returning a domain object that a KernelEvents::VIEW subscriber
         // must turn into an actual response, but perhaps a format is being
         // requested that the subscriber does not support.
-        // @see \Drupal\Core\EventSubscriber\AcceptNegotiation406::onViewDetect406()
+        // @see \Drupal\Core\EventSubscriber\RenderArrayNonHtmlSubscriber::onResponse()
         'request_format',
       ],
       'bin' => 'dynamic_page_cache',
