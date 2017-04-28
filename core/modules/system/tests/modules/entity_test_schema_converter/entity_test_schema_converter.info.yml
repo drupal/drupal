@@ -1,0 +1,8 @@
+name: 'Entity Schema Converter Test'
+type: module
+description: 'Provides testing for the entity schema converter.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - entity_test_update

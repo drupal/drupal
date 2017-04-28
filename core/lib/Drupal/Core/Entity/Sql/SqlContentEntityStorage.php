@@ -118,6 +118,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   protected $languageManager;
 
   /**
+   * Whether this storage should use the temporary table mapping.
+   *
+   * @var bool
+   */
+  protected $temporary = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
@@ -267,6 +274,31 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
+   * Sets the wrapped table mapping definition.
+   *
+   * @param \Drupal\Core\Entity\Sql\TableMappingInterface $table_mapping
+   *   The table mapping.
+   *
+   * @internal Only to be used internally by Entity API. Expected to be removed
+   *   by https://www.drupal.org/node/2554235.
+   */
+  public function setTableMapping(TableMappingInterface $table_mapping) {
+    $this->tableMapping = $table_mapping;
+  }
+
+  /**
+   * Changes the temporary state of the storage.
+   *
+   * @param bool $temporary
+   *   Whether to use a temporary table mapping or not.
+   *
+   * @internal Only to be used internally by Entity API.
+   */
+  public function setTemporary($temporary) {
+    $this->temporary = $temporary;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getTableMapping(array $storage_definitions = NULL) {
@@ -279,8 +311,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // @todo Clean-up this in https://www.drupal.org/node/2274017 so we can
     //   easily instantiate a new table mapping whenever needed.
     if (!isset($this->tableMapping) || $storage_definitions) {
+      $table_mapping_class = $this->temporary ? TemporaryTableMapping::class : DefaultTableMapping::class;
       $definitions = $storage_definitions ?: $this->entityManager->getFieldStorageDefinitions($this->entityTypeId);
-      $table_mapping = new DefaultTableMapping($this->entityType, $definitions);
+      /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping|\Drupal\Core\Entity\Sql\TemporaryTableMapping $table_mapping */
+      $table_mapping = new $table_mapping_class($this->entityType, $definitions);
 
       $shared_table_definitions = array_filter($definitions, function (FieldStorageDefinitionInterface $definition) use ($table_mapping) {
         return $table_mapping->allowsSharedTableStorage($definition);

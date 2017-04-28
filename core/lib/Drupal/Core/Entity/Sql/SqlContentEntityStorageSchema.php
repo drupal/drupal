@@ -237,6 +237,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    * {@inheritdoc}
    */
   public function requiresEntityDataMigration(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    // Check if the entity type specifies that data migration is being handled
+    // elsewhere.
+    if ($entity_type->get('requires_data_migration') === FALSE) {
+      return FALSE;
+    }
+
     // If the original storage has existing entities, or it is impossible to
     // determine if that is the case, require entity data to be migrated.
     $original_storage_class = $original->getStorageClass();
@@ -1212,10 +1218,14 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $deleted = !$this->originalDefinitions;
     $table_mapping = $this->storage->getTableMapping();
     $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $deleted);
-    $this->database->schema()->dropTable($table_name);
+    if ($this->database->schema()->tableExists($table_name)) {
+      $this->database->schema()->dropTable($table_name);
+    }
     if ($this->entityType->isRevisionable()) {
-      $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition, $deleted);
-      $this->database->schema()->dropTable($revision_name);
+      $revision_table_name = $table_mapping->getDedicatedRevisionTableName($storage_definition, $deleted);
+      if ($this->database->schema()->tableExists($revision_table_name)) {
+        $this->database->schema()->dropTable($revision_table_name);
+      }
     }
     $this->deleteFieldSchemaData($storage_definition);
   }
