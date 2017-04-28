@@ -118,4 +118,16 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
     $this->getSession()->executeScript("jQuery('{$selector} .contextual .trigger').toggleClass('visually-hidden');");
   }
 
+  /**
+   * Waits for Toolbar to load.
+   */
+  protected function waitForToolbarToLoad() {
+    $web_assert = $this->assertSession();
+    // Waiting for Toolbar module.
+    // @todo Remove the hack after https://www.drupal.org/node/2542050.
+    $web_assert->waitForElementVisible('css', '.toolbar-fixed');
+    // Waiting for Toolbar animation.
+    $web_assert->assertWaitOnAjaxRequest();
+  }
+
 }
