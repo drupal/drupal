@@ -1,7 +1,8 @@
 <?php
 
-namespace Drupal\datetime\Tests\Views;
+namespace Drupal\Tests\datetime\Kernel\Views;
 
+use Drupal\node\Entity\Node;
 use Drupal\views\Views;
 
 /**
@@ -19,8 +20,8 @@ class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Add some basic test nodes.
     $dates = [
@@ -29,11 +30,15 @@ class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
       '2002-01-01',
     ];
     foreach ($dates as $date) {
-      $this->nodes[] = $this->drupalCreateNode([
+      $node = Node::create([
+        'title' => $this->randomMachineName(8),
+        'type' => 'page',
         'field_date' => [
           'value' => $date,
         ]
       ]);
+      $node->save();
+      $this->nodes[] = $node;
     }
   }
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace Drupal\datetime\Tests\Views;
+namespace Drupal\Tests\datetime\Kernel\Views;
 
+use Drupal\node\Entity\Node;
 use Drupal\views\Views;
 
 /**
@@ -29,8 +30,8 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     static::$date = REQUEST_TIME + 86400;
 
@@ -47,11 +48,15 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
       \Drupal::service('date.formatter')->format(static::$date, 'custom', DATETIME_DATETIME_STORAGE_FORMAT, DATETIME_STORAGE_TIMEZONE),
     ];
     foreach ($dates as $date) {
-      $this->nodes[] = $this->drupalCreateNode([
+      $node = Node::create([
+        'title' => $this->randomMachineName(8),
+        'type' => 'page',
         'field_date' => [
           'value' => $date,
         ]
       ]);
+      $node->save();
+      $this->nodes[] = $node;
     }
   }
 

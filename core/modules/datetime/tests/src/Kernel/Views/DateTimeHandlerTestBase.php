@@ -1,28 +1,23 @@
 <?php
 
-namespace Drupal\datetime\Tests\Views;
-
-@trigger_error('\Drupal\datetime\Tests\Views\DateTimeHandlerTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\BrowserTestBase', E_USER_DEPRECATED);
+namespace Drupal\Tests\datetime\Kernel\Views;
 
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
-use Drupal\views\Tests\Handler\HandlerTestBase;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Base class for testing datetime handlers.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Tests\BrowserTestBase.
  */
-abstract class DateTimeHandlerTestBase extends HandlerTestBase {
+abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['datetime_test', 'node', 'datetime'];
+  public static $modules = ['datetime_test', 'node', 'datetime', 'field'];
 
   /**
    * Name of the field.
@@ -43,8 +38,11 @@ abstract class DateTimeHandlerTestBase extends HandlerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
+
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('user');
 
     // Add a date field to page nodes.
     $node_type = NodeType::create([

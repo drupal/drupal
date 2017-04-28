@@ -1,8 +1,10 @@
 <?php
 
-namespace Drupal\datetime\Tests\Views;
+namespace Drupal\Tests\datetime\Kernel\Views;
+
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\Node;
 use Drupal\views\Views;
 
 /**
@@ -27,8 +29,8 @@ class FilterDateTest extends DateTimeHandlerTestBase {
    *
    * Create nodes with relative dates of yesterday, today, and tomorrow.
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Set to 'today'.
     static::$date = REQUEST_TIME;
@@ -48,11 +50,15 @@ class FilterDateTest extends DateTimeHandlerTestBase {
     ];
 
     foreach ($dates as $date) {
-      $this->nodes[] = $this->drupalCreateNode([
+      $node = Node::create([
+        'title' => $this->randomMachineName(8),
+        'type' => 'page',
         'field_date' => [
           'value' => $date,
         ]
       ]);
+      $node->save();
+      $this->nodes[] = $node;
     }
   }
 
