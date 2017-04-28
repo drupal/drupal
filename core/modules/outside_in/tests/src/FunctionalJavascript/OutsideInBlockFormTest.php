@@ -182,6 +182,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    */
   protected function enableEditMode() {
     $this->pressToolbarEditButton();
+    $this->waitForToolbarToLoad();
     $this->assertEditModeEnabled();
   }
 
@@ -190,6 +191,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    */
   protected function disableEditMode() {
     $this->pressToolbarEditButton();
+    $this->waitForToolbarToLoad();
     $this->assertEditModeDisabled();
   }
 
@@ -213,6 +215,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    *   A css selector selects the block or an element within it.
    */
   protected function openBlockForm($block_selector) {
+    $this->waitForToolbarToLoad();
     $this->click($block_selector);
     $this->waitForOffCanvasToOpen();
     $this->assertOffCanvasBlockFormIsValid();
@@ -249,11 +252,9 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     // Load the same page twice.
     foreach ([1, 2] as $page_load_times) {
       $this->drupalGet('node/' . $node->id());
-      // Waiting for Toolbar module.
-      // @todo Remove the hack after https://www.drupal.org/node/2542050.
-      $web_assert->waitForElementVisible('css', '.toolbar-fixed');
-      // Waiting for Toolbar animation.
-      $web_assert->assertWaitOnAjaxRequest();
+
+      $this->waitForToolbarToLoad();
+
       // The 2nd page load we should already be in edit mode.
       if ($page_load_times == 1) {
         $this->enableEditMode();
@@ -363,18 +364,13 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    * Press the toolbar Edit button provided by the contextual module.
    */
   protected function pressToolbarEditButton() {
-    $this->assertSession()
-      ->waitForElementVisible('css', 'div[data-contextual-id="block:block=powered:langcode=en|outside_in::langcode=en"] .contextual-links a', 10000);
-    // Waiting for QuickEdit icon animation.
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->waitForElement('css', '[data-contextual-id] .contextual-links a');
 
     $edit_button = $this->getSession()
       ->getPage()
       ->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR);
 
     $edit_button->press();
-    // Waiting for Toolbar animation.
-    $this->assertSession()->assertWaitOnAjaxRequest();
   }
 
   /**
