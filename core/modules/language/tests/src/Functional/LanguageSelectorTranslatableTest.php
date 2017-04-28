@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the content translation settings language selector options.
  *
  * @group language
  */
-class LanguageSelectorTranslatableTest extends WebTestBase {
+class LanguageSelectorTranslatableTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -82,7 +82,7 @@ class LanguageSelectorTranslatableTest extends WebTestBase {
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => 'edit-settings-user-user-settings-language-langcode', ':option' => 'en']);
 
     // Check that the language text is translated.
-    $this->assertEqual((string) $elements[0], $name_translation, 'Checking the option string English is translated to Spanish.');
+    $this->assertEqual($elements[0]->getText(), $name_translation, 'Checking the option string English is translated to Spanish.');
   }
 
 }

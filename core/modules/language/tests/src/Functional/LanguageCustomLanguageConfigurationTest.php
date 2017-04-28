@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Adds and configures custom languages.
  *
  * @group language
  */
-class LanguageCustomLanguageConfigurationTest extends WebTestBase {
+class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

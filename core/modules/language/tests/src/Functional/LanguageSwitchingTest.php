@@ -1,19 +1,19 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Functional tests for the language switching feature.
  *
  * @group language
  */
-class LanguageSwitchingTest extends WebTestBase {
+class LanguageSwitchingTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -73,22 +73,24 @@ class LanguageSwitchingTest extends WebTestBase {
 
     // Assert that each list item and anchor element has the appropriate data-
     // attributes.
-    list($language_switcher) = $this->xpath('//div[@id=:id]', [':id' => 'block-test-language-block']);
+    $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
     $list_items = [];
     $anchors = [];
     $labels = [];
-    foreach ($language_switcher->ul->li as $list_item) {
-      $classes = explode(" ", (string) $list_item['class']);
+    foreach ($language_switchers as $list_item) {
+      $classes = explode(" ", $list_item->getAttribute('class'));
       list($langcode) = array_intersect($classes, ['en', 'fr']);
       $list_items[] = [
         'langcode_class' => $langcode,
-        'data-drupal-link-system-path' => (string) $list_item['data-drupal-link-system-path'],
+        'data-drupal-link-system-path' => $list_item->getAttribute('data-drupal-link-system-path'),
       ];
+
+      $link = $list_item->find('xpath', 'a');
       $anchors[] = [
-        'hreflang' => (string) $list_item->a['hreflang'],
-        'data-drupal-link-system-path' => (string) $list_item->a['data-drupal-link-system-path'],
+         'hreflang' => $link->getAttribute('hreflang'),
+         'data-drupal-link-system-path' => $link->getAttribute('data-drupal-link-system-path'),
       ];
-      $labels[] = (string) $list_item->a;
+      $labels[] = $link->getText();
     }
     $expected_list_items = [
       0 => ['langcode_class' => 'en', 'data-drupal-link-system-path' => 'user/2'],
@@ -124,7 +126,7 @@ class LanguageSwitchingTest extends WebTestBase {
     $this->assertText($block_label, 'Language switcher block found.');
 
     // Assert that only the current language is marked as active.
-    list($language_switcher) = $this->xpath('//div[@id=:id]', [':id' => 'block-test-language-block']);
+    $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
     $links = [
       'active' => [],
       'inactive' => [],
@@ -134,8 +136,8 @@ class LanguageSwitchingTest extends WebTestBase {
       'inactive' => [],
     ];
     $labels = [];
-    foreach ($language_switcher->ul->li as $link) {
-      $classes = explode(" ", (string) $link['class']);
+    foreach ($language_switchers as $list_item) {
+      $classes = explode(" ", $list_item->getAttribute('class'));
       list($langcode) = array_intersect($classes, ['en', 'fr']);
       if (in_array('is-active', $classes)) {
         $links['active'][] = $langcode;
@@ -143,14 +145,16 @@ class LanguageSwitchingTest extends WebTestBase {
       else {
         $links['inactive'][] = $langcode;
       }
-      $anchor_classes = explode(" ", (string) $link->a['class']);
+
+      $link = $list_item->find('xpath', 'a');
+      $anchor_classes = explode(" ", $link->getAttribute('class'));
       if (in_array('is-active', $anchor_classes)) {
         $anchors['active'][] = $langcode;
       }
       else {
         $anchors['inactive'][] = $langcode;
       }
-      $labels[] = (string) $link->a;
+      $labels[] = $link->getText();
     }
     $this->assertIdentical($links, ['active' => ['en'], 'inactive' => ['fr']], 'Only the current language list item is marked as active on the language switcher block.');
     $this->assertIdentical($anchors, ['active' => ['en'], 'inactive' => ['fr']], 'Only the current language anchor is marked as active on the language switcher block.');
@@ -208,7 +212,7 @@ class LanguageSwitchingTest extends WebTestBase {
       ':hreflang' => 'en',
     ]);
     $english_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['en']]);
-    $this->assertEqual($english_url, (string) $english_link['href']);
+    $this->assertEqual($english_url, $english_link->getAttribute('href'));
 
     // Verify the Italian URL is correct
     list($italian_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', [
@@ -216,7 +220,7 @@ class LanguageSwitchingTest extends WebTestBase {
       ':hreflang' => 'it',
     ]);
     $italian_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['it']]);
-    $this->assertEqual($italian_url, (string) $italian_link['href']);
+    $this->assertEqual($italian_url, $italian_link->getAttribute('href'));
   }
 
   /**

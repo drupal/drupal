@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -8,9 +8,9 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSession;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin;
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +37,7 @@ use Drupal\block\Entity\Block;
  *
  * @group language
  */
-class LanguageUILanguageNegotiationTest extends WebTestBase {
+class LanguageUILanguageNegotiationTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -69,9 +69,9 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // For testing path prefix.
     $langcode = 'zh-hans';
     // For setting browser language preference to 'vi'.
-    $http_header_browser_fallback = ["Accept-Language: $langcode_browser_fallback;q=1"];
+    $http_header_browser_fallback = ["Accept-Language" => "$langcode_browser_fallback;q=1"];
     // For setting browser language preference to some unknown.
-    $http_header_blah = ["Accept-Language: blah;q=1"];
+    $http_header_blah = ["Accept-Language" => "blah;q=1"];
 
     // Setup the site languages by installing two languages.
     // Set the default language in order for the translated string to be registered
@@ -107,7 +107,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textarea = current($this->xpath('//textarea'));
-    $lid = (string) $textarea[0]['name'];
+    $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $language_browser_fallback_string,
     ];
@@ -119,7 +119,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textarea = current($this->xpath('//textarea'));
-    $lid = (string) $textarea[0]['name'];
+    $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $language_string,
     ];
@@ -398,7 +398,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
 
     // Access the front page without specifying any valid URL language prefix
     // and having as browser language preference a non-default language.
-    $http_header = ["Accept-Language: $langcode_browser_fallback;q=1"];
+    $http_header = ["Accept-Language" => "$langcode_browser_fallback;q=1"];
     $language = new Language(['id' => '']);
     $this->drupalGet('', ['language' => $language], $http_header);
 
@@ -406,11 +406,11 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // language.
     $args = [':id' => 'block-test-language-block', ':url' => \Drupal::url('<front>') . $langcode_browser_fallback];
     $fields = $this->xpath('//div[@id=:id]//a[@class="language-link is-active" and starts-with(@href, :url)]', $args);
-    $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->getName(), 'The browser language is the URL active language');
+    $this->assertSame($fields[0]->getText(), $languages[$langcode_browser_fallback]->getName(), 'The browser language is the URL active language');
 
     // Check that URLs are rewritten using the given browser language.
     $fields = $this->xpath('//div[@class="site-name"]/a[@rel="home" and @href=:url]', $args);
-    $this->assertTrue($fields[0] == 'Drupal', 'URLs are rewritten using the browser language.');
+    $this->assertSame($fields[0]->getText(), 'Drupal', 'URLs are rewritten using the browser language.');
   }
 
   /**

@@ -1,18 +1,18 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Adds a new language and tests changing its status and the default language.
  *
  * @group language
  */
-class LanguageListTest extends WebTestBase {
+class LanguageListTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -176,9 +176,20 @@ class LanguageListTest extends WebTestBase {
     $this->assertResponse(403, 'Can not delete locked language');
 
     // Ensure that NL cannot be set default when it's not available.
+    // First create the NL language.
+    $edit = [
+      'predefined_langcode' => 'nl',
+    ];
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+
+    // Load the form which has now the additional NL language option.
     $this->drupalGet('admin/config/regional/language');
-    $extra_values = '&site_default_language=nl';
-    $this->drupalPostForm(NULL, [], t('Save configuration'), [], [], NULL, $extra_values);
+
+    // Delete the NL language in the background.
+    $language_storage = $this->container->get('entity_type.manager')->getStorage('configurable_language');
+    $language_storage->load('nl')->delete();
+
+    $this->drupalPostForm(NULL, ['site_default_language' => 'nl'], 'Save configuration');
     $this->assertText(t('Selected default language no longer exists.'));
     $this->assertNoFieldChecked('edit-site-default-language-xx', 'The previous default language got deselected.');
   }

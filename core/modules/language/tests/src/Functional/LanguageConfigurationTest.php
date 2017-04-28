@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Adds and configures languages to check negotiation changes.
  *
  * @group language
  */
-class LanguageConfigurationTest extends WebTestBase {
+class LanguageConfigurationTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -169,10 +169,7 @@ class LanguageConfigurationTest extends WebTestBase {
     $this->checkConfigurableLanguageWeight('after re-ordering');
 
     // Remove predefined language.
-    $edit = [
-      'confirm' => 1,
-    ];
-    $this->drupalPostForm('admin/config/regional/language/delete/fr', $edit, 'Delete');
+    $this->drupalPostForm('admin/config/regional/language/delete/fr', [], 'Delete');
     $this->checkConfigurableLanguageWeight('after deleting a language');
   }
 

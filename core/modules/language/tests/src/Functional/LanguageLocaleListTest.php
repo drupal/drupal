@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Adds a new language with translations and tests language list order.
  *
  * @group language
  */
-class LanguageLocaleListTest extends WebTestBase {
+class LanguageLocaleListTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -57,9 +57,11 @@ class LanguageLocaleListTest extends WebTestBase {
 
     // Get language list displayed in select list.
     $this->drupalGet('fr/admin/config/regional/language/add');
-    $select = $this->xpath('//select[@id="edit-predefined-langcode"]');
-    $select_element = (array) end($select);
-    $options = $select_element['option'];
+    $option_elements = $this->xpath('//select[@id="edit-predefined-langcode/option"]');
+    $options = [];
+    foreach ($option_elements as $option_element) {
+      $options[] = $option_element->getText();
+    }
     // Remove the 'Custom language...' option form the end.
     array_pop($options);
     // Order language list.

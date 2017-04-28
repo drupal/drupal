@@ -1,19 +1,19 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
-use Drupal\simpletest\WebTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the features of the language configuration element field.
  *
  * @group language
  */
-class LanguageConfigurationElementTest extends WebTestBase {
+class LanguageConfigurationElementTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

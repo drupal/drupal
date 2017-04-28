@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group language
  */
-class LanguageUrlRewritingTest extends WebTestBase {
+class LanguageUrlRewritingTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -90,9 +90,8 @@ class LanguageUrlRewritingTest extends WebTestBase {
     // we can always check the prefixed URL.
     $prefixes = language_negotiation_url_prefixes();
     $stored_prefix = isset($prefixes[$language->getId()]) ? $prefixes[$language->getId()] : $this->randomMachineName();
-    if ($this->assertNotEqual($stored_prefix, $prefix, $message1)) {
-      $prefix = $stored_prefix;
-    }
+    $this->assertNotEqual($stored_prefix, $prefix, $message1);
+    $prefix = $stored_prefix;
 
     $this->drupalGet("$prefix/$path");
     $this->assertResponse(404, $message2);

@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests entity type without language support.
@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group language
  */
-class EntityTypeWithoutLanguageFormTest extends WebTestBase {
+class EntityTypeWithoutLanguageFormTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
