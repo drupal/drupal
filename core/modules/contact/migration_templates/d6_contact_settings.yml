@@ -11,7 +11,7 @@ process:
   user_default_enabled: contact_default_status
   'flood/limit': contact_hourly_threshold
   default_form:
-    plugin: migration
+    plugin: migration_lookup
     migration: contact_category
     source: default_category
 destination:

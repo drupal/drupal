@@ -22,7 +22,7 @@ process:
   promote: promote
   sticky: sticky
   'body/format':
-    plugin: migration
+    plugin: migration_lookup
     migration: d6_filter_format
     source: format
   'body/value': body

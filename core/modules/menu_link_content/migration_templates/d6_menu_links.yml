@@ -10,7 +10,7 @@ process:
   description: description
   menu_name:
     -
-      plugin: migration
+      plugin: migration_lookup
       # The menu migration is in the system module.
       migration: d6_menu
       source: menu_name

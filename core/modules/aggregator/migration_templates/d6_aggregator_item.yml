@@ -7,7 +7,7 @@ source:
 process:
   iid: iid
   fid:
-    plugin: migration
+    plugin: migration_lookup
     migration: d6_aggregator_feed
     source: fid
   title: title

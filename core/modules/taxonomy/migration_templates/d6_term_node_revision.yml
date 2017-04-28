@@ -8,7 +8,7 @@ source:
 process:
   vid:
     -
-      plugin: migration
+      plugin: migration_lookup
       migration: d6_node
       source: vid
     -
