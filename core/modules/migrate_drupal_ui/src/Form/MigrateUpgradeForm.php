@@ -590,6 +590,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'profile',
       'destination_module' => 'user',
     ],
+    'd7_theme_settings' => [
+      'source_module' => 'system',
+      'destination_module' => 'system',
+    ],
     'd6_user' => [
       'source_module' => 'user',
       'destination_module' => 'user',
