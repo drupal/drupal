@@ -7,7 +7,7 @@ source:
     type: external_test
 process:
   nid:
-    plugin: migration
+    plugin: migration_lookup
     source: name
     migration: external_translated_test_node
   type: constants/type

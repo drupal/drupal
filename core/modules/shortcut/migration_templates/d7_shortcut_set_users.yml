@@ -7,14 +7,14 @@ source:
 process:
   uid:
     -
-      plugin: migration
+      plugin: migration_lookup
       migration: d7_user
       source: uid
     -
       plugin: skip_on_empty
       method: row
   set_name:
-    plugin: migration
+    plugin: migration_lookup
     migration: d7_shortcut_set
     source: set_name
 destination:

@@ -21,7 +21,7 @@ process:
   options/weight: 'constants/options/weight'
   bundle: type
   field_name:
-    plugin: migration
+    plugin: migration_lookup
     migration: d6_taxonomy_vocabulary
     source: vid
 destination:

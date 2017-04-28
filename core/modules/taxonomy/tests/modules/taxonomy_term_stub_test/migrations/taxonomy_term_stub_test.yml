@@ -19,7 +19,7 @@ process:
   name: name
   weight: weight
   parent:
-    plugin: migration
+    plugin: migration_lookup
     migration: taxonomy_term_stub_test
     source: parent
 destination:
