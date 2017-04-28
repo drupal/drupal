@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_moderation\Tests;
+namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
@@ -132,7 +132,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/content');
     $element = $this->cssSelect('nav.pager li.is-active a');
-    $url = (string) $element[0]['href'];
+    $url = $element[0]->getAttribute('href');
     $query = [];
     parse_str(parse_url($url, PHP_URL_QUERY), $query);
     $this->assertEqual(0, $query['page']);
