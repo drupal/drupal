@@ -8,7 +8,7 @@ source:
     uri_scheme: 'internal:/'
 process:
   shortcut_set:
-     plugin: migration
+     plugin: migration_lookup
      migration: d7_shortcut_set
      source: menu_name
   title: link_title

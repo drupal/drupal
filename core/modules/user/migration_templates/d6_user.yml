@@ -32,11 +32,11 @@ process:
     fallback_to_site_default: true
   init: init
   roles:
-    plugin: migration
+    plugin: migration_lookup
     migration: d6_user_role
     source: roles
   user_picture:
-    plugin: migration
+    plugin: migration_lookup
     migration: d6_user_picture_file
     source: uid
     no_stub: true

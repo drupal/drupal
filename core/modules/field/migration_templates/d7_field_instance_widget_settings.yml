@@ -14,7 +14,7 @@ process:
   # field migration.
   field_type_exists:
     -
-      plugin: migration
+      plugin: migration_lookup
       migration: d7_field
       source:
         - field_name

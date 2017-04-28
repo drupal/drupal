@@ -31,7 +31,7 @@ process:
     fallback_to_site_default: true
   init: init
   roles:
-    plugin: migration
+    plugin: migration_lookup
     migration: d7_user_role
     source: roles
   user_picture:
@@ -40,7 +40,7 @@ process:
       source: picture
       default_value: null
     -
-      plugin: migration
+      plugin: migration_lookup
       migration: d7_file
 destination:
   plugin: entity:user

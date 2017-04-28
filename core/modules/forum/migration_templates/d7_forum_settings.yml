@@ -18,7 +18,7 @@ process:
   'topics/page_limit': forum_per_page
   'topics/order': forum_order
   vocabulary:
-    plugin: migration
+    plugin: migration_lookup
     migration: d7_taxonomy_vocabulary
     source: forum_nav_vocabulary
 destination:

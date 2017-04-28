@@ -14,7 +14,7 @@ process:
       method: process
       source: plid
     -
-      plugin: migration
+      plugin: migration_lookup
       migration: d6_book
 destination:
   plugin: book

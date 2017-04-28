@@ -27,7 +27,7 @@ use Drupal\migrate\Row;
  * process:
  *   uid:
  *     -
- *       plugin: migration
+ *       plugin: migration_lookup
  *       migration: users
  *       source: author
  *     -

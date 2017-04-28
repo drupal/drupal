@@ -14,7 +14,7 @@ process:
   # field migration.
   field_type_exists:
     -
-      plugin: migration
+      plugin: migration_lookup
       migration: d6_field
       source:
         - field_name
@@ -29,7 +29,7 @@ process:
   field_name: field_name
   bundle:
     -
-      plugin: migration
+      plugin: migration_lookup
       migration: d6_node_type
       source: type_name
     -

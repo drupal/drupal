@@ -28,7 +28,7 @@ process:
       index:
         - 1
     -
-      plugin: migration
+      plugin: migration_lookup
       migration: d7_node_translation
 destination:
   plugin: url_alias
