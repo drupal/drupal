@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\toolbar\Tests;
+namespace Drupal\Tests\toolbar\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that the toolbar icon class remains for translated menu items.
  *
  * @group toolbar
  */
-class ToolbarMenuTranslationTest extends WebTestBase {
+class ToolbarMenuTranslationTest extends BrowserTestBase {
 
   /**
    * A user with permission to access the administrative toolbar.
@@ -66,7 +66,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
     // Translate the menu item.
     $menu_item_translated = $this->randomMachineName();
     $textarea = current($this->xpath('//textarea'));
-    $lid = (string) $textarea[0]['name'];
+    $lid = (string) $textarea->getAttribute('name');
     $edit = [
       $lid => $menu_item_translated,
     ];

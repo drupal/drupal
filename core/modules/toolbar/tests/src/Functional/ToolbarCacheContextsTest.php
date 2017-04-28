@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\toolbar\Tests;
+namespace Drupal\Tests\toolbar\Functional;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
-use Drupal\simpletest\WebTestBase;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\BrowserTestBase;
 
 
 /**
@@ -13,7 +13,7 @@ use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
  *
  * @group toolbar
  */
-class ToolbarCacheContextsTest extends WebTestBase {
+class ToolbarCacheContextsTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 

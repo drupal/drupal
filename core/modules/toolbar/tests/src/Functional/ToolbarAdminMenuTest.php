@@ -1,11 +1,12 @@
 <?php
 
-namespace Drupal\toolbar\Tests;
+namespace Drupal\Tests\toolbar\Functional;
 
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 
 /**
@@ -25,7 +26,7 @@ use Drupal\user\RoleInterface;
  *
  * @group toolbar
  */
-class ToolbarAdminMenuTest extends WebTestBase {
+class ToolbarAdminMenuTest extends BrowserTestBase {
 
   /**
    * A user with permission to access the administrative toolbar.
@@ -297,7 +298,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // Assume this is the only result.
     // Translate the string to a random string.
     $textarea = current($this->xpath('//textarea'));
-    $lid = (string) $textarea[0]['name'];
+    $lid = (string) $textarea->getAttribute('name');
     $edit = [
       $lid => $translation,
     ];
@@ -330,8 +331,8 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // Request a new page to refresh the drupalSettings object.
     $subtrees_hash = $this->getSubtreesHash();
 
-    $ajax_result = $this->drupalGetAjax('toolbar/subtrees/' . $subtrees_hash);
-    $this->assertResponse('200');
+    $this->drupalGet('toolbar/subtrees/' . $subtrees_hash, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With: XMLHttpRequest']);
+    $ajax_result = json_decode($this->getSession()->getPage()->getContent(), TRUE);
     $this->assertEqual($ajax_result[0]['command'], 'setToolbarSubtrees', 'Subtrees response uses the correct command.');
     $this->assertEqual(array_keys($ajax_result[0]['subtrees']), ['system-admin_content', 'system-admin_structure', 'system-themes_page', 'system-modules_list', 'system-admin_config', 'entity-user-collection', 'front'], 'Correct subtrees returned.');
   }
