@@ -1,10 +1,12 @@
 <?php
 
-namespace Drupal\views\Tests;
-@trigger_error('\Drupal\views\Tests\ViewTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\views\Functional\ViewTestBase', E_USER_DEPRECATED);
+namespace Drupal\Tests\views\Functional;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\views\Tests\ViewResultAssertionTrait;
+use Drupal\views\Tests\ViewTestData;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -14,13 +16,10 @@ use Drupal\views\ViewExecutable;
  * When possible, ViewsKernelTestBase should be used instead. Both base classes
  * include the same methods.
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Tests\views\Functional\ViewTestBase.
- *
  * @see \Drupal\Tests\views\Kernel\ViewsKernelTestBase
  * @see \Drupal\simpletest\WebTestBase
  */
-abstract class ViewTestBase extends WebTestBase {
+abstract class ViewTestBase extends BrowserTestBase {
 
   use ViewResultAssertionTrait;
 
@@ -95,17 +94,23 @@ abstract class ViewTestBase extends WebTestBase {
    *
    * @param string $id
    *   The HTML ID of the button
-   * @param string $label
+   * @param string $expected_label
    *   The expected label for the button.
    * @param string $message
    *   (optional) A custom message to display with the assertion. If no custom
    *   message is provided, the message will indicate the button label.
    *
-   * @return bool
-   *   TRUE if the assertion was successful, or FALSE on failure.
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   protected function helperButtonHasLabel($id, $expected_label, $message = 'Label has the expected value: %label.') {
-    return $this->assertFieldById($id, $expected_label, t($message, ['%label' => $expected_label]));
+    $xpath = $this->assertSession()->buildXPathQuery('//button[@id=:value]|//input[@id=:value]', [':value' => $id]);
+    $field = $this->getSession()->getPage()->find('xpath', $xpath);
+
+    if (empty($field)) {
+      throw new ElementNotFoundException($this->getSession()->getDriver(), 'form field', 'id', $field);
+    }
+
+    $this->assertEquals($expected_label, $field->getValue());
   }
 
   /**
