@@ -9,7 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
 
 /**
- * Provides form for block instance forms when used in the off-canvas tray.
+ * Provides form for block instance forms when used in the off-canvas dialog.
  *
  * This form removes advanced sections of regular block form such as the
  * visibility settings, machine ID and region.
@@ -92,7 +92,7 @@ class BlockEntityOffCanvasForm extends BlockForm {
    */
   protected function getPluginForm(BlockPluginInterface $block) {
     if ($block instanceof PluginWithFormsInterface) {
-      return $this->pluginFormFactory->createInstance($block, 'offcanvas', 'configure');
+      return $this->pluginFormFactory->createInstance($block, 'off_canvas', 'configure');
     }
     return $block;
   }

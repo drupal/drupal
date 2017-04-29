@@ -1,7 +1,7 @@
-entity.block.offcanvas_form:
-  path: '/admin/structure/block/manage/{block}/offcanvas'
+entity.block.off_canvas_form:
+  path: '/admin/structure/block/manage/{block}/off-canvas'
   defaults:
-    _entity_form: 'block.offcanvas'
+    _entity_form: 'block.off_canvas'
     _title_callback: '\Drupal\outside_in\Block\BlockEntityOffCanvasForm::title'
   requirements:
     _permission: 'administer blocks'

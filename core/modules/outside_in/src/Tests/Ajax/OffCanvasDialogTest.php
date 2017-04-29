@@ -21,7 +21,7 @@ class OffCanvasDialogTest extends AjaxTestBase {
   public static $modules = ['outside_in'];
 
   /**
-   * Test sending AJAX requests to open and manipulate offcanvas dialog.
+   * Test sending AJAX requests to open and manipulate off-canvas dialog.
    */
   public function testDialog() {
     $this->drupalLogin($this->drupalCreateUser(['administer contact forms']));
@@ -32,9 +32,9 @@ class OffCanvasDialogTest extends AjaxTestBase {
     $dialog_renderable = AjaxTestController::dialogContents();
     $dialog_contents = \Drupal::service('renderer')->renderRoot($dialog_renderable);
 
-    $offcanvas_expected_response = [
+    $off_canvas_expected_response = [
       'command' => 'openDialog',
-      'selector' => '#drupal-offcanvas',
+      'selector' => '#drupal-off-canvas',
       'settings' => NULL,
       'data' => $dialog_contents,
       'dialogOptions' =>
@@ -52,8 +52,8 @@ class OffCanvasDialogTest extends AjaxTestBase {
     ];
 
     // Emulate going to the JS version of the page and check the JSON response.
-    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog_offcanvas']]);
-    $this->assertEqual($offcanvas_expected_response, $ajax_result[3], 'Off-canvas dialog JSON response matches.');
+    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog_off_canvas']]);
+    $this->assertEqual($off_canvas_expected_response, $ajax_result[3], 'off-canvas dialog JSON response matches.');
   }
 
 }
