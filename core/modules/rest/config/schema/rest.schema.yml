@@ -15,18 +15,33 @@ rest.settings:
 rest_resource.method:
   type: mapping
   mapping:
+    HEAD:
+      type: rest_request
+      label: 'HEAD method settings'
     GET:
       type: rest_request
       label: 'GET method settings'
     POST:
       type: rest_request
       label: 'POST method settings'
-    PATCH:
+    PUT:
       type: rest_request
-      label: 'PATCH method settings'
+      label: 'PUT method settings'
     DELETE:
       type: rest_request
       label: 'DELETE method settings'
+    TRACE:
+      type: rest_request
+      label: 'TRACE method settings'
+    OPTIONS:
+      type: rest_request
+      label: 'OPTIONS method settings'
+    CONNECT:
+      type: rest_request
+      label: 'CONNECT method settings'
+    PATCH:
+      type: rest_request
+      label: 'PATCH method settings'
 
 # Resource-level granularity of REST resource configuration.
 rest_resource.resource:
