@@ -1003,7 +1003,7 @@ function user_user_role_insert(RoleInterface $role) {
     $action = Action::create([
       'id' => $add_id,
       'type' => 'user',
-      'label' => t('Add the @label role to the selected users', ['@label' => $role->label()]),
+      'label' => t('Add the @label role to the selected user(s)', ['@label' => $role->label()]),
       'configuration' => [
         'rid' => $role->id(),
       ],
@@ -1016,7 +1016,7 @@ function user_user_role_insert(RoleInterface $role) {
     $action = Action::create([
       'id' => $remove_id,
       'type' => 'user',
-      'label' => t('Remove the @label role from the selected users', ['@label' => $role->label()]),
+      'label' => t('Remove the @label role from the selected user(s)', ['@label' => $role->label()]),
       'configuration' => [
         'rid' => $role->id(),
       ],
