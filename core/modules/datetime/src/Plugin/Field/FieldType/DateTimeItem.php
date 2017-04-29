@@ -17,7 +17,8 @@ use Drupal\Core\Field\FieldItemBase;
  *   description = @Translation("Create and store date values."),
  *   default_widget = "datetime_default",
  *   default_formatter = "datetime_default",
- *   list_class = "\Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList"
+ *   list_class = "\Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList",
+ *   constraints = {"DateTimeFormat" = {}}
  * )
  */
 class DateTimeItem extends FieldItemBase {
