@@ -30,7 +30,7 @@ function outside_in_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_contextual_links_view_alter().
  *
- * Change Configure Blocks into offcanvas links.
+ * Change Configure Blocks into off_canvas links.
  */
 function outside_in_contextual_links_view_alter(&$element, $items) {
   if (isset($element['#links']['outside-inblock-configure'])) {
@@ -42,7 +42,7 @@ function outside_in_contextual_links_view_alter(&$element, $items) {
     $element['#links']['outside-inblock-configure']['attributes'] = [
       'class' => ['use-ajax'],
       'data-dialog-type' => 'dialog',
-      'data-dialog-renderer' => 'offcanvas',
+      'data-dialog-renderer' => 'off_canvas',
       'data-outside-in-edit' => TRUE,
     ];
     // If this is content block change title to avoid duplicate "Quick Edit".
@@ -92,8 +92,8 @@ function outside_in_theme() {
 function outside_in_entity_type_build(array &$entity_types) {
   /* @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['block']
-    ->setFormClass('offcanvas', BlockEntityOffCanvasForm::class)
-    ->setLinkTemplate('offcanvas-form', '/admin/structure/block/manage/{block}/offcanvas');
+    ->setFormClass('off_canvas', BlockEntityOffCanvasForm::class)
+    ->setLinkTemplate('off_canvas-form', '/admin/structure/block/manage/{block}/off-canvas');
 }
 
 /**
@@ -139,14 +139,14 @@ function outside_in_toolbar_alter(&$items) {
  */
 function outside_in_block_alter(&$definitions) {
   if (!empty($definitions['system_branding_block'])) {
-    $definitions['system_branding_block']['forms']['offcanvas'] = SystemBrandingOffCanvasForm::class;
+    $definitions['system_branding_block']['forms']['off_canvas'] = SystemBrandingOffCanvasForm::class;
   }
 
   // Since menu blocks use derivatives, check the definition ID instead of
   // relying on the plugin ID.
   foreach ($definitions as &$definition) {
     if ($definition['id'] === 'system_menu_block') {
-      $definition['forms']['offcanvas'] = SystemMenuOffCanvasForm::class;
+      $definition['forms']['off_canvas'] = SystemMenuOffCanvasForm::class;
     }
   }
 }

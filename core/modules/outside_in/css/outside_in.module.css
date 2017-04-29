@@ -27,7 +27,7 @@
  * to expand dialog widths.
  */
 @media all and (max-width: 48em) { /* 768px */
-  .ui-dialog.ui-dialog-offcanvas {
+  .ui-dialog.ui-dialog-off-canvas {
     width: 100% !important;
   }
   /* When tray is at 100% width stop the body from scrolling */

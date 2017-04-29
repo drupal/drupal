@@ -23,7 +23,7 @@ drupal.outside_in:
 drupal.off_canvas:
   version: VERSION
   js:
-    js/offcanvas.js: {}
+    js/off-canvas.js: {}
   dependencies:
     - core/jquery
     - core/drupal

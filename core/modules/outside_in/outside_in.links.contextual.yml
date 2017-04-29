@@ -1,4 +1,4 @@
 outside_in.block_configure:
   title: 'Quick edit'
-  route_name: 'entity.block.offcanvas_form'
+  route_name: 'entity.block.off_canvas_form'
   group: 'block'

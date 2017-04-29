@@ -7,7 +7,7 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\user\Entity\Role;
 
 /**
- * Testing opening and saving block forms in the off-canvas tray.
+ * Testing opening and saving block forms in the off-canvas dialog.
  *
  * @group outside_in
  */
@@ -63,7 +63,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
   }
 
   /**
-   * Tests opening Offcanvas tray by click blocks and elements in the blocks.
+   * Tests opening off-canvas dialog by click blocks and elements in the blocks.
    *
    * @dataProvider providerTestBlocks
    */
@@ -75,7 +75,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
 
     $link = $page->find('css', "$block_selector .contextual-links li a");
     $this->assertEquals('Quick edit', $link->getText(), "'Quick edit' is the first contextual link for the block.");
-    $this->assertContains("/admin/structure/block/manage/$block_id/offcanvas?destination=user/2", $link->getAttribute('href'));
+    $this->assertContains("/admin/structure/block/manage/$block_id/off-canvas?destination=user/2", $link->getAttribute('href'));
 
     if (isset($toolbar_item)) {
       // Check that you can open a toolbar tray and it will be closed after
@@ -133,7 +133,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
 
     // Exit edit mode using ESC.
     $web_assert->elementTextContains('css', '.contextual-toolbar-tab button', 'Editing');
-    $web_assert->elementAttributeContains('css', '.dialog-offcanvas__main-canvas', 'class', 'js-outside-in-edit-mode');
+    $web_assert->elementAttributeContains('css', '.dialog-off-canvas__main-canvas', 'class', 'js-outside-in-edit-mode');
     // Simulate press the Escape key.
     $this->getSession()->executeScript('jQuery("body").trigger(jQuery.Event("keyup", { keyCode: 27 }));');
     $this->waitForOffCanvasToClose();
@@ -141,7 +141,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $this->assertEditModeDisabled();
     $web_assert->elementTextContains('css', '#drupal-live-announce', 'Exited edit mode.');
     $web_assert->elementTextNotContains('css', '.contextual-toolbar-tab button', 'Editing');
-    $web_assert->elementAttributeNotContains('css', '.dialog-offcanvas__main-canvas', 'class', 'js-outside-in-edit-mode');
+    $web_assert->elementAttributeNotContains('css', '.dialog-off-canvas__main-canvas', 'class', 'js-outside-in-edit-mode');
   }
 
   /**
@@ -274,11 +274,11 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       $this->openBlockForm($block_selector);
       $page->find('css', $body_selector)->click();
       $web_assert->waitForElementVisible('css', $quick_edit_selector);
-      // Offcanvas should be closed when opening QuickEdit toolbar.
+      // OffCanvas should be closed when opening QuickEdit toolbar.
       $this->waitForOffCanvasToClose();
 
       $this->openBlockForm($block_selector);
-      // QuickEdit toolbar should be closed when opening Offcanvas.
+      // QuickEdit toolbar should be closed when opening off-canvas dialog.
       $web_assert->elementNotExists('css', $quick_edit_selector);
     }
 
@@ -292,7 +292,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     // Open off-canvas and enter Edit mode via contextual link.
     $this->clickContextualLink($block_selector, "Quick edit");
     $this->waitForOffCanvasToOpen();
-    // QuickEdit toolbar should be closed when opening Offcanvas.
+    // QuickEdit toolbar should be closed when opening off-canvas dialog.
     $web_assert->elementNotExists('css', $quick_edit_selector);
     // Open QuickEdit toolbar via contextual link while in Edit mode.
     $this->clickContextualLink('.node', "Quick edit", FALSE);
@@ -341,7 +341,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     // The toolbar edit button should read "Editing".
     $web_assert->elementContains('css', static::TOOLBAR_EDIT_LINK_SELECTOR, 'Editing');
     // The main canvas element should have the "js-outside-in-edit-mode" class.
-    $web_assert->elementExists('css', '.dialog-offcanvas__main-canvas.js-outside-in-edit-mode');
+    $web_assert->elementExists('css', '.dialog-off-canvas__main-canvas.js-outside-in-edit-mode');
   }
 
   /**
@@ -357,7 +357,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $web_assert->elementContains('css', static::TOOLBAR_EDIT_LINK_SELECTOR, 'Edit');
     // The main canvas element should NOT have the "js-outside-in-edit-mode"
     // class.
-    $web_assert->elementNotExists('css', '.dialog-offcanvas__main-canvas.js-outside-in-edit-mode');
+    $web_assert->elementNotExists('css', '.dialog-off-canvas__main-canvas.js-outside-in-edit-mode');
   }
 
   /**
@@ -446,7 +446,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $href = array_search('Quick edit', $link_labels);
     $this->assertEquals('', $href);
     $href = array_search('Quick edit settings', $link_labels);
-    $this->assertTrue(strstr($href, '/admin/structure/block/manage/custom/offcanvas?destination=user/2') !== FALSE);
+    $this->assertTrue(strstr($href, '/admin/structure/block/manage/custom/off-canvas?destination=user/2') !== FALSE);
   }
 
 }

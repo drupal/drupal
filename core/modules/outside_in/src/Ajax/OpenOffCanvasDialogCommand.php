@@ -5,7 +5,7 @@ namespace Drupal\outside_in\Ajax;
 use Drupal\Core\Ajax\OpenDialogCommand;
 
 /**
- * Defines an AJAX command to open content in a dialog in a off-canvas tray.
+ * Defines an AJAX command to open content in a dialog in a off-canvas dialog.
  *
  * @ingroup ajax
  */
@@ -16,7 +16,7 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
    *
    * The off-canvas dialog differs from the normal modal provided by
    * OpenDialogCommand in that a off-canvas has built in positioning and
-   * behaviours. Drupal provides a built-in off-canvas tray for this purpose,
+   * behaviours. Drupal provides a built-in off-canvas dialog for this purpose,
    * so the selector is hard-coded in the call to the parent constructor.
    *
    * @param string $title
@@ -33,7 +33,7 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
    *   populated automatically from the current request.
    */
   public function __construct($title, $content, array $dialog_options = [], $settings = NULL) {
-    parent::__construct('#drupal-offcanvas', $title, $content, $dialog_options, $settings);
+    parent::__construct('#drupal-off-canvas', $title, $content, $dialog_options, $settings);
     $this->dialogOptions['modal'] = FALSE;
     $this->dialogOptions['autoResize'] = FALSE;
     $this->dialogOptions['resizable'] = 'w';
