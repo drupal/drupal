@@ -817,12 +817,12 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * @return string|null
    *   The region name this row belongs to.
    */
-  public function getRowRegion($row) {
-    switch ($row['#row_type']) {
-      case 'field':
-      case 'extra_field':
-        return $row['region']['#value'] ?: 'hidden';
+  public function getRowRegion(&$row) {
+    $regions = $this->getRegions();
+    if (!isset($regions[$row['region']['#value']])) {
+      $row['region']['#value'] = 'hidden';
     }
+    return $row['region']['#value'];
   }
 
   /**
