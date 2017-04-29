@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\offcanvas_test\Controller;
+namespace Drupal\off_canvas_test\Controller;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
@@ -37,21 +37,21 @@ class TestController {
   }
 
   /**
-   * Displays test links that will open in offcanvas tray.
+   * Displays test links that will open in off-canvas dialog.
    *
    * @return array
    *   Render array with links.
    */
   public function linksDisplay() {
     return [
-      'offcanvas_link_1' => [
+      'off_canvas_link_1' => [
         '#title' => 'Click Me 1!',
         '#type' => 'link',
-        '#url' => Url::fromRoute('offcanvas_test.thing1'),
+        '#url' => Url::fromRoute('off_canvas_test.thing1'),
         '#attributes' => [
           'class' => ['use-ajax'],
           'data-dialog-type' => 'dialog',
-          'data-dialog-renderer' => 'offcanvas',
+          'data-dialog-renderer' => 'off_canvas',
         ],
         '#attached' => [
           'library' => [
@@ -59,14 +59,14 @@ class TestController {
           ],
         ],
       ],
-      'offcanvas_link_2' => [
+      'off_canvas_link_2' => [
         '#title' => 'Click Me 2!',
         '#type' => 'link',
-        '#url' => Url::fromRoute('offcanvas_test.thing2'),
+        '#url' => Url::fromRoute('off_canvas_test.thing2'),
         '#attributes' => [
           'class' => ['use-ajax'],
           'data-dialog-type' => 'dialog',
-          'data-dialog-renderer' => 'offcanvas',
+          'data-dialog-renderer' => 'off_canvas',
           'data-dialog-options' => Json::encode([
             'width' => 555,
           ]),
@@ -80,11 +80,11 @@ class TestController {
       'other_dialog_links' => [
         '#title' => 'Display more links!',
         '#type' => 'link',
-        '#url' => Url::fromRoute('offcanvas_test.dialog_links'),
+        '#url' => Url::fromRoute('off_canvas_test.dialog_links'),
         '#attributes' => [
           'class' => ['use-ajax'],
           'data-dialog-type' => 'dialog',
-          'data-dialog-renderer' => 'offcanvas',
+          'data-dialog-renderer' => 'off_canvas',
         ],
         '#attached' => [
           'library' => [
@@ -96,12 +96,12 @@ class TestController {
   }
 
   /**
-   * Displays dialogs links to be displayed inside the offcanvas tray.
+   * Displays dialogs links to be displayed inside the off-canvas dialog.
    *
-   * This links are used to test opening a modal and another offcanvas link from
-   * inside the offcanvas tray.
+   * This links are used to test opening a modal and another off_canvas link from
+   * inside the off-canvas dialog.
    *
-   * @todo Update tests to check these links work in the offcanvas tray.
+   * @todo Update tests to check these links work in the off-canvas dialog.
    *       https://www.drupal.org/node/2790073
    *
    * @return array
@@ -113,19 +113,19 @@ class TestController {
       '#links' => [
         'modal_link' => [
           'title' => 'Open modal!',
-          'url' => Url::fromRoute('offcanvas_test.thing2'),
+          'url' => Url::fromRoute('off_canvas_test.thing2'),
           'attributes' => [
             'class' => ['use-ajax'],
             'data-dialog-type' => 'modal',
           ],
         ],
-        'offcanvas_link' => [
-          'title' => 'Offcanvas link!',
-          'url' => Url::fromRoute('offcanvas_test.thing2'),
+        'off_canvas_link' => [
+          'title' => 'Off_canvas link!',
+          'url' => Url::fromRoute('off_canvas_test.thing2'),
           'attributes' => [
             'class' => ['use-ajax'],
             'data-dialog-type' => 'dialog',
-            'data-dialog-renderer' => 'offcanvas',
+            'data-dialog-renderer' => 'off_canvas',
           ],
         ],
       ],

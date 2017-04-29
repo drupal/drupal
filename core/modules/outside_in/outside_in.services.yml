@@ -3,7 +3,7 @@ services:
     class: Drupal\outside_in\Render\MainContent\OffCanvasRender
     arguments: ['@title_resolver', '@renderer']
     tags:
-      - { name: render.main_content_renderer, format: drupal_dialog_offcanvas }
+      - { name: render.main_content_renderer, format: drupal_dialog_off_canvas }
 
   outside_in.manager:
     class: Drupal\outside_in\OutsideInManager
