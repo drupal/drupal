@@ -34,6 +34,10 @@ class ViewsListingTest extends JavascriptTestBase {
    * Tests the filtering on the Views listing page.
    */
   public function testFilterViewsListing() {
+    $enabled_views_count = 6;
+    $disabled_views_count = 2;
+    $content_views_count = 3;
+
     $this->drupalGet('admin/structure/views');
 
     $session = $this->assertSession();
@@ -47,8 +51,8 @@ class ViewsListingTest extends JavascriptTestBase {
     $disabled_rows = $this->filterVisibleElements($disabled_rows);
 
     // Test that we see some rows of views in both tables.
-    $this->assertCount(6, $enabled_rows);
-    $this->assertCount(2, $disabled_rows);
+    $this->assertCount($enabled_views_count, $enabled_rows);
+    $this->assertCount($disabled_views_count, $disabled_rows);
 
     // Filter on the string 'people'. This should only show the people view.
     $search_input = $page->find('css', '.views-filter-text.form-search');
@@ -70,8 +74,8 @@ class ViewsListingTest extends JavascriptTestBase {
     $disabled_rows = $page->findAll('css', 'tr.views-ui-list-disabled');
     $disabled_rows = $this->filterVisibleElements($disabled_rows);
 
-    $this->assertCount(3, $enabled_rows);
-    $this->assertCount(2, $disabled_rows);
+    $this->assertCount($content_views_count, $enabled_rows);
+    $this->assertCount($disabled_views_count, $disabled_rows);
 
     // Reset the search string and check that we are back to the initial stage.
     $search_input->setValue('');
@@ -83,8 +87,8 @@ class ViewsListingTest extends JavascriptTestBase {
     $disabled_rows = $page->findAll('css', 'tr.views-ui-list-disabled');
     $disabled_rows = $this->filterVisibleElements($disabled_rows);
 
-    $this->assertCount(6, $enabled_rows);
-    $this->assertCount(2, $disabled_rows);
+    $this->assertCount($enabled_views_count, $enabled_rows);
+    $this->assertCount($disabled_views_count, $disabled_rows);
 
     // Disable a View and see if it moves to the disabled listing.
     $enabled_view = $page->find('css', 'tr.views-ui-list-enabled');
@@ -103,8 +107,8 @@ class ViewsListingTest extends JavascriptTestBase {
     $disabled_rows = $this->filterVisibleElements($disabled_rows);
 
     // Test that one enabled View has been moved to the disabled list.
-    $this->assertCount(5, $enabled_rows);
-    $this->assertCount(3, $disabled_rows);
+    $this->assertCount($enabled_views_count - 1, $enabled_rows);
+    $this->assertCount($disabled_views_count + 1, $disabled_rows);
   }
 
   /**
