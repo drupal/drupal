@@ -36,7 +36,7 @@ class MigrateSyslogConfigsTest extends MigrateDrupal7TestBase {
   public function testSyslogSettings() {
     $config = $this->config('syslog.settings');
     // 8 == LOG_USER
-    $this->assertIdentical('8', $config->get('facility'));
+    $this->assertIdentical(8, $config->get('facility'));
     $this->assertIdentical('!base_url|!timestamp|!type|!ip|!request_uri|!referer|!uid|!link|!message', $config->get('format'));
     $this->assertIdentical('drupal', $config->get('identity'));
   }

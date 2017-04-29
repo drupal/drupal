@@ -8,7 +8,7 @@ syslog.settings:
       type: string
       label: 'Identity'
     facility:
-      type: string
+      type: integer
       label: 'Facility'
     format:
       type: string

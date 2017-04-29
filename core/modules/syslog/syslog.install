@@ -13,3 +13,12 @@ function syslog_install() {
   // to be set dynamically during installation.
   \Drupal::configFactory()->getEditable('syslog.settings')->set('facility', defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER)->save();
 }
+
+/**
+ * Convert syslog.settings.facility to an integer.
+ */
+function syslog_update_8400() {
+  $config = \Drupal::configFactory()->getEditable('syslog.settings');
+  $facility = (int) $config->get('facility');
+  $config->set('facility', $facility)->save(TRUE);
+}
