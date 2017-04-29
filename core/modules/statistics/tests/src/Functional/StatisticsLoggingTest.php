@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\statistics\Tests;
+namespace Drupal\Tests\statistics\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\node\Entity\Node;
 
 /**
@@ -13,7 +13,7 @@ use Drupal\node\Entity\Node;
  *
  * @group statistics
  */
-class StatisticsLoggingTest extends WebTestBase {
+class StatisticsLoggingTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

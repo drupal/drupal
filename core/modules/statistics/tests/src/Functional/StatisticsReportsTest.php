@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\statistics\Tests;
+namespace Drupal\Tests\statistics\Functional;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;

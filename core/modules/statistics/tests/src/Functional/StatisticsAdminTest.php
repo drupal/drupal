@@ -1,15 +1,18 @@
 <?php
 
-namespace Drupal\statistics\Tests;
+namespace Drupal\Tests\statistics\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Tests the statistics admin.
  *
  * @group statistics
  */
-class StatisticsAdminTest extends WebTestBase {
+class StatisticsAdminTest extends BrowserTestBase {
+
+  use CronRunTrait;
 
   /**
    * Modules to enable.
