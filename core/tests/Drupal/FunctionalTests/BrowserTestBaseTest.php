@@ -165,6 +165,64 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertFieldsByValue($this->xpath("//select[@id = 'edit-options']"), '2');
     $this->assertFieldByXPath("//select[@id = 'edit-options']", '2');
 
+    $this->assertNoField('invalid_name_and_id');
+    $this->assertField('name');
+    $this->assertField('edit-name');
+
+    // Test that the assertion fails correctly when searching by name.
+    try {
+      $this->assertNoField('name');
+      $this->fail('The "name" field was not found based on name.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass('The "name" field was found by name.');
+    }
+
+    // Test that the assertion fails correctly when searching by id.
+    try {
+      $this->assertNoField('edit-name');
+      $this->fail('The "name" field was not found based on id.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass('The "name" field was found by id.');
+    }
+
+    // Assert that assertion correctly fails when searching for the name field
+    // without a value.
+    try {
+      $this->assertFieldsByValue($this->xpath("//input[@id = 'edit-name']"), '');
+      $this->fail('The "name" field, with no value was found.');
+    }
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+      $this->pass('The "name" field, with no value was found.');
+    }
+
+    $this->assertFieldByName('checkbox_enabled', TRUE);
+    $this->assertFieldByName('checkbox_disabled', FALSE);
+
+    $this->assertNoFieldByName('checkbox_enabled', FALSE);
+    $this->assertNoFieldByName('checkbox_disabled', TRUE);
+
+    try {
+      $this->assertFieldByName('checkbox_enabled', FALSE);
+      $this->fail('The checked "checkbox_enableRd" field was not found.');
+
+    }
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+      $this->pass('The checked "checkbox_enabled" field was found.');
+    }
+
+    try {
+      $this->assertNoFieldByName('checkbox_enabled', TRUE);
+      $this->fail('The checked "checkbox_enabled" field was not found.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass('The checked "checkbox_enabled" field was found.');
+    }
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+      $this->pass('The checked "checkbox_enabled" field was found.');
+    }
+
     $this->assertNoFieldByXPath('//notexisting');
     $this->assertNoFieldByXPath("//input[@id = 'edit-name']", 'wrong value');
 
@@ -205,12 +263,12 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->pass('The "edit-name" field with no value was not found.');
     }
 
-    // Test that the assertion fails correctly if NULL is passed in.
+    // Test that the assertion fails correctly if another value is passed in.
     try {
-      $this->assertFieldById('name', NULL);
+      $this->assertFieldById('edit-name', 'not the value');
       $this->fail('The "name" field was found.');
     }
-    catch (ExpectationException $e) {
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
       $this->pass('The "name" field was not found.');
     }
 
@@ -237,6 +295,19 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->pass('The "name" field was found.');
     }
 
+    // Test that multiple fields with the same name are validated correctly.
+    $this->assertFieldByName('duplicate_button', 'Duplicate button 1');
+    $this->assertFieldByName('duplicate_button', 'Duplicate button 2');
+    $this->assertNoFieldByName('duplicate_button', 'Rabbit');
+
+    try {
+      $this->assertNoFieldByName('duplicate_button', 'Duplicate button 2');
+      $this->fail('The "duplicate_button" field with the value Duplicate button 2 was not found.');
+    }
+    catch (ExpectationException $e) {
+      $this->pass('The "duplicate_button" field with the value Duplicate button 2 was found.');
+    }
+
     $this->assertOptionByText('options', 'one');
     try {
       $this->assertOptionByText('options', 'four');
@@ -253,7 +324,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertFieldById('Save', NULL);
       $this->fail('The field with id of "Save" was found.');
     }
-    catch (ExpectationException $e) {
+    catch (\PHPUnit_Framework_ExpectationFailedException $e) {
       $this->pass($e->getMessage());
     }
 
