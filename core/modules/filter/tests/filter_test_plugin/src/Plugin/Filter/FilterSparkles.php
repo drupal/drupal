@@ -11,7 +11,7 @@ use Drupal\filter\Plugin\FilterBase;
  * This filter does not do anything, but enabling of its module is done in a
  * test.
  *
- * @see \Drupal\filter\Tests\FilterFormTest::testFilterForm()
+ * @see \Drupal\Tests\filter\Functional\FilterFormTest::testFilterForm()
  *
  * @Filter(
  *   id = "filter_sparkles",
