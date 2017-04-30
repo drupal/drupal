@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\Tests\filter\Functional;
+namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessResult;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests access to text formats.
@@ -13,7 +13,7 @@ use Drupal\Tests\BrowserTestBase;
  * @group Access
  * @group filter
  */
-class FilterFormatAccessTest extends BrowserTestBase {
+class FilterFormatAccessTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -151,7 +151,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     ]);
     $options = [];
     foreach ($elements as $element) {
-      $options[$element->getValue()] = $element;
+      $options[(string) $element['value']] = $element;
     }
     $this->assertTrue(isset($options[$this->allowedFormat->id()]), 'The allowed text format appears as an option when adding a new node.');
     $this->assertFalse(isset($options[$this->disallowedFormat->id()]), 'The disallowed text format does not appear as an option when adding a new node.');
