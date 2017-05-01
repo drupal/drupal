@@ -312,6 +312,8 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    *
    * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.x. Use
    *   more specific getters instead.
+   *
+   * @see https://www.drupal.org/node/2873795
    */
   public function get($property) {
     return isset($this->$property) ? $this->$property : NULL;
