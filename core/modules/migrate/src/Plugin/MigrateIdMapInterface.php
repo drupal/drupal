@@ -213,6 +213,8 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    *
    * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.x. Use
    *   lookupDestinationIds() instead.
+   *
+   * @see https://www.drupal.org/node/2725809
    */
   public function lookupDestinationId(array $source_id_values);
 
