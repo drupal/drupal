@@ -1,20 +1,22 @@
 <?php
 
-namespace Drupal\filter\Tests;
+namespace Drupal\Tests\filter\Functional;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\simpletest\WebTestBase;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests restriction of IMG tags in HTML input.
  *
  * @group filter
  */
-class FilterHtmlImageSecureTest extends WebTestBase {
+class FilterHtmlImageSecureTest extends BrowserTestBase {
 
   use CommentTestTrait;
+  use TestFileCreationTrait;
 
   /**
    * Modules to enable.
@@ -90,7 +92,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     $title_text = t('This image has been removed. For security reasons, only images from the local domain are allowed.');
 
     // Put a test image in the files directory.
-    $test_images = $this->drupalGetTestFiles('image');
+    $test_images = $this->getTestFiles('image');
     $test_image = $test_images[0]->filename;
 
     // Put a test image in the files directory with special filename.
@@ -141,14 +143,14 @@ class FilterHtmlImageSecureTest extends WebTestBase {
       foreach ($this->xpath('//img[@testattribute="' . hash('sha256', $image) . '"]') as $element) {
         $found = TRUE;
         if ($converted == $red_x_image) {
-          $this->assertEqual((string) $element['src'], $red_x_image);
-          $this->assertEqual((string) $element['alt'], $alt_text);
-          $this->assertEqual((string) $element['title'], $title_text);
-          $this->assertEqual((string) $element['height'], '16');
-          $this->assertEqual((string) $element['width'], '16');
+          $this->assertEqual($element->getAttribute('src'), $red_x_image);
+          $this->assertEqual($element->getAttribute('alt'), $alt_text);
+          $this->assertEqual($element->getAttribute('title'), $title_text);
+          $this->assertEqual($element->getAttribute('height'), '16');
+          $this->assertEqual($element->getAttribute('width'), '16');
         }
         else {
-          $this->assertEqual((string) $element['src'], $converted);
+          $this->assertEqual($element->getAttribute('src'), $converted);
         }
       }
       $this->assertTrue($found, format_string('@image was found.', ['@image' => $image]));
