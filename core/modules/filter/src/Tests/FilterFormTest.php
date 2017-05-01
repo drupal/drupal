@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\Tests\filter\Functional;
+namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests form elements with associated text formats.
  *
  * @group filter
  */
-class FilterFormTest extends BrowserTestBase {
+class FilterFormTest extends WebTestBase {
 
   /**
    * Modules to enable for this test.
@@ -173,10 +173,13 @@ class FilterFormTest extends BrowserTestBase {
    *
    * @param string $id
    *   The HTML ID of the select element.
+   *
+   * @return bool
+   *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertNoSelect($id) {
     $select = $this->xpath('//select[@id=:id]', [':id' => $id]);
-    $this->assertEmpty($select, SafeMarkup::format('Field @id does not exist.', [
+    return $this->assertFalse($select, SafeMarkup::format('Field @id does not exist.', [
       '@id' => $id,
     ]));
   }
@@ -196,13 +199,14 @@ class FilterFormTest extends BrowserTestBase {
    */
   protected function assertOptions($id, array $expected_options, $selected) {
     $select = $this->xpath('//select[@id=:id]', [':id' => $id]);
-    $this->assertNotEmpty($select, SafeMarkup::format('Field @id exists.', [
+    $select = reset($select);
+    $passed = $this->assertTrue($select instanceof \SimpleXMLElement, SafeMarkup::format('Field @id exists.', [
       '@id' => $id,
     ]));
-    $select = reset($select);
-    $found_options = $select->findAll('css', 'option');
+
+    $found_options = $this->getAllOptions($select);
     foreach ($found_options as $found_key => $found_option) {
-      $expected_key = array_search($found_option->getValue(), $expected_options);
+      $expected_key = array_search($found_option->attributes()->value, $expected_options);
       if ($expected_key !== FALSE) {
         $this->pass(SafeMarkup::format('Option @option for field @id exists.', [
           '@option' => $expected_options[$expected_key],
@@ -220,15 +224,17 @@ class FilterFormTest extends BrowserTestBase {
         '@option' => $expected_option,
         '@id' => $id,
       ]));
+      $passed = FALSE;
     }
     foreach ($found_options as $found_option) {
       $this->fail(SafeMarkup::format('Option @option for field @id does not exist.', [
-        '@option' => $found_option->getValue(),
+        '@option' => $found_option->attributes()->value,
         '@id' => $id,
       ]));
+      $passed = FALSE;
     }
 
-    $this->assertOptionSelected($id, $selected);
+    return $passed && $this->assertOptionSelected($id, $selected);
   }
 
   /**
@@ -247,13 +253,14 @@ class FilterFormTest extends BrowserTestBase {
     $select = $this->xpath('//select[@id=:id and contains(@required, "required")]', [
       ':id' => $id,
     ]);
-    $this->assertNotEmpty($select, SafeMarkup::format('Required field @id exists.', [
+    $select = reset($select);
+    $passed = $this->assertTrue($select instanceof \SimpleXMLElement, SafeMarkup::format('Required field @id exists.', [
       '@id' => $id,
     ]));
     // A required select element has a "- Select -" option whose key is an empty
     // string.
     $options[] = '';
-    $this->assertOptions($id, $options, '');
+    return $passed && $this->assertOptions($id, $options, '');
   }
 
   /**
@@ -269,7 +276,8 @@ class FilterFormTest extends BrowserTestBase {
     $textarea = $this->xpath('//textarea[@id=:id and not(contains(@disabled, "disabled"))]', [
       ':id' => $id,
     ]);
-    $this->assertNotEmpty($textarea, SafeMarkup::format('Enabled field @id exists.', [
+    $textarea = reset($textarea);
+    return $this->assertTrue($textarea instanceof \SimpleXMLElement, SafeMarkup::format('Enabled field @id exists.', [
       '@id' => $id,
     ]));
   }
@@ -287,17 +295,17 @@ class FilterFormTest extends BrowserTestBase {
     $textarea = $this->xpath('//textarea[@id=:id and contains(@disabled, "disabled")]', [
       ':id' => $id,
     ]);
-    $this->assertNotEmpty($textarea, SafeMarkup::format('Disabled field @id exists.', [
+    $textarea = reset($textarea);
+    $passed = $this->assertTrue($textarea instanceof \SimpleXMLElement, SafeMarkup::format('Disabled field @id exists.', [
       '@id' => $id,
     ]));
-    $textarea = reset($textarea);
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $this->assertEqual($textarea->getText(), $expected, SafeMarkup::format('Disabled textarea @id hides text in an inaccessible text format.', [
+    $passed = $passed && $this->assertEqual((string) $textarea, $expected, SafeMarkup::format('Disabled textarea @id hides text in an inaccessible text format.', [
       '@id' => $id,
     ]));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
-    $this->assertNoSelect($select_id);
+    return $passed && $this->assertNoSelect($select_id);
   }
 
 }
