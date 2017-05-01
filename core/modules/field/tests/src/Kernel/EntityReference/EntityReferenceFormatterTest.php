@@ -164,6 +164,19 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests the merging of cache metadata.
+   */
+  public function testCustomCacheTagFormatter() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $formatter = 'entity_reference_custom_cache_tag';
+    $build = $this->buildRenderArray([$this->referencedEntity], $formatter);
+
+    $renderer->renderRoot($build);
+    $this->assertTrue(in_array('custom_cache_tag', $build['#cache']['tags']));
+  }
+
+  /**
    * Tests the ID formatter.
    */
   public function testIdFormatter() {
