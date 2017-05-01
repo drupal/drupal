@@ -13,6 +13,8 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *
  * @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use
  *   \Drupal\migrate_drupal\Annotation\MigrateField instead.
+ *
+ * @see https://www.drupal.org/node/2751897
  */
 interface MigrateCckFieldInterface extends MigrateFieldInterface {
 
