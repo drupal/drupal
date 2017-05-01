@@ -15,6 +15,8 @@ interface BlockInterface extends ConfigEntityInterface {
    *
    * @deprecated in Drupal 8.3.x, will be removed before Drupal 9.0.0.
    *   Use \Drupal\Core\Block\BlockPluginInterface::BLOCK_LABEL_VISIBLE.
+   *
+   * @see https://www.drupal.org/node/2829775
    */
   const BLOCK_LABEL_VISIBLE = BlockPluginInterface::BLOCK_LABEL_VISIBLE;
 
