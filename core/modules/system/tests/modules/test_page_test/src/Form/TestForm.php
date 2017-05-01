@@ -35,18 +35,6 @@ class TestForm extends FormBase {
       '#default_value' => 'Test name',
     ];
 
-    $form['checkbox_enabled'] = [
-      '#type' => 'checkbox',
-      '#title' => 'Checkbox enabled',
-      '#default_value' => TRUE,
-    ];
-
-    $form['checkbox_disabled'] = [
-      '#type' => 'checkbox',
-      '#title' => 'Checkbox disabled',
-      '#default_value' => FALSE,
-    ];
-
     $form['description'] = [
       '#type' => 'textfield',
       '#title' => 'Description',
@@ -67,18 +55,6 @@ class TestForm extends FormBase {
     $form['save'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
-    ];
-
-    $form['duplicate_button'] = [
-      '#type' => 'submit',
-      '#name' => 'duplicate_button',
-      '#value' => 'Duplicate button 1',
-    ];
-
-    $form['duplicate_button_2'] = [
-      '#type' => 'submit',
-      '#name' => 'duplicate_button',
-      '#value' => 'Duplicate button 2',
     ];
 
     return $form;
