@@ -113,6 +113,7 @@ entity.node_type.edit_form:
   path: '/admin/structure/types/manage/{node_type}'
   defaults:
     _entity_form: 'node_type.edit'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
   requirements:
     _permission: 'administer content types'
 
