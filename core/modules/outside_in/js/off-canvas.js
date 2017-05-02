@@ -33,7 +33,7 @@
   function resetSize(event) {
     var offsets = displace.offsets;
     var $element = event.data.$element;
-    var $widget = $element.dialog('widget');
+    var $container = $(event.data.dialog.container());
 
     var adjustedOptions = {
       // @see http://api.jqueryui.com/position/
@@ -44,7 +44,7 @@
       }
     };
 
-    $widget.css({
+    $container.css({
       position: 'fixed',
       height: ($(window).height() - (offsets.top + offsets.bottom)) + 'px'
     });
@@ -62,15 +62,15 @@
    */
   function handleDialogResize(event) {
     var $element = event.data.$element;
-    var $widget = $element.dialog('widget');
+    var $container = $(event.data.dialog.container());
 
-    var $offsets = $widget.find('> :not(#drupal-off-canvas, .ui-resizable-handle)');
+    var $offsets = $container.find('> :not(#drupal-off-canvas, .ui-resizable-handle)');
     var offset = 0;
     var modalHeight;
 
     // Let scroll element take all the height available.
     $element.css({height: 'auto'});
-    modalHeight = $widget.height();
+    modalHeight = $container.height();
     $offsets.each(function () { offset += $(this).outerHeight(); });
 
     // Take internal padding into account.
@@ -88,14 +88,13 @@
     if ($('body').outerWidth() < minDisplaceWidth) {
       return;
     }
-    var $element = event.data.$element;
-    var $widget = $element.dialog('widget');
+    var $container = $(event.data.dialog.container());
 
-    var width = $widget.outerWidth();
+    var width = $container.outerWidth();
     var mainCanvasPadding = $mainCanvasWrapper.css('padding-' + edge);
     if (width !== mainCanvasPadding) {
       $mainCanvasWrapper.css('padding-' + edge, width + 'px');
-      $widget.attr('data-offset-' + edge, width);
+      $container.attr('data-offset-' + edge, width);
       displace();
     }
   }
@@ -115,22 +114,19 @@
           if ($element.is('#drupal-off-canvas')) {
             $('.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar').toggleClass('ui-dialog-empty-title', !settings.title);
 
-            var eventData = {settings: settings, $element: $element};
+            var eventData = {settings: settings, $element: $element, dialog: dialog};
 
-            // Only add resize events if using jQuery UI.
-            if ('dialog' in $element) {
-              $element
-                  .on('dialogresize.off-canvas', eventData, debounce(bodyPadding, 100))
-                  .on('dialogContentResize.off-canvas', eventData, handleDialogResize)
-                  .on('dialogContentResize.off-canvas', eventData, debounce(bodyPadding, 100))
-                  .trigger('dialogresize.off-canvas');
+            $element
+              .on('dialogresize.off-canvas', eventData, debounce(bodyPadding, 100))
+              .on('dialogContentResize.off-canvas', eventData, handleDialogResize)
+              .on('dialogContentResize.off-canvas', eventData, debounce(bodyPadding, 100))
+              .trigger('dialogresize.off-canvas');
 
-              $element.dialog('widget').attr('data-offset-' + edge, '');
+            $(dialog.container()).attr('data-offset-' + edge, '');
 
-              $(window)
-                  .on('resize.off-canvas scroll.off-canvas', eventData, debounce(resetSize, 100))
-                  .trigger('resize.off-canvas');
-            }
+            $(window)
+                .on('resize.off-canvas scroll.off-canvas', eventData, debounce(resetSize, 100))
+                .trigger('resize.off-canvas');
 
           }
         },
