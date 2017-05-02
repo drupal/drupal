@@ -113,20 +113,25 @@
       $(window).once('off-canvas').on({
         'dialog:aftercreate': function (event, dialog, $element, settings) {
           if ($element.is('#drupal-off-canvas')) {
-            var eventData = {settings: settings, $element: $element};
             $('.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar').toggleClass('ui-dialog-empty-title', !settings.title);
 
-            $element
-              .on('dialogresize.off-canvas', eventData, debounce(bodyPadding, 100))
-              .on('dialogContentResize.off-canvas', eventData, handleDialogResize)
-              .on('dialogContentResize.off-canvas', eventData, debounce(bodyPadding, 100))
-              .trigger('dialogresize.off-canvas');
+            var eventData = {settings: settings, $element: $element};
 
-            $element.dialog('widget').attr('data-offset-' + edge, '');
+            // Only add resize events if using jQuery UI.
+            if ('dialog' in $element) {
+              $element
+                  .on('dialogresize.off-canvas', eventData, debounce(bodyPadding, 100))
+                  .on('dialogContentResize.off-canvas', eventData, handleDialogResize)
+                  .on('dialogContentResize.off-canvas', eventData, debounce(bodyPadding, 100))
+                  .trigger('dialogresize.off-canvas');
 
-            $(window)
-              .on('resize.off-canvas scroll.off-canvas', eventData, debounce(resetSize, 100))
-              .trigger('resize.off-canvas');
+              $element.dialog('widget').attr('data-offset-' + edge, '');
+
+              $(window)
+                  .on('resize.off-canvas scroll.off-canvas', eventData, debounce(resetSize, 100))
+                  .trigger('resize.off-canvas');
+            }
+
           }
         },
         'dialog:beforecreate': function (event, dialog, $element, settings) {
