@@ -235,8 +235,7 @@ class EntityOperations implements ContainerInjectionInterface {
     if (!$this->moderationInfo->isLatestRevision($entity)) {
       return;
     }
-    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    if ($entity->isDefaultRevision()) {
+    if ($this->moderationInfo->isLiveRevision($entity)) {
       return;
     }
 
