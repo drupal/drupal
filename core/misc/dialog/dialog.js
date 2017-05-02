@@ -75,7 +75,8 @@
         openDialog({modal: true});
       },
       close: closeDialog,
-      container: getContainer
+      container: getContainer,
+      options: setOptions
     };
 
     function openDialog(settings) {
@@ -97,6 +98,10 @@
 
     function getContainer() {
       return $element.dialog('widget')[0];
+    }
+
+    function setOptions($options) {
+      $element.dialog('option', $options);
     }
 
     return dialog;

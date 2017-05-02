@@ -33,7 +33,8 @@
   function resetSize(event) {
     var offsets = displace.offsets;
     var $element = event.data.$element;
-    var $container = $(event.data.dialog.container());
+    var dialog = event.data.dialog;
+    var $container = $(dialog.container());
 
     var adjustedOptions = {
       // @see http://api.jqueryui.com/position/
@@ -49,9 +50,8 @@
       height: ($(window).height() - (offsets.top + offsets.bottom)) + 'px'
     });
 
-    $element
-      .dialog('option', adjustedOptions)
-      .trigger('dialogContentResize.off-canvas');
+    dialog.options(adjustedOptions);
+    $element.trigger('dialogContentResize.off-canvas');
   }
 
   /**
