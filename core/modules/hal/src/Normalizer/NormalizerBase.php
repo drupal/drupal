@@ -11,35 +11,21 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 abstract class NormalizerBase extends SerializationNormalizerBase implements DenormalizerInterface {
 
   /**
-   * The formats that the Normalizer can handle.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  protected $formats = ['hal_json'];
+  protected $format = ['hal_json'];
 
   /**
    * {@inheritdoc}
    */
-  public function supportsNormalization($data, $format = NULL) {
-    return in_array($format, $this->formats) && parent::supportsNormalization($data, $format);
-  }
+  protected function checkFormat($format = NULL) {
+    if (isset($this->formats)) {
+      @trigger_error('::formats is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use ::$format instead. See https://www.drupal.org/node/2868275', E_USER_DEPRECATED);
 
-  /**
-   * {@inheritdoc}
-   */
-  public function supportsDenormalization($data, $type, $format = NULL) {
-    if (in_array($format, $this->formats) && (class_exists($this->supportedInterfaceOrClass) || interface_exists($this->supportedInterfaceOrClass))) {
-      $target = new \ReflectionClass($type);
-      $supported = new \ReflectionClass($this->supportedInterfaceOrClass);
-      if ($supported->isInterface()) {
-        return $target->implementsInterface($this->supportedInterfaceOrClass);
-      }
-      else {
-        return ($target->getName() == $this->supportedInterfaceOrClass || $target->isSubclassOf($this->supportedInterfaceOrClass));
-      }
+      $this->format = $this->formats;
     }
 
-    return FALSE;
+    return parent::checkFormat($format);
   }
 
 }

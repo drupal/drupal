@@ -11,9 +11,7 @@ use Drupal\serialization\Normalizer\FieldNormalizer as SerializationFieldNormali
 class FieldNormalizer extends SerializationFieldNormalizer {
 
   /**
-   * The formats that the Normalizer can handle.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected $format = ['hal_json'];
 
