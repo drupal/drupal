@@ -18,7 +18,7 @@ class CommandLineOrUnsafeMethod implements RequestPolicyInterface {
    * {@inheritdoc}
    */
   public function check(Request $request) {
-    if ($this->isCli() || !$request->isMethodSafe()) {
+    if ($this->isCli() || !$request->isMethodCacheable()) {
       return static::DENY;
     }
   }

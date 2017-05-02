@@ -47,7 +47,7 @@ class BigPipeStrategyTest extends UnitTestCase {
     $big_pipe_strategy = new BigPipeStrategy($session_configuration->reveal(), $request_stack->reveal(), $route_match->reveal());
     $processed_placeholders = $big_pipe_strategy->processPlaceholders($placeholders);
 
-    if ($request->isMethodSafe() && !$route_match_has_no_big_pipe_option && $request_has_session) {
+    if ($request->isMethodCacheable() && !$route_match_has_no_big_pipe_option && $request_has_session) {
       $this->assertSameSize($expected_big_pipe_placeholders, $processed_placeholders, 'BigPipe is able to deliver all placeholders.');
       foreach (array_keys($placeholders) as $placeholder) {
         $this->assertSame($expected_big_pipe_placeholders[$placeholder], $processed_placeholders[$placeholder], "Verifying how BigPipeStrategy handles the placeholder '$placeholder'");

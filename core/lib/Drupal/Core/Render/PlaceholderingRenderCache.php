@@ -93,7 +93,7 @@ class PlaceholderingRenderCache extends RenderCache {
    */
   public function get(array $elements) {
     // @todo remove this check when https://www.drupal.org/node/2367555 lands.
-    if (!$this->requestStack->getCurrentRequest()->isMethodSafe()) {
+    if (!$this->requestStack->getCurrentRequest()->isMethodCacheable()) {
       return FALSE;
     }
 
@@ -127,7 +127,7 @@ class PlaceholderingRenderCache extends RenderCache {
     $result = parent::set($elements, $pre_bubbling_elements);
 
     // @todo remove this check when https://www.drupal.org/node/2367555 lands.
-    if (!$this->requestStack->getCurrentRequest()->isMethodSafe()) {
+    if (!$this->requestStack->getCurrentRequest()->isMethodCacheable()) {
       return FALSE;
     }
 

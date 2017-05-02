@@ -141,8 +141,8 @@ class CollectRoutesTest extends UnitTestCase {
     $requirements_1 = $this->routes->get('test_1')->getRequirements();
     $requirements_2 = $this->routes->get('view.test_view.page_1')->getRequirements();
 
-    $this->assertEquals(count($requirements_1), 0, 'First route has no requirement.');
-    $this->assertEquals(count($requirements_2), 2, 'Views route with rest export had the format and method requirements added.');
+    $this->assertEquals(0, count($requirements_1), 'First route has no requirement.');
+    $this->assertEquals(1, count($requirements_2), 'Views route with rest export had the format requirement added.');
 
     // Check auth options.
     $auth = $this->routes->get('view.test_view.page_1')->getOption('_auth');

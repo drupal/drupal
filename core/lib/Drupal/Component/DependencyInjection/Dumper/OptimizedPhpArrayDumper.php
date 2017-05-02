@@ -237,18 +237,6 @@ class OptimizedPhpArrayDumper extends Dumper {
       $service['calls'] = $this->dumpMethodCalls($definition->getMethodCalls());
     }
 
-    if (($scope = $definition->getScope()) !== ContainerInterface::SCOPE_CONTAINER) {
-      if ($scope === ContainerInterface::SCOPE_PROTOTYPE) {
-        // Scope prototype has been replaced with 'shared' => FALSE.
-        // This is a Symfony 2.8 forward compatibility fix.
-        // Reference: https://github.com/symfony/symfony/blob/2.8/UPGRADE-2.8.md#dependencyinjection
-        $service['shared'] = FALSE;
-      }
-      else {
-        throw new InvalidArgumentException("The 'scope' definition is deprecated in Symfony 3.0 and not supported by Drupal 8.");
-      }
-    }
-
     // By default services are shared, so just provide the flag, when needed.
     if ($definition->isShared() === FALSE) {
       $service['shared'] = $definition->isShared();

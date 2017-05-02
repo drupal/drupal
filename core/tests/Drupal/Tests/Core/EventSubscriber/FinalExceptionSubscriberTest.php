@@ -23,7 +23,10 @@ class FinalExceptionSubscriberTest extends UnitTestCase {
     $config_factory = $this->getConfigFactoryStub();
 
     $kernel = $this->prophesize(HttpKernelInterface::class);
-    $request = Request::create('/test?_format=bananas');
+    $request = Request::create('/test');
+    // \Drupal\Core\StackMiddleware\NegotiationMiddleware normally takes care
+    // of this so we'll hard code it here.
+    $request->setRequestFormat('bananas');
     $e = new MethodNotAllowedHttpException(['POST', 'PUT'], 'test message');
     $event = new GetResponseForExceptionEvent($kernel->reveal(), $request, 'GET', $e);
     $subscriber = new TestDefaultExceptionSubscriber($config_factory);

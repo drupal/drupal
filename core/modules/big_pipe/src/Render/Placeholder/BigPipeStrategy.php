@@ -109,7 +109,7 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
     $request = $this->requestStack->getCurrentRequest();
 
     // @todo remove this check when https://www.drupal.org/node/2367555 lands.
-    if (!$request->isMethodSafe()) {
+    if (!$request->isMethodCacheable()) {
       return [];
     }
 

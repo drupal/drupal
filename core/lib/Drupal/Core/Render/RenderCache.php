@@ -61,9 +61,9 @@ class RenderCache implements RenderCacheInterface {
   public function get(array $elements) {
     // Form submissions rely on the form being built during the POST request,
     // and render caching of forms prevents this from happening.
-    // @todo remove the isMethodSafe() check when
+    // @todo remove the isMethodCacheable() check when
     //       https://www.drupal.org/node/2367555 lands.
-    if (!$this->requestStack->getCurrentRequest()->isMethodSafe() || !$cid = $this->createCacheID($elements)) {
+    if (!$this->requestStack->getCurrentRequest()->isMethodCacheable() || !$cid = $this->createCacheID($elements)) {
       return FALSE;
     }
     $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
@@ -88,9 +88,9 @@ class RenderCache implements RenderCacheInterface {
   public function set(array &$elements, array $pre_bubbling_elements) {
     // Form submissions rely on the form being built during the POST request,
     // and render caching of forms prevents this from happening.
-    // @todo remove the isMethodSafe() check when
+    // @todo remove the isMethodCacheable() check when
     //       https://www.drupal.org/node/2367555 lands.
-    if (!$this->requestStack->getCurrentRequest()->isMethodSafe() || !$cid = $this->createCacheID($elements)) {
+    if (!$this->requestStack->getCurrentRequest()->isMethodCacheable() || !$cid = $this->createCacheID($elements)) {
       return FALSE;
     }
 

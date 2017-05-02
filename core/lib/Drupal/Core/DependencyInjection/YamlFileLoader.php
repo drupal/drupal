@@ -168,19 +168,8 @@ class YamlFileLoader
             $definition->setShared($service['shared']);
         }
 
-        if (isset($service['scope'])) {
-            if ('request' !== $id) {
-                @trigger_error(sprintf('The "scope" key of service "%s" in file "%s" is deprecated since version 2.8 and will be removed in 3.0.', $id, $file), E_USER_DEPRECATED);
-            }
-            $definition->setScope($service['scope'], false);
-        }
-
         if (isset($service['synthetic'])) {
             $definition->setSynthetic($service['synthetic']);
-        }
-
-        if (isset($service['synchronized'])) {
-            $definition->setSynchronized($service['synchronized'], 'request' !== $id);
         }
 
         if (isset($service['lazy'])) {
@@ -213,15 +202,15 @@ class YamlFileLoader
         }
 
         if (isset($service['factory_class'])) {
-            $definition->setFactoryClass($service['factory_class']);
+            $definition->setFactory($service['factory_class']);
         }
 
         if (isset($service['factory_method'])) {
-            $definition->setFactoryMethod($service['factory_method']);
+            $definition->setFactory($service['factory_method']);
         }
 
         if (isset($service['factory_service'])) {
-            $definition->setFactoryService($service['factory_service']);
+            $definition->setFactory($service['factory_service']);
         }
 
         if (isset($service['file'])) {

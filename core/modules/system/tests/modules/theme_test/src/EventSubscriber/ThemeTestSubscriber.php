@@ -17,7 +17,8 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
   /**
    * The used container.
    *
-   * @var \Symfony\Component\DependencyInjection\IntrospectableContainerInterface
+   * @todo This variable is never initialzed, so we don't know what it is.
+   *   See https://www.drupal.org/node/2721315
    */
   protected $container;
 

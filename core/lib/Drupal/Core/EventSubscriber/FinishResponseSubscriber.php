@@ -189,9 +189,9 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *
    * When neither Cache-Control nor any of the ETag, Last-Modified, Expires
    * headers are set on the response, ::get('Cache-Control') returns the value
-   * 'no-cache'. If any of ETag, Last-Modified or Expires are set but not
-   * Cache-Control, then 'private, must-revalidate' (in exactly this order) is
-   * returned.
+   * 'no-cache, private'. If any of ETag, Last-Modified or Expires are set but
+   * not Cache-Control, then 'private, must-revalidate' (in exactly this order)
+   * is returned.
    *
    * @see \Symfony\Component\HttpFoundation\ResponseHeaderBag::computeCacheControlValue()
    *
@@ -202,7 +202,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    */
   protected function isCacheControlCustomized(Response $response) {
     $cache_control = $response->headers->get('Cache-Control');
-    return $cache_control != 'no-cache' && $cache_control != 'private, must-revalidate';
+    return $cache_control != 'no-cache, private' && $cache_control != 'private, must-revalidate';
   }
 
   /**

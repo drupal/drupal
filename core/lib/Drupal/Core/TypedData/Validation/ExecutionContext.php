@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ExecutionContext implements ExecutionContextInterface {
 
   /**
-   * @var \Symfony\Component\Validator\ValidatorInterface
+   * @var \Symfony\Component\Validator\Validator\ValidatorInterface
    */
   protected $validator;
 

@@ -76,7 +76,7 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
     // Render the block.
     // @todo The request stack manipulation won't be necessary once
     //   https://www.drupal.org/node/2367555 is fixed and the
-    //   corresponding $request->isMethodSafe() checks are removed from
+    //   corresponding $request->isMethodCacheable() checks are removed from
     //   Drupal\Core\Render\Renderer.
     $request_stack = $this->container->get('request_stack');
     $request_stack->push(new Request());

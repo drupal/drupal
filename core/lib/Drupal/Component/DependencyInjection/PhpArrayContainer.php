@@ -136,12 +136,8 @@ class PhpArrayContainer extends Container {
       }
     }
 
-    // Share the service if it is public.
-    if (!isset($definition['public']) || $definition['public'] !== FALSE) {
-      // Forward compatibility fix for Symfony 2.8 update.
-      if (!isset($definition['shared']) || $definition['shared'] !== FALSE) {
-        $this->services[$id] = $service;
-      }
+    if (!isset($definition['shared']) || $definition['shared'] !== FALSE) {
+      $this->services[$id] = $service;
     }
 
     if (isset($definition['calls'])) {
