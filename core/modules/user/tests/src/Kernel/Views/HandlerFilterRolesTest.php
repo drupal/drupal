@@ -39,13 +39,42 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
       'id' => 'roles_target_id',
       'table' => 'user__roles',
       'field' => 'roles_target_id',
-      'value' => [
-        'test_user_role' => 'test_user_role',
-      ],
+      'value' => ['test_user_role' => 'test_user_role'],
       'plugin_id' => 'user_roles',
     ];
     $view->save();
     $expected['config'][] = 'user.role.test_user_role';
+    $this->assertEqual($expected, $view->getDependencies());
+
+    $view = View::load('test_user_name');
+    $display = &$view->getDisplay('default');
+    $display['display_options']['filters']['roles_target_id'] = [
+      'id' => 'roles_target_id',
+      'table' => 'user__roles',
+      'field' => 'roles_target_id',
+      'value' => [
+        'test_user_role' => 'test_user_role',
+      ],
+      'operator' => 'empty',
+      'plugin_id' => 'user_roles',
+    ];
+    $view->save();
+    unset($expected['config']);
+    $this->assertEqual($expected, $view->getDependencies());
+
+    $view = View::load('test_user_name');
+    $display = &$view->getDisplay('default');
+    $display['display_options']['filters']['roles_target_id'] = [
+      'id' => 'roles_target_id',
+      'table' => 'user__roles',
+      'field' => 'roles_target_id',
+      'value' => [
+        'test_user_role' => 'test_user_role',
+      ],
+      'operator' => 'not empty',
+      'plugin_id' => 'user_roles',
+    ];
+    $view->save();
     $this->assertEqual($expected, $view->getDependencies());
 
     $view = Views::getView('test_user_name');
@@ -63,7 +92,6 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
       'plugin_id' => 'user_roles',
     ];
     $view->save();
-    unset($expected['config']);
     $this->assertEqual($expected, $view->getDependencies());
   }
 
