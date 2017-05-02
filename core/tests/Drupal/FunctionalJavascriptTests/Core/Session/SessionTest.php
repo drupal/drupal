@@ -48,13 +48,10 @@ class SessionTest extends JavascriptTestBase {
     // number of times.
     $this->drupalGet('<front>');
 
-    $session_assert = $this->assertSession();
-
     $page = $this->getSession()->getPage();
 
     for ($i = 0; $i < 25; $i++) {
       $page->clickLink('Link to front page');
-      $session_assert->statusCodeEquals(200);
     }
   }
 
