@@ -212,6 +212,8 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      * @covers ::getParameterCall
      *
      * @dataProvider getDefinitionsDataProvider
+     *
+     * @group legacy
      */
     public function testGetServiceDefinitions($services, $definition_services) {
       $this->containerDefinition['services'] = $definition_services;
@@ -477,6 +479,8 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      * @covers ::getReferenceCall
      *
      * @dataProvider publicPrivateDataProvider
+     *
+     * @group legacy
      */
     public function testGetServiceDefinitionWithReferenceToAlias($public) {
       $bar_definition = new Definition('\stdClass');
@@ -532,6 +536,8 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      * getDecoratedService().
      *
      * @covers ::getServiceDefinition
+     *
+     * @group legacy
      */
     public function testGetServiceDefinitionForDecoratedService() {
       $bar_definition = new Definition('\stdClass');

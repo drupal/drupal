@@ -16,6 +16,7 @@ use Drupal\Tests\UnitTestCase;
  * Tests the twig sandbox policy.
  *
  * @group Template
+ * @group legacy
  *
  * @coversDefaultClass \Drupal\Core\Template\TwigSandboxPolicy
  */

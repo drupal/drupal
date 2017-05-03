@@ -2,9 +2,6 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-@trigger_error('The ' . __NAMESPACE__ . '\DedupeEntityTest is deprecated in
-Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use ' . __NAMESPACE__ . '\MakeUniqueEntityFieldTest', E_USER_DEPRECATED);
-
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
@@ -14,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 /**
  * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\DedupeEntity
  * @group migrate
+ * @group legacy
  */
 class DedupeEntityTest extends MigrateProcessTestCase {
 

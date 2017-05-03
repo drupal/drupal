@@ -59,7 +59,6 @@ display:
           type: string
           settings:
             link_to_entity: true
-          plugin_id: field
       filters:
         type:
           id: type

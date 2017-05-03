@@ -31,14 +31,6 @@ views.filter.combine:
         type: string
         label: 'Field'
 
-views.filter_value.date:
-  type: views.filter_value.numeric
-  label: 'Date'
-  mapping:
-    type:
-      type: string
-      label: 'Type'
-
 views.filter_value.groupby_numeric:
   type: views.filter_value.numeric
   label: 'Group by numeric'

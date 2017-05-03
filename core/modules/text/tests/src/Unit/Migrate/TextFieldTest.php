@@ -11,6 +11,7 @@ use Prophecy\Argument;
 /**
  * @coversDefaultClass \Drupal\text\Plugin\migrate\cckfield\TextField
  * @group text
+ * @group legacy
  */
 class TextFieldTest extends UnitTestCase {
 

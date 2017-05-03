@@ -35,9 +35,9 @@ class UiPhpUnitOutputTest extends WebTestBase {
 
     // Check that there are <br> tags for the HTML output by
     // SimpletestUiPrinter.
-    $this->assertEqual($output[18], 'HTML output was generated<br />');
+    $this->assertEqual($output[19], 'HTML output was generated<br />');
     // Check that URLs are printed as HTML links.
-    $this->assertIdentical(strpos($output[19], '<a href="http'), 0);
+    $this->assertIdentical(strpos($output[20], '<a href="http'), 0);
   }
 
 }

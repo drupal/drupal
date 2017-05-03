@@ -14,6 +14,7 @@ use PHPUnit_Framework_ExpectationFailedException;
 /**
  * @coversDefaultClass \Drupal\FunctionalTests\AssertLegacyTrait
  * @group Assert
+ * @group legacy
  */
 class AssertLegacyTraitTest extends UnitTestCase {
 

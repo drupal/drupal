@@ -261,6 +261,8 @@ class AttributeTest extends UnitTestCase {
    *
    * @covers ::removeClass
    * @covers ::addClass
+   *
+   * @group legacy
    */
   public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = []) {
     $loader = new \Twig_Loader_String();

@@ -70,6 +70,8 @@ class ControllerResolverTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Controller\ControllerResolver::getArguments()
    * @see \Drupal\Core\Controller\ControllerResolver::doGetArguments()
+   *
+   * @group legacy
    */
   public function testGetArguments() {
     $controller = function(EntityInterface $entity, $user, RouteMatchInterface $route_match, ServerRequestInterface $psr_7) {
@@ -220,6 +222,8 @@ class ControllerResolverTest extends UnitTestCase {
    *
    * @covers ::getArguments
    * @covers ::doGetArguments
+   *
+   * @group legacy
    */
   public function testGetArgumentsWithRouteMatchAndRequest() {
     $request = Request::create('/test');
@@ -233,6 +237,8 @@ class ControllerResolverTest extends UnitTestCase {
    *
    * @covers ::getArguments
    * @covers ::doGetArguments
+   *
+   * @group legacy
    */
   public function testGetArgumentsWithRouteMatchAndPsr7Request() {
     $request = Request::create('/test');

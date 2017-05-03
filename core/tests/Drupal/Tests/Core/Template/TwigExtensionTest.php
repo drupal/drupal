@@ -15,6 +15,7 @@ use Drupal\Tests\UnitTestCase;
  * Tests the twig extension.
  *
  * @group Template
+ * @group legacy
  *
  * @coversDefaultClass \Drupal\Core\Template\TwigExtension
  */
@@ -73,6 +74,8 @@ class TwigExtensionTest extends UnitTestCase {
    * Tests the escaping
    *
    * @dataProvider providerTestEscaping
+   *
+   * @group legacy
    */
   public function testEscaping($template, $expected) {
     $twig = new \Twig_Environment(NULL, [
@@ -123,6 +126,8 @@ class TwigExtensionTest extends UnitTestCase {
 
   /**
    * Tests the active_theme function.
+   *
+   * @group legacy
    */
   public function testActiveTheme() {
     $active_theme = $this->getMockBuilder('\Drupal\Core\Theme\ActiveTheme')
@@ -183,6 +188,8 @@ class TwigExtensionTest extends UnitTestCase {
    * Tests the escaping of objects implementing MarkupInterface.
    *
    * @covers ::escapeFilter
+   *
+   * @group legacy
    */
   public function testSafeStringEscaping() {
     $twig = new \Twig_Environment(NULL, [
@@ -267,6 +274,8 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * @covers ::escapeFilter
    * @covers ::bubbleArgMetadata
+   *
+   * @group legacy
    */
   public function testEscapeWithGeneratedLink() {
     $twig = new \Twig_Environment(NULL, [
