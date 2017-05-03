@@ -487,6 +487,10 @@ Layout Initiative
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
 
+API-first Initiative
+- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+- Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
+
 Provisional membership: None at this time.
 
 
