@@ -474,11 +474,9 @@ re-architect or otherwise improve large areas of Drupal core. See
 https://www.drupal.org/community-initiatives/drupal-core for more information on
 their responsibilities. The initiative coordinators for Drupal 8 are:
 
-Workflow Initiative
-- Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
-
-PHPUnit Initiative
-- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
+API-first Initiative
+- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+- Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
 
 Layout Initiative
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
@@ -487,9 +485,12 @@ Layout Initiative
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
 
-API-first Initiative
-- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
-- Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
+PHPUnit Initiative
+- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
+
+Workflow Initiative
+- Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
+
 
 Provisional membership: None at this time.
 
