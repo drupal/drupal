@@ -106,10 +106,11 @@ class Row {
    * Retrieves the values of the source identifiers.
    *
    * @return array
-   *   An array containing the values of the source identifiers.
+   *   An array containing the values of the source identifiers. Returns values
+   *   in the same order as defined in $this->sourceIds.
    */
   public function getSourceIdValues() {
-    return array_intersect_key($this->source, $this->sourceIds);
+    return array_merge($this->sourceIds, array_intersect_key($this->source, $this->sourceIds));
   }
 
   /**
