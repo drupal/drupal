@@ -20,6 +20,8 @@ process:
       - type
       - widget_type
     map:
+      nodereference:
+        nodereference_select: entity_reference
       number_integer:
         number: integer
         optionwidgets_select: list_integer
