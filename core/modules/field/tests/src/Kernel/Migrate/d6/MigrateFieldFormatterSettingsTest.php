@@ -198,6 +198,24 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
 
     // Test hidden field.
     $this->assertComponentNotExists('node.test_planet.teaser', 'field_test_text_single_checkbox');
+
+    // Test a node reference field, which should be migrated to an entity
+    // reference field.
+    $display = EntityViewDisplay::load('node.employee.default');
+    $component = $display->getComponent('field_company');
+    $this->assertInternalType('array', $component);
+    $this->assertSame('entity_reference_label', $component['type']);
+    // The default node reference formatter shows the referenced node's title
+    // as a link.
+    $this->assertTrue($component['settings']['link']);
+
+    $display = EntityViewDisplay::load('node.employee.teaser');
+    $component = $display->getComponent('field_company');
+    $this->assertInternalType('array', $component);
+    $this->assertSame('entity_reference_label', $component['type']);
+    // The plain node reference formatter shows the referenced node's title,
+    // unlinked.
+    $this->assertFalse($component['settings']['link']);
   }
 
 }
