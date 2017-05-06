@@ -124,6 +124,9 @@
    *  True enable edit mode, false disable edit mode.
    */
   function setEditModeState(editMode) {
+    if (!document.querySelector('[data-off-canvas-main-canvas]')) {
+      throw new Error('data-off-canvas-main-canvas is missing from outside-in-page-wrapper.html.twig');
+    }
     editMode = !!editMode;
     var $editButton = $(toggleEditSelector);
     var $editables;
