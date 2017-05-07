@@ -74,7 +74,7 @@ function node_schema() {
         'default' => 0,
       ],
       'realm' => [
-        'description' => 'The realm in which the user must possess the grant ID. Each node access node can define one or more realms.',
+        'description' => 'The realm in which the user must possess the grant ID. Modules can define one or more realms by implementing hook_node_grants().',
         'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
@@ -245,4 +245,13 @@ function node_update_8301() {
   $keys['published'] = 'status';
   $entity_type->set('entity_keys', $keys);
   $definition_update_manager->updateEntityType($entity_type);
+}
+
+/**
+ * Fix realm column description on the node_access table.
+ */
+function node_update_8400() {
+  $schema = drupal_get_module_schema('node', 'node_access');
+  $schema['fields']['realm']['description'] = 'The realm in which the user must possess the grant ID. Modules can define one or more realms by implementing hook_node_grants().';
+  Database::getConnection()->schema()->changeField('node_access', 'realm', 'realm', $schema['fields']['realm']);
 }
