@@ -19,7 +19,14 @@ process:
       0: options_select
       1: entity_reference_autocomplete_tags
   options/weight: 'constants/options/weight'
-  bundle: type
+  bundle:
+    -
+      plugin: migration_lookup
+      migration: d6_node_type
+      source: type
+    -
+      plugin: skip_on_empty
+      method: row
   field_name:
     plugin: migration_lookup
     migration: d6_taxonomy_vocabulary
