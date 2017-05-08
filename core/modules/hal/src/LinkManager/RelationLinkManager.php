@@ -100,17 +100,26 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
    *   Context from the normalizer/serializer operation.
    *
    * @return array
-   *   An array of typed data ids (entity_type, bundle, and field name) keyed
-   *   by corresponding relation URI.
+   *   An array of typed data ids (entity_type_id, bundle, and field name) keyed
+   *   by corresponding relation URI. For backwards compatibility, the
+   *   entity_type key returns the full entity type object, this will be removed
+   *   before Drupal 9.0.
    */
   protected function getRelations($context = []) {
     $cid = 'hal:links:relations';
     $cache = $this->cache->get($cid);
     if (!$cache) {
-      $this->writeCache($context);
-      $cache = $this->cache->get($cid);
+      $data = $this->writeCache($context);
     }
-    return $cache->data;
+    else {
+      $data = $cache->data;
+    }
+
+    // @todo Remove this in Drupal 9.0.
+    foreach ($data as $relation_uri => $ids) {
+      $data[$relation_uri]['entity_type'] = $this->entityManager->getDefinition($ids['entity_type_id']);
+    }
+    return $data;
   }
 
   /**
@@ -118,6 +127,10 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
    *
    * @param array $context
    *   Context from the normalizer/serializer operation.
+   *
+   * @return array
+   *   An array of typed data ids (entity_type_id, bundle, and field name) keyed
+   *   by corresponding relation URI.
    */
   protected function writeCache($context = []) {
     $data = [];
@@ -128,7 +141,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
           foreach ($this->entityManager->getFieldDefinitions($entity_type->id(), $bundle) as $field_definition) {
             $relation_uri = $this->getRelationUri($entity_type->id(), $bundle, $field_definition->getName(), $context);
             $data[$relation_uri] = [
-              'entity_type' => $entity_type,
+              'entity_type_id' => $entity_type->id(),
               'bundle' => $bundle,
               'field_name' => $field_definition->getName(),
             ];
@@ -139,6 +152,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
     // These URIs only change when field info changes, so cache it permanently
     // and only clear it when the fields cache is cleared.
     $this->cache->set('hal:links:relations', $data, Cache::PERMANENT, ['entity_field_info']);
+    return $data;
   }
 
 }
