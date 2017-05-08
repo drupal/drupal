@@ -59,6 +59,8 @@ const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  *   Use Drupal\Core\Session\AccountInterface::ANONYMOUS_ROLE or
  *   \Drupal\user\RoleInterface::ANONYMOUS_ID instead.
+ *
+ * @see https://www.drupal.org/node/1619504
  */
 const DRUPAL_ANONYMOUS_RID = AccountInterface::ANONYMOUS_ROLE;
 
@@ -68,6 +70,8 @@ const DRUPAL_ANONYMOUS_RID = AccountInterface::ANONYMOUS_ROLE;
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  *   Use Drupal\Core\Session\AccountInterface::AUTHENTICATED_ROLE or
  *   \Drupal\user\RoleInterface::AUTHENTICATED_ID instead.
+ *
+ * @see https://www.drupal.org/node/1619504
  */
 const DRUPAL_AUTHENTICATED_RID = AccountInterface::AUTHENTICATED_ROLE;
 
@@ -88,6 +92,8 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
  *
  * @deprecated in Drupal 8.3.0, will be removed before Drupal 9.0.0.
  *   Use \Drupal::time()->getRequestTime();
+ *
+ * @see https://www.drupal.org/node/2785211
  */
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
@@ -105,6 +111,8 @@ const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
  *
  * @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Drupal core no
  *   longer creates an active directory.
+ *
+ * @see https://www.drupal.org/node/2501187
  */
 const CONFIG_ACTIVE_DIRECTORY = 'active';
 
@@ -123,6 +131,8 @@ const CONFIG_SYNC_DIRECTORY = 'sync';
  *
  * @deprecated in Drupal 8.0.x and will be removed before 9.0.0. The staging
  *   directory was renamed to sync.
+ *
+ * @see https://www.drupal.org/node/2574957
  */
 const CONFIG_STAGING_DIRECTORY = 'staging';
 
@@ -315,6 +325,8 @@ function t($string, array $args = [], array $options = []) {
  *
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  *   Use \Drupal\Component\Render\FormattableMarkup.
+ *
+ * @see https://www.drupal.org/node/2302363
  */
 function format_string($string, array $args) {
   return SafeMarkup::format($string, $args);
@@ -348,6 +360,8 @@ function format_string($string, array $args) {
  *
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  *   Use \Drupal\Component\Utility\Unicode::validateUtf8().
+ *
+ * @see https://www.drupal.org/node/1992584
  */
 function drupal_validate_utf8($text) {
   return Unicode::validateUtf8($text);
@@ -742,6 +756,8 @@ function drupal_installation_attempted() {
  *   need to access the value before container is available you can use
  *   BootstrapConfigStorageFactory to load the value directly from
  *   configuration.
+ *
+ * @see https://www.drupal.org/node/2538996
  */
 function drupal_get_profile() {
   global $install_state;
@@ -952,7 +968,7 @@ function drupal_static_reset($name = NULL) {
  *   string and therefore has few valid use-cases. Note also, that this method
  *   does not mark the string as safe.
  *
- * @see \Drupal\Component\Utility\SafeMarkup::format()
+ * @see https://www.drupal.org/node/2302363
  */
 function drupal_placeholder($text) {
   return '<em class="placeholder">' . Html::escape($text) . '</em>';
