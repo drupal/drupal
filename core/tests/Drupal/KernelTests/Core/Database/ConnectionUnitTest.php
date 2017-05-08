@@ -221,6 +221,12 @@ class ConnectionUnitTest extends KernelTestBase {
     $reflection = new \ReflectionObject($connection);
     $connection_property = $reflection->getProperty('connection');
     $connection_property->setAccessible(TRUE);
+    // Skip this test when a database driver does not implement PDO.
+    // An alternative database driver that does not implement PDO
+    // should implement its own connection test.
+    if (get_class($connection_property->getValue($connection)) !== 'PDO') {
+      $this->markTestSkipped('Ignored PDO connection unit test for this driver because it does not implement PDO.');
+    }
     $error_mode = $connection_property->getValue($connection)
       ->getAttribute(\PDO::ATTR_ERRMODE);
     $this->assertEqual($error_mode, \PDO::ERRMODE_EXCEPTION, 'Ensure the default error mode is set to exception.');
