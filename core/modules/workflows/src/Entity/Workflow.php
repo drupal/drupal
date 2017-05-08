@@ -246,14 +246,6 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface, EntityWith
   /**
    * {@inheritdoc}
    */
-  public function getInitialState() {
-    $ordered_states = $this->getStates();
-    return reset($ordered_states);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function addTransition($transition_id, $label, array $from_state_ids, $to_state_id) {
     if (isset($this->transitions[$transition_id])) {
       throw new \InvalidArgumentException("The transition '$transition_id' already exists in workflow '{$this->id()}'");
