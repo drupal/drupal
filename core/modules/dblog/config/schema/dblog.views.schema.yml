@@ -11,3 +11,7 @@ views.field.dblog_message:
 views.field.dblog_operations:
   type: views_field
   label: 'Operation link markup'
+
+views.filter.dblog_types:
+  type: 'views.filter.in_operator'
+  label: 'Types'

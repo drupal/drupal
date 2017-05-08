@@ -90,3 +90,69 @@ function dblog_schema() {
 
   return $schema;
 }
+
+/**
+ * Use standard plugin for wid and uid fields. Use dblog_types for type filter.
+ */
+function dblog_update_8400() {
+  $config_factory = \Drupal::configFactory();
+
+  foreach ($config_factory->listAll('views.view.') as $view_config_name) {
+    $view = $config_factory->getEditable($view_config_name);
+    if ($view->get('base_table') != 'watchdog') {
+      continue;
+    }
+
+    $save = FALSE;
+    foreach ($view->get('display') as $display_name => $display) {
+      // Iterate through all the fields of watchdog views based tables.
+      if (isset($display['display_options']['fields'])) {
+        foreach ($display['display_options']['fields'] as $field_name => $field) {
+          // We are only interested in wid and uid fields from the watchdog
+          // table that still use the numeric id.
+          if (isset($field['table']) &&
+              $field['table'] === 'watchdog' &&
+              $field['plugin_id'] == 'numeric' &&
+              in_array($field['field'], ['wid', 'uid'])) {
+
+            $save = TRUE;
+            $new_value = $field;
+            $new_value['plugin_id'] = 'standard';
+
+            // Delete all the attributes related to numeric fields.
+            unset(
+              $new_value['set_precision'],
+              $new_value['precision'],
+              $new_value['decimal'],
+              $new_value['separator'],
+              $new_value['format_plural'],
+              $new_value['format_plural_string'],
+              $new_value['prefix'],
+              $new_value['suffix']
+            );
+            $view->set("display.$display_name.display_options.fields.$field_name", $new_value);
+          }
+        }
+      }
+
+      // Iterate all filters looking for type filters to update.
+      if (isset($display['display_options']['filters'])) {
+        foreach ($display['display_options']['filters'] as $filter_name => $filter) {
+          if (isset($filter['table']) &&
+              $filter['table'] === 'watchdog' &&
+              $filter['plugin_id'] == 'in_operator' &&
+              $filter['field'] == 'type') {
+
+            $save = TRUE;
+            $filter['plugin_id'] = 'dblog_types';
+            $view->set("display.$display_name.display_options.filters.$filter_name", $filter);
+          }
+        }
+      }
+    }
+
+    if ($save) {
+      $view->save();
+    }
+  }
+}
