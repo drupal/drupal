@@ -158,7 +158,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if (!$moderation_state) {
-      $moderation_state = $workflow->getInitialState()->id();
+      $moderation_state = $workflow->getTypePlugin()->getInitialState($workflow, $entity)->id();
     }
 
     // @todo what if $entity->moderation_state is null at this point?

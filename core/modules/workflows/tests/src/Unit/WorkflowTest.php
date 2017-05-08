@@ -258,25 +258,6 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getInitialState
-   */
-  public function testGetInitialState() {
-    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-
-    // By default states are ordered in the order added.
-    $workflow
-      ->addState('draft', 'Draft')
-      ->addState('published', 'Published')
-      ->addState('archived', 'Archived');
-
-    $this->assertEquals('draft', $workflow->getInitialState()->id());
-
-    // Make published the first state.
-    $workflow->setStateWeight('published', -1);
-    $this->assertEquals('published', $workflow->getInitialState()->id());
-  }
-
-  /**
    * @covers ::addTransition
    * @covers ::hasTransition
    */

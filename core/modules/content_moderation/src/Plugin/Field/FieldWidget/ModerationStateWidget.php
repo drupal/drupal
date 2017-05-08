@@ -117,7 +117,7 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
     }
 
     $workflow = $this->moderationInformation->getWorkflowForEntity($entity);
-    $default = $items->get($delta)->value ? $workflow->getState($items->get($delta)->value) : $workflow->getInitialState();
+    $default = $items->get($delta)->value ? $workflow->getState($items->get($delta)->value) : $workflow->getTypePlugin()->getInitialState($workflow, $entity);
     if (!$default) {
       throw new \UnexpectedValueException(sprintf('The %s bundle has an invalid moderation state configuration, moderation states are enabled but no default is set.', $bundle_entity->label()));
     }

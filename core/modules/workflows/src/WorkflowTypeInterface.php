@@ -94,6 +94,17 @@ interface WorkflowTypeInterface extends PluginInspectionInterface, DerivativeIns
   public function deleteTransition($transition_id);
 
   /**
+   * Gets the initial state for the workflow.
+   *
+   * @param \Drupal\workflows\WorkflowInterface $workflow
+   *   The workflow entity.
+   *
+   * @return \Drupal\workflows\StateInterface
+   *   The initial state.
+   */
+  public function getInitialState(WorkflowInterface $workflow);
+
+  /**
    * Builds a form to be added to the Workflow state edit form.
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
