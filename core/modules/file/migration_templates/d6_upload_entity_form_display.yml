@@ -15,7 +15,14 @@ source:
         progress_indicator: throbber
 process:
   entity_type: 'constants/entity_type'
-  bundle: node_type
+  bundle:
+    -
+      plugin: migration_lookup
+      migration: d6_node_type
+      source: node_type
+    -
+      plugin: skip_on_empty
+      method: row
   field_name: 'constants/name'
   form_mode: 'constants/form_mode'
   type: 'constants/type'
