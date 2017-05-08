@@ -24,6 +24,7 @@ use Drupal\user\UserInterface;
  *   handlers = {
  *     "storage_schema" = "Drupal\content_moderation\ContentModerationStateStorageSchema",
  *     "views_data" = "\Drupal\views\EntityViewsData",
+ *     "access" = "Drupal\content_moderation\ContentModerationStateAccessControlHandler",
  *   },
  *   base_table = "content_moderation_state",
  *   revision_table = "content_moderation_state_revision",
@@ -74,6 +75,7 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
       ->setLabel(t('Content entity type ID'))
       ->setDescription(t('The ID of the content entity type this moderation state is for.'))
       ->setRequired(TRUE)
+      ->setSetting('max_length', EntityTypeInterface::ID_MAX_LENGTH)
       ->setRevisionable(TRUE);
 
     $fields['content_entity_id'] = BaseFieldDefinition::create('integer')
@@ -81,10 +83,6 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
       ->setDescription(t('The ID of the content entity this moderation state is for.'))
       ->setRequired(TRUE)
       ->setRevisionable(TRUE);
-
-    // @todo https://www.drupal.org/node/2779931 Add constraint that enforces
-    //   unique content_entity_type_id, content_entity_id and
-    //   content_entity_revision_id.
 
     $fields['content_entity_revision_id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Content entity revision ID'))
