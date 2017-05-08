@@ -182,8 +182,9 @@ class EntityOperations implements ContainerInjectionInterface {
       ]);
       $content_moderation_state->workflow->target_id = $workflow->id();
     }
-    else {
-      // Create a new revision.
+    elseif ($content_moderation_state->content_entity_revision_id->value != $entity_revision_id) {
+      // If a new revision of the content has been created, add a new content
+      // moderation state revision.
       $content_moderation_state->setNewRevision(TRUE);
     }
 
