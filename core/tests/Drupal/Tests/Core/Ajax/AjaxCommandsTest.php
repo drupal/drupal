@@ -24,6 +24,7 @@ use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\SetDialogOptionCommand;
 use Drupal\Core\Ajax\SetDialogTitleCommand;
 use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\UpdateBuildIdCommand;
 
 /**
  * Test coverage for various classes in the \Drupal\Core\Ajax namespace.
@@ -424,6 +425,22 @@ class AjaxCommandsTest extends UnitTestCase {
     $expected = [
       'command' => 'redirect',
       'url' => 'http://example.com',
+    ];
+
+    $this->assertEquals($expected, $command->render());
+  }
+
+  /**
+   * @covers \Drupal\Core\Ajax\UpdateBuildIdCommand
+   */
+  public function testUpdateBuildIdCommand() {
+    $old = 'ThisStringisOld';
+    $new = 'ThisStringIsNew';
+    $command = new UpdateBuildIdCommand($old, $new);
+    $expected = [
+      'command' => 'update_build_id',
+      'old' => $old,
+      'new' => $new,
     ];
 
     $this->assertEquals($expected, $command->render());
