@@ -1162,10 +1162,10 @@
     // :even and :odd are reversed because jQuery counts from 0 and
     // we count from 1, so we're out of sync.
     // Match immediate children of the parent element to allow nesting.
-    $(this.table).find('> tbody > tr.draggable:visible, > tr.draggable:visible')
-      .removeClass('odd even')
-      .filter(':odd').addClass('even').end()
-      .filter(':even').addClass('odd');
+    $(this.table).find('> tbody > tr.draggable, > tr.draggable')
+      .filter(':visible')
+      .filter(':odd').removeClass('odd').addClass('even').end()
+      .filter(':even').removeClass('even').addClass('odd');
   };
 
   /**
