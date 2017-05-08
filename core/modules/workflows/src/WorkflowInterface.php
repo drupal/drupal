@@ -106,14 +106,6 @@ interface WorkflowInterface extends ConfigEntityInterface {
   public function deleteState($state_id);
 
   /**
-   * Gets the initial state for the workflow.
-   *
-   * @return \Drupal\workflows\StateInterface
-   *   The initial state.
-   */
-  public function getInitialState();
-
-  /**
    * Adds a transition to the workflow.
    *
    * @param string $id

@@ -4,6 +4,7 @@ namespace Drupal\content_moderation\Plugin\WorkflowType;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -287,6 +288,16 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
     ksort($configuration['states']);
     ksort($configuration['entity_types']);
     return $configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInitialState(WorkflowInterface $workflow, $entity = NULL) {
+    if ($entity instanceof EntityPublishedInterface) {
+      return $workflow->getState($entity->isPublished() ? 'published' : 'draft');
+    }
+    return parent::getInitialState($workflow);
   }
 
 }

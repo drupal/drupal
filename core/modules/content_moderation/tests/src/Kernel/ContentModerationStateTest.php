@@ -95,6 +95,9 @@ class ContentModerationStateTest extends KernelTestBase {
       'title' => 'Test title',
       $this->entityTypeManager->getDefinition($entity_type_id)->getKey('bundle') => $bundle_id,
     ]);
+    if ($entity instanceof EntityPublishedInterface) {
+      $entity->setUnpublished();
+    }
     $entity->save();
     $entity = $this->reloadEntity($entity);
     $this->assertEquals('draft', $entity->moderation_state->value);
