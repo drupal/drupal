@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Lock;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\SchemaObjectExistsException;
@@ -42,6 +43,8 @@ class DatabaseLockBackend extends LockBackendAbstract {
    * {@inheritdoc}
    */
   public function acquire($name, $timeout = 30.0) {
+    $name = $this->normalizeName($name);
+
     // Insure that the timeout is at least 1 ms.
     $timeout = max($timeout, 0.001);
     $expire = microtime(TRUE) + $timeout;
@@ -106,6 +109,8 @@ class DatabaseLockBackend extends LockBackendAbstract {
    * {@inheritdoc}
    */
   public function lockMayBeAvailable($name) {
+    $name = $this->normalizeName($name);
+
     try {
       $lock = $this->database->query('SELECT expire, value FROM {semaphore} WHERE name = :name', [':name' => $name])->fetchAssoc();
     }
@@ -136,6 +141,8 @@ class DatabaseLockBackend extends LockBackendAbstract {
    * {@inheritdoc}
    */
   public function release($name) {
+    $name = $this->normalizeName($name);
+
     unset($this->locks[$name]);
     try {
       $this->database->delete('semaphore')
@@ -201,6 +208,33 @@ class DatabaseLockBackend extends LockBackendAbstract {
     if ($this->database->schema()->tableExists(static::TABLE_NAME)) {
       throw $e;
     }
+  }
+
+  /**
+   * Normalizes a lock name in order to comply with database limitations.
+   *
+   * @param string $name
+   *   The passed in lock name.
+   *
+   * @return string
+   *   An ASCII-encoded lock name that is at most 255 characters long.
+   */
+  protected function normalizeName($name) {
+    // Nothing to do if the name is a US ASCII string of 255 characters or less.
+    $name_is_ascii = mb_check_encoding($name, 'ASCII');
+
+    if (strlen($name) <= 255 && $name_is_ascii) {
+      return $name;
+    }
+    // Return a string that uses as much as possible of the original name with
+    // the hash appended.
+    $hash = Crypt::hashBase64($name);
+
+    if (!$name_is_ascii) {
+      return $hash;
+    }
+
+    return substr($name, 0, 255 - strlen($hash)) . $hash;
   }
 
   /**
