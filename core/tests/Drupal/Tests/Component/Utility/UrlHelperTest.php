@@ -22,7 +22,7 @@ class UrlHelperTest extends UnitTestCase {
       [['a' => ' &#//+%20@۞'], 'a=%20%26%23//%2B%2520%40%DB%9E', 'Value was properly encoded.'],
       [[' &#//+%20@۞' => 'a'], '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', 'Key was properly encoded.'],
       [['a' => '1', 'b' => '2', 'c' => '3'], 'a=1&b=2&c=3', 'Multiple values were properly concatenated.'],
-      [['a' => ['b' => '2', 'c' => '3'], 'd' => 'foo'], 'a[b]=2&a[c]=3&d=foo', 'Nested array was properly encoded.'],
+      [['a' => ['b' => '2', 'c' => '3'], 'd' => 'foo'], 'a%5Bb%5D=2&a%5Bc%5D=3&d=foo', 'Nested array was properly encoded.'],
       [['foo' => NULL], 'foo', 'Simple parameters are properly added.'],
     ];
   }
