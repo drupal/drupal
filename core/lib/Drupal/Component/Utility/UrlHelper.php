@@ -46,7 +46,7 @@ class UrlHelper {
     $params = [];
 
     foreach ($query as $key => $value) {
-      $key = ($parent ? $parent . '[' . rawurlencode($key) . ']' : rawurlencode($key));
+      $key = ($parent ? $parent . rawurlencode('[' . $key . ']') : rawurlencode($key));
 
       // Recurse into children.
       if (is_array($value)) {

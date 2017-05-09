@@ -59,29 +59,29 @@ class BigPipePlaceholderTestCases {
         ],
       ]
     );
-    $status_messages->bigPipePlaceholderId = 'callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA';
+    $status_messages->bigPipePlaceholderId = 'callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args%5B0%5D&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA';
     $status_messages->bigPipePlaceholderRenderArray = [
-      '#markup' => '<span data-big-pipe-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>',
+      '#markup' => '<span data-big-pipe-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args%5B0%5D&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>',
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
       '#attached' => [
         'library' => ['big_pipe/big_pipe'],
         'drupalSettings' => [
           'bigPipePlaceholderIds' => [
-            'callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&args[0]&token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA' => TRUE,
+            'callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&args%5B0%5D&token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA' => TRUE,
           ],
         ],
         'big_pipe_placeholders' => [
-          'callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA' => $status_messages->placeholderRenderArray,
+          'callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args%5B0%5D&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA' => $status_messages->placeholderRenderArray,
         ],
       ],
     ];
-    $status_messages->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>';
+    $status_messages->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args%5B0%5D&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>';
     $status_messages->bigPipeNoJsPlaceholderRenderArray = [
-      '#markup' => '<span data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>',
+      '#markup' => '<span data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args%5B0%5D&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>',
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
       '#attached' => [
         'big_pipe_nojs_placeholders' => [
-          '<span data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args[0]&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>' => $status_messages->placeholderRenderArray,
+          '<span data-big-pipe-nojs-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args%5B0%5D&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></span>' => $status_messages->placeholderRenderArray,
         ],
       ],
     ];
@@ -109,7 +109,7 @@ class BigPipePlaceholderTestCases {
         [
           'command' => 'insert',
           'method' => 'replaceWith',
-          'selector' => '[data-big-pipe-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&args[0]&token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"]',
+          'selector' => '[data-big-pipe-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&args%5B0%5D&token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"]',
           'data' => "\n" . '    <div role="contentinfo" aria-label="Status message" class="messages messages--status">' . "\n" . '                  <h2 class="visually-hidden">Status message</h2>' . "\n" . '                    Hello from BigPipe!' . "\n" . '            </div>' . "\n    ",
           'settings' => NULL,
         ],
@@ -272,24 +272,24 @@ class BigPipePlaceholderTestCases {
         '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::exception', ['llamas', 'suck']],
       ]
     );
-    $exception->bigPipePlaceholderId = 'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU';
+    $exception->bigPipePlaceholderId = 'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args%5B0%5D=llamas&amp;args%5B1%5D=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU';
     $exception->bigPipePlaceholderRenderArray = [
-      '#markup' => '<span data-big-pipe-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU"></span>',
+      '#markup' => '<span data-big-pipe-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args%5B0%5D=llamas&amp;args%5B1%5D=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU"></span>',
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
       '#attached' => [
         'library' => ['big_pipe/big_pipe'],
         'drupalSettings' => [
           'bigPipePlaceholderIds' => [
-            'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&args[0]=llamas&args[1]=suck&token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU' => TRUE,
+            'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&args%5B0%5D=llamas&args%5B1%5D=suck&token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU' => TRUE,
           ],
         ],
         'big_pipe_placeholders' => [
-          'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU' => $exception->placeholderRenderArray,
+          'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args%5B0%5D=llamas&amp;args%5B1%5D=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU' => $exception->placeholderRenderArray,
         ],
       ],
     ];
     $exception->embeddedAjaxResponseCommands = NULL;
-    $exception->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args[0]=llamas&amp;args[1]=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU"></span>';
+    $exception->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3Aexception&amp;args%5B0%5D=llamas&amp;args%5B1%5D=suck&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU"></span>';
     $exception->bigPipeNoJsPlaceholderRenderArray = [
       '#markup' => $exception->bigPipeNoJsPlaceholder,
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
