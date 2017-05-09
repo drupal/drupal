@@ -117,7 +117,9 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
   protected function isFirstTimeModeration(EntityInterface $entity) {
     $original_entity = $this->moderationInformation->getLatestRevision($entity->getEntityTypeId(), $entity->id());
 
-    $original_id = $original_entity->moderation_state;
+    if ($original_entity) {
+      $original_id = $original_entity->moderation_state;
+    }
 
     return !($entity->moderation_state && $original_entity && $original_id);
   }
