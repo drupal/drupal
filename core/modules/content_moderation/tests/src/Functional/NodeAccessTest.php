@@ -10,6 +10,37 @@ namespace Drupal\Tests\content_moderation\Functional;
 class NodeAccessTest extends ModerationStateTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = [
+    'content_moderation',
+    'block',
+    'block_content',
+    'node',
+    'node_access_test_empty',
+  ];
+
+  /**
+   * Permissions to grant admin user.
+   *
+   * @var array
+   */
+  protected $permissions = [
+    'administer content moderation',
+    'access administration pages',
+    'administer content types',
+    'administer nodes',
+    'view latest version',
+    'view any unpublished content',
+    'access content overview',
+    'use editorial transition create_new_draft',
+    'use editorial transition publish',
+    'bypass node access',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -17,6 +48,10 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->drupalLogin($this->adminUser);
     $this->createContentTypeFromUi('Moderated content', 'moderated_content', TRUE);
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'moderated_content');
+
+    // Rebuild permissions because hook_node_grants() is implemented by the
+    // node_access_test_empty module.
+    node_access_rebuild();
   }
 
   /**
@@ -38,7 +73,24 @@ class NodeAccessTest extends ModerationStateTestBase {
     $edit_path = 'node/' . $node->id() . '/edit';
     $latest_path = 'node/' . $node->id() . '/latest';
 
+    // Now make a new user and verify that the new user's access is correct.
+    $user = $this->createUser([
+      'use editorial transition create_new_draft',
+      'view latest version',
+      'view any unpublished content',
+    ]);
+    $this->drupalLogin($user);
+
+    $this->drupalGet($edit_path);
+    $this->assertResponse(403);
+
+    $this->drupalGet($latest_path);
+    $this->assertResponse(403);
+    $this->drupalGet($view_path);
+    $this->assertResponse(200);
+
     // Publish the node.
+    $this->drupalLogin($this->adminUser);
     $this->drupalPostForm($edit_path, [], t('Save and Publish'));
 
     // Ensure access works correctly for anonymous users.
@@ -58,12 +110,6 @@ class NodeAccessTest extends ModerationStateTestBase {
       'title[0][value]' => 'moderated content revised',
     ], t('Save and Create New Draft'));
 
-    // Now make a new user and verify that the new user's access is correct.
-    $user = $this->createUser([
-      'use editorial transition create_new_draft',
-      'view latest version',
-      'view any unpublished content',
-    ]);
     $this->drupalLogin($user);
 
     $this->drupalGet($edit_path);

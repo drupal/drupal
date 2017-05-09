@@ -98,7 +98,7 @@ class EntityRevisionConverter extends EntityConverter {
         $latest_revision = $this->entityManager->getTranslationFromContext($latest_revision, NULL, ['operation' => 'entity_upcast']);
       }
 
-      if ($latest_revision->isRevisionTranslationAffected()) {
+      if ($latest_revision instanceof EntityInterface && $latest_revision->isRevisionTranslationAffected()) {
         $entity = $latest_revision;
       }
     }
