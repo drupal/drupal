@@ -131,6 +131,11 @@ class NodeRevisionsAllTest extends NodeTestBase {
     $node = node_revision_load($node->getRevisionId());
     $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the current one.');
 
+    // Confirm that the node can still be updated.
+    $this->drupalPostForm("node/" . $reverted_node->id() . "/edit", ['body[0][value]' => 'We are Drupal.'], t('Save'));
+    $this->assertText(t('Basic page @title has been updated.', ['@title' => $reverted_node->getTitle()]), 'Node was successfully saved after reverting a revision.');
+    $this->assertText('We are Drupal.', 'Node was correctly updated after reverting a revision.');
+
     // Confirm revisions delete properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], t('Delete'));
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
