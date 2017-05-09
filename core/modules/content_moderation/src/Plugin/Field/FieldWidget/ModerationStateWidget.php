@@ -110,6 +110,7 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
     $entity = $items->getEntity();
 
     /* @var \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity */
+    $bundle_entity = $this->entityTypeManager->getStorage($entity->getEntityType()->getBundleEntityType())->load($entity->bundle());
     if (!$this->moderationInformation->isModeratedEntity($entity)) {
       // @todo https://www.drupal.org/node/2779933 write a test for this.
       return $element + ['#access' => FALSE];
@@ -117,6 +118,9 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
 
     $workflow = $this->moderationInformation->getWorkflowForEntity($entity);
     $default = $items->get($delta)->value ? $workflow->getState($items->get($delta)->value) : $workflow->getTypePlugin()->getInitialState($workflow, $entity);
+    if (!$default) {
+      throw new \UnexpectedValueException(sprintf('The %s bundle has an invalid moderation state configuration, moderation states are enabled but no default is set.', $bundle_entity->label()));
+    }
 
     /** @var \Drupal\workflows\Transition[] $transitions */
     $transitions = $this->validator->getValidTransitions($entity, $this->currentUser);
