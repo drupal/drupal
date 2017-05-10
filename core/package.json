@@ -5,13 +5,14 @@
   "private": true,
   "scripts": {
     "build:js": "node ./scripts/js/babel-es6-build.js",
-    "watch:js": "node ./scripts/js/babel-es6-watch.js",
+    "watch:js": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-watch.js",
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js --ext=.es6.js . --fix || exit 0"
   },
   "devDependencies": {
     "babel-core": "6.24.1",
-    "babel-preset-es2015": "6.16.0",
+    "babel-preset-env": "1.4.0",
     "chokidar": "1.6.1",
+    "cross-env": "^4.0.0",
     "eslint": "3.19.0",
     "eslint-config-airbnb": "14.1.0",
     "eslint-plugin-import": "2.2.0",
@@ -21,7 +22,22 @@
   },
   "babel": {
     "presets": [
-      "es2015"
+      [
+        "env",
+        {
+          "modules": false,
+          "targets": {
+            "browsers": [
+              "ie >= 9",
+              "edge >= 13",
+              "firefox >= 5",
+              "opera >= 12",
+              "safari >= 5",
+              "chrome >= 56"
+            ]
+          }
+        }
+      ]
     ]
   }
 }

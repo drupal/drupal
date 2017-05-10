@@ -11,44 +11,32 @@
 
 const fs = require('fs');
 const path = require('path');
-const babel = require('babel-core');
 const glob = require('glob');
 
-// Logging human-readable timestamp.
-const log = function (message) {
-  // eslint-disable-next-line no-console
-  console.log(`[${new Date().toTimeString().slice(0, 8)}] ${message}`);
-};
+const changeOrAdded = require('./changeOrAdded');
+const log = require('./log');
 
-function addSourceMappingUrl(code, loc) {
-  return code + '\n\n//# sourceMappingURL=' + path.basename(loc);
-}
-
-const changedOrAdded = (filePath) => {
-  babel.transformFile(filePath, {
-    sourceMaps: true,
-    comments: false
-  }, function (err, result) {
-    const fileName = filePath.slice(0, -7);
-    // we've requested for a sourcemap to be written to disk
-    let mapLoc = `${fileName}.js.map`;
-
-    fs.writeFile(mapLoc, JSON.stringify(result.map));
-    fs.writeFile(`${fileName}.js`, addSourceMappingUrl(result.code, mapLoc));
-
-    log(`'${filePath}' is being processed.`);
-  });
-};
-
+// Match only on .es6.js files.
 const fileMatch = './**/*.es6.js';
+// Ignore everything in node_modules
 const globOptions = {
-  ignore: 'node_modules/**'
+  ignore: './node_modules/**'
 };
 const processFiles = (error, filePaths) => {
   if (error) {
     process.exitCode = 1;
   }
-  filePaths.forEach(changedOrAdded);
+  // Process all the found files.
+  filePaths.forEach(changeOrAdded);
 };
-glob(fileMatch, globOptions, processFiles);
+
+// Run build:js with some special arguments to only parse specific files.
+// npm run build:js -- --files misc/drupal.es6.js misc/drupal.init.es6.js
+// Only misc/drupal.es6.js misc/drupal.init.es6.js will be processed.
+if (process.argv.length > 2 && process.argv[2] === '--files') {
+  processFiles(null, process.argv.splice(3, process.argv.length));
+}
+else {
+  glob(fileMatch, globOptions, processFiles);
+}
 process.exitCode = 0;
