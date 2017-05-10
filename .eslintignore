@@ -1,5 +1,4 @@
-core/assets/vendor/**/*
-core/modules/locale/tests/locale_test.js
+core/**/*
 vendor/**/*
 sites/**/files/**/*
 libraries/**/*
