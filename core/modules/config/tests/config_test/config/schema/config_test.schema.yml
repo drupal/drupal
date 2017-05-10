@@ -135,8 +135,7 @@ config_test.new:
        type: string
        label: 'Test setting'
      uuid:
-       type: string
-       label: 'UUID'
+      type: uuid
 
 config_test.old:
   type: config_test.new
@@ -194,3 +193,5 @@ config_test.validation:
         constraints:
           Callback:
             callback: [\Drupal\config_test\ConfigValidation, validateGiraffes]
+    uuid:
+      type: uuid

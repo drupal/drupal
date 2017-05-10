@@ -21,7 +21,7 @@ image.style.*:
           weight:
             type: integer
           uuid:
-            type: string
+            type: uuid
 
 image.effect.*:
   type: mapping

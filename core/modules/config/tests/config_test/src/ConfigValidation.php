@@ -74,7 +74,7 @@ class ConfigValidation {
    *   The validation execution context.
    */
   public static function validateMapping($mapping, ExecutionContextInterface $context) {
-    if ($diff = array_diff(array_keys($mapping), ['llama', 'cat', 'giraffe', '_core'])) {
+    if ($diff = array_diff(array_keys($mapping), ['llama', 'cat', 'giraffe', 'uuid', '_core'])) {
       $context->addViolation('Missing giraffe.');
     }
   }

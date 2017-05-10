@@ -72,6 +72,13 @@ text:
   label: 'Text'
   translatable: true
 
+# A UUID.
+uuid:
+  type: string
+  label: 'UUID'
+  constraints:
+    Uuid: {}
+
 # PHP Date format string that is translatable.
 date_format:
   type: string
@@ -275,7 +282,7 @@ config_entity:
   type: mapping
   mapping:
     uuid:
-      type: string
+      type: uuid
       label: 'UUID'
     langcode:
       type: string
@@ -336,8 +343,7 @@ condition.plugin:
       type: boolean
       label: 'Negate'
     uuid:
-      type: string
-      label: 'UUID'
+      type: uuid
     context_mapping:
       type: sequence
       label: 'Context assignments'
@@ -358,8 +364,7 @@ display_variant.plugin:
       type: integer
       label: 'Weight'
     uuid:
-      type: string
-      label: 'UUID'
+      type: uuid
 
 layout_plugin.settings:
   type: mapping
@@ -602,8 +607,7 @@ field.value.entity_reference:
       type: string
       label: 'Value'
     target_uuid:
-      type: string
-      label: 'Target UUID'
+      type: uuid
 
 # Schema for the configuration of the Boolean field type.
 

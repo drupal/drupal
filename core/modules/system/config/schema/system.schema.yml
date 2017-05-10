@@ -5,9 +5,10 @@ system.site:
   label: 'Site information'
   mapping:
     uuid:
-      type: string
+      type: uuid
       label: 'Site UUID'
       constraints:
+        Uuid: []
         NotNull: []
     name:
       type: label
