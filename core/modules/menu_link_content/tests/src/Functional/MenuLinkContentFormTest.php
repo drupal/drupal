@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\menu_link_content\Tests;
+namespace Drupal\Tests\menu_link_content\Functional;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the menu link content UI.
  *
  * @group Menu
  */
-class MenuLinkContentFormTest extends WebTestBase {
+class MenuLinkContentFormTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -77,7 +77,7 @@ class MenuLinkContentFormTest extends WebTestBase {
     $this->drupalGet('admin/structure/menu/manage/admin/add');
     $element = $this->xpath('//select[@id = :id]/option[@selected]', [':id' => 'edit-menu-parent']);
     $this->assertTrue($element, 'A default menu parent was found.');
-    $this->assertEqual('admin:', $element[0]['value'], '<Administration> menu is the parent.');
+    $this->assertEqual('admin:', $element[0]->getValue(), '<Administration> menu is the parent.');
 
     $this->drupalPostForm(
       NULL,

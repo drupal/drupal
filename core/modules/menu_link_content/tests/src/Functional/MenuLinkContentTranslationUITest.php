@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\menu_link_content\Tests;
+namespace Drupal\Tests\menu_link_content\Functional;
 
-use Drupal\content_translation\Tests\ContentTranslationUITestBase;
+use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
