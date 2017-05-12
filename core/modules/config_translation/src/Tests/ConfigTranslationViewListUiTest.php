@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\config_translation\Functional;
+namespace Drupal\config_translation\Tests;
 
 use Drupal\views_ui\Tests\UITestBase;
 
