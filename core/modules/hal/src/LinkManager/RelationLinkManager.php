@@ -100,10 +100,18 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
    *   Context from the normalizer/serializer operation.
    *
    * @return array
-   *   An array of typed data ids (entity_type_id, bundle, and field name) keyed
-   *   by corresponding relation URI. For backwards compatibility, the
-   *   entity_type key returns the full entity type object, this will be removed
-   *   before Drupal 9.0.
+   *   An array of typed data IDs keyed by corresponding relation URI. The keys
+   *   are:
+   *   - 'entity_type_id'
+   *   - 'bundle'
+   *   - 'field_name'
+   *   - 'entity_type' (deprecated)
+   *   The values for 'entity_type_id', 'bundle' and 'field_name' are strings.
+   *   The 'entity_type' key exists for backwards compatibility and its value is
+   *   the full entity type object. The 'entity_type' key will be removed before
+   *   Drupal 9.0.
+   *
+   * @see https://www.drupal.org/node/2877608
    */
   protected function getRelations($context = []) {
     $cid = 'hal:links:relations';
@@ -115,7 +123,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
       $data = $cache->data;
     }
 
-    // @todo Remove this in Drupal 9.0.
+    // @todo https://www.drupal.org/node/2716163 Remove this in Drupal 9.0.
     foreach ($data as $relation_uri => $ids) {
       $data[$relation_uri]['entity_type'] = $this->entityManager->getDefinition($ids['entity_type_id']);
     }
@@ -129,8 +137,12 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
    *   Context from the normalizer/serializer operation.
    *
    * @return array
-   *   An array of typed data ids (entity_type_id, bundle, and field name) keyed
-   *   by corresponding relation URI.
+   *   An array of typed data IDs keyed by corresponding relation URI. The keys
+   *   are:
+   *   - 'entity_type_id'
+   *   - 'bundle'
+   *   - 'field_name'
+   *   The values for 'entity_type_id', 'bundle' and 'field_name' are strings.
    */
   protected function writeCache($context = []) {
     $data = [];
