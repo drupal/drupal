@@ -11,10 +11,24 @@ use Drupal\node\NodeInterface;
  * @group node
  */
 class NodeRevisionsAllTest extends NodeTestBase {
-  protected $nodes;
-  protected $revisionLogs;
-  protected $profile = "standard";
 
+  /**
+   * A list of nodes created to be used as starting point of different tests.
+   *
+   * @var Drupal\node\NodeInterface[]
+   */
+  protected $nodes;
+
+  /**
+   * Revision logs of nodes created by the setup method.
+   *
+   * @var string[]
+   */
+  protected $revisionLogs;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
