@@ -53,7 +53,7 @@ interface LocalTaskManagerInterface extends PluginManagerInterface {
   public function getTasksBuild($current_route_name, RefinableCacheableDependencyInterface &$cacheability);
 
   /**
-   * Collects the local tasks (tabs) for the current route.
+   * Renders the local tasks (tabs) for the given route.
    *
    * @param string $route_name
    *   The route for which to make renderable local tasks.
