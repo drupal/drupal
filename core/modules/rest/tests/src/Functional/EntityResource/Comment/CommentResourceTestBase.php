@@ -269,7 +269,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     $this->provisionEntityResource();
     $this->setUpAuthorization('POST');
 
-    $url = $this->getPostUrl()->setOption('query', ['_format' => static::$format]);
+    $url = $this->getEntityResourcePostUrl()->setOption('query', ['_format' => static::$format]);
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = static::$mimeType;
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
