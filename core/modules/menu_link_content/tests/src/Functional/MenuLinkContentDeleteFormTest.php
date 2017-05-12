@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\menu_link_content\Tests;
+namespace Drupal\Tests\menu_link_content\Functional;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\simpletest\WebTestBase;
 use Drupal\system\Entity\Menu;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the menu link content delete UI.
  *
  * @group Menu
  */
-class MenuLinkContentDeleteFormTest extends WebTestBase {
+class MenuLinkContentDeleteFormTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
