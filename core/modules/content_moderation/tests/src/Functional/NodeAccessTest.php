@@ -28,7 +28,7 @@ class NodeAccessTest extends ModerationStateTestBase {
    * @var array
    */
   protected $permissions = [
-    'administer content moderation',
+    'administer workflows',
     'access administration pages',
     'administer content types',
     'administer nodes',

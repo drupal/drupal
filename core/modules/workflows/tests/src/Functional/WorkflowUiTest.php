@@ -251,6 +251,28 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
+   * Test the workflow configuration form.
+   */
+  public function testWorkflowConfigurationForm() {
+    $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_complex_test', 'label' => 'Test']);
+    $workflow
+      ->addState('published', 'Published')
+      ->addTransition('publish', 'Publish', ['published'], 'published')
+      ->save();
+
+    $this->drupalLogin($this->createUser(['administer workflows']));
+
+    // Add additional information to the workflow via the configuration form.
+    $this->drupalGet('admin/config/workflow/workflows/manage/test');
+    $this->assertSession()->pageTextContains('Example global workflow setting');
+    $this->submitForm(['type_settings[example_setting]' => 'Extra global settings'], 'Save');
+
+    $workflow_storage = $this->container->get('entity_type.manager')->getStorage('workflow');
+    $workflow = $workflow_storage->loadUnchanged('test');
+    $this->assertEquals('Extra global settings', $workflow->getTypePlugin()->getConfiguration()['example_setting']);
+  }
+
+  /**
    * Tests that workflow types can add form fields to states and transitions.
    */
   public function testWorkflowDecoration() {

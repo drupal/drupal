@@ -52,9 +52,8 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->assertText(t('The Moderated content moderated content has been deleted.'));
 
     // Disable content moderation.
-    $this->drupalPostForm('admin/structure/types/manage/moderated_content/moderation', ['workflow' => ''], t('Save'));
-    $this->drupalGet('admin/structure/types/manage/moderated_content/moderation');
-    $this->assertOptionSelected('edit-workflow', '');
+    $edit['bundles[moderated_content]'] = FALSE;
+    $this->drupalPostForm('admin/config/workflow/workflows/manage/editorial/type/node', $edit, t('Save'));;
     // Ensure the parent environment is up-to-date.
     // @see content_moderation_workflow_insert()
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();

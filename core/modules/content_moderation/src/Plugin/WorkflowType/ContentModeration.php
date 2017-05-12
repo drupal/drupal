@@ -2,7 +2,10 @@
 
 namespace Drupal\content_moderation\Plugin\WorkflowType;
 
+use Drupal\Component\Serialization\Json;
+use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -10,7 +13,8 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\content_moderation\ContentModerationState;
-use Drupal\workflows\Plugin\WorkflowTypeBase;
+use Drupal\Core\Url;
+use Drupal\workflows\Plugin\WorkflowTypeFormBase;
 use Drupal\workflows\StateInterface;
 use Drupal\workflows\WorkflowInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,7 +31,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   },
  * )
  */
-class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPluginInterface {
+class ContentModeration extends WorkflowTypeFormBase implements ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
 
@@ -39,11 +43,38 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
   protected $entityTypeManager;
 
   /**
-   * Creates an instance of the ContentModeration WorkflowType plugin.
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+  protected $entityTypeBundleInfo;
+
+  /**
+   * The moderation information service.
+   *
+   * @var \Drupal\content_moderation\ModerationInformationInterface
+   */
+  protected $moderationInfo;
+
+  /**
+   * Constructs a ContentModeration object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_info
+   *   Moderation information service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ModerationInformationInterface $moderation_info) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->moderationInfo = $moderation_info;
   }
 
   /**
@@ -54,7 +85,9 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('content_moderation.moderation_information')
     );
   }
 
@@ -173,6 +206,9 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
    *   The bundle ID to remove.
    */
   public function removeEntityTypeAndBundle($entity_type_id, $bundle_id) {
+    if (!isset($this->configuration['entity_types'][$entity_type_id])) {
+      return;
+    }
     $key = array_search($bundle_id, $this->configuration['entity_types'][$entity_type_id], TRUE);
     if ($key !== FALSE) {
       unset($this->configuration['entity_types'][$entity_type_id][$key]);
@@ -204,7 +240,7 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function defaultConfiguration() {
     // This plugin does not store anything per transition.
@@ -298,6 +334,70 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
       return $workflow->getState($entity->isPublished() ? 'published' : 'draft');
     }
     return parent::getInitialState($workflow);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state, WorkflowInterface $workflow = NULL) {
+    $header = [
+      'type' => $this->t('Items'),
+      'operations' => $this->t('Operations')
+    ];
+    $form['entity_types_container'] = [
+      '#type' => 'details',
+      '#title' => $this->t('This workflow applies to:'),
+      '#open' => TRUE,
+    ];
+    $form['entity_types_container']['entity_types'] = [
+      '#type' => 'table',
+      '#header' => $header,
+      '#empty' => $this->t('There are no entity types.'),
+    ];
+
+    $entity_types = $this->entityTypeManager->getDefinitions();
+    foreach ($entity_types as $entity_type) {
+      if (!$this->moderationInfo->canModerateEntitiesOfEntityType($entity_type)) {
+        continue;
+      }
+
+      $selected_bundles = [];
+      foreach ($this->entityTypeBundleInfo->getBundleInfo($entity_type->id()) as $bundle_id => $bundle) {
+        if ($this->appliesToEntityTypeAndBundle($entity_type->id(), $bundle_id)) {
+          $selected_bundles[$bundle_id] = $bundle['label'];
+        }
+      }
+
+      $form['entity_types_container']['entity_types'][$entity_type->id()] = [
+        'type' => [
+          'label' => ['#markup' => '<strong>' . $this->t('@bundle types', ['@bundle' => $entity_type->getLabel()]) . '</strong>'],
+          'selected' => [
+            '#prefix' => '<br/><span id="selected-' . $entity_type->id() . '">',
+            '#markup' => !empty($selected_bundles) ? implode(', ', $selected_bundles) : $this->t('none'),
+            '#suffix' => '</span>',
+          ],
+        ],
+        'operations' => [
+          '#type' => 'operations',
+          '#links' => [
+            'select' => [
+              'title' => $this->t('Select'),
+              'url' => Url::fromRoute('content_moderation.workflow_type_edit_form', ['workflow' => $workflow->id(), 'entity_type_id' => $entity_type->id()]),
+              'attributes' => [
+                'aria-label' => $this->t('Select'),
+                'class' => ['use-ajax'],
+                'data-dialog-type' => 'modal',
+                'data-dialog-options' => Json::encode([
+                  'width' => 700,
+                ]),
+              ],
+            ],
+          ],
+        ],
+      ];
+    }
+
+    return $form;
   }
 
 }

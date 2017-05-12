@@ -3,12 +3,10 @@
 namespace Drupal\content_moderation;
 
 use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
-use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -17,13 +15,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\Core\Url;
 use Drupal\content_moderation\Entity\Handler\BlockContentModerationHandler;
 use Drupal\content_moderation\Entity\Handler\ModerationHandler;
 use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
-use Drupal\content_moderation\Form\BundleModerationConfigurationForm;
 use Drupal\content_moderation\Routing\EntityModerationRouteProvider;
-use Drupal\content_moderation\Routing\EntityTypeModerationRouteProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -127,11 +122,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       // The ContentModerationState entity type should never be moderated.
       if ($entity_type->isRevisionable() && $entity_type_id != 'content_moderation_state') {
         $entity_types[$entity_type_id] = $this->addModerationToEntityType($entity_type);
-        // Add additional moderation support to entity types whose bundles are
-        // managed by a config entity type.
-        if ($entity_type->getBundleEntityType()) {
-          $entity_types[$entity_type->getBundleEntityType()] = $this->addModerationToBundleEntityType($entity_types[$entity_type->getBundleEntityType()]);
-        }
       }
     }
   }
@@ -167,67 +157,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
     }
 
     return $type;
-  }
-
-  /**
-   * Configures moderation configuration support on a entity type definition.
-   *
-   * That "configuration support" includes a configuration form, a hypermedia
-   * link, and a route provider to tie it all together. There's also a
-   * moderation handler for per-entity-type variation.
-   *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $type
-   *   The config entity definition to modify.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityTypeInterface
-   *   The modified config entity definition.
-   */
-  protected function addModerationToBundleEntityType(ConfigEntityTypeInterface $type) {
-    if ($type->hasLinkTemplate('edit-form') && !$type->hasLinkTemplate('moderation-form')) {
-      $type->setLinkTemplate('moderation-form', $type->getLinkTemplate('edit-form') . '/moderation');
-    }
-
-    if (!$type->getFormClass('moderation')) {
-      $type->setFormClass('moderation', BundleModerationConfigurationForm::class);
-    }
-
-    // @todo Core forgot to add a direct way to manipulate route_provider, so
-    // we have to do it the sloppy way for now.
-    $providers = $type->getRouteProviderClasses() ?: [];
-    if (empty($providers['moderation'])) {
-      $providers['moderation'] = EntityTypeModerationRouteProvider::class;
-      $type->setHandlerClass('route_provider', $providers);
-    }
-
-    return $type;
-  }
-
-  /**
-   * Adds an operation on bundles that should have a Moderation form.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity on which to define an operation.
-   *
-   * @return array
-   *   An array of operation definitions.
-   *
-   * @see hook_entity_operation()
-   */
-  public function entityOperation(EntityInterface $entity) {
-    $operations = [];
-    $type = $entity->getEntityType();
-    $bundle_of = $type->getBundleOf();
-    if ($this->currentUser->hasPermission('administer content moderation') && $bundle_of &&
-      $this->moderationInfo->canModerateEntitiesOfEntityType($this->entityTypeManager->getDefinition($bundle_of))
-    ) {
-      $operations['manage-moderation'] = [
-        'title' => t('Manage moderation'),
-        'weight' => 27,
-        'url' => Url::fromRoute("entity.{$type->id()}.moderation", [$entity->getEntityTypeId() => $entity->id()]),
-      ];
-    }
-
-    return $operations;
   }
 
   /**

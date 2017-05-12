@@ -101,4 +101,26 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
     );
   }
 
+  /**
+   * @covers ::addEntityTypeAndBundle
+   * @covers ::removeEntityTypeAndBundle
+   */
+  public function testRemoveEntityTypeAndBundle() {
+    /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
+    $workflow_plugin = $this->workflow->getTypePlugin();
+
+    // There should be no bundles for fake_node to start with.
+    $this->assertEquals([], $workflow_plugin->getBundlesForEntityType('fake_node'));
+    // Removing a bundle which is not set on the workflow should not throw an
+    // error and should still result in none being returned.
+    $workflow_plugin->removeEntityTypeAndBundle('fake_node', 'fake_page');
+    $this->assertEquals([], $workflow_plugin->getBundlesForEntityType('fake_node'));
+    // Adding a bundle for fake_node should result it in being returned, but
+    // then removing it will return no bundles for fake_node.
+    $workflow_plugin->addEntityTypeAndBundle('fake_node', 'fake_page');
+    $this->assertEquals(['fake_page'], $workflow_plugin->getBundlesForEntityType('fake_node'));
+    $workflow_plugin->removeEntityTypeAndBundle('fake_node', 'fake_page');
+    $this->assertEquals([], $workflow_plugin->getBundlesForEntityType('fake_node'));
+  }
+
 }

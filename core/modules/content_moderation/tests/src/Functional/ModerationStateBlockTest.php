@@ -51,17 +51,9 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
   public function testCustomBlockModeration() {
     $this->drupalLogin($this->rootUser);
 
-    $this->drupalGet('admin/structure/block/block-content/types');
-    $this->assertLinkByHref('admin/structure/block/block-content/manage/basic/moderation');
-    $this->drupalGet('admin/structure/block/block-content/manage/basic');
-    $this->assertLinkByHref('admin/structure/block/block-content/manage/basic/moderation');
-    $this->drupalGet('admin/structure/block/block-content/manage/basic/moderation');
-
-    // Enable moderation for custom blocks at
-    // admin/structure/block/block-content/manage/basic/moderation.
-    $edit = ['workflow' => 'editorial'];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('Your settings have been saved.'));
+    // Enable moderation for custom blocks.
+    $edit['bundles[basic]'] = TRUE;
+    $this->drupalPostForm('admin/config/workflow/workflows/manage/editorial/type/block_content', $edit, t('Save'));
 
     // Create a custom block at block/add and save it as draft.
     $body = 'Body of moderated block';

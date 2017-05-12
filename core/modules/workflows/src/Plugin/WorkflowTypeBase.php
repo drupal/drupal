@@ -56,28 +56,28 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function decorateState(StateInterface $state) {
     return $state;
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function deleteState($state_id) {
     unset($this->configuration['states'][$state_id]);
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function decorateTransition(TransitionInterface $transition) {
     return $transition;
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function deleteTransition($transition_id) {
     unset($this->configuration['transitions'][$transition_id]);
@@ -98,14 +98,14 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getConfiguration() {
     return $this->configuration;
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
     $this->configuration = NestedArray::mergeDeep(
@@ -122,7 +122,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function defaultConfiguration() {
     return [
@@ -132,7 +132,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function calculateDependencies() {
     return [];

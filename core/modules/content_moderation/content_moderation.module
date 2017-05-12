@@ -63,15 +63,6 @@ function content_moderation_entity_type_alter(array &$entity_types) {
 }
 
 /**
- * Implements hook_entity_operation().
- */
-function content_moderation_entity_operation(EntityInterface $entity) {
-  return \Drupal::service('class_resolver')
-    ->getInstanceFromDefinition(EntityTypeInfo::class)
-    ->entityOperation($entity);
-}
-
-/**
  * Implements hook_entity_presave().
  */
 function content_moderation_entity_presave(EntityInterface $entity) {

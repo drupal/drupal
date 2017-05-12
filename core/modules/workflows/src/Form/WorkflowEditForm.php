@@ -2,6 +2,8 @@
 
 namespace Drupal\workflows\Form;
 
+use Drupal\Core\Form\SubformState;
+use Drupal\workflows\WorkflowTypeFormInterface;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\workflows\State;
 use Drupal\Core\Entity\EntityForm;
@@ -180,7 +182,27 @@ class WorkflowEditForm extends EntityForm {
       '#markup' => $workflow->toLink($this->t('Add a new transition'), 'add-transition-form')->toString(),
     ];
 
+    if ($workflow->getTypePlugin() instanceof WorkflowTypeFormInterface) {
+      $form['type_settings'] = [
+        '#tree' => TRUE,
+      ];
+      $subform_state = SubformState::createForSubform($form['type_settings'], $form, $form_state);
+      $form['type_settings'] += $workflow->getTypePlugin()->buildConfigurationForm($form['type_settings'], $subform_state, $workflow);
+    }
+
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    /* @var \Drupal\workflows\WorkflowInterface $workflow */
+    $workflow = $this->entity;
+    if ($workflow->getTypePlugin() instanceof WorkflowTypeFormInterface) {
+      $subform_state = SubformState::createForSubform($form['type_settings'], $form, $form_state);
+      $workflow->getTypePlugin()->validateConfigurationForm($form['type_settings'], $subform_state);
+    }
   }
 
   /**
@@ -189,7 +211,12 @@ class WorkflowEditForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     /* @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
+    if ($workflow->getTypePlugin() instanceof WorkflowTypeFormInterface) {
+      $subform_state = SubformState::createForSubform($form['type_settings'], $form, $form_state);
+      $workflow->getTypePlugin()->submitConfigurationForm($form['type_settings'], $subform_state);
+    }
     $workflow->save();
+
     drupal_set_message($this->t('Saved the %label Workflow.', ['%label' => $workflow->label()]));
   }
 

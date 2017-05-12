@@ -203,6 +203,9 @@
   -webkit-transition: none;
   transition: none;
 }
+.dropbutton-single .dropbutton-action a.use-ajax{
+  float: left;
+}
 
 /**
  * The dropdown trigger.

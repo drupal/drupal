@@ -69,7 +69,6 @@ class ModerationStateAccessTest extends BrowserTestBase {
     $permissions = [
       'access content',
       'view all revisions',
-      'administer content moderation',
     ];
     $admin1 = $this->drupalCreateUser($permissions);
     $this->drupalLogin($admin1);

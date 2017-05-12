@@ -48,6 +48,10 @@ tbody tr.color-error:focus {
   background: #fcf4f2;
 }
 
+table.no-highlight tr.selected td {
+  background: transparent;
+}
+
 td,
 th {
   vertical-align: middle;

@@ -29,7 +29,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    * @var array
    */
   protected $permissions = [
-    'administer content moderation',
+    'administer workflows',
     'access administration pages',
     'administer content types',
     'administer nodes',
@@ -113,9 +113,11 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    * @param string $workflow_id
    *   The workflow to attach to the bundle.
    */
-  protected function enableModerationThroughUi($content_type_id, $workflow_id = 'editorial') {
-    $edit['workflow'] = $workflow_id;
-    $this->drupalPostForm('admin/structure/types/manage/' . $content_type_id . '/moderation', $edit, t('Save'));
+  public function enableModerationThroughUi($content_type_id, $workflow_id = 'editorial') {
+    $this->drupalGet('/admin/config/workflow/workflows');
+    $this->assertLinkByHref('admin/config/workflow/workflows/manage/' . $workflow_id);
+    $edit['bundles[' . $content_type_id . ']'] = TRUE;
+    $this->drupalPostForm('admin/config/workflow/workflows/manage/' . $workflow_id . '/type/node', $edit, t('Save'));
     // Ensure the parent environment is up-to-date.
     // @see content_moderation_workflow_insert()
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();

@@ -20,6 +20,9 @@ workflow.type_settings.workflow_type_complex_test:
   type: mapping
   label: 'Workflow complex test type settings'
   mapping:
+    example_setting:
+      type: string
+      label: 'Example setting'
     states:
       type: sequence
       label: 'Additional state configuration'
