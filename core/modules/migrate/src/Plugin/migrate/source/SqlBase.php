@@ -357,6 +357,14 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       return FALSE;
     }
 
+    // FALSE if driver is PostgreSQL and database doesn't match.
+    if ($id_map_database_options['driver'] === 'pgsql' &&
+      $source_database_options['driver'] === 'pgsql' &&
+      $id_map_database_options['database'] != $source_database_options['database']
+      ) {
+      return FALSE;
+    }
+
     foreach (['username', 'password', 'host', 'port', 'namespace', 'driver'] as $key) {
       if (isset($source_database_options[$key])) {
         if ($id_map_database_options[$key] != $source_database_options[$key]) {
