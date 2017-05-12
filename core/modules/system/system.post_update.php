@@ -65,3 +65,11 @@ function system_post_update_hashes_clear_cache() {
 function system_post_update_timestamp_plugins() {
   // Empty post-update hook.
 }
+/**
+ * Force field type plugin definitions to be cleared.
+ *
+ * @see https://www.drupal.org/node/2403703
+ */
+function system_post_update_field_type_plugins() {
+  // Empty post-update hook.
+}

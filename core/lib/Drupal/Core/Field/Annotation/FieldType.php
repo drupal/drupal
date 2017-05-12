@@ -91,4 +91,13 @@ class FieldType extends DataType {
    */
   public $list_class;
 
+  /**
+   * An integer defining a fixed cardinality for this field type.
+   *
+   * If this value is not set, cardinality can be configured in the field UI.
+   *
+   * @var int|null
+   */
+  public $cardinality;
+
 }

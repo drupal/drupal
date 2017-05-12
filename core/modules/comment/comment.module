@@ -332,18 +332,6 @@ function comment_form_field_ui_display_overview_form_alter(&$form, FormStateInte
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for 'field_storage_config_edit_form'.
- */
-function comment_form_field_storage_config_edit_form_alter(&$form, FormStateInterface $form_state) {
-  if ($form_state->getFormObject()->getEntity()->getType() == 'comment') {
-    // We only support posting one comment at the time so it doesn't make sense
-    // to let the site builder choose anything else.
-    $form['cardinality_container']['cardinality']['#default_value'] = 1;
-    $form['cardinality_container']['#access'] = FALSE;
-  }
-}
-
-/**
  * Implements hook_entity_storage_load().
  *
  * @see \Drupal\comment\Plugin\Field\FieldType\CommentItem::propertyDefinitions()
