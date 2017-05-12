@@ -304,7 +304,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // - to first test all mistakes a developer might make, and assert that the
     //   error responses provide a good DX
     // - to eventually result in a well-formed request that succeeds.
-    $url = $this->getUrl();
+    $url = $this->getEntityResourceUrl();
     $request_options = [];
 
 
@@ -325,7 +325,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response);
     }
     else {
-      $this->assertResourceErrorResponse(404, 'No route found for "GET ' . str_replace($this->baseUrl, '', $this->getUrl()->setAbsolute()->toString()) . '"', $response);
+      $this->assertResourceErrorResponse(404, 'No route found for "GET ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
     }
 
 
@@ -606,7 +606,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // - to first test all mistakes a developer might make, and assert that the
     //   error responses provide a good DX
     // - to eventually result in a well-formed request that succeeds.
-    $url = $this->getPostUrl();
+    $url = $this->getEntityResourcePostUrl();
     $request_options = [];
 
 
@@ -622,7 +622,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 404 when resource not provisioned.
     $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(404, 'No route found for "POST ' . str_replace($this->baseUrl, '', $this->getPostUrl()->setAbsolute()->toString()) . '"', $response);
+    $this->assertResourceErrorResponse(404, 'No route found for "POST ' . str_replace($this->baseUrl, '', $this->getEntityResourcePostUrl()->setAbsolute()->toString()) . '"', $response);
 
 
     $this->provisionEntityResource();
@@ -796,7 +796,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // - to first test all mistakes a developer might make, and assert that the
     //   error responses provide a good DX
     // - to eventually result in a well-formed request that succeeds.
-    $url = $this->getUrl();
+    $url = $this->getEntityResourceUrl();
     $request_options = [];
 
 
@@ -820,10 +820,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 404 when resource not provisioned, 405 if canonical route.
     $response = $this->request('PATCH', $url, $request_options);
     if ($has_canonical_url) {
-      $this->assertResourceErrorResponse(405, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getUrl()->setAbsolute()->toString()) . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
+      $this->assertResourceErrorResponse(405, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
     }
     else {
-      $this->assertResourceErrorResponse(404, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getUrl()->setAbsolute()->toString()) . '"', $response);
+      $this->assertResourceErrorResponse(404, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
     }
 
 
@@ -988,7 +988,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // - to first test all mistakes a developer might make, and assert that the
     //   error responses provide a good DX
     // - to eventually result in a well-formed request that succeeds.
-    $url = $this->getUrl();
+    $url = $this->getEntityResourceUrl();
     $request_options = [];
 
 
@@ -1013,10 +1013,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('DELETE', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
-      $this->assertResourceErrorResponse(405, 'No route found for "DELETE ' . str_replace($this->baseUrl, '', $this->getUrl()->setAbsolute()->toString()) . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
+      $this->assertResourceErrorResponse(405, 'No route found for "DELETE ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
     }
     else {
-      $this->assertResourceErrorResponse(404, 'No route found for "DELETE ' . str_replace($this->baseUrl, '', $this->getUrl()->setAbsolute()->toString()) . '"', $response);
+      $this->assertResourceErrorResponse(404, 'No route found for "DELETE ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
     }
 
     $this->provisionEntityResource();
@@ -1061,7 +1061,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
     $this->refreshTestStateAfterRestConfigChange();
     $this->entity = $this->createEntity();
-    $url = $this->getUrl()->setOption('query', $url->getOption('query'));
+    $url = $this->getEntityResourceUrl()->setOption('query', $url->getOption('query'));
 
 
     // DX: 403 when unauthorized.
@@ -1123,7 +1123,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @return \Drupal\Core\Url
    *   The URL to GET/PATCH/DELETE.
    */
-  protected function getUrl() {
+  protected function getEntityResourceUrl() {
     $has_canonical_url = $this->entity->hasLinkTemplate('canonical');
     return $has_canonical_url ? $this->entity->toUrl() : Url::fromUri('base:entity/' . static::$entityTypeId . '/' . $this->entity->id());
   }
@@ -1134,7 +1134,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @return \Drupal\Core\Url
    *   The URL to POST to.
    */
-  protected function getPostUrl() {
+  protected function getEntityResourcePostUrl() {
     $has_canonical_url = $this->entity->hasLinkTemplate('https://www.drupal.org/link-relations/create');
     return $has_canonical_url ? $this->entity->toUrl() : Url::fromUri('base:entity/' . static::$entityTypeId);
   }
