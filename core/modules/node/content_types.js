@@ -26,7 +26,7 @@
       });
       $context.find('#edit-workflow').drupalSetSummary(function (context) {
         var vals = [];
-        $(context).find('input[name^="options"]:checked').parent().each(function () {
+        $(context).find('input[name^="options"]:checked').next('label').each(function () {
           vals.push(Drupal.checkPlain($(this).text()));
         });
         if (!$(context).find('#edit-options-status').is(':checked')) {
