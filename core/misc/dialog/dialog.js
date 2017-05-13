@@ -74,7 +74,9 @@
       showModal: function () {
         openDialog({modal: true});
       },
-      close: closeDialog
+      close: closeDialog,
+      container: getContainer,
+      options: setOptions
     };
 
     function openDialog(settings) {
@@ -92,6 +94,14 @@
       dialog.returnValue = value;
       dialog.open = false;
       $(window).trigger('dialog:afterclose', [dialog, $element]);
+    }
+
+    function getContainer() {
+      return $element.dialog('widget')[0];
+    }
+
+    function setOptions($options) {
+      $element.dialog('option', $options);
     }
 
     return dialog;
