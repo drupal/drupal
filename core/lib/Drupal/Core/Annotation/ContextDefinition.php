@@ -18,8 +18,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *     "node" = @ContextDefinition("entity:node")
  *   }
  * @endcode
- * Remove spaces after @ in your actual plugin - these are put into this sample
- * code so that it is not recognized as an annotation.
  *
  * To add a label to a context definition use the "label" key:
  * @code
