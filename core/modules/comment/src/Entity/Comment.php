@@ -57,6 +57,7 @@ use Drupal\user\UserInterface;
  *     "canonical" = "/comment/{comment}",
  *     "delete-form" = "/comment/{comment}/delete",
  *     "edit-form" = "/comment/{comment}/edit",
+ *     "create" = "/comment",
  *   },
  *   bundle_entity_type = "comment_type",
  *   field_ui_base_route  = "entity.comment_type.edit_form",

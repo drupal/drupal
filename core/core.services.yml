@@ -1145,7 +1145,7 @@ services:
     class: Drupal\Core\Access\CsrfRequestHeaderAccessCheck
     arguments: ['@session_configuration', '@csrf_token']
     tags:
-      - { name: access_check }
+      - { name: access_check, needs_incoming_request: TRUE }
   maintenance_mode:
     class: Drupal\Core\Site\MaintenanceMode
     arguments: ['@state', '@current_user']

@@ -74,6 +74,7 @@ use Drupal\user\UserInterface;
  *     "edit-form" = "/node/{node}/edit",
  *     "version-history" = "/node/{node}/revisions",
  *     "revision" = "/node/{node}/revisions/{node_revision}/view",
+ *     "create" = "/node",
  *   }
  * )
  */

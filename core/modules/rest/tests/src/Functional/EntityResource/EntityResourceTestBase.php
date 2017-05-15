@@ -679,8 +679,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // missing ?_format query string.
     $response = $this->request('POST', $url, $request_options);
     $this->assertSame(415, $response->getStatusCode());
-    $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
-    $this->assertContains(htmlspecialchars('No "Content-Type" request header specified'), (string) $response->getBody());
+    $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+    $this->assertContains('A client error happened', (string) $response->getBody());
 
 
     $url->setOption('query', ['_format' => static::$format]);
@@ -814,6 +814,17 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertSame([], $response->getHeader('Location'));
     }
     $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+
+    // BC: old default POST URLs have their path updated by the inbound path
+    // processor \Drupal\rest\PathProcessor\PathProcessorEntityResourceBC to the
+    // new URL, which is derived from the 'create' link template if an entity
+    // type specifies it.
+    if ($this->entity->getEntityType()->hasLinkTemplate('create')) {
+      $this->entityStorage->load(static::$secondCreatedEntityId)->delete();
+      $old_url = Url::fromUri('base:entity/' . static::$entityTypeId);
+      $response = $this->request('POST', $old_url, $request_options);
+      $this->assertResourceResponse(201, FALSE, $response);
+    }
   }
 
   /**
@@ -851,7 +862,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     if ($has_canonical_url) {
       $this->assertSame(405, $response->getStatusCode());
       $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
-      $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
+      $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+      $this->assertContains('A client error happened', (string) $response->getBody());
     }
     else {
       $this->assertSame(404, $response->getStatusCode());
@@ -880,8 +892,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 415 when no Content-Type request header.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertSame(415, $response->getStatusCode());
-    $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
-    $this->assertTrue(FALSE !== strpos((string) $response->getBody(), htmlspecialchars('No "Content-Type" request header specified')));
+    $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+    $this->assertContains('A client error happened', (string) $response->getBody());
 
 
     $url->setOption('query', ['_format' => static::$format]);
@@ -1039,7 +1051,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     if ($has_canonical_url) {
       $this->assertSame(405, $response->getStatusCode());
       $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
-      $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
+      $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
+      $this->assertContains('A client error happened', (string) $response->getBody());
     }
     else {
       $this->assertSame(404, $response->getStatusCode());
@@ -1174,8 +1187,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *   The URL to POST to.
    */
   protected function getEntityResourcePostUrl() {
-    $has_canonical_url = $this->entity->hasLinkTemplate('https://www.drupal.org/link-relations/create');
-    return $has_canonical_url ? $this->entity->toUrl() : Url::fromUri('base:entity/' . static::$entityTypeId);
+    $has_create_url = $this->entity->hasLinkTemplate('create');
+    return $has_create_url ? Url::fromUri('internal:' . $this->entity->getEntityType()->getLinkTemplate('create')) : Url::fromUri('base:entity/' . static::$entityTypeId);
   }
 
   /**

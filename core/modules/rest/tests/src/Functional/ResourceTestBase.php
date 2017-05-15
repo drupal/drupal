@@ -321,6 +321,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * 'http_errors = FALSE' request option, nor do we want them to have to
    * convert Drupal Url objects to strings.
    *
+   * We also don't want to follow redirects automatically, to ensure these tests
+   * are able to detect when redirects are added or removed.
+   *
    * @see \GuzzleHttp\ClientInterface::request()
    *
    * @param string $method
@@ -334,6 +337,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    */
   protected function request($method, Url $url, array $request_options) {
     $request_options[RequestOptions::HTTP_ERRORS] = FALSE;
+    $request_options[RequestOptions::ALLOW_REDIRECTS] = FALSE;
     $request_options = $this->decorateWithXdebugCookie($request_options);
     $client = $this->getSession()->getDriver()->getClient()->getClient();
     return $client->request($method, $url->setAbsolute(TRUE)->toString(), $request_options);

@@ -31,3 +31,15 @@ services:
     arguments: ['@router.builder']
     tags:
       - { name: event_subscriber }
+  rest.resource.entity.post_route.subscriber:
+    class: \Drupal\rest\EventSubscriber\EntityResourcePostRouteSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: event_subscriber }
+
+  # @todo Remove in Drupal 9.0.0.
+  rest.path_processor_entity_resource_bc:
+    class: \Drupal\rest\PathProcessor\PathProcessorEntityResourceBC
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: path_processor_inbound }

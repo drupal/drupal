@@ -46,6 +46,7 @@ use Drupal\taxonomy\TermInterface;
  *     "canonical" = "/taxonomy/term/{taxonomy_term}",
  *     "delete-form" = "/taxonomy/term/{taxonomy_term}/delete",
  *     "edit-form" = "/taxonomy/term/{taxonomy_term}/edit",
+ *     "create" = "/taxonomy/term",
  *   },
  *   permission_granularity = "bundle"
  * )

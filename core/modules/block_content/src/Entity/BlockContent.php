@@ -42,6 +42,7 @@ use Drupal\user\UserInterface;
  *     "delete-form" = "/block/{block_content}/delete",
  *     "edit-form" = "/block/{block_content}",
  *     "collection" = "/admin/structure/block/block-content",
+ *     "create" = "/block",
  *   },
  *   translatable = TRUE,
  *   entity_keys = {
