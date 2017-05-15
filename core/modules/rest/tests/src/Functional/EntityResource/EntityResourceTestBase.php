@@ -435,14 +435,23 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
             ':pattern' => '%[route]=rest.%',
           ])
           ->fetchAllAssoc('cid');
+        $this->assertCount(2, $cache_items);
+        $found_cache_redirect = FALSE;
+        $found_cached_response = FALSE;
         foreach ($cache_items as $cid => $cache_item) {
           $cached_data = unserialize($cache_item->data);
           if (!isset($cached_data['#cache_redirect'])) {
+            $found_cached_response = TRUE;
             $cached_response = $cached_data['#response'];
             $this->assertNotInstanceOf(ResourceResponseInterface::class, $cached_response);
             $this->assertInstanceOf(CacheableResponseInterface::class, $cached_response);
           }
+          else {
+            $found_cache_redirect = TRUE;
+          }
         }
+        $this->assertTrue($found_cache_redirect);
+        $this->assertTrue($found_cached_response);
       }
     }
     else {
