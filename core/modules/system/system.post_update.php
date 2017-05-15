@@ -65,6 +65,14 @@ function system_post_update_hashes_clear_cache() {
 function system_post_update_timestamp_plugins() {
   // Empty post-update hook.
 }
+
+/**
+ * Clear caches to ensure Classy's message library is always added.
+ */
+function system_post_update_classy_message_library() {
+  // Empty post-update hook.
+}
+
 /**
  * Force field type plugin definitions to be cleared.
  *

@@ -8,6 +8,7 @@ hidden: true
 
 libraries:
   - classy/base
+  - classy/messages
   - core/normalize
 
 libraries-extend:

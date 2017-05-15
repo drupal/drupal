@@ -9,7 +9,6 @@ namespace Drupal\big_pipe\Tests;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -88,33 +87,14 @@ class BigPipePlaceholderTestCases {
     if ($container && $user) {
       $status_messages->embeddedAjaxResponseCommands = [
         [
-          'command' => 'settings',
-          'settings' => [
-            'ajaxPageState' => [
-              'theme' => 'classy',
-              'libraries' => 'big_pipe/big_pipe,classy/base,classy/messages,core/drupal.active-link,core/html5shiv,core/normalize,system/base',
-            ],
-            'pluralDelimiter' => PluralTranslatableMarkup::DELIMITER,
-            'user' => [
-              'uid' => '1',
-              'permissionsHash' => $container->get('user_permissions_hash_generator')->generate($user),
-            ],
-          ],
-          'merge' => TRUE,
-        ],
-        [
-          'command' => 'add_css',
-          'data' => '<link rel="stylesheet" href="' . base_path() . 'core/themes/classy/css/components/messages.css?' . $container->get('state')->get('system.css_js_query_string') . '" media="all" />' . "\n"
-        ],
-        [
           'command' => 'insert',
           'method' => 'replaceWith',
           'selector' => '[data-big-pipe-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&args%5B0%5D&token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"]',
-          'data' => "\n" . '    <div role="contentinfo" aria-label="Status message" class="messages messages--status">' . "\n" . '                  <h2 class="visually-hidden">Status message</h2>' . "\n" . '                    Hello from BigPipe!' . "\n" . '            </div>' . "\n    ",
+          'data' => '    <div role="contentinfo" aria-label="Status message" class="messages messages--status">' . "\n" . '                  <h2 class="visually-hidden">Status message</h2>' . "\n" . '                    Hello from BigPipe!' . "\n" . '            </div>' . "\n    ",
           'settings' => NULL,
         ],
       ];
-      $status_messages->embeddedHtmlResponse = '<link rel="stylesheet" href="' . base_path() . 'core/themes/classy/css/components/messages.css?' . $container->get('state')->get('system.css_js_query_string') . '" media="all" />' . "\n" . "\n" . '    <div role="contentinfo" aria-label="Status message" class="messages messages--status">' . "\n" . '                  <h2 class="visually-hidden">Status message</h2>' . "\n" . '                    Hello from BigPipe!' . "\n" . '            </div>' . "\n    \n";
+      $status_messages->embeddedHtmlResponse = '<div role="contentinfo" aria-label="Status message" class="messages messages--status">' . "\n" . '                  <h2 class="visually-hidden">Status message</h2>' . "\n" . '                    Hello from BigPipe!' . "\n" . '            </div>' . "\n    \n";
     }
 
 
