@@ -358,7 +358,7 @@ class PageCache implements HttpKernelInterface {
    */
   protected function getCacheId(Request $request) {
     $cid_parts = [
-      $request->getUri(),
+      $request->getSchemeAndHttpHost() . $request->getRequestUri(),
       $request->getRequestFormat(),
     ];
     return implode(':', $cid_parts);

@@ -539,4 +539,44 @@ class PageCacheTest extends WebTestBase {
     $this->assertEqual('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">baz</em>', $response_body);
   }
 
+  /**
+   * Test that URLs are cached in a not normalized form.
+   */
+  public function testNoUrlNormalization() {
+
+    // Use absolute URLs to avoid any processing.
+    $url = Url::fromRoute('<front>')->setAbsolute()->toString();
+
+    // In each test, the first array value is raw URL, the second one is the
+    // possible normalized URL.
+    $tests = [
+      [
+        $url . '?z=z&a=a',
+        $url . '?a=a&z=z',
+      ],
+      [
+        $url . '?',
+        $url . '',
+      ],
+      [
+        $url . '?a=b+c',
+        $url . '?a=b%20c',
+      ],
+    ];
+
+    foreach ($tests as list($url_raw, $url_normalized)) {
+
+      // Initialize cache on raw URL.
+      $this->drupalGet($url_raw);
+      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+      // Ensure cache was set.
+      $this->drupalGet($url_raw);
+      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', "Cache was set for {$url_raw} URL.");
+
+      // Check if the normalized URL is not cached.
+      $this->drupalGet($url_normalized);
+      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', "Cache is missing for {$url_normalized} URL.");
+    }
+  }
+
 }
