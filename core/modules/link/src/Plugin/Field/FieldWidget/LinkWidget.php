@@ -72,8 +72,9 @@ class LinkWidget extends WidgetBase {
     elseif ($scheme === 'entity') {
       list($entity_type, $entity_id) = explode('/', substr($uri, 7), 2);
       // Show the 'entity:' URI as the entity autocomplete would.
-      $entity_manager = \Drupal::entityManager();
-      if ($entity_manager->getDefinition($entity_type, FALSE) && $entity = \Drupal::entityManager()->getStorage($entity_type)->load($entity_id)) {
+      // @todo Support entity types other than 'node'. Will be fixed in
+      //    https://www.drupal.org/node/2423093.
+      if ($entity_type == 'node' && $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id)) {
         $displayable_string = EntityAutocomplete::getEntityLabels([$entity]);
       }
     }
