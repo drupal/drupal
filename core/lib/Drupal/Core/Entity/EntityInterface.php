@@ -110,6 +110,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @deprecated in Drupal 8.0.0, intended to be removed in Drupal 9.0.0
    *   Use \Drupal\Core\Entity\EntityInterface::toUrl() instead.
    *
+   * @see https://www.drupal.org/node/2614344
    * @see \Drupal\Core\Entity\EntityInterface::toUrl
    */
   public function urlInfo($rel = 'canonical', array $options = []);
@@ -167,6 +168,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @deprecated in Drupal 8.0.0, intended to be removed in Drupal 9.0.0
    *   Please use toUrl() instead.
    *
+   * @see https://www.drupal.org/node/2614344
    * @see \Drupal\Core\Entity\EntityInterface::toUrl
    */
   public function url($rel = 'canonical', $options = []);
@@ -189,6 +191,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @deprecated in Drupal 8.0.0, intended to be removed in Drupal 9.0.0
    *   Please use toLink() instead.
    *
+   * @see https://www.drupal.org/node/2614344
    * @see \Drupal\Core\Entity\EntityInterface::toLink
    */
   public function link($text = NULL, $rel = 'canonical', array $options = []);
