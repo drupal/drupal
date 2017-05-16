@@ -33,6 +33,7 @@ class ManageDisplayTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('local_tasks_block');
 
     // Create a test user.
     $admin_user = $this->drupalCreateUser(['access content', 'administer content types', 'administer node fields', 'administer node form display', 'administer node display', 'administer taxonomy', 'administer taxonomy_term fields', 'administer taxonomy_term display', 'administer users', 'administer account settings', 'administer user display', 'bypass node access']);
@@ -403,8 +404,11 @@ class ManageDisplayTest extends WebTestBase {
     $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
     $this->drupalGet($manage_display);
     $this->assertNoLink('Full content');
+    $this->assertLink('Teaser');
+
     $this->drupalGet($manage_display . '/teaser');
     $this->assertNoLink('Full content');
+    $this->assertLink('Default');
   }
 
   /**
