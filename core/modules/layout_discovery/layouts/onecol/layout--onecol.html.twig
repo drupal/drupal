@@ -11,14 +11,15 @@
  */
 #}
 {%
-set classes = [
-'layout--onecol',
-]
+  set classes = [
+    'layout',
+    'layout--onecol',
+  ]
 %}
 {% if content %}
-<div{{ attributes.addClass(classes) }}>
-  <div class="layout-region layout-region--content">
-    {{ content.content }}
+  <div{{ attributes.addClass(classes) }}>
+    <div class="layout__region layout__region--content">
+      {{ content.content }}
+    </div>
   </div>
-</div>
 {% endif %}

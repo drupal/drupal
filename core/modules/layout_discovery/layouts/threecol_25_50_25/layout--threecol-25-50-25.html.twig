@@ -14,34 +14,41 @@
  */
 #}
 {%
-set classes = [
-'layout--threecol',
-]
+  set classes = [
+    'layout',
+    'layout--threecol-25-50-25',
+  ]
 %}
 {% if content %}
-<div{{ attributes.addClass(classes) }}>
-  {% if content.top %}
-    <div class="layout-region layout-region--fullwidth">
-      {{ content.top }}
-    </div>
-  {% endif %}
+  <div{{ attributes.addClass(classes) }}>
+    {% if content.top %}
+      <div class="layout__region layout__region--top">
+        {{ content.top }}
+      </div>
+    {% endif %}
 
-  <div class="layout-region layout-region--side">
-    {{ content.left }}
+    {% if content.first %}
+      <div class="layout__region layout__region--first">
+        {{ content.first }}
+      </div>
+    {% endif %}
+
+    {% if content.second %}
+      <div class="layout__region layout__region--second">
+        {{ content.second }}
+      </div>
+    {% endif %}
+
+    {% if content.third %}
+      <div class="layout__region layout__region--third">
+        {{ content.third }}
+      </div>
+    {% endif %}
+
+    {% if content.bottom %}
+      <div class="layout__region layout__region--bottom">
+        {{ content.bottom }}
+      </div>
+    {% endif %}
   </div>
-
-  <div class="layout-region layout-region--middle">
-    {{ content.middle }}
-  </div>
-
-  <div class="layout-region layout-region--side">
-    {{ content.right }}
-  </div>
-
-  {% if content.bottom %}
-    <div class="layout-region layout-region--fullwidth">
-      {{ content.bottom }}
-    </div>
-  {% endif %}
-</div>
 {% endif %}

@@ -1,17 +1,26 @@
-.layout--threecol {
+/*
+ * @file
+ * Provides the layout styles for layout_threecol_25_50_25.
+ *
+ * @todo Using display: flex requires https://www.drupal.org/node/2842298 to be
+ * in before this can be marked as stable.
+ */
+.layout--threecol-25-50-25 {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
 }
 
-.layout--threecol > .layout-region {
-  flex: 0 1 25%;
-}
-
-.layout--threecol > .layout-region--fullwidth {
+.layout--threecol-25-50-25 > .layout__region,
+.layout--threecol-25-50-25 > .layout__region--second {
   flex: 0 1 100%;
 }
 
-.layout--threecol > .layout-region--middle {
-  flex: 0 1 50%;
+@media screen and (min-width: 40em) {
+  .layout--threecol-25-50-25 > .layout__region--first,
+  .layout--threecol-25-50-25 > .layout__region--third {
+    flex: 0 1 25%;
+  }
+  .layout--threecol-25-50-25 > .layout__region--second {
+    flex: 0 1 50%;
+  }
 }

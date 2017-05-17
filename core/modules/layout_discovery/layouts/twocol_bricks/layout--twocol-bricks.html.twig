@@ -14,38 +14,53 @@
  */
 #}
 {%
-set classes = [
-'layout--twocol-bricks',
-]
+  set classes = [
+    'layout',
+    'layout--twocol-bricks',
+  ]
 %}
 {% if content %}
-<div{{ attributes.addClass(classes) }}>
-  <div class="layout-region layout-region--fullwidth">
-    {{ content.top }}
-  </div>
+  <div{{ attributes.addClass(classes) }}>
+    {% if content.top %}
+      <div class="layout__region layout__region--top">
+        {{ content.top }}
+      </div>
+    {% endif %}
 
-  <div class="layout-region layout-region--left_above">
-    {{ content.left_above }}
-  </div>
+    {% if content.first_above %}
+      <div class="layout__region layout__region--first-above">
+        {{ content.first_above }}
+      </div>
+    {% endif %}
 
-  <div class="layout-region layout-region--right_above">
-    {{ content.right_above }}
-  </div>
+    {% if content.second_above %}
+      <div class="layout__region layout__region--second-above">
+        {{ content.second_above }}
+      </div>
+    {% endif %}
 
-  <div class="layout-region layout-region--middle">
-    {{ content.middle }}
-  </div>
+    {% if content.middle %}
+      <div class="layout__region layout__region--middle">
+        {{ content.middle }}
+      </div>
+    {% endif %}
 
-  <div class="layout-region layout-region--left_below">
-    {{ content.left_below }}
-  </div>
+    {% if content.first_below %}
+      <div class="layout__region layout__region--first-below">
+        {{ content.first_below }}
+      </div>
+    {% endif %}
 
-  <div class="layout-region layout-region--right_below">
-    {{ content.right_below }}
-  </div>
+    {% if content.second_below %}
+      <div class="layout__region layout__region--second-below">
+        {{ content.second_below }}
+      </div>
+    {% endif %}
 
-  <div class="layout-region layout-region--fullwidth">
-    {{ content.bottom }}
+    {% if content.bottom %}
+      <div class="layout__region layout__region--bottom">
+        {{ content.bottom }}
+      </div>
+    {% endif %}
   </div>
-</div>
 {% endif %}
