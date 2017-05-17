@@ -50,7 +50,7 @@ class FieldLayoutTest extends BrowserTestBase {
     // By default, the one-column layout is used.
     $this->drupalGet('node/1');
     $this->assertSession()->elementExists('css', '.layout--onecol');
-    $this->assertSession()->elementExists('css', '.layout-region--content .field--name-body');
+    $this->assertSession()->elementExists('css', '.layout__region--content .field--name-body');
 
     $this->drupalGet('admin/structure/types/manage/article/display');
     $this->assertEquals(['Content', 'Disabled'], $this->getRegionTitles());

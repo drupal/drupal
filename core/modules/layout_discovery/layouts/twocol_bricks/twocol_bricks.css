@@ -1,13 +1,25 @@
+/*
+ * @file
+ * Provides the layout styles for layout_twocol_bricks.
+ *
+ * @todo Using display: flex requires https://www.drupal.org/node/2842298 to be
+ * in before this can be marked as stable.
+ */
+
 .layout--twocol-bricks {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
 }
 
-.layout--twocol-bricks > .layout-region {
-  flex: 0 1 50%;
-}
-
-.layout--twocol-bricks > .layout-region--fullwidth {
+.layout--twocol-bricks > .layout__region {
   flex: 0 1 100%;
+}
+
+@media screen and (min-width: 40em) {
+  .layout--twocol-bricks > .layout__region--first-above,
+  .layout--twocol-bricks > .layout__region--second-above,
+  .layout--twocol-bricks > .layout__region--first-below,
+  .layout--twocol-bricks > .layout__region--second-below {
+    flex: 0 1 50%;
+  }
 }
