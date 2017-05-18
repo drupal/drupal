@@ -5,6 +5,7 @@ namespace Drupal\Tests\system\Functional\System;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\system\SystemRequirements;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Tests output on the status overview page.
@@ -89,6 +90,15 @@ class StatusTest extends BrowserTestBase {
 
     $this->drupalGet('admin/reports/status/php');
     $this->assertResponse(200, 'The phpinfo page is reachable.');
+
+    // Check if cron error is displayed in errors section
+    $cron_last_run = \Drupal::state()->get('system.cron_last');
+    \Drupal::state()->set('system.cron_last', 0);
+    $this->drupalGet('admin/reports/status');
+    $css_selector_converter = new CssSelectorConverter();
+    $xpath = $css_selector_converter->toXPath('details.system-status-report__entry') . '//div[contains(text(), "Cron has not run recently")]';
+    $this->assertNotEmpty($this->xpath($xpath), 'Cron has not run recently error is being displayed.');
+    \Drupal::state()->set('system.cron_last', $cron_last_run);
   }
 
 }
