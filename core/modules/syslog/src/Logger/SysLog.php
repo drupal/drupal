@@ -53,9 +53,6 @@ class SysLog implements LoggerInterface {
   protected function openConnection() {
     if (!$this->connectionOpened) {
       $facility = $this->config->get('facility');
-      if ($facility === '') {
-        $facility = defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER;
-      }
       $this->connectionOpened = openlog($this->config->get('identity'), LOG_NDELAY, $facility);
     }
   }
