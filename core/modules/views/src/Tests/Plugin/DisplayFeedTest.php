@@ -149,4 +149,24 @@ class DisplayFeedTest extends PluginTestBase {
     $this->assertResponse(404);
   }
 
+  /**
+   * Tests that the feed display works when the linked display is disabled.
+   */
+  public function testDisabledLinkedDisplay() {
+    $view = Views::getView('test_attached_disabled');
+    $view->setDisplay();
+    // Disable the page and link the feed to the page.
+    $view->displayHandlers->get('feed_1')->setOption('link_display', 'page_1');
+    $view->displayHandlers->get('page_1')->setOption('enabled', FALSE);
+    $view->save();
+
+    \Drupal::service('router.builder')->rebuild();
+
+    $this->drupalGet('test-attached-disabled');
+    $this->assertResponse(404);
+    // Ensure the feed can still be reached.
+    $this->drupalGet('test-attached-disabled.xml');
+    $this->assertResponse(200);
+  }
+
 }
