@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "babel-core": "6.24.1",
+    "babel-plugin-add-header-comment": "1.0.3",
     "babel-preset-env": "1.4.0",
     "chokidar": "1.6.1",
     "cross-env": "^4.0.0",
