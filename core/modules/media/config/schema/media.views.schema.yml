@@ -1,0 +1,5 @@
+# Schema for the views plugins of the Media module.
+
+views.field.media_bulk_form:
+  type: views_field_bulk_form
+  label: 'Media bulk form'

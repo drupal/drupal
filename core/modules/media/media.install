@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Install, uninstall and update hooks for Media module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function media_install() {
+  $source = drupal_get_path('module', 'media') . '/images/icons';
+  $destination = \Drupal::config('media.settings')->get('icon_base_uri');
+  file_prepare_directory($destination, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+
+  $files = file_scan_directory($source, '/.*\.(svg|png|jpg|jpeg|gif)$/');
+  foreach ($files as $file) {
+    file_unmanaged_copy($file->uri, $destination, FILE_EXISTS_ERROR);
+  }
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function media_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'install') {
+    $destination = 'public://media-icons/generic';
+    file_prepare_directory($destination, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $is_writable = is_writable($destination);
+    $is_directory = is_dir($destination);
+    if (!$is_writable || !$is_directory) {
+      if (!$is_directory) {
+        $error = t('The directory %directory does not exist.', ['%directory' => $destination]);
+      }
+      else {
+        $error = t('The directory %directory is not writable.', ['%directory' => $destination]);
+      }
+      $description = t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', [':handbook_url' => 'https://www.drupal.org/server-permissions']);
+      if (!empty($error)) {
+        $description = $error . ' ' . $description;
+        $requirements['media']['description'] = $description;
+        $requirements['media']['severity'] = REQUIREMENT_ERROR;
+      }
+    }
+  }
+  return $requirements;
+}

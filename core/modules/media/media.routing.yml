@@ -1,0 +1,6 @@
+entity.media.multiple_delete_confirm:
+  path: '/admin/content/media/delete'
+  defaults:
+    _form: '\Drupal\media\Form\MediaDeleteMultipleConfirmForm'
+  requirements:
+    _permission: 'administer media+delete any media'

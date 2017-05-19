@@ -62,7 +62,7 @@ function path_form_node_form_alter(&$form, FormStateInterface $form_state) {
  * Implements hook_entity_base_field_info().
  */
 function path_entity_base_field_info(EntityTypeInterface $entity_type) {
-  if ($entity_type->id() === 'taxonomy_term' || $entity_type->id() === 'node') {
+  if (in_array($entity_type->id(), ['taxonomy_term', 'node', 'media'], TRUE)) {
     $fields['path'] = BaseFieldDefinition::create('path')
       ->setLabel(t('URL alias'))
       ->setTranslatable(TRUE)

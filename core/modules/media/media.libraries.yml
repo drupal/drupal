@@ -1,0 +1,13 @@
+media_form:
+  version: VERSION
+  js:
+    js/media_form.js: {}
+  dependencies:
+    - core/drupal.form
+
+media_type_form:
+  version: VERSION
+  js:
+    js/media_type_form.js: {}
+  dependencies:
+    - core/drupal.form

@@ -1,0 +1,4 @@
+services:
+  plugin.manager.media.source:
+    class: Drupal\media\MediaSourceManager
+    parent: default_plugin_manager

@@ -1,0 +1,8 @@
+name: 'Media test type'
+type: module
+description: 'Provides test type for a media item.'
+core: 8.x
+package: Testing
+version: VERSION
+dependencies:
+  - media_test_source

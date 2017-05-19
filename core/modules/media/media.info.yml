@@ -1,0 +1,10 @@
+name: Media
+description: 'Create reusable media.'
+type: module
+package: Core (Experimental)
+version: VERSION
+core: 8.x
+dependencies:
+  - file
+  - image
+  - user

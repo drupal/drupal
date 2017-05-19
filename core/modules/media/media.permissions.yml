@@ -1,0 +1,25 @@
+administer media:
+  title: 'Administer media'
+  restrict access: TRUE
+
+administer media types:
+  title: 'Administer media types'
+  restrict access: TRUE
+
+view media:
+  title: 'View media'
+
+update media:
+  title: 'Update own media'
+
+update any media:
+  title: 'Update any media'
+
+delete media:
+  title:  'Delete own media'
+
+delete any media:
+  title:  'Delete any media'
+
+create media:
+  title: 'Create media'

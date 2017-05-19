@@ -114,6 +114,7 @@
         "drupal/link": "self.version",
         "drupal/locale": "self.version",
         "drupal/minimal": "self.version",
+        "drupal/media": "self.version",
         "drupal/menu_link_content": "self.version",
         "drupal/menu_ui": "self.version",
         "drupal/migrate": "self.version",
