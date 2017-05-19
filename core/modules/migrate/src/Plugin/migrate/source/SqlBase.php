@@ -234,6 +234,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       //      OR above high water).
       $conditions = $this->query->orConditionGroup();
       $condition_added = FALSE;
+      $added_fields = [];
       if (empty($this->configuration['ignore_map']) && $this->mapJoinable()) {
         // Build the join to the map table. Because the source key could have
         // multiple fields, we need to build things up.
@@ -259,14 +260,17 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
         for ($count = 1; $count <= $n; $count++) {
           $map_key = 'sourceid' . $count;
           $this->query->addField($alias, $map_key, "migrate_map_$map_key");
+          $added_fields[] = "$alias.$map_key";
         }
         if ($n = count($this->migration->getDestinationIds())) {
           for ($count = 1; $count <= $n; $count++) {
             $map_key = 'destid' . $count++;
             $this->query->addField($alias, $map_key, "migrate_map_$map_key");
+            $added_fields[] = "$alias.$map_key";
           }
         }
         $this->query->addField($alias, 'source_row_status', 'migrate_map_source_row_status');
+        $added_fields[] = "$alias.source_row_status";
       }
       // 2. If we are using high water marks, also include rows above the mark.
       //    But, include all rows if the high water mark is not set.
@@ -278,6 +282,15 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       }
       if ($condition_added) {
         $this->query->condition($conditions);
+      }
+      // If the query has a group by, our added fields need it too, to keep the
+      // query valid.
+      // @see https://dev.mysql.com/doc/refman/5.7/en/group-by-handling.html
+      $group_by = $this->query->getGroupBy();
+      if ($group_by && $added_fields) {
+        foreach ($added_fields as $added_field) {
+          $this->query->groupBy($added_field);
+        }
       }
     }
 
