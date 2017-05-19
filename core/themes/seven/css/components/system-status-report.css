@@ -22,7 +22,7 @@
 .system-status-report__entry--warning {
   background-color: transparent;
 }
-  /* Account for native and poly-filled details element */
+/* Account for native and poly-filled details element */
 .system-status-report__status-title {
   position: relative;
   padding: 1em 1em 1em 3em; /* LTR */

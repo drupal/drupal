@@ -17,14 +17,14 @@
   position: relative;
 }
 
-@media screen and (max-width:600px) {
+@media screen and (max-width: 600px) {
   .js .dropbutton-wrapper {
     width: 100%;
   }
 }
 
 /* Splitbuttons */
-@media screen and (min-width:600px) {
+@media screen and (min-width: 600px) {
   .form-actions .dropbutton-wrapper {
     float: left; /* LTR */
   }

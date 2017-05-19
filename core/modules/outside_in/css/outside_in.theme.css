@@ -97,7 +97,7 @@
 .ui-dialog-outside-in details,
 .ui-dialog-outside-in .form-item {
   color: #ddd;
-  font-family: "Lucida Grande", 'Lucida Sans Unicode','liberation sans', sans-serif;
+  font-family: "Lucida Grande", 'Lucida Sans Unicode', 'liberation sans', sans-serif;
   font-size: 14px;
   font-weight: normal;
   background-color: transparent;
@@ -106,7 +106,7 @@
 .ui-dialog-outside-in a,
 .ui-dialog-outside-in .link {
   border-bottom: none;
-  font-family: "Lucida Grande", 'Lucida Sans Unicode','liberation sans', sans-serif;
+  font-family: "Lucida Grande", 'Lucida Sans Unicode', 'liberation sans', sans-serif;
   font-size: 14px;
   font-weight: normal;
   color: #85bef4;
@@ -234,7 +234,6 @@
 .ui-dialog-outside-in .button--primary:focus {
   background: #2b8bd8;
 }
-
 
 /*
  * Visual styling for dropbutton in the Settings Tray module's off canvas tray.

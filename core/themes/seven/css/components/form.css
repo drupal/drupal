@@ -127,7 +127,6 @@ label[for] {
   padding: 0.25em 0.666em 0;
 }
 
-
 /* Filter */
 ul.tips,
 div.description,
@@ -254,8 +253,9 @@ select {
   }
   select:focus,
   select:hover {
-    background-image: url(../../../../misc/icons/333333/caret-down.svg),
-    -webkit-linear-gradient(top, #fcfcfa, #e9e9dd);
+    background-image:
+      url(../../../../misc/icons/333333/caret-down.svg),
+      -webkit-linear-gradient(top, #fcfcfa, #e9e9dd);
     color: #1a1a1a;
   }
   select:hover {

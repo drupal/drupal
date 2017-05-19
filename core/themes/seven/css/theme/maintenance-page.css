@@ -135,7 +135,9 @@
     padding: 1em 0;
     vertical-align: middle;
   }
-  html, .install-page, .maintenance-page {
+  html,
+  .install-page,
+  .maintenance-page {
     margin: 0;
     width: 100%;
     height: 100%;

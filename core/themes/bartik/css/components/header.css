@@ -21,7 +21,7 @@
   }
   .region-header .site-branding {
     float: left; /* LTR */
-   /* margin-bottom: 1.857em;*/
+    /* margin-bottom: 1.857em; */
   }
   [dir="rtl"] .region-header .site-branding {
     float: right;

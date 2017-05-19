@@ -24,7 +24,7 @@ a.block-demo-backlink:visited {
   font-family: "Lucida Grande", Verdana, sans-serif;
   font-size: small;
   line-height: 20px;
-  left: 20px; /*LTR*/
+  left: 20px; /* LTR */
   padding: 5px 10px;
   position: fixed;
   z-index: 499;

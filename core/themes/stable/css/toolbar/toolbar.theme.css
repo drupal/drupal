@@ -20,7 +20,8 @@
   line-height: 1em;
   text-decoration: none;
 }
-.toolbar .toolbar-item:hover, .toolbar .toolbar-item:focus {
+.toolbar .toolbar-item:hover,
+.toolbar .toolbar-item:focus {
   text-decoration: underline;
 }
 
@@ -93,8 +94,7 @@
 .toolbar-tray a:hover,
 .toolbar-tray a:active,
 .toolbar-tray a:focus,
-.toolbar-tray a.is-active
- {
+.toolbar-tray a.is-active {
   color: #000;
   text-decoration: underline;
 }
@@ -105,7 +105,7 @@
   border-left: 1px solid #dddddd; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-horizontal .menu-item + .menu-item {
-  border-left: 0 none ;
+  border-left: 0 none;
   border-right: 1px solid #dddddd;
 }
 .toolbar .toolbar-tray-horizontal .menu-item:last-child {

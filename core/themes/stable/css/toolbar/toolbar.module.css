@@ -111,7 +111,7 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
 /* This min-width media query is meant to provide basic horizontal layout to
  * the main menu tabs when JavaScript is disabled on user agents that understand
  * media queries. */
-@media (min-width:16.5em) {
+@media (min-width: 16.5em) {
   .toolbar .toolbar-bar .toolbar-tab,
   .toolbar .toolbar-tray-horizontal li {
     float: left; /* LTR */
@@ -171,7 +171,7 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   right: 0;
 }
 /* Layer the links just above the toolbar-tray. */
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon{
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
   position: relative;
   z-index: 502;
 }

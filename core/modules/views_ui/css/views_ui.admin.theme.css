@@ -158,7 +158,7 @@ details.box-padding {
 
 /* Hide 'remove' checkboxes. */
 .views-remove-checkbox {
-    display: none;
+  display: none;
 }
 
 /* sizes the labels of checkboxes and radio button to the height of the text */
@@ -345,7 +345,7 @@ td.group-title {
   padding: 0;
   width: auto;
 }
-.views-displays .tabs li.add ul.action-list li{
+.views-displays .tabs li.add ul.action-list li {
   margin: 0;
 }
 .views-displays .tabs.secondary li {
@@ -402,7 +402,7 @@ td.group-title {
   color: #0074bd;
   background-color: #f1f1f1;
 }
-.views-displays .tabs .action-list  li {
+.views-displays .tabs .action-list li {
   background-color: #f1f1f1;
   border-color: #cbcbcb;
   border-style: solid;
@@ -412,10 +412,10 @@ td.group-title {
 .views-displays .tabs .action-list li:first-child {
   border-width: 1px 1px 0;
 }
-.views-displays .action-list  li:last-child {
+.views-displays .action-list li:last-child {
   border-width: 0 1px 1px;
 }
-.views-displays .tabs .action-list  li:last-child {
+.views-displays .tabs .action-list li:last-child {
   border-width: 0 1px 1px;
 }
 .views-displays .tabs .action-list input.form-submit {
@@ -483,7 +483,7 @@ td.group-title {
 .view-preview-form .form-actions {
   vertical-align: top;
 }
-@media screen and (min-width:45em) { /* 720px */
+@media screen and (min-width: 45em) { /* 720px */
   .view-preview-form .form-type-textfield .description {
     white-space: nowrap;
   }

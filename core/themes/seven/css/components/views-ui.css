@@ -74,7 +74,6 @@ details.fieldset-no-legend {
   margin-right: 1.5em;
 }
 
-
 .views-admin-dependent .form-item .form-item,
 .views-admin-dependent .form-type-checkboxes,
 .views-admin-dependent .form-type-radios,
@@ -169,7 +168,7 @@ details.fieldset-no-legend {
  */
 
 .views-displays .secondary {
- text-align: left; /* LTR */
+  text-align: left; /* LTR */
 }
 [dir="rtl"] .views-displays .secondary {
   text-align: right;
@@ -193,14 +192,14 @@ details.fieldset-no-legend {
   color: #008BCB;
 }
 
-.views-displays .secondary .action-list  li:first-child {
+.views-displays .secondary .action-list li:first-child {
   border-radius: 0 7px 0 0; /* LTR */
 }
-[dir="rtl"] .views-displays .secondary .action-list  li:first-child {
+[dir="rtl"] .views-displays .secondary .action-list li:first-child {
   border-radius: 7px 0 0 0;
 }
 
-.views-displays .secondary .action-list  li:last-child {
+.views-displays .secondary .action-list li:last-child {
   border-radius: 0 0 7px 7px;
 }
 

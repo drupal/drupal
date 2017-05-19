@@ -55,5 +55,5 @@
   text-shadow: 0 1px 0 white;
 }
 .entity-meta details .summary {
- display: none; /* Hide JS summaries. @todo Rethink summaries. */
+  display: none; /* Hide JS summaries. @todo Rethink summaries. */
 }

@@ -10,12 +10,18 @@
 .messages pre {
   margin: 0;
 }
-.messages h1, .messages .heading-a,
-.messages h2, .messages .heading-b,
-.messages h3, .messages .heading-c,
-.messages h4, .messages .heading-d,
-.messages h5, .messages .heading-e,
-.messages h6, .messages .heading-f {
+.messages h1,
+.messages .heading-a,
+.messages h2,
+.messages .heading-b,
+.messages h3,
+.messages .heading-c,
+.messages h4,
+.messages .heading-d,
+.messages h5,
+.messages .heading-e,
+.messages h6,
+.messages .heading-f {
   margin-top: 0;
 }
 

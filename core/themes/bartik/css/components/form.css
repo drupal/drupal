@@ -316,7 +316,9 @@ input.form-submit:focus {
     -moz-box-sizing: border-box;
   }
 
-  .js .dropbutton .dropbutton-action > input, .js .dropbutton .dropbutton-action > a, .js .dropbutton .dropbutton-action > button {
+  .js .dropbutton .dropbutton-action > input,
+  .js .dropbutton .dropbutton-action > a,
+  .js .dropbutton .dropbutton-action > button {
     text-align: center;
     padding-left: 3em;
   }

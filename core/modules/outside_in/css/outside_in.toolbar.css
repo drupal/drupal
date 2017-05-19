@@ -62,9 +62,9 @@ button.toolbar-icon.toolbar-icon-edit.toolbar-item:before:focus {
 }
 
 #toolbar-bar.js-outside-in-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
- background-image: none;
- color: #fff;
+  background-image: none;
+  color: #fff;
 }
 #toolbar-bar.js-outside-in-edit-mode button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
- background-image: linear-gradient(to bottom, #0094f0, #0e69be);
+  background-image: linear-gradient(to bottom, #0094f0, #0e69be);
 }

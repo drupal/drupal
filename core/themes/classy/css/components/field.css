@@ -8,7 +8,7 @@
 }
 .field--label-inline .field__label,
 .field--label-inline .field__items {
-  float: left; /*LTR*/
+  float: left; /* LTR */
 }
 .field--label-inline .field__label,
 .field--label-inline > .field__item,
