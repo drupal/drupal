@@ -1,0 +1,47 @@
+{
+  "extends": "stylelint-config-standard",
+  "plugins": [
+    "stylelint-no-browser-hacks/lib"
+  ],
+  "rules": {
+    "at-rule-empty-line-before": null,
+    "block-no-empty": null,
+    "color-hex-case": null,
+    "color-hex-length": null,
+    "comment-empty-line-before": null,
+    "declaration-block-no-duplicate-properties": null,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "declaration-block-no-shorthand-property-overrides": null,
+    "declaration-block-trailing-semicolon": null,
+    "declaration-colon-space-after": null,
+    "function-comma-space-after": null,
+    "function-linear-gradient-no-nonstandard-direction": null,
+    "function-name-case": null,
+    "function-whitespace-after": null,
+    "length-zero-no-unit": null,
+    "no-empty-source": null,
+    "no-unknown-animations": true,
+    "number-leading-zero": null,
+    "number-no-trailing-zeros": null,
+    "plugin/no-browser-hacks": [true, {
+      "browsers": [
+        "ie >= 9",
+        "edge >= 13",
+        "firefox >= 5",
+        "opera >= 12",
+        "safari >= 5",
+        "chrome >= 56"
+      ]
+    }],
+    "property-no-unknown": null,
+    "rule-empty-line-before": null,
+    "selector-pseudo-element-colon-notation": null,
+    "selector-type-no-unknown": null,
+    "shorthand-property-no-redundant-values": null,
+    "unit-whitelist": ["deg", "em", "ex", "ms", "rem", "%", "s", "px"]
+  },
+  "ignoreFiles": [
+    "assets/vendor/**/*.css",
+    "tests/Drupal/Tests/Core/Asset/css_test_files/**/*.css"
+  ]
+}

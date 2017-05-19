@@ -6,7 +6,9 @@
   "scripts": {
     "build:js": "node ./scripts/js/babel-es6-build.js",
     "watch:js": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-watch.js",
-    "lint:core-js": "node ./node_modules/eslint/bin/eslint.js --ext=.es6.js . --fix || exit 0"
+    "lint:core-js": "node ./node_modules/eslint/bin/eslint.js --ext=.es6.js . --fix || exit 0",
+    "lint:css": "stylelint \"**/*.css\" || exit 0",
+    "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0"
   },
   "devDependencies": {
     "babel-core": "6.24.1",
@@ -18,7 +20,11 @@
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-jsx-a11y": "4.0.0",
     "eslint-plugin-react": "6.10.3",
-    "glob": "7.1.1"
+    "glob": "7.1.1",
+    "stylelint": "^7.10.1",
+    "stylelint-config-standard": "^16.0.0",
+    "stylelint-checkstyle-formatter": "^0.1.0",
+    "stylelint-no-browser-hacks": "^1.0.2"
   },
   "babel": {
     "presets": [
