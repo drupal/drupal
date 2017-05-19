@@ -375,7 +375,7 @@ Statistics
 - Tim Millwood 'timmillwood' https://www.drupal.org/u/timmillwood
 
 Syslog
-- ?
+- Mariano D'Agostino 'dagmar' https://www.drupal.org/u/dagmar
 
 System (module)
 - ?
