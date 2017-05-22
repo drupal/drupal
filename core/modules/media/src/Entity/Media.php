@@ -2,14 +2,12 @@
 
 namespace Drupal\media\Entity;
 
-use Drupal\Core\Entity\EntityPublishedTrait;
+use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\media\MediaInterface;
-use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\media\MediaSourceEntityConstraintsInterface;
 use Drupal\media\MediaSourceFieldConstraintsInterface;
 use Drupal\user\UserInterface;
@@ -82,10 +80,8 @@ use Drupal\user\UserInterface;
  *   }
  * )
  */
-class Media extends RevisionableContentEntityBase implements MediaInterface {
+class Media extends EditorialContentEntityBase implements MediaInterface {
 
-  use EntityChangedTrait;
-  use EntityPublishedTrait;
   use StringTranslationTrait;
 
   /**
@@ -367,7 +363,6 @@ class Media extends RevisionableContentEntityBase implements MediaInterface {
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-    $fields += static::publishedBaseFieldDefinitions($entity_type);
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
