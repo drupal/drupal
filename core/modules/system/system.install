@@ -57,7 +57,7 @@ function system_requirements($phase) {
     $enabled_modules = \Drupal::moduleHandler()->getModuleList();
     foreach ($enabled_modules as $module => $data) {
       $info = system_get_info('module', $module);
-      if ($info['package'] === 'Core (Experimental)') {
+      if (isset($info['package']) && $info['package'] === 'Core (Experimental)') {
         $experimental[$module] = $info['name'];
       }
     }
