@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\views\Kernel\Plugin;
+namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
@@ -11,7 +11,7 @@ use Drupal\views\ViewExecutable;
  * @group views
  * @see \Drupal\views\Plugin\views\style\Grid
  */
-class StyleGridTest extends PluginKernelTestBase {
+class StyleGridTest extends PluginTestBase {
 
   /**
    * Views used by this test.
@@ -22,10 +22,16 @@ class StyleGridTest extends PluginKernelTestBase {
 
   /**
    * Keeps track of which alignments have been tested.
-   *
-   * @var array
    */
   protected $alignmentsTested = [];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->enableViewsTestModule();
+  }
 
   /**
    * Tests the grid style.
@@ -39,6 +45,10 @@ class StyleGridTest extends PluginKernelTestBase {
       $this->assertGrid($view, $alignment, 2);
       $this->assertGrid($view, $alignment, 1);
     }
+
+    // Ensure styles are properly added for grid views.
+    $this->drupalGet('test-grid');
+    $this->assertRaw('stable/css/views/views.module.css');
   }
 
   /**
