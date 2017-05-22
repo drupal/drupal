@@ -15,14 +15,50 @@ use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class for importing configuration entities.
+ * Base destination class for importing configuration entities.
  *
- * This class serves as the import class for most configuration entities.
- * It can be necessary to provide a specific entity class if the configuration
- * entity has a compound ID (see EntityFieldEntity) or it has specific setter
- * methods (see EntityDateFormat). When implementing an entity destination for
- * the latter case, make sure to add a test not only for importing but also
- * for re-importing (if that is supported).
+ * Available configuration keys:
+ * - translations: (optional) Boolean, if TRUE, the destination will be
+ *   associated with the langcode provided by the source plugin. Defaults to
+ *   FALSE.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: d7_block_custom
+ * process:
+ *   id: bid
+ *   info: info
+ *   langcode: language
+ *   body: body
+ * destination:
+ *   plugin: entity:block
+ * @endcode
+ *
+ * This will save the migrated, processed row as a block config entity.
+ *
+ * @code
+ * source:
+ *   plugin: d6_i18n_profile_field
+ *   constants:
+ *     entity_type: user
+ *     bundle: user
+ * process:
+ *   langcode: language
+ *   entity_type: 'constants/entity_type'
+ *   bundle: 'constants/bundle'
+ *   field_name: name
+ *   ...
+ *   translation: translation
+ * destination:
+ *   plugin: entity:field_config
+ *   translations: true
+ * @endcode
+ *
+ * Because the translations configuration is set to "true", this will save the
+ * migrated, processed row to a "field_config" entity associated with the
+ * designated langcode.
  */
 class EntityConfigBase extends Entity {
 
