@@ -725,6 +725,17 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // submitted form value appears literally, regardless of custom #tree
       // and #parents being set elsewhere.
       '#parents' => ['form_build_id'],
+      // Prevent user agents from prefilling the build id with earlier values.
+      // When the ajax command "update_build_id" is executed, the user agent
+      // will assume that a user interaction changed the field. Upon a soft
+      // reload of the page, the previous build id will be restored in the
+      // input, causing subsequent ajax callbacks to access the wrong cached
+      // form build. Setting the autocomplete attribute to "off" will tell the
+      // user agent to never reuse the value.
+      // @see https://www.w3.org/TR/2011/WD-html5-20110525/common-input-element-attributes.html#the-autocomplete-attribute
+      '#attributes' => [
+        'autocomplete' => 'off',
+      ],
     ];
 
     // Add a token, based on either #token or form_id, to any form displayed to
