@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Flood\FloodInterface;
 use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
@@ -49,6 +50,13 @@ class UserController extends ControllerBase {
   protected $logger;
 
   /**
+   * The flood service.
+   *
+   * @var \Drupal\Core\Flood\FloodInterface
+   */
+  protected $flood;
+
+  /**
    * Constructs a UserController object.
    *
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
@@ -59,12 +67,15 @@ class UserController extends ControllerBase {
    *   The user data service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   * @param \Drupal\Core\Flood\FloodInterface $flood
+   *   The flood service.
    */
-  public function __construct(DateFormatterInterface $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data, LoggerInterface $logger) {
+  public function __construct(DateFormatterInterface $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data, LoggerInterface $logger, FloodInterface $flood) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
     $this->userData = $user_data;
     $this->logger = $logger;
+    $this->flood = $flood;
   }
 
   /**
@@ -75,7 +86,8 @@ class UserController extends ControllerBase {
       $container->get('date.formatter'),
       $container->get('entity.manager')->getStorage('user'),
       $container->get('user.data'),
-      $container->get('logger.factory')->get('user')
+      $container->get('logger.factory')->get('user'),
+      $container->get('flood')
     );
   }
 
@@ -186,6 +198,8 @@ class UserController extends ControllerBase {
   /**
    * Validates user, hash, and timestamp; logs the user in if correct.
    *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
    * @param int $uid
    *   User ID of the user requesting reset.
    * @param int $timestamp
@@ -201,7 +215,7 @@ class UserController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   If $uid is for a blocked user or invalid user ID.
    */
-  public function resetPassLogin($uid, $timestamp, $hash) {
+  public function resetPassLogin(Request $request, $uid, $timestamp, $hash) {
     // The current user is not logged in, so check the parameters.
     $current = REQUEST_TIME;
     /** @var \Drupal\user\UserInterface $user */
@@ -222,6 +236,18 @@ class UserController extends ControllerBase {
       return $this->redirect('user.pass');
     }
     elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && Crypt::hashEquals($hash, user_pass_rehash($user, $timestamp))) {
+      $flood_config = $this->config('user.flood');
+      if ($flood_config->get('uid_only')) {
+        // Clear flood events based on the uid only if configured.
+        $identifier = $user->id();
+      }
+      else {
+        // The default identifier is a combination of uid and IP address.
+        $identifier = $user->id() . '-' . $request->getClientIP();
+      }
+      $this->flood->clear('user.failed_login_ip');
+      $this->flood->clear('user.failed_login_user', $identifier);
+
       user_login_finalize($user);
       $this->logger->notice('User %name used one-time login link at time %timestamp.', ['%name' => $user->getDisplayName(), '%timestamp' => $timestamp]);
       drupal_set_message($this->t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please change your password.'));
