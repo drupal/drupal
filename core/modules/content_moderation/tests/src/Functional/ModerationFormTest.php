@@ -183,4 +183,26 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertResponse(403);
   }
 
+  /**
+   * Tests the revision author is updated when the moderation form is used.
+   */
+  public function testModerationFormSetsRevisionAuthor() {
+    // Create new moderated content in published.
+    $node = $this->createNode(['type' => 'moderated_content', 'moderation_state' => 'published']);
+    // Make a forward revision.
+    $node->title = $this->randomMachineName();
+    $node->moderation_state->value = 'draft';
+    $node->save();
+
+    $another_user = $this->drupalCreateUser($this->permissions);
+    $this->grantUserPermissionToCreateContentOfType($another_user, 'moderated_content');
+    $this->drupalLogin($another_user);
+    $this->drupalPostForm(sprintf('node/%d/latest', $node->id()), [
+      'new_state' => 'published',
+    ], t('Apply'));
+
+    $this->drupalGet(sprintf('node/%d/revisions', $node->id()));
+    $this->assertText('by ' . $another_user->getAccountName());
+  }
+
 }
