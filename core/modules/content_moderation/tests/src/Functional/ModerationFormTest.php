@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\content_moderation\Functional;
 
+use Drupal\workflows\Entity\Workflow;
+
 /**
  * Tests the moderation form, specifically on nodes.
  *
@@ -112,6 +114,72 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The latest version page should not show, because there is no
     // forward revision.
     $this->drupalGet($latest_version_path);
+    $this->assertResponse(403);
+  }
+
+  /**
+   * Test moderation non-bundle entity type.
+   */
+  public function testNonBundleModerationForm() {
+    $this->drupalLogin($this->rootUser);
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_mulrevpub', 'entity_test_mulrevpub');
+    $workflow->save();
+
+    // Create new moderated content in draft.
+    $this->drupalPostForm('entity_test_mulrevpub/add', [], t('Save and Create New Draft'));
+
+    // The latest version page should not show, because there is no forward
+    // revision.
+    $this->drupalGet('/entity_test_mulrevpub/manage/1/latest');
+    $this->assertResponse(403);
+
+    // Update the draft.
+    $this->drupalPostForm('entity_test_mulrevpub/manage/1/edit', [], t('Save and Create New Draft'));
+
+    // The latest version page should not show, because there is still no
+    // forward revision.
+    $this->drupalGet('/entity_test_mulrevpub/manage/1/latest');
+    $this->assertResponse(403);
+
+    // Publish the draft.
+    $this->drupalPostForm('entity_test_mulrevpub/manage/1/edit', [], t('Save and Publish'));
+
+    // The published view should not have a moderation form, because it is the
+    // default revision.
+    $this->drupalGet('entity_test_mulrevpub/manage/1');
+    $this->assertResponse(200);
+    $this->assertNoText('Status', 'The node view page has no moderation form.');
+
+    // The latest version page should not show, because there is still no
+    // forward revision.
+    $this->drupalGet('entity_test_mulrevpub/manage/1/latest');
+    $this->assertResponse(403);
+
+    // Make a forward revision.
+    $this->drupalPostForm('entity_test_mulrevpub/manage/1/edit', [], t('Save and Create New Draft'));
+
+    // The published view should not have a moderation form, because it is the
+    // default revision.
+    $this->drupalGet('entity_test_mulrevpub/manage/1');
+    $this->assertResponse(200);
+    $this->assertNoText('Status', 'The node view page has no moderation form.');
+
+    // The latest version page should show the moderation form and have "Draft"
+    // status, because the forward revision is in "Draft".
+    $this->drupalGet('entity_test_mulrevpub/manage/1/latest');
+    $this->assertResponse(200);
+    $this->assertText('Status', 'Form text found on the latest-version page.');
+    $this->assertText('Draft', 'Correct status found on the latest-version page.');
+
+    // Submit the moderation form to change status to published.
+    $this->drupalPostForm('entity_test_mulrevpub/manage/1/latest', [
+      'new_state' => 'published',
+    ], t('Apply'));
+
+    // The latest version page should not show, because there is no
+    // forward revision.
+    $this->drupalGet('entity_test_mulrevpub/manage/1/latest');
     $this->assertResponse(403);
   }
 

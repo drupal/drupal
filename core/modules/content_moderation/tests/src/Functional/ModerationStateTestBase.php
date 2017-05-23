@@ -50,6 +50,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     'block',
     'block_content',
     'node',
+    'entity_test',
   ];
 
   /**
