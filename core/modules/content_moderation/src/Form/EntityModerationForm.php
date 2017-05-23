@@ -3,6 +3,7 @@
 namespace Drupal\content_moderation\Form;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
@@ -127,8 +128,11 @@ class EntityModerationForm extends FormBase {
     $new_state = $form_state->getValue('new_state');
 
     $entity->set('moderation_state', $new_state);
-    $entity->revision_log = $form_state->getValue('revision_log');
 
+    if ($entity instanceof RevisionLogInterface) {
+      $entity->setRevisionLogMessage($form_state->getValue('revision_log'));
+      $entity->setRevisionUserId($this->currentUser()->id());
+    }
     $entity->save();
 
     drupal_set_message($this->t('The moderation state has been updated.'));
