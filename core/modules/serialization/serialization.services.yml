@@ -52,6 +52,12 @@ services:
       # Priority must be higher than serialization.normalizer.field but less
       # than hal field normalizer.
       - { name: normalizer, priority: 9 }
+  serializer.normalizer.timestamp_item:
+    class: Drupal\serialization\Normalizer\TimestampItemNormalizer
+    tags:
+      # Priority must be higher than serializer.normalizer.field_item and lower
+      # than hal normalizers.
+      - { name: normalizer, priority: 8, bc: bc_timestamp_normalizer_unix, bc_config_name: 'serialization.settings' }
   serializer.normalizer.password_field_item:
       class: Drupal\serialization\Normalizer\NullNormalizer
       arguments: ['Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem']

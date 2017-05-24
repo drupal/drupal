@@ -4,9 +4,12 @@ namespace Drupal\Tests\rest\Functional\EntityResource\Term;
 
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 abstract class TermResourceTestBase extends EntityResourceTestBase {
+
+  use BcTimestampNormalizerUnixTestTrait;
 
   /**
    * {@inheritdoc}
@@ -107,9 +110,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
         ],
       ],
       'changed' => [
-        [
-          'value' => $this->entity->getChangedTime(),
-        ],
+        $this->formatExpectedTimestampItemValues($this->entity->getChangedTime()),
       ],
       'default_langcode' => [
         [

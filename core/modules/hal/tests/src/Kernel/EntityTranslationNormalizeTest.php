@@ -43,7 +43,7 @@ class EntityTranslationNormalizeTest extends NormalizerTestBase {
 
     $node = Node::create([
       'title' => $this->randomMachineName(),
-      'uid' => $user->id(),
+      'uid' => (int) $user->id(),
       'type' => $node_type->id(),
       'status' => NodeInterface::PUBLISHED,
       'langcode' => 'en',

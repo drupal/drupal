@@ -4,10 +4,13 @@ namespace Drupal\Tests\rest\Functional\EntityResource\Node;
 
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 
 abstract class NodeResourceTestBase extends EntityResourceTestBase {
+
+  use BcTimestampNormalizerUnixTestTrait;
 
   /**
    * {@inheritdoc}
@@ -23,12 +26,12 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
+    'revision_timestamp',
+    'revision_uid',
     'created',
     'changed',
     'promote',
     'sticky',
-    'revision_timestamp',
-    'revision_uid',
   ];
 
   /**
@@ -119,14 +122,10 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
         ],
       ],
       'created' => [
-        [
-          'value' => 123456789,
-        ],
+        $this->formatExpectedTimestampItemValues(123456789),
       ],
       'changed' => [
-        [
-          'value' => $this->entity->getChangedTime(),
-        ],
+        $this->formatExpectedTimestampItemValues($this->entity->getChangedTime()),
       ],
       'promote' => [
         [
@@ -139,9 +138,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
         ],
       ],
       'revision_timestamp' => [
-        [
-          'value' => 123456789,
-        ],
+        $this->formatExpectedTimestampItemValues(123456789),
       ],
       'revision_translation_affected' => [
         [

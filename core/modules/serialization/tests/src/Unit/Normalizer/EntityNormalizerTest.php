@@ -303,9 +303,83 @@ class EntityNormalizerTest extends UnitTestCase {
 
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->once())
+      ->method('isSubClassOf')
+      ->with(FieldableEntityInterface::class)
+      ->willReturn(TRUE);
+    $entity_type->expects($this->once())
       ->method('hasKey')
       ->with('bundle')
       ->will($this->returnValue(FALSE));
+    $entity_type->expects($this->never())
+      ->method('getKey');
+
+    $this->entityManager->expects($this->once())
+      ->method('getDefinition')
+      ->with('test')
+      ->will($this->returnValue($entity_type));
+
+    $key_1 = $this->getMock(FieldItemListInterface::class);
+    $key_2 = $this->getMock(FieldItemListInterface::class);
+
+    $entity = $this->getMock(FieldableEntityInterface::class);
+    $entity->expects($this->at(0))
+      ->method('get')
+      ->with('key_1')
+      ->willReturn($key_1);
+    $entity->expects($this->at(1))
+      ->method('get')
+      ->with('key_2')
+      ->willReturn($key_2);
+
+    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $storage->expects($this->once())
+      ->method('create')
+      ->with([])
+      ->will($this->returnValue($entity));
+
+    $this->entityManager->expects($this->once())
+      ->method('getStorage')
+      ->with('test')
+      ->will($this->returnValue($storage));
+
+    $this->entityManager->expects($this->never())
+      ->method('getBaseFieldDefinitions');
+
+    // Setup expectations for the serializer. This will be called for each field
+    // item.
+    $serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')
+      ->disableOriginalConstructor()
+      ->setMethods(['denormalize'])
+      ->getMock();
+    $serializer->expects($this->at(0))
+      ->method('denormalize')
+      ->with('value_1', get_class($key_1), NULL, ['target_instance' => $key_1, 'entity_type' => 'test']);
+    $serializer->expects($this->at(1))
+      ->method('denormalize')
+      ->with('value_2', get_class($key_2), NULL, ['target_instance' => $key_2, 'entity_type' => 'test']);
+
+    $this->entityNormalizer->setSerializer($serializer);
+
+    $this->assertNotNull($this->entityNormalizer->denormalize($test_data, 'Drupal\Core\Entity\ContentEntityBase', NULL, ['entity_type' => 'test']));
+  }
+
+  /**
+   * Tests the denormalize method with no bundle defined.
+   *
+   * @covers ::denormalize
+   */
+  public function testDenormalizeWithNoFieldableEntityType() {
+    $test_data = [
+      'key_1' => 'value_1',
+      'key_2' => 'value_2',
+    ];
+
+    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type->expects($this->once())
+      ->method('isSubClassOf')
+      ->with(FieldableEntityInterface::class)
+      ->willReturn(FALSE);
+
     $entity_type->expects($this->never())
       ->method('getKey');
 

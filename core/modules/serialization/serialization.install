@@ -46,3 +46,12 @@ function serialization_update_8302() {
 
   return t('The REST API will no longer output all values as strings. Integers/booleans will be used where appropriate. If your site depends on these value being strings, <a href="https://www.drupal.org/node/2837696">read the change record to learn how to enable the BC mode.</a>');
 }
+
+/**
+ * Enable BC for timestamp formatting: continue to return UNIX timestamps.
+ */
+function serialization_update_8401() {
+  $config_factory = \Drupal::configFactory();
+  $serialization_settings = $config_factory->getEditable('serialization.settings');
+  $serialization_settings->set('bc_timestamp_normalizer_unix', TRUE)->save(TRUE);
+}

@@ -465,9 +465,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // for the keys with the array order the same (it needs to match with
     // identical comparison).
     $expected = $this->getExpectedNormalizedEntity();
-    ksort($expected);
+    static::recursiveKSort($expected);
     $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
-    ksort($actual);
+    static::recursiveKSort($actual);
     $this->assertSame($expected, $actual);
 
     // Not only assert the normalization, also assert deserialization of the
@@ -507,12 +507,14 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     }
     $this->assertSame($get_headers, $head_headers);
 
+    // BC: serialization_update_8302().
     // Only run this for fieldable entities. It doesn't make sense for config
     // entities as config values are already casted. They also run through the
     // ConfigEntityNormalizer, which doesn't deal with fields individually.
     if ($this->entity instanceof FieldableEntityInterface) {
+      // Test primitive data casting BC (strings).
       $this->config('serialization.settings')->set('bc_primitives_as_strings', TRUE)->save(TRUE);
-      // Rebuild the container so new config is reflected in the removal of the
+      // Rebuild the container so new config is reflected in the addition of the
       // PrimitiveDataNormalizer.
       $this->rebuildAll();
 
@@ -528,10 +530,48 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // Config entities are not affected.
       // @see \Drupal\serialization\Normalizer\ConfigEntityNormalizer::normalize()
       $expected = static::castToString($expected);
-      ksort($expected);
+      static::recursiveKSort($expected);
       $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
-      ksort($actual);
+      static::recursiveKSort($actual);
       $this->assertSame($expected, $actual);
+
+      // Reset the config value and rebuild.
+      $this->config('serialization.settings')->set('bc_primitives_as_strings', FALSE)->save(TRUE);
+      $this->rebuildAll();
+    }
+
+    // BC: serialization_update_8401().
+    // Only run this for fieldable entities. It doesn't make sense for config
+    // entities as config values always use the raw values (as per the config
+    // schema), returned directly from the ConfigEntityNormalizer, which
+    // doesn't deal with fields individually.
+    if ($this->entity instanceof FieldableEntityInterface) {
+      // Test the BC settings for timestamp values.
+      $this->config('serialization.settings')->set('bc_timestamp_normalizer_unix', TRUE)->save(TRUE);
+      // Rebuild the container so new config is reflected in the addition of the
+      // TimestampItemNormalizer.
+      $this->rebuildAll();
+
+
+      $response = $this->request('GET', $url, $request_options);
+      $this->assertResourceResponse(200, FALSE, $response);
+
+
+      // This ensures the BC layer for bc_timestamp_normalizer_unix works as
+      // expected. This method should be using
+      // ::formatExpectedTimestampValue() to generate the timestamp value. This
+      // will take into account the above config setting.
+      $expected = $this->getExpectedNormalizedEntity();
+      // Config entities are not affected.
+      // @see \Drupal\serialization\Normalizer\ConfigEntityNormalizer::normalize()
+      static::recursiveKSort($expected);
+      $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
+      static::recursiveKSort($actual);
+      $this->assertSame($expected, $actual);
+
+      // Reset the config value and rebuild.
+      $this->config('serialization.settings')->set('bc_timestamp_normalizer_unix', FALSE)->save(TRUE);
+      $this->rebuildAll();
     }
 
 
@@ -632,6 +672,27 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       }
     }
     return $normalization;
+  }
+
+  /**
+   * Recursively sorts an array by key.
+   *
+   * @param array $array
+   *   An array to sort.
+   *
+   * @return array
+   *   The sorted array.
+   */
+  protected static function recursiveKSort(array &$array) {
+    // First, sort the main array.
+    ksort($array);
+
+    // Then check for child arrays.
+    foreach ($array as $key => &$value) {
+      if (is_array($value)) {
+        static::recursiveKSort($value);
+      }
+    }
   }
 
   /**
@@ -968,15 +1029,19 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
     // DX: 403 when sending PATCH request with read-only fields.
-    foreach (static::$patchProtectedFieldNames as $field_name) {
-      $normalization = $this->getNormalizedPatchEntity() + [$field_name => [['value' => $this->randomString()]]];
-      $request_options[RequestOptions::BODY] = $this->serializer->serialize($normalization, static::$format);
+    // First send all fields (the "maximum normalization"). Assert the expected
+    // error message for the first PATCH-protected field. Remove that field from
+    // the normalization, send another request, assert the next PATCH-protected
+    // field error message. And so on.
+    $max_normalization = $this->getNormalizedPatchEntity() + $this->serializer->normalize($this->entity, static::$format);
+    for ($i = 0; $i < count(static::$patchProtectedFieldNames); $i++) {
+      $max_normalization = $this->removeFieldsFromNormalization($max_normalization, array_slice(static::$patchProtectedFieldNames, 0, $i));
+      $request_options[RequestOptions::BODY] = $this->serializer->serialize($max_normalization, static::$format);
       $response = $this->request('PATCH', $url, $request_options);
-      $this->assertResourceErrorResponse(403, "Access denied on updating field '$field_name'.", $response);
+      $this->assertResourceErrorResponse(403, "Access denied on updating field '" . static::$patchProtectedFieldNames[$i] . "'.", $response);
     }
 
     // 200 for well-formed request that sends the maximum number of fields.
-    $max_normalization = $this->getNormalizedPatchEntity() + $this->serializer->normalize($this->entity, static::$format);
     $max_normalization = $this->removeFieldsFromNormalization($max_normalization, static::$patchProtectedFieldNames);
     $request_options[RequestOptions::BODY] = $this->serializer->serialize($max_normalization, static::$format);
     $response = $this->request('PATCH', $url, $request_options);

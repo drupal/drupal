@@ -34,11 +34,11 @@ class NodeHalJsonAnonTest extends NodeResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
+    'revision_timestamp',
     'created',
     'changed',
     'promote',
     'sticky',
-    'revision_timestamp',
     'revision_uid',
   ];
 
