@@ -2,7 +2,7 @@ view any unpublished content:
   title: 'View any unpublished content'
   description: 'This permission is necessary for any users that may moderate content.'
 
-'view content moderation':
+view content moderation:
   title: 'View content moderation'
   description: 'View content moderation.'
 
