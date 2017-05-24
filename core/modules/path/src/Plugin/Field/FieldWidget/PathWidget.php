@@ -87,12 +87,12 @@ class PathWidget extends WidgetBase {
       // Validate that the submitted alias does not exist yet.
       $is_exists = \Drupal::service('path.alias_storage')->aliasExists($alias, $element['langcode']['#value'], $element['source']['#value']);
       if ($is_exists) {
-        $form_state->setError($element, t('The alias is already in use.'));
+        $form_state->setError($element['alias'], t('The alias is already in use.'));
       }
     }
 
     if ($alias && $alias[0] !== '/') {
-      $form_state->setError($element, t('The alias needs to start with a slash.'));
+      $form_state->setError($element['alias'], t('The alias needs to start with a slash.'));
     }
   }
 
