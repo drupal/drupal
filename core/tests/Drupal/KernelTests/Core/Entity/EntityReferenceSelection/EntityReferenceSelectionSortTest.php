@@ -96,13 +96,11 @@ class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
     $selection_options = [
       'target_type' => 'node',
       'handler' => 'default',
-      'handler_settings' => [
-        'target_bundles' => NULL,
-        // Add sorting.
-        'sort' => [
-          'field' => 'field_text.value',
-          'direction' => 'DESC',
-        ],
+      'target_bundles' => NULL,
+      // Add sorting.
+      'sort' => [
+        'field' => 'field_text.value',
+        'direction' => 'DESC',
       ],
     ];
     $handler = $this->container->get('plugin.manager.entity_reference_selection')->getInstance($selection_options);
@@ -117,7 +115,7 @@ class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
     $this->assertIdentical($result['article'], $expected_result, 'Query sorted by field returned expected values.');
 
     // Assert sort by base field.
-    $selection_options['handler_settings']['sort'] = [
+    $selection_options['sort'] = [
       'field' => 'nid',
       'direction' => 'ASC',
     ];

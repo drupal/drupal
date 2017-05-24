@@ -152,10 +152,9 @@ class EntityAutocomplete extends Textfield {
     $value = NULL;
 
     if (!empty($element['#value'])) {
-      $options = [
+      $options = $element['#selection_settings'] + [
         'target_type' => $element['#target_type'],
         'handler' => $element['#selection_handler'],
-        'handler_settings' => $element['#selection_settings'],
       ];
       /** @var /Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface $handler */
       $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getInstance($options);
