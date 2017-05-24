@@ -149,23 +149,31 @@ class NumericField extends FieldPluginBase {
    */
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
-    if (!empty($this->options['set_precision'])) {
-      $value = number_format($value, $this->options['precision'], $this->options['decimal'], $this->options['separator']);
-    }
-    else {
-      $remainder = abs($value) - intval(abs($value));
-      $value = $value > 0 ? floor($value) : ceil($value);
-      $value = number_format($value, 0, '', $this->options['separator']);
-      if ($remainder) {
-        // The substr may not be locale safe.
-        $value .= $this->options['decimal'] . substr($remainder, 2);
-      }
-    }
 
-    // Check to see if hiding should happen before adding prefix and suffix.
+    // Check to see if hiding should happen before adding prefix and suffix
+    // and before rewriting.
     if ($this->options['hide_empty'] && empty($value) && ($value !== 0 || $this->options['empty_zero'])) {
       return '';
     }
+
+    if (!empty($this->options['set_precision'])) {
+      $precision = $this->options['precision'];
+    }
+    elseif ($decimal_position = strpos($value, '.')) {
+      $precision = strlen($value) - $decimal_position - 1;
+    }
+    else {
+      $precision = 0;
+    }
+
+    // Use round first to avoid negative zeros.
+    $value = round($value, $precision);
+    // Test against both integer zero and float zero.
+    if ($this->options['empty_zero'] && ($value === 0 || $value === 0.0)) {
+      return '';
+    }
+
+    $value = number_format($value, $precision, $this->options['decimal'], $this->options['separator']);
 
     // If we should format as plural, take the (possibly) translated plural
     // setting and format with the current language.
