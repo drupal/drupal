@@ -4,21 +4,21 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\migrate\process\Get;
-use Drupal\migrate\Plugin\migrate\process\Iterator;
+use Drupal\migrate\Plugin\migrate\process\SubProcess;
 use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 
 /**
- * Tests the iterator process plugin.
+ * Tests the sub_process process plugin.
  *
  * @group migrate
  */
-class IteratorTest extends MigrateTestCase {
+class SubProcessTest extends MigrateTestCase {
 
   /**
-   * The iterator plugin being tested.
+   * The sub_process plugin being tested.
    *
-   * @var \Drupal\migrate\Plugin\migrate\process\TestIterator
+   * @var \Drupal\migrate\Plugin\migrate\process\SubProcess
    */
   protected $plugin;
 
@@ -30,13 +30,11 @@ class IteratorTest extends MigrateTestCase {
   ];
 
   /**
-   * Tests the iterator process plugin.
-   *
-   * @group legacy
+   * Tests the sub_process process plugin.
    */
-  public function testIterator() {
+  public function testSubProcess() {
     $migration = $this->getMigration();
-    // Set up the properties for the iterator.
+    // Set up the properties for the sub_process.
     $configuration = [
       'process' => [
         'foo' => 'source_foo',
@@ -44,15 +42,15 @@ class IteratorTest extends MigrateTestCase {
       ],
       'key' => '@id',
     ];
-    $plugin = new Iterator($configuration, 'iterator', []);
+    $plugin = new SubProcess($configuration, 'sub_process', []);
     // Manually create the plugins. Migration::getProcessPlugins does this
     // normally but the plugin system is not available.
     foreach ($configuration['process'] as $destination => $source) {
-      $iterator_plugins[$destination][] = new Get(['source' => $source], 'get', []);
+      $sub_process_plugins[$destination][] = new Get(['source' => $source], 'get', []);
     }
     $migration->expects($this->at(1))
       ->method('getProcessPlugins')
-      ->will($this->returnValue($iterator_plugins));
+      ->willReturn($sub_process_plugins);
     // Set up the key plugins.
     $key_plugin['key'][] = new Get(['source' => '@id'], 'get', []);
     $migration->expects($this->at(2))

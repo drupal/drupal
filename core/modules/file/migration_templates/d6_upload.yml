@@ -9,7 +9,7 @@ process:
   vid: vid
   type: type
   upload:
-    plugin: iterator
+    plugin: sub_process
     source: upload
     process:
       target_id:
