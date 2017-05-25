@@ -3,6 +3,7 @@ status: true
 dependencies:
   module:
     - aggregator
+    - user
 id: aggregator_rss_feed
 label: 'Aggregator RSS feed'
 module: aggregator
@@ -137,6 +138,8 @@ display:
         - url.query_args
         - user.permissions
       cacheable: false
+      max-age: -1
+      tags: {  }
   feed_items:
     display_plugin: feed
     id: feed_items
@@ -154,3 +157,5 @@ display:
         - 'languages:language_interface'
         - user.permissions
       cacheable: false
+      max-age: -1
+      tags: {  }
