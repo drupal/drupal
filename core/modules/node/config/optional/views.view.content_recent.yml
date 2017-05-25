@@ -296,7 +296,7 @@ display:
         - user
         - 'user.node_grants:view'
         - user.permissions
-      max-age: 0
+      max-age: -1
       tags: {  }
   block_1:
     display_plugin: block
@@ -312,5 +312,5 @@ display:
         - user
         - 'user.node_grants:view'
         - user.permissions
-      max-age: 0
+      max-age: -1
       tags: {  }
