@@ -15,13 +15,37 @@ use Drupal\migrate\Plugin\RequirementsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Sources whose data may be fetched via DBTNG.
+ * Sources whose data may be fetched via a database connection.
  *
- * By default, an existing database connection with key 'migrate' and target
- * 'default' is used. These may be overridden with explicit 'key' and/or
- * 'target' configuration keys. In addition, if the configuration key 'database'
- * is present, it is used as a database connection information array to define
- * the connection.
+ * Database configuration, which may appear either within the source plugin
+ * configuration or in state, is structured as follows:
+ *
+ * 'key' - The database key name (defaults to 'migrate').
+ * 'target' - The database target name (defaults to 'default').
+ * 'database' - Database connection information as accepted by
+ *   Database::addConnectionInfo(). If not present, the key/target is assumed
+ *   to already be defined (e.g., in settings.php).
+ *
+ * This configuration info is obtained in the following order:
+ *
+ * 1. If the source plugin configuration contains a key 'database_state_key',
+ *    its value is taken as the name of a state key which contains an array
+ *    with the above database configuration.
+ * 2. Otherwise, if the source plugin configuration contains 'key', the above
+ *    database configuration is obtained directly from the plugin configuration.
+ * 3. Otherwise, if the state 'migrate.fallback_state_key' exists, its value is
+ *    taken as the name of a state key which contains an array with the above
+ *    database configuration.
+ * 4. Otherwise, if a connection named 'migrate' exists, that is used as the
+ *    database connection.
+ * 5. Otherwise, RequirementsException is thrown.
+ *
+ * It is strongly recommended that database connections be explicitly defined
+ * via 'database_state_key' or in the source plugin configuration. Defining
+ * migrate.fallback_state_key or a 'migrate' connection affects not only any
+ * migrations intended to use that particular connection, but all
+ * SqlBase-derived source plugins which do not have explicit database
+ * configuration.
  */
 abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, RequirementsInterface {
 
@@ -101,16 +125,21 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    */
   public function getDatabase() {
     if (!isset($this->database)) {
-      // See if the database info is in state - if not, fallback to
-      // configuration.
+      // Look first for an explicit state key containing the configuration.
       if (isset($this->configuration['database_state_key'])) {
         $this->database = $this->setUpDatabase($this->state->get($this->configuration['database_state_key']));
       }
+      // Next, use explicit configuration in the source plugin.
+      elseif (isset($this->configuration['key'])) {
+        $this->database = $this->setUpDatabase($this->configuration);
+      }
+      // Next, try falling back to the global state key.
       elseif (($fallback_state_key = $this->state->get('migrate.fallback_state_key'))) {
         $this->database = $this->setUpDatabase($this->state->get($fallback_state_key));
       }
+      // If all else fails, let setUpDatabase() fallback to the 'migrate' key.
       else {
-        $this->database = $this->setUpDatabase($this->configuration);
+        $this->database = $this->setUpDatabase([]);
       }
     }
     return $this->database;
