@@ -19,7 +19,7 @@ class LogTest extends KernelTestBase {
   public static $modules = ['migrate'];
 
   /**
-   * Test the Log plugin
+   * Test the Log plugin.
    */
   public function testLog() {
     $plugin = \Drupal::service('plugin.manager.migrate.process')
@@ -28,7 +28,7 @@ class LogTest extends KernelTestBase {
     $row = new Row();
     $log_message = "Testing the log message";
 
-    //Ensure the log is getting saved
+    // Ensure the log is getting saved.
     $saved_message = $plugin->transform($log_message, $executable, $row, 'buffalo');
     $this->assertSame($log_message, $saved_message);
   }
