@@ -107,6 +107,13 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
   protected $translatedLabel;
 
   /**
+   * An user with permission to edit the referrer entity.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -134,6 +141,8 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     $this->enableTranslation();
     $this->setUpEntityReferenceField();
     $this->createContent();
+
+    $this->webUser = $this->drupalCreateUser(['edit any ' . $this->referrerType->id() . ' content']);
   }
 
   /**
@@ -143,14 +152,17 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     // Create a translated referrer entity.
     $this->referrerEntity = $this->createReferrerEntity();
     $this->assertEntityReferenceDisplay();
+    $this->assertEntityReferenceFormDisplay();
 
     // Disable translation for referrer content type.
     $this->drupalLogin($this->rootUser);
     $this->drupalPostForm('admin/config/regional/content-language', ['settings[node][referrer][translatable]' => FALSE], t('Save configuration'));
+    $this->drupalLogout();
 
     // Create a referrer entity without translation.
     $this->referrerEntity = $this->createReferrerEntity(FALSE);
     $this->assertEntityReferenceDisplay();
+    $this->assertEntityReferenceFormDisplay();
   }
 
   /**
@@ -168,6 +180,23 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     $this->assertText($this->labelOfNotTranslatedReference, 'The label of not translated reference is displayed.');
     $this->assertNoText($this->originalLabel, 'The default label of translated reference is not displayed.');
     $this->assertText($this->translatedLabel, 'The translated label of translated reference is displayed.');
+  }
+
+  /**
+   * Assert entity reference form display.
+   */
+  protected function assertEntityReferenceFormDisplay() {
+    $this->drupalLogin($this->webUser);
+    $url = $this->referrerEntity->urlInfo('edit-form');
+    $translation_url = $this->referrerEntity->urlInfo('edit-form', ['language' => ConfigurableLanguage::load($this->translateToLangcode)]);
+
+    $this->drupalGet($url);
+    $this->assertSession()->fieldValueEquals('test_reference_field[0][target_id]', $this->originalLabel . ' (1)');
+    $this->assertSession()->fieldValueEquals('test_reference_field[1][target_id]', $this->labelOfNotTranslatedReference . ' (2)');
+    $this->drupalGet($translation_url);
+    $this->assertSession()->fieldValueEquals('test_reference_field[0][target_id]', $this->translatedLabel . ' (1)');
+    $this->assertSession()->fieldValueEquals('test_reference_field[1][target_id]', $this->labelOfNotTranslatedReference . ' (2)');
+    $this->drupalLogout();
   }
 
   /**
