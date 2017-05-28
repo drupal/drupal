@@ -74,7 +74,9 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     $selection_options = [
       'target_type' => 'node',
       'handler' => 'default',
-      'target_bundles' => NULL,
+      'handler_settings' => [
+        'target_bundles' => NULL,
+      ],
     ];
 
     // Build a set of test data.
@@ -198,8 +200,10 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     $selection_options = [
       'target_type' => 'user',
       'handler' => 'default',
-      'target_bundles' => NULL,
-      'include_anonymous' => TRUE,
+      'handler_settings' => [
+        'target_bundles' => NULL,
+        'include_anonymous' => TRUE,
+      ],
     ];
 
     // Build a set of test data.
@@ -318,7 +322,7 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler (admin)');
 
     // Test the 'include_anonymous' option.
-    $selection_options['include_anonymous'] = FALSE;
+    $selection_options['handler_settings']['include_anonymous'] = FALSE;
     $referenceable_tests = [
       [
         'arguments' => [
@@ -357,7 +361,9 @@ class EntityReferenceSelectionAccessTest extends BrowserTestBase {
     $selection_options = [
       'target_type' => 'comment',
       'handler' => 'default',
-      'target_bundles' => NULL,
+      'handler_settings' => [
+        'target_bundles' => NULL,
+      ],
     ];
 
     // Build a set of test data.

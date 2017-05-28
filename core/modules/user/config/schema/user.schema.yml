@@ -166,10 +166,8 @@ condition.plugin.user_role:
       sequence:
         type: string
 
-# Schema for the entity reference 'default:user' selection handler settings.
 entity_reference_selection.default:user:
-  type: entity_reference_selection.default
-  label: 'User selection handler settings'
+  type: entity_reference_selection
   mapping:
     filter:
       type: mapping

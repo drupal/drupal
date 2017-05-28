@@ -39,6 +39,7 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
     // Initialize default options.
     $options += [
       'handler' => $this->getPluginId($options['target_type'], 'default'),
+      'handler_settings' => [],
     ];
 
     // A specific selection plugin ID was already specified.
@@ -49,7 +50,6 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
     else {
       $plugin_id = $this->getPluginId($options['target_type'], $options['handler']);
     }
-    unset($options['handler']);
 
     return $this->createInstance($plugin_id, $options);
   }
@@ -92,10 +92,10 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
    * {@inheritdoc}
    */
   public function getSelectionHandler(FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
-    $options = $field_definition->getSetting('handler_settings') ?: [];
-    $options += [
+    $options = [
       'target_type' => $field_definition->getFieldStorageDefinition()->getSetting('target_type'),
       'handler' => $field_definition->getSetting('handler'),
+      'handler_settings' => $field_definition->getSetting('handler_settings') ?: [],
       'entity' => $entity,
     ];
     return $this->getInstance($options);

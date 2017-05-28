@@ -780,24 +780,11 @@ text_format:
       # The text format should not be translated as part of the string
       # translation system, so this is not marked as translatable.
 
-# Base schema for all entity reference selection handler schemas.
+# Schema for the configuration of the Entity reference selection plugins.
+
 entity_reference_selection:
   type: mapping
-  label: 'Entity reference selection handler settings'
-  mapping:
-    target_type:
-      type: string
-      label: 'Type of item to reference'
-
-# Schema for all entity reference selection handlers that are not providing a
-# specific schema.
-entity_reference_selection.*:
-  type: entity_reference_selection
-
-# Schema for the entity reference 'default' selection handler settings.
-entity_reference_selection.default:
-  type: entity_reference_selection
-  label: 'Default selection handler settings'
+  label: 'Entity reference selection plugin configuration'
   mapping:
     target_bundles:
       type: sequence
@@ -805,7 +792,7 @@ entity_reference_selection.default:
       nullable: true
       sequence:
         type: string
-        label: 'Bundle'
+        label: 'Type'
     sort:
       type: mapping
       label: 'Sort settings'
@@ -823,7 +810,5 @@ entity_reference_selection.default:
       type: string
       label: 'Bundle assigned to the auto-created entities.'
 
-# Schema for all entity reference 'default:*' selection handlers that are not
-# providing a specific schema.
-entity_reference_selection.default:*:
-  type: entity_reference_selection.default
+entity_reference_selection.*:
+  type: entity_reference_selection

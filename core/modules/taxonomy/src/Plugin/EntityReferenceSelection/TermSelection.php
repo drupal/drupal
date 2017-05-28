@@ -3,6 +3,7 @@
 namespace Drupal\taxonomy\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -23,13 +24,8 @@ class TermSelection extends DefaultSelection {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
-    return [
-      'sort' => [
-        'field' => 'name',
-        'direction' => 'asc',
-      ]
-    ] + parent::defaultConfiguration();
+  public function entityQueryAlter(SelectInterface $query) {
+    // @todo: How to set access, as vocabulary is now config?
   }
 
   /**
@@ -53,13 +49,15 @@ class TermSelection extends DefaultSelection {
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     if ($match || $limit) {
+      $this->configuration['handler_settings']['sort'] = ['field' => 'name', 'direction' => 'asc'];
       return parent::getReferenceableEntities($match, $match_operator, $limit);
     }
 
     $options = [];
 
     $bundles = $this->entityManager->getBundleInfo('taxonomy_term');
-    $bundle_names = $this->getConfiguration()['target_bundles'] ?: array_keys($bundles);
+    $handler_settings = $this->configuration['handler_settings'];
+    $bundle_names = !empty($handler_settings['target_bundles']) ? $handler_settings['target_bundles'] : array_keys($bundles);
 
     foreach ($bundle_names as $bundle) {
       if ($vocabulary = Vocabulary::load($bundle)) {

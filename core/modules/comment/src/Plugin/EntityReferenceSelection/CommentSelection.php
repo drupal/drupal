@@ -66,8 +66,6 @@ class CommentSelection extends DefaultSelection {
    * {@inheritdoc}
    */
   public function entityQueryAlter(SelectInterface $query) {
-    parent::entityQueryAlter($query);
-
     $tables = $query->getTables();
     $data_table = 'comment_field_data';
     if (!isset($tables['comment_field_data']['alias'])) {
