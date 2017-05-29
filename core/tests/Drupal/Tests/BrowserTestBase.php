@@ -23,15 +23,15 @@ use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\simpletest\AssertHelperTrait;
-use Drupal\simpletest\ContentTypeCreationTrait;
 use Drupal\simpletest\BlockCreationTrait;
+use Drupal\simpletest\ContentTypeCreationTrait;
 use Drupal\simpletest\NodeCreationTrait;
 use Drupal\simpletest\UserCreationTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\CssSelector\CssSelectorConverter;
-use Symfony\Component\HttpFoundation\Request;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\CssSelector\CssSelectorConverter;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a test case for functional Drupal tests.
@@ -246,6 +246,20 @@ abstract class BrowserTestBase extends TestCase {
    * @var array
    */
   protected $originalShutdownCallbacks = [];
+
+  /**
+   * The number of meta refresh redirects to follow, or NULL if unlimited.
+   *
+   * @var null|int
+   */
+  protected $maximumMetaRefreshCount = NULL;
+
+  /**
+   * The number of meta refresh redirects followed during ::drupalGet().
+   *
+   * @var int
+   */
+  protected $metaRefreshCount = 0;
 
   /**
    * Initializes Mink sessions.
@@ -638,6 +652,13 @@ abstract class BrowserTestBase extends TestCase {
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
 
+    // Replace original page output with new output from redirected page(s).
+    if ($new = $this->checkForMetaRefresh()) {
+      $out = $new;
+      // We are finished with all meta refresh redirects, so reset the counter.
+      $this->metaRefreshCount = 0;
+    }
+
     // Log only for JavascriptTestBase tests because for Goutte we log with
     // ::getResponseLogHandler.
     if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
@@ -810,6 +831,12 @@ abstract class BrowserTestBase extends TestCase {
 
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
+
+    // Check if there are any meta refresh redirects (like Batch API pages).
+    if ($this->checkForMetaRefresh()) {
+      // We are finished with all meta refresh redirects, so reset the counter.
+      $this->metaRefreshCount = 0;
+    }
 
     // Log only for JavascriptTestBase tests because for Goutte we log with
     // ::getResponseLogHandler.
@@ -1368,6 +1395,28 @@ abstract class BrowserTestBase extends TestCase {
     }
 
     return $caller;
+  }
+
+  /**
+   * Checks for meta refresh tag and if found call drupalGet() recursively.
+   *
+   * This function looks for the http-equiv attribute to be set to "Refresh" and
+   * is case-sensitive.
+   *
+   * @return string|false
+   *   Either the new page content or FALSE.
+   */
+  protected function checkForMetaRefresh() {
+    $refresh = $this->cssSelect('meta[http-equiv="Refresh"]');
+    if (!empty($refresh) && (!isset($this->maximumMetaRefreshCount) || $this->metaRefreshCount < $this->maximumMetaRefreshCount)) {
+      // Parse the content attribute of the meta tag for the format:
+      // "[delay]: URL=[page_to_redirect_to]".
+      if (preg_match('/\d+;\s*URL=(?<url>.*)/i', $refresh[0]->getAttribute('content'), $match)) {
+        $this->metaRefreshCount++;
+        return $this->drupalGet($this->getAbsoluteUrl(Html::decodeEntities($match['url'])));
+      }
+    }
+    return FALSE;
   }
 
 }

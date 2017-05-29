@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Batch;
+namespace Drupal\Tests\system\Functional\Batch;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the content of the progress page.
  *
  * @group Batch
  */
-class PageTest extends WebTestBase {
+class PageTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
