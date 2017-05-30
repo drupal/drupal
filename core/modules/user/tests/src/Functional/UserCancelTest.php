@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\user\Tests;
+namespace Drupal\Tests\user\Functional;
 
-use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\simpletest\WebTestBase;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -13,7 +13,7 @@ use Drupal\user\Entity\User;
  *
  * @group user
  */
-class UserCancelTest extends WebTestBase {
+class UserCancelTest extends BrowserTestBase {
 
   use CommentTestTrait;
 
@@ -577,7 +577,7 @@ class UserCancelTest extends WebTestBase {
     $this->drupalPostForm(NULL, NULL, t('Cancel accounts'));
     $status = TRUE;
     foreach ($users as $account) {
-      $status = $status && (strpos($this->content, $account->getUsername() . '</em> has been deleted.') !== FALSE);
+      $status = $status && (strpos($this->getTextContent(), $account->getUsername() . ' has been deleted.') !== FALSE);
       $user_storage->resetCache([$account->id()]);
       $status = $status && !$user_storage->load($account->id());
     }

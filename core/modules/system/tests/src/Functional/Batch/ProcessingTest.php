@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Batch;
+namespace Drupal\Tests\system\Functional\Batch;
 
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests batch processing in form and non-form workflow.
  *
  * @group Batch
  */
-class ProcessingTest extends WebTestBase {
+class ProcessingTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
