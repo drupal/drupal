@@ -22,6 +22,8 @@ Drupal 8
   (Product Manager)
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
   (Framework Manager, Release Manager)
+- Chris McCafferty 'cilefen' https://www.drupal.org/u/cilefen
+  (Release Manager)
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
   (Release Manager)
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
@@ -34,8 +36,6 @@ Provisional membership:
   (Framework Manager - Frontend)
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
   (Product Manager)
-- Chris McCafferty 'cilefen' https://www.drupal.org/u/cilefen
-  (Release Manager)
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
   (Product Manager)
 
