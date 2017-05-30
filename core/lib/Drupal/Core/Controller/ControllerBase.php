@@ -19,8 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * difficult to unit test. Therefore this base class should only be used by
  * controller classes that contain only trivial glue code.  Controllers that
  * contain sufficiently complex logic that it's worth testing should not use
- * this base class but use ContainerInjectionInterface instead, or even better be
- * refactored to be trivial glue code.
+ * this base class but use ContainerInjectionInterface instead, or even
+ * better be refactored to be trivial glue code.
  *
  * The services exposed here are those that it is reasonable for a well-behaved
  * controller to leverage. A controller that needs other services may
@@ -70,7 +70,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
