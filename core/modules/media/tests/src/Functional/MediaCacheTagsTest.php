@@ -5,8 +5,6 @@ namespace Drupal\Tests\media\Functional;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\media\Entity\Media;
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
-use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests the media entity's cache tags.
@@ -24,19 +22,6 @@ class MediaCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     'media',
     'media_test_source',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    // Give anonymous users permission to view media, so that we can
-    // verify the cache tags of cached versions of media items.
-    $user_role = Role::load(RoleInterface::ANONYMOUS_ID);
-    $user_role->grantPermission('view media');
-    $user_role->save();
-  }
 
   /**
    * {@inheritdoc}

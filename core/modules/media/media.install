@@ -5,6 +5,8 @@
  * Install, uninstall and update hooks for Media module.
  */
 
+use \Drupal\user\RoleInterface;
+
 /**
  * Implements hook_install().
  */
@@ -16,6 +18,12 @@ function media_install() {
   $files = file_scan_directory($source, '/.*\.(svg|png|jpg|jpeg|gif)$/');
   foreach ($files as $file) {
     file_unmanaged_copy($file->uri, $destination, FILE_EXISTS_ERROR);
+  }
+
+  // Grant the "view media" permission to all users by default.
+  if (\Drupal::moduleHandler()->moduleExists('user')) {
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['view media']);
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['view media']);
   }
 }
 

@@ -56,6 +56,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $role = Role::load(RoleInterface::AUTHENTICATED_ID);
 
     // Test 'view media' permission.
+    user_role_revoke_permissions($role->id(), ['view media']);
     $this->drupalGet('media/' . $media->id());
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(403);
