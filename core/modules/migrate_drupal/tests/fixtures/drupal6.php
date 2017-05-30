@@ -45966,28 +45966,28 @@ $connection->insert('term_data')
 ->values(array(
   'tid' => '1',
   'vid' => '1',
-  'name' => 'term 1 of vocabulary 1',
-  'description' => 'description of term 1 of vocabulary 1',
+  'name' => 'zu - term 1 of vocabulary 1',
+  'description' => 'zu - description of term 1 of vocabulary 1',
   'weight' => '0',
-  'language' => '',
+  'language' => 'zu',
   'trid' => '0',
 ))
 ->values(array(
   'tid' => '2',
   'vid' => '2',
-  'name' => 'term 2 of vocabulary 2',
-  'description' => 'description of term 2 of vocabulary 2',
+  'name' => 'fr - term 2 of vocabulary 2',
+  'description' => 'fr - description of term 2 of vocabulary 2',
   'weight' => '3',
-  'language' => '',
+  'language' => 'fr',
   'trid' => '0',
 ))
 ->values(array(
   'tid' => '3',
   'vid' => '2',
-  'name' => 'term 3 of vocabulary 2',
-  'description' => 'description of term 3 of vocabulary 2',
+  'name' => 'fr - term 3 of vocabulary 2',
+  'description' => 'fr - description of term 3 of vocabulary 2',
   'weight' => '4',
-  'language' => '',
+  'language' => 'fr',
   'trid' => '0',
 ))
 ->values(array(
@@ -46015,6 +46015,15 @@ $connection->insert('term_data')
   'description' => 'description of term 6 of vocabulary 3',
   'weight' => '8',
   'language' => '',
+  'trid' => '0',
+))
+->values(array(
+  'tid' => '7',
+  'vid' => '1',
+  'name' => 'fr - term 2 of vocabulary 1',
+  'description' => 'fr - desc of term 2 vocab 1',
+  'weight' => '0',
+  'language' => 'fr',
   'trid' => '0',
 ))
 ->execute();
@@ -46058,6 +46067,10 @@ $connection->insert('term_hierarchy')
 ))
 ->values(array(
   'tid' => '4',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '7',
   'parent' => '0',
 ))
 ->values(array(
@@ -46119,6 +46132,11 @@ $connection->insert('term_node')
   'nid' => '1',
   'vid' => '1',
   'tid' => '1',
+))
+->values(array(
+  'nid' => '1',
+  'vid' => '1',
+  'tid' => '2',
 ))
 ->values(array(
   'nid' => '2',
@@ -47633,6 +47651,10 @@ $connection->insert('variable')
   'value' => 'a:2:{i:0;i:1;i:1;i:2;}',
 ))
 ->values(array(
+  'name' => 'i18ntaxonomy_vocabulary',
+  'value' => 'a:2:{i:1;s:1:"3";i:2;s:1:"2";}',
+))
+->values(array(
   'name' => 'i18n_lock_node_article',
   'value' => 'i:1;',
 ))
@@ -48160,7 +48182,7 @@ $connection->insert('vocabulary')
   'tags' => '1',
   'module' => 'taxonomy',
   'weight' => '5',
-  'language' => '',
+  'language' => 'fr',
 ))
 ->values(array(
   'vid' => '3',

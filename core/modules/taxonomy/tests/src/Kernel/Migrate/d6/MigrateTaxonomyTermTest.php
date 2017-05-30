@@ -36,18 +36,21 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
         'vid' => 'vocabulary_1_i_0_',
         'weight' => 0,
         'parent' => [0],
+        'language' => 'zu',
       ],
       '2' => [
         'source_vid' => 2,
         'vid' => 'vocabulary_2_i_1_',
         'weight' => 3,
         'parent' => [0],
+        'language' => 'fr',
       ],
       '3' => [
         'source_vid' => 2,
         'vid' => 'vocabulary_2_i_1_',
         'weight' => 4,
         'parent' => [2],
+        'language' => 'fr',
       ],
       '4' => [
         'source_vid' => 3,
@@ -83,8 +86,9 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
     foreach ($expected_results as $tid => $values) {
       /** @var Term $term */
       $term = $terms[$tid];
-      $this->assertIdentical("term {$tid} of vocabulary {$values['source_vid']}", $term->name->value);
-      $this->assertIdentical("description of term {$tid} of vocabulary {$values['source_vid']}", $term->description->value);
+      $language = isset($values['language']) ? $values['language'] . ' - ' : '';
+      $this->assertSame("{$language}term {$tid} of vocabulary {$values['source_vid']}", $term->name->value);
+      $this->assertSame("{$language}description of term {$tid} of vocabulary {$values['source_vid']}", $term->description->value);
       $this->assertIdentical($values['vid'], $term->vid->target_id);
       $this->assertIdentical((string) $values['weight'], $term->weight->value);
       if ($values['parent'] === [0]) {
