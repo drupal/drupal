@@ -1,0 +1,27 @@
+id: d6_taxonomy_vocabulary_translation
+label: Taxonomy vocabularies
+migration_tags:
+  - Drupal 6
+source:
+  plugin: d6_taxonomy_vocabulary_translation
+process:
+  vid:
+    -
+      plugin: machine_name
+      source: name
+    -
+      plugin: substr
+      length: 32
+  langcode: language
+  property:
+    plugin: static_map
+    source: property
+    map:
+      name: name
+      description: description
+  translation: translation
+destination:
+  plugin: entity:taxonomy_vocabulary
+migration_dependencies:
+  required:
+    - d6_taxonomy_vocabulary
