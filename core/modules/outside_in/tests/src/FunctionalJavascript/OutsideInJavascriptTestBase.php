@@ -130,4 +130,14 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
     $web_assert->assertWaitOnAjaxRequest();
   }
 
+  /**
+   * Get themes to test.
+   *
+   * @return string[]
+   *   Theme names to test.
+   */
+  protected function getTestThemes() {
+    return ['bartik', 'stark', 'classy', 'stable'];
+  }
+
 }
