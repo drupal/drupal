@@ -101,11 +101,8 @@
 
     terms.pop();
 
-    if (ui.item.value.search(',') > 0) {
-      terms.push('"' + ui.item.value + '"');
-    } else {
-      terms.push(ui.item.value);
-    }
+    terms.push(ui.item.value);
+
     event.target.value = terms.join(', ');
 
     return false;
