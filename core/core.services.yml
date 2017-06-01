@@ -471,9 +471,9 @@ services:
     arguments: ['@app.root', '@module_handler', '@cache.discovery']
   theme.negotiator:
     class: Drupal\Core\Theme\ThemeNegotiator
-    arguments: ['@access_check.theme']
+    arguments: ['@access_check.theme', '@class_resolver']
     tags:
-      - { name: service_collector, tag: theme_negotiator, call: addNegotiator }
+      - { name: service_id_collector, tag: theme_negotiator }
   theme.negotiator.default:
     class: Drupal\Core\Theme\DefaultNegotiator
     arguments: ['@config.factory']
