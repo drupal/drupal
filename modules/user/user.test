@@ -1529,7 +1529,13 @@ class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
     // Setup date/time settings for Los Angeles time.
     variable_set('date_default_timezone', 'America/Los_Angeles');
     variable_set('configurable_timezones', 1);
-    variable_set('date_format_medium', 'Y-m-d H:i T');
+
+    // Override the 'medium' date format, which is the default for node
+    // creation time. Since we are testing time zones with Daylight Saving
+    // Time, and need to future proof against changes to the zoneinfo database,
+    // we choose the 'I' format placeholder instead of a human-readable zone
+    // name. With 'I', a 1 means the date is in DST, and 0 if not.
+    variable_set('date_format_medium', 'Y-m-d H:i I');
 
     // Create a user account and login.
     $web_user = $this->drupalCreateUser();
@@ -1547,11 +1553,11 @@ class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
 
     // Confirm date format and time zone.
     $this->drupalGet("node/$node1->nid");
-    $this->assertText('2007-03-09 21:00 PST', 'Date should be PST.');
+    $this->assertText('2007-03-09 21:00 0', 'Date should be PST.');
     $this->drupalGet("node/$node2->nid");
-    $this->assertText('2007-03-11 01:00 PST', 'Date should be PST.');
+    $this->assertText('2007-03-11 01:00 0', 'Date should be PST.');
     $this->drupalGet("node/$node3->nid");
-    $this->assertText('2007-03-20 21:00 PDT', 'Date should be PDT.');
+    $this->assertText('2007-03-20 21:00 1', 'Date should be PDT.');
 
     // Change user time zone to Santiago time.
     $edit = array();
@@ -1562,11 +1568,11 @@ class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
 
     // Confirm date format and time zone.
     $this->drupalGet("node/$node1->nid");
-    $this->assertText('2007-03-10 02:00 CLST', 'Date should be Chile summer time; five hours ahead of PST.');
+    $this->assertText('2007-03-10 02:00 1', 'Date should be Chile summer time; five hours ahead of PST.');
     $this->drupalGet("node/$node2->nid");
-    $this->assertText('2007-03-11 05:00 CLT', 'Date should be Chile time; four hours ahead of PST');
+    $this->assertText('2007-03-11 05:00 0', 'Date should be Chile time; four hours ahead of PST');
     $this->drupalGet("node/$node3->nid");
-    $this->assertText('2007-03-21 00:00 CLT', 'Date should be Chile time; three hours ahead of PDT.');
+    $this->assertText('2007-03-21 00:00 0', 'Date should be Chile time; three hours ahead of PDT.');
   }
 }
 
