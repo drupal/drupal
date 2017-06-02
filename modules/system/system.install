@@ -160,7 +160,7 @@ function system_requirements($phase) {
       if (empty($drivers)) {
         $database_ok = FALSE;
         $pdo_message = $t('Your web server does not appear to support any common PDO database extensions. Check with your hosting provider to see if they support PDO (PHP Data Objects) and offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array(
-          '@drupal-databases' => 'http://drupal.org/node/270#database',
+          '@drupal-databases' => 'https://www.drupal.org/requirements/database',
         ));
       }
       // Make sure the native PDO extension is available, not the older PEAR
