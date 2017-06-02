@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -791,4 +792,18 @@ function entity_test_entity_test_create_access(AccountInterface $account, $conte
 
   // No opinion.
   return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_query_entity_test_access_alter().
+ */
+function entity_test_query_entity_test_access_alter(AlterableInterface $query) {
+  if (!\Drupal::state()->get('entity_test_query_access')) {
+    return;
+  }
+
+  /** @var \Drupal\Core\Database\Query\Select|\Drupal\Core\Database\Query\AlterableInterface $query */
+  if (!\Drupal::currentUser()->hasPermission('view all entity_test_query_access entities')) {
+    $query->condition('entity_test_query_access.name', 'published entity');
+  }
 }
