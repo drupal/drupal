@@ -164,6 +164,9 @@ require_once dirname(__FILE__) . '/query.inc';
  * @see drupal_install_schema()
  */
 
+/**
+ * Base class for database schema definitions.
+ */
 abstract class DatabaseSchema implements QueryPlaceholderInterface {
 
   protected $connection;
