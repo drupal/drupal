@@ -37,6 +37,13 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
   protected $dateFormatter;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * Constructs a new NodeRevisionRevertForm.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
@@ -47,6 +54,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
   public function __construct(EntityStorageInterface $node_storage, DateFormatterInterface $date_formatter) {
     $this->nodeStorage = $node_storage;
     $this->dateFormatter = $date_formatter;
+    $this->time = \Drupal::service('datetime.time');
   }
 
   /**
@@ -114,6 +122,8 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
 
     $this->revision = $this->prepareRevertedRevision($this->revision, $form_state);
     $this->revision->revision_log = t('Copy of the revision from %date.', ['%date' => $this->dateFormatter->format($original_revision_timestamp)]);
+    $this->revision->setRevisionCreationTime($this->time->getRequestTime());
+    $this->revision->setChangedTime($this->time->getRequestTime());
     $this->revision->save();
 
     $this->logger('content')->notice('@type: reverted %title revision %revision.', ['@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);
