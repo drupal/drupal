@@ -4,8 +4,10 @@
  * @file field.tpl.php
  * Default template implementation to display the value of a field.
  *
- * This file is not used and is here as a starting point for customization only.
- * @see theme_field()
+ * This file is not used by Drupal core, which uses theme functions instead for
+ * performance reasons. The markup is the same, though, so if you want to use
+ * template files rather than functions to extend field theming, copy this to
+ * your custom theme. See theme_field() for a discussion of performance.
  *
  * Available variables:
  * - $items: An array of field values. Use render() to output them.
@@ -45,7 +47,7 @@
  */
 ?>
 <!--
-THIS FILE IS NOT USED AND IS HERE AS A STARTING POINT FOR CUSTOMIZATION ONLY.
+This file is not used by Drupal core, which uses theme functions instead.
 See http://api.drupal.org/api/function/theme_field/7 for details.
 After copying this file to your theme's folder and customizing it, remove this
 HTML comment.
