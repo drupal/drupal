@@ -432,23 +432,20 @@ function _block_rehash($theme = NULL) {
   drupal_alter('block_info', $current_blocks, $theme, $code_blocks);
   foreach ($current_blocks as $module => $module_blocks) {
     foreach ($module_blocks as $delta => $block) {
-      if (!isset($block['pages'])) {
-        // {block}.pages is type 'text', so it cannot have a
-        // default value, and not null, so we need to provide
-        // value if the module did not.
-        $block['pages']  = '';
-      }
-      // Make sure weight is set.
-      if (!isset($block['weight'])) {
-        $block['weight'] = 0;
-      }
+      // Make sure certain attributes are set.
+      $block += array(
+        'pages' => '',
+        'weight' => 0,
+        'status' => 0,
+      );
+      // Check for active blocks in regions that are not available.
       if (!empty($block['region']) && $block['region'] != BLOCK_REGION_NONE && !isset($regions[$block['region']]) && $block['status'] == 1) {
         drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $block['info'], '%region' => $block['region'])), 'warning');
         // Disabled modules are moved into the BLOCK_REGION_NONE later so no
         // need to move the block to another region.
         $block['status'] = 0;
       }
-      // Set region to none if not enabled and make sure status is set.
+      // Set region to none if not enabled.
       if (empty($block['status'])) {
         $block['status'] = 0;
         $block['region'] = BLOCK_REGION_NONE;
