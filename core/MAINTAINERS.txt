@@ -285,6 +285,10 @@ Migrate (Drupal)
 - Mike Ryan 'mikeryan' https://www.drupal.org/u/mikeryan
 - Vicki Spagnolo 'quietone' https://www.drupal.org/u/quietone
 
+Media
+- Sean Blommaert 'seanB' https://www.drupal.org/u/seanb
+- Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
+
 Menu
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
 - Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
