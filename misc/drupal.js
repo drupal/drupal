@@ -168,23 +168,76 @@ Drupal.checkPlain = function (str) {
 Drupal.formatString = function(str, args) {
   // Transform arguments before inserting them.
   for (var key in args) {
-    switch (key.charAt(0)) {
-      // Escaped only.
-      case '@':
-        args[key] = Drupal.checkPlain(args[key]);
-      break;
-      // Pass-through.
-      case '!':
-        break;
-      // Escaped and placeholder.
-      case '%':
-      default:
-        args[key] = Drupal.theme('placeholder', args[key]);
-        break;
+    if (args.hasOwnProperty(key)) {
+      switch (key.charAt(0)) {
+        // Escaped only.
+        case '@':
+          args[key] = Drupal.checkPlain(args[key]);
+          break;
+        // Pass-through.
+        case '!':
+          break;
+        // Escaped and placeholder.
+        default:
+          args[key] = Drupal.theme('placeholder', args[key]);
+          break;
+      }
     }
-    str = str.replace(key, args[key]);
   }
-  return str;
+
+  return Drupal.stringReplace(str, args, null);
+};
+
+/**
+ * Replace substring.
+ *
+ * The longest keys will be tried first. Once a substring has been replaced,
+ * its new value will not be searched again.
+ *
+ * @param {String} str
+ *   A string with placeholders.
+ * @param {Object} args
+ *   Key-value pairs.
+ * @param {Array|null} keys
+ *   Array of keys from the "args".  Internal use only.
+ *
+ * @return {String}
+ *   Returns the replaced string.
+ */
+Drupal.stringReplace = function (str, args, keys) {
+  if (str.length === 0) {
+    return str;
+  }
+
+  // If the array of keys is not passed then collect the keys from the args.
+  if (!$.isArray(keys)) {
+    keys = [];
+    for (var k in args) {
+      if (args.hasOwnProperty(k)) {
+        keys.push(k);
+      }
+    }
+
+    // Order the keys by the character length. The shortest one is the first.
+    keys.sort(function (a, b) { return a.length - b.length; });
+  }
+
+  if (keys.length === 0) {
+    return str;
+  }
+
+  // Take next longest one from the end.
+  var key = keys.pop();
+  var fragments = str.split(key);
+
+  if (keys.length) {
+    for (var i = 0; i < fragments.length; i++) {
+      // Process each fragment with a copy of remaining keys.
+      fragments[i] = Drupal.stringReplace(fragments[i], args, keys.slice(0));
+    }
+  }
+
+  return fragments.join(args[key]);
 };
 
 /**
