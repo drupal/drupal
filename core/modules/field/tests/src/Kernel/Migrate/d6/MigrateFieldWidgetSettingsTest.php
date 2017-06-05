@@ -106,6 +106,11 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
       ->getComponent('field_company');
     $this->assertInternalType('array', $component);
     $this->assertSame('options_select', $component['type']);
+
+    $component = entity_get_form_display('node', 'employee', 'default')
+      ->getComponent('field_commander');
+    $this->assertInternalType('array', $component);
+    $this->assertSame('options_select', $component['type']);
   }
 
 }

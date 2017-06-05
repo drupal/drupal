@@ -150,6 +150,17 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertSame('node', $field->getSetting('target_type'));
     $this->assertSame([], $field->getDefaultValueLiteral());
     $this->assertTrue($field->isTranslatable());
+
+    // Test a user reference field, migrated to entity reference.
+    $field = FieldConfig::load('node.employee.field_commander');
+    $this->assertInstanceOf(FieldConfig::class, $field);
+    $this->assertSame('entity_reference', $field->getType());
+    $this->assertSame('Commanding Officer', $field->label());
+    $this->assertSame('default:user', $field->getSetting('handler'));
+    $this->assertSame([], $field->getSetting('handler_settings'));
+    $this->assertSame('user', $field->getSetting('target_type'));
+    $this->assertSame([], $field->getDefaultValueLiteral());
+    $this->assertTrue($field->isTranslatable());
   }
 
   /**

@@ -108,6 +108,12 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
     $this->assertSame('entity_reference', $field_storage->getType());
     $this->assertSame('node', $field_storage->getSetting('target_type'));
 
+    // Test a user reference field.
+    $field_storage = FieldStorageConfig::load('node.field_commander');
+    $this->assertInstanceOf(FieldStorageConfig::class, $field_storage);
+    $this->assertSame('entity_reference', $field_storage->getType());
+    $this->assertSame('user', $field_storage->getSetting('target_type'));
+
     // Validate that the source count and processed count match up.
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->getMigration('d6_field');

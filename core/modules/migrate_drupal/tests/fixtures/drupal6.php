@@ -603,6 +603,21 @@ $connection->schema()->createTable('batch', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('batch')
+->fields(array(
+  'bid',
+  'token',
+  'timestamp',
+  'batch',
+))
+->values(array(
+  'bid' => '1',
+  'token' => '',
+  'timestamp' => '1494966324',
+  'batch' => NULL,
+))
+->execute();
+
 $connection->schema()->createTable('blocks', array(
   'fields' => array(
     'bid' => array(
@@ -2630,6 +2645,18 @@ $connection->insert('content_node_field')
   'locked',
 ))
 ->values(array(
+  'field_name' => 'field_commander',
+  'type' => 'userreference',
+  'global_settings' => 'a:2:{s:19:"referenceable_roles";a:4:{i:2;i:2;i:3;i:0;i:4;i:0;i:5;i:0;}s:20:"referenceable_status";s:0:"";}',
+  'required' => '0',
+  'multiple' => '0',
+  'db_storage' => '1',
+  'module' => 'userreference',
+  'db_columns' => 'a:1:{s:3:"uid";a:4:{s:4:"type";s:3:"int";s:8:"unsigned";b:1;s:8:"not null";b:0;s:5:"index";b:1;}}',
+  'active' => '1',
+  'locked' => '0',
+))
+->values(array(
   'field_name' => 'field_company',
   'type' => 'nodereference',
   'global_settings' => 'a:1:{s:19:"referenceable_types";a:10:{s:7:"company";s:7:"company";s:7:"article";i:0;s:8:"employee";i:0;s:5:"forum";i:0;s:10:"test_event";i:0;s:9:"test_page";i:0;s:11:"test_planet";i:0;s:10:"test_story";i:0;s:7:"sponsor";i:0;s:5:"story";i:0;}}',
@@ -2976,6 +3003,18 @@ $connection->insert('content_node_field_instance')
   'widget_active',
 ))
 ->values(array(
+  'field_name' => 'field_commander',
+  'type_name' => 'employee',
+  'weight' => '32',
+  'label' => 'Commanding Officer',
+  'widget_type' => 'userreference_select',
+  'widget_settings' => 'a:5:{s:18:"autocomplete_match";s:8:"contains";s:4:"size";i:60;s:12:"reverse_link";i:0;s:13:"default_value";a:1:{i:0;a:1:{s:3:"uid";s:0:"";}}s:17:"default_value_php";N;}',
+  'display_settings' => 'a:5:{s:5:"label";a:2:{s:6:"format";s:5:"above";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:6:"teaser";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
+  'description' => '',
+  'widget_module' => 'userreference',
+  'widget_active' => '1',
+))
+->values(array(
   'field_name' => 'field_company',
   'type_name' => 'employee',
   'weight' => '31',
@@ -3281,6 +3320,12 @@ $connection->schema()->createTable('content_type_employee', array(
       'default' => '0',
       'unsigned' => TRUE,
     ),
+    'field_commander_uid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
   ),
   'primary key' => array(
     'vid',
@@ -3288,6 +3333,9 @@ $connection->schema()->createTable('content_type_employee', array(
   'indexes' => array(
     'nid' => array(
       'nid',
+    ),
+    'field_commander_uid' => array(
+      'field_commander_uid',
     ),
   ),
   'mysql_character_set' => 'utf8',
@@ -3297,10 +3345,12 @@ $connection->insert('content_type_employee')
 ->fields(array(
   'vid',
   'nid',
+  'field_commander_uid',
 ))
 ->values(array(
   'vid' => '21',
   'nid' => '18',
+  'field_commander_uid' => '8',
 ))
 ->execute();
 
@@ -33449,6 +33499,60 @@ $connection->insert('menu_links')
   'p9' => '0',
   'updated' => '0',
 ))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '457',
+  'plid' => '0',
+  'link_path' => 'userreference/autocomplete',
+  'router_path' => 'userreference/autocomplete',
+  'link_title' => 'Userreference autocomplete',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '1',
+  'customized' => '0',
+  'p1' => '457',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '458',
+  'plid' => '0',
+  'link_path' => 'admin/content/node-type/employee/fields/field_commander/remove',
+  'router_path' => 'admin/content/node-type/employee/fields/field_commander/remove',
+  'link_title' => 'Remove field',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '1',
+  'customized' => '0',
+  'p1' => '458',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('menu_router', array(
@@ -36125,6 +36229,50 @@ $connection->insert('menu_router')
   'description' => '',
   'position' => '',
   'weight' => '1',
+  'file' => 'sites/all/modules/cck/includes/content.admin.inc',
+))
+->values(array(
+  'path' => 'admin/content/node-type/employee/fields/field_commander',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:24:"administer content types";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:23:"content_field_edit_form";i:1;s:8:"employee";i:2;s:15:"field_commander";}',
+  'fit' => '63',
+  'number_parts' => '6',
+  'tab_parent' => 'admin/content/node-type/employee/fields',
+  'tab_root' => 'admin/content/node-type/employee',
+  'title' => 'Commanding Officer',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => 'sites/all/modules/cck/includes/content.admin.inc',
+))
+->values(array(
+  'path' => 'admin/content/node-type/employee/fields/field_commander/remove',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:24:"administer content types";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:25:"content_field_remove_form";i:1;s:8:"employee";i:2;s:15:"field_commander";}',
+  'fit' => '127',
+  'number_parts' => '7',
+  'tab_parent' => '',
+  'tab_root' => 'admin/content/node-type/employee/fields/field_commander/remove',
+  'title' => 'Remove field',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
   'file' => 'sites/all/modules/cck/includes/content.admin.inc',
 ))
 ->values(array(
@@ -42573,6 +42721,28 @@ $connection->insert('menu_router')
   'weight' => '0',
   'file' => '',
 ))
+->values(array(
+  'path' => 'userreference/autocomplete',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:14:"access content";}',
+  'page_callback' => 'userreference_autocomplete',
+  'page_arguments' => 'a:0:{}',
+  'fit' => '3',
+  'number_parts' => '2',
+  'tab_parent' => '',
+  'tab_root' => 'userreference/autocomplete',
+  'title' => 'Userreference autocomplete',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
 ->execute();
 
 $connection->schema()->createTable('node', array(
@@ -42992,7 +43162,7 @@ $connection->insert('node')
   'uid' => '1',
   'status' => '1',
   'created' => '1493066711',
-  'changed' => '1493066711',
+  'changed' => '1494966544',
   'comment' => '2',
   'promote' => '1',
   'moderate' => '0',
@@ -43577,7 +43747,7 @@ $connection->insert('node_revisions')
   'body' => "Yeah, I like animals better than people sometimes... Especially dogs. Dogs are the best. Every time you come home, they act like they haven't seen you in a year. And the good thing about dogs... is they got different dogs for different people. Like pit bulls. The dog of dogs. Pit bull can be the right man's best friend... or the wrong man's worst enemy. You going to give me a dog for a pet, give me a pit bull. Give me... Raoul. Right, Omar? Give me Raoul.",
   'teaser' => "Yeah, I like animals better than people sometimes... Especially dogs. Dogs are the best. Every time you come home, they act like they haven't seen you in a year. And the good thing about dogs... is they got different dogs for different people. Like pit bulls. The dog of dogs. Pit bull can be the right man's best friend... or the wrong man's worst enemy. You going to give me a dog for a pet, give me a pit bull. Give me... Raoul. Right, Omar?",
   'log' => '',
-  'timestamp' => '1493066711',
+  'timestamp' => '1494966544',
   'format' => '1',
 ))
 ->execute();
@@ -45087,10 +45257,10 @@ $connection->insert('system')
   'name' => 'userreference',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
-  'schema_version' => '-1',
+  'schema_version' => '6002',
   'weight' => '0',
   'info' => 'a:10:{s:4:"name";s:14:"User Reference";s:11:"description";s:56:"Defines a field type for referencing a user from a node.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:4:"text";i:2;s:13:"optionwidgets";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
@@ -46394,8 +46564,8 @@ $connection->insert('users')
   'signature' => '',
   'signature_format' => '0',
   'created' => '0',
-  'access' => '1493066649',
-  'login' => '1493066444',
+  'access' => '1494966478',
+  'login' => '1494966280',
   'status' => '1',
   'timezone' => NULL,
   'language' => '',
@@ -47476,7 +47646,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'javascript_parsed',
-  'value' => 'a:13:{i:0;s:14:"misc/jquery.js";i:1;s:14:"misc/drupal.js";i:2;s:19:"misc/tableheader.js";s:10:"refresh:fr";s:7:"waiting";s:10:"refresh:zu";s:7:"waiting";i:3;s:17:"misc/tabledrag.js";i:4;s:32:"sites/all/modules/cck/content.js";i:5;s:16:"misc/textarea.js";i:6;s:16:"misc/collapse.js";i:7;s:19:"misc/jquery.form.js";i:8;s:12:"misc/ahah.js";i:9;s:20:"misc/autocomplete.js";i:10;s:14:"misc/teaser.js";}',
+  'value' => 'a:16:{i:0;s:14:"misc/jquery.js";i:1;s:14:"misc/drupal.js";i:2;s:19:"misc/tableheader.js";s:10:"refresh:fr";s:7:"waiting";s:10:"refresh:zu";s:7:"waiting";i:3;s:17:"misc/tabledrag.js";i:4;s:32:"sites/all/modules/cck/content.js";i:5;s:16:"misc/textarea.js";i:6;s:16:"misc/collapse.js";i:7;s:12:"misc/form.js";i:8;s:19:"misc/tableselect.js";i:9;s:20:"modules/user/user.js";i:10;s:20:"misc/autocomplete.js";i:11;s:19:"misc/jquery.form.js";i:12;s:12:"misc/ahah.js";i:13;s:14:"misc/teaser.js";}',
 ))
 ->values(array(
   'name' => 'language_content_type_article',

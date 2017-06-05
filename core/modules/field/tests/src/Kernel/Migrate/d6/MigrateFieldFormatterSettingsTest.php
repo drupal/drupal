@@ -216,6 +216,12 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     // The plain node reference formatter shows the referenced node's title,
     // unlinked.
     $this->assertFalse($component['settings']['link']);
+
+    $component = $display->getComponent('field_commander');
+    $this->assertInternalType('array', $component);
+    $this->assertSame('entity_reference_label', $component['type']);
+    // The default user reference formatter links to the referenced user.
+    $this->assertTrue($component['settings']['link']);
   }
 
 }
