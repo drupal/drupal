@@ -6,6 +6,7 @@ Drupal 7.xx, xxxx-xx-xx (development version)
 - Allowed services such as Let's Encrypt to work with Drupal on Apache, by
   making Drupal's .htaccess file allow access to the .well-known directory
   defined by RFC 5785.
+- Several bug fixes.
 
 Drupal 7.54, 2017-02-01
 -----------------------

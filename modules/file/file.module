@@ -283,7 +283,7 @@ function file_ajax_upload() {
   $form['#prefix'] .= theme('status_messages');
   $output = drupal_render($form);
   $js = drupal_add_js();
-  $settings = call_user_func_array('array_merge_recursive', $js['settings']['data']);
+  $settings = drupal_array_merge_deep_array($js['settings']['data']);
 
   $commands[] = ajax_command_replace(NULL, $output, $settings);
   return array('#type' => 'ajax', '#commands' => $commands);
