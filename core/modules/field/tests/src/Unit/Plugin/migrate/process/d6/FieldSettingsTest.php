@@ -28,7 +28,7 @@ class FieldSettingsTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $result = $plugin->transform([$field_type, $field_settings], $executable, $row, 'foo');
+    $result = $plugin->transform([$field_type, $field_settings, NULL], $executable, $row, 'foo');
     $this->assertSame($allowed_values, $result['allowed_values']);
   }
 
