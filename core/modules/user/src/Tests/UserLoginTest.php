@@ -63,23 +63,16 @@ class UserLoginTest extends WebTestBase {
     // A login with the correct password should also result in a flood error
     // message.
     $this->assertFailedLogin($user1, 'ip');
-    $this->resetUserPassword($user1);
-    $this->drupalLogout();
-    // Try to login as user 1, it should be successful.
-    $this->drupalLogin($user1);
-    $this->assertNoRaw('Too many failed login attempts from your IP address.');
   }
 
   /**
    * Test the per-user login flood control.
    */
   public function testPerUserLoginFloodControl() {
-    $user_limit = 3;
-
     $this->config('user.flood')
       // Set a high global limit out so that it is not relevant in the test.
       ->set('ip_limit', 4000)
-      ->set('user_limit', $user_limit)
+      ->set('user_limit', 3)
       ->save();
 
     $user1 = $this->drupalCreateUser([]);
@@ -110,12 +103,6 @@ class UserLoginTest extends WebTestBase {
     // Try one more attempt for user 1, it should be rejected, even if the
     // correct password has been used.
     $this->assertFailedLogin($user1, 'user');
-    $this->resetUserPassword($user1);
-    $this->drupalLogout();
-
-    // Try to login as user 1, it should be successful.
-    $this->drupalLogin($user1);
-    $this->assertNoRaw('There have been more than ' . $user_limit . ' failed login attempts for this account.');
   }
 
   /**
@@ -186,25 +173,6 @@ class UserLoginTest extends WebTestBase {
     else {
       $this->assertText(t('Unrecognized username or password. Forgot your password?'));
     }
-  }
-
-  /**
-   * Reset user password.
-   *
-   * @param object $user
-   *   A user object.
-   */
-  public function resetUserPassword($user) {
-    $this->drupalGet('user/password');
-    $edit['name'] = $user->getUsername();
-    $this->drupalPostForm(NULL, $edit, 'Submit');
-    $_emails = $this->drupalGetMails();
-    $email = end($_emails);
-    $urls = [];
-    preg_match('#.+user/reset/.+#', $email['body'], $urls);
-    $resetURL = $urls[0];
-    $this->drupalGet($resetURL);
-    $this->drupalPostForm(NULL, NULL, 'Log in');
   }
 
 }
