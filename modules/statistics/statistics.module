@@ -245,7 +245,7 @@ function statistics_user_delete($account) {
  * Implements hook_cron().
  */
 function statistics_cron() {
-  $statistics_timestamp = variable_get('statistics_day_timestamp', '');
+  $statistics_timestamp = variable_get('statistics_day_timestamp', 0);
 
   if ((REQUEST_TIME - $statistics_timestamp) >= 86400) {
     // Reset day counts.
