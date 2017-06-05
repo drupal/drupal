@@ -487,7 +487,7 @@ function drupal_http_build_query(array $query, $parent = '') {
   $params = array();
 
   foreach ($query as $key => $value) {
-    $key = ($parent ? $parent . '[' . rawurlencode($key) . ']' : rawurlencode($key));
+    $key = $parent ? $parent . rawurlencode('[' . $key . ']') : rawurlencode($key);
 
     // Recurse into children.
     if (is_array($value)) {
