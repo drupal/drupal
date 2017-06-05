@@ -251,7 +251,7 @@ Drupal.t = function (str, args, options) {
  *   A translated string.
  */
 Drupal.formatPlural = function (count, singular, plural, args, options) {
-  var args = args || {};
+  args = args || {};
   args['@count'] = count;
   // Determine the index of the plural form.
   var index = Drupal.locale.pluralFormula ? Drupal.locale.pluralFormula(args['@count']) : ((args['@count'] == 1) ? 0 : 1);
