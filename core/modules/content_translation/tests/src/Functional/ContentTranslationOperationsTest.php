@@ -3,7 +3,7 @@
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\node\Tests\NodeTestBase;
+use Drupal\Tests\node\Functional\NodeTestBase;
 use Drupal\user\Entity\Role;
 
 /**
