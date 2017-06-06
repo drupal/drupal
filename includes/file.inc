@@ -2563,6 +2563,7 @@ function file_directory_temp() {
  *   An associative array of headers, as expected by file_transfer().
  */
 function file_get_content_headers($file) {
+  $name = mime_header_encode($file->filename);
   $type = mime_header_encode($file->filemime);
 
   return array(
