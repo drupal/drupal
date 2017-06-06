@@ -719,10 +719,16 @@ class DrupalUnitTestCase extends DrupalTestCase {
    * method.
    */
   protected function setUp() {
-    global $conf;
+    global $conf, $language;
 
     // Store necessary current values before switching to the test environment.
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
+
+    // Set up English language.
+    $this->originalLanguage = $language;
+    $this->originalLanguageDefault = variable_get('language_default');
+    unset($conf['language_default']);
+    $language = language_default();
 
     // Reset all statics so that test is performed with a clean environment.
     drupal_static_reset();
@@ -764,7 +770,7 @@ class DrupalUnitTestCase extends DrupalTestCase {
   }
 
   protected function tearDown() {
-    global $conf;
+    global $conf, $language;
 
     // Get back to the original connection.
     Database::removeConnection('default');
@@ -774,6 +780,12 @@ class DrupalUnitTestCase extends DrupalTestCase {
     // Restore modules if necessary.
     if (isset($this->originalModuleList)) {
       module_list(TRUE, FALSE, FALSE, $this->originalModuleList);
+    }
+
+    // Reset language.
+    $language = $this->originalLanguage;
+    if ($this->originalLanguageDefault) {
+      $GLOBALS['conf']['language_default'] = $this->originalLanguageDefault;
     }
   }
 }
