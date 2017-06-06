@@ -418,7 +418,7 @@ class CategorizeFeedTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Creates a feed and makes sure you can add more than one category to it.
+   * Creates a feed and makes sure you can add/delete categories to it.
    */
   function testCategorizeFeed() {
 
@@ -448,7 +448,31 @@ class CategorizeFeedTestCase extends AggregatorTestCase {
     // Assert the feed has two categories.
     $this->getFeedCategories($db_feed);
     $this->assertEqual(count($db_feed->categories), 2, 'Feed has 2 categories');
+
+    // Use aggregator_save_feed() to delete a category.
+    $category = reset($categories);
+    aggregator_save_category(array('cid' => $category->cid));
+
+    // Assert that category is deleted.
+    $db_category = db_query("SELECT COUNT(*) FROM {aggregator_category} WHERE cid = :cid", array(':cid' => $category->cid))->fetchField();
+    $this->assertFalse($db_category, format_string('The category %title has been deleted.', array('%title' => $category->title)));
+
+    // Assert that category has been removed from feed.
+    $categorized_feeds = db_query("SELECT COUNT(*) FROM {aggregator_category_feed} WHERE cid = :cid", array(':cid' => $category->cid))->fetchField();
+    $this->assertFalse($categorized_feeds, format_string('The category %title has been removed from feed %feed_title.', array('%title' => $category->title, '%feed_title' => $feed['title'])));
+
+    // Assert that no broken links (associated with the deleted category)
+    // appear on one of the other category pages.
+    $this->createSampleNodes();
+    $this->drupalGet('admin/config/services/aggregator');
+    $this->clickLink('update items');
+    $categories = $this->getCategories();
+    $category = reset($categories);
+    $this->drupalGet('aggregator/categories/' . $category->cid);
+    global $base_path;
+    $this->assertNoRaw('<a href="' . $base_path . 'aggregator/categories/"></a>,');
   }
+
 }
 
 /**
@@ -685,9 +709,21 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
       }
     }
 
+    // Delete category from feed items when category is deleted.
+    $cid = reset($feed->categories);
+    $categories = $this->getCategories();
+    $category_title = $categories[$cid]->title;
+
+    // Delete category.
+    aggregator_save_category(array('cid' => $cid));
+
+    // Assert category has been removed from feed items.
+    $categorized_count = db_query("SELECT COUNT(*) FROM {aggregator_category_item} WHERE cid = :cid", array(':cid' => $cid))->fetchField();
+    $this->assertFalse($categorized_count, format_string('The category %title has been removed from feed items.', array('%title' => $category_title)));
     // Delete feed.
     $this->deleteFeed($feed);
   }
+
 }
 
 /**

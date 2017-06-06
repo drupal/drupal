@@ -455,6 +455,14 @@ function aggregator_save_category($edit) {
       db_delete('aggregator_category')
         ->condition('cid', $edit['cid'])
         ->execute();
+      // Remove category from feeds.
+      db_delete('aggregator_category_feed')
+        ->condition('cid', $edit['cid'])
+        ->execute();
+      // Remove category from feed items.
+      db_delete('aggregator_category_item')
+        ->condition('cid', $edit['cid'])
+        ->execute();
       // Make sure there is no active block for this category.
       if (module_exists('block')) {
         db_delete('block')
