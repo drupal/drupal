@@ -466,6 +466,19 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Retrieves password reset email and extracts the login link.
+   */
+  public function getResetURL() {
+    // Assume the most recent email.
+    $_emails = $this->drupalGetMails();
+    $email = end($_emails);
+    $urls = array();
+    preg_match('#.+user/reset/.+#', $email['body'], $urls);
+
+    return $urls[0];
+  }
+
+  /**
    * Tests password reset functionality.
    */
   function testUserPasswordReset() {
@@ -478,6 +491,49 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     $this->drupalPost('user/password', $edit, t('E-mail new password'));
     // Confirm the password reset.
     $this->assertText(t('Further instructions have been sent to your e-mail address.'), 'Password reset instructions mailed message displayed.');
+
+    // Create an image field to enable an Ajax request on the user profile page.
+    $field = array(
+      'field_name' => 'field_avatar',
+      'type' => 'image',
+      'settings' => array(),
+      'cardinality' => 1,
+    );
+    field_create_field($field);
+
+    $instance = array(
+      'field_name' => $field['field_name'],
+      'entity_type' => 'user',
+      'label' => 'Avatar',
+      'bundle' => 'user',
+      'required' => FALSE,
+      'settings' => array(),
+      'widget' => array(
+        'type' => 'image_image',
+        'settings' => array(),
+      ),
+    );
+    field_create_instance($instance);
+
+    $resetURL = $this->getResetURL();
+    $this->drupalGet($resetURL);
+
+    // Check successful login.
+    $this->drupalPost(NULL, NULL, t('Log in'));
+
+    // Make sure the Ajax request from uploading a file does not invalidate the
+    // reset token.
+    $image = current($this->drupalGetTestFiles('image'));
+    $edit = array(
+      'files[field_avatar_und_0]' => drupal_realpath($image->uri),
+    );
+    $this->drupalPostAJAX(NULL, $edit, 'field_avatar_und_0_upload_button');
+
+    // Change the forgotten password.
+    $password = user_password();
+    $edit = array('pass[pass1]' => $password, 'pass[pass2]' => $password);
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertText(t('The changes have been saved.'), 'Forgotten password changed.');
   }
 
   /**
