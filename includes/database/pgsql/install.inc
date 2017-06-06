@@ -165,7 +165,7 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
         LANGUAGE \'sql\''
       );
 
-      // Using || to concatenate in Drupal is not recommeneded because there are
+      // Using || to concatenate in Drupal is not recommended because there are
       // database drivers for Drupal that do not support the syntax, however
       // they do support CONCAT(item1, item2) which we can replicate in
       // PostgreSQL. PostgreSQL requires the function to be defined for each

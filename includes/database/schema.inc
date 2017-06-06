@@ -294,7 +294,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
   protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
     $info = $this->connection->getConnectionOptions();
 
-    // Retrive the table name and schema
+    // Retrieve the table name and schema
     $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
     $condition = new DatabaseCondition('AND');

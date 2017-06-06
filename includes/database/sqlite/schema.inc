@@ -244,7 +244,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     // database. So the syntax '...RENAME TO database.table' would fail.
     // So we must determine the full table name here rather than surrounding
     // the table with curly braces incase the db_prefix contains a reference
-    // to a database outside of our existsing database.
+    // to a database outside of our existing database.
     $info = $this->getPrefixInfo($new_name);
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $info['table']);
 
