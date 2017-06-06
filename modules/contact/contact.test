@@ -346,6 +346,28 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
     $this->assertResponse(200);
 
+    // Test that users can disable their contact form.
+    $this->drupalLogin($this->contact_user);
+    $edit = array('contact' => FALSE);
+    $this->drupalPost('user/' . $this->contact_user->uid . '/edit', $edit, 'Save');
+    $this->drupalLogout();
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(403);
+
+    // Test that user's contact status stays disabled when saving.
+    $contact_user_temp = user_load($this->contact_user->uid, TRUE);
+    user_save($contact_user_temp);
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(403);
+
+    // Test that users can enable their contact form.
+    $this->drupalLogin($this->contact_user);
+    $edit = array('contact' => TRUE);
+    $this->drupalPost('user/' . $this->contact_user->uid . '/edit', $edit, 'Save');
+    $this->drupalLogout();
+    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->assertResponse(200);
+
     // Revoke the personal contact permission for the anonymous user.
     user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
     $this->drupalGet('user/' . $this->contact_user->uid . '/contact');

@@ -234,7 +234,14 @@ function contact_form_user_profile_form_alter(&$form, &$form_state) {
  * Implements hook_user_presave().
  */
 function contact_user_presave(&$edit, $account, $category) {
-  $edit['data']['contact'] = isset($edit['contact']) ? $edit['contact'] : variable_get('contact_default_status', 1);
+  if (isset($edit['contact'])) {
+    // Set new value.
+    $edit['data']['contact'] = $edit['contact'];
+  }
+  elseif (!isset($account->data['contact'])) {
+    // Use default if none has been set.
+    $edit['data']['contact'] = variable_get('contact_default_status', 1);
+  }
 }
 
 /**
