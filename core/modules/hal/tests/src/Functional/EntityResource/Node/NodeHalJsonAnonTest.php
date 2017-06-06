@@ -39,6 +39,7 @@ class NodeHalJsonAnonTest extends NodeResourceTestBase {
     'changed',
     'promote',
     'sticky',
+    'path',
     'revision_uid',
   ];
 
@@ -54,7 +55,7 @@ class NodeHalJsonAnonTest extends NodeResourceTestBase {
     return  $normalization + [
       '_links' => [
         'self' => [
-          'href' => $this->baseUrl . '/node/1?_format=hal_json',
+          'href' => $this->baseUrl . '/llama?_format=hal_json',
         ],
         'type' => [
           'href' => $this->baseUrl . '/rest/type/node/camelids',

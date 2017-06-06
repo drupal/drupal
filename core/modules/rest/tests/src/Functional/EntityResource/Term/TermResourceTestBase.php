@@ -14,7 +14,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['taxonomy'];
+  public static $modules = ['taxonomy', 'path'];
 
   /**
    * {@inheritdoc}
@@ -44,8 +44,12 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
       case 'POST':
       case 'PATCH':
       case 'DELETE':
+        // Grant the 'create url aliases' permission to test the case when
+        // the path field is accessible, see
+        // \Drupal\Tests\rest\Functional\EntityResource\Node\NodeResourceTestBase
+        // for a negative test.
         // @todo Update once https://www.drupal.org/node/2824408 lands.
-        $this->grantPermissionsToTestedRole(['administer taxonomy']);
+        $this->grantPermissionsToTestedRole(['administer taxonomy', 'create url aliases']);
         break;
     }
   }
@@ -67,7 +71,8 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
     // Create a "Llama" taxonomy term.
     $term = Term::create(['vid' => $vocabulary->id()])
       ->setName('Llama')
-      ->setChangedTime(123456789);
+      ->setChangedTime(123456789)
+      ->set('path', '/llama');
     $term->save();
 
     return $term;
@@ -115,6 +120,13 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
       'default_langcode' => [
         [
           'value' => TRUE,
+        ],
+      ],
+      'path' => [
+        [
+          'alias' => '/llama',
+          'pid' => 1,
+          'langcode' => 'en',
         ],
       ],
     ];

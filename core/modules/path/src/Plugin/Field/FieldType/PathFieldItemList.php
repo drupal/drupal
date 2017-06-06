@@ -34,4 +34,42 @@ class PathFieldItemList extends FieldItemList {
     \Drupal::service('path.alias_storage')->delete($conditions);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getValue($include_computed = FALSE) {
+    $this->ensureLoaded();
+    return parent::getValue($include_computed);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty() {
+    $this->ensureLoaded();
+    return parent::isEmpty();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIterator() {
+    $this->ensureLoaded();
+    return parent::getIterator();
+  }
+
+  /**
+   * Automatically create the first item for computed fields.
+   *
+   * This ensures that ::getValue() and ::isEmpty() calls will behave like a
+   * non-computed field.
+   *
+   * @todo: Move this to the base class in https://www.drupal.org/node/2392845.
+   */
+  protected function ensureLoaded() {
+    if (!isset($this->list[0]) && $this->definition->isComputed()) {
+      $this->list[0] = $this->createItem(0);
+    }
+  }
+
 }

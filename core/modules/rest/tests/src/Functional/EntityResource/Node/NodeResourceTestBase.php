@@ -15,7 +15,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node'];
+  public static $modules = ['node', 'path'];
 
   /**
    * {@inheritdoc}
@@ -32,6 +32,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
     'changed',
     'promote',
     'sticky',
+    'path',
   ];
 
   /**
@@ -51,6 +52,10 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
         $this->grantPermissionsToTestedRole(['access content', 'create camelids content']);
         break;
       case 'PATCH':
+        // Do not grant the 'create url aliases' permission to test the case
+        // when the path field is protected/not accessible, see
+        // \Drupal\Tests\rest\Functional\EntityResource\Term\TermResourceTestBase
+        // for a positive test.
         $this->grantPermissionsToTestedRole(['access content', 'edit any camelids content']);
         break;
       case 'DELETE':
@@ -79,6 +84,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
       ->setCreatedTime(123456789)
       ->setChangedTime(123456789)
       ->setRevisionCreationTime(123456789)
+      ->set('path', '/llama')
       ->save();
 
     return $node;
@@ -167,6 +173,13 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
         ],
       ],
       'revision_log' => [],
+      'path' => [
+        [
+          'alias' => '/llama',
+          'pid' => 1,
+          'langcode' => 'en',
+        ],
+      ],
     ];
   }
 

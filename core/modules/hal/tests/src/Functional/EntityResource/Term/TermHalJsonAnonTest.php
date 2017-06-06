@@ -40,7 +40,7 @@ class TermHalJsonAnonTest extends TermResourceTestBase {
     return $normalization + [
       '_links' => [
         'self' => [
-          'href' => $this->baseUrl . '/taxonomy/term/1?_format=hal_json',
+          'href' => $this->baseUrl . '/llama?_format=hal_json',
         ],
         'type' => [
           'href' => $this->baseUrl . '/rest/type/taxonomy_term/camelids',

@@ -23,6 +23,13 @@ use Drupal\Core\TypedData\DataDefinition;
 class PathItem extends FieldItemBase {
 
   /**
+   * Whether the alias has been loaded from the alias storage service yet.
+   *
+   * @var bool
+   */
+  protected $isLoaded = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
@@ -30,7 +37,17 @@ class PathItem extends FieldItemBase {
       ->setLabel(t('Path alias'));
     $properties['pid'] = DataDefinition::create('integer')
       ->setLabel(t('Path id'));
+    $properties['langcode'] = DataDefinition::create('string')
+      ->setLabel(t('Language Code'));
     return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __get($name) {
+    $this->ensureLoaded();
+    return parent::__get($name);
   }
 
   /**
@@ -43,8 +60,54 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
+  public function getValue() {
+    $this->ensureLoaded();
+    return parent::getValue();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty() {
+    $this->ensureLoaded();
+    return parent::isEmpty();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIterator() {
+    $this->ensureLoaded();
+    return parent::getIterator();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSave() {
     $this->alias = trim($this->alias);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __set($name, $value) {
+    // Also ensure that existing values are loaded when setting a value, this
+    // ensures that it is possible to set a new value immediately after loading
+    // an entity.
+    $this->ensureLoaded();
+    parent::__set($name, $value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function set($property_name, $value, $notify = TRUE) {
+    // Also ensure that existing values are loaded when setting a value, this
+    // ensures that it is possible to set a new value immediately after loading
+    // an entity.
+    $this->ensureLoaded();
+    return parent::set($property_name, $value, $notify);
   }
 
   /**
@@ -86,6 +149,40 @@ class PathItem extends FieldItemBase {
    */
   public static function mainPropertyName() {
     return 'alias';
+  }
+
+  /**
+   * Ensures the alias properties are loaded if available.
+   *
+   * This ensures that the properties will always be loaded and act like
+   * non-computed fields when calling ::__get() and getValue().
+   *
+   * @todo: Determine if this should be moved to the base class in
+   *   https://www.drupal.org/node/2392845.
+   */
+  protected function ensureLoaded() {
+    if (!$this->isLoaded) {
+      $entity = $this->getEntity();
+      if (!$entity->isNew()) {
+        // @todo Support loading languge neutral aliases in
+        //   https://www.drupal.org/node/2511968.
+        $alias = \Drupal::service('path.alias_storage')->load([
+          'source' => '/' . $entity->toUrl()->getInternalPath(),
+          'langcode' => $this->getLangcode(),
+        ]);
+        if ($alias) {
+          $this->setValue($alias);
+        }
+        else {
+          // If there is no existing alias, default the langcode to the current
+          // language.
+          // @todo Set the langcode to not specified for untranslatable fields
+          //   in https://www.drupal.org/node/2689459.
+          $this->langcode = $this->getLangcode();
+        }
+      }
+      $this->isLoaded = TRUE;
+    }
   }
 
 }
