@@ -1,14 +1,11 @@
 <?php
 
-namespace Drupal\views_ui\Tests;
+namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 
 /**
  * Provides a base class for testing the Views UI.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.x.
- *   Use \Drupal\Tests\views_ui\Functional\UITestBase.
  */
 abstract class UITestBase extends ViewTestBase {
 
@@ -36,8 +33,8 @@ abstract class UITestBase extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     $this->enableViewsTestModule();
 
@@ -51,8 +48,6 @@ abstract class UITestBase extends ViewTestBase {
       'administer permissions',
     ]);
     $this->drupalLogin($this->fullAdminUser);
-
-    @trigger_error('\Drupal\views_ui\Tests\UITestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.x. Instead, use \Drupal\Tests\views_ui\Functional\UITestBase', E_USER_DEPRECATED);
   }
 
   /**
@@ -83,9 +78,9 @@ abstract class UITestBase extends ViewTestBase {
     // Ensure that each nojs page is accessible via ajax as well.
     if (strpos($url, 'nojs') !== FALSE) {
       $url = str_replace('nojs', 'ajax', $url);
-      $result = $this->drupalGet($url, $options, $headers);
-      $this->assertResponse(200);
-      $this->assertHeader('Content-Type', 'application/json');
+      $result = $this->drupalGet($url, $options);
+      $this->assertSession()->statusCodeEquals(200);
+      $this->assertEquals('application/json', $this->getSession()->getResponseHeader('Content-Type'));
       $this->assertTrue(json_decode($result), 'Ensure that the AJAX request returned valid content.');
     }
 
