@@ -46,6 +46,7 @@ class DateRangeFieldTest extends DateTestBase {
    */
   public function testDateRangeField() {
     $field_name = $this->fieldStorage->getName();
+    $field_label = $this->field->label();
 
     // Loop through defined timezones to test that date-only fields work at the
     // extremes.
@@ -64,7 +65,7 @@ class DateRangeFieldTest extends DateTestBase {
       $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
       $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Start time element not found.');
       $this->assertNoFieldByName("{$field_name}[0][end_value][time]", '', 'End time element not found.');
-      $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_name, 'Fieldset and label found');
+      $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
       $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
       $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
@@ -256,6 +257,7 @@ class DateRangeFieldTest extends DateTestBase {
    */
   public function testDatetimeRangeField() {
     $field_name = $this->fieldStorage->getName();
+    $field_label = $this->field->label();
 
     // Ensure the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATETIME);
@@ -267,7 +269,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Start time element found.');
     $this->assertFieldByName("{$field_name}[0][end_value][date]", '', 'End date element found.');
     $this->assertFieldByName("{$field_name}[0][end_value][time]", '', 'End time element found.');
-    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
     $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
     $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
@@ -428,6 +430,7 @@ class DateRangeFieldTest extends DateTestBase {
    */
   public function testAlldayRangeField() {
     $field_name = $this->fieldStorage->getName();
+    $field_label = $this->field->label();
 
     // Ensure field is set to a all-day field.
     $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_ALLDAY);
@@ -440,7 +443,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
     $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Start time element not found.');
     $this->assertNoFieldByName("{$field_name}[0][end_value][time]", '', 'End time element not found.');
-    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
     $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
     $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
@@ -598,6 +601,7 @@ class DateRangeFieldTest extends DateTestBase {
    */
   public function testDatelistWidget() {
     $field_name = $this->fieldStorage->getName();
+    $field_label = $this->field->label();
 
     // Ensure field is set to a date only field.
     $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATE);
@@ -616,7 +620,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
     $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
     $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
@@ -1121,6 +1125,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
     $field_name = $this->fieldStorage->getName();
+    $field_label = $this->field->label();
 
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Start date element found.');
@@ -1299,7 +1304,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(new FormattableMarkup('The @title end date cannot be before the start date', ['@title' => $field_name]), 'End date before start date has been caught.');
+    $this->assertText(new FormattableMarkup('The @title end date cannot be before the start date', ['@title' => $field_label]), 'End date before start date has been caught.');
 
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1308,7 +1313,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '11:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(new FormattableMarkup('The @title end date cannot be before the start date', ['@title' => $field_name]), 'End time before start time has been caught.');
+    $this->assertText(new FormattableMarkup('The @title end date cannot be before the start date', ['@title' => $field_label]), 'End time before start time has been caught.');
   }
 
   /**
