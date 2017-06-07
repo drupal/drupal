@@ -11,7 +11,9 @@ Drupal 7.xx, xxxx-xx-xx (development version)
   Apache module is disabled.
 - Fixed Drupal's URL-generating functions to always encode '[' and ']' so that
   the URLs will pass HTML5 validation.
-- Several bug fixes.
+- Various additional bug fixes.
+- Various API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.54, 2017-02-01
 -----------------------
