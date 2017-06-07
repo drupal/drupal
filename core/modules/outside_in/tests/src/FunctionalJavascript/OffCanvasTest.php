@@ -63,7 +63,11 @@ class OffCanvasTest extends OutsideInJavascriptTestBase {
           $this->assertEquals('', $header_text);
 
           $style = $page->find('css', '.ui-dialog-off-canvas')->getAttribute('style');
-          self::assertTrue(strstr($style, 'width: 555px;') !== FALSE, 'Dialog width respected.');
+          $this->assertTrue(strstr($style, 'width: 555px;') !== FALSE, 'Dialog width respected.');
+          $page->clickLink("Click Me 1!");
+          $this->waitForOffCanvasToOpen();
+          $style = $page->find('css', '.ui-dialog-off-canvas')->getAttribute('style');
+          $this->assertTrue(strstr($style, 'width: 555px;') === FALSE, 'Dialog width reset to default.');
         }
         else {
           // Check that header is correct.
