@@ -1,0 +1,23 @@
+machine:
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+  services:
+    - docker
+dependencies:
+  pre:
+    - rm /opt/circleci/php/$(phpenv global)/etc/conf.d/xdebug.ini
+  override:
+    - sudo pip install docker-compose
+    - docker-compose up -d mariadb
+    - docker-compose up -d nginx
+test:
+  pre:
+    - composer global require "hirak/prestissimo:^0.3"
+    - composer require "wikimedia/composer-merge-plugin:~1.3" --no-interaction
+    - composer update -n
+    - composer update -n -d ./scripts
+    - sudo chown -R 82:82 .
+  override:
+    - docker-compose run --user 82 php vendor/bin/phpunit -c core core/tests/Drupal/Tests/Core/Password/PasswordHashingTest.php
+    - docker-compose run --user 82 php vendor/bin/phpunit -c core core/tests/Drupal/KernelTests/Component/Utility/SafeMarkupKernelTest.php
+    - docker-compose run --user 82 php vendor/bin/phpunit -c core core/tests/Drupal/FunctionalTests/Breadcrumb/Breadcrumb404Test.php

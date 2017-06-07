@@ -1,0 +1,29 @@
+version: "2"
+
+services:
+  mariadb:
+    image: wodby/drupal-mariadb
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+
+  php:
+    image: wodby/drupal-php:7.0
+    environment:
+      PHP_SITE_NAME: dev
+      PHP_HOST_NAME: localhost:8000
+      SIMPLETEST_BASE_URL: http://nginx
+      SIMPLETEST_DB: mysql://drupal:drupal@mariadb/drupal
+    volumes:
+      - ./:/var/www/html
+
+  nginx:
+    image: wodby/drupal-nginx
+    environment:
+      NGINX_SERVER_NAME: localhost
+      NGINX_UPSTREAM_NAME: php
+      DRUPAL_VERSION: 8
+    volumes_from:
+      - php
