@@ -1,4 +1,7 @@
 
+Drupal 7.xx, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.55, 2017-06-07
 -----------------------
 - Fixed incompatibility with PHP versions 7.0.19 and 7.1.5 due to duplicate
