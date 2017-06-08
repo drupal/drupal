@@ -3,6 +3,7 @@
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\media\Entity\Media;
+use Drupal\media\Entity\MediaType;
 
 /**
  * Ensures that media UI works correctly.
@@ -28,6 +29,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     parent::setUp();
     $this->drupalPlaceBlock('local_actions_block');
     $this->drupalPlaceBlock('local_tasks_block');
+
+    // We need to test without any default configuration in place.
+    // @TODO: Remove this when https://www.drupal.org/node/2883813 lands.
+    MediaType::load('file')->delete();
   }
 
   /**

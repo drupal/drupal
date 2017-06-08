@@ -2,8 +2,12 @@
 
 namespace Drupal\Tests\media\Kernel;
 
+use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
+use Drupal\media\MediaTypeInterface;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Base class for Media kernel tests.
@@ -86,6 +90,44 @@ abstract class MediaKernelTestBase extends KernelTestBase {
       'source_field' => $source_field->getName(),
     ])->save();
     return $media_type;
+  }
+
+  /**
+   * Helper to generate media entity.
+   *
+   * @param string $filename
+   *   String filename with extension.
+   * @param \Drupal\media\MediaTypeInterface $media_type
+   *   The the media type.
+   *
+   * @return \Drupal\media\Entity\Media
+   *   A media entity.
+   */
+  protected function generateMedia($filename, MediaTypeInterface $media_type) {
+    vfsStream::setup('drupal_root');
+    vfsStream::create([
+      'sites' => [
+        'default' => [
+          'files' => [
+            $filename => str_repeat('a', 3000),
+          ],
+        ],
+      ],
+    ]);
+
+    $file = File::create([
+      'uri' => 'vfs://drupal_root/sites/default/files/' . $filename,
+    ]);
+    $file->setPermanent();
+    $file->save();
+
+    return Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Mr. Jones',
+      'field_media_file' => [
+        'target_id' => $file->id(),
+      ],
+    ]);
   }
 
 }

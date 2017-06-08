@@ -38,6 +38,10 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     parent::setUp();
     $this->drupalPlaceBlock('local_actions_block');
     $this->drupalPlaceBlock('local_tasks_block');
+
+    // We need to test without any default configuration in place.
+    // @TODO: Remove this as part of https://www.drupal.org/node/2883813.
+    MediaType::load('file')->delete();
   }
 
   /**

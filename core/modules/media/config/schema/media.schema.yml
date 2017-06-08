@@ -44,6 +44,10 @@ media.source.*:
   type: mapping
   label: 'Media source settings'
 
+media.source.file:
+  type: media.source.field_aware
+  label: '"File" media source configuration'
+
 media.source.field_aware:
   type: mapping
   mapping:
