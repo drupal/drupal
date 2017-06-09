@@ -86,7 +86,7 @@ class State extends CacheCollector implements StateInterface {
    */
   public function delete($key) {
     parent::delete($key);
-    $this->deleteMultiple([$key]);
+    $this->keyValueStore->delete($key);
   }
 
   /**
