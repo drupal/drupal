@@ -36,6 +36,8 @@ Provisional membership:
   (Framework Manager - Frontend)
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
   (Product Manager)
+- Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
+  (Framework Manager)
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
   (Product Manager)
 
