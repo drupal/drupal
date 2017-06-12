@@ -1,18 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Database;
+namespace Drupal\Tests\system\Functional\Database;
 
 /**
  * Tests the temporary query functionality.
  *
  * @group Database
  */
-class TemporaryQueryTest extends DatabaseWebTestBase {
+class TemporaryQueryTest extends DatabaseTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = ['database_test'];
 
@@ -28,7 +26,7 @@ class TemporaryQueryTest extends DatabaseWebTestBase {
    */
   public function testTemporaryQuery() {
     $this->drupalGet('database_test/db_query_temporary');
-    $data = json_decode($this->getRawContent());
+    $data = json_decode($this->getSession()->getPage()->getContent());
     if ($data) {
       $this->assertEqual($this->countTableRows('test'), $data->row_count, 'The temporary table contains the correct amount of rows.');
       $this->assertFalse(db_table_exists($data->table_name), 'The temporary table is, indeed, temporary.');

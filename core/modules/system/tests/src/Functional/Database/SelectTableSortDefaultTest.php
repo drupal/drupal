@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\system\Tests\Database;
+namespace Drupal\Tests\system\Functional\Database;
 
 /**
  * Tests the tablesort query extender.
  *
  * @group Database
  */
-class SelectTableSortDefaultTest extends DatabaseWebTestBase {
+class SelectTableSortDefaultTest extends DatabaseTestBase {
 
   /**
    * Confirms that a tablesort query returns the correct results.
@@ -27,7 +27,7 @@ class SelectTableSortDefaultTest extends DatabaseWebTestBase {
 
     foreach ($sorts as $sort) {
       $this->drupalGet('database_test/tablesort/', ['query' => ['order' => $sort['field'], 'sort' => $sort['sort']]]);
-      $data = json_decode($this->getRawContent());
+      $data = json_decode($this->getSession()->getPage()->getContent());
 
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);
@@ -55,7 +55,7 @@ class SelectTableSortDefaultTest extends DatabaseWebTestBase {
 
     foreach ($sorts as $sort) {
       $this->drupalGet('database_test/tablesort_first/', ['query' => ['order' => $sort['field'], 'sort' => $sort['sort']]]);
-      $data = json_decode($this->getRawContent());
+      $data = json_decode($this->getSession()->getPage()->getContent());
 
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);
@@ -72,16 +72,18 @@ class SelectTableSortDefaultTest extends DatabaseWebTestBase {
    * are correct.
    */
   public function testTableSortDefaultSort() {
+    $assert = $this->assertSession();
+
     $this->drupalGet('database_test/tablesort_default_sort');
 
     // Verify that the table was displayed. Just the header is checked for
     // because if there were any fatal errors or exceptions in displaying the
     // sorted table, it would not print the table.
-    $this->assertText(t('Username'));
+    $assert->pageTextContains(t('Username'));
 
     // Verify that the header links are built properly.
-    $this->assertLinkByHref('database_test/tablesort_default_sort');
-    $this->assertPattern('/\<a.*title\=\"' . t('sort by Username') . '\".*\>/');
+    $assert->linkByHrefExists('database_test/tablesort_default_sort');
+    $assert->responseMatches('/\<a.*title\=\"' . t('sort by Username') . '\".*\>/');
   }
 
 }

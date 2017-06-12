@@ -1,6 +1,7 @@
 <?php
 
-namespace Drupal\system\Tests\Database;
+namespace Drupal\Tests\system\Functional\Database;
+
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -8,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group Database
  */
-class SelectPagerDefaultTest extends DatabaseWebTestBase {
+class SelectPagerDefaultTest extends DatabaseTestBase {
 
   /**
    * Confirms that a pager query returns the correct results.
@@ -34,13 +35,13 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
 
     for ($page = 0; $page <= $num_pages; ++$page) {
       $this->drupalGet('database_test/pager_query_even/' . $limit, ['query' => ['page' => $page]]);
-      $data = json_decode($this->getRawContent());
+      $data = json_decode($this->getSession()->getPage()->getContent());
 
       if ($page == $num_pages) {
         $correct_number = $count - ($limit * $page);
       }
 
-      $this->assertEqual(count($data->names), $correct_number, format_string('Correct number of records returned by pager: @number', ['@number' => $correct_number]));
+      $this->assertCount($correct_number, $data->names, format_string('Correct number of records returned by pager: @number', ['@number' => $correct_number]));
     }
   }
 
@@ -68,13 +69,13 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
 
     for ($page = 0; $page <= $num_pages; ++$page) {
       $this->drupalGet('database_test/pager_query_odd/' . $limit, ['query' => ['page' => $page]]);
-      $data = json_decode($this->getRawContent());
+      $data = json_decode($this->getSession()->getPage()->getContent());
 
       if ($page == $num_pages) {
         $correct_number = $count - ($limit * $page);
       }
 
-      $this->assertEqual(count($data->names), $correct_number, format_string('Correct number of records returned by pager: @number', ['@number' => $correct_number]));
+      $this->assertCount($correct_number, $data->names, format_string('Correct number of records returned by pager: @number', ['@number' => $correct_number]));
     }
   }
 
