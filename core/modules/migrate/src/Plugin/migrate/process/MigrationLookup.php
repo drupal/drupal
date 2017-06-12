@@ -217,7 +217,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
         $values[$source_id] = $source_id_values[$migration->id()][$index];
       }
 
-      $stub_row = new Row($values + $migration->getSourceConfiguration(), $source_ids, TRUE);
+      $stub_row = $this->createStubRow($values + $migration->getSourceConfiguration(), $source_ids);
 
       // Do a normal migration with the stub row.
       $migrate_executable->processRow($stub_row, $process);
@@ -255,6 +255,25 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
     if (!array_filter($value)) {
       throw new MigrateSkipProcessException();
     }
+  }
+
+  /**
+   * Create a stub row source for later import as stub data.
+   *
+   * This simple wrapper of the Row constructor allows sub-classing plugins to
+   * have more control over the row.
+   *
+   * @param array $values
+   *   An array of values to add as properties on the object.
+   * @param array $source_ids
+   *   An array containing the IDs of the source using the keys as the field
+   *   names.
+   *
+   * @return \Drupal\migrate\Row
+   *   The stub row.
+   */
+  protected function createStubRow(array $values, array $source_ids) {
+    return new Row($values, $source_ids, TRUE);
   }
 
 }
