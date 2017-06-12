@@ -1,21 +1,16 @@
 <?php
 
-namespace Drupal\migrate_drupal_ui\Tests;
-
-@trigger_error('\Drupal\migrate_drupal_ui\Tests\MigrateUpgradeTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use \Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase instead.', E_USER_DEPRECATED);
+namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Provides a base class for testing migration upgrades in the UI.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use
- *   \Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase instead.
  */
-abstract class MigrateUpgradeTestBase extends WebTestBase {
+abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   use MigrationConfigurationTrait;
 
   /**
@@ -191,6 +186,28 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
     }
     \Drupal::service('module_installer')->install(['forum']);
     \Drupal::service('module_installer')->install(['book']);
+  }
+
+  /**
+   * Transforms a nested array into a flat array suitable for BrowserTestBase::drupalPostForm().
+   *
+   * @param array $values
+   *   A multi-dimensional form values array to convert.
+   *
+   * @return array
+   *   The flattened $edit array suitable for BrowserTestBase::drupalPostForm().
+   */
+  protected function translatePostValues(array $values) {
+    $edit = [];
+    // The easiest and most straightforward way to translate values suitable for
+    // BrowserTestBase::drupalPostForm() is to actually build the POST data string
+    // and convert the resulting key/value pairs back into a flat array.
+    $query = http_build_query($values);
+    foreach (explode('&', $query) as $item) {
+      list($key, $value) = explode('=', $item);
+      $edit[urldecode($key)] = urldecode($value);
+    }
+    return $edit;
   }
 
   /**

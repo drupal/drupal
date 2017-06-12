@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\migrate_drupal_ui\Tests\d6;
+namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
-use Drupal\migrate_drupal_ui\Tests\MigrateUpgradeTestBase;
+use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -83,7 +83,7 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
 
     // Ensure migrated users can log in.
     $user = User::load(2);
-    $user->pass_raw = 'john.doe_pass';
+    $user->passRaw = 'john.doe_pass';
     $this->drupalLogin($user);
   }
 
