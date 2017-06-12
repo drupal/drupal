@@ -5,8 +5,10 @@
   "private": true,
   "scripts": {
     "build:js": "node ./scripts/js/babel-es6-build.js",
-    "watch:js": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-watch.js",
-    "lint:core-js": "node ./node_modules/eslint/bin/eslint.js --ext=.es6.js . --fix || exit 0",
+    "build:js-dev": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-build.js",
+    "watch:js": "node ./scripts/js/babel-es6-watch.js",
+    "watch:js-dev": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-watch.js",
+    "lint:core-js": "node ./node_modules/eslint/bin/eslint.js --ext=.es6.js . || exit 0",
     "lint:css": "stylelint \"**/*.css\" || exit 0",
     "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0"
   },
