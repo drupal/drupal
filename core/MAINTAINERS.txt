@@ -274,19 +274,6 @@ Mail
 Markup
 - ?
 
-Migrate
-- Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
-- Ben Dougherty 'benjy' https://www.drupal.org/u/benjy
-- Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
-- Mike Ryan 'mikeryan' https://www.drupal.org/u/mikeryan
-- Vicki Spagnolo 'quietone' https://www.drupal.org/u/quietone
-
-Migrate (Drupal)
-- Ben Dougherty 'benjy' https://www.drupal.org/u/benjy
-- Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
-- Mike Ryan 'mikeryan' https://www.drupal.org/u/mikeryan
-- Vicki Spagnolo 'quietone' https://www.drupal.org/u/quietone
-
 Media
 - Sean Blommaert 'seanB' https://www.drupal.org/u/seanb
 - Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
@@ -301,6 +288,19 @@ Menu Link Content
 
 Menu UI
 - ?
+
+Migrate
+- Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
+- Ben Dougherty 'benjy' https://www.drupal.org/u/benjy
+- Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
+- Mike Ryan 'mikeryan' https://www.drupal.org/u/mikeryan
+- Vicki Spagnolo 'quietone' https://www.drupal.org/u/quietone
+
+Migrate (Drupal)
+- Ben Dougherty 'benjy' https://www.drupal.org/u/benjy
+- Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
+- Mike Ryan 'mikeryan' https://www.drupal.org/u/mikeryan
+- Vicki Spagnolo 'quietone' https://www.drupal.org/u/quietone
 
 Node
 - Tim Millwood 'timmillwood' https://www.drupal.org/u/timmillwood
