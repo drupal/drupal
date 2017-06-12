@@ -195,6 +195,52 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   }
 
   /**
+   * Tests field initial value.
+   *
+   * @covers ::getInitialValue
+   * @covers ::setInitialValue
+   */
+  public function testFieldInitialValue() {
+    $definition = BaseFieldDefinition::create($this->fieldType);
+    $default_value = [
+      'value' => $this->randomMachineName(),
+    ];
+    $expected_default_value = [$default_value];
+    $definition->setInitialValue($default_value);
+    $entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    // Set the field item list class to be used to avoid requiring the typed
+    // data manager to retrieve it.
+    $definition->setClass('Drupal\Core\Field\FieldItemList');
+    $this->assertEquals($expected_default_value, $definition->getInitialValue($entity));
+
+    $data_definition = $this->getMockBuilder('Drupal\Core\TypedData\DataDefinition')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $data_definition->expects($this->any())
+      ->method('getClass')
+      ->will($this->returnValue('Drupal\Core\Field\FieldItemBase'));
+    $definition->setItemDefinition($data_definition);
+
+    // Set default value only with a literal.
+    $definition->setInitialValue($default_value['value']);
+    $this->assertEquals($expected_default_value, $definition->getInitialValue($entity));
+
+    // Set default value with an indexed array.
+    $definition->setInitialValue($expected_default_value);
+    $this->assertEquals($expected_default_value, $definition->getInitialValue($entity));
+
+    // Set default value with an empty array.
+    $definition->setInitialValue([]);
+    $this->assertEquals([], $definition->getInitialValue($entity));
+
+    // Set default value with NULL.
+    $definition->setInitialValue(NULL);
+    $this->assertEquals([], $definition->getInitialValue($entity));
+  }
+
+  /**
    * Tests field translatable methods.
    *
    * @covers ::isTranslatable

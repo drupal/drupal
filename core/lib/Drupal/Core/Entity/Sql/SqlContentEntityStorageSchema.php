@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\FieldStorageConfigInterface;
@@ -201,7 +202,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       return FALSE;
     }
 
-    return $this->getSchemaFromStorageDefinition($storage_definition) != $this->loadFieldSchemaData($original);
+    $current_schema = $this->getSchemaFromStorageDefinition($storage_definition);
+    $this->processFieldStorageSchema($current_schema);
+
+    return $current_schema != $this->loadFieldSchemaData($original);
   }
 
   /**
@@ -852,6 +856,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   The field schema data array.
    */
   protected function saveFieldSchemaData(FieldStorageDefinitionInterface $storage_definition, $schema) {
+    $this->processFieldStorageSchema($schema);
     $this->installedStorageSchema()->set($storage_definition->getTargetEntityTypeId() . '.field_schema_data.' . $storage_definition->getName(), $schema);
   }
 
@@ -1099,6 +1104,23 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
     $schema['fields'][$key]['not null'] = TRUE;
     unset($schema['fields'][$key]['default']);
+  }
+
+  /**
+   * Processes the schema for a field storage definition.
+   *
+   * @param array &$field_storage_schema
+   *   An array that contains the schema data for a field storage definition.
+   */
+  protected function processFieldStorageSchema(array &$field_storage_schema) {
+    // Clean up some schema properties that should not be taken into account
+    // after a field storage has been created.
+    foreach ($field_storage_schema as $table_name => $table_schema) {
+      foreach ($table_schema['fields'] as $key => $schema) {
+        unset($field_storage_schema[$table_name]['fields'][$key]['initial']);
+        unset($field_storage_schema[$table_name]['fields'][$key]['initial_from_field']);
+      }
+    }
   }
 
   /**
@@ -1613,29 +1635,62 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   - foreign keys: The schema definition for the foreign keys.
    *
    * @throws \Drupal\Core\Field\FieldException
-   *   Exception thrown if the schema contains reserved column names.
+   *   Exception thrown if the schema contains reserved column names or if the
+   *   initial values definition is invalid.
    */
   protected function getSharedTableFieldSchema(FieldStorageDefinitionInterface $storage_definition, $table_name, array $column_mapping) {
     $schema = [];
+    $table_mapping = $this->storage->getTableMapping();
     $field_schema = $storage_definition->getSchema();
 
     // Check that the schema does not include forbidden column names.
-    if (array_intersect(array_keys($field_schema['columns']), $this->storage->getTableMapping()->getReservedColumns())) {
+    if (array_intersect(array_keys($field_schema['columns']), $table_mapping->getReservedColumns())) {
       throw new FieldException("Illegal field column names on {$storage_definition->getName()}");
     }
 
     $field_name = $storage_definition->getName();
     $base_table = $this->storage->getBaseTable();
 
+    // Define the initial values, if any.
+    $initial_value = $initial_value_from_field = [];
+    $storage_definition_is_new = empty($this->loadFieldSchemaData($storage_definition));
+    if ($storage_definition_is_new && $storage_definition instanceof BaseFieldDefinition && $table_mapping->allowsSharedTableStorage($storage_definition)) {
+      if (($initial_storage_value = $storage_definition->getInitialValue()) && !empty($initial_storage_value)) {
+        // We only support initial values for fields that are stored in shared
+        // tables (i.e. single-value fields).
+        // @todo Implement initial value support for multi-value fields in
+        //   https://www.drupal.org/node/2883851.
+        $initial_value = reset($initial_storage_value);
+      }
+
+      if ($initial_value_field_name = $storage_definition->getInitialValueFromField()) {
+        // Check that the field used for populating initial values is valid. We
+        // must use the last installed version of that, as the new field might
+        // be created in an update function and the storage definition of the
+        // "from" field might get changed later.
+        $last_installed_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityType->id());
+        if (!isset($last_installed_storage_definitions[$initial_value_field_name])) {
+          throw new FieldException("Illegal initial value definition on {$storage_definition->getName()}: The field $initial_value_field_name does not exist.");
+        }
+
+        if ($storage_definition->getType() !== $last_installed_storage_definitions[$initial_value_field_name]->getType()) {
+          throw new FieldException("Illegal initial value definition on {$storage_definition->getName()}: The field types do not match.");
+        }
+
+        if (!$table_mapping->allowsSharedTableStorage($last_installed_storage_definitions[$initial_value_field_name])) {
+          throw new FieldException("Illegal initial value definition on {$storage_definition->getName()}: Both fields have to be stored in the shared entity tables.");
+        }
+
+        $initial_value_from_field = $table_mapping->getColumnNames($initial_value_field_name);
+      }
+    }
+
     // A shared table contains rows for entities where the field is empty
     // (since other fields stored in the same table might not be empty), thus
     // the only columns that can be 'not null' are those for required
-    // properties of required fields. However, even those would break in the
-    // case where a new field is added to a table that contains existing rows.
-    // For now, we only hardcode 'not null' to a couple "entity keys", in order
-    // to keep their indexes optimized.
-    // @todo Revisit once we have support for 'initial' in
-    //   https://www.drupal.org/node/2346019.
+    // properties of required fields. For now, we only hardcode 'not null' to a
+    // few "entity keys", in order to keep their indexes optimized.
+    // @todo Fix this in https://www.drupal.org/node/2841291.
     $not_null_keys = $this->entityType->getKeys();
     // Label fields are not necessarily required.
     unset($not_null_keys['label']);
@@ -1654,6 +1709,14 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
       $schema['fields'][$schema_field_name] = $column_schema;
       $schema['fields'][$schema_field_name]['not null'] = in_array($field_name, $not_null_keys);
+
+      // Use the initial value of the field storage, if available.
+      if ($initial_value && isset($initial_value[$field_column_name])) {
+        $schema['fields'][$schema_field_name]['initial'] = $initial_value[$field_column_name];
+      }
+      elseif (!empty($initial_value_from_field)) {
+        $schema['fields'][$schema_field_name]['initial_from_field'] = $initial_value_from_field[$field_column_name];
+      }
     }
 
     if (!empty($field_schema['indexes'])) {
