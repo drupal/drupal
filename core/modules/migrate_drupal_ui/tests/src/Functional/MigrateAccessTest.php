@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\migrate_drupal_ui\Tests;
+namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that only user 1 can access the migrate UI.
  *
  * @group migrate_drupal_ui
  */
-class MigrateAccessTest extends WebTestBase {
+class MigrateAccessTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
