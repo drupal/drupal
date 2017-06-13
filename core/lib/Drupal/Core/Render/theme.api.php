@@ -627,7 +627,7 @@ function hook_preprocess_HOOK(&$variables) {
 function hook_theme_suggestions_HOOK(array $variables) {
   $suggestions = [];
 
-  $suggestions[] = 'node__' . $variables['elements']['#langcode'];
+  $suggestions[] = 'hookname__' . $variables['elements']['#langcode'];
 
   return $suggestions;
 }
