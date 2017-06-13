@@ -20,7 +20,6 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
 
   use CategorizingPluginManagerTrait {
     getSortedDefinitions as traitGetSortedDefinitions;
-    getGroupedDefinitions as traitGetGroupedDefinitions;
   }
   use ContextAwarePluginManagerTrait;
 
@@ -54,20 +53,10 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
    * {@inheritdoc}
    */
   public function getSortedDefinitions(array $definitions = NULL) {
-    // Sort the plugins first by category, then by label.
+    // Sort the plugins first by category, then by admin label.
     $definitions = $this->traitGetSortedDefinitions($definitions, 'admin_label');
     // Do not display the 'broken' plugin in the UI.
     unset($definitions['broken']);
-    return $definitions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getGroupedDefinitions(array $definitions = NULL) {
-    $definitions = $this->traitGetGroupedDefinitions($definitions, 'admin_label');
-    // Do not display the 'broken' plugin in the UI.
-    unset($definitions[$this->t('Block')]['broken']);
     return $definitions;
   }
 
