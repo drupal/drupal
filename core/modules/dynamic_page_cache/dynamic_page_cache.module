@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Caches HTML responses, request and response policies allowing.
+ * Caches responses for all users, handling dynamic content correctly.
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
