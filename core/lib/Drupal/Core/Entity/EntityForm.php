@@ -38,6 +38,8 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * @var \Drupal\Core\Entity\EntityManagerInterface
    *
    * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+   *
+   * @see https://www.drupal.org/node/2549139
    */
   protected $entityManager;
 
