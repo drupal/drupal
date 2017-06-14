@@ -1,13 +1,14 @@
 <?php
 
-namespace Drupal\dblog\Tests;
+namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\dblog\Controller\DbLogController;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Generate events and verify dblog entries; verify user access to log reports
@@ -15,7 +16,8 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group dblog
  */
-class DbLogTest extends WebTestBase {
+class DbLogTest extends BrowserTestBase {
+  use CronRunTrait;
 
   /**
    * Modules to enable.
@@ -312,7 +314,7 @@ class DbLogTest extends WebTestBase {
     $wid = db_query('SELECT MIN(wid) FROM {watchdog}')->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
-    $this->assertEqual(current($this->xpath($xpath)), 'Recent log messages', 'DBLogs link displayed at breadcrumb in event page.');
+    $this->assertEqual(current($this->xpath($xpath))->getText(), 'Recent log messages', 'DBLogs link displayed at breadcrumb in event page.');
   }
 
   /**
@@ -386,7 +388,7 @@ class DbLogTest extends WebTestBase {
     $user = user_load_by_name($name);
     $this->assertTrue($user != NULL, format_string('User @name was loaded', ['@name' => $name]));
     // pass_raw property is needed by drupalLogin.
-    $user->pass_raw = $pass;
+    $user->passRaw = $pass;
     // Log in user.
     $this->drupalLogin($user);
     // Log out user.
@@ -426,16 +428,13 @@ class DbLogTest extends WebTestBase {
     if ($links = $this->xpath('//a[text()="' . $message_text . '"]')) {
       // Found link with the message text.
       $links = array_shift($links);
-      foreach ($links->attributes() as $attr => $value) {
-        if ($attr == 'href') {
-          // Extract link to details page.
-          $link = Unicode::substr($value, strpos($value, 'admin/reports/dblog/event/'));
-          $this->drupalGet($link);
-          // Check for full message text on the details page.
-          $this->assertRaw($message, 'DBLog event details was found: [delete user]');
-          break;
-        }
-      }
+      $value = $links->getAttribute('href');
+
+      // Extract link to details page.
+      $link = Unicode::substr($value, strpos($value, 'admin/reports/dblog/event/'));
+      $this->drupalGet($link);
+      // Check for full message text on the details page.
+      $this->assertRaw($message, 'DBLog event details was found: [delete user]');
     }
     $this->assertTrue($link, 'DBLog event was recorded: [delete user]');
     // Visit random URL (to generate page not found event).
@@ -526,7 +525,7 @@ class DbLogTest extends WebTestBase {
       case 'forum':
         $content = [
           'title[0][value]' => $this->randomMachineName(8),
-          'taxonomy_forums' => [1],
+          'taxonomy_forums' => 1,
           'body[0][value]' => $this->randomMachineName(32),
         ];
         break;
@@ -682,13 +681,13 @@ class DbLogTest extends WebTestBase {
   protected function getLogEntries() {
     $entries = [];
     if ($table = $this->getLogsEntriesTable()) {
-      $table = array_shift($table);
-      foreach ($table->tbody->tr as $row) {
+      foreach ($table as $row) {
+        $cells = $row->findAll('css', 'td');
         $entries[] = [
-          'severity' => $this->getSeverityConstant($row['class']),
-          'type' => $this->asText($row->td[1]),
-          'message' => $this->asText($row->td[3]),
-          'user' => $this->asText($row->td[4]),
+          'severity' => $this->getSeverityConstant($row->getAttribute('class')),
+          'type' => $cells[1]->getText(),
+          'message' => $cells[3]->getText(),
+          'user' => $cells[4]->getText(),
         ];
       }
     }
@@ -702,7 +701,7 @@ class DbLogTest extends WebTestBase {
    *   The return value of a xpath search.
    */
   protected function getLogsEntriesTable() {
-    return $this->xpath('.//table[@id="admin-dblog"]');
+    return $this->xpath('.//table[@id="admin-dblog"]/tbody/tr');
   }
 
   /**
@@ -748,22 +747,6 @@ class DbLogTest extends WebTestBase {
       }
     }
     return NULL;
-  }
-
-  /**
-   * Extracts the text contained by the XHTML element.
-   *
-   * @param \SimpleXMLElement $element
-   *   Element to extract text from.
-   *
-   * @return string
-   *   Extracted text.
-   */
-  protected function asText(\SimpleXMLElement $element) {
-    if (!is_object($element)) {
-      return $this->fail('The element is not an element.');
-    }
-    return trim(html_entity_decode(strip_tags($element->asXML())));
   }
 
   /**
