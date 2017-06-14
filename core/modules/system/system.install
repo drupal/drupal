@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\OpCodeCache;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Path\AliasStorage;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
@@ -808,9 +809,46 @@ function system_requirements($phase) {
     }
   }
 
-  // Test Unicode library
-  include_once DRUPAL_ROOT . '/core/includes/unicode.inc';
-  $requirements = array_merge($requirements, unicode_requirements());
+  // Returns Unicode library status and errors.
+  $libraries = [
+    Unicode::STATUS_SINGLEBYTE => t('Standard PHP'),
+    Unicode::STATUS_MULTIBYTE => t('PHP Mbstring Extension'),
+    Unicode::STATUS_ERROR => t('Error'),
+  ];
+  $severities = [
+    Unicode::STATUS_SINGLEBYTE => REQUIREMENT_WARNING,
+    Unicode::STATUS_MULTIBYTE => NULL,
+    Unicode::STATUS_ERROR => REQUIREMENT_ERROR,
+  ];
+  $failed_check = Unicode::check();
+  $library = Unicode::getStatus();
+
+  $requirements['unicode'] = [
+    'title' => t('Unicode library'),
+    'value' => $libraries[$library],
+    'severity' => $severities[$library],
+  ];
+  switch ($failed_check) {
+    case 'mb_strlen':
+      $requirements['unicode']['description'] = t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="http://php.net/mbstring">PHP mbstring extension</a> for improved Unicode support.');
+      break;
+
+    case 'mbstring.func_overload':
+      $requirements['unicode']['description'] = t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      break;
+
+    case 'mbstring.encoding_translation':
+      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      break;
+
+    case 'mbstring.http_input':
+      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      break;
+
+    case 'mbstring.http_output':
+      $requirements['unicode']['description'] = t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      break;
+  }
 
   if ($phase == 'runtime') {
     // Check for update status module.
