@@ -31,8 +31,10 @@
       var tabbingContext = this.model.get('tabbingContext');
 
       if (tabbingContext) {
+        if (tabbingContext.active) {
+          Drupal.announce(this.options.strings.tabbingReleased);
+        }
         tabbingContext.release();
-        Drupal.announce(this.options.strings.tabbingReleased);
       }
 
       if (!this.model.get('isViewing')) {

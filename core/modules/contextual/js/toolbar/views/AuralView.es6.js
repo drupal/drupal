@@ -55,8 +55,11 @@
       var tabbingContext = this.model.get('tabbingContext');
       // Always release an existing tabbing context.
       if (tabbingContext) {
+        // Only announce release when the context was active.
+        if (tabbingContext.active) {
+          Drupal.announce(this.options.strings.tabbingReleased);
+        }
         tabbingContext.release();
-        Drupal.announce(this.options.strings.tabbingReleased);
       }
       // Create a new tabbing context when edit mode is enabled.
       if (!this.model.get('isViewing')) {
