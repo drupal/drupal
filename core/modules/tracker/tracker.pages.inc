@@ -19,8 +19,6 @@ use Drupal\node\Entity\Node;
  *
  * @return array
  *   A renderable array.
- *
- * @see tracker_menu()
  */
 function tracker_page($account = NULL) {
   if ($account) {
