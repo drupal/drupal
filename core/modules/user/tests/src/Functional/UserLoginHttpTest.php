@@ -92,99 +92,102 @@ class UserLoginHttpTest extends BrowserTestBase {
    * Tests user session life cycle.
    */
   public function testLogin() {
+    // Without the serialization module only JSON is supported.
+    $this->doTestLogin('json');
+
+    // Enable serialization so we have access to additional formats.
+    $this->container->get('module_installer')->install(['serialization']);
+    $this->doTestLogin('json');
+    $this->doTestLogin('xml');
+    $this->doTestLogin('hal_json');
+  }
+
+  /**
+   * Do login testing for a given serialization format.
+   *
+   * @param string $format
+   *   Serialization format.
+   */
+  protected function doTestLogin($format) {
     $client = \Drupal::httpClient();
-    foreach ([FALSE, TRUE] as $serialization_enabled_option) {
-      if ($serialization_enabled_option) {
-        /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
-        $module_installer = $this->container->get('module_installer');
-        $module_installer->install(['serialization']);
-        $formats = ['json', 'xml', 'hal_json'];
-      }
-      else {
-        // Without the serialization module only JSON is supported.
-        $formats = ['json'];
-      }
-      foreach ($formats as $format) {
-        // Create new user for each iteration to reset flood.
-        // Grant the user administer users permissions to they can see the
-        // 'roles' field.
-        $account = $this->drupalCreateUser(['administer users']);
-        $name = $account->getUsername();
-        $pass = $account->passRaw;
+    // Create new user for each iteration to reset flood.
+    // Grant the user administer users permissions to they can see the
+    // 'roles' field.
+    $account = $this->drupalCreateUser(['administer users']);
+    $name = $account->getUsername();
+    $pass = $account->passRaw;
 
-        $login_status_url = $this->getLoginStatusUrlString($format);
-        $response = $client->get($login_status_url);
-        $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_OUT);
+    $login_status_url = $this->getLoginStatusUrlString($format);
+    $response = $client->get($login_status_url);
+    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_OUT);
 
-        // Flooded.
-        $this->config('user.flood')
-          ->set('user_limit', 3)
-          ->save();
+    // Flooded.
+    $this->config('user.flood')
+      ->set('user_limit', 3)
+      ->save();
 
-        $response = $this->loginRequest($name, 'wrong-pass', $format);
-        $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.', $format);
+    $response = $this->loginRequest($name, 'wrong-pass', $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.', $format);
 
-        $response = $this->loginRequest($name, 'wrong-pass', $format);
-        $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.', $format);
+    $response = $this->loginRequest($name, 'wrong-pass', $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.', $format);
 
-        $response = $this->loginRequest($name, 'wrong-pass', $format);
-        $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.', $format);
+    $response = $this->loginRequest($name, 'wrong-pass', $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.', $format);
 
-        $response = $this->loginRequest($name, 'wrong-pass', $format);
-        $this->assertHttpResponseWithMessage($response, 403, 'Too many failed login attempts from your IP address. This IP address is temporarily blocked.', $format);
+    $response = $this->loginRequest($name, 'wrong-pass', $format);
+    $this->assertHttpResponseWithMessage($response, 403, 'Too many failed login attempts from your IP address. This IP address is temporarily blocked.', $format);
 
-        // After testing the flood control we can increase the limit.
-        $this->config('user.flood')
-          ->set('user_limit', 100)
-          ->save();
+    // After testing the flood control we can increase the limit.
+    $this->config('user.flood')
+      ->set('user_limit', 100)
+      ->save();
 
-        $response = $this->loginRequest(NULL, NULL, $format);
-        $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.', $format);
+    $response = $this->loginRequest(NULL, NULL, $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.', $format);
 
-        $response = $this->loginRequest(NULL, $pass, $format);
-        $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.name.', $format);
+    $response = $this->loginRequest(NULL, $pass, $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.name.', $format);
 
-        $response = $this->loginRequest($name, NULL, $format);
-        $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.pass.', $format);
+    $response = $this->loginRequest($name, NULL, $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.pass.', $format);
 
-        // Blocked.
-        $account
-          ->block()
-          ->save();
+    // Blocked.
+    $account
+      ->block()
+      ->save();
 
-        $response = $this->loginRequest($name, $pass, $format);
-        $this->assertHttpResponseWithMessage($response, 400, 'The user has not been activated or is blocked.', $format);
+    $response = $this->loginRequest($name, $pass, $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'The user has not been activated or is blocked.', $format);
 
-        $account
-          ->activate()
-          ->save();
+    $account
+      ->activate()
+      ->save();
 
-        $response = $this->loginRequest($name, 'garbage', $format);
-        $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.', $format);
+    $response = $this->loginRequest($name, 'garbage', $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.', $format);
 
-        $response = $this->loginRequest('garbage', $pass, $format);
-        $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.', $format);
+    $response = $this->loginRequest('garbage', $pass, $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Sorry, unrecognized username or password.', $format);
 
-        $response = $this->loginRequest($name, $pass, $format);
-        $this->assertEquals(200, $response->getStatusCode());
-        $result_data = $this->serializer->decode($response->getBody(), $format);
-        $this->assertEquals($name, $result_data['current_user']['name']);
-        $this->assertEquals($account->id(), $result_data['current_user']['uid']);
-        $this->assertEquals($account->getRoles(), $result_data['current_user']['roles']);
-        $logout_token = $result_data['logout_token'];
+    $response = $this->loginRequest($name, $pass, $format);
+    $this->assertEquals(200, $response->getStatusCode());
+    $result_data = $this->serializer->decode($response->getBody(), $format);
+    $this->assertEquals($name, $result_data['current_user']['name']);
+    $this->assertEquals($account->id(), $result_data['current_user']['uid']);
+    $this->assertEquals($account->getRoles(), $result_data['current_user']['roles']);
+    $logout_token = $result_data['logout_token'];
 
-        $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
-        $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_IN);
+    $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
+    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_IN);
 
-        $response = $this->logoutRequest($format, $logout_token);
-        $this->assertEquals(204, $response->getStatusCode());
+    $response = $this->logoutRequest($format, $logout_token);
+    $this->assertEquals(204, $response->getStatusCode());
 
-        $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
-        $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_OUT);
+    $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
+    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_OUT);
 
-        $this->resetFlood();
-      }
-    }
+    $this->resetFlood();
   }
 
   /**
