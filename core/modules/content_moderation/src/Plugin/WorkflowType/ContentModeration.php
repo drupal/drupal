@@ -331,7 +331,7 @@ class ContentModeration extends WorkflowTypeFormBase implements ContainerFactory
    */
   public function getInitialState(WorkflowInterface $workflow, $entity = NULL) {
     if ($entity instanceof EntityPublishedInterface) {
-      return $workflow->getState($entity->isPublished() ? 'published' : 'draft');
+      return $workflow->getState($entity->isPublished() && !$entity->isNew() ? 'published' : 'draft');
     }
     return parent::getInitialState($workflow);
   }
