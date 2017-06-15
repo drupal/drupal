@@ -9,6 +9,7 @@ namespace Drupal\Tests\views\Unit\Plugin\pager;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Database\Query\Select;
 
 /**
  * @coversDefaultClass \Drupal\views\Plugin\views\pager\PagerPluginBase
@@ -245,6 +246,30 @@ class PagerPluginBaseTest extends UnitTestCase {
 
     $this->pager->setOffset(2);
     $this->assertEquals(1, $this->pager->executeCountQuery($query));
+  }
+
+  /**
+   * Tests the executeCountQuery method with an offset larger than result count.
+   *
+   * @see \Drupal\views\Plugin\views\pager\PagerPluginBase::executeCountQuery()
+   */
+  public function testExecuteCountQueryWithOffsetLargerThanResult() {
+    $statement = $this->getMock(TestStatementInterface::class);
+
+    $statement->expects($this->once())
+      ->method('fetchField')
+      ->will($this->returnValue(2));
+
+    $query = $this->getMockBuilder(Select::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $query->expects($this->once())
+      ->method('execute')
+      ->will($this->returnValue($statement));
+
+    $this->pager->setOffset(3);
+    $this->assertEquals(0, $this->pager->executeCountQuery($query));
   }
 
 }

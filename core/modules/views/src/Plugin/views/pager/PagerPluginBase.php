@@ -156,6 +156,8 @@ abstract class PagerPluginBase extends PluginBase {
     if (!empty($this->options['offset'])) {
       $this->total_items -= $this->options['offset'];
     }
+    // Prevent from being negative.
+    $this->total_items = max(0, $this->total_items);
 
     return $this->total_items;
   }
