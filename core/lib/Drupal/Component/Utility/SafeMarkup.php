@@ -13,6 +13,8 @@ use Drupal\Component\Render\MarkupInterface;
  *   @link sanitization sanitization functions @endlink or the @link theme_render theme and render systems @endlink
  *   so that the output can can be themed, escaped, and altered properly.
  *
+ * @see https://www.drupal.org/node/2549395
+ *
  * @see TwigExtension::escapeFilter()
  * @see twig_render_template()
  * @see sanitization
@@ -34,6 +36,8 @@ class SafeMarkup {
    * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
    *   Instead, you should just check if a variable is an instance of
    *   \Drupal\Component\Render\MarkupInterface.
+   *
+   * @see https://www.drupal.org/node/2549395
    */
   public static function isSafe($string, $strategy = 'html') {
     return $string instanceof MarkupInterface;
@@ -58,6 +62,7 @@ class SafeMarkup {
    *   possible, \Drupal\Component\Utility\Html::escape() can be used in places
    *   where explicit escaping is needed.
    *
+   * @see https://www.drupal.org/node/2549395
    * @see drupal_validate_utf8()
    */
   public static function checkPlain($text) {
@@ -84,6 +89,8 @@ class SafeMarkup {
    *
    * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
    *   Use \Drupal\Component\Render\FormattableMarkup.
+   *
+   * @see https://www.drupal.org/node/2549395
    */
   public static function format($string, array $args) {
     return new FormattableMarkup($string, $args);
