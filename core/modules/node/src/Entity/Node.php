@@ -340,6 +340,16 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ])
       ->setDisplayConfigurable('form', TRUE);
 
+    $fields['status']
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+        'weight' => 120,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
       ->setDescription(t('The time that the node was created.'))

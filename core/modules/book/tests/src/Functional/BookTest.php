@@ -741,8 +741,8 @@ class BookTest extends BrowserTestBase {
     $this->drupalPlaceBlock('book_navigation', ['block_mode' => 'book pages']);
 
     // Unpublish book node.
-    $edit = [];
-    $this->drupalPostForm('node/' . $this->book->id() . '/edit', $edit, t('Save and unpublish'));
+    $edit = ['status[value]' => FALSE];
+    $this->drupalPostForm('node/' . $this->book->id() . '/edit', $edit, t('Save'));
 
     // Test node page.
     $this->drupalGet('node/' . $this->book->id());

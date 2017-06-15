@@ -60,7 +60,7 @@ class FilterHooksTest extends BrowserTestBase {
     $edit['title[0][value]'] = $title;
     $edit['body[0][value]'] = $this->randomMachineName(32);
     $edit['body[0][format]'] = $format_id;
-    $this->drupalPostForm("node/add/{$type->id()}", $edit, t('Save and publish'));
+    $this->drupalPostForm("node/add/{$type->id()}", $edit, t('Save'));
     $this->assertText(t('@type @title has been created.', ['@type' => $type_name, '@title' => $title]));
 
     // Disable the text format.

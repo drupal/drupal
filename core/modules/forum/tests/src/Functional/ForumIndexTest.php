@@ -44,7 +44,7 @@ class ForumIndexTest extends BrowserTestBase {
     $this->drupalGet("forum/$tid");
     $this->clickLink(t('Add new @node_type', ['@node_type' => 'Forum topic']));
     $this->assertUrl('node/add/forum', ['query' => ['forum_id' => $tid]]);
-    $this->drupalPostForm(NULL, $edit, t('Save and publish'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($title);
@@ -71,7 +71,8 @@ class ForumIndexTest extends BrowserTestBase {
 
 
     // Unpublish the node.
-    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and unpublish'));
+    $edit = ['status[value]' => FALSE];
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->id());
     $this->assertText(t('Access denied'), 'Unpublished node is no longer accessible.');
 

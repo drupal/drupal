@@ -46,7 +46,7 @@ class NodeAccessTest extends ModerationStateTestBase {
   protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
-    $this->createContentTypeFromUi('Moderated content', 'moderated_content', TRUE);
+    $this->createContentTypeFromUi('Moderated content', 'moderated_content', FALSE);
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'moderated_content');
 
     // Rebuild permissions because hook_node_grants() is implemented by the
@@ -60,8 +60,20 @@ class NodeAccessTest extends ModerationStateTestBase {
   public function testPageAccess() {
     $this->drupalLogin($this->adminUser);
 
+    // Access the node form before moderation is enabled, the publication state
+    // should now be visible.
+    $this->drupalGet('node/add/moderated_content');
+    $this->assertSession()->fieldExists('Published');
+
+    // Now enable the workflow.
+    $this->enableModerationThroughUi('moderated_content', 'editorial');
+
+    // Access that the status field is no longer visible.
+    $this->drupalGet('node/add/moderated_content');
+    $this->assertSession()->fieldNotExists('Published');
+
     // Create a node to test with.
-    $this->drupalPostForm('node/add/moderated_content', [
+    $this->drupalPostForm(NULL, [
       'title[0][value]' => 'moderated content',
     ], t('Save and Create New Draft'));
     $node = $this->getNodeByTitle('moderated content');

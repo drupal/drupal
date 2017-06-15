@@ -85,7 +85,7 @@ class FormErrorHandlerCKEditorTest extends JavascriptTestBase {
     // Only enter a title in the node add form and leave the body field empty.
     $edit = ['edit-title-0-value' => 'Test inline form error with CKEditor'];
 
-    $this->submitForm($edit, 'Save and publish');
+    $this->submitForm($edit, 'Save');
 
     // Add a bottom margin to the title field to be sure the body field is not
     // visible. PhantomJS runs with a resolution of 1024x768px.

@@ -227,7 +227,7 @@ abstract class FileFieldTestBase extends WebTestBase {
         $edit[$name][] = $file_path;
       }
     }
-    $this->drupalPostForm("node/$nid/edit", $edit, t('Save and keep published'));
+    $this->drupalPostForm("node/$nid/edit", $edit, t('Save'));
 
     return $nid;
   }
@@ -243,7 +243,7 @@ abstract class FileFieldTestBase extends WebTestBase {
     ];
 
     $this->drupalPostForm('node/' . $nid . '/edit', [], t('Remove'));
-    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
   }
 
   /**
@@ -256,7 +256,7 @@ abstract class FileFieldTestBase extends WebTestBase {
     ];
 
     $this->drupalPostForm('node/' . $nid . '/edit', [], t('Remove'));
-    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
   }
 
   /**

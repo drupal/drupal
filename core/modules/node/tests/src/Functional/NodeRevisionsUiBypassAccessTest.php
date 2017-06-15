@@ -67,7 +67,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
 
     // Uncheck the create new revision checkbox and save the node.
     $edit = ['revision' => FALSE];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save and keep published');
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
 
     $this->assertUrl($node->toUrl());
     $this->assertNoLink(t('Revisions'));
@@ -78,7 +78,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
 
     // Submit the form without changing the checkbox.
     $edit = [];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save and keep published');
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
 
     $this->assertUrl($node->toUrl());
     $this->assertLink(t('Revisions'));

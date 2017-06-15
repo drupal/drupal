@@ -73,12 +73,12 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
     $edit = [
       'title[0][value]' => 'english_title',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save and publish'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Create a translation in French.
     $this->clickLink('Translate');
     $this->clickLink('Add');
-    $this->drupalPostForm(NULL, [], t('Save and keep published (this translation)'));
+    $this->drupalPostForm(NULL, [], t('Save (this translation)'));
     $this->clickLink('Translate');
 
     // Edit English translation.
@@ -90,7 +90,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
       'files[field_image_field_0]' => $images->uri,
     ];
     $this->drupalPostForm(NULL, $edit, t('Upload'));
-    $this->drupalPostForm(NULL, ['field_image_field[0][alt]' => 'alternative_text'], t('Save and keep published (this translation)'));
+    $this->drupalPostForm(NULL, ['field_image_field[0][alt]' => 'alternative_text'], t('Save (this translation)'));
 
     // Check that the translation languages are correct.
     $node = $this->getNodeByTitle('english_title');
@@ -109,13 +109,13 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
       'title[0][value]' => 'english_title',
       'test_field_only_en_fr' => 'node created',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save and publish'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertEqual('node created', \Drupal::state()->get('test_field_only_en_fr'));
 
     // Create a translation in French.
     $this->clickLink('Translate');
     $this->clickLink('Add');
-    $this->drupalPostForm(NULL, [], t('Save and keep published (this translation)'));
+    $this->drupalPostForm(NULL, [], t('Save (this translation)'));
     $this->clickLink('Translate');
 
     // Edit English translation.
@@ -137,7 +137,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
       'langcode[0][value]' => 'en',
       'field_image_field[0][alt]' => 'alternative_text'
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save and keep published (this translation)'));
+    $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
 
     // Check that the translation languages are correct.
     $node = $this->getNodeByTitle('english_title');

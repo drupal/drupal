@@ -98,7 +98,7 @@ class NodeEditFormTest extends NodeTestBase {
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
     $edit['revision'] = TRUE;
-    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Ensure that the node revision has been created.
     $revised_node = $this->drupalGetNodeByTitle($edit['title[0][value]'], TRUE);
@@ -124,12 +124,21 @@ class NodeEditFormTest extends NodeTestBase {
     $edit['created[0][value][date]'] = $this->randomMachineName(8);
     // Get the current amount of open details elements.
     $open_details_elements = count($this->cssSelect('details[open="open"]'));
-    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     // The node author details must be open.
     $this->assertRaw('<details class="node-form-author js-form-wrapper form-wrapper" data-drupal-selector="edit-author" id="edit-author" open="open">');
     // Only one extra details element should now be open.
     $open_details_elements++;
     $this->assertEqual(count($this->cssSelect('details[open="open"]')), $open_details_elements, 'Exactly one extra open &lt;details&gt; element found.');
+
+    // Edit the same node, save it and verify it's unpublished after unchecking
+    // the 'Published' boolean_checkbox and clicking 'Save'.
+    $this->drupalGet("node/" . $node->id() . "/edit");
+    $edit = ['status[value]' => FALSE];
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->nodeStorage->resetCache([$node->id()]);
+    $node = $this->nodeStorage->load($node->id());
+    $this->assertFalse($node->isPublished(), 'Node is unpublished');
   }
 
   /**
@@ -143,7 +152,7 @@ class NodeEditFormTest extends NodeTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
-    $this->drupalPostForm('node/add/page', $edit, t('Save and publish'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the node was authored by the currently logged in user.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
@@ -172,7 +181,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Save the node without making any changes.
-    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save'));
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $this->assertIdentical($this->webUser->id(), $node->getOwner()->id());
@@ -184,7 +193,7 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Check that saving the node without making any changes keeps the proper
     // author ID.
-    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save'));
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $this->assertIdentical($this->webUser->id(), $node->getOwner()->id());
@@ -203,13 +212,13 @@ class NodeEditFormTest extends NodeTestBase {
     $edit = [
       $form_element_name => 'invalid-name',
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertRaw(t('There are no entities matching "%name".', ['%name' => 'invalid-name']));
 
     // Change the authored by field to an empty string, which should assign
     // authorship to the anonymous user (uid 0).
     $edit[$form_element_name] = '';
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $uid = $node->getOwnerId();
@@ -228,7 +237,7 @@ class NodeEditFormTest extends NodeTestBase {
     // Change the authored by field to another user's name (that is not
     // logged in).
     $edit[$form_element_name] = $this->webUser->getUsername();
-    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $this->assertIdentical($node->getOwnerId(), $this->webUser->id(), 'Node authored by normal user.');

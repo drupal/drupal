@@ -14,6 +14,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -164,6 +166,27 @@ function content_moderation_node_access(NodeInterface $node, $operation, Account
   }
 
   return $access_result;
+}
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function content_moderation_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($items && $operation === 'edit') {
+    /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
+    $moderation_info = Drupal::service('content_moderation.moderation_information');
+
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($field_definition->getTargetEntityTypeId());
+
+    $entity = $items->getEntity();
+
+    // Deny edit access to the published field if the entity is being moderated.
+    if ($entity_type->hasKey('published') && $moderation_info->isModeratedEntity($entity) && $entity->moderation_state && $field_definition->getName() == $entity_type->getKey('published')) {
+      return AccessResult::forbidden();
+    }
+  }
+
+  return AccessResult::neutral();
 }
 
 /**

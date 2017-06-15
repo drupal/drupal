@@ -62,7 +62,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     // Create a new node.
     $this->drupalPostForm('node/add/moderated_content', [
       'title[0][value]' => 'non-moderated content',
-    ], t('Save and publish'));
+    ], t('Save'));
 
     $node = $this->getNodeByTitle('non-moderated content');
     if (!$node) {

@@ -86,7 +86,10 @@ class NodeForm extends ContentEntityForm {
     $node = $this->entity;
 
     if ($this->operation == 'edit') {
-      $form['#title'] = $this->t('<em>Edit @type</em> @title', ['@type' => node_get_type_label($node), '@title' => $node->label()]);
+      $form['#title'] = $this->t('<em>Edit @type</em> @title', [
+        '@type' => node_get_type_label($node),
+        '@title' => $node->label()
+      ]);
     }
 
     // Changed must be sent to the client, for later overwrite error checking.
@@ -98,6 +101,15 @@ class NodeForm extends ContentEntityForm {
     $form = parent::form($form, $form_state);
 
     $form['advanced']['#attributes']['class'][] = 'entity-meta';
+
+    $form['footer'] = [
+      '#type' => 'container',
+      '#weight' => 99,
+      '#attributes' => [
+        'class' => ['node-form-footer']
+      ]
+    ];
+    $form['status']['#group'] = 'footer';
 
     // Node author information for administrators.
     $form['author'] = [
@@ -147,8 +159,6 @@ class NodeForm extends ContentEntityForm {
 
     $form['#attached']['library'][] = 'node/form';
 
-    $form['#entity_builders']['update_status'] = '::updateStatus';
-
     return $form;
   }
 
@@ -165,6 +175,9 @@ class NodeForm extends ContentEntityForm {
    *   The current state of the form.
    *
    * @see \Drupal\node\NodeForm::form()
+   *
+   * @deprecated in Drupal 8.4.x, will be removed before Drupal 9.0.0.
+   *   The "Publish" button was removed.
    */
   public function updateStatus($entity_type_id, NodeInterface $node, array $form, FormStateInterface $form_state) {
     $element = $form_state->getTriggeringElement();
@@ -182,59 +195,6 @@ class NodeForm extends ContentEntityForm {
     $preview_mode = $node->type->entity->getPreviewMode();
 
     $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || $form_state->get('has_been_previewed');
-
-    // If saving is an option, privileged users get dedicated form submit
-    // buttons to adjust the publishing status while saving in one go.
-    // @todo This adjustment makes it close to impossible for contributed
-    //   modules to integrate with "the Save operation" of this form. Modules
-    //   need a way to plug themselves into 1) the ::submit() step, and
-    //   2) the ::save() step, both decoupled from the pressed form button.
-    if ($element['submit']['#access'] && \Drupal::currentUser()->hasPermission('administer nodes')) {
-      // isNew | prev status » default   & publish label             & unpublish label
-      // 1     | 1           » publish   & Save and publish          & Save as unpublished
-      // 1     | 0           » unpublish & Save and publish          & Save as unpublished
-      // 0     | 1           » publish   & Save and keep published   & Save and unpublish
-      // 0     | 0           » unpublish & Save and keep unpublished & Save and publish
-
-      // Add a "Publish" button.
-      $element['publish'] = $element['submit'];
-      // If the "Publish" button is clicked, we want to update the status to "published".
-      $element['publish']['#published_status'] = TRUE;
-      $element['publish']['#dropbutton'] = 'save';
-      if ($node->isNew()) {
-        $element['publish']['#value'] = t('Save and publish');
-      }
-      else {
-        $element['publish']['#value'] = $node->isPublished() ? t('Save and keep published') : t('Save and publish');
-      }
-      $element['publish']['#weight'] = 0;
-
-      // Add a "Unpublish" button.
-      $element['unpublish'] = $element['submit'];
-      // If the "Unpublish" button is clicked, we want to update the status to "unpublished".
-      $element['unpublish']['#published_status'] = FALSE;
-      $element['unpublish']['#dropbutton'] = 'save';
-      if ($node->isNew()) {
-        $element['unpublish']['#value'] = t('Save as unpublished');
-      }
-      else {
-        $element['unpublish']['#value'] = !$node->isPublished() ? t('Save and keep unpublished') : t('Save and unpublish');
-      }
-      $element['unpublish']['#weight'] = 10;
-
-      // If already published, the 'publish' button is primary.
-      if ($node->isPublished()) {
-        unset($element['unpublish']['#button_type']);
-      }
-      // Otherwise, the 'unpublish' button is primary and should come first.
-      else {
-        unset($element['publish']['#button_type']);
-        $element['unpublish']['#weight'] = -10;
-      }
-
-      // Remove the "Save" button.
-      $element['submit']['#access'] = FALSE;
-    }
 
     $element['preview'] = [
       '#type' => 'submit',

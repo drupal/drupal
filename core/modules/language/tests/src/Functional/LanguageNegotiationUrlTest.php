@@ -70,7 +70,7 @@ class LanguageNegotiationUrlTest extends BrowserTestBase {
       'title[0][value]' => 'Test',
       'path[0][alias]' => '/eng/test',
     ];
-    $this->drupalPostForm('node/add/article', $nodeValues, $this->t('Save and publish'));
+    $this->drupalPostForm('node/add/article', $nodeValues, $this->t('Save'));
     $this->assertSession()->statusCodeEquals(200);
   }
 

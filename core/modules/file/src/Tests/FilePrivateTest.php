@@ -72,10 +72,10 @@ class FilePrivateTest extends FileFieldTestBase {
     // Attempt to reuse the file when editing a node.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
+    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $edit[$field_name . '[0][fids]'] = $node_file->id();
-    $this->drupalPostForm('node/' . $new_node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $new_node->id() . '/edit', $edit, t('Save'));
     // Make sure the form submit failed - we stayed on the edit form.
     $this->assertUrl('node/' . $new_node->id() . '/edit');
     // Check that we got the expected constraint form error.
@@ -86,7 +86,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit[$field_name . '[0][fids]'] = $node_file->id();
-    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
+    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue(empty($new_node), 'Node was not created.');
     $this->assertUrl('node/add/' . $type_name);

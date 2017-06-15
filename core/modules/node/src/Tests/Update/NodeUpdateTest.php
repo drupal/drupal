@@ -2,6 +2,7 @@
 
 namespace Drupal\node\Tests\Update;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\system\Tests\Update\UpdatePathTestBase;
 
 /**
@@ -36,6 +37,31 @@ class NodeUpdateTest extends UpdatePathTestBase {
     // Check that the entity key exists and it has the correct value.
     $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('node');
     $this->assertEqual('status', $entity_type->getKey('published'));
+  }
+
+  /**
+   * Tests that the node entity form has the status checkbox.
+   *
+   * @see node_post_update_configure_status_field_widget()
+   */
+  public function testStatusCheckbox() {
+    // Run updates.
+    $this->runUpdates();
+
+    $query = \Drupal::entityQuery('entity_form_display')
+      ->condition('targetEntityType', 'node');
+    $ids = $query->execute();
+    $form_displays = EntityFormDisplay::loadMultiple($ids);
+
+    /**
+     * @var string $id
+     * @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display
+     */
+    foreach ($form_displays as $id => $form_display) {
+      $component = $form_display->getComponent('status');
+      $this->assertEqual('boolean_checkbox', $component['type']);
+      $this->assertEqual(['display_label' => TRUE], $component['settings']);
+    }
   }
 
 }
