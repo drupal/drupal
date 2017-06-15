@@ -161,8 +161,8 @@ class TestToolkit extends ImageToolkitBase {
    * @param array $args
    *   Values passed to hook.
    *
-   * @see \Drupal\system\Tests\Image\ToolkitTestBase::imageTestReset()
-   * @see \Drupal\system\Tests\Image\ToolkitTestBase::imageTestGetAllCalls()
+   * @see \Drupal\Tests\system\Functional\Image\ToolkitTestBase::imageTestReset()
+   * @see \Drupal\Tests\system\Functional\Image\ToolkitTestBase::imageTestGetAllCalls()
    */
   protected function logCall($op, $args) {
     $results = $this->state->get('image_test.results') ?: [];

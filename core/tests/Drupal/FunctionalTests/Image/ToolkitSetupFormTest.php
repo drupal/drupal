@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Image;
+namespace Drupal\FunctionalTests\Image;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests image toolkit setup form.
  *
  * @group Image
  */
-class ToolkitSetupFormTest extends WebTestBase {
+class ToolkitSetupFormTest extends BrowserTestBase {
 
   /**
    * Admin user account.
