@@ -17,8 +17,10 @@
 
 @media screen and (min-width: 40em) {
   .layout--threecol-33-34-33 > .layout__region--first,
-  .layout--threecol-33-34-33 > .layout__region--second,
   .layout--threecol-33-34-33 > .layout__region--third {
     flex: 0 1 33%;
+  }
+  .layout--threecol-33-34-33 > .layout__region--second {
+    flex: 0 1 34%;
   }
 }
