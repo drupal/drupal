@@ -1,22 +1,20 @@
 <?php
 
-namespace Drupal\system\Tests\Image;
+namespace Drupal\FunctionalTests\Image;
 
-@trigger_error(__FILE__ . ' is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use Drupal\FunctionalTests\Image\ToolkitTestBase instead. See https://www.drupal.org/node/2862641.', E_USER_DEPRECATED);
-
-use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\TestFileCreationTrait;
+
 
 /**
  * Base class for image manipulation testing.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
- *   Use Drupal\FunctionalTests\Image\ToolkitTestBase instead.
- *
- * @see https://www.drupal.org/node/2862641
  */
-abstract class ToolkitTestBase extends WebTestBase {
+abstract class ToolkitTestBase extends BrowserTestBase {
 
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
   /**
    * Modules to enable.
    *
@@ -127,7 +125,7 @@ abstract class ToolkitTestBase extends WebTestBase {
   /**
    * Resets/initializes the history of calls to the test toolkit functions.
    */
-  public function imageTestReset() {
+  protected function imageTestReset() {
     // Keep track of calls to these operations
     $results = [
       'parseFile' => [],
@@ -154,7 +152,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    *   'resize', 'rotate', 'crop', 'desaturate') with values being arrays of
    *   parameters passed to each call.
    */
-  public function imageTestGetAllCalls() {
+  protected function imageTestGetAllCalls() {
     return \Drupal::state()->get('image_test.results') ?: [];
   }
 

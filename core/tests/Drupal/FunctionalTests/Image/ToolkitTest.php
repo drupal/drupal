@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Image;
+namespace Drupal\FunctionalTests\Image;
 
 /**
  * Tests image toolkit functions.
