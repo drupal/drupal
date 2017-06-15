@@ -77,6 +77,12 @@ class InitialStateTest extends KernelTestBase {
     $this->assertEquals('draft', $loaded_unpublished_node->moderation_state->value);
     $this->assertEquals('published', $loaded_published_node->moderation_state->value);
     $this->assertEquals('draft', $loaded_entity_test->moderation_state->value);
+
+    $presave_node = Node::create([
+      'type' => 'example',
+      'title' => 'Presave node',
+    ]);
+    $this->assertEquals('draft', $presave_node->moderation_state->value);
   }
 
 }
