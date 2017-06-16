@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\aggregator\Tests;
+namespace Drupal\Tests\aggregator\Functional;
 
 /**
  * Update feed test.

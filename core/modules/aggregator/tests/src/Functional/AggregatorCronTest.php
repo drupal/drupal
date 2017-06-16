@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\aggregator\Tests;
+namespace Drupal\Tests\aggregator\Functional;
+
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Update feeds on cron.
@@ -8,6 +10,9 @@ namespace Drupal\aggregator\Tests;
  * @group aggregator
  */
 class AggregatorCronTest extends AggregatorTestBase {
+
+  use CronRunTrait;
+
   /**
    * Adds feeds and updates them via cron process.
    */

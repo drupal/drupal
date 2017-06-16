@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\aggregator\Tests;
+namespace Drupal\Tests\aggregator\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Tests aggregator feeds in multiple languages.
@@ -10,6 +11,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * @group aggregator
  */
 class FeedLanguageTest extends AggregatorTestBase {
+
+  use CronRunTrait;
 
   /**
    * Modules to install.
