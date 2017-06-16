@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\aggregator\Tests;
+namespace Drupal\Tests\aggregator\Functional;
 
 /**
  * Tests aggregator admin pages.
@@ -67,18 +67,22 @@ class AggregatorAdminTest extends AggregatorTestBase {
     // Check if the amount of feeds in the overview matches the amount created.
     $this->assertEqual(1, count($result), 'Created feed is found in the overview');
     // Check if the fields in the table match with what's expected.
-    $this->assertEqual($feed->label(), (string) $result[0]->td[0]->a);
+    $link = $this->xpath('//table/tbody/tr//td[1]/a');
+    $this->assertEquals($feed->label(), $link[0]->getText());
     $count = $this->container->get('entity.manager')->getStorage('aggregator_item')->getItemCount($feed);
-    $this->assertEqual(\Drupal::translation()->formatPlural($count, '1 item', '@count items'), (string) $result[0]->td[1]);
+    $td = $this->xpath('//table/tbody/tr//td[2]');
+    $this->assertEquals(\Drupal::translation()->formatPlural($count, '1 item', '@count items'), $td[0]->getText());
 
     // Update the items of the first feed.
     $feed->refreshItems();
     $this->drupalGet('admin/config/services/aggregator');
     $result = $this->xpath('//table/tbody/tr');
     // Check if the fields in the table match with what's expected.
-    $this->assertEqual($feed->label(), (string) $result[0]->td[0]->a);
+    $link = $this->xpath('//table/tbody/tr//td[1]/a');
+    $this->assertEquals($feed->label(), $link[0]->getText());
     $count = $this->container->get('entity.manager')->getStorage('aggregator_item')->getItemCount($feed);
-    $this->assertEqual(\Drupal::translation()->formatPlural($count, '1 item', '@count items'), (string) $result[0]->td[1]);
+    $td = $this->xpath('//table/tbody/tr//td[2]');
+    $this->assertEquals(\Drupal::translation()->formatPlural($count, '1 item', '@count items'), $td[0]->getText());
   }
 
 }

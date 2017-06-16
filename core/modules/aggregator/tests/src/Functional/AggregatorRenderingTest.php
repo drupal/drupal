@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\aggregator\Tests;
+namespace Drupal\Tests\aggregator\Functional;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\views\Entity\View;
@@ -132,10 +132,14 @@ class AggregatorRenderingTest extends AggregatorTestBase {
 
     // Check the opml aggregator page.
     $this->drupalGet('aggregator/opml');
-    $outline = $this->xpath('//outline[1]');
-    $this->assertEqual($outline[0]['type'], 'rss', 'The correct type attribute is used for rss OPML.');
-    $this->assertEqual($outline[0]['text'], $feed->label(), 'The correct text attribute is used for rss OPML.');
-    $this->assertEqual($outline[0]['xmlurl'], $feed->getUrl(), 'The correct xmlUrl attribute is used for rss OPML.');
+    $content = $this->getSession()->getPage()->getContent();
+    // We can't use Mink xpath queries here because it only supports HTML pages,
+    // but we are dealing with XML here.
+    $xml = simplexml_load_string($content);
+    $attributes = $xml->xpath('//outline[1]')[0]->attributes();
+    $this->assertEquals('rss', $attributes->type);
+    $this->assertEquals($feed->label(), $attributes->text);
+    $this->assertEquals($feed->getUrl(), $attributes->xmlUrl);
 
     // Check for the presence of a pager.
     $this->drupalGet('aggregator/sources/' . $feed->id());
