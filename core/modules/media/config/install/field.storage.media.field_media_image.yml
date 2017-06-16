@@ -6,17 +6,24 @@ dependencies:
       - media
   module:
     - file
+    - image
     - media
-id: media.field_media_file
-field_name: field_media_file
+id: media.field_media_image
+field_name: field_media_image
 entity_type: media
-type: file
+type: image
 settings:
-  uri_scheme: public
+  default_image:
+    uuid: null
+    alt: ''
+    title: ''
+    width: null
+    height: null
   target_type: file
   display_field: false
   display_default: false
-module: file
+  uri_scheme: public
+module: image
 locked: true
 cardinality: 1
 translatable: true

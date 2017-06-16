@@ -37,9 +37,21 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
     // Make the field widget visible in the form display.
     $component = \Drupal::service('plugin.manager.field.widget')
       ->prepareConfiguration($field_type, []);
-    /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $entity_form_display */
+
+    // @todo Replace entity_get_form_display() when #2367933 is done.
+    // https://www.drupal.org/node/2872159.
     $entity_form_display = entity_get_form_display('media', $media_type_id, 'default');
     $entity_form_display->setComponent($field_name, $component)
+      ->save();
+
+    // Use the default formatter and settings.
+    $component = \Drupal::service('plugin.manager.field.formatter')
+      ->prepareConfiguration($field_type, []);
+
+    // @todo Replace entity_get_display() when #2367933 is done.
+    // https://www.drupal.org/node/2872159.
+    $entity_display = entity_get_display('media', $media_type_id, 'default');
+    $entity_display->setComponent($field_name, $component)
       ->save();
   }
 

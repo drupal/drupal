@@ -3,6 +3,7 @@
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests the revisionability of media entities.
@@ -25,6 +26,46 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $page = $this->getSession()->getPage();
     $page->fillField('Name', 'Foobar');
     $page->attachFileToField('File', $this->container->get('file_system')->realpath($uri));
+    $page->pressButton('Save and publish');
+    $assert->addressMatches('/^\/media\/[0-9]+$/');
+
+    // The media item was just created, so it should only have one revision.
+    $media = $this->container
+      ->get('entity_type.manager')
+      ->getStorage('media')
+      ->load(1);
+    $this->assertRevisionCount($media, 1);
+
+    // If we edit the item, we should get a new revision.
+    $this->drupalGet('/media/1/edit');
+    $assert->checkboxChecked('Create new revision');
+    $page = $this->getSession()->getPage();
+    $page->fillField('Name', 'Foobaz');
+    $page->pressButton('Save and keep published');
+    $this->assertRevisionCount($media, 2);
+  }
+
+  /**
+   * Tests creating revisions of a Image media item.
+   */
+  public function testImageMediaRevision() {
+    $assert = $this->assertSession();
+
+    /** @var \Drupal\field\FieldConfigInterface $field */
+    // Disable the alt text field, because this is not a JavaScript test and
+    // the alt text field will therefore not appear without a full page refresh.
+    $field = FieldConfig::load('media.image.field_media_image');
+    $settings = $field->getSettings();
+    $settings['alt_field'] = FALSE;
+    $settings['alt_field_required'] = FALSE;
+    $field->set('settings', $settings);
+    $field->save();
+
+    // Create a media item.
+    $this->drupalGet('/media/add/image');
+    $page = $this->getSession()->getPage();
+    $page->fillField('Name', 'Foobar');
+    $page->attachFileToField('Image', \Drupal::root() . '/core/modules/media/tests/fixtures/example_1.jpeg');
     $page->pressButton('Save and publish');
     $assert->addressMatches('/^\/media\/[0-9]+$/');
 

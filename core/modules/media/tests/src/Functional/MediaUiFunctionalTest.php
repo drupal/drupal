@@ -33,6 +33,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     // We need to test without any default configuration in place.
     // @TODO: Remove this when https://www.drupal.org/node/2883813 lands.
     MediaType::load('file')->delete();
+    MediaType::load('image')->delete();
   }
 
   /**
