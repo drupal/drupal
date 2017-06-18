@@ -316,6 +316,7 @@ services:
       - { name: backend_overridable }
   # @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Use
   #   config.storage.sync instead.
+  # @see https://www.drupal.org/node/2574957
   config.storage.staging:
     class: Drupal\Core\Config\FileStorage
     factory: Drupal\Core\Config\FileStorageFactory::getSync
