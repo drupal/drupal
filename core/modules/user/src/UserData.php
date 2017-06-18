@@ -40,7 +40,7 @@ class UserData implements UserDataInterface {
       $query->condition('name', $name);
     }
     $result = $query->execute();
-    // If $module, $uid, and $name was passed, return the value.
+    // If $module, $uid, and $name were passed, return the value.
     if (isset($name) && isset($uid)) {
       $result = $result->fetchAllAssoc('uid');
       if (isset($result[$uid])) {
@@ -48,7 +48,7 @@ class UserData implements UserDataInterface {
       }
       return NULL;
     }
-    // If $module and $uid was passed, return the name/value pairs.
+    // If $module and $uid were passed, return data keyed by name.
     elseif (isset($uid)) {
       $return = [];
       foreach ($result as $record) {
@@ -56,7 +56,7 @@ class UserData implements UserDataInterface {
       }
       return $return;
     }
-    // If $module and $name was passed, return the uid/value pairs.
+    // If $module and $name were passed, return data keyed by uid.
     elseif (isset($name)) {
       $return = [];
       foreach ($result as $record) {
