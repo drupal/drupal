@@ -5,6 +5,9 @@
  * Provides hook implementations for Layout Discovery.
  */
 
+use Drupal\Core\Render\Element;
+use Drupal\Core\Template\Attribute;
+
 /**
  * Implements hook_help().
  */
@@ -36,4 +39,12 @@ function layout_discovery_theme() {
 function template_preprocess_layout(&$variables) {
   $variables['settings'] = isset($variables['content']['#settings']) ? $variables['content']['#settings'] : [];
   $variables['layout'] = isset($variables['content']['#layout']) ? $variables['content']['#layout'] : [];
+
+  // Create an attributes variable for each region.
+  foreach (Element::children($variables['content']) as $name) {
+    if (!isset($variables['content'][$name]['#attributes'])) {
+      $variables['content'][$name]['#attributes'] = [];
+    }
+    $variables['region_attributes'][$name] = new Attribute($variables['content'][$name]['#attributes']);
+  }
 }

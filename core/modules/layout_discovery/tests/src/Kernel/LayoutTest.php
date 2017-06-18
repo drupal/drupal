@@ -82,7 +82,7 @@ class LayoutTest extends KernelTestBase {
   public function renderLayoutData() {
     $html = [];
     $html[] = '<div data-drupal-selector="edit-layout" class="layout layout--onecol">';
-    $html[] = '<div class="layout__region layout__region--content">';
+    $html[] = '<div data-drupal-selector="edit-content" class="layout__region layout__region--content">';
     $html[] = 'This is the content';
     $html[] = '</div>';
     $html[] = '</div>';
@@ -98,11 +98,11 @@ class LayoutTest extends KernelTestBase {
     ];
 
     $html = [];
-    $html[] = '<div class="layout-example-1col clearfix">';
-    $html[] = '<div class="region-top">';
+    $html[] = '<div data-drupal-selector="edit-layout" class="layout-example-1col clearfix">';
+    $html[] = '<div data-drupal-selector="edit-top" class="region-top">';
     $html[] = 'This string added by #process.';
     $html[] = '</div>';
-    $html[] = '<div class="region-bottom">';
+    $html[] = '<div data-drupal-selector="edit-bottom" class="region-bottom">';
     $html[] = 'This is the bottom';
     $html[] = '</div>';
     $html[] = '</div>';
@@ -121,11 +121,11 @@ class LayoutTest extends KernelTestBase {
     ];
 
     $html = [];
-    $html[] = '<div class="layout-example-1col clearfix">';
-    $html[] = '<div class="region-top">';
+    $html[] = '<div data-drupal-selector="edit-layout" class="layout-example-1col clearfix">';
+    $html[] = '<div data-drupal-selector="edit-top" class="region-top">';
     $html[] = 'This is the top';
     $html[] = '</div>';
-    $html[] = '<div class="region-bottom">';
+    $html[] = '<div data-drupal-selector="edit-bottom" class="region-bottom">';
     $html[] = 'This is the bottom';
     $html[] = '</div>';
     $html[] = '</div>';
@@ -145,10 +145,10 @@ class LayoutTest extends KernelTestBase {
 
     $html = [];
     $html[] = '<div data-drupal-selector="edit-layout" class="layout layout--layout-test-1col-no-template">';
-    $html[] = '<div class="layout__region layout__region--top">';
+    $html[] = '<div data-drupal-selector="edit-top" class="layout__region layout__region--top">';
     $html[] = 'This is the top';
     $html[] = '</div>';
-    $html[] = '<div class="layout__region layout__region--bottom">';
+    $html[] = '<div data-drupal-selector="edit-bottom" class="layout__region layout__region--bottom">';
     $html[] = 'This is the bottom';
     $html[] = '</div>';
     $html[] = '</div>';
@@ -167,11 +167,11 @@ class LayoutTest extends KernelTestBase {
     ];
 
     $html = [];
-    $html[] = '<div class="layout-example-2col clearfix">';
-    $html[] = '<div class="region-left">';
+    $html[] = '<div data-drupal-selector="edit-layout" class="layout-example-2col clearfix">';
+    $html[] = '<div data-drupal-selector="edit-left" class="class-added-by-preprocess region-left">';
     $html[] = 'This is the left';
     $html[] = '</div>';
-    $html[] = '<div class="region-right">';
+    $html[] = '<div data-drupal-selector="edit-right" class="region-right">';
     $html[] = 'This is the right';
     $html[] = '</div>';
     $html[] = '</div>';
@@ -190,12 +190,12 @@ class LayoutTest extends KernelTestBase {
     ];
 
     $html = [];
-    $html[] = '<div class="layout-test-plugin clearfix">';
+    $html[] = '<div data-drupal-selector="edit-layout" class="layout-test-plugin clearfix">';
     $html[] = '<div>';
     $html[] = '<span class="setting-1-label">Blah: </span>';
     $html[] = 'Config value';
     $html[] = '</div>';
-    $html[] = '<div class="region-main">';
+    $html[] = '<div data-drupal-selector="edit-main" class="region-main">';
     $html[] = 'Main region';
     $html[] = '</div>';
     $html[] = '</div>';
