@@ -52,6 +52,11 @@
      */
     onActiveTrayChange: function (model, tray) {
       var relevantTray = (tray === null) ? model.previous('activeTray') : tray;
+      // Current activeTray and previous activeTray are empty, no state change
+      // to announce.
+      if (!relevantTray) {
+        return;
+      }
       var action = (tray === null) ? Drupal.t('closed') : Drupal.t('opened');
       var trayNameElement = relevantTray.querySelector('.toolbar-tray-name');
       var text;

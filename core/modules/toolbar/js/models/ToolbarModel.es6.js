@@ -88,7 +88,7 @@
        *
        * @type {string}
        */
-      orientation: 'vertical',
+      orientation: 'horizontal',
 
       /**
        * A tray is locked if a user toggled it to vertical. Otherwise a tray
@@ -105,7 +105,7 @@
        *
        * @type {bool}
        */
-      isTrayToggleVisible: false,
+      isTrayToggleVisible: true,
 
       /**
        * The height of the toolbar.

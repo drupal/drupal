@@ -48,6 +48,7 @@
       this.listenTo(this.model, 'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible', this.render);
       this.listenTo(this.model, 'change:mqMatches', this.onMediaQueryChange);
       this.listenTo(this.model, 'change:offsets', this.adjustPlacement);
+      this.listenTo(this.model, 'change:activeTab change:orientation change:isOriented', this.updateToolbarHeight);
 
       // Add the tray orientation toggles.
       this.$el
@@ -60,6 +61,32 @@
     },
 
     /**
+     * Update the toolbar element height.
+     *
+     * @constructs
+     *
+     * @augments Backbone.View
+     */
+    updateToolbarHeight: function () {
+      this.model.set('height', $('#toolbar-bar').find('.toolbar-tab').outerHeight() + $('.is-active.toolbar-tray-horizontal').outerHeight());
+
+      $('body').css({
+        'padding-top': this.model.get('height')
+      });
+
+      this.triggerDisplace();
+    },
+
+    // Trigger a recalculation of viewport displacing elements. Use setTimeout
+    // to ensure this recalculation happens after changes to visual elements
+    // have processed.
+    triggerDisplace: function () {
+      _.defer(function () {
+        Drupal.displace(true);
+      });
+    },
+
+    /**
      * @inheritdoc
      *
      * @return {Drupal.toolbar.ToolbarVisualView}
@@ -69,6 +96,9 @@
       this.updateTabs();
       this.updateTrayOrientation();
       this.updateBarAttributes();
+
+      $('body').removeClass('toolbar-loading');
+
       // Load the subtrees if the orientation of the toolbar is changed to
       // vertical. This condition responds to the case that the toolbar switches
       // from horizontal to vertical orientation. The toolbar starts in a
@@ -84,12 +114,7 @@
       if (this.model.changed.orientation === 'vertical' || this.model.changed.activeTab) {
         this.loadSubtrees();
       }
-      // Trigger a recalculation of viewport displacing elements. Use setTimeout
-      // to ensure this recalculation happens after changes to visual elements
-      // have processed.
-      window.setTimeout(function () {
-        Drupal.displace(true);
-      }, 0);
+
       return this;
     },
 
@@ -209,12 +234,20 @@
      */
     updateTrayOrientation: function () {
       var orientation = this.model.get('orientation');
+
       // The antiOrientation is used to render the view of action buttons like
       // the tray orientation toggle.
       var antiOrientation = (orientation === 'vertical') ? 'horizontal' : 'vertical';
-      // Update the orientation of the trays.
+
+      // Toggle toolbar's parent classes before other toolbar classes to avoid
+      // potential flicker and re-rendering.
+      $('body')
+        .toggleClass('toolbar-vertical', (orientation === 'vertical'))
+        .toggleClass('toolbar-horizontal', (orientation === 'horizontal'));
+
+      var removeClass = (antiOrientation === 'horizontal') ? 'toolbar-tray-horizontal' : 'toolbar-tray-vertical';
       var $trays = this.$el.find('.toolbar-tray')
-        .removeClass('toolbar-tray-horizontal toolbar-tray-vertical')
+        .removeClass(removeClass)
         .addClass('toolbar-tray-' + orientation);
 
       // Update the tray orientation toggle button.
@@ -246,13 +279,7 @@
     adjustPlacement: function () {
       var $trays = this.$el.find('.toolbar-tray');
       if (!this.model.get('isOriented')) {
-        $trays.css('margin-top', 0);
         $trays.removeClass('toolbar-tray-horizontal').addClass('toolbar-tray-vertical');
-      }
-      else {
-        // The toolbar container is invisible. Its placement is used to
-        // determine the container for the trays.
-        $trays.css('margin-top', this.$el.find('.toolbar-bar').outerHeight());
       }
     },
 

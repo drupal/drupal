@@ -51,9 +51,26 @@
 
         // Establish the toolbar models and views.
         var model = Drupal.toolbar.models.toolbarModel = new Drupal.toolbar.ToolbarModel({
-          locked: JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked')) || false,
-          activeTab: document.getElementById(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID')))
+          locked: JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked')),
+          activeTab: document.getElementById(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))),
+          height: $('#toolbar-administration').outerHeight()
         });
+
+        // Attach a listener to the configured media query breakpoints.
+        // Executes it before Drupal.toolbar.views to avoid extra rendering.
+        for (var label in options.breakpoints) {
+          if (options.breakpoints.hasOwnProperty(label)) {
+            var mq = options.breakpoints[label];
+            var mql = Drupal.toolbar.mql[label] = window.matchMedia(mq);
+            // Curry the model and the label of the media query breakpoint to
+            // the mediaQueryChangeHandler function.
+            mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, model, label));
+            // Fire the mediaQueryChangeHandler for each configured breakpoint
+            // so that they process once.
+            Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
+          }
+        }
+
         Drupal.toolbar.views.toolbarVisualView = new Drupal.toolbar.ToolbarVisualView({
           el: this,
           model: model,
@@ -68,6 +85,11 @@
           el: this,
           model: model
         });
+
+        // Force layout render to fix mobile view. Only needed on load, not
+        // for every media query match.
+        model.trigger('change:isFixed', model, model.get('isFixed'));
+        model.trigger('change:activeTray', model, model.get('activeTray'));
 
         // Render collapsible menus.
         var menuModel = Drupal.toolbar.models.menuModel = new Drupal.toolbar.MenuModel();
@@ -87,20 +109,6 @@
           // Indicate on the toolbarModel that subtrees are now loaded.
           model.set('areSubtreesLoaded', true);
         });
-
-        // Attach a listener to the configured media query breakpoints.
-        for (var label in options.breakpoints) {
-          if (options.breakpoints.hasOwnProperty(label)) {
-            var mq = options.breakpoints[label];
-            var mql = Drupal.toolbar.mql[label] = window.matchMedia(mq);
-            // Curry the model and the label of the media query breakpoint to
-            // the mediaQueryChangeHandler function.
-            mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, model, label));
-            // Fire the mediaQueryChangeHandler for each configured breakpoint
-            // so that they process once.
-            Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
-          }
-        }
 
         // Trigger an initial attempt to load menu subitems. This first attempt
         // is made after the media query handlers have had an opportunity to
@@ -213,7 +221,7 @@
 
         case 'toolbar.wide':
           model.set({
-            orientation: ((mql.matches) ? 'horizontal' : 'vertical')
+            orientation: ((mql.matches && !model.get('locked')) ? 'horizontal' : 'vertical')
           }, {validate: true});
           // The tray orientation toggle visibility does not need to be
           // validated.

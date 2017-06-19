@@ -40,7 +40,6 @@
         else {
           $toolbarEscape.text(Drupal.t('Home'));
         }
-        $toolbarEscape.closest('.toolbar-tab').removeClass('hidden');
       }
     }
   };

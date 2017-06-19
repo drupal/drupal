@@ -11,16 +11,17 @@
 
   Drupal.toolbar.BodyVisualView = Backbone.View.extend({
     initialize: function initialize() {
-      this.listenTo(this.model, 'change:orientation change:offsets change:activeTray change:isOriented change:isFixed change:isViewportOverflowConstrained', this.render);
+      this.listenTo(this.model, 'change:activeTray ', this.render);
+      this.listenTo(this.model, 'change:isFixed change:isViewportOverflowConstrained', this.isToolbarFixed);
+    },
+
+    isToolbarFixed: function isToolbarFixed() {
+      var isViewportOverflowConstrained = this.model.get('isViewportOverflowConstrained');
+      $('body').toggleClass('toolbar-fixed', isViewportOverflowConstrained || this.model.get('isFixed'));
     },
 
     render: function render() {
-      var $body = $('body');
-      var orientation = this.model.get('orientation');
-      var isOriented = this.model.get('isOriented');
-      var isViewportOverflowConstrained = this.model.get('isViewportOverflowConstrained');
-
-      $body.toggleClass('toolbar-vertical', orientation === 'vertical').toggleClass('toolbar-horizontal', isOriented && orientation === 'horizontal').toggleClass('toolbar-fixed', isViewportOverflowConstrained || this.model.get('isFixed')).toggleClass('toolbar-tray-open', !!this.model.get('activeTray')).css('padding-top', this.model.get('offsets').top);
+      $('body').toggleClass('toolbar-tray-open', !!this.model.get('activeTray'));
     }
   });
 })(jQuery, Drupal, Backbone);

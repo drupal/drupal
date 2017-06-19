@@ -23,11 +23,11 @@
 
       isViewportOverflowConstrained: false,
 
-      orientation: 'vertical',
+      orientation: 'horizontal',
 
       locked: false,
 
-      isTrayToggleVisible: false,
+      isTrayToggleVisible: true,
 
       height: null,
 

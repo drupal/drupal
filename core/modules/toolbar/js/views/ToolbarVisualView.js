@@ -30,10 +30,27 @@
       this.listenTo(this.model, 'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible', this.render);
       this.listenTo(this.model, 'change:mqMatches', this.onMediaQueryChange);
       this.listenTo(this.model, 'change:offsets', this.adjustPlacement);
+      this.listenTo(this.model, 'change:activeTab change:orientation change:isOriented', this.updateToolbarHeight);
 
       this.$el.find('.toolbar-tray .toolbar-lining').append(Drupal.theme('toolbarOrientationToggle'));
 
       this.model.trigger('change:activeTab');
+    },
+
+    updateToolbarHeight: function updateToolbarHeight() {
+      this.model.set('height', $('#toolbar-bar').find('.toolbar-tab').outerHeight() + $('.is-active.toolbar-tray-horizontal').outerHeight());
+
+      $('body').css({
+        'padding-top': this.model.get('height')
+      });
+
+      this.triggerDisplace();
+    },
+
+    triggerDisplace: function triggerDisplace() {
+      _.defer(function () {
+        Drupal.displace(true);
+      });
     },
 
     render: function render() {
@@ -41,13 +58,12 @@
       this.updateTrayOrientation();
       this.updateBarAttributes();
 
+      $('body').removeClass('toolbar-loading');
+
       if (this.model.changed.orientation === 'vertical' || this.model.changed.activeTab) {
         this.loadSubtrees();
       }
 
-      window.setTimeout(function () {
-        Drupal.displace(true);
-      }, 0);
       return this;
     },
 
@@ -132,7 +148,10 @@
 
       var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
 
-      var $trays = this.$el.find('.toolbar-tray').removeClass('toolbar-tray-horizontal toolbar-tray-vertical').addClass('toolbar-tray-' + orientation);
+      $('body').toggleClass('toolbar-vertical', orientation === 'vertical').toggleClass('toolbar-horizontal', orientation === 'horizontal');
+
+      var removeClass = antiOrientation === 'horizontal' ? 'toolbar-tray-horizontal' : 'toolbar-tray-vertical';
+      var $trays = this.$el.find('.toolbar-tray').removeClass(removeClass).addClass('toolbar-tray-' + orientation);
 
       var iconClass = 'toolbar-icon-toggle-' + orientation;
       var iconAntiClass = 'toolbar-icon-toggle-' + antiOrientation;
@@ -152,10 +171,7 @@
     adjustPlacement: function adjustPlacement() {
       var $trays = this.$el.find('.toolbar-tray');
       if (!this.model.get('isOriented')) {
-        $trays.css('margin-top', 0);
         $trays.removeClass('toolbar-tray-horizontal').addClass('toolbar-tray-vertical');
-      } else {
-        $trays.css('margin-top', this.$el.find('.toolbar-bar').outerHeight());
       }
     },
 
