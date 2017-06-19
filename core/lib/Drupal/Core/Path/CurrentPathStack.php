@@ -1,6 +1,8 @@
 <?php
 
 namespace Drupal\Core\Path;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -46,7 +48,7 @@ class CurrentPathStack {
    * @return string
    *   Returns the path, without leading slashes.
    */
-  public function getPath($request = NULL) {
+  public function getPath(Request $request = NULL) {
     if (!isset($request)) {
       $request = $this->requestStack->getCurrentRequest();
     }
@@ -67,7 +69,7 @@ class CurrentPathStack {
    *
    * @return $this
    */
-  public function setPath($path, $request = NULL) {
+  public function setPath($path, Request $request = NULL) {
     if (!isset($request)) {
       $request = $this->requestStack->getCurrentRequest();
     }
