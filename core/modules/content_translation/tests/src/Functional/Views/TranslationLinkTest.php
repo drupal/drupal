@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\content_translation\Tests\Views;
+namespace Drupal\Tests\content_translation\Functional\Views;
 
-use Drupal\content_translation\Tests\ContentTranslationTestBase;
+use Drupal\Tests\content_translation\Functional\ContentTranslationTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\Core\Language\Language;
 use Drupal\user\Entity\User;

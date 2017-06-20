@@ -1,11 +1,12 @@
 <?php
 
-namespace Drupal\content_translation\Tests;
+namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the field synchronization behavior for the image field.
@@ -13,6 +14,10 @@ use Drupal\file\Entity\File;
  * @group content_translation
  */
 class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
 
   /**
    * The cardinality of the image field.

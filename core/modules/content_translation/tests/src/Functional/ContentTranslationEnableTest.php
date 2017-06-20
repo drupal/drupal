@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\content_translation\Tests;
+namespace Drupal\Tests\content_translation\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Test enabling content translation module.
  *
  * @group content_translation
  */
-class ContentTranslationEnableTest extends WebTestBase {
+class ContentTranslationEnableTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
@@ -36,7 +36,7 @@ class ContentTranslationEnableTest extends WebTestBase {
     // No pending updates should be available.
     $this->drupalGet('admin/reports/status');
     $requirement_value = $this->cssSelect("details.system-status-report__entry summary:contains('Entity/field definitions') + div");
-    $this->assertEqual(t('Up to date'), trim((string) $requirement_value[0]));
+    $this->assertEqual(t('Up to date'), trim($requirement_value[0]->getText()));
 
     $this->drupalGet('admin/config/regional/content-language');
     // The node entity type should not be an option because it has no bundles.
@@ -54,7 +54,7 @@ class ContentTranslationEnableTest extends WebTestBase {
     // No pending updates should be available.
     $this->drupalGet('admin/reports/status');
     $requirement_value = $this->cssSelect("details.system-status-report__entry summary:contains('Entity/field definitions') + div");
-    $this->assertEqual(t('Up to date'), trim((string) $requirement_value[0]));
+    $this->assertEqual(t('Up to date'), trim($requirement_value[0]->getText()));
 
     // Create a node type and check the content translation settings are now
     // available for nodes.
