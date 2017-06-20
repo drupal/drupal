@@ -13,7 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\ViewEntityInterface;
-use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_help().
@@ -186,14 +185,5 @@ function dblog_view_presave(ViewEntityInterface $view) {
 
   if ($update) {
     $view->set('display', $displays);
-  }
-}
-
-/**
- * Implements hook_views_pre_render().
- */
-function dblog_views_pre_render(ViewExecutable $view) {
-  if (isset($view) && ($view->storage->get('base_table') == 'watchdog')) {
-    $view->element['#attached']['library'][] = 'dblog/drupal.dblog';
   }
 }
