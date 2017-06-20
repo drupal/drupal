@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
 use Drupal\locale\Locale;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -11,7 +11,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  *
  * @group locale
  */
-class LocaleConfigTranslationImportTest extends WebTestBase {
+class LocaleConfigTranslationImportTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -206,7 +206,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textareas = $this->xpath('//textarea');
     $textarea = current($textareas);
-    $lid = (string) $textarea[0]['name'];
+    $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => '',
     ];

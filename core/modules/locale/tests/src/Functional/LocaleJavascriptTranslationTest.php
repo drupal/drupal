@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Component\Utility\SafeMarkup;
 
 /**
@@ -11,7 +11,7 @@ use Drupal\Component\Utility\SafeMarkup;
  *
  * @group locale
  */
-class LocaleJavascriptTranslationTest extends WebTestBase {
+class LocaleJavascriptTranslationTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -21,7 +21,7 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
   public static $modules = ['locale', 'locale_test'];
 
   public function testFileParsing() {
-    $filename = __DIR__ . '/../../tests/locale_test.js';
+    $filename = __DIR__ . '/../../locale_test.js';
 
     // Parse the file to look for source strings.
     _locale_parse_js_file($filename);
@@ -138,8 +138,9 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
     $js_translation_files = \Drupal::state()->get('locale.translation.javascript');
     $js_filename = $prefix . '_' . $js_translation_files[$prefix] . '.js';
 
+    $content = $this->getSession()->getPage()->getContent();
     // Assert translations JS is included before drupal.js.
-    $this->assertTrue(strpos($this->content, $js_filename) < strpos($this->content, 'core/misc/drupal.js'), 'Translations are included before Drupal.t.');
+    $this->assertTrue(strpos($content, $js_filename) < strpos($content, 'core/misc/drupal.js'), 'Translations are included before Drupal.t.');
   }
 
 }

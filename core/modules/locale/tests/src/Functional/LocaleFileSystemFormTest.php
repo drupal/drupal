@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the locale functionality in the altered file settings form.
  *
  * @group locale
  */
-class LocaleFileSystemFormTest extends WebTestBase {
+class LocaleFileSystemFormTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

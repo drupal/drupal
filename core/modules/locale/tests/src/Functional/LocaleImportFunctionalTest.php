@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\Core\Language\LanguageInterface;
  *
  * @group locale
  */
-class LocaleImportFunctionalTest extends WebTestBase {
+class LocaleImportFunctionalTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

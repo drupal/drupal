@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Asset\AttachedAssets;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests localization of the JavaScript libraries.
@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group locale
  */
-class LocaleLibraryAlterTest extends WebTestBase {
+class LocaleLibraryAlterTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
