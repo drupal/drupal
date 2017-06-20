@@ -82,9 +82,9 @@ class WorkflowStateAddForm extends EntityForm {
     /** @var \Drupal\workflows\WorkflowInterface $entity */
     $values = $form_state->getValues();
 
-    // This is fired twice so we have to check that the entity does not already
-    // have the state.
-    if (!$entity->hasState($values['id'])) {
+    // Replicate the validation that Workflow::addState() does internally as the
+    // form values have not been validated at this point.
+    if (!$entity->hasState($values['id']) && !preg_match('/[^a-z0-9_]+/', $values['id'])) {
       $entity->addState($values['id'], $values['label']);
       if (isset($values['type_settings'])) {
         $configuration = $entity->getTypePlugin()->getConfiguration();

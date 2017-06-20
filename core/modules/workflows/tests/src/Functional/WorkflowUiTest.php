@@ -80,6 +80,24 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
+   * Test the machine name validation of the state add form.
+   */
+  public function testStateMachineNameValidation() {
+    Workflow::create([
+      'id' => 'test_workflow',
+      'type' => 'workflow_type_test',
+    ])->save();
+
+    $this->drupalLogin($this->createUser(['administer workflows']));
+    $this->drupalPostForm('admin/config/workflow/workflows/manage/test_workflow/add_state', [
+      'label' => 'Test State',
+      'id' => 'Invalid ID',
+    ], 'Save');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
+  }
+
+  /**
    * Tests the creation of a workflow through the UI.
    */
   public function testWorkflowCreation() {
