@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_translation\Tests;
+namespace Drupal\Tests\content_translation\Functional;
 
 /**
  * Tests the test content translation UI with the test entity.

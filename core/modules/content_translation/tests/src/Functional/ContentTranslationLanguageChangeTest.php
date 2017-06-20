@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_translation\Tests;
+namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Tests\NodeTestBase;

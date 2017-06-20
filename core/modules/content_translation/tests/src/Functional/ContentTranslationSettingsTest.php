@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_translation\Tests;
+namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
@@ -8,14 +8,14 @@ use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ContentLanguageSettings;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the content translation settings UI.
  *
  * @group content_translation
  */
-class ContentTranslationSettingsTest extends WebTestBase {
+class ContentTranslationSettingsTest extends BrowserTestBase {
 
   use CommentTestTrait;
 
@@ -193,7 +193,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $elements = $this->xpath('//select[@id="edit-settings-node-article-settings-language-langcode"]/option');
     // Compare values inside the option elements with expected values.
     for ($i = 0; $i < count($elements); $i++) {
-      $this->assertEqual($elements[$i]->attributes()->{'value'}, $expected_elements[$i]);
+      $this->assertEqual($elements[$i]->getValue(), $expected_elements[$i]);
     }
   }
 
