@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\Core\Language\LanguageInterface;
  *
  * @group locale
  */
-class LocaleConfigTranslationTest extends WebTestBase {
+class LocaleConfigTranslationTest extends BrowserTestBase {
 
   /**
    * The language code used.
@@ -76,7 +76,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textareas = $this->xpath('//textarea');
     $textarea = current($textareas);
-    $lid = (string) $textarea[0]['name'];
+    $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $message,
     ];
@@ -100,7 +100,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textareas = $this->xpath('//textarea');
     $textarea = current($textareas);
-    $lid = (string) $textarea[0]['name'];
+    $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => 'D',
     ];
@@ -143,7 +143,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textarea = current($this->xpath('//textarea'));
-    $lid = (string) $textarea[0]['name'];
+    $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $image_style_label,
     ];
@@ -175,7 +175,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textarea = current($this->xpath('//textarea'));
-    $lid = (string) $textarea[0]['name'];
+    $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $category_label,
     ];

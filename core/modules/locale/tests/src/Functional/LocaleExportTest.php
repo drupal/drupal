@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the exportation of locale files.
  *
  * @group locale
  */
-class LocaleExportTest extends WebTestBase {
+class LocaleExportTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

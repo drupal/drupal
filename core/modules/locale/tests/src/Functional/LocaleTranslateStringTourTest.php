@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
 use Drupal\tour\Tests\TourTestBase;
 

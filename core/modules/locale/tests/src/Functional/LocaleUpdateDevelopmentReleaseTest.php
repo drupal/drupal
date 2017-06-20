@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Test for proper version fallback in case of a development release.
  *
  * @group language
  */
-class LocaleUpdateDevelopmentReleaseTest extends WebTestBase {
+class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
 
   public static $modules = ['locale', 'locale_test_development_release'];
 

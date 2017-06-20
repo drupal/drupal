@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
+
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Tests for using cron to update project interface translations.
@@ -8,6 +10,8 @@ namespace Drupal\locale\Tests;
  * @group locale
  */
 class LocaleUpdateCronTest extends LocaleUpdateBase {
+
+  use CronRunTrait;
 
   protected $batchOutput = [];
 

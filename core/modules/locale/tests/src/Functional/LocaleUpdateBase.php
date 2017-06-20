@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\file\Entity\File;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Base class for testing updates to string translations.
  */
-abstract class LocaleUpdateBase extends WebTestBase {
+abstract class LocaleUpdateBase extends BrowserTestBase {
 
   /**
    * Timestamp for an old translation.

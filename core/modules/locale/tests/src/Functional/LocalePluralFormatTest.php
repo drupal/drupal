@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\locale\Tests;
+namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests plural handling for various languages.
  *
  * @group locale
  */
-class LocalePluralFormatTest extends WebTestBase {
+class LocalePluralFormatTest extends BrowserTestBase {
 
   /**
    * An admin user.
