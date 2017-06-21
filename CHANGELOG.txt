@@ -1,4 +1,7 @@
 
+Drupal 7.xx, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.56, 2017-06-21
 -----------------------
 - Fixed security issues (access bypass). See SA-CORE-2017-003.
