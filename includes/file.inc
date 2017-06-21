@@ -1614,6 +1614,20 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
 
   // If we made it this far it's safe to record this file in the database.
   if ($file = file_save($file)) {
+    // Track non-public files in the session if they were uploaded by an
+    // anonymous user. This allows modules such as the File module to only
+    // grant view access to the specific anonymous user who uploaded the file.
+    // See file_file_download().
+    // The 'file_public_schema' variable is used to allow other publicly
+    // accessible file schemes to be treated the same as the public:// scheme
+    // provided by Drupal core and to avoid adding unnecessary data to the
+    // session (and the resulting bypass of the page cache) in those cases. For
+    // security reasons, only schemes that are completely publicly accessible,
+    // with no download restrictions, should be added to this variable. See
+    // file_managed_file_value().
+    if (!$user->uid && !in_array($destination_scheme, variable_get('file_public_schema', array('public')))) {
+      $_SESSION['anonymous_allowed_file_ids'][$file->fid] = $file->fid;
+    }
     // Add file to the cache.
     $upload_cache[$form_field_name] = $file;
     return $file;

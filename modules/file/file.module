@@ -146,8 +146,9 @@ function file_file_download($uri, $field_type = 'file') {
   // headers for files controlled by other modules. Make an exception for
   // temporary files where the host entity has not yet been saved (for example,
   // an image preview on a node/add form) in which case, allow download by the
-  // file's owner.
-  if (empty($references) && ($file->status == FILE_STATUS_PERMANENT || $file->uid != $user->uid)) {
+  // file's owner. For anonymous file owners, only the browser session that
+  // uploaded the file should be granted access.
+  if (empty($references) && ($file->status == FILE_STATUS_PERMANENT || $file->uid != $user->uid || (!$user->uid && empty($_SESSION['anonymous_allowed_file_ids'][$file->fid])))) {
       return;
   }
 
