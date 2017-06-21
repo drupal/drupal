@@ -85,11 +85,30 @@ class AccessTest extends KernelTestBase {
   }
 
   /**
-   * Tests that the status field is not editable.
+   * Tests file entity field access.
+   *
+   * @see \Drupal\file\FileAccessControlHandler::checkFieldAccess()
    */
-  public function testStatusFieldIsNotEditable() {
+  public function testCheckFieldAccess() {
     \Drupal::currentUser()->setAccount($this->user1);
-    $this->assertFalse($this->file->get('status')->access('edit'));
+    /** @var \Drupal\file\FileInterface $file */
+    $file = File::create([
+      'uri' => 'public://test.png'
+    ]);
+    // While creating a file entity access will be allowed for create-only
+    // fields.
+    $this->assertTrue($file->get('uri')->access('edit'));
+    $this->assertTrue($file->get('filemime')->access('edit'));
+    $this->assertTrue($file->get('filesize')->access('edit'));
+    // Access to the status field is denied whilst creating a file entity.
+    $this->assertFalse($file->get('status')->access('edit'));
+    $file->save();
+    // After saving the entity is no longer new and, therefore, access to
+    // create-only fields and the status field will be denied.
+    $this->assertFalse($file->get('uri')->access('edit'));
+    $this->assertFalse($file->get('filemime')->access('edit'));
+    $this->assertFalse($file->get('filesize')->access('edit'));
+    $this->assertFalse($file->get('status')->access('edit'));
   }
 
   /**

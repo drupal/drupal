@@ -904,6 +904,14 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     // If we made it this far it's safe to record this file in the database.
     $file->save();
     $files[$i] = $file;
+    // Allow an anonymous user who creates a non-public file to see it. See
+    // \Drupal\file\FileAccessControlHandler::checkAccess().
+    if ($user->isAnonymous() && $destination_scheme !== 'public') {
+      $session = \Drupal::request()->getSession();
+      $allowed_temp_files = $session->get('anonymous_allowed_file_ids', []);
+      $allowed_temp_files[$file->id()] = $file->id();
+      $session->set('anonymous_allowed_file_ids', $allowed_temp_files);
+    }
   }
 
   // Add files to the cache.

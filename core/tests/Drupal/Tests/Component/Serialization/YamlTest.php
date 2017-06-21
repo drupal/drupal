@@ -77,6 +77,23 @@ class YamlTest extends UnitTestCase {
   }
 
   /**
+   * Ensures that decoding php objects is similar for PECL and Symfony.
+   *
+   * @requires extension yaml
+   */
+  public function testObjectSupportDisabled() {
+    $object = new \stdClass();
+    $object->foo = 'bar';
+    // In core all Yaml encoding is done via Symfony and it does not support
+    // objects so in order to encode an object we hace to use the PECL
+    // extension.
+    // @see \Drupal\Component\Serialization\Yaml::encode()
+    $yaml = YamlPecl::encode([$object]);
+    $this->assertEquals(['O:8:"stdClass":1:{s:3:"foo";s:3:"bar";}'], YamlPecl::decode($yaml));
+    $this->assertEquals(['!php/object "O:8:\"stdClass\":1:{s:3:\"foo\";s:3:\"bar\";}"'], YamlSymfony::decode($yaml));
+  }
+
+  /**
    * Data provider that lists all YAML files in core.
    */
   public function providerYamlFilesInCore() {

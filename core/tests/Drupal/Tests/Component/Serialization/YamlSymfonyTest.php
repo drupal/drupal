@@ -63,4 +63,16 @@ class YamlSymfonyTest extends YamlTestBase {
     YamlSymfony::decode('foo: [ads');
   }
 
+  /**
+   * Ensures that php object support is disabled.
+   *
+   * @covers ::encode
+   */
+  public function testObjectSupportDisabled() {
+    $this->setExpectedException(InvalidDataTypeException::class, 'Object support when dumping a YAML file has been disabled.');
+    $object = new \stdClass();
+    $object->foo = 'bar';
+    YamlSymfony::encode([$object]);
+  }
+
 }
