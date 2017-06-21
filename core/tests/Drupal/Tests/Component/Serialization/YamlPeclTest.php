@@ -27,6 +27,16 @@ class YamlPeclTest extends YamlTestBase {
   }
 
   /**
+   * Ensures that php object support is disabled.
+   */
+  public function testObjectSupportDisabled() {
+    $object = new \stdClass();
+    $object->foo = 'bar';
+    $this->assertEquals(['O:8:"stdClass":1:{s:3:"foo";s:3:"bar";}'], YamlPecl::decode(YamlPecl::encode([$object])));
+    $this->assertEquals(0, ini_get('yaml.decode_php'));
+  }
+
+  /**
    * Tests decoding YAML node anchors.
    *
    * @covers ::decode

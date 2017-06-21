@@ -7,6 +7,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\MediaTypeInterface;
+use Drupal\user\Entity\User;
 use org\bovigo\vfs\vfsStream;
 
 /**
@@ -44,6 +45,13 @@ abstract class MediaKernelTestBase extends KernelTestBase {
   protected $testConstraintsMediaType;
 
   /**
+   * A user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $user;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -52,6 +60,7 @@ abstract class MediaKernelTestBase extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installSchema('file', 'file_usage');
+    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('media');
     $this->installConfig(['field', 'system', 'image', 'file', 'media']);
 
@@ -59,6 +68,13 @@ abstract class MediaKernelTestBase extends KernelTestBase {
     $this->testMediaType = $this->createMediaType('test');
     // Create a test media type with constraints.
     $this->testConstraintsMediaType = $this->createMediaType('test_constraints');
+
+    $this->user = User::create([
+      'name' => 'username',
+      'status' => 1,
+    ]);
+    $this->user->save();
+    $this->container->get('current_user')->setAccount($this->user);
   }
 
   /**
@@ -117,6 +133,7 @@ abstract class MediaKernelTestBase extends KernelTestBase {
 
     $file = File::create([
       'uri' => 'vfs://drupal_root/sites/default/files/' . $filename,
+      'uid' => $this->user->id(),
     ]);
     $file->setPermanent();
     $file->save();

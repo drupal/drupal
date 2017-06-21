@@ -32,6 +32,8 @@ class YamlPecl implements SerializationInterface {
       // Decode binary, since Symfony YAML parser encodes binary from 3.1
       // onwards.
       ini_set('yaml.decode_binary', 1);
+      // We never want to unserialize !php/object.
+      ini_set('yaml.decode_php', 0);
       $init = TRUE;
     }
     // yaml_parse() will error with an empty value.
