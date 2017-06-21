@@ -27,6 +27,12 @@ class YamlPecl implements SerializationInterface {
    * {@inheritdoc}
    */
   public static function decode($raw) {
+    static $init;
+    if (!isset($init)) {
+      // We never want to unserialize !php/object.
+      ini_set('yaml.decode_php', 0);
+      $init = TRUE;
+    }
     // yaml_parse() will error with an empty value.
     if (!trim($raw)) {
       return NULL;
