@@ -10,7 +10,16 @@ use Drupal\Component\Utility\Unicode;
 /**
  * Returns Unicode library status and errors.
  */
+/**
+ * Moves unicode_requirements() logic to system_requirements().
+ *
+ * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
+ *
+ * @see https://www.drupal.org/node/2884698
+ */
 function unicode_requirements() {
+  @trigger_error('unicode_requirements() is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. There is no replacement; system_requirements() now includes the logic instead. See https://www.drupal.org/node/2884698', E_USER_DEPRECATED);
+
   $libraries = [
     Unicode::STATUS_SINGLEBYTE => t('Standard PHP'),
     Unicode::STATUS_MULTIBYTE => t('PHP Mbstring Extension'),
