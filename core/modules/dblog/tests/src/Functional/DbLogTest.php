@@ -248,10 +248,10 @@ class DbLogTest extends BrowserTestBase {
   */
   protected function filterLogsEntries($type = NULL, $severity = NULL) {
     $edit = [];
-    if (!is_null($type)) {
+    if (isset($type)) {
       $edit['type[]'] = $type;
     }
-    if (!is_null($severity)) {
+    if (isset($severity)) {
       $edit['severity[]'] = $severity;
     }
     $this->drupalPostForm(NULL, $edit, t('Filter'));
@@ -276,6 +276,12 @@ class DbLogTest extends BrowserTestBase {
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertText(t('Recent log messages'), 'DBLog report was displayed');
+    }
+
+    $this->drupalGet('admin/reports/dblog/confirm');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Are you sure you want to delete the recent logs?'), 'DBLog clear logs form was displayed');
     }
 
     // View the database log page-not-found report page.
@@ -799,7 +805,7 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse(200);
     // Make sure HTML tags are filtered out.
-    $this->assertRaw('title="alert(&#039;foo&#039;);Lorem ipsum dolor sit amet, consectetur adipiscing &amp; elit. Entry #0">&lt;script&gt;alert(&#039;foo&#039;);&lt;/script&gt;Lorem ipsum dolor sit…</a>');
+    $this->assertRaw('title="alert(&#039;foo&#039;);Lorem');
     $this->assertNoRaw("<script>alert('foo');</script>");
 
     // Make sure HTML tags are filtered out in admin/reports/dblog/event/ too.
@@ -808,6 +814,24 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertNoRaw("<script>alert('foo');</script>");
     $this->assertRaw("alert('foo'); <strong>Lorem ipsum</strong>");
+  }
+
+  /**
+   * Test sorting for entries with the same timestamp.
+   */
+  public function testSameTimestampEntries() {
+    $this->drupalLogin($this->adminUser);
+
+    $this->generateLogEntries(1, ['timestamp' => 1498062000, 'type' => 'same_time', 'message' => 'First']);
+    $this->generateLogEntries(1, ['timestamp' => 1498062000, 'type' => 'same_time', 'message' => 'Second']);
+    $this->generateLogEntries(1, ['timestamp' => 1498062000, 'type' => 'same_time', 'message' => 'Third']);
+
+    $this->drupalGet('admin/reports/dblog');
+
+    $entries = $this->getLogEntries();
+    $this->assertEquals($entries[0]['message'], 'Third Entry #0');
+    $this->assertEquals($entries[1]['message'], 'Second Entry #0');
+    $this->assertEquals($entries[2]['message'], 'First Entry #0');
   }
 
 }
