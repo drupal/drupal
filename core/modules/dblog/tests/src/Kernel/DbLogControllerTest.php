@@ -17,11 +17,49 @@ class DbLogControllerTest extends KernelTestBase {
    */
   public static $modules = ['dblog', 'user'];
 
+  public function setUp() {
+    parent::setUp();
+    $this->installEntitySchema('user');
+    $this->installSchema('dblog', ['watchdog']);
+  }
+
+  /**
+   * Tests links with non latin characters.
+   */
+  public function testNonLatinCharacters() {
+
+    $link = 'hello-
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰
+      科州的小九寨沟绝美高山湖泊酱凉拌素鸡照烧鸡黄玫瑰';
+
+    \Drupal::logger('my_module')->warning('test', ['link' => $link]);
+
+    $log = \Drupal::database()
+      ->select('watchdog', 'w')
+      ->fields('w', ['link'])
+      ->condition('link', '', '<>')
+      ->execute()
+      ->fetchField();
+
+    $this->assertEquals($log, $link);
+  }
+
   /**
    * Tests corrupted log entries can still display available data.
    */
   public function testDbLogCorrupted() {
-    $this->installEntitySchema('user');
     $dblog_controller = DbLogController::create($this->container);
 
     // Check message with properly serialized data.
