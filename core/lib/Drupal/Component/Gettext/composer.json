@@ -10,7 +10,7 @@
   },
   "require": {
     "php": ">=5.5.9",
-    "drupal/core-utility": "~8.2"
+    "drupal/core-utility": "^8.2"
   },
   "autoload": {
     "psr-4": {
