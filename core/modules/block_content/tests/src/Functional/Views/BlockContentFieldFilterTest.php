@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block_content\Tests\Views;
+namespace Drupal\Tests\block_content\Functional\Views;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -35,8 +35,8 @@ class BlockContentFieldFilterTest extends BlockContentTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
-    parent::setUp();
+  public function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Add two new languages.
     ConfigurableLanguage::createFromLangcode('fr')->save();

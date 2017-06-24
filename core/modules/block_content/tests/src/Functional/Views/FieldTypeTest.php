@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block_content\Tests\Views;
+namespace Drupal\Tests\block_content\Functional\Views;
 
 use Drupal\views\Views;
 

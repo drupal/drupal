@@ -1,20 +1,15 @@
 <?php
 
-namespace Drupal\block_content\Tests\Views;
-
-@trigger_error('\Drupal\block_content\Tests\Views\BlockContentTestBase is deprecated in 8.4.0 and will be removed before Drupal 9.0.0. Use \Drupal\Tests\block_content\Functional\Views\BlockContentTestBase.', E_USER_DEPRECATED);
+namespace Drupal\Tests\block_content\Functional\Views;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
  * Base class for all block_content tests.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Tests\block_content\Functional\Views\BlockContentTestBase.
  */
 abstract class BlockContentTestBase extends ViewTestBase {
 
