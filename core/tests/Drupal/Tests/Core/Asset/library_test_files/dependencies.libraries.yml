@@ -1,6 +1,7 @@
 example:
   css:
-    css/example.js: {}
+    theme:
+      css/example.css: {}
   dependencies:
     - external/example_external
     - example_module/example

@@ -129,13 +129,17 @@ class LibraryDiscoveryParser {
         //   properly resolve dependencies for all (css) libraries per category,
         //   and only once prior to rendering out an HTML page.
         if ($type == 'css' && !empty($library[$type])) {
+          assert('\Drupal\Core\Asset\LibraryDiscoveryParser::validateCssLibrary($library[$type]) < 2', 'CSS files should be specified as key/value pairs, where the values are configuration options. See https://www.drupal.org/node/2274843.');
+          assert('\Drupal\Core\Asset\LibraryDiscoveryParser::validateCssLibrary($library[$type]) === 0', 'CSS must be nested under a category. See https://www.drupal.org/node/2274843.');
           foreach ($library[$type] as $category => $files) {
+            $category_weight = 'CSS_' . strtoupper($category);
+            assert('defined($category_weight)', 'Invalid CSS category: ' . $category . '. See https://www.drupal.org/node/2274843.');
             foreach ($files as $source => $options) {
               if (!isset($options['weight'])) {
                 $options['weight'] = 0;
               }
               // Apply the corresponding weight defined by CSS_* constants.
-              $options['weight'] += constant('CSS_' . strtoupper($category));
+              $options['weight'] += constant($category_weight);
               $library[$type][$source] = $options;
             }
             unset($library[$type][$category]);
@@ -458,6 +462,36 @@ class LibraryDiscoveryParser {
       return '/' . $theme_path . '/' . $overriding_asset;
     }
     return $overriding_asset;
+  }
+
+  /**
+   * Validates CSS library structure.
+   *
+   * @param array $library
+   *   The library definition array.
+   *
+   * @return int
+   *   Returns based on validity:
+   *     - 0 if the library definition is valid
+   *     - 1 if the library definition has improper nesting
+   *     - 2 if the library definition specifies files as an array
+   */
+  public static function validateCssLibrary($library) {
+    $categories = [];
+    // Verify options first and return early if invalid.
+    foreach ($library as $category => $files) {
+      if (!is_array($files)) {
+        return 2;
+      }
+      $categories[] = $category;
+      foreach ($files as $source => $options) {
+        if (!is_array($options)) {
+          return 1;
+        }
+      }
+    }
+
+    return 0;
   }
 
 }

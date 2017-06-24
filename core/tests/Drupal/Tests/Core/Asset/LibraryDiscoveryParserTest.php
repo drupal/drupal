@@ -502,6 +502,47 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->assertEquals($library['license'], $expected_license);
   }
 
+  /**
+   * Verifies assertions catch invalid CSS declarations.
+   *
+   * @dataProvider providerTestCssAssert
+   */
+
+  /**
+   * Verify an assertion fails if CSS declarations have non-existent categories.
+   *
+   * @param string $extension
+   *   The css extension to build.
+   * @param string $exception_message
+   *   The expected exception message.
+   *
+   * @dataProvider providerTestCssAssert
+   */
+  public function testCssAssert($extension, $exception_message) {
+    $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('moduleExists')
+      ->with($extension)
+      ->will($this->returnValue(TRUE));
+
+    $path = __DIR__ . '/library_test_files';
+    $path = substr($path, strlen($this->root) + 1);
+    $this->libraryDiscoveryParser->setPaths('module', $extension, $path);
+
+    $this->setExpectedException(\AssertionError::class, $exception_message);
+    $this->libraryDiscoveryParser->buildByExtension($extension);
+  }
+
+  /**
+   * Data provider for testing bad CSS declarations.
+   */
+  public function providerTestCssAssert() {
+    return [
+      'css_bad_category' => ['css_bad_category', 'See https://www.drupal.org/node/2274843.'],
+      'Improper CSS nesting' => ['css_bad_nesting', 'CSS must be nested under a category. See https://www.drupal.org/node/2274843.'],
+      'Improper CSS nesting array' => ['css_bad_nesting_array', 'CSS files should be specified as key/value pairs, where the values are configuration options. See https://www.drupal.org/node/2274843.'],
+    ];
+  }
+
 }
 
 /**

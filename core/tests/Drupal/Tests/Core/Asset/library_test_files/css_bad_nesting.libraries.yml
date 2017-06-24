@@ -1,0 +1,4 @@
+bad_nesting:
+  css:
+    # No nesting here will break.
+    css/styles.css: { minified: true }
