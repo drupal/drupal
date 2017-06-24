@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\taxonomy\Tests\Views;
+namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;

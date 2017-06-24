@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\taxonomy\Tests;
+namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use Drupal\file\Entity\File;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -13,6 +14,11 @@ use Drupal\field\Entity\FieldStorageConfig;
  * @group taxonomy
  */
 class TaxonomyImageTest extends TaxonomyTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+    compareFiles as drupalCompareFiles;
+  }
 
   /**
    * Used taxonomy vocabulary.

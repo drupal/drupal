@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Tests;
+namespace Drupal\Tests\taxonomy\Functional;
 
 /**
  * Ensures that the term pager works properly.

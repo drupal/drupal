@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Tests\Views;
+namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -36,8 +36,8 @@ class TaxonomyVocabularyArgumentTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Add default vocabulary to list of vocabularies.
     $this->vocabularies[] = $this->vocabulary;

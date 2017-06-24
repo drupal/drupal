@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Tests\Views;
+namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
@@ -30,8 +30,8 @@ class TaxonomyRelationshipTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Make term2 parent of term1.
     $this->term1->set('parent', $this->term2->id());

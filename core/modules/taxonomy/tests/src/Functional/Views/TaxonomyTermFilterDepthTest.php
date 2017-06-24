@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Tests\Views;
+namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\views\Views;
 
@@ -34,8 +34,8 @@ class TaxonomyTermFilterDepthTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Create a hierarchy 3 deep. Note the parent setup function creates two
     // top-level terms w/o children.

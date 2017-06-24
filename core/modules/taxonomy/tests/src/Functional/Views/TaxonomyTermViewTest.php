@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Tests\Views;
+namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -40,8 +40,8 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Create an administrative user.
     $this->adminUser = $this->drupalCreateUser(['administer taxonomy', 'bypass node access']);

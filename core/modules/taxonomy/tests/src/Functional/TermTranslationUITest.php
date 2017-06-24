@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\taxonomy\Tests;
+namespace Drupal\Tests\taxonomy\Functional;
 
-use Drupal\content_translation\Tests\ContentTranslationUITestBase;
+use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 

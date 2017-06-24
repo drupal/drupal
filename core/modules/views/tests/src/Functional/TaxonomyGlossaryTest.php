@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\Functional;
 
-use Drupal\taxonomy\Tests\TaxonomyTestTrait;
+use Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait;
 
 /**
  * Tests glossary functionality of taxonomy views.
