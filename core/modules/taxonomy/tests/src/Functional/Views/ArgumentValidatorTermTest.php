@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Tests\Views;
+namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\views\Views;
 
@@ -47,8 +47,8 @@ class ArgumentValidatorTermTest extends TaxonomyTestBase {
    */
   public static $testViews = ['test_argument_validator_term'];
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Add three terms to the 'tags' vocabulary.
     for ($i = 0; $i < 3; $i++) {

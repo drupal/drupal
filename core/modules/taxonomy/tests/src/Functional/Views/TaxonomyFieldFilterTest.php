@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\taxonomy\Tests\Views;
+namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -45,8 +45,8 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
    */
   public $termNames = [];
 
-  public function setUp() {
-    parent::setUp();
+  public function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Add two new languages.
     ConfigurableLanguage::createFromLangcode('fr')->save();

@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\taxonomy\Tests;
+namespace Drupal\Tests\taxonomy\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that appropriate query tags are added.
  *
  * @group taxonomy
  */
-class TaxonomyQueryAlterTest extends WebTestBase {
+class TaxonomyQueryAlterTest extends BrowserTestBase {
 
   use TaxonomyTestTrait;
 

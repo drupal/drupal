@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Tests\Views;
+namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\views\Views;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -30,14 +30,14 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
 
     $actual = $this->xpath('//a[@href="' . $this->term1->url() . '"]');
     $this->assertEqual(count($actual), 2, 'Correct number of taxonomy term1 links');
-    $this->assertEqual($actual[0]->__toString(), $this->term1->label());
-    $this->assertEqual($actual[1]->__toString(), $this->term1->label());
+    $this->assertEqual($actual[0]->getText(), $this->term1->label());
+    $this->assertEqual($actual[1]->getText(), $this->term1->label());
     $this->assertEscaped($this->term1->label());
 
     $actual = $this->xpath('//a[@href="' . $this->term2->url() . '"]');
     $this->assertEqual(count($actual), 2, 'Correct number of taxonomy term2 links');
-    $this->assertEqual($actual[0]->__toString(), $this->term2->label());
-    $this->assertEqual($actual[1]->__toString(), $this->term2->label());
+    $this->assertEqual($actual[0]->getText(), $this->term2->label());
+    $this->assertEqual($actual[1]->getText(), $this->term2->label());
   }
 
   /**

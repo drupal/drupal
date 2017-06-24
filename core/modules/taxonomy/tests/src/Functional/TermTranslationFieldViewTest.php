@@ -3,7 +3,6 @@
 namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\node\Entity\Node;
-use Drupal\taxonomy\Tests\TaxonomyTranslationTestTrait;
 
 /**
  * Tests the translation of taxonomy terms field on nodes.

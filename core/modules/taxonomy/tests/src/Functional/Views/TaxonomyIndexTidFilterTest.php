@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Tests\Views;
+namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -34,7 +34,7 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp($import_test_views = TRUE) {
     parent::setUp(FALSE);
 
     // Setup vocabulary and terms so the initial import is valid.

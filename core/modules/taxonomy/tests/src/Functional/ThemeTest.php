@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Tests;
+namespace Drupal\Tests\taxonomy\Functional;
 
 /**
  * Verifies that various taxonomy pages use the expected theme.
