@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block_content\Tests;
+namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Component\Utility\Unicode;
@@ -140,7 +140,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Go to the configure page and verify the view mode has changed.
     $this->drupalGet('admin/structure/block/manage/testblock');
-    $this->assertFieldByXPath('//select[@name="settings[view_mode]"]/option[@selected="selected"]/@value', 'test_view_mode', 'View mode changed to Test View Mode');
+    $this->assertFieldByXPath('//select[@name="settings[view_mode]"]/option[@selected="selected"]', 'test_view_mode', 'View mode changed to Test View Mode');
 
     // Check that the block exists in the database.
     $blocks = entity_load_multiple_by_properties('block_content', ['info' => $edit['info[0][value]']]);

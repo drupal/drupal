@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block_content\Tests;
+namespace Drupal\Tests\block_content\Functional;
 
 /**
  * Tests the Views-powered listing of custom blocks.
@@ -41,13 +41,13 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertEqual(count($elements), 4, 'Correct number of table header cells found.');
 
     // Test the contents of each th cell.
-    $expected_items = ['Block description', 'Block type', 'Updated', 'Operations'];
+    $expected_items = ['Block description', 'Block type', 'Updated Sort ascending', 'Operations'];
     foreach ($elements as $key => $element) {
-      if ($element->xpath('a')) {
-        $this->assertIdentical(trim((string) $element->xpath('a')[0]), $expected_items[$key]);
+      if ($element->find('xpath', 'a')) {
+        $this->assertIdentical(trim($element->find('xpath', 'a')->getText()), $expected_items[$key]);
       }
       else {
-        $this->assertIdentical(trim((string) $element[0]), $expected_items[$key]);
+        $this->assertIdentical(trim($element->getText()), $expected_items[$key]);
       }
     }
 
@@ -73,7 +73,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertIdentical((string) $elements[0]->xpath('a')[0], $label);
+    $this->assertIdentical($elements[0]->find('xpath', 'a')->getText(), $label);
 
     // Edit the entity using the operations link.
     $blocks = $this->container

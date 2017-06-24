@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\block_content\Tests\Views;
+namespace Drupal\Tests\block_content\Functional\Views;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
 
@@ -29,8 +29,8 @@ class RevisionRelationshipsTest extends ViewTestBase {
    */
   public static $testViews = ['test_block_content_revision_id', 'test_block_content_revision_revision_id'];
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
     BlockContentType::create([
       'id' => 'basic',
       'label' => 'basic',

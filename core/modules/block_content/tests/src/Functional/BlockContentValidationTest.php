@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block_content\Tests;
+namespace Drupal\Tests\block_content\Functional;
 
 /**
  * Tests block content validation constraints.

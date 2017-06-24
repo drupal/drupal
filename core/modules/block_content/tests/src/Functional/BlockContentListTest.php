@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block_content\Tests;
+namespace Drupal\Tests\block_content\Functional;
 
 /**
  * Tests the listing of custom blocks.
@@ -41,7 +41,7 @@ class BlockContentListTest extends BlockContentTestBase {
     // Test the contents of each th cell.
     $expected_items = [t('Block description'), t('Operations')];
     foreach ($elements as $key => $element) {
-      $this->assertEqual($element[0], $expected_items[$key]);
+      $this->assertEqual($element->getText(), $expected_items[$key]);
     }
 
     $label = 'Antelope';
@@ -66,7 +66,7 @@ class BlockContentListTest extends BlockContentTestBase {
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertIdentical((string) $elements[0], $label);
+    $this->assertIdentical($elements[0]->getText(), $label);
 
     // Edit the entity using the operations link.
     $blocks = $this->container

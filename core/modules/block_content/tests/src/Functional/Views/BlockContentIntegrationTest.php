@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block_content\Tests\Views;
+namespace Drupal\Tests\block_content\Functional\Views;
 
 /**
  * Tests the block_content integration into views.
@@ -59,7 +59,7 @@ class BlockContentIntegrationTest extends BlockContentTestBase {
     $result = $this->xpath('//span[@class="field-content"]');
     $ids = [];
     foreach ($result as $element) {
-      $ids[] = (int) $element;
+      $ids[] = $element->getText();
     }
     $this->assertEqual($ids, $expected_ids);
   }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block_content\Tests;
+namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
