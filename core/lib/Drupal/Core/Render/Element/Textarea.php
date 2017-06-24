@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
  * - #cols: Number of columns in the text box.
  * - #resizable: Controls whether the text area is resizable.  Allowed values
  *   are "none", "vertical", "horizontal", or "both" (defaults to "vertical").
+ * - #maxlength: The maximum amount of characters to accept as input.
  *
  * Usage example:
  * @code
