@@ -6,6 +6,7 @@ use Drupal\Core\Flood\DatabaseBackend;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Controller\UserAuthenticationController;
+use Drupal\user\Tests\UserResetEmailTestTrait;
 use GuzzleHttp\Cookie\CookieJar;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -14,11 +15,13 @@ use Drupal\hal\Encoder\JsonEncoder as HALJsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * Tests login via direct HTTP.
+ * Tests login and password reset via direct HTTP.
  *
  * @group user
  */
 class UserLoginHttpTest extends BrowserTestBase {
+
+  use UserResetEmailTestTrait;
 
   /**
    * Modules to install.
@@ -188,6 +191,52 @@ class UserLoginHttpTest extends BrowserTestBase {
     $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_OUT);
 
     $this->resetFlood();
+  }
+
+  /**
+   * Executes a password HTTP request.
+   *
+   * @param array $request_body
+   *   The request body.
+   * @param string $format
+   *   The format to use to make the request.
+   *
+   * @return \Psr\Http\Message\ResponseInterface
+   *   The HTTP response.
+   */
+  protected function passwordRequest(array $request_body, $format = 'json') {
+    $password_reset_url = Url::fromRoute('user.pass.http')
+      ->setRouteParameter('_format', $format)
+      ->setAbsolute();
+
+    $result = \Drupal::httpClient()->post($password_reset_url->toString(), [
+      'body' => $this->serializer->encode($request_body, $format),
+      'headers' => [
+        'Accept' => "application/$format",
+      ],
+      'http_errors' => FALSE,
+      'cookies' => $this->cookies,
+    ]);
+
+    return $result;
+  }
+
+  /**
+   * Tests user password reset.
+   */
+  public function testPasswordReset() {
+    // Create a user account.
+    $account = $this->drupalCreateUser();
+
+    // Without the serialization module only JSON is supported.
+    $this->doTestPasswordReset('json', $account);
+
+    // Enable serialization so we have access to additional formats.
+    $this->container->get('module_installer')->install(['serialization']);
+
+    $this->doTestPasswordReset('json', $account);
+    $this->doTestPasswordReset('xml', $account);
+    $this->doTestPasswordReset('hal_json', $account);
   }
 
   /**
@@ -427,6 +476,49 @@ class UserLoginHttpTest extends BrowserTestBase {
     $user_login_status_url->setRouteParameter('_format', $format);
     $user_login_status_url->setAbsolute();
     return $user_login_status_url->toString();
+  }
+
+  /**
+   * Do password reset testing for given format and account.
+   *
+   * @param string $format
+   *   Serialization format.
+   * @param \Drupal\user\UserInterface $account
+   *   Test account.
+   */
+  protected function doTestPasswordReset($format, $account) {
+    $response = $this->passwordRequest([], $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.name or credentials.mail', $format);
+
+    $response = $this->passwordRequest(['name' => 'dramallama'], $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Unrecognized username or email address.', $format);
+
+    $response = $this->passwordRequest(['mail' => 'llama@drupal.org'], $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'Unrecognized username or email address.', $format);
+
+    $account
+      ->block()
+      ->save();
+
+    $response = $this->passwordRequest(['name' => $account->getAccountName()], $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'The user has not been activated or is blocked.', $format);
+
+    $response = $this->passwordRequest(['mail' => $account->getEmail()], $format);
+    $this->assertHttpResponseWithMessage($response, 400, 'The user has not been activated or is blocked.', $format);
+
+    $account
+      ->activate()
+      ->save();
+
+    $response = $this->passwordRequest(['name' => $account->getAccountName()], $format);
+    $this->assertEquals(200, $response->getStatusCode());
+    $this->loginFromResetEmail();
+    $this->drupalLogout();
+
+    $response = $this->passwordRequest(['mail' => $account->getEmail()], $format);
+    $this->assertEquals(200, $response->getStatusCode());
+    $this->loginFromResetEmail();
+    $this->drupalLogout();
   }
 
 }
