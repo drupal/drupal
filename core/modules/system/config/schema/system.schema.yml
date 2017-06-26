@@ -188,13 +188,6 @@ system.performance:
         gzip:
           type: boolean
           label: 'Compress JavaScript files.'
-    response:
-      type: mapping
-      label: 'Response performance settings'
-      mapping:
-        gzip:
-          type: boolean
-          label: 'Compress cached pages'
     stale_file_threshold:
       type: integer
       label: 'Stale file threshold'

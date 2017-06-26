@@ -222,7 +222,6 @@ class PageCacheTest extends WebTestBase {
   public function testPageCache() {
     $config = $this->config('system.performance');
     $config->set('cache.page.max_age', 300);
-    $config->set('response.gzip', 1);
     $config->save();
 
     // Fill the cache.

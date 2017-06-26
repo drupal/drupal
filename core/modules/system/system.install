@@ -1974,3 +1974,13 @@ function system_update_8400(&$sandbox) {
 
   $sandbox['#finished'] = $sandbox['current'] == $sandbox['max'];
 }
+
+/**
+ * Remove response.gzip (and response) from system module configuration.
+ */
+function system_update_8401() {
+  \Drupal::configFactory()->getEditable('system.performance')
+    ->clear('response.gzip')
+    ->clear('response')
+    ->save();
+}
