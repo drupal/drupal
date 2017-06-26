@@ -62,6 +62,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * The REST Resource plugin ID can be calculated from this.
    *
    * @var string
+   *
+   * @see \Drupal\rest\Entity\RestResourceConfig::__construct()
    */
   protected static $resourceConfigId = NULL;
 
@@ -98,6 +100,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
    */
   public function setUp() {
     parent::setUp();
+
+    $this->serializer = $this->container->get('serializer');
 
     // Ensure the anonymous user role has no permissions at all.
     $user_role = Role::load(RoleInterface::ANONYMOUS_ID);
@@ -173,6 +177,21 @@ abstract class ResourceTestBase extends BrowserTestBase {
   }
 
   /**
+   * Return the expected error message.
+   *
+   * @param string $method
+   *   The HTTP method (GET, POST, PATCH, DELETE).
+   *
+   * @return string
+   *    The error string.
+   */
+  protected function getExpectedUnauthorizedAccessMessage($method) {
+    $resource_plugin_id = str_replace('.', ':', static::$resourceConfigId);
+    $permission = 'restful ' . strtolower($method) . ' ' . $resource_plugin_id;
+    return "The '$permission' permission is required.";
+  }
+
+  /**
    * Sets up the necessary authorization.
    *
    * In case of a test verifying publicly accessible REST resources: grant
@@ -229,29 +248,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   Request options to apply.
    */
   abstract protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options);
-
-  /**
-   * Return the expected error message.
-   *
-   * @param string $method
-   *   The HTTP method (GET, POST, PATCH, DELETE).
-   *
-   * @return string
-   *    The error string.
-   */
-  abstract protected function getExpectedUnauthorizedAccessMessage($method);
-
-  /**
-   * Return the default expected error message if the
-   * bc_entity_resource_permissions is true.
-   *
-   * @param string $method
-   *   The HTTP method (GET, POST, PATCH, DELETE).
-   *
-   * @return string
-   *   The error string.
-   */
-  abstract protected function getExpectedBcUnauthorizedAccessMessage($method);
 
   /**
    * Initializes authentication.

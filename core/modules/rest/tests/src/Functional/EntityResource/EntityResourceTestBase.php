@@ -151,7 +151,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Calculate REST Resource config entity ID.
     static::$resourceConfigId = 'entity.' . static::$entityTypeId;
 
-    $this->serializer = $this->container->get('serializer');
     $this->entityStorage = $this->container->get('entity_type.manager')
       ->getStorage(static::$entityTypeId);
 
@@ -231,7 +230,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected function getExpectedUnauthorizedAccessMessage($method) {
 
     if ($this->config('rest.settings')->get('bc_entity_resource_permissions')) {
-      return $this->getExpectedBCUnauthorizedAccessMessage($method);
+      return parent::getExpectedUnauthorizedAccessMessage($method);
     }
 
     $permission = $this->entity->getEntityType()->getAdminPermission();
@@ -253,13 +252,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     }
 
     return "$message.";
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedBcUnauthorizedAccessMessage($method) {
-    return "The 'restful " . strtolower($method) . " entity:" . $this->entity->getEntityTypeId() . "' permission is required.";
   }
 
   /**
