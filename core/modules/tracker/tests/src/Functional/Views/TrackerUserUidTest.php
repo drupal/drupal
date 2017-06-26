@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\tracker\Tests\Views;
+namespace Drupal\Tests\tracker\Functional\Views;
 
 use Drupal\views\Views;
 

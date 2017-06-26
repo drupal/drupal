@@ -1,20 +1,15 @@
 <?php
 
-namespace Drupal\tracker\Tests\Views;
-
-@trigger_error(__NAMESPACE__ . '\TrackerTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\tracker\Functional\Views\TrackerTestBase', E_USER_DEPRECATED);
+namespace Drupal\Tests\tracker\Functional\Views;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\comment\Entity\Comment;
 
 /**
  * Base class for all tracker tests.
- *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
- *   Use \Drupal\Tests\tracker\Functional\Views\TrackerTestBase instead.
  */
 abstract class TrackerTestBase extends ViewTestBase {
 
@@ -41,8 +36,8 @@ abstract class TrackerTestBase extends ViewTestBase {
    */
   protected $comment;
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     ViewTestData::createTestViews(get_class($this), ['tracker_test_views']);
 
