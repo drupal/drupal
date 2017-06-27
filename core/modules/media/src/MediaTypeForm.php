@@ -176,7 +176,7 @@ class MediaTypeForm extends EntityForm {
     $form['additional_settings'] = [
       '#type' => 'vertical_tabs',
       '#attached' => [
-        'library' => ['media/media_type_form'],
+        'library' => ['media/type_form'],
       ],
     ];
 

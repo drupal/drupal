@@ -47,7 +47,7 @@ class MediaForm extends ContentEntityForm {
       $form['created']['#group'] = 'author';
     }
 
-    $form['#attached']['library'][] = 'media/media_form';
+    $form['#attached']['library'][] = 'media/form';
 
     $form['#entity_builders']['update_status'] = [$this, 'updateStatus'];
 
