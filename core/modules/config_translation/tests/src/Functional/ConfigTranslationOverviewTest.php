@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\config_translation\Tests;
+namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Translate settings and entities to various languages.
  *
  * @group config_translation
  */
-class ConfigTranslationOverviewTest extends WebTestBase {
+class ConfigTranslationOverviewTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -77,10 +77,8 @@ class ConfigTranslationOverviewTest extends WebTestBase {
     // Make sure there is only a single operation for each dropbutton, either
     // 'List' or 'Translate'.
     foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
-      $this->assertIdentical(1, $dropbutton->count());
-      foreach ($dropbutton->li as $link) {
-        $this->assertTrue(((string) $link->a === 'Translate') || ((string) $link->a === 'List'));
-      }
+      $this->assertIdentical(1, count($dropbutton->find('xpath', 'li')));
+      $this->assertTrue(($dropbutton->getText() === 'Translate') || ($dropbutton->getText() === 'List'));
     }
 
     $labels = [
@@ -104,10 +102,8 @@ class ConfigTranslationOverviewTest extends WebTestBase {
       // Make sure there is only a single 'Translate' operation for each
       // dropbutton.
       foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
-        $this->assertIdentical(1, $dropbutton->count());
-        foreach ($dropbutton->li as $link) {
-          $this->assertIdentical('Translate', (string) $link->a);
-        }
+        $this->assertIdentical(1, count($dropbutton->find('xpath', 'li')));
+        $this->assertIdentical('Translate', $dropbutton->getText());
       }
 
       $entity_type = \Drupal::entityManager()->getDefinition($test_entity->getEntityTypeId());
