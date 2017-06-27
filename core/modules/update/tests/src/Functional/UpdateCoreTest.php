@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\update\Tests;
+namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Url;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Tests the Update Manager module through a series of functional tests using
@@ -11,6 +12,8 @@ use Drupal\Core\Url;
  * @group update
  */
 class UpdateCoreTest extends UpdateTestBase {
+
+  use CronRunTrait;
 
   /**
    * Modules to enable.
@@ -76,6 +79,7 @@ class UpdateCoreTest extends UpdateTestBase {
         $this->standardTests();
         $this->drupalGet('admin/reports/updates');
         $this->clickLink(t('Check manually'));
+        $this->checkForMetaRefresh();
         $this->assertNoText(t('Security update required!'));
         $this->assertRaw(\Drupal::l("8.$minor_version.1" . $extra_version, Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version-release")), 'Link to release appears.');
         $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-8-$minor_version-1$extra_version.tar.gz")), 'Link to download appears.');
@@ -139,6 +143,7 @@ class UpdateCoreTest extends UpdateTestBase {
           $this->standardTests();
           $this->drupalGet('admin/reports/updates');
           $this->clickLink(t('Check manually'));
+          $this->checkForMetaRefresh();
           $this->assertNoText(t('Security update required!'));
           $this->assertRaw(\Drupal::l('9.0.0', Url::fromUri("http://example.com/drupal-9-0-0-release")), 'Link to release appears.');
           $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-9-0-0.tar.gz")), 'Link to download appears.');
@@ -226,6 +231,7 @@ class UpdateCoreTest extends UpdateTestBase {
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
+    $this->checkForMetaRefresh();
     $this->assertText(t('Checked available update data for one project.'));
     $this->drupalGet('admin/modules');
     $this->assertNoText(t('There are updates available for your version of Drupal.'));
@@ -247,6 +253,7 @@ class UpdateCoreTest extends UpdateTestBase {
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
+    $this->checkForMetaRefresh();
     $this->assertText(t('Checked available update data for one project.'));
     $this->drupalGet('admin/modules');
     $this->assertText(t('There are updates available for your version of Drupal.'));
@@ -268,6 +275,7 @@ class UpdateCoreTest extends UpdateTestBase {
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
+    $this->checkForMetaRefresh();
     $this->assertText(t('Checked available update data for one project.'));
     $this->drupalGet('admin/modules');
     $this->assertNoText(t('There are updates available for your version of Drupal.'));

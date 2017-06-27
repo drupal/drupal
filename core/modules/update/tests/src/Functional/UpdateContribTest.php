@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\update\Tests;
+namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Core\Utility\ProjectInfo;

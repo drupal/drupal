@@ -1,12 +1,10 @@
 <?php
 
-namespace Drupal\update\Tests;
-
-@trigger_error(__NAMESPACE__ . '\UpdateTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\update\Functional\UpdateTestBase', E_USER_DEPRECATED);
+namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Defines some shared functions used by all update tests.
@@ -24,11 +22,8 @@ use Drupal\simpletest\WebTestBase;
  * (via the 'update_test_xml_map' variable), and then performs a series of
  * assertions that the report matches our expectations given the specific
  * initial state and availability scenario.
- *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
- *   Use \Drupal\Tests\update\Functional\UpdateTestBase instead.
  */
-abstract class UpdateTestBase extends WebTestBase {
+abstract class UpdateTestBase extends BrowserTestBase {
 
   protected function setUp() {
     parent::setUp();
@@ -74,6 +69,7 @@ abstract class UpdateTestBase extends WebTestBase {
     // Manually check the update status.
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
+    $this->checkForMetaRefresh();
   }
 
   /**
