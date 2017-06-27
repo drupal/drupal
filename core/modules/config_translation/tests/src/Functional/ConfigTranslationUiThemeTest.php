@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\config_translation\Tests;
+namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Verifies theme configuration translation settings.
  *
  * @group config_translation
  */
-class ConfigTranslationUiThemeTest extends WebTestBase {
+class ConfigTranslationUiThemeTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -65,7 +65,7 @@ class ConfigTranslationUiThemeTest extends WebTestBase {
       ':label' => 'Install and set as default',
       ':theme' => $theme,
     ]);
-    $this->drupalGet($GLOBALS['base_root'] . $elements[0]['href'], ['external' => TRUE]);
+    $this->drupalGet($GLOBALS['base_root'] . $elements[0]->getAttribute('href'), ['external' => TRUE]);
 
     $translation_base_url = 'admin/config/development/performance/translate';
     $this->drupalGet($translation_base_url);

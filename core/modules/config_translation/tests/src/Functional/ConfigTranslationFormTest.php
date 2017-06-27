@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\config_translation\Tests;
+namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests for altering configuration translation forms.
  *
  * @group config_translation
  */
-class ConfigTranslationFormTest extends WebTestBase {
+class ConfigTranslationFormTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
