@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\update\Tests;
+namespace Drupal\Tests\update\Functional;
 
 /**
  * Tests the update_delete_file_if_stale() function.

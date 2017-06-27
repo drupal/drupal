@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\update\Tests;
+namespace Drupal\Tests\update\Functional;
 
 /**
  * Tests the Update Manager module upload via authorize.php functionality.
@@ -23,7 +23,7 @@ class FileTransferAuthorizeFormTest extends UpdateTestBase {
 
     // Create a local cache so the module is not downloaded from drupal.org.
     $cache_directory = _update_manager_cache_directory(TRUE);
-    $validArchiveFile = __DIR__ . '/../../tests/update_test_new_module/8.x-1.0/update_test_new_module.tar.gz';
+    $validArchiveFile = __DIR__ . '/../../update_test_new_module/8.x-1.0/update_test_new_module.tar.gz';
     copy($validArchiveFile, $cache_directory . '/update_test_new_module.tar.gz');
   }
 
