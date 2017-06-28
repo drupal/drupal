@@ -20,9 +20,7 @@ use Drupal\Core\Form\FormStateInterface;
 class HtmlList extends StylePluginBase {
 
   /**
-   * Does the style plugin allows to use style plugins.
-   *
-   * @var bool
+   * {@inheritdoc}
    */
   protected $usesRowPlugin = TRUE;
 

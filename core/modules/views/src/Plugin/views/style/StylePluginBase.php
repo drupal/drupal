@@ -50,7 +50,7 @@ abstract class StylePluginBase extends PluginBase {
   protected $rowTokens = [];
 
   /**
-   * Does the style plugin allows to use style plugins.
+   * Whether or not this style uses a row plugin.
    *
    * @var bool
    */

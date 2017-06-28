@@ -20,9 +20,7 @@ use Drupal\Core\Url;
 class Opml extends StylePluginBase {
 
   /**
-   * Does the style plugin for itself support to add fields to its output.
-   *
-   * @var bool
+   * {@inheritdoc}
    */
   protected $usesRowPlugin = TRUE;
 
