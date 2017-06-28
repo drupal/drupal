@@ -291,7 +291,7 @@
     if (event.which === 13 || event.which === 32 && element.type !== 'text' && element.type !== 'textarea' && element.type !== 'tel' && element.type !== 'number') {
       event.preventDefault();
       event.stopPropagation();
-      $(ajax.element_settings.element).trigger(ajax.element_settings.event);
+      $(element).trigger(ajax.element_settings.event);
     }
   };
 

@@ -635,7 +635,7 @@
       element.type !== 'textarea' && element.type !== 'tel' && element.type !== 'number')) {
       event.preventDefault();
       event.stopPropagation();
-      $(ajax.element_settings.element).trigger(ajax.element_settings.event);
+      $(element).trigger(ajax.element_settings.event);
     }
   };
 
