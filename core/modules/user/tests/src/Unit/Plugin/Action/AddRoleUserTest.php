@@ -23,9 +23,9 @@ class AddRoleUserTest extends RoleUserTestBase {
       ->will($this->returnValue(TRUE));
 
     $config = ['rid' => 'test_role_1'];
-    $remove_role_plugin = new AddRoleUser($config, 'user_add_role_action', ['type' => 'user'], $this->userRoleEntityType);
+    $add_role_plugin = new AddRoleUser($config, 'user_add_role_action', ['type' => 'user'], $this->userRoleEntityType);
 
-    $remove_role_plugin->execute($this->account);
+    $add_role_plugin->execute($this->account);
   }
 
   /**
@@ -41,9 +41,9 @@ class AddRoleUserTest extends RoleUserTestBase {
       ->will($this->returnValue(FALSE));
 
     $config = ['rid' => 'test_role_1'];
-    $remove_role_plugin = new AddRoleUser($config, 'user_remove_role_action', ['type' => 'user'], $this->userRoleEntityType);
+    $add_role_plugin = new AddRoleUser($config, 'user_add_role_action', ['type' => 'user'], $this->userRoleEntityType);
 
-    $remove_role_plugin->execute($this->account);
+    $add_role_plugin->execute($this->account);
   }
 
 }
