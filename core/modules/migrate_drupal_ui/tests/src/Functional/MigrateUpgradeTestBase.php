@@ -127,9 +127,12 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $drivers = drupal_get_database_types();
     $form = $drivers[$driver]->getFormOptions($connection_options);
     $connection_options = array_intersect_key($connection_options, $form + $form['advanced_options']);
+    $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
     $edit = [
       $driver => $connection_options,
       'source_base_path' => $this->getSourceBasePath(),
+      'source_private_file_path' => $this->getSourceBasePath(),
+      'version' => $version,
     ];
     if (count($drivers) !== 1) {
       $edit['driver'] = $driver;
@@ -159,10 +162,9 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
       $this->assertEqual($expected_count, $real_count, "Found $real_count $entity_type entities, expected $expected_count.");
     }
 
-    $version_tag = 'Drupal ' . $this->getLegacyDrupalVersion($this->sourceDatabase);
     $plugin_manager = \Drupal::service('plugin.manager.migration');
     /** @var \Drupal\migrate\Plugin\Migration[] $all_migrations */
-    $all_migrations = $plugin_manager->createInstancesByTag($version_tag);
+    $all_migrations = $plugin_manager->createInstancesByTag('Drupal ' . $version);
     foreach ($all_migrations as $migration) {
       $id_map = $migration->getIdMap();
       foreach ($id_map as $source_id => $map) {

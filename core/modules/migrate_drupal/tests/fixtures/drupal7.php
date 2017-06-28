@@ -3426,6 +3426,21 @@ $connection->insert('field_config')
   'translatable' => '0',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '25',
+  'field_name' => 'field_private_file',
+  'type' => 'file',
+  'module' => 'file',
+  'active' => '1',
+  'storage_type' => 'field_sql_storage',
+  'storage_module' => 'field_sql_storage',
+  'storage_active' => '1',
+  'locked' => '0',
+  'data' => 'a:7:{s:12:"translatable";s:1:"0";s:12:"entity_types";a:0:{}s:8:"settings";a:3:{s:13:"display_field";i:0;s:15:"display_default";i:0;s:10:"uri_scheme";s:7:"private";}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:29:"field_data_field_private_file";a:3:{s:3:"fid";s:22:"field_private_file_fid";s:7:"display";s:26:"field_private_file_display";s:11:"description";s:30:"field_private_file_description";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:33:"field_revision_field_private_file";a:3:{s:3:"fid";s:22:"field_private_file_fid";s:7:"display";s:26:"field_private_file_display";s:11:"description";s:30:"field_private_file_description";}}}}}s:12:"foreign keys";a:1:{s:3:"fid";a:2:{s:5:"table";s:12:"file_managed";s:7:"columns";a:1:{s:3:"fid";s:3:"fid";}}}s:7:"indexes";a:1:{s:3:"fid";a:1:{i:0;s:3:"fid";}}s:2:"id";s:2:"25";}',
+  'cardinality' => '1',
+  'translatable' => '0',
+  'deleted' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('field_config_instance', array(
@@ -3835,6 +3850,15 @@ $connection->insert('field_config_instance')
   'entity_type' => 'taxonomy_term',
   'bundle' => 'test_vocabulary',
   'data' => 'a:7:{s:5:"label";s:14:"Term Reference";s:6:"widget";a:5:{s:6:"weight";s:2:"14";s:4:"type";s:21:"taxonomy_autocomplete";s:6:"module";s:8:"taxonomy";s:6:"active";i:0;s:8:"settings";a:2:{s:4:"size";i:60;s:17:"autocomplete_path";s:21:"taxonomy/autocomplete";}}s:8:"settings";a:1:{s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:4:{s:5:"label";s:5:"above";s:4:"type";s:6:"hidden";s:6:"weight";s:2:"13";s:8:"settings";a:0:{}}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '42',
+  'field_id' => '25',
+  'field_name' => 'field_private_file',
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'data' => 'a:6:{s:5:"label";s:12:"Private file";s:6:"widget";a:5:{s:6:"weight";s:2:"19";s:4:"type";s:12:"file_generic";s:6:"module";s:4:"file";s:6:"active";i:1;s:8:"settings";a:1:{s:18:"progress_indicator";s:8:"throbber";}}s:8:"settings";a:5:{s:14:"file_directory";s:0:"";s:15:"file_extensions";s:3:"txt";s:12:"max_filesize";s:0:"";s:17:"description_field";i:0;s:18:"user_register_form";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"file_default";s:8:"settings";a:0:{}s:6:"module";s:4:"file";s:6:"weight";i:18;}}s:8:"required";i:0;s:11:"description";s:0:"";}',
   'deleted' => '0',
 ))
 ->execute();
@@ -5340,10 +5364,133 @@ $connection->insert('field_data_field_phone')
   'bundle' => 'test_content_type',
   'deleted' => '0',
   'entity_id' => '1',
-  'revision_id' => '1',
+  'revision_id' => '6',
   'language' => 'und',
   'delta' => '0',
   'field_phone_value' => '99-99-99-99',
+))
+->execute();
+
+$connection->schema()->createTable('field_data_field_private_file', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_private_file_fid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_private_file_display' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '1',
+      'unsigned' => TRUE,
+    ),
+    'field_private_file_description' => array(
+      'type' => 'text',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_private_file_fid' => array(
+      'field_private_file_fid',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('field_data_field_private_file')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'field_private_file_fid',
+  'field_private_file_display',
+  'field_private_file_description',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '6',
+  'language' => 'und',
+  'delta' => '0',
+  'field_private_file_fid' => '4',
+  'field_private_file_display' => '1',
+  'field_private_file_description' => '',
 ))
 ->execute();
 
@@ -7579,6 +7726,140 @@ $connection->insert('field_revision_field_phone')
   'delta' => '0',
   'field_phone_value' => '99-99-99-99',
 ))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '6',
+  'language' => 'und',
+  'delta' => '0',
+  'field_phone_value' => '99-99-99-99',
+))
+->execute();
+
+$connection->schema()->createTable('field_revision_field_private_file', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_private_file_fid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_private_file_display' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '1',
+      'unsigned' => TRUE,
+    ),
+    'field_private_file_description' => array(
+      'type' => 'text',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'revision_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_private_file_fid' => array(
+      'field_private_file_fid',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('field_revision_field_private_file')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'field_private_file_fid',
+  'field_private_file_display',
+  'field_private_file_description',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '6',
+  'language' => 'und',
+  'delta' => '0',
+  'field_private_file_fid' => '4',
+  'field_private_file_display' => '1',
+  'field_private_file_description' => '',
+))
 ->execute();
 
 $connection->schema()->createTable('field_revision_field_tags', array(
@@ -8365,6 +8646,16 @@ $connection->insert('file_managed')
   'status' => '1',
   'timestamp' => '1421727516',
 ))
+->values(array(
+  'fid' => '3',
+  'uid' => '1',
+  'filename' => 'Babylon5.txt',
+  'uri' => 'private://Babylon5.txt',
+  'filemime' => 'text/plain',
+  'filesize' => '4',
+  'status' => '1',
+  'timestamp' => '1486104045',
+))
 ->execute();
 
 $connection->schema()->createTable('file_usage', array(
@@ -8424,20 +8715,27 @@ $connection->insert('file_usage')
   'module' => 'file',
   'type' => 'node',
   'id' => '1',
-  'count' => '2',
+  'count' => '3',
 ))
 ->values(array(
   'fid' => '2',
   'module' => 'file',
   'type' => 'node',
   'id' => '1',
-  'count' => '1',
+  'count' => '2',
 ))
 ->values(array(
   'fid' => '2',
   'module' => 'file',
   'type' => 'user',
   'id' => '2',
+  'count' => '1',
+))
+->values(array(
+  'fid' => '3',
+  'module' => 'file',
+  'type' => 'node',
+  'id' => '1',
   'count' => '1',
 ))
 ->execute();
@@ -43862,7 +44160,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'file_private_path',
-  'value' => 's:0:"";',
+  'value' => 's:21:"sites/default/private";',
 ))
 ->values(array(
   'name' => 'file_public_path',
