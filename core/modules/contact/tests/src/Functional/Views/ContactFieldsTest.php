@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\contact\Tests\Views;
+namespace Drupal\Tests\contact\Functional\Views;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\contact\Entity\ContactForm;
 
@@ -28,8 +28,8 @@ class ContactFieldsTest extends ViewTestBase {
    */
   protected $fieldStorage;
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => strtolower($this->randomMachineName()),
