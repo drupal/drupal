@@ -28,6 +28,11 @@ class ContentModerationStateTest extends KernelTestBase {
     'entity_test',
     'node',
     'block_content',
+    'media',
+    'media_test_source',
+    'image',
+    'file',
+    'field',
     'content_moderation',
     'user',
     'system',
@@ -56,8 +61,12 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->installEntitySchema('entity_test_no_bundle');
     $this->installEntitySchema('entity_test_mulrevpub');
     $this->installEntitySchema('block_content');
+    $this->installEntitySchema('media');
+    $this->installEntitySchema('file');
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
+    $this->installSchema('file', 'file_usage');
+    $this->installConfig(['field', 'system', 'image', 'file', 'media']);
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
   }
@@ -83,6 +92,16 @@ class ContentModerationStateTest extends KernelTestBase {
       $entity_type = $entity_type_storage->create([
         $bundle_entity_type_definition->getKey('id') => 'example',
       ]);
+      if ($entity_type_id == 'media') {
+        $entity_type->set('source', 'test');
+        $entity_type->save();
+        $source_field = $entity_type->getSource()->createSourceField($entity_type);
+        $source_field->getFieldStorageDefinition()->save();
+        $source_field->save();
+        $entity_type->set('source_configuration', [
+          'source_field' => $source_field->getName(),
+        ]);
+      }
       $entity_type->save();
       $bundle_id = $entity_type->id();
     }
@@ -173,6 +192,9 @@ class ContentModerationStateTest extends KernelTestBase {
       ],
       'Block content' => [
         'block_content',
+      ],
+      'Media' => [
+        'media',
       ],
       'Test Entity with Bundle' => [
         'entity_test_with_bundle',
