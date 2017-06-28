@@ -21,9 +21,7 @@ use Drupal\Core\Url;
 class Rss extends StylePluginBase {
 
   /**
-   * Does the style plugin for itself support to add fields to it's output.
-   *
-   * @var bool
+   * {@inheritdoc}
    */
   protected $usesRowPlugin = TRUE;
 
