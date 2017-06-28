@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\forum\Tests\Views;
+namespace Drupal\Tests\forum\Functional\Views;
 
 use Drupal\node\NodeInterface;
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -28,8 +28,8 @@ class ForumIntegrationTest extends ViewTestBase {
    */
   public static $testViews = ['test_forum_index'];
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     ViewTestData::createTestViews(get_class($this), ['forum_test_views']);
   }
