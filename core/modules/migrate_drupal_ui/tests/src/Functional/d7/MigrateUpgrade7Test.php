@@ -17,6 +17,11 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
   /**
    * {@inheritdoc}
    */
+  public static $modules = ['file'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal7.php');
@@ -45,9 +50,9 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
       'configurable_language' => 4,
       'contact_form' => 3,
       'editor' => 2,
-      'field_config' => 52,
-      'field_storage_config' => 39,
-      'file' => 2,
+      'field_config' => 53,
+      'field_storage_config' => 40,
+      'file' => 3,
       'filter_format' => 7,
       'image_style' => 6,
       'language_content_settings' => 2,

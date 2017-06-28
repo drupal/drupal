@@ -250,6 +250,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       'source_module' => 'file',
       'destination_module' => 'file',
     ],
+    'd7_file_private' => [
+      'source_module' => 'file',
+      'destination_module' => 'file',
+    ],
     'd6_filter_format' => [
       'source_module' => 'filter',
       'destination_module' => 'filter',
@@ -885,6 +889,15 @@ class MigrateUpgradeForm extends ConfirmFormBase {
 
     $default_options = [];
 
+
+    $form['version'] = [
+      '#type' => 'radios',
+      '#default_value' => 7,
+      '#title' => $this->t('Drupal version of the source site'),
+      '#options' => [6 => $this->t('Drupal 6'), 7 => $this->t('Drupal 7')],
+      '#required' => TRUE,
+    ];
+
     $form['database'] = [
       '#type' => 'details',
       '#title' => $this->t('Source database'),
@@ -938,10 +951,38 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       '#title' => $this->t('Source files'),
       '#open' => TRUE,
     ];
-    $form['source']['source_base_path'] = [
+    $form['source']['d6_source_base_path'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Files directory'),
       '#description' => $this->t('To import files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
+      '#states' => [
+        'visible' => [
+          ':input[name="version"]' => ['value' => 6],
+        ],
+      ],
+    ];
+
+    $form['source']['source_base_path'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Public files directory'),
+      '#description' => $this->t('To import public files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
+      '#states' => [
+        'visible' => [
+          ':input[name="version"]' => ['value' => 7],
+        ],
+      ],
+    ];
+
+    $form['source']['source_private_file_path'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Private file directory'),
+      '#default_value' => '',
+      '#description' => $this->t('To import private files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot).'),
+      '#states' => [
+        'visible' => [
+          ':input[name="version"]' => ['value' => 7],
+        ],
+      ],
     ];
 
     $form['actions'] = ['#type' => 'actions'];
@@ -992,6 +1033,12 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       if (!$version) {
         $form_state->setErrorByName($database['driver'] . '][0', $this->t('Source database does not contain a recognizable Drupal version.'));
       }
+      elseif ($version != $form_state->getValue('version')) {
+        $form_state->setErrorByName($database['driver'] . '][0', $this->t('Source database is Drupal version @version but version @selected was selected.', [
+          '@version' => $version,
+          '@selected' => $form_state->getValue('version'),
+        ]));
+      }
       else {
         $this->createDatabaseStateSettings($database, $version);
         $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
@@ -1009,6 +1056,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
         // Store the retrieved migration IDs in form storage.
         $form_state->set('migrations', $migration_array);
         $form_state->set('source_base_path', $form_state->getValue('source_base_path'));
+        $form_state->set('source_private_file_path', $form_state->getValue('source_private_file_path'));
 
         // Store the retrived system data in form storage.
         $form_state->set('system_data', $system_data);
