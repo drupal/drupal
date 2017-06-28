@@ -4,6 +4,7 @@ rest.settings:
   label: 'REST settings'
   mapping:
     # @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
+    # @see https://www.drupal.org/node/2830467
     link_domain:
       type: string
       label: 'Domain of the relation'

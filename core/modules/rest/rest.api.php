@@ -34,6 +34,8 @@ function hook_rest_resource_alter(&$definitions) {
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Use
  *   hook_serialization_type_uri_alter() instead. This exists solely for BC.
  *
+ * @see https://www.drupal.org/node/2830467
+ *
  * Modules may wish to alter the type URI generated for a resource based on the
  * context of the serializer/normalizer operation.
  *
@@ -60,6 +62,8 @@ function hook_rest_type_uri_alter(&$uri, $context = []) {
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Use
  *   hook_serialization_relation_uri_alter() instead. This exists solely for BC.
+ *
+ * @see https://www.drupal.org/node/2830467
  *
  * Modules may wish to alter the relation URI generated for a resource based on
  * the context of the serializer/normalizer operation.

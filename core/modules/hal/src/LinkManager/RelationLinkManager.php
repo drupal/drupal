@@ -72,6 +72,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
     $this->moduleHandler->alter('hal_relation_uri', $uri, $context);
     // @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. This
     // hook is invoked to maintain backwards compatibility
+    // @see https://www.drupal.org/node/2830467
     $this->moduleHandler->alter('rest_relation_uri', $uri, $context);
     return $uri;
   }
