@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\book\Tests\Views;
+namespace Drupal\Tests\book\Functional\Views;
 
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -45,8 +45,8 @@ class BookRelationshipTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     // Create users.
     $this->bookAuthor = $this->drupalCreateUser(
