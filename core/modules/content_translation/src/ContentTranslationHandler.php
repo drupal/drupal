@@ -116,6 +116,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       ->setLabel(t('Translation source'))
       ->setDescription(t('The source language from which this translation was created.'))
       ->setDefaultValue(LanguageInterface::LANGCODE_NOT_SPECIFIED)
+      ->setInitialValue(LanguageInterface::LANGCODE_NOT_SPECIFIED)
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
@@ -123,6 +124,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       ->setLabel(t('Translation outdated'))
       ->setDescription(t('A boolean indicating whether this translation needs to be updated.'))
       ->setDefaultValue(FALSE)
+      ->setInitialValue(FALSE)
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
@@ -142,6 +144,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         ->setLabel(t('Translation status'))
         ->setDescription(t('A boolean indicating whether the translation is visible to non-translators.'))
         ->setDefaultValue(TRUE)
+        ->setInitialValue(TRUE)
         ->setRevisionable(TRUE)
         ->setTranslatable(TRUE);
     }
