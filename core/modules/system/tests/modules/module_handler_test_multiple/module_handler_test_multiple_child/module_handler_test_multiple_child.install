@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Utility functions for the module_handler_test_multiple_child module.
+ *
+ * Install, update and uninstall functions for the
+ * module_handler_test_multiple_child module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function module_handler_test_multiple_child_install() {
+  // Set weight of module.
+  module_set_weight('module_handler_test_multiple_child', 1);
+}

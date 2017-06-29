@@ -44,4 +44,20 @@ class ModuleInstallerTest extends KernelTestBase {
     $this->container->get('router.route_provider')->getRouteByName('router_test.1');
   }
 
+  /**
+   * Tests config changes by hook_install() are saved for dependent modules.
+   *
+   * @covers ::install
+   */
+  public function testConfigChangeOnInstall() {
+    // Install the child module so the parent is installed automatically.
+    $this->container->get('module_installer')->install(['module_handler_test_multiple_child']);
+    $modules = $this->config('core.extension')->get('module');
+
+    $this->assertArrayHasKey('module_handler_test_multiple', $modules, 'Module module_handler_test_multiple is installed');
+    $this->assertArrayHasKey('module_handler_test_multiple_child', $modules, 'Module module_handler_test_multiple_child is installed');
+    $this->assertEquals(1, $modules['module_handler_test_multiple'], 'Weight of module_handler_test_multiple is set.');
+    $this->assertEquals(1, $modules['module_handler_test_multiple_child'], 'Weight of module_handler_test_multiple_child is set.');
+  }
+
 }
