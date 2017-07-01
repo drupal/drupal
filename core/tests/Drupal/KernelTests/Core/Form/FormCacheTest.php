@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Form;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
+use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -99,6 +100,18 @@ class FormCacheTest extends KernelTestBase {
 
     // Restore user account.
     $account_switcher->switchBack();
+  }
+
+  /**
+   * Tests the form cache with an overridden cache expiration.
+   */
+  public function testCacheCustomExpiration() {
+    // Override form cache expiration so that the cached form expired yesterday.
+    new Settings(['form_cache_expiration' => -1 * (24 * 60 * 60), 'hash_salt' => $this->randomMachineName()]);
+    \Drupal::formBuilder()->setCache($this->formBuildId, $this->form, $this->formState);
+
+    $cached_form_state = new FormState();
+    $this->assertFalse(\Drupal::formBuilder()->getCache($this->formBuildId, $cached_form_state), 'Expired form not returned from cache');
   }
 
 }

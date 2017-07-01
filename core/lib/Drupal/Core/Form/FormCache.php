@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\Settings;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -170,8 +171,8 @@ class FormCache implements FormCacheInterface {
    * {@inheritdoc}
    */
   public function setCache($form_build_id, $form, FormStateInterface $form_state) {
-    // 6 hours cache life time for forms should be plenty.
-    $expire = 21600;
+    // Cache forms for 6 hours by default.
+    $expire = Settings::get('form_cache_expiration', 21600);
 
     // Ensure that the form build_id embedded in the form structure is the same
     // as the one passed in as a parameter. This is an additional safety measure
