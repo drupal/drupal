@@ -321,9 +321,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function elementClasses($row_index = NULL) {
-    $classes = explode(' ', $this->options['element_class']);
+    $classes = $this->tokenizeValue($this->options['element_class'], $row_index);
+    $classes = explode(' ', $classes);
     foreach ($classes as &$class) {
-      $class = $this->tokenizeValue($class, $row_index);
       $class = Html::cleanCssIdentifier($class);
     }
     return implode(' ', $classes);
@@ -368,9 +368,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function elementLabelClasses($row_index = NULL) {
-    $classes = explode(' ', $this->options['element_label_class']);
+    $classes = $this->tokenizeValue($this->options['element_label_class'], $row_index);
+    $classes = explode(' ', $classes);
     foreach ($classes as &$class) {
-      $class = $this->tokenizeValue($class, $row_index);
       $class = Html::cleanCssIdentifier($class);
     }
     return implode(' ', $classes);
@@ -380,9 +380,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function elementWrapperClasses($row_index = NULL) {
-    $classes = explode(' ', $this->options['element_wrapper_class']);
+    $classes = $this->tokenizeValue($this->options['element_wrapper_class'], $row_index);
+    $classes = explode(' ', $classes);
     foreach ($classes as &$class) {
-      $class = $this->tokenizeValue($class, $row_index);
       $class = Html::cleanCssIdentifier($class);
     }
     return implode(' ', $classes);
