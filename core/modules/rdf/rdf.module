@@ -329,7 +329,7 @@ function rdf_preprocess_node(&$variables) {
       '#theme' => 'rdf_metadata',
       '#metadata' => [$date_attributes],
     ];
-    $variables['metadata'] = drupal_render($rdf_metadata);
+    $variables['metadata'] = \Drupal::service('renderer')->render($rdf_metadata);
   }
 
   // Adds RDFa markup annotating the number of comments a node has.
@@ -534,7 +534,7 @@ function rdf_preprocess_comment(&$variables) {
     if (!empty($variables['content']['comment_body']['#prefix'])) {
       $rdf_metadata['#suffix'] = $variables['content']['comment_body']['#prefix'];
     }
-    $variables['content']['comment_body']['#prefix'] = drupal_render($rdf_metadata);
+    $variables['content']['comment_body']['#prefix'] = \Drupal::service('renderer')->render($rdf_metadata);
   }
 }
 

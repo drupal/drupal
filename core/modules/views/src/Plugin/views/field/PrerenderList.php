@@ -90,7 +90,7 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
           '#list_type' => $this->options['type'],
         ];
       }
-      return drupal_render($render);
+      return \Drupal::service('renderer')->render($render);
     }
   }
 

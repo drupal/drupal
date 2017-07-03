@@ -74,7 +74,7 @@ class BreakLockForm extends EntityConfirmFormBase {
       '#theme' => 'username',
       '#account' => $account,
     ];
-    return $this->t('By breaking this lock, any unsaved changes made by @user will be lost.', ['@user' => drupal_render($username)]);
+    return $this->t('By breaking this lock, any unsaved changes made by @user will be lost.', ['@user' => \Drupal::service('renderer')->render($username)]);
   }
 
   /**

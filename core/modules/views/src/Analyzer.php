@@ -77,7 +77,7 @@ class Analyzer {
           '#theme' => 'item_list',
           '#items' => $messages,
         ];
-        $message = drupal_render($item_list);
+        $message = \Drupal::service('renderer')->render($item_list);
       }
       elseif ($messages) {
         $message = array_shift($messages);

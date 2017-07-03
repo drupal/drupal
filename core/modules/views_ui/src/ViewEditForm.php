@@ -129,7 +129,7 @@ class ViewEditForm extends ViewFormBase {
         '#account' => $this->entityManager->getStorage('user')->load($view->lock->owner),
       ];
       $lock_message_substitutions = [
-        '@user' => drupal_render($username),
+        '@user' => \Drupal::service('renderer')->render($username),
         '@age' => $this->dateFormatter->formatTimeDiffSince($view->lock->updated),
         ':url' => $view->url('break-lock-form'),
       ];

@@ -64,7 +64,7 @@ class FilterCaption extends FilterBase {
           '#caption' => $caption,
           '#classes' => $classes,
         ];
-        $altered_html = drupal_render($filter_caption);
+        $altered_html = \Drupal::service('renderer')->render($filter_caption);
 
         // Load the altered HTML into a new DOMDocument and retrieve the element.
         $updated_nodes = Html::load($altered_html)->getElementsByTagName('body')
