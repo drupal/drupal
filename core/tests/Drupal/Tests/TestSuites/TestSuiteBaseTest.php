@@ -94,6 +94,14 @@ class TestSuiteBaseTest extends \PHPUnit_Framework_TestCase {
     $this->assertEmpty(array_diff_assoc($expected_tests, $stub->testFiles));
   }
 
+  /**
+   * Tests the assumption that local time is in 'Australia/Sydney'.
+   */
+  public function testLocalTimeZone() {
+    // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
+    $this->assertEquals('Australia/Sydney', date_default_timezone_get());
+  }
+
 }
 
 /**

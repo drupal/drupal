@@ -503,4 +503,18 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertTrue(file_exists($htaccess_filename), "$htaccess_filename exists");
   }
 
+  /**
+   * Tests the assumption that local time is in 'Australia/Sydney'.
+   */
+  public function testLocalTimeZone() {
+    // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
+    $this->assertEquals('Australia/Sydney', date_default_timezone_get());
+
+    // The 'Australia/Sydney' time zone is also set in
+    // FunctionalTestSetupTrait::initConfig().
+    $config_factory = $this->container->get('config.factory');
+    $value = $config_factory->get('system.date')->get('timezone.default');
+    $this->assertEquals('Australia/Sydney', $value);
+  }
+
 }
