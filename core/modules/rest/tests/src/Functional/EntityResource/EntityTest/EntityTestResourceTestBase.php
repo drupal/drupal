@@ -116,7 +116,11 @@ abstract class EntityTestResourceTestBase extends EntityResourceTestBase {
    */
   protected function getNormalizedPostEntity() {
     return [
-      'type' => 'entity_test',
+      'type' => [
+        [
+          'value' => 'entity_test',
+        ],
+      ],
       'name' => [
         [
           'value' => 'Dramallama',

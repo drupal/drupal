@@ -121,7 +121,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     return [
       'name' => [
         [
-          'value' => 'Dramallama ' . $this->randomMachineName(),
+          'value' => 'Dramallama',
         ],
       ],
     ];

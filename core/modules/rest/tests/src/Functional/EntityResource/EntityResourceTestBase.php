@@ -848,6 +848,25 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertSame([], $response->getHeader('Location'));
     }
     $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+    // Assert that the entity was indeed created, and that the response body
+    // contains the serialized created entity.
+    $created_entity = $this->entityStorage->loadUnchanged(static::$firstCreatedEntityId);
+    $created_entity_normalization = $this->serializer->normalize($created_entity, static::$format, ['account' => $this->account]);
+    // @todo Remove this if-test in https://www.drupal.org/node/2543726: execute
+    // its body unconditionally.
+    if (static::$entityTypeId !== 'taxonomy_term') {
+      $this->assertSame($created_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
+    }
+    // Assert that the entity was indeed created using the POSTed values.
+    foreach ($this->getNormalizedPostEntity() as $field_name => $field_normalization) {
+      // Some top-level keys in the normalization may not be fields on the
+      // entity (for example '_links' and '_embedded' in the HAL normalization).
+      if ($created_entity->hasField($field_name)) {
+        // Subset, not same, because we can e.g. send just the target_id for the
+        // bundle in a POST request; the response will include more properties.
+        $this->assertArraySubset(static::castToString($field_normalization), $created_entity->get($field_name)->getValue(), TRUE);
+      }
+    }
 
 
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
@@ -1064,10 +1083,25 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
     $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+    // Assert that the entity was indeed updated, and that the response body
+    // contains the serialized updated entity.
+    $updated_entity = $this->entityStorage->loadUnchanged($this->entity->id());
+    $updated_entity_normalization = $this->serializer->normalize($updated_entity, static::$format, ['account' => $this->account]);
+    $this->assertSame($updated_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
+    // Assert that the entity was indeed created using the PATCHed values.
+    foreach ($this->getNormalizedPatchEntity() as $field_name => $field_normalization) {
+      // Some top-level keys in the normalization may not be fields on the
+      // entity (for example '_links' and '_embedded' in the HAL normalization).
+      if ($updated_entity->hasField($field_name)) {
+        // Subset, not same, because we can e.g. send just the target_id for the
+        // bundle in a PATCH request; the response will include more properties.
+        $this->assertArraySubset(static::castToString($field_normalization), $updated_entity->get($field_name)->getValue(), TRUE);
+      }
+    }
     // Ensure that fields do not get deleted if they're not present in the PATCH
     // request. Test this using the configurable field that we added, but which
     // is not sent in the PATCH request.
-    $this->assertSame('All the faith he had had had had no effect on the outcome of his life.', $this->entityStorage->loadUnchanged($this->entity->id())->get('field_rest_test')->value);
+    $this->assertSame('All the faith he had had had had no effect on the outcome of his life.', $updated_entity->get('field_rest_test')->value);
 
 
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);

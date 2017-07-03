@@ -117,7 +117,11 @@ abstract class EntityTestLabelResourceTestBase extends EntityResourceTestBase {
    */
   protected function getNormalizedPostEntity() {
     return [
-      'type' => 'entity_test_label',
+      'type' => [
+        [
+          'value' => 'entity_test_label',
+        ],
+      ],
       'name' => [
         [
           'value' => 'label_llama',

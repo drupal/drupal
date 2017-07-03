@@ -219,7 +219,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       ],
       'entity_id' => [
         [
-          'target_id' => EntityTest::load(1)->id(),
+          'target_id' => (int) EntityTest::load(1)->id(),
         ],
       ],
       'field_name' => [

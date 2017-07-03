@@ -132,7 +132,11 @@ abstract class ShortcutResourceTestBase extends EntityResourceTestBase {
           'uri' => 'internal:/',
         ],
       ],
-      'shortcut_set' => 'default',
+      'shortcut_set' => [
+        [
+          'target_id' => 'default',
+        ],
+      ],
     ];
   }
 

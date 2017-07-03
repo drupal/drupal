@@ -147,6 +147,12 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
           'value' => 'Dramallama',
         ],
       ],
+      'description' => [
+        [
+          'value' => 'Dramallamas are the coolest camelids.',
+          'format' => NULL,
+        ],
+      ],
     ];
   }
 
