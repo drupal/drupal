@@ -114,6 +114,12 @@ class PreviewTest extends UITestBase {
     $settings->set('ui.show.sql_query.where', 'below')->save();
     $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], t('Update preview'));
     $this->assertTrue(strpos($this->getRawContent(), 'view-test-preview') < strpos($this->getRawContent(), 'views-query-info'), 'Statistics shown below the preview.');
+
+    // Test that the preview title isn't double escaped.
+    $this->drupalPostForm("admin/structure/views/nojs/display/test_preview/default/title", $edit = ['title' => 'Double & escaped'], t('Apply'));
+    $this->drupalPostForm(NULL, [], t('Update preview'));
+    $elements = $this->xpath('//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()=:text]', [':text' => t('Double & escaped')]);
+    $this->assertEqual(1, count($elements));
   }
 
   /**

@@ -4,7 +4,6 @@ namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Views;
@@ -688,7 +687,11 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'Title' %}</strong>",
                 ],
               ],
-              Xss::filterAdmin($executable->getTitle()),
+              [
+                'data' => [
+                  '#markup' => $executable->getTitle(),
+                ],
+              ],
             ];
             if (isset($path)) {
               // @todo Views should expect and store a leading /. See:
