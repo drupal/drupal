@@ -105,6 +105,7 @@ function menu_list_system_menus() {
  *     tasks.
  *
  * @see hook_menu_local_tasks_alter()
+ * @see https://www.drupal.org/node/2544940
  *
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  */
@@ -116,6 +117,8 @@ function menu_local_tasks($level = 0) {
 
 /**
  * Returns the rendered local tasks at the top level.
+ *
+ * @see https://www.drupal.org/node/2874695
  *
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  */
@@ -129,6 +132,8 @@ function menu_primary_local_tasks() {
 
 /**
  * Returns the rendered local tasks at the second level.
+ *
+ * @see https://www.drupal.org/node/2874695
  *
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  */
