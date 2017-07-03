@@ -40,12 +40,16 @@ class FilterFormatPermission extends ProcessPluginBase implements ContainerFacto
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+    $migration_plugin_configuration = $configuration + [
+      'migration' => 'd6_filter_format',
+    ];
+
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
       $migration,
-      $container->get('plugin.manager.migrate.process')->createInstance('migration', ['migration' => 'd6_filter_format'], $migration)
+      $container->get('plugin.manager.migrate.process')->createInstance('migration', $migration_plugin_configuration, $migration)
     );
   }
 
