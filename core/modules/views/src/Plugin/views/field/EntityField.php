@@ -1043,10 +1043,13 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    */
   public function getValue(ResultRow $values, $field = NULL) {
     $entity = $this->getEntity($values);
+    // Retrieve the translated object.
+    $translated_entity = $this->getEntityFieldRenderer()->getEntityTranslation($entity, $values);
+
     // Some bundles might not have a specific field, in which case the entity
     // (potentially a fake one) doesn't have it either.
     /** @var \Drupal\Core\Field\FieldItemListInterface $field_item_list */
-    $field_item_list = isset($entity->{$this->definition['field_name']}) ? $entity->{$this->definition['field_name']} : NULL;
+    $field_item_list = isset($translated_entity->{$this->definition['field_name']}) ? $translated_entity->{$this->definition['field_name']} : NULL;
 
     if (!isset($field_item_list)) {
       // There isn't anything we can do without a valid field.

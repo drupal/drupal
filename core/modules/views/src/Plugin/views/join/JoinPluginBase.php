@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\join;
 
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Plugin\PluginBase;
 
 /**
@@ -261,12 +262,13 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
     }
 
     if ($this->leftTable) {
-      $left = $view_query->getTableInfo($this->leftTable);
-      $left_field = "$left[alias].$this->leftField";
+      $left_table = $view_query->getTableInfo($this->leftTable);
+      $left_field = "$left_table[alias].$this->leftField";
     }
     else {
       // This can be used if left_field is a formula or something. It should be used only *very* rarely.
       $left_field = $this->leftField;
+      $left_table = NULL;
     }
 
     $condition = "$left_field = $table[alias].$this->field";
@@ -274,89 +276,123 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
 
     // Tack on the extra.
     if (isset($this->extra)) {
-      if (is_array($this->extra)) {
-        $extras = [];
-        foreach ($this->extra as $info) {
-          // Do not require 'value' to be set; allow for field syntax instead.
-          $info += [
-            'value' => NULL,
-          ];
-          // Figure out the table name. Remember, only use aliases provided
-          // if at all possible.
-          $join_table = '';
-          if (!array_key_exists('table', $info)) {
-            $join_table = $table['alias'] . '.';
-          }
-          elseif (isset($info['table'])) {
-            // If we're aware of a table alias for this table, use the table
-            // alias instead of the table name.
-            if (isset($left) && $left['table'] == $info['table']) {
-              $join_table = $left['alias'] . '.';
-            }
-            else {
-              $join_table = $info['table'] . '.';
-            }
-          }
-
-          // Convert a single-valued array of values to the single-value case,
-          // and transform from IN() notation to = notation
-          if (is_array($info['value']) && count($info['value']) == 1) {
-            $info['value'] = array_shift($info['value']);
-          }
-          if (is_array($info['value'])) {
-            // We use an SA-CORE-2014-005 conformant placeholder for our array
-            // of values. Also, note that the 'IN' operator is implicit.
-            // @see https://www.drupal.org/node/2401615.
-            $operator = !empty($info['operator']) ? $info['operator'] : 'IN';
-            $placeholder = ':views_join_condition_' . $select_query->nextPlaceholder() . '[]';
-            $placeholder_sql = "( $placeholder )";
-          }
-          else {
-            // With a single value, the '=' operator is implicit.
-            $operator = !empty($info['operator']) ? $info['operator'] : '=';
-            $placeholder = $placeholder_sql = ':views_join_condition_' . $select_query->nextPlaceholder();
-          }
-          // Set 'field' as join table field if available or set 'left field' as
-          // join table field is not set.
-          if (isset($info['field'])) {
-            $join_table_field = "$join_table$info[field]";
-            // Allow the value to be set either with the 'value' element or
-            // with 'left_field'.
-            if (isset($info['left_field'])) {
-              $placeholder_sql = "$left[alias].$info[left_field]";
-            }
-            else {
-              $arguments[$placeholder] = $info['value'];
-            }
-          }
-          // Set 'left field' as join table field is not set.
-          else {
-            $join_table_field = "$left[alias].$info[left_field]";
-            $arguments[$placeholder] = $info['value'];
-          }
-          // Render out the SQL fragment with parameters.
-          $extras[] = "$join_table_field $operator $placeholder_sql";
-        }
-
-        if ($extras) {
-          if (count($extras) == 1) {
-            $condition .= ' AND ' . array_shift($extras);
-          }
-          else {
-            $condition .= ' AND (' . implode(' ' . $this->extraOperator . ' ', $extras) . ')';
-          }
-        }
-      }
-      elseif ($this->extra && is_string($this->extra)) {
-        $condition .= " AND ($this->extra)";
-      }
+      $this->joinAddExtra($arguments, $condition, $table, $select_query, $left_table);
     }
 
     $select_query->addJoin($this->type, $right_table, $table['alias'], $condition, $arguments);
   }
+  /**
+   * Adds the extras to the join condition.
+   *
+   * @param array $arguments
+   *   Array of query arguments.
+   * @param string $condition
+   *   The condition to be built.
+   * @param array $table
+   *   The right table.
+   * @param \Drupal\Core\Database\Query\SelectInterface $select_query
+   *   The current select query being built.
+   * @param array $left_table
+   *   The left table.
+   */
+  protected function joinAddExtra(&$arguments, &$condition, $table, SelectInterface $select_query, $left_table = NULL) {
+    if (is_array($this->extra)) {
+      $extras = [];
+      foreach ($this->extra as $info) {
+        $extras[] = $this->buildExtra($info, $arguments, $table, $select_query, $left_table);
+      }
+
+      if ($extras) {
+        if (count($extras) == 1) {
+          $condition .= ' AND ' . array_shift($extras);
+        }
+        else {
+          $condition .= ' AND (' . implode(' ' . $this->extraOperator . ' ', $extras) . ')';
+        }
+      }
+    }
+    elseif ($this->extra && is_string($this->extra)) {
+      $condition .= " AND ($this->extra)";
+    }
+  }
+
+  /**
+   * Builds a single extra condition.
+   *
+   * @param array $info
+   *   The extra information. See JoinPluginBase::$extra for details.
+   * @param array $arguments
+   *   Array of query arguments.
+   * @param array $table
+   *   The right table.
+   * @param \Drupal\Core\Database\Query\SelectInterface $select_query
+   *   The current select query being built.
+   * @param array $left
+   *   The left table.
+   *
+   * @return string
+   *   The extra condition
+   */
+  protected function buildExtra($info, &$arguments, $table, SelectInterface $select_query, $left) {
+    // Do not require 'value' to be set; allow for field syntax instead.
+    $info += [
+      'value' => NULL,
+    ];
+    // Figure out the table name. Remember, only use aliases provided
+    // if at all possible.
+    $join_table = '';
+    if (!array_key_exists('table', $info)) {
+      $join_table = $table['alias'] . '.';
+    }
+    elseif (isset($info['table'])) {
+      // If we're aware of a table alias for this table, use the table
+      // alias instead of the table name.
+      if (isset($left) && $left['table'] == $info['table']) {
+        $join_table = $left['alias'] . '.';
+      }
+      else {
+        $join_table = $info['table'] . '.';
+      }
+    }
+
+    // Convert a single-valued array of values to the single-value case,
+    // and transform from IN() notation to = notation
+    if (is_array($info['value']) && count($info['value']) == 1) {
+      $info['value'] = array_shift($info['value']);
+    }
+    if (is_array($info['value'])) {
+      // We use an SA-CORE-2014-005 conformant placeholder for our array
+      // of values. Also, note that the 'IN' operator is implicit.
+      // @see https://www.drupal.org/node/2401615.
+      $operator = !empty($info['operator']) ? $info['operator'] : 'IN';
+      $placeholder = ':views_join_condition_' . $select_query->nextPlaceholder() . '[]';
+      $placeholder_sql = "( $placeholder )";
+    }
+    else {
+      // With a single value, the '=' operator is implicit.
+      $operator = !empty($info['operator']) ? $info['operator'] : '=';
+      $placeholder = $placeholder_sql = ':views_join_condition_' . $select_query->nextPlaceholder();
+    }
+    // Set 'field' as join table field if available or set 'left field' as
+    // join table field is not set.
+    if (isset($info['field'])) {
+      $join_table_field = "$join_table$info[field]";
+      // Allow the value to be set either with the 'value' element or
+      // with 'left_field'.
+      if (isset($info['left_field'])) {
+        $placeholder_sql = "$left[alias].$info[left_field]";
+      }
+      else {
+        $arguments[$placeholder] = $info['value'];
+      }
+    }
+    // Set 'left field' as join table field is not set.
+    else {
+      $join_table_field = "$left[alias].$info[left_field]";
+      $arguments[$placeholder] = $info['value'];
+    }
+    // Render out the SQL fragment with parameters.
+    return "$join_table_field $operator $placeholder_sql";
+  }
 
 }
-
-/**
- * @}
- */

@@ -17,7 +17,6 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Entity\View;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\Views;
-use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_help().
@@ -437,21 +436,42 @@ function views_add_contextual_links(&$render_element, $location, $display_id, ar
 /**
  * Implements hook_ENTITY_TYPE_insert() for 'field_config'.
  */
-function views_field_config_insert(FieldConfigInterface $field) {
+function views_field_config_insert(EntityInterface $field) {
   Views::viewsData()->clear();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update() for 'field_config'.
  */
-function views_field_config_update(FieldConfigInterface $field) {
+function views_field_config_update(EntityInterface $entity) {
   Views::viewsData()->clear();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
  */
-function views_field_config_delete(FieldConfigInterface $field) {
+function views_field_config_delete(EntityInterface $entity) {
+  Views::viewsData()->clear();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function views_base_field_override_insert(EntityInterface $entity) {
+  Views::viewsData()->clear();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function views_base_field_override_update(EntityInterface $entity) {
+  Views::viewsData()->clear();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function views_base_field_override_delete(EntityInterface $entity) {
   Views::viewsData()->clear();
 }
 
