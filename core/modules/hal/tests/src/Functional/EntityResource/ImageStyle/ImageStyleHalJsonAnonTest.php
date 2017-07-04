@@ -6,7 +6,7 @@ use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\ImageStyle\ImageStyleResourceTestBase;
 
 /**
- * @group rest
+ * @group hal
  */
 class ImageStyleHalJsonAnonTest extends ImageStyleResourceTestBase {
 
