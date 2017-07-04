@@ -30,6 +30,15 @@ function entity_test_update_entity_base_field_info(EntityTypeInterface $entity_t
 }
 
 /**
+ * Implements hook_entity_field_storage_info().
+ */
+function entity_test_update_entity_field_storage_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'entity_test_update') {
+    return \Drupal::state()->get('entity_test_update.additional_field_storage_definitions', []);
+  }
+}
+
+/**
  * Implements hook_entity_type_alter().
  */
 function entity_test_update_entity_type_alter(array &$entity_types) {

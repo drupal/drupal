@@ -161,15 +161,6 @@ function entity_test_entity_base_field_info_alter(&$fields, EntityTypeInterface 
 }
 
 /**
- * Implements hook_entity_field_storage_info().
- */
-function entity_test_entity_field_storage_info(EntityTypeInterface $entity_type) {
-  if ($entity_type->id() == 'entity_test_update') {
-    return \Drupal::state()->get('entity_test_update.additional_field_storage_definitions', []);
-  }
-}
-
-/**
  * Creates a new bundle for entity_test entities.
  *
  * @param string $bundle
