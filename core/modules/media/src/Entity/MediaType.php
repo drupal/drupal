@@ -13,7 +13,7 @@ use Drupal\media\MediaTypeInterface;
  * @ConfigEntityType(
  *   id = "media_type",
  *   label = @Translation("Media type"),
- *   label_collection = @Translation("Media"),
+ *   label_collection = @Translation("Media types"),
  *   label_singular = @Translation("media type"),
  *   label_plural = @Translation("media types"),
  *   label_count = @PluralTranslation(
