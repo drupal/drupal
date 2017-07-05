@@ -4,6 +4,9 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\media\MediaInterface;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the revisionability of media entities.
@@ -11,6 +14,62 @@ use Drupal\field\Entity\FieldConfig;
  * @group media
  */
 class MediaRevisionTest extends MediaFunctionalTestBase {
+
+  /**
+   * Checks media revision operations.
+   */
+  public function testRevisions() {
+    $assert = $this->assertSession();
+
+    /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $media_storage */
+    $media_storage = $this->container->get('entity.manager')->getStorage('media');
+
+    // Create a media type and media item.
+    $media_type = $this->createMediaType();
+    $media = $media_storage->create([
+      'bundle' => $media_type->id(),
+      'name' => 'Unnamed',
+    ]);
+    $media->save();
+
+    // You can't access the revision page when there is only 1 revision.
+    $this->drupalGet('media/' . $media->id() . '/revisions/' . $media->getRevisionId() . '/view');
+    $assert->statusCodeEquals(403);
+
+    // Create some revisions.
+    $media_revisions = [];
+    $media_revisions[] = clone $media;
+    $revision_count = 3;
+    for ($i = 0; $i < $revision_count; $i++) {
+      $media->revision_log = $this->randomMachineName(32);
+      $media = $this->createMediaRevision($media);
+      $media_revisions[] = clone $media;
+    }
+
+    // Get the last revision for simple checks.
+    /** @var \Drupal\media\MediaInterface $media */
+    $media = end($media_revisions);
+
+    // Test permissions.
+    $this->drupalLogin($this->nonAdminUser);
+    /** @var \Drupal\user\RoleInterface $role */
+    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
+
+    // Test 'view all media revisions' permission ('view media' permission is
+    // needed as well).
+    user_role_revoke_permissions($role->id(), ['view media', 'view all media revisions']);
+    $this->drupalGet('media/' . $media->id() . '/revisions/' . $media->getRevisionId() . '/view');
+    $assert->statusCodeEquals(403);
+    $this->grantPermissions($role, ['view media', 'view all media revisions']);
+    $this->drupalGet('media/' . $media->id() . '/revisions/' . $media->getRevisionId() . '/view');
+    $assert->statusCodeEquals(200);
+
+    // Confirm the revision page shows the correct title.
+    $assert->pageTextContains($media->label());
+
+    // Confirm that the last revision is the default revision.
+    $this->assertTrue($media->isDefaultRevision(), 'Last revision is the default.');
+  }
 
   /**
    * Tests creating revisions of a File media item.
@@ -43,6 +102,13 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $page->fillField('Name', 'Foobaz');
     $page->pressButton('Save and keep published');
     $this->assertRevisionCount($media, 2);
+
+    // Confirm the correct revision title appears on "view revisions" page.
+    $media = $this->container->get('entity_type.manager')
+      ->getStorage('media')
+      ->loadUnchanged(1);
+    $this->drupalGet("media/" . $media->id() . "/revisions/" . $media->getRevisionId() . "/view");
+    $assert->pageTextContains('Foobaz');
   }
 
   /**
@@ -83,6 +149,29 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $page->fillField('Name', 'Foobaz');
     $page->pressButton('Save and keep published');
     $this->assertRevisionCount($media, 2);
+
+    // Confirm the correct revision title appears on "view revisions" page.
+    $media = $this->container->get('entity_type.manager')
+      ->getStorage('media')
+      ->loadUnchanged(1);
+    $this->drupalGet("media/" . $media->id() . "/revisions/" . $media->getRevisionId() . "/view");
+    $assert->pageTextContains('Foobaz');
+  }
+
+  /**
+   * Creates a new revision for a given media item.
+   *
+   * @param \Drupal\media\MediaInterface $media
+   *   A media object.
+   *
+   * @return \Drupal\media\MediaInterface
+   *   A media object with up to date revision information.
+   */
+  protected function createMediaRevision(MediaInterface $media) {
+    $media->set('name', $this->randomMachineName());
+    $media->setNewRevision();
+    $media->save();
+    return $media;
   }
 
   /**

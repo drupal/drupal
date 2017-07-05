@@ -23,3 +23,7 @@ delete any media:
 
 create media:
   title: 'Create media'
+
+view all media revisions:
+  title: 'View all media revisions'
+  description: 'To view a revision, you also need permission to view the media item.'

@@ -76,6 +76,7 @@ use Drupal\user\UserInterface;
  *     "canonical" = "/media/{media}",
  *     "delete-form" = "/media/{media}/delete",
  *     "edit-form" = "/media/{media}/edit",
+ *     "revision" = "/media/{media}/revisions/{media_revision}/view",
  *     "admin-form" = "/admin/structure/media/manage/{media_type}"
  *   }
  * )
