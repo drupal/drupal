@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.mediaFormSummaries = {
     attach: function attach(context) {
       var $context = $(context);

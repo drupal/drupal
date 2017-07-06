@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * Attach the machine-readable name form element behavior.
    *
@@ -42,14 +39,14 @@
      *   - field_prefix: The #field_prefix of the form element.
      *   - field_suffix: The #field_suffix of the form element.
      */
-    attach: function (context, settings) {
-      var self = this;
-      var $context = $(context);
-      var timeout = null;
-      var xhr = null;
+    attach(context, settings) {
+      const self = this;
+      const $context = $(context);
+      let timeout = null;
+      let xhr = null;
 
       function clickEditHandler(e) {
-        var data = e.data;
+        const data = e.data;
         data.$wrapper.removeClass('visually-hidden');
         data.$target.trigger('focus');
         data.$suffix.hide();
@@ -57,12 +54,12 @@
       }
 
       function machineNameHandler(e) {
-        var data = e.data;
-        var options = data.options;
-        var baseValue = $(e.target).val();
+        const data = e.data;
+        const options = data.options;
+        const baseValue = $(e.target).val();
 
-        var rx = new RegExp(options.replace_pattern, 'g');
-        var expected = baseValue.toLowerCase().replace(rx, options.replace).substr(0, options.maxlength);
+        const rx = new RegExp(options.replace_pattern, 'g');
+        const expected = baseValue.toLowerCase().replace(rx, options.replace).substr(0, options.maxlength);
 
         // Abort the last pending request because the label has changed and it
         // is no longer valid.
@@ -78,8 +75,8 @@
           timeout = null;
         }
         if (baseValue.toLowerCase() !== expected) {
-          timeout = setTimeout(function () {
-            xhr = self.transliterate(baseValue, options).done(function (machine) {
+          timeout = setTimeout(() => {
+            xhr = self.transliterate(baseValue, options).done((machine) => {
               self.showMachineName(machine.substr(0, options.maxlength), data);
             });
           }, 300);
@@ -89,15 +86,15 @@
         }
       }
 
-      Object.keys(settings.machineName).forEach(function (source_id) {
-        var machine = '';
-        var eventData;
-        var options = settings.machineName[source_id];
+      Object.keys(settings.machineName).forEach((source_id) => {
+        let machine = '';
+        let eventData;
+        const options = settings.machineName[source_id];
 
-        var $source = $context.find(source_id).addClass('machine-name-source').once('machine-name');
-        var $target = $context.find(options.target).addClass('machine-name-target');
-        var $suffix = $context.find(options.suffix);
-        var $wrapper = $target.closest('.js-form-item');
+        const $source = $context.find(source_id).addClass('machine-name-source').once('machine-name');
+        const $target = $context.find(options.target).addClass('machine-name-target');
+        const $suffix = $context.find(options.suffix);
+        const $wrapper = $target.closest('.js-form-item');
         // All elements have to exist.
         if (!$source.length || !$target.length || !$suffix.length || !$wrapper.length) {
           return;
@@ -120,10 +117,10 @@
           machine = self.transliterate($source.val(), options);
         }
         // Append the machine name preview to the source field.
-        var $preview = $('<span class="machine-name-value">' + options.field_prefix + Drupal.checkPlain(machine) + options.field_suffix + '</span>');
+        const $preview = $(`<span class="machine-name-value">${options.field_prefix}${Drupal.checkPlain(machine)}${options.field_suffix}</span>`);
         $suffix.empty();
         if (options.label) {
-          $suffix.append('<span class="machine-name-label">' + options.label + ': </span>');
+          $suffix.append(`<span class="machine-name-label">${options.label}: </span>`);
         }
         $suffix.append($preview);
 
@@ -133,15 +130,15 @@
         }
 
         eventData = {
-          $source: $source,
-          $target: $target,
-          $suffix: $suffix,
-          $wrapper: $wrapper,
-          $preview: $preview,
-          options: options
+          $source,
+          $target,
+          $suffix,
+          $wrapper,
+          $preview,
+          options,
         };
         // If it is editable, append an edit link.
-        var $link = $('<span class="admin-link"><button type="button" class="link">' + Drupal.t('Edit') + '</button></span>').on('click', eventData, clickEditHandler);
+        const $link = $(`<span class="admin-link"><button type="button" class="link">${Drupal.t('Edit')}</button></span>`).on('click', eventData, clickEditHandler);
         $suffix.append($link);
 
         // Preview the machine name in realtime when the human-readable name
@@ -159,8 +156,8 @@
       });
     },
 
-    showMachineName: function (machine, data) {
-      var settings = data.options;
+    showMachineName(machine, data) {
+      const settings = data.options;
       // Set the machine name to the transliterated value.
       if (machine !== '') {
         if (machine !== settings.replace) {
@@ -196,16 +193,15 @@
      * @return {jQuery}
      *   The transliterated source string.
      */
-    transliterate: function (source, settings) {
+    transliterate(source, settings) {
       return $.get(Drupal.url('machine_name/transliterate'), {
         text: source,
         langcode: drupalSettings.langcode,
         replace_pattern: settings.replace_pattern,
         replace_token: settings.replace_token,
         replace: settings.replace,
-        lowercase: true
+        lowercase: true,
       });
-    }
+    },
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

@@ -6,9 +6,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * Default dialog options.
    *
@@ -30,10 +27,10 @@
     // side), you may want to override this method and do
     // `jQuery(event.target).remove()` as well, to remove the dialog on
     // closing.
-    close: function (event) {
+    close(event) {
       Drupal.dialog(event.target).close();
       Drupal.detachBehaviors(event.target, null, 'unload');
-    }
+    },
   };
 
   /**
@@ -63,18 +60,18 @@
    *   The dialog instance.
    */
   Drupal.dialog = function (element, options) {
-    var undef;
-    var $element = $(element);
-    var dialog = {
+    let undef;
+    const $element = $(element);
+    const dialog = {
       open: false,
       returnValue: undef,
-      show: function () {
-        openDialog({modal: false});
+      show() {
+        openDialog({ modal: false });
       },
-      showModal: function () {
-        openDialog({modal: true});
+      showModal() {
+        openDialog({ modal: true });
       },
-      close: closeDialog
+      close: closeDialog,
     };
 
     function openDialog(settings) {
@@ -96,5 +93,4 @@
 
     return dialog;
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

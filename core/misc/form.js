@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, debounce) {
-
-  'use strict';
-
   $.fn.drupalGetSummary = function () {
     var callback = this.data('summaryCallback');
     return this[0] && callback ? $.trim(callback(this[0])) : '';
@@ -63,7 +60,7 @@
       var $context = $(context);
       var contextIsForm = $context.is('form');
       var $forms = (contextIsForm ? $context : $context.find('form')).once('form-updated');
-      var formFields;
+      var formFields = void 0;
 
       if ($forms.length) {
         $.makeArray($forms).forEach(function (form) {

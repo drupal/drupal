@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.nodeDetailsSummaries = {
     attach: function attach(context) {
       var $context = $(context);
@@ -36,9 +33,9 @@
             vals.push(Drupal.checkPlain($.trim($(this).text())));
           });
           return vals.join(', ');
-        } else {
-          return Drupal.t('Not promoted');
         }
+
+        return Drupal.t('Not promoted');
       });
     }
   };

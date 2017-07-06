@@ -4,20 +4,17 @@
  */
 
 (function ($) {
-
-  'use strict';
-
   $.widget('ui.dialog', $.ui.dialog, {
     options: {
       buttonClass: 'button',
-      buttonPrimaryClass: 'button--primary'
+      buttonPrimaryClass: 'button--primary',
     },
-    _createButtons: function () {
-      var opts = this.options;
-      var primaryIndex;
-      var $buttons;
-      var index;
-      var il = opts.buttons.length;
+    _createButtons() {
+      const opts = this.options;
+      let primaryIndex;
+      let $buttons;
+      let index;
+      const il = opts.buttons.length;
       for (index = 0; index < il; index++) {
         if (opts.buttons[index].primary && opts.buttons[index].primary === true) {
           primaryIndex = index;
@@ -30,7 +27,6 @@
       if (typeof primaryIndex !== 'undefined') {
         $buttons.eq(index).addClass(opts.buttonPrimaryClass);
       }
-    }
+    },
   });
-
-})(jQuery);
+}(jQuery));

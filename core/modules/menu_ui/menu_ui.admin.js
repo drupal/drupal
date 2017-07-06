@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.menuUiChangeParentItems = {
     attach: function attach(context, settings) {
       var $menu = $('#edit-menu').once('menu-parent');

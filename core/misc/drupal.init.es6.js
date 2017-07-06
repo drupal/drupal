@@ -10,10 +10,8 @@ document.documentElement.className += ' js';
 // wrapping it in an anonymous closure.
 
 (function (domready, Drupal, drupalSettings) {
-
-  'use strict';
-
   // Attach all behaviors.
-  domready(function () { Drupal.attachBehaviors(document, drupalSettings); });
-
-})(domready, Drupal, window.drupalSettings);
+  domready(() => {
+    Drupal.attachBehaviors(document, drupalSettings);
+  });
+}(domready, Drupal, window.drupalSettings));

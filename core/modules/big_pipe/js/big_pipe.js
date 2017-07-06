@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   function bigPipeProcessPlaceholderReplacement(index, placeholderReplacement) {
     var placeholderId = placeholderReplacement.getAttribute('data-big-pipe-replacement-for-placeholder-with-id');
     var content = this.textContent.trim();
@@ -58,7 +55,7 @@
 
   var interval = drupalSettings.bigPipeInterval || 50;
 
-  var timeoutID;
+  var timeoutID = void 0;
 
   bigPipeProcess();
 

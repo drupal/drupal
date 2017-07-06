@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * Ajax command for highlighting elements.
    *
@@ -35,23 +32,23 @@
    *   The XHR status code?
    */
   Drupal.AjaxCommands.prototype.viewsSetForm = function (ajax, response, status) {
-    var $form = $('.js-views-ui-dialog form');
+    const $form = $('.js-views-ui-dialog form');
     // Identify the button that was clicked so that .ajaxSubmit() can use it.
     // We need to do this for both .click() and .mousedown() since JavaScript
     // code might trigger either behavior.
-    var $submit_buttons = $form.find('input[type=submit].js-form-submit, button.js-form-submit').once('views-ajax-submit');
+    const $submit_buttons = $form.find('input[type=submit].js-form-submit, button.js-form-submit').once('views-ajax-submit');
     $submit_buttons.on('click mousedown', function () {
       this.form.clk = this;
     });
     $form.once('views-ajax-submit').each(function () {
-      var $form = $(this);
-      var element_settings = {
+      const $form = $(this);
+      const element_settings = {
         url: response.url,
         event: 'submit',
         base: $form.attr('id'),
-        element: this
+        element: this,
       };
-      var ajaxForm = Drupal.ajax(element_settings);
+      const ajaxForm = Drupal.ajax(element_settings);
       ajaxForm.$form = $form;
     });
   };
@@ -106,16 +103,16 @@
    *   The HTTP status code.
    */
   Drupal.AjaxCommands.prototype.viewsReplaceTitle = function (ajax, response, status) {
-    var doc = document;
+    const doc = document;
     // For the <title> element, make a best-effort attempt to replace the page
     // title and leave the site name alone. If the theme doesn't use the site
     // name in the <title> element, this will fail.
-    var oldTitle = doc.title;
+    const oldTitle = doc.title;
     // Escape the site name, in case it has special characters in it, so we can
     // use it in our regex.
-    var escapedSiteName = response.siteName.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-    var re = new RegExp('.+ (.) ' + escapedSiteName);
-    doc.title = oldTitle.replace(re, response.title + ' $1 ' + response.siteName);
+    const escapedSiteName = response.siteName.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    const re = new RegExp(`.+ (.) ${escapedSiteName}`);
+    doc.title = oldTitle.replace(re, `${response.title} $1 ${response.siteName}`);
 
     $('h1.page-title').text(response.title);
   };
@@ -140,13 +137,13 @@
    *   checked.
    */
   Drupal.behaviors.livePreview = {
-    attach: function (context) {
+    attach(context) {
       $('input#edit-displays-live-preview', context).once('views-ajax').on('click', function () {
         if ($(this).is(':checked')) {
           $('#preview-submit').trigger('click');
         }
       });
-    }
+    },
   };
 
   /**
@@ -158,15 +155,15 @@
    *   Attaches behavior to sync the preview display when needed.
    */
   Drupal.behaviors.syncPreviewDisplay = {
-    attach: function (context) {
+    attach(context) {
       $('#views-tabset a').once('views-ajax').on('click', function () {
-        var href = $(this).attr('href');
+        const href = $(this).attr('href');
         // Cut of #views-tabset.
-        var display_id = href.substr(11);
+        const display_id = href.substr(11);
         // Set the form element.
         $('#views-live-preview #preview-display-id').val(display_id);
       });
-    }
+    },
   };
 
   /**
@@ -179,14 +176,14 @@
    */
   Drupal.behaviors.viewsAjax = {
     collapseReplaced: false,
-    attach: function (context, settings) {
-      var base_element_settings = {
+    attach(context, settings) {
+      const base_element_settings = {
         event: 'click',
-        progress: {type: 'fullscreen'}
+        progress: { type: 'fullscreen' },
       };
       // Bind AJAX behaviors to all items showing the class.
       $('a.views-ajax-link', context).once('views-ajax').each(function () {
-        var element_settings = base_element_settings;
+        const element_settings = base_element_settings;
         element_settings.base = $(this).attr('id');
         element_settings.element = this;
         // Set the URL to go to the anchor.
@@ -203,7 +200,7 @@
             return true;
           }
 
-          var element_settings = base_element_settings;
+          const element_settings = base_element_settings;
           // Set the URL to go to the anchor.
           element_settings.url = $(this).attr('href');
           if (Drupal.Views.getPath(element_settings.url).substring(0, 21) !== 'admin/structure/views') {
@@ -227,7 +224,7 @@
             this.form.clk = this;
             return true;
           });
-          var element_settings = base_element_settings;
+          const element_settings = base_element_settings;
           // Set the URL to go to the anchor.
           element_settings.url = $(this.form).attr('action');
           if (Drupal.Views.getPath(element_settings.url).substring(0, 21) !== 'admin/structure/views') {
@@ -242,8 +239,6 @@
 
           Drupal.ajax(element_settings);
         });
-
-    }
+    },
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

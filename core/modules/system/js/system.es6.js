@@ -4,11 +4,8 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   // Cache IDs in an array for ease of use.
-  var ids = [];
+  const ids = [];
 
   /**
    * Attaches field copy behavior from input fields to other input fields.
@@ -23,10 +20,10 @@
    *   Attaches the field copy behavior to an input field.
    */
   Drupal.behaviors.copyFieldValue = {
-    attach: function (context) {
+    attach(context) {
       // List of fields IDs on which to bind the event listener.
       // Create an array of IDs to use with jQuery.
-      for (var sourceId in drupalSettings.copyFieldValue) {
+      for (const sourceId in drupalSettings.copyFieldValue) {
         if (drupalSettings.copyFieldValue.hasOwnProperty(sourceId)) {
           ids.push(sourceId);
         }
@@ -37,13 +34,13 @@
         // bubble up the DOM tree.
         $('body').once('copy-field-values').on('value:copy', this.valueTargetCopyHandler);
         // Listen on all source elements.
-        $('#' + ids.join(', #')).once('copy-field-values').on('blur', this.valueSourceBlurHandler);
+        $(`#${ids.join(', #')}`).once('copy-field-values').on('blur', this.valueSourceBlurHandler);
       }
     },
-    detach: function (context, settings, trigger) {
+    detach(context, settings, trigger) {
       if (trigger === 'unload' && ids.length) {
         $('body').removeOnce('copy-field-values').off('value:copy');
-        $('#' + ids.join(', #')).removeOnce('copy-field-values').off('blur');
+        $(`#${ids.join(', #')}`).removeOnce('copy-field-values').off('blur');
       }
     },
 
@@ -55,8 +52,8 @@
      * @param {string} value
      *   Custom value from jQuery trigger.
      */
-    valueTargetCopyHandler: function (e, value) {
-      var $target = $(e.target);
+    valueTargetCopyHandler(e, value) {
+      const $target = $(e.target);
       if ($target.val() === '') {
         $target.val(value);
       }
@@ -71,11 +68,10 @@
      * @param {jQuery.Event} e
      *   The event triggered.
      */
-    valueSourceBlurHandler: function (e) {
-      var value = $(e.target).val();
-      var targetIds = drupalSettings.copyFieldValue[e.target.id];
-      $('#' + targetIds.join(', #')).trigger('value:copy', value);
-    }
+    valueSourceBlurHandler(e) {
+      const value = $(e.target).val();
+      const targetIds = drupalSettings.copyFieldValue[e.target.id];
+      $(`#${targetIds.join(', #')}`).trigger('value:copy', value);
+    },
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

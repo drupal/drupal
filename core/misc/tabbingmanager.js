@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   function TabbingManager() {
     this.stack = [];
   }
@@ -35,7 +32,6 @@
 
       return tabbingContext;
     },
-
     release: function release() {
       var toActivate = this.stack.length - 1;
       while (toActivate >= 0 && this.stack[toActivate].released) {
@@ -48,7 +44,6 @@
         this.stack[toActivate].activate();
       }
     },
-
     activate: function activate(tabbingContext) {
       var $set = tabbingContext.$tabbableElements;
       var level = tabbingContext.level;
@@ -71,7 +66,6 @@
       }
       $hasFocus.trigger('focus');
     },
-
     deactivate: function deactivate(tabbingContext) {
       var $set = tabbingContext.$disabledElements;
       var level = tabbingContext.level;
@@ -80,7 +74,6 @@
         this.restoreTabindex($set.eq(i), level);
       }
     },
-
     recordTabindex: function recordTabindex($el, level) {
       var tabInfo = $el.data('drupalOriginalTabIndices') || {};
       tabInfo[level] = {
@@ -89,7 +82,6 @@
       };
       $el.data('drupalOriginalTabIndices', tabInfo);
     },
-
     restoreTabindex: function restoreTabindex($el, level) {
       var tabInfo = $el.data('drupalOriginalTabIndices');
       if (tabInfo && tabInfo[level]) {
@@ -118,7 +110,6 @@
   });
 
   function TabbingContext(options) {
-
     $.extend(this, {
       level: null,
 
@@ -142,7 +133,6 @@
         $(document).trigger('drupalTabbingContextReleased', this);
       }
     },
-
     activate: function activate() {
       if (!this.active && !this.released) {
         this.active = true;
@@ -151,7 +141,6 @@
         $(document).trigger('drupalTabbingContextActivated', this);
       }
     },
-
     deactivate: function deactivate() {
       if (this.active) {
         this.active = false;

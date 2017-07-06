@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, window) {
-
-  'use strict';
-
   Drupal.behaviors.commentNewIndicator = {
     attach: function attach(context) {
       var nodeIDs = [];
@@ -19,9 +16,9 @@
         if (Drupal.history.needsServerCheck(nodeID, commentTimestamp)) {
           nodeIDs.push(nodeID);
           return true;
-        } else {
-          return false;
         }
+
+        return false;
       });
 
       if ($placeholders.length === 0) {
@@ -37,7 +34,7 @@
   function processCommentNewIndicators($placeholders) {
     var isFirstNewComment = true;
     var newCommentString = Drupal.t('new');
-    var $placeholder;
+    var $placeholder = void 0;
 
     $placeholders.each(function (index, placeholder) {
       $placeholder = $(placeholder);

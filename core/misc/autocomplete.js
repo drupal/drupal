@@ -6,17 +6,14 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
-  var autocomplete;
+  var autocomplete = void 0;
 
   function autocompleteSplitValues(value) {
     var result = [];
     var quote = false;
     var current = '';
     var valueLength = value.length;
-    var character;
+    var character = void 0;
 
     for (var i = 0; i < valueLength; i++) {
       character = value.charAt(i);
@@ -118,7 +115,7 @@
       if ($autocomplete.length) {
         var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
         $.extend(autocomplete.options, {
-          firstCharacterBlacklist: blacklist ? blacklist : ''
+          firstCharacterBlacklist: blacklist || ''
         });
 
         $autocomplete.autocomplete(autocomplete.options).each(function () {

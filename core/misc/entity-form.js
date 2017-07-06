@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.entityContentDetailsSummaries = {
     attach: function attach(context) {
       var $context = $(context);
@@ -25,7 +22,7 @@
 
       $context.find('details.entity-translation-options').drupalSetSummary(function (context) {
         var $translationContext = $(context);
-        var translate;
+        var translate = void 0;
         var $checkbox = $translationContext.find('.js-form-item-translation-translate input');
 
         if ($checkbox.length) {

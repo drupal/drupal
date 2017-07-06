@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * Attach handlers to evaluate the strength of any password fields and to
    * check that its confirmation is correct.
@@ -18,15 +15,15 @@
    *   password fields.
    */
   Drupal.behaviors.password = {
-    attach: function (context, settings) {
-      var $passwordInput = $(context).find('input.js-password-field').once('password');
+    attach(context, settings) {
+      const $passwordInput = $(context).find('input.js-password-field').once('password');
 
       if ($passwordInput.length) {
-        var translate = settings.password;
+        const translate = settings.password;
 
-        var $passwordInputParent = $passwordInput.parent();
-        var $passwordInputParentWrapper = $passwordInputParent.parent();
-        var $passwordSuggestions;
+        const $passwordInputParent = $passwordInput.parent();
+        const $passwordInputParentWrapper = $passwordInputParent.parent();
+        let $passwordSuggestions;
 
         // Add identifying class to password element parent.
         $passwordInputParent.addClass('password-parent');
@@ -35,36 +32,36 @@
         $passwordInputParentWrapper
           .find('input.js-password-confirm')
           .parent()
-          .append('<div aria-live="polite" aria-atomic="true" class="password-confirm js-password-confirm">' + translate.confirmTitle + ' <span></span></div>')
+          .append(`<div aria-live="polite" aria-atomic="true" class="password-confirm js-password-confirm">${translate.confirmTitle} <span></span></div>`)
           .addClass('confirm-parent');
 
-        var $confirmInput = $passwordInputParentWrapper.find('input.js-password-confirm');
-        var $confirmResult = $passwordInputParentWrapper.find('div.js-password-confirm');
-        var $confirmChild = $confirmResult.find('span');
+        const $confirmInput = $passwordInputParentWrapper.find('input.js-password-confirm');
+        const $confirmResult = $passwordInputParentWrapper.find('div.js-password-confirm');
+        const $confirmChild = $confirmResult.find('span');
 
         // If the password strength indicator is enabled, add its markup.
         if (settings.password.showStrengthIndicator) {
-          var passwordMeter = '<div class="password-strength"><div class="password-strength__meter"><div class="password-strength__indicator js-password-strength__indicator"></div></div><div aria-live="polite" aria-atomic="true" class="password-strength__title">' + translate.strengthTitle + ' <span class="password-strength__text js-password-strength__text"></span></div></div>';
+          const passwordMeter = `<div class="password-strength"><div class="password-strength__meter"><div class="password-strength__indicator js-password-strength__indicator"></div></div><div aria-live="polite" aria-atomic="true" class="password-strength__title">${translate.strengthTitle} <span class="password-strength__text js-password-strength__text"></span></div></div>`;
           $confirmInput.parent().after('<div class="password-suggestions description"></div>');
           $passwordInputParent.append(passwordMeter);
           $passwordSuggestions = $passwordInputParentWrapper.find('div.password-suggestions').hide();
         }
 
         // Check that password and confirmation inputs match.
-        var passwordCheckMatch = function (confirmInputVal) {
-          var success = $passwordInput.val() === confirmInputVal;
-          var confirmClass = success ? 'ok' : 'error';
+        const passwordCheckMatch = function (confirmInputVal) {
+          const success = $passwordInput.val() === confirmInputVal;
+          const confirmClass = success ? 'ok' : 'error';
 
           // Fill in the success message and set the class accordingly.
-          $confirmChild.html(translate['confirm' + (success ? 'Success' : 'Failure')])
+          $confirmChild.html(translate[`confirm${success ? 'Success' : 'Failure'}`])
             .removeClass('ok error').addClass(confirmClass);
         };
 
         // Check the password strength.
-        var passwordCheck = function () {
+        const passwordCheck = function () {
           if (settings.password.showStrengthIndicator) {
             // Evaluate the password strength.
-            var result = Drupal.evaluatePasswordStrength($passwordInput.val(), settings.password);
+            const result = Drupal.evaluatePasswordStrength($passwordInput.val(), settings.password);
 
             // Update the suggestions for how to improve the password.
             if ($passwordSuggestions.html() !== result.message) {
@@ -77,7 +74,7 @@
 
             // Adjust the length of the strength indicator.
             $passwordInputParent.find('.js-password-strength__indicator')
-              .css('width', result.strength + '%')
+              .css('width', `${result.strength}%`)
               .removeClass('is-weak is-fair is-good is-strong')
               .addClass(result.indicatorClass);
 
@@ -88,10 +85,10 @@
           // Check the value in the confirm input and show results.
           if ($confirmInput.val()) {
             passwordCheckMatch($confirmInput.val());
-            $confirmResult.css({visibility: 'visible'});
+            $confirmResult.css({ visibility: 'visible' });
           }
           else {
-            $confirmResult.css({visibility: 'hidden'});
+            $confirmResult.css({ visibility: 'hidden' });
           }
         };
 
@@ -99,7 +96,7 @@
         $passwordInput.on('input', passwordCheck);
         $confirmInput.on('input', passwordCheck);
       }
-    }
+    },
   };
 
   /**
@@ -117,21 +114,21 @@
    */
   Drupal.evaluatePasswordStrength = function (password, translate) {
     password = password.trim();
-    var indicatorText;
-    var indicatorClass;
-    var weaknesses = 0;
-    var strength = 100;
-    var msg = [];
+    let indicatorText;
+    let indicatorClass;
+    let weaknesses = 0;
+    let strength = 100;
+    let msg = [];
 
-    var hasLowercase = /[a-z]/.test(password);
-    var hasUppercase = /[A-Z]/.test(password);
-    var hasNumbers = /[0-9]/.test(password);
-    var hasPunctuation = /[^a-zA-Z0-9]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasNumbers = /[0-9]/.test(password);
+    const hasPunctuation = /[^a-zA-Z0-9]/.test(password);
 
     // If there is a username edit box on the page, compare password to that,
     // otherwise use value from the database.
-    var $usernameBox = $('input.username');
-    var username = ($usernameBox.length > 0) ? $usernameBox.val() : translate.username;
+    const $usernameBox = $('input.username');
+    const username = ($usernameBox.length > 0) ? $usernameBox.val() : translate.username;
 
     // Lose 5 points for every character less than 12, plus a 30 point penalty.
     if (password.length < 12) {
@@ -203,15 +200,13 @@
     }
 
     // Assemble the final message.
-    msg = translate.hasWeaknesses + '<ul><li>' + msg.join('</li><li>') + '</li></ul>';
+    msg = `${translate.hasWeaknesses}<ul><li>${msg.join('</li><li>')}</li></ul>`;
 
     return {
-      strength: strength,
+      strength,
       message: msg,
-      indicatorText: indicatorText,
-      indicatorClass: indicatorClass
+      indicatorText,
+      indicatorClass,
     };
-
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

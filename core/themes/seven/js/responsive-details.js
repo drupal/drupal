@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.responsiveDetails = {
     attach: function attach(context) {
       var $details = $(context).find('details').once('responsive-details');

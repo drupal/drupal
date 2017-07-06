@@ -4,9 +4,6 @@
  */
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   Drupal.contextual.AuralView = Backbone.View.extend(/** @lends Drupal.contextual.AuralView# */{
 
     /**
@@ -19,7 +16,7 @@
      * @param {object} options
      *   Options for the view.
      */
-    initialize: function (options) {
+    initialize(options) {
       this.options = options;
 
       this.listenTo(this.model, 'change', this.render);
@@ -34,8 +31,8 @@
     /**
      * @inheritdoc
      */
-    render: function () {
-      var isOpen = this.model.get('isOpen');
+    render() {
+      const isOpen = this.model.get('isOpen');
 
       // Set the hidden property of the links.
       this.$el.find('.contextual-links')
@@ -45,11 +42,10 @@
       this.$el.find('.trigger')
         .text(Drupal.t('@action @title configuration options', {
           '@action': (!isOpen) ? this.options.strings.open : this.options.strings.close,
-          '@title': this.model.get('title')
+          '@title': this.model.get('title'),
         }))
         .attr('aria-pressed', isOpen);
-    }
+    },
 
   });
-
-})(Drupal, Backbone);
+}(Drupal, Backbone));

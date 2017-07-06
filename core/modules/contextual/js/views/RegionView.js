@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal, Backbone, Modernizr) {
-
-  'use strict';
-
   Drupal.contextual.RegionView = Backbone.View.extend({
     events: function events() {
       var mapping = {
@@ -25,16 +22,13 @@
       }
       return mapping;
     },
-
     initialize: function initialize() {
       this.listenTo(this.model, 'change:hasFocus', this.render);
     },
-
     render: function render() {
       this.$el.toggleClass('focus', this.model.get('hasFocus'));
 
       return this;
     }
-
   });
 })(Drupal, Backbone, Modernizr);

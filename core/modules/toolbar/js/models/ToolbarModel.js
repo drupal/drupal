@@ -6,9 +6,6 @@
 **/
 
 (function (Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.toolbar.ToolbarModel = Backbone.Model.extend({
     defaults: {
       activeTab: null,

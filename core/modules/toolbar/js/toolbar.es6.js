@@ -4,26 +4,23 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   // Merge run-time settings with the defaults.
-  var options = $.extend(
+  const options = $.extend(
     {
       breakpoints: {
         'toolbar.narrow': '',
         'toolbar.standard': '',
-        'toolbar.wide': ''
-      }
+        'toolbar.wide': '',
+      },
     },
     drupalSettings.toolbar,
     // Merge strings on top of drupalSettings so that they are not mutable.
     {
       strings: {
         horizontal: Drupal.t('Horizontal orientation'),
-        vertical: Drupal.t('Vertical orientation')
-      }
-    }
+        vertical: Drupal.t('Vertical orientation'),
+      },
+    },
   );
 
   /**
@@ -40,7 +37,7 @@
    *   Attaches the toolbar rendering functionality to the toolbar element.
    */
   Drupal.behaviors.toolbar = {
-    attach: function (context) {
+    attach(context) {
       // Verify that the user agent understands media queries. Complex admin
       // toolbar layouts require media query support.
       if (!window.matchMedia('only screen').matches) {
@@ -48,20 +45,19 @@
       }
       // Process the administrative toolbar.
       $(context).find('#toolbar-administration').once('toolbar').each(function () {
-
         // Establish the toolbar models and views.
-        var model = Drupal.toolbar.models.toolbarModel = new Drupal.toolbar.ToolbarModel({
+        const model = Drupal.toolbar.models.toolbarModel = new Drupal.toolbar.ToolbarModel({
           locked: JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked')),
           activeTab: document.getElementById(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))),
-          height: $('#toolbar-administration').outerHeight()
+          height: $('#toolbar-administration').outerHeight(),
         });
 
         // Attach a listener to the configured media query breakpoints.
         // Executes it before Drupal.toolbar.views to avoid extra rendering.
-        for (var label in options.breakpoints) {
+        for (const label in options.breakpoints) {
           if (options.breakpoints.hasOwnProperty(label)) {
-            var mq = options.breakpoints[label];
-            var mql = Drupal.toolbar.mql[label] = window.matchMedia(mq);
+            const mq = options.breakpoints[label];
+            const mql = Drupal.toolbar.mql[label] = window.matchMedia(mq);
             // Curry the model and the label of the media query breakpoint to
             // the mediaQueryChangeHandler function.
             mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, model, label));
@@ -73,17 +69,17 @@
 
         Drupal.toolbar.views.toolbarVisualView = new Drupal.toolbar.ToolbarVisualView({
           el: this,
-          model: model,
-          strings: options.strings
+          model,
+          strings: options.strings,
         });
         Drupal.toolbar.views.toolbarAuralView = new Drupal.toolbar.ToolbarAuralView({
           el: this,
-          model: model,
-          strings: options.strings
+          model,
+          strings: options.strings,
         });
         Drupal.toolbar.views.bodyVisualView = new Drupal.toolbar.BodyVisualView({
           el: this,
-          model: model
+          model,
         });
 
         // Force layout render to fix mobile view. Only needed on load, not
@@ -92,20 +88,20 @@
         model.trigger('change:activeTray', model, model.get('activeTray'));
 
         // Render collapsible menus.
-        var menuModel = Drupal.toolbar.models.menuModel = new Drupal.toolbar.MenuModel();
+        const menuModel = Drupal.toolbar.models.menuModel = new Drupal.toolbar.MenuModel();
         Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView({
           el: $(this).find('.toolbar-menu-administration').get(0),
           model: menuModel,
-          strings: options.strings
+          strings: options.strings,
         });
 
         // Handle the resolution of Drupal.toolbar.setSubtrees.
         // This is handled with a deferred so that the function may be invoked
         // asynchronously.
-        Drupal.toolbar.setSubtrees.done(function (subtrees) {
+        Drupal.toolbar.setSubtrees.done((subtrees) => {
           menuModel.set('subtrees', subtrees);
-          var theme = drupalSettings.ajaxPageState.theme;
-          localStorage.setItem('Drupal.toolbar.subtrees.' + theme, JSON.stringify(subtrees));
+          const theme = drupalSettings.ajaxPageState.theme;
+          localStorage.setItem(`Drupal.toolbar.subtrees.${theme}`, JSON.stringify(subtrees));
           // Indicate on the toolbarModel that subtrees are now loaded.
           model.set('areSubtreesLoaded', true);
         });
@@ -121,19 +117,19 @@
 
         $(document)
           // Update the model when the viewport offset changes.
-          .on('drupalViewportOffsetChange.toolbar', function (event, offsets) {
+          .on('drupalViewportOffsetChange.toolbar', (event, offsets) => {
             model.set('offsets', offsets);
           });
 
         // Broadcast model changes to other modules.
         model
-          .on('change:orientation', function (model, orientation) {
+          .on('change:orientation', (model, orientation) => {
             $(document).trigger('drupalToolbarOrientationChange', orientation);
           })
-          .on('change:activeTab', function (model, tab) {
+          .on('change:activeTab', (model, tab) => {
             $(document).trigger('drupalToolbarTabChange', tab);
           })
-          .on('change:activeTray', function (model, tray) {
+          .on('change:activeTray', (model, tray) => {
             $(document).trigger('drupalToolbarTrayChange', tray);
           });
 
@@ -142,11 +138,11 @@
         // not the first 'Home' toolbar tab).
         if (Drupal.toolbar.models.toolbarModel.get('orientation') === 'horizontal' && Drupal.toolbar.models.toolbarModel.get('activeTab') === null) {
           Drupal.toolbar.models.toolbarModel.set({
-            activeTab: $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0)
+            activeTab: $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0),
           });
         }
       });
-    }
+    },
   };
 
   /**
@@ -198,42 +194,42 @@
      * @param {object} mql
      *   A MediaQueryList object.
      */
-    mediaQueryChangeHandler: function (model, label, mql) {
+    mediaQueryChangeHandler(model, label, mql) {
       switch (label) {
         case 'toolbar.narrow':
           model.set({
             isOriented: mql.matches,
-            isTrayToggleVisible: false
+            isTrayToggleVisible: false,
           });
           // If the toolbar doesn't have an explicit orientation yet, or if the
           // narrow media query doesn't match then set the orientation to
           // vertical.
           if (!mql.matches || !model.get('orientation')) {
-            model.set({orientation: 'vertical'}, {validate: true});
+            model.set({ orientation: 'vertical' }, { validate: true });
           }
           break;
 
         case 'toolbar.standard':
           model.set({
-            isFixed: mql.matches
+            isFixed: mql.matches,
           });
           break;
 
         case 'toolbar.wide':
           model.set({
-            orientation: ((mql.matches && !model.get('locked')) ? 'horizontal' : 'vertical')
-          }, {validate: true});
+            orientation: ((mql.matches && !model.get('locked')) ? 'horizontal' : 'vertical'),
+          }, { validate: true });
           // The tray orientation toggle visibility does not need to be
           // validated.
           model.set({
-            isTrayToggleVisible: mql.matches
+            isTrayToggleVisible: mql.matches,
           });
           break;
 
         default:
           break;
       }
-    }
+    },
   };
 
   /**
@@ -261,5 +257,4 @@
   Drupal.AjaxCommands.prototype.setToolbarSubtrees = function (ajax, response, status) {
     Drupal.toolbar.setSubtrees.resolve(response.subtrees);
   };
-
 }(jQuery, Drupal, drupalSettings));

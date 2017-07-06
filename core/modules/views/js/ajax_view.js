@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.ViewsAjaxView = {};
   Drupal.behaviors.ViewsAjaxView.attach = function () {
     if (drupalSettings && drupalSettings.views && drupalSettings.views.ajaxViews) {

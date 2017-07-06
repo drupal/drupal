@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings, storage) {
-
-  'use strict';
-
   var currentUserID = parseInt(drupalSettings.user.uid, 10);
 
   var thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - 30 * 24 * 60 * 60;
@@ -40,14 +37,12 @@
         }
       });
     },
-
     getLastRead: function getLastRead(nodeID) {
       if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
         return parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }
       return parseInt(storage.getItem('Drupal.history.' + currentUserID + '.' + nodeID) || 0, 10);
     },
-
     markAsRead: function markAsRead(nodeID) {
       $.ajax({
         url: Drupal.url('history/' + nodeID + '/read'),
@@ -62,7 +57,6 @@
         }
       });
     },
-
     needsServerCheck: function needsServerCheck(nodeID, contentTimestamp) {
       if (contentTimestamp < thirtyDaysAgo) {
         return false;

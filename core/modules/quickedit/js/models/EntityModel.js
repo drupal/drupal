@@ -6,9 +6,6 @@
 **/
 
 (function (_, $, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.EntityModel = Drupal.quickedit.BaseModel.extend({
     defaults: {
       el: null,
@@ -47,7 +44,6 @@
 
       Drupal.quickedit.BaseModel.prototype.initialize.call(this);
     },
-
     stateChange: function stateChange(entityModel, state, options) {
       var to = state;
       switch (to) {
@@ -127,7 +123,6 @@
           break;
       }
     },
-
     _updateInTempStoreAttributes: function _updateInTempStoreAttributes(entityModel, fieldModel) {
       var current = fieldModel.get('state');
       var previous = fieldModel.previous('state');
@@ -145,7 +140,6 @@
           fieldModel.set('inTempStore', _.intersection([fieldModel.get('fieldID')], fieldsInTempStore).length > 0);
         }
     },
-
     fieldStateChange: function fieldStateChange(fieldModel, state) {
       var entityModel = this;
       var fieldState = state;
@@ -220,7 +214,6 @@
           break;
       }
     },
-
     save: function save(options) {
       var entityModel = this;
 
@@ -245,7 +238,6 @@
 
       entitySaverAjax.execute();
     },
-
     validate: function validate(attrs, options) {
       var acceptedFieldStates = options['accept-field-states'] || [];
 
@@ -273,7 +265,6 @@
         return 'isCommitting is a mutex, hence only changes are allowed';
       }
     },
-
     _acceptStateChange: function _acceptStateChange(from, to, context) {
       var accept = true;
 
@@ -293,7 +284,6 @@
 
       return accept;
     },
-
     _fieldsHaveAcceptableStates: function _fieldsHaveAcceptableStates(acceptedFieldStates) {
       var accept = true;
 
@@ -307,7 +297,6 @@
 
       return accept;
     },
-
     destroy: function destroy(options) {
       Drupal.quickedit.BaseModel.prototype.destroy.call(this, options);
 
@@ -315,18 +304,13 @@
 
       this.get('fields').reset();
     },
-
-    sync: function sync() {
-      return;
-    }
-
+    sync: function sync() {}
   }, {
     states: ['closed', 'launching', 'opening', 'opened', 'committing', 'deactivating', 'closing'],
 
     followsStateSequence: function followsStateSequence(from, to) {
       return _.indexOf(this.states, from) < _.indexOf(this.states, to);
     }
-
   });
 
   Drupal.quickedit.EntityCollection = Backbone.Collection.extend({

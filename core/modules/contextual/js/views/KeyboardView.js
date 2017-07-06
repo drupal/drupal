@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   Drupal.contextual.KeyboardView = Backbone.View.extend({
     events: {
       'focus .trigger': 'focus',
@@ -27,11 +24,9 @@
     initialize: function initialize() {
       this.timer = NaN;
     },
-
     focus: function focus() {
       window.clearTimeout(this.timer);
       this.model.focus();
     }
-
   });
 })(Drupal, Backbone);

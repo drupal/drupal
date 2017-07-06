@@ -6,9 +6,6 @@
 **/
 
 (function ($, _, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.editors.image = Drupal.quickedit.EditorView.extend({
     initialize: function initialize(options) {
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
@@ -27,7 +24,6 @@
         }
       });
     },
-
     stateChange: function stateChange(fieldModel, state, options) {
       var from = fieldModel.previous('state');
       switch (state) {
@@ -109,7 +105,6 @@
           break;
       }
     },
-
     uploadImage: function uploadImage(file) {
       this.renderDropzone('upload loading', Drupal.t('Uploading <i>@file</i>…', { '@file': file.name }));
 
@@ -136,7 +131,6 @@
         }
       });
     },
-
     ajax: function ajax(options) {
       var defaultOptions = {
         context: this,
@@ -166,7 +160,6 @@
 
       $.ajax(ajaxOptions);
     },
-
     renderToolbar: function renderToolbar(fieldModel) {
       var $toolgroup = $('#' + fieldModel.toolbarView.getMainWysiwygToolgroupId());
       var $toolbar = $toolgroup.find('.quickedit-image-field-info');
@@ -189,7 +182,6 @@
         });
       }
     },
-
     renderDropzone: function renderDropzone(state, text) {
       var $dropzone = this.$el.find('.quickedit-image-dropzone');
 
@@ -205,15 +197,12 @@
 
       return $dropzone;
     },
-
     revert: function revert() {
       this.$el.html(this.model.get('originalValue'));
     },
-
     getQuickEditUISettings: function getQuickEditUISettings() {
       return { padding: false, unifiedToolbar: true, fullWidthToolbar: true, popup: false };
     },
-
     showValidationErrors: function showValidationErrors() {
       var errors = Drupal.theme('quickeditImageErrors', {
         errors: this.model.get('validationErrors')
@@ -223,11 +212,9 @@
 
       this.fieldModel.get('entity').toolbarView.position();
     },
-
     removeValidationErrors: function removeValidationErrors() {
       $('#' + this.fieldModel.toolbarView.getMainWysiwygToolgroupId()).find('.quickedit-image-errors').remove();
       this.getEditedElement().removeClass('quickedit-validation-error');
     }
-
   });
 })(jQuery, _, Drupal);

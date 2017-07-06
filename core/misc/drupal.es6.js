@@ -38,14 +38,11 @@
  *
  * @namespace
  */
-window.Drupal = {behaviors: {}, locale: {}};
+window.Drupal = { behaviors: {}, locale: {} };
 
 // JavaScript should be made compatible with libraries other than jQuery by
 // wrapping it in an anonymous closure.
 (function (Drupal, drupalSettings, drupalTranslations) {
-
-  'use strict';
-
   /**
    * Helper to rethrow errors asynchronously.
    *
@@ -56,7 +53,9 @@ window.Drupal = {behaviors: {}, locale: {}};
    *   The error to be thrown.
    */
   Drupal.throwError = function (error) {
-    setTimeout(function () { throw error; }, 0);
+    setTimeout(() => {
+      throw error;
+    }, 0);
   };
 
   /**
@@ -151,9 +150,9 @@ window.Drupal = {behaviors: {}, locale: {}};
   Drupal.attachBehaviors = function (context, settings) {
     context = context || document;
     settings = settings || drupalSettings;
-    var behaviors = Drupal.behaviors;
+    const behaviors = Drupal.behaviors;
     // Execute all of them.
-    for (var i in behaviors) {
+    for (const i in behaviors) {
       if (behaviors.hasOwnProperty(i) && typeof behaviors[i].attach === 'function') {
         // Don't stop the execution of behaviors in case of an error.
         try {
@@ -211,9 +210,9 @@ window.Drupal = {behaviors: {}, locale: {}};
     context = context || document;
     settings = settings || drupalSettings;
     trigger = trigger || 'unload';
-    var behaviors = Drupal.behaviors;
+    const behaviors = Drupal.behaviors;
     // Execute all of them.
-    for (var i in behaviors) {
+    for (const i in behaviors) {
       if (behaviors.hasOwnProperty(i) && typeof behaviors[i].detach === 'function') {
         // Don't stop the execution of behaviors in case of an error.
         try {
@@ -268,9 +267,9 @@ window.Drupal = {behaviors: {}, locale: {}};
    */
   Drupal.formatString = function (str, args) {
     // Keep args intact.
-    var processedArgs = {};
+    const processedArgs = {};
     // Transform arguments before inserting them.
-    for (var key in args) {
+    for (const key in args) {
       if (args.hasOwnProperty(key)) {
         switch (key.charAt(0)) {
           // Escaped only.
@@ -318,14 +317,14 @@ window.Drupal = {behaviors: {}, locale: {}};
     // If the array of keys is not passed then collect the keys from the args.
     if (!Array.isArray(keys)) {
       keys = [];
-      for (var k in args) {
+      for (const k in args) {
         if (args.hasOwnProperty(k)) {
           keys.push(k);
         }
       }
 
       // Order the keys by the character length. The shortest one is the first.
-      keys.sort(function (a, b) { return a.length - b.length; });
+      keys.sort((a, b) => a.length - b.length);
     }
 
     if (keys.length === 0) {
@@ -333,11 +332,11 @@ window.Drupal = {behaviors: {}, locale: {}};
     }
 
     // Take next longest one from the end.
-    var key = keys.pop();
-    var fragments = str.split(key);
+    const key = keys.pop();
+    const fragments = str.split(key);
 
     if (keys.length) {
-      for (var i = 0; i < fragments.length; i++) {
+      for (let i = 0; i < fragments.length; i++) {
         // Process each fragment with a copy of remaining keys.
         fragments[i] = Drupal.stringReplace(fragments[i], args, keys.slice(0));
       }
@@ -408,7 +407,7 @@ window.Drupal = {behaviors: {}, locale: {}};
    * @see https://github.com/jquery/jquery-ui/blob/1.11.4/ui/tabs.js#L53
    */
   Drupal.url.toAbsolute = function (url) {
-    var urlParsingNode = document.createElement('a');
+    const urlParsingNode = document.createElement('a');
 
     // Decode the URL first; this is required by IE <= 6. Decoding non-UTF-8
     // strings may throw an exception.
@@ -440,15 +439,15 @@ window.Drupal = {behaviors: {}, locale: {}};
   Drupal.url.isLocal = function (url) {
     // Always use browser-derived absolute URLs in the comparison, to avoid
     // attempts to break out of the base path using directory traversal.
-    var absoluteUrl = Drupal.url.toAbsolute(url);
-    var protocol = location.protocol;
+    let absoluteUrl = Drupal.url.toAbsolute(url);
+    let protocol = location.protocol;
 
     // Consider URLs that match this site's base URL but use HTTPS instead of HTTP
     // as local as well.
     if (protocol === 'http:' && absoluteUrl.indexOf('https:') === 0) {
       protocol = 'https:';
     }
-    var baseUrl = protocol + '//' + location.host + drupalSettings.path.baseUrl.slice(0, -1);
+    let baseUrl = `${protocol}//${location.host}${drupalSettings.path.baseUrl.slice(0, -1)}`;
 
     // Decoding non-UTF-8 strings may throw an exception.
     try {
@@ -466,7 +465,7 @@ window.Drupal = {behaviors: {}, locale: {}};
 
     // The given URL matches the site's base URL, or has a path under the site's
     // base URL.
-    return absoluteUrl === baseUrl || absoluteUrl.indexOf(baseUrl + '/') === 0;
+    return absoluteUrl === baseUrl || absoluteUrl.indexOf(`${baseUrl}/`) === 0;
   };
 
   /**
@@ -506,13 +505,13 @@ window.Drupal = {behaviors: {}, locale: {}};
     args = args || {};
     args['@count'] = count;
 
-    var pluralDelimiter = drupalSettings.pluralDelimiter;
-    var translations = Drupal.t(singular + pluralDelimiter + plural, args, options).split(pluralDelimiter);
-    var index = 0;
+    const pluralDelimiter = drupalSettings.pluralDelimiter;
+    const translations = Drupal.t(singular + pluralDelimiter + plural, args, options).split(pluralDelimiter);
+    let index = 0;
 
     // Determine the index of the plural form.
     if (typeof drupalTranslations !== 'undefined' && drupalTranslations.pluralFormula) {
-      index = count in drupalTranslations.pluralFormula ? drupalTranslations.pluralFormula[count] : drupalTranslations.pluralFormula['default'];
+      index = count in drupalTranslations.pluralFormula ? drupalTranslations.pluralFormula[count] : drupalTranslations.pluralFormula.default;
     }
     else if (args['@count'] !== 1) {
       index = 1;
@@ -561,7 +560,7 @@ window.Drupal = {behaviors: {}, locale: {}};
    *   but also a complex object.
    */
   Drupal.theme = function (func) {
-    var args = Array.prototype.slice.apply(arguments, [1]);
+    const args = Array.prototype.slice.apply(arguments, [1]);
     if (func in Drupal.theme) {
       return Drupal.theme[func].apply(this, args);
     }
@@ -577,7 +576,6 @@ window.Drupal = {behaviors: {}, locale: {}};
    *   The formatted text (html).
    */
   Drupal.theme.placeholder = function (str) {
-    return '<em class="placeholder">' + Drupal.checkPlain(str) + '</em>';
+    return `<em class="placeholder">${Drupal.checkPlain(str)}</em>`;
   };
-
-})(Drupal, window.drupalSettings, window.drupalTranslations);
+}(Drupal, window.drupalSettings, window.drupalTranslations));

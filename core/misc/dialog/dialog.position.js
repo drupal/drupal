@@ -6,18 +6,15 @@
 **/
 
 (function ($, Drupal, drupalSettings, debounce, displace) {
-
-  'use strict';
-
   drupalSettings.dialog = $.extend({ autoResize: true, maxHeight: '95%' }, drupalSettings.dialog);
 
   function resetSize(event) {
     var positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
     var adjustedOptions = {};
     var windowHeight = $(window).height();
-    var option;
-    var optionValue;
-    var adjustedValue;
+    var option = void 0;
+    var optionValue = void 0;
+    var adjustedValue = void 0;
     for (var n = 0; n < positionOptions.length; n++) {
       option = positionOptions[n];
       optionValue = event.data.settings[option];

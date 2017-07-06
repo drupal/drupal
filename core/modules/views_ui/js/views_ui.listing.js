@@ -6,14 +6,11 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.viewTableFilterByText = {
     attach: function attach(context, settings) {
       var $input = $('input.views-filter-text').once('views-filter-text');
       var $table = $($input.attr('data-table'));
-      var $rows;
+      var $rows = void 0;
 
       function filterViewList(e) {
         var query = $(e.target).val().toLowerCase();

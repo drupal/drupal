@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.setTimezone = {
     attach: function attach(context, settings) {
       var $timezone = $(context).find('.timezone-detect').once('timezone');
@@ -26,7 +23,7 @@
         var offsetJan = dateJan.getTimezoneOffset() * -60;
         var offsetJul = dateJul.getTimezoneOffset() * -60;
 
-        var isDaylightSavingTime;
+        var isDaylightSavingTime = void 0;
 
         if (offsetJan === offsetJul) {
           isDaylightSavingTime = '';

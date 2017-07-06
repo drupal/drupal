@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.pathDetailsSummaries = {
     attach: function attach(context) {
       $(context).find('.path-form').drupalSetSummary(function (context) {

@@ -6,9 +6,6 @@
  */
 
 (function (Backbone, Drupal) {
-
-  'use strict';
-
   /**
    * @constructor
    *
@@ -46,9 +43,8 @@
        *
        * @type {Array}
        */
-      validationErrors: null
-    }
+      validationErrors: null,
+    },
 
   });
-
 }(Backbone, Drupal));

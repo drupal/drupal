@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, _) {
-
-  'use strict';
-
   /**
    * @constructor
    *
@@ -36,9 +33,9 @@
      * @param {string} state
      *   The state to change to.
      */
-    stateChange: function (fieldModel, state) {
-      var from = fieldModel.previous('state');
-      var to = state;
+    stateChange(fieldModel, state) {
+      const from = fieldModel.previous('state');
+      const to = state;
       switch (to) {
         case 'inactive':
           break;
@@ -84,23 +81,23 @@
      * @return {object}
      *   A settings object for the quick edit UI.
      */
-    getQuickEditUISettings: function () {
-      return {padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: true};
+    getQuickEditUISettings() {
+      return { padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: true };
     },
 
     /**
      * Loads the form for this field, displays it on top of the actual field.
      */
-    loadForm: function () {
-      var fieldModel = this.fieldModel;
+    loadForm() {
+      const fieldModel = this.fieldModel;
 
       // Generate a DOM-compatible ID for the form container DOM element.
-      var id = 'quickedit-form-for-' + fieldModel.id.replace(/[\/\[\]]/g, '_');
+      const id = `quickedit-form-for-${fieldModel.id.replace(/[\/\[\]]/g, '_')}`;
 
       // Render form container.
-      var $formContainer = this.$formContainer = $(Drupal.theme('quickeditFormContainer', {
-        id: id,
-        loadingMsg: Drupal.t('Loading…')
+      const $formContainer = this.$formContainer = $(Drupal.theme('quickeditFormContainer', {
+        id,
+        loadingMsg: Drupal.t('Loading…'),
       }));
       $formContainer
         .find('.quickedit-form')
@@ -111,7 +108,7 @@
       if (this.$el.css('display') === 'inline') {
         $formContainer.prependTo(this.$el.offsetParent());
         // Position the form container to render on top of the field's element.
-        var pos = this.$el.position();
+        const pos = this.$el.position();
         $formContainer.css('left', pos.left).css('top', pos.top);
       }
       else {
@@ -119,7 +116,7 @@
       }
 
       // Load form, insert it into the form container and attach event handlers.
-      var formOptions = {
+      const formOptions = {
         fieldID: fieldModel.get('fieldID'),
         $el: this.$el,
         nocssjs: false,
@@ -130,17 +127,17 @@
         // request, that might not even be necessary: it is only when a user
         // loads a first changed field for an entity that this needs to happen:
         // precisely now!
-        reset: !fieldModel.get('entity').get('inTempStore')
+        reset: !fieldModel.get('entity').get('inTempStore'),
       };
-      Drupal.quickedit.util.form.load(formOptions, function (form, ajax) {
+      Drupal.quickedit.util.form.load(formOptions, (form, ajax) => {
         Drupal.AjaxCommands.prototype.insert(ajax, {
           data: form,
-          selector: '#' + id + ' .placeholder'
+          selector: `#${id} .placeholder`,
         });
 
         $formContainer
-          .on('formUpdated.quickedit', ':input', function (event) {
-            var state = fieldModel.get('state');
+          .on('formUpdated.quickedit', ':input', (event) => {
+            const state = fieldModel.get('state');
             // If the form is in an invalid state, it will persist on the page.
             // Set the field to activating so that the user can correct the
             // invalid value.
@@ -153,7 +150,7 @@
               fieldModel.set('state', 'changed');
             }
           })
-          .on('keypress.quickedit', 'input', function (event) {
+          .on('keypress.quickedit', 'input', (event) => {
             if (event.keyCode === 13) {
               return false;
             }
@@ -167,7 +164,7 @@
     /**
      * Removes the form for this field, detaches behaviors and event handlers.
      */
-    removeForm: function () {
+    removeForm() {
       if (this.$formContainer === null) {
         return;
       }
@@ -185,11 +182,11 @@
     /**
      * @inheritdoc
      */
-    save: function () {
-      var $formContainer = this.$formContainer;
-      var $submit = $formContainer.find('.quickedit-form-submit');
-      var editorModel = this.model;
-      var fieldModel = this.fieldModel;
+    save() {
+      const $formContainer = this.$formContainer;
+      const $submit = $formContainer.find('.quickedit-form-submit');
+      const editorModel = this.model;
+      const fieldModel = this.fieldModel;
 
       function cleanUpAjax() {
         Drupal.quickedit.util.form.unajaxifySaving(formSaveAjax);
@@ -199,7 +196,7 @@
       // Create an AJAX object for the form associated with the field.
       var formSaveAjax = Drupal.quickedit.util.form.ajaxifySaving({
         nocssjs: false,
-        other_view_modes: fieldModel.findOtherViewModes()
+        other_view_modes: fieldModel.findOtherViewModes(),
       }, $submit);
 
       // Successfully saved.
@@ -213,7 +210,7 @@
         fieldModel.set('htmlForOtherViewModes', response.other_view_modes);
         // Finally, set the 'html' attribute on the field model. This will cause
         // the field to be rerendered.
-        _.defer(function () {
+        _.defer(() => {
           fieldModel.set('html', response.data);
         });
       };
@@ -231,7 +228,7 @@
       formSaveAjax.commands.quickeditFieldForm = function (ajax, response, status) {
         Drupal.AjaxCommands.prototype.insert(ajax, {
           data: response.data,
-          selector: '#' + $formContainer.attr('id') + ' form'
+          selector: `#${$formContainer.attr('id')} form`,
         });
       };
 
@@ -243,13 +240,12 @@
     /**
      * @inheritdoc
      */
-    showValidationErrors: function () {
+    showValidationErrors() {
       this.$formContainer
         .find('.quickedit-form')
         .addClass('quickedit-validation-error')
         .find('form')
         .prepend(this.model.get('validationErrors'));
-    }
+    },
   });
-
-})(jQuery, Drupal, _);
+}(jQuery, Drupal, _));

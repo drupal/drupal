@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Behaviors for setting summaries on content type form.
    *
@@ -16,16 +13,16 @@
    *   Attaches summary behaviors on content type edit forms.
    */
   Drupal.behaviors.contentTypes = {
-    attach: function (context) {
-      var $context = $(context);
+    attach(context) {
+      const $context = $(context);
       // Provide the vertical tab summaries.
-      $context.find('#edit-submission').drupalSetSummary(function (context) {
-        var vals = [];
+      $context.find('#edit-submission').drupalSetSummary((context) => {
+        const vals = [];
         vals.push(Drupal.checkPlain($(context).find('#edit-title-label').val()) || Drupal.t('Requires a title'));
         return vals.join(', ');
       });
-      $context.find('#edit-workflow').drupalSetSummary(function (context) {
-        var vals = [];
+      $context.find('#edit-workflow').drupalSetSummary((context) => {
+        const vals = [];
         $(context).find('input[name^="options"]:checked').next('label').each(function () {
           vals.push(Drupal.checkPlain($(this).text()));
         });
@@ -34,8 +31,8 @@
         }
         return vals.join(', ');
       });
-      $('#edit-language', context).drupalSetSummary(function (context) {
-        var vals = [];
+      $('#edit-language', context).drupalSetSummary((context) => {
+        const vals = [];
 
         vals.push($('.js-form-item-language-configuration-langcode select option:selected', context).text());
 
@@ -45,9 +42,9 @@
 
         return vals.join(', ');
       });
-      $context.find('#edit-display').drupalSetSummary(function (context) {
-        var vals = [];
-        var $editContext = $(context);
+      $context.find('#edit-display').drupalSetSummary((context) => {
+        const vals = [];
+        const $editContext = $(context);
         $editContext.find('input:checked').next('label').each(function () {
           vals.push(Drupal.checkPlain($(this).text()));
         });
@@ -56,7 +53,6 @@
         }
         return vals.join(', ');
       });
-    }
+    },
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

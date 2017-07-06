@@ -4,9 +4,6 @@
  */
 
 (function ($, _, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.editors.plain_text = Drupal.quickedit.EditorView.extend(/** @lends Drupal.quickedit.editors.plain_text# */{
 
     /**
@@ -22,16 +19,16 @@
      * @param {object} options
      *   Options for the plain text editor.
      */
-    initialize: function (options) {
+    initialize(options) {
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
 
-      var editorModel = this.model;
-      var fieldModel = this.fieldModel;
+      const editorModel = this.model;
+      const fieldModel = this.fieldModel;
 
       // Store the original value of this field. Necessary for reverting
       // changes.
-      var $textElement;
-      var $fieldItems = this.$el.find('.quickedit-field');
+      let $textElement;
+      const $fieldItems = this.$el.find('.quickedit-field');
       if ($fieldItems.length) {
         $textElement = this.$textElement = $fieldItems.eq(0);
       }
@@ -41,9 +38,9 @@
       editorModel.set('originalValue', $.trim(this.$textElement.text()));
 
       // Sets the state to 'changed' whenever the value changes.
-      var previousText = editorModel.get('originalValue');
-      $textElement.on('keyup paste', function (event) {
-        var currentText = $.trim($textElement.text());
+      let previousText = editorModel.get('originalValue');
+      $textElement.on('keyup paste', (event) => {
+        const currentText = $.trim($textElement.text());
         if (previousText !== currentText) {
           previousText = currentText;
           editorModel.set('currentValue', currentText);
@@ -58,7 +55,7 @@
      * @return {jQuery}
      *   The text element for the plain text editor.
      */
-    getEditedElement: function () {
+    getEditedElement() {
       return this.$textElement;
     },
 
@@ -72,9 +69,9 @@
      * @param {object} options
      *   State options, if needed by the state change.
      */
-    stateChange: function (fieldModel, state, options) {
-      var from = fieldModel.previous('state');
-      var to = state;
+    stateChange(fieldModel, state, options) {
+      const from = fieldModel.previous('state');
+      const to = state;
       switch (to) {
         case 'inactive':
           break;
@@ -94,7 +91,7 @@
         case 'activating':
           // Defer updating the field model until the current state change has
           // propagated, to not trigger a nested state change event.
-          _.defer(function () {
+          _.defer(() => {
             fieldModel.set('state', 'active');
           });
           break;
@@ -128,17 +125,16 @@
      * @return {object}
      *   A settings object for the quick edit UI.
      */
-    getQuickEditUISettings: function () {
-      return {padding: true, unifiedToolbar: false, fullWidthToolbar: false, popup: false};
+    getQuickEditUISettings() {
+      return { padding: true, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
     },
 
     /**
      * @inheritdoc
      */
-    revert: function () {
+    revert() {
       this.$textElement.html(this.model.get('originalValue'));
-    }
+    },
 
   });
-
-})(jQuery, _, Drupal);
+}(jQuery, _, Drupal));

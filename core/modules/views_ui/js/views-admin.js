@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.viewsUi = {};
 
   Drupal.behaviors.viewsUiEditView = {
@@ -25,7 +22,7 @@
 
       var exclude = new RegExp('[^a-z0-9\\-]+', 'g');
       var replace = '-';
-      var suffix;
+      var suffix = void 0;
 
       var $fields = $context.find('[id^="edit-page-title"], [id^="edit-block-title"], [id^="edit-page-link-properties-title"]');
       if ($fields.length) {
@@ -89,7 +86,6 @@
 
       this.target.on('focus.viewsUi', this.unbind);
     },
-
     getTransliterated: function getTransliterated() {
       var from = this.source.val();
       if (this.exclude) {
@@ -97,7 +93,6 @@
       }
       return from;
     },
-
     _populate: function _populate() {
       var transliterated = this.getTransliterated();
       var suffix = this.suffix;
@@ -106,12 +101,10 @@
         $(this).val(transliterated.substr(0, maxlength) + suffix);
       });
     },
-
     _unbind: function _unbind() {
       this.source.off('keyup.viewsUi change.viewsUi', this.populate);
       this.target.off('focus.viewsUi', this.unbind);
     },
-
     rebind: function rebind($fields) {
       this.target = $fields;
       this.bind();
@@ -252,9 +245,9 @@
 
   $.extend(Drupal.viewsUi.OptionsSearch.prototype, {
     getOptions: function getOptions($allOptions) {
-      var $title;
-      var $description;
-      var $option;
+      var $title = void 0;
+      var $description = void 0;
+      var $option = void 0;
       var options = [];
       var length = $allOptions.length;
       for (var i = 0; i < length; i++) {
@@ -269,7 +262,6 @@
       }
       return options;
     },
-
     handleFilter: function handleFilter(event) {
       var search = this.$searchBox.val().toLowerCase();
       var words = search.split(' ');
@@ -364,28 +356,25 @@
       $('<ul class="action-links"><li><a id="views-add-group-link" href="#">' + this.addGroupButton.val() + '</a></li></ul>').prependTo(this.table.parent()).once('views-rearrange-filter-handler').find('#views-add-group-link').on('click.views-rearrange-filter-handler', $.proxy(this, 'clickAddGroupButton'));
 
       var length = this.removeGroupButtons.length;
-      var i;
+      var i = void 0;
       for (i = 0; i < length; i++) {
         var $removeGroupButton = $(this.removeGroupButtons[i]);
         var buttonId = $removeGroupButton.attr('id');
         $('<a href="#" class="views-remove-group-link">' + Drupal.t('Remove group') + '</a>').insertBefore($removeGroupButton).once('views-rearrange-filter-handler').on('click.views-rearrange-filter-handler', { buttonId: buttonId }, $.proxy(this, 'clickRemoveGroupButton'));
       }
     },
-
     clickAddGroupButton: function clickAddGroupButton(event) {
       this.addGroupButton.trigger('mousedown');
       event.preventDefault();
     },
-
     clickRemoveGroupButton: function clickRemoveGroupButton(event) {
       this.table.find('#' + event.data.buttonId).trigger('mousedown');
       event.preventDefault();
     },
-
     duplicateGroupsOperator: function duplicateGroupsOperator() {
-      var dropdowns;
-      var newRow;
-      var titleRow;
+      var dropdowns = void 0;
+      var newRow = void 0;
+      var titleRow = void 0;
 
       var titleRows = $('tr.views-group-title').once('duplicateGroupsOperator');
 
@@ -417,7 +406,6 @@
 
       return dropdowns;
     },
-
     syncGroupsOperators: function syncGroupsOperators() {
       if (this.dropdowns.length < 2) {
         return;
@@ -425,14 +413,12 @@
 
       this.dropdowns.on('change', $.proxy(this, 'operatorChangeHandler'));
     },
-
     operatorChangeHandler: function operatorChangeHandler(event) {
       var $target = $(event.target);
       var operators = this.dropdowns.find('select').not($target);
 
       operators.val($target.val());
     },
-
     modifyTableDrag: function modifyTableDrag() {
       var tableDrag = Drupal.tableDrag['views-rearrange-filters'];
       var filterHandler = this;
@@ -472,7 +458,6 @@
         }
       };
     },
-
     redrawOperatorLabels: function redrawOperatorLabels() {
       for (var i = 0; i < this.draggableRows.length; i++) {
         var $draggableRow = $(this.draggableRows[i]);
@@ -495,12 +480,11 @@
         }
       }
     },
-
     updateRowspans: function updateRowspans() {
-      var $row;
-      var $currentEmptyRow;
-      var draggableCount;
-      var $operatorCell;
+      var $row = void 0;
+      var $currentEmptyRow = void 0;
+      var draggableCount = void 0;
+      var $operatorCell = void 0;
       var rows = $(this.table).find('tr');
       var length = rows.length;
       for (var i = 0; i < length; i++) {
@@ -556,7 +540,7 @@
     attach: function attach(context, settings) {
       var $buttons = $('[data-drupal-selector="edit-options-expose-button-button"], [data-drupal-selector="edit-options-group-button-button"]').once('views-ui-checkboxify');
       var length = $buttons.length;
-      var i;
+      var i = void 0;
       for (i = 0; i < length; i++) {
         new Drupal.viewsUi.Checkboxifier($buttons[i]);
       }

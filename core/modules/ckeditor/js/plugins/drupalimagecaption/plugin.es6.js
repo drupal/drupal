@@ -11,13 +11,10 @@
  */
 
 (function (CKEDITOR) {
-
-  'use strict';
-
   CKEDITOR.plugins.add('drupalimagecaption', {
     requires: 'drupalimage',
 
-    beforeInit: function (editor) {
+    beforeInit(editor) {
       // Disable default placeholder text that comes with CKEditor's image2
       // plugin: it has an inferior UX (it requires the user to manually delete
       // the place holder text).
@@ -26,35 +23,35 @@
       // Drupal.t() will not work inside CKEditor plugins because CKEditor loads
       // the JavaScript file instead of Drupal. Pull translated strings from the
       // plugin settings that are translated server-side.
-      var placeholderText = editor.config.drupalImageCaption_captionPlaceholderText;
+      const placeholderText = editor.config.drupalImageCaption_captionPlaceholderText;
 
       // Override the image2 widget definition to handle the additional
       // data-align and data-caption attributes.
-      editor.on('widgetDefinition', function (event) {
-        var widgetDefinition = event.data;
+      editor.on('widgetDefinition', (event) => {
+        const widgetDefinition = event.data;
         if (widgetDefinition.name !== 'image') {
           return;
         }
 
         // Only perform the downcasting/upcasting for to the enabled filters.
-        var captionFilterEnabled = editor.config.drupalImageCaption_captionFilterEnabled;
-        var alignFilterEnabled = editor.config.drupalImageCaption_alignFilterEnabled;
+        const captionFilterEnabled = editor.config.drupalImageCaption_captionFilterEnabled;
+        const alignFilterEnabled = editor.config.drupalImageCaption_alignFilterEnabled;
 
         // Override default features definitions for drupalimagecaption.
         CKEDITOR.tools.extend(widgetDefinition.features, {
           caption: {
-            requiredContent: 'img[data-caption]'
+            requiredContent: 'img[data-caption]',
           },
           align: {
-            requiredContent: 'img[data-align]'
-          }
+            requiredContent: 'img[data-align]',
+          },
         }, true);
 
         // Extend requiredContent & allowedContent.
         // CKEDITOR.style is an immutable object: we cannot modify its
         // definition to extend requiredContent. Hence we get the definition,
         // modify it, and pass it to a new CKEDITOR.style instance.
-        var requiredContent = widgetDefinition.requiredContent.getDefinition();
+        const requiredContent = widgetDefinition.requiredContent.getDefinition();
         requiredContent.attributes['data-align'] = '';
         requiredContent.attributes['data-caption'] = '';
         widgetDefinition.requiredContent = new CKEDITOR.style(requiredContent);
@@ -70,14 +67,14 @@
         // Override downcast(): ensure we *only* output <img>, but also ensure
         // we include the data-entity-type, data-entity-uuid, data-align and
         // data-caption attributes.
-        var originalDowncast = widgetDefinition.downcast;
+        const originalDowncast = widgetDefinition.downcast;
         widgetDefinition.downcast = function (element) {
-          var img = findElementByName(element, 'img');
+          const img = findElementByName(element, 'img');
           originalDowncast.call(this, img);
 
-          var caption = this.editables.caption;
-          var captionHtml = caption && caption.getData();
-          var attrs = img.attributes;
+          const caption = this.editables.caption;
+          const captionHtml = caption && caption.getData();
+          const attrs = img.attributes;
 
           if (captionFilterEnabled) {
             // If image contains a non-empty caption, serialize caption to the
@@ -96,9 +93,8 @@
           if (img.parent.name === 'a') {
             return img.parent;
           }
-          else {
-            return img;
-          }
+
+          return img;
         };
 
         // We want to upcast <img> elements to a DOM structure required by the
@@ -107,7 +103,7 @@
         //   - <img> tag in a paragraph (non-captioned, centered image),
         //   - <figure> tag (captioned image).
         // We take the same attributes into account as downcast() does.
-        var originalUpcast = widgetDefinition.upcast;
+        const originalUpcast = widgetDefinition.upcast;
         widgetDefinition.upcast = function (element, data) {
           if (element.name !== 'img' || !element.attributes['data-entity-type'] || !element.attributes['data-entity-uuid']) {
             return;
@@ -118,14 +114,14 @@
           }
 
           element = originalUpcast.call(this, element, data);
-          var attrs = element.attributes;
+          const attrs = element.attributes;
 
           if (element.parent.name === 'a') {
             element = element.parent;
           }
 
-          var retElement = element;
-          var caption;
+          let retElement = element;
+          let caption;
 
           // We won't need the attributes during editing: we'll use widget.data
           // to store them (except the caption, which is stored in the DOM).
@@ -147,9 +143,9 @@
             // image. The captioned image will be transformed to <figure>, so we
             // don't want the <p> anymore.
             if (element.parent.name === 'p' && caption) {
-              var index = element.getIndex();
-              var splitBefore = index > 0;
-              var splitAfter = index + 1 < element.parent.children.length;
+              let index = element.getIndex();
+              const splitBefore = index > 0;
+              const splitAfter = index + 1 < element.parent.children.length;
 
               if (splitBefore) {
                 element.parent.split(index);
@@ -165,7 +161,7 @@
 
             // If this image has a caption, create a full <figure> structure.
             if (caption) {
-              var figure = new CKEDITOR.htmlParser.element('figure');
+              const figure = new CKEDITOR.htmlParser.element('figure');
               caption = new CKEDITOR.htmlParser.fragment.fromHtml(caption, 'figcaption');
 
               // Use Drupal's data-placeholder attribute to insert a CSS-based,
@@ -177,7 +173,7 @@
               element.replaceWith(figure);
               figure.add(element);
               figure.add(caption);
-              figure.attributes['class'] = editor.config.image2_captionedClass;
+              figure.attributes.class = editor.config.image2_captionedClass;
               retElement = figure;
             }
           }
@@ -187,7 +183,7 @@
             // disabled), but it is centered, make sure that it's wrapped with
             // <p>, which will become a part of the widget.
             if (data.align === 'center' && (!captionFilterEnabled || !caption)) {
-              var p = new CKEDITOR.htmlParser.element('p');
+              const p = new CKEDITOR.htmlParser.element('p');
               element.replaceWith(p);
               p.add(element);
               // Apply the class for centered images.
@@ -204,15 +200,15 @@
         // Append to the values defined by the drupalimage plugin.
         // @see core/modules/ckeditor/js/plugins/drupalimage/plugin.js
         CKEDITOR.tools.extend(widgetDefinition._mapDataToDialog, {
-          'align': 'data-align',
+          align: 'data-align',
           'data-caption': 'data-caption',
-          'hasCaption': 'hasCaption'
+          hasCaption: 'hasCaption',
         });
 
         // Override Drupal dialog save callback.
-        var originalCreateDialogSaveCallback = widgetDefinition._createDialogSaveCallback;
+        const originalCreateDialogSaveCallback = widgetDefinition._createDialogSaveCallback;
         widgetDefinition._createDialogSaveCallback = function (editor, widget) {
-          var saveCallback = originalCreateDialogSaveCallback.call(this, editor, widget);
+          const saveCallback = originalCreateDialogSaveCallback.call(this, editor, widget);
 
           return function (dialogReturnValues) {
             // Ensure hasCaption is a boolean. image2 assumes it always works
@@ -223,7 +219,7 @@
             // shifter" to enter the wrong branch of the algorithm and blow up.
             dialogReturnValues.attributes.hasCaption = !!dialogReturnValues.attributes.hasCaption;
 
-            var actualWidget = saveCallback(dialogReturnValues);
+            const actualWidget = saveCallback(dialogReturnValues);
 
             // By default, the template of captioned widget has no
             // data-placeholder attribute. Note that it also must be done when
@@ -235,7 +231,7 @@
               // element with no content. Remove this <br> if it is the only
               // thing in the caption. Our placeholder support requires the
               // element be entirely empty. See filter-caption.css.
-              var captionElement = actualWidget.editables.caption.$;
+              const captionElement = actualWidget.editables.caption.$;
               if (captionElement.childNodes.length === 1 && captionElement.childNodes.item(0).nodeName === 'BR') {
                 captionElement.removeChild(captionElement.childNodes.item(0));
               }
@@ -246,9 +242,9 @@
       }, null, null, 20);
     },
 
-    afterInit: function (editor) {
-      var disableButtonIfOnWidget = function (evt) {
-        var widget = editor.widgets.focused;
+    afterInit(editor) {
+      const disableButtonIfOnWidget = function (evt) {
+        const widget = editor.widgets.focused;
         if (widget && widget.name === 'image') {
           this.setState(CKEDITOR.TRISTATE_DISABLED);
           evt.cancel();
@@ -257,15 +253,15 @@
 
       // Disable alignment buttons if the align filter is not enabled.
       if (editor.plugins.justify && !editor.config.drupalImageCaption_alignFilterEnabled) {
-        var cmd;
-        var commands = ['justifyleft', 'justifycenter', 'justifyright', 'justifyblock'];
-        for (var n = 0; n < commands.length; n++) {
+        let cmd;
+        const commands = ['justifyleft', 'justifycenter', 'justifyright', 'justifyblock'];
+        for (let n = 0; n < commands.length; n++) {
           cmd = editor.getCommand(commands[n]);
           cmd.contextSensitive = 1;
           cmd.on('refresh', disableButtonIfOnWidget, null, null, 4);
         }
       }
-    }
+    },
   });
 
   /**
@@ -287,8 +283,8 @@
       return element;
     }
 
-    var found = null;
-    element.forEach(function (el) {
+    let found = null;
+    element.forEach((el) => {
       if (el.name === name) {
         found = el;
         // Stop here.
@@ -297,5 +293,4 @@
     }, CKEDITOR.NODE_ELEMENT);
     return found;
   }
-
-})(CKEDITOR);
+}(CKEDITOR));

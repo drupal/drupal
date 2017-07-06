@@ -4,9 +4,6 @@
  */
 
 (function (_, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.FieldModel = Drupal.quickedit.BaseModel.extend(/** @lends Drupal.quickedit.FieldModel# */{
 
     /**
@@ -103,7 +100,7 @@
        * view modes (keys) of this field, for other instances of this field
        * displayed in a different view mode.
        */
-      htmlForOtherViewModes: null
+      htmlForOtherViewModes: null,
     },
 
     /**
@@ -116,7 +113,7 @@
      * @param {object} options
      *   Options for the field model.
      */
-    initialize: function (options) {
+    initialize(options) {
       // Store the original full HTML representation of this field.
       this.set('html', options.el.outerHTML);
 
@@ -136,7 +133,7 @@
      * @param {object} options
      *   Options for the field model.
      */
-    destroy: function (options) {
+    destroy(options) {
       if (this.get('state') !== 'inactive') {
         throw new Error('FieldModel cannot be destroyed if it is not inactive state.');
       }
@@ -146,9 +143,9 @@
     /**
      * @inheritdoc
      */
-    sync: function () {
+    sync() {
       // We don't use REST updates to sync.
-      return;
+
     },
 
     /**
@@ -171,13 +168,13 @@
      * @return {string}
      *   A string to say something about the state of the field model.
      */
-    validate: function (attrs, options) {
-      var current = this.get('state');
-      var next = attrs.state;
+    validate(attrs, options) {
+      const current = this.get('state');
+      const next = attrs.state;
       if (current !== next) {
         // Ensure it's a valid state.
         if (_.indexOf(this.constructor.states, next) === -1) {
-          return '"' + next + '" is an invalid state';
+          return `"${next}" is an invalid state`;
         }
         // Check if the acceptStateChange callback accepts it.
         if (!this.get('acceptStateChange')(current, next, options, this)) {
@@ -192,7 +189,7 @@
      * @return {string}
      *   An entity ID: a string of the format `<entity type>/<id>`.
      */
-    getEntityID: function () {
+    getEntityID() {
       return this.get('fieldID').split('/').slice(0, 2).join('/');
     },
 
@@ -202,7 +199,7 @@
      * @return {string}
      *   A view mode ID.
      */
-    getViewMode: function () {
+    getViewMode() {
       return this.get('fieldID').split('/').pop();
     },
 
@@ -212,29 +209,29 @@
      * @return {Array}
      *   An array containing view mode IDs.
      */
-    findOtherViewModes: function () {
-      var currentField = this;
-      var otherViewModes = [];
+    findOtherViewModes() {
+      const currentField = this;
+      const otherViewModes = [];
       Drupal.quickedit.collections.fields
         // Find all instances of fields that display the same logical field
         // (same entity, same field, just a different instance and maybe a
         // different view mode).
-        .where({logicalFieldID: currentField.get('logicalFieldID')})
-        .forEach(function (field) {
+        .where({ logicalFieldID: currentField.get('logicalFieldID') })
+        .forEach((field) => {
           // Ignore the current field.
           if (field === currentField) {
-            return;
+
           }
           // Also ignore other fields with the same view mode.
           else if (field.get('fieldID') === currentField.get('fieldID')) {
-            return;
+
           }
           else {
             otherViewModes.push(field.getViewMode());
           }
         });
       return otherViewModes;
-    }
+    },
 
   }, /** @lends Drupal.quickedit.FieldModel */{
 
@@ -312,7 +309,7 @@
       // - Guarantees: see 'candidate' and 'active'.
       // - Expected behavior: remain in 'invalid' state, let the user make more
       //   changes so that he can save it again, without validation errors.
-      'invalid'
+      'invalid',
     ],
 
     /**
@@ -326,9 +323,9 @@
      * @return {bool}
      *   Whether the 'from' state comes before the 'to' state.
      */
-    followsStateSequence: function (from, to) {
+    followsStateSequence(from, to) {
       return _.indexOf(this.states, from) < _.indexOf(this.states, to);
-    }
+    },
 
   });
 
@@ -342,7 +339,6 @@
     /**
      * @type {Drupal.quickedit.FieldModel}
      */
-    model: Drupal.quickedit.FieldModel
+    model: Drupal.quickedit.FieldModel,
   });
-
 }(_, Backbone, Drupal));

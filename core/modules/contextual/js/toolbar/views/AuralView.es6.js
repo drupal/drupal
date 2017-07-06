@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, Backbone, _) {
-
-  'use strict';
-
   Drupal.contextualToolbar.AuralView = Backbone.View.extend(/** @lends Drupal.contextualToolbar.AuralView# */{
 
     /**
@@ -26,7 +23,7 @@
      * @param {object} options
      *   Options for the view.
      */
-    initialize: function (options) {
+    initialize(options) {
       this.options = options;
 
       this.listenTo(this.model, 'change', this.render);
@@ -41,7 +38,7 @@
      * @return {Drupal.contextualToolbar.AuralView}
      *   The current contextual toolbar aural view.
      */
-    render: function () {
+    render() {
       // Render the state.
       this.$el.find('button').attr('aria-pressed', !this.model.get('isViewing'));
 
@@ -51,8 +48,8 @@
     /**
      * Limits tabbing to the contextual links and edit mode toolbar tab.
      */
-    manageTabbing: function () {
-      var tabbingContext = this.model.get('tabbingContext');
+    manageTabbing() {
+      let tabbingContext = this.model.get('tabbingContext');
       // Always release an existing tabbing context.
       if (tabbingContext) {
         // Only announce release when the context was active.
@@ -73,10 +70,10 @@
     /**
      * Announces the current tabbing constraint.
      */
-    announceTabbingConstraint: function () {
-      var strings = this.options.strings;
+    announceTabbingConstraint() {
+      const strings = this.options.strings;
       Drupal.announce(Drupal.formatString(strings.tabbingConstrained, {
-        '@contextualsCount': Drupal.formatPlural(Drupal.contextual.collection.length, '@count contextual link', '@count contextual links')
+        '@contextualsCount': Drupal.formatPlural(Drupal.contextual.collection.length, '@count contextual link', '@count contextual links'),
       }));
       Drupal.announce(strings.pressEsc);
     },
@@ -87,7 +84,7 @@
      * @param {jQuery.Event} event
      *   The keypress event.
      */
-    onKeypress: function (event) {
+    onKeypress(event) {
       // The first tab key press is tracked so that an annoucement about tabbing
       // constraints can be raised if edit mode is enabled when the page is
       // loaded.
@@ -100,8 +97,7 @@
       if (event.keyCode === 27) {
         this.model.set('isViewing', true);
       }
-    }
+    },
 
   });
-
-})(jQuery, Drupal, Backbone, _);
+}(jQuery, Drupal, Backbone, _));

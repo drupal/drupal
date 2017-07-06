@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   Drupal.contextualToolbar.StateModel = Backbone.Model.extend({
     defaults: {
       isViewing: true,
@@ -32,20 +29,16 @@
         });
       });
     },
-
     countContextualLinks: function countContextualLinks(contextualModel, contextualCollection) {
       this.set('contextualCount', contextualCollection.length);
     },
-
     lockNewContextualLinks: function lockNewContextualLinks(contextualModel, contextualCollection) {
       if (!this.get('isViewing')) {
         contextualModel.set('isLocked', true);
       }
     },
-
     updateVisibility: function updateVisibility() {
       this.set('isVisible', this.get('contextualCount') > 0);
     }
-
   });
 })(Drupal, Backbone);

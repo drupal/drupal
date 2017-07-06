@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   function findFieldForFormatSelector($formatSelector) {
     var field_id = $formatSelector.attr('data-editor-for');
 
@@ -73,6 +70,7 @@
         create: function create() {
           $(this).parent().find('.ui-dialog-titlebar-close').remove();
         },
+
         beforeClose: false,
         close: function close(event) {
           $(event.target).remove();
@@ -129,9 +127,8 @@
         });
       });
     },
-
     detach: function detach(context, settings, trigger) {
-      var editors;
+      var editors = void 0;
 
       if (trigger === 'serialize') {
         editors = $(context).find('[data-editor-for]').findOnce('editor');

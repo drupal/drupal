@@ -4,9 +4,6 @@
  */
 
 (function (Backbone, Drupal) {
-
-  'use strict';
-
   /**
    * Backbone model for the toolbar.
    *
@@ -130,8 +127,8 @@
         top: 0,
         right: 0,
         bottom: 0,
-        left: 0
-      }
+        left: 0,
+      },
     },
 
     /**
@@ -145,13 +142,12 @@
      * @return {string|undefined}
      *   Returns an error message if validation failed.
      */
-    validate: function (attributes, options) {
+    validate(attributes, options) {
       // Prevent the orientation being set to horizontal if it is locked, unless
       // override has not been passed as an option.
       if (attributes.orientation === 'horizontal' && this.get('locked') && !options.override) {
         return Drupal.t('The toolbar cannot be set to a horizontal orientation when it is locked.');
       }
-    }
+    },
   });
-
 }(Backbone, Drupal));

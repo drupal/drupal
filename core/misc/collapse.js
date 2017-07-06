@@ -6,9 +6,6 @@
 **/
 
 (function ($, Modernizr, Drupal) {
-
-  'use strict';
-
   function CollapsibleDetails(node) {
     this.$node = $(node);
     this.$node.data('details', this);
@@ -32,7 +29,6 @@
       this.$summary = $('<span class="summary"></span>');
       this.$node.on('summaryUpdated', $.proxy(this.onSummaryUpdated, this)).trigger('summaryUpdated');
     },
-
     setupLegend: function setupLegend() {
       var $legend = this.$node.find('> summary');
 
@@ -42,18 +38,17 @@
 
       $legend.append(this.$summary).on('click', $.proxy(this.onLegendClick, this));
     },
-
     onLegendClick: function onLegendClick(e) {
       this.toggle();
       e.preventDefault();
     },
-
     onSummaryUpdated: function onSummaryUpdated() {
       var text = $.trim(this.$node.drupalGetSummary());
       this.$summary.html(text ? ' (' + text + ')' : '');
     },
-
     toggle: function toggle() {
+      var _this = this;
+
       var isOpen = !!this.$node.attr('open');
       var $summaryPrefix = this.$node.find('> summary span.details-summary-prefix');
       if (isOpen) {
@@ -63,8 +58,8 @@
       }
 
       setTimeout(function () {
-        this.$node.attr('open', !isOpen);
-      }.bind(this), 0);
+        _this.$node.attr('open', !isOpen);
+      }, 0);
     }
   });
 

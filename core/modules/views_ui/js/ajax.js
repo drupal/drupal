@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.AjaxCommands.prototype.viewsHighlight = function (ajax, response, status) {
     $('.hilited').removeClass('hilited');
     $(response.selector).addClass('hilited');

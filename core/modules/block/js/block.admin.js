@@ -6,14 +6,11 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.blockFilterByText = {
     attach: function attach(context, settings) {
       var $input = $('input.block-filter-text').once('block-filter-text');
       var $table = $($input.attr('data-element'));
-      var $filter_rows;
+      var $filter_rows = void 0;
 
       function filterBlockList(e) {
         var query = $(e.target).val().toLowerCase();

@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.textSummary = {
     attach: function attach(context, settings) {
       $(context).find('.js-text-summary').once('text-summary').each(function () {

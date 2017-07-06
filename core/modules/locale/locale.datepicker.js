@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.localeDatepicker = {
     attach: function attach(context, settings) {
       $.datepicker.regional['drupal-locale'] = $.extend({

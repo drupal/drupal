@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   var options = $.extend({
     breakpoints: {
       'toolbar.narrow': '',

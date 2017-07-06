@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Theme function for a "backstage" for the Quick Edit module.
    *
@@ -19,8 +16,8 @@
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditBackstage = function (settings) {
-    var html = '';
-    html += '<div id="' + settings.id + '" />';
+    let html = '';
+    html += `<div id="${settings.id}" />`;
     return html;
   };
 
@@ -36,8 +33,8 @@
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditEntityToolbar = function (settings) {
-    var html = '';
-    html += '<div id="' + settings.id + '" class="quickedit quickedit-toolbar-container clearfix">';
+    let html = '';
+    html += `<div id="${settings.id}" class="quickedit quickedit-toolbar-container clearfix">`;
     html += '<i class="quickedit-toolbar-pointer"></i>';
     html += '<div class="quickedit-toolbar-content">';
     html += '<div class="quickedit-toolbar quickedit-toolbar-entity clearfix icon icon-pencil">';
@@ -63,7 +60,7 @@
    */
   Drupal.theme.quickeditEntityToolbarLabel = function (settings) {
     // @todo Add XSS regression test coverage in https://www.drupal.org/node/2547437
-    return '<span class="field">' + Drupal.checkPlain(settings.fieldLabel) + '</span>' + Drupal.checkPlain(settings.entityLabel);
+    return `<span class="field">${Drupal.checkPlain(settings.fieldLabel)}</span>${Drupal.checkPlain(settings.entityLabel)}`;
   };
 
   /**
@@ -88,7 +85,7 @@
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditFieldToolbar = function (settings) {
-    return '<div id="' + settings.id + '" />';
+    return `<div id="${settings.id}" />`;
   };
 
   /**
@@ -108,15 +105,15 @@
    */
   Drupal.theme.quickeditToolgroup = function (settings) {
     // Classes.
-    var classes = (settings.classes || []);
+    const classes = (settings.classes || []);
     classes.unshift('quickedit-toolgroup');
-    var html = '';
-    html += '<div class="' + classes.join(' ') + '"';
+    let html = '';
+    html += `<div class="${classes.join(' ')}"`;
     if (settings.id) {
-      html += ' id="' + settings.id + '"';
+      html += ` id="${settings.id}"`;
     }
     html += '>';
-    html += Drupal.theme('quickeditButtons', {buttons: settings.buttons});
+    html += Drupal.theme('quickeditButtons', { buttons: settings.buttons });
     html += '</div>';
     return html;
   };
@@ -138,21 +135,21 @@
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditButtons = function (settings) {
-    var html = '';
-    for (var i = 0; i < settings.buttons.length; i++) {
-      var button = settings.buttons[i];
+    let html = '';
+    for (let i = 0; i < settings.buttons.length; i++) {
+      const button = settings.buttons[i];
       if (!button.hasOwnProperty('type')) {
         button.type = 'button';
       }
       // Attributes.
-      var attributes = [];
-      var attrMap = settings.buttons[i].attributes || {};
-      for (var attr in attrMap) {
+      const attributes = [];
+      const attrMap = settings.buttons[i].attributes || {};
+      for (const attr in attrMap) {
         if (attrMap.hasOwnProperty(attr)) {
-          attributes.push(attr + ((attrMap[attr]) ? '="' + attrMap[attr] + '"' : ''));
+          attributes.push(attr + ((attrMap[attr]) ? `="${attrMap[attr]}"` : ''));
         }
       }
-      html += '<button type="' + button.type + '" class="' + button.classes + '"' + ' ' + attributes.join(' ') + '>';
+      html += `<button type="${button.type}" class="${button.classes}"` + ` ${attributes.join(' ')}>`;
       html += button.label;
       html += '</button>';
     }
@@ -173,8 +170,8 @@
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditFormContainer = function (settings) {
-    var html = '';
-    html += '<div id="' + settings.id + '" class="quickedit-form-container">';
+    let html = '';
+    html += `<div id="${settings.id}" class="quickedit-form-container">`;
     html += '  <div class="quickedit-form">';
     html += '    <div class="placeholder">';
     html += settings.loadingMsg;
@@ -183,5 +180,4 @@
     html += '</div>';
     return html;
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

@@ -6,15 +6,12 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.contentTranslationDependentOptions = {
     attach: function attach(context) {
       var $context = $(context);
       var options = drupalSettings.contentTranslationDependentOptions;
-      var $fields;
-      var dependent_columns;
+      var $fields = void 0;
+      var dependent_columns = void 0;
 
       function fieldsChangeHandler($fields, dependent_columns) {
         return function (e) {
@@ -36,7 +33,7 @@
     },
     check: function check($fields, dependent_columns, $changed) {
       var $element = $changed;
-      var column;
+      var column = void 0;
 
       function filterFieldsList(index, field) {
         return $(field).val() === column;

@@ -6,9 +6,6 @@
 **/
 
 (function (_, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.FieldModel = Drupal.quickedit.BaseModel.extend({
     defaults: {
       el: null,
@@ -45,18 +42,13 @@
 
       Drupal.quickedit.BaseModel.prototype.initialize.call(this, options);
     },
-
     destroy: function destroy(options) {
       if (this.get('state') !== 'inactive') {
         throw new Error('FieldModel cannot be destroyed if it is not inactive state.');
       }
       Drupal.quickedit.BaseModel.prototype.destroy.call(this, options);
     },
-
-    sync: function sync() {
-      return;
-    },
-
+    sync: function sync() {},
     validate: function validate(attrs, options) {
       var current = this.get('state');
       var next = attrs.state;
@@ -70,37 +62,28 @@
         }
       }
     },
-
     getEntityID: function getEntityID() {
       return this.get('fieldID').split('/').slice(0, 2).join('/');
     },
-
     getViewMode: function getViewMode() {
       return this.get('fieldID').split('/').pop();
     },
-
     findOtherViewModes: function findOtherViewModes() {
       var currentField = this;
       var otherViewModes = [];
       Drupal.quickedit.collections.fields.where({ logicalFieldID: currentField.get('logicalFieldID') }).forEach(function (field) {
-        if (field === currentField) {
-          return;
-        } else if (field.get('fieldID') === currentField.get('fieldID')) {
-            return;
-          } else {
+        if (field === currentField) {} else if (field.get('fieldID') === currentField.get('fieldID')) {} else {
             otherViewModes.push(field.getViewMode());
           }
       });
       return otherViewModes;
     }
-
   }, {
     states: ['inactive', 'candidate', 'highlighted', 'activating', 'active', 'changed', 'saving', 'saved', 'invalid'],
 
     followsStateSequence: function followsStateSequence(from, to) {
       return _.indexOf(this.states, from) < _.indexOf(this.states, to);
     }
-
   });
 
   Drupal.quickedit.FieldCollection = Backbone.Collection.extend({

@@ -6,9 +6,6 @@
 **/
 
 (function (Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.toolbar.MenuModel = Backbone.Model.extend({
     defaults: {
       subtrees: {}

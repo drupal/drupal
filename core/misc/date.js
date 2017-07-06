@@ -6,9 +6,6 @@
 **/
 
 (function ($, Modernizr, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.date = {
     attach: function attach(context, settings) {
       var $context = $(context);

@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.util = Drupal.quickedit.util || {};
 
   Drupal.quickedit.util.constants = {};
@@ -36,6 +33,7 @@
         click: function click() {
           networkErrorModal.close();
         },
+
         primary: true
       }],
       create: function create() {
@@ -75,7 +73,6 @@
 
       formLoaderAjax.execute();
     },
-
     ajaxifySaving: function ajaxifySaving(options, $submit) {
       var settings = {
         url: $submit.closest('form').attr('action'),
@@ -94,16 +91,15 @@
             }
           }
         },
+
         base: $submit.attr('id'),
         element: $submit[0]
       };
 
       return Drupal.ajax(settings);
     },
-
     unajaxifySaving: function unajaxifySaving(ajax) {
       $(ajax.element).off('click.quickedit');
     }
-
   };
 })(jQuery, Drupal);

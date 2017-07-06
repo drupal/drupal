@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, Backbone, CKEDITOR, _) {
-
-  'use strict';
-
   Drupal.ckeditor.ControllerView = Backbone.View.extend({
     events: {},
 
@@ -18,7 +15,6 @@
       this.model.listenTo(this.model, 'change:activeEditorConfig', this.model.sync);
       this.listenTo(this.model, 'change:isDirty', this.parseEditorDOM);
     },
-
     parseEditorDOM: function parseEditorDOM(model, isDirty, options) {
       if (isDirty) {
         var currentConfig = this.model.get('activeEditorConfig');
@@ -58,7 +54,6 @@
         }
       }
     },
-
     getCKEditorFeatures: function getCKEditorFeatures(CKEditorConfig, callback) {
       var getProperties = function getProperties(CKEPropertiesList) {
         return _.isObject(CKEPropertiesList) ? _.keys(CKEPropertiesList) : [];
@@ -108,8 +103,8 @@
         if (e.editor.name === hiddenCKEditorID) {
           var CKEFeatureRulesMap = {};
           var rules = e.editor.filter.allowedContent;
-          var rule;
-          var name;
+          var rule = void 0;
+          var name = void 0;
           for (var i = 0; i < rules.length; i++) {
             rule = rules[i];
             name = rule.featureName || ':(';
@@ -137,7 +132,6 @@
         }
       });
     },
-
     getFeatureForButton: function getFeatureForButton(button) {
       if (button === '-') {
         return false;
@@ -155,7 +149,6 @@
       }
       return featuresMetadata[featureName];
     },
-
     disableFeaturesDisallowedByFilters: function disableFeaturesDisallowedByFilters(features, buttonsToFeatures) {
       this.model.set('featuresMetadata', features);
 
@@ -192,7 +185,6 @@
         }
       }
     },
-
     broadcastConfigurationChanges: function broadcastConfigurationChanges($ckeditorToolbar) {
       var view = this;
       var hiddenEditorConfig = this.model.get('hiddenEditorConfig');
@@ -229,7 +221,6 @@
         });
       });
     },
-
     getButtonList: function getButtonList(config) {
       var buttons = [];
 

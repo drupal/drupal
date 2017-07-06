@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.password = {
     attach: function attach(context, settings) {
       var $passwordInput = $(context).find('input.js-password-field').once('password');
@@ -18,7 +15,7 @@
 
         var $passwordInputParent = $passwordInput.parent();
         var $passwordInputParentWrapper = $passwordInputParent.parent();
-        var $passwordSuggestions;
+        var $passwordSuggestions = void 0;
 
         $passwordInputParent.addClass('password-parent');
 
@@ -73,8 +70,8 @@
 
   Drupal.evaluatePasswordStrength = function (password, translate) {
     password = password.trim();
-    var indicatorText;
-    var indicatorClass;
+    var indicatorText = void 0;
+    var indicatorClass = void 0;
     var weaknesses = 0;
     var strength = 100;
     var msg = [];

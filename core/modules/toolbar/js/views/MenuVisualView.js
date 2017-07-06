@@ -6,14 +6,10 @@
 **/
 
 (function ($, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.toolbar.MenuVisualView = Backbone.View.extend({
     initialize: function initialize() {
       this.listenTo(this.model, 'change:subtrees', this.render);
     },
-
     render: function render() {
       var subtrees = this.model.get('subtrees');
 

@@ -6,9 +6,6 @@
 **/
 
 (function () {
-
-  'use strict';
-
   var settingsElement = document.querySelector('head > script[type="application/json"][data-drupal-selector="drupal-settings-json"], body > script[type="application/json"][data-drupal-selector="drupal-settings-json"]');
 
   window.drupalSettings = {};

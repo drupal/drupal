@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   var dateFormats = drupalSettings.dateFormats;
 
   Drupal.behaviors.dateFormat = {

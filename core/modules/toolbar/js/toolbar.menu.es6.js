@@ -9,19 +9,15 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * Store the open menu tray.
    */
-  var activeItem = Drupal.url(drupalSettings.path.currentPath);
+  let activeItem = Drupal.url(drupalSettings.path.currentPath);
 
   $.fn.drupalToolbarMenu = function () {
-
-    var ui = {
+    const ui = {
       handleOpen: Drupal.t('Extend'),
-      handleClose: Drupal.t('Collapse')
+      handleClose: Drupal.t('Collapse'),
     };
 
     /**
@@ -31,12 +27,12 @@
      *   A jQuery Event object.
      */
     function toggleClickHandler(event) {
-      var $toggle = $(event.target);
-      var $item = $toggle.closest('li');
+      const $toggle = $(event.target);
+      const $item = $toggle.closest('li');
       // Toggle the list item.
       toggleList($item);
       // Close open sibling menus.
-      var $openItems = $item.siblings().filter('.open');
+      const $openItems = $item.siblings().filter('.open');
       toggleList($openItems, false);
     }
 
@@ -71,7 +67,7 @@
      *   simply toggling its presence.
      */
     function toggleList($item, switcher) {
-      var $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
+      const $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
       switcher = (typeof switcher !== 'undefined') ? switcher : !$item.hasClass('open');
       // Toggle the item open state.
       $item.toggleClass('open', switcher);
@@ -96,19 +92,19 @@
      *   The root of the menu to be initialized.
      */
     function initItems($menu) {
-      var options = {
+      const options = {
         class: 'toolbar-icon toolbar-handle',
         action: ui.handleOpen,
-        text: ''
+        text: '',
       };
       // Initialize items and their links.
       $menu.find('li > a').wrap('<div class="toolbar-box">');
       // Add a handle to each list item if it has a menu.
-      $menu.find('li').each(function (index, element) {
-        var $item = $(element);
+      $menu.find('li').each((index, element) => {
+        const $item = $(element);
         if ($item.children('ul.toolbar-menu').length) {
-          var $box = $item.children('.toolbar-box');
-          options.text = Drupal.t('@label', {'@label': $box.find('a').text()});
+          const $box = $item.children('.toolbar-box');
+          options.text = Drupal.t('@label', { '@label': $box.find('a').text() });
           $item.children('.toolbar-box')
             .append(Drupal.theme('toolbarMenuItemToggle', options));
         }
@@ -129,7 +125,7 @@
      */
     function markListLevels($lists, level) {
       level = (!level) ? 1 : level;
-      var $lis = $lists.children('li').addClass('level-' + level);
+      const $lis = $lists.children('li').addClass(`level-${level}`);
       $lists = $lis.children('ul');
       if ($lists.length) {
         markListLevels($lists, level + 1);
@@ -146,20 +142,20 @@
      *   The root of the menu.
      */
     function openActiveItem($menu) {
-      var pathItem = $menu.find('a[href="' + location.pathname + '"]');
+      const pathItem = $menu.find(`a[href="${location.pathname}"]`);
       if (pathItem.length && !activeItem) {
         activeItem = location.pathname;
       }
       if (activeItem) {
-        var $activeItem = $menu.find('a[href="' + activeItem + '"]').addClass('menu-item--active');
-        var $activeTrail = $activeItem.parentsUntil('.root', 'li').addClass('menu-item--active-trail');
+        const $activeItem = $menu.find(`a[href="${activeItem}"]`).addClass('menu-item--active');
+        const $activeTrail = $activeItem.parentsUntil('.root', 'li').addClass('menu-item--active-trail');
         toggleList($activeTrail, true);
       }
     }
 
     // Return the jQuery object.
     return this.each(function (selector) {
-      var $menu = $(this).once('toolbar-menu');
+      const $menu = $(this).once('toolbar-menu');
       if ($menu.length) {
         // Bind event handlers.
         $menu
@@ -191,7 +187,6 @@
    *   A string representing a DOM fragment.
    */
   Drupal.theme.toolbarMenuItemToggle = function (options) {
-    return '<button class="' + options['class'] + '"><span class="action">' + options.action + '</span><span class="label">' + options.text + '</span></button>';
+    return `<button class="${options.class}"><span class="action">${options.action}</span><span class="label">${options.text}</span></button>`;
   };
-
 }(jQuery, Drupal, drupalSettings));

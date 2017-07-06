@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal, Backbone, $) {
-
-  'use strict';
-
   Drupal.ckeditor.AuralView = Backbone.View.extend({
     events: {
       'click .ckeditor-buttons a': 'announceButtonHelp',
@@ -21,7 +18,6 @@
     initialize: function initialize() {
       this.listenTo(this.model, 'change:isDirty', this.announceMove);
     },
-
     announceMove: function announceMove(model, isDirty) {
       if (!isDirty) {
         var item = document.activeElement || null;
@@ -35,7 +31,6 @@
         }
       }
     },
-
     onFocus: function onFocus(event) {
       event.stopPropagation();
 
@@ -48,7 +43,6 @@
         this.announceButtonGroupPosition($currentTarget);
       }
     },
-
     announceButtonGroupPosition: function announceButtonGroupPosition($group) {
       var $groups = $group.parent().children();
       var $row = $group.closest('.ckeditor-row');
@@ -71,7 +65,6 @@
       }
       Drupal.announce(text, 'assertive');
     },
-
     announceButtonPosition: function announceButtonPosition($button) {
       var $row = $button.closest('.ckeditor-row');
       var $rows = $row.parent().children();
@@ -86,7 +79,7 @@
       var rowCount = $rows.not('.placeholder').length;
 
       var type = $button.attr('data-drupal-ckeditor-type') === 'separator' ? '' : Drupal.t('button');
-      var text;
+      var text = void 0;
 
       if ($button.closest('.ckeditor-toolbar-disabled').length > 0) {
         text = Drupal.t('@name @type.', {
@@ -119,12 +112,11 @@
           Drupal.announce(text, 'assertive');
         }
     },
-
     announceButtonHelp: function announceButtonHelp(event) {
       var $link = $(event.currentTarget);
       var $button = $link.parent();
       var enabled = $button.closest('.ckeditor-toolbar-active').length > 0;
-      var message;
+      var message = void 0;
 
       if (enabled) {
         message = Drupal.t('The "@name" button is currently enabled.', {
@@ -141,12 +133,11 @@
       Drupal.announce(message);
       event.preventDefault();
     },
-
     announceSeparatorHelp: function announceSeparatorHelp(event) {
       var $link = $(event.currentTarget);
       var $button = $link.parent();
       var enabled = $button.closest('.ckeditor-toolbar-active').length > 0;
-      var message;
+      var message = void 0;
 
       if (enabled) {
         message = Drupal.t('This @name is currently enabled.', {

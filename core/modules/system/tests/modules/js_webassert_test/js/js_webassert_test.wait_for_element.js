@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.js_webassert_test_wait_for_element = {
     attach: function attach(context) {
       $('#js_webassert_test_element_invisible').show();

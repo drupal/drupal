@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
 
   Drupal.behaviors.tableDrag = {
@@ -122,9 +119,9 @@
 
   Drupal.tableDrag.prototype.initColumns = function () {
     var $table = this.$table;
-    var hidden;
-    var cell;
-    var columnIndex;
+    var hidden = void 0;
+    var cell = void 0;
+    var columnIndex = void 0;
     for (var group in this.tableSettings) {
       if (this.tableSettings.hasOwnProperty(group)) {
         for (var d in this.tableSettings[group]) {
@@ -152,7 +149,7 @@
       var $row = $(this);
       var index = columnIndex;
       var cells = $row.children();
-      var cell;
+      var cell = void 0;
       cells.each(function (n) {
         if (n < index && this.colSpan && this.colSpan > 1) {
           index -= this.colSpan - 1;
@@ -281,7 +278,7 @@
       }
 
       var keyChange = false;
-      var groupHeight;
+      var groupHeight = void 0;
 
       switch (event.keyCode) {
         case 37:
@@ -471,8 +468,8 @@
   };
 
   Drupal.tableDrag.prototype.dropRow = function (event, self) {
-    var droppedRow;
-    var $droppedRow;
+    var droppedRow = void 0;
+    var $droppedRow = void 0;
 
     if (self.rowObject !== null) {
       droppedRow = self.rowObject.element;
@@ -588,10 +585,10 @@
   Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
     var rowSettings = this.rowSettings(group, changedRow);
     var $changedRow = $(changedRow);
-    var sourceRow;
-    var $previousRow;
-    var previousRow;
-    var useSibling;
+    var sourceRow = void 0;
+    var $previousRow = void 0;
+    var previousRow = void 0;
+    var useSibling = void 0;
 
     if (rowSettings.relationship === 'self' || rowSettings.relationship === 'group') {
       sourceRow = changedRow;
@@ -701,7 +698,7 @@
     var b = document.body;
 
     var windowHeight = this.windowHeight = window.innerHeight || (de.clientHeight && de.clientWidth !== 0 ? de.clientHeight : b.offsetHeight);
-    var scrollY;
+    var scrollY = void 0;
     if (document.all) {
       scrollY = this.scrollY = !de.scrollTop ? b.scrollTop : de.scrollTop;
     } else {
@@ -809,8 +806,8 @@
   Drupal.tableDrag.prototype.row.prototype.isValidSwap = function (row) {
     var $row = $(row);
     if (this.indentEnabled) {
-      var prevRow;
-      var nextRow;
+      var prevRow = void 0;
+      var nextRow = void 0;
       if (this.direction === 'down') {
         prevRow = row;
         nextRow = $row.next('tr').get(0);
@@ -847,8 +844,8 @@
 
   Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow, nextRow) {
     var $prevRow = $(prevRow);
-    var minIndent;
-    var maxIndent;
+    var minIndent = void 0;
+    var maxIndent = void 0;
 
     minIndent = nextRow ? $(nextRow).find('.js-indentation').length : 0;
 
@@ -901,7 +898,7 @@
     var siblings = [];
     var directions = ['prev', 'next'];
     var rowIndentation = this.indents;
-    var checkRowIndentation;
+    var checkRowIndentation = void 0;
     for (var d = 0; d < directions.length; d++) {
       var checkRow = $(this.element)[directions[d]]();
       while (checkRow.length) {
@@ -957,11 +954,9 @@
     tableDragChangedMarker: function tableDragChangedMarker() {
       return '<abbr class="warning tabledrag-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
     },
-
     tableDragIndentation: function tableDragIndentation() {
       return '<div class="js-indentation indentation">&nbsp;</div>';
     },
-
     tableDragChangedWarning: function tableDragChangedWarning() {
       return '<div class="tabledrag-changed-warning messages messages--warning" role="alert">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('You have unsaved changes.') + '</div>';
     }

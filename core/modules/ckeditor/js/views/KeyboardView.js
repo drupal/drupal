@@ -6,17 +6,12 @@
 **/
 
 (function ($, Drupal, Backbone, _) {
-
-  'use strict';
-
   Drupal.ckeditor.KeyboardView = Backbone.View.extend({
     initialize: function initialize() {
       this.$el.on('keydown.ckeditor', '.ckeditor-buttons a, .ckeditor-multiple-buttons a', this.onPressButton.bind(this));
       this.$el.on('keydown.ckeditor', '[data-drupal-ckeditor-type="group"]', this.onPressGroup.bind(this));
     },
-
     render: function render() {},
-
     onPressButton: function onPressButton(event) {
       var upDownKeys = [38, 63232, 40, 63233];
       var leftRightKeys = [37, 63234, 39, 63235];
@@ -31,13 +26,13 @@
         var $button = $target.parent();
         var $container = $button.parent();
         var $group = $button.closest('.ckeditor-toolbar-group');
-        var $row;
+        var $row = void 0;
         var containerType = $container.data('drupal-ckeditor-button-sorting');
         var $availableButtons = this.$el.find('[data-drupal-ckeditor-button-sorting="source"]');
         var $activeButtons = this.$el.find('.ckeditor-toolbar-active');
 
         var $originalGroup = $group;
-        var dir;
+        var dir = void 0;
 
         if (containerType === 'source') {
           if (_.indexOf([40, 63233], event.keyCode) > -1) {
@@ -105,7 +100,6 @@
         event.stopPropagation();
       }
     },
-
     onPressGroup: function onPressGroup(event) {
       var upDownKeys = [38, 63232, 40, 63233];
       var leftRightKeys = [37, 63234, 39, 63235];
@@ -124,8 +118,8 @@
         var $group = $(event.currentTarget);
         var $container = $group.parent();
         var $siblings = $container.children();
-        var index;
-        var dir;
+        var index = void 0;
+        var dir = void 0;
 
         if (_.indexOf(leftRightKeys, event.keyCode) > -1) {
           index = $siblings.index($group);

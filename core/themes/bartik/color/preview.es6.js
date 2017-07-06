@@ -3,12 +3,9 @@
  * Preview for the Bartik theme.
  */
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.color = {
     logoChanged: false,
-    callback: function (context, settings, $form) {
+    callback(context, settings, $form) {
       // Change the logo to be the real one.
       if (!this.logoChanged) {
         $('.color-preview .color-preview-logo img').attr('src', drupalSettings.color.logo);
@@ -19,8 +16,8 @@
         $('div').remove('.color-preview-logo');
       }
 
-      var $colorPreview = $form.find('.color-preview');
-      var $colorPalette = $form.find('.js-color-palette');
+      const $colorPreview = $form.find('.color-preview');
+      const $colorPalette = $form.find('.js-color-palette');
 
       // Solid background.
       $colorPreview.css('backgroundColor', $colorPalette.find('input[name="palette[bg]"]').val());
@@ -30,7 +27,7 @@
       $colorPreview.find('.color-preview-content a').css('color', $colorPalette.find('input[name="palette[link]"]').val());
 
       // Sidebar block.
-      var $colorPreviewBlock = $colorPreview.find('.color-preview-sidebar .color-preview-block');
+      const $colorPreviewBlock = $colorPreview.find('.color-preview-sidebar .color-preview-block');
       $colorPreviewBlock.css('background-color', $colorPalette.find('input[name="palette[sidebar]"]').val());
       $colorPreviewBlock.css('border-color', $colorPalette.find('input[name="palette[sidebarborders]"]').val());
 
@@ -38,12 +35,12 @@
       $colorPreview.find('.color-preview-footer-wrapper').css('background-color', $colorPalette.find('input[name="palette[footer]"]').val());
 
       // CSS3 Gradients.
-      var gradient_start = $colorPalette.find('input[name="palette[top]"]').val();
-      var gradient_end = $colorPalette.find('input[name="palette[bottom]"]').val();
+      const gradient_start = $colorPalette.find('input[name="palette[top]"]').val();
+      const gradient_end = $colorPalette.find('input[name="palette[bottom]"]').val();
 
-      $colorPreview.find('.color-preview-header').attr('style', 'background-color: ' + gradient_start + '; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(' + gradient_start + '), to(' + gradient_end + ')); background-image: -moz-linear-gradient(-90deg, ' + gradient_start + ', ' + gradient_end + ');');
+      $colorPreview.find('.color-preview-header').attr('style', `background-color: ${gradient_start}; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(${gradient_start}), to(${gradient_end})); background-image: -moz-linear-gradient(-90deg, ${gradient_start}, ${gradient_end});`);
 
       $colorPreview.find('.color-preview-site-name').css('color', $colorPalette.find('input[name="palette[titleslogan]"]').val());
-    }
+    },
   };
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

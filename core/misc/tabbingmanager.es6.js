@@ -28,16 +28,12 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Provides an API for managing page tabbing order modifications.
    *
    * @constructor Drupal~TabbingManager
    */
   function TabbingManager() {
-
     /**
      * Tabbing sets are stored as a stack. The active set is at the top of the
      * stack. We use a JavaScript array as if it were a stack; we consider the
@@ -70,24 +66,24 @@
      *
      * @fires event:drupalTabbingConstrained
      */
-    constrain: function (elements) {
+    constrain(elements) {
       // Deactivate all tabbingContexts to prepare for the new constraint. A
       // tabbingContext instance will only be reactivated if the stack is
       // unwound to it in the _unwindStack() method.
-      var il = this.stack.length;
-      for (var i = 0; i < il; i++) {
+      const il = this.stack.length;
+      for (let i = 0; i < il; i++) {
         this.stack[i].deactivate();
       }
 
       // The "active tabbing set" are the elements tabbing should be constrained
       // to.
-      var $elements = $(elements).find(':tabbable').addBack(':tabbable');
+      const $elements = $(elements).find(':tabbable').addBack(':tabbable');
 
-      var tabbingContext = new TabbingContext({
+      const tabbingContext = new TabbingContext({
         // The level is the current height of the stack before this new
         // tabbingContext is pushed on top of the stack.
         level: this.stack.length,
-        $tabbableElements: $elements
+        $tabbableElements: $elements,
       });
 
       this.stack.push(tabbingContext);
@@ -109,10 +105,10 @@
      * from the top-most released tabbingContext down to the first non-released
      * tabbingContext instance. This non-released instance is then activated.
      */
-    release: function () {
+    release() {
       // Unwind as far as possible: find the topmost non-released
       // tabbingContext.
-      var toActivate = this.stack.length - 1;
+      let toActivate = this.stack.length - 1;
       while (toActivate >= 0 && this.stack[toActivate].released) {
         toActivate--;
       }
@@ -137,18 +133,18 @@
      * @param {Drupal~TabbingContext} tabbingContext
      *   The TabbingContext instance that has been activated.
      */
-    activate: function (tabbingContext) {
-      var $set = tabbingContext.$tabbableElements;
-      var level = tabbingContext.level;
+    activate(tabbingContext) {
+      const $set = tabbingContext.$tabbableElements;
+      const level = tabbingContext.level;
       // Determine which elements are reachable via tabbing by default.
-      var $disabledSet = $(':tabbable')
+      const $disabledSet = $(':tabbable')
         // Exclude elements of the active tabbing set.
         .not($set);
       // Set the disabled set on the tabbingContext.
       tabbingContext.$disabledElements = $disabledSet;
       // Record the tabindex for each element, so we can restore it later.
-      var il = $disabledSet.length;
-      for (var i = 0; i < il; i++) {
+      const il = $disabledSet.length;
+      for (let i = 0; i < il; i++) {
         this.recordTabindex($disabledSet.eq(i), level);
       }
       // Make all tabbable elements outside of the active tabbing set
@@ -160,7 +156,7 @@
       // Set focus on an element in the tabbingContext's set of tabbable
       // elements. First, check if there is an element with an autofocus
       // attribute. Select the last one from the DOM order.
-      var $hasFocus = $set.filter('[autofocus]').eq(-1);
+      let $hasFocus = $set.filter('[autofocus]').eq(-1);
       // If no element in the tabbable set has an autofocus attribute, select
       // the first element in the set.
       if ($hasFocus.length === 0) {
@@ -178,11 +174,11 @@
      * @param {Drupal~TabbingContext} tabbingContext
      *   The TabbingContext instance that has been deactivated.
      */
-    deactivate: function (tabbingContext) {
-      var $set = tabbingContext.$disabledElements;
-      var level = tabbingContext.level;
-      var il = $set.length;
-      for (var i = 0; i < il; i++) {
+    deactivate(tabbingContext) {
+      const $set = tabbingContext.$disabledElements;
+      const level = tabbingContext.level;
+      const il = $set.length;
+      for (let i = 0; i < il; i++) {
         this.restoreTabindex($set.eq(i), level);
       }
     },
@@ -195,11 +191,11 @@
      * @param {number} level
      *   The stack level for which the tabindex attribute should be recorded.
      */
-    recordTabindex: function ($el, level) {
-      var tabInfo = $el.data('drupalOriginalTabIndices') || {};
+    recordTabindex($el, level) {
+      const tabInfo = $el.data('drupalOriginalTabIndices') || {};
       tabInfo[level] = {
         tabindex: $el[0].getAttribute('tabindex'),
-        autofocus: $el[0].hasAttribute('autofocus')
+        autofocus: $el[0].hasAttribute('autofocus'),
       };
       $el.data('drupalOriginalTabIndices', tabInfo);
     },
@@ -212,10 +208,10 @@
      * @param {number} level
      *   The stack level for which the tabindex attribute should be restored.
      */
-    restoreTabindex: function ($el, level) {
-      var tabInfo = $el.data('drupalOriginalTabIndices');
+    restoreTabindex($el, level) {
+      const tabInfo = $el.data('drupalOriginalTabIndices');
       if (tabInfo && tabInfo[level]) {
-        var data = tabInfo[level];
+        const data = tabInfo[level];
         if (data.tabindex) {
           $el[0].setAttribute('tabindex', data.tabindex);
         }
@@ -235,7 +231,7 @@
         }
         else {
           // Remove the data for this stack level and higher.
-          var levelToDelete = level;
+          let levelToDelete = level;
           while (tabInfo.hasOwnProperty(levelToDelete)) {
             delete tabInfo[levelToDelete];
             levelToDelete++;
@@ -243,7 +239,7 @@
           $el.data('drupalOriginalTabIndices', tabInfo);
         }
       }
-    }
+    },
   });
 
   /**
@@ -272,7 +268,6 @@
    *   tabbingContext can be active at a time.
    */
   function TabbingContext(options) {
-
     $.extend(this, /** @lends Drupal~TabbingContext# */{
 
       /**
@@ -298,7 +293,7 @@
       /**
        * @type {bool}
        */
-      active: false
+      active: false,
     }, options);
   }
 
@@ -315,7 +310,7 @@
      *
      * @fires event:drupalTabbingContextReleased
      */
-    release: function () {
+    release() {
       if (!this.released) {
         this.deactivate();
         this.released = true;
@@ -330,7 +325,7 @@
      *
      * @fires event:drupalTabbingContextActivated
      */
-    activate: function () {
+    activate() {
       // A released TabbingContext object can never be activated again.
       if (!this.active && !this.released) {
         this.active = true;
@@ -345,14 +340,14 @@
      *
      * @fires event:drupalTabbingContextDeactivated
      */
-    deactivate: function () {
+    deactivate() {
       if (this.active) {
         this.active = false;
         Drupal.tabbingManager.deactivate(this);
         // Allow modules to respond to the constrain event.
         $(document).trigger('drupalTabbingContextDeactivated', this);
       }
-    }
+    },
   });
 
   // Mark this behavior as processed on the first pass and return if it is
@@ -365,5 +360,4 @@
    * @type {Drupal~TabbingManager}
    */
   Drupal.tabbingManager = new TabbingManager();
-
 }(jQuery, Drupal));

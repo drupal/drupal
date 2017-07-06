@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Move a block in the blocks table from one region to another.
    *
@@ -19,13 +16,13 @@
    *   Attaches the drag behavior to a applicable table element.
    */
   Drupal.behaviors.termDrag = {
-    attach: function (context, settings) {
-      var backStep = settings.taxonomy.backStep;
-      var forwardStep = settings.taxonomy.forwardStep;
+    attach(context, settings) {
+      const backStep = settings.taxonomy.backStep;
+      const forwardStep = settings.taxonomy.forwardStep;
       // Get the blocks tableDrag object.
-      var tableDrag = Drupal.tableDrag.taxonomy;
-      var $table = $('#taxonomy');
-      var rows = $table.find('tr').length;
+      const tableDrag = Drupal.tableDrag.taxonomy;
+      const $table = $('#taxonomy');
+      const rows = $table.find('tr').length;
 
       // When a row is swapped, keep previous and next page classes set.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
@@ -33,9 +30,9 @@
         $table.find('tr.taxonomy-term-divider-top').removeClass('taxonomy-term-divider-top');
         $table.find('tr.taxonomy-term-divider-bottom').removeClass('taxonomy-term-divider-bottom');
 
-        var tableBody = $table[0].tBodies[0];
+        const tableBody = $table[0].tBodies[0];
         if (backStep) {
-          for (var n = 0; n < backStep; n++) {
+          for (let n = 0; n < backStep; n++) {
             $(tableBody.rows[n]).addClass('taxonomy-term-preview');
           }
           $(tableBody.rows[backStep - 1]).addClass('taxonomy-term-divider-top');
@@ -43,14 +40,13 @@
         }
 
         if (forwardStep) {
-          for (var k = rows - forwardStep - 1; k < rows - 1; k++) {
+          for (let k = rows - forwardStep - 1; k < rows - 1; k++) {
             $(tableBody.rows[k]).addClass('taxonomy-term-preview');
           }
           $(tableBody.rows[rows - forwardStep - 2]).addClass('taxonomy-term-divider-top');
           $(tableBody.rows[rows - forwardStep - 1]).addClass('taxonomy-term-divider-bottom');
         }
       };
-    }
+    },
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

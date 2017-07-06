@@ -7,15 +7,11 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   Drupal.quickedit.BaseModel = Backbone.Model.extend({
     initialize: function initialize(options) {
       this.__initialized = true;
       return Backbone.Model.prototype.initialize.call(this, options);
     },
-
     set: function set(key, val, options) {
       if (this.__initialized) {
         if ((typeof key === 'undefined' ? 'undefined' : _typeof(key)) === 'object') {
@@ -29,6 +25,5 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
       return Backbone.Model.prototype.set.call(this, key, val, options);
     }
-
   });
 })(Drupal, Backbone);

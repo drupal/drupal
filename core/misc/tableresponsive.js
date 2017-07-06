@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, window) {
-
-  'use strict';
-
   Drupal.behaviors.tableResponsive = {
     attach: function attach(context, settings) {
       var $tables = $(context).find('table.responsive-enabled').once('tableresponsive');
@@ -53,7 +50,6 @@
         this.$link.hide().text(this.hideText);
       }
     },
-
     eventhandlerToggleColumns: function eventhandlerToggleColumns(e) {
       e.preventDefault();
       var self = this;

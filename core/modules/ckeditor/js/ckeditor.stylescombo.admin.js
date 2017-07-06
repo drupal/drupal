@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings, _) {
-
-  'use strict';
-
   Drupal.behaviors.ckeditorStylesComboSettings = {
     attach: function attach(context) {
       var $context = $(context);
@@ -25,7 +22,6 @@
         }
       });
     },
-
     _generateStylesSetSetting: function _generateStylesSetSetting(styles) {
       var stylesSet = [];
 
@@ -65,10 +61,10 @@
         var styles = $.trim($('[data-drupal-selector="edit-editor-settings-plugins-stylescombo-styles"]').val());
         if (styles.length === 0) {
           return Drupal.t('No styles configured');
-        } else {
-          var count = $.trim(styles).split('\n').length;
-          return Drupal.t('@count styles configured', { '@count': count });
         }
+
+        var count = $.trim(styles).split('\n').length;
+        return Drupal.t('@count styles configured', { '@count': count });
       });
     }
   };

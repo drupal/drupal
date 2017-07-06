@@ -10,15 +10,12 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * Store the state of weight columns display for all tables.
    *
    * Default value is to hide weight columns.
    */
-  var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
+  let showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
 
   /**
    * Drag and drop table rows with field manipulation.
@@ -35,7 +32,7 @@
    * @type {Drupal~behavior}
    */
   Drupal.behaviors.tableDrag = {
-    attach: function (context, settings) {
+    attach(context, settings) {
       function initTableDrag(table, base) {
         if (table.length) {
           // Create the new tableDrag instance. Save in the Drupal variable
@@ -44,12 +41,12 @@
         }
       }
 
-      for (var base in settings.tableDrag) {
+      for (const base in settings.tableDrag) {
         if (settings.tableDrag.hasOwnProperty(base)) {
-          initTableDrag($(context).find('#' + base).once('tabledrag'), base);
+          initTableDrag($(context).find(`#${base}`).once('tabledrag'), base);
         }
       }
-    }
+    },
   };
 
   /**
@@ -63,8 +60,8 @@
    *   Settings for the table added via drupal_add_dragtable().
    */
   Drupal.tableDrag = function (table, tableSettings) {
-    var self = this;
-    var $table = $(table);
+    const self = this;
+    const $table = $(table);
 
     /**
      * @type {jQuery}
@@ -146,7 +143,7 @@
      * @prop {number} interval
      * @prop {number} trigger
      */
-    this.scrollSettings = {amount: 4, interval: 50, trigger: 70};
+    this.scrollSettings = { amount: 4, interval: 50, trigger: 70 };
 
     /**
      *
@@ -175,9 +172,9 @@
      * @type {bool}
      */
     this.indentEnabled = false;
-    for (var group in tableSettings) {
+    for (const group in tableSettings) {
       if (tableSettings.hasOwnProperty(group)) {
-        for (var n in tableSettings[group]) {
+        for (const n in tableSettings[group]) {
           if (tableSettings[group].hasOwnProperty(n)) {
             if (tableSettings[group][n].relationship === 'parent') {
               this.indentEnabled = true;
@@ -190,7 +187,6 @@
       }
     }
     if (this.indentEnabled) {
-
       /**
        * Total width of indents, set in makeDraggable.
        *
@@ -201,10 +197,10 @@
       // Because the table doesn't need to start with any indentations, we
       // manually append 2 indentations in the first draggable row, measure
       // the offset, then remove.
-      var indent = Drupal.theme('tableDragIndentation');
-      var testRow = $('<tr/>').addClass('draggable').appendTo(table);
-      var testCell = $('<td/>').appendTo(testRow).prepend(indent).prepend(indent);
-      var $indentation = testCell.find('.js-indentation');
+      const indent = Drupal.theme('tableDragIndentation');
+      const testRow = $('<tr/>').addClass('draggable').appendTo(table);
+      const testCell = $('<td/>').appendTo(testRow).prepend(indent).prepend(indent);
+      const $indentation = testCell.find('.js-indentation');
 
       /**
        *
@@ -216,7 +212,9 @@
 
     // Make each applicable row draggable.
     // Match immediate children of the parent element to allow nesting.
-    $table.find('> tr.draggable, > tbody > tr.draggable').each(function () { self.makeDraggable(this); });
+    $table.find('> tr.draggable, > tbody > tr.draggable').each(function () {
+      self.makeDraggable(this);
+    });
 
     // Add a link before the table for users to show or hide weight columns.
     $table.before($('<button type="button" class="link tabledrag-toggle-weight"></button>')
@@ -226,7 +224,7 @@
         this.toggleColumns();
       }, this))
       .wrap('<div class="tabledrag-toggle-weight-wrapper"></div>')
-      .parent()
+      .parent(),
     );
 
     // Initialize the specified columns (for example, weight or parent columns)
@@ -237,10 +235,10 @@
 
     // Add event bindings to the document. The self variable is passed along
     // as event handlers do not have direct access to the tableDrag object.
-    $(document).on('touchmove', function (event) { return self.dragRow(event.originalEvent.touches[0], self); });
-    $(document).on('touchend', function (event) { return self.dropRow(event.originalEvent.touches[0], self); });
-    $(document).on('mousemove pointermove', function (event) { return self.dragRow(event, self); });
-    $(document).on('mouseup pointerup', function (event) { return self.dropRow(event, self); });
+    $(document).on('touchmove', event => self.dragRow(event.originalEvent.touches[0], self));
+    $(document).on('touchend', event => self.dropRow(event.originalEvent.touches[0], self));
+    $(document).on('mousemove pointermove', event => self.dragRow(event, self));
+    $(document).on('mouseup pointerup', event => self.dropRow(event, self));
 
     // React to localStorage event showing or hiding weight columns.
     $(window).on('storage', $.proxy(function (e) {
@@ -262,17 +260,16 @@
    * 'Drupal.tableDrag.showWeight' localStorage value.
    */
   Drupal.tableDrag.prototype.initColumns = function () {
-    var $table = this.$table;
-    var hidden;
-    var cell;
-    var columnIndex;
-    for (var group in this.tableSettings) {
+    const $table = this.$table;
+    let hidden;
+    let cell;
+    let columnIndex;
+    for (const group in this.tableSettings) {
       if (this.tableSettings.hasOwnProperty(group)) {
-
         // Find the first field in this group.
-        for (var d in this.tableSettings[group]) {
+        for (const d in this.tableSettings[group]) {
           if (this.tableSettings[group].hasOwnProperty(d)) {
-            var field = $table.find('.' + this.tableSettings[group][d].target).eq(0);
+            const field = $table.find(`.${this.tableSettings[group][d].target}`).eq(0);
             if (field.length && this.tableSettings[group][d].hidden) {
               hidden = this.tableSettings[group][d].hidden;
               cell = field.closest('td');
@@ -308,17 +305,17 @@
   Drupal.tableDrag.prototype.addColspanClass = function (columnIndex) {
     return function () {
       // Get the columnIndex and adjust for any colspans in this row.
-      var $row = $(this);
-      var index = columnIndex;
-      var cells = $row.children();
-      var cell;
+      const $row = $(this);
+      let index = columnIndex;
+      const cells = $row.children();
+      let cell;
       cells.each(function (n) {
         if (n < index && this.colSpan && this.colSpan > 1) {
           index -= this.colSpan - 1;
         }
       });
       if (index > 0) {
-        cell = cells.filter(':nth-child(' + index + ')');
+        cell = cells.filter(`:nth-child(${index})`);
         if (cell[0].colSpan && cell[0].colSpan > 1) {
           // If this cell has a colspan, mark it so we can reduce the colspan.
           cell.addClass('tabledrag-has-colspan');
@@ -376,7 +373,7 @@
    * Undo showColumns().
    */
   Drupal.tableDrag.prototype.hideColumns = function () {
-    var $tables = $('table').findOnce('tabledrag');
+    const $tables = $('table').findOnce('tabledrag');
     // Hide weight/parent cells and headers.
     $tables.find('.tabledrag-hide').css('display', 'none');
     // Show TableDrag handles.
@@ -395,7 +392,7 @@
    * Undo hideColumns().
    */
   Drupal.tableDrag.prototype.showColumns = function () {
-    var $tables = $('table').findOnce('tabledrag');
+    const $tables = $('table').findOnce('tabledrag');
     // Show weight/parent cells and headers.
     $tables.find('.tabledrag-hide').css('display', '');
     // Hide TableDrag handles.
@@ -420,15 +417,15 @@
    *   The table row settings.
    */
   Drupal.tableDrag.prototype.rowSettings = function (group, row) {
-    var field = $(row).find('.' + group);
-    var tableSettingsGroup = this.tableSettings[group];
-    for (var delta in tableSettingsGroup) {
+    const field = $(row).find(`.${group}`);
+    const tableSettingsGroup = this.tableSettings[group];
+    for (const delta in tableSettingsGroup) {
       if (tableSettingsGroup.hasOwnProperty(delta)) {
-        var targetClass = tableSettingsGroup[delta].target;
-        if (field.is('.' + targetClass)) {
+        const targetClass = tableSettingsGroup[delta].target;
+        if (field.is(`.${targetClass}`)) {
           // Return a copy of the row settings.
-          var rowSettings = {};
-          for (var n in tableSettingsGroup[delta]) {
+          const rowSettings = {};
+          for (const n in tableSettingsGroup[delta]) {
             if (tableSettingsGroup[delta].hasOwnProperty(n)) {
               rowSettings[n] = tableSettingsGroup[delta][n];
             }
@@ -446,14 +443,14 @@
    *   The item to add event handlers to.
    */
   Drupal.tableDrag.prototype.makeDraggable = function (item) {
-    var self = this;
-    var $item = $(item);
+    const self = this;
+    const $item = $(item);
     // Add a class to the title link.
     $item.find('td:first-of-type').find('a').addClass('menu-item__link');
     // Create the handle.
-    var handle = $('<a href="#" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>').attr('title', Drupal.t('Drag to re-order'));
+    const handle = $('<a href="#" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>').attr('title', Drupal.t('Drag to re-order'));
     // Insert the handle after indentations (if any).
-    var $indentationLast = $item.find('td:first-of-type').find('.js-indentation').eq(-1);
+    const $indentationLast = $item.find('td:first-of-type').find('.js-indentation').eq(-1);
     if ($indentationLast.length) {
       $indentationLast.after(handle);
       // Update the total width of indentation in this entire table.
@@ -463,7 +460,7 @@
       $item.find('td').eq(0).prepend(handle);
     }
 
-    handle.on('mousedown touchstart pointerdown', function (event) {
+    handle.on('mousedown touchstart pointerdown', (event) => {
       event.preventDefault();
       if (event.originalEvent.type === 'touchstart') {
         event = event.originalEvent.touches[0];
@@ -472,32 +469,32 @@
     });
 
     // Prevent the anchor tag from jumping us to the top of the page.
-    handle.on('click', function (e) {
+    handle.on('click', (e) => {
       e.preventDefault();
     });
 
     // Set blur cleanup when a handle is focused.
-    handle.on('focus', function () {
+    handle.on('focus', () => {
       self.safeBlur = true;
     });
 
     // On blur, fire the same function as a touchend/mouseup. This is used to
     // update values after a row has been moved through the keyboard support.
-    handle.on('blur', function (event) {
+    handle.on('blur', (event) => {
       if (self.rowObject && self.safeBlur) {
         self.dropRow(event, self);
       }
     });
 
     // Add arrow-key support to the handle.
-    handle.on('keydown', function (event) {
+    handle.on('keydown', (event) => {
       // If a rowObject doesn't yet exist and this isn't the tab key.
       if (event.keyCode !== 9 && !self.rowObject) {
         self.rowObject = new self.row(item, 'keyboard', self.indentEnabled, self.maxDepth, true);
       }
 
-      var keyChange = false;
-      var groupHeight;
+      let keyChange = false;
+      let groupHeight;
 
       /* eslint-disable no-fallthrough */
 
@@ -580,12 +577,12 @@
             if ($(item).is('.tabledrag-root')) {
               // Swap with the next group (necessarily a top-level one).
               groupHeight = 0;
-              var nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
+              const nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
               if (nextGroup) {
                 $(nextGroup.group).each(function () {
                   groupHeight += $(this).is(':hidden') ? 0 : this.offsetHeight;
                 });
-                var nextGroupRow = $(nextGroup.group).eq(-1).get(0);
+                const nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                 self.rowObject.swap('after', nextGroupRow);
                 // No need to check for indentation, 0 is the only valid one.
                 window.scrollBy(0, parseInt(groupHeight, 10));
@@ -628,8 +625,7 @@
     // scrolling. IE and Safari will suppress scrolling on keydown, but all
     // other browsers need to return false on keypress.
     // http://www.quirksmode.org/js/keys.html
-    handle.on('keypress', function (event) {
-
+    handle.on('keypress', (event) => {
       /* eslint-disable no-fallthrough */
 
       switch (event.keyCode) {
@@ -645,7 +641,6 @@
       }
 
       /* eslint-enable no-fallthrough */
-
     });
   };
 
@@ -704,8 +699,8 @@
   Drupal.tableDrag.prototype.dragRow = function (event, self) {
     if (self.dragObject) {
       self.currentPointerCoords = self.pointerCoords(event);
-      var y = self.currentPointerCoords.y - self.dragObject.initOffset.y;
-      var x = self.currentPointerCoords.x - self.dragObject.initOffset.x;
+      const y = self.currentPointerCoords.y - self.dragObject.initOffset.y;
+      const x = self.currentPointerCoords.x - self.dragObject.initOffset.x;
 
       // Check for row swapping and vertical scrolling.
       if (y !== self.oldY) {
@@ -713,7 +708,7 @@
         // Update the old value.
         self.oldY = y;
         // Check if the window should be scrolled (and how fast).
-        var scrollAmount = self.checkScroll(self.currentPointerCoords.y);
+        const scrollAmount = self.checkScroll(self.currentPointerCoords.y);
         // Stop any current scrolling.
         clearInterval(self.scrollInterval);
         // Continue scrolling if the mouse has moved in the scroll direction.
@@ -722,7 +717,7 @@
         }
 
         // If we have a valid target, perform the swap and restripe the table.
-        var currentRow = self.findDropTargetRow(x, y);
+        const currentRow = self.findDropTargetRow(x, y);
         if (currentRow) {
           if (self.rowObject.direction === 'down') {
             self.rowObject.swap('after', currentRow, self);
@@ -738,13 +733,13 @@
 
       // Similar to row swapping, handle indentations.
       if (self.indentEnabled) {
-        var xDiff = self.currentPointerCoords.x - self.dragObject.indentPointerPos.x;
+        const xDiff = self.currentPointerCoords.x - self.dragObject.indentPointerPos.x;
         // Set the number of indentations the pointer has been moved left or
         // right.
-        var indentDiff = Math.round(xDiff / self.indentAmount);
+        const indentDiff = Math.round(xDiff / self.indentAmount);
         // Indent the row with our estimated diff, which may be further
         // restricted according to the rows around this row.
-        var indentChange = self.rowObject.indent(indentDiff);
+        const indentChange = self.rowObject.indent(indentDiff);
         // Update table and pointer indentations.
         self.dragObject.indentPointerPos.x += self.indentAmount * indentChange * self.rtl;
         self.indentCount = Math.max(self.indentCount, self.rowObject.indents);
@@ -763,8 +758,8 @@
    *   The tableDrag instance.
    */
   Drupal.tableDrag.prototype.dropRow = function (event, self) {
-    var droppedRow;
-    var $droppedRow;
+    let droppedRow;
+    let $droppedRow;
 
     // Drop row functionality.
     if (self.rowObject !== null) {
@@ -777,11 +772,11 @@
 
         // If a setting exists for affecting the entire group, update all the
         // fields in the entire dragged group.
-        for (var group in self.tableSettings) {
+        for (const group in self.tableSettings) {
           if (self.tableSettings.hasOwnProperty(group)) {
-            var rowSettings = self.rowSettings(group, droppedRow);
+            const rowSettings = self.rowSettings(group, droppedRow);
             if (rowSettings.relationship === 'group') {
-              for (var n in self.rowObject.children) {
+              for (const n in self.rowObject.children) {
                 if (self.rowObject.children.hasOwnProperty(n)) {
                   self.updateField(self.rowObject.children[n], group);
                 }
@@ -828,11 +823,11 @@
    */
   Drupal.tableDrag.prototype.pointerCoords = function (event) {
     if (event.pageX || event.pageY) {
-      return {x: event.pageX, y: event.pageY};
+      return { x: event.pageX, y: event.pageY };
     }
     return {
       x: event.clientX + document.body.scrollLeft - document.body.clientLeft,
-      y: event.clientY + document.body.scrollTop - document.body.clientTop
+      y: event.clientY + document.body.scrollTop - document.body.clientTop,
     };
   };
 
@@ -851,9 +846,9 @@
    *   An object with `x` and `y` keys indicating the position.
    */
   Drupal.tableDrag.prototype.getPointerOffset = function (target, event) {
-    var docPos = $(target).offset();
-    var pointerPos = this.pointerCoords(event);
-    return {x: pointerPos.x - docPos.left, y: pointerPos.y - docPos.top};
+    const docPos = $(target).offset();
+    const pointerPos = this.pointerCoords(event);
+    return { x: pointerPos.x - docPos.left, y: pointerPos.y - docPos.top };
   };
 
   /**
@@ -870,11 +865,11 @@
    *   The drop target row, if found.
    */
   Drupal.tableDrag.prototype.findDropTargetRow = function (x, y) {
-    var rows = $(this.table.tBodies[0].rows).not(':hidden');
-    for (var n = 0; n < rows.length; n++) {
-      var row = rows[n];
-      var $row = $(row);
-      var rowY = $row.offset().top;
+    const rows = $(this.table.tBodies[0].rows).not(':hidden');
+    for (let n = 0; n < rows.length; n++) {
+      let row = rows[n];
+      let $row = $(row);
+      const rowY = $row.offset().top;
       var rowHeight;
       // Because Safari does not report offsetHeight on table rows, but does on
       // table cells, grab the firstChild of the row and use that instead.
@@ -929,7 +924,7 @@
    *   DOM object for the row that was just dropped.
    */
   Drupal.tableDrag.prototype.updateFields = function (changedRow) {
-    for (var group in this.tableSettings) {
+    for (const group in this.tableSettings) {
       if (this.tableSettings.hasOwnProperty(group)) {
         // Each group may have a different setting for relationship, so we find
         // the source rows for each separately.
@@ -947,12 +942,12 @@
    *   The settings group on which field updates will occur.
    */
   Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
-    var rowSettings = this.rowSettings(group, changedRow);
-    var $changedRow = $(changedRow);
-    var sourceRow;
-    var $previousRow;
-    var previousRow;
-    var useSibling;
+    let rowSettings = this.rowSettings(group, changedRow);
+    const $changedRow = $(changedRow);
+    let sourceRow;
+    let $previousRow;
+    let previousRow;
+    let useSibling;
     // Set the row as its own target.
     if (rowSettings.relationship === 'self' || rowSettings.relationship === 'group') {
       sourceRow = changedRow;
@@ -961,10 +956,10 @@
     else if (rowSettings.relationship === 'sibling') {
       $previousRow = $changedRow.prev('tr:first-of-type');
       previousRow = $previousRow.get(0);
-      var $nextRow = $changedRow.next('tr:first-of-type');
-      var nextRow = $nextRow.get(0);
+      const $nextRow = $changedRow.next('tr:first-of-type');
+      const nextRow = $nextRow.get(0);
       sourceRow = changedRow;
-      if ($previousRow.is('.draggable') && $previousRow.find('.' + group).length) {
+      if ($previousRow.is('.draggable') && $previousRow.find(`.${group}`).length) {
         if (this.indentEnabled) {
           if ($previousRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
             sourceRow = previousRow;
@@ -974,7 +969,7 @@
           sourceRow = previousRow;
         }
       }
-      else if ($nextRow.is('.draggable') && $nextRow.find('.' + group).length) {
+      else if ($nextRow.is('.draggable') && $nextRow.find(`.${group}`).length) {
         if (this.indentEnabled) {
           if ($nextRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
             sourceRow = nextRow;
@@ -1024,13 +1019,13 @@
       rowSettings.source = rowSettings.target;
     }
 
-    var targetClass = '.' + rowSettings.target;
-    var targetElement = $changedRow.find(targetClass).get(0);
+    const targetClass = `.${rowSettings.target}`;
+    const targetElement = $changedRow.find(targetClass).get(0);
 
     // Check if a target element exists in this row.
     if (targetElement) {
-      var sourceClass = '.' + rowSettings.source;
-      var sourceElement = $(sourceClass, sourceRow).get(0);
+      const sourceClass = `.${rowSettings.source}`;
+      const sourceElement = $(sourceClass, sourceRow).get(0);
       switch (rowSettings.action) {
         case 'depth':
           // Get the depth of the target row.
@@ -1046,11 +1041,11 @@
           var siblings = this.rowObject.findSiblings(rowSettings);
           if ($(targetElement).is('select')) {
             // Get a list of acceptable values.
-            var values = [];
+            const values = [];
             $(targetElement).find('option').each(function () {
               values.push(this.value);
             });
-            var maxVal = values[values.length - 1];
+            const maxVal = values[values.length - 1];
             // Populate the values in the siblings.
             $(siblings).find(targetClass).each(function () {
               // If there are more items than possible values, assign the
@@ -1065,7 +1060,7 @@
           }
           else {
             // Assume a numeric input field.
-            var weight = parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
+            let weight = parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
             $(siblings).find(targetClass).each(function () {
               this.value = weight;
               weight++;
@@ -1091,8 +1086,8 @@
    *   The group selector.
    */
   Drupal.tableDrag.prototype.copyDragClasses = function (sourceRow, targetRow, group) {
-    var sourceElement = $(sourceRow).find('.' + group);
-    var targetElement = $(targetRow).find('.' + group);
+    const sourceElement = $(sourceRow).find(`.${group}`);
+    const targetElement = $(targetRow).find(`.${group}`);
     if (sourceElement.length && targetElement.length) {
       targetElement[0].className = sourceElement[0].className;
     }
@@ -1108,19 +1103,19 @@
    *   The suggested scroll.
    */
   Drupal.tableDrag.prototype.checkScroll = function (cursorY) {
-    var de = document.documentElement;
-    var b = document.body;
+    const de = document.documentElement;
+    const b = document.body;
 
-    var windowHeight = this.windowHeight = window.innerHeight || (de.clientHeight && de.clientWidth !== 0 ? de.clientHeight : b.offsetHeight);
-    var scrollY;
+    const windowHeight = this.windowHeight = window.innerHeight || (de.clientHeight && de.clientWidth !== 0 ? de.clientHeight : b.offsetHeight);
+    let scrollY;
     if (document.all) {
       scrollY = this.scrollY = !de.scrollTop ? b.scrollTop : de.scrollTop;
     }
     else {
       scrollY = this.scrollY = window.pageYOffset ? window.pageYOffset : window.scrollY;
     }
-    var trigger = this.scrollSettings.trigger;
-    var delta = 0;
+    const trigger = this.scrollSettings.trigger;
+    let delta = 0;
 
     // Return a scroll speed relative to the edge of the screen.
     if (cursorY - scrollY > windowHeight - trigger) {
@@ -1142,13 +1137,13 @@
    *   The amount of scroll to apply to the window.
    */
   Drupal.tableDrag.prototype.setScroll = function (scrollAmount) {
-    var self = this;
+    const self = this;
 
-    this.scrollInterval = setInterval(function () {
+    this.scrollInterval = setInterval(() => {
       // Update the scroll values stored in the object.
       self.checkScroll(self.currentPointerCoords.y);
-      var aboveTable = self.scrollY > self.table.topY;
-      var belowTable = self.scrollY + self.windowHeight < self.table.bottomY;
+      const aboveTable = self.scrollY > self.table.topY;
+      const belowTable = self.scrollY + self.windowHeight < self.table.bottomY;
       if (scrollAmount > 0 && belowTable || scrollAmount < 0 && aboveTable) {
         window.scrollBy(0, scrollAmount);
       }
@@ -1205,7 +1200,7 @@
    *   relationships.
    */
   Drupal.tableDrag.prototype.row = function (tableRow, method, indentEnabled, maxDepth, addClasses) {
-    var $tableRow = $(tableRow);
+    const $tableRow = $(tableRow);
 
     this.element = tableRow;
     this.method = method;
@@ -1222,7 +1217,7 @@
       this.children = this.findChildren(addClasses);
       this.group = $.merge(this.group, this.children);
       // Find the depth of this entire group.
-      for (var n = 0; n < this.group.length; n++) {
+      for (let n = 0; n < this.group.length; n++) {
         this.groupDepth = Math.max($(this.group[n]).find('.js-indentation').length, this.groupDepth);
       }
     }
@@ -1239,13 +1234,13 @@
    *   An array of children of the row.
    */
   Drupal.tableDrag.prototype.row.prototype.findChildren = function (addClasses) {
-    var parentIndentation = this.indents;
-    var currentRow = $(this.element, this.table).next('tr.draggable');
-    var rows = [];
-    var child = 0;
+    const parentIndentation = this.indents;
+    let currentRow = $(this.element, this.table).next('tr.draggable');
+    const rows = [];
+    let child = 0;
 
     function rowIndentation(indentNum, el) {
-      var self = $(el);
+      const self = $(el);
       if (child === 1 && (indentNum === parentIndentation)) {
         self.addClass('tree-child-first');
       }
@@ -1272,7 +1267,7 @@
       currentRow = currentRow.next('tr.draggable');
     }
     if (addClasses && rows.length) {
-      $(rows[rows.length - 1]).find('.js-indentation:nth-child(' + (parentIndentation + 1) + ')').addClass('tree-child-last');
+      $(rows[rows.length - 1]).find(`.js-indentation:nth-child(${parentIndentation + 1})`).addClass('tree-child-last');
     }
     return rows;
   };
@@ -1287,10 +1282,10 @@
    *   Whether the swap is a valid swap or not.
    */
   Drupal.tableDrag.prototype.row.prototype.isValidSwap = function (row) {
-    var $row = $(row);
+    const $row = $(row);
     if (this.indentEnabled) {
-      var prevRow;
-      var nextRow;
+      let prevRow;
+      let nextRow;
       if (this.direction === 'down') {
         prevRow = row;
         nextRow = $row.next('tr').get(0);
@@ -1325,12 +1320,12 @@
    */
   Drupal.tableDrag.prototype.row.prototype.swap = function (position, row) {
     // Makes sure only DOM object are passed to Drupal.detachBehaviors().
-    this.group.forEach(function (row) {
+    this.group.forEach((row) => {
       Drupal.detachBehaviors(row, drupalSettings, 'move');
     });
     $(row)[position](this.group);
     // Makes sure only DOM object are passed to Drupal.attachBehaviors()s.
-    this.group.forEach(function (row) {
+    this.group.forEach((row) => {
       Drupal.attachBehaviors(row, drupalSettings);
     });
     this.changed = true;
@@ -1352,9 +1347,9 @@
    *   interval.
    */
   Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow, nextRow) {
-    var $prevRow = $(prevRow);
-    var minIndent;
-    var maxIndent;
+    const $prevRow = $(prevRow);
+    let minIndent;
+    let maxIndent;
 
     // Minimum indentation:
     // Do not orphan the next row.
@@ -1377,7 +1372,7 @@
       }
     }
 
-    return {min: minIndent, max: maxIndent};
+    return { min: minIndent, max: maxIndent };
   };
 
   /**
@@ -1392,21 +1387,21 @@
    *   The number of indentations applied.
    */
   Drupal.tableDrag.prototype.row.prototype.indent = function (indentDiff) {
-    var $group = $(this.group);
+    const $group = $(this.group);
     // Determine the valid indentations interval if not available yet.
     if (!this.interval) {
-      var prevRow = $(this.element).prev('tr').get(0);
-      var nextRow = $group.eq(-1).next('tr').get(0);
+      const prevRow = $(this.element).prev('tr').get(0);
+      const nextRow = $group.eq(-1).next('tr').get(0);
       this.interval = this.validIndentInterval(prevRow, nextRow);
     }
 
     // Adjust to the nearest valid indentation.
-    var indent = this.indents + indentDiff;
+    let indent = this.indents + indentDiff;
     indent = Math.max(indent, this.interval.min);
     indent = Math.min(indent, this.interval.max);
     indentDiff = indent - this.indents;
 
-    for (var n = 1; n <= Math.abs(indentDiff); n++) {
+    for (let n = 1; n <= Math.abs(indentDiff); n++) {
       // Add or remove indentations.
       if (indentDiff < 0) {
         $group.find('.js-indentation:first-of-type').remove();
@@ -1440,15 +1435,15 @@
    *   An array of siblings.
    */
   Drupal.tableDrag.prototype.row.prototype.findSiblings = function (rowSettings) {
-    var siblings = [];
-    var directions = ['prev', 'next'];
-    var rowIndentation = this.indents;
-    var checkRowIndentation;
-    for (var d = 0; d < directions.length; d++) {
-      var checkRow = $(this.element)[directions[d]]();
+    const siblings = [];
+    const directions = ['prev', 'next'];
+    const rowIndentation = this.indents;
+    let checkRowIndentation;
+    for (let d = 0; d < directions.length; d++) {
+      let checkRow = $(this.element)[directions[d]]();
       while (checkRow.length) {
         // Check that the sibling contains a similar target field.
-        if (checkRow.find('.' + rowSettings.target)) {
+        if (checkRow.find(`.${rowSettings.target}`)) {
           // Either add immediately if this is a flat table, or check to ensure
           // that this row has the same level of indentation.
           if (this.indentEnabled) {
@@ -1482,7 +1477,7 @@
    * Remove indentation helper classes from the current row group.
    */
   Drupal.tableDrag.prototype.row.prototype.removeIndentClasses = function () {
-    for (var n in this.children) {
+    for (const n in this.children) {
       if (this.children.hasOwnProperty(n)) {
         $(this.children[n]).find('.js-indentation')
           .removeClass('tree-child')
@@ -1497,8 +1492,8 @@
    * Add an asterisk or other marker to the changed row.
    */
   Drupal.tableDrag.prototype.row.prototype.markChanged = function () {
-    var marker = Drupal.theme('tableDragChangedMarker');
-    var cell = $(this.element).find('td:first-of-type');
+    const marker = Drupal.theme('tableDragChangedMarker');
+    const cell = $(this.element).find('td:first-of-type');
     if (cell.find('abbr.tabledrag-changed').length === 0) {
       cell.append(marker);
     }
@@ -1533,15 +1528,15 @@
      * @return {string}
      *  Markup for the marker.
      */
-    tableDragChangedMarker: function () {
-      return '<abbr class="warning tabledrag-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
+    tableDragChangedMarker() {
+      return `<abbr class="warning tabledrag-changed" title="${Drupal.t('Changed')}">*</abbr>`;
     },
 
     /**
      * @return {string}
      *   Markup for the indentation.
      */
-    tableDragIndentation: function () {
+    tableDragIndentation() {
       return '<div class="js-indentation indentation">&nbsp;</div>';
     },
 
@@ -1549,9 +1544,8 @@
      * @return {string}
      *   Markup for the warning.
      */
-    tableDragChangedWarning: function () {
-      return '<div class="tabledrag-changed-warning messages messages--warning" role="alert">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('You have unsaved changes.') + '</div>';
-    }
+    tableDragChangedWarning() {
+      return `<div class="tabledrag-changed-warning messages messages--warning" role="alert">${Drupal.theme('tableDragChangedMarker')} ${Drupal.t('You have unsaved changes.')}</div>`;
+    },
   });
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

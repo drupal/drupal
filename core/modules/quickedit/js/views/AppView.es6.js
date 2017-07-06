@@ -6,9 +6,6 @@
  */
 
 (function ($, _, Backbone, Drupal) {
-
-  'use strict';
-
   // Indicates whether the page should be reloaded after in-place editing has
   // shut down. A page reload is necessary to re-instate the original HTML of
   // the edited fields if in-place editing has been canceled and one or more of
@@ -16,7 +13,7 @@
   // been changed to the empty value and hence may have been rerendered as the
   // empty string, which makes it impossible for Quick Edit to know where to
   // restore the original HTML.
-  var reload = false;
+  let reload = false;
 
   Drupal.quickedit.AppView = Backbone.View.extend(/** @lends Drupal.quickedit.AppView# */{
 
@@ -34,7 +31,7 @@
      * @param {Drupal.quickedit.FieldCollection} options.fieldsCollection
      *   All on-page fields
      */
-    initialize: function (options) {
+    initialize(options) {
       // AppView's configuration for handling states.
       // @see Drupal.quickedit.FieldModel.states
       this.activeFieldStates = ['activating', 'active'];
@@ -66,27 +63,27 @@
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.EntityModel.states}.
      */
-    appStateChange: function (entityModel, state) {
-      var app = this;
-      var entityToolbarView;
+    appStateChange(entityModel, state) {
+      const app = this;
+      let entityToolbarView;
       switch (state) {
         case 'launching':
           reload = false;
           // First, create an entity toolbar view.
           entityToolbarView = new Drupal.quickedit.EntityToolbarView({
             model: entityModel,
-            appModel: this.model
+            appModel: this.model,
           });
           entityModel.toolbarView = entityToolbarView;
           // Second, set up in-place editors.
           // They must be notified of state changes, hence this must happen
           // while the associated fields are still in the 'inactive' state.
-          entityModel.get('fields').each(function (fieldModel) {
+          entityModel.get('fields').each((fieldModel) => {
             app.setupEditor(fieldModel);
           });
           // Third, transition the entity to the 'opening' state, which will
           // transition all fields from 'inactive' to 'candidate'.
-          _.defer(function () {
+          _.defer(() => {
             entityModel.set('state', 'opening');
           });
           break;
@@ -94,7 +91,7 @@
         case 'closed':
           entityToolbarView = entityModel.toolbarView;
           // First, tear down the in-place editors.
-          entityModel.get('fields').each(function (fieldModel) {
+          entityModel.get('fields').each((fieldModel) => {
             app.teardownEditor(fieldModel);
           });
           // Second, tear down the entity toolbar view.
@@ -129,8 +126,8 @@
      * @return {bool}
      *   Whether the editor change was accepted or rejected.
      */
-    acceptEditorStateChange: function (from, to, context, fieldModel) {
-      var accept = true;
+    acceptEditorStateChange(from, to, context, fieldModel) {
+      let accept = true;
 
       // If the app is in view mode, then reject all state changes except for
       // those to 'inactive'.
@@ -183,8 +180,8 @@
         // If it's not against the general principle, then here are more
         // disallowed cases to check.
         if (accept) {
-          var activeField;
-          var activeFieldState;
+          let activeField;
+          let activeFieldState;
           // Ensure only one field (editor) at a time is active … but allow a
           // user to hop from one field to the next, even if we still have to
           // start saving the field that is currently active: assume it will be
@@ -255,38 +252,38 @@
      * @param {Drupal.quickedit.FieldModel} fieldModel
      *   The field for which an in-place editor must be set up.
      */
-    setupEditor: function (fieldModel) {
+    setupEditor(fieldModel) {
       // Get the corresponding entity toolbar.
-      var entityModel = fieldModel.get('entity');
-      var entityToolbarView = entityModel.toolbarView;
+      const entityModel = fieldModel.get('entity');
+      const entityToolbarView = entityModel.toolbarView;
       // Get the field toolbar DOM root from the entity toolbar.
-      var fieldToolbarRoot = entityToolbarView.getToolbarRoot();
+      const fieldToolbarRoot = entityToolbarView.getToolbarRoot();
       // Create in-place editor.
-      var editorName = fieldModel.get('metadata').editor;
-      var editorModel = new Drupal.quickedit.EditorModel();
-      var editorView = new Drupal.quickedit.editors[editorName]({
+      const editorName = fieldModel.get('metadata').editor;
+      const editorModel = new Drupal.quickedit.EditorModel();
+      const editorView = new Drupal.quickedit.editors[editorName]({
         el: $(fieldModel.get('el')),
         model: editorModel,
-        fieldModel: fieldModel
+        fieldModel,
       });
 
       // Create in-place editor's toolbar for this field — stored inside the
       // entity toolbar, the entity toolbar will position itself appropriately
       // above (or below) the edited element.
-      var toolbarView = new Drupal.quickedit.FieldToolbarView({
+      const toolbarView = new Drupal.quickedit.FieldToolbarView({
         el: fieldToolbarRoot,
         model: fieldModel,
         $editedElement: $(editorView.getEditedElement()),
-        editorView: editorView,
-        entityModel: entityModel
+        editorView,
+        entityModel,
       });
 
       // Create decoration for edited element: padding if necessary, sets
       // classes on the element to style it according to the current state.
-      var decorationView = new Drupal.quickedit.FieldDecorationView({
+      const decorationView = new Drupal.quickedit.FieldDecorationView({
         el: $(editorView.getEditedElement()),
         model: fieldModel,
-        editorView: editorView
+        editorView,
       });
 
       // Track these three views in FieldModel so that we can tear them down
@@ -304,7 +301,7 @@
      * @param {Drupal.quickedit.FieldModel} fieldModel
      *   The field for which an in-place editor must be torn down.
      */
-    teardownEditor: function (fieldModel) {
+    teardownEditor(fieldModel) {
       // Early-return if this field was not yet decorated.
       if (typeof fieldModel.editorView === 'undefined') {
         return;
@@ -333,9 +330,9 @@
      *
      * @see Drupal.quickedit.AppView#acceptEditorStateChange
      */
-    confirmEntityDeactivation: function (entityModel) {
-      var that = this;
-      var discardDialog;
+    confirmEntityDeactivation(entityModel) {
+      const that = this;
+      let discardDialog;
 
       function closeDiscardDialog(action) {
         discardDialog.close(action);
@@ -345,10 +342,10 @@
         // If the targetState is saving, the field must be saved, then the
         // entity must be saved.
         if (action === 'save') {
-          entityModel.set('state', 'committing', {confirmed: true});
+          entityModel.set('state', 'committing', { confirmed: true });
         }
         else {
-          entityModel.set('state', 'deactivating', {confirmed: true});
+          entityModel.set('state', 'deactivating', { confirmed: true });
           // Editing has been canceled and the changes will not be saved. Mark
           // the page for reload if the entityModel declares that it requires
           // a reload.
@@ -361,7 +358,7 @@
 
       // Only instantiate if there isn't a modal instance visible yet.
       if (!this.model.get('activeModal')) {
-        var $unsavedChanges = $('<div>' + Drupal.t('You have unsaved changes') + '</div>');
+        const $unsavedChanges = $(`<div>${Drupal.t('You have unsaved changes')}</div>`);
         discardDialog = Drupal.dialog($unsavedChanges.get(0), {
           title: Drupal.t('Discard changes?'),
           dialogClass: 'quickedit-discard-modal',
@@ -369,30 +366,30 @@
           buttons: [
             {
               text: Drupal.t('Save'),
-              click: function () {
+              click() {
                 closeDiscardDialog('save');
               },
-              primary: true
+              primary: true,
             },
             {
               text: Drupal.t('Discard changes'),
-              click: function () {
+              click() {
                 closeDiscardDialog('discard');
-              }
-            }
+              },
+            },
           ],
           // Prevent this modal from being closed without the user making a
           // choice as per http://stackoverflow.com/a/5438771.
           closeOnEscape: false,
-          create: function () {
+          create() {
             $(this).parent().find('.ui-dialog-titlebar-close').remove();
           },
           beforeClose: false,
-          close: function (event) {
+          close(event) {
             // Automatically destroy the DOM element that was used for the
             // dialog.
             $(event.target).remove();
-          }
+          },
         });
         this.model.set('activeModal', discardDialog);
 
@@ -409,9 +406,9 @@
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.
      */
-    editorStateChange: function (fieldModel, state) {
-      var from = fieldModel.previous('state');
-      var to = state;
+    editorStateChange(fieldModel, state) {
+      const from = fieldModel.previous('state');
+      const to = state;
 
       // Keep track of the highlighted field in the global state.
       if (_.indexOf(this.singleFieldStates, to) !== -1 && this.model.get('highlightedField') !== fieldModel) {
@@ -447,12 +444,12 @@
      *   Whether this change to the 'html' attribute occurred because of the
      *   propagation of changes to another instance of this field.
      */
-    renderUpdatedField: function (fieldModel, html, options) {
+    renderUpdatedField(fieldModel, html, options) {
       // Get data necessary to rerender property before it is unavailable.
-      var $fieldWrapper = $(fieldModel.get('el'));
-      var $context = $fieldWrapper.parent();
+      const $fieldWrapper = $(fieldModel.get('el'));
+      const $context = $fieldWrapper.parent();
 
-      var renderField = function () {
+      const renderField = function () {
         // Destroy the field model; this will cause all attached views to be
         // destroyed too, and removal from all collections in which it exists.
         fieldModel.destroy();
@@ -475,17 +472,17 @@
         // Deferred because renderUpdatedField is reacting to a field model
         // change event, and we want to make sure that event fully propagates
         // before making another change to the same model.
-        _.defer(function () {
+        _.defer(() => {
           // First set the state to 'candidate', to allow all attached views to
           // clean up all their "active state"-related changes.
           fieldModel.set('state', 'candidate');
 
           // Similarly, the above .set() call's change event must fully
           // propagate before calling it again.
-          _.defer(function () {
+          _.defer(() => {
             // Set the field's state to 'inactive', to enable the updating of
             // its DOM value.
-            fieldModel.set('state', 'inactive', {reason: 'rerender'});
+            fieldModel.set('state', 'inactive', { reason: 'rerender' });
 
             renderField();
           });
@@ -511,23 +508,23 @@
      *
      * @see Drupal.quickedit.AppView#renderUpdatedField
      */
-    propagateUpdatedField: function (updatedField, html, options) {
+    propagateUpdatedField(updatedField, html, options) {
       // Don't propagate field updates that themselves were caused by
       // propagation.
       if (options.propagation) {
         return;
       }
 
-      var htmlForOtherViewModes = updatedField.get('htmlForOtherViewModes');
+      const htmlForOtherViewModes = updatedField.get('htmlForOtherViewModes');
       Drupal.quickedit.collections.fields
         // Find all instances of fields that display the same logical field
         // (same entity, same field, just a different instance and maybe a
         // different view mode).
-        .where({logicalFieldID: updatedField.get('logicalFieldID')})
-        .forEach(function (field) {
+        .where({ logicalFieldID: updatedField.get('logicalFieldID') })
+        .forEach((field) => {
           // Ignore the field that was already updated.
           if (field === updatedField) {
-            return;
+
           }
           // If this other instance of the field has the same view mode, we can
           // update it easily.
@@ -539,10 +536,8 @@
           // available (and that should be the case unless this field was only
           // added to the page after editing of the updated field began), then
           // use that view mode's re-rendered version.
-          else {
-            if (field.getViewMode() in htmlForOtherViewModes) {
-              field.set('html', htmlForOtherViewModes[field.getViewMode()], {propagation: true});
-            }
+          else if (field.getViewMode() in htmlForOtherViewModes) {
+            field.set('html', htmlForOtherViewModes[field.getViewMode()], { propagation: true });
           }
         });
     },
@@ -556,8 +551,8 @@
      * @param {Drupal.quickedit.FieldModel} fieldModel
      *   A field that was just added to the collection of fields.
      */
-    rerenderedFieldToCandidate: function (fieldModel) {
-      var activeEntity = Drupal.quickedit.collections.entities.findWhere({isActive: true});
+    rerenderedFieldToCandidate(fieldModel) {
+      const activeEntity = Drupal.quickedit.collections.entities.findWhere({ isActive: true });
 
       // Early-return if there is no active entity.
       if (!activeEntity) {
@@ -579,7 +574,7 @@
      * @param {Drupal.quickedit.EntityModel} changedEntityModel
      *   The entityModel instance whose active state has changed.
      */
-    enforceSingleActiveEntity: function (changedEntityModel) {
+    enforceSingleActiveEntity(changedEntityModel) {
       // When an entity is deactivated, we don't need to enforce anything.
       if (changedEntityModel.get('isActive') === false) {
         return;
@@ -587,14 +582,11 @@
 
       // This entity was activated; deactivate all other entities.
       changedEntityModel.collection.chain()
-        .filter(function (entityModel) {
-          return entityModel.get('isActive') === true && entityModel !== changedEntityModel;
-        })
-        .each(function (entityModel) {
+        .filter(entityModel => entityModel.get('isActive') === true && entityModel !== changedEntityModel)
+        .each((entityModel) => {
           entityModel.set('state', 'deactivating');
         });
-    }
+    },
 
   });
-
 }(jQuery, _, Backbone, Drupal));

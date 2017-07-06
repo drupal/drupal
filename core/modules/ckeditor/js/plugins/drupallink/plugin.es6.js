@@ -6,16 +6,13 @@
  */
 
 (function ($, Drupal, drupalSettings, CKEDITOR) {
-
-  'use strict';
-
   function parseAttributes(editor, element) {
-    var parsedAttributes = {};
+    const parsedAttributes = {};
 
-    var domElement = element.$;
-    var attribute;
-    var attributeName;
-    for (var attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
+    const domElement = element.$;
+    let attribute;
+    let attributeName;
+    for (let attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
       attribute = domElement.attributes.item(attrIndex);
       attributeName = attribute.nodeName.toLowerCase();
       // Ignore data-cke-* attributes; they're CKEditor internals.
@@ -24,7 +21,7 @@
       }
       // Store the value for this attribute, unless there's a data-cke-saved-
       // alternative for it, which will contain the quirk-free, original value.
-      parsedAttributes[attributeName] = element.data('cke-saved-' + attributeName) || attribute.nodeValue;
+      parsedAttributes[attributeName] = element.data(`cke-saved-${attributeName}`) || attribute.nodeValue;
     }
 
     // Remove any cke_* classes.
@@ -36,8 +33,8 @@
   }
 
   function getAttributes(editor, data) {
-    var set = {};
-    for (var attributeName in data) {
+    const set = {};
+    for (const attributeName in data) {
       if (data.hasOwnProperty(attributeName)) {
         set[attributeName] = data[attributeName];
       }
@@ -48,16 +45,16 @@
     set['data-cke-saved-href'] = set.href;
 
     // Remove all attributes which are not currently set.
-    var removed = {};
-    for (var s in set) {
+    const removed = {};
+    for (const s in set) {
       if (set.hasOwnProperty(s)) {
         delete removed[s];
       }
     }
 
     return {
-      set: set,
-      removed: CKEDITOR.tools.objectKeys(removed)
+      set,
+      removed: CKEDITOR.tools.objectKeys(removed),
     };
   }
 
@@ -65,32 +62,32 @@
     icons: 'drupallink,drupalunlink',
     hidpi: true,
 
-    init: function (editor) {
+    init(editor) {
       // Add the commands for link and unlink.
       editor.addCommand('drupallink', {
         allowedContent: {
           a: {
             attributes: {
-              '!href': true
+              '!href': true,
             },
-            classes: {}
-          }
+            classes: {},
+          },
         },
         requiredContent: new CKEDITOR.style({
           element: 'a',
           attributes: {
-            href: ''
-          }
+            href: '',
+          },
         }),
-        modes: {wysiwyg: 1},
+        modes: { wysiwyg: 1 },
         canUndo: true,
-        exec: function (editor) {
-          var drupalImageUtils = CKEDITOR.plugins.drupalimage;
-          var focusedImageWidget = drupalImageUtils && drupalImageUtils.getFocusedWidget(editor);
-          var linkElement = getSelectedLink(editor);
+        exec(editor) {
+          const drupalImageUtils = CKEDITOR.plugins.drupalimage;
+          const focusedImageWidget = drupalImageUtils && drupalImageUtils.getFocusedWidget(editor);
+          let linkElement = getSelectedLink(editor);
 
           // Set existing values based on selected element.
-          var existingValues = {};
+          let existingValues = {};
           if (linkElement && linkElement.$) {
             existingValues = parseAttributes(editor, linkElement);
           }
@@ -101,7 +98,7 @@
           }
 
           // Prepare a save callback to be used upon saving the dialog.
-          var saveCallback = function (returnValues) {
+          const saveCallback = function (returnValues) {
             // If an image widget is focused, we're not editing an independent
             // link, but we're wrapping an image widget in a link.
             if (focusedImageWidget) {
@@ -114,19 +111,19 @@
 
             // Create a new link element if needed.
             if (!linkElement && returnValues.attributes.href) {
-              var selection = editor.getSelection();
-              var range = selection.getRanges(1)[0];
+              const selection = editor.getSelection();
+              const range = selection.getRanges(1)[0];
 
               // Use link URL as text with a collapsed cursor.
               if (range.collapsed) {
                 // Shorten mailto URLs to just the email address.
-                var text = new CKEDITOR.dom.text(returnValues.attributes.href.replace(/^mailto:/, ''), editor.document);
+                const text = new CKEDITOR.dom.text(returnValues.attributes.href.replace(/^mailto:/, ''), editor.document);
                 range.insertNode(text);
                 range.selectNodeContents(text);
               }
 
               // Create the new link by applying a style to the new text.
-              var style = new CKEDITOR.style({element: 'a', attributes: returnValues.attributes});
+              const style = new CKEDITOR.style({ element: 'a', attributes: returnValues.attributes });
               style.type = CKEDITOR.STYLE_INLINE;
               style.applyToRange(range);
               range.select();
@@ -136,12 +133,12 @@
             }
             // Update the link properties.
             else if (linkElement) {
-              for (var attrName in returnValues.attributes) {
+              for (const attrName in returnValues.attributes) {
                 if (returnValues.attributes.hasOwnProperty(attrName)) {
                   // Update the property if a value is specified.
                   if (returnValues.attributes[attrName].length > 0) {
-                    var value = returnValues.attributes[attrName];
-                    linkElement.data('cke-saved-' + attrName, value);
+                    const value = returnValues.attributes[attrName];
+                    linkElement.data(`cke-saved-${attrName}`, value);
                     linkElement.setAttribute(attrName, value);
                   }
                   // Delete the property if set to an empty string.
@@ -158,14 +155,14 @@
           // Drupal.t() will not work inside CKEditor plugins because CKEditor
           // loads the JavaScript file instead of Drupal. Pull translated
           // strings from the plugin settings that are translated server-side.
-          var dialogSettings = {
+          const dialogSettings = {
             title: linkElement ? editor.config.drupalLink_dialogTitleEdit : editor.config.drupalLink_dialogTitleAdd,
-            dialogClass: 'editor-link-dialog'
+            dialogClass: 'editor-link-dialog',
           };
 
           // Open the dialog for the edit form.
-          Drupal.ckeditor.openDialog(editor, Drupal.url('editor/dialog/link/' + editor.config.drupal.format), existingValues, saveCallback, dialogSettings);
-        }
+          Drupal.ckeditor.openDialog(editor, Drupal.url(`editor/dialog/link/${editor.config.drupal.format}`), existingValues, saveCallback, dialogSettings);
+        },
       });
       editor.addCommand('drupalunlink', {
         contextSensitive: 1,
@@ -173,22 +170,22 @@
         requiredContent: new CKEDITOR.style({
           element: 'a',
           attributes: {
-            href: ''
-          }
+            href: '',
+          },
         }),
-        exec: function (editor) {
-          var style = new CKEDITOR.style({element: 'a', type: CKEDITOR.STYLE_INLINE, alwaysRemoveElement: 1});
+        exec(editor) {
+          const style = new CKEDITOR.style({ element: 'a', type: CKEDITOR.STYLE_INLINE, alwaysRemoveElement: 1 });
           editor.removeStyle(style);
         },
-        refresh: function (editor, path) {
-          var element = path.lastElement && path.lastElement.getAscendant('a', true);
+        refresh(editor, path) {
+          const element = path.lastElement && path.lastElement.getAscendant('a', true);
           if (element && element.getName() === 'a' && element.getAttribute('href') && element.getChildCount()) {
             this.setState(CKEDITOR.TRISTATE_OFF);
           }
           else {
             this.setState(CKEDITOR.TRISTATE_DISABLED);
           }
-        }
+        },
       });
 
       // CTRL + K.
@@ -198,16 +195,16 @@
       if (editor.ui.addButton) {
         editor.ui.addButton('DrupalLink', {
           label: Drupal.t('Link'),
-          command: 'drupallink'
+          command: 'drupallink',
         });
         editor.ui.addButton('DrupalUnlink', {
           label: Drupal.t('Unlink'),
-          command: 'drupalunlink'
+          command: 'drupalunlink',
         });
       }
 
-      editor.on('doubleclick', function (evt) {
-        var element = getSelectedLink(editor) || evt.data.element;
+      editor.on('doubleclick', (evt) => {
+        const element = getSelectedLink(editor) || evt.data.element;
 
         if (!element.isReadOnly()) {
           if (element.is('a')) {
@@ -224,37 +221,37 @@
             label: Drupal.t('Edit Link'),
             command: 'drupallink',
             group: 'link',
-            order: 1
+            order: 1,
           },
 
           unlink: {
             label: Drupal.t('Unlink'),
             command: 'drupalunlink',
             group: 'link',
-            order: 5
-          }
+            order: 5,
+          },
         });
       }
 
       // If the "contextmenu" plugin is loaded, register the listeners.
       if (editor.contextMenu) {
-        editor.contextMenu.addListener(function (element, selection) {
+        editor.contextMenu.addListener((element, selection) => {
           if (!element || element.isReadOnly()) {
             return null;
           }
-          var anchor = getSelectedLink(editor);
+          const anchor = getSelectedLink(editor);
           if (!anchor) {
             return null;
           }
 
-          var menu = {};
+          let menu = {};
           if (anchor.getAttribute('href') && anchor.getChildCount()) {
-            menu = {link: CKEDITOR.TRISTATE_OFF, unlink: CKEDITOR.TRISTATE_OFF};
+            menu = { link: CKEDITOR.TRISTATE_OFF, unlink: CKEDITOR.TRISTATE_OFF };
           }
           return menu;
         });
       }
-    }
+    },
   });
 
   /**
@@ -278,13 +275,13 @@
    *
    */
   function getSelectedLink(editor) {
-    var selection = editor.getSelection();
-    var selectedElement = selection.getSelectedElement();
+    const selection = editor.getSelection();
+    const selectedElement = selection.getSelectedElement();
     if (selectedElement && selectedElement.is('a')) {
       return selectedElement;
     }
 
-    var range = selection.getRanges(true)[0];
+    const range = selection.getRanges(true)[0];
 
     if (range) {
       range.shrink(CKEDITOR.SHRINK_TEXT);
@@ -298,7 +295,6 @@
   // http://dev.ckeditor.com/ticket/13885.)
   CKEDITOR.plugins.drupallink = {
     parseLinkAttributes: parseAttributes,
-    getLinkAttributes: getAttributes
+    getLinkAttributes: getAttributes,
   };
-
-})(jQuery, Drupal, drupalSettings, CKEDITOR);
+}(jQuery, Drupal, drupalSettings, CKEDITOR));

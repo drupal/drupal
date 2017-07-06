@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, Backbone, _) {
-
-  'use strict';
-
   Drupal.contextualToolbar.AuralView = Backbone.View.extend({
     announcedOnce: false,
 
@@ -20,13 +17,11 @@
 
       $(document).on('keyup', _.bind(this.onKeypress, this));
     },
-
     render: function render() {
       this.$el.find('button').attr('aria-pressed', !this.model.get('isViewing'));
 
       return this;
     },
-
     manageTabbing: function manageTabbing() {
       var tabbingContext = this.model.get('tabbingContext');
 
@@ -44,7 +39,6 @@
         this.announcedOnce = true;
       }
     },
-
     announceTabbingConstraint: function announceTabbingConstraint() {
       var strings = this.options.strings;
       Drupal.announce(Drupal.formatString(strings.tabbingConstrained, {
@@ -52,7 +46,6 @@
       }));
       Drupal.announce(strings.pressEsc);
     },
-
     onKeypress: function onKeypress(event) {
       if (!this.announcedOnce && event.keyCode === 9 && !this.model.get('isViewing')) {
         this.announceTabbingConstraint();
@@ -64,6 +57,5 @@
         this.model.set('isViewing', true);
       }
     }
-
   });
 })(jQuery, Drupal, Backbone, _);

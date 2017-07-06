@@ -6,17 +6,14 @@
  */
 
 (function ($, Drupal, drupalSettings, storage) {
-
-  'use strict';
-
-  var currentUserID = parseInt(drupalSettings.user.uid, 10);
+  const currentUserID = parseInt(drupalSettings.user.uid, 10);
 
   // Any comment that is older than 30 days is automatically considered read,
   // so for these we don't need to perform a request at all!
-  var thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - 30 * 24 * 60 * 60;
+  const thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - 30 * 24 * 60 * 60;
 
   // Use the data embedded in the page, if available.
-  var embeddedLastReadTimestamps = false;
+  let embeddedLastReadTimestamps = false;
   if (drupalSettings.history && drupalSettings.history.lastReadTimestamps) {
     embeddedLastReadTimestamps = drupalSettings.history.lastReadTimestamps;
   }
@@ -34,7 +31,7 @@
      * @param {function} callback
      *   A callback that is called after the requested timestamps were fetched.
      */
-    fetchTimestamps: function (nodeIDs, callback) {
+    fetchTimestamps(nodeIDs, callback) {
       // Use the data embedded in the page, if available.
       if (embeddedLastReadTimestamps) {
         callback();
@@ -44,16 +41,16 @@
       $.ajax({
         url: Drupal.url('history/get_node_read_timestamps'),
         type: 'POST',
-        data: {'node_ids[]': nodeIDs},
+        data: { 'node_ids[]': nodeIDs },
         dataType: 'json',
-        success: function (results) {
-          for (var nodeID in results) {
+        success(results) {
+          for (const nodeID in results) {
             if (results.hasOwnProperty(nodeID)) {
-              storage.setItem('Drupal.history.' + currentUserID + '.' + nodeID, results[nodeID]);
+              storage.setItem(`Drupal.history.${currentUserID}.${nodeID}`, results[nodeID]);
             }
           }
           callback();
-        }
+        },
       });
     },
 
@@ -66,12 +63,12 @@
      * @return {number}
      *   A UNIX timestamp.
      */
-    getLastRead: function (nodeID) {
+    getLastRead(nodeID) {
       // Use the data embedded in the page, if available.
       if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
         return parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }
-      return parseInt(storage.getItem('Drupal.history.' + currentUserID + '.' + nodeID) || 0, 10);
+      return parseInt(storage.getItem(`Drupal.history.${currentUserID}.${nodeID}`) || 0, 10);
     },
 
     /**
@@ -80,20 +77,20 @@
      * @param {number|string} nodeID
      *   A node ID.
      */
-    markAsRead: function (nodeID) {
+    markAsRead(nodeID) {
       $.ajax({
-        url: Drupal.url('history/' + nodeID + '/read'),
+        url: Drupal.url(`history/${nodeID}/read`),
         type: 'POST',
         dataType: 'json',
-        success: function (timestamp) {
+        success(timestamp) {
           // If the data is embedded in the page, don't store on the client
           // side.
           if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
             return;
           }
 
-          storage.setItem('Drupal.history.' + currentUserID + '.' + nodeID, timestamp);
-        }
+          storage.setItem(`Drupal.history.${currentUserID}.${nodeID}`, timestamp);
+        },
       });
     },
 
@@ -114,7 +111,7 @@
      *   Whether a server check is necessary for the given node and its
      *   timestamp.
      */
-    needsServerCheck: function (nodeID, contentTimestamp) {
+    needsServerCheck(nodeID, contentTimestamp) {
       // First check if the content is older than 30 days, then we can bail
       // early.
       if (contentTimestamp < thirtyDaysAgo) {
@@ -126,9 +123,8 @@
         return contentTimestamp > parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }
 
-      var minLastReadTimestamp = parseInt(storage.getItem('Drupal.history.' + currentUserID + '.' + nodeID) || 0, 10);
+      const minLastReadTimestamp = parseInt(storage.getItem(`Drupal.history.${currentUserID}.${nodeID}`) || 0, 10);
       return contentTimestamp > minLastReadTimestamp;
-    }
+    },
   };
-
-})(jQuery, Drupal, drupalSettings, window.localStorage);
+}(jQuery, Drupal, drupalSettings, window.localStorage));

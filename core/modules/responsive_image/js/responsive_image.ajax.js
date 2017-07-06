@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.responsiveImageAJAX = {
     attach: function attach() {
       if (window.picturefill) {

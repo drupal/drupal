@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Process elements with the .dropbutton class on page load.
    *
@@ -16,21 +13,21 @@
    *   Attaches dropButton behaviors.
    */
   Drupal.behaviors.dropButton = {
-    attach: function (context, settings) {
-      var $dropbuttons = $(context).find('.dropbutton-wrapper').once('dropbutton');
+    attach(context, settings) {
+      const $dropbuttons = $(context).find('.dropbutton-wrapper').once('dropbutton');
       if ($dropbuttons.length) {
         // Adds the delegated handler that will toggle dropdowns on click.
-        var $body = $('body').once('dropbutton-click');
+        const $body = $('body').once('dropbutton-click');
         if ($body.length) {
           $body.on('click', '.dropbutton-toggle', dropbuttonClickHandler);
         }
         // Initialize all buttons.
-        var il = $dropbuttons.length;
-        for (var i = 0; i < il; i++) {
+        const il = $dropbuttons.length;
+        for (let i = 0; i < il; i++) {
           DropButton.dropbuttons.push(new DropButton($dropbuttons[i], settings.dropbutton));
         }
       }
-    }
+    },
   };
 
   /**
@@ -64,8 +61,8 @@
    */
   function DropButton(dropbutton, settings) {
     // Merge defaults with settings.
-    var options = $.extend({title: Drupal.t('List additional actions')}, settings);
-    var $dropbutton = $(dropbutton);
+    const options = $.extend({ title: Drupal.t('List additional actions') }, settings);
+    const $dropbutton = $(dropbutton);
 
     /**
      * @type {jQuery}
@@ -87,9 +84,9 @@
     // Add the special dropdown only if there are hidden actions.
     if (this.$actions.length > 1) {
       // Identify the first element of the collection.
-      var $primary = this.$actions.slice(0, 1);
+      const $primary = this.$actions.slice(0, 1);
       // Identify the secondary actions.
-      var $secondary = this.$actions.slice(1);
+      const $secondary = this.$actions.slice(1);
       $secondary.addClass('secondary-action');
       // Add toggle link.
       $primary.after(Drupal.theme('dropbuttonToggle', options));
@@ -122,7 +119,7 @@
           /**
            * @ignore
            */
-          'focusin.dropbutton': $.proxy(this.focusIn, this)
+          'focusin.dropbutton': $.proxy(this.focusIn, this),
         });
     }
     else {
@@ -139,7 +136,7 @@
      *
      * @type {Array.<Drupal.DropButton>}
      */
-    dropbuttons: []
+    dropbuttons: [],
   });
 
   /**
@@ -154,8 +151,8 @@
      *   Force the dropbutton to open by passing true or to close by
      *   passing false.
      */
-    toggle: function (show) {
-      var isBool = typeof show === 'boolean';
+    toggle(show) {
+      const isBool = typeof show === 'boolean';
       show = isBool ? show : !this.$dropbutton.hasClass('open');
       this.$dropbutton.toggleClass('open', show);
     },
@@ -163,7 +160,7 @@
     /**
      * @method
      */
-    hoverIn: function () {
+    hoverIn() {
       // Clear any previous timer we were using.
       if (this.timerID) {
         window.clearTimeout(this.timerID);
@@ -173,7 +170,7 @@
     /**
      * @method
      */
-    hoverOut: function () {
+    hoverOut() {
       // Wait half a second before closing.
       this.timerID = window.setTimeout($.proxy(this, 'close'), 500);
     },
@@ -181,14 +178,14 @@
     /**
      * @method
      */
-    open: function () {
+    open() {
       this.toggle(true);
     },
 
     /**
      * @method
      */
-    close: function () {
+    close() {
       this.toggle(false);
     },
 
@@ -196,7 +193,7 @@
      * @param {jQuery.Event} e
      *   The event triggered.
      */
-    focusOut: function (e) {
+    focusOut(e) {
       this.hoverOut.call(this, e);
     },
 
@@ -204,9 +201,9 @@
      * @param {jQuery.Event} e
      *   The event triggered.
      */
-    focusIn: function (e) {
+    focusIn(e) {
       this.hoverIn.call(this, e);
-    }
+    },
   });
 
   $.extend(Drupal.theme, /** @lends Drupal.theme */{
@@ -222,12 +219,11 @@
      * @return {string}
      *   A string representing a DOM fragment.
      */
-    dropbuttonToggle: function (options) {
-      return '<li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">' + options.title + '</span></span></button></li>';
-    }
+    dropbuttonToggle(options) {
+      return `<li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">${options.title}</span></span></button></li>`;
+    },
   });
 
   // Expose constructor in the public space.
   Drupal.DropButton = DropButton;
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

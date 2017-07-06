@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings, Backbone) {
-
-  'use strict';
-
   Drupal.toolbar.ToolbarVisualView = Backbone.View.extend(/** @lends Drupal.toolbar.ToolbarVisualView# */{
 
     /**
@@ -15,9 +12,9 @@
      * @return {object}
      *   A map of events.
      */
-    events: function () {
+    events() {
       // Prevents delay and simulated mouse events.
-      var touchEndToClick = function (event) {
+      const touchEndToClick = function (event) {
         event.preventDefault();
         event.target.click();
       };
@@ -26,7 +23,7 @@
         'click .toolbar-bar .toolbar-tab .trigger': 'onTabClick',
         'click .toolbar-toggle-orientation button': 'onOrientationToggleClick',
         'touchend .toolbar-bar .toolbar-tab .trigger': touchEndToClick,
-        'touchend .toolbar-toggle-orientation button': touchEndToClick
+        'touchend .toolbar-toggle-orientation button': touchEndToClick,
       };
     },
 
@@ -42,7 +39,7 @@
      * @param {object} options.strings
      *   Various strings to use in the view.
      */
-    initialize: function (options) {
+    initialize(options) {
       this.strings = options.strings;
 
       this.listenTo(this.model, 'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible', this.render);
@@ -67,11 +64,11 @@
      *
      * @augments Backbone.View
      */
-    updateToolbarHeight: function () {
+    updateToolbarHeight() {
       this.model.set('height', $('#toolbar-bar').find('.toolbar-tab').outerHeight() + $('.is-active.toolbar-tray-horizontal').outerHeight());
 
       $('body').css({
-        'padding-top': this.model.get('height')
+        'padding-top': this.model.get('height'),
       });
 
       this.triggerDisplace();
@@ -80,8 +77,8 @@
     // Trigger a recalculation of viewport displacing elements. Use setTimeout
     // to ensure this recalculation happens after changes to visual elements
     // have processed.
-    triggerDisplace: function () {
-      _.defer(function () {
+    triggerDisplace() {
+      _.defer(() => {
         Drupal.displace(true);
       });
     },
@@ -92,7 +89,7 @@
      * @return {Drupal.toolbar.ToolbarVisualView}
      *   The `ToolbarVisualView` instance.
      */
-    render: function () {
+    render() {
       this.updateTabs();
       this.updateTrayOrientation();
       this.updateBarAttributes();
@@ -124,12 +121,12 @@
      * @param {jQuery.Event} event
      *   The event triggered.
      */
-    onTabClick: function (event) {
+    onTabClick(event) {
       // If this tab has a tray associated with it, it is considered an
       // activatable tab.
       if (event.target.hasAttribute('data-toolbar-tray')) {
-        var activeTab = this.model.get('activeTab');
-        var clickedTab = event.target;
+        const activeTab = this.model.get('activeTab');
+        const clickedTab = event.target;
 
         // Set the event target as the active item if it is not already.
         this.model.set('activeTab', (!activeTab || clickedTab !== activeTab) ? clickedTab : null);
@@ -145,11 +142,11 @@
      * @param {jQuery.Event} event
      *   The event triggered.
      */
-    onOrientationToggleClick: function (event) {
-      var orientation = this.model.get('orientation');
+    onOrientationToggleClick(event) {
+      const orientation = this.model.get('orientation');
       // Determine the toggle-to orientation.
-      var antiOrientation = (orientation === 'vertical') ? 'horizontal' : 'vertical';
-      var locked = antiOrientation === 'vertical';
+      const antiOrientation = (orientation === 'vertical') ? 'horizontal' : 'vertical';
+      const locked = antiOrientation === 'vertical';
       // Remember the locked state.
       if (locked) {
         localStorage.setItem('Drupal.toolbar.trayVerticalLocked', 'true');
@@ -159,11 +156,11 @@
       }
       // Update the model.
       this.model.set({
-        locked: locked,
-        orientation: antiOrientation
+        locked,
+        orientation: antiOrientation,
       }, {
         validate: true,
-        override: true
+        override: true,
       });
 
       event.preventDefault();
@@ -173,8 +170,8 @@
     /**
      * Updates the display of the tabs: toggles a tab and the associated tray.
      */
-    updateTabs: function () {
-      var $tab = $(this.model.get('activeTab'));
+    updateTabs() {
+      const $tab = $(this.model.get('activeTab'));
       // Deactivate the previous tab.
       $(this.model.previous('activeTab'))
         .removeClass('is-active')
@@ -189,14 +186,14 @@
           .addClass('is-active')
           // Mark the tab as pressed.
           .prop('aria-pressed', true);
-        var name = $tab.attr('data-toolbar-tray');
+        const name = $tab.attr('data-toolbar-tray');
         // Store the active tab name or remove the setting.
-        var id = $tab.get(0).id;
+        const id = $tab.get(0).id;
         if (id) {
           localStorage.setItem('Drupal.toolbar.activeTabID', JSON.stringify(id));
         }
         // Activate the associated tray.
-        var $tray = this.$el.find('[data-toolbar-tray="' + name + '"].toolbar-tray');
+        const $tray = this.$el.find(`[data-toolbar-tray="${name}"].toolbar-tray`);
         if ($tray.length) {
           $tray.addClass('is-active');
           this.model.set('activeTray', $tray.get(0));
@@ -216,8 +213,8 @@
     /**
      * Update the attributes of the toolbar bar element.
      */
-    updateBarAttributes: function () {
-      var isOriented = this.model.get('isOriented');
+    updateBarAttributes() {
+      const isOriented = this.model.get('isOriented');
       if (isOriented) {
         this.$el.find('.toolbar-bar').attr('data-offset-top', '');
       }
@@ -232,12 +229,12 @@
     /**
      * Updates the orientation of the active tray if necessary.
      */
-    updateTrayOrientation: function () {
-      var orientation = this.model.get('orientation');
+    updateTrayOrientation() {
+      const orientation = this.model.get('orientation');
 
       // The antiOrientation is used to render the view of action buttons like
       // the tray orientation toggle.
-      var antiOrientation = (orientation === 'vertical') ? 'horizontal' : 'vertical';
+      const antiOrientation = (orientation === 'vertical') ? 'horizontal' : 'vertical';
 
       // Toggle toolbar's parent classes before other toolbar classes to avoid
       // potential flicker and re-rendering.
@@ -245,15 +242,15 @@
         .toggleClass('toolbar-vertical', (orientation === 'vertical'))
         .toggleClass('toolbar-horizontal', (orientation === 'horizontal'));
 
-      var removeClass = (antiOrientation === 'horizontal') ? 'toolbar-tray-horizontal' : 'toolbar-tray-vertical';
-      var $trays = this.$el.find('.toolbar-tray')
+      const removeClass = (antiOrientation === 'horizontal') ? 'toolbar-tray-horizontal' : 'toolbar-tray-vertical';
+      const $trays = this.$el.find('.toolbar-tray')
         .removeClass(removeClass)
-        .addClass('toolbar-tray-' + orientation);
+        .addClass(`toolbar-tray-${orientation}`);
 
       // Update the tray orientation toggle button.
-      var iconClass = 'toolbar-icon-toggle-' + orientation;
-      var iconAntiClass = 'toolbar-icon-toggle-' + antiOrientation;
-      var $orientationToggle = this.$el.find('.toolbar-toggle-orientation')
+      const iconClass = `toolbar-icon-toggle-${orientation}`;
+      const iconAntiClass = `toolbar-icon-toggle-${antiOrientation}`;
+      const $orientationToggle = this.$el.find('.toolbar-toggle-orientation')
         .toggle(this.model.get('isTrayToggleVisible'));
       $orientationToggle.find('button')
         .val(antiOrientation)
@@ -263,12 +260,12 @@
         .addClass(iconAntiClass);
 
       // Update data offset attributes for the trays.
-      var dir = document.documentElement.dir;
-      var edge = (dir === 'rtl') ? 'right' : 'left';
+      const dir = document.documentElement.dir;
+      const edge = (dir === 'rtl') ? 'right' : 'left';
       // Remove data-offset attributes from the trays so they can be refreshed.
       $trays.removeAttr('data-offset-left data-offset-right data-offset-top');
       // If an active vertical tray exists, mark it as an offset element.
-      $trays.filter('.toolbar-tray-vertical.is-active').attr('data-offset-' + edge, '');
+      $trays.filter('.toolbar-tray-vertical.is-active').attr(`data-offset-${edge}`, '');
       // If an active horizontal tray exists, mark it as an offset element.
       $trays.filter('.toolbar-tray-horizontal.is-active').attr('data-offset-top', '');
     },
@@ -276,8 +273,8 @@
     /**
      * Sets the tops of the trays so that they align with the bottom of the bar.
      */
-    adjustPlacement: function () {
-      var $trays = this.$el.find('.toolbar-tray');
+    adjustPlacement() {
+      const $trays = this.$el.find('.toolbar-tray');
       if (!this.model.get('isOriented')) {
         $trays.removeClass('toolbar-tray-horizontal').addClass('toolbar-tray-vertical');
       }
@@ -293,21 +290,21 @@
      * and compared to the subtreesHash in drupalSettings to determine when the
      * admin menu subtrees cache has been invalidated.
      */
-    loadSubtrees: function () {
-      var $activeTab = $(this.model.get('activeTab'));
-      var orientation = this.model.get('orientation');
+    loadSubtrees() {
+      const $activeTab = $(this.model.get('activeTab'));
+      const orientation = this.model.get('orientation');
       // Only load and render the admin menu subtrees if:
       //   (1) They have not been loaded yet.
       //   (2) The active tab is the administration menu tab, indicated by the
       //       presence of the data-drupal-subtrees attribute.
       //   (3) The orientation of the tray is vertical.
       if (!this.model.get('areSubtreesLoaded') && typeof $activeTab.data('drupal-subtrees') !== 'undefined' && orientation === 'vertical') {
-        var subtreesHash = drupalSettings.toolbar.subtreesHash;
-        var theme = drupalSettings.ajaxPageState.theme;
-        var endpoint = Drupal.url('toolbar/subtrees/' + subtreesHash);
-        var cachedSubtreesHash = localStorage.getItem('Drupal.toolbar.subtreesHash.' + theme);
-        var cachedSubtrees = JSON.parse(localStorage.getItem('Drupal.toolbar.subtrees.' + theme));
-        var isVertical = this.model.get('orientation') === 'vertical';
+        const subtreesHash = drupalSettings.toolbar.subtreesHash;
+        const theme = drupalSettings.ajaxPageState.theme;
+        const endpoint = Drupal.url(`toolbar/subtrees/${subtreesHash}`);
+        const cachedSubtreesHash = localStorage.getItem(`Drupal.toolbar.subtreesHash.${theme}`);
+        const cachedSubtrees = JSON.parse(localStorage.getItem(`Drupal.toolbar.subtrees.${theme}`));
+        const isVertical = this.model.get('orientation') === 'vertical';
         // If we have the subtrees in localStorage and the subtree hash has not
         // changed, then use the cached data.
         if (isVertical && subtreesHash === cachedSubtreesHash && cachedSubtrees) {
@@ -317,16 +314,15 @@
         // toolbar is vertical.
         else if (isVertical) {
           // Remove the cached menu information.
-          localStorage.removeItem('Drupal.toolbar.subtreesHash.' + theme);
-          localStorage.removeItem('Drupal.toolbar.subtrees.' + theme);
+          localStorage.removeItem(`Drupal.toolbar.subtreesHash.${theme}`);
+          localStorage.removeItem(`Drupal.toolbar.subtrees.${theme}`);
           // The AJAX response's command will trigger the resolve method of the
           // Drupal.toolbar.setSubtrees Promise.
-          Drupal.ajax({url: endpoint}).execute();
+          Drupal.ajax({ url: endpoint }).execute();
           // Cache the hash for the subtrees locally.
-          localStorage.setItem('Drupal.toolbar.subtreesHash.' + theme, subtreesHash);
+          localStorage.setItem(`Drupal.toolbar.subtreesHash.${theme}`, subtreesHash);
         }
       }
-    }
+    },
   });
-
 }(jQuery, Drupal, drupalSettings, Backbone));

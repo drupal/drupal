@@ -4,12 +4,9 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
-  var pathInfo = drupalSettings.path;
-  var escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
-  var windowLocation = window.location;
+  const pathInfo = drupalSettings.path;
+  const escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
+  const windowLocation = window.location;
 
   // Saves the last non-administrative page in the browser to be able to link
   // back to it when browsing administrative pages. If there is a destination
@@ -31,8 +28,8 @@
    *   Attaches the replacement functionality to the toolbar-escape-admin element.
    */
   Drupal.behaviors.escapeAdmin = {
-    attach: function () {
-      var $toolbarEscape = $('[data-toolbar-escape-admin]').once('escapeAdmin');
+    attach() {
+      const $toolbarEscape = $('[data-toolbar-escape-admin]').once('escapeAdmin');
       if ($toolbarEscape.length && pathInfo.currentPathIsAdmin) {
         if (escapeAdminPath !== null) {
           $toolbarEscape.attr('href', escapeAdminPath);
@@ -41,7 +38,6 @@
           $toolbarEscape.text(Drupal.t('Home'));
         }
       }
-    }
+    },
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

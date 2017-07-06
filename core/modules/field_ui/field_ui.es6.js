@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * @type {Drupal~behavior}
    *
@@ -14,8 +11,8 @@
    *   Adds behaviors to the field storage add form.
    */
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
-    attach: function (context) {
-      var $form = $(context).find('[data-drupal-selector="field-ui-field-storage-add-form"]').once('field_ui_add');
+    attach(context) {
+      const $form = $(context).find('[data-drupal-selector="field-ui-field-storage-add-form"]').once('field_ui_add');
       if ($form.length) {
         // Add a few 'js-form-required' and 'form-required' css classes here.
         // We can not use the Form API '#required' property because both label
@@ -28,9 +25,9 @@
           '.js-form-item-existing-storage-label label')
           .addClass('js-form-required form-required');
 
-        var $newFieldType = $form.find('select[name="new_storage_type"]');
-        var $existingStorageName = $form.find('select[name="existing_storage_name"]');
-        var $existingStorageLabel = $form.find('input[name="existing_storage_label"]');
+        const $newFieldType = $form.find('select[name="new_storage_type"]');
+        const $existingStorageName = $form.find('select[name="existing_storage_name"]');
+        const $existingStorageLabel = $form.find('input[name="existing_storage_label"]');
 
         // When the user selects a new field type, clear the "existing field"
         // selection.
@@ -44,7 +41,7 @@
         // When the user selects an existing storage name, clear the "new field
         // type" selection and populate the 'existing_storage_label' element.
         $existingStorageName.on('change', function () {
-          var value = $(this).val();
+          const value = $(this).val();
           if (value !== '') {
             // Reset the "new field type" selection.
             $newFieldType.val('').trigger('change');
@@ -56,7 +53,7 @@
           }
         });
       }
-    }
+    },
   };
 
   /**
@@ -70,11 +67,11 @@
    * @see Drupal.fieldUIOverview.attach
    */
   Drupal.behaviors.fieldUIDisplayOverview = {
-    attach: function (context, settings) {
+    attach(context, settings) {
       $(context).find('table#field-display-overview').once('field-display-overview').each(function () {
         Drupal.fieldUIOverview.attach(this, settings.fieldUIRowsData, Drupal.fieldUIDisplayOverview);
       });
-    }
+    },
   };
 
   /**
@@ -94,8 +91,8 @@
      * @param {object} rowHandlers
      *   Handlers to be added to the rows.
      */
-    attach: function (table, rowsData, rowHandlers) {
-      var tableDrag = Drupal.tableDrag[table.id];
+    attach(table, rowsData, rowHandlers) {
+      const tableDrag = Drupal.tableDrag[table.id];
 
       // Add custom tabledrag callbacks.
       tableDrag.onDrop = this.onDrop;
@@ -104,14 +101,14 @@
       // Create row handlers.
       $(table).find('tr.draggable').each(function () {
         // Extract server-side data for the row.
-        var row = this;
+        const row = this;
         if (row.id in rowsData) {
-          var data = rowsData[row.id];
+          const data = rowsData[row.id];
           data.tableDrag = tableDrag;
 
           // Create the row handler, make it accessible from the DOM row
           // element.
-          var rowHandler = new rowHandlers[data.rowHandler](row, data);
+          const rowHandler = new rowHandlers[data.rowHandler](row, data);
           $(row).data('fieldUIRowHandler', rowHandler);
         }
       });
@@ -120,16 +117,16 @@
     /**
      * Event handler to be attached to form inputs triggering a region change.
      */
-    onChange: function () {
-      var $trigger = $(this);
-      var $row = $trigger.closest('tr');
-      var rowHandler = $row.data('fieldUIRowHandler');
+    onChange() {
+      const $trigger = $(this);
+      const $row = $trigger.closest('tr');
+      const rowHandler = $row.data('fieldUIRowHandler');
 
-      var refreshRows = {};
+      const refreshRows = {};
       refreshRows[rowHandler.name] = $trigger.get(0);
 
       // Handle region change.
-      var region = rowHandler.getRegion();
+      const region = rowHandler.getRegion();
       if (region !== rowHandler.region) {
         // Remove parenting.
         $row.find('select.js-field-parent').val('');
@@ -146,18 +143,18 @@
     /**
      * Lets row handlers react when a row is dropped into a new region.
      */
-    onDrop: function () {
-      var dragObject = this;
-      var row = dragObject.rowObject.element;
-      var $row = $(row);
-      var rowHandler = $row.data('fieldUIRowHandler');
+    onDrop() {
+      const dragObject = this;
+      const row = dragObject.rowObject.element;
+      const $row = $(row);
+      const rowHandler = $row.data('fieldUIRowHandler');
       if (typeof rowHandler !== 'undefined') {
-        var regionRow = $row.prevAll('tr.region-message').get(0);
-        var region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
+        const regionRow = $row.prevAll('tr.region-message').get(0);
+        const region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
 
         if (region !== rowHandler.region) {
           // Let the row handler deal with the region change.
-          var refreshRows = rowHandler.regionChange(region);
+          const refreshRows = rowHandler.regionChange(region);
           // Update the row region.
           rowHandler.region = region;
           // Ajax-update the rows.
@@ -174,10 +171,10 @@
      * @param {HTMLElement} draggedRow
      *   The tableDrag rowObject for the row being dragged.
      */
-    onSwap: function (draggedRow) {
-      var rowObject = this;
+    onSwap(draggedRow) {
+      const rowObject = this;
       $(rowObject.table).find('tr.region-message').each(function () {
-        var $this = $(this);
+        const $this = $(this);
         // If the dragged row is in this region, but above the message row, swap
         // it down one space.
         if ($this.prev('tr').get(0) === rowObject.group[rowObject.group.length - 1]) {
@@ -211,11 +208,11 @@
      *   whose values are the DOM element in the row that should get an Ajax
      *   throbber.
      */
-    AJAXRefreshRows: function (rows) {
+    AJAXRefreshRows(rows) {
       // Separate keys and values.
-      var rowNames = [];
-      var ajaxElements = [];
-      var rowName;
+      const rowNames = [];
+      const ajaxElements = [];
+      let rowName;
       for (rowName in rows) {
         if (rows.hasOwnProperty(rowName)) {
           rowNames.push(rowName);
@@ -235,7 +232,7 @@
         // elements disabled only after firing the request.
         $(ajaxElements).prop('disabled', true);
       }
-    }
+    },
   };
 
   /**
@@ -286,7 +283,7 @@
      * @return {string}
      *   Either 'hidden' or 'content'.
      */
-    getRegion: function () {
+    getRegion() {
       return this.$regionSelect.val();
     },
 
@@ -309,7 +306,7 @@
      *   of the change, in the format expected by
      *   {@link Drupal.fieldUIOverview.AJAXRefreshRows}.
      */
-    regionChange: function (region) {
+    regionChange(region) {
       // Replace dashes with underscores.
       region = region.replace(/-/g, '_');
 
@@ -319,17 +316,16 @@
       // Restore the formatter back to the default formatter. Pseudo-fields
       // do not have default formatters, we just return to 'visible' for
       // those.
-      var value = (typeof this.defaultPlugin !== 'undefined') ? this.defaultPlugin : this.$pluginSelect.find('option').val();
+      const value = (typeof this.defaultPlugin !== 'undefined') ? this.defaultPlugin : this.$pluginSelect.find('option').val();
 
       if (typeof value !== 'undefined') {
         this.$pluginSelect.val(value);
       }
 
-      var refreshRows = {};
+      const refreshRows = {};
       refreshRows[this.name] = this.$pluginSelect.get(0);
 
       return refreshRows;
-    }
+    },
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

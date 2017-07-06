@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, Backbone, _) {
-
-  'use strict';
-
   Drupal.ckeditor.KeyboardView = Backbone.View.extend(/** @lends Drupal.ckeditor.KeyboardView# */{
 
     /**
@@ -16,7 +13,7 @@
      *
      * @augments Backbone.View
      */
-    initialize: function () {
+    initialize() {
       // Add keyboard arrow support.
       this.$el.on('keydown.ckeditor', '.ckeditor-buttons a, .ckeditor-multiple-buttons a', this.onPressButton.bind(this));
       this.$el.on('keydown.ckeditor', '[data-drupal-ckeditor-type="group"]', this.onPressGroup.bind(this));
@@ -25,7 +22,7 @@
     /**
      * @inheritdoc
      */
-    render: function () {
+    render() {
     },
 
     /**
@@ -34,18 +31,18 @@
      * @param {jQuery.Event} event
      *   The keypress event triggered.
      */
-    onPressButton: function (event) {
-      var upDownKeys = [
+    onPressButton(event) {
+      const upDownKeys = [
         38, // Up arrow.
         63232, // Safari up arrow.
         40, // Down arrow.
-        63233 // Safari down arrow.
+        63233, // Safari down arrow.
       ];
-      var leftRightKeys = [
+      const leftRightKeys = [
         37, // Left arrow.
         63234, // Safari left arrow.
         39, // Right arrow.
-        63235 // Safari right arrow.
+        63235, // Safari right arrow.
       ];
 
       // Respond to an enter key press. Prevent the bubbling of the enter key
@@ -56,19 +53,19 @@
 
       // Only take action when a direction key is pressed.
       if (_.indexOf(_.union(upDownKeys, leftRightKeys), event.keyCode) > -1) {
-        var view = this;
-        var $target = $(event.currentTarget);
-        var $button = $target.parent();
-        var $container = $button.parent();
-        var $group = $button.closest('.ckeditor-toolbar-group');
-        var $row;
-        var containerType = $container.data('drupal-ckeditor-button-sorting');
-        var $availableButtons = this.$el.find('[data-drupal-ckeditor-button-sorting="source"]');
-        var $activeButtons = this.$el.find('.ckeditor-toolbar-active');
+        let view = this;
+        let $target = $(event.currentTarget);
+        let $button = $target.parent();
+        const $container = $button.parent();
+        let $group = $button.closest('.ckeditor-toolbar-group');
+        let $row;
+        const containerType = $container.data('drupal-ckeditor-button-sorting');
+        const $availableButtons = this.$el.find('[data-drupal-ckeditor-button-sorting="source"]');
+        const $activeButtons = this.$el.find('.ckeditor-toolbar-active');
         // The current location of the button, just in case it needs to be put
         // back.
-        var $originalGroup = $group;
-        var dir;
+        const $originalGroup = $group;
+        let dir;
 
         // Move available buttons between their container and the active
         // toolbar.
@@ -85,8 +82,8 @@
           // Move buttons between sibling buttons in a group and between groups.
           if (_.indexOf(leftRightKeys, event.keyCode) > -1) {
             // Move left.
-            var $siblings = $container.children();
-            var index = $siblings.index($button);
+            const $siblings = $container.children();
+            const index = $siblings.index($button);
             if (_.indexOf([37, 63234], event.keyCode) > -1) {
               // Move between sibling buttons.
               if (index > 0) {
@@ -157,8 +154,7 @@
 
         view = this;
         // Attempt to move the button to the new toolbar position.
-        Drupal.ckeditor.registerButtonMove(this, $button, function (result) {
-
+        Drupal.ckeditor.registerButtonMove(this, $button, (result) => {
           // Put the button back if the registration failed.
           // If the button was in a row, then it was in the active toolbar
           // configuration. The button was probably placed in a new group, but
@@ -187,28 +183,28 @@
      * @param {jQuery.Event} event
      *   The keypress event triggered.
      */
-    onPressGroup: function (event) {
-      var upDownKeys = [
+    onPressGroup(event) {
+      const upDownKeys = [
         38, // Up arrow.
         63232, // Safari up arrow.
         40, // Down arrow.
-        63233 // Safari down arrow.
+        63233, // Safari down arrow.
       ];
-      var leftRightKeys = [
+      const leftRightKeys = [
         37, // Left arrow.
         63234, // Safari left arrow.
         39, // Right arrow.
-        63235 // Safari right arrow.
+        63235, // Safari right arrow.
       ];
 
       // Respond to an enter key press.
       if (event.keyCode === 13) {
-        var view = this;
+        const view = this;
         // Open the group renaming dialog in the next evaluation cycle so that
         // this event can be cancelled and the bubbling wiped out. Otherwise,
         // Firefox has issues because the page focus is shifted to the dialog
         // along with the keydown event.
-        window.setTimeout(function () {
+        window.setTimeout(() => {
           Drupal.ckeditor.openGroupNameDialog(view, $(event.currentTarget));
         }, 0);
         event.preventDefault();
@@ -217,11 +213,11 @@
 
       // Respond to direction key presses.
       if (_.indexOf(_.union(upDownKeys, leftRightKeys), event.keyCode) > -1) {
-        var $group = $(event.currentTarget);
-        var $container = $group.parent();
-        var $siblings = $container.children();
-        var index;
-        var dir;
+        const $group = $(event.currentTarget);
+        const $container = $group.parent();
+        const $siblings = $container.children();
+        let index;
+        let dir;
         // Move groups between sibling groups.
         if (_.indexOf(leftRightKeys, event.keyCode) > -1) {
           index = $siblings.index($group);
@@ -247,7 +243,6 @@
               $container.closest('.ckeditor-row').next().find('.ckeditor-toolbar-groups').prepend($group);
             }
           }
-
         }
         // Move groups between rows.
         else if (_.indexOf(upDownKeys, event.keyCode) > -1) {
@@ -260,7 +255,6 @@
         event.preventDefault();
         event.stopPropagation();
       }
-    }
+    },
   });
-
-})(jQuery, Drupal, Backbone, _);
+}(jQuery, Drupal, Backbone, _));

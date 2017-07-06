@@ -4,9 +4,6 @@
  */
 
 (function (Drupal, $, Backbone) {
-
-  'use strict';
-
   Drupal.quickedit.EntityDecorationView = Backbone.View.extend(/** @lends Drupal.quickedit.EntityDecorationView# */{
 
     /**
@@ -16,25 +13,24 @@
      *
      * @augments Backbone.View
      */
-    initialize: function () {
+    initialize() {
       this.listenTo(this.model, 'change', this.render);
     },
 
     /**
      * @inheritdoc
      */
-    render: function () {
+    render() {
       this.$el.toggleClass('quickedit-entity-active', this.model.get('isActive'));
     },
 
     /**
      * @inheritdoc
      */
-    remove: function () {
+    remove() {
       this.setElement(null);
       Backbone.View.prototype.remove.call(this);
-    }
+    },
 
   });
-
 }(Drupal, jQuery, Backbone));

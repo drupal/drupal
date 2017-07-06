@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.AjaxCommands.prototype.editorDialogSave = function (ajax, response, status) {
     $(window).trigger('editor:dialogsave', [response.values]);
   };

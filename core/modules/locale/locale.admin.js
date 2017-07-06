@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.localeTranslateDirty = {
     attach: function attach() {
       var $form = $('#locale-translate-edit-form').once('localetranslatedirty');
@@ -60,9 +57,9 @@
           $tr.find('.locale-translation-update__prefix').text(function () {
             if ($tr.hasClass('expanded')) {
               return Drupal.t('Hide description');
-            } else {
-              return Drupal.t('Show description');
             }
+
+            return Drupal.t('Show description');
           });
         });
         $table.find('.requirements, .links').hide();
@@ -74,7 +71,6 @@
     localeTranslateChangedMarker: function localeTranslateChangedMarker() {
       return '<abbr class="warning ajax-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
     },
-
     localeTranslateChangedWarning: function localeTranslateChangedWarning() {
       return '<div class="clearfix messages messages--warning">' + Drupal.theme('localeTranslateChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
     }

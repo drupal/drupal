@@ -10,11 +10,8 @@
  */
 
 (function ($, Drupal, drupalSettings, debounce, displace) {
-
-  'use strict';
-
   // autoResize option will turn off resizable and draggable.
-  drupalSettings.dialog = $.extend({autoResize: true, maxHeight: '95%'}, drupalSettings.dialog);
+  drupalSettings.dialog = $.extend({ autoResize: true, maxHeight: '95%' }, drupalSettings.dialog);
 
   /**
    * Resets the current options for positioning.
@@ -32,13 +29,13 @@
    * @fires event:dialogContentResize
    */
   function resetSize(event) {
-    var positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
-    var adjustedOptions = {};
-    var windowHeight = $(window).height();
-    var option;
-    var optionValue;
-    var adjustedValue;
-    for (var n = 0; n < positionOptions.length; n++) {
+    const positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
+    let adjustedOptions = {};
+    let windowHeight = $(window).height();
+    let option;
+    let optionValue;
+    let adjustedValue;
+    for (let n = 0; n < positionOptions.length; n++) {
       option = positionOptions[n];
       optionValue = event.data.settings[option];
       if (optionValue) {
@@ -76,26 +73,26 @@
    *   Altered options object.
    */
   function resetPosition(options) {
-    var offsets = displace.offsets;
-    var left = offsets.left - offsets.right;
-    var top = offsets.top - offsets.bottom;
+    const offsets = displace.offsets;
+    const left = offsets.left - offsets.right;
+    const top = offsets.top - offsets.bottom;
 
-    var leftString = (left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2)) + 'px';
-    var topString = (top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2)) + 'px';
+    const leftString = `${(left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2))}px`;
+    const topString = `${(top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2))}px`;
     options.position = {
-      my: 'center' + (left !== 0 ? leftString : '') + ' center' + (top !== 0 ? topString : ''),
-      of: window
+      my: `center${left !== 0 ? leftString : ''} center${top !== 0 ? topString : ''}`,
+      of: window,
     };
     return options;
   }
 
   $(window).on({
     'dialog:aftercreate': function (event, dialog, $element, settings) {
-      var autoResize = debounce(resetSize, 20);
-      var eventData = {settings: settings, $element: $element};
+      const autoResize = debounce(resetSize, 20);
+      const eventData = { settings, $element };
       if (settings.autoResize === true || settings.autoResize === 'true') {
         $element
-          .dialog('option', {resizable: false, draggable: false})
+          .dialog('option', { resizable: false, draggable: false })
           .dialog('widget').css('position', 'fixed');
         $(window)
           .on('resize.dialogResize scroll.dialogResize', eventData, autoResize)
@@ -106,7 +103,6 @@
     'dialog:beforeclose': function (event, dialog, $element) {
       $(window).off('.dialogResize');
       $(document).off('.dialogResize');
-    }
+    },
   });
-
-})(jQuery, Drupal, drupalSettings, Drupal.debounce, Drupal.displace);
+}(jQuery, Drupal, drupalSettings, Drupal.debounce, Drupal.displace));

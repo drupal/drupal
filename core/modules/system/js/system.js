@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   var ids = [];
 
   Drupal.behaviors.copyFieldValue = {
@@ -30,14 +27,12 @@
         $('#' + ids.join(', #')).removeOnce('copy-field-values').off('blur');
       }
     },
-
     valueTargetCopyHandler: function valueTargetCopyHandler(e, value) {
       var $target = $(e.target);
       if ($target.val() === '') {
         $target.val(value);
       }
     },
-
     valueSourceBlurHandler: function valueSourceBlurHandler(e) {
       var value = $(e.target).val();
       var targetIds = drupalSettings.copyFieldValue[e.target.id];

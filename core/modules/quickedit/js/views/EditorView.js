@@ -6,28 +6,21 @@
 **/
 
 (function ($, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.EditorView = Backbone.View.extend({
     initialize: function initialize(options) {
       this.fieldModel = options.fieldModel;
       this.listenTo(this.fieldModel, 'change:state', this.stateChange);
     },
-
     remove: function remove() {
       this.setElement();
       Backbone.View.prototype.remove.call(this);
     },
-
     getEditedElement: function getEditedElement() {
       return this.$el;
     },
-
     getQuickEditUISettings: function getQuickEditUISettings() {
       return { padding: false, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
     },
-
     stateChange: function stateChange(fieldModel, state) {
       var from = fieldModel.previous('state');
       var to = state;
@@ -74,9 +67,7 @@
           break;
       }
     },
-
     revert: function revert() {},
-
     save: function save() {
       var fieldModel = this.fieldModel;
       var editorModel = this.model;
@@ -136,15 +127,12 @@
         fillAndSubmitForm(editorModel.get('currentValue'));
       });
     },
-
     showValidationErrors: function showValidationErrors() {
       var $errors = $('<div class="quickedit-validation-errors"></div>').append(this.model.get('validationErrors'));
       this.getEditedElement().addClass('quickedit-validation-error').after($errors);
     },
-
     removeValidationErrors: function removeValidationErrors() {
       this.getEditedElement().removeClass('quickedit-validation-error').next('.quickedit-validation-errors').remove();
     }
-
   });
 })(jQuery, Backbone, Drupal);

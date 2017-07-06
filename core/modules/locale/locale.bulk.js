@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.importLanguageCodeSelector = {
     attach: function attach(context, settings) {
       var $form = $('#locale-translate-import-form').once('autodetect-lang');

@@ -6,9 +6,6 @@
 **/
 
 (function ($, _, Backbone, Drupal, drupalSettings, JSON, storage) {
-
-  'use strict';
-
   var options = $.extend(drupalSettings.quickedit, {
     strings: {
       quickEdit: Drupal.t('Quick edit')
@@ -74,24 +71,19 @@
       has: function has(fieldID) {
         return storage.getItem(this._prefixFieldID(fieldID)) !== null;
       },
-
       add: function add(fieldID, metadata) {
         storage.setItem(this._prefixFieldID(fieldID), JSON.stringify(metadata));
       },
-
       get: function get(fieldID, key) {
         var metadata = JSON.parse(storage.getItem(this._prefixFieldID(fieldID)));
         return typeof key === 'undefined' ? metadata : metadata[key];
       },
-
       _prefixFieldID: function _prefixFieldID(fieldID) {
         return 'Drupal.quickedit.metadata.' + fieldID;
       },
-
       _unprefixFieldID: function _unprefixFieldID(fieldID) {
         return fieldID.substring(26);
       },
-
       intersection: function intersection(fieldIDs) {
         var prefixedFieldIDs = _.map(fieldIDs, this._prefixFieldID);
         var intersection = _.intersection(prefixedFieldIDs, _.keys(sessionStorage));

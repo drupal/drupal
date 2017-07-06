@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.nodeNewCommentsLink = {
     attach: function attach(context) {
       var nodeIDs = [];
@@ -21,10 +18,10 @@
 
           hide($placeholder);
           return true;
-        } else {
-          remove($placeholder);
-          return false;
         }
+
+        remove($placeholder);
+        return false;
       });
 
       if ($placeholders.length === 0) {
@@ -52,7 +49,7 @@
   function processNodeNewCommentLinks($placeholders) {
     var $placeholdersToUpdate = {};
     var fieldName = 'comment';
-    var $placeholder;
+    var $placeholder = void 0;
     $placeholders.each(function (index, placeholder) {
       $placeholder = $(placeholder);
       var timestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
@@ -87,7 +84,7 @@
       $.ajax({
         url: Drupal.url('comments/render_new_comments_node_links'),
         type: 'POST',
-        data: { 'node_ids[]': nodeIDs, 'field_name': fieldName },
+        data: { 'node_ids[]': nodeIDs, field_name: fieldName },
         dataType: 'json',
         success: render
       });

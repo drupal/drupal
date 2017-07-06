@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.dropButton = {
     attach: function attach(context, settings) {
       var $dropbuttons = $(context).find('.dropbutton-wrapper').once('dropbutton');
@@ -73,29 +70,23 @@
       show = isBool ? show : !this.$dropbutton.hasClass('open');
       this.$dropbutton.toggleClass('open', show);
     },
-
     hoverIn: function hoverIn() {
       if (this.timerID) {
         window.clearTimeout(this.timerID);
       }
     },
-
     hoverOut: function hoverOut() {
       this.timerID = window.setTimeout($.proxy(this, 'close'), 500);
     },
-
     open: function open() {
       this.toggle(true);
     },
-
     close: function close() {
       this.toggle(false);
     },
-
     focusOut: function focusOut(e) {
       this.hoverOut.call(this, e);
     },
-
     focusIn: function focusIn(e) {
       this.hoverIn.call(this, e);
     }

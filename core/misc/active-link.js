@@ -6,16 +6,13 @@
 **/
 
 (function (Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.activeLinks = {
     attach: function attach(context) {
       var path = drupalSettings.path;
       var queryString = JSON.stringify(path.currentQuery);
-      var querySelector = path.currentQuery ? "[data-drupal-link-query='" + queryString + "']" : ':not([data-drupal-link-query])';
+      var querySelector = path.currentQuery ? '[data-drupal-link-query=\'' + queryString + '\']' : ':not([data-drupal-link-query])';
       var originalSelectors = ['[data-drupal-link-system-path="' + path.currentPath + '"]'];
-      var selectors;
+      var selectors = void 0;
 
       if (path.isFront) {
         originalSelectors.push('[data-drupal-link-system-path="<front>"]');

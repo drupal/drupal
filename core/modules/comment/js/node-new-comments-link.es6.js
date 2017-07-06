@@ -7,9 +7,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * Render "X new comments" links wherever necessary.
    *
@@ -19,30 +16,29 @@
    *   Attaches new comment links behavior.
    */
   Drupal.behaviors.nodeNewCommentsLink = {
-    attach: function (context) {
+    attach(context) {
       // Collect all "X new comments" node link placeholders (and their
       // corresponding node IDs) newer than 30 days ago that have not already
       // been read after their last comment timestamp.
-      var nodeIDs = [];
-      var $placeholders = $(context)
+      const nodeIDs = [];
+      const $placeholders = $(context)
         .find('[data-history-node-last-comment-timestamp]')
         .once('history')
         .filter(function () {
-          var $placeholder = $(this);
-          var lastCommentTimestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
-          var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
+          const $placeholder = $(this);
+          const lastCommentTimestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
+          const nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
           if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
             nodeIDs.push(nodeID);
             // Hide this placeholder link until it is certain we'll need it.
             hide($placeholder);
             return true;
           }
-          else {
+
             // Remove this placeholder link from the DOM because we won't need
             // it.
-            remove($placeholder);
-            return false;
-          }
+          remove($placeholder);
+          return false;
         });
 
       if ($placeholders.length === 0) {
@@ -50,10 +46,10 @@
       }
 
       // Perform an AJAX request to retrieve node read timestamps.
-      Drupal.history.fetchTimestamps(nodeIDs, function () {
+      Drupal.history.fetchTimestamps(nodeIDs, () => {
         processNodeNewCommentLinks($placeholders);
       });
-    }
+    },
   };
 
   /**
@@ -112,15 +108,15 @@
    */
   function processNodeNewCommentLinks($placeholders) {
     // Figure out which placeholders need the "x new comments" links.
-    var $placeholdersToUpdate = {};
-    var fieldName = 'comment';
-    var $placeholder;
-    $placeholders.each(function (index, placeholder) {
+    const $placeholdersToUpdate = {};
+    let fieldName = 'comment';
+    let $placeholder;
+    $placeholders.each((index, placeholder) => {
       $placeholder = $(placeholder);
-      var timestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
+      const timestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
       fieldName = $placeholder.attr('data-history-node-field-name');
-      var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
-      var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
+      const nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
+      const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       // Queue this placeholder's "X new comments" link to be downloaded from
       // the server.
@@ -134,7 +130,7 @@
     });
 
     // Perform an AJAX request to retrieve node view timestamps.
-    var nodeIDs = Object.keys($placeholdersToUpdate);
+    const nodeIDs = Object.keys($placeholdersToUpdate);
     if (nodeIDs.length === 0) {
       return;
     }
@@ -149,7 +145,7 @@
      *   Data about new comment links indexed by nodeID.
      */
     function render(results) {
-      for (var nodeID in results) {
+      for (const nodeID in results) {
         if (results.hasOwnProperty(nodeID) && $placeholdersToUpdate.hasOwnProperty(nodeID)) {
           $placeholdersToUpdate[nodeID]
             .attr('href', results[nodeID].first_new_comment_link)
@@ -167,11 +163,10 @@
       $.ajax({
         url: Drupal.url('comments/render_new_comments_node_links'),
         type: 'POST',
-        data: {'node_ids[]': nodeIDs, 'field_name': fieldName},
+        data: { 'node_ids[]': nodeIDs, field_name: fieldName },
         dataType: 'json',
-        success: render
+        success: render,
       });
     }
   }
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

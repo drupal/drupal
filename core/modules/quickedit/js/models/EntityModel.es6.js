@@ -4,9 +4,6 @@
  */
 
 (function (_, $, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.EntityModel = Drupal.quickedit.BaseModel.extend(/** @lends Drupal.quickedit.EntityModel# */{
 
     /**
@@ -133,7 +130,7 @@
        *
        * @type {bool}
        */
-      reload: false
+      reload: false,
     },
 
     /**
@@ -141,7 +138,7 @@
      *
      * @augments Drupal.quickedit.BaseModel
      */
-    initialize: function () {
+    initialize() {
       this.set('fields', new Drupal.quickedit.FieldCollection());
 
       // Respond to entity state changes.
@@ -166,14 +163,14 @@
      * @param {object} options
      *   Options for the entity model.
      */
-    stateChange: function (entityModel, state, options) {
-      var to = state;
+    stateChange(entityModel, state, options) {
+      const to = state;
       switch (to) {
         case 'closed':
           this.set({
             isActive: false,
             inTempStore: false,
-            isDirty: false
+            isDirty: false,
           });
           break;
 
@@ -182,7 +179,7 @@
 
         case 'opening':
           // Set the fields to candidate state.
-          entityModel.get('fields').each(function (fieldModel) {
+          entityModel.get('fields').each((fieldModel) => {
             fieldModel.set('state', 'candidate', options);
           });
           break;
@@ -198,28 +195,22 @@
           // For fields that are in an active state, transition them to
           // candidate.
           fields.chain()
-            .filter(function (fieldModel) {
-              return _.intersection([fieldModel.get('state')], ['active']).length;
-            })
-            .each(function (fieldModel) {
+            .filter(fieldModel => _.intersection([fieldModel.get('state')], ['active']).length)
+            .each((fieldModel) => {
               fieldModel.set('state', 'candidate');
             });
           // For fields that are in a changed state, field values must first be
           // stored in PrivateTempStore.
           fields.chain()
-            .filter(function (fieldModel) {
-              return _.intersection([fieldModel.get('state')], Drupal.quickedit.app.changedFieldStates).length;
-            })
-            .each(function (fieldModel) {
+            .filter(fieldModel => _.intersection([fieldModel.get('state')], Drupal.quickedit.app.changedFieldStates).length)
+            .each((fieldModel) => {
               fieldModel.set('state', 'saving');
             });
           break;
 
         case 'deactivating':
           var changedFields = this.get('fields')
-            .filter(function (fieldModel) {
-              return _.intersection([fieldModel.get('state')], ['changed', 'invalid']).length;
-            });
+            .filter(fieldModel => _.intersection([fieldModel.get('state')], ['changed', 'invalid']).length);
           // If the entity contains unconfirmed or unsaved changes, return the
           // entity to an opened state and ask the user if they would like to
           // save the changes or discard the changes.
@@ -232,23 +223,21 @@
           //   proceed to set the fields to candidate state.
           if ((changedFields.length || this.get('fieldsInTempStore').length) && (!options.saved && !options.confirmed)) {
             // Cancel deactivation until the user confirms save or discard.
-            this.set('state', 'opened', {confirming: true});
+            this.set('state', 'opened', { confirming: true });
             // An action in reaction to state change must be deferred.
-            _.defer(function () {
+            _.defer(() => {
               Drupal.quickedit.app.confirmEntityDeactivation(entityModel);
             });
           }
           else {
-            var invalidFields = this.get('fields')
-              .filter(function (fieldModel) {
-                return _.intersection([fieldModel.get('state')], ['invalid']).length;
-              });
+            const invalidFields = this.get('fields')
+              .filter(fieldModel => _.intersection([fieldModel.get('state')], ['invalid']).length);
             // Indicate if this EntityModel needs to be reloaded in order to
             // restore the original values of its fields.
             entityModel.set('reload', (this.get('fieldsInTempStore').length || invalidFields.length));
             // Set all fields to the 'candidate' state. A changed field may have
             // to go through confirmation first.
-            entityModel.get('fields').each(function (fieldModel) {
+            entityModel.get('fields').each((fieldModel) => {
               // If the field is already in the candidate state, trigger a
               // change event so that the entityModel can move to the next state
               // in deactivation.
@@ -265,10 +254,10 @@
         case 'closing':
           // Set all fields to the 'inactive' state.
           options.reason = 'stop';
-          this.get('fields').each(function (fieldModel) {
+          this.get('fields').each((fieldModel) => {
             fieldModel.set({
               inTempStore: false,
-              state: 'inactive'
+              state: 'inactive',
             }, options);
           });
           break;
@@ -288,10 +277,10 @@
      *
      * @see Drupal.quickedit.EntityModel#fieldStateChange
      */
-    _updateInTempStoreAttributes: function (entityModel, fieldModel) {
-      var current = fieldModel.get('state');
-      var previous = fieldModel.previous('state');
-      var fieldsInTempStore = entityModel.get('fieldsInTempStore');
+    _updateInTempStoreAttributes(entityModel, fieldModel) {
+      const current = fieldModel.get('state');
+      const previous = fieldModel.previous('state');
+      let fieldsInTempStore = entityModel.get('fieldsInTempStore');
       // If the fieldModel changed to the 'saved' state: remember that this
       // field was saved to PrivateTempStore.
       if (current === 'saved') {
@@ -325,9 +314,9 @@
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.
      */
-    fieldStateChange: function (fieldModel, state) {
-      var entityModel = this;
-      var fieldState = state;
+    fieldStateChange(fieldModel, state) {
+      const entityModel = this;
+      const fieldState = state;
       // Switch on the entityModel state.
       // The EntityModel responds to FieldModel state changes as a function of
       // its state. For example, a field switching back to 'candidate' state
@@ -351,9 +340,9 @@
           // goal of having all fieldModels in the 'candidate' state.
           // A state change in reaction to another state change must be
           // deferred.
-          _.defer(function () {
+          _.defer(() => {
             entityModel.set('state', 'opened', {
-              'accept-field-states': Drupal.quickedit.app.readyFieldStates
+              'accept-field-states': Drupal.quickedit.app.readyFieldStates,
             });
           });
           break;
@@ -381,8 +370,8 @@
           if (fieldState === 'invalid') {
             // A state change in reaction to another state change must be
             // deferred.
-            _.defer(function () {
-              entityModel.set('state', 'opened', {reason: 'invalid'});
+            _.defer(() => {
+              entityModel.set('state', 'opened', { reason: 'invalid' });
             });
           }
           else {
@@ -392,26 +381,26 @@
           // Attempt to save the entity. If the entity's fields are not yet all
           // in a ready state, the save will not be processed.
           var options = {
-            'accept-field-states': Drupal.quickedit.app.readyFieldStates
+            'accept-field-states': Drupal.quickedit.app.readyFieldStates,
           };
           if (entityModel.set('isCommitting', true, options)) {
             entityModel.save({
-              success: function () {
+              success() {
                 entityModel.set({
                   state: 'deactivating',
-                  isCommitting: false
-                }, {saved: true});
+                  isCommitting: false,
+                }, { saved: true });
               },
-              error: function () {
+              error() {
                 // Reset the "isCommitting" mutex.
                 entityModel.set('isCommitting', false);
                 // Change the state back to "opened", to allow the user to hit
                 // the "Save" button again.
-                entityModel.set('state', 'opened', {reason: 'networkerror'});
+                entityModel.set('state', 'opened', { reason: 'networkerror' });
                 // Show a modal to inform the user of the network error.
-                var message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', {'@entity-title': entityModel.get('label')});
+                const message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', { '@entity-title': entityModel.get('label') });
                 Drupal.quickedit.util.networkErrorModal(Drupal.t('Network problem!'), message);
-              }
+              },
             });
           }
           break;
@@ -421,9 +410,9 @@
           // are in either the 'candidate' or 'highlighted' state.
           // A state change in reaction to another state change must be
           // deferred.
-          _.defer(function () {
+          _.defer(() => {
             entityModel.set('state', 'closing', {
-              'accept-field-states': Drupal.quickedit.app.readyFieldStates
+              'accept-field-states': Drupal.quickedit.app.readyFieldStates,
             });
           });
           break;
@@ -433,9 +422,9 @@
           // are in the 'inactive' state.
           // A state change in reaction to another state change must be
           // deferred.
-          _.defer(function () {
+          _.defer(() => {
             entityModel.set('state', 'closed', {
-              'accept-field-states': ['inactive']
+              'accept-field-states': ['inactive'],
             });
           });
           break;
@@ -450,24 +439,24 @@
      * @param {function} [options.success]
      *   A function to invoke if the entity is successfully saved.
      */
-    save: function (options) {
-      var entityModel = this;
+    save(options) {
+      const entityModel = this;
 
       // Create a Drupal.ajax instance to save the entity.
-      var entitySaverAjax = Drupal.ajax({
-        url: Drupal.url('quickedit/entity/' + entityModel.get('entityID')),
-        error: function () {
+      const entitySaverAjax = Drupal.ajax({
+        url: Drupal.url(`quickedit/entity/${entityModel.get('entityID')}`),
+        error() {
           // Let the Drupal.quickedit.EntityModel Backbone model's error()
           // method handle errors.
           options.error.call(entityModel);
-        }
+        },
       });
       // Entity saved successfully.
       entitySaverAjax.commands.quickeditEntitySaved = function (ajax, response, status) {
         // All fields have been moved from PrivateTempStore to permanent
         // storage, update the "inTempStore" attribute on FieldModels, on the
         // EntityModel and clear EntityModel's "fieldInTempStore" attribute.
-        entityModel.get('fields').each(function (fieldModel) {
+        entityModel.get('fields').each((fieldModel) => {
           fieldModel.set('inTempStore', false);
         });
         entityModel.set('inTempStore', false);
@@ -503,16 +492,16 @@
      * @return {string}
      *   A string to say something about the state of the entity model.
      */
-    validate: function (attrs, options) {
-      var acceptedFieldStates = options['accept-field-states'] || [];
+    validate(attrs, options) {
+      const acceptedFieldStates = options['accept-field-states'] || [];
 
       // Validate state change.
-      var currentState = this.get('state');
-      var nextState = attrs.state;
+      const currentState = this.get('state');
+      const nextState = attrs.state;
       if (currentState !== nextState) {
         // Ensure it's a valid state.
         if (_.indexOf(this.constructor.states, nextState) === -1) {
-          return '"' + nextState + '" is an invalid state';
+          return `"${nextState}" is an invalid state`;
         }
 
         // Ensure it's a state change that is allowed.
@@ -528,8 +517,8 @@
       }
 
       // Validate setting isCommitting = true.
-      var currentIsCommitting = this.get('isCommitting');
-      var nextIsCommitting = attrs.isCommitting;
+      const currentIsCommitting = this.get('isCommitting');
+      const nextIsCommitting = attrs.isCommitting;
       if (currentIsCommitting === false && nextIsCommitting === true) {
         if (!this._fieldsHaveAcceptableStates(acceptedFieldStates)) {
           return 'isCommitting change not accepted because fields are not in acceptable state';
@@ -559,8 +548,8 @@
      *
      * @see Drupal.quickedit.AppView#acceptEditorStateChange
      */
-    _acceptStateChange: function (from, to, context) {
-      var accept = true;
+    _acceptStateChange(from, to, context) {
+      let accept = true;
 
       // In general, enforce the states sequence. Disallow going back from a
       // "later" state to an "earlier" state, except in explicitly allowed
@@ -605,14 +594,14 @@
      *
      * @see Drupal.quickedit.EntityModel#validate
      */
-    _fieldsHaveAcceptableStates: function (acceptedFieldStates) {
-      var accept = true;
+    _fieldsHaveAcceptableStates(acceptedFieldStates) {
+      let accept = true;
 
       // If no acceptable field states are provided, assume all field states are
       // acceptable. We want to let validation pass as a default and only
       // check validity on calls to set that explicitly request it.
       if (acceptedFieldStates.length > 0) {
-        var fieldStates = this.get('fields').pluck('state') || [];
+        const fieldStates = this.get('fields').pluck('state') || [];
         // If not all fields are in one of the accepted field states, then we
         // still can't allow this state change.
         if (_.difference(fieldStates, acceptedFieldStates).length) {
@@ -629,7 +618,7 @@
      * @param {object} options
      *   Options for the entity model.
      */
-    destroy: function (options) {
+    destroy(options) {
       Drupal.quickedit.BaseModel.prototype.destroy.call(this, options);
 
       this.stopListening();
@@ -641,10 +630,10 @@
     /**
      * @inheritdoc
      */
-    sync: function () {
+    sync() {
       // We don't use REST updates to sync.
-      return;
-    }
+
+    },
 
   }, /** @lends Drupal.quickedit.EntityModel */{
 
@@ -705,7 +694,7 @@
       // - Trigger: EntityModel.
       // - Guarantees: all fields are in the 'candidate' state.
       // - Expected behavior: change all fields to the 'inactive' state.
-      'closing'
+      'closing',
     ],
 
     /**
@@ -719,9 +708,9 @@
      * @return {bool}
      *   Whether the 'from' state comes before the 'to' state.
      */
-    followsStateSequence: function (from, to) {
+    followsStateSequence(from, to) {
       return _.indexOf(this.states, from) < _.indexOf(this.states, to);
-    }
+    },
 
   });
 
@@ -735,7 +724,6 @@
     /**
      * @type {Drupal.quickedit.EntityModel}
      */
-    model: Drupal.quickedit.EntityModel
+    model: Drupal.quickedit.EntityModel,
   });
-
 }(_, jQuery, Backbone, Drupal));

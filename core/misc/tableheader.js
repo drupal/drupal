@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, displace) {
-
-  'use strict';
-
   Drupal.behaviors.tableHeader = {
     attach: function attach(context) {
       $(window).one('scroll.TableHeaderInit', { context: context }, tableHeaderInitHandler);
@@ -111,7 +108,6 @@
 
       this.recalculateSticky();
     },
-
     stickyPosition: function stickyPosition(offsetTop, offsetLeft) {
       var css = {};
       if (typeof offsetTop === 'number') {
@@ -122,7 +118,6 @@
       }
       return this.$stickyTable.css(css);
     },
-
     checkStickyVisible: function checkStickyVisible() {
       var scrollTop = scrollValue('scrollTop');
       var tableTop = this.tableOffset.top - displace.offsets.top;
@@ -136,14 +131,12 @@
       this.stickyVisible = visible;
       return visible;
     },
-
     onScroll: function onScroll(e) {
       this.checkStickyVisible();
 
       this.stickyPosition(null, scrollValue('scrollLeft'));
       this.$stickyTable.css('visibility', this.stickyVisible ? 'visible' : 'hidden');
     },
-
     recalculateSticky: function recalculateSticky(event) {
       this.tableHeight = this.$originalTable[0].clientHeight;
 

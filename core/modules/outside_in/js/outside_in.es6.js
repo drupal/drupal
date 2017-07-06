@@ -4,14 +4,11 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
-  var blockConfigureSelector = '[data-outside-in-edit]';
-  var toggleEditSelector = '[data-drupal-outsidein="toggle"]';
-  var itemsToToggleSelector = '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-outsidein="editable"] a, [data-drupal-outsidein="editable"] button';
-  var contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
-  var quickEditItemSelector = '[data-quickedit-entity-id]';
+  const blockConfigureSelector = '[data-outside-in-edit]';
+  const toggleEditSelector = '[data-drupal-outsidein="toggle"]';
+  const itemsToToggleSelector = '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-outsidein="editable"] a, [data-drupal-outsidein="editable"] button';
+  const contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
+  const quickEditItemSelector = '[data-quickedit-entity-id]';
 
   /**
    * Reacts to contextual links being added.
@@ -23,7 +20,7 @@
    *
    * @listens event:drupalContextualLinkAdded
    */
-  $(document).on('drupalContextualLinkAdded', function (event, data) {
+  $(document).on('drupalContextualLinkAdded', (event, data) => {
     // Bind Ajax behaviors to all items showing the class.
     // @todo Fix contextual links to work with use-ajax links in
     //    https://www.drupal.org/node/2764931.
@@ -33,7 +30,7 @@
     // Click "Edit" button in toolbar to force Contextual Edit which starts
     // Settings Tray edit mode also.
     data.$el.find(blockConfigureSelector)
-      .on('click.outsidein', function () {
+      .on('click.outsidein', () => {
         if (!isInEditMode()) {
           $(toggleEditSelector).trigger('click').trigger('click.outside_in');
         }
@@ -42,10 +39,10 @@
       });
   });
 
-  $(document).on('keyup.outsidein', function (e) {
+  $(document).on('keyup.outsidein', (e) => {
     if (isInEditMode() && e.keyCode === 27) {
       Drupal.announce(
-        Drupal.t('Exited edit mode.')
+        Drupal.t('Exited edit mode.'),
       );
       toggleEditMode();
     }
@@ -128,8 +125,8 @@
       throw new Error('data-off-canvas-main-canvas is missing from outside-in-page-wrapper.html.twig');
     }
     editMode = !!editMode;
-    var $editButton = $(toggleEditSelector);
-    var $editables;
+    const $editButton = $(toggleEditSelector);
+    let $editables;
     // Turn on edit mode.
     if (editMode) {
       $editButton.text(Drupal.t('Editing'));
@@ -144,7 +141,7 @@
         // and click it.
         $editables
           .not(contextualItemsSelector)
-          .on('click.outsidein', function (e) {
+          .on('click.outsidein', (e) => {
             // Contextual links are allowed to function in Edit mode.
             if ($(e.target).closest('.contextual').length || !localStorage.getItem('Drupal.contextualToolbar.isViewing')) {
               return;
@@ -154,7 +151,7 @@
           });
         $(quickEditItemSelector)
           .not(contextualItemsSelector)
-          .on('click.outsidein', function (e) {
+          .on('click.outsidein', (e) => {
             // For all non-contextual links or the contextual QuickEdit link close the off-canvas dialog.
             if (!$(e.target).parent().hasClass('contextual') || $(e.target).parent().hasClass('quickedit')) {
               closeOffCanvas();
@@ -193,12 +190,12 @@
    *   Attaches contextual toolbar behavior on a contextualToolbar-init event.
    */
   Drupal.behaviors.outsideInEdit = {
-    attach: function () {
-      var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
+    attach() {
+      const editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
       if (editMode) {
         setEditModeState(true);
       }
-    }
+    },
   };
 
   /**
@@ -210,26 +207,25 @@
    *   Toggle the js-outside-edit-mode class.
    */
   Drupal.behaviors.toggleEditMode = {
-    attach: function () {
-
+    attach() {
       $(toggleEditSelector).once('outsidein').on('click.outsidein', toggleEditMode);
 
-      var search = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog';
-      var replace = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog_off_canvas';
+      const search = `${Drupal.ajax.WRAPPER_FORMAT}=drupal_dialog`;
+      const replace = `${Drupal.ajax.WRAPPER_FORMAT}=drupal_dialog_off_canvas`;
       // Loop through all Ajax links and change the format to dialog-off-canvas when
       // needed.
       Drupal.ajax.instances
-        .filter(function (instance) {
-          var hasElement = instance && !!instance.element;
-          var rendererOffCanvas = false;
-          var wrapperOffCanvas = false;
+        .filter((instance) => {
+          const hasElement = instance && !!instance.element;
+          let rendererOffCanvas = false;
+          let wrapperOffCanvas = false;
           if (hasElement) {
             rendererOffCanvas = $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
             wrapperOffCanvas = instance.options.url.indexOf('drupal_dialog_off_canvas') === -1;
           }
           return hasElement && rendererOffCanvas && wrapperOffCanvas;
         })
-        .forEach(function (instance) {
+        .forEach((instance) => {
           // @todo Move logic for data-dialog-renderer attribute into ajax.js
           //   https://www.drupal.org/node/2784443
           instance.options.url = instance.options.url.replace(search, replace);
@@ -238,9 +234,9 @@
             instance.options.data.dialogOptions = {};
           }
           instance.options.data.dialogOptions.outsideInActiveEditableId = $(instance.element).parents('.outside-in-editable').attr('id');
-          instance.progress = {type: 'fullscreen'};
+          instance.progress = { type: 'fullscreen' };
         });
-    }
+    },
   };
 
   // Manage Active editable class on opening and closing of the dialog.
@@ -248,7 +244,7 @@
     'dialog:beforecreate': function (event, dialog, $element, settings) {
       if ($element.is('#drupal-off-canvas')) {
         $('body .outside-in-active-editable').removeClass('outside-in-active-editable');
-        var $activeElement = $('#' + settings.outsideInActiveEditableId);
+        const $activeElement = $(`#${settings.outsideInActiveEditableId}`);
         if ($activeElement.length) {
           $activeElement.addClass('outside-in-active-editable');
           settings.dialogClass += ' ui-dialog-outside-in';
@@ -259,7 +255,6 @@
       if ($element.is('#drupal-off-canvas')) {
         $('body .outside-in-active-editable').removeClass('outside-in-active-editable');
       }
-    }
+    },
   });
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

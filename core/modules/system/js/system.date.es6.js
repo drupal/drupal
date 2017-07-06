@@ -4,10 +4,7 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
-  var dateFormats = drupalSettings.dateFormats;
+  const dateFormats = drupalSettings.dateFormats;
 
   /**
    * Display the preview for date format entered.
@@ -18,11 +15,11 @@
    *   Attach behavior for previewing date formats on input elements.
    */
   Drupal.behaviors.dateFormat = {
-    attach: function (context) {
-      var $context = $(context);
-      var $source = $context.find('[data-drupal-date-formatter="source"]').once('dateFormat');
-      var $target = $context.find('[data-drupal-date-formatter="preview"]').once('dateFormat');
-      var $preview = $target.find('em');
+    attach(context) {
+      const $context = $(context);
+      const $source = $context.find('[data-drupal-date-formatter="source"]').once('dateFormat');
+      const $target = $context.find('[data-drupal-date-formatter="preview"]').once('dateFormat');
+      const $preview = $target.find('em');
 
       // All elements have to exist.
       if (!$source.length || !$target.length) {
@@ -36,10 +33,8 @@
        *   The jQuery event triggered.
        */
       function dateFormatHandler(e) {
-        var baseValue = $(e.target).val() || '';
-        var dateString = baseValue.replace(/\\?(.?)/gi, function (key, value) {
-          return dateFormats[key] ? dateFormats[key] : value;
-        });
+        const baseValue = $(e.target).val() || '';
+        const dateString = baseValue.replace(/\\?(.?)/gi, (key, value) => dateFormats[key] ? dateFormats[key] : value);
 
         $preview.html(dateString);
         $target.toggleClass('js-hide', !dateString.length);
@@ -51,7 +46,6 @@
       $source.on('keyup.dateFormat change.dateFormat input.dateFormat', dateFormatHandler)
         // Initialize preview.
         .trigger('keyup');
-    }
+    },
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

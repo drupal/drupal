@@ -4,9 +4,6 @@
  */
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   /**
    * Models the state of a contextual link's trigger, list & region.
    *
@@ -61,7 +58,7 @@
        *
        * @type {bool}
        */
-      isLocked: false
+      isLocked: false,
     },
 
     /**
@@ -72,8 +69,8 @@
      * @return {Drupal.contextual.StateModel}
      *   The current contextual state model.
      */
-    toggleOpen: function () {
-      var newIsOpen = !this.get('isOpen');
+    toggleOpen() {
+      const newIsOpen = !this.get('isOpen');
       this.set('isOpen', newIsOpen);
       if (newIsOpen) {
         this.focus();
@@ -90,7 +87,7 @@
      * @return {Drupal.contextual.StateModel}
      *   The current contextual state model.
      */
-    close: function () {
+    close() {
       this.set('isOpen', false);
       return this;
     },
@@ -103,10 +100,10 @@
      * @return {Drupal.contextual.StateModel}
      *   The current contextual state model.
      */
-    focus: function () {
+    focus() {
       this.set('hasFocus', true);
-      var cid = this.cid;
-      this.collection.each(function (model) {
+      const cid = this.cid;
+      this.collection.each((model) => {
         if (model.cid !== cid) {
           model.close().blur();
         }
@@ -120,13 +117,12 @@
      * @return {Drupal.contextual.StateModel}
      *   The current contextual state model.
      */
-    blur: function () {
+    blur() {
       if (!this.get('isOpen')) {
         this.set('hasFocus', false);
       }
       return this;
-    }
+    },
 
   });
-
-})(Drupal, Backbone);
+}(Drupal, Backbone));

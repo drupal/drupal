@@ -6,9 +6,6 @@
 **/
 
 (function ($, Backbone, Drupal, document) {
-
-  'use strict';
-
   var queryString = decodeURI(window.location.search);
 
   Drupal.behaviors.tour = {
@@ -54,7 +51,6 @@
       this.listenTo(this.model, 'change:tour change:isActive', this.render);
       this.listenTo(this.model, 'change:isActive', this.toggleTour);
     },
-
     render: function render() {
       this.$el.toggleClass('hidden', this._getTour().length === 0);
 
@@ -62,7 +58,6 @@
       this.$el.find('button').toggleClass('is-active', isActive).prop('aria-pressed', isActive);
       return this;
     },
-
     toggleTour: function toggleTour() {
       if (this.model.get('isActive')) {
         var $tour = this._getTour();
@@ -87,21 +82,17 @@
         this.model.set({ isActive: false, activeTour: [] });
       }
     },
-
     onClick: function onClick(event) {
       this.model.set('isActive', !this.model.get('isActive'));
       event.preventDefault();
       event.stopPropagation();
     },
-
     _getTour: function _getTour() {
       return this.model.get('tour');
     },
-
     _getDocument: function _getDocument() {
       return $(document);
     },
-
     _removeIrrelevantTourItems: function _removeIrrelevantTourItems($tour, $document) {
       var removals = false;
       var tips = /tips=([^&]+)/.exec(queryString);
@@ -135,6 +126,5 @@
         }).eq(-1).attr('data-text', Drupal.t('End tour'));
       }
     }
-
   });
 })(jQuery, Backbone, Drupal, document);

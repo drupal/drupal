@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Theme function for the progress bar.
    *
@@ -17,7 +14,7 @@
    *   The HTML for the progress bar.
    */
   Drupal.theme.progressBar = function (id) {
-    return '<div id="' + id + '" class="progress" aria-live="polite">' +
+    return `<div id="${id}" class="progress" aria-live="polite">` +
       '<div class="progress__label">&nbsp;</div>' +
       '<div class="progress__track"><div class="progress__bar"></div></div>' +
       '<div class="progress__percentage"></div>' +
@@ -72,10 +69,10 @@
      * @param {string} label
      *   The text for the progressbar label.
      */
-    setProgress: function (percentage, message, label) {
+    setProgress(percentage, message, label) {
       if (percentage >= 0 && percentage <= 100) {
-        $(this.element).find('div.progress__bar').css('width', percentage + '%');
-        $(this.element).find('div.progress__percentage').html(percentage + '%');
+        $(this.element).find('div.progress__bar').css('width', `${percentage}%`);
+        $(this.element).find('div.progress__percentage').html(`${percentage}%`);
       }
       $('div.progress__description', this.element).html(message);
       $('div.progress__label', this.element).html(label);
@@ -92,7 +89,7 @@
      * @param {number} delay
      *   The delay for calling the monitoring URI.
      */
-    startMonitoring: function (uri, delay) {
+    startMonitoring(uri, delay) {
       this.delay = delay;
       this.uri = uri;
       this.sendPing();
@@ -101,7 +98,7 @@
     /**
      * Stop monitoring progress via Ajax.
      */
-    stopMonitoring: function () {
+    stopMonitoring() {
       clearTimeout(this.timer);
       // This allows monitoring to be stopped from within the callback.
       this.uri = null;
@@ -110,15 +107,15 @@
     /**
      * Request progress data from server.
      */
-    sendPing: function () {
+    sendPing() {
       if (this.timer) {
         clearTimeout(this.timer);
       }
       if (this.uri) {
-        var pb = this;
+        const pb = this;
         // When doing a post request, you need non-null data. Otherwise a
         // HTTP 411 or HTTP 406 (with Apache mod_security) error may result.
-        var uri = this.uri;
+        let uri = this.uri;
         if (uri.indexOf('?') === -1) {
           uri += '?';
         }
@@ -131,7 +128,7 @@
           url: uri,
           data: '',
           dataType: 'json',
-          success: function (progress) {
+          success(progress) {
             // Display errors.
             if (progress.status === 0) {
               pb.displayError(progress.data);
@@ -140,12 +137,14 @@
             // Update display.
             pb.setProgress(progress.percentage, progress.message, progress.label);
             // Schedule next timer.
-            pb.timer = setTimeout(function () { pb.sendPing(); }, pb.delay);
+            pb.timer = setTimeout(() => {
+              pb.sendPing();
+            }, pb.delay);
           },
-          error: function (xmlhttp) {
-            var e = new Drupal.AjaxError(xmlhttp, pb.uri);
-            pb.displayError('<pre>' + e.message + '</pre>');
-          }
+          error(xmlhttp) {
+            const e = new Drupal.AjaxError(xmlhttp, pb.uri);
+            pb.displayError(`<pre>${e.message}</pre>`);
+          },
         });
       }
     },
@@ -156,14 +155,13 @@
      * @param {string} string
      *   The error message to show the user.
      */
-    displayError: function (string) {
-      var error = $('<div class="messages messages--error"></div>').html(string);
+    displayError(string) {
+      const error = $('<div class="messages messages--error"></div>').html(string);
       $(this.element).before(error).hide();
 
       if (this.errorCallback) {
         this.errorCallback(this);
       }
-    }
+    },
   });
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

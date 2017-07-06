@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Initialize tableSelects.
    *
@@ -16,10 +13,10 @@
    *   Attaches tableSelect functionality.
    */
   Drupal.behaviors.tableSelect = {
-    attach: function (context, settings) {
+    attach(context, settings) {
       // Select the inner-most table in case of nested tables.
       $(context).find('th.select-all').closest('table').once('table-select').each(Drupal.tableSelect);
-    }
+    },
   };
 
   /**
@@ -34,19 +31,19 @@
 
     // Keep track of the table, which checkbox is checked and alias the
     // settings.
-    var table = this;
-    var checkboxes;
-    var lastChecked;
-    var $table = $(table);
-    var strings = {
+    const table = this;
+    let checkboxes;
+    let lastChecked;
+    const $table = $(table);
+    const strings = {
       selectAll: Drupal.t('Select all rows in this table'),
-      selectNone: Drupal.t('Deselect all rows in this table')
+      selectNone: Drupal.t('Deselect all rows in this table'),
     };
-    var updateSelectAll = function (state) {
+    const updateSelectAll = function (state) {
       // Update table's select-all checkbox (and sticky header's if available).
       $table.prev('table.sticky-header').addBack().find('th.select-all input[type="checkbox"]').each(function () {
-        var $checkbox = $(this);
-        var stateChanged = $checkbox.prop('checked') !== state;
+        const $checkbox = $(this);
+        const stateChanged = $checkbox.prop('checked') !== state;
 
         $checkbox.attr('title', state ? strings.selectNone : strings.selectAll);
 
@@ -60,13 +57,13 @@
     };
 
     // Find all <th> with class select-all, and insert the check all checkbox.
-    $table.find('th.select-all').prepend($('<input type="checkbox" class="form-checkbox" />').attr('title', strings.selectAll)).on('click', function (event) {
+    $table.find('th.select-all').prepend($('<input type="checkbox" class="form-checkbox" />').attr('title', strings.selectAll)).on('click', (event) => {
       if ($(event.target).is('input[type="checkbox"]')) {
         // Loop through all checkboxes and set their state to the select all
         // checkbox' state.
         checkboxes.each(function () {
-          var $checkbox = $(this);
-          var stateChanged = $checkbox.prop('checked') !== event.target.checked;
+          const $checkbox = $(this);
+          const stateChanged = $checkbox.prop('checked') !== event.target.checked;
 
           /**
            * @checkbox {HTMLElement}
@@ -128,10 +125,10 @@
    */
   Drupal.tableSelectRange = function (from, to, state) {
     // We determine the looping mode based on the order of from and to.
-    var mode = from.rowIndex > to.rowIndex ? 'previousSibling' : 'nextSibling';
+    const mode = from.rowIndex > to.rowIndex ? 'previousSibling' : 'nextSibling';
 
     // Traverse through the sibling nodes.
-    for (var i = from[mode]; i; i = i[mode]) {
+    for (let i = from[mode]; i; i = i[mode]) {
       var $i;
       // Make sure that we're only dealing with elements.
       if (i.nodeType !== 1) {
@@ -155,5 +152,4 @@
       }
     }
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

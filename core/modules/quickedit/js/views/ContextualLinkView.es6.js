@@ -4,9 +4,6 @@
  */
 
 (function ($, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.ContextualLinkView = Backbone.View.extend(/** @lends Drupal.quickedit.ContextualLinkView# */{
 
     /**
@@ -15,7 +12,7 @@
      * @return {object}
      *   A map of events.
      */
-    events: function () {
+    events() {
       // Prevents delay and simulated mouse events.
       function touchEndToClick(event) {
         event.preventDefault();
@@ -27,7 +24,7 @@
           event.preventDefault();
           this.model.set('state', 'launching');
         },
-        'touchEnd a': touchEndToClick
+        'touchEnd a': touchEndToClick,
       };
     },
 
@@ -47,7 +44,7 @@
      * @param {object} options.strings
      *   The strings for the "Quick edit" link.
      */
-    initialize: function (options) {
+    initialize(options) {
       // Insert the text of the quick edit toggle.
       this.$el.find('a').text(options.strings.quickEdit);
       // Initial render.
@@ -67,15 +64,14 @@
      * @return {Drupal.quickedit.ContextualLinkView}
      *   The `ContextualLinkView` in question.
      */
-    render: function (entityModel, isActive) {
+    render(entityModel, isActive) {
       this.$el.find('a').attr('aria-pressed', isActive);
 
       // Hides the contextual links if an in-place editor is active.
       this.$el.closest('.contextual').toggle(!isActive);
 
       return this;
-    }
+    },
 
   });
-
-})(jQuery, Backbone, Drupal);
+}(jQuery, Backbone, Drupal));

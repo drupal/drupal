@@ -6,9 +6,6 @@
 **/
 
 (function (Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.AppModel = Backbone.Model.extend({
     defaults: {
       highlightedField: null,

@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
     attach: function attach(context) {
       var $form = $(context).find('[data-drupal-selector="field-ui-field-storage-add-form"]').once('field_ui_add');
@@ -65,7 +62,6 @@
         }
       });
     },
-
     onChange: function onChange() {
       var $trigger = $(this);
       var $row = $trigger.closest('tr');
@@ -85,7 +81,6 @@
 
       Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
     },
-
     onDrop: function onDrop() {
       var dragObject = this;
       var row = dragObject.rowObject.element;
@@ -104,7 +99,6 @@
         }
       }
     },
-
     onSwap: function onSwap(draggedRow) {
       var rowObject = this;
       $(rowObject.table).find('tr.region-message').each(function () {
@@ -123,11 +117,10 @@
           }
       });
     },
-
     AJAXRefreshRows: function AJAXRefreshRows(rows) {
       var rowNames = [];
       var ajaxElements = [];
-      var rowName;
+      var rowName = void 0;
       for (rowName in rows) {
         if (rows.hasOwnProperty(rowName)) {
           rowNames.push(rowName);
@@ -168,7 +161,6 @@
     getRegion: function getRegion() {
       return this.$regionSelect.val();
     },
-
     regionChange: function regionChange(region) {
       region = region.replace(/-/g, '_');
 

@@ -4,9 +4,6 @@
  */
 
 (function ($, window, Drupal) {
-
-  'use strict';
-
   /**
    * Provide the summary information for the block settings vertical tabs.
    *
@@ -16,7 +13,7 @@
    *   Attaches the behavior for the block settings summaries.
    */
   Drupal.behaviors.blockSettingsSummary = {
-    attach: function () {
+    attach() {
       // The drupalSetSummary method required for this behavior is not available
       // on the Blocks administration page, so we need to make sure this
       // behavior is processed only if drupalSetSummary is defined.
@@ -34,10 +31,10 @@
        *   A string with the summary.
        */
       function checkboxesSummary(context) {
-        var vals = [];
-        var $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
-        var il = $checkboxes.length;
-        for (var i = 0; i < il; i++) {
+        const vals = [];
+        const $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
+        const il = $checkboxes.length;
+        for (let i = 0; i < il; i++) {
           vals.push($($checkboxes[i]).html());
         }
         if (!vals.length) {
@@ -48,16 +45,15 @@
 
       $('[data-drupal-selector="edit-visibility-node-type"], [data-drupal-selector="edit-visibility-language"], [data-drupal-selector="edit-visibility-user-role"]').drupalSetSummary(checkboxesSummary);
 
-      $('[data-drupal-selector="edit-visibility-request-path"]').drupalSetSummary(function (context) {
-        var $pages = $(context).find('textarea[name="visibility[request_path][pages]"]');
+      $('[data-drupal-selector="edit-visibility-request-path"]').drupalSetSummary((context) => {
+        const $pages = $(context).find('textarea[name="visibility[request_path][pages]"]');
         if (!$pages.val()) {
           return Drupal.t('Not restricted');
         }
-        else {
-          return Drupal.t('Restricted to certain pages');
-        }
+
+        return Drupal.t('Restricted to certain pages');
       });
-    }
+    },
   };
 
   /**
@@ -72,7 +68,7 @@
    *   Attaches the tableDrag behaviour for blocks in block administration.
    */
   Drupal.behaviors.blockDrag = {
-    attach: function (context, settings) {
+    attach(context, settings) {
       // tableDrag is required and we should be on the blocks admin page.
       if (typeof Drupal.tableDrag === 'undefined' || typeof Drupal.tableDrag.blocks === 'undefined') {
         return;
@@ -88,7 +84,7 @@
        */
       function checkEmptyRegions(table, rowObject) {
         table.find('tr.region-message').each(function () {
-          var $this = $(this);
+          const $this = $(this);
           // If the dragged row is in this region, but above the message row,
           // swap it down one space.
           if ($this.prev('tr').get(0) === rowObject.element) {
@@ -121,7 +117,7 @@
         // Remove the color-success class from new block if applicable.
         table.find('.color-success').removeClass('color-success');
 
-        var $rowObject = $(rowObject);
+        const $rowObject = $(rowObject);
         if (!$rowObject.is('.drag-previous')) {
           table.find('.drag-previous').removeClass('drag-previous');
           $rowObject.addClass('drag-previous');
@@ -138,21 +134,20 @@
        */
       function updateBlockWeights(table, region) {
         // Calculate minimum weight.
-        var weight = -Math.round(table.find('.draggable').length / 2);
+        let weight = -Math.round(table.find('.draggable').length / 2);
         // Update the block weights.
-        table.find('.region-' + region + '-message').nextUntil('.region-title')
-          .find('select.block-weight').val(function () {
+        table.find(`.region-${region}-message`).nextUntil('.region-title')
+          .find('select.block-weight').val(() =>
             // Increment the weight before assigning it to prevent using the
             // absolute minimum available weight. This way we always have an
             // unused upper and lower bound, which makes manually setting the
             // weights easier for users who prefer to do it that way.
-            return ++weight;
-          });
+             ++weight);
       }
 
-      var table = $('#blocks');
+      const table = $('#blocks');
       // Get the blocks tableDrag object.
-      var tableDrag = Drupal.tableDrag.blocks;
+      const tableDrag = Drupal.tableDrag.blocks;
       // Add a handler for when a row is swapped, update empty regions.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         checkEmptyRegions(table, this);
@@ -162,15 +157,15 @@
       // Add a handler so when a row is dropped, update fields dropped into
       // new regions.
       tableDrag.onDrop = function () {
-        var dragObject = this;
-        var $rowElement = $(dragObject.rowObject.element);
+        const dragObject = this;
+        const $rowElement = $(dragObject.rowObject.element);
         // Use "region-message" row instead of "region" row because
         // "region-{region_name}-message" is less prone to regexp match errors.
-        var regionRow = $rowElement.prevAll('tr.region-message').get(0);
-        var regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
-        var regionField = $rowElement.find('select.block-region-select');
+        const regionRow = $rowElement.prevAll('tr.region-message').get(0);
+        const regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
+        const regionField = $rowElement.find('select.block-region-select');
         // Check whether the newly picked region is available for this block.
-        if (regionField.find('option[value=' + regionName + ']').length === 0) {
+        if (regionField.find(`option[value=${regionName}]`).length === 0) {
           // If not, alert the user and keep the block in its old region
           // setting.
           window.alert(Drupal.t('The block cannot be placed in this region.'));
@@ -180,11 +175,11 @@
         }
 
         // Update region and weight fields if the region has been changed.
-        if (!regionField.is('.block-region-' + regionName)) {
-          var weightField = $rowElement.find('select.block-weight');
-          var oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
-          regionField.removeClass('block-region-' + oldRegionName).addClass('block-region-' + regionName);
-          weightField.removeClass('block-weight-' + oldRegionName).addClass('block-weight-' + regionName);
+        if (!regionField.is(`.block-region-${regionName}`)) {
+          const weightField = $rowElement.find('select.block-weight');
+          const oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
+          regionField.removeClass(`block-region-${oldRegionName}`).addClass(`block-region-${regionName}`);
+          weightField.removeClass(`block-weight-${oldRegionName}`).addClass(`block-weight-${regionName}`);
           regionField.val(regionName);
         }
 
@@ -195,13 +190,13 @@
       $(context).find('select.block-region-select').once('block-region-select')
         .on('change', function (event) {
           // Make our new row and select field.
-          var row = $(this).closest('tr');
-          var select = $(this);
+          const row = $(this).closest('tr');
+          const select = $(this);
           // Find the correct region and insert the row as the last in the
           // region.
           tableDrag.rowObject = new tableDrag.row(row[0]);
-          var region_message = table.find('.region-' + select[0].value + '-message');
-          var region_items = region_message.nextUntil('.region-message, .region-title');
+          const region_message = table.find(`.region-${select[0].value}-message`);
+          const region_items = region_message.nextUntil('.region-message, .region-title');
           if (region_items.length) {
             region_items.last().after(row);
           }
@@ -222,7 +217,6 @@
           // Remove focus from selectbox.
           select.trigger('blur');
         });
-    }
+    },
   };
-
-})(jQuery, window, Drupal);
+}(jQuery, window, Drupal));

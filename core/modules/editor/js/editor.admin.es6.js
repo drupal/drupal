@@ -8,9 +8,6 @@
  */
 
 (function ($, _, Drupal, document) {
-
-  'use strict';
-
   /**
    * Editor configuration namespace.
    *
@@ -30,7 +27,7 @@
      *
      * @fires event:drupalEditorFeatureAdded
      */
-    addedFeature: function (feature) {
+    addedFeature(feature) {
       $(document).trigger('drupalEditorFeatureAdded', feature);
     },
 
@@ -46,7 +43,7 @@
      *
      * @fires event:drupalEditorFeatureRemoved
      */
-    removedFeature: function (feature) {
+    removedFeature(feature) {
       $(document).trigger('drupalEditorFeatureRemoved', feature);
     },
 
@@ -65,7 +62,7 @@
      *
      * @fires event:drupalEditorFeatureModified
      */
-    modifiedFeature: function (feature) {
+    modifiedFeature(feature) {
       $(document).trigger('drupalEditorFeatureModified', feature);
     },
 
@@ -90,8 +87,7 @@
      * @return {bool}
      *   Whether the given feature is allowed by the current filters.
      */
-    featureIsAllowedByFilters: function (feature) {
-
+    featureIsAllowedByFilters(feature) {
       /**
        * Generate the universe U of possible values that can result from the
        * feature's rules' requirements.
@@ -143,16 +139,16 @@
        * @see filterStatusAllowsFeature()
        */
       function generateUniverseFromFeatureRequirements(feature) {
-        var properties = ['attributes', 'styles', 'classes'];
-        var universe = {};
+        const properties = ['attributes', 'styles', 'classes'];
+        const universe = {};
 
-        for (var r = 0; r < feature.rules.length; r++) {
-          var featureRule = feature.rules[r];
+        for (let r = 0; r < feature.rules.length; r++) {
+          const featureRule = feature.rules[r];
 
           // For each tag required by this feature rule, create a basic entry in
           // the universe.
-          var requiredTags = featureRule.required.tags;
-          for (var t = 0; t < requiredTags.length; t++) {
+          const requiredTags = featureRule.required.tags;
+          for (let t = 0; t < requiredTags.length; t++) {
             universe[requiredTags[t]] = {
               // Whether this tag was allowed or not.
               tag: false,
@@ -161,7 +157,7 @@
               // allowed property rule.
               touchedByAllowedPropertyRule: false,
               // Analogous, but for forbidden property rule.
-              touchedBytouchedByForbiddenPropertyRule: false
+              touchedBytouchedByForbiddenPropertyRule: false,
             };
           }
 
@@ -174,11 +170,11 @@
           // Expand the existing universe, assume that each tags' property
           // value is disallowed. If the filter rules allow everything in the
           // feature's universe, then the feature is allowed.
-          for (var p = 0; p < properties.length; p++) {
-            var property = properties[p];
-            for (var pv = 0; pv < featureRule.required[property].length; pv++) {
-              var propertyValue = featureRule.required[property];
-              universe[requiredTags][property + ':' + propertyValue] = false;
+          for (let p = 0; p < properties.length; p++) {
+            const property = properties[p];
+            for (let pv = 0; pv < featureRule.required[property].length; pv++) {
+              const propertyValue = featureRule.required[property];
+              universe[requiredTags][`${property}:${propertyValue}`] = false;
             }
           }
         }
@@ -225,8 +221,8 @@
           return findPropertyValuesOnAllTags(universe, property, propertyValues, allowing);
         }
 
-        var atLeastOneFound = false;
-        _.each(propertyValues, function (propertyValue) {
+        let atLeastOneFound = false;
+        _.each(propertyValues, (propertyValue) => {
           if (findPropertyValueOnTag(universe, tag, property, propertyValue, allowing)) {
             atLeastOneFound = true;
           }
@@ -250,8 +246,8 @@
        *   Returns true if found, false otherwise.
        */
       function findPropertyValuesOnAllTags(universe, property, propertyValues, allowing) {
-        var atLeastOneFound = false;
-        _.each(_.keys(universe), function (tag) {
+        let atLeastOneFound = false;
+        _.each(_.keys(universe), (tag) => {
           if (findPropertyValuesOnTag(universe, tag, property, propertyValues, allowing)) {
             atLeastOneFound = true;
           }
@@ -286,7 +282,7 @@
           return false;
         }
 
-        var key = property + ':' + propertyValue;
+        const key = `${property}:${propertyValue}`;
 
         // Track whether a tag was touched by a filter rule that allows specific
         // property values on this particular tag.
@@ -306,19 +302,18 @@
           return false;
         }
         // The complex case: wildcard in property value.
-        else {
-          var atLeastOneFound = false;
-          var regex = key.replace(/\*/g, '[^ ]*');
-          _.each(_.keys(universe[tag]), function (key) {
-            if (key.match(regex)) {
-              atLeastOneFound = true;
-              if (allowing) {
-                universe[tag][key] = true;
-              }
+
+        let atLeastOneFound = false;
+        const regex = key.replace(/\*/g, '[^ ]*');
+        _.each(_.keys(universe[tag]), (key) => {
+          if (key.match(regex)) {
+            atLeastOneFound = true;
+            if (allowing) {
+              universe[tag][key] = true;
             }
-          });
-          return atLeastOneFound;
-        }
+          }
+        });
+        return atLeastOneFound;
       }
 
       /**
@@ -355,8 +350,8 @@
        *   Whether something was deleted from the universe.
        */
       function deleteAllTagsFromUniverseIfAllowed(universe) {
-        var atLeastOneDeleted = false;
-        _.each(_.keys(universe), function (tag) {
+        let atLeastOneDeleted = false;
+        _.each(_.keys(universe), (tag) => {
           if (deleteFromUniverseIfAllowed(universe, tag)) {
             atLeastOneDeleted = true;
           }
@@ -377,12 +372,12 @@
        *   Whether any filter rule forbids something in the universe.
        */
       function anyForbiddenFilterRuleMatches(universe, filterStatus) {
-        var properties = ['attributes', 'styles', 'classes'];
+        const properties = ['attributes', 'styles', 'classes'];
 
         // Check if a tag in the universe is forbidden.
-        var allRequiredTags = _.keys(universe);
-        var filterRule;
-        for (var i = 0; i < filterStatus.rules.length; i++) {
+        const allRequiredTags = _.keys(universe);
+        let filterRule;
+        for (let i = 0; i < filterStatus.rules.length; i++) {
           filterRule = filterStatus.rules[i];
           if (filterRule.allow === false) {
             if (_.intersection(allRequiredTags, filterRule.tags).length > 0) {
@@ -393,16 +388,16 @@
 
         // Check if a property value of a tag in the universe is forbidden.
         // For all filter rules…
-        for (var n = 0; n < filterStatus.rules.length; n++) {
+        for (let n = 0; n < filterStatus.rules.length; n++) {
           filterRule = filterStatus.rules[n];
           // … if there are tags with restricted property values …
           if (filterRule.restrictedTags.tags.length && !emptyProperties(filterRule.restrictedTags.forbidden)) {
             // … for all those tags …
-            for (var j = 0; j < filterRule.restrictedTags.tags.length; j++) {
-              var tag = filterRule.restrictedTags.tags[j];
+            for (let j = 0; j < filterRule.restrictedTags.tags.length; j++) {
+              const tag = filterRule.restrictedTags.tags[j];
               // … then iterate over all properties …
-              for (var k = 0; k < properties.length; k++) {
-                var property = properties[k];
+              for (let k = 0; k < properties.length; k++) {
+                const property = properties[k];
                 // … and return true if just one of the forbidden property
                 // values for this tag and property is listed in the universe.
                 if (findPropertyValuesOnTag(universe, tag, property, filterRule.restrictedTags.forbidden[property], false)) {
@@ -428,15 +423,15 @@
        *   The filter status in question.
        */
       function markAllowedTagsAndPropertyValues(universe, filterStatus) {
-        var properties = ['attributes', 'styles', 'classes'];
+        const properties = ['attributes', 'styles', 'classes'];
 
         // Check if a tag in the universe is allowed.
-        var filterRule;
-        var tag;
-        for (var l = 0; !_.isEmpty(universe) && l < filterStatus.rules.length; l++) {
+        let filterRule;
+        let tag;
+        for (let l = 0; !_.isEmpty(universe) && l < filterStatus.rules.length; l++) {
           filterRule = filterStatus.rules[l];
           if (filterRule.allow === true) {
-            for (var m = 0; !_.isEmpty(universe) && m < filterRule.tags.length; m++) {
+            for (let m = 0; !_.isEmpty(universe) && m < filterRule.tags.length; m++) {
               tag = filterRule.tags[m];
               if (_.has(universe, tag)) {
                 universe[tag].tag = true;
@@ -448,16 +443,16 @@
 
         // Check if a property value of a tag in the universe is allowed.
         // For all filter rules…
-        for (var i = 0; !_.isEmpty(universe) && i < filterStatus.rules.length; i++) {
+        for (let i = 0; !_.isEmpty(universe) && i < filterStatus.rules.length; i++) {
           filterRule = filterStatus.rules[i];
           // … if there are tags with restricted property values …
           if (filterRule.restrictedTags.tags.length && !emptyProperties(filterRule.restrictedTags.allowed)) {
             // … for all those tags …
-            for (var j = 0; !_.isEmpty(universe) && j < filterRule.restrictedTags.tags.length; j++) {
+            for (let j = 0; !_.isEmpty(universe) && j < filterRule.restrictedTags.tags.length; j++) {
               tag = filterRule.restrictedTags.tags[j];
               // … then iterate over all properties …
-              for (var k = 0; k < properties.length; k++) {
-                var property = properties[k];
+              for (let k = 0; k < properties.length; k++) {
+                const property = properties[k];
                 // … and try to delete this tag from the universe if just one
                 // of the allowed property values for this tag and property is
                 // listed in the universe. (Because everything might be allowed
@@ -506,7 +501,7 @@
 
         // Generate the universe U of possible values that can result from the
         // feature's rules' requirements.
-        var universe = generateUniverseFromFeatureRequirements(feature);
+        const universe = generateUniverseFromFeatureRequirements(feature);
 
         // If anything that is in the universe (and is thus required by the
         // feature) is forbidden by any of the filter's rules, then this filter
@@ -534,12 +529,12 @@
             return true;
           }
           // Otherwise, it is still possible that this feature is allowed.
-          else {
+
             // Every tag must be explicitly allowed if there are filter rules
             // doing tag whitelisting.
-            if (!_.every(_.pluck(universe, 'tag'))) {
-              return false;
-            }
+          if (!_.every(_.pluck(universe, 'tag'))) {
+            return false;
+          }
             // Every tag was explicitly allowed, but since the universe is not
             // empty, one or more tag properties are disallowed. However, if
             // only blacklisting of tag properties was applied to these tags,
@@ -548,36 +543,33 @@
             // this point, and since no whitelisting was applied, it doesn't
             // matter that the properties: this could never have happened
             // anyway. It's only this late that we can know this for certain.
-            else {
-              var tags = _.keys(universe);
+
+          const tags = _.keys(universe);
               // Figure out if there was any rule applying whitelisting tag
               // restrictions to each of the remaining tags.
-              for (var i = 0; i < tags.length; i++) {
-                var tag = tags[i];
-                if (_.has(universe, tag)) {
-                  if (universe[tag].touchedByAllowedPropertyRule === false) {
-                    delete universe[tag];
-                  }
-                }
+          for (let i = 0; i < tags.length; i++) {
+            const tag = tags[i];
+            if (_.has(universe, tag)) {
+              if (universe[tag].touchedByAllowedPropertyRule === false) {
+                delete universe[tag];
               }
-              return _.isEmpty(universe);
             }
           }
+          return _.isEmpty(universe);
         }
         // Otherwise, if all filter rules were doing blacklisting, then the sole
         // fact that we got to this point indicates that this filter allows for
         // everything that is required for this feature.
-        else {
-          return true;
-        }
+
+        return true;
       }
 
       // If any filter's current status forbids the editor feature, return
       // false.
       Drupal.filterConfiguration.update();
-      for (var filterID in Drupal.filterConfiguration.statuses) {
+      for (const filterID in Drupal.filterConfiguration.statuses) {
         if (Drupal.filterConfiguration.statuses.hasOwnProperty(filterID)) {
-          var filterStatus = Drupal.filterConfiguration.statuses[filterID];
+          const filterStatus = Drupal.filterConfiguration.statuses[filterID];
           if (!(filterStatusAllowsFeature(filterStatus, feature))) {
             return false;
           }
@@ -585,7 +577,7 @@
       }
 
       return true;
-    }
+    },
   };
 
   /**
@@ -620,6 +612,16 @@
    * @see Drupal.EditorFeature
    */
   Drupal.EditorFeatureHTMLRule = function () {
+    /**
+     *
+     * @type {object}
+     *
+     * @prop {Array} tags
+     * @prop {Array} attributes
+     * @prop {Array} styles
+     * @prop {Array} classes
+     */
+    this.required = { tags: [], attributes: [], styles: [], classes: [] };
 
     /**
      *
@@ -630,18 +632,7 @@
      * @prop {Array} styles
      * @prop {Array} classes
      */
-    this.required = {tags: [], attributes: [], styles: [], classes: []};
-
-    /**
-     *
-     * @type {object}
-     *
-     * @prop {Array} tags
-     * @prop {Array} attributes
-     * @prop {Array} styles
-     * @prop {Array} classes
-     */
-    this.allowed = {tags: [], attributes: [], styles: [], classes: []};
+    this.allowed = { tags: [], attributes: [], styles: [], classes: [] };
 
     /**
      *
@@ -715,7 +706,6 @@
    * @see Drupal.FilterHTMLRule
    */
   Drupal.FilterStatus = function (name) {
-
     /**
      *
      * @type {string}
@@ -828,15 +818,15 @@
     // Apply restrictions to properties set on tags.
     this.restrictedTags = {
       tags: [],
-      allowed: {attributes: [], styles: [], classes: []},
-      forbidden: {attributes: [], styles: [], classes: []}
+      allowed: { attributes: [], styles: [], classes: [] },
+      forbidden: { attributes: [], styles: [], classes: [] },
     };
 
     return this;
   };
 
   Drupal.FilterHTMLRule.prototype.clone = function () {
-    var clone = new Drupal.FilterHTMLRule();
+    const clone = new Drupal.FilterHTMLRule();
     clone.tags = this.tags.slice(0);
     clone.allow = this.allow;
     clone.restrictedTags.tags = this.restrictedTags.tags.slice(0);
@@ -888,11 +878,11 @@
      * keep the HTML rules for the {@link Drupal.FilterStatus} object
      * up-to-date.
      */
-    update: function () {
-      for (var filterID in Drupal.filterConfiguration.statuses) {
+    update() {
+      for (const filterID in Drupal.filterConfiguration.statuses) {
         if (Drupal.filterConfiguration.statuses.hasOwnProperty(filterID)) {
           // Update status.
-          Drupal.filterConfiguration.statuses[filterID].active = $('[name="filters[' + filterID + '][status]"]').is(':checked');
+          Drupal.filterConfiguration.statuses[filterID].active = $(`[name="filters[${filterID}][status]"]`).is(':checked');
 
           // Update current rules.
           if (Drupal.filterConfiguration.liveSettingParsers[filterID]) {
@@ -900,7 +890,7 @@
           }
         }
       }
-    }
+    },
 
   };
 
@@ -913,23 +903,22 @@
    *   Gets filter configuration from filter form input.
    */
   Drupal.behaviors.initializeFilterConfiguration = {
-    attach: function (context, settings) {
-      var $context = $(context);
+    attach(context, settings) {
+      const $context = $(context);
 
       $context.find('#filters-status-wrapper input.form-checkbox').once('filter-editor-status').each(function () {
-        var $checkbox = $(this);
-        var nameAttribute = $checkbox.attr('name');
+        const $checkbox = $(this);
+        const nameAttribute = $checkbox.attr('name');
 
         // The filter's checkbox has a name attribute of the form
         // "filters[<name of filter>][status]", parse "<name of filter>"
         // from it.
-        var filterID = nameAttribute.substring(8, nameAttribute.indexOf(']'));
+        const filterID = nameAttribute.substring(8, nameAttribute.indexOf(']'));
 
         // Create a Drupal.FilterStatus object to track the state (whether it's
         // active or not and its current settings, if any) of each filter.
         Drupal.filterConfiguration.statuses[filterID] = new Drupal.FilterStatus(filterID);
       });
-    }
+    },
   };
-
-})(jQuery, _, Drupal, document);
+}(jQuery, _, Drupal, document));

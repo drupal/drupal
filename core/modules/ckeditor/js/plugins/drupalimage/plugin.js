@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, CKEDITOR) {
-
-  'use strict';
-
   CKEDITOR.plugins.add('drupalimage', {
     requires: 'image2',
     icons: 'drupalimage',
@@ -26,8 +23,8 @@
             attributes: {
               '!src': true,
               '!alt': true,
-              'width': true,
-              'height': true
+              width: true,
+              height: true
             },
             classes: {}
           }
@@ -84,10 +81,10 @@
         };
 
         widgetDefinition._mapDataToDialog = {
-          'src': 'src',
-          'alt': 'alt',
-          'width': 'width',
-          'height': 'height',
+          src: 'src',
+          alt: 'alt',
+          width: 'width',
+          height: 'height',
           'data-entity-type': 'data-entity-type',
           'data-entity-uuid': 'data-entity-uuid'
         };
@@ -195,11 +192,9 @@
         });
       }
     },
-
     afterInit: function afterInit(editor) {
       linkCommandIntegrator(editor);
     }
-
   });
 
   CKEDITOR.plugins.image2.getLinkAttributesParser = function () {

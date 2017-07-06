@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.detailsAria = {
     attach: function attach() {
       $('body').once('detailsAria').on('click.detailsAria', 'summary', function (event) {

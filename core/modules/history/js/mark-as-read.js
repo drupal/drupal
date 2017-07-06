@@ -6,9 +6,6 @@
 **/
 
 (function (window, Drupal, drupalSettings) {
-
-  'use strict';
-
   window.addEventListener('load', function () {
     if (drupalSettings.history && drupalSettings.history.nodesToMarkAsRead) {
       Object.keys(drupalSettings.history.nodesToMarkAsRead).forEach(Drupal.history.markAsRead);

@@ -6,13 +6,10 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.color = {
     callback: function callback(context, settings, form, farb, height, width) {
-      var accum;
-      var delta;
+      var accum = void 0;
+      var delta = void 0;
 
       form.find('.color-preview').css('backgroundColor', form.find('.color-palette input[name="palette[base]"]').val());
 
@@ -28,8 +25,8 @@
         element.style.backgroundColor = farb.pack(accum);
       }
 
-      var color_start;
-      var color_end;
+      var color_start = void 0;
+      var color_end = void 0;
       for (var i in settings.gradients) {
         if (settings.gradients.hasOwnProperty(i)) {
           color_start = farb.unpack(form.find('.color-palette input[name="palette[' + settings.gradients[i].colors[0] + ']"]').val());

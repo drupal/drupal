@@ -12,9 +12,6 @@
  */
 
 (function ($, Drupal, drupalSettings, _) {
-
-  'use strict';
-
   Drupal.quickedit.editors.editor = Drupal.quickedit.EditorView.extend(/** @lends Drupal.quickedit.editors.editor# */{
 
     /**
@@ -53,17 +50,17 @@
      * @param {object} options
      *   Options for the editor view.
      */
-    initialize: function (options) {
+    initialize(options) {
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
 
-      var metadata = Drupal.quickedit.metadata.get(this.fieldModel.get('fieldID'), 'custom');
+      const metadata = Drupal.quickedit.metadata.get(this.fieldModel.get('fieldID'), 'custom');
       this.textFormat = drupalSettings.editor.formats[metadata.format];
       this.textFormatHasTransformations = metadata.formatHasTransformations;
       this.textEditor = Drupal.editors[this.textFormat.editor];
 
       // Store the actual value of this field. We'll need this to restore the
       // original value when the user discards his modifications.
-      var $fieldItems = this.$el.find('.quickedit-field');
+      const $fieldItems = this.$el.find('.quickedit-field');
       if ($fieldItems.length) {
         this.$textElement = $fieldItems.eq(0);
       }
@@ -79,7 +76,7 @@
      * @return {jQuery}
      *   The text element edited.
      */
-    getEditedElement: function () {
+    getEditedElement() {
       return this.$textElement;
     },
 
@@ -91,10 +88,10 @@
      * @param {string} state
      *   The current state.
      */
-    stateChange: function (fieldModel, state) {
-      var editorModel = this.model;
-      var from = fieldModel.previous('state');
-      var to = state;
+    stateChange(fieldModel, state) {
+      const editorModel = this.model;
+      const from = fieldModel.previous('state');
+      const to = state;
       switch (to) {
         case 'inactive':
           break;
@@ -126,8 +123,8 @@
           // of this field, then we'll need to load a re-formatted version of it
           // without the transformation filters.
           if (this.textFormatHasTransformations) {
-            var $textElement = this.$textElement;
-            this._getUntransformedText(function (untransformedText) {
+            const $textElement = this.$textElement;
+            this._getUntransformedText((untransformedText) => {
               $textElement.html(untransformedText);
               fieldModel.set('state', 'active');
             });
@@ -137,7 +134,7 @@
           else {
             // Defer updating the model until the current state change has
             // propagated, to not trigger a nested state change event.
-            _.defer(function () {
+            _.defer(() => {
               fieldModel.set('state', 'active');
             });
           }
@@ -150,10 +147,10 @@
             textElement,
             this.textFormat,
             toolbarView.getMainWysiwygToolgroupId(),
-            toolbarView.getFloatedWysiwygToolgroupId()
+            toolbarView.getFloatedWysiwygToolgroupId(),
           );
           // Set the state to 'changed' whenever the content has changed.
-          this.textEditor.onChange(textElement, function (htmlText) {
+          this.textEditor.onChange(textElement, (htmlText) => {
             editorModel.set('currentValue', htmlText);
             fieldModel.set('state', 'changed');
           });
@@ -184,14 +181,14 @@
      * @return {object}
      *   The sttings for the quick edit UI.
      */
-    getQuickEditUISettings: function () {
-      return {padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: false};
+    getQuickEditUISettings() {
+      return { padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: false };
     },
 
     /**
      * @inheritdoc
      */
-    revert: function () {
+    revert() {
       this.$textElement.html(this.model.get('originalValue'));
     },
 
@@ -206,13 +203,13 @@
      *
      * @see \Drupal\editor\Ajax\GetUntransformedTextCommand
      */
-    _getUntransformedText: function (callback) {
-      var fieldID = this.fieldModel.get('fieldID');
+    _getUntransformedText(callback) {
+      const fieldID = this.fieldModel.get('fieldID');
 
       // Create a Drupal.ajax instance to load the form.
-      var textLoaderAjax = Drupal.ajax({
+      const textLoaderAjax = Drupal.ajax({
         url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('editor/!entity_type/!id/!field_name/!langcode/!view_mode')),
-        submit: {nocssjs: true}
+        submit: { nocssjs: true },
       });
 
       // Implement a scoped editorGetUntransformedText AJAX command: calls the
@@ -224,8 +221,7 @@
       // This will ensure our scoped editorGetUntransformedText AJAX command
       // gets called.
       textLoaderAjax.execute();
-    }
+    },
 
   });
-
-})(jQuery, Drupal, drupalSettings, _);
+}(jQuery, Drupal, drupalSettings, _));

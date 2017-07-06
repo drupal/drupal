@@ -6,9 +6,6 @@
 **/
 
 (function (Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.EditorModel = Backbone.Model.extend({
     defaults: {
       originalValue: null,

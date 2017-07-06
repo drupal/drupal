@@ -6,9 +6,6 @@
 **/
 
 (function ($) {
-
-  'use strict';
-
   $.widget('ui.dialog', $.ui.dialog, {
     options: {
       buttonClass: 'button',
@@ -16,9 +13,9 @@
     },
     _createButtons: function _createButtons() {
       var opts = this.options;
-      var primaryIndex;
-      var $buttons;
-      var index;
+      var primaryIndex = void 0;
+      var $buttons = void 0;
+      var index = void 0;
       var il = opts.buttons.length;
       for (index = 0; index < il; index++) {
         if (opts.buttons[index].primary && opts.buttons[index].primary === true) {

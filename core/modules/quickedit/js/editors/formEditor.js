@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, _) {
-
-  'use strict';
-
   Drupal.quickedit.editors.form = Drupal.quickedit.EditorView.extend({
     $formContainer: null,
 
@@ -54,11 +51,9 @@
           break;
       }
     },
-
     getQuickEditUISettings: function getQuickEditUISettings() {
       return { padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: true };
     },
-
     loadForm: function loadForm() {
       var fieldModel = this.fieldModel;
 
@@ -109,7 +104,6 @@
         fieldModel.set('state', 'active');
       });
     },
-
     removeForm: function removeForm() {
       if (this.$formContainer === null) {
         return;
@@ -121,7 +115,6 @@
       this.$formContainer.off('change.quickedit', ':input').off('keypress.quickedit', 'input').remove();
       this.$formContainer = null;
     },
-
     save: function save() {
       var $formContainer = this.$formContainer;
       var $submit = $formContainer.find('.quickedit-form-submit');
@@ -164,7 +157,6 @@
 
       $submit.trigger('click.quickedit');
     },
-
     showValidationErrors: function showValidationErrors() {
       this.$formContainer.find('.quickedit-form').addClass('quickedit-validation-error').find('form').prepend(this.model.get('validationErrors'));
     }

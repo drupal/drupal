@@ -6,9 +6,6 @@
 **/
 
 (function ($, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.ContextualLinkView = Backbone.View.extend({
     events: function events() {
       function touchEndToClick(event) {
@@ -24,7 +21,6 @@
         'touchEnd a': touchEndToClick
       };
     },
-
     initialize: function initialize(options) {
       this.$el.find('a').text(options.strings.quickEdit);
 
@@ -32,7 +28,6 @@
 
       this.listenTo(this.model, 'change:isActive', this.render);
     },
-
     render: function render(entityModel, isActive) {
       this.$el.find('a').attr('aria-pressed', isActive);
 
@@ -40,6 +35,5 @@
 
       return this;
     }
-
   });
 })(jQuery, Backbone, Drupal);

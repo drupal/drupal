@@ -6,16 +6,13 @@
 **/
 
 (function ($, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.FieldDecorationView = Backbone.View.extend({
     _widthAttributeIsEmpty: null,
 
     events: {
       'mouseenter.quickedit': 'onMouseEnter',
       'mouseleave.quickedit': 'onMouseLeave',
-      'click': 'onClick',
+      click: 'onClick',
       'tabIn.quickedit': 'onMouseEnter',
       'tabOut.quickedit': 'onMouseLeave'
     },
@@ -26,12 +23,10 @@
       this.listenTo(this.model, 'change:state', this.stateChange);
       this.listenTo(this.model, 'change:isChanged change:inTempStore', this.renderChanged);
     },
-
     remove: function remove() {
       this.setElement();
       Backbone.View.prototype.remove.call(this);
     },
-
     stateChange: function stateChange(model, state) {
       var from = model.previous('state');
       var to = state;
@@ -83,47 +78,38 @@
           break;
       }
     },
-
     renderChanged: function renderChanged() {
       this.$el.toggleClass('quickedit-changed', this.model.get('isChanged') || this.model.get('inTempStore'));
     },
-
     onMouseEnter: function onMouseEnter(event) {
       var that = this;
       that.model.set('state', 'highlighted');
       event.stopPropagation();
     },
-
     onMouseLeave: function onMouseLeave(event) {
       var that = this;
       that.model.set('state', 'candidate', { reason: 'mouseleave' });
       event.stopPropagation();
     },
-
     onClick: function onClick(event) {
       this.model.set('state', 'activating');
       event.preventDefault();
       event.stopPropagation();
     },
-
     decorate: function decorate() {
       this.$el.addClass('quickedit-candidate quickedit-editable');
     },
-
     undecorate: function undecorate() {
       this.$el.removeClass('quickedit-candidate quickedit-editable quickedit-highlighted quickedit-editing');
     },
-
     startHighlight: function startHighlight() {
       var that = this;
 
       that.$el.addClass('quickedit-highlighted');
     },
-
     stopHighlight: function stopHighlight() {
       this.$el.removeClass('quickedit-highlighted');
     },
-
     prepareEdit: function prepareEdit() {
       this.$el.addClass('quickedit-editing');
 
@@ -131,7 +117,6 @@
         this.$el.addClass('quickedit-editor-is-popup');
       }
     },
-
     stopEdit: function stopEdit() {
       this.$el.removeClass('quickedit-highlighted quickedit-editing');
 
@@ -141,7 +126,6 @@
 
       $('.quickedit-candidate').addClass('quickedit-editable');
     },
-
     _pad: function _pad() {
       if (this.$el.data('quickedit-padded')) {
         return;
@@ -158,9 +142,9 @@
         self.$el.removeClass('quickedit-animate-disable-width');
 
         self.$el.css({
-          'position': 'relative',
-          'top': posProp.top - 5 + 'px',
-          'left': posProp.left - 5 + 'px',
+          position: 'relative',
+          top: posProp.top - 5 + 'px',
+          left: posProp.left - 5 + 'px',
           'padding-top': posProp['padding-top'] + 5 + 'px',
           'padding-left': posProp['padding-left'] + 5 + 'px',
           'padding-right': posProp['padding-right'] + 5 + 'px',
@@ -169,7 +153,6 @@
         }).data('quickedit-padded', true);
       }, 0);
     },
-
     _unpad: function _unpad() {
       if (!this.$el.data('quickedit-padded')) {
         return;
@@ -185,9 +168,9 @@
         self.$el.removeClass('quickedit-animate-disable-width');
 
         self.$el.css({
-          'position': 'relative',
-          'top': posProp.top + 5 + 'px',
-          'left': posProp.left + 5 + 'px',
+          position: 'relative',
+          top: posProp.top + 5 + 'px',
+          left: posProp.left + 5 + 'px',
           'padding-top': posProp['padding-top'] - 5 + 'px',
           'padding-left': posProp['padding-left'] - 5 + 'px',
           'padding-right': posProp['padding-right'] - 5 + 'px',
@@ -198,9 +181,8 @@
 
       this.$el.removeData('quickedit-padded');
     },
-
     _getPositionProperties: function _getPositionProperties($e) {
-      var p;
+      var p = void 0;
       var r = {};
       var props = ['top', 'left', 'bottom', 'right', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom', 'margin-bottom'];
 
@@ -211,13 +193,11 @@
       }
       return r;
     },
-
     _replaceBlankPosition: function _replaceBlankPosition(pos) {
       if (pos === 'auto' || !pos) {
         pos = '0px';
       }
       return pos;
     }
-
   });
 })(jQuery, Backbone, Drupal);

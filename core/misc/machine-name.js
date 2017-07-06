@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.machineName = {
     attach: function attach(context, settings) {
       var self = this;
@@ -54,7 +51,7 @@
 
       Object.keys(settings.machineName).forEach(function (source_id) {
         var machine = '';
-        var eventData;
+        var eventData = void 0;
         var options = settings.machineName[source_id];
 
         var $source = $context.find(source_id).addClass('machine-name-source').once('machine-name');
@@ -110,7 +107,6 @@
         $target.on('invalid', eventData, clickEditHandler);
       });
     },
-
     showMachineName: function showMachineName(machine, data) {
       var settings = data.options;
 
@@ -126,7 +122,6 @@
         data.$preview.empty();
       }
     },
-
     transliterate: function transliterate(source, settings) {
       return $.get(Drupal.url('machine_name/transliterate'), {
         text: source,

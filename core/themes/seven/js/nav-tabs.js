@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   function init(i, tab) {
     var $tab = $(tab);
     var $target = $tab.find('[data-drupal-nav-tabs-target]');

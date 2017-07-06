@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.termDrag = {
     attach: function attach(context, settings) {
       var backStep = settings.taxonomy.backStep;

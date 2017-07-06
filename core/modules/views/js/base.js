@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.Views = {};
 
   Drupal.Views.parseQueryString = function (query) {
@@ -17,7 +14,7 @@
     if (pos !== -1) {
       query = query.substring(pos + 1);
     }
-    var pair;
+    var pair = void 0;
     var pairs = query.split('&');
     for (var i = 0; i < pairs.length; i++) {
       pair = pairs[i].split('=');

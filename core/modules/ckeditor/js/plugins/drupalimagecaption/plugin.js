@@ -6,9 +6,6 @@
 **/
 
 (function (CKEDITOR) {
-
-  'use strict';
-
   CKEDITOR.plugins.add('drupalimagecaption', {
     requires: 'drupalimage',
 
@@ -66,9 +63,9 @@
 
           if (img.parent.name === 'a') {
             return img.parent;
-          } else {
-            return img;
           }
+
+          return img;
         };
 
         var originalUpcast = widgetDefinition.upcast;
@@ -87,7 +84,7 @@
           }
 
           var retElement = element;
-          var caption;
+          var caption = void 0;
 
           if (captionFilterEnabled) {
             caption = attrs['data-caption'];
@@ -129,7 +126,7 @@
               element.replaceWith(figure);
               figure.add(element);
               figure.add(caption);
-              figure.attributes['class'] = editor.config.image2_captionedClass;
+              figure.attributes.class = editor.config.image2_captionedClass;
               retElement = figure;
             }
           }
@@ -149,9 +146,9 @@
         };
 
         CKEDITOR.tools.extend(widgetDefinition._mapDataToDialog, {
-          'align': 'data-align',
+          align: 'data-align',
           'data-caption': 'data-caption',
-          'hasCaption': 'hasCaption'
+          hasCaption: 'hasCaption'
         });
 
         var originalCreateDialogSaveCallback = widgetDefinition._createDialogSaveCallback;
@@ -175,7 +172,6 @@
         };
       }, null, null, 20);
     },
-
     afterInit: function afterInit(editor) {
       var disableButtonIfOnWidget = function disableButtonIfOnWidget(evt) {
         var widget = editor.widgets.focused;
@@ -186,7 +182,7 @@
       };
 
       if (editor.plugins.justify && !editor.config.drupalImageCaption_alignFilterEnabled) {
-        var cmd;
+        var cmd = void 0;
         var commands = ['justifyleft', 'justifycenter', 'justifyright', 'justifyblock'];
         for (var n = 0; n < commands.length; n++) {
           cmd = editor.getCommand(commands[n]);

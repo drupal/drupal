@@ -6,18 +6,15 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.menuUiDetailsSummaries = {
     attach: function attach(context) {
       $(context).find('.menu-link-form').drupalSetSummary(function (context) {
         var $context = $(context);
         if ($context.find('.js-form-item-menu-enabled input').is(':checked')) {
           return Drupal.checkPlain($context.find('.js-form-item-menu-title input').val());
-        } else {
-          return Drupal.t('Not in menu');
         }
+
+        return Drupal.t('Not in menu');
       });
     }
   };

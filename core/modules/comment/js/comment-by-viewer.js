@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.commentByViewer = {
     attach: function attach(context) {
       var currentUserID = parseInt(drupalSettings.user.uid, 10);

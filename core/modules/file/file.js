@@ -6,13 +6,10 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.fileValidateAutoAttach = {
     attach: function attach(context, settings) {
       var $context = $(context);
-      var elements;
+      var elements = void 0;
 
       function initFileValidation(selector) {
         $context.find(selector).once('fileValidate').on('change.fileValidate', { extensions: elements[selector] }, Drupal.file.validateExtension);
@@ -25,7 +22,7 @@
     },
     detach: function detach(context, settings, trigger) {
       var $context = $(context);
-      var elements;
+      var elements = void 0;
 
       function removeFileValidation(selector) {
         $context.find(selector).removeOnce('fileValidate').off('change.fileValidate', Drupal.file.validateExtension);
@@ -92,11 +89,9 @@
         }
       }
     },
-
     triggerUploadButton: function triggerUploadButton(event) {
       $(event.target).closest('.js-form-managed-file').find('.js-form-submit').trigger('mousedown');
     },
-
     disableFields: function disableFields(event) {
       var $clickedButton = $(this).findOnce('ajax');
 
@@ -115,7 +110,6 @@
         $fieldsToTemporarilyDisable.prop('disabled', false);
       }, 1000);
     },
-
     progressBar: function progressBar(event) {
       var $clickedButton = $(this);
       var $progressId = $clickedButton.closest('div.js-form-managed-file').find('input.file-progress');
@@ -133,7 +127,6 @@
         $clickedButton.closest('div.js-form-managed-file').find('div.ajax-progress-bar').slideDown();
       }, 500);
     },
-
     openInNewWindow: function openInNewWindow(event) {
       event.preventDefault();
       $(this).attr('target', '_blank');

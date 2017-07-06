@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   var states = Drupal.states = {
     postponed: []
   };
@@ -16,8 +13,8 @@
   Drupal.behaviors.states = {
     attach: function attach(context, settings) {
       var $states = $(context).find('[data-drupal-states]');
-      var config;
-      var state;
+      var config = void 0;
+      var state = void 0;
       var il = $states.length;
       for (var i = 0; i < il; i++) {
         config = JSON.parse($states[i].getAttribute('data-drupal-states'));
@@ -63,7 +60,7 @@
 
   states.Dependent.prototype = {
     initializeDependee: function initializeDependee(selector, dependeeStates) {
-      var state;
+      var state = void 0;
       var self = this;
 
       function stateEventHandler(e) {
@@ -90,23 +87,20 @@
         }
       }
     },
-
     compare: function compare(reference, selector, state) {
       var value = this.values[selector][state.name];
       if (reference.constructor.name in states.Dependent.comparisons) {
         return states.Dependent.comparisons[reference.constructor.name](reference, value);
-      } else {
-        return _compare2(reference, value);
       }
-    },
 
+      return _compare2(reference, value);
+    },
     update: function update(selector, state, value) {
       if (value !== this.values[selector][state.name]) {
         this.values[selector][state.name] = value;
         this.reevaluate();
       }
     },
-
     reevaluate: function reevaluate() {
       var value = this.verifyConstraints(this.constraints);
 
@@ -118,9 +112,8 @@
         this.element.trigger({ type: 'state:' + this.state, value: value, trigger: true });
       }
     },
-
     verifyConstraints: function verifyConstraints(constraints, selector) {
-      var result;
+      var result = void 0;
       if ($.isArray(constraints)) {
         var hasXor = $.inArray('xor', constraints) === -1;
         var len = constraints.length;
@@ -147,7 +140,6 @@
         }
       return result;
     },
-
     checkConstraints: function checkConstraints(value, selector, state) {
       if (typeof state !== 'string' || /[0-9]/.test(state[0])) {
         state = null;
@@ -159,11 +151,10 @@
       if (state !== null) {
         state = states.State.sanitize(state);
         return invert(this.compare(value, selector, state), state.invert);
-      } else {
-        return this.verifyConstraints(value, selector);
       }
-    },
 
+      return this.verifyConstraints(value, selector);
+    },
     getDependees: function getDependees() {
       var cache = {};
 
@@ -208,7 +199,6 @@
 
       this.element.data('trigger:' + this.state, true);
     },
-
     defaultTrigger: function defaultTrigger(event, valueFn) {
       var oldValue = valueFn.call(this.element);
 
@@ -289,9 +279,9 @@
   states.State.sanitize = function (state) {
     if (state instanceof states.State) {
       return state;
-    } else {
-      return new states.State(state);
     }
+
+    return new states.State(state);
   };
 
   states.State.aliases = {
@@ -328,7 +318,7 @@
     if (e.trigger) {
       if (e.value) {
         var label = 'label' + (e.target.id ? '[for=' + e.target.id + ']' : '');
-        var $label = $(e.target).attr({ 'required': 'required', 'aria-required': 'aria-required' }).closest('.js-form-item, .js-form-wrapper').find(label);
+        var $label = $(e.target).attr({ required: 'required', 'aria-required': 'aria-required' }).closest('.js-form-item, .js-form-wrapper').find(label);
 
         if (!$label.hasClass('js-form-required').length) {
           $label.addClass('js-form-required form-required');
@@ -364,9 +354,9 @@
       return b;
     } else if (typeof b === 'undefined') {
       return a;
-    } else {
-      return a && b;
     }
+
+    return a && b;
   }
 
   function invert(a, invertState) {
@@ -376,8 +366,8 @@
   function _compare2(a, b) {
     if (a === b) {
       return typeof a === 'undefined' ? a : true;
-    } else {
-      return typeof a === 'undefined' || typeof b === 'undefined';
     }
+
+    return typeof a === 'undefined' || typeof b === 'undefined';
   }
 })(jQuery, Drupal);

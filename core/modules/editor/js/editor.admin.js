@@ -6,22 +6,16 @@
 **/
 
 (function ($, _, Drupal, document) {
-
-  'use strict';
-
   Drupal.editorConfiguration = {
     addedFeature: function addedFeature(feature) {
       $(document).trigger('drupalEditorFeatureAdded', feature);
     },
-
     removedFeature: function removedFeature(feature) {
       $(document).trigger('drupalEditorFeatureRemoved', feature);
     },
-
     modifiedFeature: function modifiedFeature(feature) {
       $(document).trigger('drupalEditorFeatureModified', feature);
     },
-
     featureIsAllowedByFilters: function featureIsAllowedByFilters(feature) {
       function generateUniverseFromFeatureRequirements(feature) {
         var properties = ['attributes', 'styles', 'classes'];
@@ -104,19 +98,20 @@
             return true;
           }
           return false;
-        } else {
-            var atLeastOneFound = false;
-            var regex = key.replace(/\*/g, '[^ ]*');
-            _.each(_.keys(universe[tag]), function (key) {
-              if (key.match(regex)) {
-                atLeastOneFound = true;
-                if (allowing) {
-                  universe[tag][key] = true;
-                }
-              }
-            });
-            return atLeastOneFound;
+        }
+
+
+        var atLeastOneFound = false;
+        var regex = key.replace(/\*/g, '[^ ]*');
+        _.each(_.keys(universe[tag]), function (key) {
+          if (key.match(regex)) {
+            atLeastOneFound = true;
+            if (allowing) {
+              universe[tag][key] = true;
+            }
           }
+        });
+        return atLeastOneFound;
       }
 
       function deleteFromUniverseIfAllowed(universe, tag) {
@@ -144,7 +139,7 @@
         var properties = ['attributes', 'styles', 'classes'];
 
         var allRequiredTags = _.keys(universe);
-        var filterRule;
+        var filterRule = void 0;
         for (var i = 0; i < filterStatus.rules.length; i++) {
           filterRule = filterStatus.rules[i];
           if (filterRule.allow === false) {
@@ -178,8 +173,8 @@
       function markAllowedTagsAndPropertyValues(universe, filterStatus) {
         var properties = ['attributes', 'styles', 'classes'];
 
-        var filterRule;
-        var tag;
+        var filterRule = void 0;
+        var tag = void 0;
         for (var l = 0; !_.isEmpty(universe) && l < filterStatus.rules.length; l++) {
           filterRule = filterStatus.rules[l];
           if (filterRule.allow === true) {
@@ -236,26 +231,28 @@
         if (_.some(_.pluck(filterStatus.rules, 'allow'))) {
           if (_.isEmpty(universe)) {
             return true;
-          } else {
-              if (!_.every(_.pluck(universe, 'tag'))) {
-                return false;
-              } else {
-                  var tags = _.keys(universe);
-
-                  for (var i = 0; i < tags.length; i++) {
-                    var tag = tags[i];
-                    if (_.has(universe, tag)) {
-                      if (universe[tag].touchedByAllowedPropertyRule === false) {
-                        delete universe[tag];
-                      }
-                    }
-                  }
-                  return _.isEmpty(universe);
-                }
-            }
-        } else {
-            return true;
           }
+
+          if (!_.every(_.pluck(universe, 'tag'))) {
+            return false;
+          }
+
+
+          var tags = _.keys(universe);
+
+          for (var i = 0; i < tags.length; i++) {
+            var tag = tags[i];
+            if (_.has(universe, tag)) {
+              if (universe[tag].touchedByAllowedPropertyRule === false) {
+                delete universe[tag];
+              }
+            }
+          }
+          return _.isEmpty(universe);
+        }
+
+
+        return true;
       }
 
       Drupal.filterConfiguration.update();
@@ -344,7 +341,6 @@
         }
       }
     }
-
   };
 
   Drupal.behaviors.initializeFilterConfiguration = {

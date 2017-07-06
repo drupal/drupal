@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.dialog = {
     attach: function attach(context, settings) {
       var $context = $(context);
@@ -33,7 +30,6 @@
         $(event.target).remove();
       };
     },
-
     prepareDialogButtons: function prepareDialogButtons($dialog) {
       var buttons = [];
       var $buttons = $dialog.find('.form-actions input[type=submit], .form-actions a.button');

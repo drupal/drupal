@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.theme.quickeditBackstage = function (settings) {
     var html = '';
     html += '<div id="' + settings.id + '" />';
@@ -69,7 +66,7 @@
           attributes.push(attr + (attrMap[attr] ? '="' + attrMap[attr] + '"' : ''));
         }
       }
-      html += '<button type="' + button.type + '" class="' + button.classes + '"' + ' ' + attributes.join(' ') + '>';
+      html += '<button type="' + button.type + '" class="' + button.classes + '"' + (' ' + attributes.join(' ') + '>');
       html += button.label;
       html += '</button>';
     }

@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   var pathInfo = drupalSettings.path;
   var escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
   var windowLocation = window.location;

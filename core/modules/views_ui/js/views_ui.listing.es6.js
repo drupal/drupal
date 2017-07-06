@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Filters the view listing tables by a text input search string.
    *
@@ -20,18 +17,18 @@
    *   Attaches the filter functionality to the views admin text search field.
    */
   Drupal.behaviors.viewTableFilterByText = {
-    attach: function (context, settings) {
-      var $input = $('input.views-filter-text').once('views-filter-text');
-      var $table = $($input.attr('data-table'));
-      var $rows;
+    attach(context, settings) {
+      const $input = $('input.views-filter-text').once('views-filter-text');
+      const $table = $($input.attr('data-table'));
+      let $rows;
 
       function filterViewList(e) {
-        var query = $(e.target).val().toLowerCase();
+        const query = $(e.target).val().toLowerCase();
 
         function showViewRow(index, row) {
-          var $row = $(row);
-          var $sources = $row.find('[data-drupal-selector="views-table-filter-text-source"]');
-          var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
+          const $row = $(row);
+          const $sources = $row.find('[data-drupal-selector="views-table-filter-text-source"]');
+          const textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
 
@@ -48,7 +45,6 @@
         $rows = $table.find('tbody tr');
         $input.on('keyup', filterViewList);
       }
-    }
+    },
   };
-
 }(jQuery, Drupal));

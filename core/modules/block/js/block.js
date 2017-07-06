@@ -6,9 +6,6 @@
 **/
 
 (function ($, window, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.blockSettingsSummary = {
     attach: function attach() {
       if (typeof $.fn.drupalSetSummary === 'undefined') {
@@ -34,9 +31,9 @@
         var $pages = $(context).find('textarea[name="visibility[request_path][pages]"]');
         if (!$pages.val()) {
           return Drupal.t('Not restricted');
-        } else {
-          return Drupal.t('Restricted to certain pages');
         }
+
+        return Drupal.t('Restricted to certain pages');
       });
     }
   };

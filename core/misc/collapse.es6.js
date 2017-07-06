@@ -4,9 +4,6 @@
  */
 
 (function ($, Modernizr, Drupal) {
-
-  'use strict';
-
   /**
    * The collapsible details object represents a single details element.
    *
@@ -20,8 +17,8 @@
     this.$node.data('details', this);
     // Expand details if there are errors inside, or if it contains an
     // element that is targeted by the URI fragment identifier.
-    var anchor = location.hash && location.hash !== '#' ? ', ' + location.hash : '';
-    if (this.$node.find('.error' + anchor).length) {
+    const anchor = location.hash && location.hash !== '#' ? `, ${location.hash}` : '';
+    if (this.$node.find(`.error${anchor}`).length) {
       this.$node.attr('open', true);
     }
     // Initialize and setup the summary,
@@ -37,7 +34,7 @@
      *
      * @type {Array.<Drupal.CollapsibleDetails>}
      */
-    instances: []
+    instances: [],
   });
 
   $.extend(CollapsibleDetails.prototype, /** @lends Drupal.CollapsibleDetails# */{
@@ -49,7 +46,7 @@
      *
      * @listens event:summaryUpdated
      */
-    setupSummary: function () {
+    setupSummary() {
       this.$summary = $('<span class="summary"></span>');
       this.$node
         .on('summaryUpdated', $.proxy(this.onSummaryUpdated, this))
@@ -59,9 +56,9 @@
     /**
      * Initialize and setup legend markup.
      */
-    setupLegend: function () {
+    setupLegend() {
       // Turn the summary into a clickable link.
-      var $legend = this.$node.find('> summary');
+      const $legend = this.$node.find('> summary');
 
       $('<span class="details-summary-prefix visually-hidden"></span>')
         .append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show'))
@@ -70,7 +67,7 @@
 
       // .wrapInner() does not retain bound events.
       $('<a class="details-title"></a>')
-        .attr('href', '#' + this.$node.attr('id'))
+        .attr('href', `#${this.$node.attr('id')}`)
         .prepend($legend.contents())
         .appendTo($legend);
 
@@ -85,7 +82,7 @@
      * @param {jQuery.Event} e
      *   The event triggered.
      */
-    onLegendClick: function (e) {
+    onLegendClick(e) {
       this.toggle();
       e.preventDefault();
     },
@@ -93,17 +90,17 @@
     /**
      * Update summary.
      */
-    onSummaryUpdated: function () {
-      var text = $.trim(this.$node.drupalGetSummary());
-      this.$summary.html(text ? ' (' + text + ')' : '');
+    onSummaryUpdated() {
+      const text = $.trim(this.$node.drupalGetSummary());
+      this.$summary.html(text ? ` (${text})` : '');
     },
 
     /**
      * Toggle the visibility of a details element using smooth animations.
      */
-    toggle: function () {
-      var isOpen = !!this.$node.attr('open');
-      var $summaryPrefix = this.$node.find('> summary span.details-summary-prefix');
+    toggle() {
+      const isOpen = !!this.$node.attr('open');
+      const $summaryPrefix = this.$node.find('> summary span.details-summary-prefix');
       if (isOpen) {
         $summaryPrefix.html(Drupal.t('Show'));
       }
@@ -112,10 +109,10 @@
       }
       // Delay setting the attribute to emulate chrome behavior and make
       // details-aria.js work as expected with this polyfill.
-      setTimeout(function () {
+      setTimeout(() => {
         this.$node.attr('open', !isOpen);
-      }.bind(this), 0);
-    }
+      }, 0);
+    },
   });
 
   /**
@@ -127,20 +124,19 @@
    *   Attaches behavior for the details element.
    */
   Drupal.behaviors.collapse = {
-    attach: function (context) {
+    attach(context) {
       if (Modernizr.details) {
         return;
       }
-      var $collapsibleDetails = $(context).find('details').once('collapse').addClass('collapse-processed');
+      const $collapsibleDetails = $(context).find('details').once('collapse').addClass('collapse-processed');
       if ($collapsibleDetails.length) {
-        for (var i = 0; i < $collapsibleDetails.length; i++) {
+        for (let i = 0; i < $collapsibleDetails.length; i++) {
           CollapsibleDetails.instances.push(new CollapsibleDetails($collapsibleDetails[i]));
         }
       }
-    }
+    },
   };
 
   // Expose constructor in the public space.
   Drupal.CollapsibleDetails = CollapsibleDetails;
-
-})(jQuery, Modernizr, Drupal);
+}(jQuery, Modernizr, Drupal));

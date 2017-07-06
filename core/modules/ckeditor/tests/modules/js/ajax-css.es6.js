@@ -4,12 +4,9 @@
  */
 
 (function (Drupal, ckeditor, editorSettings, $) {
-
-  'use strict';
-
   Drupal.behaviors.ajaxCssForm = {
 
-    attach: function (context) {
+    attach(context) {
       // Initialize an inline CKEditor on the #edit-inline element if it
       // isn't editable already.
       $(context)
@@ -18,7 +15,6 @@
         .each(function () {
           ckeditor.attachInlineEditor(this, editorSettings.formats.test_format);
         });
-    }
+    },
   };
-
-})(Drupal, Drupal.editors.ckeditor, drupalSettings.editor, jQuery);
+}(Drupal, Drupal.editors.ckeditor, drupalSettings.editor, jQuery));

@@ -4,9 +4,6 @@
  */
 
 (function (Drupal, Backbone, Modernizr) {
-
-  'use strict';
-
   Drupal.contextual.RegionView = Backbone.View.extend(/** @lends Drupal.contextual.RegionView# */{
 
     /**
@@ -15,12 +12,14 @@
      * @return {object}
      *   A mapping of events to be used in the view.
      */
-    events: function () {
-      var mapping = {
-        mouseenter: function () { this.model.set('regionIsHovered', true); },
-        mouseleave: function () {
+    events() {
+      let mapping = {
+        mouseenter() {
+          this.model.set('regionIsHovered', true);
+        },
+        mouseleave() {
           this.model.close().blur().set('regionIsHovered', false);
-        }
+        },
       };
       // We don't want mouse hover events on touch.
       if (Modernizr.touchevents) {
@@ -36,7 +35,7 @@
      *
      * @augments Backbone.View
      */
-    initialize: function () {
+    initialize() {
       this.listenTo(this.model, 'change:hasFocus', this.render);
     },
 
@@ -46,12 +45,11 @@
      * @return {Drupal.contextual.RegionView}
      *   The current contextual region view.
      */
-    render: function () {
+    render() {
       this.$el.toggleClass('focus', this.model.get('hasFocus'));
 
       return this;
-    }
+    },
 
   });
-
-})(Drupal, Backbone, Modernizr);
+}(Drupal, Backbone, Modernizr));

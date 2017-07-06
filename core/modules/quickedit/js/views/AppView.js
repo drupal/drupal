@@ -6,9 +6,6 @@
 **/
 
 (function ($, _, Backbone, Drupal) {
-
-  'use strict';
-
   var reload = false;
 
   Drupal.quickedit.AppView = Backbone.View.extend({
@@ -30,10 +27,9 @@
 
       this.listenTo(options.fieldsCollection, 'destroy', this.teardownEditor);
     },
-
     appStateChange: function appStateChange(entityModel, state) {
       var app = this;
-      var entityToolbarView;
+      var entityToolbarView = void 0;
       switch (state) {
         case 'launching':
           reload = false;
@@ -72,7 +68,6 @@
           break;
       }
     },
-
     acceptEditorStateChange: function acceptEditorStateChange(from, to, context, fieldModel) {
       var accept = true;
 
@@ -100,8 +95,8 @@
           }
 
           if (accept) {
-            var activeField;
-            var activeFieldState;
+            var activeField = void 0;
+            var activeFieldState = void 0;
 
             if ((this.readyFieldStates.indexOf(from) !== -1 || from === 'invalid') && this.activeFieldStates.indexOf(to) !== -1) {
               activeField = this.model.get('activeField');
@@ -137,7 +132,6 @@
 
       return accept;
     },
-
     setupEditor: function setupEditor(fieldModel) {
       var entityModel = fieldModel.get('entity');
       var entityToolbarView = entityModel.toolbarView;
@@ -170,7 +164,6 @@
       fieldModel.toolbarView = toolbarView;
       fieldModel.decorationView = decorationView;
     },
-
     teardownEditor: function teardownEditor(fieldModel) {
       if (typeof fieldModel.editorView === 'undefined') {
         return;
@@ -185,10 +178,9 @@
       fieldModel.editorView.remove();
       delete fieldModel.editorView;
     },
-
     confirmEntityDeactivation: function confirmEntityDeactivation(entityModel) {
       var that = this;
-      var discardDialog;
+      var discardDialog = void 0;
 
       function closeDiscardDialog(action) {
         discardDialog.close(action);
@@ -218,6 +210,7 @@
             click: function click() {
               closeDiscardDialog('save');
             },
+
             primary: true
           }, {
             text: Drupal.t('Discard changes'),
@@ -230,6 +223,7 @@
           create: function create() {
             $(this).parent().find('.ui-dialog-titlebar-close').remove();
           },
+
           beforeClose: false,
           close: function close(event) {
             $(event.target).remove();
@@ -240,7 +234,6 @@
         discardDialog.showModal();
       }
     },
-
     editorStateChange: function editorStateChange(fieldModel, state) {
       var from = fieldModel.previous('state');
       var to = state;
@@ -260,7 +253,6 @@
         this.model.set('activeField', null);
       }
     },
-
     renderUpdatedField: function renderUpdatedField(fieldModel, html, options) {
       var $fieldWrapper = $(fieldModel.get('el'));
       var $context = $fieldWrapper.parent();
@@ -287,7 +279,6 @@
         renderField();
       }
     },
-
     propagateUpdatedField: function propagateUpdatedField(updatedField, html, options) {
       if (options.propagation) {
         return;
@@ -295,18 +286,13 @@
 
       var htmlForOtherViewModes = updatedField.get('htmlForOtherViewModes');
       Drupal.quickedit.collections.fields.where({ logicalFieldID: updatedField.get('logicalFieldID') }).forEach(function (field) {
-        if (field === updatedField) {
-          return;
-        } else if (field.getViewMode() === updatedField.getViewMode()) {
+        if (field === updatedField) {} else if (field.getViewMode() === updatedField.getViewMode()) {
             field.set('html', updatedField.get('html'));
-          } else {
-              if (field.getViewMode() in htmlForOtherViewModes) {
-                field.set('html', htmlForOtherViewModes[field.getViewMode()], { propagation: true });
-              }
+          } else if (field.getViewMode() in htmlForOtherViewModes) {
+              field.set('html', htmlForOtherViewModes[field.getViewMode()], { propagation: true });
             }
       });
     },
-
     rerenderedFieldToCandidate: function rerenderedFieldToCandidate(fieldModel) {
       var activeEntity = Drupal.quickedit.collections.entities.findWhere({ isActive: true });
 
@@ -319,7 +305,6 @@
         fieldModel.set('state', 'candidate');
       }
     },
-
     enforceSingleActiveEntity: function enforceSingleActiveEntity(changedEntityModel) {
       if (changedEntityModel.get('isActive') === false) {
         return;
@@ -331,6 +316,5 @@
         entityModel.set('state', 'deactivating');
       });
     }
-
   });
 })(jQuery, _, Backbone, Drupal);

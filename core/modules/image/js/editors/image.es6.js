@@ -4,9 +4,6 @@
  */
 
 (function ($, _, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.editors.image = Drupal.quickedit.EditorView.extend(/** @lends Drupal.quickedit.editors.image# */{
 
     /**
@@ -17,18 +14,18 @@
      * @param {object} options
      *   Options for the image editor.
      */
-    initialize: function (options) {
+    initialize(options) {
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
       // Set our original value to our current HTML (for reverting).
       this.model.set('originalValue', this.$el.html().trim());
       // $.val() callback function for copying input from our custom form to
       // the Quick Edit Field Form.
       this.model.set('currentValue', function (index, value) {
-        var matches = $(this).attr('name').match(/(alt|title)]$/);
+        const matches = $(this).attr('name').match(/(alt|title)]$/);
         if (matches) {
-          var name = matches[1];
-          var $toolgroup = $('#' + options.fieldModel.toolbarView.getMainWysiwygToolgroupId());
-          var $input = $toolgroup.find('.quickedit-image-field-info input[name="' + name + '"]');
+          const name = matches[1];
+          const $toolgroup = $(`#${options.fieldModel.toolbarView.getMainWysiwygToolgroupId()}`);
+          const $input = $toolgroup.find(`.quickedit-image-field-info input[name="${name}"]`);
           if ($input.length) {
             return $input.val();
           }
@@ -46,8 +43,8 @@
      * @param {object} options
      *   State options, if needed by the state change.
      */
-    stateChange: function (fieldModel, state, options) {
-      var from = fieldModel.previous('state');
+    stateChange(fieldModel, state, options) {
+      const from = fieldModel.previous('state');
       switch (state) {
         case 'inactive':
           break;
@@ -68,7 +65,7 @@
         case 'activating':
           // Defer updating the field model until the current state change has
           // propagated, to not trigger a nested state change event.
-          _.defer(function () {
+          _.defer(() => {
             fieldModel.set('state', 'active');
           });
           break;
@@ -98,7 +95,7 @@
             }
           });
 
-          $dropzone.on('click', function (e) {
+          $dropzone.on('click', (e) => {
             // Create an <input> element without appending it to the DOM, and
             // trigger a click event. This is the easiest way to arbitrarily
             // open the browser's upload dialog.
@@ -113,7 +110,7 @@
 
           // Prevent the browser's default behavior when dragging files onto
           // the document (usually opens them in the same tab).
-          $dropzone.on('dragover dragenter dragleave drop click', function (e) {
+          $dropzone.on('dragover dragenter dragleave drop click', (e) => {
             e.preventDefault();
             e.stopPropagation();
           });
@@ -147,26 +144,26 @@
      * @param {File} file
      *   The file to upload.
      */
-    uploadImage: function (file) {
+    uploadImage(file) {
       // Indicate loading by adding a special class to our icon.
-      this.renderDropzone('upload loading', Drupal.t('Uploading <i>@file</i>…', {'@file': file.name}));
+      this.renderDropzone('upload loading', Drupal.t('Uploading <i>@file</i>…', { '@file': file.name }));
 
       // Build a valid URL for our endpoint.
-      var fieldID = this.fieldModel.get('fieldID');
-      var url = Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/image/upload/!entity_type/!id/!field_name/!langcode/!view_mode'));
+      const fieldID = this.fieldModel.get('fieldID');
+      const url = Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/image/upload/!entity_type/!id/!field_name/!langcode/!view_mode'));
 
       // Construct form data that our endpoint can consume.
-      var data = new FormData();
+      const data = new FormData();
       data.append('files[image]', file);
 
       // Construct a POST request to our endpoint.
-      var self = this;
+      const self = this;
       this.ajax({
         type: 'POST',
-        url: url,
-        data: data,
-        success: function (response) {
-          var $el = $(self.fieldModel.get('el'));
+        url,
+        data,
+        success(response) {
+          const $el = $(self.fieldModel.get('el'));
           // Indicate that the field has changed - this enables the
           // "Save" button.
           self.fieldModel.set('state', 'changed');
@@ -176,9 +173,9 @@
           // Replace our html with the new image. If we replaced our entire
           // element with data.html, we would have to implement complicated logic
           // like what's in Drupal.quickedit.AppView.renderUpdatedField.
-          var $content = $(response.html).closest('[data-quickedit-field-id]').children();
+          const $content = $(response.html).closest('[data-quickedit-field-id]').children();
           $el.empty().append($content);
-        }
+        },
       });
     },
 
@@ -204,20 +201,20 @@
      * @param {function} options.success
      *   A callback function used when a request is successful, without errors.
      */
-    ajax: function (options) {
-      var defaultOptions = {
+    ajax(options) {
+      const defaultOptions = {
         context: this,
         dataType: 'json',
         cache: false,
         contentType: false,
         processData: false,
-        error: function () {
+        error() {
           this.renderDropzone('error', Drupal.t('A server error has occurred.'));
-        }
+        },
       };
 
-      var ajaxOptions = $.extend(defaultOptions, options);
-      var successCallback = ajaxOptions.success;
+      const ajaxOptions = $.extend(defaultOptions, options);
+      const successCallback = ajaxOptions.success;
 
       // Handle the success callback.
       ajaxOptions.success = function (response) {
@@ -242,26 +239,26 @@
      * @param {Drupal.quickedit.FieldModel} fieldModel
      *   The current Field Model.
      */
-    renderToolbar: function (fieldModel) {
-      var $toolgroup = $('#' + fieldModel.toolbarView.getMainWysiwygToolgroupId());
-      var $toolbar = $toolgroup.find('.quickedit-image-field-info');
+    renderToolbar(fieldModel) {
+      const $toolgroup = $(`#${fieldModel.toolbarView.getMainWysiwygToolgroupId()}`);
+      let $toolbar = $toolgroup.find('.quickedit-image-field-info');
       if ($toolbar.length === 0) {
         // Perform an AJAX request for extra image info (alt/title).
-        var fieldID = fieldModel.get('fieldID');
-        var url = Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/image/info/!entity_type/!id/!field_name/!langcode/!view_mode'));
-        var self = this;
+        const fieldID = fieldModel.get('fieldID');
+        const url = Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/image/info/!entity_type/!id/!field_name/!langcode/!view_mode'));
+        const self = this;
         self.ajax({
           type: 'GET',
-          url: url,
-          success: function (response) {
+          url,
+          success(response) {
             $toolbar = $(Drupal.theme.quickeditImageToolbar(response));
             $toolgroup.append($toolbar);
-            $toolbar.on('keyup paste', function () {
+            $toolbar.on('keyup paste', () => {
               fieldModel.set('state', 'changed');
             });
             // Re-position the toolbar, which could have changed size.
             fieldModel.get('entity').toolbarView.position();
-          }
+          },
         });
       }
     },
@@ -277,20 +274,20 @@
      * @return {jQuery}
      *   The rendered dropzone.
      */
-    renderDropzone: function (state, text) {
-      var $dropzone = this.$el.find('.quickedit-image-dropzone');
+    renderDropzone(state, text) {
+      let $dropzone = this.$el.find('.quickedit-image-dropzone');
       // If the element already exists, modify its contents.
       if ($dropzone.length) {
         $dropzone
           .removeClass('upload error hover loading')
-          .addClass('.quickedit-image-dropzone ' + state)
+          .addClass(`.quickedit-image-dropzone ${state}`)
           .children('.quickedit-image-text')
             .html(text);
       }
       else {
         $dropzone = $(Drupal.theme('quickeditImageDropzone', {
-          state: state,
-          text: text
+          state,
+          text,
         }));
         this.$el.append($dropzone);
       }
@@ -301,25 +298,25 @@
     /**
      * @inheritdoc
      */
-    revert: function () {
+    revert() {
       this.$el.html(this.model.get('originalValue'));
     },
 
     /**
      * @inheritdoc
      */
-    getQuickEditUISettings: function () {
-      return {padding: false, unifiedToolbar: true, fullWidthToolbar: true, popup: false};
+    getQuickEditUISettings() {
+      return { padding: false, unifiedToolbar: true, fullWidthToolbar: true, popup: false };
     },
 
     /**
      * @inheritdoc
      */
-    showValidationErrors: function () {
-      var errors = Drupal.theme('quickeditImageErrors', {
-        errors: this.model.get('validationErrors')
+    showValidationErrors() {
+      const errors = Drupal.theme('quickeditImageErrors', {
+        errors: this.model.get('validationErrors'),
       });
-      $('#' + this.fieldModel.toolbarView.getMainWysiwygToolgroupId())
+      $(`#${this.fieldModel.toolbarView.getMainWysiwygToolgroupId()}`)
         .append(errors);
       this.getEditedElement()
         .addClass('quickedit-validation-error');
@@ -330,13 +327,12 @@
     /**
      * @inheritdoc
      */
-    removeValidationErrors: function () {
-      $('#' + this.fieldModel.toolbarView.getMainWysiwygToolgroupId())
+    removeValidationErrors() {
+      $(`#${this.fieldModel.toolbarView.getMainWysiwygToolgroupId()}`)
         .find('.quickedit-image-errors').remove();
       this.getEditedElement()
         .removeClass('quickedit-validation-error');
-    }
+    },
 
   });
-
-})(jQuery, _, Drupal);
+}(jQuery, _, Drupal));

@@ -6,9 +6,6 @@
  */
 
 (function (Backbone, Drupal) {
-
-  'use strict';
-
   /**
    * @constructor
    *
@@ -49,9 +46,8 @@
        *
        * @type {Drupal.dialog~dialogDefinition}
        */
-      activeModal: null
-    }
+      activeModal: null,
+    },
 
   });
-
 }(Backbone, Drupal));

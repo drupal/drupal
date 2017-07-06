@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   var blockConfigureSelector = '[data-outside-in-edit]';
   var toggleEditSelector = '[data-drupal-outsidein="toggle"]';
   var itemsToToggleSelector = '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-outsidein="editable"] a, [data-drupal-outsidein="editable"] button';
@@ -71,7 +68,7 @@
     }
     editMode = !!editMode;
     var $editButton = $(toggleEditSelector);
-    var $editables;
+    var $editables = void 0;
 
     if (editMode) {
       $editButton.text(Drupal.t('Editing'));
@@ -126,7 +123,6 @@
 
   Drupal.behaviors.toggleEditMode = {
     attach: function attach() {
-
       $(toggleEditSelector).once('outsidein').on('click.outsidein', toggleEditMode);
 
       var search = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog';

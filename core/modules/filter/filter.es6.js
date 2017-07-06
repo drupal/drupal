@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Displays the guidelines of the selected text format automatically.
    *
@@ -16,14 +13,13 @@
    *   Attaches behavior for updating filter guidelines.
    */
   Drupal.behaviors.filterGuidelines = {
-    attach: function (context) {
-
+    attach(context) {
       function updateFilterGuidelines(event) {
-        var $this = $(event.target);
-        var value = $this.val();
+        const $this = $(event.target);
+        const value = $this.val();
         $this.closest('.filter-wrapper')
           .find('.filter-guidelines-item').hide()
-          .filter('.filter-guidelines-' + value).show();
+          .filter(`.filter-guidelines-${value}`).show();
       }
 
       $(context).find('.filter-guidelines').once('filter-guidelines')
@@ -33,7 +29,6 @@
         // Need to trigger the namespaced event to avoid triggering formUpdated
         // when initializing the select.
         .trigger('change.filterGuidelines');
-    }
+    },
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

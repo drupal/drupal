@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings, Backbone) {
-
-  'use strict';
-
   Drupal.toolbar.ToolbarVisualView = Backbone.View.extend({
     events: function events() {
       var touchEndToClick = function touchEndToClick(event) {
@@ -23,7 +20,6 @@
         'touchend .toolbar-toggle-orientation button': touchEndToClick
       };
     },
-
     initialize: function initialize(options) {
       this.strings = options.strings;
 
@@ -36,7 +32,6 @@
 
       this.model.trigger('change:activeTab');
     },
-
     updateToolbarHeight: function updateToolbarHeight() {
       this.model.set('height', $('#toolbar-bar').find('.toolbar-tab').outerHeight() + $('.is-active.toolbar-tray-horizontal').outerHeight());
 
@@ -46,13 +41,11 @@
 
       this.triggerDisplace();
     },
-
     triggerDisplace: function triggerDisplace() {
       _.defer(function () {
         Drupal.displace(true);
       });
     },
-
     render: function render() {
       this.updateTabs();
       this.updateTrayOrientation();
@@ -66,7 +59,6 @@
 
       return this;
     },
-
     onTabClick: function onTabClick(event) {
       if (event.target.hasAttribute('data-toolbar-tray')) {
         var activeTab = this.model.get('activeTab');
@@ -78,7 +70,6 @@
         event.stopPropagation();
       }
     },
-
     onOrientationToggleClick: function onOrientationToggleClick(event) {
       var orientation = this.model.get('orientation');
 
@@ -102,7 +93,6 @@
       event.preventDefault();
       event.stopPropagation();
     },
-
     updateTabs: function updateTabs() {
       var $tab = $(this.model.get('activeTab'));
 
@@ -131,7 +121,6 @@
         localStorage.removeItem('Drupal.toolbar.activeTabID');
       }
     },
-
     updateBarAttributes: function updateBarAttributes() {
       var isOriented = this.model.get('isOriented');
       if (isOriented) {
@@ -142,7 +131,6 @@
 
       this.$el.toggleClass('toolbar-oriented', isOriented);
     },
-
     updateTrayOrientation: function updateTrayOrientation() {
       var orientation = this.model.get('orientation');
 
@@ -167,14 +155,12 @@
 
       $trays.filter('.toolbar-tray-horizontal.is-active').attr('data-offset-top', '');
     },
-
     adjustPlacement: function adjustPlacement() {
       var $trays = this.$el.find('.toolbar-tray');
       if (!this.model.get('isOriented')) {
         $trays.removeClass('toolbar-tray-horizontal').addClass('toolbar-tray-vertical');
       }
     },
-
     loadSubtrees: function loadSubtrees() {
       var $activeTab = $(this.model.get('activeTab'));
       var orientation = this.model.get('orientation');

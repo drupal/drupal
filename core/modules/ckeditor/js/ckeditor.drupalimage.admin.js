@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.ckeditorDrupalImageSettingsSummary = {
     attach: function attach() {
       $('[data-ckeditor-plugin-id="drupalimage"]').drupalSetSummary(function (context) {

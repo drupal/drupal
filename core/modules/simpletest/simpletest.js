@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.simpleTestGroupCollapse = {
     attach: function attach(context) {
       $(context).find('.simpletest-group').once('simpletest-group-collapse').each(function () {
@@ -59,7 +56,7 @@
     attach: function attach(context) {
       var $input = $('input.table-filter-text').once('table-filter-text');
       var $table = $($input.attr('data-table'));
-      var $rows;
+      var $rows = void 0;
       var searched = false;
 
       function filterTestList(e) {

@@ -13,9 +13,6 @@
  */
 
 (function ($, Drupal, debounce) {
-
-  'use strict';
-
   /**
    * Retrieves the summary for the first element.
    *
@@ -23,7 +20,7 @@
    *   The text of the summary.
    */
   $.fn.drupalGetSummary = function () {
-    var callback = this.data('summaryCallback');
+    const callback = this.data('summaryCallback');
     return (this[0] && callback) ? $.trim(callback(this[0])) : '';
   };
 
@@ -42,13 +39,15 @@
    * @listens event:formUpdated
    */
   $.fn.drupalSetSummary = function (callback) {
-    var self = this;
+    const self = this;
 
     // To facilitate things, the callback should always be a function. If it's
     // not, we wrap it into an anonymous function which just returns the value.
     if (typeof callback !== 'function') {
-      var val = callback;
-      callback = function () { return val; };
+      const val = callback;
+      callback = function () {
+        return val;
+      };
     }
 
     return this
@@ -56,7 +55,7 @@
       // To prevent duplicate events, the handlers are first removed and then
       // (re-)added.
       .off('formUpdated.summary')
-      .on('formUpdated.summary', function () {
+      .on('formUpdated.summary', () => {
         self.trigger('summaryUpdated');
       })
       // The actual summaryUpdated handler doesn't fire when the callback is
@@ -105,11 +104,11 @@
    * @type {Drupal~behavior}
    */
   Drupal.behaviors.formSingleSubmit = {
-    attach: function () {
+    attach() {
       function onFormSubmit(e) {
-        var $form = $(e.currentTarget);
-        var formValues = $form.serialize();
-        var previousValues = $form.attr('data-drupal-form-submit-last');
+        const $form = $(e.currentTarget);
+        const formValues = $form.serialize();
+        const previousValues = $form.attr('data-drupal-form-submit-last');
         if (previousValues === formValues) {
           e.preventDefault();
         }
@@ -120,7 +119,7 @@
 
       $('body').once('form-single-submit')
         .on('submit.singleSubmit', 'form:not([method~="GET"])', onFormSubmit);
-    }
+    },
   };
 
   /**
@@ -145,11 +144,10 @@
    *   Array of IDs for form fields.
    */
   function fieldsList(form) {
-    var $fieldList = $(form).find('[name]').map(function (index, element) {
+    const $fieldList = $(form).find('[name]').map((index, element) =>
       // We use id to avoid name duplicates on radio fields and filter out
       // elements with a name but no id.
-      return element.getAttribute('id');
-    });
+       element.getAttribute('id'));
     // Return a true array.
     return $.makeArray($fieldList);
   }
@@ -167,19 +165,21 @@
    * @fires event:formUpdated
    */
   Drupal.behaviors.formUpdated = {
-    attach: function (context) {
-      var $context = $(context);
-      var contextIsForm = $context.is('form');
-      var $forms = (contextIsForm ? $context : $context.find('form')).once('form-updated');
-      var formFields;
+    attach(context) {
+      const $context = $(context);
+      const contextIsForm = $context.is('form');
+      const $forms = (contextIsForm ? $context : $context.find('form')).once('form-updated');
+      let formFields;
 
       if ($forms.length) {
         // Initialize form behaviors, use $.makeArray to be able to use native
         // forEach array method and have the callback parameters in the right
         // order.
-        $.makeArray($forms).forEach(function (form) {
-          var events = 'change.formUpdated input.formUpdated ';
-          var eventHandler = debounce(function (event) { triggerFormUpdated(event.target); }, 300);
+        $.makeArray($forms).forEach((form) => {
+          const events = 'change.formUpdated input.formUpdated ';
+          const eventHandler = debounce((event) => {
+            triggerFormUpdated(event.target);
+          }, 300);
           formFields = fieldsList(form).join(',');
 
           form.setAttribute('data-drupal-form-fields', formFields);
@@ -190,28 +190,27 @@
       if (contextIsForm) {
         formFields = fieldsList(context).join(',');
         // @todo replace with form.getAttribute() when #1979468 is in.
-        var currentFields = $(context).attr('data-drupal-form-fields');
+        const currentFields = $(context).attr('data-drupal-form-fields');
         // If there has been a change in the fields or their order, trigger
         // formUpdated.
         if (formFields !== currentFields) {
           triggerFormUpdated(context);
         }
       }
-
     },
-    detach: function (context, settings, trigger) {
-      var $context = $(context);
-      var contextIsForm = $context.is('form');
+    detach(context, settings, trigger) {
+      const $context = $(context);
+      const contextIsForm = $context.is('form');
       if (trigger === 'unload') {
-        var $forms = (contextIsForm ? $context : $context.find('form')).removeOnce('form-updated');
+        const $forms = (contextIsForm ? $context : $context.find('form')).removeOnce('form-updated');
         if ($forms.length) {
-          $.makeArray($forms).forEach(function (form) {
+          $.makeArray($forms).forEach((form) => {
             form.removeAttribute('data-drupal-form-fields');
             $(form).off('.formUpdated');
           });
         }
       }
-    }
+    },
   };
 
   /**
@@ -223,28 +222,27 @@
    *   Attaches the behavior for filling user info from browser.
    */
   Drupal.behaviors.fillUserInfoFromBrowser = {
-    attach: function (context, settings) {
-      var userInfo = ['name', 'mail', 'homepage'];
-      var $forms = $('[data-user-info-from-browser]').once('user-info-from-browser');
+    attach(context, settings) {
+      const userInfo = ['name', 'mail', 'homepage'];
+      const $forms = $('[data-user-info-from-browser]').once('user-info-from-browser');
       if ($forms.length) {
-        userInfo.map(function (info) {
-          var $element = $forms.find('[name=' + info + ']');
-          var browserData = localStorage.getItem('Drupal.visitor.' + info);
-          var emptyOrDefault = ($element.val() === '' || ($element.attr('data-drupal-default-value') === $element.val()));
+        userInfo.map((info) => {
+          const $element = $forms.find(`[name=${info}]`);
+          const browserData = localStorage.getItem(`Drupal.visitor.${info}`);
+          const emptyOrDefault = ($element.val() === '' || ($element.attr('data-drupal-default-value') === $element.val()));
           if ($element.length && emptyOrDefault && browserData) {
             $element.val(browserData);
           }
         });
       }
-      $forms.on('submit', function () {
-        userInfo.map(function (info) {
-          var $element = $forms.find('[name=' + info + ']');
+      $forms.on('submit', () => {
+        userInfo.map((info) => {
+          const $element = $forms.find(`[name=${info}]`);
           if ($element.length) {
-            localStorage.setItem('Drupal.visitor.' + info, $element.val());
+            localStorage.setItem(`Drupal.visitor.${info}`, $element.val());
           }
         });
       });
-    }
+    },
   };
-
-})(jQuery, Drupal, Drupal.debounce);
+}(jQuery, Drupal, Drupal.debounce));

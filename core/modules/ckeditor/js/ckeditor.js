@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal, debounce, CKEDITOR, $, displace, AjaxCommands) {
-
-  'use strict';
-
   Drupal.editors.ckeditor = {
     attach: function attach(element, format) {
       this._loadExternalPlugins(format);
@@ -22,7 +19,6 @@
 
       return !!CKEDITOR.replace(element, format.editorSettings);
     },
-
     detach: function detach(element, format, trigger) {
       var editor = CKEDITOR.dom.element.get(element).getEditor();
       if (editor) {
@@ -35,7 +31,6 @@
       }
       return !!editor;
     },
-
     onChange: function onChange(element, callback) {
       var editor = CKEDITOR.dom.element.get(element).getEditor();
       if (editor) {
@@ -61,7 +56,6 @@
       }
       return !!editor;
     },
-
     attachInlineEditor: function attachInlineEditor(element, format, mainToolbarId, floatedToolbarId) {
       this._loadExternalPlugins(format);
 
@@ -104,7 +98,6 @@
 
       return !!CKEDITOR.inline(element, settings);
     },
-
     _loadExternalPlugins: function _loadExternalPlugins(format) {
       var externalPlugins = format.editorSettings.drupalExternalPlugins;
 
@@ -117,7 +110,6 @@
         delete format.editorSettings.drupalExternalPlugins;
       }
     }
-
   };
 
   Drupal.ckeditor = {

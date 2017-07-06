@@ -4,15 +4,12 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
-  $(document).ready(function () {
+  $(document).ready(() => {
     $.ajax({
       type: 'POST',
       cache: false,
       url: drupalSettings.statistics.url,
-      data: drupalSettings.statistics.data
+      data: drupalSettings.statistics.data,
     });
   });
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

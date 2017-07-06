@@ -4,9 +4,6 @@
  */
 
 (function ($, _, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.FieldToolbarView = Backbone.View.extend(/** @lends Drupal.quickedit.FieldToolbarView# */{
 
     /**
@@ -40,7 +37,7 @@
      * @param {Drupal.quickedit.EditorView} options.editorView
      *   The EditorView the toolbar belongs to.
      */
-    initialize: function (options) {
+    initialize(options) {
       this.$editedElement = options.$editedElement;
       this.editorView = options.editorView;
 
@@ -50,7 +47,7 @@
       this.$root = this.$el;
 
       // Generate a DOM-compatible ID for the form container DOM element.
-      this._id = 'quickedit-toolbar-for-' + this.model.id.replace(/[\/\[\]]/g, '_');
+      this._id = `quickedit-toolbar-for-${this.model.id.replace(/[\/\[\]]/g, '_')}`;
 
       this.listenTo(this.model, 'change:state', this.stateChange);
     },
@@ -61,10 +58,10 @@
      * @return {Drupal.quickedit.FieldToolbarView}
      *   The current FieldToolbarView.
      */
-    render: function () {
+    render() {
       // Render toolbar and set it as the view's element.
       this.setElement($(Drupal.theme('quickeditFieldToolbar', {
-        id: this._id
+        id: this._id,
       })));
 
       // Attach to the field toolbar $root element in the entity toolbar.
@@ -82,9 +79,9 @@
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.
      */
-    stateChange: function (model, state) {
-      var from = model.previous('state');
-      var to = state;
+    stateChange(model, state) {
+      const from = model.previous('state');
+      const to = state;
       switch (to) {
         case 'inactive':
           break;
@@ -134,17 +131,17 @@
     /**
      * Insert WYSIWYG markup into the associated toolbar.
      */
-    insertWYSIWYGToolGroups: function () {
+    insertWYSIWYGToolGroups() {
       this.$el
         .append(Drupal.theme('quickeditToolgroup', {
           id: this.getFloatedWysiwygToolgroupId(),
           classes: ['wysiwyg-floated', 'quickedit-animate-slow', 'quickedit-animate-invisible', 'quickedit-animate-delay-veryfast'],
-          buttons: []
+          buttons: [],
         }))
         .append(Drupal.theme('quickeditToolgroup', {
           id: this.getMainWysiwygToolgroupId(),
           classes: ['wysiwyg-main', 'quickedit-animate-slow', 'quickedit-animate-invisible', 'quickedit-animate-delay-veryfast'],
-          buttons: []
+          buttons: [],
         }));
 
       // Animate the toolgroups into visibility.
@@ -160,8 +157,8 @@
      * @return {string}
      *   A string that can be used as the ID for this toolbar's container.
      */
-    getId: function () {
-      return 'quickedit-toolbar-for-' + this._id;
+    getId() {
+      return `quickedit-toolbar-for-${this._id}`;
     },
 
     /**
@@ -172,8 +169,8 @@
      * @return {string}
      *   A string that can be used as the ID.
      */
-    getFloatedWysiwygToolgroupId: function () {
-      return 'quickedit-wysiwyg-floated-toolgroup-for-' + this._id;
+    getFloatedWysiwygToolgroupId() {
+      return `quickedit-wysiwyg-floated-toolgroup-for-${this._id}`;
     },
 
     /**
@@ -184,8 +181,8 @@
      * @return {string}
      *   A string that can be used as the ID.
      */
-    getMainWysiwygToolgroupId: function () {
-      return 'quickedit-wysiwyg-main-toolgroup-for-' + this._id;
+    getMainWysiwygToolgroupId() {
+      return `quickedit-wysiwyg-main-toolgroup-for-${this._id}`;
     },
 
     /**
@@ -197,8 +194,8 @@
      * @return {jQuery}
      *   The toolgroup element.
      */
-    _find: function (toolgroup) {
-      return this.$el.find('.quickedit-toolgroup.' + toolgroup);
+    _find(toolgroup) {
+      return this.$el.find(`.quickedit-toolgroup.${toolgroup}`);
     },
 
     /**
@@ -207,21 +204,20 @@
      * @param {string} toolgroup
      *   A toolgroup name.
      */
-    show: function (toolgroup) {
-      var $group = this._find(toolgroup);
+    show(toolgroup) {
+      const $group = this._find(toolgroup);
       // Attach a transitionEnd event handler to the toolbar group so that
       // update events can be triggered after the animations have ended.
-      $group.on(Drupal.quickedit.util.constants.transitionEnd, function (event) {
+      $group.on(Drupal.quickedit.util.constants.transitionEnd, (event) => {
         $group.off(Drupal.quickedit.util.constants.transitionEnd);
       });
       // The call to remove the class and start the animation must be started in
       // the next animation frame or the event handler attached above won't be
       // triggered.
-      window.setTimeout(function () {
+      window.setTimeout(() => {
         $group.removeClass('quickedit-animate-invisible');
       }, 0);
-    }
+    },
 
   });
-
-})(jQuery, _, Backbone, Drupal);
+}(jQuery, _, Backbone, Drupal));

@@ -27,21 +27,18 @@
  *   The debounced function.
  */
 Drupal.debounce = function (func, wait, immediate) {
-
-  'use strict';
-
-  var timeout;
-  var result;
+  let timeout;
+  let result;
   return function () {
-    var context = this;
-    var args = arguments;
-    var later = function () {
+    const context = this;
+    const args = arguments;
+    const later = function () {
       timeout = null;
       if (!immediate) {
         result = func.apply(context, args);
       }
     };
-    var callNow = immediate && !timeout;
+    const callNow = immediate && !timeout;
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
     if (callNow) {

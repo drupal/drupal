@@ -6,16 +6,13 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.permissions = {
     attach: function attach(context) {
       var self = this;
       $('table#permissions').once('permissions').each(function () {
         var $table = $(this);
-        var $ancestor;
-        var method;
+        var $ancestor = void 0;
+        var method = void 0;
         if ($table.prev().length) {
           $ancestor = $table.prev();
           method = 'after';
@@ -34,7 +31,6 @@
         $ancestor[method]($table);
       });
     },
-
     toggle: function toggle() {
       var authCheckbox = this;
       var $row = $(this).closest('tr');

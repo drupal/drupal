@@ -4,10 +4,7 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
-  var autocomplete;
+  let autocomplete;
 
   /**
    * Helper splitting terms from the autocomplete value.
@@ -22,13 +19,13 @@
    */
   function autocompleteSplitValues(value) {
     // We will match the value against comma-separated terms.
-    var result = [];
-    var quote = false;
-    var current = '';
-    var valueLength = value.length;
-    var character;
+    const result = [];
+    let quote = false;
+    let current = '';
+    const valueLength = value.length;
+    let character;
 
-    for (var i = 0; i < valueLength; i++) {
+    for (let i = 0; i < valueLength; i++) {
       character = value.charAt(i);
       if (character === '"') {
         current += character;
@@ -76,13 +73,13 @@
    *   Whether to perform a search or not.
    */
   function searchHandler(event) {
-    var options = autocomplete.options;
+    const options = autocomplete.options;
 
     if (options.isComposing) {
       return false;
     }
 
-    var term = autocomplete.extractLastTerm(event.target.value);
+    const term = autocomplete.extractLastTerm(event.target.value);
     // Abort search if the first character is in firstCharacterBlacklist.
     if (term.length > 0 && options.firstCharacterBlacklist.indexOf(term[0]) !== -1) {
       return false;
@@ -100,7 +97,7 @@
    *   The function to call with the response.
    */
   function sourceData(request, response) {
-    var elementId = this.element.attr('id');
+    const elementId = this.element.attr('id');
 
     if (!(elementId in autocomplete.cache)) {
       autocomplete.cache[elementId] = {};
@@ -114,10 +111,10 @@
      *   Suggestions returned by the server.
      */
     function showSuggestions(suggestions) {
-      var tagged = autocomplete.splitValues(request.term);
-      var il = tagged.length;
-      for (var i = 0; i < il; i++) {
-        var index = suggestions.indexOf(tagged[i]);
+      const tagged = autocomplete.splitValues(request.term);
+      const il = tagged.length;
+      for (let i = 0; i < il; i++) {
+        const index = suggestions.indexOf(tagged[i]);
         if (index >= 0) {
           suggestions.splice(index, 1);
         }
@@ -146,7 +143,7 @@
       showSuggestions(autocomplete.cache[elementId][term]);
     }
     else {
-      var options = $.extend({success: sourceCallbackHandler, data: {q: term}}, autocomplete.ajax);
+      const options = $.extend({ success: sourceCallbackHandler, data: { q: term } }, autocomplete.ajax);
       $.ajax(this.element.attr('data-autocomplete-path'), options);
     }
   }
@@ -173,7 +170,7 @@
    *   Returns false to indicate the event status.
    */
   function selectHandler(event, ui) {
-    var terms = autocomplete.splitValues(event.target.value);
+    const terms = autocomplete.splitValues(event.target.value);
     // Remove the current input.
     terms.pop();
     // Add the selected item.
@@ -212,14 +209,14 @@
    *   Detaches the autocomplete behaviors.
    */
   Drupal.behaviors.autocomplete = {
-    attach: function (context) {
+    attach(context) {
       // Act on textfields with the "form-autocomplete" class.
-      var $autocomplete = $(context).find('input.form-autocomplete').once('autocomplete');
+      const $autocomplete = $(context).find('input.form-autocomplete').once('autocomplete');
       if ($autocomplete.length) {
         // Allow options to be overriden per instance.
-        var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
+        const blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
         $.extend(autocomplete.options, {
-          firstCharacterBlacklist: (blacklist) ? blacklist : ''
+          firstCharacterBlacklist: (blacklist) || '',
         });
         // Use jQuery UI Autocomplete on the textfield.
         $autocomplete.autocomplete(autocomplete.options)
@@ -228,21 +225,21 @@
           });
 
         // Use CompositionEvent to handle IME inputs. It requests remote server on "compositionend" event only.
-        $autocomplete.on('compositionstart.autocomplete', function () {
+        $autocomplete.on('compositionstart.autocomplete', () => {
           autocomplete.options.isComposing = true;
         });
-        $autocomplete.on('compositionend.autocomplete', function () {
+        $autocomplete.on('compositionend.autocomplete', () => {
           autocomplete.options.isComposing = false;
         });
       }
     },
-    detach: function (context, settings, trigger) {
+    detach(context, settings, trigger) {
       if (trigger === 'unload') {
         $(context).find('input.form-autocomplete')
           .removeOnce('autocomplete')
           .autocomplete('destroy');
       }
-    }
+    },
   };
 
   /**
@@ -254,7 +251,7 @@
     cache: {},
     // Exposes options to allow overriding by contrib.
     splitValues: autocompleteSplitValues,
-    extractLastTerm: extractLastTerm,
+    extractLastTerm,
     // jQuery UI autocomplete options.
 
     /**
@@ -267,18 +264,17 @@
       focus: focusHandler,
       search: searchHandler,
       select: selectHandler,
-      renderItem: renderItem,
+      renderItem,
       minLength: 1,
       // Custom options, used by Drupal.autocomplete.
       firstCharacterBlacklist: '',
       // Custom options, indicate IME usage status.
-      isComposing: false
+      isComposing: false,
     },
     ajax: {
-      dataType: 'json'
-    }
+      dataType: 'json',
+    },
   };
 
   Drupal.autocomplete = autocomplete;
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

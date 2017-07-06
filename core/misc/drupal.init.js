@@ -12,9 +12,6 @@ if (window.jQuery) {
 document.documentElement.className += ' js';
 
 (function (domready, Drupal, drupalSettings) {
-
-  'use strict';
-
   domready(function () {
     Drupal.attachBehaviors(document, drupalSettings);
   });

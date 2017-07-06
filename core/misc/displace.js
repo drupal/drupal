@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, debounce) {
-
-  'use strict';
-
   var offsets = {
     top: 0,
     right: 0,

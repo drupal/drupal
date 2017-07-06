@@ -4,9 +4,6 @@
  */
 
 (function ($, _, Backbone, Drupal, debounce) {
-
-  'use strict';
-
   Drupal.quickedit.EntityToolbarView = Backbone.View.extend(/** @lends Drupal.quickedit.EntityToolbarView# */{
 
     /**
@@ -18,11 +15,11 @@
      * @return {object}
      *   A map of events.
      */
-    events: function () {
-      var map = {
+    events() {
+      const map = {
         'click button.action-save': 'onClickSave',
         'click button.action-cancel': 'onClickCancel',
-        'mouseenter': 'onMouseenter'
+        mouseenter: 'onMouseenter',
       };
       return map;
     },
@@ -37,8 +34,8 @@
      * @param {Drupal.quickedit.AppModel} options.appModel
      *   A quickedit `AppModel` to use in the view.
      */
-    initialize: function (options) {
-      var that = this;
+    initialize(options) {
+      const that = this;
       this.appModel = options.appModel;
       this.$entity = $(this.model.get('el'));
 
@@ -55,14 +52,14 @@
 
       // Adjust the fence placement within which the entity toolbar may be
       // positioned.
-      $(document).on('drupalViewportOffsetChange.quickedit', function (event, offsets) {
+      $(document).on('drupalViewportOffsetChange.quickedit', (event, offsets) => {
         if (that.$fence) {
           that.$fence.css(offsets);
         }
       });
 
       // Set the entity toolbar DOM element as the el for this view.
-      var $toolbar = this.buildToolbarEl();
+      const $toolbar = this.buildToolbarEl();
       this.setElement($toolbar);
       this._fieldToolbarRoot = $toolbar.find('.quickedit-toolbar-field').get(0);
 
@@ -76,10 +73,10 @@
      * @return {Drupal.quickedit.EntityToolbarView}
      *   The entity toolbar view.
      */
-    render: function () {
+    render() {
       if (this.model.get('isActive')) {
         // If the toolbar container doesn't exist, create it.
-        var $body = $('body');
+        const $body = $('body');
         if ($body.children('#quickedit-entity-toolbar').length === 0) {
           $body.append(this.$el);
         }
@@ -102,8 +99,8 @@
 
       // The save button text and state varies with the state of the entity
       // model.
-      var $button = this.$el.find('.quickedit-button.action-save');
-      var isDirty = this.model.get('isDirty');
+      const $button = this.$el.find('.quickedit-button.action-save');
+      const isDirty = this.model.get('isDirty');
       // Adjust the save button according to the state of the model.
       switch (this.model.get('state')) {
         // Quick editing is active, but no field is being edited.
@@ -136,7 +133,7 @@
     /**
      * @inheritdoc
      */
-    remove: function () {
+    remove() {
       // Remove additional DOM elements controlled by this View.
       this.$fence.remove();
 
@@ -153,7 +150,7 @@
      * @param {jQuery.Event} event
      *   The scroll or resize event.
      */
-    windowChangeHandler: function (event) {
+    windowChangeHandler(event) {
       this.position();
     },
 
@@ -166,7 +163,7 @@
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.
      */
-    fieldStateChange: function (model, state) {
+    fieldStateChange(model, state) {
       switch (state) {
         case 'active':
           this.render();
@@ -184,25 +181,25 @@
      * @param {HTMLElement} [element]
      *   The element against which the entity toolbar is positioned.
      */
-    position: function (element) {
+    position(element) {
       clearTimeout(this.timer);
 
-      var that = this;
+      const that = this;
       // Vary the edge of the positioning according to the direction of language
       // in the document.
-      var edge = (document.documentElement.dir === 'rtl') ? 'right' : 'left';
+      const edge = (document.documentElement.dir === 'rtl') ? 'right' : 'left';
       // A time unit to wait until the entity toolbar is repositioned.
-      var delay = 0;
+      let delay = 0;
       // Determines what check in the series of checks below should be
       // evaluated.
-      var check = 0;
+      let check = 0;
       // When positioned against an active field that has padding, we should
       // ignore that padding when positioning the toolbar, to not unnecessarily
       // move the toolbar horizontally, which feels annoying.
-      var horizontalPadding = 0;
-      var of;
-      var activeField;
-      var highlightedField;
+      let horizontalPadding = 0;
+      let of;
+      let activeField;
+      let highlightedField;
       // There are several elements in the page that the entity toolbar might be
       // positioned against. They are considered below in a priority order.
       do {
@@ -238,8 +235,8 @@
             var topMostPosition = 1000000;
             var topMostField = null;
             // Position against the topmost field.
-            for (var i = 0; i < fieldModels.length; i++) {
-              var pos = fieldModels[i].get('el').getBoundingClientRect().top;
+            for (let i = 0; i < fieldModels.length; i++) {
+              const pos = fieldModels[i].get('el').getBoundingClientRect().top;
               if (pos < topMostPosition) {
                 topMostPosition = pos;
                 topMostField = fieldModels[i];
@@ -278,22 +275,22 @@
        */
       function refinePosition(view, suggested, info) {
         // Determine if the pointer should be on the top or bottom.
-        var isBelow = suggested.top > info.target.top;
+        const isBelow = suggested.top > info.target.top;
         info.element.element.toggleClass('quickedit-toolbar-pointer-top', isBelow);
         // Don't position the toolbar past the first or last editable field if
         // the entity is the target.
         if (view.$entity[0] === info.target.element[0]) {
           // Get the first or last field according to whether the toolbar is
           // above or below the entity.
-          var $field = view.$entity.find('.quickedit-editable').eq((isBelow) ? -1 : 0);
+          const $field = view.$entity.find('.quickedit-editable').eq((isBelow) ? -1 : 0);
           if ($field.length > 0) {
             suggested.top = (isBelow) ? ($field.offset().top + $field.outerHeight(true)) : $field.offset().top - info.element.element.outerHeight(true);
           }
         }
         // Don't let the toolbar go outside the fence.
-        var fenceTop = view.$fence.offset().top;
-        var fenceHeight = view.$fence.height();
-        var toolbarHeight = info.element.element.outerHeight(true);
+        const fenceTop = view.$fence.offset().top;
+        const fenceHeight = view.$fence.height();
+        const toolbarHeight = info.element.element.outerHeight(true);
         if (suggested.top < fenceTop) {
           suggested.top = fenceTop;
         }
@@ -303,7 +300,7 @@
         // Position the toolbar.
         info.element.element.css({
           left: Math.floor(suggested.left),
-          top: Math.floor(suggested.top)
+          top: Math.floor(suggested.top),
         });
       }
 
@@ -313,16 +310,16 @@
       function positionToolbar() {
         that.$el
           .position({
-            my: edge + ' bottom',
+            my: `${edge} bottom`,
             // Move the toolbar 1px towards the start edge of the 'of' element,
             // plus any horizontal padding that may have been added to the
             // element that is being added, to prevent unwanted horizontal
             // movement.
-            at: edge + '+' + (1 + horizontalPadding) + ' top',
-            of: of,
+            at: `${edge}+${1 + horizontalPadding} top`,
+            of,
             collision: 'flipfit',
             using: refinePosition.bind(null, that),
-            within: that.$fence
+            within: that.$fence,
           })
           // Resize the toolbar to match the dimensions of the field, up to a
           // maximum width that is equal to 90% of the field's width.
@@ -332,14 +329,14 @@
             // of the client if it is less than 240px, so that the toolbar
             // never folds up into a squashed and jumbled mess.
             'min-width': (document.documentElement.clientWidth < 240) ? document.documentElement.clientWidth : 240,
-            'width': '100%'
+            width: '100%',
           });
       }
 
       // Uses the jQuery.ui.position() method. Use a timeout to move the toolbar
       // only after the user has focused on an editable for 250ms. This prevents
       // the toolbar from jumping around the screen.
-      this.timer = setTimeout(function () {
+      this.timer = setTimeout(() => {
         // Render the position in the next execution cycle, so that animations
         // on the field have time to process. This is not strictly speaking, a
         // guarantee that all animations will be finished, but it's a simple
@@ -354,7 +351,7 @@
      * @param {jQuery.Event} event
      *   The click event.
      */
-    onClickSave: function (event) {
+    onClickSave(event) {
       event.stopPropagation();
       event.preventDefault();
       // Save the model.
@@ -367,7 +364,7 @@
      * @param {jQuery.Event} event
      *   The click event.
      */
-    onClickCancel: function (event) {
+    onClickCancel(event) {
       event.preventDefault();
       this.model.set('state', 'deactivating');
     },
@@ -380,7 +377,7 @@
      * @param {jQuery.Event} event
      *   The mouse event.
      */
-    onMouseenter: function (event) {
+    onMouseenter(event) {
       clearTimeout(this.timer);
     },
 
@@ -390,9 +387,9 @@
      * @return {jQuery}
      *   The toolbar element.
      */
-    buildToolbarEl: function () {
-      var $toolbar = $(Drupal.theme('quickeditEntityToolbar', {
-        id: 'quickedit-entity-toolbar'
+    buildToolbarEl() {
+      const $toolbar = $(Drupal.theme('quickeditEntityToolbar', {
+        id: 'quickedit-entity-toolbar',
       }));
 
       $toolbar
@@ -406,14 +403,14 @@
               type: 'submit',
               classes: 'action-save quickedit-button icon',
               attributes: {
-                'aria-hidden': true
-              }
+                'aria-hidden': true,
+              },
             },
             {
               label: Drupal.t('Close'),
-              classes: 'action-cancel quickedit-button icon icon-close icon-only'
-            }
-          ]
+              classes: 'action-cancel quickedit-button icon icon-close icon-only',
+            },
+          ],
         }));
 
       // Give the toolbar a sensible starting position so that it doesn't
@@ -421,7 +418,7 @@
       $toolbar
         .css({
           left: this.$entity.offset().left,
-          top: this.$entity.offset().top
+          top: this.$entity.offset().top,
         });
 
       return $toolbar;
@@ -433,35 +430,35 @@
      * @return {jQuery}
      *   The DOM element that fields will attach their toolbars to.
      */
-    getToolbarRoot: function () {
+    getToolbarRoot() {
       return this._fieldToolbarRoot;
     },
 
     /**
      * Generates a state-dependent label for the entity toolbar.
      */
-    label: function () {
+    label() {
       // The entity label.
-      var label = '';
-      var entityLabel = this.model.get('label');
+      let label = '';
+      const entityLabel = this.model.get('label');
 
       // Label of an active field, if it exists.
-      var activeField = Drupal.quickedit.app.model.get('activeField');
-      var activeFieldLabel = activeField && activeField.get('metadata').label;
+      const activeField = Drupal.quickedit.app.model.get('activeField');
+      const activeFieldLabel = activeField && activeField.get('metadata').label;
       // Label of a highlighted field, if it exists.
-      var highlightedField = Drupal.quickedit.app.model.get('highlightedField');
-      var highlightedFieldLabel = highlightedField && highlightedField.get('metadata').label;
+      const highlightedField = Drupal.quickedit.app.model.get('highlightedField');
+      const highlightedFieldLabel = highlightedField && highlightedField.get('metadata').label;
       // The label is constructed in a priority order.
       if (activeFieldLabel) {
         label = Drupal.theme('quickeditEntityToolbarLabel', {
-          entityLabel: entityLabel,
-          fieldLabel: activeFieldLabel
+          entityLabel,
+          fieldLabel: activeFieldLabel,
         });
       }
       else if (highlightedFieldLabel) {
         label = Drupal.theme('quickeditEntityToolbarLabel', {
-          entityLabel: entityLabel,
-          fieldLabel: highlightedFieldLabel
+          entityLabel,
+          fieldLabel: highlightedFieldLabel,
         });
       }
       else {
@@ -483,7 +480,7 @@
      *   A string of space-delimited class names that will be applied to the
      *   wrapping element of the toolbar group.
      */
-    addClass: function (toolgroup, classes) {
+    addClass(toolgroup, classes) {
       this._find(toolgroup).addClass(classes);
     },
 
@@ -496,7 +493,7 @@
      *   A string of space-delimited class names that will be removed from the
      *   wrapping element of the toolbar group.
      */
-    removeClass: function (toolgroup, classes) {
+    removeClass(toolgroup, classes) {
       this._find(toolgroup).removeClass(classes);
     },
 
@@ -509,8 +506,8 @@
      * @return {jQuery}
      *   The toolgroup DOM element.
      */
-    _find: function (toolgroup) {
-      return this.$el.find('.quickedit-toolbar .quickedit-toolgroup.' + toolgroup);
+    _find(toolgroup) {
+      return this.$el.find(`.quickedit-toolbar .quickedit-toolgroup.${toolgroup}`);
     },
 
     /**
@@ -519,10 +516,9 @@
      * @param {string} toolgroup
      *   A toolgroup name.
      */
-    show: function (toolgroup) {
+    show(toolgroup) {
       this.$el.removeClass('quickedit-animate-invisible');
-    }
+    },
 
   });
-
-})(jQuery, _, Backbone, Drupal, Drupal.debounce);
+}(jQuery, _, Backbone, Drupal, Drupal.debounce));

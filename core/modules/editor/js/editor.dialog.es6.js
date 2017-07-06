@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Command to save the contents of an editor-provided modal.
    *
@@ -30,5 +27,4 @@
   Drupal.AjaxCommands.prototype.editorDialogSave = function (ajax, response, status) {
     $(window).trigger('editor:dialogsave', [response.values]);
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

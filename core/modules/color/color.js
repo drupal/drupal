@@ -6,14 +6,11 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.color = {
     attach: function attach(context, settings) {
-      var i;
-      var j;
-      var colors;
+      var i = void 0;
+      var j = void 0;
+      var colors = void 0;
 
       var form = $(context).find('#system-theme-settings .color-form').once('color');
       if (form.length === 0) {
@@ -71,7 +68,7 @@
       }
 
       function shift_color(given, ref1, ref2) {
-        var d;
+        var d = void 0;
 
         given = farb.RGBToHSL(farb.unpack(given));
 
@@ -103,7 +100,7 @@
       }
 
       function callback(input, color, propagate, colorScheme) {
-        var matched;
+        var matched = void 0;
 
         $(input).css({
           backgroundColor: color,

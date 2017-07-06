@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings, _) {
-
-  'use strict';
-
   Drupal.ckeditor = Drupal.ckeditor || {};
 
   Drupal.behaviors.ckeditorAdmin = {
@@ -74,7 +71,6 @@
         callback(true);
       }
     },
-
     registerGroupMove: function registerGroupMove(view, $group) {
       var $row = $group.closest('.ckeditor-row');
       if ($row.hasClass('placeholder')) {
@@ -89,7 +85,6 @@
       });
       view.model.set('isDirty', true);
     },
-
     openGroupNameDialog: function openGroupNameDialog(view, $group, callback) {
       callback = callback || function () {};
 
@@ -98,7 +93,7 @@
           var $form = $(form);
           if (!$form.hasClass('errors')) {
             $form.addClass('errors').find('input').addClass('error').attr('aria-invalid', 'true');
-            $('<div class=\"description\" >' + Drupal.t('Please provide a name for the button group.') + '</div>').insertAfter(form.elements[0]);
+            $('<div class="description" >' + Drupal.t('Please provide a name for the button group.') + '</div>').insertAfter(form.elements[0]);
           }
           return true;
         }
@@ -154,6 +149,7 @@
           click: function click() {
             closeDialog('apply', this);
           },
+
           primary: true
         }, {
           text: Drupal.t('Cancel'),
@@ -200,7 +196,6 @@
 
       $(document.querySelector('.ckeditor-name-toolbar-group').querySelector('input')).attr('value', $group.attr('data-drupal-ckeditor-toolbar-group-name')).trigger('focus');
     }
-
   };
 
   Drupal.behaviors.ckeditorAdminButtonPluginSettings = {

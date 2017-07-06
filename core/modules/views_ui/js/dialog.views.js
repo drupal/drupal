@@ -6,15 +6,12 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   function handleDialogResize(e) {
     var $modal = $(e.currentTarget);
     var $viewsOverride = $modal.find('[data-drupal-views-offset]');
     var $scroll = $modal.find('[data-drupal-views-scroll]');
     var offset = 0;
-    var modalHeight;
+    var modalHeight = void 0;
     if ($scroll.length) {
       $modal.closest('.views-ui-dialog').addClass('views-ui-dialog-scroll');
 

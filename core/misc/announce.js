@@ -6,10 +6,7 @@
 **/
 
 (function (Drupal, debounce) {
-
-  'use strict';
-
-  var liveElement;
+  var liveElement = void 0;
   var announcements = [];
 
   Drupal.behaviors.drupalAnnounce = {
@@ -28,7 +25,7 @@
   function announce() {
     var text = [];
     var priority = 'polite';
-    var announcement;
+    var announcement = void 0;
 
     var il = announcements.length;
     for (var i = 0; i < il; i++) {

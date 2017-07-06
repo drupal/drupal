@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Behaviors for setting summaries on media type form.
    *
@@ -16,11 +13,11 @@
    *   Attaches summary behaviors on media type edit forms.
    */
   Drupal.behaviors.mediaTypeFormSummaries = {
-    attach: function (context) {
-      var $context = $(context);
+    attach(context) {
+      const $context = $(context);
       // Provide the vertical tab summaries.
-      $context.find('#edit-workflow').drupalSetSummary(function (context) {
-        var vals = [];
+      $context.find('#edit-workflow').drupalSetSummary((context) => {
+        const vals = [];
         $(context).find('input[name^="options"]:checked').parent().each(function () {
           vals.push(Drupal.checkPlain($(this).find('label').text()));
         });
@@ -29,8 +26,8 @@
         }
         return vals.join(', ');
       });
-      $(context).find('#edit-language').drupalSetSummary(function (context) {
-        var vals = [];
+      $(context).find('#edit-language').drupalSetSummary((context) => {
+        const vals = [];
 
         vals.push($(context).find('.js-form-item-language-configuration-langcode select option:selected').text());
 
@@ -40,7 +37,6 @@
 
         return vals.join(', ');
       });
-    }
+    },
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

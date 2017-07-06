@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.commentFieldsetSummaries = {
     attach: function attach(context) {
       var $context = $(context);

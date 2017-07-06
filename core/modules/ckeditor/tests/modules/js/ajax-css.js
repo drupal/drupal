@@ -6,11 +6,7 @@
 **/
 
 (function (Drupal, ckeditor, editorSettings, $) {
-
-  'use strict';
-
   Drupal.behaviors.ajaxCssForm = {
-
     attach: function attach(context) {
       $(context).find('#edit-inline').not('[contenteditable]').each(function () {
         ckeditor.attachInlineEditor(this, editorSettings.formats.test_format);

@@ -4,9 +4,6 @@
  */
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   Drupal.contextualToolbar.VisualView = Backbone.View.extend(/** @lends Drupal.contextualToolbar.VisualView# */{
 
     /**
@@ -15,18 +12,18 @@
      * @return {object}
      *   A mapping of events to be used in the view.
      */
-    events: function () {
+    events() {
       // Prevents delay and simulated mouse events.
-      var touchEndToClick = function (event) {
+      const touchEndToClick = function (event) {
         event.preventDefault();
         event.target.click();
       };
 
       return {
-        click: function () {
+        click() {
           this.model.set('isViewing', !this.model.get('isViewing'));
         },
-        touchend: touchEndToClick
+        touchend: touchEndToClick,
       };
     },
 
@@ -39,7 +36,7 @@
      *
      * @augments Backbone.View
      */
-    initialize: function () {
+    initialize() {
       this.listenTo(this.model, 'change', this.render);
       this.listenTo(this.model, 'change:isViewing', this.persist);
     },
@@ -50,7 +47,7 @@
      * @return {Drupal.contextualToolbar.VisualView}
      *   The current contextual toolbar visual view.
      */
-    render: function () {
+    render() {
       // Render the visibility.
       this.$el.toggleClass('hidden', !this.model.get('isVisible'));
       // Render the state.
@@ -70,15 +67,14 @@
      * @param {bool} isViewing
      *   The value of the isViewing attribute in the model.
      */
-    persist: function (model, isViewing) {
+    persist(model, isViewing) {
       if (!isViewing) {
         localStorage.setItem('Drupal.contextualToolbar.isViewing', 'false');
       }
       else {
         localStorage.removeItem('Drupal.contextualToolbar.isViewing');
       }
-    }
+    },
 
   });
-
-})(Drupal, Backbone);
+}(Drupal, Backbone));

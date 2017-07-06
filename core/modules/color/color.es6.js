@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Displays farbtastic color selector and initialize color administration UI.
    *
@@ -16,26 +13,26 @@
    *   Attach color selection behavior to relevant context.
    */
   Drupal.behaviors.color = {
-    attach: function (context, settings) {
-      var i;
-      var j;
-      var colors;
+    attach(context, settings) {
+      let i;
+      let j;
+      let colors;
       // This behavior attaches by ID, so is only valid once on a page.
-      var form = $(context).find('#system-theme-settings .color-form').once('color');
+      const form = $(context).find('#system-theme-settings .color-form').once('color');
       if (form.length === 0) {
         return;
       }
-      var inputs = [];
-      var hooks = [];
-      var locks = [];
-      var focused = null;
+      const inputs = [];
+      const hooks = [];
+      const locks = [];
+      let focused = null;
 
       // Add Farbtastic.
       $('<div class="color-placeholder"></div>').once('color').prependTo(form);
-      var farb = $.farbtastic('.color-placeholder');
+      const farb = $.farbtastic('.color-placeholder');
 
       // Decode reference colors to HSL.
-      var reference = settings.color.reference;
+      const reference = settings.color.reference;
       for (i in reference) {
         if (reference.hasOwnProperty(i)) {
           reference[i] = farb.RGBToHSL(farb.unpack(reference[i]));
@@ -43,14 +40,14 @@
       }
 
       // Build a preview.
-      var height = [];
-      var width = [];
+      const height = [];
+      const width = [];
       // Loop through all defined gradients.
       for (i in settings.gradients) {
         if (settings.gradients.hasOwnProperty(i)) {
           // Add element to display the gradient.
-          $('.color-preview').once('color').append('<div id="gradient-' + i + '"></div>');
-          var gradient = $('.color-preview #gradient-' + i);
+          $('.color-preview').once('color').append(`<div id="gradient-${i}"></div>`);
+          const gradient = $(`.color-preview #gradient-${i}`);
           // Add height of current gradient to the list (divided by 10).
           height.push(parseInt(gradient.css('height'), 10) / 10);
           // Add width of current gradient to the list (divided by 10).
@@ -67,14 +64,14 @@
 
       // Set up colorScheme selector.
       form.find('#edit-scheme').on('change', function () {
-        var schemes = settings.color.schemes;
-        var colorScheme = this.options[this.selectedIndex].value;
+        const schemes = settings.color.schemes;
+        const colorScheme = this.options[this.selectedIndex].value;
         if (colorScheme !== '' && schemes[colorScheme]) {
           // Get colors of active scheme.
           colors = schemes[colorScheme];
-          for (var fieldName in colors) {
+          for (const fieldName in colors) {
             if (colors.hasOwnProperty(fieldName)) {
-              callback($('#edit-palette-' + fieldName), colors[fieldName], false, true);
+              callback($(`#edit-palette-${fieldName}`), colors[fieldName], false, true);
             }
           }
           preview();
@@ -110,7 +107,7 @@
        *   A hex color, shifted.
        */
       function shift_color(given, ref1, ref2) {
-        var d;
+        let d;
         // Convert to HSL.
         given = farb.RGBToHSL(farb.unpack(given));
 
@@ -162,11 +159,11 @@
        *   the color.
        */
       function callback(input, color, propagate, colorScheme) {
-        var matched;
+        let matched;
         // Set background/foreground colors.
         $(input).css({
           backgroundColor: color,
-          color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
+          color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff',
         });
 
         // Change input value.
@@ -218,7 +215,7 @@
        *   The focus event on the field.
        */
       function focus(e) {
-        var input = e.target;
+        const input = e.target;
         // Remove old bindings.
         if (focused) {
           $(focused).off('keyup', farb.updateValue)
@@ -228,7 +225,9 @@
 
         // Add new bindings.
         focused = input;
-        farb.linkTo(function (color) { callback(input, color, true, false); });
+        farb.linkTo((color) => {
+          callback(input, color, true, false);
+        });
         farb.setColor(input.value);
         $(focused).on('keyup', farb.updateValue).on('keyup', preview).on('keyup', resetScheme)
           .parent().addClass('item-selected');
@@ -241,30 +240,30 @@
           this.key = this.id.substring(13);
 
           // Link to color picker temporarily to initialize.
-          farb.linkTo(function () {}).setColor('#000').linkTo(this);
+          farb.linkTo(() => {}).setColor('#000').linkTo(this);
 
           // Add lock.
-          var i = inputs.length;
+          const i = inputs.length;
           if (inputs.length) {
-            var toggleClick = true;
-            var lock = $('<button class="color-palette__lock">' + Drupal.t('Unlock') + '</button>').on('click', function (e) {
+            let toggleClick = true;
+            const lock = $(`<button class="color-palette__lock">${Drupal.t('Unlock')}</button>`).on('click', function (e) {
               e.preventDefault();
               if (toggleClick) {
                 $(this).addClass('is-unlocked').html(Drupal.t('Lock'));
                 $(hooks[i - 1]).attr('class',
-                  locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)') ? 'color-palette__hook is-up' : 'color-palette__hook'
+                  locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)') ? 'color-palette__hook is-up' : 'color-palette__hook',
                 );
                 $(hooks[i]).attr('class',
-                  locks[i] && $(locks[i]).is(':not(.is-unlocked)') ? 'color-palette__hook is-down' : 'color-palette__hook'
+                  locks[i] && $(locks[i]).is(':not(.is-unlocked)') ? 'color-palette__hook is-down' : 'color-palette__hook',
                 );
               }
               else {
                 $(this).removeClass('is-unlocked').html(Drupal.t('Unlock'));
                 $(hooks[i - 1]).attr('class',
-                  locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)') ? 'color-palette__hook is-both' : 'color-palette__hook is-down'
+                  locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)') ? 'color-palette__hook is-both' : 'color-palette__hook is-down',
                 );
                 $(hooks[i]).attr('class',
-                  locks[i] && $(locks[i]).is(':not(.is-unlocked)') ? 'color-palette__hook is-both' : 'color-palette__hook is-up'
+                  locks[i] && $(locks[i]).is(':not(.is-unlocked)') ? 'color-palette__hook is-both' : 'color-palette__hook is-up',
                 );
               }
               toggleClick = !toggleClick;
@@ -274,7 +273,7 @@
           }
 
           // Add hook.
-          var hook = $('<div class="color-palette__hook"></div>');
+          const hook = $('<div class="color-palette__hook"></div>');
           $(this).after(hook);
           hooks.push(hook);
 
@@ -291,7 +290,6 @@
 
       // Render preview.
       preview();
-    }
+    },
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

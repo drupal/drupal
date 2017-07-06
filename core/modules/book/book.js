@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.bookDetailsSummaries = {
     attach: function attach(context) {
       $(context).find('.book-outline-form').drupalSetSummary(function (context) {
@@ -19,9 +16,9 @@
           return Drupal.t('Not in book');
         } else if (val === 'new') {
           return Drupal.t('New book');
-        } else {
-          return Drupal.checkPlain($select.find(':selected').text());
         }
+
+        return Drupal.checkPlain($select.find(':selected').text());
       });
     }
   };

@@ -8,9 +8,6 @@
 window.Drupal = { behaviors: {}, locale: {} };
 
 (function (Drupal, drupalSettings, drupalTranslations) {
-
-  'use strict';
-
   Drupal.throwError = function (error) {
     setTimeout(function () {
       throw error;
@@ -171,7 +168,7 @@ window.Drupal = { behaviors: {}, locale: {} };
     var index = 0;
 
     if (typeof drupalTranslations !== 'undefined' && drupalTranslations.pluralFormula) {
-      index = count in drupalTranslations.pluralFormula ? drupalTranslations.pluralFormula[count] : drupalTranslations.pluralFormula['default'];
+      index = count in drupalTranslations.pluralFormula ? drupalTranslations.pluralFormula[count] : drupalTranslations.pluralFormula.default;
     } else if (args['@count'] !== 1) {
       index = 1;
     }

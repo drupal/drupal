@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.theme.progressBar = function (id) {
     return '<div id="' + id + '" class="progress" aria-live="polite">' + '<div class="progress__label">&nbsp;</div>' + '<div class="progress__track"><div class="progress__bar"></div></div>' + '<div class="progress__percentage"></div>' + '<div class="progress__description">&nbsp;</div>' + '</div>';
   };
@@ -34,19 +31,16 @@
         this.updateCallback(percentage, message, this);
       }
     },
-
     startMonitoring: function startMonitoring(uri, delay) {
       this.delay = delay;
       this.uri = uri;
       this.sendPing();
     },
-
     stopMonitoring: function stopMonitoring() {
       clearTimeout(this.timer);
 
       this.uri = null;
     },
-
     sendPing: function sendPing() {
       if (this.timer) {
         clearTimeout(this.timer);
@@ -85,7 +79,6 @@
         });
       }
     },
-
     displayError: function displayError(string) {
       var error = $('<div class="messages messages--error"></div>').html(string);
       $(this.element).before(error).hide();

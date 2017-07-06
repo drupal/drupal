@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   Drupal.ckeditor.Model = Backbone.Model.extend({
     defaults: {
       activeEditorConfig: null,

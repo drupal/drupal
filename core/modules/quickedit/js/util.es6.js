@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * @namespace
    */
@@ -41,13 +38,13 @@
    *   The formatted URL.
    */
   Drupal.quickedit.util.buildUrl = function (id, urlFormat) {
-    var parts = id.split('/');
+    const parts = id.split('/');
     return Drupal.formatString(decodeURIComponent(urlFormat), {
       '!entity_type': parts[0],
       '!id': parts[1],
       '!field_name': parts[2],
       '!langcode': parts[3],
-      '!view_mode': parts[4]
+      '!view_mode': parts[4],
     });
   };
 
@@ -60,26 +57,26 @@
    *   The message to use in the modal dialog.
    */
   Drupal.quickedit.util.networkErrorModal = function (title, message) {
-    var $message = $('<div>' + message + '</div>');
+    const $message = $(`<div>${message}</div>`);
     var networkErrorModal = Drupal.dialog($message.get(0), {
-      title: title,
+      title,
       dialogClass: 'quickedit-network-error',
       buttons: [
         {
           text: Drupal.t('OK'),
-          click: function () {
+          click() {
             networkErrorModal.close();
           },
-          primary: true
-        }
+          primary: true,
+        },
       ],
-      create: function () {
+      create() {
         $(this).parent().find('.ui-dialog-titlebar-close').remove();
       },
-      close: function (event) {
+      close(event) {
         // Automatically destroy the DOM element that was used for the dialog.
         $(event.target).remove();
-      }
+      },
     });
     networkErrorModal.showModal();
   };
@@ -111,27 +108,27 @@
      *   as the ajax object, necessary if the callback wants to perform other
      *   Ajax commands.
      */
-    load: function (options, callback) {
-      var fieldID = options.fieldID;
+    load(options, callback) {
+      const fieldID = options.fieldID;
 
       // Create a Drupal.ajax instance to load the form.
-      var formLoaderAjax = Drupal.ajax({
+      const formLoaderAjax = Drupal.ajax({
         url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/form/!entity_type/!id/!field_name/!langcode/!view_mode')),
         submit: {
           nocssjs: options.nocssjs,
-          reset: options.reset
+          reset: options.reset,
         },
-        error: function (xhr, url) {
+        error(xhr, url) {
           // Show a modal to inform the user of the network error.
-          var fieldLabel = Drupal.quickedit.metadata.get(fieldID, 'label');
-          var message = Drupal.t('Could not load the form for <q>@field-label</q>, either due to a website problem or a network connection problem.<br>Please try again.', {'@field-label': fieldLabel});
+          const fieldLabel = Drupal.quickedit.metadata.get(fieldID, 'label');
+          const message = Drupal.t('Could not load the form for <q>@field-label</q>, either due to a website problem or a network connection problem.<br>Please try again.', { '@field-label': fieldLabel });
           Drupal.quickedit.util.networkErrorModal(Drupal.t('Network problem!'), message);
 
           // Change the state back to "candidate", to allow the user to start
           // in-place editing of the field again.
-          var fieldModel = Drupal.quickedit.app.model.get('activeField');
+          const fieldModel = Drupal.quickedit.app.model.get('activeField');
           fieldModel.set('state', 'candidate');
-        }
+        },
       });
       // Implement a scoped quickeditFieldForm AJAX command: calls the callback.
       formLoaderAjax.commands.quickeditFieldForm = function (ajax, response, status) {
@@ -160,16 +157,16 @@
      * @return {Drupal.Ajax}
      *   A {@link Drupal.Ajax} instance.
      */
-    ajaxifySaving: function (options, $submit) {
+    ajaxifySaving(options, $submit) {
       // Re-wire the form to handle submit.
-      var settings = {
+      const settings = {
         url: $submit.closest('form').attr('action'),
         setClick: true,
         event: 'click.quickedit',
         progress: false,
         submit: {
           nocssjs: options.nocssjs,
-          other_view_modes: options.other_view_modes
+          other_view_modes: options.other_view_modes,
         },
 
         /**
@@ -183,15 +180,15 @@
          * @param {number} [status]
          *   The HTTP status code.
          */
-        success: function (response, status) {
-          for (var i in response) {
+        success(response, status) {
+          for (const i in response) {
             if (response.hasOwnProperty(i) && response[i].command && this.commands[response[i].command]) {
               this.commands[response[i].command](this, response[i], status);
             }
           }
         },
         base: $submit.attr('id'),
-        element: $submit[0]
+        element: $submit[0],
       };
 
       return Drupal.ajax(settings);
@@ -204,10 +201,9 @@
      *   A {@link Drupal.Ajax} instance that was returned by
      *   {@link Drupal.quickedit.form.ajaxifySaving}.
      */
-    unajaxifySaving: function (ajax) {
+    unajaxifySaving(ajax) {
       $(ajax.element).off('click.quickedit');
-    }
+    },
 
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

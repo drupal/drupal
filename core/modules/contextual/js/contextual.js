@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings, _, Backbone, JSON, storage) {
-
-  'use strict';
-
   var options = $.extend(drupalSettings.contextual, {
     strings: {
       open: Drupal.t('Open'),
@@ -101,7 +98,7 @@
         ids.push($(this).attr('data-contextual-id'));
       });
 
-      var uncachedIDs = _.filter(ids, function initIfCached(contextualID) {
+      var uncachedIDs = _.filter(ids, function (contextualID) {
         var html = storage.getItem('Drupal.contextual.' + contextualID);
         if (html && html.length) {
           window.setTimeout(function () {

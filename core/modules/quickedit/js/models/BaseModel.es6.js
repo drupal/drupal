@@ -4,9 +4,6 @@
  */
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   Drupal.quickedit.BaseModel = Backbone.Model.extend(/** @lends Drupal.quickedit.BaseModel# */{
 
     /**
@@ -20,7 +17,7 @@
      * @return {Drupal.quickedit.BaseModel}
      *   A quickedit base model.
      */
-    initialize: function (options) {
+    initialize(options) {
       this.__initialized = true;
       return Backbone.Model.prototype.initialize.call(this, options);
     },
@@ -39,7 +36,7 @@
      *   The result of `Backbone.Model.prototype.set` with the specified
      *   parameters.
      */
-    set: function (key, val, options) {
+    set(key, val, options) {
       if (this.__initialized) {
         // Deal with both the "key", value and {key:value}-style arguments.
         if (typeof key === 'object') {
@@ -53,8 +50,7 @@
         }
       }
       return Backbone.Model.prototype.set.call(this, key, val, options);
-    }
+    },
 
   });
-
 }(Drupal, Backbone));

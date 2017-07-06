@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Auto-hide summary textarea if empty and show hide and unhide links.
    *
@@ -16,14 +13,14 @@
    *   Attaches auto-hide behavior on `text-summary` events.
    */
   Drupal.behaviors.textSummary = {
-    attach: function (context, settings) {
+    attach(context, settings) {
       $(context).find('.js-text-summary').once('text-summary').each(function () {
-        var $widget = $(this).closest('.js-text-format-wrapper');
+        const $widget = $(this).closest('.js-text-format-wrapper');
 
-        var $summary = $widget.find('.js-text-summary-wrapper');
-        var $summaryLabel = $summary.find('label').eq(0);
-        var $full = $widget.find('.js-text-full').closest('.js-form-item');
-        var $fullLabel = $full.find('label').eq(0);
+        const $summary = $widget.find('.js-text-summary-wrapper');
+        const $summaryLabel = $summary.find('label').eq(0);
+        const $full = $widget.find('.js-text-full').closest('.js-form-item');
+        let $fullLabel = $full.find('label').eq(0);
 
         // Create a placeholder label when the field cardinality is greater
         // than 1.
@@ -32,10 +29,10 @@
         }
 
         // Set up the edit/hide summary link.
-        var $link = $('<span class="field-edit-link"> (<button type="button" class="link link-edit-summary">' + Drupal.t('Hide summary') + '</button>)</span>');
-        var $button = $link.find('button');
-        var toggleClick = true;
-        $link.on('click', function (e) {
+        const $link = $(`<span class="field-edit-link"> (<button type="button" class="link link-edit-summary">${Drupal.t('Hide summary')}</button>)</span>`);
+        const $button = $link.find('button');
+        let toggleClick = true;
+        $link.on('click', (e) => {
           if (toggleClick) {
             $summary.hide();
             $button.html(Drupal.t('Edit summary'));
@@ -55,7 +52,6 @@
           $link.trigger('click');
         }
       });
-    }
+    },
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

@@ -6,16 +6,12 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   drupalSettings.dialog = {
     autoOpen: true,
     dialogClass: '',
 
     buttonClass: 'button',
     buttonPrimaryClass: 'button--primary',
-
     close: function close(event) {
       Drupal.dialog(event.target).close();
       Drupal.detachBehaviors(event.target, null, 'unload');
@@ -23,7 +19,7 @@
   };
 
   Drupal.dialog = function (element, options) {
-    var undef;
+    var undef = void 0;
     var $element = $(element);
     var dialog = {
       open: false,
@@ -34,6 +30,7 @@
       showModal: function showModal() {
         openDialog({ modal: true });
       },
+
       close: closeDialog
     };
 

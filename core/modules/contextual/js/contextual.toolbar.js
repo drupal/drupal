@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, Backbone) {
-
-  'use strict';
-
   var strings = {
     tabbingReleased: Drupal.t('Tabbing is no longer constrained by the Contextual module.'),
     tabbingConstrained: Drupal.t('Tabbing is constrained to a set of @contextualsCount and the edit mode toggle.'),

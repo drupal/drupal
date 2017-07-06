@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * Executes Ajax commands in <script type="application/vnd.drupal-ajax"> tag.
    *
@@ -18,8 +15,8 @@
    *   Script tag created by BigPipe.
    */
   function bigPipeProcessPlaceholderReplacement(index, placeholderReplacement) {
-    var placeholderId = placeholderReplacement.getAttribute('data-big-pipe-replacement-for-placeholder-with-id');
-    var content = this.textContent.trim();
+    const placeholderId = placeholderReplacement.getAttribute('data-big-pipe-replacement-for-placeholder-with-id');
+    const content = this.textContent.trim();
     // Ignore any placeholders that are not in the known placeholder list. Used
     // to avoid someone trying to XSS the site via the placeholdering mechanism.
     if (typeof drupalSettings.bigPipePlaceholderIds[placeholderId] !== 'undefined') {
@@ -32,14 +29,14 @@
         $(this).removeOnce('big-pipe');
       }
       else {
-        var response = JSON.parse(content);
+        const response = JSON.parse(content);
         // Create a Drupal.Ajax object without associating an element, a
         // progress indicator or a URL.
-        var ajaxObject = Drupal.ajax({
+        const ajaxObject = Drupal.ajax({
           url: '',
           base: false,
           element: false,
-          progress: false
+          progress: false,
         });
         // Then, simulate an AJAX response having arrived, and let the Ajax
         // system handle it.
@@ -82,7 +79,7 @@
   }
 
   function bigPipeProcess() {
-    timeoutID = setTimeout(function () {
+    timeoutID = setTimeout(() => {
       if (!bigPipeProcessDocument(document)) {
         bigPipeProcess();
       }
@@ -94,17 +91,16 @@
   // more would cause the user to see content appear noticeably slower.
   var interval = drupalSettings.bigPipeInterval || 50;
   // The internal ID to contain the watcher service.
-  var timeoutID;
+  let timeoutID;
 
   bigPipeProcess();
 
   // If something goes wrong, make sure everything is cleaned up and has had a
   // chance to be processed with everything loaded.
-  $(window).on('load', function () {
+  $(window).on('load', () => {
     if (timeoutID) {
       clearTimeout(timeoutID);
     }
     bigPipeProcessDocument(document);
   });
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

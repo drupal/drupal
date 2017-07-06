@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Displays and updates the status of filters on the admin page.
    *
@@ -16,19 +13,19 @@
    *   Attaches behaviors to the filter admin view.
    */
   Drupal.behaviors.filterStatus = {
-    attach: function (context, settings) {
-      var $context = $(context);
+    attach(context, settings) {
+      const $context = $(context);
       $context.find('#filters-status-wrapper input.form-checkbox').once('filter-status').each(function () {
-        var $checkbox = $(this);
+        const $checkbox = $(this);
         // Retrieve the tabledrag row belonging to this filter.
-        var $row = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-weight')).closest('tr');
+        const $row = $context.find(`#${$checkbox.attr('id').replace(/-status$/, '-weight')}`).closest('tr');
         // Retrieve the vertical tab belonging to this filter.
-        var $filterSettings = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-settings'));
-        var filterSettingsTab = $filterSettings.data('verticalTab');
+        const $filterSettings = $context.find(`#${$checkbox.attr('id').replace(/-status$/, '-settings')}`);
+        const filterSettingsTab = $filterSettings.data('verticalTab');
 
         // Bind click handler to this checkbox to conditionally show and hide
         // the filter's tableDrag row and vertical tab pane.
-        $checkbox.on('click.filterUpdate', function () {
+        $checkbox.on('click.filterUpdate', () => {
           if ($checkbox.is(':checked')) {
             $row.show();
             if (filterSettingsTab) {
@@ -55,15 +52,12 @@
 
         // Attach summary for configurable filters (only for screen readers).
         if (filterSettingsTab) {
-          filterSettingsTab.details.drupalSetSummary(function (tabContext) {
-            return $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled');
-          });
+          filterSettingsTab.details.drupalSetSummary(tabContext => $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled'));
         }
 
         // Trigger our bound click handler to update elements to initial state.
         $checkbox.triggerHandler('click.filterUpdate');
       });
-    }
+    },
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

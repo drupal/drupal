@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * @type {Drupal~behavior}
    *
@@ -14,9 +11,8 @@
    *   Makes changes in the DOM to be able to test the completion of AJAX in assertWaitOnAjaxRequest.
    */
   Drupal.behaviors.js_webassert_test_wait_for_element = {
-    attach: function (context) {
+    attach(context) {
       $('#js_webassert_test_element_invisible').show();
-    }
+    },
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

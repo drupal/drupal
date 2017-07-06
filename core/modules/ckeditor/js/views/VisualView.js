@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal, Backbone, $) {
-
-  'use strict';
-
   Drupal.ckeditor.VisualView = Backbone.View.extend({
 
     events: {
@@ -24,7 +21,6 @@
 
       this.render();
     },
-
     render: function render(model, value, changedAttributes) {
       this.insertPlaceholders();
       this.applySorting();
@@ -40,7 +36,6 @@
 
       return this;
     },
-
     onGroupNameClick: function onGroupNameClick(event) {
       var $group = $(event.currentTarget).closest('.ckeditor-toolbar-group');
       Drupal.ckeditor.openGroupNameDialog(this, $group);
@@ -48,12 +43,10 @@
       event.stopPropagation();
       event.preventDefault();
     },
-
     onGroupNamesToggleClick: function onGroupNamesToggleClick(event) {
       this.model.set('groupNamesVisible', !this.model.get('groupNamesVisible'));
       event.preventDefault();
     },
-
     onAddGroupButtonClick: function onAddGroupButtonClick(event) {
       function insertNewGroup(success, $group) {
         if (success) {
@@ -67,7 +60,6 @@
 
       event.preventDefault();
     },
-
     endGroupDrag: function endGroupDrag(event, ui) {
       var view = this;
       Drupal.ckeditor.registerGroupMove(this, ui.item, function (success) {
@@ -76,13 +68,11 @@
         }
       });
     },
-
     startButtonDrag: function startButtonDrag(event, ui) {
       this.$el.find('a:focus').trigger('blur');
 
       this.model.set('groupNamesVisible', true);
     },
-
     endButtonDrag: function endButtonDrag(event, ui) {
       var view = this;
       Drupal.ckeditor.registerButtonMove(this, ui.item, function (success) {
@@ -93,7 +83,6 @@
         ui.item.find('a').trigger('focus');
       });
     },
-
     applySorting: function applySorting() {
       this.$el.find('.ckeditor-buttons').not('.ui-sortable').sortable({
         connectWith: '.ckeditor-buttons',
@@ -120,12 +109,10 @@
         helper: 'clone'
       });
     },
-
     insertPlaceholders: function insertPlaceholders() {
       this.insertPlaceholderRow();
       this.insertNewGroupButtons();
     },
-
     insertPlaceholderRow: function insertPlaceholderRow() {
       var $rows = this.$el.find('.ckeditor-row');
 
@@ -143,7 +130,6 @@
         return $(row).find('.ckeditor-toolbar-group').not('.placeholder').length === 0;
       }).remove();
     },
-
     insertNewGroupButtons: function insertNewGroupButtons() {
       this.$el.find('.ckeditor-row').each(function () {
         var $row = $(this);

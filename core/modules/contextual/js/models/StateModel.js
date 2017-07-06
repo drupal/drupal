@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   Drupal.contextual.StateModel = Backbone.Model.extend({
     defaults: {
       title: '',
@@ -30,12 +27,10 @@
       }
       return this;
     },
-
     close: function close() {
       this.set('isOpen', false);
       return this;
     },
-
     focus: function focus() {
       this.set('hasFocus', true);
       var cid = this.cid;
@@ -46,13 +41,11 @@
       });
       return this;
     },
-
     blur: function blur() {
       if (!this.get('isOpen')) {
         this.set('hasFocus', false);
       }
       return this;
     }
-
   });
 })(Drupal, Backbone);

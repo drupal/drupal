@@ -6,9 +6,6 @@
 **/
 
 (function ($, _, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.FieldToolbarView = Backbone.View.extend({
     $editedElement: null,
 
@@ -26,7 +23,6 @@
 
       this.listenTo(this.model, 'change:state', this.stateChange);
     },
-
     render: function render() {
       this.setElement($(Drupal.theme('quickeditFieldToolbar', {
         id: this._id
@@ -36,7 +32,6 @@
 
       return this;
     },
-
     stateChange: function stateChange(model, state) {
       var from = model.previous('state');
       var to = state;
@@ -82,7 +77,6 @@
           break;
       }
     },
-
     insertWYSIWYGToolGroups: function insertWYSIWYGToolGroups() {
       this.$el.append(Drupal.theme('quickeditToolgroup', {
         id: this.getFloatedWysiwygToolgroupId(),
@@ -97,23 +91,18 @@
       this.show('wysiwyg-floated');
       this.show('wysiwyg-main');
     },
-
     getId: function getId() {
       return 'quickedit-toolbar-for-' + this._id;
     },
-
     getFloatedWysiwygToolgroupId: function getFloatedWysiwygToolgroupId() {
       return 'quickedit-wysiwyg-floated-toolgroup-for-' + this._id;
     },
-
     getMainWysiwygToolgroupId: function getMainWysiwygToolgroupId() {
       return 'quickedit-wysiwyg-main-toolgroup-for-' + this._id;
     },
-
     _find: function _find(toolgroup) {
       return this.$el.find('.quickedit-toolgroup.' + toolgroup);
     },
-
     show: function show(toolgroup) {
       var $group = this._find(toolgroup);
 
@@ -125,6 +114,5 @@
         $group.removeClass('quickedit-animate-invisible');
       }, 0);
     }
-
   });
 })(jQuery, _, Backbone, Drupal);

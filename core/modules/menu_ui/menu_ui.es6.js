@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Set a summary on the menu link form.
    *
@@ -16,17 +13,16 @@
    *   Find the form and call `drupalSetSummary` on it.
    */
   Drupal.behaviors.menuUiDetailsSummaries = {
-    attach: function (context) {
-      $(context).find('.menu-link-form').drupalSetSummary(function (context) {
-        var $context = $(context);
+    attach(context) {
+      $(context).find('.menu-link-form').drupalSetSummary((context) => {
+        const $context = $(context);
         if ($context.find('.js-form-item-menu-enabled input').is(':checked')) {
           return Drupal.checkPlain($context.find('.js-form-item-menu-title input').val());
         }
-        else {
-          return Drupal.t('Not in menu');
-        }
+
+        return Drupal.t('Not in menu');
       });
-    }
+    },
   };
 
   /**
@@ -39,16 +35,16 @@
    *   link titles.
    */
   Drupal.behaviors.menuUiLinkAutomaticTitle = {
-    attach: function (context) {
-      var $context = $(context);
+    attach(context) {
+      const $context = $(context);
       $context.find('.menu-link-form').each(function () {
-        var $this = $(this);
+        const $this = $(this);
         // Try to find menu settings widget elements as well as a 'title' field
         // in the form, but play nicely with user permissions and form
         // alterations.
-        var $checkbox = $this.find('.js-form-item-menu-enabled input');
-        var $link_title = $context.find('.js-form-item-menu-title input');
-        var $title = $this.closest('form').find('.js-form-item-title-0-value input');
+        const $checkbox = $this.find('.js-form-item-menu-enabled input');
+        const $link_title = $context.find('.js-form-item-menu-title input');
+        const $title = $this.closest('form').find('.js-form-item-title-0-value input');
         // Bail out if we do not have all required fields.
         if (!($checkbox.length && $link_title.length && $title.length)) {
           return;
@@ -60,11 +56,11 @@
           $link_title.data('menuLinkAutomaticTitleOverridden', true);
         }
         // Whenever the value is changed manually, disable this behavior.
-        $link_title.on('keyup', function () {
+        $link_title.on('keyup', () => {
           $link_title.data('menuLinkAutomaticTitleOverridden', true);
         });
         // Global trigger on checkbox (do not fill-in a value when disabled).
-        $checkbox.on('change', function () {
+        $checkbox.on('change', () => {
           if ($checkbox.is(':checked')) {
             if (!$link_title.data('menuLinkAutomaticTitleOverridden')) {
               $link_title.val($title.val());
@@ -78,14 +74,13 @@
           $checkbox.trigger('formUpdated');
         });
         // Take over any title change.
-        $title.on('keyup', function () {
+        $title.on('keyup', () => {
           if (!$link_title.data('menuLinkAutomaticTitleOverridden') && $checkbox.is(':checked')) {
             $link_title.val($title.val());
             $link_title.val($title.val()).trigger('formUpdated');
           }
         });
       });
-    }
+    },
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

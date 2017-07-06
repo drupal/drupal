@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, _, document) {
-
-  'use strict';
-
   if (Drupal.filterConfiguration) {
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
       getRules: function getRules() {
@@ -63,7 +60,6 @@
         });
       });
     },
-
     _updateAllowedTags: function _updateAllowedTags() {
       this.autoTags = this._calculateAutoAllowedTags(this.userTags, this.newFeatures);
 
@@ -77,13 +73,12 @@
           this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
         }
     },
-
     _calculateAutoAllowedTags: function _calculateAutoAllowedTags(userAllowedTags, newFeatures) {
-      var featureName;
-      var feature;
-      var featureRule;
-      var filterRule;
-      var tag;
+      var featureName = void 0;
+      var feature = void 0;
+      var featureRule = void 0;
+      var filterRule = void 0;
+      var tag = void 0;
       var editorRequiredTags = {};
 
       for (featureName in newFeatures) {
@@ -135,13 +130,12 @@
 
       return autoAllowedTags;
     },
-
     _parseSetting: function _parseSetting(setting) {
-      var node;
-      var tag;
-      var rule;
-      var attributes;
-      var attribute;
+      var node = void 0;
+      var tag = void 0;
+      var rule = void 0;
+      var attributes = void 0;
+      var attribute = void 0;
       var allowedTags = setting.match(/(<[^>]+>)/g);
       var sandbox = document.createElement('div');
       var rules = {};
@@ -171,7 +165,6 @@
       }
       return rules;
     },
-
     _generateSetting: function _generateSetting(tags) {
       return _.reduce(tags, function (setting, rule, tag) {
         if (setting.length) {
@@ -191,7 +184,6 @@
         return setting;
       }, '');
     }
-
   };
 
   Drupal.theme.filterFilterHTMLUpdateMessage = function (tags) {

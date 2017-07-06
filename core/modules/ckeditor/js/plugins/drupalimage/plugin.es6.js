@@ -14,19 +14,16 @@
  */
 
 (function ($, Drupal, CKEDITOR) {
-
-  'use strict';
-
   CKEDITOR.plugins.add('drupalimage', {
     requires: 'image2',
     icons: 'drupalimage',
     hidpi: true,
 
-    beforeInit: function (editor) {
+    beforeInit(editor) {
       // Override the image2 widget definition to require and handle the
       // additional data-entity-type and data-entity-uuid attributes.
-      editor.on('widgetDefinition', function (event) {
-        var widgetDefinition = event.data;
+      editor.on('widgetDefinition', (event) => {
+        const widgetDefinition = event.data;
         if (widgetDefinition.name !== 'image') {
           return;
         }
@@ -46,11 +43,11 @@
             attributes: {
               '!src': true,
               '!alt': true,
-              'width': true,
-              'height': true
+              width: true,
+              height: true,
             },
-            classes: {}
-          }
+            classes: {},
+          },
         };
         // Mapped from image2's requiredContent: "img[src,alt]". This does not
         // use the object format unlike above, but a CKEDITOR.style instance,
@@ -60,15 +57,15 @@
           element: 'img',
           attributes: {
             src: '',
-            alt: ''
-          }
+            alt: '',
+          },
         });
 
         // Extend requiredContent & allowedContent.
         // CKEDITOR.style is an immutable object: we cannot modify its
         // definition to extend requiredContent. Hence we get the definition,
         // modify it, and pass it to a new CKEDITOR.style instance.
-        var requiredContent = widgetDefinition.requiredContent.getDefinition();
+        const requiredContent = widgetDefinition.requiredContent.getDefinition();
         requiredContent.attributes['data-entity-type'] = '';
         requiredContent.attributes['data-entity-uuid'] = '';
         widgetDefinition.requiredContent = new CKEDITOR.style(requiredContent);
@@ -113,13 +110,13 @@
         // add that class, because the widget template already contains it.
         // @see http://dev.ckeditor.com/ticket/13888
         // @see https://www.drupal.org/node/2268941
-        var originalGetClasses = widgetDefinition.getClasses;
+        const originalGetClasses = widgetDefinition.getClasses;
         widgetDefinition.getClasses = function () {
-          var classes = originalGetClasses.call(this);
-          var captionedClasses = (this.editor.config.image2_captionedClass || '').split(/\s+/);
+          const classes = originalGetClasses.call(this);
+          const captionedClasses = (this.editor.config.image2_captionedClass || '').split(/\s+/);
 
           if (captionedClasses.length && classes) {
-            for (var i = 0; i < captionedClasses.length; i++) {
+            for (let i = 0; i < captionedClasses.length; i++) {
               if (captionedClasses[i] in classes) {
                 delete classes[captionedClasses[i]];
               }
@@ -133,21 +130,21 @@
         // Keys in the hash are the keys for image2's data, values are the keys
         // that the Drupal dialog uses.
         widgetDefinition._mapDataToDialog = {
-          'src': 'src',
-          'alt': 'alt',
-          'width': 'width',
-          'height': 'height',
+          src: 'src',
+          alt: 'alt',
+          width: 'width',
+          height: 'height',
           'data-entity-type': 'data-entity-type',
-          'data-entity-uuid': 'data-entity-uuid'
+          'data-entity-uuid': 'data-entity-uuid',
         };
 
         // Protected; transforms widget's data object to the format used by the
         // \Drupal\editor\Form\EditorImageDialog dialog, keeping only the data
         // listed in widgetDefinition._dataForDialog.
         widgetDefinition._dataToDialogValues = function (data) {
-          var dialogValues = {};
-          var map = widgetDefinition._mapDataToDialog;
-          Object.keys(widgetDefinition._mapDataToDialog).forEach(function (key) {
+          const dialogValues = {};
+          const map = widgetDefinition._mapDataToDialog;
+          Object.keys(widgetDefinition._mapDataToDialog).forEach((key) => {
             dialogValues[map[key]] = data[key];
           });
           return dialogValues;
@@ -155,9 +152,9 @@
 
         // Protected; the inverse of _dataToDialogValues.
         widgetDefinition._dialogValuesToData = function (dialogReturnValues) {
-          var data = {};
-          var map = widgetDefinition._mapDataToDialog;
-          Object.keys(widgetDefinition._mapDataToDialog).forEach(function (key) {
+          const data = {};
+          const map = widgetDefinition._mapDataToDialog;
+          Object.keys(widgetDefinition._mapDataToDialog).forEach((key) => {
             if (dialogReturnValues.hasOwnProperty(map[key])) {
               data[key] = dialogReturnValues[map[key]];
             }
@@ -168,7 +165,7 @@
         // Protected; creates Drupal dialog save callback.
         widgetDefinition._createDialogSaveCallback = function (editor, widget) {
           return function (dialogReturnValues) {
-            var firstEdit = !widget.ready;
+            const firstEdit = !widget.ready;
 
             // Dialog may have blurred the widget. Re-focus it first.
             if (!firstEdit) {
@@ -178,13 +175,13 @@
             editor.fire('saveSnapshot');
 
             // Pass `true` so DocumentFragment will also be returned.
-            var container = widget.wrapper.getParent(true);
-            var image = widget.parts.image;
+            const container = widget.wrapper.getParent(true);
+            const image = widget.parts.image;
 
             // Set the updated widget data, after the necessary conversions from
             // the dialog's return values.
             // Note: on widget#setData this widget instance might be destroyed.
-            var data = widgetDefinition._dialogValuesToData(dialogReturnValues.attributes);
+            const data = widgetDefinition._dialogValuesToData(dialogReturnValues.attributes);
             widget.setData(data);
 
             // Retrieve the widget once again. It could've been destroyed
@@ -199,7 +196,7 @@
               editor.widgets.finalizeCreation(container);
             }
 
-            setTimeout(function () {
+            setTimeout(() => {
               // (Re-)focus the widget.
               widget.focus();
               // Save snapshot for undo support.
@@ -210,7 +207,7 @@
           };
         };
 
-        var originalInit = widgetDefinition.init;
+        const originalInit = widgetDefinition.init;
         widgetDefinition.init = function () {
           originalInit.call(this);
 
@@ -227,14 +224,14 @@
       // to handle its editing with a Drupal-native dialog.
       // This includes also a case just after the image was created
       // and dialog should be opened for it for the first time.
-      editor.widgets.on('instanceCreated', function (event) {
-        var widget = event.data;
+      editor.widgets.on('instanceCreated', (event) => {
+        const widget = event.data;
 
         if (widget.name !== 'image') {
           return;
         }
 
-        widget.on('edit', function (event) {
+        widget.on('edit', (event) => {
           // Cancel edit event to break image2's dialog binding
           // (and also to prevent automatic insertion before opening dialog).
           event.cancel();
@@ -246,7 +243,7 @@
             // Drupal.t() will not work inside CKEditor plugins because CKEditor
             // loads the JavaScript file instead of Drupal. Pull translated
             // strings from the plugin settings that are translated server-side.
-            dialogTitle: widget.data.src ? editor.config.drupalImage_dialogTitleEdit : editor.config.drupalImage_dialogTitleAdd
+            dialogTitle: widget.data.src ? editor.config.drupalImage_dialogTitleEdit : editor.config.drupalImage_dialogTitleAdd,
           });
         });
       });
@@ -256,15 +253,15 @@
       editor.addCommand('editdrupalimage', {
         allowedContent: 'img[alt,!src,width,height,!data-entity-type,!data-entity-uuid]',
         requiredContent: 'img[alt,src,data-entity-type,data-entity-uuid]',
-        modes: {wysiwyg: 1},
+        modes: { wysiwyg: 1 },
         canUndo: true,
-        exec: function (editor, data) {
-          var dialogSettings = {
+        exec(editor, data) {
+          const dialogSettings = {
             title: data.dialogTitle,
-            dialogClass: 'editor-image-dialog'
+            dialogClass: 'editor-image-dialog',
           };
-          Drupal.ckeditor.openDialog(editor, Drupal.url('editor/dialog/image/' + editor.config.drupal.format), data.existingValues, data.saveCallback, dialogSettings);
-        }
+          Drupal.ckeditor.openDialog(editor, Drupal.url(`editor/dialog/image/${editor.config.drupal.format}`), data.existingValues, data.saveCallback, dialogSettings);
+        },
       });
 
       // Register the toolbar button.
@@ -272,14 +269,14 @@
         editor.ui.addButton('DrupalImage', {
           label: Drupal.t('Image'),
           // Note that we use the original image2 command!
-          command: 'image'
+          command: 'image',
         });
       }
     },
 
-    afterInit: function (editor) {
+    afterInit(editor) {
       linkCommandIntegrator(editor);
-    }
+    },
 
   });
 
@@ -308,7 +305,7 @@
 
     // Override default behaviour of 'drupalunlink' command.
     editor.getCommand('drupalunlink').on('exec', function (evt) {
-      var widget = getFocusedWidget(editor);
+      const widget = getFocusedWidget(editor);
 
       // Override 'drupalunlink' only when link truly belongs to the widget. If
       // wrapped inline widget in a link, let default unlink work.
@@ -329,7 +326,7 @@
 
     // Override default refresh of 'drupalunlink' command.
     editor.getCommand('drupalunlink').on('refresh', function (evt) {
-      var widget = getFocusedWidget(editor);
+      const widget = getFocusedWidget(editor);
 
       if (!widget) {
         return;
@@ -354,7 +351,7 @@
    *   The focused image2 widget instance, or null.
    */
   function getFocusedWidget(editor) {
-    var widget = editor.widgets.focused;
+    const widget = editor.widgets.focused;
 
     if (widget && widget.name === 'image') {
       return widget;
@@ -365,7 +362,6 @@
 
   // Expose an API for other plugins to interact with drupalimage widgets.
   CKEDITOR.plugins.drupalimage = {
-    getFocusedWidget: getFocusedWidget
+    getFocusedWidget,
   };
-
-})(jQuery, Drupal, CKEDITOR);
+}(jQuery, Drupal, CKEDITOR));

@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Sets summaries about revision and translation of entities.
    *
@@ -19,11 +16,11 @@
    *   translation options.
    */
   Drupal.behaviors.entityContentDetailsSummaries = {
-    attach: function (context) {
-      var $context = $(context);
-      $context.find('.entity-content-form-revision-information').drupalSetSummary(function (context) {
-        var $revisionContext = $(context);
-        var revisionCheckbox = $revisionContext.find('.js-form-item-revision input');
+    attach(context) {
+      const $context = $(context);
+      $context.find('.entity-content-form-revision-information').drupalSetSummary((context) => {
+        const $revisionContext = $(context);
+        const revisionCheckbox = $revisionContext.find('.js-form-item-revision input');
 
         // Return 'New revision' if the 'Create new revision' checkbox is checked,
         // or if the checkbox doesn't exist, but the revision log does. For users
@@ -36,10 +33,10 @@
         return Drupal.t('No revision');
       });
 
-      $context.find('details.entity-translation-options').drupalSetSummary(function (context) {
-        var $translationContext = $(context);
-        var translate;
-        var $checkbox = $translationContext.find('.js-form-item-translation-translate input');
+      $context.find('details.entity-translation-options').drupalSetSummary((context) => {
+        const $translationContext = $(context);
+        let translate;
+        let $checkbox = $translationContext.find('.js-form-item-translation-translate input');
 
         if ($checkbox.length) {
           translate = $checkbox.is(':checked') ? Drupal.t('Needs to be updated') : Drupal.t('Does not need to be updated');
@@ -51,7 +48,6 @@
 
         return translate;
       });
-    }
+    },
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

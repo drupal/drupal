@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, window) {
-
-  'use strict';
-
   /**
    * Attach the tableResponsive function to {@link Drupal.behaviors}.
    *
@@ -16,15 +13,15 @@
    *   Attaches tableResponsive functionality.
    */
   Drupal.behaviors.tableResponsive = {
-    attach: function (context, settings) {
-      var $tables = $(context).find('table.responsive-enabled').once('tableresponsive');
+    attach(context, settings) {
+      const $tables = $(context).find('table.responsive-enabled').once('tableresponsive');
       if ($tables.length) {
-        var il = $tables.length;
-        for (var i = 0; i < il; i++) {
+        const il = $tables.length;
+        for (let i = 0; i < il; i++) {
           TableResponsive.tables.push(new TableResponsive($tables[i]));
         }
       }
-    }
+    },
   };
 
   /**
@@ -73,7 +70,7 @@
      *
      * @type {Array.<Drupal.TableResponsive>}
      */
-    tables: []
+    tables: [],
   });
 
   /**
@@ -88,9 +85,9 @@
      * @param {jQuery.Event} e
      *   The event triggered.
      */
-    eventhandlerEvaluateColumnVisibility: function (e) {
-      var pegged = parseInt(this.$link.data('pegged'), 10);
-      var hiddenLength = this.$headers.filter('.priority-medium:hidden, .priority-low:hidden').length;
+    eventhandlerEvaluateColumnVisibility(e) {
+      const pegged = parseInt(this.$link.data('pegged'), 10);
+      const hiddenLength = this.$headers.filter('.priority-medium:hidden, .priority-low:hidden').length;
       // If the table has hidden columns, associate an action link with the
       // table to show the columns.
       if (hiddenLength > 0) {
@@ -112,18 +109,18 @@
      * @param {jQuery.Event} e
      *   The event triggered.
      */
-    eventhandlerToggleColumns: function (e) {
+    eventhandlerToggleColumns(e) {
       e.preventDefault();
-      var self = this;
-      var $hiddenHeaders = this.$headers.filter('.priority-medium:hidden, .priority-low:hidden');
+      const self = this;
+      const $hiddenHeaders = this.$headers.filter('.priority-medium:hidden, .priority-low:hidden');
       this.$revealedCells = this.$revealedCells || $();
       // Reveal hidden columns.
       if ($hiddenHeaders.length > 0) {
         $hiddenHeaders.each(function (index, element) {
-          var $header = $(this);
-          var position = $header.prevAll('th').length;
+          const $header = $(this);
+          const position = $header.prevAll('th').length;
           self.$table.find('tbody tr').each(function () {
-            var $cells = $(this).find('td').eq(position);
+            const $cells = $(this).find('td').eq(position);
             $cells.show();
             // Keep track of the revealed cells, so they can be hidden later.
             self.$revealedCells = $().add(self.$revealedCells).add($cells);
@@ -140,19 +137,19 @@
         // Strip the 'display:none' declaration from the style attributes of
         // the table cells that .hide() added.
         this.$revealedCells.each(function (index, element) {
-          var $cell = $(this);
-          var properties = $cell.attr('style').split(';');
-          var newProps = [];
+          const $cell = $(this);
+          const properties = $cell.attr('style').split(';');
+          const newProps = [];
           // The hide method adds display none to the element. The element
           // should be returned to the same state it was in before the columns
           // were revealed, so it is necessary to remove the display none value
           // from the style attribute.
-          var match = /^display\s*\:\s*none$/;
-          for (var i = 0; i < properties.length; i++) {
-            var prop = properties[i];
+          const match = /^display\s*\:\s*none$/;
+          for (let i = 0; i < properties.length; i++) {
+            const prop = properties[i];
             prop.trim();
             // Find the display:none property and remove it.
-            var isDisplayNone = match.exec(prop);
+            const isDisplayNone = match.exec(prop);
             if (isDisplayNone) {
               continue;
             }
@@ -165,10 +162,9 @@
         // Refresh the toggle link.
         $(window).trigger('resize.tableresponsive');
       }
-    }
+    },
   });
 
   // Make the TableResponsive object available in the Drupal namespace.
   Drupal.TableResponsive = TableResponsive;
-
-})(jQuery, Drupal, window);
+}(jQuery, Drupal, window));

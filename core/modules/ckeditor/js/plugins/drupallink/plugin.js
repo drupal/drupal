@@ -6,15 +6,12 @@
 **/
 
 (function ($, Drupal, drupalSettings, CKEDITOR) {
-
-  'use strict';
-
   function parseAttributes(editor, element) {
     var parsedAttributes = {};
 
     var domElement = element.$;
-    var attribute;
-    var attributeName;
+    var attribute = void 0;
+    var attributeName = void 0;
     for (var attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
       attribute = domElement.attributes.item(attrIndex);
       attributeName = attribute.nodeName.toLowerCase();

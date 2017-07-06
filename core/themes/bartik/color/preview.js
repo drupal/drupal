@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.color = {
     logoChanged: false,
     callback: function callback(context, settings, $form) {

@@ -4,9 +4,6 @@
  */
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   /**
    * Backbone model for the CKEditor toolbar configuration state.
    *
@@ -60,16 +57,15 @@
       /**
        * Whether the button group names are currently visible.
        */
-      groupNamesVisible: false
+      groupNamesVisible: false,
     },
 
     /**
      * @method
      */
-    sync: function () {
+    sync() {
       // Push the settings into the textarea.
       this.get('$textarea').val(JSON.stringify(this.get('activeEditorConfig')));
-    }
+    },
   });
-
-})(Drupal, Backbone);
+}(Drupal, Backbone));

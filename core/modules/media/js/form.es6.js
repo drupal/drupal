@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal) {
-
-  'use strict';
-
   /**
    * Behaviors for summaries for tabs in the media edit form.
    *
@@ -16,25 +13,24 @@
    *   Attaches summary behavior for tabs in the media edit form.
    */
   Drupal.behaviors.mediaFormSummaries = {
-    attach: function (context) {
-      var $context = $(context);
+    attach(context) {
+      const $context = $(context);
 
-      $context.find('.media-form-author').drupalSetSummary(function (context) {
-        var $authorContext = $(context);
-        var name = $authorContext.find('.field--name-uid input').val();
-        var date = $authorContext.find('.field--name-created input').val();
+      $context.find('.media-form-author').drupalSetSummary((context) => {
+        const $authorContext = $(context);
+        const name = $authorContext.find('.field--name-uid input').val();
+        const date = $authorContext.find('.field--name-created input').val();
 
         if (name && date) {
-          return Drupal.t('By @name on @date', {'@name': name, '@date': date});
+          return Drupal.t('By @name on @date', { '@name': name, '@date': date });
         }
         else if (name) {
-          return Drupal.t('By @name', {'@name': name});
+          return Drupal.t('By @name', { '@name': name });
         }
         else if (date) {
-          return Drupal.t('Authored on @date', {'@date': date});
+          return Drupal.t('Authored on @date', { '@date': date });
         }
       });
-    }
+    },
   };
-
-})(jQuery, Drupal);
+}(jQuery, Drupal));

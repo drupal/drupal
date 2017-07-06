@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, displace) {
-
-  'use strict';
-
   /**
    * Attaches sticky table headers.
    *
@@ -16,9 +13,9 @@
    *   Attaches the sticky table header behavior.
    */
   Drupal.behaviors.tableHeader = {
-    attach: function (context) {
-      $(window).one('scroll.TableHeaderInit', {context: context}, tableHeaderInitHandler);
-    }
+    attach(context) {
+      $(window).one('scroll.TableHeaderInit', { context }, tableHeaderInitHandler);
+    },
   };
 
   function scrollValue(position) {
@@ -27,9 +24,9 @@
 
   // Select and initialize sticky table headers.
   function tableHeaderInitHandler(e) {
-    var $tables = $(e.data.context).find('table.sticky-enabled').once('tableheader');
-    var il = $tables.length;
-    for (var i = 0; i < il; i++) {
+    const $tables = $(e.data.context).find('table.sticky-enabled').once('tableheader');
+    const il = $tables.length;
+    for (let i = 0; i < il; i++) {
       TableHeader.tables.push(new TableHeader($tables[i]));
     }
     forTables('onScroll');
@@ -37,9 +34,9 @@
 
   // Helper method to loop through tables and execute a method.
   function forTables(method, arg) {
-    var tables = TableHeader.tables;
-    var il = tables.length;
-    for (var i = 0; i < il; i++) {
+    const tables = TableHeader.tables;
+    const il = tables.length;
+    for (let i = 0; i < il; i++) {
       tables[i][method](arg);
     }
   }
@@ -71,7 +68,7 @@
      *
      * @ignore
      */
-    'scroll.TableHeader': tableHeaderOnScrollHandler
+    'scroll.TableHeader': tableHeaderOnScrollHandler,
   });
   // Bind to custom Drupal events.
   $(document).on({
@@ -89,7 +86,7 @@
      *
      * @ignore
      */
-    'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler
+    'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler,
   });
 
   /**
@@ -106,7 +103,7 @@
    * @listens event:columnschange
    */
   function TableHeader(table) {
-    var $table = $(table);
+    const $table = $(table);
 
     /**
      * @name Drupal.TableHeader#$originalTable
@@ -134,8 +131,8 @@
     this.tableOffset = this.$originalTable.offset();
 
     // React to columns change to avoid making checks in the scroll callback.
-    this.$originalTable.on('columnschange', {tableHeader: this}, function (e, display) {
-      var tableHeader = e.data.tableHeader;
+    this.$originalTable.on('columnschange', { tableHeader: this }, (e, display) => {
+      const tableHeader = e.data.tableHeader;
       if (tableHeader.displayWeight === null || tableHeader.displayWeight !== display) {
         tableHeader.recalculateSticky();
       }
@@ -156,7 +153,7 @@
      *
      * @type {Array.<Drupal.TableHeader>}
      */
-    tables: []
+    tables: [],
   });
 
   /**
@@ -195,15 +192,15 @@
     /**
      * Create the duplicate header.
      */
-    createSticky: function () {
+    createSticky() {
       // Clone the table header so it inherits original jQuery properties.
-      var $stickyHeader = this.$originalHeader.clone(true);
+      const $stickyHeader = this.$originalHeader.clone(true);
       // Hide the table to avoid a flash of the header clone upon page load.
       this.$stickyTable = $('<table class="sticky-header"/>')
         .css({
           visibility: 'hidden',
           position: 'fixed',
-          top: '0px'
+          top: '0px',
         })
         .append($stickyHeader)
         .insertBefore(this.$originalTable);
@@ -225,13 +222,13 @@
      * @return {jQuery}
      *   The sticky table as a jQuery collection.
      */
-    stickyPosition: function (offsetTop, offsetLeft) {
-      var css = {};
+    stickyPosition(offsetTop, offsetLeft) {
+      const css = {};
       if (typeof offsetTop === 'number') {
-        css.top = offsetTop + 'px';
+        css.top = `${offsetTop}px`;
       }
       if (typeof offsetLeft === 'number') {
-        css.left = (this.tableOffset.left - offsetLeft) + 'px';
+        css.left = `${this.tableOffset.left - offsetLeft}px`;
       }
       return this.$stickyTable.css(css);
     },
@@ -242,11 +239,11 @@
      * @return {bool}
      *   The visibility status.
      */
-    checkStickyVisible: function () {
-      var scrollTop = scrollValue('scrollTop');
-      var tableTop = this.tableOffset.top - displace.offsets.top;
-      var tableBottom = tableTop + this.tableHeight;
-      var visible = false;
+    checkStickyVisible() {
+      const scrollTop = scrollValue('scrollTop');
+      const tableTop = this.tableOffset.top - displace.offsets.top;
+      const tableBottom = tableTop + this.tableHeight;
+      let visible = false;
 
       if (tableTop < scrollTop && scrollTop < (tableBottom - this.minHeight)) {
         visible = true;
@@ -265,7 +262,7 @@
      * @param {jQuery.Event} e
      *   The scroll event.
      */
-    onScroll: function (e) {
+    onScroll(e) {
       this.checkStickyVisible();
       // Track horizontal positioning relative to the viewport.
       this.stickyPosition(null, scrollValue('scrollLeft'));
@@ -278,7 +275,7 @@
      * @param {jQuery.Event} event
      *   Event being triggered.
      */
-    recalculateSticky: function (event) {
+    recalculateSticky(event) {
       // Update table size.
       this.tableHeight = this.$originalTable[0].clientHeight;
 
@@ -288,29 +285,28 @@
       this.stickyPosition(displace.offsets.top, scrollValue('scrollLeft'));
 
       // Update columns width.
-      var $that = null;
-      var $stickyCell = null;
-      var display = null;
+      let $that = null;
+      let $stickyCell = null;
+      let display = null;
       // Resize header and its cell widths.
       // Only apply width to visible table cells. This prevents the header from
       // displaying incorrectly when the sticky header is no longer visible.
-      var il = this.$originalHeaderCells.length;
-      for (var i = 0; i < il; i++) {
+      const il = this.$originalHeaderCells.length;
+      for (let i = 0; i < il; i++) {
         $that = $(this.$originalHeaderCells[i]);
         $stickyCell = this.$stickyHeaderCells.eq($that.index());
         display = $that.css('display');
         if (display !== 'none') {
-          $stickyCell.css({width: $that.css('width'), display: display});
+          $stickyCell.css({ width: $that.css('width'), display });
         }
         else {
           $stickyCell.css('display', 'none');
         }
       }
       this.$stickyTable.css('width', this.$originalTable.outerWidth());
-    }
+    },
   });
 
   // Expose constructor in the public space.
   Drupal.TableHeader = TableHeader;
-
 }(jQuery, Drupal, window.parent.Drupal.displace));

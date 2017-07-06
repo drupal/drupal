@@ -6,12 +6,8 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.nodePreviewDestroyLinks = {
     attach: function attach(context) {
-
       function clickPreviewModal(event) {
         if (event.button === 0 && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey) {
           event.preventDefault();

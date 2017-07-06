@@ -4,9 +4,6 @@
  */
 
 (function (Backbone, Drupal) {
-
-  'use strict';
-
   /**
    * Backbone Model for collapsible menus.
    *
@@ -26,8 +23,7 @@
       /**
        * @type {object}
        */
-      subtrees: {}
-    }
+      subtrees: {},
+    },
   });
-
 }(Backbone, Drupal));

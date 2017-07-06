@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, debounce) {
-
-  'use strict';
-
   /**
    * Filters the module list table by a text input search string.
    *
@@ -20,29 +17,29 @@
    * @type {Drupal~behavior}
    */
   Drupal.behaviors.tableFilterByText = {
-    attach: function (context, settings) {
-      var $input = $('input.table-filter-text').once('table-filter-text');
-      var $table = $($input.attr('data-table'));
-      var $rowsAndDetails;
-      var $rows;
-      var $details;
-      var searching = false;
+    attach(context, settings) {
+      const $input = $('input.table-filter-text').once('table-filter-text');
+      const $table = $($input.attr('data-table'));
+      let $rowsAndDetails;
+      let $rows;
+      let $details;
+      let searching = false;
 
       function hidePackageDetails(index, element) {
-        var $packDetails = $(element);
-        var $visibleRows = $packDetails.find('tbody tr:visible');
+        const $packDetails = $(element);
+        const $visibleRows = $packDetails.find('tbody tr:visible');
         $packDetails.toggle($visibleRows.length > 0);
       }
 
       function filterModuleList(e) {
-        var query = $(e.target).val();
+        const query = $(e.target).val();
         // Case insensitive expression to find query at the beginning of a word.
-        var re = new RegExp('\\b' + query, 'i');
+        const re = new RegExp(`\\b${query}`, 'i');
 
         function showModuleRow(index, row) {
-          var $row = $(row);
-          var $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
-          var textMatch = $sources.text().search(re) !== -1;
+          const $row = $(row);
+          const $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
+          const textMatch = $sources.text().search(re) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
         // Search over all rows and packages.
@@ -65,8 +62,8 @@
           Drupal.announce(
             Drupal.t(
               '!modules modules are available in the modified list.',
-              {'!modules': $rowsAndDetails.find('tbody tr:visible').length}
-            )
+              { '!modules': $rowsAndDetails.find('tbody tr:visible').length },
+            ),
           );
         }
         else if (searching) {
@@ -94,10 +91,9 @@
 
         $input.on({
           keyup: debounce(filterModuleList, 200),
-          keydown: preventEnterKey
+          keydown: preventEnterKey,
         });
       }
-    }
+    },
   };
-
 }(jQuery, Drupal, Drupal.debounce));

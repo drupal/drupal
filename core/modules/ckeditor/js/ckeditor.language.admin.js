@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.ckeditorLanguageSettingsSummary = {
     attach: function attach() {
       $('#edit-editor-settings-plugins-language').drupalSetSummary(function (context) {

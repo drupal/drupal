@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, debounce, displace) {
-
-  'use strict';
-
   var minDisplaceWidth = 768;
 
   var edge = document.documentElement.dir === 'rtl' ? 'left' : 'right';
@@ -42,7 +39,7 @@
 
     var $offsets = $widget.find('> :not(#drupal-off-canvas, .ui-resizable-handle)');
     var offset = 0;
-    var modalHeight;
+    var modalHeight = void 0;
 
     $element.css({ height: 'auto' });
     modalHeight = $widget.height();

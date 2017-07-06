@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.verticalTabs = {
     attach: function attach(context) {
       var width = drupalSettings.widthBreakpoint || 640;
@@ -21,7 +18,7 @@
       $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs').each(function () {
         var $this = $(this).addClass('vertical-tabs__panes');
         var focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
-        var tab_focus;
+        var tab_focus = void 0;
 
         var $details = $this.find('> details');
         if ($details.length === 0) {
@@ -99,11 +96,9 @@
       $('#active-vertical-tab').remove();
       this.link.append('<span id="active-vertical-tab" class="visually-hidden">' + Drupal.t('(active tab)') + '</span>');
     },
-
     updateSummary: function updateSummary() {
       this.summary.html(this.details.drupalGetSummary());
     },
-
     tabShow: function tabShow() {
       this.item.show();
 
@@ -116,7 +111,6 @@
       this.focus();
       return this;
     },
-
     tabHide: function tabHide() {
       this.item.hide();
 

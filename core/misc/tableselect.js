@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.tableSelect = {
     attach: function attach(context, settings) {
       $(context).find('th.select-all').closest('table').once('table-select').each(Drupal.tableSelect);
@@ -21,8 +18,8 @@
     }
 
     var table = this;
-    var checkboxes;
-    var lastChecked;
+    var checkboxes = void 0;
+    var lastChecked = void 0;
     var $table = $(table);
     var strings = {
       selectAll: Drupal.t('Select all rows in this table'),

@@ -6,11 +6,8 @@
 **/
 
 Drupal.debounce = function (func, wait, immediate) {
-
-  'use strict';
-
-  var timeout;
-  var result;
+  var timeout = void 0;
+  var result = void 0;
   return function () {
     var context = this;
     var args = arguments;

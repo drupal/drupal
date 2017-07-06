@@ -7,9 +7,6 @@
  */
 
 (function ($, Drupal, window) {
-
-  'use strict';
-
   /**
    * Renders "new" comment indicators wherever necessary.
    *
@@ -19,25 +16,24 @@
    *   Attaches "new" comment indicators behavior.
    */
   Drupal.behaviors.commentNewIndicator = {
-    attach: function (context) {
+    attach(context) {
       // Collect all "new" comment indicator placeholders (and their
       // corresponding node IDs) newer than 30 days ago that have not already
       // been read after their last comment timestamp.
-      var nodeIDs = [];
-      var $placeholders = $(context)
+      const nodeIDs = [];
+      const $placeholders = $(context)
         .find('[data-comment-timestamp]')
         .once('history')
         .filter(function () {
-          var $placeholder = $(this);
-          var commentTimestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
-          var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
+          const $placeholder = $(this);
+          const commentTimestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
+          const nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
           if (Drupal.history.needsServerCheck(nodeID, commentTimestamp)) {
             nodeIDs.push(nodeID);
             return true;
           }
-          else {
-            return false;
-          }
+
+          return false;
         });
 
       if ($placeholders.length === 0) {
@@ -45,10 +41,10 @@
       }
 
       // Fetch the node read timestamps from the server.
-      Drupal.history.fetchTimestamps(nodeIDs, function () {
+      Drupal.history.fetchTimestamps(nodeIDs, () => {
         processCommentNewIndicators($placeholders);
       });
-    }
+    },
   };
 
   /**
@@ -58,20 +54,20 @@
    *   The elements that should be processed.
    */
   function processCommentNewIndicators($placeholders) {
-    var isFirstNewComment = true;
-    var newCommentString = Drupal.t('new');
-    var $placeholder;
+    let isFirstNewComment = true;
+    const newCommentString = Drupal.t('new');
+    let $placeholder;
 
-    $placeholders.each(function (index, placeholder) {
+    $placeholders.each((index, placeholder) => {
       $placeholder = $(placeholder);
-      var timestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
-      var $node = $placeholder.closest('[data-history-node-id]');
-      var nodeID = $node.attr('data-history-node-id');
-      var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
+      const timestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
+      const $node = $placeholder.closest('[data-history-node-id]');
+      const nodeID = $node.attr('data-history-node-id');
+      const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       if (timestamp > lastViewTimestamp) {
         // Turn the placeholder into an actual "new" indicator.
-        var $comment = $(placeholder)
+        const $comment = $(placeholder)
           .removeClass('hidden')
           .text(newCommentString)
           .closest('.js-comment')
@@ -92,5 +88,4 @@
       }
     });
   }
-
-})(jQuery, Drupal, window);
+}(jQuery, Drupal, window));

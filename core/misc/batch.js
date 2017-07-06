@@ -6,14 +6,11 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.batch = {
     attach: function attach(context, settings) {
       var batch = settings.batch;
       var $progress = $('[data-drupal-progress]').once('batch');
-      var progressBar;
+      var progressBar = void 0;
 
       function updateCallback(progress, status, pb) {
         if (progress === '100') {

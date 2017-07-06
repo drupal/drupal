@@ -6,16 +6,13 @@
 **/
 
 (function ($, Drupal, debounce) {
-
-  'use strict';
-
   Drupal.behaviors.tableFilterByText = {
     attach: function attach(context, settings) {
       var $input = $('input.table-filter-text').once('table-filter-text');
       var $table = $($input.attr('data-table'));
-      var $rowsAndDetails;
-      var $rows;
-      var $details;
+      var $rowsAndDetails = void 0;
+      var $rows = void 0;
+      var $details = void 0;
       var searching = false;
 
       function hidePackageDetails(index, element) {

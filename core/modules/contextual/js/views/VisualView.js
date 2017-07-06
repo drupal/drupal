@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal, Backbone, Modernizr) {
-
-  'use strict';
-
   Drupal.contextual.VisualView = Backbone.View.extend({
     events: function events() {
       var touchEndToClick = function touchEndToClick(event) {
@@ -33,11 +30,9 @@
       }
       return mapping;
     },
-
     initialize: function initialize() {
       this.listenTo(this.model, 'change', this.render);
     },
-
     render: function render() {
       var isOpen = this.model.get('isOpen');
 
@@ -51,6 +46,5 @@
 
       return this;
     }
-
   });
 })(Drupal, Backbone, Modernizr);

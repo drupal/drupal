@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.negotiationLanguage = {
     attach: function attach() {
       var $configForm = $('#language-negotiation-configure-form');

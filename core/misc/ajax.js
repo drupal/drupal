@@ -4,14 +4,11 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 (function ($, window, Drupal, drupalSettings) {
-
-  'use strict';
-
   Drupal.behaviors.AJAX = {
     attach: function attach(context, settings) {
-
       function loadAjaxBehavior(base) {
         var element_settings = settings.ajax[base];
         if (typeof element_settings.selector === 'undefined') {
@@ -63,7 +60,6 @@
         Drupal.ajax(element_settings);
       });
     },
-
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
         Drupal.ajax.expired().forEach(function (instance) {
@@ -74,12 +70,11 @@
   };
 
   Drupal.AjaxError = function (xmlhttp, uri, customMessage) {
-
-    var statusCode;
-    var statusText;
-    var pathText;
-    var responseText;
-    var readyStateText;
+    var statusCode = void 0;
+    var statusText = void 0;
+    var pathText = void 0;
+    var responseText = void 0;
+    var readyStateText = void 0;
     if (xmlhttp.status) {
       statusCode = '\n' + Drupal.t('An AJAX HTTP error occurred.') + '\n' + Drupal.t('HTTP Result Code: !status', { '!status': xmlhttp.status });
     } else {
@@ -231,6 +226,7 @@
           return ajax.error(xmlhttprequest, ajax.url);
         }
       },
+
       dataType: 'json',
       type: 'POST'
     };
@@ -476,7 +472,7 @@
       var $wrapper = response.selector ? $(response.selector) : $(ajax.wrapper);
       var method = response.method || ajax.method;
       var effect = ajax.getEffect(response);
-      var settings;
+      var settings = void 0;
 
       var $new_content_wrapped = $('<div></div>').html(response.data);
       var $new_content = $new_content_wrapped.contents();
@@ -514,14 +510,12 @@
         Drupal.attachBehaviors($new_content.get(0), settings);
       }
     },
-
     remove: function remove(ajax, response, status) {
       var settings = response.settings || ajax.settings || drupalSettings;
       $(response.selector).each(function () {
         Drupal.detachBehaviors(this, settings);
       }).remove();
     },
-
     changed: function changed(ajax, response, status) {
       var $element = $(response.selector);
       if (!$element.hasClass('ajax-changed')) {
@@ -531,19 +525,15 @@
         }
       }
     },
-
     alert: function alert(ajax, response, status) {
       window.alert(response.text, response.title);
     },
-
     redirect: function redirect(ajax, response, status) {
       window.location = response.url;
     },
-
     css: function css(ajax, response, status) {
       $(response.selector).css(response.argument);
     },
-
     settings: function settings(ajax, response, status) {
       var ajaxSettings = drupalSettings.ajax;
 
@@ -565,28 +555,23 @@
         ajax.settings = response.settings;
       }
     },
-
     data: function data(ajax, response, status) {
       $(response.selector).data(response.name, response.value);
     },
-
     invoke: function invoke(ajax, response, status) {
       var $element = $(response.selector);
-      $element[response.method].apply($element, response.args);
+      $element[response.method].apply($element, _toConsumableArray(response.args));
     },
-
     restripe: function restripe(ajax, response, status) {
       $(response.selector).find('> tbody > tr:visible, > tr:visible').removeClass('odd even').filter(':even').addClass('odd').end().filter(':odd').addClass('even');
     },
-
     update_build_id: function update_build_id(ajax, response, status) {
       $('input[name="form_build_id"][value="' + response.old + '"]').val(response.new);
     },
-
     add_css: function add_css(ajax, response, status) {
       $('head').prepend(response.data);
 
-      var match;
+      var match = void 0;
       var importMatch = /^@import url\("(.*)"\);$/igm;
       if (document.styleSheets[0].addImport && importMatch.test(response.data)) {
         importMatch.lastIndex = 0;

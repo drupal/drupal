@@ -19,11 +19,8 @@
  */
 
 (function (Drupal, debounce) {
-
-  'use strict';
-
-  var liveElement;
-  var announcements = [];
+  let liveElement;
+  const announcements = [];
 
   /**
    * Builds a div element with the aria-live attribute and add it to the DOM.
@@ -34,7 +31,7 @@
    *   Attaches the behavior for drupalAnnouce.
    */
   Drupal.behaviors.drupalAnnounce = {
-    attach: function (context) {
+    attach(context) {
       // Create only one aria-live element.
       if (!liveElement) {
         liveElement = document.createElement('div');
@@ -44,21 +41,21 @@
         liveElement.setAttribute('aria-busy', 'false');
         document.body.appendChild(liveElement);
       }
-    }
+    },
   };
 
   /**
    * Concatenates announcements to a single string; appends to the live region.
    */
   function announce() {
-    var text = [];
-    var priority = 'polite';
-    var announcement;
+    const text = [];
+    let priority = 'polite';
+    let announcement;
 
     // Create an array of announcement strings to be joined and appended to the
     // aria live region.
-    var il = announcements.length;
-    for (var i = 0; i < il; i++) {
+    const il = announcements.length;
+    for (let i = 0; i < il; i++) {
       announcement = announcements.pop();
       text.unshift(announcement.text);
       // If any of the announcements has a priority of assertive then the group
@@ -109,8 +106,8 @@
     // Save the text and priority into a closure variable. Multiple simultaneous
     // announcements will be concatenated and read in sequence.
     announcements.push({
-      text: text,
-      priority: priority
+      text,
+      priority,
     });
     // Immediately invoke the function that debounce returns. 200 ms is right at
     // the cusp where humans notice a pause, so we will wait

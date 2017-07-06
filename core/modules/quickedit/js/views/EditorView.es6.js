@@ -4,9 +4,6 @@
  */
 
 (function ($, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.EditorView = Backbone.View.extend(/** @lends Drupal.quickedit.EditorView# */{
 
     /**
@@ -38,7 +35,7 @@
      * @see Drupal.quickedit.EditorModel
      * @see Drupal.quickedit.editors.plain_text
      */
-    initialize: function (options) {
+    initialize(options) {
       this.fieldModel = options.fieldModel;
       this.listenTo(this.fieldModel, 'change:state', this.stateChange);
     },
@@ -46,7 +43,7 @@
     /**
      * @inheritdoc
      */
-    remove: function () {
+    remove() {
       // The el property is the field, which should not be removed. Remove the
       // pointer to it, then call Backbone.View.prototype.remove().
       this.setElement();
@@ -68,7 +65,7 @@
      *
      * @see Drupal.quickedit.editors.plain_text
      */
-    getEditedElement: function () {
+    getEditedElement() {
       return this.$el;
     },
 
@@ -85,8 +82,8 @@
      *    integrated toolbar should consume the full width of the element,
      *    rather than being just long enough to accommodate a label.
      */
-    getQuickEditUISettings: function () {
-      return {padding: false, unifiedToolbar: false, fullWidthToolbar: false, popup: false};
+    getQuickEditUISettings() {
+      return { padding: false, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
     },
 
     /**
@@ -98,9 +95,9 @@
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.
      */
-    stateChange: function (fieldModel, state) {
-      var from = fieldModel.previous('state');
-      var to = state;
+    stateChange(fieldModel, state) {
+      const from = fieldModel.previous('state');
+      const to = state;
       switch (to) {
         case 'inactive':
           // An in-place editor view will not yet exist in this state, hence
@@ -131,7 +128,7 @@
             // Do the loading here.
             callback();
           };
-          loadDependencies(function () {
+          loadDependencies(() => {
             fieldModel.set('state', 'active');
           });
           break;
@@ -175,7 +172,7 @@
     /**
      * Reverts the modified value to the original, before editing started.
      */
-    revert: function () {
+    revert() {
       // A no-op by default; each editor should implement reverting itself.
       // Note that if the in-place editor does not cause the FieldModel's
       // element to be modified, then nothing needs to happen.
@@ -184,13 +181,13 @@
     /**
      * Saves the modified value in the in-place editor for this field.
      */
-    save: function () {
-      var fieldModel = this.fieldModel;
-      var editorModel = this.model;
-      var backstageId = 'quickedit_backstage-' + this.fieldModel.id.replace(/[\/\[\]\_\s]/g, '-');
+    save() {
+      const fieldModel = this.fieldModel;
+      const editorModel = this.model;
+      const backstageId = `quickedit_backstage-${this.fieldModel.id.replace(/[\/\[\]\_\s]/g, '-')}`;
 
       function fillAndSubmitForm(value) {
-        var $form = $('#' + backstageId).find('form');
+        const $form = $(`#${backstageId}`).find('form');
         // Fill in the value in any <input> that isn't hidden or a submit
         // button.
         $form.find(':input[type!="hidden"][type!="submit"]:not(select)')
@@ -200,7 +197,7 @@
         $form.find('.quickedit-form-submit').trigger('click.quickedit');
       }
 
-      var formOptions = {
+      const formOptions = {
         fieldID: this.fieldModel.get('fieldID'),
         $el: this.$el,
         nocssjs: true,
@@ -212,23 +209,23 @@
         // that might not even be necessary: it is only when a user saves a
         // first changed field for an entity that this needs to happen:
         // precisely now!
-        reset: !this.fieldModel.get('entity').get('inTempStore')
+        reset: !this.fieldModel.get('entity').get('inTempStore'),
       };
 
-      var self = this;
-      Drupal.quickedit.util.form.load(formOptions, function (form, ajax) {
+      const self = this;
+      Drupal.quickedit.util.form.load(formOptions, (form, ajax) => {
         // Create a backstage area for storing forms that are hidden from view
         // (hence "backstage" — since the editing doesn't happen in the form, it
         // happens "directly" in the content, the form is only used for saving).
-        var $backstage = $(Drupal.theme('quickeditBackstage', {id: backstageId})).appendTo('body');
+        const $backstage = $(Drupal.theme('quickeditBackstage', { id: backstageId })).appendTo('body');
         // Hidden forms are stuffed into the backstage container for this field.
-        var $form = $(form).appendTo($backstage);
+        const $form = $(form).appendTo($backstage);
         // Disable the browser's HTML5 validation; we only care about server-
         // side validation. (Not disabling this will actually cause problems
         // because browsers don't like to set HTML5 validation errors on hidden
         // forms.)
         $form.prop('novalidate', true);
-        var $submit = $form.find('.quickedit-form-submit');
+        const $submit = $form.find('.quickedit-form-submit');
         self.formSaveAjax = Drupal.quickedit.util.form.ajaxifySaving(formOptions, $submit);
 
         function removeHiddenForm() {
@@ -276,8 +273,8 @@
      *
      * Should be called when the state is changed to 'invalid'.
      */
-    showValidationErrors: function () {
-      var $errors = $('<div class="quickedit-validation-errors"></div>')
+    showValidationErrors() {
+      const $errors = $('<div class="quickedit-validation-errors"></div>')
         .append(this.model.get('validationErrors'));
       this.getEditedElement()
         .addClass('quickedit-validation-error')
@@ -292,13 +289,12 @@
      * editor again to attempt to save again. In the case of the latter: the
      * invalid value was discarded.
      */
-    removeValidationErrors: function () {
+    removeValidationErrors() {
       this.getEditedElement()
         .removeClass('quickedit-validation-error')
         .next('.quickedit-validation-errors')
         .remove();
-    }
+    },
 
   });
-
 }(jQuery, Backbone, Drupal));

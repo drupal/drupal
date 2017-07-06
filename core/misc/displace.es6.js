@@ -25,19 +25,16 @@
  */
 
 (function ($, Drupal, debounce) {
-
-  'use strict';
-
   /**
    * @name Drupal.displace.offsets
    *
    * @type {Drupal~displaceOffset}
    */
-  var offsets = {
+  let offsets = {
     top: 0,
     right: 0,
     bottom: 0,
-    left: 0
+    left: 0,
   };
 
   /**
@@ -46,7 +43,7 @@
    * @type {Drupal~behavior}
    */
   Drupal.behaviors.drupalDisplace = {
-    attach: function () {
+    attach() {
       // Mark this behavior as processed on the first pass.
       if (this.displaceProcessed) {
         return;
@@ -54,7 +51,7 @@
       this.displaceProcessed = true;
 
       $(window).on('resize.drupalDisplace', debounce(displace, 200));
-    }
+    },
   };
 
   /**
@@ -96,7 +93,7 @@
       top: calculateOffset('top'),
       right: calculateOffset('right'),
       bottom: calculateOffset('bottom'),
-      left: calculateOffset('left')
+      left: calculateOffset('left'),
     };
   }
 
@@ -118,17 +115,17 @@
    *   The viewport displacement distance for the requested edge.
    */
   function calculateOffset(edge) {
-    var edgeOffset = 0;
-    var displacingElements = document.querySelectorAll('[data-offset-' + edge + ']');
-    var n = displacingElements.length;
-    for (var i = 0; i < n; i++) {
-      var el = displacingElements[i];
+    let edgeOffset = 0;
+    const displacingElements = document.querySelectorAll(`[data-offset-${edge}]`);
+    const n = displacingElements.length;
+    for (let i = 0; i < n; i++) {
+      const el = displacingElements[i];
       // If the element is not visible, do consider its dimensions.
       if (el.style.display === 'none') {
         continue;
       }
       // If the offset data attribute contains a displacing value, use it.
-      var displacement = parseInt(el.getAttribute('data-offset-' + edge), 10);
+      let displacement = parseInt(el.getAttribute(`data-offset-${edge}`), 10);
       // If the element's offset data attribute exits
       // but is not a valid number then get the displacement
       // dimensions directly from the element.
@@ -157,15 +154,15 @@
    *   The viewport displacement distance for the requested edge.
    */
   function getRawOffset(el, edge) {
-    var $el = $(el);
-    var documentElement = document.documentElement;
-    var displacement = 0;
-    var horizontal = (edge === 'left' || edge === 'right');
+    const $el = $(el);
+    const documentElement = document.documentElement;
+    let displacement = 0;
+    const horizontal = (edge === 'left' || edge === 'right');
     // Get the offset of the element itself.
-    var placement = $el.offset()[horizontal ? 'left' : 'top'];
+    let placement = $el.offset()[horizontal ? 'left' : 'top'];
     // Subtract scroll distance from placement to get the distance
     // to the edge of the viewport.
-    placement -= window['scroll' + (horizontal ? 'X' : 'Y')] || document.documentElement['scroll' + (horizontal ? 'Left' : 'Top')] || 0;
+    placement -= window[`scroll${horizontal ? 'X' : 'Y'}`] || document.documentElement[`scroll${horizontal ? 'Left' : 'Top'}`] || 0;
     // Find the displacement value according to the edge.
     switch (edge) {
       // Left and top elements displace as a sum of their own offset value
@@ -209,14 +206,13 @@
      *
      * @ignore
      */
-    offsets: offsets,
+    offsets,
 
     /**
      * Expose method to compute a single edge offsets.
      *
      * @ignore
      */
-    calculateOffset: calculateOffset
+    calculateOffset,
   });
-
-})(jQuery, Drupal, Drupal.debounce);
+}(jQuery, Drupal, Drupal.debounce));

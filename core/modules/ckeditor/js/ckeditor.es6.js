@@ -4,9 +4,6 @@
  */
 
 (function (Drupal, debounce, CKEDITOR, $, displace, AjaxCommands) {
-
-  'use strict';
-
   /**
    * @namespace
    */
@@ -23,18 +20,18 @@
      * @return {bool}
      *   Whether the call to `CKEDITOR.replace()` created an editor or not.
      */
-    attach: function (element, format) {
+    attach(element, format) {
       this._loadExternalPlugins(format);
       // Also pass settings that are Drupal-specific.
       format.editorSettings.drupal = {
-        format: format.format
+        format: format.format,
       };
 
       // Set a title on the CKEditor instance that includes the text field's
       // label so that screen readers say something that is understandable
       // for end users.
-      var label = $('label[for=' + element.getAttribute('id') + ']').html();
-      format.editorSettings.title = Drupal.t('Rich Text Editor, !label field', {'!label': label});
+      const label = $(`label[for=${element.getAttribute('id')}]`).html();
+      format.editorSettings.title = Drupal.t('Rich Text Editor, !label field', { '!label': label });
 
       return !!CKEDITOR.replace(element, format.editorSettings);
     },
@@ -53,8 +50,8 @@
      *   Whether the call to `CKEDITOR.dom.element.get(element).getEditor()`
      *   found an editor or not.
      */
-    detach: function (element, format, trigger) {
-      var editor = CKEDITOR.dom.element.get(element).getEditor();
+    detach(element, format, trigger) {
+      const editor = CKEDITOR.dom.element.get(element).getEditor();
       if (editor) {
         if (trigger === 'serialize') {
           editor.updateElement();
@@ -79,22 +76,22 @@
      *   Whether the call to `CKEDITOR.dom.element.get(element).getEditor()`
      *   found an editor or not.
      */
-    onChange: function (element, callback) {
-      var editor = CKEDITOR.dom.element.get(element).getEditor();
+    onChange(element, callback) {
+      const editor = CKEDITOR.dom.element.get(element).getEditor();
       if (editor) {
-        editor.on('change', debounce(function () {
+        editor.on('change', debounce(() => {
           callback(editor.getData());
         }, 400));
 
         // A temporary workaround to control scrollbar appearance when using
         // autoGrow event to control editor's height.
         // @todo Remove when http://dev.ckeditor.com/ticket/12120 is fixed.
-        editor.on('mode', function () {
-          var editable = editor.editable();
+        editor.on('mode', () => {
+          const editable = editor.editable();
           if (!editable.isInline()) {
-            editor.on('autoGrow', function (evt) {
-              var doc = evt.editor.document;
-              var scrollable = CKEDITOR.env.quirks ? doc.getBody() : doc.getDocumentElement();
+            editor.on('autoGrow', (evt) => {
+              const doc = evt.editor.document;
+              const scrollable = CKEDITOR.env.quirks ? doc.getBody() : doc.getDocumentElement();
 
               if (scrollable.$.scrollHeight < scrollable.$.clientHeight) {
                 scrollable.setStyle('overflow-y', 'hidden');
@@ -124,34 +121,34 @@
      * @return {bool}
      *   Whether the call to `CKEDITOR.replace()` created an editor or not.
      */
-    attachInlineEditor: function (element, format, mainToolbarId, floatedToolbarId) {
+    attachInlineEditor(element, format, mainToolbarId, floatedToolbarId) {
       this._loadExternalPlugins(format);
       // Also pass settings that are Drupal-specific.
       format.editorSettings.drupal = {
-        format: format.format
+        format: format.format,
       };
 
-      var settings = $.extend(true, {}, format.editorSettings);
+      const settings = $.extend(true, {}, format.editorSettings);
 
       // If a toolbar is already provided for "true WYSIWYG" (in-place editing),
       // then use that toolbar instead: override the default settings to render
       // CKEditor UI's top toolbar into mainToolbar, and don't render the bottom
       // toolbar at all. (CKEditor doesn't need a floated toolbar.)
       if (mainToolbarId) {
-        var settingsOverride = {
+        const settingsOverride = {
           extraPlugins: 'sharedspace',
           removePlugins: 'floatingspace,elementspath',
           sharedSpaces: {
-            top: mainToolbarId
-          }
+            top: mainToolbarId,
+          },
         };
 
         // Find the "Source" button, if any, and replace it with "Sourcedialog".
         // (The 'sourcearea' plugin only works in CKEditor's iframe mode.)
-        var sourceButtonFound = false;
-        for (var i = 0; !sourceButtonFound && i < settings.toolbar.length; i++) {
+        let sourceButtonFound = false;
+        for (let i = 0; !sourceButtonFound && i < settings.toolbar.length; i++) {
           if (settings.toolbar[i] !== '/') {
-            for (var j = 0; !sourceButtonFound && j < settings.toolbar[i].items.length; j++) {
+            for (let j = 0; !sourceButtonFound && j < settings.toolbar[i].items.length; j++) {
               if (settings.toolbar[i].items[j] === 'Source') {
                 sourceButtonFound = true;
                 // Swap sourcearea's "Source" button for sourcedialog's.
@@ -163,8 +160,8 @@
           }
         }
 
-        settings.extraPlugins += ',' + settingsOverride.extraPlugins;
-        settings.removePlugins += ',' + settingsOverride.removePlugins;
+        settings.extraPlugins += `,${settingsOverride.extraPlugins}`;
+        settings.removePlugins += `,${settingsOverride.removePlugins}`;
         settings.sharedSpaces = settingsOverride.sharedSpaces;
       }
 
@@ -181,18 +178,18 @@
      * @param {object} format
      *   The text format used in the editor.
      */
-    _loadExternalPlugins: function (format) {
-      var externalPlugins = format.editorSettings.drupalExternalPlugins;
+    _loadExternalPlugins(format) {
+      const externalPlugins = format.editorSettings.drupalExternalPlugins;
       // Register and load additional CKEditor plugins as necessary.
       if (externalPlugins) {
-        for (var pluginName in externalPlugins) {
+        for (const pluginName in externalPlugins) {
           if (externalPlugins.hasOwnProperty(pluginName)) {
             CKEDITOR.plugins.addExternal(pluginName, externalPlugins[pluginName], '');
           }
         }
         delete format.editorSettings.drupalExternalPlugins;
       }
-    }
+    },
 
   };
 
@@ -223,9 +220,9 @@
      * @param {object} dialogSettings
      *   An object containing settings to be passed to the jQuery UI.
      */
-    openDialog: function (editor, url, existingValues, saveCallback, dialogSettings) {
+    openDialog(editor, url, existingValues, saveCallback, dialogSettings) {
       // Locate a suitable place to display our loading indicator.
-      var $target = $(editor.container.$);
+      let $target = $(editor.container.$);
       if (editor.elementMode === CKEDITOR.ELEMENT_MODE_REPLACE) {
         $target = $target.find('.cke_contents');
       }
@@ -234,7 +231,7 @@
       $target.css('position', 'relative').find('.ckeditor-dialog-loading').remove();
 
       // Add a consistent dialog class.
-      var classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
+      const classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
       classes.push('ui-dialog--narrow');
       dialogSettings.dialogClass = classes.join(' ');
       dialogSettings.autoResize = window.matchMedia('(min-width: 600px)').matches;
@@ -242,71 +239,71 @@
 
       // Add a "Loading…" message, hide it underneath the CKEditor toolbar,
       // create a Drupal.Ajax instance to load the dialog and trigger it.
-      var $content = $('<div class="ckeditor-dialog-loading"><span style="top: -40px;" class="ckeditor-dialog-loading-link">' + Drupal.t('Loading...') + '</span></div>');
+      const $content = $(`<div class="ckeditor-dialog-loading"><span style="top: -40px;" class="ckeditor-dialog-loading-link">${Drupal.t('Loading...')}</span></div>`);
       $content.appendTo($target);
 
-      var ckeditorAjaxDialog = Drupal.ajax({
+      const ckeditorAjaxDialog = Drupal.ajax({
         dialog: dialogSettings,
         dialogType: 'modal',
         selector: '.ckeditor-dialog-loading-link',
-        url: url,
-        progress: {type: 'throbber'},
+        url,
+        progress: { type: 'throbber' },
         submit: {
-          editor_object: existingValues
-        }
+          editor_object: existingValues,
+        },
       });
       ckeditorAjaxDialog.execute();
 
       // After a short delay, show "Loading…" message.
-      window.setTimeout(function () {
-        $content.find('span').animate({top: '0px'});
+      window.setTimeout(() => {
+        $content.find('span').animate({ top: '0px' });
       }, 1000);
 
       // Store the save callback to be executed when this dialog is closed.
       Drupal.ckeditor.saveCallback = saveCallback;
-    }
+    },
   };
 
   // Moves the dialog to the top of the CKEDITOR stack.
-  $(window).on('dialogcreate', function (e, dialog, $element, settings) {
+  $(window).on('dialogcreate', (e, dialog, $element, settings) => {
     $('.ui-dialog--narrow').css('zIndex', CKEDITOR.config.baseFloatZIndex + 1);
   });
 
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
-  $(window).on('dialog:beforecreate', function (e, dialog, $element, settings) {
-    $('.ckeditor-dialog-loading').animate({top: '-40px'}, function () {
+  $(window).on('dialog:beforecreate', (e, dialog, $element, settings) => {
+    $('.ckeditor-dialog-loading').animate({ top: '-40px' }, function () {
       $(this).remove();
     });
   });
 
   // Respond to dialogs that are saved, sending data back to CKEditor.
-  $(window).on('editor:dialogsave', function (e, values) {
+  $(window).on('editor:dialogsave', (e, values) => {
     if (Drupal.ckeditor.saveCallback) {
       Drupal.ckeditor.saveCallback(values);
     }
   });
 
   // Respond to dialogs that are closed, removing the current save handler.
-  $(window).on('dialog:afterclose', function (e, dialog, $element) {
+  $(window).on('dialog:afterclose', (e, dialog, $element) => {
     if (Drupal.ckeditor.saveCallback) {
       Drupal.ckeditor.saveCallback = null;
     }
   });
 
   // Formulate a default formula for the maximum autoGrow height.
-  $(document).on('drupalViewportOffsetChange', function () {
+  $(document).on('drupalViewportOffsetChange', () => {
     CKEDITOR.config.autoGrow_maxHeight = 0.7 * (window.innerHeight - displace.offsets.top - displace.offsets.bottom);
   });
 
   // Redirect on hash change when the original hash has an associated CKEditor.
   function redirectTextareaFragmentToCKEditorInstance() {
-    var hash = location.hash.substr(1);
-    var element = document.getElementById(hash);
+    const hash = location.hash.substr(1);
+    const element = document.getElementById(hash);
     if (element) {
-      var editor = CKEDITOR.dom.element.get(element).getEditor();
+      const editor = CKEDITOR.dom.element.get(element).getEditor();
       if (editor) {
-        var id = editor.container.getAttribute('id');
-        location.replace('#' + id);
+        const id = editor.container.getAttribute('id');
+        location.replace(`#${id}`);
       }
     }
   }
@@ -319,7 +316,6 @@
   CKEDITOR.timestamp = drupalSettings.ckeditor.timestamp;
 
   if (AjaxCommands) {
-
     /**
      * Command to add style sheets to a CKEditor instance.
      *
@@ -337,14 +333,13 @@
      * @see http://docs.ckeditor.com/#!/api/CKEDITOR.dom.document
      */
     AjaxCommands.prototype.ckeditor_add_stylesheet = function (ajax, response, status) {
-      var editor = CKEDITOR.instances[response.editor_id];
+      const editor = CKEDITOR.instances[response.editor_id];
 
       if (editor) {
-        response.stylesheets.forEach(function (url) {
+        response.stylesheets.forEach((url) => {
           editor.document.appendStyleSheet(url);
         });
       }
     };
   }
-
-})(Drupal, Drupal.debounce, CKEDITOR, jQuery, Drupal.displace, Drupal.AjaxCommands);
+}(Drupal, Drupal.debounce, CKEDITOR, jQuery, Drupal.displace, Drupal.AjaxCommands));

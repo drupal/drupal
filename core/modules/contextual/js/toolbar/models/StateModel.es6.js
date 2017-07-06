@@ -4,9 +4,6 @@
  */
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   Drupal.contextualToolbar.StateModel = Backbone.Model.extend(/** @lends Drupal.contextualToolbar.StateModel# */{
 
     /**
@@ -47,7 +44,7 @@
        *
        * @type {?Drupal~TabbingContext}
        */
-      tabbingContext: null
+      tabbingContext: null,
     },
 
     /**
@@ -65,7 +62,7 @@
      *   The collection of {@link Drupal.contextual.StateModel} models that
      *   represent the contextual links on the page.
      */
-    initialize: function (attrs, options) {
+    initialize(attrs, options) {
       // Respond to new/removed contextual links.
       this.listenTo(options.contextualCollection, 'reset remove add', this.countContextualLinks);
       this.listenTo(options.contextualCollection, 'add', this.lockNewContextualLinks);
@@ -74,8 +71,8 @@
       this.listenTo(this, 'change:contextualCount', this.updateVisibility);
 
       // Whenever edit mode is toggled, lock all contextual links.
-      this.listenTo(this, 'change:isViewing', function (model, isViewing) {
-        options.contextualCollection.each(function (contextualModel) {
+      this.listenTo(this, 'change:isViewing', (model, isViewing) => {
+        options.contextualCollection.each((contextualModel) => {
           contextualModel.set('isLocked', !isViewing);
         });
       });
@@ -89,7 +86,7 @@
      * @param {Backbone.Collection} contextualCollection
      *    The collection of contextual link models.
      */
-    countContextualLinks: function (contextualModel, contextualCollection) {
+    countContextualLinks(contextualModel, contextualCollection) {
       this.set('contextualCount', contextualCollection.length);
     },
 
@@ -101,7 +98,7 @@
      * @param {Backbone.Collection} [contextualCollection]
      *    The collection of contextual link models.
      */
-    lockNewContextualLinks: function (contextualModel, contextualCollection) {
+    lockNewContextualLinks(contextualModel, contextualCollection) {
       if (!this.get('isViewing')) {
         contextualModel.set('isLocked', true);
       }
@@ -110,10 +107,9 @@
     /**
      * Automatically updates visibility of the view/edit mode toggle.
      */
-    updateVisibility: function () {
+    updateVisibility() {
       this.set('isVisible', this.get('contextualCount') > 0);
-    }
+    },
 
   });
-
-})(Drupal, Backbone);
+}(Drupal, Backbone));

@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * @namespace
    */
@@ -22,14 +19,14 @@
    *   A map of query parameters.
    */
   Drupal.Views.parseQueryString = function (query) {
-    var args = {};
-    var pos = query.indexOf('?');
+    const args = {};
+    const pos = query.indexOf('?');
     if (pos !== -1) {
       query = query.substring(pos + 1);
     }
-    var pair;
-    var pairs = query.split('&');
-    for (var i = 0; i < pairs.length; i++) {
+    let pair;
+    const pairs = query.split('&');
+    for (let i = 0; i < pairs.length; i++) {
       pair = pairs[i].split('=');
       // Ignore the 'q' path argument, if present.
       if (pair[0] !== 'q' && pair[1]) {
@@ -51,12 +48,12 @@
    *   An object containing `view_args` and `view_path`.
    */
   Drupal.Views.parseViewArgs = function (href, viewPath) {
-    var returnObj = {};
-    var path = Drupal.Views.getPath(href);
+    const returnObj = {};
+    const path = Drupal.Views.getPath(href);
     // Get viewPath url without baseUrl portion.
-    var viewHref = Drupal.url(viewPath).substring(drupalSettings.path.baseUrl.length);
+    const viewHref = Drupal.url(viewPath).substring(drupalSettings.path.baseUrl.length);
     // Ensure we have a correct path.
-    if (viewHref && path.substring(0, viewHref.length + 1) === viewHref + '/') {
+    if (viewHref && path.substring(0, viewHref.length + 1) === `${viewHref}/`) {
       returnObj.view_args = decodeURIComponent(path.substring(viewHref.length + 1, path.length));
       returnObj.view_path = path;
     }
@@ -74,7 +71,7 @@
    */
   Drupal.Views.pathPortion = function (href) {
     // Remove e.g. http://example.com if present.
-    var protocol = window.location.protocol;
+    const protocol = window.location.protocol;
     if (href.substring(0, protocol.length) === protocol) {
       // 2 is the length of the '//' that normally follows the protocol.
       href = href.substring(href.indexOf('/', protocol.length + 2));
@@ -98,13 +95,12 @@
     if (href.substring(0, 3) === '?q=') {
       href = href.substring(3, href.length);
     }
-    var chars = ['#', '?', '&'];
-    for (var i = 0; i < chars.length; i++) {
+    const chars = ['#', '?', '&'];
+    for (let i = 0; i < chars.length; i++) {
       if (href.indexOf(chars[i]) > -1) {
         href = href.substr(0, href.indexOf(chars[i]));
       }
     }
     return href;
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

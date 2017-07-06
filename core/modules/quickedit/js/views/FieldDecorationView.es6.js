@@ -4,9 +4,6 @@
  */
 
 (function ($, Backbone, Drupal) {
-
-  'use strict';
-
   Drupal.quickedit.FieldDecorationView = Backbone.View.extend(/** @lends Drupal.quickedit.FieldDecorationView# */{
 
     /**
@@ -20,9 +17,9 @@
     events: {
       'mouseenter.quickedit': 'onMouseEnter',
       'mouseleave.quickedit': 'onMouseLeave',
-      'click': 'onClick',
+      click: 'onClick',
       'tabIn.quickedit': 'onMouseEnter',
-      'tabOut.quickedit': 'onMouseLeave'
+      'tabOut.quickedit': 'onMouseLeave',
     },
 
     /**
@@ -35,7 +32,7 @@
      * @param {Drupal.quickedit.EditorView} options.editorView
      *   The editor object view.
      */
-    initialize: function (options) {
+    initialize(options) {
       this.editorView = options.editorView;
 
       this.listenTo(this.model, 'change:state', this.stateChange);
@@ -45,7 +42,7 @@
     /**
      * @inheritdoc
      */
-    remove: function () {
+    remove() {
       // The el property is the field, which should not be removed. Remove the
       // pointer to it, then call Backbone.View.prototype.remove().
       this.setElement();
@@ -61,9 +58,9 @@
      *   The state of the associated field. One of
      *   {@link Drupal.quickedit.FieldModel.states}.
      */
-    stateChange: function (model, state) {
-      var from = model.previous('state');
-      var to = state;
+    stateChange(model, state) {
+      const from = model.previous('state');
+      const to = state;
       switch (to) {
         case 'inactive':
           this.undecorate();
@@ -121,7 +118,7 @@
      * changed and stored before by the user (i.e. remotely, stored in
      * PrivateTempStore).
      */
-    renderChanged: function () {
+    renderChanged() {
       this.$el.toggleClass('quickedit-changed', this.model.get('isChanged') || this.model.get('inTempStore'));
     },
 
@@ -131,8 +128,8 @@
      * @param {jQuery.Event} event
      *   The mouse event.
      */
-    onMouseEnter: function (event) {
-      var that = this;
+    onMouseEnter(event) {
+      const that = this;
       that.model.set('state', 'highlighted');
       event.stopPropagation();
     },
@@ -143,9 +140,9 @@
      * @param {jQuery.Event} event
      *   The mouse event.
      */
-    onMouseLeave: function (event) {
-      var that = this;
-      that.model.set('state', 'candidate', {reason: 'mouseleave'});
+    onMouseLeave(event) {
+      const that = this;
+      that.model.set('state', 'candidate', { reason: 'mouseleave' });
       event.stopPropagation();
     },
 
@@ -155,7 +152,7 @@
      * @param {jQuery.Event} event
      *   The click event.
      */
-    onClick: function (event) {
+    onClick(event) {
       this.model.set('state', 'activating');
       event.preventDefault();
       event.stopPropagation();
@@ -164,23 +161,23 @@
     /**
      * Adds classes used to indicate an elements editable state.
      */
-    decorate: function () {
+    decorate() {
       this.$el.addClass('quickedit-candidate quickedit-editable');
     },
 
     /**
      * Removes classes used to indicate an elements editable state.
      */
-    undecorate: function () {
+    undecorate() {
       this.$el.removeClass('quickedit-candidate quickedit-editable quickedit-highlighted quickedit-editing');
     },
 
     /**
      * Adds that class that indicates that an element is highlighted.
      */
-    startHighlight: function () {
+    startHighlight() {
       // Animations.
-      var that = this;
+      const that = this;
       // Use a timeout to grab the next available animation frame.
       that.$el.addClass('quickedit-highlighted');
     },
@@ -188,14 +185,14 @@
     /**
      * Removes the class that indicates that an element is highlighted.
      */
-    stopHighlight: function () {
+    stopHighlight() {
       this.$el.removeClass('quickedit-highlighted');
     },
 
     /**
      * Removes the class that indicates that an element as editable.
      */
-    prepareEdit: function () {
+    prepareEdit() {
       this.$el.addClass('quickedit-editing');
 
       // Allow the field to be styled differently while editing in a pop-up
@@ -211,7 +208,7 @@
      * Reapplies the class that indicates that a candidate editable element is
      * again available to be edited.
      */
-    stopEdit: function () {
+    stopEdit() {
       this.$el.removeClass('quickedit-highlighted quickedit-editing');
 
       // Done editing in a pop-up in-place editor; remove the class.
@@ -226,12 +223,12 @@
     /**
      * Adds padding around the editable element to make it pop visually.
      */
-    _pad: function () {
+    _pad() {
       // Early return if the element has already been padded.
       if (this.$el.data('quickedit-padded')) {
         return;
       }
-      var self = this;
+      const self = this;
 
       // Add 5px padding for readability. This means we'll freeze the current
       // width and *then* add 5px padding, hence ensuring the padding is added
@@ -245,22 +242,22 @@
       }
 
       // 2) Add padding; use animations.
-      var posProp = this._getPositionProperties(this.$el);
-      setTimeout(function () {
+      const posProp = this._getPositionProperties(this.$el);
+      setTimeout(() => {
         // Re-enable width animations (padding changes affect width too!).
         self.$el.removeClass('quickedit-animate-disable-width');
 
         // Pad the editable.
         self.$el
           .css({
-            'position': 'relative',
-            'top': posProp.top - 5 + 'px',
-            'left': posProp.left - 5 + 'px',
-            'padding-top': posProp['padding-top'] + 5 + 'px',
-            'padding-left': posProp['padding-left'] + 5 + 'px',
-            'padding-right': posProp['padding-right'] + 5 + 'px',
-            'padding-bottom': posProp['padding-bottom'] + 5 + 'px',
-            'margin-bottom': posProp['margin-bottom'] - 10 + 'px'
+            position: 'relative',
+            top: `${posProp.top - 5}px`,
+            left: `${posProp.left - 5}px`,
+            'padding-top': `${posProp['padding-top'] + 5}px`,
+            'padding-left': `${posProp['padding-left'] + 5}px`,
+            'padding-right': `${posProp['padding-right'] + 5}px`,
+            'padding-bottom': `${posProp['padding-bottom'] + 5}px`,
+            'margin-bottom': `${posProp['margin-bottom'] - 10}px`,
           })
           .data('quickedit-padded', true);
       }, 0);
@@ -269,12 +266,12 @@
     /**
      * Removes the padding around the element being edited when editing ceases.
      */
-    _unpad: function () {
+    _unpad() {
       // Early return if the element has not been padded.
       if (!this.$el.data('quickedit-padded')) {
         return;
       }
-      var self = this;
+      const self = this;
 
       // 1) Set the empty width again.
       if (this._widthAttributeIsEmpty) {
@@ -285,22 +282,22 @@
 
       // 2) Remove padding; use animations (these will run simultaneously with)
       // the fading out of the toolbar as its gets removed).
-      var posProp = this._getPositionProperties(this.$el);
-      setTimeout(function () {
+      const posProp = this._getPositionProperties(this.$el);
+      setTimeout(() => {
         // Re-enable width animations (padding changes affect width too!).
         self.$el.removeClass('quickedit-animate-disable-width');
 
         // Unpad the editable.
         self.$el
           .css({
-            'position': 'relative',
-            'top': posProp.top + 5 + 'px',
-            'left': posProp.left + 5 + 'px',
-            'padding-top': posProp['padding-top'] - 5 + 'px',
-            'padding-left': posProp['padding-left'] - 5 + 'px',
-            'padding-right': posProp['padding-right'] - 5 + 'px',
-            'padding-bottom': posProp['padding-bottom'] - 5 + 'px',
-            'margin-bottom': posProp['margin-bottom'] + 10 + 'px'
+            position: 'relative',
+            top: `${posProp.top + 5}px`,
+            left: `${posProp.left + 5}px`,
+            'padding-top': `${posProp['padding-top'] - 5}px`,
+            'padding-left': `${posProp['padding-left'] - 5}px`,
+            'padding-right': `${posProp['padding-right'] - 5}px`,
+            'padding-bottom': `${posProp['padding-bottom'] - 5}px`,
+            'margin-bottom': `${posProp['margin-bottom'] + 10}px`,
           });
       }, 0);
       // Remove the marker that indicates that this field has padding. This is
@@ -322,17 +319,17 @@
      * @return {object}
      *   An object containing css values for the needed properties.
      */
-    _getPositionProperties: function ($e) {
-      var p;
-      var r = {};
-      var props = [
+    _getPositionProperties($e) {
+      let p;
+      const r = {};
+      const props = [
         'top', 'left', 'bottom', 'right',
         'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
-        'margin-bottom'
+        'margin-bottom',
       ];
 
-      var propCount = props.length;
-      for (var i = 0; i < propCount; i++) {
+      const propCount = props.length;
+      for (let i = 0; i < propCount; i++) {
         p = props[i];
         r[p] = parseInt(this._replaceBlankPosition($e.css(p)), 10);
       }
@@ -348,13 +345,12 @@
      * @return {string}
      *   A CSS value that is valid for `position`.
      */
-    _replaceBlankPosition: function (pos) {
+    _replaceBlankPosition(pos) {
       if (pos === 'auto' || !pos) {
         pos = '0px';
       }
       return pos;
-    }
+    },
 
   });
-
-})(jQuery, Backbone, Drupal);
+}(jQuery, Backbone, Drupal));

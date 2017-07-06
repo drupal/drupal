@@ -6,13 +6,9 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   var activeItem = Drupal.url(drupalSettings.path.currentPath);
 
   $.fn.drupalToolbarMenu = function () {
-
     var ui = {
       handleOpen: Drupal.t('Extend'),
       handleClose: Drupal.t('Collapse')
@@ -102,6 +98,6 @@
   };
 
   Drupal.theme.toolbarMenuItemToggle = function (options) {
-    return '<button class="' + options['class'] + '"><span class="action">' + options.action + '</span><span class="label">' + options.text + '</span></button>';
+    return '<button class="' + options.class + '"><span class="action">' + options.action + '</span><span class="label">' + options.text + '</span></button>';
   };
 })(jQuery, Drupal, drupalSettings);

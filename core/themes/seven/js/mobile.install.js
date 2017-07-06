@@ -6,9 +6,6 @@
 **/
 
 (function () {
-
-  'use strict';
-
   function findActiveStep(steps) {
     for (var i = 0; i < steps.length; i++) {
       if (steps[i].className === 'is-active') {

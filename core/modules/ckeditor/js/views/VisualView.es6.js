@@ -5,15 +5,12 @@
  */
 
 (function (Drupal, Backbone, $) {
-
-  'use strict';
-
   Drupal.ckeditor.VisualView = Backbone.View.extend(/** @lends Drupal.ckeditor.VisualView# */{
 
     events: {
       'click .ckeditor-toolbar-group-name': 'onGroupNameClick',
       'click .ckeditor-groupnames-toggle': 'onGroupNamesToggleClick',
-      'click .ckeditor-add-new-group button': 'onAddGroupButtonClick'
+      'click .ckeditor-add-new-group button': 'onAddGroupButtonClick',
     },
 
     /**
@@ -23,7 +20,7 @@
      *
      * @augments Backbone.View
      */
-    initialize: function () {
+    initialize() {
       this.listenTo(this.model, 'change:isDirty change:groupNamesVisible', this.render);
 
       // Add a toggle for the button group names.
@@ -46,16 +43,16 @@
      * @return {Drupal.ckeditor.VisualView}
      *   The {@link Drupal.ckeditor.VisualView} object.
      */
-    render: function (model, value, changedAttributes) {
+    render(model, value, changedAttributes) {
       this.insertPlaceholders();
       this.applySorting();
 
       // Toggle button group names.
-      var groupNamesVisible = this.model.get('groupNamesVisible');
+      let groupNamesVisible = this.model.get('groupNamesVisible');
       // If a button was just placed in the active toolbar, ensure that the
       // button group names are visible.
       if (changedAttributes && changedAttributes.changes && changedAttributes.changes.isDirty) {
-        this.model.set({groupNamesVisible: true}, {silent: true});
+        this.model.set({ groupNamesVisible: true }, { silent: true });
         groupNamesVisible = true;
       }
       this.$el.find('[data-toolbar="active"]').toggleClass('ckeditor-group-names-are-visible', groupNamesVisible);
@@ -72,8 +69,8 @@
      * @param {jQuery.Event} event
      *   The click event on the button group.
      */
-    onGroupNameClick: function (event) {
-      var $group = $(event.currentTarget).closest('.ckeditor-toolbar-group');
+    onGroupNameClick(event) {
+      const $group = $(event.currentTarget).closest('.ckeditor-toolbar-group');
       Drupal.ckeditor.openGroupNameDialog(this, $group);
 
       event.stopPropagation();
@@ -86,7 +83,7 @@
      * @param {jQuery.Event} event
      *   The click event on the toggle button.
      */
-    onGroupNamesToggleClick: function (event) {
+    onGroupNamesToggleClick(event) {
       this.model.set('groupNamesVisible', !this.model.get('groupNamesVisible'));
       event.preventDefault();
     },
@@ -97,8 +94,7 @@
      * @param {jQuery.Event} event
      *   The event of the button click.
      */
-    onAddGroupButtonClick: function (event) {
-
+    onAddGroupButtonClick(event) {
       /**
        * Inserts a new button if the openGroupNameDialog function returns true.
        *
@@ -133,9 +129,9 @@
      *   A jQuery.ui.sortable argument that contains information about the
      *   elements involved in the sort action.
      */
-    endGroupDrag: function (event, ui) {
-      var view = this;
-      Drupal.ckeditor.registerGroupMove(this, ui.item, function (success) {
+    endGroupDrag(event, ui) {
+      const view = this;
+      Drupal.ckeditor.registerGroupMove(this, ui.item, (success) => {
         if (!success) {
           // Cancel any sorting in the configuration area.
           view.$el.find('.ckeditor-toolbar-configuration').find('.ui-sortable').sortable('cancel');
@@ -152,7 +148,7 @@
      *   A jQuery.ui.sortable argument that contains information about the
      *   elements involved in the sort action.
      */
-    startButtonDrag: function (event, ui) {
+    startButtonDrag(event, ui) {
       this.$el.find('a:focus').trigger('blur');
 
       // Show the button group names as soon as the user starts dragging.
@@ -168,9 +164,9 @@
      *   A jQuery.ui.sortable argument that contains information about the
      *   elements involved in the sort action.
      */
-    endButtonDrag: function (event, ui) {
-      var view = this;
-      Drupal.ckeditor.registerButtonMove(this, ui.item, function (success) {
+    endButtonDrag(event, ui) {
+      const view = this;
+      Drupal.ckeditor.registerButtonMove(this, ui.item, (success) => {
         if (!success) {
           // Cancel any sorting in the configuration area.
           view.$el.find('.ui-sortable').sortable('cancel');
@@ -184,7 +180,7 @@
     /**
      * Invokes jQuery.sortable() on new buttons and groups in a CKEditor config.
      */
-    applySorting: function () {
+    applySorting() {
       // Make the buttons sortable.
       this.$el.find('.ckeditor-buttons').not('.ui-sortable').sortable({
         // Change this to .ckeditor-toolbar-group-buttons.
@@ -195,7 +191,7 @@
         cursor: 'move',
         start: this.startButtonDrag.bind(this),
         // Sorting within a sortable.
-        stop: this.endButtonDrag.bind(this)
+        stop: this.endButtonDrag.bind(this),
       }).disableSelection();
 
       // Add the drag and drop functionality to button groups.
@@ -205,20 +201,20 @@
         placeholder: 'ckeditor-toolbar-group-placeholder',
         forcePlaceholderSize: true,
         cursor: 'move',
-        stop: this.endGroupDrag.bind(this)
+        stop: this.endGroupDrag.bind(this),
       });
 
       // Add the drag and drop functionality to buttons.
       this.$el.find('.ckeditor-multiple-buttons li').draggable({
         connectToSortable: '.ckeditor-toolbar-active .ckeditor-buttons',
-        helper: 'clone'
+        helper: 'clone',
       });
     },
 
     /**
      * Wraps the invocation of methods to insert blank groups and rows.
      */
-    insertPlaceholders: function () {
+    insertPlaceholders() {
       this.insertPlaceholderRow();
       this.insertNewGroupButtons();
     },
@@ -226,8 +222,8 @@
     /**
      * Inserts a blank row at the bottom of the CKEditor configuration.
      */
-    insertPlaceholderRow: function () {
-      var $rows = this.$el.find('.ckeditor-row');
+    insertPlaceholderRow() {
+      let $rows = this.$el.find('.ckeditor-row');
       // Add a placeholder row. to the end of the list if one does not exist.
       if (!$rows.eq(-1).hasClass('placeholder')) {
         this.$el
@@ -238,8 +234,8 @@
       // Update the $rows variable to include the new row.
       $rows = this.$el.find('.ckeditor-row');
       // Remove blank rows except the last one.
-      var len = $rows.length;
-      $rows.filter(function (index, row) {
+      const len = $rows.length;
+      $rows.filter((index, row) => {
         // Do not remove the last row.
         if (index + 1 === len) {
           return false;
@@ -253,12 +249,12 @@
     /**
      * Inserts a button in each row that will add a new CKEditor button group.
      */
-    insertNewGroupButtons: function () {
+    insertNewGroupButtons() {
       // Insert an add group button to each row.
       this.$el.find('.ckeditor-row').each(function () {
-        var $row = $(this);
-        var $groups = $row.find('.ckeditor-toolbar-group');
-        var $button = $row.find('.ckeditor-add-new-group');
+        const $row = $(this);
+        const $groups = $row.find('.ckeditor-toolbar-group');
+        const $button = $row.find('.ckeditor-add-new-group');
         if ($button.length === 0) {
           $row.children('.ckeditor-toolbar-groups').append(Drupal.theme('ckeditorNewButtonGroup'));
         }
@@ -267,7 +263,6 @@
           $button.appendTo($row.children('.ckeditor-toolbar-groups'));
         }
       });
-    }
+    },
   });
-
-})(Drupal, Backbone, jQuery);
+}(Drupal, Backbone, jQuery));

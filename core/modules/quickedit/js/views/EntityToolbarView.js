@@ -6,9 +6,6 @@
 **/
 
 (function ($, _, Backbone, Drupal, debounce) {
-
-  'use strict';
-
   Drupal.quickedit.EntityToolbarView = Backbone.View.extend({
     _fieldToolbarRoot: null,
 
@@ -16,11 +13,10 @@
       var map = {
         'click button.action-save': 'onClickSave',
         'click button.action-cancel': 'onClickCancel',
-        'mouseenter': 'onMouseenter'
+        mouseenter: 'onMouseenter'
       };
       return map;
     },
-
     initialize: function initialize(options) {
       var that = this;
       this.appModel = options.appModel;
@@ -46,7 +42,6 @@
 
       this.render();
     },
-
     render: function render() {
       if (this.model.get('isActive')) {
         var $body = $('body');
@@ -84,7 +79,6 @@
 
       return this;
     },
-
     remove: function remove() {
       this.$fence.remove();
 
@@ -93,11 +87,9 @@
 
       Backbone.View.prototype.remove.call(this);
     },
-
     windowChangeHandler: function windowChangeHandler(event) {
       this.position();
     },
-
     fieldStateChange: function fieldStateChange(model, state) {
       switch (state) {
         case 'active':
@@ -109,7 +101,6 @@
           break;
       }
     },
-
     position: function position(element) {
       clearTimeout(this.timer);
 
@@ -122,9 +113,9 @@
       var check = 0;
 
       var horizontalPadding = 0;
-      var of;
-      var activeField;
-      var highlightedField;
+      var of = void 0;
+      var activeField = void 0;
+      var highlightedField = void 0;
 
       do {
         switch (check) {
@@ -209,7 +200,7 @@
           'max-width': document.documentElement.clientWidth < 450 ? document.documentElement.clientWidth : 450,
 
           'min-width': document.documentElement.clientWidth < 240 ? document.documentElement.clientWidth : 240,
-          'width': '100%'
+          width: '100%'
         });
       }
 
@@ -217,23 +208,19 @@
         _.defer(positionToolbar);
       }, delay);
     },
-
     onClickSave: function onClickSave(event) {
       event.stopPropagation();
       event.preventDefault();
 
       this.model.set('state', 'committing');
     },
-
     onClickCancel: function onClickCancel(event) {
       event.preventDefault();
       this.model.set('state', 'deactivating');
     },
-
     onMouseenter: function onMouseenter(event) {
       clearTimeout(this.timer);
     },
-
     buildToolbarEl: function buildToolbarEl() {
       var $toolbar = $(Drupal.theme('quickeditEntityToolbar', {
         id: 'quickedit-entity-toolbar'
@@ -261,11 +248,9 @@
 
       return $toolbar;
     },
-
     getToolbarRoot: function getToolbarRoot() {
       return this._fieldToolbarRoot;
     },
-
     label: function label() {
       var label = '';
       var entityLabel = this.model.get('label');
@@ -292,22 +277,17 @@
 
       this.$el.find('.quickedit-toolbar-label').html(label);
     },
-
     addClass: function addClass(toolgroup, classes) {
       this._find(toolgroup).addClass(classes);
     },
-
     removeClass: function removeClass(toolgroup, classes) {
       this._find(toolgroup).removeClass(classes);
     },
-
     _find: function _find(toolgroup) {
       return this.$el.find('.quickedit-toolbar .quickedit-toolgroup.' + toolgroup);
     },
-
     show: function show(toolgroup) {
       this.$el.removeClass('quickedit-animate-invisible');
     }
-
   });
 })(jQuery, _, Backbone, Drupal, Drupal.debounce);

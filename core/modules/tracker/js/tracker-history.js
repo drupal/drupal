@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, window) {
-
-  'use strict';
-
   Drupal.behaviors.trackerHistory = {
     attach: function attach(context) {
       var nodeIDs = [];
@@ -18,9 +15,9 @@
         if (Drupal.history.needsServerCheck(nodeID, nodeTimestamp)) {
           nodeIDs.push(nodeID);
           return true;
-        } else {
-          return false;
         }
+
+        return false;
       });
 
       var $newRepliesPlaceholders = $(context).find('[data-history-node-last-comment-timestamp]').once('history').filter(function () {
@@ -36,9 +33,9 @@
             nodeIDs.push(nodeID);
           }
           return true;
-        } else {
-          return false;
         }
+
+        return false;
       });
 
       if ($nodeNewPlaceholders.length === 0 && $newRepliesPlaceholders.length === 0) {

@@ -6,9 +6,6 @@
 **/
 
 (function (Drupal, Backbone) {
-
-  'use strict';
-
   Drupal.contextual.AuralView = Backbone.View.extend({
     initialize: function initialize(options) {
       this.options = options;
@@ -19,7 +16,6 @@
 
       this.render();
     },
-
     render: function render() {
       var isOpen = this.model.get('isOpen');
 
@@ -30,6 +26,5 @@
         '@title': this.model.get('title')
       })).attr('aria-pressed', isOpen);
     }
-
   });
 })(Drupal, Backbone);

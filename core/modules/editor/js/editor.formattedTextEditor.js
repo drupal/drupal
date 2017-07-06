@@ -6,9 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings, _) {
-
-  'use strict';
-
   Drupal.quickedit.editors.editor = Drupal.quickedit.EditorView.extend({
     textFormat: null,
 
@@ -34,11 +31,9 @@
       }
       this.model.set('originalValue', this.$textElement.html());
     },
-
     getEditedElement: function getEditedElement() {
       return this.$textElement;
     },
-
     stateChange: function stateChange(fieldModel, state) {
       var editorModel = this.model;
       var from = fieldModel.previous('state');
@@ -106,15 +101,12 @@
           break;
       }
     },
-
     getQuickEditUISettings: function getQuickEditUISettings() {
       return { padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: false };
     },
-
     revert: function revert() {
       this.$textElement.html(this.model.get('originalValue'));
     },
-
     _getUntransformedText: function _getUntransformedText(callback) {
       var fieldID = this.fieldModel.get('fieldID');
 
@@ -129,6 +121,5 @@
 
       textLoaderAjax.execute();
     }
-
   });
 })(jQuery, Drupal, drupalSettings, _);

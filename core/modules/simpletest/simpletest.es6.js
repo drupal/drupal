@@ -4,9 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-
-  'use strict';
-
   /**
    * Collapses table rows followed by group rows on the test listing page.
    *
@@ -16,21 +13,21 @@
    *   Attach collapse behavior on the test listing page.
    */
   Drupal.behaviors.simpleTestGroupCollapse = {
-    attach: function (context) {
+    attach(context) {
       $(context).find('.simpletest-group').once('simpletest-group-collapse').each(function () {
-        var $group = $(this);
-        var $image = $group.find('.simpletest-image');
+        const $group = $(this);
+        const $image = $group.find('.simpletest-image');
         $image
           .html(drupalSettings.simpleTest.images[0])
-          .on('click', function () {
-            var $tests = $group.nextUntil('.simpletest-group');
-            var expand = !$group.hasClass('expanded');
+          .on('click', () => {
+            const $tests = $group.nextUntil('.simpletest-group');
+            const expand = !$group.hasClass('expanded');
             $group.toggleClass('expanded', expand);
             $tests.toggleClass('js-hide', !expand);
             $image.html(drupalSettings.simpleTest.images[+expand]);
           });
       });
-    }
+    },
   };
 
   /**
@@ -42,23 +39,23 @@
    *   Attaches behavior for selecting all tests in a group.
    */
   Drupal.behaviors.simpleTestSelectAll = {
-    attach: function (context) {
+    attach(context) {
       $(context).find('.simpletest-group').once('simpletest-group-select-all').each(function () {
-        var $group = $(this);
-        var $cell = $group.find('.simpletest-group-select-all');
-        var $groupCheckbox = $('<input type="checkbox" id="' + $cell.attr('id') + '-group-select-all" class="form-checkbox" />');
-        var $testCheckboxes = $group.nextUntil('.simpletest-group').find('input[type=checkbox]');
+        const $group = $(this);
+        const $cell = $group.find('.simpletest-group-select-all');
+        const $groupCheckbox = $(`<input type="checkbox" id="${$cell.attr('id')}-group-select-all" class="form-checkbox" />`);
+        const $testCheckboxes = $group.nextUntil('.simpletest-group').find('input[type=checkbox]');
         $cell.append($groupCheckbox);
 
         // Toggle the test checkboxes when the group checkbox is toggled.
         $groupCheckbox.on('change', function () {
-          var checked = $(this).prop('checked');
+          const checked = $(this).prop('checked');
           $testCheckboxes.prop('checked', checked);
         });
 
         // Update the group checkbox when a test checkbox is toggled.
         function updateGroupCheckbox() {
-          var allChecked = true;
+          let allChecked = true;
           $testCheckboxes.each(function () {
             if (!$(this).prop('checked')) {
               allChecked = false;
@@ -70,7 +67,7 @@
 
         $testCheckboxes.on('change', updateGroupCheckbox);
       });
-    }
+    },
   };
 
   /**
@@ -86,19 +83,19 @@
    *   Attaches the filter behavior to the text input element.
    */
   Drupal.behaviors.simpletestTableFilterByText = {
-    attach: function (context) {
-      var $input = $('input.table-filter-text').once('table-filter-text');
-      var $table = $($input.attr('data-table'));
-      var $rows;
-      var searched = false;
+    attach(context) {
+      const $input = $('input.table-filter-text').once('table-filter-text');
+      const $table = $($input.attr('data-table'));
+      let $rows;
+      let searched = false;
 
       function filterTestList(e) {
-        var query = $(e.target).val().toLowerCase();
+        const query = $(e.target).val().toLowerCase();
 
         function showTestRow(index, row) {
-          var $row = $(row);
-          var $sources = $row.find('.table-filter-text-source');
-          var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
+          const $row = $(row);
+          const $sources = $row.find('.table-filter-text-source');
+          const textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
 
@@ -124,7 +121,6 @@
         $rows = $table.find('tbody tr');
         $input.trigger('focus').on('keyup', Drupal.debounce(filterTestList, 200));
       }
-    }
+    },
   };
-
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

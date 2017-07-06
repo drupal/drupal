@@ -6,12 +6,8 @@
 **/
 
 (function ($, Drupal) {
-
-  'use strict';
-
   Drupal.behaviors.filterGuidelines = {
     attach: function attach(context) {
-
       function updateFilterGuidelines(event) {
         var $this = $(event.target);
         var value = $this.val();
