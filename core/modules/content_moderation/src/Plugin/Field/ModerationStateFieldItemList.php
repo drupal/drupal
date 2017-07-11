@@ -3,6 +3,7 @@
 namespace Drupal\content_moderation\Plugin\Field;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Field\FieldItemList;
 
 /**
@@ -115,6 +116,43 @@ class ModerationStateFieldItemList extends FieldItemList {
         $this->list[$index] = $this->createItem($index, $moderation_state);
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onChange($delta) {
+    $entity = $this->getEntity();
+
+    /** @var \Drupal\content_moderation\ModerationInformationInterface $content_moderation_info */
+    $content_moderation_info = \Drupal::service('content_moderation.moderation_information');
+    $workflow = $content_moderation_info->getWorkflowForEntity($entity);
+
+    $current_state_id = $this->list[0]->value;
+
+    // Change the entity's default revision flag and the publishing status only
+    // if the new workflow state is a valid one.
+    if ($workflow->hasState($current_state_id)) {
+      /** @var \Drupal\content_moderation\ContentModerationState $current_state */
+      $current_state = $workflow->getState($current_state_id);
+
+      // This entity is default if it is new, a new translation, the default
+      // revision state, or the default revision is not published.
+      $update_default_revision = $entity->isNew()
+        || $entity->isNewTranslation()
+        || $current_state->isDefaultRevisionState()
+        || !$content_moderation_info->isDefaultRevisionPublished($entity);
+
+      $entity->isDefaultRevision($update_default_revision);
+
+      // Update publishing status if it can be updated and if it needs updating.
+      $published_state = $current_state->isPublishedState();
+      if (($entity instanceof EntityPublishedInterface) && $entity->isPublished() !== $published_state) {
+        $published_state ? $entity->setPublished() : $entity->setUnpublished();
+      }
+    }
+
+    parent::onChange($delta);
   }
 
 }

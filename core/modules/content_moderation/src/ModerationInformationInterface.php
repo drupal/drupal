@@ -127,6 +127,21 @@ interface ModerationInformationInterface {
   public function isLiveRevision(ContentEntityInterface $entity);
 
   /**
+   * Determines if the default revision for the given entity is published.
+   *
+   * The default revision is the same as the entity retrieved by "default" from
+   * the storage handler. If the entity is translated, check if any of the
+   * translations are published.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being saved.
+   *
+   * @return bool
+   *   TRUE if the default revision is published. FALSE otherwise.
+   */
+  public function isDefaultRevisionPublished(ContentEntityInterface $entity);
+
+  /**
    * Gets the workflow for the given content entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity

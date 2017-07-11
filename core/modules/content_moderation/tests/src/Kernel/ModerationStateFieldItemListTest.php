@@ -79,4 +79,24 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $this->assertEquals(['draft'], $states);
   }
 
+  /**
+   * Tests that moderation state changes also change the related entity state.
+   */
+  public function testModerationStateChanges() {
+    // Change the moderation state and check that the entity's
+    // 'isDefaultRevision' flag and the publishing status have also been
+    // updated.
+    $this->testNode->moderation_state->value = 'published';
+
+    $this->assertTrue($this->testNode->isPublished());
+    $this->assertTrue($this->testNode->isDefaultRevision());
+
+    $this->testNode->save();
+
+    // Repeat the checks using an 'unpublished' state.
+    $this->testNode->moderation_state->value = 'draft';
+    $this->assertFalse($this->testNode->isPublished());
+    $this->assertFalse($this->testNode->isDefaultRevision());
+  }
+
 }

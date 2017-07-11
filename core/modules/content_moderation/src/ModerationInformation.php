@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\TypedData\TranslatableInterface;
 
 /**
  * General service for moderation-related questions about Entity API.
@@ -135,6 +136,29 @@ class ModerationInformation implements ModerationInformationInterface {
       && $entity->isDefaultRevision()
       && $entity->moderation_state->value
       && $workflow->getState($entity->moderation_state->value)->isPublishedState();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isDefaultRevisionPublished(ContentEntityInterface $entity) {
+    $workflow = $this->getWorkflowForEntity($entity);
+    $default_revision = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->load($entity->id());
+
+    // Ensure we are checking all translations of the default revision.
+    if ($default_revision instanceof TranslatableInterface && $default_revision->isTranslatable()) {
+      // Loop through each language that has a translation.
+      foreach ($default_revision->getTranslationLanguages() as $language) {
+        // Load the translated revision.
+        $language_revision = $default_revision->getTranslation($language->getId());
+        // Return TRUE if a translation with a published state is found.
+        if ($workflow->getState($language_revision->moderation_state->value)->isPublishedState()) {
+          return TRUE;
+        }
+      }
+    }
+
+    return $workflow->getState($default_revision->moderation_state->value)->isPublishedState();
   }
 
   /**
