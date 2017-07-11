@@ -85,7 +85,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $page = $this->getSession()->getPage();
     $page->fillField('Name', 'Foobar');
     $page->attachFileToField('File', $this->container->get('file_system')->realpath($uri));
-    $page->pressButton('Save and publish');
+    $page->pressButton('Save');
     $assert->addressMatches('/^\/media\/[0-9]+$/');
 
     // The media item was just created, so it should only have one revision.
@@ -100,7 +100,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $assert->checkboxChecked('Create new revision');
     $page = $this->getSession()->getPage();
     $page->fillField('Name', 'Foobaz');
-    $page->pressButton('Save and keep published');
+    $page->pressButton('Save');
     $this->assertRevisionCount($media, 2);
 
     // Confirm the correct revision title appears on "view revisions" page.
@@ -132,7 +132,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $page = $this->getSession()->getPage();
     $page->fillField('Name', 'Foobar');
     $page->attachFileToField('Image', \Drupal::root() . '/core/modules/media/tests/fixtures/example_1.jpeg');
-    $page->pressButton('Save and publish');
+    $page->pressButton('Save');
     $assert->addressMatches('/^\/media\/[0-9]+$/');
 
     // The media item was just created, so it should only have one revision.
@@ -147,7 +147,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $assert->checkboxChecked('Create new revision');
     $page = $this->getSession()->getPage();
     $page->fillField('Name', 'Foobaz');
-    $page->pressButton('Save and keep published');
+    $page->pressButton('Save');
     $this->assertRevisionCount($media, 2);
 
     // Confirm the correct revision title appears on "view revisions" page.

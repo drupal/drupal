@@ -32,6 +32,13 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 100
+    region: content
+    third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
     weight: 5

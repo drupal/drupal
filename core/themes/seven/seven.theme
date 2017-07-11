@@ -186,3 +186,14 @@ function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $form['revision_information']['#type'] = 'container';
   $form['revision_information']['#group'] = 'meta';
 }
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\media\MediaForm.
+ */
+function seven_form_media_form_alter(&$form, FormStateInterface $form_state) {
+  // @todo Revisit after https://www.drupal.org/node/2892304 is in. It
+  // introduces a footer region to these forms which will allow for us to
+  // display a top border over the published checkbox by defining a
+  // media-edit-form.html.twig template the same way node does.
+  $form['#attached']['library'][] = 'seven/media-form';
+}

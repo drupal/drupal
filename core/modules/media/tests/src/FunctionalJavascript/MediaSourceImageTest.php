@@ -62,7 +62,7 @@ class MediaSourceImageTest extends MediaSourceTestBase {
     $page->attachFileToField("files[{$source_field_id}_0]", \Drupal::root() . '/core/modules/media/tests/fixtures/example_1.jpeg');
     $assert_session->assertWaitOnAjaxRequest();
     $page->fillField("{$source_field_id}[0][alt]", 'Image Alt Text 1');
-    $page->pressButton('Save and publish');
+    $page->pressButton('Save');
 
     $assert_session->addressEquals('media/1');
 

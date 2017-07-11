@@ -59,7 +59,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page->fillField('name[0][value]', $media_name);
     $revision_log_message = $this->randomString();
     $page->fillField('revision_log_message[0][value]', $revision_log_message);
-    $page->pressButton('Save and publish');
+    $page->pressButton('Save');
     $media_id = $this->container->get('entity.query')->get('media')->execute();
     $media_id = reset($media_id);
     /** @var \Drupal\media\MediaInterface $media */
@@ -78,7 +78,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $assert_session->checkboxNotChecked('edit-revision');
     $media_name = $this->randomMachineName();
     $page->fillField('name[0][value]', $media_name2);
-    $page->pressButton('Save and keep published');
+    $page->pressButton('Save');
     /** @var \Drupal\media\MediaInterface $media */
     $media = $this->container->get('entity_type.manager')
       ->getStorage('media')
@@ -109,7 +109,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $assert_session->checkboxChecked('edit-revision');
     $page->fillField('name[0][value]', $media_name);
     $page->fillField('revision_log_message[0][value]', $revision_log_message);
-    $page->pressButton('Save and keep published');
+    $page->pressButton('Save');
     $assert_session->titleEquals($media_name . ' | Drupal');
     /** @var \Drupal\media\MediaInterface $media */
     $media = $this->container->get('entity_type.manager')
@@ -117,6 +117,16 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       ->loadUnchanged($media_id);
     $this->assertEquals($media->getRevisionLogMessage(), $revision_log_message);
     $this->assertNotEquals($previous_revision_id, $media->getRevisionId());
+
+    // Test the status checkbox.
+    $this->drupalGet('media/' . $media_id . '/edit');
+    $page->uncheckField('status[value]');
+    $page->pressButton('Save');
+    /** @var \Drupal\media\MediaInterface $media */
+    $media = $this->container->get('entity_type.manager')
+      ->getStorage('media')
+      ->loadUnchanged($media_id);
+    $this->assertFalse($media->isPublished());
 
     // Tests media delete form.
     $this->drupalGet('media/' . $media_id . '/edit');
