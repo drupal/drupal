@@ -2530,8 +2530,8 @@ function hook_validation_constraint_alter(array &$definitions) {
  *
  * @section sec_dispatch Dispatching events
  * To dispatch an event, call the
- * \Symfony\Component\EventDispatcher\EventDispatchInterface::dispatch() method
- * on the 'event_dispatcher' service (see the
+ * \Symfony\Component\EventDispatcher\EventDispatcherInterface::dispatch()
+ * method on the 'event_dispatcher' service (see the
  * @link container Services topic @endlink for more information about how to
  * interact with services). The first argument is the unique event name, which
  * you should normally define as a constant in a separate static class (see
