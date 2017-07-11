@@ -78,7 +78,7 @@ class ContextualLinks extends RenderElement {
       $class = Html::getClass($class);
       $links[$class] = [
         'title' => $item['title'],
-        'url' => Url::fromRoute(isset($item['route_name']) ? $item['route_name'] : '', isset($item['route_parameters']) ? $item['route_parameters'] : []),
+        'url' => Url::fromRoute(isset($item['route_name']) ? $item['route_name'] : '', isset($item['route_parameters']) ? $item['route_parameters'] : [], $item['localized_options']),
       ];
     }
     $element['#links'] = $links;
