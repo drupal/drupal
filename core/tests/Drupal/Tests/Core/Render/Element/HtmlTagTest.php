@@ -48,20 +48,20 @@ class HtmlTagTest extends RendererTestBase {
       '#value' => 'value',
       '#tag' => 'p',
     ];
-    $tags[] = [$element, '<p>value</p>' . "\n"];
+    $tags['value'] = [$element, '<p>value</p>' . "\n"];
 
     // Normal element without a value should not result in a void element.
     $element = [
       '#tag' => 'p',
       '#value' => NULL,
     ];
-    $tags[] = [$element, "<p></p>\n"];
+    $tags['no-value'] = [$element, "<p></p>\n"];
 
     // A void element.
     $element = [
       '#tag' => 'br',
     ];
-    $tags[] = [$element, "<br />\n"];
+    $tags['void-element'] = [$element, "<br />\n"];
 
     // Attributes.
     $element = [
@@ -69,32 +69,32 @@ class HtmlTagTest extends RendererTestBase {
       '#attributes' => ['class' => 'test', 'id' => 'id'],
       '#value' => 'value',
     ];
-    $tags[] = [$element, '<div class="test" id="id">value</div>' . "\n"];
+    $tags['attributes'] = [$element, '<div class="test" id="id">value</div>' . "\n"];
 
     // No script tags.
     $element['#noscript'] = TRUE;
-    $tags[] = [$element, '<noscript><div class="test" id="id">value</div>' . "\n" . '</noscript>'];
+    $tags['noscript'] = [$element, '<noscript><div class="test" id="id">value</div>' . "\n" . '</noscript>'];
 
     // Ensure that #tag is sanitised.
     $element = [
       '#tag' => 'p><script>alert()</script><p',
       '#value' => 'value',
     ];
-    $tags[] = [$element, "<p&gt;&lt;script&gt;alert()&lt;/script&gt;&lt;p>value</p&gt;&lt;script&gt;alert()&lt;/script&gt;&lt;p>\n"];
+    $tags['sanitized-tag'] = [$element, "<p&gt;&lt;script&gt;alert()&lt;/script&gt;&lt;p>value</p&gt;&lt;script&gt;alert()&lt;/script&gt;&lt;p>\n"];
 
     // Ensure that #value is not filtered if it is marked as safe.
     $element = [
       '#tag' => 'p',
       '#value' => Markup::create('<script>value</script>'),
     ];
-    $tags[] = [$element, "<p><script>value</script></p>\n"];
+    $tags['value-safe'] = [$element, "<p><script>value</script></p>\n"];
 
     // Ensure that #value is filtered if it is not safe.
     $element = [
       '#tag' => 'p',
       '#value' => '<script>value</script>',
     ];
-    $tags[] = [$element, "<p>value</p>\n"];
+    $tags['value-not-safe'] = [$element, "<p>value</p>\n"];
 
     // Ensure that nested render arrays render properly.
     $element = [
@@ -105,7 +105,7 @@ class HtmlTagTest extends RendererTestBase {
         ['#markup' => '<b>value2</b>'],
       ],
     ];
-    $tags[] = [$element, "<p><b>value1</b><b>value2</b></p>\n"];
+    $tags['nested'] = [$element, "<p><b>value1</b><b>value2</b></p>\n"];
 
     // Ensure svg elements.
     $element = [
@@ -117,7 +117,7 @@ class HtmlTagTest extends RendererTestBase {
         'y' => 10,
       ],
     ];
-    $tags[] = [$element, '<rect width="25" height="25" x="5" y="10" />' . "\n"];
+    $tags['rect'] = [$element, '<rect width="25" height="25" x="5" y="10" />' . "\n"];
 
     $element = [
       '#tag' => 'circle',
@@ -127,7 +127,7 @@ class HtmlTagTest extends RendererTestBase {
         'r' => 100,
       ],
     ];
-    $tags[] = [$element, '<circle cx="100" cy="100" r="100" />' . "\n"];
+    $tags['circle'] = [$element, '<circle cx="100" cy="100" r="100" />' . "\n"];
 
     $element = [
       '#tag' => 'polygon',
@@ -135,7 +135,7 @@ class HtmlTagTest extends RendererTestBase {
         'points' => '60,20 100,40 100,80 60,100 20,80 20,40',
       ],
     ];
-    $tags[] = [$element, '<polygon points="60,20 100,40 100,80 60,100 20,80 20,40" />' . "\n"];
+    $tags['polygon'] = [$element, '<polygon points="60,20 100,40 100,80 60,100 20,80 20,40" />' . "\n"];
 
     $element = [
       '#tag' => 'ellipse',
@@ -146,7 +146,7 @@ class HtmlTagTest extends RendererTestBase {
         'ry' => 25,
       ],
     ];
-    $tags[] = [$element, '<ellipse cx="60" cy="60" rx="50" ry="25" />' . "\n"];
+    $tags['ellipse'] = [$element, '<ellipse cx="60" cy="60" rx="50" ry="25" />' . "\n"];
 
     $element = [
       '#tag' => 'use',
@@ -157,7 +157,7 @@ class HtmlTagTest extends RendererTestBase {
         'height' => 50,
       ],
     ];
-    $tags[] = [$element, '<use x="50" y="10" width="50" height="50" />' . "\n"];
+    $tags['use'] = [$element, '<use x="50" y="10" width="50" height="50" />' . "\n"];
 
     $element = [
       '#tag' => 'path',
@@ -168,7 +168,7 @@ class HtmlTagTest extends RendererTestBase {
         'stroke-width' => 3,
       ],
     ];
-    $tags[] = [$element, '<path d="M 100 100 L 300 100 L 200 300 z" fill="orange" stroke="black" stroke-width="3" />' . "\n"];
+    $tags['path'] = [$element, '<path d="M 100 100 L 300 100 L 200 300 z" fill="orange" stroke="black" stroke-width="3" />' . "\n"];
 
     $element = [
       '#tag' => 'stop',
@@ -177,7 +177,7 @@ class HtmlTagTest extends RendererTestBase {
         'stop-color' => '#F60',
       ],
     ];
-    $tags[] = [$element, '<stop offset="5%" stop-color="#F60" />' . "\n"];
+    $tags['stop'] = [$element, '<stop offset="5%" stop-color="#F60" />' . "\n"];
 
     // Nested svg elements.
     $element = [
@@ -200,7 +200,7 @@ class HtmlTagTest extends RendererTestBase {
         ],
       ],
     ];
-    $tags[] = [$element, '<linearGradient><stop offset="5%" stop-color="#F60" />' . "\n" . '<stop offset="95%" stop-color="#FF6" />' . "\n" . '</linearGradient>' . "\n"];
+    $tags['linearGradient'] = [$element, '<linearGradient><stop offset="5%" stop-color="#F60" />' . "\n" . '<stop offset="95%" stop-color="#FF6" />' . "\n" . '</linearGradient>' . "\n"];
 
     return $tags;
   }
@@ -225,14 +225,14 @@ class HtmlTagTest extends RendererTestBase {
     $element = [
       '#tag' => 'link',
     ];
-    $tags[] = [$element, $element];
+    $tags['no-browser'] = [$element, $element];
 
     // Specify all browsers.
     $element['#browsers'] = [
       'IE' => TRUE,
       '!IE' => TRUE,
     ];
-    $tags[] = [$element, $element];
+    $tags['all-browsers'] = [$element, $element];
 
     // All IE.
     $element = [
@@ -245,7 +245,7 @@ class HtmlTagTest extends RendererTestBase {
     $expected = $element;
     $expected['#prefix'] = "\n<!--[if IE]>\n";
     $expected['#suffix'] = "<![endif]-->\n";
-    $tags[] = [$element, $expected];
+    $tags['all-ie'] = [$element, $expected];
 
     // Exclude IE.
     $element = [
@@ -257,7 +257,7 @@ class HtmlTagTest extends RendererTestBase {
     $expected = $element;
     $expected['#prefix'] = "\n<!--[if !IE]><!-->\n";
     $expected['#suffix'] = "<!--<![endif]-->\n";
-    $tags[] = [$element, $expected];
+    $tags['no-ie'] = [$element, $expected];
 
     // IE gt 8
     $element = [
@@ -269,7 +269,7 @@ class HtmlTagTest extends RendererTestBase {
     $expected = $element;
     $expected['#prefix'] = "\n<!--[if gt IE 8]><!-->\n";
     $expected['#suffix'] = "<!--<![endif]-->\n";
-    $tags[] = [$element, $expected];
+    $tags['ie9plus'] = [$element, $expected];
 
     // Prefix and suffix filtering if not safe.
     $element = [
@@ -283,13 +283,13 @@ class HtmlTagTest extends RendererTestBase {
     $expected = $element;
     $expected['#prefix'] = "\n<!--[if !IE]><!-->\nprefix";
     $expected['#suffix'] = "suffix<!--<![endif]-->\n";
-    $tags[] = [$element, $expected];
+    $tags['non-ie-unsafe'] = [$element, $expected];
 
     // Prefix and suffix filtering if marked as safe. This has to come after the
     // previous test case.
     $expected['#prefix'] = "\n<!--[if !IE]><!-->\n<blink>prefix</blink>";
     $expected['#suffix'] = "<blink>suffix</blink><!--<![endif]-->\n";
-    $tags[] = [$element, $expected, TRUE];
+    $tags['non-ie-safe'] = [$element, $expected, TRUE];
 
     return $tags;
   }
