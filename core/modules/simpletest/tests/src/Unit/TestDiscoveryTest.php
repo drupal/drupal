@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\simpletest\Unit\TestInfoParsingTest.
- */
-
 namespace Drupal\Tests\simpletest\Unit;
 
 use Composer\Autoload\ClassLoader;
@@ -19,7 +14,7 @@ use org\bovigo\vfs\vfsStream;
  * @coversDefaultClass \Drupal\simpletest\TestDiscovery
  * @group simpletest
  */
-class TestInfoParsingTest extends UnitTestCase {
+class TestDiscoveryTest extends UnitTestCase {
 
   /**
    * @covers ::getTestInfo
@@ -35,13 +30,13 @@ class TestInfoParsingTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => 'Drupal\Tests\simpletest\Unit\TestInfoParsingTest',
+        'name' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest',
         'group' => 'simpletest',
         'description' => 'Tests \Drupal\simpletest\TestDiscovery.',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      'Drupal\Tests\simpletest\Unit\TestInfoParsingTest',
+      'Drupal\Tests\simpletest\Unit\TestDiscoveryTest',
     ];
 
     // A core unit test.
@@ -366,26 +361,6 @@ EOF;
     ], $result);
   }
 
-}
-
-class TestTestDiscovery extends TestDiscovery {
-
-  /**
-   * @var \Drupal\Core\Extension\Extension[]
-   */
-  protected $extensions = [];
-
-  public function setExtensions(array $extensions) {
-    $this->extensions = $extensions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExtensions() {
-    return $this->extensions;
-  }
-
   /**
    * @covers ::getPhpunitTestSuite
    * @dataProvider providerTestGetPhpunitTestSuite
@@ -409,6 +384,26 @@ class TestTestDiscovery extends TestDiscovery {
     $data['core-functionaljavascripttest'] = ['\Drupal\FunctionalJavascriptTests\ExampleTest', 'FunctionalJavascript'];
 
     return $data;
+  }
+
+}
+
+class TestTestDiscovery extends TestDiscovery {
+
+  /**
+   * @var \Drupal\Core\Extension\Extension[]
+   */
+  protected $extensions = [];
+
+  public function setExtensions(array $extensions) {
+    $this->extensions = $extensions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExtensions() {
+    return $this->extensions;
   }
 
 }
