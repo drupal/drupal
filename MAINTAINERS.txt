@@ -44,10 +44,8 @@ Cron system
 - Derek Wright 'dww' https://www.drupal.org/u/dww
 
 Database system
-- Larry Garfield 'Crell' https://www.drupal.org/u/crell
 
   - MySQL driver
-    - Larry Garfield 'Crell' https://www.drupal.org/u/crell
     - David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
 
   - PostgreSQL driver
