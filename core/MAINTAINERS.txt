@@ -170,10 +170,8 @@ CSS
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
 
 Database API
-- Larry Garfield 'Crell' https://www.drupal.org/u/crell
 
   MySQL DB driver
-  - Larry Garfield 'Crell' https://www.drupal.org/u/crell
   - David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
 
   PostgreSQL DB driver
@@ -339,10 +337,9 @@ Render API
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
 
 Request Processing
-- Larry Garfield 'Crell' https://www.drupal.org/u/crell
+- ?
 
 REST
-- Larry Garfield 'Crell' https://www.drupal.org/u/crell
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Responsive Image
@@ -351,7 +348,6 @@ Responsive Image
 - Jelle Sebreghts 'Jelle_S' https://www.drupal.org/u/jelle_s
 
 Routing
-- Larry Garfield 'Crell' https://www.drupal.org/u/crell
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 
 Search
