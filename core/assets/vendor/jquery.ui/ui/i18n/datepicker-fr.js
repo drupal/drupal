@@ -1,39 +1,4 @@
-/* French initialisation for the jQuery UI date picker plugin. */
-/* Written by Keith Wood (kbwood{at}iinet.com.au),
-			  Stéphane Nahmani (sholby@sholby.net),
-			  Stéphane Raimbault <stephane.raimbault@gmail.com> */
-(function( factory ) {
-	if ( typeof define === "function" && define.amd ) {
-
-		// AMD. Register as an anonymous module.
-		define([ "../datepicker" ], factory );
-	} else {
-
-		// Browser globals
-		factory( jQuery.datepicker );
-	}
-}(function( datepicker ) {
-
-datepicker.regional['fr'] = {
-	closeText: 'Fermer',
-	prevText: 'Précédent',
-	nextText: 'Suivant',
-	currentText: 'Aujourd\'hui',
-	monthNames: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
-		'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
-	monthNamesShort: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin',
-		'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
-	dayNames: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
-	dayNamesShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
-	dayNamesMin: ['D','L','M','M','J','V','S'],
-	weekHeader: 'Sem.',
-	dateFormat: 'dd/mm/yy',
-	firstDay: 1,
-	isRTL: false,
-	showMonthAfterYear: false,
-	yearSuffix: ''};
-datepicker.setDefaults(datepicker.regional['fr']);
-
-return datepicker.regional['fr'];
-
-}));
+/*! jQuery UI - v1.12.1 - 2017-03-31
+* http://jqueryui.com
+* Copyright jQuery Foundation and other contributors; Licensed  */
+!function(a){"function"==typeof define&&define.amd?define(["../widgets/datepicker"],a):a(jQuery.datepicker)}(function(a){return a.regional.fr={closeText:"Fermer",prevText:"Précédent",nextText:"Suivant",currentText:"Aujourd'hui",monthNames:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],monthNamesShort:["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."],dayNames:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],dayNamesShort:["dim.","lun.","mar.","mer.","jeu.","ven.","sam."],dayNamesMin:["D","L","M","M","J","V","S"],weekHeader:"Sem.",dateFormat:"dd/mm/yy",firstDay:1,isRTL:!1,showMonthAfterYear:!1,yearSuffix:""},a.setDefaults(a.regional.fr),a.regional.fr});

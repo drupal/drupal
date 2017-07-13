@@ -1,37 +1,4 @@
-/* Czech initialisation for the jQuery UI date picker plugin. */
-/* Written by Tomas Muller (tomas@tomas-muller.net). */
-(function( factory ) {
-	if ( typeof define === "function" && define.amd ) {
-
-		// AMD. Register as an anonymous module.
-		define([ "../datepicker" ], factory );
-	} else {
-
-		// Browser globals
-		factory( jQuery.datepicker );
-	}
-}(function( datepicker ) {
-
-datepicker.regional['cs'] = {
-	closeText: 'Zavřít',
-	prevText: '&#x3C;Dříve',
-	nextText: 'Později&#x3E;',
-	currentText: 'Nyní',
-	monthNames: ['leden','únor','březen','duben','květen','červen',
-	'červenec','srpen','září','říjen','listopad','prosinec'],
-	monthNamesShort: ['led','úno','bře','dub','kvě','čer',
-	'čvc','srp','zář','říj','lis','pro'],
-	dayNames: ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'],
-	dayNamesShort: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
-	dayNamesMin: ['ne','po','út','st','čt','pá','so'],
-	weekHeader: 'Týd',
-	dateFormat: 'dd.mm.yy',
-	firstDay: 1,
-	isRTL: false,
-	showMonthAfterYear: false,
-	yearSuffix: ''};
-datepicker.setDefaults(datepicker.regional['cs']);
-
-return datepicker.regional['cs'];
-
-}));
+/*! jQuery UI - v1.12.1 - 2017-03-31
+* http://jqueryui.com
+* Copyright jQuery Foundation and other contributors; Licensed  */
+!function(a){"function"==typeof define&&define.amd?define(["../widgets/datepicker"],a):a(jQuery.datepicker)}(function(a){return a.regional.cs={closeText:"Zavřít",prevText:"&#x3C;Dříve",nextText:"Později&#x3E;",currentText:"Nyní",monthNames:["leden","únor","březen","duben","květen","červen","červenec","srpen","září","říjen","listopad","prosinec"],monthNamesShort:["led","úno","bře","dub","kvě","čer","čvc","srp","zář","říj","lis","pro"],dayNames:["neděle","pondělí","úterý","středa","čtvrtek","pátek","sobota"],dayNamesShort:["ne","po","út","st","čt","pá","so"],dayNamesMin:["ne","po","út","st","čt","pá","so"],weekHeader:"Týd",dateFormat:"dd.mm.yy",firstDay:1,isRTL:!1,showMonthAfterYear:!1,yearSuffix:""},a.setDefaults(a.regional.cs),a.regional.cs});
