@@ -16,6 +16,8 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
 
   const TOOLBAR_EDIT_LINK_SELECTOR = '#toolbar-bar div.contextual-toolbar-tab button';
 
+  const LABEL_INPUT_SELECTOR = 'input[data-drupal-selector="edit-settings-label"]';
+
   /**
    * {@inheritdoc}
    */
@@ -92,9 +94,15 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       $this->openBlockForm($block_selector);
       switch ($block_plugin) {
         case 'system_powered_by_block':
+          // Confirm "Display Title" is not checked.
+          $web_assert->checkboxNotChecked('settings[label_display]');
+          // Confirm Title is not visible.
+          $this->assertEquals($this->isLabelInputVisible(), FALSE, 'Label is not visible');
+          $page->checkField('settings[label_display]');
+          $this->assertEquals($this->isLabelInputVisible(), TRUE, 'Label is visible');
           // Fill out form, save the form.
           $page->fillField('settings[label]', $new_page_text);
-          $page->checkField('settings[label_display]');
+
           break;
 
         case 'system_branding_block':
@@ -195,8 +203,19 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    */
   protected function assertOffCanvasBlockFormIsValid() {
     $web_assert = $this->assertSession();
+    // Confirm that Block title display label has been changed.
+    $web_assert->elementTextContains('css', '.form-item-settings-label-display label', 'Display block title');
+    // Confirm Block title label is shown if checkbox is checked.
+    if ($this->getSession()->getPage()->find('css', 'input[name="settings[label_display]"]')->isChecked()) {
+      $this->assertEquals($this->isLabelInputVisible(), TRUE, 'Label is visible');
+      $web_assert->elementTextContains('css', '.form-item-settings-label label', 'Block title');
+    }
+    else {
+      $this->assertEquals($this->isLabelInputVisible(), FALSE, 'Label is not visible');
+    }
+
     // Check that common block form elements exist.
-    $web_assert->elementExists('css', 'input[data-drupal-selector="edit-settings-label"]');
+    $web_assert->elementExists('css', static::LABEL_INPUT_SELECTOR);
     $web_assert->elementExists('css', 'input[data-drupal-selector="edit-settings-label-display"]');
     // Check that advanced block form elements do not exist.
     $web_assert->elementNotExists('css', 'input[data-drupal-selector="edit-visibility-request-path-pages"]');
@@ -467,6 +486,16 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    */
   public function getBlockSelector(Block $block) {
     return '#block-' . $block->id();
+  }
+
+  /**
+   * Determines if the label input is visible.
+   *
+   * @return bool
+   *   TRUE if the label is visible, FALSE if it is not.
+   */
+  protected function isLabelInputVisible() {
+    return $this->getSession()->getPage()->find('css', static::LABEL_INPUT_SELECTOR)->isVisible();
   }
 
 }
