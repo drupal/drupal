@@ -17,7 +17,8 @@ use Drupal\Core\TypedData\DataDefinition;
  *   description = @Translation("An entity field containing a path alias and related data."),
  *   no_ui = TRUE,
  *   default_widget = "path",
- *   list_class = "\Drupal\path\Plugin\Field\FieldType\PathFieldItemList"
+ *   list_class = "\Drupal\path\Plugin\Field\FieldType\PathFieldItemList",
+ *   constraints = {"PathAlias" = {}},
  * )
  */
 class PathItem extends FieldItemBase {
