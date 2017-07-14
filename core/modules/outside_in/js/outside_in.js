@@ -125,21 +125,9 @@
     attach: function attach() {
       $(toggleEditSelector).once('outsidein').on('click.outsidein', toggleEditMode);
 
-      var search = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog';
-      var replace = Drupal.ajax.WRAPPER_FORMAT + '=drupal_dialog_off_canvas';
-
       Drupal.ajax.instances.filter(function (instance) {
-        var hasElement = instance && !!instance.element;
-        var rendererOffCanvas = false;
-        var wrapperOffCanvas = false;
-        if (hasElement) {
-          rendererOffCanvas = $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
-          wrapperOffCanvas = instance.options.url.indexOf('drupal_dialog_off_canvas') === -1;
-        }
-        return hasElement && rendererOffCanvas && wrapperOffCanvas;
+        return $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
       }).forEach(function (instance) {
-        instance.options.url = instance.options.url.replace(search, replace);
-
         if (!('dialogOptions' in instance.options.data)) {
           instance.options.data.dialogOptions = {};
         }

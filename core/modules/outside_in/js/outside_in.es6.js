@@ -209,26 +209,14 @@
   Drupal.behaviors.toggleEditMode = {
     attach() {
       $(toggleEditSelector).once('outsidein').on('click.outsidein', toggleEditMode);
-
-      const search = `${Drupal.ajax.WRAPPER_FORMAT}=drupal_dialog`;
-      const replace = `${Drupal.ajax.WRAPPER_FORMAT}=drupal_dialog_off_canvas`;
-      // Loop through all Ajax links and change the format to dialog-off-canvas when
-      // needed.
+      // Find all Ajax instances that use the 'off_canvas' renderer.
       Drupal.ajax.instances
-        .filter((instance) => {
-          const hasElement = instance && !!instance.element;
-          let rendererOffCanvas = false;
-          let wrapperOffCanvas = false;
-          if (hasElement) {
-            rendererOffCanvas = $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
-            wrapperOffCanvas = instance.options.url.indexOf('drupal_dialog_off_canvas') === -1;
-          }
-          return hasElement && rendererOffCanvas && wrapperOffCanvas;
-        })
+        // If there is an element and the renderer is 'off_canvas' then we want
+        // to add our changes.
+        .filter(instance => $(instance.element).attr('data-dialog-renderer') === 'off_canvas')
+        // Loop through all Ajax instances that use the 'off_canvas' renderer to
+        // set active editable ID.
         .forEach((instance) => {
-          // @todo Move logic for data-dialog-renderer attribute into ajax.js
-          //   https://www.drupal.org/node/2784443
-          instance.options.url = instance.options.url.replace(search, replace);
           // Check to make sure existing dialogOptions aren't overridden.
           if (!('dialogOptions' in instance.options.data)) {
             instance.options.data.dialogOptions = {};

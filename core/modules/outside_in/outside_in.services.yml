@@ -1,9 +1,9 @@
 services:
   main_content_renderer.off_canvas:
-    class: Drupal\outside_in\Render\MainContent\OffCanvasRender
+    class: Drupal\outside_in\Render\MainContent\OffCanvasRenderer
     arguments: ['@title_resolver', '@renderer']
     tags:
-      - { name: render.main_content_renderer, format: drupal_dialog_off_canvas }
+      - { name: render.main_content_renderer, format: drupal_dialog.off_canvas }
 
   outside_in.manager:
     class: Drupal\outside_in\OutsideInManager

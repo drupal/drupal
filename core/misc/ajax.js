@@ -38,6 +38,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           element_settings.event = 'click';
         }
         element_settings.dialogType = $(this).data('dialog-type');
+        element_settings.dialogRenderer = $(this).data('dialog-renderer');
         element_settings.dialog = $(this).data('dialog-options');
         element_settings.base = $(this).attr('id');
         element_settings.element = this;
@@ -240,7 +241,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     } else {
       ajax.options.url += '&';
     }
-    ajax.options.url += Drupal.ajax.WRAPPER_FORMAT + '=drupal_' + (element_settings.dialogType || 'ajax');
+
+    var wrapper = 'drupal_' + (element_settings.dialogType || 'ajax');
+    if (element_settings.dialogRenderer) {
+      wrapper += '.' + element_settings.dialogRenderer;
+    }
+    ajax.options.url += Drupal.ajax.WRAPPER_FORMAT + '=' + wrapper;
 
     $(ajax.element).on(element_settings.event, function (event) {
       if (!drupalSettings.ajaxTrustedUrl[ajax.url] && !Drupal.url.isLocal(ajax.url)) {

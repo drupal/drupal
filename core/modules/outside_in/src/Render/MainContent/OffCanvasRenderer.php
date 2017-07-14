@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Default main content renderer for off-canvas dialog requests.
  */
-class OffCanvasRender extends DialogRenderer {
+class OffCanvasRenderer extends DialogRenderer {
 
   /**
    * The renderer.
@@ -23,7 +23,7 @@ class OffCanvasRender extends DialogRenderer {
   protected $renderer;
 
   /**
-   * Constructs a new OffCanvasRender.
+   * Constructs a new OffCanvasRenderer.
    *
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver.
