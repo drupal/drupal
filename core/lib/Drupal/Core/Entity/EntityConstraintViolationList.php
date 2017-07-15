@@ -68,6 +68,11 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
           if ($this->entity->hasField($field_name)) {
             $this->violationOffsetsByField[$field_name][$offset] = $offset;
           }
+          // If the first part of the violation property path is not a valid
+          // field name, we're dealing with an entity-level validation.
+          else {
+            $this->entityViolationOffsets[$offset] = $offset;
+          }
         }
         else {
           $this->entityViolationOffsets[$offset] = $offset;
