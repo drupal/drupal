@@ -232,6 +232,20 @@ function content_moderation_entity_bundle_info_alter(&$bundles) {
 }
 
 /**
+ * Implements hook_entity_bundle_delete().
+ */
+function content_moderation_entity_bundle_delete($entity_type_id, $bundle_id) {
+  // Remove non-configuration based bundles from content moderation based
+  // workflows when they are removed.
+  foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {
+    if ($workflow->getTypePlugin()->appliesToEntityTypeAndBundle($entity_type_id, $bundle_id)) {
+      $workflow->getTypePlugin()->removeEntityTypeAndBundle($entity_type_id, $bundle_id);
+      $workflow->save();
+    }
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_insert().
  */
 function content_moderation_workflow_insert(WorkflowInterface $entity) {

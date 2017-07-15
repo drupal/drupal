@@ -462,6 +462,41 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
+   * Test the content moderation workflow dependencies for non-config bundles.
+   */
+  public function testWorkflowNonConfigBundleDependencies() {
+    // Create a bundle not based on any particular configuration.
+    entity_test_create_bundle('test_bundle');
+
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test', 'test_bundle');
+    $workflow->save();
+
+    // Ensure the bundle is correctly added to the workflow.
+    $this->assertEquals([
+      'module' => [
+        'content_moderation',
+        'entity_test',
+      ],
+    ], $workflow->getDependencies());
+    $this->assertEquals([
+      'test_bundle',
+    ], $workflow->getTypePlugin()->getBundlesForEntityType('entity_test'));
+
+    // Delete the test bundle to ensure the workflow entity responds
+    // appropriately.
+    entity_test_delete_bundle('test_bundle');
+
+    $workflow = Workflow::load('editorial');
+    $this->assertEquals([], $workflow->getTypePlugin()->getBundlesForEntityType('entity_test'));
+    $this->assertEquals([
+      'module' => [
+        'content_moderation',
+      ],
+    ], $workflow->getDependencies());
+  }
+
+  /**
    * Reloads the entity after clearing the static cache.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
