@@ -12,6 +12,8 @@ use Drupal\field\Entity\FieldConfig;
 /**
  * Create field entities by attaching fields to entities.
  *
+ * @coversDefaultClass \Drupal\Core\Field\FieldConfigBase
+ *
  * @group field
  */
 class FieldCrudTest extends FieldKernelTestBase {
@@ -64,10 +66,6 @@ class FieldCrudTest extends FieldKernelTestBase {
    * Test the creation of a field.
    */
   public function testCreateField() {
-    // Set a state flag so that field_test.module knows to add an in-memory
-    // constraint for this field.
-    \Drupal::state()->set('field_test_add_constraint', $this->fieldStorage->getName());
-    /** @var \Drupal\Core\Field\FieldConfigInterface $field */
     $field = FieldConfig::create($this->fieldDefinition);
     $field->save();
 
@@ -100,17 +98,6 @@ class FieldCrudTest extends FieldKernelTestBase {
     // Check that the denormalized 'field_type' was properly written.
     $this->assertEqual($config['field_type'], $this->fieldStorageDefinition['type']);
 
-    // Test constraints are applied. A Range constraint is added dynamically to
-    // limit the field to values between 0 and 32.
-    // @see field_test_entity_bundle_field_info_alter()
-    $this->doFieldValidationTests();
-
-    // Test FieldConfigBase::setPropertyConstraints().
-    \Drupal::state()->set('field_test_set_constraint', $this->fieldStorage->getName());
-    \Drupal::state()->set('field_test_add_constraint', FALSE);
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
-    $this->doFieldValidationTests();
-
     // Guarantee that the field/bundle combination is unique.
     try {
       FieldConfig::create($this->fieldDefinition)->save();
@@ -131,6 +118,81 @@ class FieldCrudTest extends FieldKernelTestBase {
     }
 
     // TODO: test other failures.
+  }
+
+  /**
+   * Tests setting and adding property constraints to a configurable field.
+   *
+   * @covers ::setPropertyConstraints
+   * @covers ::addPropertyConstraints
+   */
+  public function testFieldPropertyConstraints() {
+    $field = FieldConfig::create($this->fieldDefinition);
+    $field->save();
+    $field_name = $this->fieldStorage->getName();
+
+    // Test that constraints are applied to configurable fields. A TestField and
+    // a Range constraint are added dynamically to limit the field to values
+    // between 0 and 32.
+    // @see field_test_entity_bundle_field_info_alter()
+    \Drupal::state()->set('field_test_constraint', $field_name);
+
+    // Clear the field definitions cache so the new constraints added by
+    // field_test_entity_bundle_field_info_alter() are taken into consideration.
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+
+    // Test the newly added property constraints in the same request as when the
+    // caches were cleared. This will test the field definitions that are stored
+    // in the static cache of
+    // \Drupal\Core\Entity\EntityFieldManager::getFieldDefinitions().
+    $this->doFieldPropertyConstraintsTests();
+
+    // In order to test a real-world scenario where the property constraints are
+    // only stored in the persistent cache of
+    // \Drupal\Core\Entity\EntityFieldManager::getFieldDefinitions(), we need to
+    // simulate a new request by removing the 'entity_field.manager' service,
+    // thus forcing it to be re-initialized without static caches.
+    \Drupal::getContainer()->set('entity_field.manager', NULL);
+
+    // This will test the field definitions that are stored in the persistent
+    // cache by \Drupal\Core\Entity\EntityFieldManager::getFieldDefinitions().
+    $this->doFieldPropertyConstraintsTests();
+  }
+
+  /**
+   * Tests configurable field validation.
+   *
+   * @see field_test_entity_bundle_field_info_alter()
+   */
+  protected function doFieldPropertyConstraintsTests() {
+    $field_name = $this->fieldStorage->getName();
+
+    // Check that a valid value (not -2 and between 0 and 32) doesn't trigger
+    // any violation.
+    $entity = EntityTest::create();
+    $entity->set($field_name, 1);
+    $violations = $entity->validate();
+    $this->assertCount(0, $violations, 'No violations found when in-range value passed.');
+
+    // Check that a value that is specifically restricted triggers both
+    // violations.
+    $entity->set($field_name, -2);
+    $violations = $entity->validate();
+    $this->assertCount(2, $violations, 'Two violations found when using a null and outside the range value.');
+
+    $this->assertEquals($field_name . '.0.value', $violations[0]->getPropertyPath());
+    $this->assertEquals(t('%name does not accept the value @value.', ['%name' => $field_name, '@value' => -2]), $violations[0]->getMessage());
+
+    $this->assertEquals($field_name . '.0.value', $violations[1]->getPropertyPath());
+    $this->assertEquals(t('This value should be %limit or more.', ['%limit' => 0]), $violations[1]->getMessage());
+
+    // Check that a value that is not specifically restricted but outside the
+    // range triggers the expected violation.
+    $entity->set($field_name, 33);
+    $violations = $entity->validate();
+    $this->assertCount(1, $violations, 'Violations found when using value outside the range.');
+    $this->assertEquals($field_name . '.0.value', $violations[0]->getPropertyPath());
+    $this->assertEquals(t('This value should be %limit or less.', ['%limit' => 32]), $violations[0]->getMessage());
   }
 
   /**
@@ -278,26 +340,6 @@ class FieldCrudTest extends FieldKernelTestBase {
     $field_2->save();
     $this->container->get('entity.manager')->getStorage('field_config')->delete([$field, $field_2]);
     $this->assertFalse(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
-  }
-
-  /**
-   * Tests configurable field validation.
-   *
-   * @see field_test_entity_bundle_field_info_alter()
-   */
-  protected function doFieldValidationTests() {
-    $entity = EntityTest::create();
-    $entity->set($this->fieldStorage->getName(), 1);
-    $violations = $entity->validate();
-    $this->assertEqual(count($violations), 0, 'No violations found when in-range value passed.');
-
-    $entity->set($this->fieldStorage->getName(), 33);
-    $violations = $entity->validate();
-    $this->assertEqual(count($violations), 1, 'Violations found when using value outside the range.');
-    $this->assertEqual($violations[0]->getPropertyPath(), $this->fieldStorage->getName() . '.0.value');
-    $this->assertEqual($violations[0]->getMessage(), t('This value should be %limit or less.', [
-      '%limit' => 32,
-    ]));
   }
 
 }
