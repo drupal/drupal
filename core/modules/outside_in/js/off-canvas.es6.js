@@ -31,6 +31,7 @@
     const offsets = displace.offsets;
     const $element = event.data.$element;
     const $widget = $element.dialog('widget');
+    const $elementScroll = $element.scrollTop();
 
     const adjustedOptions = {
       // @see http://api.jqueryui.com/position/
@@ -49,6 +50,9 @@
     $element
       .dialog('option', adjustedOptions)
       .trigger('dialogContentResize.off-canvas');
+
+    // Reset the elements scroll position after being repositioned.
+    $element.scrollTop($elementScroll);
   }
 
   /**

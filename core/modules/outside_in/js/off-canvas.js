@@ -16,6 +16,7 @@
     var offsets = displace.offsets;
     var $element = event.data.$element;
     var $widget = $element.dialog('widget');
+    var $elementScroll = $element.scrollTop();
 
     var adjustedOptions = {
       position: {
@@ -31,6 +32,8 @@
     });
 
     $element.dialog('option', adjustedOptions).trigger('dialogContentResize.off-canvas');
+
+    $element.scrollTop($elementScroll);
   }
 
   function handleDialogResize(event) {
