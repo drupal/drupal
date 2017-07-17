@@ -65,7 +65,9 @@
      * @augments Backbone.View
      */
     updateToolbarHeight() {
-      this.model.set('height', $('#toolbar-bar').find('.toolbar-tab').outerHeight() + $('.is-active.toolbar-tray-horizontal').outerHeight());
+      const toolbarTabOuterHeight = $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
+      const toolbarTrayHorizontalOuterHeight = $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
+      this.model.set('height', toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight);
 
       $('body').css({
         'padding-top': this.model.get('height'),
