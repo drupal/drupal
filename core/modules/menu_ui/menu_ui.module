@@ -71,6 +71,10 @@ function menu_ui_entity_type_build(array &$entity_types) {
     ->setLinkTemplate('edit-form', '/admin/structure/menu/manage/{menu}')
     ->setLinkTemplate('add-link-form', '/admin/structure/menu/manage/{menu}/add')
     ->setLinkTemplate('collection', '/admin/structure/menu');
+
+  if (isset($entity_types['node'])) {
+    $entity_types['node']->addConstraint('MenuSettings', []);
+  }
 }
 
 /**
@@ -357,6 +361,15 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
       $form['actions'][$action]['#submit'][] = 'menu_ui_form_node_form_submit';
     }
   }
+
+  $form['#entity_builders'][] = 'menu_ui_node_builder';
+}
+
+/**
+ * Entity form builder to add the menu information to the node.
+ */
+function menu_ui_node_builder($entity_type, NodeInterface $entity, &$form, FormStateInterface $form_state) {
+  $entity->menu = $form_state->getValue('menu');
 }
 
 /**
