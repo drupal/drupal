@@ -101,8 +101,7 @@ function outside_in_entity_type_build(array &$entity_types) {
  */
 function outside_in_preprocess_block(&$variables) {
   // The main system block does not contain the block contextual links.
-  $variables['#cache']['contexts'][] = 'outside_in_is_applied';
-  if ($variables['plugin_id'] !== 'system_main_block' && \Drupal::service('outside_in.manager')->isApplicable()) {
+  if ($variables['plugin_id'] !== 'system_main_block') {
     // Add class and attributes to all blocks to allow Javascript to target.
     $variables['attributes']['class'][] = 'outside-in-editable';
     $variables['attributes']['data-drupal-outsidein'] = 'editable';
@@ -112,11 +111,15 @@ function outside_in_preprocess_block(&$variables) {
 /**
  * Implements hook_toolbar_alter().
  *
- * Includes outside_library if Edit link is in toolbar.
+ * Alters the 'contextual' toolbar tab if it exists (meaning the user is allowed
+ * to use contextual links) and if they can administer blocks.
+ *
+ * @todo Remove the "administer blocks" requirement in https://www.drupal.org/node/2822965
+ * @see contextual_toolbar()
  */
 function outside_in_toolbar_alter(&$items) {
-  $items['contextual']['#cache']['contexts'][] = 'outside_in_is_applied';
-  if (isset($items['contextual']['tab']) && \Drupal::service('outside_in.manager')->isApplicable()) {
+  $items['contextual']['#cache']['contexts'][] = 'user.permissions';
+  if (isset($items['contextual']['tab']) && \Drupal::currentUser()->hasPermission('administer blocks')) {
     $items['contextual']['#weight'] = -1000;
     $items['contextual']['#attached']['library'][] = 'outside_in/drupal.outside_in';
     $items['contextual']['tab']['#attributes']['data-drupal-outsidein'] = 'toggle';
