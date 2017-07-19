@@ -90,7 +90,7 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     /** @var \Drupal\field\FieldStorageConfigInterface $storage */
     $storage = $source_field->getFieldStorageDefinition();
     $this->assertFalse($storage->isNew(), 'Source field storage definition was saved.');
-    $this->assertTrue($storage->isLocked(), 'Source field storage definition was locked.');
+    $this->assertFalse($storage->isLocked(), 'Source field storage definition was not locked.');
 
     /** @var \Drupal\media\MediaTypeInterface $media_type_storage */
     $media_type_storage = $this->container->get('entity_type.manager')->getStorage('media_type');

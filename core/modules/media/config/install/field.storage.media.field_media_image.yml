@@ -24,7 +24,7 @@ settings:
   display_default: false
   uri_scheme: public
 module: image
-locked: true
+locked: false
 cardinality: 1
 translatable: true
 indexes: {  }

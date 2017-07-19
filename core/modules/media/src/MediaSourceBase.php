@@ -240,7 +240,6 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
         'entity_type' => 'media',
         'field_name' => $this->getSourceFieldName(),
         'type' => reset($this->pluginDefinition['allowed_field_types']),
-        'locked' => TRUE,
       ]);
   }
 

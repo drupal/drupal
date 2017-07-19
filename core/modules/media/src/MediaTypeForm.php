@@ -318,8 +318,8 @@ class MediaTypeForm extends EntityForm {
       $source_field = $source->createSourceField($media_type);
       /** @var \Drupal\field\FieldStorageConfigInterface $storage */
       $storage = $source_field->getFieldStorageDefinition();
-      if ($storage->isNew() || !$storage->isLocked()) {
-        $storage->setLocked(TRUE)->save();
+      if ($storage->isNew()) {
+        $storage->save();
       }
       $source_field->save();
 

@@ -352,7 +352,7 @@ class MediaSourceTest extends MediaKernelTestBase {
 
     // Test field storage.
     $this->assertTrue($field_storage->isNew(), 'Field storage is saved automatically.');
-    $this->assertTrue($field_storage->isLocked(), 'Field storage is not locked.');
+    $this->assertFalse($field_storage->isLocked(), 'Field storage is not locked.');
     $this->assertEquals('string', $field_storage->getType(), 'Field is not of correct type.');
     $this->assertEquals('field_media_test_1', $field_storage->getName(), 'Incorrect field name is used.');
     $this->assertEquals('media', $field_storage->getTargetEntityTypeId(), 'Field is not targeting media entities.');
@@ -387,7 +387,7 @@ class MediaSourceTest extends MediaKernelTestBase {
 
     // Test field storage.
     $this->assertTrue($field_storage->isNew(), 'Field storage is saved automatically.');
-    $this->assertTrue($field_storage->isLocked(), 'Field storage is not locked.');
+    $this->assertFalse($field_storage->isLocked(), 'Field storage is not locked.');
     $this->assertEquals('string_long', $field_storage->getType(), 'Field is of incorrect type.');
     $this->assertEquals('field_media_test_constraints_1', $field_storage->getName(), 'Incorrect field name is used.');
     $this->assertEquals('media', $field_storage->getTargetEntityTypeId(), 'Field is not targeting media entities.');

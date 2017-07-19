@@ -51,7 +51,7 @@ trait MediaFunctionalTestCreateMediaTypeTrait {
       $source_field = $source->createSourceField($media_type);
       /** @var \Drupal\field\FieldStorageConfigInterface $storage */
       $storage = $source_field->getFieldStorageDefinition();
-      $storage->setLocked(TRUE)->save();
+      $storage->save();
       $source_field->save();
 
       $media_type

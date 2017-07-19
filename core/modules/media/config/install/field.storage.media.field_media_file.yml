@@ -17,7 +17,7 @@ settings:
   display_field: false
   display_default: false
 module: file
-locked: true
+locked: false
 cardinality: 1
 translatable: true
 indexes: {  }
