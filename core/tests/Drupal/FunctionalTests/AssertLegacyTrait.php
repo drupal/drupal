@@ -720,6 +720,22 @@ trait AssertLegacyTrait {
   }
 
   /**
+   * Asserts whether an expected cache tag was absent in the last response.
+   *
+   * @param string $cache_tag
+   *   The cache tag to check.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->assertSession()->responseHeaderNotContains() instead.
+   *
+   * @see https://www.drupal.org/node/2864029
+   */
+  protected function assertNoCacheTag($cache_tag) {
+    @trigger_error('assertNoCacheTag() is deprecated and scheduled for removal in Drupal 9.0.0. Use $this->assertSession()->responseHeaderNotContains() instead. See https://www.drupal.org/node/2864029.', E_USER_DEPRECATED);
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', $cache_tag);
+  }
+
+  /**
    * Checks that current response header equals value.
    *
    * @param string $name
