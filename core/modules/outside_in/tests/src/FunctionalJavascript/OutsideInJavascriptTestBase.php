@@ -42,7 +42,7 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
   protected function waitForOffCanvasToOpen() {
     $web_assert = $this->assertSession();
     $web_assert->assertWaitOnAjaxRequest();
-    $web_assert->waitForElementVisible('css', '#drupal-off-canvas');
+    $this->assertElementVisibleAfterWait('css', '#drupal-off-canvas');
   }
 
   /**
@@ -125,7 +125,7 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
     $web_assert = $this->assertSession();
     // Waiting for Toolbar module.
     // @todo Remove the hack after https://www.drupal.org/node/2542050.
-    $web_assert->waitForElementVisible('css', '.toolbar-fixed');
+    $this->assertElementVisibleAfterWait('css', '.toolbar-fixed');
     // Waiting for Toolbar animation.
     $web_assert->assertWaitOnAjaxRequest();
   }
@@ -138,6 +138,21 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
    */
   protected function getTestThemes() {
     return ['bartik', 'stark', 'classy', 'stable'];
+  }
+
+  /**
+   * Asserts the specified selector is visible after a wait.
+   *
+   * @param string $selector
+   *   The selector engine name. See ElementInterface::findAll() for the
+   *   supported selectors.
+   * @param string|array $locator
+   *   The selector locator.
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   */
+  protected function assertElementVisibleAfterWait($selector, $locator, $timeout = 10000) {
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible($selector, $locator, $timeout));
   }
 
 }
