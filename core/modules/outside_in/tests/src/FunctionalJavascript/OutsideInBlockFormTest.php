@@ -85,7 +85,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
           $this->waitForNoElement("#toolbar-administration a.is-active");
         }
         $page->find('css', $toolbar_item)->click();
-        $web_assert->waitForElementVisible('css', "{$toolbar_item}.is-active");
+        $this->assertElementVisibleAfterWait('css', "{$toolbar_item}.is-active");
       }
       $this->enableEditMode();
       if (isset($toolbar_item)) {
@@ -276,7 +276,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
         $this->drupalGet('node/' . $node->id());
         // Waiting for Toolbar module.
         // @todo Remove the hack after https://www.drupal.org/node/2542050.
-        $web_assert->waitForElementVisible('css', '.toolbar-fixed');
+        $this->assertElementVisibleAfterWait('css', '.toolbar-fixed');
         // Waiting for Toolbar animation.
         $web_assert->assertWaitOnAjaxRequest();
         // The 2nd page load we should already be in edit mode.
@@ -285,7 +285,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
         }
         // In Edit mode clicking field should open QuickEdit toolbar.
         $page->find('css', $body_selector)->click();
-        $web_assert->waitForElementVisible('css', $quick_edit_selector);
+        $this->assertElementVisibleAfterWait('css', $quick_edit_selector);
 
         $this->disableEditMode();
         // Exiting Edit mode should close QuickEdit toolbar.
@@ -296,7 +296,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
         $this->enableEditMode();
         $this->openBlockForm($block_selector);
         $page->find('css', $body_selector)->click();
-        $web_assert->waitForElementVisible('css', $quick_edit_selector);
+        $this->assertElementVisibleAfterWait('css', $quick_edit_selector);
         // Off-canvas dialog should be closed when opening QuickEdit toolbar.
         $this->waitForOffCanvasToClose();
 
@@ -310,7 +310,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       $this->disableEditMode();
       // Open QuickEdit toolbar before going into Edit mode.
       $this->clickContextualLink($node_selector, "Quick edit");
-      $web_assert->waitForElementVisible('css', $quick_edit_selector);
+      $this->assertElementVisibleAfterWait('css', $quick_edit_selector);
       // Open off-canvas and enter Edit mode via contextual link.
       $this->clickContextualLink($block_selector, "Quick edit");
       $this->waitForOffCanvasToOpen();
@@ -319,7 +319,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       // Open QuickEdit toolbar via contextual link while in Edit mode.
       $this->clickContextualLink($node_selector, "Quick edit", FALSE);
       $this->waitForOffCanvasToClose();
-      $web_assert->waitForElementVisible('css', $quick_edit_selector);
+      $this->assertElementVisibleAfterWait('css', $quick_edit_selector);
       $this->disableEditMode();
     }
   }
