@@ -26,9 +26,11 @@ var CKBUILDER_CONFIG = {
 	ignore: [
 		// CKEditor repository structure: unrelated to the usage of CKEditor itself.
 		'bender.js',
+		'bender.ci.js',
 		'.bender',
 		'bender-err.log',
 		'bender-out.log',
+		'.travis.yml',
 		'dev',
 		'docs',
 		'.DS_Store',
