@@ -379,7 +379,7 @@ class BlockTest extends BlockTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
     $cid_parts = [\Drupal::url('<front>', [], ['absolute' => TRUE]), 'html'];
     $cid = implode(':', $cid_parts);
-    $cache_entry = \Drupal::cache('render')->get($cid);
+    $cache_entry = \Drupal::cache('page')->get($cid);
     $expected_cache_tags = [
       'config:block_list',
       'block_view',
@@ -420,7 +420,7 @@ class BlockTest extends BlockTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
     $cid_parts = [\Drupal::url('<front>', [], ['absolute' => TRUE]), 'html'];
     $cid = implode(':', $cid_parts);
-    $cache_entry = \Drupal::cache('render')->get($cid);
+    $cache_entry = \Drupal::cache('page')->get($cid);
     $expected_cache_tags = [
       'config:block_list',
       'block_view',

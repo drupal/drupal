@@ -54,7 +54,7 @@ abstract class PageCacheTagsTestBase extends WebTestBase {
       $absolute_url = $url->setAbsolute()->toString();
       $cid_parts = [$absolute_url, 'html'];
       $cid = implode(':', $cid_parts);
-      $cache_entry = \Drupal::cache('render')->get($cid);
+      $cache_entry = \Drupal::cache('page')->get($cid);
       sort($cache_entry->tags);
       $tags = array_unique($tags);
       sort($tags);

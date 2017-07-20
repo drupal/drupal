@@ -59,7 +59,7 @@ class PageCacheTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
     $cid_parts = [\Drupal::url('system_test.cache_tags_page', [], ['absolute' => TRUE]), 'html'];
     $cid = implode(':', $cid_parts);
-    $cache_entry = \Drupal::cache('render')->get($cid);
+    $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
     $expected_tags = [
       'config:user.role.anonymous',
@@ -91,7 +91,7 @@ class PageCacheTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
     $cid_parts = [\Drupal::url('system_test.cache_tags_page', [], ['absolute' => TRUE]), 'html'];
     $cid = implode(':', $cid_parts);
-    $cache_entry = \Drupal::cache('render')->get($cid);
+    $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
     $expected_tags = [
       'config:user.role.anonymous',
@@ -156,7 +156,7 @@ class PageCacheTest extends WebTestBase {
 
     // Clear the page cache. After that request a HAL request, followed by an
     // ordinary HTML one.
-    \Drupal::cache('render')->deleteAll();
+    \Drupal::cache('page')->deleteAll();
     $this->drupalGet($node_url_with_hal_json_format);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
     $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/hal+json');
@@ -374,7 +374,7 @@ class PageCacheTest extends WebTestBase {
       $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
 
       // Ensure the 'expire' field on the cache entry uses cache_ttl_4xx.
-      $cache_item = \Drupal::service('cache.render')->get($this->getUrl() . ':html');
+      $cache_item = \Drupal::service('cache.page')->get($this->getUrl() . ':html');
       $difference = $cache_item->expire - (int) $cache_item->created;
       // Given that a second might have passed we cannot be sure that
       // $difference will exactly equal the default cache_ttl_4xx setting.
@@ -393,7 +393,7 @@ class PageCacheTest extends WebTestBase {
       'required' => TRUE,
     ];
     $this->writeSettings($settings);
-    \Drupal::service('cache.render')->deleteAll();
+    \Drupal::service('cache.page')->deleteAll();
 
     foreach ($tests as $code => $content_url) {
       // Getting the 404 page twice should still result in a cache miss.

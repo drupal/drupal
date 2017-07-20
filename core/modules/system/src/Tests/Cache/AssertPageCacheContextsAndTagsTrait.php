@@ -91,7 +91,7 @@ trait AssertPageCacheContextsAndTagsTrait {
     // Assert page cache item + expected cache tags.
     $cid_parts = [$url->setAbsolute()->toString(), 'html'];
     $cid = implode(':', $cid_parts);
-    $cache_entry = \Drupal::cache('render')->get($cid);
+    $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
     $this->assertEqual($cache_entry->tags, $expected_tags);
     $this->debugCacheTags($cache_entry->tags, $expected_tags);
