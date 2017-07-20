@@ -28,13 +28,10 @@
  *
  * @see template_preprocess_media()
  *
- * @todo Make the HTML wrapper tag for media items more semantically correct.
- *   https://www.drupal.org/node/2878115
- *
  * @ingroup themeable
  */
 #}
-<article{{ attributes }}>
+<div{{ attributes }}>
   {#
     In the 'full' view mode the entity label is assumed to be displayed as the
     page title, so we do not display it here.
@@ -48,4 +45,4 @@
   {{ title_suffix }}
 
   {{ content }}
-</article>
+</div>
