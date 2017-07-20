@@ -48,24 +48,6 @@ function media_theme() {
 }
 
 /**
- * Implements hook_entity_operation_alter().
- *
- * Fix broken operations array in field UI for entities with restricted access.
- *
- * @todo This hook can be removed when issue #2836384 is done.
- * @see https://www.drupal.org/node/2836384
- */
-function media_entity_operation_alter(array &$operations, EntityInterface $entity) {
-  if ($entity instanceof FieldConfigInterface && $entity->getTargetEntityTypeId() === 'media') {
-    /** @var \Drupal\media\MediaTypeInterface $media_type */
-    $media_type = \Drupal::entityTypeManager()->getStorage('media_type')->load($entity->getTargetBundle());
-    if ($entity->id() === 'media.' . $media_type->id() . '.' . $media_type->getSource()->getConfiguration()['source_field']) {
-      unset($operations['delete']);
-    }
-  }
-}
-
-/**
  * Implements hook_entity_access().
  */
 function media_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
