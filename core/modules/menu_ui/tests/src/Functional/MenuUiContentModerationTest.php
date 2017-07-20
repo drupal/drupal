@@ -58,6 +58,14 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     // Create a node.
     $node = $this->drupalCreateNode();
 
+    // Publish the node with no changes.
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and Publish'));
+    $this->assertSession()->responseContains(t('Page %label has been updated.', ['%label' => $node->toLink($node->label())->toString()]));
+
+    // Create a forward revision with no changes.
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and Create New Draft'));
+    $this->assertSession()->responseContains(t('Page %label has been updated.', ['%label' => $node->toLink($node->label())->toString()]));
+
     // Add a menu link and save a new default (published) revision.
     $edit = [
       'menu[enabled]' => 1,
@@ -126,6 +134,21 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     // Check that the menu settings were not applied.
     $this->assertSession()->pageTextNotContains('You can only change the menu settings for the published version of this content.');
     $this->assertSession()->linkExists('Test menu link');
+
+    // Create a node.
+    $node = $this->drupalCreateNode();
+
+    // Publish the node with no changes.
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and Publish'));
+    $this->assertSession()->responseContains(t('Page %label has been updated.', ['%label' => $node->toLink($node->label())->toString()]));
+
+    // Add a menu link and save and create a new non-default (draft) revision.
+    $edit = [
+      'menu[enabled]' => 1,
+      'menu[title]' => 'Test menu link',
+    ];
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and Create New Draft'));
+    $this->assertSession()->pageTextContains('You can only change the menu settings for the published version of this content.');
   }
 
 }
