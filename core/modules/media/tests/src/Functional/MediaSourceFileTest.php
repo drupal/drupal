@@ -51,4 +51,15 @@ class MediaSourceFileTest extends MediaFunctionalTestBase {
     $this->assertSame('txt doc docx pdf odt', FieldConfig::load("media.$media_type_id.field_media_file")->get('settings')['file_extensions']);
   }
 
+  /**
+   * Ensure source field deletion is not possible.
+   */
+  public function testPreventSourceFieldDeletion() {
+    $media_type = $this->createMediaType([], 'file');
+    $media_type_id = $media_type->id();
+
+    $this->drupalGet("admin/structure/media/manage/$media_type_id/fields/media.$media_type_id.field_media_file/delete");
+    $this->assertSession()->statusCodeEquals(403);
+  }
+
 }
