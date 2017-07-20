@@ -27,7 +27,8 @@ class MediaViewsWizardTest extends MediaJavascriptTestBase {
     $page->fillField('label', $view_id);
     $this->waitUntilVisible('.machine-name-value');
     $page->selectFieldOption('show[wizard_key]', 'media');
-    $assert_session->assertWaitOnAjaxRequest();
+    $result = $assert_session->waitForElementVisible('css', 'select[data-drupal-selector="edit-show-type"]');
+    $this->assertNotEmpty($result);
     $page->checkField('page[create]');
     $page->fillField('page[path]', $this->randomMachineName(16));
     $page->pressButton('Save and edit');

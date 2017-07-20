@@ -112,11 +112,13 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
     $assert_session->fieldExists('Media source');
     $assert_session->optionExists('Media source', $source_id);
     $page->selectFieldOption('Media source', $source_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $result = $assert_session->waitForElementVisible('css', 'fieldset[data-drupal-selector="edit-source-configuration"]');
+    $this->assertNotEmpty($result);
 
     // Make sure the provided fields are visible on the form.
     foreach ($provided_fields as $provided_field) {
-      $assert_session->selectExists("field_map[{$provided_field}]");
+      $result = $assert_session->waitForElementVisible('css', 'select[name="field_map[' . $provided_field . ']"]');
+      $this->assertNotEmpty($result);
     }
 
     // Save the form to create the type.

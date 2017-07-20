@@ -46,7 +46,8 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     // Create a media item.
     $this->drupalGet("media/add/{$media_type_id}");
     $page->attachFileToField("files[{$source_field_id}_0]", \Drupal::service('file_system')->realpath($test_filepath));
-    $assert_session->assertWaitOnAjaxRequest();
+    $result = $assert_session->waitForButton('Remove');
+    $this->assertNotEmpty($result);
     $page->pressButton('Save');
 
     $assert_session->addressEquals('media/1');
@@ -63,7 +64,8 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     file_unmanaged_copy($icon_base . '/generic.png', $icon_base . '/text--plain.png');
     $this->drupalGet("media/add/{$media_type_id}");
     $page->attachFileToField("files[{$source_field_id}_0]", \Drupal::service('file_system')->realpath($test_filepath));
-    $assert_session->assertWaitOnAjaxRequest();
+    $result = $assert_session->waitForButton('Remove');
+    $this->assertNotEmpty($result);
     $page->pressButton('Save');
     $assert_session->elementAttributeContains('css', '.image-style-thumbnail', 'src', 'text--plain.png');
   }

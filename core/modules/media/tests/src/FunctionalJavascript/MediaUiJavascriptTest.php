@@ -120,7 +120,8 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
 
     // Try to change media type and check if new configuration sub-form appears.
     $page->selectFieldOption('source', 'test');
-    $assert_session->assertWaitOnAjaxRequest();
+    $result = $assert_session->waitForElementVisible('css', 'fieldset[data-drupal-selector="edit-source-configuration"]');
+    $this->assertNotEmpty($result);
     $assert_session->fieldExists('Test config value');
     $assert_session->fieldValueEquals('Test config value', 'This is default value.');
     $assert_session->fieldExists('Attribute 1');
