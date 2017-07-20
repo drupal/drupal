@@ -249,8 +249,8 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
    */
   protected function hasSourceFieldChanged() {
     $source_field_name = $this->getSource()->getConfiguration()['source_field'];
-    $current_value = $this->get($source_field_name)->getValue();
-    return (isset($this->original) && $current_value != $this->original->get($source_field_name)->getValue());
+    $current_items = $this->get($source_field_name);
+    return isset($this->original) && !$current_items->equals($this->original->get($source_field_name));
   }
 
   /**
