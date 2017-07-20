@@ -200,6 +200,43 @@ class NodeEditFormTest extends NodeTestBase {
   }
 
   /**
+   * Tests the node meta information.
+   */
+  public function testNodeMetaInformation() {
+    // Check that regular users (i.e. without the 'administer nodes' permission)
+    // can not see the meta information.
+    $this->drupalLogin($this->webUser);
+    $this->drupalGet('node/add/page');
+    $this->assertNoText('Not saved yet');
+
+    // Create node to edit.
+    $edit['title[0][value]'] = $this->randomMachineName(8);
+    $edit['body[0][value]'] = $this->randomMachineName(16);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
+    $this->drupalGet("node/" . $node->id() . "/edit");
+    $this->assertNoText('Published');
+    $this->assertNoText(format_date($node->getChangedTime(), 'short'));
+
+    // Check that users with the 'administer nodes' permission can see the meta
+    // information.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('node/add/page');
+    $this->assertText('Not saved yet');
+
+    // Create node to edit.
+    $edit['title[0][value]'] = $this->randomMachineName(8);
+    $edit['body[0][value]'] = $this->randomMachineName(16);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
+    $this->drupalGet("node/" . $node->id() . "/edit");
+    $this->assertText('Published');
+    $this->assertText(format_date($node->getChangedTime(), 'short'));
+  }
+
+  /**
    * Checks that the "authored by" works correctly with various values.
    *
    * @param \Drupal\node\NodeInterface $node

@@ -7,6 +7,7 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,6 +24,13 @@ class NodeForm extends ContentEntityForm {
   protected $tempStoreFactory;
 
   /**
+   * The Current User object.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a NodeForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -33,10 +41,13 @@ class NodeForm extends ContentEntityForm {
    *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(EntityManagerInterface $entity_manager, PrivateTempStoreFactory $temp_store_factory, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+  public function __construct(EntityManagerInterface $entity_manager, PrivateTempStoreFactory $temp_store_factory, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL, AccountInterface $current_user) {
     parent::__construct($entity_manager, $entity_type_bundle_info, $time);
     $this->tempStoreFactory = $temp_store_factory;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -47,7 +58,8 @@ class NodeForm extends ContentEntityForm {
       $container->get('entity.manager'),
       $container->get('user.private_tempstore'),
       $container->get('entity_type.bundle.info'),
-      $container->get('datetime.time')
+      $container->get('datetime.time'),
+      $container->get('current_user')
     );
   }
 
@@ -101,6 +113,34 @@ class NodeForm extends ContentEntityForm {
     $form = parent::form($form, $form_state);
 
     $form['advanced']['#attributes']['class'][] = 'entity-meta';
+
+    $form['meta'] = [
+      '#type' => 'details',
+      '#group' => 'advanced',
+      '#weight' => -10,
+      '#title' => $this->t('Status'),
+      '#attributes' => ['class' => ['entity-meta__header']],
+      '#tree' => TRUE,
+      '#access' => $this->currentUser->hasPermission('administer nodes'),
+    ];
+    $form['meta']['published'] = [
+      '#type' => 'item',
+      '#markup' => $node->isPublished() ? $this->t('Published') : $this->t('Not published'),
+      '#access' => !$node->isNew(),
+      '#wrapper_attributes' => ['class' => ['entity-meta__title']],
+    ];
+    $form['meta']['changed'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Last saved'),
+      '#markup' => !$node->isNew() ? format_date($node->getChangedTime(), 'short') : $this->t('Not saved yet'),
+      '#wrapper_attributes' => ['class' => ['entity-meta__last-saved']],
+    ];
+    $form['meta']['author'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Author'),
+      '#markup' => $node->getOwner()->getUsername(),
+      '#wrapper_attributes' => ['class' => ['entity-meta__author']],
+    ];
 
     $form['footer'] = [
       '#type' => 'container',
