@@ -185,7 +185,6 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    */
   protected function enableEditMode() {
     $this->pressToolbarEditButton();
-    $this->waitForToolbarToLoad();
     $this->assertEditModeEnabled();
   }
 
@@ -194,7 +193,6 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    */
   protected function disableEditMode() {
     $this->pressToolbarEditButton();
-    $this->waitForToolbarToLoad();
     $this->assertEditModeDisabled();
   }
 
@@ -229,7 +227,6 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    *   A css selector selects the block or an element within it.
    */
   protected function openBlockForm($block_selector) {
-    $this->waitForToolbarToLoad();
     $this->click($block_selector);
     $this->waitForOffCanvasToOpen();
     $this->assertOffCanvasBlockFormIsValid();
@@ -274,11 +271,6 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       // Load the same page twice.
       foreach ([1, 2] as $page_load_times) {
         $this->drupalGet('node/' . $node->id());
-        // Waiting for Toolbar module.
-        // @todo Remove the hack after https://www.drupal.org/node/2542050.
-        $this->assertElementVisibleAfterWait('css', '.toolbar-fixed');
-        // Waiting for Toolbar animation.
-        $web_assert->assertWaitOnAjaxRequest();
         // The 2nd page load we should already be in edit mode.
         if ($page_load_times == 1) {
           $this->enableEditMode();

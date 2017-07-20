@@ -119,18 +119,6 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
   }
 
   /**
-   * Waits for Toolbar to load.
-   */
-  protected function waitForToolbarToLoad() {
-    $web_assert = $this->assertSession();
-    // Waiting for Toolbar module.
-    // @todo Remove the hack after https://www.drupal.org/node/2542050.
-    $this->assertElementVisibleAfterWait('css', '.toolbar-fixed');
-    // Waiting for Toolbar animation.
-    $web_assert->assertWaitOnAjaxRequest();
-  }
-
-  /**
    * Get themes to test.
    *
    * @return string[]
