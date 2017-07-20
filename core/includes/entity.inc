@@ -531,24 +531,24 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
  *
  * @deprecated as of Drupal 8.0.x, will be removed before Drupal 9.0.0.
  *   If the entity form display is available in configuration use:
- * @code
- *   \Drupal::entityTypeManager()
- *     ->getStorage('entity_form_display')
- *     ->load($entity_type . '.' . $bundle . '.' . $form_mode);
- * @endcode
+ *   @code
+ *     \Drupal::entityTypeManager()
+ *       ->getStorage('entity_form_display')
+ *       ->load($entity_type . '.' . $bundle . '.' . $form_mode);
+ *   @endcode
  *   When the entity form display is not available in configuration, you can
  *   create a new EntityFormDisplay object using:
- * @code
- * $values = array(
- *  'targetEntityType' => $entity_type,
- *  'bundle' => $bundle,
- *  'mode' => $form_mode,
- *  'status' => TRUE,
- * );
- * \Drupal::entityTypeManager()
- *   ->getStorage('entity_form_display')
- *   ->create($values);
- * @endcode
+ *   @code
+ *   $values = array(
+ *    'targetEntityType' => $entity_type,
+ *    'bundle' => $bundle,
+ *    'mode' => $form_mode,
+ *    'status' => TRUE,
+ *   );
+ *   \Drupal::entityTypeManager()
+ *     ->getStorage('entity_form_display')
+ *     ->create($values);
+ *   @endcode
  *
  * @see \Drupal\Core\Entity\EntityStorageInterface::create()
  * @see \Drupal\Core\Entity\EntityStorageInterface::load()
