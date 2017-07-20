@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Entity Test Update module.
+ */
+
+use Drupal\system\Tests\Update\DbUpdatesTrait;
+
+DbUpdatesTrait::includeUpdates('entity_test_update', 'entity_rev_pub_updates');

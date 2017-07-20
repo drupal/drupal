@@ -777,6 +777,11 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // of a NOT NULL constraint.
     $this->makeBaseFieldEntityKey();
 
+    // Field storage CRUD operations use the last installed entity type
+    // definition so we need to update it before doing any other field storage
+    // updates.
+    $this->entityDefinitionUpdateManager->updateEntityType($this->state->get('entity_test_update.entity_type'));
+
     // Try to apply the update and verify they fail since we have a NULL value.
     $message = 'An error occurs when trying to enabling NOT NULL constraints with NULL data.';
     try {
