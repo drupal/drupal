@@ -262,3 +262,13 @@ function content_moderation_workflow_insert(WorkflowInterface $entity) {
 function content_moderation_workflow_update(WorkflowInterface $entity) {
   content_moderation_workflow_insert($entity);
 }
+
+/**
+ * Implements hook_rest_resource_alter().
+ */
+function content_moderation_rest_resource_alter(&$definitions) {
+  // ContentModerationState is an internal entity type. Therefore it should not
+  // be exposed via REST.
+  // @see \Drupal\content_moderation\ContentModerationStateAccessControlHandler
+  unset($definitions['entity:content_moderation_state']);
+}
