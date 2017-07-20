@@ -60,6 +60,13 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   protected $currentUser;
 
   /**
+   * The state transition validation service.
+   *
+   * @var \Drupal\content_moderation\StateTransitionValidationInterface
+   */
+  protected $validator;
+
+  /**
    * A keyed array of custom moderation handlers for given entity types.
    *
    * Any entity not specified will use a common default.
@@ -85,12 +92,13 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   Current user.
    */
-  public function __construct(TranslationInterface $translation, ModerationInformationInterface $moderation_information, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info, AccountInterface $current_user) {
+  public function __construct(TranslationInterface $translation, ModerationInformationInterface $moderation_information, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info, AccountInterface $current_user, StateTransitionValidationInterface $validator) {
     $this->stringTranslation = $translation;
     $this->moderationInfo = $moderation_information;
     $this->entityTypeManager = $entity_type_manager;
     $this->bundleInfo = $bundle_info;
     $this->currentUser = $current_user;
+    $this->validator = $validator;
   }
 
   /**
@@ -102,7 +110,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       $container->get('content_moderation.moderation_information'),
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('content_moderation.state_transition_validation')
     );
   }
 
@@ -282,12 +291,57 @@ class EntityTypeInfo implements ContainerInjectionInterface {
         $this->entityTypeManager->getHandler($type->getBundleOf(), 'moderation')->enforceRevisionsBundleFormAlter($form, $form_state, $form_id);
       }
     }
-    elseif ($form_object instanceof ContentEntityFormInterface) {
+    elseif ($form_object instanceof ContentEntityFormInterface && in_array($form_object->getOperation(), ['edit', 'default'])) {
       $entity = $form_object->getEntity();
       if ($this->moderationInfo->isModeratedEntity($entity)) {
         $this->entityTypeManager
           ->getHandler($entity->getEntityTypeId(), 'moderation')
           ->enforceRevisionsEntityFormAlter($form, $form_state, $form_id);
+
+        if (!$this->moderationInfo->isForwardRevisionAllowed($entity)) {
+          $latest_revision = $this->moderationInfo->getLatestRevision($entity->getEntityTypeId(), $entity->id());
+          if ($entity->bundle()) {
+            $bundle_type_id = $entity->getEntityType()->getBundleEntityType();
+            $bundle = $this->entityTypeManager->getStorage($bundle_type_id)->load($entity->bundle());
+            $type_label = $bundle->label();
+          }
+          else {
+            $type_label = $entity->getEntityType()->getLabel();
+          }
+
+          $translation = $this->moderationInfo->getAffectedRevisionTranslation($latest_revision);
+          $args = [
+            '@type_label' => $type_label,
+            '@latest_revision_edit_url' => $translation->toUrl('edit-form', ['language' => $translation->language()])->toString(),
+            '@latest_revision_delete_url' => $translation->toUrl('delete-form', ['language' => $translation->language()])->toString(),
+          ];
+          $label = $this->t('Unable to save this @type_label.', $args);
+          $message = $this->t('<a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest draft revision to allow all workflow transitions.', $args);
+          $full_message = $this->t('Unable to save this @type_label. <a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest draft revision to allow all workflow transitions.', $args);
+          drupal_set_message($full_message, 'error');
+
+          $form['actions']['#access'] = FALSE;
+          $form['invalid_transitions'] = [
+            'label' => [
+              '#type' => 'item',
+              '#prefix' => '<strong class="label">',
+              '#markup' => $label,
+              '#suffix' => '</strong>',
+            ],
+            'message' => [
+              '#type' => 'item',
+              '#markup' => $message,
+            ],
+            '#weight' => 999,
+            '#no_valid_transitions' => TRUE,
+          ];
+
+          if ($form['footer']) {
+            $form['footer']['invalid_transitions'] = $form['invalid_transitions'];
+            unset($form['invalid_transitions']);
+          }
+        }
+
         // Submit handler to redirect to the latest version, if available.
         $form['actions']['submit']['#submit'][] = [EntityTypeInfo::class, 'bundleFormRedirect'];
       }

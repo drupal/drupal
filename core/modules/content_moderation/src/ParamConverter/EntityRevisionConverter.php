@@ -92,13 +92,12 @@ class EntityRevisionConverter extends EntityConverter {
       $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
       $latest_revision = $this->moderationInformation->getLatestRevision($entity_type_id, $value);
 
-      // If the entity type is translatable, ensure we return the proper
-      // translation object for the current context.
-      if ($latest_revision instanceof EntityInterface && $entity instanceof TranslatableInterface) {
-        $latest_revision = $this->entityManager->getTranslationFromContext($latest_revision, NULL, ['operation' => 'entity_upcast']);
-      }
-
-      if ($latest_revision instanceof EntityInterface && $latest_revision->isRevisionTranslationAffected()) {
+      if ($latest_revision instanceof EntityInterface) {
+        // If the entity type is translatable, ensure we return the proper
+        // translation object for the current context.
+        if ($entity instanceof TranslatableInterface) {
+          $latest_revision = $this->entityManager->getTranslationFromContext($latest_revision, NULL, ['operation' => 'entity_upcast']);
+        }
         $entity = $latest_revision;
       }
     }

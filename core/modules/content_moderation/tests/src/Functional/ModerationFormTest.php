@@ -12,6 +12,18 @@ use Drupal\workflows\Entity\Workflow;
 class ModerationFormTest extends ModerationStateTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = [
+    'node',
+    'content_moderation',
+    'locale',
+    'content_translation',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -203,6 +215,240 @@ class ModerationFormTest extends ModerationStateTestBase {
 
     $this->drupalGet(sprintf('node/%d/revisions', $node->id()));
     $this->assertText('by ' . $another_user->getAccountName());
+  }
+
+  /**
+   * Tests translated and moderated nodes.
+   */
+  public function testContentTranslationNodeForm() {
+    $this->drupalLogin($this->rootUser);
+
+    // Add French language.
+    $edit = [
+      'predefined_langcode' => 'fr',
+    ];
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+
+    // Enable content translation on articles.
+    $this->drupalGet('admin/config/regional/content-language');
+    $edit = [
+      'entity_types[node]' => TRUE,
+      'settings[node][moderated_content][translatable]' => TRUE,
+      'settings[node][moderated_content][settings][language][language_alterable]' => TRUE,
+    ];
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
+
+    // Adding languages requires a container rebuild in the test running
+    // environment so that multilingual services are used.
+    $this->rebuildContainer();
+
+    // Create new moderated content in draft (revision 1).
+    $this->drupalPostForm('node/add/moderated_content', [
+      'title[0][value]' => 'Some moderated content',
+      'body[0][value]' => 'First version of the content.',
+    ], t('Save and Create New Draft'));
+    $this->assertTrue($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    $node = $this->drupalGetNodeByTitle('Some moderated content');
+    $this->assertTrue($node->language(), 'en');
+    $edit_path = sprintf('node/%d/edit', $node->id());
+    $translate_path = sprintf('node/%d/translations/add/en/fr', $node->id());
+    $latest_version_path = sprintf('node/%d/latest', $node->id());
+    $french = \Drupal::languageManager()->getLanguage('fr');
+
+    $this->drupalGet($latest_version_path);
+    $this->assertSession()->statusCodeEquals('403');
+    $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    // Add french translation (revision 2).
+    $this->drupalGet($translate_path);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [
+      'body[0][value]' => 'Second version of the content.',
+    ], t('Save and Publish (this translation)'));
+
+    $this->drupalGet($latest_version_path, ['language' => $french]);
+    $this->assertSession()->statusCodeEquals('403');
+    $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    // Add french forward revision (revision 3).
+    $this->drupalGet($edit_path, ['language' => $french]);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [
+      'body[0][value]' => 'Third version of the content.',
+    ], t('Save and Create New Draft (this translation)'));
+
+    $this->drupalGet($latest_version_path, ['language' => $french]);
+    $this->assertTrue($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    // It should not be possible to add a new english revision.
+    $this->drupalGet($edit_path);
+    $this->assertFalse($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->assertSession()->pageTextContains('Unable to save this Moderated content.');
+
+    $this->clickLink('Publish');
+    $this->assertSession()->fieldValueEquals('body[0][value]', 'Third version of the content.');
+
+    $this->drupalGet($edit_path);
+    $this->clickLink('Delete');
+    $this->assertSession()->buttonExists('Delete');
+
+    $this->drupalGet($latest_version_path);
+    $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    // Publish the french forward revision (revision 4).
+    $this->drupalGet($edit_path, ['language' => $french]);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [
+      'body[0][value]' => 'Fifth version of the content.',
+    ], t('Save and Publish (this translation)'));
+
+    $this->drupalGet($latest_version_path, ['language' => $french]);
+    $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    // Now we can publish the english (revision 5).
+    $this->drupalGet($edit_path);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [
+      'body[0][value]' => 'Sixth version of the content.',
+    ], t('Save and Publish (this translation)'));
+
+    $this->drupalGet($latest_version_path);
+    $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    // Make sure we're allowed to create a forward french revision.
+    $this->drupalGet($edit_path, ['language' => $french]);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+
+    // Add a english forward revision (revision 6).
+    $this->drupalGet($edit_path);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [
+      'body[0][value]' => 'Seventh version of the content.',
+    ], t('Save and Create New Draft (this translation)'));
+
+    $this->drupalGet($latest_version_path);
+    $this->assertTrue($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    // Make sure we're not allowed to create a forward french revision.
+    $this->drupalGet($edit_path, ['language' => $french]);
+    $this->assertFalse($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->assertSession()->pageTextContains('Unable to save this Moderated content.');
+
+    $this->drupalGet($latest_version_path, ['language' => $french]);
+    $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    // We should be able to publish the english forward revision (revision 7)
+    $this->drupalGet($edit_path);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [
+      'body[0][value]' => 'Eighth version of the content.',
+    ], t('Save and Publish (this translation)'));
+
+    $this->drupalGet($latest_version_path);
+    $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
+
+    // Make sure we're allowed to create a forward french revision.
+    $this->drupalGet($edit_path, ['language' => $french]);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+
+    // Make sure we're allowed to create a forward english revision.
+    $this->drupalGet($edit_path);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+
+    // Create new moderated content. (revision 1).
+    $this->drupalPostForm('node/add/moderated_content', [
+      'title[0][value]' => 'Second moderated content',
+      'body[0][value]' => 'First version of the content.',
+    ], t('Save and Publish'));
+
+    $node = $this->drupalGetNodeByTitle('Second moderated content');
+    $this->assertTrue($node->language(), 'en');
+    $edit_path = sprintf('node/%d/edit', $node->id());
+    $translate_path = sprintf('node/%d/translations/add/en/fr', $node->id());
+
+    // Add a forward revision (revision 2).
+    $this->drupalGet($edit_path);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [
+      'body[0][value]' => 'Second version of the content.',
+    ], t('Save and Create New Draft (this translation)'));
+
+    // It shouldn't be possible to translate as we have a forward revision.
+    $this->drupalGet($translate_path);
+    $this->assertFalse($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->assertSession()->pageTextContains('Unable to save this Moderated content.');
+
+    // Create new moderated content (revision 1).
+    $this->drupalPostForm('node/add/moderated_content', [
+      'title[0][value]' => 'Third moderated content',
+    ], t('Save and Publish'));
+
+    $node = $this->drupalGetNodeByTitle('Third moderated content');
+    $this->assertTrue($node->language(), 'en');
+    $edit_path = sprintf('node/%d/edit', $node->id());
+    $translate_path = sprintf('node/%d/translations/add/en/fr', $node->id());
+
+    // Translate it, without updating data (revision 2).
+    $this->drupalGet($translate_path);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [], t('Save and Create New Draft (this translation)'));
+
+    // Add another draft for the translation (revision 3).
+    $this->drupalGet($edit_path, ['language' => $french]);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [], t('Save and Create New Draft (this translation)'));
+
+    // Editing the original translation should not be possible.
+    $this->drupalGet($edit_path);
+    $this->assertFalse($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->assertSession()->pageTextContains('Unable to save this Moderated content.');
+
+    // Updating and publishing the french translation is still possible.
+    $this->drupalGet($edit_path, ['language' => $french]);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertFalse($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [], t('Save and Publish (this translation)'));
+
+    // Now the french translation is published, an english draft can be added.
+    $this->drupalGet($edit_path);
+    $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
+    $this->assertTrue($this->xpath('//input[@value="Save and Archive (this translation)"]'));
+    $this->drupalPostForm(NULL, [], t('Save and Create New Draft (this translation)'));
   }
 
 }

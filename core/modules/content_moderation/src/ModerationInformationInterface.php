@@ -90,6 +90,30 @@ interface ModerationInformationInterface {
   public function getDefaultRevisionId($entity_type_id, $entity_id);
 
   /**
+   * Returns the revision translation affected translation of a revision.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity.
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface
+   *   The revision translation affected translation.
+   */
+  public function getAffectedRevisionTranslation(ContentEntityInterface $entity);
+
+  /**
+   * Determines if forward revisions are allowed.
+   *
+   * @internal
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity.
+   *
+   * @return bool
+   *   If forward revisions are allowed.
+   */
+  public function isForwardRevisionAllowed(ContentEntityInterface $entity);
+
+  /**
    * Determines if an entity is a latest revision.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity

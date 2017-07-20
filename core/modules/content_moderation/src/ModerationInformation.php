@@ -115,6 +115,25 @@ class ModerationInformation implements ModerationInformationInterface {
   /**
    * {@inheritdoc}
    */
+  public function getAffectedRevisionTranslation(ContentEntityInterface $entity) {
+    foreach ($entity->getTranslationLanguages() as $language) {
+      $translation = $entity->getTranslation($language->getId());
+      if (!$translation->isDefaultRevision() && $translation->isRevisionTranslationAffected()) {
+        return $translation;
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isForwardRevisionAllowed(ContentEntityInterface $entity) {
+    return !(!$entity->isRevisionTranslationAffected() && count($entity->getTranslationLanguages()) > 1 && $this->hasForwardRevision($entity));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isLatestRevision(ContentEntityInterface $entity) {
     return $entity->getRevisionId() == $this->getLatestRevisionId($entity->getEntityTypeId(), $entity->id());
   }

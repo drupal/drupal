@@ -13,6 +13,7 @@ use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublishNode;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -20,7 +21,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\workflows\WorkflowInterface;
-use Drupal\node\NodeInterface;
 use Drupal\node\Plugin\Action\PublishNode;
 use Drupal\node\Plugin\Action\UnpublishNode;
 use Drupal\workflows\Entity\Workflow;
@@ -131,34 +131,34 @@ function content_moderation_entity_view(array &$build, EntityInterface $entity, 
 }
 
 /**
- * Implements hook_node_access().
+ * Implements hook_entity_access().
  *
- * Nodes in particular should be viewable if unpublished and the user has
- * the appropriate permission. This permission is therefore effectively
- * mandatory for any user that wants to moderate things.
+ * Entities should be viewable if unpublished and the user has the appropriate
+ * permission. This permission is therefore effectively mandatory for any user
+ * that wants to moderate things.
  */
-function content_moderation_node_access(NodeInterface $node, $operation, AccountInterface $account) {
+function content_moderation_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
   /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
   $moderation_info = Drupal::service('content_moderation.moderation_information');
 
   $access_result = NULL;
   if ($operation === 'view') {
-    $access_result = (!$node->isPublished())
+    $access_result = (($entity instanceof EntityPublishedInterface) && !$entity->isPublished())
       ? AccessResult::allowedIfHasPermission($account, 'view any unpublished content')
       : AccessResult::neutral();
 
-    $access_result->addCacheableDependency($node);
+    $access_result->addCacheableDependency($entity);
   }
-  elseif ($operation === 'update' && $moderation_info->isModeratedEntity($node) && $node->moderation_state) {
+  elseif ($operation === 'update' && $moderation_info->isModeratedEntity($entity) && $entity->moderation_state) {
     /** @var \Drupal\content_moderation\StateTransitionValidation $transition_validation */
     $transition_validation = \Drupal::service('content_moderation.state_transition_validation');
 
-    $valid_transition_targets = $transition_validation->getValidTransitions($node, $account);
+    $valid_transition_targets = $transition_validation->getValidTransitions($entity, $account);
     $access_result = $valid_transition_targets ? AccessResult::neutral() : AccessResult::forbidden();
 
-    $access_result->addCacheableDependency($node);
+    $access_result->addCacheableDependency($entity);
     $access_result->addCacheableDependency($account);
-    $workflow = \Drupal::service('content_moderation.moderation_information')->getWorkflowForEntity($node);
+    $workflow = $moderation_info->getWorkflowForEntity($entity);
     $access_result->addCacheableDependency($workflow);
     foreach ($valid_transition_targets as $valid_transition_target) {
       $access_result->addCacheableDependency($valid_transition_target);
