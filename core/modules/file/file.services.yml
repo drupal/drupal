@@ -1,6 +1,6 @@
 services:
   file.usage:
     class: Drupal\file\FileUsage\DatabaseFileUsageBackend
-    arguments: ['@database']
+    arguments: ['@database', 'file_usage', '@config.factory']
     tags:
       - { name: backend_overridable }

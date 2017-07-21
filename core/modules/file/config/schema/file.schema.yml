@@ -21,6 +21,9 @@ file.settings:
         directory:
           type: path
           label: 'Directory'
+    make_unused_managed_files_temporary:
+      type: boolean
+      label: 'Controls if unused files should be marked temporary'
 
 field.storage_settings.file:
   type: base_entity_reference_field_settings

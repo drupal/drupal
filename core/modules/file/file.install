@@ -116,3 +116,15 @@ function file_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+ * Prevent unused files from being deleted.
+ */
+function file_update_8300() {
+  // Disable deletion of unused permanent files.
+  \Drupal::configFactory()->getEditable('file.settings')
+    ->set('make_unused_managed_files_temporary', FALSE)
+    ->save();
+
+  return t('Files that have no remaining usages are no longer deleted by default.');
+}
