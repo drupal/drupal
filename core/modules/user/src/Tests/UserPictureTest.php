@@ -33,6 +33,12 @@ class UserPictureTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // This test expects unused managed files to be marked temporary and then
+    // cleaned up by file_cron().
+    $this->config('file.settings')
+      ->set('make_unused_managed_files_temporary', TRUE)
+      ->save();
+
     $this->webUser = $this->drupalCreateUser([
       'access content',
       'access comments',

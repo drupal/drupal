@@ -125,10 +125,10 @@ class FileSystemForm extends ConfigFormBase {
     $period[0] = t('Never');
     $form['temporary_maximum_age'] = [
       '#type' => 'select',
-      '#title' => t('Delete orphaned files after'),
+      '#title' => t('Delete temporary files after'),
       '#default_value' => $config->get('temporary_maximum_age'),
       '#options' => $period,
-      '#description' => t('Orphaned files are not referenced from any content but remain in the file system and may appear in administrative listings. <strong>Warning:</strong> If enabled, orphaned files will be permanently deleted and may not be recoverable.'),
+      '#description' => t('Temporary files are not referenced, but are in the file system and therefore may show up in administrative lists. <strong>Warning:</strong> If enabled, temporary files will be permanently deleted and may not be recoverable.'),
     ];
 
     return parent::buildForm($form, $form_state);
