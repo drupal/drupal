@@ -22,11 +22,6 @@ class FileFieldRevisionTest extends FileFieldTestBase {
    *    should be deleted also.
    */
   public function testRevisions() {
-    // This test expects unused managed files to be marked as a temporary file
-    // and then deleted up by file_cron().
-    $this->config('file.settings')
-      ->set('make_unused_managed_files_temporary', TRUE)
-      ->save();
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());

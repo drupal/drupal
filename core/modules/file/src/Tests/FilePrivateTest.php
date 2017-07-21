@@ -27,10 +27,6 @@ class FilePrivateTest extends FileFieldTestBase {
     node_access_test_add_field(NodeType::load('article'));
     node_access_rebuild();
     \Drupal::state()->set('node_access_test.private', TRUE);
-    // This test expects unused managed files to be marked as a temporary file.
-    $this->config('file.settings')
-      ->set('make_unused_managed_files_temporary', TRUE)
-      ->save();
   }
 
   /**
