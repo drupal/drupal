@@ -132,7 +132,7 @@ class TimestampFormatter extends FormatterBase implements ContainerFactoryPlugin
     $elements['timezone'] = [
       '#type' => 'select',
       '#title' => $this->t('Time zone'),
-      '#options' => ['' => $this->t('- Default site/user time zone -')] + system_time_zones(FALSE),
+      '#options' => ['' => $this->t('- Default site/user time zone -')] + system_time_zones(FALSE, TRUE),
       '#default_value' => $this->getSetting('timezone'),
     ];
 

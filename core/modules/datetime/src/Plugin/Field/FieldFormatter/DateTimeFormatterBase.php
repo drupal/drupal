@@ -98,7 +98,7 @@ abstract class DateTimeFormatterBase extends FormatterBase implements ContainerF
       '#type' => 'select',
       '#title' => $this->t('Time zone override'),
       '#description' => $this->t('The time zone selected here will always be used'),
-      '#options' => system_time_zones(TRUE),
+      '#options' => system_time_zones(TRUE, TRUE),
       '#default_value' => $this->getSetting('timezone_override'),
     ];
 
