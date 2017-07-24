@@ -12,8 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Default main content renderer for off-canvas dialog requests.
- *
- * @internal
  */
 class OffCanvasRenderer extends DialogRenderer {
 
