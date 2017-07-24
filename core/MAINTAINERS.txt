@@ -430,6 +430,9 @@ Views
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
 
+Workflows
+- Sam Becker 'Sam152' https://www.drupal.org/u/sam152
+
 Topic maintainers
 -----------------
 
