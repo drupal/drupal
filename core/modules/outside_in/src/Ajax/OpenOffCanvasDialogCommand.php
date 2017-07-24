@@ -8,6 +8,8 @@ use Drupal\Core\Ajax\OpenDialogCommand;
  * Defines an AJAX command to open content in a dialog in a off-canvas dialog.
  *
  * @ingroup ajax
+ *
+ * @internal
  */
 class OpenOffCanvasDialogCommand extends OpenDialogCommand {
 

@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * The off-canvas form handler for the SystemBrandingBlock.
  *
  * @see outside_in_block_alter()
+ *
+ * @internal
  */
 class SystemBrandingOffCanvasForm extends PluginFormBase implements ContainerInjectionInterface {
 
