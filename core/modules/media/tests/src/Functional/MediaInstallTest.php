@@ -29,14 +29,20 @@ class MediaInstallTest extends BrowserTestBase {
    */
   public function testReinstallAfterUninstall() {
     $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    // Uninstall the media module.
     $this->container->get('module_installer')->uninstall(['media'], FALSE);
+
+    // Install the media module again, through a test module that depends on it.
+    // Note: We use a test module because in 8.4 the media module is hidden.
+    // @todo Simplify this in https://www.drupal.org/node/2897028 once it's
+    //   shown again.
     $this->drupalGet('/admin/modules');
-    $page->checkField('modules[media][enable]');
+    $page->checkField('modules[media_test_views][enable]');
     $page->pressButton('Install');
-    // @todo Remove this if-statement in https://www.drupal.org/node/2895059
-    if ($page->find('css', 'h1')->getText() == 'Are you sure you wish to enable experimental modules?') {
-      $page->pressButton('Continue');
-    }
+    $assert_session->pageTextContains('Some required modules must be enabled');
+    $page->pressButton('Continue');
     $this->assertSession()->pageTextNotContains('could not be moved/copied because a file by that name already exists in the destination directory');
   }
 
