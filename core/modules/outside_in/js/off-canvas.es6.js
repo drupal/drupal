@@ -5,6 +5,8 @@
  * @todo This functionality should extracted into a new core library or a part
  *  of the current drupal.dialog.ajax library.
  *  https://www.drupal.org/node/2784443
+ *
+ * @private
  */
 
 (function ($, Drupal, debounce, displace) {

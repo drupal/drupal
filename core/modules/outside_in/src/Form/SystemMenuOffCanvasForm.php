@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * The off-canvas form handler for the SystemMenuBlock.
  *
  * @see outside_in_block_alter()
+ *
+ * @internal
  */
 class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjectionInterface {
 

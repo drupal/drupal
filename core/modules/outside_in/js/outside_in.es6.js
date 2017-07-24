@@ -1,6 +1,8 @@
 /**
  * @file
  * Drupal's Settings Tray library.
+ *
+ * @private
  */
 
 (function ($, Drupal) {

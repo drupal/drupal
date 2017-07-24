@@ -13,6 +13,8 @@ use Drupal\Core\Plugin\PluginWithFormsInterface;
  *
  * This form removes advanced sections of regular block form such as the
  * visibility settings, machine ID and region.
+ *
+ * @internal
  */
 class BlockEntityOffCanvasForm extends BlockForm {
 
