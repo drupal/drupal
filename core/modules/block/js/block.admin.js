@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal) {
+(function ($, Drupal, debounce) {
   Drupal.behaviors.blockFilterByText = {
     attach: function attach(context, settings) {
       var $input = $('input.block-filter-text').once('block-filter-text');
@@ -24,6 +24,7 @@
 
         if (query.length >= 2) {
           $filter_rows.each(toggleBlockEntry);
+          Drupal.announce(Drupal.formatPlural($table.find('tr:visible').length - 1, '1 block is available in the modified list.', '@count blocks are available in the modified list.'));
         } else {
           $filter_rows.each(function (index) {
             $(this).parent().parent().show();
@@ -33,7 +34,7 @@
 
       if ($table.length) {
         $filter_rows = $table.find('div.block-filter-text-source');
-        $input.on('keyup', filterBlockList);
+        $input.on('keyup', debounce(filterBlockList, 200));
       }
     }
   };
@@ -51,4 +52,4 @@
       }
     }
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, Drupal.debounce);

@@ -3,7 +3,7 @@
  * Block admin behaviors.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, debounce) {
   /**
    * Filters the block list by a text input search string.
    *
@@ -53,6 +53,13 @@
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
           $filter_rows.each(toggleBlockEntry);
+          Drupal.announce(
+            Drupal.formatPlural(
+              $table.find('tr:visible').length - 1,
+              '1 block is available in the modified list.',
+              '@count blocks are available in the modified list.'
+            )
+          );
         }
         else {
           $filter_rows.each(function (index) {
@@ -63,7 +70,7 @@
 
       if ($table.length) {
         $filter_rows = $table.find('div.block-filter-text-source');
-        $input.on('keyup', filterBlockList);
+        $input.on('keyup', debounce(filterBlockList, 200));
       }
     },
   };
@@ -90,4 +97,4 @@
       }
     },
   };
-}(jQuery, Drupal));
+}(jQuery, Drupal, Drupal.debounce));
