@@ -54,7 +54,7 @@ class TimezoneTest extends KernelTestBase {
     $ungrouped_count = count(system_time_zones());
     $grouped_result = system_time_zones(NULL, TRUE);
     $grouped_count = 0;
-    array_walk_recursive($grouped_result, function ($grouped_count) use
+    array_walk_recursive($grouped_result, function () use
     (&$grouped_count) {
       $grouped_count++;
     });
