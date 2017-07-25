@@ -28,7 +28,7 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
    * @param string $theme
    *   The theme.
    */
-  public function enableTheme($theme) {
+  protected function enableTheme($theme) {
     // Enable the theme.
     \Drupal::service('theme_installer')->install([$theme]);
     $theme_config = \Drupal::configFactory()->getEditable('system.theme');
