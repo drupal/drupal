@@ -12,6 +12,16 @@
  * @event formUpdated
  */
 
+/**
+ * Triggers when a click on a page fragment link or hash change is detected.
+ *
+ * The event triggers when the fragment in the URL changes (a hash change) and
+ * when a link containing a fragment identifier is clicked. In case the hash
+ * changes due to a click this event will only be triggered once.
+ *
+ * @event formFragmentLinkClickOrHashChange
+ */
+
 (function ($, Drupal, debounce) {
   /**
    * Retrieves the summary for the first element.
@@ -245,4 +255,45 @@
       });
     },
   };
+
+  /**
+   * Sends a fragment interaction event on a hash change or fragment link click.
+   *
+   * @param {jQuery.Event} e
+   *   The event triggered.
+   *
+   * @fires event:formFragmentLinkClickOrHashChange
+   */
+  const handleFragmentLinkClickOrHashChange = (e) => {
+    let $target;
+
+    if (e.type === 'click') {
+      $target = e.currentTarget.location ? $(e.currentTarget.location.hash) : $(e.currentTarget.hash);
+    }
+    else {
+      $target = $(`#${location.hash.substr(1)}`);
+    }
+
+    $('body').trigger('formFragmentLinkClickOrHashChange', [$target]);
+
+    /**
+     * Clicking a fragment link or a hash change should focus the target
+     * element, but event timing issues in multiple browsers require a timeout.
+     */
+    setTimeout(() => {
+      $target.focus();
+    }, 300, $target);
+  };
+
+  // Binds a listener to handle URL fragment changes.
+  $(window).on('hashchange.form-fragment', debounce(handleFragmentLinkClickOrHashChange, 300, true));
+
+  /**
+   * Binds a listener to handle clicks on fragment links and absolute URL links
+   * containing a fragment, this is needed next to the hash change listener
+   * because clicking such links doesn't trigger a hash change when the fragment
+   * is already in the URL.
+   */
+  $(document).on('click.form-fragment', 'a[href*="#"]', debounce(handleFragmentLinkClickOrHashChange, 300, true));
+
 }(jQuery, Drupal, Drupal.debounce));

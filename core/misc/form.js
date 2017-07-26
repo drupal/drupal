@@ -124,4 +124,24 @@
       });
     }
   };
+
+  var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e) {
+    var $target = void 0;
+
+    if (e.type === 'click') {
+      $target = e.currentTarget.location ? $(e.currentTarget.location.hash) : $(e.currentTarget.hash);
+    } else {
+      $target = $('#' + location.hash.substr(1));
+    }
+
+    $('body').trigger('formFragmentLinkClickOrHashChange', [$target]);
+
+    setTimeout(function () {
+      $target.focus();
+    }, 300, $target);
+  };
+
+  $(window).on('hashchange.form-fragment', debounce(handleFragmentLinkClickOrHashChange, 300, true));
+
+  $(document).on('click.form-fragment', 'a[href*="#"]', debounce(handleFragmentLinkClickOrHashChange, 300, true));
 })(jQuery, Drupal, Drupal.debounce);

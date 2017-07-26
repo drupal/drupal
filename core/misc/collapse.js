@@ -77,5 +77,11 @@
     }
   };
 
+  var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e, $target) {
+    $target.parents('details').not('[open]').find('> summary').trigger('click');
+  };
+
+  $('body').on('formFragmentLinkClickOrHashChange.details', handleFragmentLinkClickOrHashChange);
+
   Drupal.CollapsibleDetails = CollapsibleDetails;
 })(jQuery, Modernizr, Drupal);

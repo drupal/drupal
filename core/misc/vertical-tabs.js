@@ -6,6 +6,12 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
+  var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e, $target) {
+    $target.parents('.vertical-tabs__pane').each(function (index, pane) {
+      $(pane).data('verticalTab').focus();
+    });
+  };
+
   Drupal.behaviors.verticalTabs = {
     attach: function attach(context) {
       var width = drupalSettings.widthBreakpoint || 640;
@@ -14,6 +20,8 @@
       if (window.matchMedia(mq).matches) {
         return;
       }
+
+      $('body').once('vertical-tabs-fragments').on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
 
       $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs').each(function () {
         var $this = $(this).addClass('vertical-tabs__panes');

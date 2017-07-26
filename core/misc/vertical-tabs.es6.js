@@ -14,6 +14,23 @@
 
 (function ($, Drupal, drupalSettings) {
   /**
+   * Show the parent vertical tab pane of a targeted page fragment.
+   *
+   * In order to make sure a targeted element inside a vertical tab pane is
+   * visible on a hash change or fragment link click, show all parent panes.
+   *
+   * @param {jQuery.Event} e
+   *   The event triggered.
+   * @param {jQuery} $target
+   *   The targeted node as a jQuery object.
+   */
+  const handleFragmentLinkClickOrHashChange = (e, $target) => {
+    $target.parents('.vertical-tabs__pane').each((index, pane) => {
+      $(pane).data('verticalTab').focus();
+    });
+  };
+
+  /**
    * This script transforms a set of details into a stack of vertical tabs.
    *
    * Each tab may have a summary which can be updated by another
@@ -35,6 +52,11 @@
       if (window.matchMedia(mq).matches) {
         return;
       }
+
+      /**
+       * Binds a listener to handle fragment link clicks and URL hash changes.
+       */
+      $('body').once('vertical-tabs-fragments').on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
 
       $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs').each(function () {
         const $this = $(this).addClass('vertical-tabs__panes');
