@@ -9,7 +9,7 @@
 
 /* Style the edit mode toolbar and tabs. */
 #toolbar-bar.js-outside-in-edit-mode {
-  background-color: #fff;
+  background-image: linear-gradient(to bottom,#0c97ed,#1f86c7);
 }
 .js-outside-in-edit-mode .toolbar-item:not(.toolbar-icon-edit) {
   color: #999;
