@@ -138,6 +138,48 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests linkExistsExact() functionality.
+   *
+   * @see \Drupal\Tests\WebAssert::linkExistsExact()
+   */
+  public function testLinkExistsExact() {
+    $this->drupalGet('test-pipe-char');
+    $this->assertSession()->linkExistsExact('foo|bar|baz');
+  }
+
+  /**
+   * Tests linkExistsExact() functionality fail.
+   *
+   * @see \Drupal\Tests\WebAssert::linkExistsExact()
+   */
+  public function testInvalidLinkExistsExact() {
+    $this->drupalGet('test-pipe-char');
+    $this->setExpectedException(ExpectationException::class, 'Link with label foo|bar found');
+    $this->assertSession()->linkExistsExact('foo|bar');
+  }
+
+  /**
+   * Tests linkNotExistsExact() functionality.
+   *
+   * @see \Drupal\Tests\WebAssert::linkNotExistsExact()
+   */
+  public function testLinkNotExistsExact() {
+    $this->drupalGet('test-pipe-char');
+    $this->assertSession()->linkNotExistsExact('foo|bar');
+  }
+
+  /**
+   * Tests linkNotExistsExact() functionality fail.
+   *
+   * @see \Drupal\Tests\WebAssert::linkNotExistsExact()
+   */
+  public function testInvalidLinkNotExistsExact() {
+    $this->drupalGet('test-pipe-char');
+    $this->setExpectedException(ExpectationException::class, 'Link with label foo|bar|baz not found');
+    $this->assertSession()->linkNotExistsExact('foo|bar|baz');
+  }
+
+  /**
    * Tests legacy text asserts.
    */
   public function testLegacyTextAsserts() {
