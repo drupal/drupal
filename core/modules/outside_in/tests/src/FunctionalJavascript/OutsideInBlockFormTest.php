@@ -32,6 +32,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     'quickedit',
     'search',
     'block_content',
+    'outside_in_test',
     // Add test module to override CSS pointer-events properties because they
     // cause test failures.
     'outside_in_test_css',
@@ -114,10 +115,9 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       if (isset($new_page_text)) {
         $page->pressButton($button_text);
         // Make sure the changes are present.
-        // @todo Use a wait method that will take into account the form submitting
-        //   and all JavaScript activity. https://www.drupal.org/node/2837676
-        //   The use \Behat\Mink\WebAssert::pageTextContains to check text.
-        $this->assertJsCondition('jQuery("' . $block_selector . ' ' . $label_selector . '").html() == "' . $new_page_text . '"');
+        $new_page_text_locator = "$block_selector $label_selector:contains($new_page_text)";
+        $this->assertElementVisibleAfterWait('css', $new_page_text_locator);
+        $web_assert->assertWaitOnAjaxRequest();
       }
 
       $this->openBlockForm($block_selector);
@@ -131,7 +131,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       // Open block form by clicking a element inside the block.
       // This confirms that default action for links and form elements is
       // suppressed.
-      $this->openBlockForm("$block_selector {$element_selector}");
+      $this->openBlockForm("$block_selector {$element_selector}", $block_selector);
       $web_assert->elementTextContains('css', '.contextual-toolbar-tab button', 'Editing');
       $web_assert->elementAttributeContains('css', '.dialog-off-canvas__main-canvas', 'class', 'js-outside-in-edit-mode');
       // Simulate press the Escape key.
@@ -154,7 +154,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     $blocks = [
       'block-powered' => [
         'block_plugin' => 'system_powered_by_block',
-        'new_page_text' => 'Can you imagine anyone showing the label on this block?',
+        'new_page_text' => 'Can you imagine anyone showing the label on this block',
         'element_selector' => 'span a',
         'label_selector' => 'h2',
         'button_text' => 'Save Powered by Drupal',
@@ -162,7 +162,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       ],
       'block-branding' => [
         'block_plugin' => 'system_branding_block',
-        'new_page_text' => 'The site that will live a very short life.',
+        'new_page_text' => 'The site that will live a very short life',
         'element_selector' => "a[rel='home']:last-child",
         'label_selector' => "a[rel='home']:last-child",
         'button_text' => 'Save Site branding',
@@ -192,6 +192,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    * Disables edit mode by pressing edit button in the toolbar.
    */
   protected function disableEditMode() {
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->pressToolbarEditButton();
     $this->assertEditModeDisabled();
   }
@@ -225,8 +226,20 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    *
    * @param string $block_selector
    *   A css selector selects the block or an element within it.
+   * @param string $contextual_link_container
+   *   The element that contains the contextual links. If none provide the
+   *   $block_selector will be used.
    */
-  protected function openBlockForm($block_selector) {
+  protected function openBlockForm($block_selector, $contextual_link_container = '') {
+    if (!$contextual_link_container) {
+      $contextual_link_container = $block_selector;
+    }
+    // Ensure that contextual link element is present because this is required
+    // to open the off-canvas dialog in edit mode.
+    $contextual_link = $this->assertSession()->waitForElement('css', "$contextual_link_container .contextual-links a");
+    $this->assertNotEmpty($contextual_link);
+    // Ensure that all other Ajax activity is completed.
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->click($block_selector);
     $this->waitForOffCanvasToOpen();
     $this->assertOffCanvasBlockFormIsValid();
@@ -488,6 +501,28 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
    */
   protected function isLabelInputVisible() {
     return $this->getSession()->getPage()->find('css', static::LABEL_INPUT_SELECTOR)->isVisible();
+  }
+
+  /**
+   * Test that validation errors appear in the off-canvas dialog.
+   */
+  public function testValidationMessages() {
+    $page = $this->getSession()->getPage();
+    $web_assert = $this->assertSession();
+    foreach ($this->getTestThemes() as $theme) {
+      $this->enableTheme($theme);
+      $block = $this->placeBlock('outside_in_test_validation');
+      $this->drupalGet('user');
+      $this->enableEditMode();
+      $this->openBlockForm($this->getBlockSelector($block));
+      $page->pressButton('Save Block with validation error');
+      $web_assert->assertWaitOnAjaxRequest();
+      // The outside_in_test_validation test plugin form always has a validation
+      // error.
+      $web_assert->elementContains('css', '#drupal-off-canvas', 'Sorry system error. Please save again');
+      $this->disableEditMode();
+      $block->delete();
+    }
   }
 
 }
