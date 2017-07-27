@@ -64,6 +64,20 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   /**
    * {@inheritdoc}
    */
+  public function workflowHasData(WorkflowInterface $workflow) {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function workflowStateHasData(WorkflowInterface $workflow, StateInterface $state) {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function decorateState(StateInterface $state) {
     return $state;
   }

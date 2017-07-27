@@ -75,6 +75,13 @@ class WorkflowStateDeleteForm extends ConfirmFormBase {
     }
     $this->workflow = $workflow;
     $this->stateId = $workflow_state;
+
+    if ($this->workflow->getTypePlugin()->workflowStateHasData($this->workflow, $this->workflow->getState($this->stateId))) {
+      $form['#title'] = $this->getQuestion();
+      $form['description'] = ['#markup' => $this->t('This workflow state is in use. You cannot remove this workflow state until you have removed all content using it.')];
+      return $form;
+    }
+
     return parent::buildForm($form, $form_state);
   }
 

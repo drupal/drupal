@@ -451,4 +451,53 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalPostForm(NULL, [], t('Save and Create New Draft (this translation)'));
   }
 
+  /**
+   * Tests that workflows and states can not be deleted if they are in use.
+   *
+   * @covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowHasData
+   * @covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowStateHasData
+   */
+  public function testWorkflowInUse() {
+    $user = $this->createUser([
+      'administer workflows',
+      'create moderated_content content',
+      'edit own moderated_content content',
+      'use editorial transition create_new_draft',
+      'use editorial transition publish',
+      'use editorial transition archive'
+    ]);
+    $this->drupalLogin($user);
+    $paths = [
+      'archived_state' => 'admin/config/workflow/workflows/manage/editorial/state/archived/delete',
+      'editorial_workflow' => 'admin/config/workflow/workflows/manage/editorial/delete',
+    ];
+    foreach ($paths as $path) {
+      $this->drupalGet($path);
+      $this->assertSession()->buttonExists('Delete');
+    }
+    // Create new moderated content in draft.
+    $this->drupalPostForm('node/add/moderated_content', [
+      'title[0][value]' => 'Some moderated content',
+      'body[0][value]' => 'First version of the content.',
+    ], 'Save and Create New Draft');
+
+    // The archived state is not used yet, so can still be deleted.
+    $this->drupalGet($paths['archived_state']);
+    $this->assertSession()->buttonExists('Delete');
+
+    // The workflow is being used, so can't be deleted.
+    $this->drupalGet($paths['editorial_workflow']);
+    $this->assertSession()->buttonNotExists('Delete');
+
+    $node = $this->drupalGetNodeByTitle('Some moderated content');
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Save and Publish');
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Save and Archive');
+
+    // Now the archived state is being used so it can not be deleted either.
+    foreach ($paths as $path) {
+      $this->drupalGet($path);
+      $this->assertSession()->buttonNotExists('Delete');
+    }
+  }
+
 }

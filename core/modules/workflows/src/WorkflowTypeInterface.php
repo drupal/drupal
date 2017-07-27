@@ -57,6 +57,38 @@ interface WorkflowTypeInterface extends PluginInspectionInterface, DerivativeIns
   public function checkWorkflowAccess(WorkflowInterface $entity, $operation, AccountInterface $account);
 
   /**
+   * Determines if the workflow is being has data associated with it.
+   *
+   * @internal
+   *   Marked as internal until it's validated this should form part of the
+   *   public API in https://www.drupal.org/node/2897148.
+   *
+   * @param \Drupal\workflows\WorkflowInterface $workflow
+   *   The workflow to check.
+   *
+   * @return bool
+   *   TRUE if the workflow is being used, FALSE if not.
+   */
+  public function workflowHasData(WorkflowInterface $workflow);
+
+  /**
+   * Determines if the workflow state has data associated with it.
+   *
+   * @internal
+   *   Marked as internal until it's validated this should form part of the
+   *   public API in https://www.drupal.org/node/2897148.
+   *
+   * @param \Drupal\workflows\WorkflowInterface $workflow
+   *   The workflow to check.
+   * @param \Drupal\workflows\StateInterface $state
+   *   The workflow state to check.
+   *
+   * @return bool
+   *   TRUE if the workflow state is being used, FALSE if not.
+   */
+  public function workflowStateHasData(WorkflowInterface $workflow, StateInterface $state);
+
+  /**
    * Decorates states so the WorkflowType can add additional information.
    *
    * @param \Drupal\workflows\StateInterface $state

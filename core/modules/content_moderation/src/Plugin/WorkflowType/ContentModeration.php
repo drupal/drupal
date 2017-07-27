@@ -117,6 +117,35 @@ class ContentModeration extends WorkflowTypeFormBase implements ContainerFactory
   /**
    * {@inheritdoc}
    */
+  public function workflowHasData(WorkflowInterface $workflow) {
+    return (bool) $this->entityTypeManager
+      ->getStorage('content_moderation_state')
+      ->getQuery()
+      ->condition('workflow', $workflow->id())
+      ->count()
+      ->accessCheck(FALSE)
+      ->range(0, 1)
+      ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function workflowStateHasData(WorkflowInterface $workflow, StateInterface $state) {
+    return (bool) $this->entityTypeManager
+      ->getStorage('content_moderation_state')
+      ->getQuery()
+      ->condition('workflow', $workflow->id())
+      ->condition('moderation_state', $state->id())
+      ->count()
+      ->accessCheck(FALSE)
+      ->range(0, 1)
+      ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildStateConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, StateInterface $state = NULL) {
     /** @var \Drupal\content_moderation\ContentModerationState $state */
     $is_required_state = isset($state) ? in_array($state->id(), $this->getRequiredStates(), TRUE) : FALSE;
