@@ -4,10 +4,10 @@ namespace Drupal\Tests\workflows\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
+use Drupal\workflow_type_test\Plugin\WorkflowType\TestType;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\workflows\State;
 use Drupal\workflows\Transition;
-use Drupal\workflows\WorkflowTypeInterface;
 use Drupal\workflows\WorkflowTypeManager;
 use Prophecy\Argument;
 
@@ -26,14 +26,8 @@ class WorkflowTest extends UnitTestCase {
     // Create a container so that the plugin manager and workflow type can be
     // mocked.
     $container = new ContainerBuilder();
-    $workflow_type = $this->prophesize(WorkflowTypeInterface::class);
-    $workflow_type->setConfiguration(Argument::any())->will(function ($arguments) {
-      $this->getConfiguration()->willReturn($arguments[0]);
-    });
-    $workflow_type->decorateState(Argument::any())->willReturnArgument(0);
-    $workflow_type->decorateTransition(Argument::any())->willReturnArgument(0);
     $workflow_manager = $this->prophesize(WorkflowTypeManager::class);
-    $workflow_manager->createInstance('test_type', Argument::any())->willReturn($workflow_type->reveal());
+    $workflow_manager->createInstance('test_type', Argument::any())->willReturn(new TestType([], '', []));
     $container->set('plugin.manager.workflows.type', $workflow_manager->reveal());
     \Drupal::setContainer($container);
   }
@@ -64,7 +58,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::addState
    */
   public function testAddStateException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' already exists in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' already exists in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->addState('draft', 'Draft');
     $workflow->addState('draft', 'Draft');
@@ -99,7 +93,7 @@ class WorkflowTest extends UnitTestCase {
       'archived',
       'draft',
       'published',
-    ], array_keys($workflow->get('states')));
+    ], array_keys($workflow->getTypePlugin()->getConfiguration()['states']));
 
     // Ensure we're returning state objects.
     $this->assertInstanceOf(State::class, $workflow->getStates()['draft']);
@@ -126,7 +120,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::getStates
    */
   public function testGetStatesException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The state 'state_that_does_not_exist' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The state 'state_that_does_not_exist' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->getStates(['state_that_does_not_exist']);
   }
@@ -163,7 +157,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::getState
    */
   public function testGetStateException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The state 'state_that_does_not_exist' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The state 'state_that_does_not_exist' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->getState('state_that_does_not_exist');
   }
@@ -183,7 +177,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::setStateLabel
    */
   public function testSetStateLabelException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->setStateLabel('draft', 'Draft');
   }
@@ -203,7 +197,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::setStateWeight
    */
   public function testSetStateWeightException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->setStateWeight('draft', 10);
   }
@@ -212,43 +206,25 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::deleteState
    */
   public function testDeleteState() {
-    // Create a container so that the plugin manager and workflow type can be
-    // mocked and test that
-    // \Drupal\workflows\WorkflowTypeInterface::deleteState() is called
-    // correctly.
-    $container = new ContainerBuilder();
-    $workflow_type = $this->prophesize(WorkflowTypeInterface::class);
-    $workflow_type->setConfiguration(Argument::any())->will(function ($arguments) {
-      $this->getConfiguration()->willReturn($arguments[0]);
-    });
-    $workflow_type->decorateState(Argument::any())->willReturnArgument(0);
-    $workflow_type->decorateTransition(Argument::any())->willReturnArgument(0);
-    $workflow_type->deleteState('draft')->shouldBeCalled();
-    $workflow_type->deleteTransition('create_new_draft')->shouldBeCalled();
-    $workflow_manager = $this->prophesize(WorkflowTypeManager::class);
-    $workflow_manager->createInstance('test_type', Argument::any())->willReturn($workflow_type->reveal());
-    $container->set('plugin.manager.workflows.type', $workflow_manager->reveal());
-    \Drupal::setContainer($container);
-
-    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow
+    $workflow_type = new TestType([], '', []);
+    $workflow_type
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addTransition('publish', 'Publish', ['draft', 'published'], 'published')
       ->addTransition('create_new_draft', 'Create new draft', ['draft', 'published'], 'draft');
-    $this->assertCount(2, $workflow->getStates());
-    $this->assertCount(2, $workflow->getState('published')->getTransitions());
-    $workflow->deleteState('draft');
-    $this->assertFalse($workflow->hasState('draft'));
-    $this->assertCount(1, $workflow->getStates());
-    $this->assertCount(1, $workflow->getState('published')->getTransitions());
+    $this->assertCount(2, $workflow_type->getStates());
+    $this->assertCount(2, $workflow_type->getState('published')->getTransitions());
+    $workflow_type->deleteState('draft');
+    $this->assertFalse($workflow_type->hasState('draft'));
+    $this->assertCount(1, $workflow_type->getStates());
+    $this->assertCount(1, $workflow_type->getState('published')->getTransitions());
   }
 
   /**
    * @covers ::deleteState
    */
   public function testDeleteStateException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->deleteState('draft');
   }
@@ -257,7 +233,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::deleteState
    */
   public function testDeleteOnlyStateException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' can not be deleted from workflow 'test' as it is the only state");
+    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' can not be deleted from workflow as it is the only state");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->addState('draft', 'Draft');
     $workflow->deleteState('draft');
@@ -290,7 +266,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::addTransition
    */
   public function testAddTransitionDuplicateException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'publish' already exists in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'publish' already exists in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->addState('published', 'Published');
     $workflow->addTransition('publish', 'Publish', ['published'], 'published');
@@ -311,7 +287,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::addTransition
    */
   public function testAddTransitionMissingFromException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->addState('published', 'Published');
     $workflow->addTransition('publish', 'Publish', ['draft'], 'published');
@@ -321,7 +297,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::addTransition
    */
   public function testAddTransitionDuplicateTransitionStatesException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The 'publish' transition already allows 'draft' to 'published' transitions in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The 'publish' transition already allows 'draft' to 'published' transitions in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
       ->addState('draft', 'Draft')
@@ -351,7 +327,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::addTransition
    */
   public function testAddTransitionMissingToException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The state 'published' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The state 'published' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->addState('draft', 'Draft');
     $workflow->addTransition('publish', 'Publish', ['draft'], 'published');
@@ -376,7 +352,7 @@ class WorkflowTest extends UnitTestCase {
       ->addTransition('a_a', 'A to A', ['a'], 'a');
 
     // Transitions are stored in alphabetical key order in configuration.
-    $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->get('transitions')));
+    $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->getTypePlugin()->getConfiguration()['transitions']));
 
     // Ensure we're returning transition objects.
     $this->assertInstanceOf(Transition::class, $workflow->getTransitions()['a_a']);
@@ -429,7 +405,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::getTransition
    */
   public function testGetTransitionException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'transition_that_does_not_exist' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'transition_that_does_not_exist' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->getTransition('transition_that_does_not_exist');
   }
@@ -482,7 +458,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::getTransitionFromStateToState
    */
   public function testGetTransitionFromStateToStateException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The transition from 'archived' to 'archived' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The transition from 'archived' to 'archived' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     // By default states are ordered in the order added.
     $workflow
@@ -514,7 +490,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::setTransitionLabel
    */
   public function testSetTransitionLabelException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'draft-published' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'draft-published' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->addState('published', 'Published');
     $workflow->setTransitionLabel('draft-published', 'Publish');
@@ -538,7 +514,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::setTransitionWeight
    */
   public function testSetTransitionWeightException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'draft-published' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'draft-published' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->addState('published', 'Published');
     $workflow->setTransitionWeight('draft-published', 10);
@@ -572,7 +548,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::setTransitionFromStates
    */
   public function testSetTransitionFromStatesMissingTransition() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'test' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'test' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
       ->addState('draft', 'Draft')
@@ -587,7 +563,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::setTransitionFromStates
    */
   public function testSetTransitionFromStatesMissingState() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The state 'published' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The state 'published' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
       ->addState('draft', 'Draft')
@@ -601,7 +577,7 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::setTransitionFromStates
    */
   public function testSetTransitionFromStatesAlreadyExists() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The 'create_new_draft' transition already allows 'draft' to 'draft' transitions in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The 'create_new_draft' transition already allows 'draft' to 'draft' transitions in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
       ->addState('draft', 'Draft')
@@ -617,40 +593,23 @@ class WorkflowTest extends UnitTestCase {
    * @covers ::deleteTransition
    */
   public function testDeleteTransition() {
-    // Create a container so that the plugin manager and workflow type can be
-    // mocked and test that
-    // \Drupal\workflows\WorkflowTypeInterface::deleteState() is called
-    // correctly.
-    $container = new ContainerBuilder();
-    $workflow_type = $this->prophesize(WorkflowTypeInterface::class);
-    $workflow_type->setConfiguration(Argument::any())->will(function ($arguments) {
-      $this->getConfiguration()->willReturn($arguments[0]);
-    });
-    $workflow_type->decorateState(Argument::any())->willReturnArgument(0);
-    $workflow_type->decorateTransition(Argument::any())->willReturnArgument(0);
-    $workflow_type->deleteTransition('publish')->shouldBeCalled();
-    $workflow_manager = $this->prophesize(WorkflowTypeManager::class);
-    $workflow_manager->createInstance('test_type', Argument::any())->willReturn($workflow_type->reveal());
-    $container->set('plugin.manager.workflows.type', $workflow_manager->reveal());
-    \Drupal::setContainer($container);
-
-    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow
+    $workflow_type = new TestType([], '', []);
+    $workflow_type
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addTransition('create_new_draft', 'Create new draft', ['draft'], 'draft')
       ->addTransition('publish', 'Publish', ['draft'], 'published');
-    $this->assertTrue($workflow->getState('draft')->canTransitionTo('published'));
-    $workflow->deleteTransition('publish');
-    $this->assertFalse($workflow->getState('draft')->canTransitionTo('published'));
-    $this->assertTrue($workflow->getState('draft')->canTransitionTo('draft'));
+    $this->assertTrue($workflow_type->getState('draft')->canTransitionTo('published'));
+    $workflow_type->deleteTransition('publish');
+    $this->assertFalse($workflow_type->getState('draft')->canTransitionTo('published'));
+    $this->assertTrue($workflow_type->getState('draft')->canTransitionTo('draft'));
   }
 
   /**
    * @covers ::deleteTransition
    */
   public function testDeleteTransitionException() {
-    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'draft-published' does not exist in workflow 'test'");
+    $this->setExpectedException(\InvalidArgumentException::class, "The transition 'draft-published' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->addState('published', 'Published');
     $workflow->deleteTransition('draft-published');

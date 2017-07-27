@@ -54,14 +54,10 @@ abstract class WorkflowResourceTestBase extends EntityResourceTestBase {
     $workflow
       ->addState('draft', 'Draft')
       ->addState('published', 'Published');
-    $workflow->getTypePlugin()->setConfiguration([
-      'example_setting' => 'foo',
-      'states' => [
-        'draft' => [
-          'extra' => 'bar',
-        ],
-      ],
-    ]);
+    $configuration = $workflow->getTypePlugin()->getConfiguration();
+    $configuration['example_setting'] = 'foo';
+    $configuration['states']['draft']['extra'] = 'bar';
+    $workflow->getTypePlugin()->setConfiguration($configuration);
     $workflow->save();
     return $workflow;
   }
@@ -79,23 +75,18 @@ abstract class WorkflowResourceTestBase extends EntityResourceTestBase {
       'id' => 'rest_workflow',
       'label' => 'REST Worklow',
       'langcode' => 'en',
-      'states' => [
-        'draft' => [
-          'label' => 'Draft',
-          'weight' => 0,
-        ],
-        'published' => [
-          'label' => 'Published',
-          'weight' => 1,
-        ],
-      ],
       'status' => TRUE,
-      'transitions' => [],
       'type' => 'workflow_type_complex_test',
       'type_settings' => [
         'states' => [
           'draft' => [
             'extra' => 'bar',
+            'label' => 'Draft',
+            'weight' => 0,
+          ],
+          'published' => [
+            'label' => 'Published',
+            'weight' => 1,
           ],
         ],
         'transitions' => [],

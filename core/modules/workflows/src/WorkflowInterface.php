@@ -23,6 +23,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @return \Drupal\workflows\WorkflowInterface
    *   The workflow entity.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function addState($state_id, $label);
 
@@ -34,6 +36,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @return bool
    *   TRUE if the workflow has a state with the provided ID, FALSE if not.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function hasState($state_id);
 
@@ -48,6 +52,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if $state_ids contains a state ID that does not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function getStates($state_ids = NULL);
 
@@ -62,6 +68,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if $state_id does not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function getState($state_id);
 
@@ -75,6 +83,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @return \Drupal\workflows\WorkflowInterface
    *   The workflow entity.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function setStateLabel($state_id, $label);
 
@@ -88,6 +98,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @return \Drupal\workflows\WorkflowInterface
    *   The workflow entity.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function setStateWeight($state_id, $weight);
 
@@ -102,8 +114,20 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if $state_id does not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function deleteState($state_id);
+
+  /**
+   * Gets the initial state for the workflow.
+   *
+   * @return \Drupal\workflows\StateInterface
+   *   The initial state.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
+   */
+  public function getInitialState();
 
   /**
    * Adds a transition to the workflow.
@@ -122,6 +146,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if either state does not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function addTransition($id, $label, array $from_state_ids, $to_state_id);
 
@@ -136,6 +162,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if $transition_id does not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function getTransition($transition_id);
 
@@ -147,6 +175,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @return bool
    *   TRUE if the transition exists, FALSE if not.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function hasTransition($transition_id);
 
@@ -162,6 +192,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if $transition_ids contains a transition ID that does not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function getTransitions(array $transition_ids = NULL);
 
@@ -176,6 +208,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @return array
    *   The transition IDs for a state for the provided direction.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function getTransitionsForState($state_id, $direction = 'from');
 
@@ -192,6 +226,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if the transition does not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function getTransitionFromStateToState($from_state_id, $to_state_id);
 
@@ -205,6 +241,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @return bool
    *   TRUE if the transition exists, FALSE if not.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function hasTransitionFromStateToState($from_state_id, $to_state_id);
 
@@ -221,6 +259,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if the transition does not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function setTransitionLabel($transition_id, $label);
 
@@ -237,6 +277,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if the transition does not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function setTransitionWeight($transition_id, $weight);
 
@@ -253,6 +295,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if the transition does not exist or the states do not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function setTransitionFromStates($transition_id, array   $from_state_ids);
 
@@ -267,6 +311,8 @@ interface WorkflowInterface extends ConfigEntityInterface {
    *
    * @throws \InvalidArgumentException
    *   Thrown if the transition does not exist.
+   *
+   * @deprecated in Drupal 8.4.x and will be removed before 9.0.0.
    */
   public function deleteTransition($transition_id);
 

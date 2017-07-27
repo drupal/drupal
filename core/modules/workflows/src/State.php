@@ -51,7 +51,7 @@ class State implements StateInterface {
    * @param int $weight
    *   The state's weight.
    */
-  public function __construct(WorkflowInterface $workflow, $id, $label, $weight = 0) {
+  public function __construct(WorkflowTypeInterface $workflow, $id, $label, $weight = 0) {
     $this->workflow = $workflow;
     $this->id = $id;
     $this->label = $label;

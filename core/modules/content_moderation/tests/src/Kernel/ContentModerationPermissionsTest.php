@@ -55,37 +55,13 @@ class ContentModerationPermissionsTest extends KernelTestBase {
           'id' => 'simple_workflow',
           'label' => 'Simple Workflow',
           'type' => 'content_moderation',
-          'transitions' => [
-            'publish' => [
-              'label' => 'Publish',
-              'from' => ['draft'],
-              'to' => 'published',
-              'weight' => 0,
-            ],
-            'unpublish' => [
-              'label' => 'Unpublish',
-              'from' => ['published'],
-              'to' => 'draft',
-              'weight' => 0,
-            ],
-          ],
-          'states' => [
-            'draft' => [
-              'label' => 'Draft',
-              'weight' => -5,
-            ],
-            'published' => [
-              'label' => 'Published',
-              'weight' => 0,
-            ],
-          ],
         ],
         [
           'use simple_workflow transition publish' => [
             'title' => 'Use <em class="placeholder">Publish</em> transition from <em class="placeholder">Simple Workflow</em> workflow.',
           ],
-          'use simple_workflow transition unpublish' => [
-            'title' => 'Use <em class="placeholder">Unpublish</em> transition from <em class="placeholder">Simple Workflow</em> workflow.',
+          'use simple_workflow transition create_new_draft' => [
+            'title' => 'Use <em class="placeholder">Create New Draft</em> transition from <em class="placeholder">Simple Workflow</em> workflow.',
           ],
         ],
       ],

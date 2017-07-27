@@ -17,14 +17,6 @@ class TestType extends WorkflowTypeBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
-    // No configuration is stored for the test type.
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getRequiredStates() {
     // Normally this is obtained from the annotation but we get from state to
     // allow dynamic testing.

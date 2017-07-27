@@ -34,12 +34,4 @@ class RequiredStateTestType extends WorkflowTypeBase {
     return $workflow;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function defaultConfiguration() {
-    // No configuration is stored for the test type.
-    return [];
-  }
-
 }

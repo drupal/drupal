@@ -28,7 +28,8 @@ class ComplexTestType extends WorkflowTypeFormBase {
    */
   public function decorateState(StateInterface $state) {
     if (isset($this->configuration['states'][$state->id()])) {
-      $state = new DecoratedState($state, $this->configuration['states'][$state->id()]['extra']);
+      $extra = isset($this->configuration['states'][$state->id()]['extra']) ? $this->configuration['states'][$state->id()]['extra'] : '';
+      $state = new DecoratedState($state, $extra);
     }
     else {
       $state = new DecoratedState($state);
@@ -41,7 +42,8 @@ class ComplexTestType extends WorkflowTypeFormBase {
    */
   public function decorateTransition(TransitionInterface $transition) {
     if (isset($this->configuration['transitions'][$transition->id()])) {
-      $transition = new DecoratedTransition($transition, $this->configuration['transitions'][$transition->id()]['extra']);
+      $extra = isset($this->configuration['transitions'][$transition->id()]['extra']) ? $this->configuration['transitions'][$transition->id()]['extra'] : '';
+      $transition = new DecoratedTransition($transition, $extra);
     }
     else {
       $transition = new DecoratedTransition($transition);

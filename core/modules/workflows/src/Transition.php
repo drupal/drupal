@@ -69,7 +69,7 @@ class Transition implements TransitionInterface {
    * @param int $weight
    *   (optional) The transition's weight. Defaults to 0.
    */
-  public function __construct(WorkflowInterface $workflow, $id, $label, array $from_state_ids, $to_state_id, $weight = 0) {
+  public function __construct(WorkflowTypeInterface $workflow, $id, $label, array $from_state_ids, $to_state_id, $weight = 0) {
     $this->workflow = $workflow;
     $this->id = $id;
     $this->label = $label;

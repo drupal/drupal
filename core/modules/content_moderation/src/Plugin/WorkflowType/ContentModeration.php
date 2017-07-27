@@ -94,20 +94,6 @@ class ContentModeration extends WorkflowTypeFormBase implements ContainerFactory
   /**
    * {@inheritdoc}
    */
-  public function initializeWorkflow(WorkflowInterface $workflow) {
-    $workflow
-      ->addState('draft', $this->t('Draft'))
-      ->setStateWeight('draft', -5)
-      ->addState('published', $this->t('Published'))
-      ->setStateWeight('published', 0)
-      ->addTransition('create_new_draft', $this->t('Create New Draft'), ['draft', 'published'], 'draft')
-      ->addTransition('publish', $this->t('Publish'), ['draft', 'published'], 'published');
-    return $workflow;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function checkWorkflowAccess(WorkflowInterface $entity, $operation, AccountInterface $account) {
     if ($operation === 'view') {
       return AccessResult::allowedIfHasPermission($account, 'view content moderation');
@@ -119,7 +105,7 @@ class ContentModeration extends WorkflowTypeFormBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function decorateState(StateInterface $state) {
-    if (isset($this->configuration['states'][$state->id()])) {
+    if (isset($this->configuration['states'][$state->id()]['published']) && isset($this->configuration['states'][$state->id()]['default_revision'])) {
       $state = new ContentModerationState($state, $this->configuration['states'][$state->id()]['published'], $this->configuration['states'][$state->id()]['default_revision']);
     }
     else {
@@ -243,16 +229,39 @@ class ContentModeration extends WorkflowTypeFormBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    // This plugin does not store anything per transition.
     return [
       'states' => [
         'draft' => [
+          'label' => 'Draft',
           'published' => FALSE,
           'default_revision' => FALSE,
+          'weight' => 0,
         ],
         'published' => [
+          'label' => 'Published',
           'published' => TRUE,
           'default_revision' => TRUE,
+          'weight' => 1,
+        ],
+      ],
+      'transitions' => [
+        'create_new_draft' => [
+          'label' => 'Create New Draft',
+          'to' => 'draft',
+          'weight' => 0,
+          'from' => [
+            'draft',
+            'published',
+          ],
+        ],
+        'publish' => [
+          'label' => 'Publish',
+          'to' => 'published',
+          'weight' => 1,
+          'from' => [
+            'draft',
+            'published',
+          ],
         ],
       ],
       'entity_types' => [],

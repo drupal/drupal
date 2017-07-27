@@ -37,9 +37,6 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
     $this->workflow = Workflow::create(['id' => 'test', 'type' => 'content_moderation']);
-    $this->workflow
-      ->addState('draft', 'Draft')
-      ->addState('published', 'Published');
   }
 
   /**

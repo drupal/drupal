@@ -6,22 +6,30 @@ views.filter.latest_revision:
       type: string
       label: 'Value'
 
+content_moderation.state:
+  type: workflows.state
+  mapping:
+    published:
+      type: boolean
+      label: 'Is published'
+    default_revision:
+      type: boolean
+      label: 'Is default revision'
+
 workflow.type_settings.content_moderation:
   type: mapping
   mapping:
     states:
       type: sequence
-      label: 'Additional state configuration for content moderation'
+      label: 'Content moderation states'
       sequence:
-        type: mapping
+        type: content_moderation.state
         label: 'States'
-        mapping:
-          published:
-            type: boolean
-            label: 'Is published'
-          default_revision:
-            type: boolean
-            label: 'Is default revision'
+    transitions:
+      type: sequence
+      sequence:
+        type: workflows.transition
+        label: 'Transitions'
     entity_types:
       type: sequence
       label: 'Entity types'

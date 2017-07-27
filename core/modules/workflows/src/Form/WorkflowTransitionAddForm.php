@@ -107,7 +107,7 @@ class WorkflowTransitionAddForm extends EntityForm {
     $entity->addTransition($values['id'], $values['label'], array_filter($values['from']), $values['to']);
     if (isset($values['type_settings'])) {
       $configuration = $entity->getTypePlugin()->getConfiguration();
-      $configuration['transitions'][$values['id']] = $values['type_settings'][$entity->getTypePlugin()->getPluginId()];
+      $configuration['transitions'][$values['id']] += $values['type_settings'][$entity->getTypePlugin()->getPluginId()];
       $entity->set('type_settings', $configuration);
     }
   }
