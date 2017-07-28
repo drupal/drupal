@@ -4,7 +4,7 @@ dependencies:
   module:
     - content_moderation
 id: editorial
-label: 'Editorial'
+label: 'Editorial workflow'
 type: content_moderation
 type_settings:
   states:

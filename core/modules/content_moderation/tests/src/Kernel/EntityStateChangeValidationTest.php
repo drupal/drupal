@@ -116,7 +116,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $violations = $node->validate();
 
     $this->assertCount(1, $violations);
-    $this->assertEquals('State <em class="placeholder">invalid_state</em> does not exist on <em class="placeholder">Editorial</em> workflow', $violations->get(0)->getMessage());
+    $this->assertEquals('State <em class="placeholder">invalid_state</em> does not exist on <em class="placeholder">Editorial workflow</em>', $violations->get(0)->getMessage());
   }
 
   /**
