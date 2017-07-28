@@ -24,6 +24,8 @@ class WorkflowEditForm extends EntityForm {
 
     /* @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
+    $form['#title'] = $this->t('Edit %label workflow', ['%label' => $workflow->label()]);
+
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),

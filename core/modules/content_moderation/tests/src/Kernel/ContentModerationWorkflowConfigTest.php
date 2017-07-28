@@ -123,7 +123,7 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
       $error_log = $this->configImporter->getErrors();
       $expected = [
         'The moderation state Test two is being used, but is not in the source storage.',
-        'The workflow Editorial workflow is being used, and cannot be deleted.',
+        'The workflow Editorial is being used, and cannot be deleted.',
       ];
       $this->assertEqual($expected, $error_log);
     }
