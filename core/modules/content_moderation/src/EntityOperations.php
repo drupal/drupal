@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a class for reacting to entity events.
+ *
+ * @internal
  */
 class EntityOperations implements ContainerInjectionInterface {
 

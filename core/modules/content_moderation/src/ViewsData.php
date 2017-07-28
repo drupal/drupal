@@ -8,6 +8,8 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides the content_moderation views integration.
+ *
+ * @internal
  */
 class ViewsData {
 

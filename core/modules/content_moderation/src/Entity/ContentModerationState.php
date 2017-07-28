@@ -39,6 +39,11 @@ use Drupal\user\UserInterface;
  *     "langcode" = "langcode",
  *   }
  * )
+ *
+ * @internal
+ *   This entity is marked internal because it should not be used directly to
+ *   alter the moderation state of an entity. Instead, the computed
+ *   moderation_state field should be set on the entity directly.
  */
 class ContentModerationState extends ContentEntityBase implements ContentModerationStateInterface {
 

@@ -4,6 +4,8 @@ namespace Drupal\content_moderation;
 
 /**
  * Tracks metadata about revisions across content entities.
+ *
+ * @internal
  */
 interface RevisionTrackerInterface {
 

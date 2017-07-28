@@ -17,6 +17,8 @@ use Symfony\Component\Routing\RouteCollection;
  * Provides the following routes:
  * - The latest version tab, showing the latest revision of an entity, not the
  *   default one.
+ *
+ * @internal
  */
 class EntityModerationRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
 

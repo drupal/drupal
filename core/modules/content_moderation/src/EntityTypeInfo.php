@@ -26,6 +26,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * This class contains primarily bridged hooks for compile-time or
  * cache-clear-time hooks. Runtime hooks should be placed in EntityOperations.
+ *
+ * @internal
  */
 class EntityTypeInfo implements ContainerInjectionInterface {
 

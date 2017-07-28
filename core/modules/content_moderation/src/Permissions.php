@@ -7,6 +7,8 @@ use Drupal\workflows\Entity\Workflow;
 
 /**
  * Defines a class for dynamic permissions based on transitions.
+ *
+ * @internal
  */
 class Permissions {
 
