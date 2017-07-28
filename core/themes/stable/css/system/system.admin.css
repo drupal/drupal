@@ -394,3 +394,8 @@ small .admin-link:after {
 .cron-description__run-cron {
   display: block;
 }
+
+.system-cron-settings__link {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
