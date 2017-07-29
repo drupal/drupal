@@ -89,27 +89,6 @@ interface WorkflowTypeInterface extends PluginInspectionInterface, DerivativeIns
   public function workflowStateHasData(WorkflowInterface $workflow, StateInterface $state);
 
   /**
-   * Decorates states so the WorkflowType can add additional information.
-   *
-   * @param \Drupal\workflows\StateInterface $state
-   *   The state object to decorate.
-   *
-   * @return \Drupal\workflows\StateInterface
-   *   The decorated state object.
-   */
-  public function decorateState(StateInterface $state);
-
-  /**
-   * Decorates transitions so the WorkflowType can add additional information.
-   * @param \Drupal\workflows\TransitionInterface $transition
-   *   The transition object to decorate.
-   *
-   * @return \Drupal\workflows\TransitionInterface
-   *   The decorated transition object.
-   */
-  public function decorateTransition(TransitionInterface $transition);
-
-  /**
    * Gets the initial state for the workflow.
    *
    * @param \Drupal\workflows\WorkflowInterface $workflow

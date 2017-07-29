@@ -8,8 +8,6 @@ use Drupal\workflows\Plugin\WorkflowTypeFormBase;
 use Drupal\workflows\StateInterface;
 use Drupal\workflows\TransitionInterface;
 use Drupal\workflows\WorkflowInterface;
-use Drupal\workflow_type_test\DecoratedState;
-use Drupal\workflow_type_test\DecoratedTransition;
 
 /**
  * Test workflow type.
@@ -24,44 +22,15 @@ class ComplexTestType extends WorkflowTypeFormBase {
   use StringTranslationTrait;
 
   /**
-   * {@inheritDoc}
-   */
-  public function decorateState(StateInterface $state) {
-    if (isset($this->configuration['states'][$state->id()])) {
-      $extra = isset($this->configuration['states'][$state->id()]['extra']) ? $this->configuration['states'][$state->id()]['extra'] : '';
-      $state = new DecoratedState($state, $extra);
-    }
-    else {
-      $state = new DecoratedState($state);
-    }
-    return $state;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function decorateTransition(TransitionInterface $transition) {
-    if (isset($this->configuration['transitions'][$transition->id()])) {
-      $extra = isset($this->configuration['transitions'][$transition->id()]['extra']) ? $this->configuration['transitions'][$transition->id()]['extra'] : '';
-      $transition = new DecoratedTransition($transition, $extra);
-    }
-    else {
-      $transition = new DecoratedTransition($transition);
-    }
-    return $transition;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function buildStateConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, StateInterface $state = NULL) {
-    /** @var \Drupal\workflow_type_test\DecoratedState $state */
     $form = [];
     $form['extra'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Extra'),
       '#description' => $this->t('Extra information added to state'),
-      '#default_value' => isset($state) ? $state->getExtra() : FALSE,
+      '#default_value' => isset($this->configuration['states'][$state->id()]['extra']) ? $this->configuration['states'][$state->id()]['extra'] : '',
     ];
     return $form;
   }
@@ -70,13 +39,12 @@ class ComplexTestType extends WorkflowTypeFormBase {
    * {@inheritdoc}
    */
   public function buildTransitionConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, TransitionInterface $transition = NULL) {
-    /** @var \Drupal\workflow_type_test\DecoratedTransition $transition */
     $form = [];
     $form['extra'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Extra'),
       '#description' => $this->t('Extra information added to transition'),
-      '#default_value' => isset($transition) ? $transition->getExtra() : FALSE,
+      '#default_value' => isset($this->configuration['transitions'][$transition->id()]['extra']) ? $this->configuration['transitions'][$transition->id()]['extra'] : '',
     ];
     return $form;
   }
