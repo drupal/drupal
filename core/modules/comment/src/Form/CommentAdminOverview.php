@@ -3,13 +3,13 @@
 namespace Drupal\comment\Form;
 
 use Drupal\comment\CommentInterface;
-use Drupal\comment\CommentStorageInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,11 +18,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommentAdminOverview extends FormBase {
 
   /**
-   * The entity storage.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The comment storage.
@@ -46,22 +46,30 @@ class CommentAdminOverview extends FormBase {
   protected $moduleHandler;
 
   /**
+   * The tempstore factory.
+   *
+   * @var \Drupal\user\PrivateTempStoreFactory
+   */
+  protected $tempStoreFactory;
+
+  /**
    * Creates a CommentAdminOverview form.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager service.
-   * @param \Drupal\comment\CommentStorageInterface $comment_storage
-   *   The comment storage.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
+   *   The tempstore factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, CommentStorageInterface $comment_storage, DateFormatterInterface $date_formatter, ModuleHandlerInterface $module_handler) {
-    $this->entityManager = $entity_manager;
-    $this->commentStorage = $comment_storage;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, DateFormatterInterface $date_formatter, ModuleHandlerInterface $module_handler, PrivateTempStoreFactory $temp_store_factory) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->commentStorage = $entity_type_manager->getStorage('comment');
     $this->dateFormatter = $date_formatter;
     $this->moduleHandler = $module_handler;
+    $this->tempStoreFactory = $temp_store_factory;
   }
 
   /**
@@ -69,10 +77,10 @@ class CommentAdminOverview extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
-      $container->get('entity.manager')->getStorage('comment'),
+      $container->get('entity_type.manager'),
       $container->get('date.formatter'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('user.private_tempstore')
     );
   }
 
@@ -171,7 +179,9 @@ class CommentAdminOverview extends FormBase {
     }
 
     foreach ($commented_entity_ids as $entity_type => $ids) {
-      $commented_entities[$entity_type] = $this->entityManager->getStorage($entity_type)->loadMultiple($ids);
+      $commented_entities[$entity_type] = $this->entityTypeManager
+        ->getStorage($entity_type)
+        ->loadMultiple($ids);
     }
 
     foreach ($comments as $comment) {
@@ -255,23 +265,33 @@ class CommentAdminOverview extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $operation = $form_state->getValue('operation');
     $cids = $form_state->getValue('comments');
-
-    foreach ($cids as $cid) {
-      // Delete operation handled in \Drupal\comment\Form\ConfirmDeleteMultiple
-      // see \Drupal\comment\Controller\AdminController::adminPage().
-      if ($operation == 'unpublish') {
-        $comment = $this->commentStorage->load($cid);
-        $comment->setPublished(FALSE);
+    /** @var \Drupal\comment\CommentInterface[] $comments */
+    $comments = $this->commentStorage->loadMultiple($cids);
+    if ($operation != 'delete') {
+      foreach ($comments as $comment) {
+        if ($operation == 'unpublish') {
+          $comment->setUnpublished();
+        }
+        elseif ($operation == 'publish') {
+          $comment->setPublished();
+        }
         $comment->save();
       }
-      elseif ($operation == 'publish') {
-        $comment = $this->commentStorage->load($cid);
-        $comment->setPublished(TRUE);
-        $comment->save();
-      }
+      drupal_set_message($this->t('The update has been performed.'));
+      $form_state->setRedirect('comment.admin');
     }
-    drupal_set_message($this->t('The update has been performed.'));
-    $form_state->setRedirect('comment.admin');
+    else {
+      $info = [];
+      /** @var \Drupal\comment\CommentInterface $comment */
+      foreach ($comments as $comment) {
+        $langcode = $comment->language()->getId();
+        $info[$comment->id()][$langcode] = $langcode;
+      }
+      $this->tempStoreFactory
+        ->get('comment_multiple_delete_confirm')
+        ->set($this->currentUser()->id(), $info);
+      $form_state->setRedirect('comment.multiple_delete_confirm');
+    }
   }
 
 }
