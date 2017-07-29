@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
@@ -116,8 +117,8 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
     $elements = [];
     $url = NULL;
     if ($this->getSetting('link_to_entity')) {
-      // For the default revision this falls back to 'canonical'
-      $url = $items->getEntity()->urlInfo('revision');
+      // For the default revision this falls back to 'canonical'.
+      $url = $this->getEntityUrl($items->getEntity());
     }
 
     foreach ($items as $delta => $item) {
@@ -153,6 +154,20 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
       '#template' => '{{ value|nl2br }}',
       '#context' => ['value' => $item->value],
     ];
+  }
+
+  /**
+   * Gets the URI elements of the entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   *
+   * @return \Drupal\Core\Url
+   *   The URI elements of the entity.
+   */
+  protected function getEntityUrl(EntityInterface $entity) {
+    // For the default revision this falls back to 'canonical'.
+    return $entity->toUrl('revision');
   }
 
 }

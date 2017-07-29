@@ -100,6 +100,15 @@ class DefaultViewsTest extends ViewTestBase {
         'field_name' => 'comment'
       ];
       Comment::create($comment)->save();
+
+      $unpublished_comment = [
+        'uid' => $user->id(),
+        'status' => CommentInterface::NOT_PUBLISHED,
+        'entity_id' => $node->id(),
+        'entity_type' => 'node',
+        'field_name' => 'comment',
+      ];
+      Comment::create($unpublished_comment)->save();
     }
 
     // Some views, such as the "Who's Online" view, only return results if at

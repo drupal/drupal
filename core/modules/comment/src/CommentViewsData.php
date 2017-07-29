@@ -23,6 +23,7 @@ class CommentViewsData extends EntityViewsData {
 
     $data['comment_field_data']['subject']['title'] = $this->t('Title');
     $data['comment_field_data']['subject']['help'] = $this->t('The title of the comment.');
+    $data['comment_field_data']['subject']['field']['default_formatter'] = 'comment_permalink';
 
     $data['comment_field_data']['name']['title'] = $this->t('Author');
     $data['comment_field_data']['name']['help'] = $this->t("The name of the comment's author. Can be rendered as a link to the author's homepage.");
@@ -165,6 +166,17 @@ class CommentViewsData extends EntityViewsData {
         'title' => $this->t('Link to reply-to comment'),
         'help' => $this->t('Provide a simple link to reply to the comment.'),
         'id' => 'comment_link_reply',
+      ],
+    ];
+
+    $data['comment_field_data']['entity_id']['field']['id'] = 'commented_entity';
+    unset($data['comment_field_data']['entity_id']['relationship']);
+
+    $data['comment']['comment_bulk_form'] = [
+      'title' => $this->t('Comment operations bulk form'),
+      'help' => $this->t('Add a form element that lets you run operations on multiple comments.'),
+      'field' => [
+        'id' => 'comment_bulk_form',
       ],
     ];
 

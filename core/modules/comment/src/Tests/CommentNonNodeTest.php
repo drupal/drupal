@@ -222,7 +222,7 @@ class CommentNonNodeTest extends WebTestBase {
     $this->drupalPostForm('admin/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
 
     if ($operation == 'delete') {
-      $this->drupalPostForm(NULL, [], t('Delete comments'));
+      $this->drupalPostForm(NULL, [], t('Delete'));
       $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), format_string('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
     }
     else {

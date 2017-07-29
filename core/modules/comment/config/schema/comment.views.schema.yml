@@ -16,6 +16,14 @@ views.field.comment_entity_link:
       type: boolean
       label: 'Show teaser-style link'
 
+views.field.comment_bulk_form:
+  type: views_field_bulk_form
+  label: 'Comment bulk form'
+
+views.field.commented_entity:
+  type: views.field.field
+  label: 'Commented entity'
+
 views.field.comment_last_timestamp:
   type: views.field.date
   label: 'Last comment date'

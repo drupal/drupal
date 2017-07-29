@@ -38,6 +38,10 @@ action.configuration.comment_unpublish_action:
   type: action_configuration_default
   label: 'Unpublish comment configuration'
 
+action.configuration.comment_delete_action:
+  type: action_configuration_default
+  label: 'Delete comment configuration'
+
 comment.type.*:
   type: config_entity
   label: 'Comment type settings'
@@ -105,3 +109,6 @@ field.field_settings.comment:
     preview:
       type: integer
       label: 'Preview comment'
+
+field.formatter.settings.comment_permalink:
+  type: field.formatter.settings.string
