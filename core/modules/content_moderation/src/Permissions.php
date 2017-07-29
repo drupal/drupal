@@ -24,7 +24,7 @@ class Permissions {
     $permissions = [];
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     foreach (Workflow::loadMultipleByType('content_moderation') as $id => $workflow) {
-      foreach ($workflow->getTransitions() as $transition) {
+      foreach ($workflow->getTypePlugin()->getTransitions() as $transition) {
         $permissions['use ' . $workflow->id() . ' transition ' . $transition->id()] = [
           'title' => $this->t('Use %transition transition from %workflow workflow.', [
             '%transition' => $transition->label(),

@@ -69,6 +69,7 @@ class StateTransitionValidationTest extends UnitTestCase {
 
     $workflow = new Workflow(['id' => 'process', 'type' => 'content_moderation'], 'workflow');
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'draft')
       ->addState('needs_review', 'needs_review')
       ->addState('published', 'published')

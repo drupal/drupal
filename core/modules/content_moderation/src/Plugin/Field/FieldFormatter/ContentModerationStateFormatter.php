@@ -61,7 +61,7 @@ class ContentModerationStateFormatter extends FormatterBase implements Container
     $workflow = $this->moderationInformation->getWorkflowForEntity($items->getEntity());
     foreach ($items as $delta => $item) {
       $elements[$delta] = [
-        '#markup' => $workflow->getState($item->value)->label(),
+        '#markup' => $workflow->getTypePlugin()->getState($item->value)->label(),
       ];
     }
     return $elements;

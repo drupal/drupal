@@ -27,6 +27,7 @@ class RequiredStateTestType extends WorkflowTypeBase {
    */
   public function initializeWorkflow(WorkflowInterface $workflow) {
     $workflow
+      ->getTypePlugin()
       ->addState('fresh', $this->t('Fresh'))
       ->setStateWeight('fresh', -5)
       ->addState('rotten', $this->t('Rotten'))

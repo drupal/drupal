@@ -69,7 +69,7 @@ class WorkflowEditForm extends EntityForm {
       ],
     ];
 
-    $states = $workflow->getStates();
+    $states = $workflow->getTypePlugin()->getStates();
 
     // Warn the user if there are no states.
     if (empty($states)) {
@@ -146,7 +146,7 @@ class WorkflowEditForm extends EntityForm {
         ],
       ],
     ];
-    foreach ($workflow->getTransitions() as $transition) {
+    foreach ($workflow->getTypePlugin()->getTransitions() as $transition) {
       $links['edit'] = [
         'title' => $this->t('Edit'),
         'url' => Url::fromRoute('entity.workflow.edit_transition_form', ['workflow' => $workflow->id(), 'workflow_transition' => $transition->id()]),
@@ -233,10 +233,10 @@ class WorkflowEditForm extends EntityForm {
     $entity->set('label', $values['label']);
     $entity->set('id', $values['id']);
     foreach ($values['states'] as $state_id => $state_values) {
-      $entity->setStateWeight($state_id, $state_values['weight']);
+      $entity->getTypePlugin()->setStateWeight($state_id, $state_values['weight']);
     }
     foreach ($values['transitions'] as $transition_id => $transition_values) {
-      $entity->setTransitionWeight($transition_id, $transition_values['weight']);
+      $entity->getTypePlugin()->setTransitionWeight($transition_id, $transition_values['weight']);
     }
   }
 

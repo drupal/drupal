@@ -103,7 +103,7 @@ class EntityOperations implements ContainerInjectionInterface {
     if ($entity->moderation_state->value) {
       $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
       /** @var \Drupal\content_moderation\ContentModerationState $current_state */
-      $current_state = $workflow->getState($entity->moderation_state->value);
+      $current_state = $workflow->getTypePlugin()->getState($entity->moderation_state->value);
 
       // This entity is default if it is new, a new translation, the default
       // revision, or the default revision is not published.

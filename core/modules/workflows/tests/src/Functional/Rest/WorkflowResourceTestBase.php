@@ -52,6 +52,7 @@ abstract class WorkflowResourceTestBase extends EntityResourceTestBase {
       'type' => 'workflow_type_complex_test',
     ]);
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published');
     $configuration = $workflow->getTypePlugin()->getConfiguration();

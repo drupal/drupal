@@ -45,7 +45,7 @@ class WorkflowTransitionAddForm extends EntityForm {
 
     // @todo https://www.drupal.org/node/2830584 Add some ajax to ensure that
     //   only valid transitions are selectable.
-    $states = array_map([State::class, 'labelCallback'], $workflow->getStates());
+    $states = array_map([State::class, 'labelCallback'], $workflow->getTypePlugin()->getStates());
     $form['from'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('From'),
@@ -82,7 +82,7 @@ class WorkflowTransitionAddForm extends EntityForm {
   public function exists($transition_id) {
     /** @var \Drupal\workflows\WorkflowInterface $original_workflow */
     $original_workflow = \Drupal::entityTypeManager()->getStorage('workflow')->loadUnchanged($this->getEntity()->id());
-    return $original_workflow->hasTransition($transition_id);
+    return $original_workflow->getTypePlugin()->hasTransition($transition_id);
   }
 
   /**
@@ -104,7 +104,7 @@ class WorkflowTransitionAddForm extends EntityForm {
     }
     /** @var \Drupal\workflows\WorkflowInterface $entity */
     $values = $form_state->getValues();
-    $entity->addTransition($values['id'], $values['label'], array_filter($values['from']), $values['to']);
+    $entity->getTypePlugin()->addTransition($values['id'], $values['label'], array_filter($values['from']), $values['to']);
     if (isset($values['type_settings'])) {
       $configuration = $entity->getTypePlugin()->getConfiguration();
       $configuration['transitions'][$values['id']] += $values['type_settings'][$entity->getTypePlugin()->getPluginId()];
@@ -121,10 +121,10 @@ class WorkflowTransitionAddForm extends EntityForm {
     $workflow = $this->getEntity();
     $values = $form_state->getValues();
     foreach (array_filter($values['from']) as $from_state_id) {
-      if ($workflow->hasTransitionFromStateToState($from_state_id, $values['to'])) {
+      if ($workflow->getTypePlugin()->hasTransitionFromStateToState($from_state_id, $values['to'])) {
         $form_state->setErrorByName('from][' . $from_state_id, $this->t('The transition from %from to %to already exists.', [
-          '%from' => $workflow->getState($from_state_id)->label(),
-          '%to' => $workflow->getState($values['to'])->label(),
+          '%from' => $workflow->getTypePlugin()->getState($from_state_id)->label(),
+          '%to' => $workflow->getTypePlugin()->getState($values['to'])->label(),
         ]));
       }
     }

@@ -12,7 +12,7 @@ use Drupal\workflows\WorkflowTypeManager;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\workflows\Entity\Workflow
+ * @coversDefaultClass \Drupal\workflows\Plugin\WorkflowTypeBase
  *
  * @group workflows
  */
@@ -38,20 +38,20 @@ class WorkflowTest extends UnitTestCase {
    */
   public function testAddAndHasState() {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $this->assertFalse($workflow->hasState('draft'));
+    $this->assertFalse($workflow->getTypePlugin()->hasState('draft'));
 
     // By default states are ordered in the order added.
-    $workflow->addState('draft', 'Draft');
-    $this->assertTrue($workflow->hasState('draft'));
-    $this->assertFalse($workflow->hasState('published'));
-    $this->assertEquals(0, $workflow->getState('draft')->weight());
+    $workflow->getTypePlugin()->addState('draft', 'Draft');
+    $this->assertTrue($workflow->getTypePlugin()->hasState('draft'));
+    $this->assertFalse($workflow->getTypePlugin()->hasState('published'));
+    $this->assertEquals(0, $workflow->getTypePlugin()->getState('draft')->weight());
     // Adding a state does not set up a transition to itself.
-    $this->assertFalse($workflow->hasTransitionFromStateToState('draft', 'draft'));
+    $this->assertFalse($workflow->getTypePlugin()->hasTransitionFromStateToState('draft', 'draft'));
 
     // New states are added with a new weight 1 more than the current highest
     // weight.
-    $workflow->addState('published', 'Published');
-    $this->assertEquals(1, $workflow->getState('published')->weight());
+    $workflow->getTypePlugin()->addState('published', 'Published');
+    $this->assertEquals(1, $workflow->getTypePlugin()->getState('published')->weight());
   }
 
   /**
@@ -60,8 +60,8 @@ class WorkflowTest extends UnitTestCase {
   public function testAddStateException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' already exists in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('draft', 'Draft');
-    $workflow->addState('draft', 'Draft');
+    $workflow->getTypePlugin()->addState('draft', 'Draft');
+    $workflow->getTypePlugin()->addState('draft', 'Draft');
   }
 
   /**
@@ -70,7 +70,7 @@ class WorkflowTest extends UnitTestCase {
   public function testAddStateInvalidIdException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The state ID 'draft-draft' must contain only lowercase letters, numbers, and underscores");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('draft-draft', 'Draft');
+    $workflow->getTypePlugin()->addState('draft-draft', 'Draft');
   }
 
   /**
@@ -80,10 +80,11 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
 
     // Getting states works when there are none.
-    $this->assertArrayEquals([], array_keys($workflow->getStates()));
-    $this->assertArrayEquals([], array_keys($workflow->getStates([])));
+    $this->assertArrayEquals([], array_keys($workflow->getTypePlugin()->getStates()));
+    $this->assertArrayEquals([], array_keys($workflow->getTypePlugin()->getStates([])));
 
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addState('archived', 'Archived');
@@ -96,24 +97,24 @@ class WorkflowTest extends UnitTestCase {
     ], array_keys($workflow->getTypePlugin()->getConfiguration()['states']));
 
     // Ensure we're returning state objects.
-    $this->assertInstanceOf(State::class, $workflow->getStates()['draft']);
+    $this->assertInstanceOf(State::class, $workflow->getTypePlugin()->getStates()['draft']);
 
     // Passing in no IDs returns all states.
-    $this->assertArrayEquals(['draft', 'published', 'archived'], array_keys($workflow->getStates()));
+    $this->assertArrayEquals(['draft', 'published', 'archived'], array_keys($workflow->getTypePlugin()->getStates()));
 
     // The order of states is by weight.
-    $workflow->setStateWeight('published', -1);
-    $this->assertArrayEquals(['published', 'draft', 'archived'], array_keys($workflow->getStates()));
+    $workflow->getTypePlugin()->setStateWeight('published', -1);
+    $this->assertArrayEquals(['published', 'draft', 'archived'], array_keys($workflow->getTypePlugin()->getStates()));
 
     // The label is also used for sorting if weights are equal.
-    $workflow->setStateWeight('archived', 0);
-    $this->assertArrayEquals(['published', 'archived', 'draft'], array_keys($workflow->getStates()));
+    $workflow->getTypePlugin()->setStateWeight('archived', 0);
+    $this->assertArrayEquals(['published', 'archived', 'draft'], array_keys($workflow->getTypePlugin()->getStates()));
 
     // You can limit the states returned by passing in states IDs.
-    $this->assertArrayEquals(['archived', 'draft'], array_keys($workflow->getStates(['draft', 'archived'])));
+    $this->assertArrayEquals(['archived', 'draft'], array_keys($workflow->getTypePlugin()->getStates(['draft', 'archived'])));
 
     // An empty array does not load all states.
-    $this->assertArrayEquals([], array_keys($workflow->getStates([])));
+    $this->assertArrayEquals([], array_keys($workflow->getTypePlugin()->getStates([])));
   }
 
   /**
@@ -122,7 +123,7 @@ class WorkflowTest extends UnitTestCase {
   public function testGetStatesException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'state_that_does_not_exist' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->getStates(['state_that_does_not_exist']);
+    $workflow->getTypePlugin()->getStates(['state_that_does_not_exist']);
   }
 
   /**
@@ -132,6 +133,7 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     // By default states are ordered in the order added.
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addState('archived', 'Archived')
@@ -139,18 +141,18 @@ class WorkflowTest extends UnitTestCase {
       ->addTransition('publish', 'Publish', ['draft'], 'published');
 
     // Ensure we're returning state objects and they are set up correctly
-    $this->assertInstanceOf(State::class, $workflow->getState('draft'));
-    $this->assertEquals('archived', $workflow->getState('archived')->id());
-    $this->assertEquals('Archived', $workflow->getState('archived')->label());
+    $this->assertInstanceOf(State::class, $workflow->getTypePlugin()->getState('draft'));
+    $this->assertEquals('archived', $workflow->getTypePlugin()->getState('archived')->id());
+    $this->assertEquals('Archived', $workflow->getTypePlugin()->getState('archived')->label());
 
-    $draft = $workflow->getState('draft');
+    $draft = $workflow->getTypePlugin()->getState('draft');
     $this->assertTrue($draft->canTransitionTo('draft'));
     $this->assertTrue($draft->canTransitionTo('published'));
     $this->assertFalse($draft->canTransitionTo('archived'));
     $this->assertEquals('Publish', $draft->getTransitionTo('published')->label());
     $this->assertEquals(0, $draft->weight());
-    $this->assertEquals(1, $workflow->getState('published')->weight());
-    $this->assertEquals(2, $workflow->getState('archived')->weight());
+    $this->assertEquals(1, $workflow->getTypePlugin()->getState('published')->weight());
+    $this->assertEquals(2, $workflow->getTypePlugin()->getState('archived')->weight());
   }
 
   /**
@@ -159,7 +161,7 @@ class WorkflowTest extends UnitTestCase {
   public function testGetStateException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'state_that_does_not_exist' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->getState('state_that_does_not_exist');
+    $workflow->getTypePlugin()->getState('state_that_does_not_exist');
   }
 
   /**
@@ -167,10 +169,10 @@ class WorkflowTest extends UnitTestCase {
    */
   public function testSetStateLabel() {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('draft', 'Draft');
-    $this->assertEquals('Draft', $workflow->getState('draft')->label());
-    $workflow->setStateLabel('draft', 'Unpublished');
-    $this->assertEquals('Unpublished', $workflow->getState('draft')->label());
+    $workflow->getTypePlugin()->addState('draft', 'Draft');
+    $this->assertEquals('Draft', $workflow->getTypePlugin()->getState('draft')->label());
+    $workflow->getTypePlugin()->setStateLabel('draft', 'Unpublished');
+    $this->assertEquals('Unpublished', $workflow->getTypePlugin()->getState('draft')->label());
   }
 
   /**
@@ -179,7 +181,7 @@ class WorkflowTest extends UnitTestCase {
   public function testSetStateLabelException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->setStateLabel('draft', 'Draft');
+    $workflow->getTypePlugin()->setStateLabel('draft', 'Draft');
   }
 
   /**
@@ -187,10 +189,10 @@ class WorkflowTest extends UnitTestCase {
    */
   public function testSetStateWeight() {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('draft', 'Draft');
-    $this->assertEquals(0, $workflow->getState('draft')->weight());
-    $workflow->setStateWeight('draft', -10);
-    $this->assertEquals(-10, $workflow->getState('draft')->weight());
+    $workflow->getTypePlugin()->addState('draft', 'Draft');
+    $this->assertEquals(0, $workflow->getTypePlugin()->getState('draft')->weight());
+    $workflow->getTypePlugin()->setStateWeight('draft', -10);
+    $this->assertEquals(-10, $workflow->getTypePlugin()->getState('draft')->weight());
   }
 
   /**
@@ -199,7 +201,7 @@ class WorkflowTest extends UnitTestCase {
   public function testSetStateWeightException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->setStateWeight('draft', 10);
+    $workflow->getTypePlugin()->setStateWeight('draft', 10);
   }
 
   /**
@@ -226,7 +228,7 @@ class WorkflowTest extends UnitTestCase {
   public function testDeleteStateException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->deleteState('draft');
+    $workflow->getTypePlugin()->deleteState('draft');
   }
 
   /**
@@ -235,8 +237,8 @@ class WorkflowTest extends UnitTestCase {
   public function testDeleteOnlyStateException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' can not be deleted from workflow as it is the only state");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('draft', 'Draft');
-    $workflow->deleteState('draft');
+    $workflow->getTypePlugin()->addState('draft', 'Draft');
+    $workflow->getTypePlugin()->deleteState('draft');
   }
 
   /**
@@ -248,18 +250,19 @@ class WorkflowTest extends UnitTestCase {
 
     // By default states are ordered in the order added.
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published');
 
-    $this->assertFalse($workflow->getState('draft')->canTransitionTo('published'));
-    $workflow->addTransition('publish', 'Publish', ['draft'], 'published');
-    $this->assertTrue($workflow->getState('draft')->canTransitionTo('published'));
-    $this->assertEquals(0, $workflow->getTransition('publish')->weight());
-    $this->assertTrue($workflow->hasTransition('publish'));
-    $this->assertFalse($workflow->hasTransition('draft'));
+    $this->assertFalse($workflow->getTypePlugin()->getState('draft')->canTransitionTo('published'));
+    $workflow->getTypePlugin()->addTransition('publish', 'Publish', ['draft'], 'published');
+    $this->assertTrue($workflow->getTypePlugin()->getState('draft')->canTransitionTo('published'));
+    $this->assertEquals(0, $workflow->getTypePlugin()->getTransition('publish')->weight());
+    $this->assertTrue($workflow->getTypePlugin()->hasTransition('publish'));
+    $this->assertFalse($workflow->getTypePlugin()->hasTransition('draft'));
 
-    $workflow->addTransition('save_publish', 'Save', ['published'], 'published');
-    $this->assertEquals(1, $workflow->getTransition('save_publish')->weight());
+    $workflow->getTypePlugin()->addTransition('save_publish', 'Save', ['published'], 'published');
+    $this->assertEquals(1, $workflow->getTypePlugin()->getTransition('save_publish')->weight());
   }
 
   /**
@@ -268,9 +271,9 @@ class WorkflowTest extends UnitTestCase {
   public function testAddTransitionDuplicateException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The transition 'publish' already exists in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('published', 'Published');
-    $workflow->addTransition('publish', 'Publish', ['published'], 'published');
-    $workflow->addTransition('publish', 'Publish', ['published'], 'published');
+    $workflow->getTypePlugin()->addState('published', 'Published');
+    $workflow->getTypePlugin()->addTransition('publish', 'Publish', ['published'], 'published');
+    $workflow->getTypePlugin()->addTransition('publish', 'Publish', ['published'], 'published');
   }
 
   /**
@@ -279,8 +282,8 @@ class WorkflowTest extends UnitTestCase {
   public function testAddTransitionInvalidIdException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The transition ID 'publish-publish' must contain only lowercase letters, numbers, and underscores");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('published', 'Published');
-    $workflow->addTransition('publish-publish', 'Publish', ['published'], 'published');
+    $workflow->getTypePlugin()->addState('published', 'Published');
+    $workflow->getTypePlugin()->addTransition('publish-publish', 'Publish', ['published'], 'published');
   }
 
   /**
@@ -289,8 +292,8 @@ class WorkflowTest extends UnitTestCase {
   public function testAddTransitionMissingFromException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'draft' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('published', 'Published');
-    $workflow->addTransition('publish', 'Publish', ['draft'], 'published');
+    $workflow->getTypePlugin()->addState('published', 'Published');
+    $workflow->getTypePlugin()->addTransition('publish', 'Publish', ['draft'], 'published');
   }
 
   /**
@@ -300,10 +303,11 @@ class WorkflowTest extends UnitTestCase {
     $this->setExpectedException(\InvalidArgumentException::class, "The 'publish' transition already allows 'draft' to 'published' transitions in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published');
-    $workflow->addTransition('publish', 'Publish', ['draft', 'published'], 'published');
-    $workflow->addTransition('draft_to_published', 'Publish a draft', ['draft'], 'published');
+    $workflow->getTypePlugin()->addTransition('publish', 'Publish', ['draft', 'published'], 'published');
+    $workflow->getTypePlugin()->addTransition('draft_to_published', 'Publish a draft', ['draft'], 'published');
   }
 
   /**
@@ -311,16 +315,16 @@ class WorkflowTest extends UnitTestCase {
    */
   public function testAddTransitionConsistentAfterFromCatch() {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('published', 'Published');
+    $workflow->getTypePlugin()->addState('published', 'Published');
     try {
-      $workflow->addTransition('publish', 'Publish', ['draft'], 'published');
+      $workflow->getTypePlugin()->addTransition('publish', 'Publish', ['draft'], 'published');
     }
     catch (\InvalidArgumentException $e) {
     }
     // Ensure that the workflow is not left in an inconsistent state after an
     // exception is thrown from Workflow::setTransitionFromStates() whilst
     // calling Workflow::addTransition().
-    $this->assertFalse($workflow->hasTransition('publish'));
+    $this->assertFalse($workflow->getTypePlugin()->hasTransition('publish'));
   }
 
   /**
@@ -329,8 +333,8 @@ class WorkflowTest extends UnitTestCase {
   public function testAddTransitionMissingToException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'published' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('draft', 'Draft');
-    $workflow->addTransition('publish', 'Publish', ['draft'], 'published');
+    $workflow->getTypePlugin()->addState('draft', 'Draft');
+    $workflow->getTypePlugin()->addTransition('publish', 'Publish', ['draft'], 'published');
   }
 
   /**
@@ -341,11 +345,12 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
 
     // Getting transitions works when there are none.
-    $this->assertArrayEquals([], array_keys($workflow->getTransitions()));
-    $this->assertArrayEquals([], array_keys($workflow->getTransitions([])));
+    $this->assertArrayEquals([], array_keys($workflow->getTypePlugin()->getTransitions()));
+    $this->assertArrayEquals([], array_keys($workflow->getTypePlugin()->getTransitions([])));
 
     // By default states are ordered in the order added.
     $workflow
+      ->getTypePlugin()
       ->addState('a', 'A')
       ->addState('b', 'B')
       ->addTransition('a_b', 'A to B', ['a'], 'b')
@@ -355,26 +360,26 @@ class WorkflowTest extends UnitTestCase {
     $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->getTypePlugin()->getConfiguration()['transitions']));
 
     // Ensure we're returning transition objects.
-    $this->assertInstanceOf(Transition::class, $workflow->getTransitions()['a_a']);
+    $this->assertInstanceOf(Transition::class, $workflow->getTypePlugin()->getTransitions()['a_a']);
 
     // Passing in no IDs returns all transitions.
-    $this->assertArrayEquals(['a_b', 'a_a'], array_keys($workflow->getTransitions()));
+    $this->assertArrayEquals(['a_b', 'a_a'], array_keys($workflow->getTypePlugin()->getTransitions()));
 
     // The order of states is by weight.
-    $workflow->setTransitionWeight('a_a', -1);
-    $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->getTransitions()));
+    $workflow->getTypePlugin()->setTransitionWeight('a_a', -1);
+    $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->getTypePlugin()->getTransitions()));
 
     // If all weights are equal it will fallback to labels.
-    $workflow->setTransitionWeight('a_a', 0);
-    $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->getTransitions()));
-    $workflow->setTransitionLabel('a_b', 'A B');
-    $this->assertArrayEquals(['a_b', 'a_a'], array_keys($workflow->getTransitions()));
+    $workflow->getTypePlugin()->setTransitionWeight('a_a', 0);
+    $this->assertArrayEquals(['a_a', 'a_b'], array_keys($workflow->getTypePlugin()->getTransitions()));
+    $workflow->getTypePlugin()->setTransitionLabel('a_b', 'A B');
+    $this->assertArrayEquals(['a_b', 'a_a'], array_keys($workflow->getTypePlugin()->getTransitions()));
 
     // You can limit the states returned by passing in states IDs.
-    $this->assertArrayEquals(['a_a'], array_keys($workflow->getTransitions(['a_a'])));
+    $this->assertArrayEquals(['a_a'], array_keys($workflow->getTypePlugin()->getTransitions(['a_a'])));
 
     // An empty array does not load all states.
-    $this->assertArrayEquals([], array_keys($workflow->getTransitions([])));
+    $this->assertArrayEquals([], array_keys($workflow->getTypePlugin()->getTransitions([])));
   }
 
 
@@ -385,6 +390,7 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     // By default states are ordered in the order added.
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addState('archived', 'Archived')
@@ -392,13 +398,13 @@ class WorkflowTest extends UnitTestCase {
       ->addTransition('publish', 'Publish', ['draft'], 'published');
 
     // Ensure we're returning state objects and they are set up correctly
-    $this->assertInstanceOf(Transition::class, $workflow->getTransition('create_new_draft'));
-    $this->assertEquals('publish', $workflow->getTransition('publish')->id());
-    $this->assertEquals('Publish', $workflow->getTransition('publish')->label());
+    $this->assertInstanceOf(Transition::class, $workflow->getTypePlugin()->getTransition('create_new_draft'));
+    $this->assertEquals('publish', $workflow->getTypePlugin()->getTransition('publish')->id());
+    $this->assertEquals('Publish', $workflow->getTypePlugin()->getTransition('publish')->label());
 
-    $transition = $workflow->getTransition('publish');
-    $this->assertEquals($workflow->getState('draft'), $transition->from()['draft']);
-    $this->assertEquals($workflow->getState('published'), $transition->to());
+    $transition = $workflow->getTypePlugin()->getTransition('publish');
+    $this->assertEquals($workflow->getTypePlugin()->getState('draft'), $transition->from()['draft']);
+    $this->assertEquals($workflow->getTypePlugin()->getState('published'), $transition->to());
   }
 
   /**
@@ -407,7 +413,7 @@ class WorkflowTest extends UnitTestCase {
   public function testGetTransitionException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The transition 'transition_that_does_not_exist' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->getTransition('transition_that_does_not_exist');
+    $workflow->getTypePlugin()->getTransition('transition_that_does_not_exist');
   }
 
   /**
@@ -417,6 +423,7 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     // By default states are ordered in the order added.
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addState('archived', 'Archived')
@@ -424,12 +431,12 @@ class WorkflowTest extends UnitTestCase {
       ->addTransition('publish', 'Publish', ['draft', 'published'], 'published')
       ->addTransition('archive', 'Archive', ['published'], 'archived');
 
-    $this->assertEquals(['create_new_draft', 'publish'], array_keys($workflow->getTransitionsForState('draft')));
-    $this->assertEquals(['create_new_draft'], array_keys($workflow->getTransitionsForState('draft', 'to')));
-    $this->assertEquals(['publish', 'archive'], array_keys($workflow->getTransitionsForState('published')));
-    $this->assertEquals(['publish'], array_keys($workflow->getTransitionsForState('published', 'to')));
-    $this->assertEquals(['create_new_draft'], array_keys($workflow->getTransitionsForState('archived', 'from')));
-    $this->assertEquals(['archive'], array_keys($workflow->getTransitionsForState('archived', 'to')));
+    $this->assertEquals(['create_new_draft', 'publish'], array_keys($workflow->getTypePlugin()->getTransitionsForState('draft')));
+    $this->assertEquals(['create_new_draft'], array_keys($workflow->getTypePlugin()->getTransitionsForState('draft', 'to')));
+    $this->assertEquals(['publish', 'archive'], array_keys($workflow->getTypePlugin()->getTransitionsForState('published')));
+    $this->assertEquals(['publish'], array_keys($workflow->getTypePlugin()->getTransitionsForState('published', 'to')));
+    $this->assertEquals(['create_new_draft'], array_keys($workflow->getTypePlugin()->getTransitionsForState('archived', 'from')));
+    $this->assertEquals(['archive'], array_keys($workflow->getTypePlugin()->getTransitionsForState('archived', 'to')));
   }
 
 
@@ -441,6 +448,7 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     // By default states are ordered in the order added.
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addState('archived', 'Archived')
@@ -448,9 +456,9 @@ class WorkflowTest extends UnitTestCase {
       ->addTransition('publish', 'Publish', ['draft', 'published'], 'published')
       ->addTransition('archive', 'Archive', ['published'], 'archived');
 
-    $this->assertTrue($workflow->hasTransitionFromStateToState('draft', 'published'));
-    $this->assertFalse($workflow->hasTransitionFromStateToState('archived', 'archived'));
-    $transition = $workflow->getTransitionFromStateToState('published', 'archived');
+    $this->assertTrue($workflow->getTypePlugin()->hasTransitionFromStateToState('draft', 'published'));
+    $this->assertFalse($workflow->getTypePlugin()->hasTransitionFromStateToState('archived', 'archived'));
+    $transition = $workflow->getTypePlugin()->getTransitionFromStateToState('published', 'archived');
     $this->assertEquals('Archive', $transition->label());
   }
 
@@ -462,6 +470,7 @@ class WorkflowTest extends UnitTestCase {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     // By default states are ordered in the order added.
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addState('archived', 'Archived')
@@ -469,7 +478,7 @@ class WorkflowTest extends UnitTestCase {
       ->addTransition('publish', 'Publish', ['draft', 'published'], 'published')
       ->addTransition('archive', 'Archive', ['published'], 'archived');
 
-    $workflow->getTransitionFromStateToState('archived', 'archived');
+    $workflow->getTypePlugin()->getTransitionFromStateToState('archived', 'archived');
   }
 
   /**
@@ -478,12 +487,13 @@ class WorkflowTest extends UnitTestCase {
   public function testSetTransitionLabel() {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addTransition('publish', 'Publish', ['draft'], 'published');
-    $this->assertEquals('Publish', $workflow->getTransition('publish')->label());
-    $workflow->setTransitionLabel('publish', 'Publish!');
-    $this->assertEquals('Publish!', $workflow->getTransition('publish')->label());
+    $this->assertEquals('Publish', $workflow->getTypePlugin()->getTransition('publish')->label());
+    $workflow->getTypePlugin()->setTransitionLabel('publish', 'Publish!');
+    $this->assertEquals('Publish!', $workflow->getTypePlugin()->getTransition('publish')->label());
   }
 
   /**
@@ -492,8 +502,8 @@ class WorkflowTest extends UnitTestCase {
   public function testSetTransitionLabelException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The transition 'draft-published' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('published', 'Published');
-    $workflow->setTransitionLabel('draft-published', 'Publish');
+    $workflow->getTypePlugin()->addState('published', 'Published');
+    $workflow->getTypePlugin()->setTransitionLabel('draft-published', 'Publish');
   }
 
   /**
@@ -502,12 +512,13 @@ class WorkflowTest extends UnitTestCase {
   public function testSetTransitionWeight() {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addTransition('publish', 'Publish', ['draft'], 'published');
-    $this->assertEquals(0, $workflow->getTransition('publish')->weight());
-    $workflow->setTransitionWeight('publish', 10);
-    $this->assertEquals(10, $workflow->getTransition('publish')->weight());
+    $this->assertEquals(0, $workflow->getTypePlugin()->getTransition('publish')->weight());
+    $workflow->getTypePlugin()->setTransitionWeight('publish', 10);
+    $this->assertEquals(10, $workflow->getTypePlugin()->getTransition('publish')->weight());
   }
 
   /**
@@ -516,8 +527,8 @@ class WorkflowTest extends UnitTestCase {
   public function testSetTransitionWeightException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The transition 'draft-published' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('published', 'Published');
-    $workflow->setTransitionWeight('draft-published', 10);
+    $workflow->getTypePlugin()->addState('published', 'Published');
+    $workflow->getTypePlugin()->setTransitionWeight('draft-published', 10);
   }
 
   /**
@@ -526,22 +537,23 @@ class WorkflowTest extends UnitTestCase {
   public function testSetTransitionFromStates() {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addState('archived', 'Archived')
       ->addTransition('test', 'Test', ['draft'], 'draft');
 
-    $this->assertTrue($workflow->hasTransitionFromStateToState('draft', 'draft'));
-    $this->assertFalse($workflow->hasTransitionFromStateToState('published', 'draft'));
-    $this->assertFalse($workflow->hasTransitionFromStateToState('archived', 'draft'));
-    $workflow->setTransitionFromStates('test', ['draft', 'published', 'archived']);
-    $this->assertTrue($workflow->hasTransitionFromStateToState('draft', 'draft'));
-    $this->assertTrue($workflow->hasTransitionFromStateToState('published', 'draft'));
-    $this->assertTrue($workflow->hasTransitionFromStateToState('archived', 'draft'));
-    $workflow->setTransitionFromStates('test', ['published', 'archived']);
-    $this->assertFalse($workflow->hasTransitionFromStateToState('draft', 'draft'));
-    $this->assertTrue($workflow->hasTransitionFromStateToState('published', 'draft'));
-    $this->assertTrue($workflow->hasTransitionFromStateToState('archived', 'draft'));
+    $this->assertTrue($workflow->getTypePlugin()->hasTransitionFromStateToState('draft', 'draft'));
+    $this->assertFalse($workflow->getTypePlugin()->hasTransitionFromStateToState('published', 'draft'));
+    $this->assertFalse($workflow->getTypePlugin()->hasTransitionFromStateToState('archived', 'draft'));
+    $workflow->getTypePlugin()->setTransitionFromStates('test', ['draft', 'published', 'archived']);
+    $this->assertTrue($workflow->getTypePlugin()->hasTransitionFromStateToState('draft', 'draft'));
+    $this->assertTrue($workflow->getTypePlugin()->hasTransitionFromStateToState('published', 'draft'));
+    $this->assertTrue($workflow->getTypePlugin()->hasTransitionFromStateToState('archived', 'draft'));
+    $workflow->getTypePlugin()->setTransitionFromStates('test', ['published', 'archived']);
+    $this->assertFalse($workflow->getTypePlugin()->hasTransitionFromStateToState('draft', 'draft'));
+    $this->assertTrue($workflow->getTypePlugin()->hasTransitionFromStateToState('published', 'draft'));
+    $this->assertTrue($workflow->getTypePlugin()->hasTransitionFromStateToState('archived', 'draft'));
   }
 
   /**
@@ -551,12 +563,13 @@ class WorkflowTest extends UnitTestCase {
     $this->setExpectedException(\InvalidArgumentException::class, "The transition 'test' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addState('archived', 'Archived')
       ->addTransition('create_new_draft', 'Create new draft', ['draft'], 'draft');
 
-    $workflow->setTransitionFromStates('test', ['draft', 'published', 'archived']);
+    $workflow->getTypePlugin()->setTransitionFromStates('test', ['draft', 'published', 'archived']);
   }
 
   /**
@@ -566,11 +579,12 @@ class WorkflowTest extends UnitTestCase {
     $this->setExpectedException(\InvalidArgumentException::class, "The state 'published' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('archived', 'Archived')
       ->addTransition('create_new_draft', 'Create new draft', ['draft'], 'draft');
 
-    $workflow->setTransitionFromStates('create_new_draft', ['draft', 'published', 'archived']);
+    $workflow->getTypePlugin()->setTransitionFromStates('create_new_draft', ['draft', 'published', 'archived']);
   }
 
   /**
@@ -580,13 +594,14 @@ class WorkflowTest extends UnitTestCase {
     $this->setExpectedException(\InvalidArgumentException::class, "The 'create_new_draft' transition already allows 'draft' to 'draft' transitions in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('archived', 'Archived')
       ->addState('needs_review', 'Needs Review')
       ->addTransition('create_new_draft', 'Create new draft', ['draft'], 'draft')
       ->addTransition('needs_review', 'Needs review', ['needs_review'], 'draft');
 
-    $workflow->setTransitionFromStates('needs_review', ['draft']);
+    $workflow->getTypePlugin()->setTransitionFromStates('needs_review', ['draft']);
   }
 
   /**
@@ -611,17 +626,17 @@ class WorkflowTest extends UnitTestCase {
   public function testDeleteTransitionException() {
     $this->setExpectedException(\InvalidArgumentException::class, "The transition 'draft-published' does not exist in workflow.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('published', 'Published');
-    $workflow->deleteTransition('draft-published');
+    $workflow->getTypePlugin()->addState('published', 'Published');
+    $workflow->getTypePlugin()->deleteTransition('draft-published');
   }
 
   /**
-   * @covers ::status
+   * @covers \Drupal\workflows\Entity\Workflow::status
    */
   public function testStatus() {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $this->assertFalse($workflow->status());
-    $workflow->addState('published', 'Published');
+    $workflow->getTypePlugin()->addState('published', 'Published');
     $this->assertTrue($workflow->status());
   }
 

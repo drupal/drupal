@@ -59,7 +59,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
               ->read($unprocessed_configuration);
             $diff = array_diff_key($workflow_config['type_settings']['states'], $original_workflow_config['type_settings']['states']);
             foreach (array_keys($diff) as $state_id) {
-              $state = $workflow->getState($state_id);
+              $state = $workflow->getTypePlugin()->getState($state_id);
               if ($workflow->getTypePlugin()->workflowStateHasData($workflow, $state)) {
                 $event->getConfigImporter()->logError($this->t('The moderation state @state_label is being used, but is not in the source storage.', ['@state_label' => $state->label()]));
               }
