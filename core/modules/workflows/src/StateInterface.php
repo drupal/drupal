@@ -5,8 +5,6 @@ namespace Drupal\workflows;
 /**
  * An interface for state value objects.
  *
- * @see \Drupal\workflows\WorkflowTypeInterface::decorateState()
- *
  * @internal
  *   The workflow system is currently experimental and should only be leveraged
  *   by experimental modules and development releases of contributed modules.

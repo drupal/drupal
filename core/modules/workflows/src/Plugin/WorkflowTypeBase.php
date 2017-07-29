@@ -78,20 +78,6 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   /**
    * {@inheritdoc}
    */
-  public function decorateState(StateInterface $state) {
-    return $state;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function decorateTransition(TransitionInterface $transition) {
-    return $transition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildStateConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, StateInterface $state = NULL) {
     return [];
   }
@@ -200,13 +186,12 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
     if (!isset($this->configuration['states'][$state_id])) {
       throw new \InvalidArgumentException("The state '$state_id' does not exist in workflow.'");
     }
-    $state = new State(
+    return new State(
       $this,
       $state_id,
       $this->configuration['states'][$state_id]['label'],
       $this->configuration['states'][$state_id]['weight']
     );
-    return $this->decorateState($state);
   }
 
   /**
@@ -337,7 +322,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
     if (!$this->hasTransition($transition_id)) {
       throw new \InvalidArgumentException("The transition '$transition_id' does not exist in workflow.'");
     }
-    $transition = new Transition(
+    return new Transition(
       $this,
       $transition_id,
       $this->configuration['transitions'][$transition_id]['label'],
@@ -345,7 +330,6 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
       $this->configuration['transitions'][$transition_id]['to'],
       $this->configuration['transitions'][$transition_id]['weight']
     );
-    return $this->decorateTransition($transition);
   }
 
   /**

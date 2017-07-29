@@ -104,7 +104,8 @@ class ContentModeration extends WorkflowTypeFormBase implements ContainerFactory
   /**
    * {@inheritdoc}
    */
-  public function decorateState(StateInterface $state) {
+  public function getState($state_id) {
+    $state = parent::getState($state_id);
     if (isset($this->configuration['states'][$state->id()]['published']) && isset($this->configuration['states'][$state->id()]['default_revision'])) {
       $state = new ContentModerationState($state, $this->configuration['states'][$state->id()]['published'], $this->configuration['states'][$state->id()]['default_revision']);
     }
