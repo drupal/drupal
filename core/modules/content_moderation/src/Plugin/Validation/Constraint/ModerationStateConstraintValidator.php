@@ -78,7 +78,7 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
 
     $workflow = $this->moderationInformation->getWorkflowForEntity($entity);
 
-    if (!$workflow->hasState($entity->moderation_state->value)) {
+    if (!$workflow->getTypePlugin()->hasState($entity->moderation_state->value)) {
       // If the state we are transitioning to doesn't exist, we can't validate
       // the transitions for this entity further.
       $this->context->addViolation($constraint->invalidStateMessage, [
@@ -100,12 +100,12 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
       // we cannot do any further validation of transitions, because none will
       // be setup for a state that doesn't exist. Instead allow any state to
       // take its place.
-      if (!$workflow->hasState($original_entity->moderation_state->value)) {
+      if (!$workflow->getTypePlugin()->hasState($original_entity->moderation_state->value)) {
         return;
       }
 
-      $new_state = $workflow->getState($entity->moderation_state->value);
-      $original_state = $workflow->getState($original_entity->moderation_state->value);
+      $new_state = $workflow->getTypePlugin()->getState($entity->moderation_state->value);
+      $original_state = $workflow->getTypePlugin()->getState($original_entity->moderation_state->value);
 
       if (!$original_state->canTransitionTo($new_state->id())) {
         $this->context->addViolation($constraint->message, [

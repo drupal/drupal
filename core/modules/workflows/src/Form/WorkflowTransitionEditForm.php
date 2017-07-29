@@ -43,7 +43,7 @@ class WorkflowTransitionEditForm extends EntityForm {
 
     /* @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->getEntity();
-    $transition = $workflow->getTransition($this->transitionId);
+    $transition = $workflow->getTypePlugin()->getTransition($this->transitionId);
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
@@ -60,7 +60,7 @@ class WorkflowTransitionEditForm extends EntityForm {
 
     // @todo https://www.drupal.org/node/2830584 Add some ajax to ensure that
     //   only valid transitions are selectable.
-    $states = array_map([State::class, 'labelCallback'], $workflow->getStates());
+    $states = array_map([State::class, 'labelCallback'], $workflow->getTypePlugin()->getStates());
     $form['from'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('From'),
@@ -94,12 +94,12 @@ class WorkflowTransitionEditForm extends EntityForm {
     $workflow = $this->getEntity();
     $values = $form_state->getValues();
     foreach (array_filter($values['from']) as $from_state_id) {
-      if ($workflow->hasTransitionFromStateToState($from_state_id, $values['to'])) {
-        $transition = $workflow->getTransitionFromStateToState($from_state_id, $values['to']);
+      if ($workflow->getTypePlugin()->hasTransitionFromStateToState($from_state_id, $values['to'])) {
+        $transition = $workflow->getTypePlugin()->getTransitionFromStateToState($from_state_id, $values['to']);
         if ($transition->id() !== $values['id']) {
           $form_state->setErrorByName('from][' . $from_state_id, $this->t('The transition from %from to %to already exists.', [
-            '%from' => $workflow->getState($from_state_id)->label(),
-            '%to' => $workflow->getState($values['to'])->label(),
+            '%from' => $workflow->getTypePlugin()->getState($from_state_id)->label(),
+            '%to' => $workflow->getTypePlugin()->getState($values['to'])->label(),
           ]));
         }
       }
@@ -126,8 +126,8 @@ class WorkflowTransitionEditForm extends EntityForm {
     /** @var \Drupal\workflows\WorkflowInterface $entity */
     $values = $form_state->getValues();
     $form_state->set('created_transition', FALSE);
-    $entity->setTransitionLabel($values['id'], $values['label']);
-    $entity->setTransitionFromStates($values['id'], array_filter($values['from']));
+    $entity->getTypePlugin()->setTransitionLabel($values['id'], $values['label']);
+    $entity->getTypePlugin()->setTransitionFromStates($values['id'], array_filter($values['from']));
     if (isset($values['type_settings'])) {
       $configuration = $entity->getTypePlugin()->getConfiguration();
       $configuration['transitions'][$values['id']] += $values['type_settings'][$entity->getTypePlugin()->getPluginId()];
@@ -143,7 +143,7 @@ class WorkflowTransitionEditForm extends EntityForm {
     $workflow = $this->entity;
     $workflow->save();
     drupal_set_message($this->t('Saved %label transition.', [
-      '%label' => $workflow->getTransition($this->transitionId)->label(),
+      '%label' => $workflow->getTypePlugin()->getTransition($this->transitionId)->label(),
     ]));
     $form_state->setRedirectUrl($workflow->toUrl('edit-form'));
   }

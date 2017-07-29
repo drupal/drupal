@@ -76,7 +76,7 @@ class WorkflowListBuilder extends ConfigEntityListBuilder {
       '#markup' => $entity->getTypePlugin()->label()
     ];
 
-    $items = array_map([State::class, 'labelCallback'], $entity->getStates());
+    $items = array_map([State::class, 'labelCallback'], $entity->getTypePlugin()->getStates());
     $row['states']['data'] = [
       '#theme' => 'item_list',
       '#context' => ['list_style' => 'comma-list'],

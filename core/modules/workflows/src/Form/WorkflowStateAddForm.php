@@ -63,7 +63,7 @@ class WorkflowStateAddForm extends EntityForm {
   public function exists($state_id) {
     /** @var \Drupal\workflows\WorkflowInterface $original_workflow */
     $original_workflow = \Drupal::entityTypeManager()->getStorage('workflow')->loadUnchanged($this->getEntity()->id());
-    return $original_workflow->hasState($state_id);
+    return $original_workflow->getTypePlugin()->hasState($state_id);
   }
 
   /**
@@ -84,8 +84,8 @@ class WorkflowStateAddForm extends EntityForm {
 
     // Replicate the validation that Workflow::addState() does internally as the
     // form values have not been validated at this point.
-    if (!$entity->hasState($values['id']) && !preg_match('/[^a-z0-9_]+/', $values['id'])) {
-      $entity->addState($values['id'], $values['label']);
+    if (!$entity->getTypePlugin()->hasState($values['id']) && !preg_match('/[^a-z0-9_]+/', $values['id'])) {
+      $entity->getTypePlugin()->addState($values['id'], $values['label']);
       if (isset($values['type_settings'])) {
         $configuration = $entity->getTypePlugin()->getConfiguration();
         // @todo move to submitStateConfigurationForm. #2849827.
@@ -103,7 +103,7 @@ class WorkflowStateAddForm extends EntityForm {
     $workflow = $this->entity;
     $workflow->save();
     drupal_set_message($this->t('Created %label state.', [
-      '%label' => $workflow->getState($form_state->getValue('id'))->label(),
+      '%label' => $workflow->getTypePlugin()->getState($form_state->getValue('id'))->label(),
     ]));
     $form_state->setRedirectUrl($workflow->toUrl('edit-form'));
   }

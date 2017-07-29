@@ -132,9 +132,9 @@ class ModerationStateFieldItemList extends FieldItemList {
 
     // Change the entity's default revision flag and the publishing status only
     // if the new workflow state is a valid one.
-    if ($workflow->hasState($current_state_id)) {
+    if ($workflow->getTypePlugin()->hasState($current_state_id)) {
       /** @var \Drupal\content_moderation\ContentModerationState $current_state */
-      $current_state = $workflow->getState($current_state_id);
+      $current_state = $workflow->getTypePlugin()->getState($current_state_id);
 
       // This entity is default if it is new, a new translation, the default
       // revision state, or the default revision is not published.

@@ -154,7 +154,7 @@ class ModerationInformation implements ModerationInformationInterface {
     return $this->isLatestRevision($entity)
       && $entity->isDefaultRevision()
       && $entity->moderation_state->value
-      && $workflow->getState($entity->moderation_state->value)->isPublishedState();
+      && $workflow->getTypePlugin()->getState($entity->moderation_state->value)->isPublishedState();
   }
 
   /**
@@ -171,13 +171,13 @@ class ModerationInformation implements ModerationInformationInterface {
         // Load the translated revision.
         $language_revision = $default_revision->getTranslation($language->getId());
         // Return TRUE if a translation with a published state is found.
-        if ($workflow->getState($language_revision->moderation_state->value)->isPublishedState()) {
+        if ($workflow->getTypePlugin()->getState($language_revision->moderation_state->value)->isPublishedState()) {
           return TRUE;
         }
       }
     }
 
-    return $workflow->getState($default_revision->moderation_state->value)->isPublishedState();
+    return $workflow->getTypePlugin()->getState($default_revision->moderation_state->value)->isPublishedState();
   }
 
   /**

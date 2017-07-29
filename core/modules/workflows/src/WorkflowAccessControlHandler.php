@@ -62,7 +62,7 @@ class WorkflowAccessControlHandler extends EntityAccessControlHandler implements
       list(, $state_id) = explode(':', $operation, 2);
       // Deleting a state is editing a workflow, but also we should forbid
       // access if there is only one state.
-      $admin_access = AccessResult::allowedIf(count($entity->getStates()) > 1)
+      $admin_access = AccessResult::allowedIf(count($entity->getTypePlugin()->getStates()) > 1)
         ->andIf(parent::checkAccess($entity, 'edit', $account))
         ->andIf(AccessResult::allowedIf(!in_array($state_id, $workflow_type->getRequiredStates(), TRUE)))
         ->addCacheableDependency($entity);

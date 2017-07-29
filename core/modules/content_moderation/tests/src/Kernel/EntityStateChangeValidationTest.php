@@ -137,7 +137,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     // Enable moderation to test validation on existing content, with no
     // explicit state.
     $workflow = Workflow::load('editorial');
-    $workflow->addState('deleted_state', 'Deleted state');
+    $workflow->getTypePlugin()->addState('deleted_state', 'Deleted state');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
 
@@ -152,7 +152,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
 
     // Delete the state so $node->original contains an invalid state when
     // validating.
-    $workflow->deleteState('deleted_state');
+    $workflow->getTypePlugin()->deleteState('deleted_state');
     $workflow->save();
     $node->moderation_state->value = 'draft';
     $violations = $node->validate();

@@ -42,7 +42,7 @@ class WorkflowStateEditForm extends EntityForm {
 
     /* @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->getEntity();
-    $state = $workflow->getState($this->stateId);
+    $state = $workflow->getTypePlugin()->getState($this->stateId);
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
@@ -124,7 +124,7 @@ class WorkflowStateEditForm extends EntityForm {
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
     /** @var \Drupal\workflows\WorkflowInterface $entity */
     $values = $form_state->getValues();
-    $entity->setStateLabel($values['id'], $values['label']);
+    $entity->getTypePlugin()->setStateLabel($values['id'], $values['label']);
     if (isset($values['type_settings'])) {
       $configuration = $entity->getTypePlugin()->getConfiguration();
       $configuration['states'][$values['id']] += $values['type_settings'][$entity->getTypePlugin()->getPluginId()];
@@ -140,7 +140,7 @@ class WorkflowStateEditForm extends EntityForm {
     $workflow = $this->entity;
     $workflow->save();
     drupal_set_message($this->t('Saved %label state.', [
-      '%label' => $workflow->getState($this->stateId)->label(),
+      '%label' => $workflow->getTypePlugin()->getState($this->stateId)->label(),
     ]));
     $form_state->setRedirectUrl($workflow->toUrl('edit-form'));
   }

@@ -89,7 +89,7 @@ class EntityModerationForm extends FormBase {
       $form['current'] = [
         '#type' => 'item',
         '#title' => $this->t('Status'),
-        '#markup' => $workflow->getState($current_state)->label(),
+        '#markup' => $workflow->getTypePlugin()->getState($current_state)->label(),
       ];
     }
 
@@ -137,7 +137,7 @@ class EntityModerationForm extends FormBase {
 
     drupal_set_message($this->t('The moderation state has been updated.'));
 
-    $new_state = $this->moderationInfo->getWorkflowForEntity($entity)->getState($new_state);
+    $new_state = $this->moderationInfo->getWorkflowForEntity($entity)->getTypePlugin()->getState($new_state);
     // The page we're on likely won't be visible if we just set the entity to
     // the default state, as we hide that latest-revision tab if there is no
     // forward revision. Redirect to the canonical URL instead, since that will
