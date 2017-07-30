@@ -5,7 +5,7 @@ namespace Drupal\book\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Validation constraint for changing the book outline in forward revisions.
+ * Validation constraint for changing the book outline in pending revisions.
  *
  * @Constraint(
  *   id = "BookOutline",

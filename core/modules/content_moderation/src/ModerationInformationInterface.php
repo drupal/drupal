@@ -101,7 +101,7 @@ interface ModerationInformationInterface {
   public function getAffectedRevisionTranslation(ContentEntityInterface $entity);
 
   /**
-   * Determines if forward revisions are allowed.
+   * Determines if pending revisions are allowed.
    *
    * @internal
    *
@@ -109,9 +109,9 @@ interface ModerationInformationInterface {
    *   The content entity.
    *
    * @return bool
-   *   If forward revisions are allowed.
+   *   If pending revisions are allowed.
    */
-  public function isForwardRevisionAllowed(ContentEntityInterface $entity);
+  public function isPendingRevisionAllowed(ContentEntityInterface $entity);
 
   /**
    * Determines if an entity is a latest revision.
@@ -126,15 +126,15 @@ interface ModerationInformationInterface {
   public function isLatestRevision(ContentEntityInterface $entity);
 
   /**
-   * Determines if a forward revision exists for the specified entity.
+   * Determines if a pending revision exists for the specified entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity which may or may not have a forward revision.
+   *   The entity which may or may not have a pending revision.
    *
    * @return bool
-   *   TRUE if this entity has forward revisions available, FALSE otherwise.
+   *   TRUE if this entity has pending revisions available, FALSE otherwise.
    */
-  public function hasForwardRevision(ContentEntityInterface $entity);
+  public function hasPendingRevision(ContentEntityInterface $entity);
 
   /**
    * Determines if an entity is "live".

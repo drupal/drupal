@@ -34,7 +34,7 @@ class LatestRevisionCheck implements AccessInterface {
   }
 
   /**
-   * Checks that there is a forward revision available.
+   * Checks that there is a pending revision available.
    *
    * This checker assumes the presence of an '_entity_access' requirement key
    * in the same form as used by EntityAccessCheck.
@@ -54,7 +54,7 @@ class LatestRevisionCheck implements AccessInterface {
   public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account) {
     // This tab should not show up unless there's a reason to show it.
     $entity = $this->loadEntity($route, $route_match);
-    if ($this->moderationInfo->hasForwardRevision($entity)) {
+    if ($this->moderationInfo->hasPendingRevision($entity)) {
       // Check the global permissions first.
       $access_result = AccessResult::allowedIfHasPermissions($account, ['view latest version', 'view any unpublished content']);
       if (!$access_result->isAllowed()) {

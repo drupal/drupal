@@ -55,9 +55,9 @@ class EntityOperationsTest extends KernelTestBase {
   }
 
   /**
-   * Verifies that the process of saving forward-revisions works as expected.
+   * Verifies that the process of saving pending revisions works as expected.
    */
-  public function testForwardRevisions() {
+  public function testPendingRevisions() {
     // Create a new node in draft.
     $page = Node::create([
       'type' => 'page',
@@ -68,7 +68,7 @@ class EntityOperationsTest extends KernelTestBase {
 
     $id = $page->id();
 
-    // Verify the entity saved correctly, and that the presence of forward
+    // Verify the entity saved correctly, and that the presence of pending
     // revisions doesn't affect the default node load.
     /** @var Node $page */
     $page = Node::load($id);
@@ -87,7 +87,7 @@ class EntityOperationsTest extends KernelTestBase {
     $this->assertTrue($page->isDefaultRevision());
     $this->assertTrue($page->isPublished());
 
-    // Make a new forward-revision in Draft.
+    // Make a new pending revision in Draft.
     $page->setTitle('C');
     $page->moderation_state->value = 'draft';
     $page->save();
@@ -96,7 +96,7 @@ class EntityOperationsTest extends KernelTestBase {
     $page = Node::load($id);
     $this->assertEquals('B', $page->getTitle());
 
-    // Verify we can load the forward revision, even if the mechanism is kind
+    // Verify we can load the pending revision, even if the mechanism is kind
     // of gross. Note: revisionIds() is only available on NodeStorageInterface,
     // so this won't work for non-nodes. We'd need to use entity queries. This
     // is a core bug that should get fixed.

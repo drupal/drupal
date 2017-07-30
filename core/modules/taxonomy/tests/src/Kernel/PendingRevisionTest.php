@@ -11,11 +11,11 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
- * Kernel tests for taxonomy forward revisions.
+ * Kernel tests for taxonomy pending revisions.
  *
  * @group taxonomy
  */
-class ForwardRevisionTest extends KernelTestBase {
+class PendingRevisionTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -35,9 +35,9 @@ class ForwardRevisionTest extends KernelTestBase {
   }
 
   /**
-   * Tests that the taxonomy index work correctly with forward revisions.
+   * Tests that the taxonomy index work correctly with pending revisions.
    */
-  public function testTaxonomyIndexWithForwardRevision() {
+  public function testTaxonomyIndexWithPendingRevision() {
     \Drupal::configFactory()->getEditable('taxonomy.settings')->set('maintain_index_table', TRUE)->save();
 
     Vocabulary::create([
@@ -92,8 +92,7 @@ class ForwardRevisionTest extends KernelTestBase {
     $taxonomy_index = $this->getTaxonomyIndex();
     $this->assertEquals($term2->id(), $taxonomy_index[$node->id()]->tid);
 
-    // Check that saving a forward (non-default) revision does not affect the
-    // taxonomy index.
+    // Check that saving a pending revision does not affect the taxonomy index.
     $node->setNewRevision(TRUE);
     $node->isDefaultRevision(FALSE);
     $node->field_tags->target_id = $term->id();
@@ -102,7 +101,7 @@ class ForwardRevisionTest extends KernelTestBase {
     $taxonomy_index = $this->getTaxonomyIndex();
     $this->assertEquals($term2->id(), $taxonomy_index[$node->id()]->tid);
 
-    // Check that making the previously created forward-revision the default
+    // Check that making the previously created pending revision the default
     // revision updates the taxonomy index correctly.
     $node->isDefaultRevision(TRUE);
     $node->save();

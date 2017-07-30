@@ -140,7 +140,7 @@ class EntityModerationForm extends FormBase {
     $new_state = $this->moderationInfo->getWorkflowForEntity($entity)->getTypePlugin()->getState($new_state);
     // The page we're on likely won't be visible if we just set the entity to
     // the default state, as we hide that latest-revision tab if there is no
-    // forward revision. Redirect to the canonical URL instead, since that will
+    // pending revision. Redirect to the canonical URL instead, since that will
     // still exist.
     if ($new_state->isDefaultRevisionState()) {
       $form_state->setRedirectUrl($entity->toUrl('canonical'));

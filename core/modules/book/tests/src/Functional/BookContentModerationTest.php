@@ -41,7 +41,7 @@ class BookContentModerationTest extends BrowserTestBase {
   /**
    * Tests that book drafts can not modify the book outline.
    */
-  public function testBookWithForwardRevisions() {
+  public function testBookWithPendingRevisions() {
     // Create two books.
     $book_1_nodes = $this->createBook(t('Save and Publish'));
     $book_1 = $this->book;

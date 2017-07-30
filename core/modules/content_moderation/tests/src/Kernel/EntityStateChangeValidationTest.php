@@ -186,13 +186,13 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $node_fr->save();
     $this->assertEquals('published', $node_fr->moderation_state->value);
 
-    // Create a forward revision of the original node.
+    // Create a pending revision of the original node.
     $node->moderation_state = 'draft';
     $node->setNewRevision(TRUE);
     $node->isDefaultRevision(FALSE);
     $node->save();
 
-    // For the forward english revision, there should be a violation from draft
+    // For the pending english revision, there should be a violation from draft
     // to archived.
     $node->moderation_state = 'archived';
     $violations = $node->validate();

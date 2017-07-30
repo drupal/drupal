@@ -427,14 +427,14 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertFieldByName('revision_log[0][value]', $edit['revision_log[0][value]'], 'Revision log field displayed.');
 
     // Save the node after coming back from the preview page so we can create a
-    // forward revision for it.
+    // pending revision for it.
     $this->drupalPostForm(NULL, [], t('Save'));
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
 
-    // Check that previewing a forward revision of a node works. This can not be
+    // Check that previewing a pending revision of a node works. This can not be
     // accomplished through the UI so we have to use API calls.
     // @todo Change this test to use the UI when we will be able to create
-    // forward revisions in core.
+    // pending revisions in core.
     // @see https://www.drupal.org/node/2725533
     $node->setNewRevision(TRUE);
     $node->isDefaultRevision(FALSE);

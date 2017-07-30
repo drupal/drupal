@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Constraint validator for changing the menu settings in forward revisions.
+ * Constraint validator for changing the menu settings in pending revisions.
  */
 class MenuSettingsConstraintValidator extends ConstraintValidator {
 
@@ -25,15 +25,15 @@ class MenuSettingsConstraintValidator extends ConstraintValidator {
         $values['parent'] = $parent;
       }
 
-      // Handle the case when a menu link is added to a forward revision.
+      // Handle the case when a menu link is added to a pending revision.
       if (!$defaults['entity_id'] && $values['enabled']) {
         $violation_path = 'menu';
       }
-      // Handle the case when the menu link is deleted in a forward revision.
+      // Handle the case when the menu link is deleted in a pending revision.
       elseif (empty($values['enabled']) && $defaults['entity_id']) {
         $violation_path = 'menu';
       }
-      // Handle all the other menu link changes in a forward revision.
+      // Handle all the other menu link changes in a pending revision.
       elseif ($defaults['entity_id']) {
         if (($values['title'] != $defaults['title'])) {
           $violation_path = 'menu.title';

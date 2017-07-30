@@ -887,9 +887,9 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test forward-revisions.
+   * Test pending revisions.
    */
-  public function testForwardRevisions() {
+  public function testPendingRevisions() {
     // Ensure entity 14 is returned.
     $result = \Drupal::entityQuery('entity_test_mulrev')
       ->condition('id', [14], 'IN')
@@ -914,7 +914,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     $this->assertEqual(count($result), 1);
 
-    // Verify that field conditions on the default and forward revision are
+    // Verify that field conditions on the default and pending revision are
     // work as expected.
     $result = \Drupal::entityQuery('entity_test_mulrev')
       ->condition('id', [14], 'IN')

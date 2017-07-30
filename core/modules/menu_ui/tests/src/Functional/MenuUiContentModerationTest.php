@@ -42,7 +42,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
   /**
    * Tests that node drafts can not modify the menu settings.
    */
-  public function testMenuUiWithForwardRevisions() {
+  public function testMenuUiWithPendingRevisions() {
     $editor = $this->drupalCreateUser([
       'administer nodes',
       'administer menu',
@@ -62,7 +62,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and Publish'));
     $this->assertSession()->responseContains(t('Page %label has been updated.', ['%label' => $node->toLink($node->label())->toString()]));
 
-    // Create a forward revision with no changes.
+    // Create a pending revision with no changes.
     $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and Create New Draft'));
     $this->assertSession()->responseContains(t('Page %label has been updated.', ['%label' => $node->toLink($node->label())->toString()]));
 
