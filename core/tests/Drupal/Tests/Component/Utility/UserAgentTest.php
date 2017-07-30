@@ -2,8 +2,9 @@
 
 namespace Drupal\Tests\Component\Utility;
 
+use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\UserAgent;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests bytes size parsing helper methods.
@@ -12,7 +13,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @coversDefaultClass \Drupal\Component\Utility\UserAgent
  */
-class UserAgentTest extends UnitTestCase {
+class UserAgentTest extends TestCase {
 
   /**
    * Helper method to supply language codes to testGetBestMatchingLangcode().
@@ -82,6 +83,9 @@ class UserAgentTest extends UnitTestCase {
    *   - Expected best matching language code.
    */
   public function providerTestGetBestMatchingLangcode() {
+    // Random generator.
+    $random = new Random();
+
     return [
       // Equal qvalue for each language, choose the site preferred one.
       ['en,en-US,fr-CA,fr,es-MX', 'en'],
@@ -141,7 +145,7 @@ class UserAgentTest extends UnitTestCase {
       ['', FALSE],
       ['de,pl', FALSE],
       ['iecRswK4eh', FALSE],
-      [$this->randomMachineName(10), FALSE],
+      [$random->name(10, TRUE), FALSE],
 
       // Chinese langcodes.
       ['zh-cn, en-us;q=0.90, en;q=0.80, zh;q=0.70', 'zh-hans'],

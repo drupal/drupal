@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait
  * @uses \Drupal\Component\Plugin\Discovery\DiscoveryTrait
  * @group Plugin
  */
-class DiscoveryCachedTraitTest extends UnitTestCase {
+class DiscoveryCachedTraitTest extends TestCase {
 
   /**
    * Data provider for testGetDefinition().

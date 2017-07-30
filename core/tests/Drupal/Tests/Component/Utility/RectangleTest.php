@@ -3,13 +3,13 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Rectangle;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\Utility\Rectangle
  * @group Image
  */
-class RectangleTest extends UnitTestCase {
+class RectangleTest extends TestCase {
 
   /**
    * Tests wrong rectangle width.

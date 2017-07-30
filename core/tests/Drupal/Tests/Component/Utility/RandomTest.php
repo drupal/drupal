@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Random;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests random data generation.
@@ -12,7 +12,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @coversDefaultClass \Drupal\Component\Utility\Random
  */
-class RandomTest extends UnitTestCase {
+class RandomTest extends TestCase {
 
   /**
    * The first random string passed to the test callback.

@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\Component\Datetime;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Datetime\DateTimePlus;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\Datetime\DateTimePlus
  * @group Datetime
  */
-class DateTimePlusTest extends UnitTestCase {
+class DateTimePlusTest extends TestCase {
 
   /**
    * Test creating dates from string and array input.

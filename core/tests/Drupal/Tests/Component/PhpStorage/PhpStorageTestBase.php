@@ -3,13 +3,14 @@
 namespace Drupal\Tests\Component\PhpStorage;
 
 use Drupal\Component\PhpStorage\PhpStorageInterface;
-use Drupal\Tests\UnitTestCase;
+use Drupal\Component\Utility\Random;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Base test for PHP storages.
  */
-abstract class PhpStorageTestBase extends UnitTestCase {
+abstract class PhpStorageTestBase extends TestCase {
 
   /**
    * A unique per test class directory path to test php storage.
@@ -31,7 +32,10 @@ abstract class PhpStorageTestBase extends UnitTestCase {
    * Assert that a PHP storage's load/save/delete operations work.
    */
   public function assertCRUD($php) {
-    $name = $this->randomMachineName() . '/' . $this->randomMachineName() . '.php';
+    // Random generator.
+    $random_generator = new Random();
+
+    $name = $random_generator->name(8, TRUE) . '/' . $random_generator->name(8, TRUE) . '.php';
 
     // Find a global that doesn't exist.
     do {
