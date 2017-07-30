@@ -242,8 +242,8 @@ class EntityOperations implements ContainerInjectionInterface {
     // Don't display the moderation form when when:
     // - The revision is not translation affected.
     // - There are more than one translation languages.
-    // - The entity has forward revisions.
-    if (!$this->moderationInfo->isForwardRevisionAllowed($entity)) {
+    // - The entity has pending revisions.
+    if (!$this->moderationInfo->isPendingRevisionAllowed($entity)) {
       return;
     }
 

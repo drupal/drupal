@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Constraint validator for changing the book outline in forward revisions.
+ * Constraint validator for changing the book outline in pending revisions.
  */
 class BookOutlineConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 

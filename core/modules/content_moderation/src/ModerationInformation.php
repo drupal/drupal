@@ -127,8 +127,8 @@ class ModerationInformation implements ModerationInformationInterface {
   /**
    * {@inheritdoc}
    */
-  public function isForwardRevisionAllowed(ContentEntityInterface $entity) {
-    return !(!$entity->isRevisionTranslationAffected() && count($entity->getTranslationLanguages()) > 1 && $this->hasForwardRevision($entity));
+  public function isPendingRevisionAllowed(ContentEntityInterface $entity) {
+    return !(!$entity->isRevisionTranslationAffected() && count($entity->getTranslationLanguages()) > 1 && $this->hasPendingRevision($entity));
   }
 
   /**
@@ -141,7 +141,7 @@ class ModerationInformation implements ModerationInformationInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasForwardRevision(ContentEntityInterface $entity) {
+  public function hasPendingRevision(ContentEntityInterface $entity) {
     return $this->isModeratedEntity($entity)
       && !($this->getLatestRevisionId($entity->getEntityTypeId(), $entity->id()) == $this->getDefaultRevisionId($entity->getEntityTypeId(), $entity->id()));
   }

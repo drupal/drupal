@@ -36,9 +36,7 @@ class ModerationFormTest extends ModerationStateTestBase {
   /**
    * Tests the moderation form that shows on the latest version page.
    *
-   * The latest version page only shows if there is a forward revision. There
-   * is only a forward revision if a draft revision is created on a node where
-   * the default revision is not a published moderation state.
+   * The latest version page only shows if there is a pending revision.
    *
    * @see \Drupal\content_moderation\EntityOperations
    * @see \Drupal\Tests\content_moderation\Functional\ModerationStateBlockTest::testCustomBlockModeration
@@ -63,7 +61,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertResponse(200);
     $this->assertField('edit-new-state', 'The node view page has a moderation form.');
 
-    // The latest version page should not show, because there is no forward
+    // The latest version page should not show, because there is no pending
     // revision.
     $this->drupalGet($latest_version_path);
     $this->assertResponse(403);
@@ -80,7 +78,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertField('edit-new-state', 'The node view page has a moderation form.');
 
     // The latest version page should not show, because there is still no
-    // forward revision.
+    // pending revision.
     $this->drupalGet($latest_version_path);
     $this->assertResponse(403);
 
@@ -96,11 +94,11 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertNoField('edit-new-state', 'The node view page has no moderation form.');
 
     // The latest version page should not show, because there is still no
-    // forward revision.
+    // pending revision.
     $this->drupalGet($latest_version_path);
     $this->assertResponse(403);
 
-    // Make a forward revision.
+    // Make a pending revision.
     $this->drupalPostForm($edit_path, [
       'body[0][value]' => 'Fourth version of the content.',
     ], t('Save and Create New Draft'));
@@ -112,7 +110,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertNoField('edit-new-state', 'The node view page has no moderation form.');
 
     // The latest version page should show the moderation form and have "Draft"
-    // status, because the forward revision is in "Draft".
+    // status, because the pending revision is in "Draft".
     $this->drupalGet($latest_version_path);
     $this->assertResponse(200);
     $this->assertField('edit-new-state', 'The latest-version page has a moderation form.');
@@ -124,7 +122,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     ], t('Apply'));
 
     // The latest version page should not show, because there is no
-    // forward revision.
+    // pending revision.
     $this->drupalGet($latest_version_path);
     $this->assertResponse(403);
   }
@@ -141,7 +139,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     // Create new moderated content in draft.
     $this->drupalPostForm('entity_test_mulrevpub/add', [], t('Save and Create New Draft'));
 
-    // The latest version page should not show, because there is no forward
+    // The latest version page should not show, because there is no pending
     // revision.
     $this->drupalGet('/entity_test_mulrevpub/manage/1/latest');
     $this->assertResponse(403);
@@ -150,7 +148,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalPostForm('entity_test_mulrevpub/manage/1/edit', [], t('Save and Create New Draft'));
 
     // The latest version page should not show, because there is still no
-    // forward revision.
+    // pending revision.
     $this->drupalGet('/entity_test_mulrevpub/manage/1/latest');
     $this->assertResponse(403);
 
@@ -164,11 +162,11 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertNoText('Status', 'The node view page has no moderation form.');
 
     // The latest version page should not show, because there is still no
-    // forward revision.
+    // pending revision.
     $this->drupalGet('entity_test_mulrevpub/manage/1/latest');
     $this->assertResponse(403);
 
-    // Make a forward revision.
+    // Make a pending revision.
     $this->drupalPostForm('entity_test_mulrevpub/manage/1/edit', [], t('Save and Create New Draft'));
 
     // The published view should not have a moderation form, because it is the
@@ -178,7 +176,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertNoText('Status', 'The node view page has no moderation form.');
 
     // The latest version page should show the moderation form and have "Draft"
-    // status, because the forward revision is in "Draft".
+    // status, because the pending revision is in "Draft".
     $this->drupalGet('entity_test_mulrevpub/manage/1/latest');
     $this->assertResponse(200);
     $this->assertText('Status', 'Form text found on the latest-version page.');
@@ -190,7 +188,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     ], t('Apply'));
 
     // The latest version page should not show, because there is no
-    // forward revision.
+    // pending revision.
     $this->drupalGet('entity_test_mulrevpub/manage/1/latest');
     $this->assertResponse(403);
   }
@@ -201,7 +199,7 @@ class ModerationFormTest extends ModerationStateTestBase {
   public function testModerationFormSetsRevisionAuthor() {
     // Create new moderated content in published.
     $node = $this->createNode(['type' => 'moderated_content', 'moderation_state' => 'published']);
-    // Make a forward revision.
+    // Make a pending revision.
     $node->title = $this->randomMachineName();
     $node->moderation_state->value = 'draft';
     $node->save();
@@ -273,7 +271,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->statusCodeEquals('403');
     $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
 
-    // Add french forward revision (revision 3).
+    // Add french pending revision (revision 3).
     $this->drupalGet($edit_path, ['language' => $french]);
     $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
     $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
@@ -302,7 +300,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($latest_version_path);
     $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
 
-    // Publish the french forward revision (revision 4).
+    // Publish the french pending revision (revision 4).
     $this->drupalGet($edit_path, ['language' => $french]);
     $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
     $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
@@ -326,13 +324,13 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($latest_version_path);
     $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
 
-    // Make sure we're allowed to create a forward french revision.
+    // Make sure we're allowed to create a pending french revision.
     $this->drupalGet($edit_path, ['language' => $french]);
     $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
     $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
     $this->assertTrue($this->xpath('//input[@value="Save and Archive (this translation)"]'));
 
-    // Add a english forward revision (revision 6).
+    // Add a english pending revision (revision 6).
     $this->drupalGet($edit_path);
     $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
     $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
@@ -344,7 +342,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($latest_version_path);
     $this->assertTrue($this->xpath('//ul[@class="entity-moderation-form"]'));
 
-    // Make sure we're not allowed to create a forward french revision.
+    // Make sure we're not allowed to create a pending french revision.
     $this->drupalGet($edit_path, ['language' => $french]);
     $this->assertFalse($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
     $this->assertFalse($this->xpath('//input[@value="Save and Publish (this translation)"]'));
@@ -354,7 +352,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($latest_version_path, ['language' => $french]);
     $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
 
-    // We should be able to publish the english forward revision (revision 7)
+    // We should be able to publish the english pending revision (revision 7)
     $this->drupalGet($edit_path);
     $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
     $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
@@ -366,13 +364,13 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($latest_version_path);
     $this->assertFalse($this->xpath('//ul[@class="entity-moderation-form"]'));
 
-    // Make sure we're allowed to create a forward french revision.
+    // Make sure we're allowed to create a pending french revision.
     $this->drupalGet($edit_path, ['language' => $french]);
     $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
     $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
     $this->assertTrue($this->xpath('//input[@value="Save and Archive (this translation)"]'));
 
-    // Make sure we're allowed to create a forward english revision.
+    // Make sure we're allowed to create a pending english revision.
     $this->drupalGet($edit_path);
     $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
     $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
@@ -389,7 +387,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $edit_path = sprintf('node/%d/edit', $node->id());
     $translate_path = sprintf('node/%d/translations/add/en/fr', $node->id());
 
-    // Add a forward revision (revision 2).
+    // Add a pending revision (revision 2).
     $this->drupalGet($edit_path);
     $this->assertTrue($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
     $this->assertTrue($this->xpath('//input[@value="Save and Publish (this translation)"]'));
@@ -398,7 +396,7 @@ class ModerationFormTest extends ModerationStateTestBase {
       'body[0][value]' => 'Second version of the content.',
     ], t('Save and Create New Draft (this translation)'));
 
-    // It shouldn't be possible to translate as we have a forward revision.
+    // It shouldn't be possible to translate as we have a pending revision.
     $this->drupalGet($translate_path);
     $this->assertFalse($this->xpath('//input[@value="Save and Create New Draft (this translation)"]'));
     $this->assertFalse($this->xpath('//input[@value="Save and Publish (this translation)"]'));

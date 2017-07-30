@@ -300,7 +300,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
           ->getHandler($entity->getEntityTypeId(), 'moderation')
           ->enforceRevisionsEntityFormAlter($form, $form_state, $form_id);
 
-        if (!$this->moderationInfo->isForwardRevisionAllowed($entity)) {
+        if (!$this->moderationInfo->isPendingRevisionAllowed($entity)) {
           $latest_revision = $this->moderationInfo->getLatestRevision($entity->getEntityTypeId(), $entity->id());
           if ($entity->bundle()) {
             $bundle_type_id = $entity->getEntityType()->getBundleEntityType();
@@ -318,8 +318,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
             '@latest_revision_delete_url' => $translation->toUrl('delete-form', ['language' => $translation->language()])->toString(),
           ];
           $label = $this->t('Unable to save this @type_label.', $args);
-          $message = $this->t('<a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest draft revision to allow all workflow transitions.', $args);
-          $full_message = $this->t('Unable to save this @type_label. <a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest draft revision to allow all workflow transitions.', $args);
+          $message = $this->t('<a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest revision to allow all workflow transitions.', $args);
+          $full_message = $this->t('Unable to save this @type_label. <a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest revision to allow all workflow transitions.', $args);
           drupal_set_message($full_message, 'error');
 
           $form['actions']['#access'] = FALSE;
@@ -351,7 +351,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   }
 
   /**
-   * Redirect content entity edit forms on save, if there is a forward revision.
+   * Redirect content entity edit forms on save, if there is a pending revision.
    *
    * When saving their changes, editors should see those changes displayed on
    * the next page.
@@ -366,7 +366,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
     $entity = $form_state->getFormObject()->getEntity();
 
     $moderation_info = \Drupal::getContainer()->get('content_moderation.moderation_information');
-    if ($moderation_info->hasForwardRevision($entity) && $entity->hasLinkTemplate('latest-version')) {
+    if ($moderation_info->hasPendingRevision($entity) && $entity->hasLinkTemplate('latest-version')) {
       $entity_type_id = $entity->getEntityTypeId();
       $form_state->setRedirect("entity.$entity_type_id.latest_version", [$entity_type_id => $entity->id()]);
     }

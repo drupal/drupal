@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Constraint validator for changing path aliases in forward revisions.
+ * Constraint validator for changing path aliases in pending revisions.
  */
 class PathAliasConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 

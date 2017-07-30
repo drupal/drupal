@@ -7,11 +7,11 @@ use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests that the Book module handles forward revisions correctly.
+ * Tests that the Book module handles pending revisions correctly.
  *
  * @group book
  */
-class BookForwardRevisionTest extends KernelTestBase {
+class BookPendingRevisionTest extends KernelTestBase {
 
   /**
    * Modules to enable.
@@ -34,9 +34,9 @@ class BookForwardRevisionTest extends KernelTestBase {
   }
 
   /**
-   * Tests forward revision handling for books.
+   * Tests pending revision handling for books.
    */
-  public function testBookWithForwardRevisions() {
+  public function testBookWithPendingRevisions() {
     $content_type = NodeType::create([
       'type' => $this->randomMachineName(),
       'name' => $this->randomString(),
@@ -65,36 +65,36 @@ class BookForwardRevisionTest extends KernelTestBase {
     $child->book['pid'] = $book_1->id();
     $child->save();
 
-    // Try to move the child to a different book while saving it as a forward
+    // Try to move the child to a different book while saving it as a pending
     // revision.
     /** @var \Drupal\book\BookManagerInterface $book_manager */
     $book_manager = $this->container->get('book.manager');
 
     // Check that the API doesn't allow us to change the book outline for
-    // forward revisions.
+    // pending revisions.
     $child->book['bid'] = $book_2->id();
     $child->setNewRevision(TRUE);
     $child->isDefaultRevision(FALSE);
 
-    $this->assertFalse($book_manager->updateOutline($child), 'A forward revision can not change the book outline.');
+    $this->assertFalse($book_manager->updateOutline($child), 'A pending revision can not change the book outline.');
 
     // Check that the API doesn't allow us to change the book parent for
-    // forward revisions.
+    // pending revisions.
     $child = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($child->id());
     $child->book['pid'] = $book_1_child->id();
     $child->setNewRevision(TRUE);
     $child->isDefaultRevision(FALSE);
 
-    $this->assertFalse($book_manager->updateOutline($child), 'A forward revision can not change the book outline.');
+    $this->assertFalse($book_manager->updateOutline($child), 'A pending revision can not change the book outline.');
 
     // Check that the API doesn't allow us to change the book weight for
-    // forward revisions.
+    // pending revisions.
     $child = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($child->id());
     $child->book['weight'] = 2;
     $child->setNewRevision(TRUE);
     $child->isDefaultRevision(FALSE);
 
-    $this->assertFalse($book_manager->updateOutline($child), 'A forward revision can not change the book outline.');
+    $this->assertFalse($book_manager->updateOutline($child), 'A pending revision can not change the book outline.');
   }
 
 }

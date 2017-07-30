@@ -93,18 +93,18 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $this->drupalGet('');
     $this->assertText($updated_body);
 
-    // Publish the block so we can create a forward revision.
+    // Publish the block so we can create a pending revision.
     $this->drupalPostForm('block/' . $block->id(), [], t('Save and Publish'));
 
-    // Create a forward revision.
-    $forward_revision_body = 'This is the forward revision body value';
+    // Create a pending revision.
+    $pending_revision_body = 'This is the pending revision body value';
     $edit = [
-      'body[0][value]' => $forward_revision_body,
+      'body[0][value]' => $pending_revision_body,
     ];
     $this->drupalPostForm('block/' . $block->id(), $edit, t('Save and Create New Draft'));
     $this->assertText(t('basic Moderated block has been updated.'));
 
-    // Navigate to home page and check that the forward revision doesn't show,
+    // Navigate to home page and check that the pending revision doesn't show,
     // since it should not be set as the default revision.
     $this->drupalGet('');
     $this->assertText($updated_body);
@@ -116,10 +116,10 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $this->drupalPostForm('block/' . $block->id() . '/latest', $edit, t('Apply'));
     $this->assertText(t('The moderation state has been updated.'));
 
-    // Navigate to home page and check that the forward revision is now the
+    // Navigate to home page and check that the pending revision is now the
     // default revision and therefore visible.
     $this->drupalGet('');
-    $this->assertText($forward_revision_body);
+    $this->assertText($pending_revision_body);
   }
 
 }

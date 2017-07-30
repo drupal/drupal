@@ -116,7 +116,7 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->drupalGet($view_path);
     $this->assertResponse(200);
 
-    // Create a forward revision for the 'Latest revision' tab.
+    // Create a pending revision for the 'Latest revision' tab.
     $this->drupalLogin($this->adminUser);
     $this->drupalPostForm($edit_path, [
       'title[0][value]' => 'moderated content revised',
@@ -132,7 +132,7 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->drupalGet($view_path);
     $this->assertResponse(200);
 
-    // Now make another user, who should not be able to see forward revisions.
+    // Now make another user, who should not be able to see pending revisions.
     $user = $this->createUser([
       'use editorial transition create_new_draft',
     ]);

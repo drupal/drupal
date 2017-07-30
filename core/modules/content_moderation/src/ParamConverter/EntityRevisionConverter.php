@@ -41,23 +41,23 @@ class EntityRevisionConverter extends EntityConverter {
    * {@inheritdoc}
    */
   public function applies($definition, $name, Route $route) {
-    return $this->hasForwardRevisionFlag($definition) || $this->isEditFormPage($route);
+    return $this->hasPendingRevisionFlag($definition) || $this->isEditFormPage($route);
   }
 
   /**
-   * Determines if the route definition includes a forward-revision flag.
+   * Determines if the route definition includes a pending revision flag.
    *
    * This is a custom flag defined by the Content Moderation module to load
-   * forward revisions rather than the default revision on a given route.
+   * pending revisions rather than the default revision on a given route.
    *
    * @param array $definition
    *   The parameter definition provided in the route options.
    *
    * @return bool
-   *   TRUE if the forward revision flag is set, FALSE otherwise.
+   *   TRUE if the pending revision flag is set, FALSE otherwise.
    */
-  protected function hasForwardRevisionFlag(array $definition) {
-    return (isset($definition['load_forward_revision']) && $definition['load_forward_revision']);
+  protected function hasPendingRevisionFlag(array $definition) {
+    return (isset($definition['load_pending_revision']) && $definition['load_pending_revision']);
   }
 
   /**

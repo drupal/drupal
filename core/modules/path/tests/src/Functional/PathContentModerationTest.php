@@ -52,11 +52,11 @@ class PathContentModerationTest extends BrowserTestBase {
     ], t('Save and Publish'));
     $node = $this->getNodeByTitle('moderated content');
 
-    // Add a forward revision with the same alias.
+    // Add a pending revision with the same alias.
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->fieldValueEquals('path[0][alias]', '/moderated-content');
     $this->drupalPostForm(NULL, [
-      'title[0][value]' => 'forward revision',
+      'title[0][value]' => 'pending revision',
       'path[0][alias]' => '/moderated-content',
     ], t('Save and Create New Draft'));
     $this->assertSession()->pageTextNotContains('You can only change the URL alias for the published version of this content.');
@@ -70,12 +70,12 @@ class PathContentModerationTest extends BrowserTestBase {
     ], t('Save and Publish'));
     $node = $this->getNodeByTitle('moderated content 2');
 
-    // Add a forward revision with a new alias.
+    // Add a pending revision with a new alias.
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->fieldValueEquals('path[0][alias]', '');
     $this->drupalPostForm(NULL, [
-      'title[0][value]' => 'forward revision',
-      'path[0][alias]' => '/forward-revision',
+      'title[0][value]' => 'pending revision',
+      'path[0][alias]' => '/pending-revision',
     ], t('Save and Create New Draft'));
     $this->assertSession()->pageTextContains('You can only change the URL alias for the published version of this content.');
 
@@ -88,11 +88,11 @@ class PathContentModerationTest extends BrowserTestBase {
     ], t('Save and Publish'));
     $node = $this->getNodeByTitle('moderated content 3');
 
-    // Add a forward revision with no path alias.
+    // Add a pending revision with no path alias.
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->fieldValueEquals('path[0][alias]', '');
     $this->drupalPostForm(NULL, [
-      'title[0][value]' => 'forward revision',
+      'title[0][value]' => 'pending revision',
       'path[0][alias]' => '',
     ], t('Save and Create New Draft'));
     $this->assertSession()->pageTextNotContains('You can only change the URL alias for the published version of this content.');

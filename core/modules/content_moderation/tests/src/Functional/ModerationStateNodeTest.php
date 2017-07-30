@@ -105,7 +105,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->assertUrl(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
     $this->assertText('Third version of the content.');
 
-    // Make a new forward revision; after saving, we should be on the "Latest
+    // Make a new pending revision; after saving, we should be on the "Latest
     // version" tab.
     $this->drupalPostForm($edit_path, [
       'body[0][value]' => 'Fourth version of the content.',

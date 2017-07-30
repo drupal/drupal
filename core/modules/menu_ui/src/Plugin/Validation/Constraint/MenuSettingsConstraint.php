@@ -5,7 +5,7 @@ namespace Drupal\menu_ui\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Validation constraint for changing the menu settings in forward revisions.
+ * Validation constraint for changing the menu settings in pending revisions.
  *
  * @Constraint(
  *   id = "MenuSettings",

@@ -88,9 +88,9 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests the translation values when saving a forward revision.
+   * Tests the translation values when saving a pending revision.
    */
-  public function testTranslationValuesWhenSavingForwardRevisions() {
+  public function testTranslationValuesWhenSavingPendingRevisions() {
     $user = $this->createUser();
     $storage = $this->entityManager->getStorage('entity_test_mulrev');
 
@@ -103,33 +103,33 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $entity->addTranslation('de', ['name' => 'default revision - de']);
     $entity->save();
 
-    // Create a forward revision for the entity and change a field value for
+    // Create a pending revision for the entity and change a field value for
     // both languages.
-    $forward_revision = $this->reloadEntity($entity);
+    $pending_revision = $this->reloadEntity($entity);
 
-    $forward_revision->setNewRevision();
-    $forward_revision->isDefaultRevision(FALSE);
+    $pending_revision->setNewRevision();
+    $pending_revision->isDefaultRevision(FALSE);
 
-    $forward_revision->name = 'forward revision - en';
-    $forward_revision->save();
+    $pending_revision->name = 'pending revision - en';
+    $pending_revision->save();
 
-    $forward_revision_translation = $forward_revision->getTranslation('de');
-    $forward_revision_translation->name = 'forward revision - de';
-    $forward_revision_translation->save();
+    $pending_revision_translation = $pending_revision->getTranslation('de');
+    $pending_revision_translation->name = 'pending revision - de';
+    $pending_revision_translation->save();
 
-    $forward_revision_id = $forward_revision->getRevisionId();
-    $forward_revision = $storage->loadRevision($forward_revision_id);
+    $pending_revision_id = $pending_revision->getRevisionId();
+    $pending_revision = $storage->loadRevision($pending_revision_id);
 
-    // Change the value of the field in the default language, save the forward
+    // Change the value of the field in the default language, save the pending
     // revision and check that the value of the field in the second language is
-    // also taken from the forward revision, *not* from the default revision.
-    $forward_revision->name = 'updated forward revision - en';
-    $forward_revision->save();
+    // also taken from the pending revision, *not* from the default revision.
+    $pending_revision->name = 'updated pending revision - en';
+    $pending_revision->save();
 
-    $forward_revision = $storage->loadRevision($forward_revision_id);
+    $pending_revision = $storage->loadRevision($pending_revision_id);
 
-    $this->assertEquals($forward_revision->name->value, 'updated forward revision - en');
-    $this->assertEquals($forward_revision->getTranslation('de')->name->value, 'forward revision - de');
+    $this->assertEquals($pending_revision->name->value, 'updated pending revision - en');
+    $this->assertEquals($pending_revision->getTranslation('de')->name->value, 'pending revision - de');
   }
 
   /**
