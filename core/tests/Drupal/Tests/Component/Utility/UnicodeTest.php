@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\Component\Utility;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\Unicode;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test unicode handling features implemented in Unicode component.
@@ -12,7 +12,7 @@ use Drupal\Component\Utility\Unicode;
  *
  * @coversDefaultClass \Drupal\Component\Utility\Unicode
  */
-class UnicodeTest extends UnitTestCase {
+class UnicodeTest extends TestCase {
 
   /**
    * {@inheritdoc}

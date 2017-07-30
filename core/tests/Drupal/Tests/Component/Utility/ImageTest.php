@@ -3,13 +3,13 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Image;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\Utility\Image
  * @group Image
  */
-class ImageTest extends UnitTestCase {
+class ImageTest extends TestCase {
 
   /**
    * Tests all control flow branches in image_dimensions_scale().

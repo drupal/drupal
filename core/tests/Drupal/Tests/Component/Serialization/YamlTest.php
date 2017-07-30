@@ -7,13 +7,13 @@ use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Serialization\YamlPecl;
 use Drupal\Component\Serialization\YamlSymfony;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\Serialization\Yaml
  * @group Serialization
  */
-class YamlTest extends UnitTestCase {
+class YamlTest extends TestCase {
 
   /**
    * @var \PHPUnit_Framework_MockObject_MockObject

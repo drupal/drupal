@@ -5,13 +5,14 @@ namespace Drupal\Tests\Component\FileCache;
 use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\NullFileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Tests\UnitTestCase;
+use Drupal\Component\Utility\Random;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\FileCache\FileCacheFactory
  * @group FileCache
  */
-class FileCacheFactoryTest extends UnitTestCase {
+class FileCacheFactoryTest extends TestCase {
 
   /**
    * {@inheritdoc}
@@ -170,7 +171,10 @@ class FileCacheFactoryTest extends UnitTestCase {
    * @covers ::setPrefix
    */
   public function testGetSetPrefix() {
-    $prefix = $this->randomMachineName();
+    // Random generator.
+    $random = new Random();
+
+    $prefix = $random->name(8, TRUE);
     FileCacheFactory::setPrefix($prefix);
     $this->assertEquals($prefix, FileCacheFactory::getPrefix());
   }

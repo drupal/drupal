@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Bytes;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests bytes size parsing helper methods.
@@ -12,7 +12,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @coversDefaultClass \Drupal\Component\Utility\Bytes
  */
-class BytesTest extends UnitTestCase {
+class BytesTest extends TestCase {
 
   /**
    * Tests \Drupal\Component\Utility\Bytes::toInt().

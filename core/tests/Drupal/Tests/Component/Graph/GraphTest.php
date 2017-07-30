@@ -3,13 +3,13 @@
 namespace Drupal\Tests\Component\Graph;
 
 use Drupal\Component\Graph\Graph;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\Graph\Graph
  * @group Graph
  */
-class GraphTest extends UnitTestCase {
+class GraphTest extends TestCase {
 
   /**
    * Test depth-first-search features.

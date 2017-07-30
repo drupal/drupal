@@ -5,7 +5,7 @@ namespace Drupal\Tests\Component\Utility;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * XSS Filtering tests.
@@ -20,7 +20,7 @@ use Drupal\Tests\UnitTestCase;
  * - CVE-2002-1806, ~CVE-2005-0682, ~CVE-2005-2106, CVE-2005-3973,
  *   CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
  */
-class XssTest extends UnitTestCase {
+class XssTest extends TestCase {
 
   /**
    * {@inheritdoc}

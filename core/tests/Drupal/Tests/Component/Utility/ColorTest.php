@@ -3,14 +3,14 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Color;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests Color utility class conversions.
  *
  * @group Utility
  */
-class ColorTest extends UnitTestCase {
+class ColorTest extends TestCase {
 
   /**
    * Tests Color::hexToRgb().

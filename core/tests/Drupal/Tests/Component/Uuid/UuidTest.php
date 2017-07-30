@@ -7,14 +7,14 @@ use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Component\Uuid\Com;
 use Drupal\Component\Uuid\Pecl;
 use Drupal\Component\Uuid\Php;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the handling of Universally Unique Identifiers (UUIDs).
  *
  * @group Uuid
  */
-class UuidTest extends UnitTestCase {
+class UuidTest extends TestCase {
 
   /**
    * Tests generating valid UUIDs.

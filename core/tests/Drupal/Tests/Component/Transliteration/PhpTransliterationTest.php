@@ -4,8 +4,8 @@ namespace Drupal\Tests\Component\Transliteration;
 
 use Drupal\Component\Transliteration\PhpTransliteration;
 use Drupal\Component\Utility\Random;
-use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests Transliteration component functionality.
@@ -14,7 +14,7 @@ use org\bovigo\vfs\vfsStream;
  *
  * @coversDefaultClass \Drupal\Component\Transliteration\PhpTransliteration
  */
-class PhpTransliterationTest extends UnitTestCase {
+class PhpTransliterationTest extends TestCase {
 
   /**
    * Tests the PhpTransliteration::removeDiacritics() function.
