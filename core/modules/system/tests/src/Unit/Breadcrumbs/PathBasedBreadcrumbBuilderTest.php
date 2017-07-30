@@ -11,6 +11,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Link;
 use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
@@ -85,6 +86,13 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   protected $currentPath;
 
   /**
+   * The mocked path matcher service.
+   *
+   * @var \Drupal\Core\Path\PathMatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $pathMatcher;
+
+  /**
    * {@inheritdoc}
    *
    * @covers ::__construct
@@ -106,6 +114,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $this->pathMatcher = $this->getMock(PathMatcherInterface::class);
+
     $this->builder = new TestPathBasedBreadcrumbBuilder(
       $this->context,
       $this->accessManager,
@@ -114,7 +124,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       $config_factory,
       $this->titleResolver,
       $this->currentUser,
-      $this->currentPath
+      $this->currentPath,
+      $this->pathMatcher
     );
 
     $this->builder->setStringTranslation($this->getStringTranslationStub());
@@ -136,9 +147,9 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::build
    */
   public function testBuildOnFrontpage() {
-    $this->context->expects($this->once())
-      ->method('getPathInfo')
-      ->will($this->returnValue('/'));
+    $this->pathMatcher->expects($this->once())
+      ->method('isFrontPage')
+      ->willReturn(TRUE);
 
     $breadcrumb = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals([], $breadcrumb->getLinks());
