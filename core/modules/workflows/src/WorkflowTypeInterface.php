@@ -18,21 +18,6 @@ use Drupal\Core\Session\AccountInterface;
 interface WorkflowTypeInterface extends PluginInspectionInterface, DerivativeInspectionInterface, ConfigurablePluginInterface {
 
   /**
-   * Initializes a workflow.
-   *
-   * Used to create required states and default transitions.
-   *
-   * @param \Drupal\workflows\WorkflowInterface $workflow
-   *   The workflow to initialize.
-   *
-   * @return \Drupal\workflows\WorkflowInterface
-   *   The initialized workflow.
-   *
-   * @see \Drupal\workflows\Form\WorkflowAddForm::save()
-   */
-  public function initializeWorkflow(WorkflowInterface $workflow);
-
-  /**
    * Gets the label for the workflow type.
    *
    * @return string

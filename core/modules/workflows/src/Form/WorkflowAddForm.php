@@ -84,8 +84,6 @@ class WorkflowAddForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     /* @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
-    // Initialize the workflow using the selected type plugin.
-    $workflow = $workflow->getTypePlugin()->initializeWorkflow($workflow);
     $return = $workflow->save();
     if (empty($workflow->getTypePlugin()->getStates())) {
       drupal_set_message($this->t('Created the %label Workflow. In order for the workflow to be enabled there needs to be at least one state.', [
