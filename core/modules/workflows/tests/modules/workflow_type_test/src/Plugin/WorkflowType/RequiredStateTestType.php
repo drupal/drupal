@@ -4,7 +4,6 @@ namespace Drupal\workflow_type_test\Plugin\WorkflowType;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\workflows\Plugin\WorkflowTypeBase;
-use Drupal\workflows\WorkflowInterface;
 
 /**
  * Test workflow type.
@@ -25,14 +24,29 @@ class RequiredStateTestType extends WorkflowTypeBase {
   /**
    * {@inheritdoc}
    */
-  public function initializeWorkflow(WorkflowInterface $workflow) {
-    $workflow
-      ->getTypePlugin()
-      ->addState('fresh', $this->t('Fresh'))
-      ->setStateWeight('fresh', -5)
-      ->addState('rotten', $this->t('Rotten'))
-      ->addTransition('rot', $this->t('Rot'), ['fresh'], 'rotten');
-    return $workflow;
+  public function defaultConfiguration() {
+    return [
+      'states' => [
+        'fresh' => [
+          'label' => 'Fresh',
+          'weight' => 0,
+        ],
+        'rotten' => [
+          'label' => 'Rotten',
+          'weight' => 1,
+        ],
+      ],
+      'transitions' => [
+        'rot' => [
+          'label' => 'Rot',
+          'to' => 'rotten',
+          'weight' => 0,
+          'from' => [
+            'fresh',
+          ],
+        ],
+      ],
+    ];
   }
 
 }

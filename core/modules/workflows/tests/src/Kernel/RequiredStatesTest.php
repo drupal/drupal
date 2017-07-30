@@ -22,7 +22,6 @@ class RequiredStatesTest extends KernelTestBase {
 
   /**
    * @covers ::getRequiredStates
-   * @covers ::initializeWorkflow
    * @covers ::__construct
    */
   public function testGetRequiredStates() {
@@ -30,8 +29,6 @@ class RequiredStatesTest extends KernelTestBase {
       'id' => 'test',
       'type' => 'workflow_type_required_state_test',
     ], 'workflow');
-    /** @var \Drupal\workflows\WorkflowInterface $workflow */
-    $workflow = $workflow->getTypePlugin()->initializeWorkflow($workflow);
     $workflow->save();
     $this->assertEquals(['fresh', 'rotten'], $workflow->getTypePlugin()
       ->getRequiredStates());
@@ -50,8 +47,6 @@ class RequiredStatesTest extends KernelTestBase {
       'id' => 'test',
       'type' => 'workflow_type_required_state_test',
     ], 'workflow');
-    /** @var \Drupal\workflows\WorkflowInterface $workflow */
-    $workflow = $workflow->getTypePlugin()->initializeWorkflow($workflow);
     $workflow->save();
     // Ensure that required states can't be deleted.
     $this->setExpectedException(RequiredStateMissingException::class, "Required State Type Test' requires states with the ID 'fresh' in workflow 'test'");
@@ -66,6 +61,9 @@ class RequiredStatesTest extends KernelTestBase {
     $workflow = new Workflow([
       'id' => 'test',
       'type' => 'workflow_type_required_state_test',
+      'type_settings' => [
+        'states' => [],
+      ],
     ], 'workflow');
     $this->setExpectedException(RequiredStateMissingException::class, "Required State Type Test' requires states with the ID 'fresh', 'rotten' in workflow 'test'");
     $workflow->save();
@@ -79,8 +77,6 @@ class RequiredStatesTest extends KernelTestBase {
       'id' => 'test',
       'type' => 'workflow_type_required_state_test',
     ], 'workflow');
-    /** @var \Drupal\workflows\WorkflowInterface $workflow */
-    $workflow = $workflow->getTypePlugin()->initializeWorkflow($workflow);
     $workflow->save();
 
     // Ensure states added by default configuration can be changed.

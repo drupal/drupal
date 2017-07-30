@@ -254,9 +254,8 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('There is no Workflow yet.');
     $this->assertNull($workflow_storage->loadUnchanged('test'), 'The test workflow has been deleted');
 
-    // Ensure that workflow types that implement
-    // \Drupal\workflows\WorkflowTypeInterface::initializeWorkflow() are
-    // initialized correctly.
+    // Ensure that workflow types with default configuration are initialized
+    // correctly.
     $this->drupalGet('admin/config/workflow/workflows');
     $this->clickLink('Add workflow');
     $this->submitForm(['label' => 'Test 2', 'id' => 'test2', 'workflow_type' => 'workflow_type_required_state_test'], 'Save');
