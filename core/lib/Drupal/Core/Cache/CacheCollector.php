@@ -246,6 +246,18 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
         }
         $data = array_merge($cache->data, $data);
       }
+      elseif ($this->cacheCreated) {
+        // Getting here indicates that there was a cache entry at the
+        // beginning of the request, but now it's gone (some other process
+        // must have cleared it). We back out to prevent corrupting the cache
+        // with incomplete data, since we won't be able to properly merge
+        // the existing cache data from earlier with the new data.
+        // A future request will properly hydrate the cache from scratch.
+        if ($lock) {
+          $this->lock->release($lock_name);
+        }
+        return;
+      }
       // Remove keys marked for deletion.
       foreach ($this->keysToRemove as $delete_key) {
         unset($data[$delete_key]);
