@@ -288,9 +288,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     // Create dedicated field tables.
-    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type->id());
-    $table_mapping = $this->storage->getTableMapping($field_storage_definitions);
-    foreach ($field_storage_definitions as $field_storage_definition) {
+    $table_mapping = $this->storage->getTableMapping($this->fieldStorageDefinitions);
+    foreach ($this->fieldStorageDefinitions as $field_storage_definition) {
       if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
         $this->createDedicatedTableSchema($field_storage_definition);
       }
@@ -537,19 +536,18 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       // We need to act only on shared entity schema tables.
       $table_mapping = $this->storage->getTableMapping();
       $table_names = array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames());
-      $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
       foreach ($table_names as $table_name) {
         if (!isset($schema[$table_name])) {
           $schema[$table_name] = [];
         }
         foreach ($table_mapping->getFieldNames($table_name) as $field_name) {
-          if (!isset($storage_definitions[$field_name])) {
+          if (!isset($this->fieldStorageDefinitions[$field_name])) {
             throw new FieldException("Field storage definition for '$field_name' could not be found.");
           }
           // Add the schema for base field definitions.
-          elseif ($table_mapping->allowsSharedTableStorage($storage_definitions[$field_name])) {
+          elseif ($table_mapping->allowsSharedTableStorage($this->fieldStorageDefinitions[$field_name])) {
             $column_names = $table_mapping->getColumnNames($field_name);
-            $storage_definition = $storage_definitions[$field_name];
+            $storage_definition = $this->fieldStorageDefinitions[$field_name];
             $schema[$table_name] = array_merge_recursive($schema[$table_name], $this->getSharedTableFieldSchema($storage_definition, $table_name, $column_names));
           }
         }
@@ -570,7 +568,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       // Add an index for the 'published' entity key.
       if (is_subclass_of($entity_type->getClass(), EntityPublishedInterface::class)) {
         $published_key = $entity_type->getKey('published');
-        if ($published_key && !$storage_definitions[$published_key]->hasCustomStorage()) {
+        if ($published_key && !$this->fieldStorageDefinitions[$published_key]->hasCustomStorage()) {
           $published_field_table = $table_mapping->getFieldTableName($published_key);
           $id_key = $entity_type->getKey('id');
           if ($bundle_key = $entity_type->getKey('bundle')) {
@@ -628,9 +626,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     // Collect all possible field schema identifiers for shared table fields.
     // These will be used to detect entity schema data in the subsequent loop.
     $field_schema_identifiers = [];
-    $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
-    $table_mapping = $this->storage->getTableMapping($storage_definitions);
-    foreach ($storage_definitions as $field_name => $storage_definition) {
+    $table_mapping = $this->storage->getTableMapping($this->fieldStorageDefinitions);
+    foreach ($this->fieldStorageDefinitions as $field_name => $storage_definition) {
       if ($table_mapping->allowsSharedTableStorage($storage_definition)) {
         // Make sure both base identifier names and suffixed names are listed.
         $name = $this->getFieldSchemaIdentifierName($entity_type_id, $field_name);
