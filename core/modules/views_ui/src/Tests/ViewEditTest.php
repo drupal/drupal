@@ -64,6 +64,12 @@ class ViewEditTest extends UITestBase {
     $this->assertIdentical($displays['test_1']['id'], 'test_1', 'New display ID matches the display ID key.');
     $this->assertFalse(array_key_exists('attachment_1', $displays), 'Old display ID not found.');
 
+    // Set to the same machine name and save the View.
+    $edit = ['display_id' => 'test_1'];
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/test_1/display_id', $edit, 'Apply');
+    $this->drupalPostForm(NULL, [], 'Save');
+    $this->assertLink(t('test_1'));
+
     // Test the form validation with invalid IDs.
     $machine_name_edit_url = 'admin/structure/views/nojs/display/test_view/test_1/display_id';
     $error_text = t('Display name must be letters, numbers, or underscores only.');
