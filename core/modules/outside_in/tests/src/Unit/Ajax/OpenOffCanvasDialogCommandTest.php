@@ -31,6 +31,7 @@ class OpenOffCanvasDialogCommandTest extends UnitTestCase {
         'draggable' => FALSE,
         'drupalAutoButtons' => FALSE,
         'buttons' => [],
+        'dialogClass' => 'ui-dialog-off-canvas',
         'width' => 300,
       ],
       'effect' => 'fade',

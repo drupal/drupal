@@ -6,10 +6,7 @@ drupal.outside_in:
     component:
       css/outside_in.module.css: {}
       css/outside_in.motion.css: {}
-      css/outside_in.form.css: {}
-      css/outside_in.table.css: {}
-      css/outside_in.details.css: {}
-      css/outside_in.tabledrag.css: {}
+      css/outside_in.toolbar.css: {}
     theme:
       # @todo Set the group higher than CSS_AGGREGATE_THEME so that it overrides
       #   both jQuery UI and Classy's dialog.css, remove in
@@ -24,6 +21,21 @@ drupal.off_canvas:
   version: VERSION
   js:
     js/off-canvas.js: {}
+  css:
+    base:
+      css/off-canvas.reset.css: {}
+      css/off-canvas.base.css: {}
+      css/off-canvas.css: {}
+      css/off-canvas.theme.css: { group: 200 }
+    component:
+      css/off-canvas.motion.css: {}
+      css/off-canvas.button.css: {}
+      css/off-canvas.form.css: {}
+      css/off-canvas.table.css: {}
+      css/off-canvas.details.css: {}
+      css/off-canvas.tabledrag.css: {}
+      css/off-canvas.dropbutton.css: {}
+
   dependencies:
     - core/jquery
     - core/drupal
