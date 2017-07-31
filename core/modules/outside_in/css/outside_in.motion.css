@@ -26,11 +26,3 @@
   -moz-transition: all .7s ease;
   transition: all .7s ease;
 }
-
-/* Transition the administration tray.
-#toolbar-administration,
-#toolbar-administration * {
-  -webkit-transition: all .7s ease;
-  -moz-transition: all .7s ease;
-  transition: all .7s ease;
-}*/
