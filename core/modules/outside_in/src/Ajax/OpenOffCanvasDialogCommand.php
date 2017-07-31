@@ -49,6 +49,9 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     // @todo drupal.ajax.js does not respect drupalAutoButtons properly, pass an
     //   empty set of buttons until https://www.drupal.org/node/2793343 is in.
     $this->dialogOptions['buttons'] = [];
+    if (empty($dialog_options['dialogClass'])) {
+      $this->dialogOptions['dialogClass'] = 'ui-dialog-off-canvas';
+    }
     // If no width option is provided then use the default width to avoid the
     // dialog staying at the width of the previous instance when opened
     // more than once, with different widths, on a single page.

@@ -144,7 +144,6 @@
         var $activeElement = $('#' + settings.outsideInActiveEditableId);
         if ($activeElement.length) {
           $activeElement.addClass('outside-in-active-editable');
-          settings.dialogClass += ' ui-dialog-outside-in';
         }
       }
     },
