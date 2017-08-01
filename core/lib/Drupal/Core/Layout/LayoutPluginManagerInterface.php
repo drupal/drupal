@@ -6,11 +6,6 @@ use Drupal\Component\Plugin\CategorizingPluginManagerInterface;
 
 /**
  * Provides the interface for a plugin manager of layouts.
- *
- * @internal
- *   The layout system is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 interface LayoutPluginManagerInterface extends CategorizingPluginManagerInterface {
 

@@ -16,7 +16,7 @@ function layout_discovery_help($route_name) {
     case 'help.page.layout_discovery':
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('Layout Discovery allows modules or themes to register layouts, and for other modules to list the available layouts and render them.') . '</p>';
-      $output .= '<p>' . t('For more information, see the <a href=":layout-discovery-documentation">online documentation for the Layout Discovery module</a>.', [':layout-discovery-documentation' => 'https://www.drupal.org/node/2619128']) . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":layout-discovery-documentation">online documentation for the Layout Discovery module</a>.', [':layout-discovery-documentation' => 'https://www.drupal.org/docs/8/api/layout-api']) . '</p>';
       return $output;
   }
 }
