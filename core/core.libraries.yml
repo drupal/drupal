@@ -341,10 +341,10 @@ html5shiv:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "2.2.4"
+  version: "3.2.1"
   license:
     name: MIT
-    url: https://github.com/jquery/jquery/blob/2.2.4/LICENSE.txt
+    url: https://github.com/jquery/jquery/blob/3.2.1/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
