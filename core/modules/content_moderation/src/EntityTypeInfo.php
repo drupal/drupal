@@ -261,11 +261,11 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       ])
       ->setDisplayOptions('form', [
         'type' => 'moderation_state_default',
-        'weight' => 5,
+        'weight' => 100,
         'settings' => [],
       ])
       ->addConstraint('ModerationState', [])
-      ->setDisplayConfigurable('form', FALSE)
+      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', FALSE)
       ->setReadOnly(FALSE)
       ->setTranslatable(TRUE);
@@ -322,6 +322,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
           $full_message = $this->t('Unable to save this @type_label. <a href="@latest_revision_edit_url">Publish</a> or <a href="@latest_revision_delete_url">delete</a> the latest revision to allow all workflow transitions.', $args);
           drupal_set_message($full_message, 'error');
 
+          $form['moderation_state']['#access'] = FALSE;
           $form['actions']['#access'] = FALSE;
           $form['invalid_transitions'] = [
             'label' => [
@@ -339,13 +340,24 @@ class EntityTypeInfo implements ContainerInjectionInterface {
           ];
 
           if ($form['footer']) {
-            $form['footer']['invalid_transitions'] = $form['invalid_transitions'];
-            unset($form['invalid_transitions']);
+            $form['invalid_transitions']['#group'] = 'footer';
           }
         }
 
         // Submit handler to redirect to the latest version, if available.
         $form['actions']['submit']['#submit'][] = [EntityTypeInfo::class, 'bundleFormRedirect'];
+
+        // Move the 'moderation_state' field widget to the footer region, if
+        // available.
+        if (isset($form['footer'])) {
+          $form['moderation_state']['#group'] = 'footer';
+        }
+
+        // Duplicate the label of the current moderation state to the meta
+        // region, if available.
+        if (isset($form['meta']['published'])) {
+          $form['meta']['published']['#markup'] = $form['moderation_state']['widget'][0]['current']['#markup'];
+        }
       }
     }
   }

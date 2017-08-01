@@ -2,7 +2,7 @@
 
 namespace Drupal\content_moderation\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -75,7 +75,7 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
    * @param \Drupal\content_moderation\ModerationInformation $moderation_information
    *   Moderation information service.
    * @param \Drupal\content_moderation\StateTransitionValidation $validator
-   *   Moderation state transition validation service
+   *   Moderation state transition validation service.
    */
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, ModerationInformation $moderation_information, StateTransitionValidation $validator) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
@@ -106,7 +106,7 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    /** @var ContentEntityInterface $entity */
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $items->getEntity();
 
     /* @var \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity */
@@ -121,95 +121,53 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
     /** @var \Drupal\workflows\Transition[] $transitions */
     $transitions = $this->validator->getValidTransitions($entity, $this->currentUser);
 
-    $target_states = [];
+    $transition_labels = [];
+    $default_value = NULL;
     foreach ($transitions as $transition) {
-      $target_states[$transition->to()->id()] = $transition->label();
+      $transition_to_state = $transition->to();
+      $transition_labels[$transition_to_state->id()] = $transition_to_state->label();
     }
 
-    // @todo https://www.drupal.org/node/2779933 write a test for this.
     $element += [
-      '#access' => FALSE,
-      '#type' => 'select',
-      '#options' => $target_states,
-      '#default_value' => $default->id(),
-      '#published' => $default->isPublishedState(),
-      '#key_column' => $this->column,
+      '#type' => 'container',
+      'current' => [
+        '#type' => 'item',
+        '#title' => $this->t('Current state'),
+        '#markup' => $default->label(),
+        '#access' => !$entity->isNew(),
+        '#wrapper_attributes' => [
+          'class' => ['container-inline'],
+        ],
+      ],
+      'state' => [
+        '#type' => 'select',
+        '#title' => $entity->isNew() ? $this->t('Save as') : $this->t('Change to'),
+        '#key_column' => $this->column,
+        '#options' => $transition_labels,
+        '#default_value' => $default_value,
+        '#access' => !empty($transition_labels),
+        '#wrapper_attributes' => [
+          'class' => ['container-inline'],
+        ],
+      ],
     ];
     $element['#element_validate'][] = [get_class($this), 'validateElement'];
 
-    // Use the dropbutton.
-    $element['#process'][] = [get_called_class(), 'processActions'];
-    return $element;
-  }
-
-  /**
-   * Entity builder updating the node moderation state with the submitted value.
-   *
-   * @param string $entity_type_id
-   *   The entity type identifier.
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity updated with the submitted values.
-   * @param array $form
-   *   The complete form array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public static function updateStatus($entity_type_id, ContentEntityInterface $entity, array $form, FormStateInterface $form_state) {
-    $element = $form_state->getTriggeringElement();
-    if (isset($element['#moderation_state'])) {
-      $entity->moderation_state->value = $element['#moderation_state'];
-    }
-  }
-
-  /**
-   * Process callback to alter action buttons.
-   */
-  public static function processActions($element, FormStateInterface $form_state, array &$form) {
-
-    // We'll steal most of the button configuration from the default submit
-    // button. However, NodeForm also hides that button for admins (as it adds
-    // its own, too), so we have to restore it.
-    $default_button = $form['actions']['submit'];
-    $default_button['#access'] = TRUE;
-
-    // Add a custom button for each transition we're allowing. The #dropbutton
-    // property tells FAPI to cluster them all together into a single widget.
-    $options = $element['#options'];
-
-    $entity = $form_state->getFormObject()->getEntity();
-    $translatable = !$entity->isNew() && $entity->isTranslatable();
-    foreach ($options as $id => $label) {
-      $button = [
-        '#dropbutton' => 'save',
-        '#moderation_state' => $id,
-        '#weight' => -10,
-      ];
-
-      $button['#value'] = $translatable
-        ? t('Save and @transition (this translation)', ['@transition' => $label])
-        : t('Save and @transition', ['@transition' => $label]);
-
-      $form['actions']['moderation_state_' . $id] = $button + $default_button;
-    }
-
-    // Hide the default buttons, including the specialty ones added by
-    // NodeForm.
-    foreach (['publish', 'unpublish', 'submit'] as $key) {
-      $form['actions'][$key]['#access'] = FALSE;
-      unset($form['actions'][$key]['#dropbutton']);
-    }
-
-    // Setup a callback to translate the button selection back into field
-    // widget, so that it will get saved properly.
-    $form['#entity_builders']['update_moderation_state'] = [get_called_class(), 'updateStatus'];
     return $element;
   }
 
   /**
    * {@inheritdoc}
    */
+  public static function validateElement(array $element, FormStateInterface $form_state) {
+    $form_state->setValueForElement($element, [$element['state']['#key_column'] => $element['state']['#value']]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    return $field_definition->getName() === 'moderation_state';
+    return is_a($field_definition->getClass(), ModerationStateFieldItemList::class, TRUE);
   }
 
 }

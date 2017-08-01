@@ -27,17 +27,18 @@ trait BookTestTrait {
   /**
    * Creates a new book with a page hierarchy.
    *
-   * @param string $submit
-   *   (optional) Value of the submit button whose click is to be emulated.
-   *   Defaults to 'Save'.
+   * @param array $edit
+   *   (optional) Field data in an associative array. Changes the current input
+   *   fields (where possible) to the values indicated. Defaults to an empty
+   *   array.
    *
    * @return \Drupal\node\NodeInterface[]
    */
-  public function createBook($submit = NULL) {
+  public function createBook($edit = []) {
     // Create new book.
     $this->drupalLogin($this->bookAuthor);
 
-    $this->book = $this->createBookNode('new', NULL, $submit);
+    $this->book = $this->createBookNode('new', NULL, $edit);
     $book = $this->book;
 
     /*
@@ -50,11 +51,11 @@ trait BookTestTrait {
      *  |- Node 4
      */
     $nodes = [];
-    $nodes[] = $this->createBookNode($book->id(), NULL, $submit); // Node 0.
-    $nodes[] = $this->createBookNode($book->id(), $nodes[0]->book['nid'], $submit); // Node 1.
-    $nodes[] = $this->createBookNode($book->id(), $nodes[0]->book['nid'], $submit); // Node 2.
-    $nodes[] = $this->createBookNode($book->id(), NULL, $submit); // Node 3.
-    $nodes[] = $this->createBookNode($book->id(), NULL, $submit); // Node 4.
+    $nodes[] = $this->createBookNode($book->id(), NULL, $edit); // Node 0.
+    $nodes[] = $this->createBookNode($book->id(), $nodes[0]->book['nid'], $edit); // Node 1.
+    $nodes[] = $this->createBookNode($book->id(), $nodes[0]->book['nid'], $edit); // Node 2.
+    $nodes[] = $this->createBookNode($book->id(), NULL, $edit); // Node 3.
+    $nodes[] = $this->createBookNode($book->id(), NULL, $edit); // Node 4.
 
     $this->drupalLogout();
 
@@ -167,21 +168,19 @@ trait BookTestTrait {
    *   A book node ID or set to 'new' to create a new book.
    * @param int|null $parent
    *   (optional) Parent book reference ID. Defaults to NULL.
-   * @param string $submit
-   *   (optional) Value of the submit button whose click is to be emulated.
-   *   Defaults to 'Save'.
+   * @param array $edit
+   *   (optional) Field data in an associative array. Changes the current input
+   *   fields (where possible) to the values indicated. Defaults to an empty
+   *   array.
    *
    * @return \Drupal\node\NodeInterface
    *   The created node.
    */
-  public function createBookNode($book_nid, $parent = NULL, $submit = NULL) {
+  public function createBookNode($book_nid, $parent = NULL, $edit = []) {
     // $number does not use drupal_static as it should not be reset
     // since it uniquely identifies each call to createBookNode().
     static $number = 0; // Used to ensure that when sorted nodes stay in same order.
 
-    $submit = $submit ?: t('Save');
-
-    $edit = [];
     $edit['title[0][value]'] = str_pad($number, 2, '0', STR_PAD_LEFT) . ' - SimpleTest test node ' . $this->randomMachineName(10);
     $edit['body[0][value]'] = 'SimpleTest test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
     $edit['book[bid]'] = $book_nid;
@@ -190,13 +189,13 @@ trait BookTestTrait {
       $this->drupalPostForm('node/add/book', $edit, t('Change book (update list of parents)'));
 
       $edit['book[pid]'] = $parent;
-      $this->drupalPostForm(NULL, $edit, $submit);
+      $this->drupalPostForm(NULL, $edit, t('Save'));
       // Make sure the parent was flagged as having children.
       $parent_node = \Drupal::entityManager()->getStorage('node')->loadUnchanged($parent);
       $this->assertFalse(empty($parent_node->book['has_children']), 'Parent node is marked as having children');
     }
     else {
-      $this->drupalPostForm('node/add/book', $edit, $submit);
+      $this->drupalPostForm('node/add/book', $edit, t('Save'));
     }
 
     // Check to make sure the book node was created.
