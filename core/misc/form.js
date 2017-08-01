@@ -126,22 +126,26 @@
   };
 
   var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e) {
-    var $target = void 0;
-
+    var url = void 0;
     if (e.type === 'click') {
-      $target = e.currentTarget.location ? $(e.currentTarget.location.hash) : $(e.currentTarget.hash);
+      url = e.currentTarget.location ? e.currentTarget.location : e.currentTarget;
     } else {
-      $target = $('#' + location.hash.substr(1));
+      url = location;
     }
+    var hash = url.hash.substr(1);
+    if (hash) {
+      var $target = $('#' + hash);
+      $('body').trigger('formFragmentLinkClickOrHashChange', [$target]);
 
-    $('body').trigger('formFragmentLinkClickOrHashChange', [$target]);
-
-    setTimeout(function () {
-      $target.focus();
-    }, 300, $target);
+      setTimeout(function () {
+        return $target.trigger('focus');
+      }, 300);
+    }
   };
 
-  $(window).on('hashchange.form-fragment', debounce(handleFragmentLinkClickOrHashChange, 300, true));
+  var debouncedHandleFragmentLinkClickOrHashChange = debounce(handleFragmentLinkClickOrHashChange, 300, true);
 
-  $(document).on('click.form-fragment', 'a[href*="#"]', debounce(handleFragmentLinkClickOrHashChange, 300, true));
+  $(window).on('hashchange.form-fragment', debouncedHandleFragmentLinkClickOrHashChange);
+
+  $(document).on('click.form-fragment', 'a[href*="#"]', debouncedHandleFragmentLinkClickOrHashChange);
 })(jQuery, Drupal, Drupal.debounce);

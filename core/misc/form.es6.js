@@ -265,28 +265,30 @@
    * @fires event:formFragmentLinkClickOrHashChange
    */
   const handleFragmentLinkClickOrHashChange = (e) => {
-    let $target;
-
+    let url;
     if (e.type === 'click') {
-      $target = e.currentTarget.location ? $(e.currentTarget.location.hash) : $(e.currentTarget.hash);
+      url = e.currentTarget.location ? e.currentTarget.location : e.currentTarget;
     }
     else {
-      $target = $(`#${location.hash.substr(1)}`);
+      url = location;
     }
+    const hash = url.hash.substr(1);
+    if (hash) {
+      const $target = $(`#${hash}`);
+      $('body').trigger('formFragmentLinkClickOrHashChange', [$target]);
 
-    $('body').trigger('formFragmentLinkClickOrHashChange', [$target]);
-
-    /**
-     * Clicking a fragment link or a hash change should focus the target
-     * element, but event timing issues in multiple browsers require a timeout.
-     */
-    setTimeout(() => {
-      $target.focus();
-    }, 300, $target);
+      /**
+       * Clicking a fragment link or a hash change should focus the target
+       * element, but event timing issues in multiple browsers require a timeout.
+       */
+      setTimeout(() => $target.trigger('focus'), 300);
+    }
   };
 
+  const debouncedHandleFragmentLinkClickOrHashChange = debounce(handleFragmentLinkClickOrHashChange, 300, true);
+
   // Binds a listener to handle URL fragment changes.
-  $(window).on('hashchange.form-fragment', debounce(handleFragmentLinkClickOrHashChange, 300, true));
+  $(window).on('hashchange.form-fragment', debouncedHandleFragmentLinkClickOrHashChange);
 
   /**
    * Binds a listener to handle clicks on fragment links and absolute URL links
@@ -294,6 +296,6 @@
    * because clicking such links doesn't trigger a hash change when the fragment
    * is already in the URL.
    */
-  $(document).on('click.form-fragment', 'a[href*="#"]', debounce(handleFragmentLinkClickOrHashChange, 300, true));
+  $(document).on('click.form-fragment', 'a[href*="#"]', debouncedHandleFragmentLinkClickOrHashChange);
 
 }(jQuery, Drupal, Drupal.debounce));
