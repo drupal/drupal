@@ -4,12 +4,11 @@ namespace Drupal\workflows\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\PluginWithFormsTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\workflows\State;
 use Drupal\workflows\StateInterface;
 use Drupal\workflows\Transition;
-use Drupal\workflows\TransitionInterface;
 use Drupal\workflows\WorkflowInterface;
 use Drupal\workflows\WorkflowTypeInterface;
 
@@ -23,6 +22,8 @@ use Drupal\workflows\WorkflowTypeInterface;
  *   by experimental modules and development releases of contributed modules.
  */
 abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterface {
+
+  use PluginWithFormsTrait;
 
   /**
    * A regex for matching a valid state/transition machine name.
@@ -66,20 +67,6 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    */
   public function workflowStateHasData(WorkflowInterface $workflow, StateInterface $state) {
     return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildStateConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, StateInterface $state = NULL) {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildTransitionConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, TransitionInterface $transition = NULL) {
-    return [];
   }
 
   /**

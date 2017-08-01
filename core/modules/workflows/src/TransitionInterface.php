@@ -12,6 +12,11 @@ namespace Drupal\workflows;
 interface TransitionInterface {
 
   /**
+   * The key of the transition plugin form.
+   */
+  const PLUGIN_FORM_KEY = 'transition';
+
+  /**
    * Gets the transition's ID.
    *
    * @return string

@@ -4,8 +4,7 @@ namespace Drupal\workflows;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
-use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -15,7 +14,12 @@ use Drupal\Core\Session\AccountInterface;
  *   The workflow system is currently experimental and should only be leveraged
  *   by experimental modules and development releases of contributed modules.
  */
-interface WorkflowTypeInterface extends PluginInspectionInterface, DerivativeInspectionInterface, ConfigurablePluginInterface {
+interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInspectionInterface, ConfigurablePluginInterface {
+
+  /**
+   * The key of the global workflow plugin form.
+   */
+  const PLUGIN_FORM_KEY = 'configure';
 
   /**
    * Gets the label for the workflow type.
@@ -83,45 +87,6 @@ interface WorkflowTypeInterface extends PluginInspectionInterface, DerivativeIns
    *   The initial state.
    */
   public function getInitialState(WorkflowInterface $workflow);
-
-  /**
-   * Builds a form to be added to the Workflow state edit form.
-   *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   * @param \Drupal\workflows\WorkflowInterface $workflow
-   *   The workflow the state is attached to.
-   * @param \Drupal\workflows\StateInterface|null $state
-   *   The workflow state being edited. If NULL, a new state is being added.
-   *
-   * @return array
-   *   Form elements to add to a workflow state form for customisations to the
-   *   workflow.
-   *
-   * @see \Drupal\workflows\Form\WorkflowStateAddForm::form()
-   * @see \Drupal\workflows\Form\WorkflowStateEditForm::form()
-   */
-  public function buildStateConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, StateInterface $state = NULL);
-
-  /**
-   * Builds a form to be added to the Workflow transition edit form.
-   *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   * @param \Drupal\workflows\WorkflowInterface $workflow
-   *   The workflow the state is attached to.
-   * @param \Drupal\workflows\TransitionInterface|null $transition
-   *   The workflow transition being edited. If NULL, a new transition is being
-   *   added.
-   *
-   * @return array
-   *   Form elements to add to a workflow transition form for customisations to
-   *   the workflow.
-   *
-   * @see \Drupal\workflows\Form\WorkflowTransitionAddForm::form()
-   * @see \Drupal\workflows\Form\WorkflowTransitionEditForm::form()
-   */
-  public function buildTransitionConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, TransitionInterface $transition = NULL);
 
   /**
    * Gets the required states of workflow type.

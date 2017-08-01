@@ -12,6 +12,11 @@ namespace Drupal\workflows;
 interface StateInterface {
 
   /**
+   * The key of the state plugin form.
+   */
+  const PLUGIN_FORM_KEY = 'state';
+
+  /**
    * Gets the state's ID.
    *
    * @return string

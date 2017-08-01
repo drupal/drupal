@@ -50,4 +50,23 @@ class WorkflowType extends Plugin {
    */
   public $required_states = [];
 
+  /**
+   * A list of optional form classes implementing PluginFormInterface.
+   *
+   * Forms which will be used for the workflow UI are 'configure', 'state' and
+   * 'transition'.
+   *
+   * @see \Drupal\Core\Plugin\PluginWithFormsInterface
+   * @see \Drupal\Core\Plugin\PluginFormInterface
+   * @see \Drupal\workflows\Plugin\WorkflowTypeConfigureFormBase
+   * @see \Drupal\workflows\Plugin\WorkflowTypeStateFormBase
+   * @see \Drupal\workflows\Plugin\WorkflowTypeTransitionFormBase
+   * @see \Drupal\workflows\WorkflowTypeInterface::PLUGIN_FORM_KEY
+   * @see \Drupal\workflows\StateInterface::PLUGIN_FORM_KEY
+   * @see \Drupal\workflows\TransitionInterface::PLUGIN_FORM_KEY
+   *
+   * @var array
+   */
+  public $forms = [];
+
 }
