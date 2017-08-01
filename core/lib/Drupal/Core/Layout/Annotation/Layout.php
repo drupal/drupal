@@ -14,11 +14,6 @@ use Drupal\Core\Layout\LayoutDefinition;
  *
  * Plugin namespace: Plugin\Layout
  *
- * @internal
- *   The layout system is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
- *
  * @see \Drupal\Core\Layout\LayoutInterface
  * @see \Drupal\Core\Layout\LayoutDefault
  * @see \Drupal\Core\Layout\LayoutPluginManager
