@@ -278,20 +278,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     // Set up mocking of the plugin factory.
     $map = [];
     foreach ($definitions as $plugin_id => $definition) {
-      $plugin = $this->getMock('Drupal\Core\Menu\ContextualLinkInterface');
-      $plugin->expects($this->any())
-        ->method('getRouteName')
-        ->will($this->returnValue($definition['route_name']));
-      $plugin->expects($this->any())
-        ->method('getTitle')
-        ->will($this->returnValue($definition['title']));
-      $plugin->expects($this->any())
-        ->method('getWeight')
-        ->will($this->returnValue($definition['weight']));
-      $plugin->expects($this->any())
-        ->method('getOptions')
-        ->will($this->returnValue($definition['options']));
-      $map[] = [$plugin_id, [], $plugin];
+      $map[] = [$plugin_id, [], new ContextualLinkDefault([], $plugin_id, $definition)];
     }
     $this->factory->expects($this->any())
       ->method('createInstance')
@@ -308,6 +295,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
       $this->assertEquals($definition['weight'], $result[$plugin_id]['weight']);
       $this->assertEquals($definition['title'], $result[$plugin_id]['title']);
       $this->assertEquals($definition['route_name'], $result[$plugin_id]['route_name']);
+      $this->assertEquals($definition['options'], $result[$plugin_id]['localized_options']);
     }
   }
 
