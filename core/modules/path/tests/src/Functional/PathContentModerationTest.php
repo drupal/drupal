@@ -49,7 +49,8 @@ class PathContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [
       'title[0][value]' => 'moderated content',
       'path[0][alias]' => '/moderated-content',
-    ], t('Save and Publish'));
+      'moderation_state[0][state]' => 'published',
+    ], t('Save'));
     $node = $this->getNodeByTitle('moderated content');
 
     // Add a pending revision with the same alias.
@@ -58,7 +59,8 @@ class PathContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [
       'title[0][value]' => 'pending revision',
       'path[0][alias]' => '/moderated-content',
-    ], t('Save and Create New Draft'));
+      'moderation_state[0][state]' => 'draft',
+    ], t('Save'));
     $this->assertSession()->pageTextNotContains('You can only change the URL alias for the published version of this content.');
 
     // Create some moderated content with no path alias.
@@ -67,7 +69,8 @@ class PathContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [
       'title[0][value]' => 'moderated content 2',
       'path[0][alias]' => '',
-    ], t('Save and Publish'));
+      'moderation_state[0][state]' => 'published',
+    ], t('Save'));
     $node = $this->getNodeByTitle('moderated content 2');
 
     // Add a pending revision with a new alias.
@@ -76,7 +79,8 @@ class PathContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [
       'title[0][value]' => 'pending revision',
       'path[0][alias]' => '/pending-revision',
-    ], t('Save and Create New Draft'));
+      'moderation_state[0][state]' => 'draft',
+    ], t('Save'));
     $this->assertSession()->pageTextContains('You can only change the URL alias for the published version of this content.');
 
     // Create some moderated content with no path alias.
@@ -85,7 +89,8 @@ class PathContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [
       'title[0][value]' => 'moderated content 3',
       'path[0][alias]' => '',
-    ], t('Save and Publish'));
+      'moderation_state[0][state]' => 'published',
+    ], t('Save'));
     $node = $this->getNodeByTitle('moderated content 3');
 
     // Add a pending revision with no path alias.
@@ -94,7 +99,8 @@ class PathContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [
       'title[0][value]' => 'pending revision',
       'path[0][alias]' => '',
-    ], t('Save and Create New Draft'));
+      'moderation_state[0][state]' => 'draft',
+    ], t('Save'));
     $this->assertSession()->pageTextNotContains('You can only change the URL alias for the published version of this content.');
   }
 

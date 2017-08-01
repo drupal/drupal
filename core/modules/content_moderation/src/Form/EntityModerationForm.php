@@ -88,7 +88,7 @@ class EntityModerationForm extends FormBase {
     if ($current_state) {
       $form['current'] = [
         '#type' => 'item',
-        '#title' => $this->t('Status'),
+        '#title' => $this->t('Moderation state'),
         '#markup' => $workflow->getTypePlugin()->getState($current_state)->label(),
       ];
     }
@@ -98,7 +98,7 @@ class EntityModerationForm extends FormBase {
 
     $form['new_state'] = [
       '#type' => 'select',
-      '#title' => $this->t('Moderate'),
+      '#title' => $this->t('Change to'),
       '#options' => $target_states,
     ];
 

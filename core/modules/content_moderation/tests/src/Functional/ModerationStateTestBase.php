@@ -38,6 +38,9 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     'access content overview',
     'use editorial transition create_new_draft',
     'use editorial transition publish',
+    'use editorial transition archive',
+    'use editorial transition archived_draft',
+    'use editorial transition archived_published',
   ];
 
   /**

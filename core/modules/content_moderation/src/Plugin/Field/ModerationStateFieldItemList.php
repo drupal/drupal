@@ -122,19 +122,40 @@ class ModerationStateFieldItemList extends FieldItemList {
    * {@inheritdoc}
    */
   public function onChange($delta) {
+    $this->updateModeratedEntity($this->list[$delta]->value);
+
+    parent::onChange($delta);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($values, $notify = TRUE) {
+    parent::setValue($values, $notify);
+
+    if (isset($this->list[0])) {
+      $this->updateModeratedEntity($this->list[0]->value);
+    }
+  }
+
+  /**
+   * Updates the default revision flag and the publishing status of the entity.
+   *
+   * @param string $moderation_state_id
+   *   The ID of the new moderation state.
+   */
+  protected function updateModeratedEntity($moderation_state_id) {
     $entity = $this->getEntity();
 
     /** @var \Drupal\content_moderation\ModerationInformationInterface $content_moderation_info */
     $content_moderation_info = \Drupal::service('content_moderation.moderation_information');
     $workflow = $content_moderation_info->getWorkflowForEntity($entity);
 
-    $current_state_id = $this->list[0]->value;
-
     // Change the entity's default revision flag and the publishing status only
     // if the new workflow state is a valid one.
-    if ($workflow->getTypePlugin()->hasState($current_state_id)) {
+    if ($workflow->getTypePlugin()->hasState($moderation_state_id)) {
       /** @var \Drupal\content_moderation\ContentModerationState $current_state */
-      $current_state = $workflow->getTypePlugin()->getState($current_state_id);
+      $current_state = $workflow->getTypePlugin()->getState($moderation_state_id);
 
       // This entity is default if it is new, a new translation, the default
       // revision state, or the default revision is not published.
@@ -151,8 +172,6 @@ class ModerationStateFieldItemList extends FieldItemList {
         $published_state ? $entity->setPublished() : $entity->setUnpublished();
       }
     }
-
-    parent::onChange($delta);
   }
 
 }

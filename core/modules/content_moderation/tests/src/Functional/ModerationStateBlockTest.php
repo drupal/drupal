@@ -59,9 +59,10 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $body = 'Body of moderated block';
     $edit = [
       'info[0][value]' => 'Moderated block',
+      'moderation_state[0][state]' => 'draft',
       'body[0][value]' => $body,
     ];
-    $this->drupalPostForm('block/add', $edit, t('Save and Create New Draft'));
+    $this->drupalPostForm('block/add', $edit, t('Save'));
     $this->assertText(t('basic Moderated block has been created.'));
 
     // Place the block in the Sidebar First region.
@@ -83,8 +84,9 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $updated_body = 'This is the new body value';
     $edit = [
       'body[0][value]' => $updated_body,
+      'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm('block/' . $block->id(), $edit, t('Save and Create New Draft'));
+    $this->drupalPostForm('block/' . $block->id(), $edit, t('Save'));
     $this->assertText(t('basic Moderated block has been updated.'));
 
     // Navigate to the home page and check that the block shows the updated
@@ -94,14 +96,17 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $this->assertText($updated_body);
 
     // Publish the block so we can create a pending revision.
-    $this->drupalPostForm('block/' . $block->id(), [], t('Save and Publish'));
+    $this->drupalPostForm('block/' . $block->id(), [
+      'moderation_state[0][state]' => 'published',
+    ], t('Save'));
 
     // Create a pending revision.
     $pending_revision_body = 'This is the pending revision body value';
     $edit = [
       'body[0][value]' => $pending_revision_body,
+      'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm('block/' . $block->id(), $edit, t('Save and Create New Draft'));
+    $this->drupalPostForm('block/' . $block->id(), $edit, t('Save'));
     $this->assertText(t('basic Moderated block has been updated.'));
 
     // Navigate to home page and check that the pending revision doesn't show,
