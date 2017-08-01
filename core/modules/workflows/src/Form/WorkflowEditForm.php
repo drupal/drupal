@@ -3,18 +3,46 @@
 namespace Drupal\workflows\Form;
 
 use Drupal\Core\Form\SubformState;
-use Drupal\workflows\WorkflowTypeFormInterface;
+use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\workflows\State;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\workflows\WorkflowTypeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The form for editing workflows.
  */
 class WorkflowEditForm extends EntityForm {
+
+  /**
+   * The plugin form factory.
+   *
+   * @var \Drupal\Core\Plugin\PluginFormFactoryInterface
+   */
+  protected $pluginFormFactory;
+
+  /**
+   * Creates an instance of WorkflowStateEditForm.
+   *
+   * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $pluginFormFactory
+   *   The plugin form factory.
+   */
+  public function __construct(PluginFormFactoryInterface $pluginFormFactory) {
+    $this->pluginFormFactory = $pluginFormFactory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin_form.factory')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -24,6 +52,7 @@ class WorkflowEditForm extends EntityForm {
 
     /* @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
+    $workflow_type = $workflow->getTypePlugin();
     $form['#title'] = $this->t('Edit %label workflow', ['%label' => $workflow->label()]);
 
     $form['label'] = [
@@ -184,12 +213,14 @@ class WorkflowEditForm extends EntityForm {
       '#markup' => $workflow->toLink($this->t('Add a new transition'), 'add-transition-form')->toString(),
     ];
 
-    if ($workflow->getTypePlugin() instanceof WorkflowTypeFormInterface) {
+    if ($workflow_type->hasFormClass(WorkflowTypeInterface::PLUGIN_FORM_KEY)) {
       $form['type_settings'] = [
         '#tree' => TRUE,
       ];
       $subform_state = SubformState::createForSubform($form['type_settings'], $form, $form_state);
-      $form['type_settings'] += $workflow->getTypePlugin()->buildConfigurationForm($form['type_settings'], $subform_state, $workflow);
+      $form['type_settings'] += $this->pluginFormFactory
+        ->createInstance($workflow_type, WorkflowTypeInterface::PLUGIN_FORM_KEY)
+        ->buildConfigurationForm($form['type_settings'], $subform_state);
     }
 
     return $form;
@@ -201,9 +232,13 @@ class WorkflowEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     /* @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
-    if ($workflow->getTypePlugin() instanceof WorkflowTypeFormInterface) {
+    $workflow_type = $workflow->getTypePlugin();
+
+    if ($workflow_type->hasFormClass(WorkflowTypeInterface::PLUGIN_FORM_KEY)) {
       $subform_state = SubformState::createForSubform($form['type_settings'], $form, $form_state);
-      $workflow->getTypePlugin()->validateConfigurationForm($form['type_settings'], $subform_state);
+      $this->pluginFormFactory
+        ->createInstance($workflow_type, WorkflowTypeInterface::PLUGIN_FORM_KEY)
+        ->validateConfigurationForm($form['type_settings'], $subform_state);
     }
   }
 
@@ -213,12 +248,16 @@ class WorkflowEditForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     /* @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
-    if ($workflow->getTypePlugin() instanceof WorkflowTypeFormInterface) {
-      $subform_state = SubformState::createForSubform($form['type_settings'], $form, $form_state);
-      $workflow->getTypePlugin()->submitConfigurationForm($form['type_settings'], $subform_state);
-    }
-    $workflow->save();
+    $workflow_type = $workflow->getTypePlugin();
 
+    if ($workflow_type->hasFormClass(WorkflowTypeInterface::PLUGIN_FORM_KEY)) {
+      $subform_state = SubformState::createForSubform($form['type_settings'], $form, $form_state);
+      $this->pluginFormFactory
+        ->createInstance($workflow_type, WorkflowTypeInterface::PLUGIN_FORM_KEY)
+        ->submitConfigurationForm($form['type_settings'], $subform_state);
+    }
+
+    $workflow->save();
     drupal_set_message($this->t('Saved the %label Workflow.', ['%label' => $workflow->label()]));
   }
 

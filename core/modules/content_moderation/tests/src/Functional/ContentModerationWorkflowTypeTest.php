@@ -62,8 +62,8 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
     $this->submitForm([
       'label' => 'Test State',
       'id' => 'test_state',
-      'type_settings[content_moderation][published]' => TRUE,
-      'type_settings[content_moderation][default_revision]' => FALSE,
+      'type_settings[published]' => TRUE,
+      'type_settings[default_revision]' => FALSE,
     ], 'Save');
     $this->assertSession()->pageTextContains('Created Test State state.');
     $this->assertSession()->linkByHrefExists('/admin/config/workflow/workflows/manage/test_workflow/state/test_state/delete');
@@ -78,13 +78,13 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
 
     // Ensure that the published settings cannot be changed.
     $this->drupalGet('admin/config/workflow/workflows/manage/test_workflow/state/published');
-    $this->assertSession()->fieldDisabled('type_settings[content_moderation][published]');
-    $this->assertSession()->fieldDisabled('type_settings[content_moderation][default_revision]');
+    $this->assertSession()->fieldDisabled('type_settings[published]');
+    $this->assertSession()->fieldDisabled('type_settings[default_revision]');
 
     // Ensure that the draft settings cannot be changed.
     $this->drupalGet('admin/config/workflow/workflows/manage/test_workflow/state/draft');
-    $this->assertSession()->fieldDisabled('type_settings[content_moderation][published]');
-    $this->assertSession()->fieldDisabled('type_settings[content_moderation][default_revision]');
+    $this->assertSession()->fieldDisabled('type_settings[published]');
+    $this->assertSession()->fieldDisabled('type_settings[default_revision]');
   }
 
 }

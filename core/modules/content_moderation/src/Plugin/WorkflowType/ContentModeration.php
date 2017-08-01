@@ -2,19 +2,16 @@
 
 namespace Drupal\content_moderation\Plugin\WorkflowType;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\content_moderation\ContentModerationState;
-use Drupal\Core\Url;
-use Drupal\workflows\Plugin\WorkflowTypeFormBase;
+use Drupal\workflows\Plugin\WorkflowTypeBase;
 use Drupal\workflows\StateInterface;
 use Drupal\workflows\WorkflowInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -29,9 +26,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     "draft",
  *     "published",
  *   },
+ *   forms = {
+ *     "configure" = "\Drupal\content_moderation\Form\ContentModerationConfigureForm",
+ *     "state" = "\Drupal\content_moderation\Form\ContentModerationStateForm"
+ *   },
  * )
  */
-class ContentModeration extends WorkflowTypeFormBase implements ContainerFactoryPluginInterface {
+class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
 
@@ -142,35 +143,6 @@ class ContentModeration extends WorkflowTypeFormBase implements ContainerFactory
       ->accessCheck(FALSE)
       ->range(0, 1)
       ->execute();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildStateConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, StateInterface $state = NULL) {
-    /** @var \Drupal\content_moderation\ContentModerationState $state */
-    $is_required_state = isset($state) ? in_array($state->id(), $this->getRequiredStates(), TRUE) : FALSE;
-
-    $form = [];
-    $form['published'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Published'),
-      '#description' => $this->t('When content reaches this state it should be published.'),
-      '#default_value' => isset($state) ? $state->isPublishedState() : FALSE,
-      '#disabled' => $is_required_state,
-    ];
-
-    $form['default_revision'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Default revision'),
-      '#description' => $this->t('When content reaches this state it should be made the default revision; this is implied for published states.'),
-      '#default_value' => isset($state) ? $state->isDefaultRevisionState() : FALSE,
-      '#disabled' => $is_required_state,
-      // @todo Add form #state to force "make default" on when "published" is
-      // on for a state.
-      // @see https://www.drupal.org/node/2645614
-    ];
-    return $form;
   }
 
   /**
@@ -373,70 +345,6 @@ class ContentModeration extends WorkflowTypeFormBase implements ContainerFactory
       return $workflow->getTypePlugin()->getState($entity->isPublished() && !$entity->isNew() ? 'published' : 'draft');
     }
     return parent::getInitialState($workflow);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state, WorkflowInterface $workflow = NULL) {
-    $header = [
-      'type' => $this->t('Items'),
-      'operations' => $this->t('Operations')
-    ];
-    $form['entity_types_container'] = [
-      '#type' => 'details',
-      '#title' => $this->t('This workflow applies to:'),
-      '#open' => TRUE,
-    ];
-    $form['entity_types_container']['entity_types'] = [
-      '#type' => 'table',
-      '#header' => $header,
-      '#empty' => $this->t('There are no entity types.'),
-    ];
-
-    $entity_types = $this->entityTypeManager->getDefinitions();
-    foreach ($entity_types as $entity_type) {
-      if (!$this->moderationInfo->canModerateEntitiesOfEntityType($entity_type)) {
-        continue;
-      }
-
-      $selected_bundles = [];
-      foreach ($this->entityTypeBundleInfo->getBundleInfo($entity_type->id()) as $bundle_id => $bundle) {
-        if ($this->appliesToEntityTypeAndBundle($entity_type->id(), $bundle_id)) {
-          $selected_bundles[$bundle_id] = $bundle['label'];
-        }
-      }
-
-      $form['entity_types_container']['entity_types'][$entity_type->id()] = [
-        'type' => [
-          'label' => ['#markup' => '<strong>' . $this->t('@bundle types', ['@bundle' => $entity_type->getLabel()]) . '</strong>'],
-          'selected' => [
-            '#prefix' => '<br/><span id="selected-' . $entity_type->id() . '">',
-            '#markup' => !empty($selected_bundles) ? implode(', ', $selected_bundles) : $this->t('none'),
-            '#suffix' => '</span>',
-          ],
-        ],
-        'operations' => [
-          '#type' => 'operations',
-          '#links' => [
-            'select' => [
-              'title' => $this->t('Select'),
-              'url' => Url::fromRoute('content_moderation.workflow_type_edit_form', ['workflow' => $workflow->id(), 'entity_type_id' => $entity_type->id()]),
-              'attributes' => [
-                'aria-label' => $this->t('Select'),
-                'class' => ['use-ajax'],
-                'data-dialog-type' => 'modal',
-                'data-dialog-options' => Json::encode([
-                  'width' => 700,
-                ]),
-              ],
-            ],
-          ],
-        ],
-      ];
-    }
-
-    return $form;
   }
 
 }
