@@ -39,12 +39,6 @@ function outside_in_contextual_links_view_alter(&$element, $items) {
     unset($element['#links']['outside-inblock-configure']);
     $element['#links'] = ['outside-inblock-configure' => $outside_in_link] + $element['#links'];
 
-    $element['#links']['outside-inblock-configure']['attributes'] = [
-      'class' => ['use-ajax'],
-      'data-dialog-type' => 'dialog',
-      'data-dialog-renderer' => 'off_canvas',
-      'data-outside-in-edit' => TRUE,
-    ];
     // If this is content block change title to avoid duplicate "Quick Edit".
     if (isset($element['#links']['block-contentblock-edit'])) {
       $element['#links']['outside-inblock-configure']['title'] = t('Quick edit settings');
