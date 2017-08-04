@@ -3,7 +3,7 @@
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\media\Entity\Media;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 

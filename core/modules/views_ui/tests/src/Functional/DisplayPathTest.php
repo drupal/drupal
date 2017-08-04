@@ -4,7 +4,7 @@ namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests the UI of generic display path plugin.
@@ -13,6 +13,7 @@ use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
  * @see \Drupal\views\Plugin\views\display\PathPluginBase
  */
 class DisplayPathTest extends UITestBase {
+
   use AssertPageCacheContextsAndTagsTrait;
 
   protected function setUp($import_test_views = TRUE) {

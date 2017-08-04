@@ -3,7 +3,7 @@
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Url;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests the node access automatic cacheability bubbling logic.

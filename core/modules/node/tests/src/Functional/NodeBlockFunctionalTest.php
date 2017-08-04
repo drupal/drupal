@@ -4,7 +4,7 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 
 /**

@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Cache;
+namespace Drupal\Tests\system\Functional\Cache;
 
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the 'session.exists' cache context service.
  *
  * @group Cache
  */
-class SessionExistsCacheContextTest extends WebTestBase {
+class SessionExistsCacheContextTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -59,8 +59,7 @@ class SessionExistsCacheContextTest extends WebTestBase {
    * Asserts whether a session cookie is present on the client or not.
    */
   public function assertSessionCookieOnClient($expected_present) {
-    $non_deleted_cookies = array_filter($this->cookies, function ($item) { return $item['value'] !== 'deleted'; });
-    $this->assertEqual($expected_present, isset($non_deleted_cookies[$this->getSessionName()]), 'Session cookie exists.');
+    $this->assertEqual($expected_present, (bool) $this->getSession()->getCookie($this->getSessionName()), 'Session cookie exists.');
   }
 
 }
