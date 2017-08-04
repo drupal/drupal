@@ -1,5 +1,5 @@
 /*!
- * jQuery Once v2.1.1 - http://github.com/robloach/jquery-once
+ * jQuery Once v2.2.0 - http://github.com/robloach/jquery-once
  * @license MIT, GPL-2.0
  *   http://opensource.org/licenses/MIT
  *   http://opensource.org/licenses/GPL-2.0
@@ -29,7 +29,7 @@
     /* globals jQuery */
     factory(jQuery);
   }
-}(function ($) {
+})(function ($) {
   'use strict';
 
   /**
@@ -40,13 +40,13 @@
    *
    * @returns The valid ID name.
    *
-   * @throws Error when an ID is provided, but not a string.
+   * @throws TypeError when an ID is provided, but not a string.
    * @private
    */
   var checkId = function (id) {
     id = id || 'once';
     if (typeof id !== 'string') {
-      throw new Error('The jQuery Once id parameter must be a string');
+      throw new TypeError('The jQuery Once id parameter must be a string');
     }
     return id;
   };
@@ -173,4 +173,4 @@
       return $(this).data(name) === true;
     });
   };
-}));
+});
