@@ -37,7 +37,9 @@ are underway and we hope to finalize it before 8.4.0-rc1.
   `/admin/config/media/file-system`
   to avoid permanent deletion of the affected files.
 
-## Important bug fixes since 8.3.x
+## Important fixes since 8.3.x
+
+Translators should take note of several [string additions and changes since the last release](https://www.drupal.org/project/issues/search/drupal?project_issue_followers=&issue_tags_op=%3D&issue_tags=String+change+in+8.4.0).
 
 ### File usage tracking
 
@@ -237,6 +239,8 @@ for outstanding issues.
   [See the change record for information about how you can use this in your theme](https://www.drupal.org/node/2887146).
 * [Added more helpful errors](https://www.drupal.org/node/2705037) when CSS
   is not properly nested under an existing category in asset libraries.
+* Also see the [change records for the 8.4.x branch](https://www.drupal.org/list-changes/drupal/published?keywords_description=&to_branch=8.4.x&version=&created_op=%3E%3D&created%5Bvalue%5D=&created%5Bmin%5D=&created%5Bmax%5D=)
+  for other changes for developers.
 
 ## Automated testing improvements
 
