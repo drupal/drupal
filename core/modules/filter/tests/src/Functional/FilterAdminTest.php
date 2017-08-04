@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\filter\Tests;
+namespace Drupal\Tests\filter\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\user\RoleInterface;
  *
  * @group filter
  */
-class FilterAdminTest extends WebTestBase {
+class FilterAdminTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
@@ -142,7 +142,7 @@ class FilterAdminTest extends WebTestBase {
     $edit_link = $this->xpath('//a[@href=:href]', [
       ':href' => \Drupal::url('entity.filter_format.edit_form', ['filter_format' => $format_id])
     ]);
-    $this->assertTrue($edit_link, format_string('Link href %href found.',
+    $this->assertNotEmpty($edit_link, format_string('Link href %href found.',
       ['%href' => 'admin/config/content/formats/manage/' . $format_id]
     ));
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
@@ -218,7 +218,7 @@ class FilterAdminTest extends WebTestBase {
       ':first' => 'filters[' . $first_filter . '][weight]',
       ':second' => 'filters[' . $second_filter . '][weight]',
     ]);
-    $this->assertTrue(!empty($elements), 'Order confirmed in admin interface.');
+    $this->assertNotEmpty($elements, 'Order confirmed in admin interface.');
 
     // Reorder filters.
     $edit = [];
@@ -234,7 +234,7 @@ class FilterAdminTest extends WebTestBase {
       ':first' => 'filters[' . $second_filter . '][weight]',
       ':second' => 'filters[' . $first_filter . '][weight]',
     ]);
-    $this->assertTrue(!empty($elements), 'Reorder confirmed in admin interface.');
+    $this->assertNotEmpty($elements, 'Reorder confirmed in admin interface.');
 
     $filter_format = FilterFormat::load($restricted);
     foreach ($filter_format->filters() as $filter_name => $filter) {
@@ -260,9 +260,9 @@ class FilterAdminTest extends WebTestBase {
     $format = FilterFormat::load($edit['format']);
     $this->assertNotNull($format, 'Format found in database.');
     $this->drupalGet('admin/config/content/formats/manage/' . $format->id());
-    $this->assertFieldByName('roles[' . RoleInterface::AUTHENTICATED_ID . ']', '', 'Role found.');
-    $this->assertFieldByName('filters[' . $second_filter . '][status]', '', 'Line break filter found.');
-    $this->assertFieldByName('filters[' . $first_filter . '][status]', '', 'URL filter found.');
+    $this->assertSession()->checkboxChecked('roles[' . RoleInterface::AUTHENTICATED_ID . ']');
+    $this->assertSession()->checkboxChecked('filters[' . $second_filter . '][status]');
+    $this->assertSession()->checkboxChecked('filters[' . $first_filter . '][status]');
 
     // Disable new filter.
     $this->drupalPostForm('admin/config/content/formats/manage/' . $format->id() . '/disable', [], t('Disable'));
@@ -297,8 +297,8 @@ class FilterAdminTest extends WebTestBase {
     $this->assertText(t('Basic page @title has been created.', ['@title' => $edit['title[0][value]']]), 'Filtered node created.');
 
     // Verify that the creation message contains a link to a node.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'node/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a node');
+    $view_link = $this->xpath('//div[contains(@class, "messages")]//a[contains(@href, :href)]', [':href' => 'node/']);
+    $this->assertNotEmpty($view_link, 'The message area contains a link to a node');
 
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue($node, 'Node found in database.');
