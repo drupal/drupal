@@ -206,18 +206,17 @@ for outstanding issues.
 * The internal page cache now [has a dedicated cache bin](https://www.drupal.org/node/2889603)
   distinct from the rest of the render cache (a significant scalability
   improvement).
-* The service collector [no longer loads all dependencies](https://www.drupal.org/node/2472337);
-  instead, the new service ID collector allows instances of dependencies to
-  be lazily created.
+* The service collector pattern instantiates all services it collects, which is expensive, and unnecessary for some use cases.   For those use cases, a [new service ID collector](https://www.drupal.org/node/2472337)
+  pattern was added. The theme negotiator was updated to use it.
   [See the change record for information about how to use the service ID collector](https://www.drupal.org/node/2598944) for improved performance.
 * The maximum time in-progress forms are cached [is now customizable](https://www.drupal.org/node/1286154)
   rather than being limited to a default cache lifetime of 6 hours. Sites can
   decrease the lifetime to reduce cache footprint, or increase it if needed for
   a particular site's usecase.
   [See the change record to learn how to access this new setting](https://www.drupal.org/node/2886836).
-* If there are no status messages to be rendered, the corresponding Twig
-  template [is no longer loaded](https://www.drupal.org/node/2853509) on every
-  page, leading to a 10% performance improvement when there are no messages!
+* If there are no status messages, the corresponding rendering
+  [is now skipped](https://www.drupal.org/node/2853509). On simple sites, this
+  can result in a 10% improvement when there are no messages!
 * [Optimized the early Drupal installer](https://www.drupal.org/node/2872611)
   to check whether any themes are installed first before invoking an
   unnecessary function, which improves Drupal install time measurably for
@@ -229,6 +228,7 @@ for outstanding issues.
   coding standards for Drupal core and contributed modules.
   [See the change record for information about how to configure your project for eslint](https://www.drupal.org/node/2873849).
 * Field type definitions can now [enforce the cardinality of the field](https://www.drupal.org/node/2403703).
+  [See the change record for information about how to specify a cardinality via the annotation](https://www.drupal.org/node/2869873).
 * [Added new methods](https://www.drupal.org/node/2869809) to make getting
   typed configuration entity representations easier.
   [See the change record for more information about how to invoke these methods](https://www.drupal.org/node/2877282).
@@ -249,6 +249,7 @@ for outstanding issues.
   [require use of the Drupal core deprecation policy](https://www.drupal.org/node/2488860)
   (`@trigger_error()`) to mark code deprecated; otherwise a test error will
   be thrown.
+  [See the change record for information about how to update `phpunit.xml` and how to test deprecated code](https://www.drupal.org/node/2811561).
 * [Resolved random test failures](https://www.drupal.org/node/2866056) due to
   ResourceTestBase's HTTP client timeout of 30 seconds.
 
