@@ -4,7 +4,7 @@ namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\Component\Utility\Html;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
