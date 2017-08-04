@@ -167,7 +167,13 @@ interface ThemeHandlerInterface {
    * @return $this
    *
    * @deprecated in Drupal 8.2.x-dev and will be removed before Drupal 9.0.0.
-   *   Use \Drupal::config('system.theme')->set('default', $theme)->save().
+   *   Use
+   *   @code
+   *     \Drupal::configFactory()
+   *       ->getEditable('system.theme')
+   *       ->set('default', $theme)
+   *       ->save();
+   *   @endcode
    */
   public function setDefault($theme);
 
