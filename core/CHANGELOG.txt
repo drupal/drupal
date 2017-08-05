@@ -1,12 +1,12 @@
 Drupal 8.4.x, xxxx-xx-xx
 ------------------------
-## Drush users: Update to Drush 8.1.12
+### Drush users: Update to Drush 8.1.12
 
 [Versions of Drush earlier than 8.1.12 will not work with Drupal 8.4.x](https://www.drupal.org/node/2874827).
 Update Drush to 8.1.12 before using it to update to Drupal core 8.4.x or you
  will encounter fatal errors.
 
-## Updated browser requirements: Internet Explorer 9 and 10 no longer supported
+### Updated browser requirements: Internet Explorer 9 and 10 no longer supported
 
 In April 2017, Microsoft discontinued all support for Internet Explorer 9 and
 10. Therefore, [Drupal 8.4 has as well](https://www.drupal.org/node/2897971).
@@ -19,7 +19,7 @@ currently lists incorrect information regarding very outdated browser versions
 such as Safari 5 and Firefox 5. [Clarifications to the browser policy and documentation](https://www.drupal.org/node/2390621)
 are underway and we hope to finalize it before 8.4.0-rc1.
 
-## Known Issues
+### Known Issues
 
 * Drupal 8.4.0-alpha1 includes major version updates for two dependencies:
   Symfony 3.2 and jQuery 3. Both updates may introduce backwards compatibility
@@ -37,11 +37,11 @@ are underway and we hope to finalize it before 8.4.0-rc1.
   `/admin/config/media/file-system`
   to avoid permanent deletion of the affected files.
 
-## Important fixes since 8.3.x
+### Important fixes since 8.3.x
 
 Translators should take note of several [string additions and changes since the last release](https://www.drupal.org/project/issues/search/drupal?project_issue_followers=&issue_tags_op=%3D&issue_tags=String+change+in+8.4.0).
 
-### File usage tracking
+#### File usage tracking
 
 Drupal 8 has several longstanding [file usage tracking
 bugs](https://www.drupal.org/node/2821423). To prevent further data loss,
@@ -58,7 +58,7 @@ tracked correctly in several scenarios, regardless of the setting. Discussion
 on [how to evolve the file usage tracking system](https://www.drupal.org/node/2821423)
 is underway.
 
-### Configuration export sorting
+#### Configuration export sorting
 
 * [#2361539: Config export key order is not predictable for sequences, add orderby property to config schema](https://www.drupal.org/node/2361539)
   resolves an issue where sequences in configuration were not sorted unless
@@ -76,7 +76,7 @@ is underway.
       relates to various sequences in core and contributed modules in which
       the source order is important.
 
-### Revision data integrity fixes
+#### Revision data integrity fixes
 
 * Previously, data from draft revisions for [path aliases](https://www.drupal.org/node/2856363),
   [menus](https://www.drupal.org/node/2858434), and [books](https://www.drupal.org/node/2858431)
@@ -92,13 +92,13 @@ is underway.
   [A similar but unrelated bug in Content Moderation](https://www.drupal.org/node/2862988)
   has also been fixed in this release.
 
-## New stable modules
+### New stable modules
 
 The following modules, previously considered experimental, are now stable and
 safe for use on production sites, with full backwards compatibility and upgrade
 paths from 8.4.0 to future releases:
 
-### Datetime Range
+#### Datetime Range
 
 The [Datetime Range module](https://www.drupal.org/node/2893128) provides a
 field type that allows end dates to support contributed modules like
@@ -110,7 +110,7 @@ Future releases may improve Views support, usability, Datetime Range field
 validation, and REST support. For bugs or feature requests for this
 module, [see the core Datetime issue queue](https://www.drupal.org/project/issues/search/drupal?project_issue_followers=&status%5B%5D=Open&version%5B%5D=8.x&component%5B%5D=datetime.module&issue_tags_op=%3D).
 
-### Layout Discovery
+#### Layout Discovery
 
 The [Layout Discovery module](https://www.drupal.org/node/2834025) provides
 an API for modules or themes to register layouts as well as five common
@@ -119,7 +119,7 @@ core and contributed layout solutions to be compatible with each other. This
 stable release is backwards-compatible with the 8.3.x experimental version
 and introduces [support for per-region attributes](https://www.drupal.org/node/2885877).
 
-### Media
+#### Media
 
 The new core [Media module](https://www.drupal.org/node/2831274) provides an
 API for reusable media entities and references. It is based on the contributed
@@ -142,7 +142,7 @@ user experience issues with it are resolved in a future release.
 Similarly, the REST API and normalizations for Media is not final and support
 for decoupled applications will be improved in a future release.
 
-### Inline Form Errors
+#### Inline Form Errors
 
 The [Inline Form Errors module](https://www.drupal.org/node/2897652) provides a
 summary of any validation errors at the top of a form and places the individual
@@ -153,7 +153,7 @@ and polished enough for production use. See the core
 [Inline Form Errors module issue queue](https://www.drupal.org/project/issues/drupal?text=&status=Open&priorities=All&categories=All&version=All&component=inline_form_errors.module)
 for outstanding issues.
 
-## Content authoring and site administration improvements
+### Content authoring and site administration improvements
 
 * The "Save and keep (un)published" dropbutton has been replaced with [a "Published" checkbox and single "Save" button](https://www.drupal.org/node/2068063).
   The "Save and..." dropbutton was a new design in Drupal 8, but users found it
@@ -179,7 +179,7 @@ for outstanding issues.
   [This meta information is now provided by node.module itself](https://www.drupal.org/node/2803875)
   so other administration themes can access it.
 
-## REST and API-first improvements
+### REST and API-first improvements
 
 * Authenticated REST API performance increased by 15% by
   [utilizing the Dynamic Page Cache](https://www.drupal.org/node/2827797).
@@ -203,7 +203,7 @@ for outstanding issues.
   debugging and better bug reports.
 * Massive expansion of test coverage.
 
-## Performance and scalability improvements
+### Performance and scalability improvements
 
 * The internal page cache now [has a dedicated cache bin](https://www.drupal.org/node/2889603)
   distinct from the rest of the render cache (a significant scalability
@@ -224,7 +224,7 @@ for outstanding issues.
   unnecessary function, which improves Drupal install time measurably for
   both sites and automated tests.
 
-## Developer experience improvements
+### Developer experience improvements
 
 * [Adopted Airbnb JavaScript style guide 14.1](https://www.drupal.org/node/2815077) as the new baseline set of
   coding standards for Drupal core and contributed modules.
@@ -242,7 +242,7 @@ for outstanding issues.
 * Also see the [change records for the 8.4.x branch](https://www.drupal.org/list-changes/drupal/published?keywords_description=&to_branch=8.4.x&version=&created_op=%3E%3D&created%5Bvalue%5D=&created%5Bmin%5D=&created%5Bmax%5D=)
   for other changes for developers.
 
-## Automated testing improvements
+### Automated testing improvements
 
 * [PHPUnit has been updated from 4.8.28 to 4.8.35](https://www.drupal.org/node/2850797)
   in order to incorporate a forward compatibility layer for PHPUnit 4.8, useful
@@ -257,7 +257,7 @@ for outstanding issues.
 * [Resolved random test failures](https://www.drupal.org/node/2866056) due to
   ResourceTestBase's HTTP client timeout of 30 seconds.
 
-## Third-party library updates
+### Third-party library updates
 
 * [Drupal's Symfony dependency has been updated from Symfony 2.8 to Symfony
   3.2](https://www.drupal.org/node/2712647). This major version update is
@@ -279,9 +279,9 @@ for outstanding issues.
 * [CKEditor has been updated from 4.6.2 to 4.7.1](https://www.drupal.org/node/2893566).
 * [asm89/stack-cors has been updated from 1.0 to 1.1](https://www.drupal.org/node/2853201).
 
-## Experimental modules
+### Experimental modules
 
-### Migrate ([beta stability](https://www.drupal.org/core/experimental#beta))
+#### Migrate ([beta stability](https://www.drupal.org/core/experimental#beta))
 
 Migrate provides a general API for migrations. It will be considered completely
 stable once all  issues tagged [Migrate critical](https://www.drupal.org/project/issues/search/drupal?project_issue_followers=&status%5B%5D=Open&version%5B%5D=8.x&issue_tags_op=%3D&issue_tags=Migrate+critical) are resolved.
@@ -292,7 +292,7 @@ stable once all  issues tagged [Migrate critical](https://www.drupal.org/project
   to better capture their purposes. (Backwards compatibility is provided for
   both process plugins since Migrate is in beta.)
 
-### Migrate Drupal and Migrate Drupal UI ([alpha stability](https://www.drupal.org/core/experimental#alpha))
+#### Migrate Drupal and Migrate Drupal UI ([alpha stability](https://www.drupal.org/core/experimental#alpha))
 
 Migrate Drupal module provides API support for Drupal-to-Drupal migrations, and
 Migrate Drupal UI offers a simple user interface to run migrations from older
@@ -322,7 +322,7 @@ Drupal versions.
   referring to custom fields provided by the Drupal 6 module CCK, which was
   replaced in Drupal 7 by the core Field API. [See the change record for more information about how this impacts your migration plugins](https://www.drupal.org/node/2751897).
 
-### Workflows ([beta stability](https://www.drupal.org/core/experimental#beta))
+#### Workflows ([beta stability](https://www.drupal.org/core/experimental#beta))
 
 The Workflows module provides an abstract system of states (like Draft,
 Archived, and Published) and transitions between them. Workflows can be used by
@@ -337,7 +337,7 @@ for full details on the API and data model changes related to this fix. Now
 that this change is complete, the Workflows module has reached beta stability,
 and it may furthermore be marked stable in time for Drupal 8.4.0!
 
-### Content Moderation ([beta stability](https://www.drupal.org/core/experimental#beta))
+#### Content Moderation ([beta stability](https://www.drupal.org/core/experimental#beta))
 
 Content Moderation allows workflows from the Workflows module to be applied to
 content. Content Moderation has beta stability in 8.4.0-alpha1, but may become
@@ -357,7 +357,7 @@ stable in time for 8.4.0! Notable improvements in this release:
   If your contributed module refers to revisions that are not yet published, it
   should use this new term.
 
-### Field Layout ([alpha stability](https://www.drupal.org/core/experimental#alpha))
+#### Field Layout ([alpha stability](https://www.drupal.org/core/experimental#alpha))
 
 This module provides the ability for site builders to rearrange fields on
 content types, block types, etc. into new regions, for both the form and
@@ -367,7 +367,7 @@ the [entity display layout roadmap](https://www.drupal.org/node/2795833) for
 the next steps for this module, which needs to become stable by 8.5.0 to remain
 in Drupal core.
 
-### Settings Tray ([alpha stability](https://www.drupal.org/core/experimental#alpha))
+#### Settings Tray ([alpha stability](https://www.drupal.org/core/experimental#alpha))
 
 The Settings Tray module allows configuring page elements such as blocks and
 menus from the frontend of your site. Settings Tray has improved significantly
@@ -391,7 +391,7 @@ To track progress, see the ["outside in" roadmap issue](https://www.drupal.org/n
 * Edit mode [now behaves the same way whether accessed by clicking "Quick edit" or clicking through the toolbar](https://www.drupal.org/node/2847664)
 * Users can now [escape from Edit mode with the ESC key](https://www.drupal.org/node/2784571), for better accessibility.
 
-### Place Blocks ([alpha stability](https://www.drupal.org/core/experimental#alpha))
+#### Place Blocks ([alpha stability](https://www.drupal.org/core/experimental#alpha))
 
 This feature allows the user to place a block on any page and see the region
 where it will be displayed, without having to navigate to a backend
