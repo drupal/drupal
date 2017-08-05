@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\datetime\Plugin\migrate\field\d6;
-
-@trigger_error('DateField is deprecated in Drupal 8.4.x and will be removed before Drupal 9.0.x. Use \Drupal\datetime\Plugin\migrate\field\DateField instead.', E_USER_DEPRECATED);
+namespace Drupal\datetime\Plugin\migrate\field;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
@@ -10,17 +8,14 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
  * @MigrateField(
- *   id = "date",
+ *   id = "datetime",
  *   type_map = {
  *     "date" = "datetime",
  *     "datestamp" =  "timestamp",
  *     "datetime" =  "datetime",
  *   },
- *   core = {6}
+ *   core = {6,7}
  * )
- *
- * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use
- * \Drupal\datetime\Plugin\migrate\field\DateField instead.
  */
 class DateField extends FieldPluginBase {
 
@@ -39,7 +34,7 @@ class DateField extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function getFieldFormatterMap() {
-    // See d6_field_formatter_settings.yml and
+    // See d6_field_formatter_settings.yml, d7_field_formatter_settings.yml and
     // FieldPluginBase::processFieldFormatter().
     return [];
   }

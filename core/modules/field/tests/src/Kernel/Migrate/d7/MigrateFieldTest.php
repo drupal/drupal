@@ -97,7 +97,7 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.field_email', 'email', TRUE, -1);
     $this->assertEntity('node.field_phone', 'telephone', TRUE, 1);
     $this->assertEntity('node.field_date', 'datetime', TRUE, 1);
-    $this->assertEntity('node.field_date_with_end_time', 'datetime', TRUE, 1);
+    $this->assertEntity('node.field_date_with_end_time', 'timestamp', TRUE, 1);
     $this->assertEntity('node.field_node_entityreference', 'entity_reference', TRUE, -1);
     $this->assertEntity('node.field_user_entityreference', 'entity_reference', TRUE, 1);
     $this->assertEntity('node.field_term_entityreference', 'entity_reference', TRUE, -1);
