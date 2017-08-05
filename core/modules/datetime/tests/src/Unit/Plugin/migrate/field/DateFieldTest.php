@@ -1,14 +1,13 @@
 <?php
 
-namespace Drupal\Tests\datetime\Unit\Plugin\migrate\field\d6;
+namespace Drupal\Tests\datetime\Unit\Plugin\migrate\field;
 
-use Drupal\datetime\Plugin\migrate\field\d6\DateField;
+use Drupal\datetime\Plugin\migrate\field\DateField;
 use Drupal\migrate\MigrateException;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * @group migrate
- * @group legacy
  */
 class DateFieldTest extends UnitTestCase {
 
