@@ -11,6 +11,9 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
 
   /**
    * A node type without moderation state disabled.
+   *
+   * @covers \Drupal\content_moderation\EntityTypeInfo::formAlter
+   * @covers \Drupal\content_moderation\Entity\Handler\NodeModerationHandler::enforceRevisionsBundleFormAlter
    */
   public function testNotModerated() {
     $this->drupalLogin($this->adminUser);
@@ -27,6 +30,9 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
 
   /**
    * Tests enabling moderation on an existing node-type, with content.
+   *
+   * @covers \Drupal\content_moderation\EntityTypeInfo::formAlter
+   * @covers \Drupal\content_moderation\Entity\Handler\NodeModerationHandler::enforceRevisionsBundleFormAlter
    */
   public function testEnablingOnExistingContent() {
     $editor_permissions = [
