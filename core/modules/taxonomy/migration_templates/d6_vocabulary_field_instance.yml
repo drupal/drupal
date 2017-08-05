@@ -8,6 +8,7 @@ source:
     entity_type: node
     auto_create: true
     selection_handler: 'default:taxonomy_term'
+    field_prefix: field_
 process:
   entity_type: 'constants/entity_type'
   bundle:
@@ -18,7 +19,8 @@ process:
     -
       plugin: skip_on_empty
       method: row
-  field_name:
+  # This value is only used in the 'field_name' process pipeline below.
+  raw_field_name:
     -
       plugin: migration_lookup
       migration: d6_taxonomy_vocabulary
@@ -26,6 +28,17 @@ process:
     -
       plugin: skip_on_empty
       method: row
+  field_name:
+    # Prepend field_ to avoid conflicts with base fields, and make sure the
+    # result is no longer than 32 characters.
+    -
+      plugin: concat
+      source:
+        - constants/field_prefix
+        - '@raw_field_name'
+    -
+      plugin: substr
+      length: 32
   label: name
   'settings/handler': 'constants/selection_handler'
   'settings/handler_settings/target_bundles/0': '@field_name'

@@ -32,9 +32,9 @@ class MigrateTermNodeRevisionTest extends MigrateDrupal6TestBase {
    */
   public function testTermRevisionNode() {
     $node = \Drupal::entityManager()->getStorage('node')->loadRevision(2);
-    $this->assertIdentical(2, count($node->vocabulary_3_i_2_));
-    $this->assertIdentical('4', $node->vocabulary_3_i_2_[0]->target_id);
-    $this->assertIdentical('5', $node->vocabulary_3_i_2_[1]->target_id);
+    $this->assertSame(2, count($node->field_vocabulary_3_i_2_));
+    $this->assertSame('4', $node->field_vocabulary_3_i_2_[0]->target_id);
+    $this->assertSame('5', $node->field_vocabulary_3_i_2_[1]->target_id);
   }
 
 }

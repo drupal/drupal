@@ -89,8 +89,8 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
       $language = isset($values['language']) ? $values['language'] . ' - ' : '';
       $this->assertSame("{$language}term {$tid} of vocabulary {$values['source_vid']}", $term->name->value);
       $this->assertSame("{$language}description of term {$tid} of vocabulary {$values['source_vid']}", $term->description->value);
-      $this->assertIdentical($values['vid'], $term->vid->target_id);
-      $this->assertIdentical((string) $values['weight'], $term->weight->value);
+      $this->assertSame($values['vid'], $term->vid->target_id);
+      $this->assertSame((string) $values['weight'], $term->weight->value);
       if ($values['parent'] === [0]) {
         $this->assertNull($term->parent->target_id);
       }
@@ -99,7 +99,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
         foreach (\Drupal::entityManager()->getStorage('taxonomy_term')->loadParents($tid) as $parent) {
           $parents[] = (int) $parent->id();
         }
-        $this->assertIdentical($parents, $values['parent']);
+        $this->assertSame($parents, $values['parent']);
       }
 
       $this->assertArrayHasKey($tid, $tree_terms, "Term $tid exists in vocabulary tree");

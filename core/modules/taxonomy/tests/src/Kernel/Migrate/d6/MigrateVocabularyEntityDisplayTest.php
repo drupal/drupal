@@ -41,11 +41,16 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
     $this->executeMigration('d6_vocabulary_entity_display');
 
     // Test that the field exists.
-    $component = EntityViewDisplay::load('node.page.default')->getComponent('tags');
-    $this->assertIdentical('entity_reference_label', $component['type']);
-    $this->assertIdentical(20, $component['weight']);
+    $component = EntityViewDisplay::load('node.page.default')->getComponent('field_tags');
+    $this->assertSame('entity_reference_label', $component['type']);
+    $this->assertSame(20, $component['weight']);
     // Test the Id map.
-    $this->assertIdentical(['node', 'article', 'default', 'tags'], $this->getMigration('d6_vocabulary_entity_display')->getIdMap()->lookupDestinationID([4, 'article']));
+    $this->assertSame(['node', 'article', 'default', 'field_tags'], $this->getMigration('d6_vocabulary_entity_display')->getIdMap()->lookupDestinationID([4, 'article']));
+
+    // Tests that a vocabulary named like a D8 base field will be migrated and
+    // prefixed with 'field_' to avoid conflicts.
+    $field_type = EntityViewDisplay::load('node.sponsor.default')->getComponent('field_type');
+    $this->assertTrue(is_array($field_type));
   }
 
   /**

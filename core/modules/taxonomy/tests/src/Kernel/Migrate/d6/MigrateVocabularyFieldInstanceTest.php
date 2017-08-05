@@ -40,30 +40,35 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->executeMigration('d6_vocabulary_field_instance');
 
     // Test that the field exists.
-    $field_id = 'node.article.tags';
+    $field_id = 'node.article.field_tags';
     $field = FieldConfig::load($field_id);
-    $this->assertIdentical($field_id, $field->id(), 'Field instance exists on article bundle.');
-    $this->assertIdentical('Tags', $field->label());
+    $this->assertSame($field_id, $field->id(), 'Field instance exists on article bundle.');
+    $this->assertSame('Tags', $field->label());
     $this->assertTrue($field->isRequired(), 'Field is required');
 
     // Test the page bundle as well.
-    $field_id = 'node.page.tags';
+    $field_id = 'node.page.field_tags';
     $field = FieldConfig::load($field_id);
-    $this->assertIdentical($field_id, $field->id(), 'Field instance exists on page bundle.');
-    $this->assertIdentical('Tags', $field->label());
+    $this->assertSame($field_id, $field->id(), 'Field instance exists on page bundle.');
+    $this->assertSame('Tags', $field->label());
     $this->assertTrue($field->isRequired(), 'Field is required');
 
     $settings = $field->getSettings();
-    $this->assertIdentical('default:taxonomy_term', $settings['handler'], 'The handler plugin ID is correct.');
-    $this->assertIdentical(['tags'], $settings['handler_settings']['target_bundles'], 'The target_bundles handler setting is correct.');
-    $this->assertIdentical(TRUE, $settings['handler_settings']['auto_create'], 'The "auto_create" setting is correct.');
+    $this->assertSame('default:taxonomy_term', $settings['handler'], 'The handler plugin ID is correct.');
+    $this->assertSame(['field_tags'], $settings['handler_settings']['target_bundles'], 'The target_bundles handler setting is correct.');
+    $this->assertSame(TRUE, $settings['handler_settings']['auto_create'], 'The "auto_create" setting is correct.');
 
-    $this->assertIdentical(['node', 'article', 'tags'], $this->getMigration('d6_vocabulary_field_instance')->getIdMap()->lookupDestinationID([4, 'article']));
+    $this->assertSame(['node', 'article', 'field_tags'], $this->getMigration('d6_vocabulary_field_instance')->getIdMap()->lookupDestinationID([4, 'article']));
 
     // Test the the field vocabulary_1_i_0_.
-    $field_id = 'node.story.vocabulary_1_i_0_';
+    $field_id = 'node.story.field_vocabulary_1_i_0_';
     $field = FieldConfig::load($field_id);
     $this->assertFalse($field->isRequired(), 'Field is not required');
+
+    // Tests that a vocabulary named like a D8 base field will be migrated and
+    // prefixed with 'field_' to avoid conflicts.
+    $field_type = FieldConfig::load('node.sponsor.field_type');
+    $this->assertInstanceOf(FieldConfig::class, $field_type);
   }
 
   /**
