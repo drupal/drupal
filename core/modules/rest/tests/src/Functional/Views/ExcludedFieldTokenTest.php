@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\rest\Tests\Views;
+namespace Drupal\Tests\rest\Functional\Views;
 
 use Drupal\node\Entity\Node;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
@@ -43,8 +43,8 @@ class ExcludedFieldTokenTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     ViewTestData::createTestViews(get_class($this), ['rest_test_views']);
 
@@ -66,7 +66,7 @@ class ExcludedFieldTokenTest extends ViewTestBase {
    * Tests the display of an excluded title field when used as a token.
    */
   public function testExcludedTitleTokenDisplay() {
-    $actual_json = $this->drupalGetWithFormat($this->view->getPath(), 'json');
+    $actual_json = $this->drupalGet($this->view->getPath(), ['query' => ['_format' => 'json']]);
     $this->assertResponse(200);
 
     $expected = [
