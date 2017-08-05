@@ -53,7 +53,6 @@ class WorkflowAddForm extends EntityForm {
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $workflow->label(),
-      '#description' => $this->t('Label for the Workflow.'),
       '#required' => TRUE,
     ];
 
