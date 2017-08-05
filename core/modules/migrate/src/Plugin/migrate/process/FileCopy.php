@@ -19,11 +19,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * The file can be moved, reused, or set to be automatically renamed if a
  * duplicate exists.
  *
- * The source value is an array of two values:
- * - source: The source path or URI, e.g. '/path/to/foo.txt' or
- *   'public://bar.txt'.
- * - destination: The destination path or URI, e.g. '/path/to/bar.txt' or
- *   'public://foo.txt'.
+ * The source value is an indexed array of two values:
+ * - The source path or URI, e.g. '/path/to/foo.txt' or 'public://bar.txt'.
+ * - The destination URI, e.g. 'public://foo.txt'.
  *
  * Available configuration keys:
  * - move: (optional) Boolean, if TRUE, move the file, otherwise copy the file.
@@ -39,8 +37,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * process:
  *   path_to_file:
  *     plugin: file_copy
- *     source: /path/to/file.png
- *     destination: /new/path/to/file.png
+ *     source:
+ *       - /path/to/file.png
+ *       - public://new/path/to/file.png
  * @endcode
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
