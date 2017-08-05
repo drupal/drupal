@@ -9558,6 +9558,14 @@ $connection->insert('i18n_strings')
   'objectindex' => '0',
   'format' => '0',
 ))
+->values(array(
+  'lid' => '1672',
+  'objectid' => '6',
+  'type' => 'vocabulary',
+  'property' => 'name',
+  'objectindex' => '6',
+  'format' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('i18n_variable', array(
@@ -22009,6 +22017,13 @@ $connection->insert('locales_source')
   'textgroup' => 'default',
   'source' => '%name: Title mismatch. Please check your selection.',
   'version' => 'none',
+))
+->values(array(
+  'lid' => '1672',
+  'location' => 'vocabulary:6:name',
+  'textgroup' => 'taxonomy',
+  'source' => 'Type',
+  'version' => '1',
 ))
 ->execute();
 
@@ -48226,6 +48241,20 @@ $connection->insert('vocabulary')
   'weight' => '7',
   'language' => '',
 ))
+->values(array(
+  'vid' => '6',
+  'name' => 'Type',
+  'description' => '',
+  'help' => '',
+  'relations' => '1',
+  'hierarchy' => '0',
+  'multiple' => '0',
+  'required' => '0',
+  'tags' => '0',
+  'module' => 'taxonomy',
+  'weight' => '0',
+  'language' => '',
+))
 ->execute();
 
 $connection->schema()->createTable('vocabulary_node_types', array(
@@ -48267,6 +48296,10 @@ $connection->insert('vocabulary_node_types')
 ->values(array(
   'vid' => '4',
   'type' => 'page',
+))
+->values(array(
+  'vid' => '6',
+  'type' => 'sponsor',
 ))
 ->values(array(
   'vid' => '1',

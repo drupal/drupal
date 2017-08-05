@@ -9,6 +9,7 @@ source:
     form_mode: default
     options:
       weight: 20
+    field_prefix: field_
 process:
   entity_type: 'constants/entity_type'
   form_mode: 'constants/form_mode'
@@ -27,10 +28,26 @@ process:
     -
       plugin: skip_on_empty
       method: row
+  # This value is only used in the 'field_name' process pipeline below.
+  raw_field_name:
+    -
+      plugin: migration_lookup
+      migration: d6_taxonomy_vocabulary
+      source: vid
+    -
+      plugin: skip_on_empty
+      method: row
   field_name:
-    plugin: migration_lookup
-    migration: d6_taxonomy_vocabulary
-    source: vid
+    # Prepend field_ to avoid conflicts with base fields, and make sure the
+    # result is no longer than 32 characters.
+    -
+      plugin: concat
+      source:
+        - constants/field_prefix
+        - '@raw_field_name'
+    -
+      plugin: substr
+      length: 32
 destination:
   plugin: component_entity_form_display
 migration_dependencies:

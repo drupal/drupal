@@ -40,12 +40,12 @@ class MigrateTermNodeTest extends MigrateDrupal6TestBase {
 
     $nodes = Node::loadMultiple([1, 2]);
     $node = $nodes[1];
-    $this->assertIdentical(1, count($node->vocabulary_1_i_0_));
-    $this->assertIdentical('1', $node->vocabulary_1_i_0_[0]->target_id);
+    $this->assertSame(1, count($node->field_vocabulary_1_i_0_));
+    $this->assertSame('1', $node->field_vocabulary_1_i_0_[0]->target_id);
     $node = $nodes[2];
-    $this->assertIdentical(2, count($node->vocabulary_2_i_1_));
-    $this->assertIdentical('2', $node->vocabulary_2_i_1_[0]->target_id);
-    $this->assertIdentical('3', $node->vocabulary_2_i_1_[1]->target_id);
+    $this->assertSame(2, count($node->field_vocabulary_2_i_1_));
+    $this->assertSame('2', $node->field_vocabulary_2_i_1_[0]->target_id);
+    $this->assertSame('3', $node->field_vocabulary_2_i_1_[1]->target_id);
   }
 
   /**
