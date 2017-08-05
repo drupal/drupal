@@ -179,6 +179,9 @@ class EntityOperations implements ContainerInjectionInterface {
       $content_moderation_state = $storage->create([
         'content_entity_type_id' => $entity_type_id,
         'content_entity_id' => $entity_id,
+        // Make sure that the moderation state entity has the same language code
+        // as the moderated entity.
+        'langcode' => $entity->language()->getId(),
       ]);
       $content_moderation_state->workflow->target_id = $workflow->id();
     }

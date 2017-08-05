@@ -5,7 +5,9 @@ namespace Drupal\Tests\content_moderation\Kernel;
 use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -325,6 +327,27 @@ class ContentModerationStateTest extends KernelTestBase {
     $english_node = $this->reloadEntity($english_node);
     $this->assertTrue($english_node->isPublished());
     $this->assertEquals(6, $english_node->getRevisionId());
+  }
+
+  /**
+   * Tests that entities with special languages can be moderated.
+   */
+  public function testModerationWithSpecialLanguages() {
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
+    $workflow->save();
+
+    // Create a test entity.
+    $entity = EntityTestRev::create([
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ]);
+    $entity->save();
+    $this->assertEquals('draft', $entity->moderation_state->value);
+
+    $entity->moderation_state->value = 'published';
+    $entity->save();
+
+    $this->assertEquals('published', EntityTestRev::load($entity->id())->moderation_state->value);
   }
 
   /**
