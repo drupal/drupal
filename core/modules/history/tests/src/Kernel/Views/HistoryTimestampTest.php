@@ -1,18 +1,20 @@
 <?php
 
-namespace Drupal\history\Tests\Views;
+namespace Drupal\Tests\history\Kernel\Views;
 
+use Drupal\node\Entity\Node;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\Entity\User;
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewTestBase;
 
 /**
  * Tests the history timestamp handlers.
  *
  * @group history
- * @see \Drupal\history\Plugin\views\field\HistoryTimestamp.
- * @see \Drupal\history\Plugin\views\filter\HistoryTimestamp.
+ * @see \Drupal\history\Plugin\views\field\HistoryUserTimestamp
+ * @see \Drupal\history\Plugin\views\filter\HistoryUserTimestamp
  */
-class HistoryTimestampTest extends ViewTestBase {
+class HistoryTimestampTest extends ViewsKernelTestBase {
 
   /**
    * Modules to enable.
@@ -29,15 +31,40 @@ class HistoryTimestampTest extends ViewTestBase {
   public static $testViews = ['test_history'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
+
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('user');
+    $this->installSchema('history', ['history']);
+    // Use classy theme because its marker is wrapped in a span so it can be
+    // easily targeted with xpath.
+    \Drupal::service('theme_handler')->install(['classy']);
+    \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('classy'));
+  }
+
+  /**
    * Tests the handlers.
    */
   public function testHandlers() {
     $nodes = [];
-    $nodes[] = $this->drupalCreateNode();
-    $nodes[] = $this->drupalCreateNode();
+    $node = Node::create([
+      'title' => 'n1',
+      'type' => 'default',
+    ]);
+    $node->save();
+    $nodes[] = $node;
+    $node = Node::create([
+      'title' => 'n2',
+      'type' => 'default',
+    ]);
+    $node->save();
+    $nodes[] = $node;
 
-    $account = $this->drupalCreateUser();
-    $this->drupalLogin($account);
+    $account = User::create(['name' => 'admin']);
+    $account->save();
     \Drupal::currentUser()->setAccount($account);
 
     db_insert('history')
@@ -83,7 +110,6 @@ class HistoryTimestampTest extends ViewTestBase {
     $view = Views::getView('test_history');
     $view->setDisplay('page_2');
     $this->executeView($view);
-
   }
 
 }
