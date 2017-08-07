@@ -359,14 +359,22 @@
     // [data-quickedit-entity-id] element's data-quickedit-entity-instance-id
     // attribute.
     const entityElementSelector = `[data-quickedit-entity-id="${entityID}"]`;
-    let entityElement = $(fieldElement).closest(entityElementSelector);
+    const $entityElement = $(entityElementSelector);
+
+    // If there are no elements returned from `entityElementSelector`
+    // throw an error. Check the browser console for this message.
+    if (!$entityElement.length) {
+      throw `Quick Edit could not associate the rendered entity field markup (with [data-quickedit-field-id="${fieldID}"]) with the corresponding rendered entity markup: no parent DOM node found with [data-quickedit-entity-id="${entityID}"]. This is typically caused by the theme's template for this entity type forgetting to print the attributes.`;
+    }
+    let entityElement = $(fieldElement).closest($entityElement);
+
     // In the case of a full entity view page, the entity title is rendered
     // outside of "the entity DOM node": it's rendered as the page title. So in
     // this case, we find the lowest common parent element (deepest in the tree)
     // and consider that the entity element.
     if (entityElement.length === 0) {
-      const $lowestCommonParent = $(entityElementSelector).parents().has(fieldElement).first();
-      entityElement = $lowestCommonParent.find(entityElementSelector);
+      const $lowestCommonParent = $entityElement.parents().has(fieldElement).first();
+      entityElement = $lowestCommonParent.find($entityElement);
     }
     const entityInstanceID = entityElement
       .get(0)
