@@ -159,11 +159,16 @@
     var entityID = extractEntityID(fieldID);
 
     var entityElementSelector = '[data-quickedit-entity-id="' + entityID + '"]';
-    var entityElement = $(fieldElement).closest(entityElementSelector);
+    var $entityElement = $(entityElementSelector);
+
+    if (!$entityElement.length) {
+      throw 'Quick Edit could not associate the rendered entity field markup (with [data-quickedit-field-id="' + fieldID + '"]) with the corresponding rendered entity markup: no parent DOM node found with [data-quickedit-entity-id="' + entityID + '"]. This is typically caused by the theme\'s template for this entity type forgetting to print the attributes.';
+    }
+    var entityElement = $(fieldElement).closest($entityElement);
 
     if (entityElement.length === 0) {
-      var $lowestCommonParent = $(entityElementSelector).parents().has(fieldElement).first();
-      entityElement = $lowestCommonParent.find(entityElementSelector);
+      var $lowestCommonParent = $entityElement.parents().has(fieldElement).first();
+      entityElement = $lowestCommonParent.find($entityElement);
     }
     var entityInstanceID = entityElement.get(0).getAttribute('data-quickedit-entity-instance-id');
 
