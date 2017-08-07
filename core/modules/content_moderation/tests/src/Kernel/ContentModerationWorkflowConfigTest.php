@@ -79,9 +79,22 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
    * Test deleting a state via config import.
    */
   public function testDeletingStateViaConfiguration() {
+    $config_sync = \Drupal::service('config.storage.sync');
+
+    // Alter the workflow data.
     $config_data = $this->config('workflows.workflow.editorial')->get();
     unset($config_data['type_settings']['states']['test1']);
-    \Drupal::service('config.storage.sync')->write('workflows.workflow.editorial', $config_data);
+    $config_sync->write('workflows.workflow.editorial', $config_data);
+
+    // Alter the data of another entity type.
+    $config_data = $this->config('node.type.example')->get();
+    $config_data['description'] = 'A new description';
+    $config_sync->write('node.type.example', $config_data);
+
+    // Alter the values of simple config.
+    $config_data = $this->config('core.extension')->get();
+    $config_data['module']['node'] = 1;
+    $config_sync->write('core.extension', $config_data);
 
     // There are no Nodes with the moderation state test1, so this should run
     // with no errors.
