@@ -253,7 +253,6 @@ class EntityOperations implements ContainerInjectionInterface {
     $component = $display->getComponent('content_moderation_control');
     if ($component) {
       $build['content_moderation_control'] = $this->formBuilder->getForm(EntityModerationForm::class, $entity);
-      $build['content_moderation_control']['#weight'] = $component['weight'];
     }
   }
 
