@@ -154,31 +154,16 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The entity to update or create a moderation state for.
    */
   protected function updateOrCreateFromEntity(EntityInterface $entity) {
-    $moderation_state = $entity->moderation_state->value;
-    $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    if (!$moderation_state) {
-      $moderation_state = $workflow->getTypePlugin()->getInitialState($workflow, $entity)->id();
-    }
-
-    // @todo what if $entity->moderation_state is null at this point?
-    $entity_type_id = $entity->getEntityTypeId();
-    $entity_id = $entity->id();
     $entity_revision_id = $entity->getRevisionId();
+    $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
+    $content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($entity);
 
-    $storage = $this->entityTypeManager->getStorage('content_moderation_state');
-    $entities = $storage->loadByProperties([
-      'content_entity_type_id' => $entity_type_id,
-      'content_entity_id' => $entity_id,
-      'workflow' => $workflow->id(),
-    ]);
-
-    /** @var \Drupal\content_moderation\ContentModerationStateInterface $content_moderation_state */
-    $content_moderation_state = reset($entities);
     if (!($content_moderation_state instanceof ContentModerationStateInterface)) {
+      $storage = $this->entityTypeManager->getStorage('content_moderation_state');
       $content_moderation_state = $storage->create([
-        'content_entity_type_id' => $entity_type_id,
-        'content_entity_id' => $entity_id,
+        'content_entity_type_id' => $entity->getEntityTypeId(),
+        'content_entity_id' => $entity->id(),
         // Make sure that the moderation state entity has the same language code
         // as the moderated entity.
         'langcode' => $entity->language()->getId(),
@@ -203,6 +188,13 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     // Create the ContentModerationState entity for the inserted entity.
+    $moderation_state = $entity->moderation_state->value;
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    if (!$moderation_state) {
+      $moderation_state = $workflow->getTypePlugin()->getInitialState($workflow, $entity)->id();
+    }
+
+    // @todo what if $entity->moderation_state is null at this point?
     $content_moderation_state->set('content_entity_revision_id', $entity_revision_id);
     $content_moderation_state->set('moderation_state', $moderation_state);
     ContentModerationStateEntity::updateOrCreateFromEntity($content_moderation_state);
@@ -222,6 +214,61 @@ class EntityOperations implements ContainerInjectionInterface {
       $entity->language()->getId(),
       $entity->getRevisionId()
     );
+  }
+
+  /**
+   * Hook bridge.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity being deleted.
+   *
+   * @see hook_entity_delete()
+   */
+  public function entityDelete(EntityInterface $entity) {
+    $content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($entity);
+    if ($content_moderation_state) {
+      $content_moderation_state->delete();
+    }
+  }
+
+  /**
+   * Hook bridge.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity revision being deleted.
+   *
+   * @see hook_entity_revision_delete()
+   */
+  public function entityRevisionDelete(EntityInterface $entity) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    if (!$entity->isDefaultRevision()) {
+      $content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($entity);
+      if ($content_moderation_state) {
+        $this->entityTypeManager
+          ->getStorage('content_moderation_state')
+          ->deleteRevision($content_moderation_state->getRevisionId());
+      }
+    }
+  }
+
+  /**
+   * Hook bridge.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $translation
+   *   The entity translation being deleted.
+   *
+   * @see hook_entity_translation_delete()
+   */
+  public function entityTranslationDelete(EntityInterface $translation) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $translation */
+    if (!$translation->isDefaultTranslation()) {
+      $langcode = $translation->language()->getId();
+      $content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($translation);
+      if ($content_moderation_state && $content_moderation_state->hasTranslation($langcode)) {
+        $content_moderation_state->removeTranslation($langcode);
+        ContentModerationStateEntity::updateOrCreateFromEntity($content_moderation_state);
+      }
+    }
   }
 
   /**

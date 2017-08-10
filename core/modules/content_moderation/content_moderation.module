@@ -92,6 +92,33 @@ function content_moderation_entity_update(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_entity_delete().
+ */
+function content_moderation_entity_delete(EntityInterface $entity) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityDelete($entity);
+}
+
+/**
+ * Implements hook_entity_revision_delete().
+ */
+function content_moderation_entity_revision_delete(EntityInterface $entity) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityRevisionDelete($entity);
+}
+
+/**
+ * Implements hook_entity_translation_delete().
+ */
+function content_moderation_entity_translation_delete(EntityInterface $translation) {
+  return \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityTranslationDelete($translation);
+}
+
+/**
  * Implements hook_form_alter().
  */
 function content_moderation_form_alter(&$form, FormStateInterface $form_state, $form_id) {

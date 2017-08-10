@@ -4,6 +4,7 @@ namespace Drupal\content_moderation\Entity;
 
 use Drupal\content_moderation\ContentModerationStateInterface;
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\TypedData\TranslatableInterface;
@@ -140,6 +141,44 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
    */
   public static function updateOrCreateFromEntity(ContentModerationState $content_moderation_state) {
     $content_moderation_state->realSave();
+  }
+
+  /**
+   * Loads a content moderation state entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   A moderated entity object.
+   *
+   * @return \Drupal\content_moderation\ContentModerationStateInterface|null
+   *   The related content moderation state or NULL if none could be found.
+   *
+   * @internal
+   *   This method should only be called by code directly handling the
+   *   ContentModerationState entity objects.
+   */
+  public static function loadFromModeratedEntity(EntityInterface $entity) {
+    $content_moderation_state = NULL;
+    $moderation_info = \Drupal::service('content_moderation.moderation_information');
+
+    if ($moderation_info->isModeratedEntity($entity)) {
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+      $storage = \Drupal::entityTypeManager()->getStorage('content_moderation_state');
+
+      $ids = $storage->getQuery()
+        ->condition('content_entity_type_id', $entity->getEntityTypeId())
+        ->condition('content_entity_id', $entity->id())
+        ->condition('workflow', $moderation_info->getWorkflowForEntity($entity)->id())
+        ->condition('content_entity_revision_id', $entity->getLoadedRevisionId())
+        ->allRevisions()
+        ->execute();
+
+      if ($ids) {
+        /** @var \Drupal\content_moderation\ContentModerationStateInterface $content_moderation_state */
+        $content_moderation_state = $storage->loadRevision(key($ids));
+      }
+    }
+
+    return $content_moderation_state;
   }
 
   /**

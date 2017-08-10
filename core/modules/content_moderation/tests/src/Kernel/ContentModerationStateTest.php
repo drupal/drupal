@@ -3,13 +3,13 @@
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\content_moderation\Entity\ContentModerationState;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -29,6 +29,7 @@ class ContentModerationStateTest extends KernelTestBase {
   public static $modules = [
     'entity_test',
     'node',
+    'block',
     'block_content',
     'media',
     'media_test_source',
@@ -74,17 +75,20 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
-   * Tests basic monolingual content moderation through the API.
+   * Sets up a bundle entity type for the specified entity type, if needed.
    *
-   * @dataProvider basicModerationTestCases
+   * @param string $entity_type_id
+   *   The entity type identifier.
+   *
+   * @return string
+   *   The bundle identifier.
    */
-  public function testBasicModeration($entity_type_id) {
+  protected function setupBundleEntityType($entity_type_id) {
     // Make the 'entity_test_with_bundle' entity type revisionable.
     if ($entity_type_id == 'entity_test_with_bundle') {
       $this->setEntityTestWithBundleKeys(['revision' => 'revision_id']);
     }
 
-    $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
     $bundle_id = $entity_type_id;
     $bundle_entity_type_id = $this->entityTypeManager->getDefinition($entity_type_id)->getBundleEntityType();
     if ($bundle_entity_type_id) {
@@ -112,6 +116,19 @@ class ContentModerationStateTest extends KernelTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle($entity_type_id, $bundle_id);
     $workflow->save();
 
+    return $bundle_id;
+  }
+
+  /**
+   * Tests basic monolingual content moderation through the API.
+   *
+   * @dataProvider basicModerationTestCases
+   */
+  public function testBasicModeration($entity_type_id) {
+    $bundle_id = $this->setupBundleEntityType($entity_type_id);
+
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
     $entity = $entity_storage->create([
       'title' => 'Test title',
       $this->entityTypeManager->getDefinition($entity_type_id)->getKey('bundle') => $bundle_id,
@@ -211,6 +228,69 @@ class ContentModerationStateTest extends KernelTestBase {
         'entity_test_no_bundle',
       ],
     ];
+  }
+
+  /**
+   * Tests removal of content moderation state entity field data.
+   *
+   * @dataProvider basicModerationTestCases
+   */
+  public function testContentModerationStateDataRemoval($entity_type_id) {
+    $bundle_id = $this->setupBundleEntityType($entity_type_id);
+
+    // Test content moderation state deletion.
+    $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $entity_storage->create([
+      'title' => 'Test title',
+      $this->entityTypeManager->getDefinition($entity_type_id)->getKey('bundle') => $bundle_id,
+    ]);
+    $entity->save();
+    $entity = $this->reloadEntity($entity);
+    $entity->delete();
+    $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
+    $this->assertFalse($content_moderation_state);
+
+    // Test content moderation state revision deletion.
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity2 */
+    $entity2 = $entity_storage->create([
+      'title' => 'Test title',
+      $this->entityTypeManager->getDefinition($entity_type_id)->getKey('bundle') => $bundle_id,
+    ]);
+    $entity2->save();
+    $revision = clone $entity2;
+    $revision->isDefaultRevision(FALSE);
+    $content_moderation_state = ContentModerationState::loadFromModeratedEntity($revision);
+    $this->assertTrue($content_moderation_state);
+    $entity2 = $this->reloadEntity($entity2);
+    $entity2->setNewRevision(TRUE);
+    $entity2->save();
+    $entity_storage->deleteRevision($revision->getRevisionId());
+    $content_moderation_state = ContentModerationState::loadFromModeratedEntity($revision);
+    $this->assertFalse($content_moderation_state);
+    $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity2);
+    $this->assertTrue($content_moderation_state);
+
+    // Test content moderation state translation deletion.
+    if ($this->entityTypeManager->getDefinition($entity_type_id)->isTranslatable()) {
+      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity3 */
+      $entity3 = $entity_storage->create([
+        'title' => 'Test title',
+        $this->entityTypeManager->getDefinition($entity_type_id)->getKey('bundle') => $bundle_id,
+      ]);
+      $langcode = 'it';
+      ConfigurableLanguage::createFromLangcode($langcode)
+        ->save();
+      $entity3->save();
+      $translation = $entity3->addTranslation($langcode, ['title' => 'Titolo test']);
+      $translation->save();
+      $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity3);
+      $this->assertTrue($content_moderation_state->hasTranslation($langcode));
+      $entity3->removeTranslation($langcode);
+      $entity3->save();
+      $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity3);
+      $this->assertFalse($content_moderation_state->hasTranslation($langcode));
+    }
   }
 
   /**
