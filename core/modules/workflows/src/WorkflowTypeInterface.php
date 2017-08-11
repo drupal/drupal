@@ -80,13 +80,10 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
   /**
    * Gets the initial state for the workflow.
    *
-   * @param \Drupal\workflows\WorkflowInterface $workflow
-   *   The workflow entity.
-   *
    * @return \Drupal\workflows\StateInterface
    *   The initial state.
    */
-  public function getInitialState(WorkflowInterface $workflow);
+  public function getInitialState();
 
   /**
    * Gets the required states of workflow type.

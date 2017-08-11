@@ -189,11 +189,11 @@ class WorkflowUiTest extends BrowserTestBase {
 
     // Ensure that weight changes the state ordering.
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertEquals('published', $workflow->getTypePlugin()->getInitialState($workflow)->id());
+    $this->assertEquals('published', $workflow->getTypePlugin()->getInitialState()->id());
     $this->drupalGet('admin/config/workflow/workflows/manage/test');
     $this->submitForm(['states[draft][weight]' => '-1'], 'Save');
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertEquals('draft', $workflow->getTypePlugin()->getInitialState($workflow)->id());
+    $this->assertEquals('draft', $workflow->getTypePlugin()->getInitialState()->id());
 
     // Verify that we are still on the workflow edit page.
     $this->assertSession()->addressEquals('admin/config/workflow/workflows/manage/test');

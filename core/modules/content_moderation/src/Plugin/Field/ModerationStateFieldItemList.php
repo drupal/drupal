@@ -39,7 +39,7 @@ class ModerationStateFieldItemList extends FieldItemList {
     // the node type form creates a fake Node entity to get default values.
     // @see \Drupal\node\NodeTypeForm::form()
     $workflow = $moderation_info->getWorkFlowForEntity($entity);
-    return $workflow ? $workflow->getTypePlugin()->getInitialState($workflow, $entity)->id() : NULL;
+    return $workflow ? $workflow->getTypePlugin()->getInitialState($entity)->id() : NULL;
   }
 
   /**
