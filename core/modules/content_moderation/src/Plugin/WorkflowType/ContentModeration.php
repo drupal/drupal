@@ -4,6 +4,7 @@ namespace Drupal\content_moderation\Plugin\WorkflowType;
 
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
@@ -340,11 +341,19 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
   /**
    * {@inheritdoc}
    */
-  public function getInitialState(WorkflowInterface $workflow, $entity = NULL) {
-    if ($entity instanceof EntityPublishedInterface) {
-      return $workflow->getTypePlugin()->getState($entity->isPublished() && !$entity->isNew() ? 'published' : 'draft');
+  public function getInitialState($entity = NULL) {
+    // Workflows are not tied to entities, but Content Moderation adds the
+    // relationship between Workflows and entities. Content Moderation needs the
+    // entity object to be able to determine the initial state based on
+    // publishing status.
+    if (!($entity instanceof ContentEntityInterface)) {
+      throw new \InvalidArgumentException('A content entity object must be supplied.');
     }
-    return parent::getInitialState($workflow);
+    if ($entity instanceof EntityPublishedInterface) {
+      return $this->getState($entity->isPublished() && !$entity->isNew() ? 'published' : 'draft');
+    }
+    // Workflows determines the initial state for non-publishable entities.
+    return parent::getInitialState();
   }
 
 }
