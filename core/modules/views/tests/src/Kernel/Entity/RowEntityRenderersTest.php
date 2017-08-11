@@ -5,6 +5,7 @@ namespace Drupal\Tests\views\Kernel\Entity;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\Entity\User;
 use Drupal\views\Views;
 
 /**
@@ -27,7 +28,10 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_entity_row_renderers'];
+  public static $testViews = [
+    'test_entity_row_renderers',
+    'test_entity_row_renderers_revisions_base',
+  ];
 
   /**
    * An array of added languages.
@@ -42,6 +46,20 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    * @var array
    */
   protected $expected;
+
+  /**
+   * The author of the test content.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $testAuthor;
+
+  /**
+   * An array of IDs of the test content.
+   *
+   * @var array[]
+   */
+  protected $testIds;
 
   /**
    * {@inheritdoc}
@@ -64,19 +82,25 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
 
+    $this->testAuthor = User::create([
+      'name' => 'foo',
+    ]);
+    $this->testAuthor->save();
+
     // Make sure we do not try to render non-existing user data.
     $node_type = NodeType::create(['type' => 'test']);
     $node_type->setDisplaySubmitted(FALSE);
     $node_type->save();
 
     $this->values = [];
+    $this->ids = [];
     $controller = \Drupal::entityManager()->getStorage('node');
     $langcode_index = 0;
 
     for ($i = 0; $i < count($this->langcodes); $i++) {
       // Create a node with a different default language each time.
       $default_langcode = $this->langcodes[$langcode_index++];
-      $node = $controller->create(['type' => 'test', 'uid' => 0, 'langcode' => $default_langcode]);
+      $node = $controller->create(['type' => 'test', 'uid' => $this->testAuthor->id(), 'langcode' => $default_langcode]);
       // Ensure the default language is processed first.
       $langcodes = array_merge([$default_langcode], array_diff($this->langcodes, [$default_langcode]));
 
@@ -92,6 +116,11 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
         }
 
         $node->save();
+
+        $this->ids[] = [
+          'nid' => $node->id(),
+          'uid' => $this->testAuthor->id(),
+        ];
       }
     }
   }
@@ -108,6 +137,15 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    */
   public function testFieldRenderers() {
     $this->checkLanguageRenderers('page_2', $this->values);
+  }
+
+  /**
+   * Tests the row renderer with a revision base table.
+   */
+  public function testRevisionBaseTable() {
+    $view = Views::getView('test_entity_row_renderers_revisions_base');
+    $view->execute();
+    $this->assertIdenticalResultset($view, $this->ids, ['nid' => 'nid', 'uid' => 'uid']);
   }
 
   /**
