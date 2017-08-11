@@ -1,4 +1,4 @@
-#main-canvas.js-outside-in-edit-mode a,
-#main-canvas.js-outside-in-edit-mode input {
+.dialog-off-canvas__main-canvas.js-outside-in-edit-mode a,
+.dialog-off-canvas__main-canvas.js-outside-in-edit-mode input {
   pointer-events: inherit !important;
 }

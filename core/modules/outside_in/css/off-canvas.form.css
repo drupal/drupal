@@ -74,7 +74,6 @@
   font-size: 14px;
   color: #333;
   line-height: 16px;
-  cursor: pointer;
 }
 /* Reduce contrast for fields against dark background. */
 #drupal-off-canvas .form-text,
