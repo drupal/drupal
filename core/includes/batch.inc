@@ -47,8 +47,22 @@ function _batch_page(Request $request) {
     }
   }
 
-  // Register database update for the end of processing.
+  // We need to store the updated batch information in the batch storage after
+  // processing the batch. In order for the error page to work correctly this
+  // needs to be done even in case of a PHP fatal error in which case the end of
+  // this function is never reached. Therefore we register a shutdown function
+  // to handle this case. Because with FastCGI and fastcgi_finish_request()
+  // shutdown functions are called after the HTTP connection is closed, updating
+  // the batch information in a shutdown function would lead to race conditions
+  // between consecutive requests if the batch processing continues. In case of
+  // a fatal error the processing stops anyway, so it works even with FastCGI.
+  // However, we must ensure to only update in the shutdown phase in this
+  // particular case we track whether the batch information still needs to be
+  // updated.
+  // @see _batch_shutdown()
+  // @see \Symfony\Component\HttpFoundation\Response::send()
   drupal_register_shutdown_function('_batch_shutdown');
+  _batch_needs_update(TRUE);
 
   $build = [];
 
@@ -70,18 +84,46 @@ function _batch_page(Request $request) {
       $current_set = _batch_current_set();
       $build['#title'] = $current_set['title'];
       $build['content'] = _batch_progress_page();
+
+      $response = $build;
       break;
 
     case 'do':
       // JavaScript-based progress page callback.
-      return _batch_do();
+      $response = _batch_do();
+      break;
 
     case 'finished':
       // _batch_finished() returns a RedirectResponse.
-      return _batch_finished();
+      $response = _batch_finished();
+      break;
   }
 
-  return $build;
+  if ($batch) {
+    \Drupal::service('batch.storage')->update($batch);
+  }
+  _batch_needs_update(FALSE);
+
+  return $response;
+}
+
+/**
+ * Checks whether the batch information needs to be updated in the storage.
+ *
+ * @param bool $new_value
+ *   (optional) A new value to set.
+ *
+ * @return bool
+ *   TRUE if the batch information needs to be updated; FALSE otherwise.
+ */
+function _batch_needs_update($new_value = NULL) {
+  $needs_update = &drupal_static(__FUNCTION__, FALSE);
+
+  if (isset($new_value)) {
+    $needs_update = $new_value;
+  }
+
+  return $needs_update;
 }
 
 /**
@@ -509,7 +551,7 @@ function _batch_finished() {
  * @see drupal_register_shutdown_function()
  */
 function _batch_shutdown() {
-  if ($batch = batch_get()) {
+  if (($batch = batch_get()) && _batch_needs_update()) {
     \Drupal::service('batch.storage')->update($batch);
   }
 }
