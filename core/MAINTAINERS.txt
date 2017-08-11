@@ -516,11 +516,11 @@ tools, documentation, and processes to make it easier for new contributors to
 get involved. They organize communications and logistics, and actively
 participate in mentoring.
 
+- Mauricio Dinarte 'dinarcon' https://www.drupal.org/u/dinarcon
 - Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
+- Rachel Lawson 'rachel_norfolk' https://www.drupal.org/u/rachel_norfolk
 - Valery Lourie 'valthebald' https://www.drupal.org/u/valthebald
-- Alina Mackenzie 'alimac' https://www.drupal.org/u/alimac
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
-- Andrea Soper 'ZenDoodles' https://www.drupal.org/u/zendoodles
-- Cathy Theys 'YesCT' https://www.drupal.org/u/yesct
+- Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
 
 Provisional membership: None at this time.
