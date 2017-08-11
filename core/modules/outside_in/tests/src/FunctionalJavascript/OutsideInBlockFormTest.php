@@ -238,6 +238,9 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     // to open the off-canvas dialog in edit mode.
     $contextual_link = $this->assertSession()->waitForElement('css', "$contextual_link_container .contextual-links a");
     $this->assertNotEmpty($contextual_link);
+    // When page first loads Edit Mode is not triggered until first contextual
+    // link is added.
+    $this->assertElementVisibleAfterWait('css', '.dialog-off-canvas__main-canvas.js-outside-in-edit-mode');
     // Ensure that all other Ajax activity is completed.
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->click($block_selector);
