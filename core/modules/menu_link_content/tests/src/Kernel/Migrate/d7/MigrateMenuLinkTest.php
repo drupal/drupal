@@ -29,7 +29,7 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('menu_link_content');
     $this->installEntitySchema('node');
     $node = Node::create([
-      'nid' => 3,
+      'nid' => 2,
       'title' => 'node link test',
       'type' => 'article',
     ]);
@@ -90,8 +90,8 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
     // Tests migrating an external link with an undefined title attribute.
     $this->assertEntity(470, 'Ask', static::MENU_NAME, NULL, TRUE, FALSE, [], 'http://ask.com', 0);
     $this->assertEntity(245, 'Home', 'main', NULL, TRUE, FALSE, [], 'internal:/', 0);
-    $this->assertEntity(478, 'custom link test', 'admin', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'internal:/admin/content/book', 0);
-    $this->assertEntity(479, 'node link test', 'tools', 'node 3', TRUE, FALSE, ['attributes' => ['title' => 'node 3']], 'entity:node/3', 3);
+    $this->assertEntity(478, 'custom link test', 'admin', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'internal:/admin/content', 0);
+    $this->assertEntity(479, 'node link test', 'tools', 'node 2', TRUE, FALSE, ['attributes' => ['title' => 'node 2']], 'entity:node/2', 3);
 
     $menu_link_tree_service = \Drupal::service('menu.link_tree');
     $parameters = new MenuTreeParameters();
