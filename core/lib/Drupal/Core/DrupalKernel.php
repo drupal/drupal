@@ -916,6 +916,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // new session into the master request if one was present before.
     if (($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE))) {
       if ($request = $request_stack->getMasterRequest()) {
+        $subrequest = TRUE;
         if ($request->hasSession()) {
           $request->setSession($this->container->get('session'));
         }
@@ -927,6 +928,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     \Drupal::setContainer($this->container);
+
+    // Allow other parts of the codebase to react on container initialization in
+    // subrequest.
+    if (!empty($subrequest)) {
+      $this->container->get('event_dispatcher')->dispatch(self::CONTAINER_INITIALIZE_SUBREQUEST_FINISHED);
+    }
 
     // If needs dumping flag was set, dump the container.
     if ($this->containerNeedsDumping && !$this->cacheDrupalContainer($container_definition)) {
