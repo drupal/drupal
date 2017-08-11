@@ -23,6 +23,14 @@
    * @listens event:drupalContextualLinkAdded
    */
   $(document).on('drupalContextualLinkAdded', (event, data) => {
+    // When the first contextual link is added to the page set Edit Mode.
+    $('body').once('outside_in.edit_mode_init').each(() => {
+      const editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
+      if (editMode) {
+        setEditModeState(true);
+      }
+    });
+
     // Bind Ajax behaviors to all items showing the class.
     // @todo Fix contextual links to work with use-ajax links in
     //    https://www.drupal.org/node/2764931.
@@ -182,23 +190,6 @@
     getItemsToToggle().toggleClass('js-outside-in-edit-mode', editMode);
     $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
   }
-
-  /**
-   * Attaches contextual's edit toolbar tab behavior.
-   *
-   * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Attaches contextual toolbar behavior on a contextualToolbar-init event.
-   */
-  Drupal.behaviors.outsideInEdit = {
-    attach() {
-      const editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
-      if (editMode) {
-        setEditModeState(true);
-      }
-    },
-  };
 
   /**
    * Toggle the js-outside-edit-mode class on items that we want to disable while in edit mode.

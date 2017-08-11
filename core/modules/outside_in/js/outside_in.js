@@ -13,6 +13,13 @@
   var quickEditItemSelector = '[data-quickedit-entity-id]';
 
   $(document).on('drupalContextualLinkAdded', function (event, data) {
+    $('body').once('outside_in.edit_mode_init').each(function () {
+      var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
+      if (editMode) {
+        setEditModeState(true);
+      }
+    });
+
     Drupal.attachBehaviors(data.$el[0]);
 
     data.$el.find(blockConfigureSelector).on('click.outsidein', function () {
@@ -111,15 +118,6 @@
     getItemsToToggle().toggleClass('js-outside-in-edit-mode', editMode);
     $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
   }
-
-  Drupal.behaviors.outsideInEdit = {
-    attach: function attach() {
-      var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
-      if (editMode) {
-        setEditModeState(true);
-      }
-    }
-  };
 
   Drupal.behaviors.toggleEditMode = {
     attach: function attach() {
