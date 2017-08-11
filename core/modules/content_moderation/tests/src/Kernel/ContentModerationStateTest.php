@@ -7,9 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestRev;
-use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -59,7 +57,6 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->installSchema('node', 'node_access');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
-    $this->installEntitySchema('entity_test_with_bundle');
     $this->installEntitySchema('entity_test_rev');
     $this->installEntitySchema('entity_test_no_bundle');
     $this->installEntitySchema('entity_test_mulrevpub');
@@ -84,11 +81,6 @@ class ContentModerationStateTest extends KernelTestBase {
    *   The bundle identifier.
    */
   protected function setupBundleEntityType($entity_type_id) {
-    // Make the 'entity_test_with_bundle' entity type revisionable.
-    if ($entity_type_id == 'entity_test_with_bundle') {
-      $this->setEntityTestWithBundleKeys(['revision' => 'revision_id']);
-    }
-
     $bundle_id = $entity_type_id;
     $bundle_entity_type_id = $this->entityTypeManager->getDefinition($entity_type_id)->getBundleEntityType();
     if ($bundle_entity_type_id) {
@@ -214,9 +206,6 @@ class ContentModerationStateTest extends KernelTestBase {
       ],
       'Media' => [
         'media',
-      ],
-      'Test Entity with Bundle' => [
-        'entity_test_with_bundle',
       ],
       'Test entity - revisions, data table, and published interface' => [
         'entity_test_mulrevpub',
@@ -434,34 +423,23 @@ class ContentModerationStateTest extends KernelTestBase {
    * Tests that a non-translatable entity type with a langcode can be moderated.
    */
   public function testNonTranslatableEntityTypeModeration() {
-    // Make the 'entity_test_with_bundle' entity type revisionable.
-    $this->setEntityTestWithBundleKeys(['revision' => 'revision_id']);
-
-    // Create a test bundle.
-    $entity_test_bundle = EntityTestBundle::create([
-      'id' => 'example',
-    ]);
-    $entity_test_bundle->save();
-
     $workflow = Workflow::load('editorial');
-    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_with_bundle', 'example');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
     $workflow->save();
 
     // Check that the tested entity type is not translatable.
-    $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_with_bundle');
+    $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_rev');
     $this->assertFalse($entity_type->isTranslatable(), 'The test entity type is not translatable.');
 
     // Create a test entity.
-    $entity_test_with_bundle = EntityTestWithBundle::create([
-      'type' => 'example'
-    ]);
-    $entity_test_with_bundle->save();
-    $this->assertEquals('draft', $entity_test_with_bundle->moderation_state->value);
+    $entity = EntityTestRev::create();
+    $entity->save();
+    $this->assertEquals('draft', $entity->moderation_state->value);
 
-    $entity_test_with_bundle->moderation_state->value = 'published';
-    $entity_test_with_bundle->save();
+    $entity->moderation_state->value = 'published';
+    $entity->save();
 
-    $this->assertEquals('published', EntityTestWithBundle::load($entity_test_with_bundle->id())->moderation_state->value);
+    $this->assertEquals('published', EntityTestRev::load($entity->id())->moderation_state->value);
   }
 
   /**
@@ -469,54 +447,35 @@ class ContentModerationStateTest extends KernelTestBase {
    * moderated.
    */
   public function testNonLangcodeEntityTypeModeration() {
-    // Make the 'entity_test_with_bundle' entity type revisionable and unset
-    // the langcode entity key.
-    $this->setEntityTestWithBundleKeys(['revision' => 'revision_id'], ['langcode']);
+    // Unset the langcode entity key for 'entity_test_rev'.
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_rev');
+    $keys = $entity_type->getKeys();
+    unset($keys['langcode']);
+    $entity_type->set('entity_keys', $keys);
+    \Drupal::state()->set('entity_test_rev.entity_type', $entity_type);
 
-    // Create a test bundle.
-    $entity_test_bundle = EntityTestBundle::create([
-      'id' => 'example',
-    ]);
-    $entity_test_bundle->save();
+    // Update the entity type in order to remove the 'langcode' field.
+    \Drupal::entityDefinitionUpdateManager()->applyUpdates();
 
     $workflow = Workflow::load('editorial');
-    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_with_bundle', 'example');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_rev', 'entity_test_rev');
     $workflow->save();
 
-    // Check that the tested entity type is not translatable.
-    $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_with_bundle');
+    // Check that the tested entity type is not translatable and does not have a
+    // 'langcode' entity key.
+    $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_rev');
     $this->assertFalse($entity_type->isTranslatable(), 'The test entity type is not translatable.');
+    $this->assertFalse($entity_type->getKey('langcode'), "The test entity type does not have a 'langcode' entity key.");
 
     // Create a test entity.
-    $entity_test_with_bundle = EntityTestWithBundle::create([
-      'type' => 'example'
-    ]);
-    $entity_test_with_bundle->save();
-    $this->assertEquals('draft', $entity_test_with_bundle->moderation_state->value);
+    $entity = EntityTestRev::create();
+    $entity->save();
+    $this->assertEquals('draft', $entity->moderation_state->value);
 
-    $entity_test_with_bundle->moderation_state->value = 'published';
-    $entity_test_with_bundle->save();
+    $entity->moderation_state->value = 'published';
+    $entity->save();
 
-    $this->assertEquals('published', EntityTestWithBundle::load($entity_test_with_bundle->id())->moderation_state->value);
-  }
-
-  /**
-   * Set the keys on the test entity type.
-   *
-   * @param array $keys
-   *   The entity keys to override
-   * @param array $remove_keys
-   *   Keys to remove.
-   */
-  protected function setEntityTestWithBundleKeys($keys, $remove_keys = []) {
-    $entity_type = clone \Drupal::entityTypeManager()->getDefinition('entity_test_with_bundle');
-    $original_keys = $entity_type->getKeys();
-    foreach ($remove_keys as $remove_key) {
-      unset($original_keys[$remove_key]);
-    }
-    $entity_type->set('entity_keys', $keys + $original_keys);
-    \Drupal::state()->set('entity_test_with_bundle.entity_type', $entity_type);
-    \Drupal::entityDefinitionUpdateManager()->applyUpdates();
+    $this->assertEquals('published', EntityTestRev::load($entity->id())->moderation_state->value);
   }
 
   /**
