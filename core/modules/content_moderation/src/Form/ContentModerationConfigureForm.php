@@ -110,7 +110,6 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
               'title' => $this->t('Select'),
               'url' => Url::fromRoute('content_moderation.workflow_type_edit_form', ['workflow' => $workflow->id(), 'entity_type_id' => $entity_type->id()]),
               'attributes' => [
-                'aria-label' => $this->t('Select'),
                 'class' => ['use-ajax'],
                 'data-dialog-type' => 'modal',
                 'data-dialog-options' => Json::encode([
