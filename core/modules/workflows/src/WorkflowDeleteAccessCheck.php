@@ -11,6 +11,10 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Provides a access checker for deleting a workflow state.
+ *
+ * @internal
+ *   Marked as internal until it's validated this should form part of the public
+ *   API in https://www.drupal.org/node/2897148.
  */
 class WorkflowDeleteAccessCheck implements AccessInterface {
 
