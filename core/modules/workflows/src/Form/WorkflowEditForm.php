@@ -115,7 +115,6 @@ class WorkflowEditForm extends EntityForm {
         'edit' => [
           'title' => $this->t('Edit'),
           'url' => Url::fromRoute('entity.workflow.edit_state_form', ['workflow' => $workflow->id(), 'workflow_state' => $state->id()]),
-          'attributes' => ['aria-label' => $this->t('Edit @state state', ['@state' => $state->label()])],
         ]
       ];
       if ($this->entity->access('delete-state:' . $state->id())) {
@@ -125,7 +124,6 @@ class WorkflowEditForm extends EntityForm {
             'workflow' => $workflow->id(),
             'workflow_state' => $state->id()
           ]),
-          'attributes' => ['aria-label' => $this->t('Delete @state state', ['@state' => $state->label()])],
         ];
       }
       $form['states_container']['states'][$state->id()] = [
@@ -178,12 +176,10 @@ class WorkflowEditForm extends EntityForm {
       $links['edit'] = [
         'title' => $this->t('Edit'),
         'url' => Url::fromRoute('entity.workflow.edit_transition_form', ['workflow' => $workflow->id(), 'workflow_transition' => $transition->id()]),
-        'attributes' => ['aria-label' => $this->t('Edit \'@transition\' transition', ['@transition' => $transition->label()])],
       ];
       $links['delete'] = [
         'title' => t('Delete'),
         'url' => Url::fromRoute('entity.workflow.delete_transition_form', ['workflow' => $workflow->id(), 'workflow_transition' => $transition->id()]),
-        'attributes' => ['aria-label' => $this->t('Delete \'@transition\' transition', ['@transition' => $transition->label()])],
       ];
       $form['transitions_container']['transitions'][$transition->id()] = [
         '#attributes' => ['class' => ['draggable']],
