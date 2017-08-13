@@ -43,7 +43,9 @@ class TextField extends CckFieldPluginBase {
    * {@inheritdoc}
    */
   public function processCckFieldValues(MigrationInterface $migration, $field_name, $field_info) {
-    if ($field_info['widget_type'] == 'optionwidgets_onoff') {
+    $widget_type = isset($field_info['widget_type']) ? $field_info['widget_type'] : $field_info['widget']['type'];
+
+    if ($widget_type == 'optionwidgets_onoff') {
       $process = [
         'value' => [
           'plugin' => 'static_map',

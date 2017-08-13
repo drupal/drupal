@@ -34,7 +34,7 @@ class LinkField extends D6LinkField {
   public function processFieldInstance(MigrationInterface $migration) {
     $process = [
       'plugin' => 'static_map',
-      'source' => 'instance_settings/title',
+      'source' => 'settings/title',
       'bypass' => TRUE,
       'map' => [
         'disabled' => DRUPAL_DISABLED,
