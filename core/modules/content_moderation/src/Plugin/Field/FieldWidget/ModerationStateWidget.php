@@ -105,15 +105,20 @@ class ModerationStateWidget extends OptionsSelectWidget implements ContainerFact
   /**
    * {@inheritdoc}
    */
+  public function form(FieldItemListInterface $items, array &$form, FormStateInterface $form_state, $get_delta = NULL) {
+    $entity = $items->getEntity();
+    if (!$this->moderationInformation->isModeratedEntity($entity)) {
+      return [];
+    }
+    return parent::form($items, $form, $form_state, $get_delta);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $items->getEntity();
-
-    /* @var \Drupal\Core\Config\Entity\ConfigEntityInterface $bundle_entity */
-    if (!$this->moderationInformation->isModeratedEntity($entity)) {
-      // @todo https://www.drupal.org/node/2779933 write a test for this.
-      return $element + ['#access' => FALSE];
-    }
 
     $workflow = $this->moderationInformation->getWorkflowForEntity($entity);
     $default = $items->get($delta)->value ? $workflow->getTypePlugin()->getState($items->get($delta)->value) : $workflow->getTypePlugin()->getInitialState($entity);
