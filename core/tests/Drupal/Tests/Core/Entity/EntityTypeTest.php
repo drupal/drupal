@@ -58,7 +58,11 @@ class EntityTypeTest extends UnitTestCase {
    */
   public function testGetKeys($entity_keys, $expected) {
     $entity_type = $this->setUpEntityType(['entity_keys' => $entity_keys]);
-    $this->assertSame($expected + ['default_langcode' => 'default_langcode'], $entity_type->getKeys());
+    $expected += [
+      'default_langcode' => 'default_langcode',
+      'revision_translation_affected' => 'revision_translation_affected',
+    ];
+    $this->assertSame($expected, $entity_type->getKeys());
   }
 
   /**

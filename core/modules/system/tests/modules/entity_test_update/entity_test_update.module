@@ -79,6 +79,11 @@ function entity_test_update_entity_presave(EntityInterface $entity) {
  *   (e.g. content_translation_status);
  * - 52 more test entities (with the IDs 51 - 102) crated, translated and saved.
  *
+ * The 'drupal-8.0.0-rc1-filled.standard.entity_test_update_mul_rev.php.gz' db
+ * dump was created like the multilingual one described above, with one change:
+ * The annotation of the entity_test_update entity type was also manually edited
+ * in order to make it revisionable.
+ *
  * @param int $start
  *   (optional) The entity ID to start from. Defaults to 1.
  * @param int $end

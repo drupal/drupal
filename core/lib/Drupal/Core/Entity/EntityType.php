@@ -302,6 +302,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
       'bundle' => '',
       'langcode' => '',
       'default_langcode' => 'default_langcode',
+      'revision_translation_affected' => 'revision_translation_affected',
     ];
     $this->handlers += [
       'access' => 'Drupal\Core\Entity\EntityAccessControlHandler',

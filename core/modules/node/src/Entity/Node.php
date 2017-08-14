@@ -400,13 +400,6 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ])
       ->setDisplayConfigurable('form', TRUE);
 
-    $fields['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Revision translation affected'))
-      ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
-      ->setReadOnly(TRUE)
-      ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE);
-
     return $fields;
   }
 
