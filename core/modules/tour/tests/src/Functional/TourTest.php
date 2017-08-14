@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\tour\Tests;
+namespace Drupal\Tests\tour\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\tour\Entity\Tour;

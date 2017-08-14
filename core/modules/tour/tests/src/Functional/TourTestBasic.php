@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\tour\Tests;
+namespace Drupal\Tests\tour\Functional;
 
 /**
  * Simple tour tips test base.
