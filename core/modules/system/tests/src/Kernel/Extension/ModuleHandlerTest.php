@@ -172,8 +172,8 @@ class ModuleHandlerTest extends KernelTestBase {
    * Tests uninstalling a module that is a "dependency" of a profile.
    */
   public function testUninstallProfileDependency() {
-    $profile = 'minimal';
-    $dependency = 'dblog';
+    $profile = 'testing';
+    $dependency = 'page_cache';
     $this->setSetting('install_profile', $profile);
     // Prime the drupal_get_filename() static cache with the location of the
     // minimal profile as it is not the currently active profile and we don't
