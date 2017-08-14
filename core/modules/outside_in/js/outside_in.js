@@ -124,7 +124,7 @@
       $(toggleEditSelector).once('outsidein').on('click.outsidein', toggleEditMode);
 
       Drupal.ajax.instances.filter(function (instance) {
-        return $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
+        return instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
       }).forEach(function (instance) {
         if (!('dialogOptions' in instance.options.data)) {
           instance.options.data.dialogOptions = {};
