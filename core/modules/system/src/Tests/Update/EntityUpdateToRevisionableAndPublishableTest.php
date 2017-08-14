@@ -77,6 +77,8 @@ class EntityUpdateToRevisionableAndPublishableTest extends UpdatePathTestBase {
 
   /**
    * Tests the conversion of an entity type to revisionable and publishable.
+   *
+   * @covers entity_test_update_update_8400
    */
   public function testConvertToRevisionableAndPublishable() {
     // Check that entity type is not revisionable nor publishable prior to

@@ -1689,8 +1689,9 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     // few "entity keys", in order to keep their indexes optimized.
     // @todo Fix this in https://www.drupal.org/node/2841291.
     $not_null_keys = $this->entityType->getKeys();
-    // Label fields are not necessarily required.
-    unset($not_null_keys['label']);
+    // Label and the 'revision_translation_affected' fields are not necessarily
+    // required.
+    unset($not_null_keys['label'], $not_null_keys['revision_translation_affected']);
     // Because entity ID and revision ID are both serial fields in the base and
     // revision table respectively, the revision ID is not known yet, when
     // inserting data into the base table. Instead the revision ID in the base

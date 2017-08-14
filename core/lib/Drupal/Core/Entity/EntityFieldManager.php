@@ -220,6 +220,20 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       }
     }
 
+    // Make sure that revisionable entity types are correctly defined.
+    if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
+      // The 'revision_translation_affected' field should always be defined.
+      // This field has been added unconditionally in Drupal 8.4.0 and it is
+      // overriding any pre-existing definition on purpose so that any
+      // differences are immediately available in the status report.
+      $base_field_definitions[$keys['revision_translation_affected']] = BaseFieldDefinition::create('boolean')
+        ->setLabel($this->t('Revision translation affected'))
+        ->setDescription($this->t('Indicates if the last edit of a translation belongs to current revision.'))
+        ->setReadOnly(TRUE)
+        ->setRevisionable(TRUE)
+        ->setTranslatable(TRUE);
+    }
+
     // Assign base field definitions the entity type provider.
     $provider = $entity_type->getProvider();
     foreach ($base_field_definitions as $definition) {

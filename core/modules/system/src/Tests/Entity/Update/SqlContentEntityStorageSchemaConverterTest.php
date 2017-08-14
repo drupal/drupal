@@ -92,6 +92,9 @@ class SqlContentEntityStorageSchemaConverterTest extends UpdatePathTestBase {
     $entity_test_update = $this->lastInstalledSchemaRepository->getLastInstalledDefinition('entity_test_update');
     $this->assertTrue($entity_test_update->isRevisionable());
 
+    $field_storage_definitions = $this->lastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions('entity_test_update');
+    $this->assertTrue(isset($field_storage_definitions['revision_translation_affected']));
+
     /** @var \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
     $this->assertEqual(count($storage->loadMultiple()), 102, 'All test entities were found.');
@@ -103,6 +106,10 @@ class SqlContentEntityStorageSchemaConverterTest extends UpdatePathTestBase {
 
       $this->assertEqual($i, $revision->id());
       $this->assertEqual($i, $revision->getRevisionId());
+
+      // Check that the correct initial value was provided for the
+      // 'revision_translation_affected' field.
+      $this->assertTrue($revision->revision_translation_affected->value);
 
       $this->assertEqual($i . ' - test single property', $revision->test_single_property->value);
 
