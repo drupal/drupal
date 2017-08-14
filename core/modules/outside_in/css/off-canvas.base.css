@@ -1,4 +1,4 @@
-/*
+/**
  * @file
  * Set base styles for the settings tray.
  */
@@ -200,7 +200,7 @@
   content: ']';
 }
 
-/* Override jquery UI */
+/* Override jQuery UI */
 #drupal-off-canvas .ui-widget-content a {
   color: #85bef4 !important;
 }

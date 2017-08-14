@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Styling for the off-canvas ui dialog. Including overrides for jQuery UI.
+ */
+
 /* Style the dialog-off-canvas container. */
 .ui-dialog.ui-dialog-off-canvas {
   background: #444;
@@ -20,7 +25,7 @@
   font-weight: normal;
   color: #fff;
 }
-/* Hide the default Jquery UI dialog close button. */
+/* Hide the default jQuery UI dialog close button. */
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close .ui-icon {
   visibility: hidden;
 }
@@ -32,7 +37,6 @@
   border: 0;
   position: absolute;
   right: 1em;
-  -moz-transition: all .5s ease;
   transition: background .5s ease;
 }
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:hover {
@@ -75,7 +79,7 @@
   right: 1em;
 }
 
-/* Override default styling from jquery UI. */
+/* Override default styling from jQuery UI. */
 #drupal-off-canvas .ui-state-default,
 #drupal-off-canvas .ui-widget-content .ui-state-default,
 #drupal-off-canvas .ui-widget-header .ui-state-default {
@@ -85,5 +89,5 @@
   color: #333;
 }
 #drupal-off-canvas .ui-widget-content a {
-  color: #85bef4/*{fcContent}*/;
+  color: #85bef4;
 }

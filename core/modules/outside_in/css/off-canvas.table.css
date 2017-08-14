@@ -72,7 +72,7 @@
   padding: 6px 8px;
   color: #ddd;
 }
-/* Hide overflow with elipsis for links. */
+/* Hide overflow with ellipsis for links. */
 #drupal-off-canvas td a {
   display: block;
   overflow: hidden;

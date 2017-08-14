@@ -1,4 +1,5 @@
 /**
+ * @file
  * Visual styling for buttons in the off canvas tray.
  *
  * See seven/css/components/buttons.css
@@ -85,7 +86,7 @@
 }
 #drupal-off-canvas .no-touchevents .button--small {
   font-size: 13px;
-  padding: 2px 1em;  /* 1 */
+  padding: 2px 1em;
 }
 #drupal-off-canvas .button:disabled,
 #drupal-off-canvas .button:disabled:active,

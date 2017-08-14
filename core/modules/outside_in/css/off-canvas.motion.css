@@ -11,7 +11,5 @@
  */
 
 .dialog-off-canvas__main-canvas {
-  -webkit-transition: all .7s ease;
-  -moz-transition: all .7s ease;
   transition: all .7s ease;
 }

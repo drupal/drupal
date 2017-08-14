@@ -21,7 +21,6 @@
 /* Style both the edit and editing states of the contextual links toggle tab. */
 .toolbar-icon-edit.toolbar-item {
   background-color: #50a0e9;
-  background-image: -webkit-linear-gradient(top, #007bc6, #0071b8);
   background-image: linear-gradient(to bottom, #007bc6, #0071b8);
   color: #eee;
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
@@ -30,7 +29,6 @@
 }
 .toolbar-icon-edit.toolbar-item.is-active {
   background-color: #50a0e9;
-  background-image: -webkit-linear-gradient(top, #007bc6, #0071b8);
   background-image: linear-gradient(to bottom, #007bc6, #0071b8);
   color: #eee;
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
@@ -40,7 +38,6 @@
 .toolbar-tab:hover > .toolbar-icon-edit,
 .toolbar-icon-edit:focus .toolbar-item {
   background-color: #2369a6;
-  background-image: -webkit-linear-gradient(top, #0c97ed, #1f86c7);
   background-image: linear-gradient(to bottom, #0c97ed, #1f86c7);
   border-color: #1e5c90;
   color: #fff;
