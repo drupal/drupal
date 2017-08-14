@@ -5,7 +5,6 @@ namespace Drupal\workflows;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
-use Drupal\Core\Session\AccountInterface;
 
 /**
  * An interface for Workflow type plugins.
@@ -28,22 +27,6 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    *   The workflow type label.
    */
   public function label();
-
-  /**
-   * Performs access checks.
-   *
-   * @param \Drupal\workflows\WorkflowInterface $entity
-   *   The workflow entity for which to check access.
-   * @param string $operation
-   *   The entity operation. Usually one of 'view', 'view label', 'update' or
-   *   'delete'.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user for which to check access.
-   *
-   * @return \Drupal\Core\Access\AccessResultInterface
-   *   The access result.
-   */
-  public function checkWorkflowAccess(WorkflowInterface $entity, $operation, AccountInterface $account);
 
   /**
    * Determines if the workflow is being has data associated with it.

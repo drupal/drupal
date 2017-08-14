@@ -3,13 +3,11 @@
 namespace Drupal\content_moderation\Plugin\WorkflowType;
 
 use Drupal\content_moderation\ModerationInformationInterface;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\content_moderation\ContentModerationState;
 use Drupal\workflows\Plugin\WorkflowTypeBase;
@@ -91,16 +89,6 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
       $container->get('entity_type.bundle.info'),
       $container->get('content_moderation.moderation_information')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function checkWorkflowAccess(WorkflowInterface $entity, $operation, AccountInterface $account) {
-    if ($operation === 'view') {
-      return AccessResult::allowedIfHasPermission($account, 'view content moderation');
-    }
-    return parent::checkWorkflowAccess($entity, $operation, $account);
   }
 
   /**

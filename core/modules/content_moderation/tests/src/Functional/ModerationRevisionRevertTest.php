@@ -43,7 +43,6 @@ class ModerationRevisionRevertTest extends BrowserTestBase {
       'administer nodes',
       'bypass node access',
       'view all revisions',
-      'view content moderation',
       'use editorial transition create_new_draft',
       'use editorial transition publish',
     ]);
