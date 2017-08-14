@@ -143,6 +143,13 @@ class BaseFieldOverride extends FieldConfigBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getClass() {
+    return $this->getBaseFieldDefinition()->getClass();
+  }
+
+  /**
    * Gets the base field definition.
    *
    * @return \Drupal\Core\Field\BaseFieldDefinition
