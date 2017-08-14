@@ -399,6 +399,37 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
+   * Tests moderation when the moderation_state field has a config override.
+   */
+  public function testModerationWithFieldConfigOverride() {
+    NodeType::create([
+      'type' => 'test_type',
+    ])->save();
+
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'test_type');
+    $workflow->save();
+
+    $fields = $this->container->get('entity_field.manager')->getFieldDefinitions('node', 'test_type');
+    $field_config = $fields['moderation_state']->getConfig('test_type');
+    $field_config->setLabel('Field Override!');
+    $field_config->save();
+
+    $node = Node::create([
+      'title' => 'Test node',
+      'type' => 'test_type',
+    ]);
+    $node->save();
+    $this->assertFalse($node->isPublished());
+    $this->assertEquals('draft', $node->moderation_state->value);
+
+    $node->moderation_state = 'published';
+    $node->save();
+    $this->assertTrue($node->isPublished());
+    $this->assertEquals('published', $node->moderation_state->value);
+  }
+
+  /**
    * Tests that entities with special languages can be moderated.
    */
   public function testModerationWithSpecialLanguages() {
