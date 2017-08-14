@@ -13,81 +13,6 @@
   const quickEditItemSelector = '[data-quickedit-entity-id]';
 
   /**
-   * Reacts to contextual links being added.
-   *
-   * @param {jQuery.Event} event
-   *   The `drupalContextualLinkAdded` event.
-   * @param {object} data
-   *   An object containing the data relevant to the event.
-   *
-   * @listens event:drupalContextualLinkAdded
-   */
-  $(document).on('drupalContextualLinkAdded', (event, data) => {
-    // When the first contextual link is added to the page set Edit Mode.
-    $('body').once('outside_in.edit_mode_init').each(() => {
-      const editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
-      if (editMode) {
-        setEditModeState(true);
-      }
-    });
-
-    // Bind Ajax behaviors to all items showing the class.
-    // @todo Fix contextual links to work with use-ajax links in
-    //    https://www.drupal.org/node/2764931.
-    Drupal.attachBehaviors(data.$el[0]);
-
-    // Bind a listener to all 'Quick edit' links for blocks
-    // Click "Edit" button in toolbar to force Contextual Edit which starts
-    // Settings Tray edit mode also.
-    data.$el.find(blockConfigureSelector)
-      .on('click.outsidein', () => {
-        if (!isInEditMode()) {
-          $(toggleEditSelector).trigger('click').trigger('click.outside_in');
-        }
-        // Always disable QuickEdit regardless of whether "EditMode" was just enabled.
-        disableQuickEdit();
-      });
-  });
-
-  $(document).on('keyup.outsidein', (e) => {
-    if (isInEditMode() && e.keyCode === 27) {
-      Drupal.announce(
-        Drupal.t('Exited edit mode.'),
-      );
-      toggleEditMode();
-    }
-  });
-
-  /**
-   * Gets all items that should be toggled with class during edit mode.
-   *
-   * @return {jQuery}
-   *   Items that should be toggled.
-   */
-  function getItemsToToggle() {
-    return $(itemsToToggleSelector).not(contextualItemsSelector);
-  }
-
-  /**
-   * Helper to check the state of the outside-in mode.
-   *
-   * @todo don't use a class for this.
-   *
-   * @return {boolean}
-   *  State of the outside-in edit mode.
-   */
-  function isInEditMode() {
-    return $('#toolbar-bar').hasClass('js-outside-in-edit-mode');
-  }
-
-  /**
-   * Helper to toggle Edit mode.
-   */
-  function toggleEditMode() {
-    setEditModeState(!isInEditMode());
-  }
-
-  /**
    * Prevent default click events except contextual links.
    *
    * In edit mode the default action of click events is suppressed.
@@ -125,10 +50,20 @@
   }
 
   /**
-   *  Helper to switch edit mode state.
+   * Gets all items that should be toggled with class during edit mode.
+   *
+   * @return {jQuery}
+   *   Items that should be toggled.
+   */
+  function getItemsToToggle() {
+    return $(itemsToToggleSelector).not(contextualItemsSelector);
+  }
+
+  /**
+   * Helper to switch edit mode state.
    *
    * @param {boolean} editMode
-   *  True enable edit mode, false disable edit mode.
+   *   True enable edit mode, false disable edit mode.
    */
   function setEditModeState(editMode) {
     if (!document.querySelector('[data-off-canvas-main-canvas]')) {
@@ -162,7 +97,10 @@
         $(quickEditItemSelector)
           .not(contextualItemsSelector)
           .on('click.outsidein', (e) => {
-            // For all non-contextual links or the contextual QuickEdit link close the off-canvas dialog.
+            /**
+             * For all non-contextual links or the contextual QuickEdit link
+             * close the off-canvas dialog.
+             */
             if (!$(e.target).parent().hasClass('contextual') || $(e.target).parent().hasClass('quickedit')) {
               closeOffCanvas();
             }
@@ -190,6 +128,78 @@
     getItemsToToggle().toggleClass('js-outside-in-edit-mode', editMode);
     $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
   }
+
+  /**
+   * Helper to check the state of the outside-in mode.
+   *
+   * @todo don't use a class for this.
+   *
+   * @return {boolean}
+   *   State of the outside-in edit mode.
+   */
+  function isInEditMode() {
+    return $('#toolbar-bar').hasClass('js-outside-in-edit-mode');
+  }
+
+  /**
+   * Helper to toggle Edit mode.
+   */
+  function toggleEditMode() {
+    setEditModeState(!isInEditMode());
+  }
+
+  /**
+   * Reacts to contextual links being added.
+   *
+   * @param {jQuery.Event} event
+   *   The `drupalContextualLinkAdded` event.
+   * @param {object} data
+   *   An object containing the data relevant to the event.
+   *
+   * @listens event:drupalContextualLinkAdded
+   */
+  $(document).on('drupalContextualLinkAdded', (event, data) => {
+
+    // When the first contextual link is added to the page set Edit Mode.
+    $('body').once('outside_in.edit_mode_init').each(() => {
+      const editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
+      if (editMode) {
+        setEditModeState(true);
+      }
+    });
+
+    /**
+     * Bind Ajax behaviors to all items showing the class.
+     * @todo Fix contextual links to work with use-ajax links in
+     * https://www.drupal.org/node/2764931.
+     */
+    Drupal.attachBehaviors(data.$el[0]);
+    /**
+     * Bind a listener to all 'Quick edit' links for blocks. Click "Edit" button
+     * in toolbar to force Contextual Edit which starts Settings Tray edit
+     * mode also.
+     */
+    data.$el.find(blockConfigureSelector)
+      .on('click.outsidein', () => {
+        if (!isInEditMode()) {
+          $(toggleEditSelector).trigger('click').trigger('click.outside_in');
+        }
+        /**
+         * Always disable QuickEdit regardless of whether "EditMode" was just
+         * enabled.
+         */
+        disableQuickEdit();
+      });
+  });
+
+  $(document).on('keyup.outsidein', (e) => {
+    if (isInEditMode() && e.keyCode === 27) {
+      Drupal.announce(
+        Drupal.t('Exited edit mode.'),
+      );
+      toggleEditMode();
+    }
+  });
 
   /**
    * Toggle the js-outside-edit-mode class on items that we want to disable while in edit mode.
@@ -222,7 +232,7 @@
 
   // Manage Active editable class on opening and closing of the dialog.
   $(window).on({
-    'dialog:beforecreate': function (event, dialog, $element, settings) {
+    'dialog:beforecreate': (event, dialog, $element, settings) => {
       if ($element.is('#drupal-off-canvas')) {
         $('body .outside-in-active-editable').removeClass('outside-in-active-editable');
         const $activeElement = $(`#${settings.outsideInActiveEditableId}`);
@@ -231,7 +241,7 @@
         }
       }
     },
-    'dialog:beforeclose': function (event, dialog, $element) {
+    'dialog:beforeclose': (event, dialog, $element) => {
       if ($element.is('#drupal-off-canvas')) {
         $('body .outside-in-active-editable').removeClass('outside-in-active-editable');
       }

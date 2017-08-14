@@ -38,6 +38,7 @@
 }
 #drupal-off-canvas a.tabledrag-handle .handle {
   /* Use lighter drag icon against dark background. */
+  background-color: transparent;
   background-image: url(../../../misc/icons/bebebe/move.svg);
   background-repeat: no-repeat;
   background-position: center;
@@ -45,7 +46,6 @@
   margin: 0;
   padding: 0;
   width: auto;
-  background-color: transparent;
 }
 #drupal-off-canvas .draggable a.tabledrag-handle:hover .handle,
 #drupal-off-canvas .draggable a.tabledrag-handle:focus .handle {

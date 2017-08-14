@@ -8,8 +8,6 @@
 
 /* Transition the edit icon in the toolbar. */
 #toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
-  -webkit-transition: all .7s ease;
-  -moz-transition: all .7s ease;
   transition: all .7s ease;
 }
 
@@ -17,7 +15,5 @@
 .dialog-off-canvas__main-canvas .contextual,
 .dialog-off-canvas__main-canvas .js-outside-in-edit-mode .outside-in-editable,
 .dialog-off-canvas__main-canvas.js-tray-open .js-outside-in-edit-mode .outside-in-editable {
-  -webkit-transition: all .7s ease;
-  -moz-transition: all .7s ease;
   transition: all .7s ease;
 }

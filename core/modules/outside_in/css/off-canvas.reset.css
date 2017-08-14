@@ -167,8 +167,7 @@
 #drupal-off-canvas table tbody tr:nth-child(odd),
 #drupal-off-canvas table tfoot {
   border: 0;
-  background: none;
-  background-color: transparent;
+  background: transparent none;
 }
 #drupal-off-canvas th,
 #drupal-off-canvas td,
@@ -325,6 +324,9 @@
 #drupal-off-canvas select[disabled] optgroup,
 #drupal-off-canvas textarea[disabled] {
   box-shadow: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   cursor: default;
 }
@@ -358,8 +360,7 @@
 }
 #drupal-off-canvas * button {
   background: none;
-  border: 1px solid;
-  border-color: grey;
+  border: 1px solid grey;
   color: black;
   padding: 0;
   text-decoration: none;
@@ -372,14 +373,14 @@
 #drupal-off-canvas *:not(div) textarea,
 #drupal-off-canvas *:not(div) select {
   background: white;
-  border: 1px solid;
-  border-color: grey;
+  border: 1px solid grey;
   color: black;
   padding: 0;
   vertical-align: top;
 }
 
-/* Bootstrap and other frameworks add color to selection. */
+/* To standardize off-canvas selection color. */
+#drupal-off-canvas ::-moz-selection,
 #drupal-off-canvas ::selection {
   background-color: rgba(175,175,175,0.5);
   color: inherit;

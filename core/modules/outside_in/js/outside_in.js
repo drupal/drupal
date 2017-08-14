@@ -12,44 +12,6 @@
   var contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
   var quickEditItemSelector = '[data-quickedit-entity-id]';
 
-  $(document).on('drupalContextualLinkAdded', function (event, data) {
-    $('body').once('outside_in.edit_mode_init').each(function () {
-      var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
-      if (editMode) {
-        setEditModeState(true);
-      }
-    });
-
-    Drupal.attachBehaviors(data.$el[0]);
-
-    data.$el.find(blockConfigureSelector).on('click.outsidein', function () {
-      if (!isInEditMode()) {
-        $(toggleEditSelector).trigger('click').trigger('click.outside_in');
-      }
-
-      disableQuickEdit();
-    });
-  });
-
-  $(document).on('keyup.outsidein', function (e) {
-    if (isInEditMode() && e.keyCode === 27) {
-      Drupal.announce(Drupal.t('Exited edit mode.'));
-      toggleEditMode();
-    }
-  });
-
-  function getItemsToToggle() {
-    return $(itemsToToggleSelector).not(contextualItemsSelector);
-  }
-
-  function isInEditMode() {
-    return $('#toolbar-bar').hasClass('js-outside-in-edit-mode');
-  }
-
-  function toggleEditMode() {
-    setEditModeState(!isInEditMode());
-  }
-
   function preventClick(event) {
     if ($(event.target).closest('.contextual-links').length) {
       return;
@@ -67,6 +29,10 @@
 
   function closeOffCanvas() {
     $('.ui-dialog-off-canvas .ui-dialog-titlebar-close').trigger('click');
+  }
+
+  function getItemsToToggle() {
+    return $(itemsToToggleSelector).not(contextualItemsSelector);
   }
 
   function setEditModeState(editMode) {
@@ -118,6 +84,40 @@
     getItemsToToggle().toggleClass('js-outside-in-edit-mode', editMode);
     $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
   }
+
+  function isInEditMode() {
+    return $('#toolbar-bar').hasClass('js-outside-in-edit-mode');
+  }
+
+  function toggleEditMode() {
+    setEditModeState(!isInEditMode());
+  }
+
+  $(document).on('drupalContextualLinkAdded', function (event, data) {
+    $('body').once('outside_in.edit_mode_init').each(function () {
+      var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
+      if (editMode) {
+        setEditModeState(true);
+      }
+    });
+
+    Drupal.attachBehaviors(data.$el[0]);
+
+    data.$el.find(blockConfigureSelector).on('click.outsidein', function () {
+      if (!isInEditMode()) {
+        $(toggleEditSelector).trigger('click').trigger('click.outside_in');
+      }
+
+      disableQuickEdit();
+    });
+  });
+
+  $(document).on('keyup.outsidein', function (e) {
+    if (isInEditMode() && e.keyCode === 27) {
+      Drupal.announce(Drupal.t('Exited edit mode.'));
+      toggleEditMode();
+    }
+  });
 
   Drupal.behaviors.toggleEditMode = {
     attach: function attach() {
