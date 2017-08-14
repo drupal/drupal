@@ -1,18 +1,13 @@
 <?php
 
-namespace Drupal\tour\Tests;
+namespace Drupal\Tests\tour\Functional;
 
-use Drupal\simpletest\WebTestBase;
-
-@trigger_error('\Drupal\tour\Tests\TourTestBase is deprecated in 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\tour\Functional\TourTestBase.', E_USER_DEPRECATED);
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Base class for testing Tour functionality.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Tests\tour\Functional\TourTestBase instead.
  */
-abstract class TourTestBase extends WebTestBase {
+abstract class TourTestBase extends BrowserTestBase {
 
   /**
    * Assert function to determine if tips rendered to the page
@@ -40,8 +35,10 @@ abstract class TourTestBase extends WebTestBase {
       // Tips are rendered as <li> elements inside <ol id="tour">.
       $rendered_tips = $this->xpath('//ol[@id = "tour"]//li[starts-with(@class, "tip")]');
       foreach ($rendered_tips as $rendered_tip) {
-        $attributes = (array) $rendered_tip->attributes();
-        $tips[] = $attributes['@attributes'];
+        $tips[] = [
+          'data-id' => $rendered_tip->getAttribute('data-id'),
+          'data-class' => $rendered_tip->getAttribute('data-class'),
+        ];
       }
     }
 
@@ -53,13 +50,14 @@ abstract class TourTestBase extends WebTestBase {
       // Check for corresponding page elements.
       $total = 0;
       $modals = 0;
+      $raw_content = $this->getSession()->getPage()->getContent();
       foreach ($tips as $tip) {
         if (!empty($tip['data-id'])) {
-          $elements = \PHPUnit_Util_XML::cssSelect('#' . $tip['data-id'], TRUE, $this->content, TRUE);
+          $elements = \PHPUnit_Util_XML::cssSelect('#' . $tip['data-id'], TRUE, $raw_content, TRUE);
           $this->assertTrue(!empty($elements) && count($elements) === 1, format_string('Found corresponding page element for tour tip with id #%data-id', ['%data-id' => $tip['data-id']]));
         }
         elseif (!empty($tip['data-class'])) {
-          $elements = \PHPUnit_Util_XML::cssSelect('.' . $tip['data-class'], TRUE, $this->content, TRUE);
+          $elements = \PHPUnit_Util_XML::cssSelect('.' . $tip['data-class'], TRUE, $raw_content, TRUE);
           $this->assertFalse(empty($elements), format_string('Found corresponding page element for tour tip with class .%data-class', ['%data-class' => $tip['data-class']]));
         }
         else {

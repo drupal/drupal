@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\language\Tests;
+namespace Drupal\Tests\language\Functional;
 
-use Drupal\tour\Tests\TourTestBase;
+use Drupal\Tests\tour\Functional\TourTestBase;
 
 /**
  * Tests tour functionality.

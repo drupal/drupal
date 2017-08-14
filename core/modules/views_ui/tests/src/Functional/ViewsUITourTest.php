@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\views_ui\Tests;
+namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\tour\Tests\TourTestBase;
+use Drupal\Tests\tour\Functional\TourTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**

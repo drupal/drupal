@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\tour\Tests\TourTestBase;
+use Drupal\Tests\tour\Functional\TourTestBase;
 
 /**
  * Tests the Translate Interface tour.

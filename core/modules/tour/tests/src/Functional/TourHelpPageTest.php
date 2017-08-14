@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\tour\Tests;
+namespace Drupal\Tests\tour\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Verifies help page display of tours.
  *
  * @group help
  */
-class TourHelpPageTest extends WebTestBase {
+class TourHelpPageTest extends BrowserTestBase {
 
   /**
    * Modules to enable, including some providing tours.
@@ -101,7 +101,7 @@ class TourHelpPageTest extends WebTestBase {
     foreach ($titles[1] as $title) {
       if ($tours_ok) {
         $this->assertText($title);
-        $this->assertNoLink($title);
+        $this->assertSession()->linkNotExistsExact($title);
       }
       else {
         $this->assertNoText($title);
