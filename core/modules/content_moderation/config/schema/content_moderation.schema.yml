@@ -22,11 +22,13 @@ workflow.type_settings.content_moderation:
     states:
       type: sequence
       label: 'Content moderation states'
+      orderby: key
       sequence:
         type: content_moderation.state
         label: 'States'
     transitions:
       type: sequence
+      orderby: key
       sequence:
         type: workflows.transition
         label: 'Transitions'

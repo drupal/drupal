@@ -24,20 +24,6 @@ type_settings:
       default_revision: true
       weight: 0
   transitions:
-    create_new_draft:
-      label: 'Create New Draft'
-      to: draft
-      weight: 0
-      from:
-        - draft
-        - published
-    publish:
-      label: Publish
-      to: published
-      weight: 1
-      from:
-        - draft
-        - published
     archive:
       label: Archive
       from:
@@ -56,4 +42,18 @@ type_settings:
         - archived
       to: published
       weight: 4
+    create_new_draft:
+      label: 'Create New Draft'
+      to: draft
+      weight: 0
+      from:
+        - draft
+        - published
+    publish:
+      label: Publish
+      to: published
+      weight: 1
+      from:
+        - draft
+        - published
   entity_types: {  }
