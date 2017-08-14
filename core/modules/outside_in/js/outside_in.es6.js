@@ -216,7 +216,7 @@
       Drupal.ajax.instances
         // If there is an element and the renderer is 'off_canvas' then we want
         // to add our changes.
-        .filter(instance => $(instance.element).attr('data-dialog-renderer') === 'off_canvas')
+        .filter(instance => instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas')
         // Loop through all Ajax instances that use the 'off_canvas' renderer to
         // set active editable ID.
         .forEach((instance) => {
