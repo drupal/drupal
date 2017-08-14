@@ -2,10 +2,6 @@ view any unpublished content:
   title: 'View any unpublished content'
   description: 'This permission is necessary for any users that may moderate content.'
 
-view content moderation:
-  title: 'View content moderation'
-  description: 'View content moderation.'
-
 view latest version:
   title: 'View the latest version'
   description: 'View the latest version of an entity. (Also requires "View any unpublished content" permission)'
