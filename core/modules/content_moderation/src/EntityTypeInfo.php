@@ -159,8 +159,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       $type->setLinkTemplate('latest-version', $type->getLinkTemplate('canonical') . '/latest');
     }
 
-    // @todo Core forgot to add a direct way to manipulate route_provider, so
-    // we have to do it the sloppy way for now.
     $providers = $type->getRouteProviderClasses() ?: [];
     if (empty($providers['moderation'])) {
       $providers['moderation'] = EntityModerationRouteProvider::class;

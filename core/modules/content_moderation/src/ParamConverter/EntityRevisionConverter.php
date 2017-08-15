@@ -28,9 +28,6 @@ class EntityRevisionConverter extends EntityConverter {
    *   The entity manager, needed by the parent class.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_info
    *   The moderation info utility service.
-   *
-   * @todo: If the parent class is ever cleaned up to use EntityTypeManager
-   *   instead of Entity manager, this method will also need to be adjusted.
    */
   public function __construct(EntityManagerInterface $entity_manager, ModerationInformationInterface $moderation_info) {
     parent::__construct($entity_manager);
