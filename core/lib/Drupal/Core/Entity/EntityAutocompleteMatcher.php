@@ -52,10 +52,9 @@ class EntityAutocompleteMatcher {
   public function getMatches($target_type, $selection_handler, $selection_settings, $string = '') {
     $matches = [];
 
-    $options = [
+    $options = $selection_settings + [
       'target_type' => $target_type,
       'handler' => $selection_handler,
-      'handler_settings' => $selection_settings,
     ];
     $handler = $this->selectionManager->getInstance($options);
 

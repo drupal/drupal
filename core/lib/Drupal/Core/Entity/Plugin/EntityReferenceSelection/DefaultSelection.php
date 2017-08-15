@@ -4,19 +4,17 @@ namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionTrait;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\EntityOwnerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Default plugin implementation of the Entity Reference Selection plugin.
@@ -38,88 +36,51 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   deriver = "Drupal\Core\Entity\Plugin\Derivative\DefaultSelectionDeriver"
  * )
  */
-class DefaultSelection extends PluginBase implements SelectionInterface, SelectionWithAutocreateInterface, ContainerFactoryPluginInterface {
+class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface, SelectionWithAutocreateInterface {
+
+  use SelectionTrait {
+    // PHP 5.5.9 gets confused between SelectionPluginBase::__construct() and
+    // SelectionTrait::__construct() that's why we are renaming the
+    // SelectionTrait::__construct() to avoid the confusion.
+    // @todo Remove this in https://www.drupal.org/node/2670966.
+    SelectionTrait::__construct as private initialize;
+  }
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * Constructs a new SelectionBase object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
+   * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->entityManager = $entity_manager;
-    $this->moduleHandler = $module_handler;
-    $this->currentUser = $current_user;
+    $this->initialize($configuration, $plugin_id, $plugin_definition, $entity_manager, $module_handler, $current_user);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity.manager'),
-      $container->get('module_handler'),
-      $container->get('current_user')
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $entity_type_id = $this->configuration['target_type'];
-    $selection_handler_settings = $this->configuration['handler_settings'];
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
-    $bundles = $this->entityManager->getBundleInfo($entity_type_id);
-
-    // Merge-in default values.
-    $selection_handler_settings += [
+  public function defaultConfiguration() {
+    return [
       // For the 'target_bundles' setting, a NULL value is equivalent to "allow
       // entities from any bundle to be referenced" and an empty array value is
       // equivalent to "no entities from any bundle can be referenced".
       'target_bundles' => NULL,
       'sort' => [
         'field' => '_none',
+        'direction' => 'ASC',
       ],
       'auto_create' => FALSE,
       'auto_create_bundle' => NULL,
-    ];
+    ] + parent::defaultConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
+
+    $configuration = $this->getConfiguration();
+    $entity_type_id = $configuration['target_type'];
+    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $bundles = $this->entityManager->getBundleInfo($entity_type_id);
 
     if ($entity_type->hasKey('bundle')) {
       $bundle_options = [];
@@ -132,7 +93,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
         '#type' => 'checkboxes',
         '#title' => $this->t('Bundles'),
         '#options' => $bundle_options,
-        '#default_value' => (array) $selection_handler_settings['target_bundles'],
+        '#default_value' => (array) $configuration['target_bundles'],
         '#required' => TRUE,
         '#size' => 6,
         '#multiple' => TRUE,
@@ -189,7 +150,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
         ] + $fields,
         '#ajax' => TRUE,
         '#limit_validation_errors' => [],
-        '#default_value' => $selection_handler_settings['sort']['field'],
+        '#default_value' => $configuration['sort']['field'],
       ];
 
       $form['sort']['settings'] = [
@@ -198,12 +159,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
         '#process' => [[EntityReferenceItem::class, 'formProcessMergeParent']],
       ];
 
-      if ($selection_handler_settings['sort']['field'] != '_none') {
-        // Merge-in default values.
-        $selection_handler_settings['sort'] += [
-          'direction' => 'ASC',
-        ];
-
+      if ($configuration['sort']['field'] != '_none') {
         $form['sort']['settings']['direction'] = [
           '#type' => 'select',
           '#title' => $this->t('Sort direction'),
@@ -212,7 +168,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
             'ASC' => $this->t('Ascending'),
             'DESC' => $this->t('Descending'),
           ],
-          '#default_value' => $selection_handler_settings['sort']['direction'],
+          '#default_value' => $configuration['sort']['direction'],
         ];
       }
     }
@@ -220,17 +176,17 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
     $form['auto_create'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Create referenced entities if they don't already exist"),
-      '#default_value' => $selection_handler_settings['auto_create'],
+      '#default_value' => $configuration['auto_create'],
       '#weight' => -2,
     ];
 
     if ($entity_type->hasKey('bundle')) {
-      $bundles = array_intersect_key($bundle_options, array_filter((array) $selection_handler_settings['target_bundles']));
+      $bundles = array_intersect_key($bundle_options, array_filter((array) $configuration['target_bundles']));
       $form['auto_create_bundle'] = [
         '#type' => 'select',
         '#title' => $this->t('Store new items in'),
         '#options' => $bundles,
-        '#default_value' => $selection_handler_settings['auto_create_bundle'],
+        '#default_value' => $configuration['auto_create_bundle'],
         '#access' => count($bundles) > 1,
         '#states' => [
           'visible' => [
@@ -248,6 +204,8 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    parent::validateConfigurationForm($form, $form_state);
+
     // If no checkboxes were checked for 'target_bundles', store NULL ("all
     // bundles are referenceable") rather than empty array ("no bundle is
     // referenceable" - typically happens when all referenceable bundles have
@@ -262,11 +220,6 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) { }
-
-  /**
    * Form element validation handler; Filters the #value property of an element.
    */
   public static function elementValidateFilter(&$element, FormStateInterface $form_state) {
@@ -278,7 +231,7 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
    * {@inheritdoc}
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
-    $target_type = $this->configuration['target_type'];
+    $target_type = $this->getConfiguration()['target_type'];
 
     $query = $this->buildEntityQuery($match, $match_operator);
     if ($limit > 0) {
@@ -353,8 +306,9 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
    */
   public function validateReferenceableNewEntities(array $entities) {
     return array_filter($entities, function ($entity) {
-      if (isset($this->configuration['handler_settings']['target_bundles'])) {
-        return in_array($entity->bundle(), $this->configuration['handler_settings']['target_bundles']);
+      $target_bundles = $this->getConfiguration()['target_bundles'];
+      if (isset($target_bundles)) {
+        return in_array($entity->bundle(), $target_bundles);
       }
       return TRUE;
     });
@@ -374,23 +328,23 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
    *   it.
    */
   protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
-    $target_type = $this->configuration['target_type'];
-    $handler_settings = $this->configuration['handler_settings'];
+    $configuration = $this->getConfiguration();
+    $target_type = $configuration['target_type'];
     $entity_type = $this->entityManager->getDefinition($target_type);
 
     $query = $this->entityManager->getStorage($target_type)->getQuery();
 
     // If 'target_bundles' is NULL, all bundles are referenceable, no further
     // conditions are needed.
-    if (isset($handler_settings['target_bundles']) && is_array($handler_settings['target_bundles'])) {
+    if (is_array($configuration['target_bundles'])) {
       // If 'target_bundles' is an empty array, no bundle is referenceable,
       // force the query to never return anything and bail out early.
-      if ($handler_settings['target_bundles'] === []) {
+      if ($configuration['target_bundles'] === []) {
         $query->condition($entity_type->getKey('id'), NULL, '=');
         return $query;
       }
       else {
-        $query->condition($entity_type->getKey('bundle'), $handler_settings['target_bundles'], 'IN');
+        $query->condition($entity_type->getKey('bundle'), $configuration['target_bundles'], 'IN');
       }
     }
 
@@ -406,20 +360,12 @@ class DefaultSelection extends PluginBase implements SelectionInterface, Selecti
     $query->addMetaData('entity_reference_selection_handler', $this);
 
     // Add the sort option.
-    if (!empty($handler_settings['sort'])) {
-      $sort_settings = $handler_settings['sort'];
-      if ($sort_settings['field'] != '_none') {
-        $query->sort($sort_settings['field'], $sort_settings['direction']);
-      }
+    if ($configuration['sort']['field'] !== '_none') {
+      $query->sort($configuration['sort']['field'], $configuration['sort']['direction']);
     }
 
     return $query;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function entityQueryAlter(SelectInterface $query) { }
 
   /**
    * Helper method: Passes a query to the alteration system again.

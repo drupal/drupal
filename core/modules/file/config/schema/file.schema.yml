@@ -51,7 +51,7 @@ base_file_field_field_settings:
       label: 'Reference method'
     handler_settings:
       type: entity_reference_selection.[%parent.handler]
-      label: 'Entity reference selection settings'
+      label: 'File selection handler settings'
     file_directory:
       type: string
       label: 'File directory'
