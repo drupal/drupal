@@ -50,6 +50,11 @@ class CommentAdminTest extends CommentWebTestBase {
     $this->drupalGet('admin/content/comment');
     $this->assertText(t('No comments available.'));
 
+    // Assert the expose filters on the admin page.
+    $this->assertField('subject');
+    $this->assertField('author_name');
+    $this->assertField('langcode');
+
     $this->drupalLogout();
 
     // Post anonymous comment without contact info.
@@ -98,6 +103,12 @@ class CommentAdminTest extends CommentWebTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/content/comment/approval');
     $this->assertText(t('Unapproved comments (@count)', ['@count' => 2]), 'Two unapproved comments waiting for approval.');
+
+    // Assert the expose filters on the admin page.
+    $this->assertField('subject');
+    $this->assertField('author_name');
+    $this->assertField('langcode');
+
     $edit = [
       "action" => 'comment_publish_action',
       "comment_bulk_form[1]" => $comments[0]->id(),
