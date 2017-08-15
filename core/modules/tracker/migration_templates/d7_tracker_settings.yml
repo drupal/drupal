@@ -6,6 +6,7 @@ source:
   plugin: variable
   variables:
     - tracker_batch_size
+  source_module: tracker
 process:
   cron_index_limit: tracker_batch_size
 destination:

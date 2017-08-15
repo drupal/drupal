@@ -8,6 +8,7 @@ source:
     - date_format_long
     - date_format_medium
     - date_format_short
+  source_module: system
 process:
   id:
     plugin: static_map

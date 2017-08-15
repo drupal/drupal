@@ -9,7 +9,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "d7_tracker_node",
- *   source_provider = "tracker"
+ *   source_module = "tracker"
  * )
  */
 class TrackerNode extends DrupalSqlBase {

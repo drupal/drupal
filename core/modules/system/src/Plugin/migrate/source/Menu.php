@@ -9,7 +9,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "menu",
- *   source_provider = "menu"
+ *   source_module = "menu"
  * )
  */
 class Menu extends DrupalSqlBase {

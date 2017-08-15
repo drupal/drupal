@@ -6,6 +6,7 @@ source:
   plugin: variable
   variables:
     - theme_settings
+  source_module: system
 process:
   'features/logo': theme_settings/toggle_logo
   'features/name': theme_settings/toggle_name

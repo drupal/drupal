@@ -195,4 +195,26 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getDestinationModule() {
+    if (!empty($this->configuration['destination_module'])) {
+      return $this->configuration['destination_module'];
+    }
+    if (!empty($this->pluginDefinition['destination_module'])) {
+      return $this->pluginDefinition['destination_module'];
+    }
+    // Config translations require the config_translation module so set the
+    // migration provider to 'config_translation'. The corresponding non
+    // translated configuration is expected to be handled in a separate
+    // migration.
+    if (isset($this->configuration['translations'])) {
+      return 'config_translation';
+    }
+    // Get the module handling this configuration object from the config_name,
+    // which is of the form <module_name>.<configuration object name>
+    return !empty($this->configuration['config_name']) ? explode('.', $this->configuration['config_name'], 2)[0] : NULL;
+  }
+
 }

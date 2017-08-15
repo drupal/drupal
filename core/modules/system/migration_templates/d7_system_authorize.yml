@@ -5,6 +5,7 @@ source:
   plugin: variable
   variables:
     - authorize_filetransfer_default
+  source_module: system
 process:
    filetransfer_default: authorize_filetransfer_default
 destination:

@@ -7,6 +7,7 @@ source:
   variables:
     - allow_insecure_uploads
     - file_temporary_path
+  source_module: system
 process:
   allow_insecure_uploads:
     plugin: static_map

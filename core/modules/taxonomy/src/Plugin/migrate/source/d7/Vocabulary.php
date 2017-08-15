@@ -9,7 +9,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "d7_taxonomy_vocabulary",
- *   source_provider = "taxonomy"
+ *   source_module = "taxonomy"
  * )
  */
 class Vocabulary extends DrupalSqlBase {

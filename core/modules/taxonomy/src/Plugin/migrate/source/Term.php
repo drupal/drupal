@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "taxonomy_term",
- *   source_provider = "taxonomy"
+ *   source_module = "taxonomy"
  * )
  *
  * @deprecated in Drupal 8.3.0, intended to be removed in Drupal 9.0.0.

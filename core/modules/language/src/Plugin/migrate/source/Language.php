@@ -8,7 +8,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * @MigrateSource(
  *   id = "language",
- *   source_provider = "locale"
+ *   source_module = "locale"
  * )
  */
 class Language extends DrupalSqlBase {

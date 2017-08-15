@@ -9,7 +9,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow;
  *
  * @MigrateSource(
  *   id = "d7_theme_settings",
- *   source_provider = "system"
+ *   source_module = "system"
  * )
  */
 class ThemeSettings extends VariableMultiRow {

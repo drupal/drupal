@@ -19,6 +19,7 @@ source:
       type: string
     field_name:
       type: string
+  source_module: block
 process:
   entity_type: entity_type
   bundle: bundle

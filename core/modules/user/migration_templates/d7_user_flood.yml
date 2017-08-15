@@ -10,6 +10,7 @@ source:
     - user_failed_login_ip_window
     - user_failed_login_user_window
     - user_failed_login_user_limit
+  source_module: user
 process:
   uid_only: user_failed_login_identifier_uid_only
   ip_limit: user_failed_login_ip_limit

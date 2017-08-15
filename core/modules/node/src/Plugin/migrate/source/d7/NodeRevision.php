@@ -7,7 +7,7 @@ namespace Drupal\node\Plugin\migrate\source\d7;
  *
  * @MigrateSource(
  *   id = "d7_node_revision",
- *   source_provider = "node"
+ *   source_module = "node"
  * )
  */
 class NodeRevision extends Node {

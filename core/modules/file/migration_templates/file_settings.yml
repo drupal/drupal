@@ -9,6 +9,7 @@ source:
     - file_description_type
     - file_description_length
     - file_icon_directory
+  source_module: system
 process:
   'description/type': file_description_type
   'description/length': file_description_length

@@ -10,7 +10,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "d6_profile_field_values",
- *   source_provider = "profile"
+ *   source_module = "profile"
  * )
  */
 class ProfileFieldValues extends DrupalSqlBase {

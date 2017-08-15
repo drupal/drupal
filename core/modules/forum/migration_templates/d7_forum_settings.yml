@@ -11,6 +11,7 @@ source:
     - forum_block_num_active
     - forum_block_num_new
     - forum_nav_vocabulary
+  source_module: forum
 process:
   'block/active/limit': forum_block_num_active
   'block/new/limit': forum_block_num_new

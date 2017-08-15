@@ -9,7 +9,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
  * Drupal 7 user source from database.
  *
  * @MigrateSource(
- *   id = "d7_user"
+ *   id = "d7_user",
+ *   source_module = "user"
  * )
  */
 class User extends FieldableEntity {

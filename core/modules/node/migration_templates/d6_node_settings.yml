@@ -6,6 +6,7 @@ source:
   plugin: variable
   variables:
     - node_admin_theme
+  source_module: node
 process:
   use_admin_theme: node_admin_theme
 destination:

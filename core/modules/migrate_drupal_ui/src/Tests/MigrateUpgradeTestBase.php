@@ -44,6 +44,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
     'book',
     'forum',
     'statistics',
+    'modules_available_test',
   ];
 
   /**
@@ -149,6 +150,30 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
     $this->assertResponse(200);
     $this->assertText('Are you sure?');
+    // Ensure we get errors about missing modules.
+    $this->assertText(t('Source module not found for module_no_annotation.'));
+    $this->assertText(t('Source module not found for modules_available_test.'));
+    $this->assertText(t('Destination module not found for modules_available_test'));
+
+    // Uninstall the module causing the missing module error messages.
+    $this->container->get('module_installer')->uninstall(['modules_available_test'], TRUE);
+
+    // Restart the upgrade process.
+    $this->drupalGet('/upgrade');
+    $this->assertText('Upgrade a site by importing it into a clean and empty new install of Drupal 8. You will lose any existing configuration once you import your site into it. See the online documentation for Drupal site upgrades for more detailed information.');
+
+    $this->drupalPostForm(NULL, [], t('Continue'));
+    $this->assertText('Provide credentials for the database of the Drupal site you want to upgrade.');
+    $this->assertFieldByName('mysql[host]');
+
+    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
+    $this->assertResponse(200);
+    $this->assertText('Are you sure?');
+    // Ensure there are no errors about the missing modules.
+    $this->assertNoText(t('Source module not found for module_no_annotation.'));
+    $this->assertNoText(t('Source module not found for modules_available_test.'));
+    $this->assertNoText(t('Destination module not found for modules_available_test'));
+    // Check for any missing module errors.
     $this->drupalPostForm(NULL, [], t('Perform upgrade'));
     $this->assertText(t('Congratulations, you upgraded Drupal!'));
 

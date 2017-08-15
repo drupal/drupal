@@ -133,4 +133,12 @@ interface MigrateDestinationInterface extends PluginInspectionInterface {
    */
   public function rollbackAction();
 
+  /**
+   * Gets the destination module handling the destination data.
+   *
+   * @return string|null
+   *   The destination module or NULL if not found.
+   */
+  public function getDestinationModule();
+
 }

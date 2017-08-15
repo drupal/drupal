@@ -19,6 +19,7 @@ source:
     - user_mail_register_pending_approval_body
     - user_mail_status_blocked_subject
     - user_mail_status_blocked_body
+  source_module: user
 process:
   'status_activated/subject':
     plugin: convert_tokens

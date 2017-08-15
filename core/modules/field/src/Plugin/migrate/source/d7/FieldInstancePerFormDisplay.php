@@ -7,7 +7,7 @@ namespace Drupal\field\Plugin\migrate\source\d7;
  *
  * @MigrateSource(
  *   id = "d7_field_instance_per_form_display",
- *   source_provider = "field"
+ *   source_module = "field"
  * )
  */
 class FieldInstancePerFormDisplay extends FieldInstance {
