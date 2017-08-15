@@ -10,7 +10,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
  *
  * @MigrateSource(
  *   id = "d7_comment",
- *   source_provider = "comment"
+ *   source_module = "comment"
  * )
  */
 class Comment extends FieldableEntity {

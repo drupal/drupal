@@ -9,6 +9,7 @@ source:
     - preprocess_js
     - cache_lifetime
     - page_compression
+  source_module: system
 process:
   'css/preprocess': preprocess_css
   'js/preprocess': preprocess_js

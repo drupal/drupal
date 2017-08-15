@@ -9,7 +9,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "d6_field_instance_per_form_display",
- *   source_provider = "content"
+ *   source_module = "content"
  * )
  */
 class FieldInstancePerFormDisplay extends DrupalSqlBase {

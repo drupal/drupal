@@ -7,7 +7,7 @@ namespace Drupal\field\Plugin\migrate\source\d7;
  *
  * @MigrateSource(
  *   id = "d7_field_instance_per_view_mode",
- *   source_provider = "field"
+ *   source_module = "field"
  * )
  */
 class FieldInstancePerViewMode extends FieldInstance {

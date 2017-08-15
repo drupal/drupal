@@ -7,7 +7,7 @@ namespace Drupal\taxonomy\Plugin\migrate\source\d6;
  *
  * @MigrateSource(
  *   id = "d6_taxonomy_vocabulary_per_type",
- *   source_provider = "taxonomy"
+ *   source_module = "taxonomy"
  * )
  */
 class VocabularyPerType extends Vocabulary {

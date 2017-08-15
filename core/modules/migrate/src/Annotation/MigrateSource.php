@@ -43,16 +43,15 @@ class MigrateSource extends Plugin implements MultipleProviderAnnotationInterfac
   /**
    * Identifies the system providing the data the source plugin will read.
    *
-   * This can be any type, and the source plugin itself determines how the value
-   * is used. For example, Migrate Drupal's source plugins expect
-   * source_provider to be the name of a module that must be installed and
-   * enabled in the source database.
+   * The source plugin itself determines how the value is used. For example,
+   * Migrate Drupal's source plugins expect source_module to be the name of a
+   * module that must be installed and enabled in the source database.
    *
    * @see \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase::checkRequirements
    *
-   * @var mixed
+   * @var string
    */
-  public $source_provider;
+  public $source_module;
 
   /**
    * Specifies the minimum version of the source provider.
@@ -60,7 +59,7 @@ class MigrateSource extends Plugin implements MultipleProviderAnnotationInterfac
    * This can be any type, and the source plugin itself determines how it is
    * used. For example, Migrate Drupal's source plugins expect this to be an
    * integer representing the minimum installed database schema version of the
-   * module specified by source_provider.
+   * module specified by source_module.
    *
    * @var mixed
    */

@@ -8,7 +8,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * Drupal 6 block source from database.
  *
  * @MigrateSource(
- *   id = "d6_box"
+ *   id = "d6_box",
+ *   source_module = "block"
  * )
  */
 class Box extends DrupalSqlBase {

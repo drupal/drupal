@@ -10,6 +10,7 @@ source:
     - user_email_verification
     - user_register
     - anonymous
+  source_module: i18n
 process:
   langcode: language
   'notify/status_blocked': user_mail_status_blocked_notify

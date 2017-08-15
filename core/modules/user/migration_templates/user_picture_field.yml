@@ -12,6 +12,7 @@ source:
     type: image
     name: user_picture
     cardinality: 1
+  source_module: user
 process:
   entity_type: 'constants/entity_type'
   field_name: 'constants/name'

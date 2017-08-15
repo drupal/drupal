@@ -8,6 +8,7 @@ source:
     - book_child_type
     - book_block_mode
     - book_allowed_types
+  source_module: book
 process:
   child_type: book_child_type
   'block/navigation/mode': book_block_mode

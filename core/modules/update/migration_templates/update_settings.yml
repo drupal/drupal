@@ -11,6 +11,7 @@ source:
     - update_notification_threshold
     - update_notify_emails
     - update_check_frequency
+  source_module: update
 process:
   'fetch/max_attempts': update_max_fetch_attempts
   'fetch/url': update_fetch_url

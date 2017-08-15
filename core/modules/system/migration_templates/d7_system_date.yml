@@ -10,6 +10,7 @@ source:
     - configurable_timezones
     - empty_timezone_message
     - user_default_timezone
+  source_module: system
 process:
   'country/default': site_default_country
   first_day: date_first_day

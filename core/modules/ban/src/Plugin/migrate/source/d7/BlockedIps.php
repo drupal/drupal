@@ -9,7 +9,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "d7_blocked_ips",
- *   source_provider = "system"
+ *   source_module = "system"
  * )
  */
 class BlockedIps extends DrupalSqlBase {

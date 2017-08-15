@@ -13,6 +13,7 @@ source:
     - site_frontpage
     - site_403
     - site_404
+  source_module: i18n
 process:
   langcode: language
   name: site_name

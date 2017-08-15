@@ -6,6 +6,7 @@ source:
   plugin: variable
   variables:
     - filter_fallback_format
+  source_module: filter
 process:
   fallback_format: filter_fallback_format
 destination:

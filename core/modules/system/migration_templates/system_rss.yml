@@ -8,6 +8,7 @@ source:
   variables:
     - feed_default_items
     - feed_item_length
+  source_module: system
 process:
   'items/limit': feed_default_items
   'items/view_mode': feed_item_length

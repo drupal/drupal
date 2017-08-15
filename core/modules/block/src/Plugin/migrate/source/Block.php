@@ -10,7 +10,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "block",
- *   source_provider = "block"
+ *   source_module = "block"
  * )
  */
 class Block extends DrupalSqlBase {

@@ -7,7 +7,7 @@ namespace Drupal\node\Plugin\migrate\source\d6;
  *
  * @MigrateSource(
  *   id = "d6_view_mode",
- *   source_provider = "content"
+ *   source_module = "content"
  * )
  */
 class ViewMode extends ViewModeBase {

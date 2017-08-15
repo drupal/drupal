@@ -10,6 +10,7 @@ source:
     - simpletest_httpauth_password
     - simpletest_httpauth_username
     - simpletest_verbose
+  source_module: simpletest
 process:
   clear_results: simpletest_clear_results
   'httpauth/method': simpletest_httpauth_method

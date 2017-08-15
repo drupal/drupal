@@ -7,6 +7,7 @@ source:
   plugin: variable
   variables:
     - image_toolkit
+  source_module: system
 process:
   toolkit: image_toolkit
 destination:

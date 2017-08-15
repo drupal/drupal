@@ -15,7 +15,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Drupal 6 node source from database.
  *
  * @MigrateSource(
- *   id = "d6_node"
+ *   id = "d6_node",
+ *   source_module = "node"
+ *
  * )
  */
 class Node extends DrupalSqlBase {
