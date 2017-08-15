@@ -398,15 +398,23 @@ class ManagedFile extends FormElement {
    * Render API callback: Validates the managed_file element.
    */
   public static function validateManagedFile(&$element, FormStateInterface $form_state, &$complete_form) {
-    // If referencing an existing file, only allow if there are existing
-    // references. This prevents unmanaged files from being deleted if this
-    // item were to be deleted.
     $clicked_button = end($form_state->getTriggeringElement()['#parents']);
     if ($clicked_button != 'remove_button' && !empty($element['fids']['#value'])) {
       $fids = $element['fids']['#value'];
       foreach ($fids as $fid) {
         if ($file = File::load($fid)) {
-          if ($file->isPermanent()) {
+          // If referencing an existing file, only allow if there are existing
+          // references. This prevents unmanaged files from being deleted if
+          // this item were to be deleted. When files that are no longer in use
+          // are automatically marked as temporary (now disabled by default),
+          // it is not safe to reference a permanent file without usage. Adding
+          // a usage and then later on removing it again would delete the file,
+          // but it is unknown if and where it is currently referenced. However,
+          // when files are not marked temporary (and then removed)
+          // automatically, it is safe to add and remove usages, as it would
+          // simply return to the current state.
+          // @see https://www.drupal.org/node/2891902
+          if ($file->isPermanent() && \Drupal::config('file.settings')->get('make_unused_managed_files_temporary')) {
             $references = static::fileUsage()->listUsage($file);
             if (empty($references)) {
               // We expect the field name placeholder value to be wrapped in t()

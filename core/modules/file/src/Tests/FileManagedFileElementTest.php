@@ -194,4 +194,55 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $file->delete();
   }
 
+  /**
+   * Verify that unused permanent files can be used.
+   */
+  public function testUnusedPermanentFileValidation() {
+
+    // Create a permanent file without usages.
+    $file = $this->getTestFile('image');
+    $file->setPermanent();
+    $file->save();
+
+    // By default, unused files are no longer marked temporary, and it must be
+    // allowed to reference an unused file.
+    $this->drupalGet('file/test/1/0/1/' . $file->id());
+    $this->drupalPostForm(NULL, [], 'Save');
+    $this->assertNoText('The file used in the Managed file &amp; butter field may not be referenced.');
+    $this->assertText('The file ids are ' . $file->id());
+
+    // Enable marking unused files as tempory, unused permanent files must not
+    // be referenced now.
+    $this->config('file.settings')
+      ->set('make_unused_managed_files_temporary', TRUE)
+      ->save();
+    $this->drupalGet('file/test/1/0/1/' . $file->id());
+    $this->drupalPostForm(NULL, [], 'Save');
+    $this->assertText('The file used in the Managed file &amp; butter field may not be referenced.');
+    $this->assertNoText('The file ids are ' . $file->id());
+
+    // Make the file temporary, now using it is allowed.
+    $file->setTemporary();
+    $file->save();
+
+    $this->drupalGet('file/test/1/0/1/' . $file->id());
+    $this->drupalPostForm(NULL, [], 'Save');
+    $this->assertNoText('The file used in the Managed file &amp; butter field may not be referenced.');
+    $this->assertText('The file ids are ' . $file->id());
+
+    // Make the file permanent again and add a usage from itself, referencing is
+    // still allowed.
+    $file->setPermanent();
+    $file->save();
+
+    /** @var \Drupal\file\FileUsage\FileUsageInterface $file_usage */
+    $file_usage = \Drupal::service('file.usage');
+    $file_usage->add($file, 'file', 'file', $file->id());
+
+    $this->drupalGet('file/test/1/0/1/' . $file->id());
+    $this->drupalPostForm(NULL, [], 'Save');
+    $this->assertNoText('The file used in the Managed file &amp; butter field may not be referenced.');
+    $this->assertText('The file ids are ' . $file->id());
+  }
+
 }
