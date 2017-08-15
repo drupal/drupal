@@ -25,13 +25,12 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
     // Enable all core modules that provide field plugins.
     $modules = system_rebuild_module_data();
     $modules = array_filter($modules, function (Extension $module) {
-      // Filter contrib, hidden, experimental, already enabled modules, and
-      // modules in the Testing package.
+      // Filter contrib, hidden, already enabled modules and modules in the
+      // Testing package.
       if ($module->origin === 'core'
         && empty($module->info['hidden'])
         && $module->status == FALSE
         && $module->info['package'] !== 'Testing'
-        && $module->info['package'] !== 'Core (Experimental)'
         && is_readable($module->getPath() . '/src/Plugin/Field')) {
         return TRUE;
       }
