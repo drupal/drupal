@@ -854,10 +854,10 @@ display:
       cacheable: false
       max-age: 0
       tags: {  }
-  page_1:
+  page_published:
     display_plugin: page
-    id: page_1
-    display_title: 'Published Comments'
+    id: page_published
+    display_title: 'Published comments'
     position: 1
     display_options:
       path: admin/content/comment
@@ -883,10 +883,10 @@ display:
       cacheable: false
       max-age: 0
       tags: {  }
-  page_2:
+  page_unapproved:
     display_plugin: page
-    id: page_2
-    display_title: 'Unapproved Comments'
+    id: page_unapproved
+    display_title: 'Unapproved comments'
     position: 2
     display_options:
       path: admin/content/comment/approval
