@@ -17,7 +17,7 @@ class ViewAjaxTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_ajax_view'];
+  public static $testViews = ['test_ajax_view', 'test_view'];
 
   protected function setUp() {
     parent::setUp();
@@ -59,6 +59,16 @@ class ViewAjaxTest extends ViewTestBase {
     $this->setRawContent($data[1]['data']);
     $result = $this->xpath('//div[contains(@class, "views-row")]');
     $this->assertEqual(count($result), 2, 'Ensure that two items are rendered in the HTML.');
+  }
+
+  /**
+   * Ensures that non-ajax view cannot be accessed via an ajax HTTP request.
+   */
+  public function testNonAjaxViewViaAjax() {
+    $this->drupalPost('views/ajax', '', ['view_name' => 'test_ajax_view', 'view_display_id' => 'default'], ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
+    $this->assertResponse(200);
+    $this->drupalPost('views/ajax', '', ['view_name' => 'test_view', 'view_display_id' => 'default'], ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);
+    $this->assertResponse(403);
   }
 
 }

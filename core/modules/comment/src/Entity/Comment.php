@@ -81,14 +81,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    if (is_null($this->get('status')->value)) {
-      if (\Drupal::currentUser()->hasPermission('skip comment approval')) {
-        $this->setPublished();
-      }
-      else {
-        $this->setUnpublished();
-      }
-    }
     if ($this->isNew()) {
       // Add the comment to database. This next section builds the thread field.
       // @see \Drupal\comment\CommentViewBuilder::buildComponents()
@@ -236,6 +228,9 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setDescription(t('The comment type.'));
 
     $fields['langcode']->setDescription(t('The comment language code.'));
+
+    // Set the default value callback for the status field.
+    $fields['status']->setDefaultValueCallback('Drupal\comment\Entity\Comment::getDefaultStatus');
 
     $fields['pid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Parent ID'))
@@ -556,6 +551,18 @@ class Comment extends ContentEntityBase implements CommentInterface {
    */
   public function getTypeId() {
     return $this->bundle();
+  }
+
+  /**
+   * Default value callback for 'status' base field definition.
+   *
+   * @see ::baseFieldDefinitions()
+   *
+   * @return bool
+   *  TRUE if the comment should be published, FALSE otherwise.
+   */
+  public static function getDefaultStatus() {
+    return \Drupal::currentUser()->hasPermission('skip comment approval') ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED;
   }
 
 }

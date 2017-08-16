@@ -747,6 +747,16 @@ function entity_test_entity_access(EntityInterface $entity, $operation, AccountI
     return AccessResult::allowed();
   }
 
+  // Create specific labels to allow or deny access based on certain test
+  // conditions.
+  // @see \Drupal\KernelTests\Core\Entity\EntityAccessControlHandlerTest
+  if ($entity->label() == 'Accessible') {
+    return AccessResult::allowed();
+  }
+  if ($entity->label() == 'Inaccessible') {
+    return AccessResult::forbidden();
+  }
+
   // Uncacheable because the access result depends on a State key-value pair and
   // might therefore change at any time.
   $condition = \Drupal::state()->get("entity_test_entity_access.{$operation}." . $entity->id(), FALSE);
