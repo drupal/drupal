@@ -81,10 +81,6 @@ class CommentLockTest extends UnitTestCase {
     $comment->expects($this->any())
       ->method('getEntityType')
       ->will($this->returnValue($entity_type));
-    $comment->expects($this->at(1))
-      ->method('get')
-      ->with('status')
-      ->will($this->returnValue((object) ['value' => NULL]));
     $storage = $this->getMock('Drupal\comment\CommentStorageInterface');
 
     // preSave() should acquire the lock. (This is what's really being tested.)
