@@ -9,7 +9,9 @@ use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestDefaultAccess;
+use Drupal\entity_test\Entity\EntityTestNoUuid;
 use Drupal\entity_test\Entity\EntityTestLabel;
+use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\User;
 
@@ -19,6 +21,16 @@ use Drupal\user\Entity\User;
  * @group Entity
  */
 class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    $this->installEntitySchema('entity_test_no_uuid');
+    $this->installEntitySchema('entity_test_rev');
+  }
 
   /**
    * Asserts entity access correctly grants or denies access.
@@ -197,6 +209,64 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     $this->assertEntityAccess([
       'view' => TRUE,
     ], $translation);
+  }
+
+  /**
+   * Ensures the static access cache works correctly in the absence of an UUID.
+   *
+   * @see entity_test_entity_access()
+   */
+  public function testEntityWithoutUuidAccessCache() {
+    $account = $this->createUser();
+
+    $entity1 = EntityTestNoUuid::create([
+      'name' => 'Accessible',
+    ]);
+    $entity1->save();
+
+    $entity2 = EntityTestNoUuid::create([
+      'name' => 'Inaccessible',
+    ]);
+    $entity2->save();
+
+    $this->assertTrue($entity1->access('delete', $account), 'Entity 1 can be deleted.');
+    $this->assertFalse($entity2->access('delete', $account), 'Entity 2 CANNOT be deleted.');
+
+    $entity1
+      ->setName('Inaccessible')
+      ->setNewRevision();
+    $entity1->save();
+
+    $this->assertFalse($entity1->access('delete', $account), 'Entity 1 revision 2 CANNOT be deleted.');
+  }
+
+  /**
+   * Ensures the static access cache works correctly with a UUID and revisions.
+   *
+   * @see entity_test_entity_access()
+   */
+  public function testEntityWithUuidAccessCache() {
+    $account = $this->createUser();
+
+    $entity1 = EntityTestRev::create([
+      'name' => 'Accessible',
+    ]);
+    $entity1->save();
+
+    $entity2 = EntityTestRev::create([
+      'name' => 'Inaccessible',
+    ]);
+    $entity2->save();
+
+    $this->assertTrue($entity1->access('delete', $account), 'Entity 1 can be deleted.');
+    $this->assertFalse($entity2->access('delete', $account), 'Entity 2 CANNOT be deleted.');
+
+    $entity1
+      ->setName('Inaccessible')
+      ->setNewRevision();
+    $entity1->save();
+
+    $this->assertFalse($entity1->access('delete', $account), 'Entity 1 revision 2 CANNOT be deleted.');
   }
 
   /**
