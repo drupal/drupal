@@ -155,6 +155,7 @@
       const offsets = displace.offsets;
       const $element = event.data.$element;
       const container = Drupal.offCanvas.getContainer($element);
+      const $elementScroll = $element.scrollTop();
 
       const topPosition = (offsets.top !== 0 ? `+${offsets.top}` : '');
       const adjustedOptions = {
@@ -174,6 +175,9 @@
       $element
         .dialog('option', adjustedOptions)
         .trigger('dialogContentResize.off-canvas');
+
+      // Reset the elements scroll position after being repositioned.
+      $element.scrollTop($elementScroll);
     },
 
     /**
