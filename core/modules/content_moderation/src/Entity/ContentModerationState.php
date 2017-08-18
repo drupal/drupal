@@ -67,7 +67,6 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
       ->setDescription(t('The workflow the moderation state is in.'))
       ->setSetting('target_type', 'workflow')
       ->setRequired(TRUE)
-      ->setTranslatable(TRUE)
       ->setRevisionable(TRUE);
 
     $fields['moderation_state'] = BaseFieldDefinition::create('string')
