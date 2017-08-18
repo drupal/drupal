@@ -5,3 +5,4 @@ entity.block.off_canvas_form:
     _title_callback: '\Drupal\outside_in\Block\BlockEntityOffCanvasForm::title'
   requirements:
     _permission: 'administer blocks'
+    _access_block_plugin_has_offcanvas_form: 'TRUE'

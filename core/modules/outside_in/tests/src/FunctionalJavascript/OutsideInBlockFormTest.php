@@ -5,6 +5,8 @@ namespace Drupal\Tests\outside_in\FunctionalJavascript;
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\outside_in_test\Plugin\Block\OffCanvasFormAnnotationIsClassBlock;
+use Drupal\outside_in_test\Plugin\Block\OffCanvasFormAnnotationNoneBlock;
 use Drupal\user\Entity\Role;
 
 /**
@@ -36,6 +38,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
     // Add test module to override CSS pointer-events properties because they
     // cause test failures.
     'outside_in_test_css',
+    'outside_in_test',
   ];
 
   /**
@@ -110,6 +113,10 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
           // Fill out form, save the form.
           $page->fillField('settings[site_information][site_name]', $new_page_text);
           break;
+
+        case 'outside_in_test_class':
+          $web_assert->elementExists('css', '[data-drupal-selector="edit-settings-some-setting"]');
+          break;
       }
 
       if (isset($new_page_text)) {
@@ -174,6 +181,26 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
         'element_selector' => '#edit-submit',
         'label_selector' => 'h2',
         'button_text' => 'Save Search form',
+        'toolbar_item' => NULL,
+      ],
+      // This is the functional JS test coverage accompanying
+      // \Drupal\Tests\outside_in\Functional\OutsideInTest::testPossibleAnnotations().
+      OffCanvasFormAnnotationIsClassBlock::class => [
+        'block_plugin' => 'outside_in_test_class',
+        'new_page_text' => NULL,
+        'element_selector' => 'span',
+        'label_selector' => NULL,
+        'button_text' => NULL,
+        'toolbar_item' => NULL,
+      ],
+      // This is the functional JS test coverage accompanying
+      // \Drupal\Tests\outside_in\Functional\OutsideInTest::testPossibleAnnotations().
+      OffCanvasFormAnnotationNoneBlock::class => [
+        'block_plugin' => 'outside_in_test_none',
+        'new_page_text' => NULL,
+        'element_selector' => 'span',
+        'label_selector' => NULL,
+        'button_text' => NULL,
         'toolbar_item' => NULL,
       ],
     ];
