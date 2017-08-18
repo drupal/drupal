@@ -572,6 +572,33 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->condition('*.level1.level2', 41)
       ->execute();
     $this->assertResults([]);
+    // Make sure that "IS NULL" and "IS NOT NULL" work correctly with
+    // array-valued fields/keys.
+    $all = ['1', '2', '3', '4', '5'];
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->exists('array.level1.level2')
+      ->execute();
+    $this->assertResults($all);
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->exists('array.level1')
+      ->execute();
+    $this->assertResults($all);
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->exists('array')
+      ->execute();
+    $this->assertResults($all);
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->notExists('array.level1.level2')
+      ->execute();
+    $this->assertResults([]);
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->notExists('array.level1')
+      ->execute();
+    $this->assertResults([]);
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->notExists('array')
+      ->execute();
+    $this->assertResults([]);
   }
 
   /**
