@@ -33,15 +33,6 @@ class DateField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getFieldFormatterMap() {
-    // See d6_field_formatter_settings.yml, d7_field_formatter_settings.yml and
-    // FieldPluginBase::processFieldFormatter().
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
     switch ($data['type']) {
       case 'date':

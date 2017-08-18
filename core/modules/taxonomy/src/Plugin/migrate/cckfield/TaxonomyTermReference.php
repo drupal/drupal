@@ -19,13 +19,6 @@ class TaxonomyTermReference extends CckFieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getFieldFormatterMap() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
     $process = [
       'plugin' => 'iterator',
