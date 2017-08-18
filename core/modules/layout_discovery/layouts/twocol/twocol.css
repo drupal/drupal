@@ -1,13 +1,23 @@
+/*
+ * @file
+ * Provides the layout styles for layout_twocol.
+ *
+ * @todo Using display: flex requires https://www.drupal.org/node/2842298 to be
+ * in before this can be marked as stable.
+ */
+
 .layout--twocol {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
 }
 
-.layout--twocol > .layout-region {
-  flex: 0 1 50%;
-}
-
-.layout--twocol > .layout-region--fullwidth {
+.layout--twocol > .layout__region {
   flex: 0 1 100%;
+}
+
+@media screen and (min-width: 40em) {
+  .layout--twocol > .layout__region--first,
+  .layout--twocol > .layout__region--second {
+    flex: 0 1 50%;
+  }
 }

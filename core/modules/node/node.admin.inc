@@ -173,7 +173,7 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
       '#theme' => 'item_list',
       '#items' => $results,
     ];
-    $message .= drupal_render($item_list);
+    $message .= \Drupal::service('renderer')->render($item_list);
     drupal_set_message($message);
   }
 }

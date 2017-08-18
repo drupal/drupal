@@ -8,13 +8,13 @@
 namespace Drupal\Tests\Component\ProxyBuilder;
 
 use Drupal\Component\ProxyBuilder\ProxyBuilder;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\ProxyBuilder\ProxyBuilder
  * @group proxy_builder
  */
-class ProxyBuilderTest extends UnitTestCase {
+class ProxyBuilderTest extends TestCase {
 
   /**
    * The tested proxy builder.

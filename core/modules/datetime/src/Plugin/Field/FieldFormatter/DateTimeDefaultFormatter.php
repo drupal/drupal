@@ -68,7 +68,7 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
     $summary = parent::settingsSummary();
 
     $date = new DrupalDateTime();
-    $summary[] = t('Format: @display', ['@display' => $this->formatDate($date, $this->getFormatSettings())]);
+    $summary[] = t('Format: @display', ['@display' => $this->formatDate($date)]);
 
     return $summary;
   }

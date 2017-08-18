@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\Component\Utility;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\SortArray;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the SortArray component.
@@ -12,7 +12,7 @@ use Drupal\Component\Utility\SortArray;
  *
  * @coversDefaultClass \Drupal\Component\Utility\SortArray
  */
-class SortArrayTest extends UnitTestCase {
+class SortArrayTest extends TestCase {
 
   /**
    * Tests SortArray::sortByWeightElement() input against expected output.

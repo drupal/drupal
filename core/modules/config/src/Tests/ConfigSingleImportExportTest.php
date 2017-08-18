@@ -155,6 +155,29 @@ EOD;
     ];
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
     $this->assertRaw(t('Configuration %name depends on the %owner module that will not be installed after import.', ['%name' => 'config_test.dynamic.second', '%owner' => 'does_not_exist']));
+
+    // Try to preform an update which would create a PHP object if Yaml parsing
+    // not securely set up.
+    // Perform an update.
+    $import = <<<EOD
+id: second
+uuid: $second_uuid
+label: !php/object "O:36:\"Drupal\\\Core\\\Test\\\ObjectSerialization\":0:{}"
+weight: 0
+style: ''
+status: '0'
+EOD;
+    $edit = [
+      'config_type' => 'config_test',
+      'import' => $import,
+    ];
+    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
+    $this->assertRaw(t('Are you sure you want to update the %name @type?', ['%name' => 'second', '@type' => 'test configuration']));
+    $this->drupalPostForm(NULL, [], t('Confirm'));
+    $entity = $storage->load('second');
+    $this->assertRaw(t('The configuration was imported successfully.'));
+    $this->assertTrue(is_string($entity->label()), 'Entity label is a string');
+    $this->assertTrue(strpos($entity->label(), 'ObjectSerialization') > 0, 'Label contains serialized object');
   }
 
   /**

@@ -1,5 +1,7 @@
-entity-moderation-form:
+content_moderation:
   version: VERSION
   css:
-    layout:
-      css/entity-moderation-form.css: {}
+    component:
+      css/content_moderation.module.css: {}
+    theme:
+      css/content_moderation.theme.css: {}

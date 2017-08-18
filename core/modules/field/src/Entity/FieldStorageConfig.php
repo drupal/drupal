@@ -628,7 +628,17 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * {@inheritdoc}
    */
   public function getCardinality() {
-    return $this->cardinality;
+    /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $definition = $field_type_manager->getDefinition($this->getType());
+    $enforced_cardinality = isset($definition['cardinality']) ? $definition['cardinality'] : NULL;
+
+    // Enforced cardinality is a positive integer or -1.
+    if ($enforced_cardinality !== NULL && $enforced_cardinality < 1 && $enforced_cardinality !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+      throw new FieldException("Invalid enforced cardinality '$enforced_cardinality'. Allowed values: a positive integer or -1.");
+    }
+
+    return $enforced_cardinality ?: $this->cardinality;
   }
 
   /**

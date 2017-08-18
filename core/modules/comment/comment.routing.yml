@@ -2,7 +2,7 @@ comment.admin:
   path: '/admin/content/comment'
   defaults:
     _title: 'Comments'
-    _controller: '\Drupal\comment\Controller\AdminController::adminPage'
+    _form: '\Drupal\comment\Form\CommentAdminOverview'
     type: 'new'
   requirements:
     _permission: 'administer comments'
@@ -11,7 +11,7 @@ comment.admin_approval:
   path: '/admin/content/comment/approval'
   defaults:
     _title: 'Unapproved comments'
-    _controller: '\Drupal\comment\Controller\AdminController::adminPage'
+    _form: '\Drupal\comment\Form\CommentAdminOverview'
     type: 'approval'
   requirements:
     _permission: 'administer comments'
@@ -53,6 +53,14 @@ entity.comment.delete_form:
   requirements:
     _entity_access: 'comment.delete'
     comment: \d+
+
+comment.multiple_delete_confirm:
+  path: '/admin/content/comment/delete'
+  defaults:
+    _title: 'Delete'
+    _form: '\Drupal\comment\Form\ConfirmDeleteMultiple'
+  requirements:
+    _permission: 'administer comments'
 
 comment.reply:
   path: '/comment/reply/{entity_type}/{entity}/{field_name}/{pid}'

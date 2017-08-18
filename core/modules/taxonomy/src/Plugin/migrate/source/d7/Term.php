@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
  *
  * @MigrateSource(
  *   id = "d7_taxonomy_term",
- *   source_provider = "taxonomy"
+ *   source_module = "taxonomy"
  * )
  */
 class Term extends FieldableEntity {

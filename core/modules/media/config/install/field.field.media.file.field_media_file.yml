@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_file
+    - media.type.file
+  enforced:
+    module:
+      - media
+  module:
+    - file
+id: media.file.field_media_file
+field_name: field_media_file
+entity_type: media
+bundle: file
+label: File
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt rtf doc docx ppt pptx xls xlsx pdf odf odg odp ods odt fodt fods fodp fodg key numbers pages'
+  max_filesize: ''
+  handler: 'default:file'
+  handler_settings: {  }
+  description_field: false
+field_type: file

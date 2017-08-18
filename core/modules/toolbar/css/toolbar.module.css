@@ -21,7 +21,9 @@
     display: none;
   }
 }
-
+.toolbar-loading #toolbar-administration {
+  overflow: hidden;
+}
 /**
  * Very specific overrides for Drupal system CSS.
  */
@@ -56,18 +58,44 @@
   position: relative;
   z-index: 1250;
 }
+.toolbar-horizontal .toolbar-tray {
+  position: fixed;
+  width: 100%;
+  left: 0;
+}
 /* Position the admin toolbar absolutely when the configured standard breakpoint
  * is active. The toolbar container, that contains the bar and the trays, is
  * position absolutely so that it scrolls with the page. Otherwise, on smaller
  * screens, the components of the admin toolbar are positioned statically. */
-body.toolbar-fixed .toolbar-oriented,
-.toolbar-oriented .toolbar-bar,
-.toolbar-oriented .toolbar-tray {
+.toolbar-oriented .toolbar-bar {
   left: 0;
   position: absolute;
   right: 0;
   top: 0;
 }
+.toolbar-oriented .toolbar-tray {
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+/* .toolbar-loading is required by toolbar JavaScript to pre-render markup
+ * style to avoid extra reflow & flicker. */
+@media (min-width: 61em) {
+  .toolbar-loading.toolbar-horizontal .toolbar .toolbar-bar .toolbar-tab:last-child .toolbar-tray {
+    position: relative;
+    display: block;
+    z-index: -999;
+    visibility: hidden;
+    width: 1px;
+  }
+  .toolbar-loading.toolbar-horizontal .toolbar .toolbar-bar .toolbar-tab:last-child .toolbar-tray .toolbar-lining {
+    width: 999em;
+  }
+  .toolbar-loading.toolbar-horizontal .toolbar .toolbar-bar .home-toolbar-tab + .toolbar-tab .toolbar-tray {
+    display: block;
+  }
+}
+
 /* Layer the bar just above the trays and above contextual link triggers. */
 .toolbar-oriented .toolbar-bar {
   z-index: 502;
@@ -85,13 +113,16 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   width: 240px;
   width: 15rem;
 }
+
 /* Present the admin toolbar tabs horizontally as a default on user agents that
  * do not understand media queries or on user agents where JavaScript is
  * disabled. */
+.toolbar-loading.toolbar-horizontal .toolbar .toolbar-tray .toolbar-menu > li,
 .toolbar .toolbar-bar .toolbar-tab,
 .toolbar .toolbar-tray-horizontal li {
   float: left; /* LTR */
 }
+[dir="rtl"] .toolbar-loading.toolbar-horizontal .toolbar .toolbar-tray .toolbar-menu > li,
 [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
 [dir="rtl"] .toolbar .toolbar-tray-horizontal li {
   float: right;
@@ -111,7 +142,7 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
 /* This min-width media query is meant to provide basic horizontal layout to
  * the main menu tabs when JavaScript is disabled on user agents that understand
  * media queries. */
-@media (min-width:16.5em) {
+@media (min-width: 16.5em) {
   .toolbar .toolbar-bar .toolbar-tab,
   .toolbar .toolbar-tray-horizontal li {
     float: left; /* LTR */
@@ -171,7 +202,7 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   right: 0;
 }
 /* Layer the links just above the toolbar-tray. */
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon{
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
   position: relative;
   z-index: 502;
 }
@@ -180,14 +211,9 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   display: none;
 }
 /* When the configured standard breakpoint is active and the tray is in a
- * horizontal position, the tray is fixed to the top of the viewport and does
- * not scroll with the page contents. */
-body.toolbar-fixed .toolbar .toolbar-tray-horizontal {
-  position: fixed;
-}
-/* When the configured standard breakpoint is active and the tray is in a
  * vertical position, the tray does not scroll with the page. The contents of
- * the tray scroll within the confines of the viewport. */
+ * the tray scroll within the confines of the viewport.
+ */
 .toolbar .toolbar-tray-vertical.is-active,
 body.toolbar-fixed .toolbar .toolbar-tray-vertical {
   height: 100%;
@@ -257,4 +283,14 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
 }
 [dir="rtl"] .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
   float: left;
+}
+
+/**
+ * Toolbar home button toggle.
+ */
+.toolbar .toolbar-bar .home-toolbar-tab {
+  display: none;
+}
+.path-admin .toolbar-bar .home-toolbar-tab {
+  display: block;
 }

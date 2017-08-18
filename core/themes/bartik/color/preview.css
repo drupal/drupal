@@ -78,7 +78,7 @@
 }
 [dir="rtl"] .color-preview-sidebar,
 [dir="rtl"] .color-preview-content {
-    float: right;
+  float: right;
 }
 .color-preview-sidebar {
   margin-left: 15px; /* LTR */

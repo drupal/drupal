@@ -90,13 +90,16 @@ class EntityReference extends DisplayPluginBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Builds the view result as a renderable array.
+   *
+   * @return array
+   *   Renderable array or empty array.
    */
   public function render() {
     if (!empty($this->view->result) && $this->view->style_plugin->evenEmpty()) {
       return $this->view->style_plugin->render($this->view->result);
     }
-    return '';
+    return [];
   }
 
   /**

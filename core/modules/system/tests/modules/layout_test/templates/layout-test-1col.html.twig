@@ -4,11 +4,11 @@
  * Template for an example 1 column layout.
  */
 #}
-<div class="layout-example-1col clearfix">
-  <div class="region-top">
+<div{{ attributes.addClass('layout-example-1col', 'clearfix') }}>
+  <div {{ region_attributes.top.addClass('region-top') }}>
     {{ content.top }}
   </div>
-  <div class="region-bottom">
+  <div {{ region_attributes.bottom.addClass('region-bottom') }}>
     {{ content.bottom }}
   </div>
 </div>

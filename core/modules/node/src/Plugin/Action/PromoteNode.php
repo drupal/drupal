@@ -2,8 +2,8 @@
 
 namespace Drupal\node\Plugin\Action;
 
-use Drupal\Core\Action\ActionBase;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Field\FieldUpdateActionBase;
+use Drupal\node\NodeInterface;
 
 /**
  * Promotes a node.
@@ -14,24 +14,13 @@ use Drupal\Core\Session\AccountInterface;
  *   type = "node"
  * )
  */
-class PromoteNode extends ActionBase {
+class PromoteNode extends FieldUpdateActionBase {
 
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
-    $entity->setPromoted(TRUE);
-    $entity->save();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    /** @var \Drupal\node\NodeInterface $object */
-    $access = $object->access('update', $account, TRUE)
-      ->andif($object->promote->access('edit', $account, TRUE));
-    return $return_as_object ? $access : $access->isAllowed();
+  protected function getFieldsToUpdate() {
+    return ['promote' => NodeInterface::PROMOTED];
   }
 
 }

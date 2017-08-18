@@ -12,15 +12,20 @@ class OffCanvasTest extends OutsideInJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['block', 'system', 'toolbar', 'outside_in', 'off_canvas_test'];
+  public static $modules = [
+    'block',
+    'system',
+    'toolbar',
+    'outside_in',
+    'off_canvas_test',
+  ];
 
   /**
-   * Tests that regular non-contextual links will work with the off-canvas dialog.
+   * Tests that non-contextual links will work with the off-canvas dialog.
    */
   public function testOffCanvasLinks() {
-    $themes = ['bartik', 'stark'];
     // Test the same functionality on multiple themes.
-    foreach ($themes as $theme) {
+    foreach ($this->getTestThemes() as $theme) {
       $this->enableTheme($theme);
       $this->drupalGet('/off-canvas-test-links');
 
@@ -55,10 +60,14 @@ class OffCanvasTest extends OutsideInJavascriptTestBase {
         if ($link_index == '2') {
           // Check no title behavior.
           $web_assert->elementExists('css', '.ui-dialog-empty-title');
-          $this->assertEquals('', $header_text);
+          $this->assertEquals("\xc2\xa0", $header_text);
 
           $style = $page->find('css', '.ui-dialog-off-canvas')->getAttribute('style');
-          self::assertTrue(strstr($style, 'width: 555px;') !== FALSE, 'Dialog width respected.');
+          $this->assertTrue(strstr($style, 'width: 555px;') !== FALSE, 'Dialog width respected.');
+          $page->clickLink("Click Me 1!");
+          $this->waitForOffCanvasToOpen();
+          $style = $page->find('css', '.ui-dialog-off-canvas')->getAttribute('style');
+          $this->assertTrue(strstr($style, 'width: 555px;') === FALSE, 'Dialog width reset to default.');
         }
         else {
           // Check that header is correct.
@@ -73,7 +82,6 @@ class OffCanvasTest extends OutsideInJavascriptTestBase {
    * Tests the body displacement behaves differently at a narrow width.
    */
   public function testNarrowWidth() {
-    $themes = ['stark', 'bartik'];
     $narrow_width_breakpoint = 768;
     $offset = 20;
     $height = 800;
@@ -81,7 +89,7 @@ class OffCanvasTest extends OutsideInJavascriptTestBase {
     $web_assert = $this->assertSession();
 
     // Test the same functionality on multiple themes.
-    foreach ($themes as $theme) {
+    foreach ($this->getTestThemes() as $theme) {
       $this->enableTheme($theme);
       // Testing at the wider width.
       $this->getSession()->resizeWindow($narrow_width_breakpoint + $offset, $height);
@@ -101,6 +109,15 @@ class OffCanvasTest extends OutsideInJavascriptTestBase {
       $this->waitForOffCanvasToOpen();
       $this->assertFalse($page->find('css', '.dialog-off-canvas__main-canvas')->hasAttribute('style'), 'Body not padded on narrow page with tray open.');
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getTestThemes() {
+    // Add 'seven' theme. Setting Tray "Edit Mode" will not work with 'seven'
+    // because it removes all contextual links the off-canvas dialog should.
+    return array_merge(parent::getTestThemes(), ['seven']);
   }
 
 }

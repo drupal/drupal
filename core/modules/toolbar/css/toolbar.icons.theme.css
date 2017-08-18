@@ -219,7 +219,6 @@
   background-color: #f5f5f5;
 }
 
-
 /**
  * Handle.
  */
@@ -280,8 +279,7 @@
   background-image: url(../../../misc/icons/bebebe/push-left.svg); /* LTR */
 }
 .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before,
-.toolbar .toolbar-toggle-orientation [value="vertical"]:focus:before
- {
+.toolbar .toolbar-toggle-orientation [value="vertical"]:focus:before {
   background-image: url(../../../misc/icons/787878/push-left.svg); /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:before {

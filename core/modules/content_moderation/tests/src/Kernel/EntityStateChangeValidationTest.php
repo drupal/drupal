@@ -97,6 +97,124 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   }
 
   /**
+   * Test validation with an invalid state.
+   */
+  public function testInvalidState() {
+    $node_type = NodeType::create([
+      'type' => 'example',
+    ]);
+    $node_type->save();
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
+    $workflow->save();
+
+    $node = Node::create([
+      'type' => 'example',
+      'title' => 'Test title',
+    ]);
+    $node->moderation_state->value = 'invalid_state';
+    $violations = $node->validate();
+
+    $this->assertCount(1, $violations);
+    $this->assertEquals('State <em class="placeholder">invalid_state</em> does not exist on <em class="placeholder">Editorial</em> workflow', $violations->get(0)->getMessage());
+  }
+
+  /**
+   * Test validation with content that has no initial state or an invalid state.
+   */
+  public function testInvalidStateWithoutExisting() {
+    // Create content without moderation enabled for the content type.
+    $node_type = NodeType::create([
+      'type' => 'example',
+    ]);
+    $node_type->save();
+    $node = Node::create([
+      'type' => 'example',
+      'title' => 'Test title',
+    ]);
+    $node->save();
+
+    // Enable moderation to test validation on existing content, with no
+    // explicit state.
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addState('deleted_state', 'Deleted state');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
+    $workflow->save();
+
+    // Validate the invalid state.
+    $node->moderation_state->value = 'invalid_state';
+    $violations = $node->validate();
+    $this->assertCount(1, $violations);
+
+    // Assign the node to a state we're going to delete.
+    $node->moderation_state->value = 'deleted_state';
+    $node->save();
+
+    // Delete the state so $node->original contains an invalid state when
+    // validating.
+    $workflow->getTypePlugin()->deleteState('deleted_state');
+    $workflow->save();
+    $node->moderation_state->value = 'draft';
+    $violations = $node->validate();
+    $this->assertCount(0, $violations);
+  }
+
+  /**
+   * Test state transition validation with multiple languages.
+   */
+  public function testInvalidStateMultilingual() {
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+    $node_type = NodeType::create([
+      'type' => 'example',
+    ]);
+    $node_type->save();
+
+    $workflow = Workflow::load('editorial');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
+    $workflow->save();
+
+    $node = Node::create([
+      'type' => 'example',
+      'title' => 'English Published Node',
+      'langcode' => 'en',
+      'moderation_state' => 'published',
+    ]);
+    $node->save();
+
+    $node_fr = $node->addTranslation('fr');
+    $node_fr->setTitle('French Published Node');
+    $node_fr->save();
+    $this->assertEquals('published', $node_fr->moderation_state->value);
+
+    // Create a pending revision of the original node.
+    $node->moderation_state = 'draft';
+    $node->setNewRevision(TRUE);
+    $node->isDefaultRevision(FALSE);
+    $node->save();
+
+    // For the pending english revision, there should be a violation from draft
+    // to archived.
+    $node->moderation_state = 'archived';
+    $violations = $node->validate();
+    $this->assertCount(1, $violations);
+    $this->assertEquals('Invalid state transition from <em class="placeholder">Draft</em> to <em class="placeholder">Archived</em>', $violations->get(0)->getMessage());
+
+    // From the default french published revision, there should be none.
+    $node_fr = Node::load($node->id())->getTranslation('fr');
+    $this->assertEquals('published', $node_fr->moderation_state->value);
+    $node_fr->moderation_state = 'archived';
+    $violations = $node_fr->validate();
+    $this->assertCount(0, $violations);
+
+    // From the latest french revision, there should also be no violation.
+    $node_fr = $node->getTranslation('fr');
+    $this->assertEquals('published', $node_fr->moderation_state->value);
+    $node_fr->moderation_state = 'archived';
+    $violations = $node_fr->validate();
+    $this->assertCount(0, $violations);
+  }
+
+  /**
    * Tests that content without prior moderation information can be moderated.
    */
   public function testLegacyContent() {

@@ -76,19 +76,6 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
   public function getDerivativeDefinitions($base_plugin_definition) {
     $this->derivatives = [];
 
-    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
-      if ($this->moderationInfo->canModerateEntitiesOfEntityType($entity_type)) {
-        $bundle_id = $entity_type->getBundleEntityType();
-        $this->derivatives["$bundle_id.moderation_tab"] = [
-          'route_name' => "entity.$bundle_id.moderation",
-          'title' => $this->t('Manage moderation'),
-          // @todo - are we sure they all have an edit_form?
-          'base_route' => "entity.$bundle_id.edit_form",
-          'weight' => 30,
-        ] + $base_plugin_definition;
-      }
-    }
-
     $latest_version_entities = array_filter($this->entityTypeManager->getDefinitions(), function (EntityTypeInterface $type) {
       return $this->moderationInfo->canModerateEntitiesOfEntityType($type) && $type->hasLinkTemplate('latest-version');
     });

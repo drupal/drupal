@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -93,23 +94,12 @@ function entity_test_entity_type_alter(array &$entity_types) {
     }
   }
 
-  // Allow entity_test_with_bundle tests to override the entity type definition.
-  $entity_types['entity_test_with_bundle'] = $state->get('entity_test_with_bundle.entity_type', $entity_types['entity_test_with_bundle']);
+  // Allow entity_test_rev tests to override the entity type definition.
+  $entity_types['entity_test_rev'] = $state->get('entity_test_rev.entity_type', $entity_types['entity_test_rev']);
 
   // Enable the entity_test_new only when needed.
   if (!$state->get('entity_test_new')) {
     unset($entity_types['entity_test_new']);
-  }
-}
-
-/**
- * Implements hook_module_implements_alter().
- */
-function entity_test_module_implements_alter(&$implementations, $hook) {
-  // Move our hook_entity_type_alter() implementation to the beginning of the
-  // list in order to run before content_moderation_entity_type_alter().
-  if ($hook === 'entity_type_alter') {
-    $implementations = ['entity_test' => $implementations['entity_test']] + $implementations;
   }
 }
 
@@ -157,15 +147,6 @@ function entity_test_entity_base_field_info_alter(&$fields, EntityTypeInterface 
   //    https://www.drupal.org/node/2554235.
   if ($entity_type->id() == 'entity_test' && $state->get('entity_test.db_updates.entity_definition_updates') == 8001) {
     $fields['user_id']->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
-  }
-}
-
-/**
- * Implements hook_entity_field_storage_info().
- */
-function entity_test_entity_field_storage_info(EntityTypeInterface $entity_type) {
-  if ($entity_type->id() == 'entity_test_update') {
-    return \Drupal::state()->get('entity_test_update.additional_field_storage_definitions', []);
   }
 }
 
@@ -756,6 +737,16 @@ function entity_test_entity_access(EntityInterface $entity, $operation, AccountI
     return AccessResult::allowed();
   }
 
+  // Create specific labels to allow or deny access based on certain test
+  // conditions.
+  // @see \Drupal\KernelTests\Core\Entity\EntityAccessControlHandlerTest
+  if ($entity->label() == 'Accessible') {
+    return AccessResult::allowed();
+  }
+  if ($entity->label() == 'Inaccessible') {
+    return AccessResult::forbidden();
+  }
+
   // Uncacheable because the access result depends on a State key-value pair and
   // might therefore change at any time.
   $condition = \Drupal::state()->get("entity_test_entity_access.{$operation}." . $entity->id(), FALSE);
@@ -791,4 +782,18 @@ function entity_test_entity_test_create_access(AccountInterface $account, $conte
 
   // No opinion.
   return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_query_entity_test_access_alter().
+ */
+function entity_test_query_entity_test_access_alter(AlterableInterface $query) {
+  if (!\Drupal::state()->get('entity_test_query_access')) {
+    return;
+  }
+
+  /** @var \Drupal\Core\Database\Query\Select|\Drupal\Core\Database\Query\AlterableInterface $query */
+  if (!\Drupal::currentUser()->hasPermission('view all entity_test_query_access entities')) {
+    $query->condition('entity_test_query_access.name', 'published entity');
+  }
 }

@@ -166,6 +166,17 @@ class AssertLegacyTraitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::assertNoCacheTag
+   */
+  public function testAssertNoCacheTag() {
+    $this->webAssert
+      ->responseHeaderNotContains('X-Drupal-Cache-Tags', 'some-cache-tag')
+      ->shouldBeCalled();
+
+    $this->assertNoCacheTag('some-cache-tag');
+  }
+
+  /**
    * Returns a mocked behat session object.
    *
    * @return \Behat\Mink\Session

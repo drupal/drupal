@@ -53,7 +53,7 @@ function tablesort_header(&$cell_content, array &$cell_attributes, array $header
         '#theme' => 'tablesort_indicator',
         '#style' => $ts['sort'],
       ];
-      $image = drupal_render($tablesort_indicator);
+      $image = \Drupal::service('renderer')->render($tablesort_indicator);
     }
     else {
       // If the user clicks a different header, we want to sort ascending initially.

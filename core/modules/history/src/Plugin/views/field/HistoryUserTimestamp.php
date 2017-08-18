@@ -96,7 +96,7 @@ class HistoryUserTimestamp extends Node {
         '#theme' => 'mark',
         '#status' => $mark,
       ];
-      return $this->renderLink(drupal_render($build), $values);
+      return $this->renderLink(\Drupal::service('renderer')->render($build), $values);
     }
   }
 

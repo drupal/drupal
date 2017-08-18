@@ -75,9 +75,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    */
   public function get($name) {
     $data = $this->configStorage->read($name);
-    $type_definition = $this->getDefinition($name);
-    $data_definition = $this->buildDataDefinition($type_definition, $data);
-    return $this->create($data_definition, $data);
+    return $this->createFromNameAndData($name, $data);
   }
 
   /**
@@ -385,6 +383,15 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       }
       throw new ConfigSchemaAlterException($message);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createFromNameAndData($config_name, array $config_data) {
+    $definition = $this->getDefinition($config_name);
+    $data_definition = $this->buildDataDefinition($definition, $config_data);
+    return $this->create($data_definition, $config_data);
   }
 
 }

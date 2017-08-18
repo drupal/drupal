@@ -9,7 +9,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "d6_i18n_profile_field",
- *   source_provider = "i18n"
+ *   source_module = "i18nprofile"
  * )
  */
 class I18nProfileField extends DrupalSqlBase {

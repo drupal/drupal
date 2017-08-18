@@ -4,8 +4,8 @@ namespace Drupal\Tests\history\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use GuzzleHttp\Cookie\CookieJar;
 
 /**

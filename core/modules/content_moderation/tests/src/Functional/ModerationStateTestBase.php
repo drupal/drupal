@@ -29,7 +29,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    * @var array
    */
   protected $permissions = [
-    'administer content moderation',
+    'administer workflows',
     'access administration pages',
     'administer content types',
     'administer nodes',
@@ -38,6 +38,9 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     'access content overview',
     'use editorial transition create_new_draft',
     'use editorial transition publish',
+    'use editorial transition archive',
+    'use editorial transition archived_draft',
+    'use editorial transition archived_published',
   ];
 
   /**
@@ -50,6 +53,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     'block',
     'block_content',
     'node',
+    'entity_test',
   ];
 
   /**
@@ -93,6 +97,11 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
   protected function createContentTypeFromUi($content_type_name, $content_type_id, $moderated = FALSE, $workflow_id = 'editorial') {
     $this->drupalGet('admin/structure/types');
     $this->clickLink('Add content type');
+
+    // Check that the 'Create new revision' checkbox is checked and disabled.
+    $this->assertSession()->checkboxChecked('options[revision]');
+    $this->assertSession()->fieldDisabled('options[revision]');
+
     $edit = [
       'name' => $content_type_name,
       'type' => $content_type_id,
@@ -112,9 +121,11 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    * @param string $workflow_id
    *   The workflow to attach to the bundle.
    */
-  protected function enableModerationThroughUi($content_type_id, $workflow_id = 'editorial') {
-    $edit['workflow'] = $workflow_id;
-    $this->drupalPostForm('admin/structure/types/manage/' . $content_type_id . '/moderation', $edit, t('Save'));
+  public function enableModerationThroughUi($content_type_id, $workflow_id = 'editorial') {
+    $this->drupalGet('/admin/config/workflow/workflows');
+    $this->assertLinkByHref('admin/config/workflow/workflows/manage/' . $workflow_id);
+    $edit['bundles[' . $content_type_id . ']'] = TRUE;
+    $this->drupalPostForm('admin/config/workflow/workflows/manage/' . $workflow_id . '/type/node', $edit, t('Save'));
     // Ensure the parent environment is up-to-date.
     // @see content_moderation_workflow_insert()
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();

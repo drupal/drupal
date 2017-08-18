@@ -1,7 +1,7 @@
 /**
  * Tabs.
  */
-.is-collapse-enabled  .tabs,
+.is-collapse-enabled .tabs,
 .is-horizontal .tabs {
   position: relative;
 }
@@ -107,7 +107,7 @@ li.tabs__tab a {
 }
 
 /* Only add the arrow if there's space */
-@media screen and (min-width:18.75em) { /* 300px */
+@media screen and (min-width: 18.75em) { /* 300px */
   .tabs.primary a {
     background: url(../../../../misc/icons/0074bd/chevron-right.svg) 99% center no-repeat;
   }
@@ -123,7 +123,7 @@ li.tabs__tab a {
 }
 
 /* JS dependent styling */
- .is-collapse-enabled .tabs__trigger {
+.is-collapse-enabled .tabs__trigger {
   box-sizing: content-box;
   display: block;
   position: absolute;

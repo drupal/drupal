@@ -44,14 +44,14 @@ process:
       map:
         full: default
   field_name: field_name
-  "options/label": label
-  "options/weight": weight
+  "options/label": 'formatter/label'
+  "options/weight": 'formatter/weight'
   # The formatter to use.
   "options/type":
     -
       plugin: static_map
       bypass: true
-      source: formatter_type
+      source: 'formatter/type'
       map:
         date_default: datetime_default
         email_default: email_mailto
@@ -69,7 +69,7 @@ process:
       method: row
   "options/settings":
     plugin: default_value
-    source: settings
+    source: 'formatter/settings'
     default_value: []
   "options/third_party_settings": 'constants/third_party_settings'
 destination:

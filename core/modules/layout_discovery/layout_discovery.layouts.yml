@@ -15,14 +15,14 @@ layout_twocol:
   template: layout--twocol
   library: layout_discovery/twocol
   category: 'Columns: 2'
-  default_region: left
+  default_region: first
   regions:
     top:
       label: Top
-    left:
-      label: Left
-    right:
-      label: Right
+    first:
+      label: First
+    second:
+      label: Second
     bottom:
       label: Bottom
 
@@ -36,16 +36,16 @@ layout_twocol_bricks:
   regions:
     top:
       label: Top
-    left_above:
-      label: 'Left above'
-    right_above:
-      label: 'Right above'
+    first_above:
+      label: 'First above'
+    second_above:
+      label: 'Second above'
     middle:
       label: Middle
-    left_below:
-      label: 'Left below'
-    right_below:
-      label: 'Right below'
+    first_below:
+      label: 'First below'
+    second_below:
+      label: 'Second below'
     bottom:
       label: Bottom
 
@@ -55,16 +55,16 @@ layout_threecol_25_50_25:
   template: layout--threecol-25-50-25
   library: layout_discovery/threecol_25_50_25
   category: 'Columns: 3'
-  default_region: left
+  default_region: second
   regions:
     top:
       label: Top
-    left:
-      label: Left
-    middle:
-      label: Middle
-    right:
-      label: Right
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
     bottom:
       label: Bottom
 
@@ -74,15 +74,15 @@ layout_threecol_33_34_33:
   template: layout--threecol-33-34-33
   library: layout_discovery/threecol_33_34_33
   category: 'Columns: 3'
-  default_region: left
+  default_region: first
   regions:
     top:
       label: Top
-    left:
-      label: Left
-    middle:
-      label: Middle
-    right:
-      label: Right
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
     bottom:
       label: Bottom

@@ -896,7 +896,7 @@ function drupal_render_children(&$element, $children_keys = NULL) {
   $output = '';
   foreach ($children_keys as $key) {
     if (!empty($element[$key])) {
-      $output .= drupal_render($element[$key]);
+      $output .= \Drupal::service('renderer')->render($element[$key]);
     }
   }
   return Markup::create($output);

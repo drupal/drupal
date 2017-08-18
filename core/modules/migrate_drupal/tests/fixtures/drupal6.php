@@ -603,6 +603,21 @@ $connection->schema()->createTable('batch', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('batch')
+->fields(array(
+  'bid',
+  'token',
+  'timestamp',
+  'batch',
+))
+->values(array(
+  'bid' => '1',
+  'token' => '',
+  'timestamp' => '1494966324',
+  'batch' => NULL,
+))
+->execute();
+
 $connection->schema()->createTable('blocks', array(
   'fields' => array(
     'bid' => array(
@@ -1927,6 +1942,54 @@ $connection->insert('comments')
   'mail' => 'comment3@example.com',
   'homepage' => 'https://www.drupal.org',
 ))
+->values(array(
+  'cid' => '4',
+  'pid' => '0',
+  'nid' => '19',
+  'uid' => '1',
+  'subject' => 'Subject 1',
+  'comment' => 'Comment 1',
+  'hostname' => '127.0.0.1',
+  'timestamp' => '1501955780',
+  'status' => '0',
+  'format' => '1',
+  'thread' => '01/',
+  'name' => 'root',
+  'mail' => '',
+  'homepage' => '',
+))
+->values(array(
+  'cid' => '5',
+  'pid' => '4',
+  'nid' => '19',
+  'uid' => '1',
+  'subject' => 'Subject 2',
+  'comment' => 'Comment 2',
+  'hostname' => '127.0.0.1',
+  'timestamp' => '1501955792',
+  'status' => '0',
+  'format' => '1',
+  'thread' => '01.00/',
+  'name' => 'root',
+  'mail' => '',
+  'homepage' => '',
+))
+->values(array(
+  'cid' => '6',
+  'pid' => '5',
+  'nid' => '19',
+  'uid' => '1',
+  'subject' => 'Subject 3',
+  'comment' => 'Comment 3',
+  'hostname' => '127.0.0.1',
+  'timestamp' => '1501955803',
+  'status' => '0',
+  'format' => '1',
+  'thread' => '01.00.00/',
+  'name' => 'root',
+  'mail' => '',
+  'homepage' => '',
+))
 ->execute();
 
 $connection->schema()->createTable('config', array(
@@ -2044,6 +2107,72 @@ $connection->insert('contact')
   'reply' => '',
   'weight' => '2',
   'selected' => '0',
+))
+->execute();
+
+$connection->schema()->createTable('content_field_company', array(
+  'fields' => array(
+    'vid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+      'unsigned' => TRUE,
+    ),
+    'nid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+      'unsigned' => TRUE,
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+      'unsigned' => TRUE,
+    ),
+    'field_company_nid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+  ),
+  'primary key' => array(
+    'vid',
+    'delta',
+  ),
+  'indexes' => array(
+    'nid' => array(
+      'nid',
+    ),
+    'field_company_nid' => array(
+      'field_company_nid',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('content_field_company')
+->fields(array(
+  'vid',
+  'nid',
+  'delta',
+  'field_company_nid',
+))
+->values(array(
+  'vid' => '21',
+  'nid' => '18',
+  'delta' => '0',
+  'field_company_nid' => '15',
+))
+->values(array(
+  'vid' => '21',
+  'nid' => '18',
+  'delta' => '1',
+  'field_company_nid' => '16',
 ))
 ->execute();
 
@@ -2564,6 +2693,30 @@ $connection->insert('content_node_field')
   'locked',
 ))
 ->values(array(
+  'field_name' => 'field_commander',
+  'type' => 'userreference',
+  'global_settings' => 'a:2:{s:19:"referenceable_roles";a:4:{i:2;i:2;i:3;i:0;i:4;i:0;i:5;i:0;}s:20:"referenceable_status";s:0:"";}',
+  'required' => '0',
+  'multiple' => '0',
+  'db_storage' => '1',
+  'module' => 'userreference',
+  'db_columns' => 'a:1:{s:3:"uid";a:4:{s:4:"type";s:3:"int";s:8:"unsigned";b:1;s:8:"not null";b:0;s:5:"index";b:1;}}',
+  'active' => '1',
+  'locked' => '0',
+))
+->values(array(
+  'field_name' => 'field_company',
+  'type' => 'nodereference',
+  'global_settings' => 'a:1:{s:19:"referenceable_types";a:10:{s:7:"company";s:7:"company";s:7:"article";i:0;s:8:"employee";i:0;s:5:"forum";i:0;s:10:"test_event";i:0;s:9:"test_page";i:0;s:11:"test_planet";i:0;s:10:"test_story";i:0;s:7:"sponsor";i:0;s:5:"story";i:0;}}',
+  'required' => '0',
+  'multiple' => '1',
+  'db_storage' => '0',
+  'module' => 'nodereference',
+  'db_columns' => 'a:1:{s:3:"nid";a:4:{s:4:"type";s:3:"int";s:8:"unsigned";b:1;s:8:"not null";b:0;s:5:"index";b:1;}}',
+  'active' => '1',
+  'locked' => '0',
+))
+->values(array(
   'field_name' => 'field_multivalue',
   'type' => 'number_decimal',
   'global_settings' => 'a:9:{s:6:"prefix";s:0:"";s:6:"suffix";s:0:"";s:3:"min";s:0:"";s:3:"max";s:0:"";s:14:"allowed_values";s:0:"";s:18:"allowed_values_php";s:0:"";s:9:"precision";s:2:"10";s:5:"scale";s:1:"2";s:7:"decimal";s:1:".";}',
@@ -2898,6 +3051,30 @@ $connection->insert('content_node_field_instance')
   'widget_active',
 ))
 ->values(array(
+  'field_name' => 'field_commander',
+  'type_name' => 'employee',
+  'weight' => '32',
+  'label' => 'Commanding Officer',
+  'widget_type' => 'userreference_select',
+  'widget_settings' => 'a:5:{s:18:"autocomplete_match";s:8:"contains";s:4:"size";i:60;s:12:"reverse_link";i:0;s:13:"default_value";a:1:{i:0;a:1:{s:3:"uid";s:0:"";}}s:17:"default_value_php";N;}',
+  'display_settings' => 'a:5:{s:5:"label";a:2:{s:6:"format";s:5:"above";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:6:"teaser";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
+  'description' => '',
+  'widget_module' => 'userreference',
+  'widget_active' => '1',
+))
+->values(array(
+  'field_name' => 'field_company',
+  'type_name' => 'employee',
+  'weight' => '31',
+  'label' => 'Company',
+  'widget_type' => 'nodereference_select',
+  'widget_settings' => 'a:4:{s:18:"autocomplete_match";s:8:"contains";s:4:"size";i:60;s:13:"default_value";a:1:{i:0;a:1:{s:3:"nid";s:0:"";}}s:17:"default_value_php";N;}',
+  'display_settings' => 'a:5:{s:5:"label";a:2:{s:6:"format";s:5:"above";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:6:"teaser";a:2:{s:6:"format";s:5:"plain";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
+  'description' => '',
+  'widget_module' => 'nodereference',
+  'widget_active' => '1',
+))
+->values(array(
   'field_name' => 'field_multivalue',
   'type_name' => 'test_planet',
   'weight' => '2',
@@ -3172,6 +3349,56 @@ $connection->insert('content_node_field_instance')
   'description' => 'An example integer field.',
   'widget_module' => 'number',
   'widget_active' => '1',
+))
+->execute();
+
+$connection->schema()->createTable('content_type_employee', array(
+  'fields' => array(
+    'vid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+      'unsigned' => TRUE,
+    ),
+    'nid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+      'unsigned' => TRUE,
+    ),
+    'field_commander_uid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+  ),
+  'primary key' => array(
+    'vid',
+  ),
+  'indexes' => array(
+    'nid' => array(
+      'nid',
+    ),
+    'field_commander_uid' => array(
+      'field_commander_uid',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('content_type_employee')
+->fields(array(
+  'vid',
+  'nid',
+  'field_commander_uid',
+))
+->values(array(
+  'vid' => '21',
+  'nid' => '18',
+  'field_commander_uid' => '8',
 ))
 ->execute();
 
@@ -8166,6 +8393,19 @@ $connection->schema()->createTable('forum', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('forum')
+->fields(array(
+  'nid',
+  'vid',
+  'tid',
+))
+->values(array(
+  'nid' => '19',
+  'vid' => '22',
+  'tid' => '8',
+))
+->execute();
+
 $connection->schema()->createTable('history', array(
   'fields' => array(
     'uid' => array(
@@ -8219,6 +8459,36 @@ $connection->insert('history')
   'uid' => '1',
   'nid' => '13',
   'timestamp' => '1468384931',
+))
+->values(array(
+  'uid' => '1',
+  'nid' => '14',
+  'timestamp' => '1493066668',
+))
+->values(array(
+  'uid' => '1',
+  'nid' => '15',
+  'timestamp' => '1493066677',
+))
+->values(array(
+  'uid' => '1',
+  'nid' => '16',
+  'timestamp' => '1493066685',
+))
+->values(array(
+  'uid' => '1',
+  'nid' => '17',
+  'timestamp' => '1493066693',
+))
+->values(array(
+  'uid' => '1',
+  'nid' => '18',
+  'timestamp' => '1493066711',
+))
+->values(array(
+  'uid' => '1',
+  'nid' => '19',
+  'timestamp' => '1501955803',
 ))
 ->execute();
 
@@ -9352,6 +9622,22 @@ $connection->insert('i18n_strings')
   'type' => 'type',
   'property' => 'description',
   'objectindex' => '0',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1672',
+  'objectid' => '6',
+  'type' => 'vocabulary',
+  'property' => 'name',
+  'objectindex' => '6',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1673',
+  'objectid' => '7',
+  'type' => 'vocabulary',
+  'property' => 'name',
+  'objectindex' => '7',
   'format' => '0',
 ))
 ->execute();
@@ -12505,21 +12791,21 @@ $connection->insert('locales_source')
 ))
 ->values(array(
   'lid' => '342',
-  'location' => 'modules/nodereference/nodereference.module:60',
+  'location' => 'modules/nodereference/nodereference.module:71',
   'textgroup' => 'default',
   'source' => 'Node reference',
   'version' => 'none',
 ))
 ->values(array(
   'lid' => '343',
-  'location' => 'modules/nodereference/nodereference.module:61',
+  'location' => 'modules/nodereference/nodereference.module:72',
   'textgroup' => 'default',
   'source' => 'Store the ID of a related node as an integer value.',
   'version' => 'none',
 ))
 ->values(array(
   'lid' => '344',
-  'location' => 'nodereference.module:51',
+  'location' => 'modules/nodereference/nodereference.module:90',
   'textgroup' => 'default',
   'source' => 'Content types that can be referenced',
   'version' => 'none',
@@ -12533,21 +12819,21 @@ $connection->insert('locales_source')
 ))
 ->values(array(
   'lid' => '346',
-  'location' => 'modules/nodereference/nodereference.module:100,  modules/userreference/userreference.module:97',
+  'location' => 'modules/nodereference/nodereference.module:101',
   'textgroup' => 'default',
   'source' => 'Existing Views',
   'version' => 'none',
 ))
 ->values(array(
   'lid' => '347',
-  'location' => 'modules/nodereference/nodereference.module:97',
+  'location' => 'modules/nodereference/nodereference.module:108',
   'textgroup' => 'default',
   'source' => 'Advanced - Nodes that can be referenced (View)',
   'version' => 'none',
 ))
 ->values(array(
   'lid' => '348',
-  'location' => 'modules/nodereference/nodereference.module:104',
+  'location' => 'modules/nodereference/nodereference.module:114',
   'textgroup' => 'default',
   'source' => 'View used to select the nodes',
   'version' => 'none',
@@ -12568,14 +12854,14 @@ $connection->insert('locales_source')
 ))
 ->values(array(
   'lid' => '351',
-  'location' => 'modules/nodereference/nodereference.module:122,  modules/userreference/userreference.module:119',
+  'location' => 'modules/nodereference/nodereference.module:121',
   'textgroup' => 'default',
   'source' => 'View arguments',
   'version' => 'none',
 ))
 ->values(array(
   'lid' => '352',
-  'location' => 'modules/nodereference/nodereference.module:125,  modules/userreference/userreference.module:122',
+  'location' => 'modules/nodereference/nodereference.module:124',
   'textgroup' => 'default',
   'source' => 'Provide a comma separated list of arguments to pass to the view.',
   'version' => 'none',
@@ -12603,14 +12889,14 @@ $connection->insert('locales_source')
 ))
 ->values(array(
   'lid' => '356',
-  'location' => 'modules/nodereference/nodereference.module:242',
+  'location' => 'modules/nodereference/nodereference.module:200',
   'textgroup' => 'default',
   'source' => 'Title (link)',
   'version' => 'none',
 ))
 ->values(array(
   'lid' => '357',
-  'location' => 'modules/nodereference/nodereference.module:247',
+  'location' => 'modules/nodereference/nodereference.module:205',
   'textgroup' => 'default',
   'source' => 'Title (no link)',
   'version' => 'none',
@@ -12687,7 +12973,7 @@ $connection->insert('locales_source')
 ))
 ->values(array(
   'lid' => '368',
-  'location' => 'nodereference.module:0',
+  'location' => 'modules/nodereference/nodereference.module:0',
   'textgroup' => 'default',
   'source' => 'nodereference',
   'version' => 'none',
@@ -21785,6 +22071,41 @@ $connection->insert('locales_source')
   'source' => 'The changes to these blocks will not be saved until the <em>Save blocks</em> button is clicked.',
   'version' => 'none',
 ))
+->values(array(
+  'lid' => '1669',
+  'location' => 'modules/nodereference/nodereference.module:117',
+  'textgroup' => 'default',
+  'source' => "Choose the \"Views module\" view that selects the nodes that can be referenced.<br />Note:<ul><li>Only views that have fields will work for this purpose.</li><li>This will discard the \"Content types\" settings above. Use the view's \"filters\" section instead.</li><li>Use the view's \"fields\" section to display additional informations about candidate nodes on node creation/edition form.</li><li>Use the view's \"sort criteria\" section to determine the order in which candidate nodes will be displayed.</li></ul>",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '1670',
+  'location' => 'modules/nodereference/nodereference.module:175',
+  'textgroup' => 'default',
+  'source' => "%name: This post can't be referenced.",
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '1671',
+  'location' => 'modules/nodereference/nodereference.module:518',
+  'textgroup' => 'default',
+  'source' => '%name: Title mismatch. Please check your selection.',
+  'version' => 'none',
+))
+->values(array(
+  'lid' => '1672',
+  'location' => 'vocabulary:6:name',
+  'textgroup' => 'taxonomy',
+  'source' => 'Type',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1673',
+  'location' => 'vocabulary:7:name',
+  'textgroup' => 'taxonomy',
+  'source' => 'Forums',
+  'version' => '1',
+))
 ->execute();
 
 $connection->schema()->createTable('locales_target', array(
@@ -26800,6 +27121,30 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '1265',
   'translation' => 'fr - By module',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1669',
+  'translation' => "Choisissez la vue du module Views qui sélectionne les nœuds pouvant être référencés.<br />Notez que :<ul><li>seules les vues présentant des champs fonctionneront dans ce cadre </li><li>ceci effacera les paramètres de \"Types de contenus\" figurant ci-dessus. Utilisez à la place la section \"filtres\" de la vue ;</li><li>utilisez la section \"champs\" de la vue pour afficher des informations supplémentaires sur les nœuds candidats dans le formulaire de création/édition de nœud ;</li><li>utilisez la section \"critère de tri\" de la vue pour déterminer l'ordre d'affichage des nœuds candidats.</li></ul>",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1670',
+  'translation' => "Champ '%name' : cette publication ne peut être référencée.",
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '1671',
+  'translation' => "Champ '%name' : incohérence au niveau du titre. Merci de vérifier votre sélection.",
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -33196,6 +33541,114 @@ $connection->insert('menu_links')
   'p9' => '0',
   'updated' => '0',
 ))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '455',
+  'plid' => '0',
+  'link_path' => 'nodereference/autocomplete',
+  'router_path' => 'nodereference/autocomplete',
+  'link_title' => 'Nodereference autocomplete',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '1',
+  'customized' => '0',
+  'p1' => '455',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '456',
+  'plid' => '0',
+  'link_path' => 'admin/content/node-type/employee/fields/field_company/remove',
+  'router_path' => 'admin/content/node-type/employee/fields/field_company/remove',
+  'link_title' => 'Remove field',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '1',
+  'customized' => '0',
+  'p1' => '456',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '457',
+  'plid' => '0',
+  'link_path' => 'userreference/autocomplete',
+  'router_path' => 'userreference/autocomplete',
+  'link_title' => 'Userreference autocomplete',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '1',
+  'customized' => '0',
+  'p1' => '457',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '458',
+  'plid' => '0',
+  'link_path' => 'admin/content/node-type/employee/fields/field_commander/remove',
+  'router_path' => 'admin/content/node-type/employee/fields/field_commander/remove',
+  'link_title' => 'Remove field',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '1',
+  'customized' => '0',
+  'p1' => '458',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('menu_router', array(
@@ -33503,7 +33956,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/bluemarine/bluemarine.info";s:4:"name";s:10:"bluemarine";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:11:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/bluemarine/bluemarine.info";s:4:"name";s:10:"bluemarine";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:10:"bluemarine";}',
   'fit' => '31',
@@ -33525,7 +33978,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":11:{s:8:"filename";s:31:"themes/chameleon/chameleon.info";s:4:"name";s:9:"chameleon";s:4:"type";s:5:"theme";s:5:"owner";s:32:"themes/chameleon/chameleon.theme";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:10:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":11:{s:8:"filename";s:31:"themes/chameleon/chameleon.info";s:4:"name";s:9:"chameleon";s:4:"type";s:5:"theme";s:5:"owner";s:32:"themes/chameleon/chameleon.theme";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:12:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:9:"chameleon";}',
   'fit' => '31',
@@ -33547,7 +34000,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:11:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:7:"garland";}',
   'fit' => '31',
@@ -33591,7 +34044,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:35:"themes/chameleon/marvin/marvin.info";s:4:"name";s:6:"marvin";s:4:"type";s:5:"theme";s:5:"owner";s:0:"";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:11:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:10:"base_theme";s:9:"chameleon";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:35:"themes/chameleon/marvin/marvin.info";s:4:"name";s:6:"marvin";s:4:"type";s:5:"theme";s:5:"owner";s:0:"";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:10:"base_theme";s:9:"chameleon";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:6:"marvin";}',
   'fit' => '31',
@@ -33613,7 +34066,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":13:{s:8:"filename";s:37:"themes/garland/minnelli/minnelli.info";s:4:"name";s:8:"minnelli";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:12:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:6:"engine";s:11:"phptemplate";s:10:"base_theme";s:7:"garland";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":13:{s:8:"filename";s:37:"themes/garland/minnelli/minnelli.info";s:4:"name";s:8:"minnelli";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:14:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:6:"engine";s:11:"phptemplate";s:10:"base_theme";s:7:"garland";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:8:"minnelli";}',
   'fit' => '31',
@@ -33635,7 +34088,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_block_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/pushbutton/pushbutton.info";s:4:"name";s:10:"pushbutton";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:11:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/pushbutton/pushbutton.info";s:4:"name";s:10:"pushbutton";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'block_admin_display',
   'page_arguments' => 'a:1:{i:0;s:10:"pushbutton";}',
   'fit' => '31',
@@ -34339,7 +34792,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/bluemarine/bluemarine.info";s:4:"name";s:10:"bluemarine";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:11:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/bluemarine/bluemarine.info";s:4:"name";s:10:"bluemarine";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:10:"bluemarine";}',
   'fit' => '31',
@@ -34361,7 +34814,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":11:{s:8:"filename";s:31:"themes/chameleon/chameleon.info";s:4:"name";s:9:"chameleon";s:4:"type";s:5:"theme";s:5:"owner";s:32:"themes/chameleon/chameleon.theme";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:10:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":11:{s:8:"filename";s:31:"themes/chameleon/chameleon.info";s:4:"name";s:9:"chameleon";s:4:"type";s:5:"theme";s:5:"owner";s:32:"themes/chameleon/chameleon.theme";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:12:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:9:"chameleon";}',
   'fit' => '31',
@@ -34383,7 +34836,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:11:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:27:"themes/garland/garland.info";s:4:"name";s:7:"garland";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"1";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:7:"garland";}',
   'fit' => '31',
@@ -34427,7 +34880,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:35:"themes/chameleon/marvin/marvin.info";s:4:"name";s:6:"marvin";s:4:"type";s:5:"theme";s:5:"owner";s:0:"";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:11:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:10:"base_theme";s:9:"chameleon";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:35:"themes/chameleon/marvin/marvin.info";s:4:"name";s:6:"marvin";s:4:"type";s:5:"theme";s:5:"owner";s:0:"";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:10:"base_theme";s:9:"chameleon";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:6:"marvin";}',
   'fit' => '31',
@@ -34449,7 +34902,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":13:{s:8:"filename";s:37:"themes/garland/minnelli/minnelli.info";s:4:"name";s:8:"minnelli";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:12:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:6:"engine";s:11:"phptemplate";s:10:"base_theme";s:7:"garland";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":13:{s:8:"filename";s:37:"themes/garland/minnelli/minnelli.info";s:4:"name";s:8:"minnelli";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:14:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:6:"engine";s:11:"phptemplate";s:10:"base_theme";s:7:"garland";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:8:"minnelli";}',
   'fit' => '31',
@@ -34471,7 +34924,7 @@ $connection->insert('menu_router')
   'load_functions' => '',
   'to_arg_functions' => '',
   'access_callback' => '_system_themes_access',
-  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/pushbutton/pushbutton.info";s:4:"name";s:10:"pushbutton";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:11:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
+  'access_arguments' => 'a:1:{i:0;O:8:"stdClass":12:{s:8:"filename";s:33:"themes/pushbutton/pushbutton.info";s:4:"name";s:10:"pushbutton";s:4:"type";s:5:"theme";s:5:"owner";s:45:"themes/engines/phptemplate/phptemplate.engine";s:6:"status";s:1:"0";s:8:"throttle";s:1:"0";s:9:"bootstrap";s:1:"0";s:14:"schema_version";s:2:"-1";s:6:"weight";s:1:"0";s:4:"info";a:13:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:6:"engine";s:11:"phptemplate";}}',
   'page_callback' => 'drupal_get_form',
   'page_arguments' => 'a:2:{i:0;s:21:"system_theme_settings";i:1;s:10:"pushbutton";}',
   'fit' => '31',
@@ -35872,6 +36325,94 @@ $connection->insert('menu_router')
   'description' => '',
   'position' => '',
   'weight' => '1',
+  'file' => 'sites/all/modules/cck/includes/content.admin.inc',
+))
+->values(array(
+  'path' => 'admin/content/node-type/employee/fields/field_commander',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:24:"administer content types";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:23:"content_field_edit_form";i:1;s:8:"employee";i:2;s:15:"field_commander";}',
+  'fit' => '63',
+  'number_parts' => '6',
+  'tab_parent' => 'admin/content/node-type/employee/fields',
+  'tab_root' => 'admin/content/node-type/employee',
+  'title' => 'Commanding Officer',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => 'sites/all/modules/cck/includes/content.admin.inc',
+))
+->values(array(
+  'path' => 'admin/content/node-type/employee/fields/field_commander/remove',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:24:"administer content types";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:25:"content_field_remove_form";i:1;s:8:"employee";i:2;s:15:"field_commander";}',
+  'fit' => '127',
+  'number_parts' => '7',
+  'tab_parent' => '',
+  'tab_root' => 'admin/content/node-type/employee/fields/field_commander/remove',
+  'title' => 'Remove field',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => 'sites/all/modules/cck/includes/content.admin.inc',
+))
+->values(array(
+  'path' => 'admin/content/node-type/employee/fields/field_company',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:24:"administer content types";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:23:"content_field_edit_form";i:1;s:8:"employee";i:2;s:13:"field_company";}',
+  'fit' => '63',
+  'number_parts' => '6',
+  'tab_parent' => 'admin/content/node-type/employee/fields',
+  'tab_root' => 'admin/content/node-type/employee',
+  'title' => 'Company',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '128',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => 'sites/all/modules/cck/includes/content.admin.inc',
+))
+->values(array(
+  'path' => 'admin/content/node-type/employee/fields/field_company/remove',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:24:"administer content types";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:25:"content_field_remove_form";i:1;s:8:"employee";i:2;s:13:"field_company";}',
+  'fit' => '127',
+  'number_parts' => '7',
+  'tab_parent' => '',
+  'tab_root' => 'admin/content/node-type/employee/fields/field_company/remove',
+  'title' => 'Remove field',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
   'file' => 'sites/all/modules/cck/includes/content.admin.inc',
 ))
 ->values(array(
@@ -39648,34 +40189,12 @@ $connection->insert('menu_router')
   'number_parts' => '5',
   'tab_parent' => 'admin/settings/language/i18n',
   'tab_root' => 'admin/settings/language',
-  'title' => 'Options',
+  'title' => 'Multilingual system',
   'title_callback' => 't',
   'title_arguments' => '',
   'type' => '136',
   'block_callback' => '',
   'description' => 'Configure extended options for multilingual content and translations.',
-  'position' => '',
-  'weight' => '0',
-  'file' => 'sites/all/modules/i18n/i18n.admin.inc',
-))
-->values(array(
-  'path' => 'admin/settings/language/i18n/variables',
-  'load_functions' => '',
-  'to_arg_functions' => '',
-  'access_callback' => 'user_access',
-  'access_arguments' => 'a:1:{i:0;s:29:"administer site configuration";}',
-  'page_callback' => 'drupal_get_form',
-  'page_arguments' => 'a:1:{i:0;s:25:"i18n_admin_variables_form";}',
-  'fit' => '31',
-  'number_parts' => '5',
-  'tab_parent' => 'admin/settings/language/i18n',
-  'tab_root' => 'admin/settings/language',
-  'title' => 'Variables',
-  'title_callback' => 't',
-  'title_arguments' => '',
-  'type' => '128',
-  'block_callback' => '',
-  'description' => 'Multilingual variables.',
   'position' => '',
   'weight' => '0',
   'file' => 'sites/all/modules/i18n/i18n.admin.inc',
@@ -41652,7 +42171,7 @@ $connection->insert('menu_router')
   'tab_root' => 'node/add/test-event',
   'title' => 'Migrate test event',
   'title_callback' => 'i18nstrings_title_callback',
-  'title_arguments' => 'a:2:{i:0;s:29:"nodetype:type:test_event:name";i:1;s:18:"Migrate test event";}',
+  'title_arguments' => 'a:2:{i:0;s:29:"nodetype:type:test-event:name";i:1;s:18:"Migrate test event";}',
   'type' => '6',
   'block_callback' => '',
   'description' => 'test event description here',
@@ -41674,7 +42193,7 @@ $connection->insert('menu_router')
   'tab_root' => 'node/add/test-page',
   'title' => 'Migrate test page',
   'title_callback' => 'i18nstrings_title_callback',
-  'title_arguments' => 'a:2:{i:0;s:28:"nodetype:type:test_page:name";i:1;s:17:"Migrate test page";}',
+  'title_arguments' => 'a:2:{i:0;s:28:"nodetype:type:test-page:name";i:1;s:17:"Migrate test page";}',
   'type' => '6',
   'block_callback' => '',
   'description' => "A <em>page</em>, similar in form to a <em>story</em>, is a simple method for creating and displaying information that rarely changes, such as an \"About us\" section of a website. By default, a <em>page</em> entry does not allow visitor comments and is not featured on the site's initial home page.",
@@ -41696,7 +42215,7 @@ $connection->insert('menu_router')
   'tab_root' => 'node/add/test-planet',
   'title' => 'Migrate test planet',
   'title_callback' => 'i18nstrings_title_callback',
-  'title_arguments' => 'a:2:{i:0;s:30:"nodetype:type:test_planet:name";i:1;s:19:"Migrate test planet";}',
+  'title_arguments' => 'a:2:{i:0;s:30:"nodetype:type:test-planet:name";i:1;s:19:"Migrate test planet";}',
   'type' => '6',
   'block_callback' => '',
   'description' => "A <em>story</em>, similar in form to a <em>page</em>, is ideal for creating and displaying content that informs or engages website visitors. Press releases, site announcements, and informal blog-like entries may all be created with a <em>story</em> entry. By default, a <em>story</em> entry is automatically featured on the site's initial home page, and provides the ability to post comments.",
@@ -41718,13 +42237,35 @@ $connection->insert('menu_router')
   'tab_root' => 'node/add/test-story',
   'title' => 'Migrate test story',
   'title_callback' => 'i18nstrings_title_callback',
-  'title_arguments' => 'a:2:{i:0;s:29:"nodetype:type:test_story:name";i:1;s:18:"Migrate test story";}',
+  'title_arguments' => 'a:2:{i:0;s:29:"nodetype:type:test-story:name";i:1;s:18:"Migrate test story";}',
   'type' => '6',
   'block_callback' => '',
   'description' => "A <em>story</em>, similar in form to a <em>page</em>, is ideal for creating and displaying content that informs or engages website visitors. Press releases, site announcements, and informal blog-like entries may all be created with a <em>story</em> entry. By default, a <em>story</em> entry is automatically featured on the site's initial home page, and provides the ability to post comments.",
   'position' => '',
   'weight' => '0',
   'file' => 'modules/node/node.pages.inc',
+))
+->values(array(
+  'path' => 'nodereference/autocomplete',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'nodereference_autocomplete_access',
+  'access_arguments' => 'a:1:{i:0;i:2;}',
+  'page_callback' => 'nodereference_autocomplete',
+  'page_arguments' => 'a:0:{}',
+  'fit' => '3',
+  'number_parts' => '2',
+  'tab_parent' => '',
+  'tab_root' => 'nodereference/autocomplete',
+  'title' => 'Nodereference autocomplete',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
 ))
 ->values(array(
   'path' => 'profile',
@@ -42276,6 +42817,28 @@ $connection->insert('menu_router')
   'weight' => '0',
   'file' => '',
 ))
+->values(array(
+  'path' => 'userreference/autocomplete',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:14:"access content";}',
+  'page_callback' => 'userreference_autocomplete',
+  'page_arguments' => 'a:0:{}',
+  'fit' => '3',
+  'number_parts' => '2',
+  'tab_parent' => '',
+  'tab_root' => 'userreference/autocomplete',
+  'title' => 'Userreference autocomplete',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'type' => '4',
+  'block_callback' => '',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'file' => '',
+))
 ->execute();
 
 $connection->schema()->createTable('node', array(
@@ -42618,6 +43181,108 @@ $connection->insert('node')
   'tnid' => '12',
   'translate' => '0',
 ))
+->values(array(
+  'nid' => '14',
+  'vid' => '17',
+  'type' => 'company',
+  'language' => '',
+  'title' => 'United Federation of Planets',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1493066668',
+  'changed' => '1493066668',
+  'comment' => '2',
+  'promote' => '1',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '15',
+  'vid' => '18',
+  'type' => 'company',
+  'language' => '',
+  'title' => 'Klingon Empire',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1493066677',
+  'changed' => '1493066677',
+  'comment' => '2',
+  'promote' => '1',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '16',
+  'vid' => '19',
+  'type' => 'company',
+  'language' => '',
+  'title' => 'Romulan Empire',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1493066684',
+  'changed' => '1493066684',
+  'comment' => '2',
+  'promote' => '1',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '17',
+  'vid' => '20',
+  'type' => 'company',
+  'language' => '',
+  'title' => 'Ferengi Commerce Authority',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1493066693',
+  'changed' => '1493066693',
+  'comment' => '2',
+  'promote' => '1',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '18',
+  'vid' => '21',
+  'type' => 'employee',
+  'language' => '',
+  'title' => 'Ambassador Sarek',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1493066711',
+  'changed' => '1494966544',
+  'comment' => '2',
+  'promote' => '1',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '19',
+  'vid' => '22',
+  'type' => 'forum',
+  'language' => '',
+  'title' => 'New Forum Topic',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1501955771',
+  'changed' => '1501955771',
+  'comment' => '2',
+  'promote' => '0',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('node_access', array(
@@ -42782,6 +43447,48 @@ $connection->insert('node_comment_statistics')
   'last_comment_uid' => '1',
   'comment_count' => '0',
 ))
+->values(array(
+  'nid' => '14',
+  'last_comment_timestamp' => '1493066668',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '1',
+  'comment_count' => '0',
+))
+->values(array(
+  'nid' => '15',
+  'last_comment_timestamp' => '1493066677',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '1',
+  'comment_count' => '0',
+))
+->values(array(
+  'nid' => '16',
+  'last_comment_timestamp' => '1493066684',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '1',
+  'comment_count' => '0',
+))
+->values(array(
+  'nid' => '17',
+  'last_comment_timestamp' => '1493066693',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '1',
+  'comment_count' => '0',
+))
+->values(array(
+  'nid' => '18',
+  'last_comment_timestamp' => '1493066711',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '1',
+  'comment_count' => '0',
+))
+->values(array(
+  'nid' => '19',
+  'last_comment_timestamp' => '1501955803',
+  'last_comment_name' => '',
+  'last_comment_uid' => '1',
+  'comment_count' => '3',
+))
 ->execute();
 
 $connection->schema()->createTable('node_counter', array(
@@ -42819,6 +43526,51 @@ $connection->schema()->createTable('node_counter', array(
   ),
   'mysql_character_set' => 'utf8',
 ));
+
+$connection->insert('node_counter')
+->fields(array(
+  'nid',
+  'totalcount',
+  'daycount',
+  'timestamp',
+))
+->values(array(
+  'nid' => '14',
+  'totalcount' => '1',
+  'daycount' => '1',
+  'timestamp' => '1493066668',
+))
+->values(array(
+  'nid' => '15',
+  'totalcount' => '1',
+  'daycount' => '1',
+  'timestamp' => '1493066677',
+))
+->values(array(
+  'nid' => '16',
+  'totalcount' => '1',
+  'daycount' => '1',
+  'timestamp' => '1493066685',
+))
+->values(array(
+  'nid' => '17',
+  'totalcount' => '1',
+  'daycount' => '1',
+  'timestamp' => '1493066693',
+))
+->values(array(
+  'nid' => '18',
+  'totalcount' => '1',
+  'daycount' => '1',
+  'timestamp' => '1493066711',
+))
+->values(array(
+  'nid' => '19',
+  'totalcount' => '4',
+  'daycount' => '4',
+  'timestamp' => '1501955803',
+))
+->execute();
 
 $connection->schema()->createTable('node_revisions', array(
   'fields' => array(
@@ -43052,8 +43804,8 @@ $connection->insert('node_revisions')
   'vid' => '15',
   'uid' => '1',
   'title' => 'Abantu zulu',
-  'body' => "Mr. Crusher, ready a collision course with the Borg ship.",
-  'teaser' => "Mr. Crusher, ready a collision course with the Borg ship.",
+  'body' => 'Mr. Crusher, ready a collision course with the Borg ship.',
+  'teaser' => 'Mr. Crusher, ready a collision course with the Borg ship.',
   'log' => '',
   'timestamp' => '1444238808',
   'format' => '1',
@@ -43067,6 +43819,72 @@ $connection->insert('node_revisions')
   'teaser' => 'Mr. Crusher, ready a collision course with the Borg ship.',
   'log' => '',
   'timestamp' => '1444239050',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '14',
+  'vid' => '17',
+  'uid' => '1',
+  'title' => 'United Federation of Planets',
+  'body' => '',
+  'teaser' => '',
+  'log' => '',
+  'timestamp' => '1493066668',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '15',
+  'vid' => '18',
+  'uid' => '1',
+  'title' => 'Klingon Empire',
+  'body' => '',
+  'teaser' => '',
+  'log' => '',
+  'timestamp' => '1493066677',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '16',
+  'vid' => '19',
+  'uid' => '1',
+  'title' => 'Romulan Empire',
+  'body' => '',
+  'teaser' => '',
+  'log' => '',
+  'timestamp' => '1493066684',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '17',
+  'vid' => '20',
+  'uid' => '1',
+  'title' => 'Ferengi Commerce Authority',
+  'body' => '',
+  'teaser' => '',
+  'log' => '',
+  'timestamp' => '1493066693',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '18',
+  'vid' => '21',
+  'uid' => '1',
+  'title' => 'Ambassador Sarek',
+  'body' => "Yeah, I like animals better than people sometimes... Especially dogs. Dogs are the best. Every time you come home, they act like they haven't seen you in a year. And the good thing about dogs... is they got different dogs for different people. Like pit bulls. The dog of dogs. Pit bull can be the right man's best friend... or the wrong man's worst enemy. You going to give me a dog for a pet, give me a pit bull. Give me... Raoul. Right, Omar? Give me Raoul.",
+  'teaser' => "Yeah, I like animals better than people sometimes... Especially dogs. Dogs are the best. Every time you come home, they act like they haven't seen you in a year. And the good thing about dogs... is they got different dogs for different people. Like pit bulls. The dog of dogs. Pit bull can be the right man's best friend... or the wrong man's worst enemy. You going to give me a dog for a pet, give me a pit bull. Give me... Raoul. Right, Omar?",
+  'log' => '',
+  'timestamp' => '1494966544',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '19',
+  'vid' => '22',
+  'uid' => '1',
+  'title' => 'New Forum Topic',
+  'body' => 'New Forum Body',
+  'teaser' => 'New Forum Body',
+  'log' => '',
+  'timestamp' => '1501955771',
   'format' => '1',
 ))
 ->execute();
@@ -43975,9 +44793,9 @@ $connection->schema()->createTable('sessions', array(
       'default' => '0',
     ),
     'session' => array(
-      'type' => 'text',
+      'type' => 'blob',
       'not null' => FALSE,
-      'size' => 'normal',
+      'size' => 'big',
     ),
   ),
   'primary key' => array(
@@ -44077,7 +44895,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:10:"Aggregator";s:11:"description";s:57:"Aggregates syndicated content (RSS, RDF, and Atom feeds).";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"Aggregator";s:11:"description";s:57:"Aggregates syndicated content (RSS, RDF, and Atom feeds).";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/block/block.module',
@@ -44089,7 +44907,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:5:"Block";s:11:"description";s:62:"Controls the boxes that are displayed around the main content.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:5:"Block";s:11:"description";s:62:"Controls the boxes that are displayed around the main content.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/blog/blog.module',
@@ -44101,7 +44919,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:4:"Blog";s:11:"description";s:69:"Enables keeping easily and regularly updated user web pages or blogs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Blog";s:11:"description";s:69:"Enables keeping easily and regularly updated user web pages or blogs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/blogapi/blogapi.module',
@@ -44113,7 +44931,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:8:"Blog API";s:11:"description";s:79:"Allows users to post content using applications that support XML-RPC blog APIs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:8:"Blog API";s:11:"description";s:79:"Allows users to post content using applications that support XML-RPC blog APIs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/book/book.module',
@@ -44125,7 +44943,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6000',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:4:"Book";s:11:"description";s:63:"Allows users to structure site pages in a hierarchy or outline.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Book";s:11:"description";s:63:"Allows users to structure site pages in a hierarchy or outline.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/color/color.module',
@@ -44137,7 +44955,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:5:"Color";s:11:"description";s:61:"Allows the user to change the color scheme of certain themes.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:5:"Color";s:11:"description";s:61:"Allows the user to change the color scheme of certain themes.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/comment/comment.module',
@@ -44149,7 +44967,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6005',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:7:"Comment";s:11:"description";s:57:"Allows users to comment on and discuss published content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Comment";s:11:"description";s:57:"Allows users to comment on and discuss published content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/contact/contact.module',
@@ -44161,7 +44979,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:7:"Contact";s:11:"description";s:61:"Enables the use of both personal and site-wide contact forms.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Contact";s:11:"description";s:61:"Enables the use of both personal and site-wide contact forms.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/dblog/dblog.module',
@@ -44173,7 +44991,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:16:"Database logging";s:11:"description";s:47:"Logs and records system events to the database.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:16:"Database logging";s:11:"description";s:47:"Logs and records system events to the database.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/filter/filter.module',
@@ -44185,7 +45003,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:6:"Filter";s:11:"description";s:60:"Handles the filtering of content in preparation for display.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Filter";s:11:"description";s:60:"Handles the filtering of content in preparation for display.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/forum/forum.module',
@@ -44197,7 +45015,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6000',
   'weight' => '1',
-  'info' => 'a:8:{s:4:"name";s:5:"Forum";s:11:"description";s:50:"Enables threaded discussions about general topics.";s:12:"dependencies";a:2:{i:0;s:8:"taxonomy";i:1;s:7:"comment";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:5:"Forum";s:11:"description";s:50:"Enables threaded discussions about general topics.";s:12:"dependencies";a:2:{i:0;s:8:"taxonomy";i:1;s:7:"comment";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/help/help.module',
@@ -44209,7 +45027,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:4:"Help";s:11:"description";s:35:"Manages the display of online help.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Help";s:11:"description";s:35:"Manages the display of online help.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/locale/locale.module',
@@ -44221,7 +45039,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6007',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:6:"Locale";s:11:"description";s:119:"Adds language handling functionality and enables the translation of the user interface to languages other than English.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Locale";s:11:"description";s:119:"Adds language handling functionality and enables the translation of the user interface to languages other than English.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/menu/menu.module',
@@ -44233,7 +45051,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6000',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:4:"Menu";s:11:"description";s:60:"Allows administrators to customize the site navigation menu.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Menu";s:11:"description";s:60:"Allows administrators to customize the site navigation menu.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/node/node.module',
@@ -44245,7 +45063,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:4:"Node";s:11:"description";s:66:"Allows content to be submitted to the site and displayed on pages.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Node";s:11:"description";s:66:"Allows content to be submitted to the site and displayed on pages.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/openid/openid.module',
@@ -44257,7 +45075,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:6:"OpenID";s:11:"description";s:48:"Allows users to log into your site using OpenID.";s:7:"version";s:4:"6.38";s:7:"package";s:15:"Core - optional";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"OpenID";s:11:"description";s:48:"Allows users to log into your site using OpenID.";s:7:"version";s:4:"6.38";s:7:"package";s:15:"Core - optional";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/path/path.module',
@@ -44269,7 +45087,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:4:"Path";s:11:"description";s:28:"Allows users to rename URLs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Path";s:11:"description";s:28:"Allows users to rename URLs.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/php/php.module',
@@ -44281,7 +45099,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:10:"PHP filter";s:11:"description";s:50:"Allows embedded PHP code/snippets to be evaluated.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"PHP filter";s:11:"description";s:50:"Allows embedded PHP code/snippets to be evaluated.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/ping/ping.module',
@@ -44293,7 +45111,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:4:"Ping";s:11:"description";s:51:"Alerts other sites when your site has been updated.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Ping";s:11:"description";s:51:"Alerts other sites when your site has been updated.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/poll/poll.module',
@@ -44305,7 +45123,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:4:"Poll";s:11:"description";s:95:"Allows your site to capture votes on different topics in the form of multiple choice questions.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Poll";s:11:"description";s:95:"Allows your site to capture votes on different topics in the form of multiple choice questions.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/profile/profile.module',
@@ -44317,7 +45135,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:7:"Profile";s:11:"description";s:36:"Supports configurable user profiles.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Profile";s:11:"description";s:36:"Supports configurable user profiles.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/search/search.module',
@@ -44329,7 +45147,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:6:"Search";s:11:"description";s:36:"Enables site-wide keyword searching.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Search";s:11:"description";s:36:"Enables site-wide keyword searching.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/statistics/statistics.module',
@@ -44341,7 +45159,7 @@ $connection->insert('system')
   'bootstrap' => '1',
   'schema_version' => '6000',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:10:"Statistics";s:11:"description";s:37:"Logs access statistics for your site.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"Statistics";s:11:"description";s:37:"Logs access statistics for your site.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/syslog/syslog.module',
@@ -44353,7 +45171,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:6:"Syslog";s:11:"description";s:41:"Logs and records system events to syslog.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Syslog";s:11:"description";s:41:"Logs and records system events to syslog.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/system/system.module',
@@ -44363,9 +45181,9 @@ $connection->insert('system')
   'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
-  'schema_version' => '6055',
+  'schema_version' => '6056',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:6:"System";s:11:"description";s:54:"Handles general site configuration for administrators.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"System";s:11:"description";s:54:"Handles general site configuration for administrators.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/taxonomy/taxonomy.module',
@@ -44377,7 +45195,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:8:"Taxonomy";s:11:"description";s:38:"Enables the categorization of content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:8:"Taxonomy";s:11:"description";s:38:"Enables the categorization of content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/throttle/throttle.module',
@@ -44389,7 +45207,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:8:"Throttle";s:11:"description";s:66:"Handles the auto-throttling mechanism, to control site congestion.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:8:"Throttle";s:11:"description";s:66:"Handles the auto-throttling mechanism, to control site congestion.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/tracker/tracker.module',
@@ -44401,7 +45219,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:7:"Tracker";s:11:"description";s:43:"Enables tracking of recent posts for users.";s:12:"dependencies";a:1:{i:0;s:7:"comment";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Tracker";s:11:"description";s:43:"Enables tracking of recent posts for users.";s:12:"dependencies";a:1:{i:0;s:7:"comment";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/translation/translation.module',
@@ -44413,7 +45231,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:19:"Content translation";s:11:"description";s:57:"Allows content to be translated into different languages.";s:12:"dependencies";a:1:{i:0;s:6:"locale";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:19:"Content translation";s:11:"description";s:57:"Allows content to be translated into different languages.";s:12:"dependencies";a:1:{i:0;s:6:"locale";}s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/trigger/trigger.module',
@@ -44425,7 +45243,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:7:"Trigger";s:11:"description";s:90:"Enables actions to be fired on certain system events, such as when new content is created.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Trigger";s:11:"description";s:90:"Enables actions to be fired on certain system events, such as when new content is created.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/update/update.module',
@@ -44437,7 +45255,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:13:"Update status";s:11:"description";s:88:"Checks the status of available updates for Drupal and your installed modules and themes.";s:7:"version";s:4:"6.38";s:7:"package";s:15:"Core - optional";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:13:"Update status";s:11:"description";s:88:"Checks the status of available updates for Drupal and your installed modules and themes.";s:7:"version";s:4:"6.38";s:7:"package";s:15:"Core - optional";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/upload/upload.module',
@@ -44449,7 +45267,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6000',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:6:"Upload";s:11:"description";s:51:"Allows users to upload and attach files to content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Upload";s:11:"description";s:51:"Allows users to upload and attach files to content.";s:7:"package";s:15:"Core - optional";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'modules/user/user.module',
@@ -44461,7 +45279,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:8:{s:4:"name";s:4:"User";s:11:"description";s:47:"Manages the user registration and login system.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"User";s:11:"description";s:47:"Manages the user registration and login system.";s:7:"package";s:15:"Core - required";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/content.module',
@@ -44473,7 +45291,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6010',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:7:"Content";s:11:"description";s:50:"Allows administrators to define new content types.";s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:7:"Content";s:11:"description";s:50:"Allows administrators to define new content types.";s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/content_copy/content_copy.module',
@@ -44485,7 +45303,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:12:"Content Copy";s:11:"description";s:51:"Enables ability to import/export field definitions.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:12:"Content Copy";s:11:"description";s:51:"Enables ability to import/export field definitions.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/content_multigroup/content_multigroup.module',
@@ -44509,7 +45327,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:19:"Content Permissions";s:11:"description";s:43:"Set field-level permissions for CCK fields.";s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:19:"Content Permissions";s:11:"description";s:43:"Set field-level permissions for CCK fields.";s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/fieldgroup/fieldgroup.module',
@@ -44521,19 +45339,19 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:10:"Fieldgroup";s:11:"description";s:37:"Create display groups for CCK fields.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"Fieldgroup";s:11:"description";s:37:"Create display groups for CCK fields.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/nodereference/nodereference.module',
   'name' => 'nodereference',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
-  'schema_version' => '-1',
+  'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:14:"Node Reference";s:11:"description";s:59:"Defines a field type for referencing one node from another.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:4:"text";i:2;s:13:"optionwidgets";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:14:"Node Reference";s:11:"description";s:59:"Defines a field type for referencing one node from another.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:4:"text";i:2;s:13:"optionwidgets";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/number/number.module',
@@ -44545,7 +45363,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6000',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:6:"Number";s:11:"description";s:28:"Defines numeric field types.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:6:"Number";s:11:"description";s:28:"Defines numeric field types.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/optionwidgets/optionwidgets.module',
@@ -44557,7 +45375,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:14:"Option Widgets";s:11:"description";s:82:"Defines selection, check box and radio button widgets for text and numeric fields.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:14:"Option Widgets";s:11:"description";s:82:"Defines selection, check box and radio button widgets for text and numeric fields.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/text/text.module',
@@ -44569,19 +45387,19 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6003',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Text";s:11:"description";s:32:"Defines simple text field types.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Text";s:11:"description";s:32:"Defines simple text field types.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/modules/userreference/userreference.module',
   'name' => 'userreference',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
-  'schema_version' => '-1',
+  'schema_version' => '6002',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:14:"User Reference";s:11:"description";s:56:"Defines a field type for referencing a user from a node.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:4:"text";i:2;s:13:"optionwidgets";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.9";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1294407979";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:14:"User Reference";s:11:"description";s:56:"Defines a field type for referencing a user from a node.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:4:"text";i:2;s:13:"optionwidgets";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:3:"cck";s:9:"datestamp";s:10:"1434568159";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/cck/tests/content_test.module',
@@ -44605,7 +45423,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6005',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:4:"Date";s:11:"description";s:41:"Defines CCK date/time fields and widgets.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:8:"date_api";i:2;s:13:"date_timezone";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1396284252";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:4:"Date";s:11:"description";s:41:"Defines CCK date/time fields and widgets.";s:12:"dependencies";a:3:{i:0;s:7:"content";i:1;s:8:"date_api";i:2;s:13:"date_timezone";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1326285938";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_api.module',
@@ -44617,7 +45435,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6006',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:8:"Date API";s:11:"description";s:45:"A Date API that can be used by other modules.";s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1396284252";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:8:"Date API";s:11:"description";s:45:"A Date API that can be used by other modules.";s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1326285938";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_locale/date_locale.module',
@@ -44629,7 +45447,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:11:"Date Locale";s:11:"description";s:124:"Allows the site admin to configure multiple formats for date/time display to tailor dates for a specific locale or audience.";s:7:"package";s:9:"Date/Time";s:12:"dependencies";a:2:{i:0;s:8:"date_api";i:1;s:6:"locale";}s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1396284252";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:11:"Date Locale";s:11:"description";s:124:"Allows the site admin to configure multiple formats for date/time display to tailor dates for a specific locale or audience.";s:7:"package";s:9:"Date/Time";s:12:"dependencies";a:2:{i:0;s:8:"date_api";i:1;s:6:"locale";}s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1326285938";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_php4/date_php4.module',
@@ -44641,7 +45459,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:9:"Date PHP4";s:11:"description";s:134:"Emulate PHP 5.2 date functions in PHP 4.x, PHP 5.0, and PHP 5.1. Required when using the Date API with PHP versions less than PHP 5.2.";s:7:"package";s:9:"Date/Time";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1396284252";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:9:"Date PHP4";s:11:"description";s:134:"Emulate PHP 5.2 date functions in PHP 4.x, PHP 5.0, and PHP 5.1. Required when using the Date API with PHP versions less than PHP 5.2.";s:7:"package";s:9:"Date/Time";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1326285938";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_popup/date_popup.module',
@@ -44653,7 +45471,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:10:"Date Popup";s:11:"description";s:84:"Enables jquery popup calendars and time entry widgets for selecting dates and times.";s:12:"dependencies";a:3:{i:0;s:8:"date_api";i:1;s:13:"date_timezone";i:2;s:9:"jquery_ui";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1396284252";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"Date Popup";s:11:"description";s:84:"Enables jquery popup calendars and time entry widgets for selecting dates and times.";s:12:"dependencies";a:2:{i:0;s:8:"date_api";i:1;s:13:"date_timezone";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1326285938";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_repeat/date_repeat.module',
@@ -44665,7 +45483,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:15:"Date Repeat API";s:11:"description";s:73:"A Date Repeat API to calculate repeating dates and times from iCal rules.";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1396284252";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:15:"Date Repeat API";s:11:"description";s:73:"A Date Repeat API to calculate repeating dates and times from iCal rules.";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1326285938";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_timezone/date_timezone.module',
@@ -44677,7 +45495,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '5200',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:13:"Date Timezone";s:11:"description";s:111:"Needed when using Date API. Overrides site and user timezone handling to set timezone names instead of offsets.";s:7:"package";s:9:"Date/Time";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1396284252";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:13:"Date Timezone";s:11:"description";s:111:"Needed when using Date API. Overrides site and user timezone handling to set timezone names instead of offsets.";s:7:"package";s:9:"Date/Time";s:12:"dependencies";a:1:{i:0;s:8:"date_api";}s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1326285938";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/date/date_tools/date_tools.module',
@@ -44689,7 +45507,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:10:"Date Tools";s:11:"description";s:52:"Tools to import and auto-create dates and calendars.";s:12:"dependencies";a:2:{i:0;s:7:"content";i:1;s:4:"date";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.10";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1396284252";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"Date Tools";s:11:"description";s:52:"Tools to import and auto-create dates and calendars.";s:12:"dependencies";a:2:{i:0;s:7:"content";i:1;s:4:"date";}s:7:"package";s:9:"Date/Time";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-2.8";s:7:"project";s:4:"date";s:9:"datestamp";s:10:"1326285938";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/ddblock/ddblock.module',
@@ -44797,7 +45615,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6104',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:9:"FileField";s:11:"description";s:26:"Defines a file field type.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:3:"php";s:3:"5.0";s:7:"version";s:8:"6.x-3.13";s:7:"project";s:9:"filefield";s:9:"datestamp";s:10:"1405541029";s:10:"dependents";a:0:{}}',
+  'info' => 'a:10:{s:4:"name";s:9:"FileField";s:11:"description";s:26:"Defines a file field type.";s:12:"dependencies";a:1:{i:0;s:7:"content";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:3:"php";s:3:"5.0";s:7:"version";s:8:"6.x-3.14";s:7:"project";s:9:"filefield";s:9:"datestamp";s:10:"1456327142";s:10:"dependents";a:0:{}}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/filefield/filefield_meta/filefield_meta.module',
@@ -44809,7 +45627,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:14:"FileField Meta";s:11:"description";s:48:"Add metadata gathering and storage to FileField.";s:12:"dependencies";a:2:{i:0;s:9:"filefield";i:1;s:6:"getid3";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:3:"php";s:3:"5.0";s:7:"version";s:8:"6.x-3.13";s:7:"project";s:9:"filefield";s:9:"datestamp";s:10:"1405541029";s:10:"dependents";a:0:{}}',
+  'info' => 'a:10:{s:4:"name";s:14:"FileField Meta";s:11:"description";s:48:"Add metadata gathering and storage to FileField.";s:12:"dependencies";a:2:{i:0;s:9:"filefield";i:1;s:6:"getid3";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:3:"php";s:3:"5.0";s:7:"version";s:8:"6.x-3.14";s:7:"project";s:9:"filefield";s:9:"datestamp";s:10:"1456327142";s:10:"dependents";a:0:{}}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18n.module',
@@ -44821,7 +45639,7 @@ $connection->insert('system')
   'bootstrap' => '1',
   'schema_version' => '9',
   'weight' => '10',
-  'info' => 'a:10:{s:4:"name";s:20:"Internationalization";s:11:"description";s:49:"Extends Drupal support for multilingual features.";s:12:"dependencies";a:2:{i:0;s:6:"locale";i:1;s:11:"translation";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:20:"Internationalization";s:11:"description";s:49:"Extends Drupal support for multilingual features.";s:12:"dependencies";a:2:{i:0;s:6:"locale";i:1;s:11:"translation";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18nblocks/i18nblocks.module',
@@ -44833,7 +45651,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:17:"Block translation";s:11:"description";s:50:"Enables multilingual blocks and block translation.";s:12:"dependencies";a:2:{i:0;s:4:"i18n";i:1;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:17:"Block translation";s:11:"description";s:50:"Enables multilingual blocks and block translation.";s:12:"dependencies";a:2:{i:0;s:4:"i18n";i:1;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18ncck/i18ncck.module',
@@ -44845,7 +45663,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:15:"CCK translation";s:11:"description";s:56:"Supports translatable custom CCK fields and fieldgroups.";s:12:"dependencies";a:3:{i:0;s:4:"i18n";i:1;s:7:"content";i:2;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:15:"CCK translation";s:11:"description";s:56:"Supports translatable custom CCK fields and fieldgroups.";s:12:"dependencies";a:3:{i:0;s:4:"i18n";i:1;s:7:"content";i:2;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18ncontent/i18ncontent.module',
@@ -44857,7 +45675,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6002',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:24:"Content type translation";s:11:"description";s:99:"Add multilingual options for content and translate related strings: name, description, help text...";s:12:"dependencies";a:1:{i:0;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:24:"Content type translation";s:11:"description";s:99:"Add multilingual options for content and translate related strings: name, description, help text...";s:12:"dependencies";a:1:{i:0;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18nmenu/i18nmenu.module',
@@ -44869,7 +45687,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:16:"Menu translation";s:11:"description";s:40:"Supports translatable custom menu items.";s:12:"dependencies";a:4:{i:0;s:4:"i18n";i:1;s:4:"menu";i:2;s:10:"i18nblocks";i:3;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:16:"Menu translation";s:11:"description";s:40:"Supports translatable custom menu items.";s:12:"dependencies";a:4:{i:0;s:4:"i18n";i:1;s:4:"menu";i:2;s:10:"i18nblocks";i:3;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18npoll/i18npoll.module',
@@ -44881,7 +45699,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:14:"Poll aggregate";s:11:"description";s:45:"Aggregates poll results for all translations.";s:12:"dependencies";a:2:{i:0;s:11:"translation";i:1;s:4:"poll";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:14:"Poll aggregate";s:11:"description";s:45:"Aggregates poll results for all translations.";s:12:"dependencies";a:2:{i:0;s:11:"translation";i:1;s:4:"poll";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18nprofile/i18nprofile.module',
@@ -44893,7 +45711,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '2',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:19:"Profile translation";s:11:"description";s:36:"Enables multilingual profile fields.";s:12:"dependencies";a:2:{i:0;s:7:"profile";i:1;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:19:"Profile translation";s:11:"description";s:36:"Enables multilingual profile fields.";s:12:"dependencies";a:2:{i:0;s:7:"profile";i:1;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18nstrings/i18nstrings.module',
@@ -44905,7 +45723,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6006',
   'weight' => '10',
-  'info' => 'a:10:{s:4:"name";s:18:"String translation";s:11:"description";s:57:"Provides support for translation of user defined strings.";s:12:"dependencies";a:1:{i:0;s:6:"locale";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:18:"String translation";s:11:"description";s:57:"Provides support for translation of user defined strings.";s:12:"dependencies";a:1:{i:0;s:6:"locale";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18nsync/i18nsync.module',
@@ -44917,7 +45735,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:24:"Synchronize translations";s:11:"description";s:74:"Synchronizes taxonomy and fields accross translations of the same content.";s:12:"dependencies";a:1:{i:0;s:4:"i18n";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:24:"Synchronize translations";s:11:"description";s:74:"Synchronizes taxonomy and fields accross translations of the same content.";s:12:"dependencies";a:1:{i:0;s:4:"i18n";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/i18ntaxonomy/i18ntaxonomy.module',
@@ -44929,7 +45747,19 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6002',
   'weight' => '5',
-  'info' => 'a:10:{s:4:"name";s:20:"Taxonomy translation";s:11:"description";s:30:"Enables multilingual taxonomy.";s:12:"dependencies";a:3:{i:0;s:4:"i18n";i:1;s:8:"taxonomy";i:2;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:20:"Taxonomy translation";s:11:"description";s:30:"Enables multilingual taxonomy.";s:12:"dependencies";a:3:{i:0;s:4:"i18n";i:1;s:8:"taxonomy";i:2;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18nviews/i18nviews.module',
+  'name' => 'i18nviews',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'throttle' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:10:{s:4:"name";s:17:"Views translation";s:11:"description";s:80:"Translation of views strings and content selection for views. Requires Views 3.x";s:12:"dependencies";a:3:{i:0;s:5:"views";i:1;s:11:"i18nstrings";i:2;s:12:"i18ntaxonomy";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/i18n/tests/i18n_test.module',
@@ -44941,7 +45771,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:26:"Internationalization tests";s:11:"description";s:55:"Helper module for testing i18n (do not enable manually)";s:12:"dependencies";a:3:{i:0;s:6:"locale";i:1;s:11:"translation";i:2;s:4:"i18n";}s:7:"package";s:7:"Testing";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:26:"Internationalization tests";s:11:"description";s:55:"Helper module for testing i18n (do not enable manually)";s:12:"dependencies";a:3:{i:0;s:6:"locale";i:1;s:11:"translation";i:2;s:4:"i18n";}s:7:"package";s:5:"Devel";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-1.4";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1270669810";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/imageapi/imageapi.module',
@@ -44953,7 +45783,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:8:"ImageAPI";s:11:"description";s:38:"ImageAPI supporting multiple toolkits.";s:7:"package";s:10:"ImageCache";s:4:"core";s:3:"6.x";s:3:"php";s:3:"5.1";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:8:"imageapi";s:9:"datestamp";s:10:"1305563215";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}}',
+  'info' => 'a:10:{s:4:"name";s:8:"ImageAPI";s:11:"description";s:38:"ImageAPI supporting multiple toolkits.";s:7:"package";s:10:"ImageCache";s:4:"core";s:3:"6.x";s:3:"php";s:3:"5.1";s:7:"version";s:13:"6.x-1.9+4-dev";s:7:"project";s:8:"imageapi";s:9:"datestamp";s:10:"1380582658";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/imageapi/imageapi_gd.module',
@@ -44965,7 +45795,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => "a:10:{s:4:\"name\";s:12:\"ImageAPI GD2\";s:11:\"description\";s:49:\"Uses PHP's built-in GD2 image processing support.\";s:7:\"package\";s:10:\"ImageCache\";s:4:\"core\";s:3:\"6.x\";s:7:\"version\";s:8:\"6.x-1.10\";s:7:\"project\";s:8:\"imageapi\";s:9:\"datestamp\";s:10:\"1305563215\";s:12:\"dependencies\";a:0:{}s:10:\"dependents\";a:0:{}s:3:\"php\";s:5:\"4.3.5\";}",
+  'info' => "a:10:{s:4:\"name\";s:12:\"ImageAPI GD2\";s:11:\"description\";s:49:\"Uses PHP's built-in GD2 image processing support.\";s:7:\"package\";s:10:\"ImageCache\";s:4:\"core\";s:3:\"6.x\";s:7:\"version\";s:13:\"6.x-1.9+4-dev\";s:7:\"project\";s:8:\"imageapi\";s:9:\"datestamp\";s:10:\"1380582658\";s:12:\"dependencies\";a:0:{}s:10:\"dependents\";a:0:{}s:3:\"php\";s:5:\"4.3.5\";}",
 ))
 ->values(array(
   'filename' => 'sites/all/modules/imageapi/imageapi_imagemagick.module',
@@ -44977,7 +45807,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:20:"ImageAPI ImageMagick";s:11:"description";s:33:"Command Line ImageMagick support.";s:7:"package";s:10:"ImageCache";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:8:"imageapi";s:9:"datestamp";s:10:"1305563215";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:20:"ImageAPI ImageMagick";s:11:"description";s:33:"Command Line ImageMagick support.";s:7:"package";s:10:"ImageCache";s:4:"core";s:3:"6.x";s:7:"version";s:13:"6.x-1.9+4-dev";s:7:"project";s:8:"imageapi";s:9:"datestamp";s:10:"1380582658";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/imagecache/imagecache.module',
@@ -44989,7 +45819,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6001',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:10:"ImageCache";s:11:"description";s:36:"Dynamic image manipulator and cache.";s:7:"package";s:10:"ImageCache";s:12:"dependencies";a:1:{i:0;s:8:"imageapi";}s:4:"core";s:3:"6.x";s:7:"version";s:11:"6.x-2.0-rc1";s:7:"project";s:10:"imagecache";s:9:"datestamp";s:10:"1337742655";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"ImageCache";s:11:"description";s:36:"Dynamic image manipulator and cache.";s:7:"package";s:10:"ImageCache";s:12:"dependencies";a:1:{i:0;s:8:"imageapi";}s:4:"core";s:3:"6.x";s:7:"version";s:18:"6.x-2.0-rc1+16-dev";s:7:"project";s:10:"imagecache";s:9:"datestamp";s:10:"1380582680";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/imagecache/imagecache_ui.module',
@@ -45001,7 +45831,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:13:"ImageCache UI";s:11:"description";s:26:"ImageCache User Interface.";s:12:"dependencies";a:2:{i:0;s:10:"imagecache";i:1;s:8:"imageapi";}s:7:"package";s:10:"ImageCache";s:4:"core";s:3:"6.x";s:7:"version";s:11:"6.x-2.0-rc1";s:7:"project";s:10:"imagecache";s:9:"datestamp";s:10:"1337742655";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:13:"ImageCache UI";s:11:"description";s:26:"ImageCache User Interface.";s:12:"dependencies";a:2:{i:0;s:10:"imagecache";i:1;s:8:"imageapi";}s:7:"package";s:10:"ImageCache";s:4:"core";s:3:"6.x";s:7:"version";s:18:"6.x-2.0-rc1+16-dev";s:7:"project";s:10:"imagecache";s:9:"datestamp";s:10:"1380582680";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/imagefield/imagefield.module',
@@ -45013,7 +45843,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '6006',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:10:"ImageField";s:11:"description";s:28:"Defines an image field type.";s:4:"core";s:3:"6.x";s:12:"dependencies";a:2:{i:0;s:7:"content";i:1;s:9:"filefield";}s:7:"package";s:3:"CCK";s:7:"version";s:8:"6.x-3.11";s:7:"project";s:10:"imagefield";s:9:"datestamp";s:10:"1365969012";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:10:"ImageField";s:11:"description";s:28:"Defines an image field type.";s:4:"core";s:3:"6.x";s:12:"dependencies";a:2:{i:0;s:7:"content";i:1;s:9:"filefield";}s:7:"package";s:3:"CCK";s:7:"version";s:7:"6.x-3.3";s:7:"project";s:10:"imagefield";s:9:"datestamp";s:10:"1273102211";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/jquery_ui/jquery_ui.module',
@@ -45032,7 +45862,7 @@ $connection->insert('system')
   'name' => 'link',
   'type' => 'module',
   'owner' => '',
-  'status' => '1',
+  'status' => '0',
   'throttle' => '0',
   'bootstrap' => '0',
   'schema_version' => '6002',
@@ -45056,7 +45886,7 @@ $connection->insert('system')
   'name' => 'phone',
   'type' => 'module',
   'owner' => '',
-  'status' => '1',
+  'status' => '0',
   'throttle' => '0',
   'bootstrap' => '0',
   'schema_version' => '6200',
@@ -45073,7 +45903,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:9:{s:4:"name";s:12:"Variable API";s:11:"description";s:12:"Variable API";s:4:"core";s:3:"6.x";s:7:"version";s:14:"6.x-1.0-alpha1";s:7:"project";s:8:"variable";s:9:"datestamp";s:10:"1414059742";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:9:{s:4:"name";s:12:"Variable API";s:11:"description";s:12:"Variable API";s:4:"core";s:3:"6.x";s:7:"version";s:11:"6.x-1.x-dev";s:7:"project";s:8:"variable";s:9:"datestamp";s:10:"1406295528";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/variable/variable_admin/variable_admin.module',
@@ -45085,7 +45915,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '0',
   'weight' => '0',
-  'info' => 'a:9:{s:4:"name";s:14:"Variable admin";s:11:"description";s:23:"Variable API - Admin UI";s:4:"core";s:3:"6.x";s:7:"version";s:14:"6.x-1.0-alpha1";s:7:"project";s:8:"variable";s:9:"datestamp";s:10:"1414059742";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:9:{s:4:"name";s:14:"Variable admin";s:11:"description";s:23:"Variable API - Admin UI";s:4:"core";s:3:"6.x";s:7:"version";s:11:"6.x-1.x-dev";s:7:"project";s:8:"variable";s:9:"datestamp";s:10:"1406295528";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/views/tests/views_test.module',
@@ -45109,7 +45939,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:5:"Views";s:11:"description";s:55:"Create customized lists and queries from your database.";s:7:"package";s:5:"Views";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.18";s:7:"project";s:5:"views";s:9:"datestamp";s:10:"1423647793";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:5:"Views";s:11:"description";s:55:"Create customized lists and queries from your database.";s:7:"package";s:5:"Views";s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-3.2";s:7:"project";s:5:"views";s:9:"datestamp";s:10:"1423647787";s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/views/views_export/views_export.module',
@@ -45121,7 +45951,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:14:"Views exporter";s:11:"description";s:40:"Allows exporting multiple views at once.";s:7:"package";s:5:"Views";s:12:"dependencies";a:1:{i:0;s:5:"views";}s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-2.18";s:7:"project";s:5:"views";s:9:"datestamp";s:10:"1423647793";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:14:"Views exporter";s:11:"description";s:40:"Allows exporting multiple views at once.";s:7:"package";s:5:"Views";s:12:"dependencies";a:1:{i:0;s:5:"views";}s:4:"core";s:3:"6.x";s:7:"version";s:7:"6.x-3.2";s:7:"project";s:5:"views";s:9:"datestamp";s:10:"1423647787";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/views/views_ui.module',
@@ -45133,7 +45963,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:8:"Views UI";s:11:"description";s:93:"Administrative interface to views. Without this module, you cannot create or edit your views.";s:7:"package";s:5:"Views";s:4:"core";s:3:"6.x";s:12:"dependencies";a:1:{i:0;s:5:"views";}s:7:"version";s:8:"6.x-2.18";s:7:"project";s:5:"views";s:9:"datestamp";s:10:"1423647793";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:10:{s:4:"name";s:8:"Views UI";s:11:"description";s:93:"Administrative interface to views. Without this module, you cannot create or edit your views.";s:7:"package";s:5:"Views";s:4:"core";s:3:"6.x";s:12:"dependencies";a:1:{i:0;s:5:"views";}s:7:"version";s:7:"6.x-3.2";s:7:"project";s:5:"views";s:9:"datestamp";s:10:"1423647787";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'themes/bluemarine/bluemarine.info',
@@ -45145,7 +45975,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:11:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:13:{s:4:"name";s:10:"Bluemarine";s:11:"description";s:66:"Table-based multi-column theme with a marine and ash color scheme.";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/bluemarine/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/bluemarine/script.js";}s:10:"screenshot";s:32:"themes/bluemarine/screenshot.png";s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'themes/chameleon/chameleon.info',
@@ -45157,7 +45987,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:10:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:12:{s:4:"name";s:9:"Chameleon";s:11:"description";s:42:"Minimalist tabled theme with light colors.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:8:"features";a:4:{i:0;s:4:"logo";i:1;s:7:"favicon";i:2;s:4:"name";i:3;s:6:"slogan";}s:11:"stylesheets";a:1:{s:3:"all";a:2:{s:9:"style.css";s:26:"themes/chameleon/style.css";s:10:"common.css";s:27:"themes/chameleon/common.css";}}s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"scripts";a:1:{s:9:"script.js";s:26:"themes/chameleon/script.js";}s:10:"screenshot";s:31:"themes/chameleon/screenshot.png";s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'themes/chameleon/marvin/marvin.info',
@@ -45169,7 +45999,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:11:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:13:{s:4:"name";s:6:"Marvin";s:11:"description";s:31:"Boxy tabled theme in all grays.";s:7:"regions";a:2:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";}s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:10:"base theme";s:9:"chameleon";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:33:"themes/chameleon/marvin/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/chameleon/marvin/script.js";}s:10:"screenshot";s:38:"themes/chameleon/marvin/screenshot.png";s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'themes/garland/garland.info',
@@ -45181,7 +46011,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:11:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:13:{s:4:"name";s:7:"Garland";s:11:"description";s:66:"Tableless, recolorable, multi-column, fluid width theme (default).";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:11:"stylesheets";a:2:{s:3:"all";a:1:{s:9:"style.css";s:24:"themes/garland/style.css";}s:5:"print";a:1:{s:9:"print.css";s:24:"themes/garland/print.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:24:"themes/garland/script.js";}s:10:"screenshot";s:29:"themes/garland/screenshot.png";s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'themes/garland/minnelli/minnelli.info',
@@ -45193,7 +46023,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:12:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}',
+  'info' => 'a:14:{s:4:"name";s:8:"Minnelli";s:11:"description";s:56:"Tableless, recolorable, multi-column, fixed width theme.";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:10:"base theme";s:7:"garland";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:12:"minnelli.css";s:36:"themes/garland/minnelli/minnelli.css";}}s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:7:"scripts";a:1:{s:9:"script.js";s:33:"themes/garland/minnelli/script.js";}s:10:"screenshot";s:38:"themes/garland/minnelli/screenshot.png";s:3:"php";s:5:"4.3.5";s:6:"engine";s:11:"phptemplate";}',
 ))
 ->values(array(
   'filename' => 'themes/pushbutton/pushbutton.info',
@@ -45205,7 +46035,7 @@ $connection->insert('system')
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:11:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:8:"6.38-dev";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:13:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}',
 ))
 ->execute();
 
@@ -45273,28 +46103,28 @@ $connection->insert('term_data')
 ->values(array(
   'tid' => '1',
   'vid' => '1',
-  'name' => 'term 1 of vocabulary 1',
-  'description' => 'description of term 1 of vocabulary 1',
+  'name' => 'zu - term 1 of vocabulary 1',
+  'description' => 'zu - description of term 1 of vocabulary 1',
   'weight' => '0',
-  'language' => '',
+  'language' => 'zu',
   'trid' => '0',
 ))
 ->values(array(
   'tid' => '2',
   'vid' => '2',
-  'name' => 'term 2 of vocabulary 2',
-  'description' => 'description of term 2 of vocabulary 2',
+  'name' => 'fr - term 2 of vocabulary 2',
+  'description' => 'fr - description of term 2 of vocabulary 2',
   'weight' => '3',
-  'language' => '',
+  'language' => 'fr',
   'trid' => '0',
 ))
 ->values(array(
   'tid' => '3',
   'vid' => '2',
-  'name' => 'term 3 of vocabulary 2',
-  'description' => 'description of term 3 of vocabulary 2',
+  'name' => 'fr - term 3 of vocabulary 2',
+  'description' => 'fr - description of term 3 of vocabulary 2',
   'weight' => '4',
-  'language' => '',
+  'language' => 'fr',
   'trid' => '0',
 ))
 ->values(array(
@@ -45321,6 +46151,24 @@ $connection->insert('term_data')
   'name' => 'term 6 of vocabulary 3',
   'description' => 'description of term 6 of vocabulary 3',
   'weight' => '8',
+  'language' => '',
+  'trid' => '0',
+))
+->values(array(
+  'tid' => '7',
+  'vid' => '1',
+  'name' => 'fr - term 2 of vocabulary 1',
+  'description' => 'fr - desc of term 2 vocab 1',
+  'weight' => '0',
+  'language' => 'fr',
+  'trid' => '0',
+))
+->values(array(
+  'tid' => '8',
+  'vid' => '7',
+  'name' => 'General discussion',
+  'description' => '',
+  'weight' => '0',
   'language' => '',
   'trid' => '0',
 ))
@@ -45365,6 +46213,14 @@ $connection->insert('term_hierarchy')
 ))
 ->values(array(
   'tid' => '4',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '7',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '8',
   'parent' => '0',
 ))
 ->values(array(
@@ -45428,6 +46284,11 @@ $connection->insert('term_node')
   'tid' => '1',
 ))
 ->values(array(
+  'nid' => '1',
+  'vid' => '1',
+  'tid' => '2',
+))
+->values(array(
   'nid' => '2',
   'vid' => '3',
   'tid' => '2',
@@ -45446,6 +46307,11 @@ $connection->insert('term_node')
   'nid' => '1',
   'vid' => '2',
   'tid' => '5',
+))
+->values(array(
+  'nid' => '19',
+  'vid' => '22',
+  'tid' => '8',
 ))
 ->execute();
 
@@ -45871,8 +46737,8 @@ $connection->insert('users')
   'signature' => '',
   'signature_format' => '0',
   'created' => '0',
-  'access' => '1467889223',
-  'login' => '1467886039',
+  'access' => '1494966478',
+  'login' => '1494966280',
   'status' => '1',
   'timezone' => NULL,
   'language' => '',
@@ -46102,10 +46968,6 @@ $connection->insert('variable')
 ->fields(array(
   'name',
   'value',
-))
-->values(array(
-  'name' => 'menu_default_node_menu',
-  'value' => 's:10:"navigation";',
 ))
 ->values(array(
   'name' => 'actions_max_stack',
@@ -46524,6 +47386,10 @@ $connection->insert('variable')
   'value' => 'i:3;',
 ))
 ->values(array(
+  'name' => 'content_extra_weights_employee',
+  'value' => 'a:11:{s:5:"title";s:2:"-5";s:10:"body_field";s:1:"0";s:20:"revision_information";s:2:"20";s:6:"author";s:2:"20";s:7:"options";s:2:"25";s:16:"comment_settings";s:2:"30";s:8:"language";s:1:"0";s:11:"translation";s:2:"30";s:4:"menu";s:2:"-2";s:4:"book";s:2:"10";s:4:"path";s:2:"30";}',
+))
+->values(array(
   'name' => 'content_extra_weights_story',
   'value' => 'a:9:{s:5:"title";s:2:"-5";s:10:"body_field";s:2:"-2";s:20:"revision_information";s:2:"19";s:6:"author";s:2:"18";s:7:"options";s:2:"20";s:16:"comment_settings";s:2:"22";s:4:"menu";s:2:"-3";s:8:"taxonomy";s:2:"-4";s:11:"attachments";s:2:"21";}',
 ))
@@ -46545,7 +47411,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'css_js_query_string',
-  'value' => 's:20:"8SAkMTxRZndiw7000000";',
+  'value' => 's:20:"y8SAkMTxRZndiw700000";',
 ))
 ->values(array(
   'name' => 'date:story:4:field_test_datestamp_fromto',
@@ -46925,7 +47791,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'forum_nav_vocabulary',
-  'value' => 's:1:"1";',
+  'value' => 's:1:"7";',
 ))
 ->values(array(
   'name' => 'forum_order',
@@ -46938,6 +47804,10 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'i18nstrings_allowed_formats',
   'value' => 'a:2:{i:0;i:1;i:1;i:2;}',
+))
+->values(array(
+  'name' => 'i18ntaxonomy_vocabulary',
+  'value' => 'a:2:{i:1;s:1:"3";i:2;s:1:"2";}',
 ))
 ->values(array(
   'name' => 'i18n_lock_node_article',
@@ -46953,7 +47823,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'javascript_parsed',
-  'value' => 'a:9:{i:0;s:14:"misc/jquery.js";i:1;s:14:"misc/drupal.js";i:2;s:19:"misc/tableheader.js";i:3;s:16:"misc/collapse.js";s:10:"refresh:fr";s:7:"waiting";s:10:"refresh:zu";s:7:"waiting";i:4;s:17:"misc/tabledrag.js";i:5;s:22:"modules/block/block.js";i:6;s:16:"misc/textarea.js";}',
+  'value' => 'a:16:{i:0;s:14:"misc/jquery.js";i:1;s:14:"misc/drupal.js";i:2;s:19:"misc/tableheader.js";s:10:"refresh:fr";s:7:"waiting";s:10:"refresh:zu";s:7:"waiting";i:3;s:17:"misc/tabledrag.js";i:4;s:32:"sites/all/modules/cck/content.js";i:5;s:16:"misc/textarea.js";i:6;s:16:"misc/collapse.js";i:7;s:12:"misc/form.js";i:8;s:19:"misc/tableselect.js";i:9;s:20:"modules/user/user.js";i:10;s:20:"misc/autocomplete.js";i:11;s:19:"misc/jquery.form.js";i:12;s:12:"misc/ahah.js";i:13;s:14:"misc/teaser.js";}',
 ))
 ->values(array(
   'name' => 'language_content_type_article',
@@ -46982,6 +47852,10 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'locale_js_directory',
   'value' => 's:9:"languages";',
+))
+->values(array(
+  'name' => 'menu_default_node_menu',
+  'value' => 's:10:"navigation";',
 ))
 ->values(array(
   'name' => 'menu_expanded',
@@ -47228,11 +48102,15 @@ $connection->insert('variable')
   'value' => 'b:0;',
 ))
 ->values(array(
-  'name' => 'upload_test_page',
-  'value' => 'b:0;',
+  'name' => 'upload_story',
+  'value' => 'b:1;',
 ))
 ->values(array(
   'name' => 'upload_test_event',
+  'value' => 'b:0;',
+))
+->values(array(
+  'name' => 'upload_test_page',
   'value' => 'b:0;',
 ))
 ->values(array(
@@ -47242,10 +48120,6 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'upload_test_story',
   'value' => 'b:0;',
-))
-->values(array(
-  'name' => 'upload_story',
-  'value' => 'b:1;',
 ))
 ->values(array(
   'name' => 'user_block_max_list_count',
@@ -47463,7 +48337,7 @@ $connection->insert('vocabulary')
   'tags' => '1',
   'module' => 'taxonomy',
   'weight' => '5',
-  'language' => '',
+  'language' => 'fr',
 ))
 ->values(array(
   'vid' => '3',
@@ -47507,6 +48381,34 @@ $connection->insert('vocabulary')
   'weight' => '7',
   'language' => '',
 ))
+->values(array(
+  'vid' => '6',
+  'name' => 'Type',
+  'description' => '',
+  'help' => '',
+  'relations' => '1',
+  'hierarchy' => '0',
+  'multiple' => '0',
+  'required' => '0',
+  'tags' => '0',
+  'module' => 'taxonomy',
+  'weight' => '0',
+  'language' => '',
+))
+->values(array(
+  'vid' => '7',
+  'name' => 'Forums',
+  'description' => '',
+  'help' => '',
+  'relations' => '1',
+  'hierarchy' => '0',
+  'multiple' => '0',
+  'required' => '0',
+  'tags' => '0',
+  'module' => 'taxonomy',
+  'weight' => '0',
+  'language' => '',
+))
 ->execute();
 
 $connection->schema()->createTable('vocabulary_node_types', array(
@@ -47542,12 +48444,16 @@ $connection->insert('vocabulary_node_types')
   'type' => 'article',
 ))
 ->values(array(
-  'vid' => '1',
+  'vid' => '7',
   'type' => 'forum',
 ))
 ->values(array(
   'vid' => '4',
   'type' => 'page',
+))
+->values(array(
+  'vid' => '6',
+  'type' => 'sponsor',
 ))
 ->values(array(
   'vid' => '1',

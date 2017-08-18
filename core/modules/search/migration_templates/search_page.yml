@@ -16,6 +16,7 @@ source:
     id: node_search
     path: node
     plugin: node_search
+  source_module: search
 process:
   id: 'constants/id'
   path: 'constants/path'

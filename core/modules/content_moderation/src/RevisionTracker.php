@@ -8,6 +8,8 @@ use Drupal\Core\Database\SchemaObjectExistsException;
 
 /**
  * Tracks metadata about revisions across entities.
+ *
+ * @internal
  */
 class RevisionTracker implements RevisionTrackerInterface {
 

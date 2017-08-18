@@ -21,6 +21,9 @@ file.settings:
         directory:
           type: path
           label: 'Directory'
+    make_unused_managed_files_temporary:
+      type: boolean
+      label: 'Controls if unused files should be marked temporary'
 
 field.storage_settings.file:
   type: base_entity_reference_field_settings
@@ -48,7 +51,7 @@ base_file_field_field_settings:
       label: 'Reference method'
     handler_settings:
       type: entity_reference_selection.[%parent.handler]
-      label: 'Entity reference selection settings'
+      label: 'File selection handler settings'
     file_directory:
       type: string
       label: 'File directory'

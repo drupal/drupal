@@ -327,7 +327,8 @@ class CacheCollectorTest extends UnitTestCase {
     // invalidation.
     $this->cacheBackend->expects($this->at(0))
       ->method('get')
-      ->with($this->cid, TRUE);
+      ->with($this->cid, TRUE)
+      ->will($this->returnValue($cache));
     $this->cacheBackend->expects($this->once())
       ->method('set')
       ->with($this->cid, [], Cache::PERMANENT, []);

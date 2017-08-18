@@ -282,7 +282,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[0][alt]' => $image['#alt'],
       $field_name . '[0][title]' => $image['#title'],
     ];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save'));
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->assertRaw($default_output, 'Image displayed using user supplied alt and title attributes.');
 
@@ -292,7 +292,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[0][alt]' => $this->randomMachineName($test_size),
       $field_name . '[0][title]' => $this->randomMachineName($test_size),
     ];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save'));
     $schema = $field->getFieldStorageDefinition()->getSchema();
     $this->assertRaw(t('Alternative text cannot be longer than %max characters but is currently %length characters long.', [
       '%max' => $schema['columns']['alt']['length'],
@@ -314,9 +314,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = [
       'files[' . $field_name . '_1][]' => drupal_realpath($test_image->uri),
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     // Add the required alt text.
-    $this->drupalPostForm(NULL, [$field_name . '[1][alt]' => $alt], t('Save and keep published'));
+    $this->drupalPostForm(NULL, [$field_name . '[1][alt]' => $alt], t('Save'));
     $this->assertText(format_string('Article @title has been updated.', ['@title' => $node->getTitle()]));
 
     // Assert ImageWidget::process() calls FieldWidget::process().

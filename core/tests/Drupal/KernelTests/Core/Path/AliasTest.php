@@ -216,4 +216,62 @@ class AliasTest extends PathUnitTestBase {
     $this->assertEqual($memoryCounterBackend->getCounter('set', 'path_alias_whitelist'), 0);
   }
 
+  /**
+   * Tests situation where the whitelist cache is deleted mid-request.
+   */
+  public function testWhitelistCacheDeletionMidRequest() {
+    // Prepare database table.
+    $connection = Database::getConnection();
+    $this->fixtures->createTables($connection);
+
+    $memoryCounterBackend = new MemoryCounterBackend();
+
+    // Create AliasManager and Path object.
+    $aliasStorage = new AliasStorage($connection, $this->container->get('module_handler'));
+    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $aliasStorage);
+    $aliasManager = new AliasManager($aliasStorage, $whitelist, $this->container->get('language_manager'), $memoryCounterBackend);
+
+    // Whitelist cache should not exist at all yet.
+    $this->assertFalse($memoryCounterBackend->get('path_alias_whitelist'));
+
+    // Add some aliases for both menu routes we have.
+    $aliasStorage->save('/admin/something', '/' . $this->randomMachineName());
+    $aliasStorage->save('/user/something', '/' . $this->randomMachineName());
+    $aliasManager->cacheClear();
+
+    // Lookup admin path in whitelist. It will query the DB and figure out
+    // that it indeed has an alias, and add it to the internal whitelist and
+    // flag it to be peristed to cache.
+    $this->assertTrue($whitelist->get('admin'));
+
+    // Destruct the whitelist so it persists its cache.
+    $whitelist->destruct();
+    $this->assertEquals($memoryCounterBackend->getCounter('set', 'path_alias_whitelist'), 1);
+    // Cache data should have data for 'user' and 'admin', even though just
+    // 'admin' was looked up. This is because the cache is primed with all
+    // menu router base paths.
+    $this->assertEquals(['user' => FALSE, 'admin' => TRUE], $memoryCounterBackend->get('path_alias_whitelist')->data);
+    $memoryCounterBackend->resetCounter();
+
+    // Re-initialize the the whitelist and lookup an alias for the 'user' path.
+    // Whitelist should load data from its cache, see that it hasn't done a
+    // check for 'user' yet, perform the check, then mark the result to be
+    // persisted to cache.
+    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $aliasStorage);
+    $this->assertTrue($whitelist->get('user'));
+
+    // Delete the whitelist cache. This could happen from an outside process,
+    // like a code deployment that performs a cache rebuild.
+    $memoryCounterBackend->delete('path_alias_whitelist');
+
+    // Destruct whitelist so it attempts to save the whitelist data to cache.
+    // However it should recognize that the previous cache entry was deleted
+    // from underneath it and not save anything to cache, to protect from
+    // cache corruption.
+    $whitelist->destruct();
+    $this->assertEquals($memoryCounterBackend->getCounter('set', 'path_alias_whitelist'), 0);
+    $this->assertFalse($memoryCounterBackend->get('path_alias_whitelist'));
+    $memoryCounterBackend->resetCounter();
+  }
+
 }

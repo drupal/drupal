@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\config_translation\Functional;
 
-use Drupal\views_ui\Tests\UITestBase;
+use Drupal\Tests\views_ui\Functional\UITestBase;
 
 /**
  * Visit view list and test if translate is available.
@@ -25,8 +25,8 @@ class ConfigTranslationViewListUiTest extends UITestBase {
    */
   public static $modules = ['config_translation', 'views_ui'];
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     $permissions = [
       'administer views',

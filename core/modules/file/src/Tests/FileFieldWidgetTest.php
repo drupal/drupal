@@ -121,7 +121,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertTrue(isset($label[0]), 'Label for upload found.');
 
       // Save the node and ensure it does not have the file.
-      $this->drupalPostForm(NULL, [], t('Save and keep published'));
+      $this->drupalPostForm(NULL, [], t('Save'));
       $node_storage->resetCache([$nid]);
       $node = $node_storage->load($nid);
       $this->assertTrue(empty($node->{$field_name}->target_id), 'File was successfully removed from the node.');
@@ -238,8 +238,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), format_string('After removing all files, there is no "Remove" button displayed (JSMode=%type).', ['%type' => $type]));
 
       // Save the node and ensure it does not have any files.
-      $this->drupalPostForm(NULL, ['title[0][value]' => $this->randomMachineName()], t('Save and publish'));
-      $matches = [];
+      $this->drupalPostForm(NULL, ['title[0][value]' => $this->randomMachineName()], t('Save'));
       preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
       $nid = $matches[1];
       $node_storage->resetCache([$nid]);
@@ -368,7 +367,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
+    $this->drupalPostForm('node/add/article', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     // Add a comment with a file.
@@ -402,7 +401,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Unpublishes node.
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Save and unpublish'));
+    $edit = ['status[value]' => FALSE];
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Ensures normal user can no longer download the file.
     $this->drupalLogin($user);

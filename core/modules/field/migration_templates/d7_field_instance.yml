@@ -19,15 +19,15 @@ process:
   settings:
     plugin: d7_field_instance_settings
     source:
-      - instance_settings
-      - widget_settings
-      - field_settings
+      - settings
+      - widget
+      - field_definition
   default_value_function: ''
   default_value:
     plugin: d7_field_instance_defaults
     source:
       - default_value
-      - widget_settings
+      - widget
   translatable: translatable
 destination:
   plugin: entity:field_config

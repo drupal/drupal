@@ -2,11 +2,12 @@
 
 namespace Drupal\content_moderation\Plugin\WorkflowType;
 
-use Drupal\Core\Access\AccessResult;
+use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\content_moderation\ContentModerationState;
 use Drupal\workflows\Plugin\WorkflowTypeBase;
@@ -24,6 +25,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     "draft",
  *     "published",
  *   },
+ *   forms = {
+ *     "configure" = "\Drupal\content_moderation\Form\ContentModerationConfigureForm",
+ *     "state" = "\Drupal\content_moderation\Form\ContentModerationStateForm"
+ *   },
  * )
  */
 class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPluginInterface {
@@ -38,11 +43,38 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
   protected $entityTypeManager;
 
   /**
-   * Creates an instance of the ContentModeration WorkflowType plugin.
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+  protected $entityTypeBundleInfo;
+
+  /**
+   * The moderation information service.
+   *
+   * @var \Drupal\content_moderation\ModerationInformationInterface
+   */
+  protected $moderationInfo;
+
+  /**
+   * Constructs a ContentModeration object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_info
+   *   Moderation information service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ModerationInformationInterface $moderation_info) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->moderationInfo = $moderation_info;
   }
 
   /**
@@ -53,39 +85,18 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('content_moderation.moderation_information')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function initializeWorkflow(WorkflowInterface $workflow) {
-    $workflow
-      ->addState('draft', $this->t('Draft'))
-      ->setStateWeight('draft', -5)
-      ->addState('published', $this->t('Published'))
-      ->setStateWeight('published', 0)
-      ->addTransition('create_new_draft', $this->t('Create New Draft'), ['draft', 'published'], 'draft')
-      ->addTransition('publish', $this->t('Publish'), ['draft', 'published'], 'published');
-    return $workflow;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function checkWorkflowAccess(WorkflowInterface $entity, $operation, AccountInterface $account) {
-    if ($operation === 'view') {
-      return AccessResult::allowedIfHasPermission($account, 'view content moderation');
-    }
-    return parent::checkWorkflowAccess($entity, $operation, $account);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function decorateState(StateInterface $state) {
-    if (isset($this->configuration['states'][$state->id()])) {
+  public function getState($state_id) {
+    $state = parent::getState($state_id);
+    if (isset($this->configuration['states'][$state->id()]['published']) && isset($this->configuration['states'][$state->id()]['default_revision'])) {
       $state = new ContentModerationState($state, $this->configuration['states'][$state->id()]['published'], $this->configuration['states'][$state->id()]['default_revision']);
     }
     else {
@@ -97,30 +108,30 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
   /**
    * {@inheritdoc}
    */
-  public function buildStateConfigurationForm(FormStateInterface $form_state, WorkflowInterface $workflow, StateInterface $state = NULL) {
-    /** @var \Drupal\content_moderation\ContentModerationState $state */
-    $is_required_state = isset($state) ? in_array($state->id(), $this->getRequiredStates(), TRUE) : FALSE;
+  public function workflowHasData(WorkflowInterface $workflow) {
+    return (bool) $this->entityTypeManager
+      ->getStorage('content_moderation_state')
+      ->getQuery()
+      ->condition('workflow', $workflow->id())
+      ->count()
+      ->accessCheck(FALSE)
+      ->range(0, 1)
+      ->execute();
+  }
 
-    $form = [];
-    $form['published'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Published'),
-      '#description' => $this->t('When content reaches this state it should be published.'),
-      '#default_value' => isset($state) ? $state->isPublishedState() : FALSE,
-      '#disabled' => $is_required_state,
-    ];
-
-    $form['default_revision'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Default revision'),
-      '#description' => $this->t('When content reaches this state it should be made the default revision; this is implied for published states.'),
-      '#default_value' => isset($state) ? $state->isDefaultRevisionState() : FALSE,
-      '#disabled' => $is_required_state,
-      // @todo Add form #state to force "make default" on when "published" is
-      // on for a state.
-      // @see https://www.drupal.org/node/2645614
-    ];
-    return $form;
+  /**
+   * {@inheritdoc}
+   */
+  public function workflowStateHasData(WorkflowInterface $workflow, StateInterface $state) {
+    return (bool) $this->entityTypeManager
+      ->getStorage('content_moderation_state')
+      ->getQuery()
+      ->condition('workflow', $workflow->id())
+      ->condition('moderation_state', $state->id())
+      ->count()
+      ->accessCheck(FALSE)
+      ->range(0, 1)
+      ->execute();
   }
 
   /**
@@ -172,6 +183,9 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
    *   The bundle ID to remove.
    */
   public function removeEntityTypeAndBundle($entity_type_id, $bundle_id) {
+    if (!isset($this->configuration['entity_types'][$entity_type_id])) {
+      return;
+    }
     $key = array_search($bundle_id, $this->configuration['entity_types'][$entity_type_id], TRUE);
     if ($key !== FALSE) {
       unset($this->configuration['entity_types'][$entity_type_id][$key]);
@@ -203,19 +217,42 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    // This plugin does not store anything per transition.
     return [
       'states' => [
         'draft' => [
+          'label' => 'Draft',
           'published' => FALSE,
           'default_revision' => FALSE,
+          'weight' => 0,
         ],
         'published' => [
+          'label' => 'Published',
           'published' => TRUE,
           'default_revision' => TRUE,
+          'weight' => 1,
+        ],
+      ],
+      'transitions' => [
+        'create_new_draft' => [
+          'label' => 'Create New Draft',
+          'to' => 'draft',
+          'weight' => 0,
+          'from' => [
+            'draft',
+            'published',
+          ],
+        ],
+        'publish' => [
+          'label' => 'Publish',
+          'to' => 'published',
+          'weight' => 1,
+          'from' => [
+            'draft',
+            'published',
+          ],
         ],
       ],
       'entity_types' => [],
@@ -287,6 +324,24 @@ class ContentModeration extends WorkflowTypeBase implements ContainerFactoryPlug
     ksort($configuration['states']);
     ksort($configuration['entity_types']);
     return $configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInitialState($entity = NULL) {
+    // Workflows are not tied to entities, but Content Moderation adds the
+    // relationship between Workflows and entities. Content Moderation needs the
+    // entity object to be able to determine the initial state based on
+    // publishing status.
+    if (!($entity instanceof ContentEntityInterface)) {
+      throw new \InvalidArgumentException('A content entity object must be supplied.');
+    }
+    if ($entity instanceof EntityPublishedInterface) {
+      return $this->getState($entity->isPublished() && !$entity->isNew() ? 'published' : 'draft');
+    }
+    // Workflows determines the initial state for non-publishable entities.
+    return parent::getInitialState();
   }
 
 }

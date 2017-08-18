@@ -100,4 +100,12 @@ interface MigrateSourceInterface extends \Countable, \Iterator, PluginInspection
    */
   public function getIds();
 
+  /**
+   * Gets the source module providing the source data.
+   *
+   * @return string|null
+   *   The source module or NULL if not found.
+   */
+  public function getSourceModule();
+
 }

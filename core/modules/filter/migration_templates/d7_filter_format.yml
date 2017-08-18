@@ -10,7 +10,7 @@ process:
   cache: cache
   weight: weight
   filters:
-    plugin: iterator
+    plugin: sub_process
     source: filters
     key: '@id'
     process:

@@ -17,6 +17,8 @@ use Symfony\Component\Routing\RouteCollection;
  * Provides the following routes:
  * - The latest version tab, showing the latest revision of an entity, not the
  *   default one.
+ *
+ * @internal
  */
 class EntityModerationRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
 
@@ -81,13 +83,12 @@ class EntityModerationRouteProvider implements EntityRouteProviderInterface, Ent
         // If the entity type is a node, unpublished content will be visible
         // if the user has the "view all unpublished content" permission.
         ->setRequirement('_entity_access', "{$entity_type_id}.view")
-        ->setRequirement('_permission', 'view latest version,view any unpublished content')
         ->setRequirement('_content_moderation_latest_version', 'TRUE')
         ->setOption('_content_moderation_entity_type', $entity_type_id)
         ->setOption('parameters', [
           $entity_type_id => [
             'type' => 'entity:' . $entity_type_id,
-            'load_forward_revision' => 1,
+            'load_pending_revision' => 1,
           ],
         ]);
 

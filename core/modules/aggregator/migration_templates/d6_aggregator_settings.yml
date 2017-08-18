@@ -12,6 +12,7 @@ source:
     - aggregator_teaser_length
     - aggregator_clear
     - aggregator_summary_items
+  source_module: aggregator
 process:
   fetcher: aggregator_fetcher
   parser: aggregator_parser

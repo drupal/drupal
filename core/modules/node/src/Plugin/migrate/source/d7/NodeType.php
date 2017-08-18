@@ -10,7 +10,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "d7_node_type",
- *   source_provider = "node"
+ *   source_module = "node"
  * )
  */
 class NodeType extends DrupalSqlBase {

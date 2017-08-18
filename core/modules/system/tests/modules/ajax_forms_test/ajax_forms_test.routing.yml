@@ -30,3 +30,11 @@ ajax_forms_test.lazy_load_form:
   requirements:
     _access: 'TRUE'
 
+ajax_forms_test.image_button_form:
+  path: '/ajax_forms_image_button_form'
+  defaults:
+    _title: 'AJAX forms image button test'
+    _form: '\Drupal\ajax_forms_test\Form\AjaxFormsTestImageButtonForm'
+  requirements:
+    _access: 'TRUE'
+

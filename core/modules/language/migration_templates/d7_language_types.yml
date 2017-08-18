@@ -12,6 +12,7 @@ source:
     - locale_language_providers_weight_language
     - locale_language_providers_weight_language_content
     - locale_language_providers_weight_language_url
+  source_module: language
 process:
   all:
     plugin: language_types

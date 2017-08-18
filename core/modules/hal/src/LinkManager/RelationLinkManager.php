@@ -72,6 +72,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
     $this->moduleHandler->alter('hal_relation_uri', $uri, $context);
     // @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. This
     // hook is invoked to maintain backwards compatibility
+    // @see https://www.drupal.org/node/2830467
     $this->moduleHandler->alter('rest_relation_uri', $uri, $context);
     return $uri;
   }
@@ -100,17 +101,34 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
    *   Context from the normalizer/serializer operation.
    *
    * @return array
-   *   An array of typed data ids (entity_type, bundle, and field name) keyed
-   *   by corresponding relation URI.
+   *   An array of typed data IDs keyed by corresponding relation URI. The keys
+   *   are:
+   *   - 'entity_type_id'
+   *   - 'bundle'
+   *   - 'field_name'
+   *   - 'entity_type' (deprecated)
+   *   The values for 'entity_type_id', 'bundle' and 'field_name' are strings.
+   *   The 'entity_type' key exists for backwards compatibility and its value is
+   *   the full entity type object. The 'entity_type' key will be removed before
+   *   Drupal 9.0.
+   *
+   * @see https://www.drupal.org/node/2877608
    */
   protected function getRelations($context = []) {
     $cid = 'hal:links:relations';
     $cache = $this->cache->get($cid);
     if (!$cache) {
-      $this->writeCache($context);
-      $cache = $this->cache->get($cid);
+      $data = $this->writeCache($context);
     }
-    return $cache->data;
+    else {
+      $data = $cache->data;
+    }
+
+    // @todo https://www.drupal.org/node/2716163 Remove this in Drupal 9.0.
+    foreach ($data as $relation_uri => $ids) {
+      $data[$relation_uri]['entity_type'] = $this->entityManager->getDefinition($ids['entity_type_id']);
+    }
+    return $data;
   }
 
   /**
@@ -118,6 +136,14 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
    *
    * @param array $context
    *   Context from the normalizer/serializer operation.
+   *
+   * @return array
+   *   An array of typed data IDs keyed by corresponding relation URI. The keys
+   *   are:
+   *   - 'entity_type_id'
+   *   - 'bundle'
+   *   - 'field_name'
+   *   The values for 'entity_type_id', 'bundle' and 'field_name' are strings.
    */
   protected function writeCache($context = []) {
     $data = [];
@@ -128,7 +154,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
           foreach ($this->entityManager->getFieldDefinitions($entity_type->id(), $bundle) as $field_definition) {
             $relation_uri = $this->getRelationUri($entity_type->id(), $bundle, $field_definition->getName(), $context);
             $data[$relation_uri] = [
-              'entity_type' => $entity_type,
+              'entity_type_id' => $entity_type->id(),
               'bundle' => $bundle,
               'field_name' => $field_definition->getName(),
             ];
@@ -139,6 +165,7 @@ class RelationLinkManager extends LinkManagerBase implements RelationLinkManager
     // These URIs only change when field info changes, so cache it permanently
     // and only clear it when the fields cache is cleared.
     $this->cache->set('hal:links:relations', $data, Cache::PERMANENT, ['entity_field_info']);
+    return $data;
   }
 
 }

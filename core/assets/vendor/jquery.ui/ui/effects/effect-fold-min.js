@@ -1,0 +1,4 @@
+/*! jQuery UI - v1.12.1 - 2017-03-31
+* http://jqueryui.com
+* Copyright jQuery Foundation and other contributors; Licensed  */
+!function(a){"function"==typeof define&&define.amd?define(["jquery","../version","../effect"],a):a(jQuery)}(function(a){return a.effects.define("fold","hide",function(b,c){var d=a(this),e=b.mode,f="show"===e,g="hide"===e,h=b.size||15,i=/([0-9]+)%/.exec(h),j=!!b.horizFirst,k=j?["right","bottom"]:["bottom","right"],l=b.duration/2,m=a.effects.createPlaceholder(d),n=d.cssClip(),o={clip:a.extend({},n)},p={clip:a.extend({},n)},q=[n[k[0]],n[k[1]]],r=d.queue().length;i&&(h=parseInt(i[1],10)/100*q[g?0:1]),o.clip[k[0]]=h,p.clip[k[0]]=h,p.clip[k[1]]=0,f&&(d.cssClip(p.clip),m&&m.css(a.effects.clipToBox(p)),p.clip=n),d.queue(function(c){m&&m.animate(a.effects.clipToBox(o),l,b.easing).animate(a.effects.clipToBox(p),l,b.easing),c()}).animate(o,l,b.easing).animate(p,l,b.easing).queue(c),a.effects.unshift(d,r,4)})});

@@ -52,7 +52,7 @@ process:
     plugin: field_instance_widget_settings
     source:
       - 'widget/type'
-      - widget_settings
+      - 'widget/settings'
   'options/third_party_settings': 'constants/third_party_settings'
 destination:
   plugin: component_entity_form_display

@@ -11,5 +11,7 @@ instead.', E_USER_DEPRECATED);
  *
  * @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use
  *   \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface instead.
+ *
+ * @see https://www.drupal.org/node/2751897
  */
 interface MigrateCckFieldPluginManagerInterface extends MigrateFieldPluginManagerInterface { }

@@ -2,6 +2,7 @@
 
 namespace Drupal\file\FileUsage;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\file\FileInterface;
 
@@ -32,8 +33,11 @@ class DatabaseFileUsageBackend extends FileUsageBase {
    *   information.
    * @param string $table
    *   (optional) The table to store file usage info. Defaults to 'file_usage'.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   (optional) The config factory.
    */
-  public function __construct(Connection $connection, $table = 'file_usage') {
+  public function __construct(Connection $connection, $table = 'file_usage', ConfigFactoryInterface $config_factory = NULL) {
+    parent::__construct($config_factory);
     $this->connection = $connection;
 
     $this->tableName = $table;

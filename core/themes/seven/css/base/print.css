@@ -42,7 +42,8 @@
     color: #000;
     text-decoration: underline;
   }
-  .button, .button--primary {
+  .button,
+  .button--primary {
     background: none !important;
   }
   .messages {
@@ -70,7 +71,17 @@
     background: none;
     border-radius: 4px;
   }
-  input.form-autocomplete, input.form-text, input.form-tel, input.form-email, input.form-url, input.form-search, input.form-number, input.form-color, input.form-file, textarea.form-textarea, select.form-select {
+  input.form-autocomplete,
+  input.form-text,
+  input.form-tel,
+  input.form-email,
+  input.form-url,
+  input.form-search,
+  input.form-number,
+  input.form-color,
+  input.form-file,
+  textarea.form-textarea,
+  select.form-select {
     border-width: 1px;
   }
 }

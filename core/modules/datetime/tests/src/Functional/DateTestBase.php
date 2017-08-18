@@ -107,6 +107,7 @@ abstract class DateTestBase extends BrowserTestBase {
    */
   protected function createField() {
     $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_label = Unicode::ucfirst(Unicode::strtolower($this->randomMachineName()));
     $type = $this->getTestFieldType();
     $widget_type = $formatter_type = $type . '_default';
 
@@ -119,8 +120,9 @@ abstract class DateTestBase extends BrowserTestBase {
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
+      'label' => $field_label,
       'bundle' => 'entity_test',
-      'description' => 'Description for ' . $field_name,
+      'description' => 'Description for ' . $field_label,
       'required' => TRUE,
     ]);
     $this->field->save();

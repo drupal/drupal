@@ -2,6 +2,8 @@
 
 namespace Drupal\taxonomy\Tests;
 
+@trigger_error(__NAMESPACE__ . '\TaxonomyTestTrait is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait', E_USER_DEPRECATED);
+
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -9,6 +11,9 @@ use Drupal\taxonomy\Entity\Term;
 
 /**
  * Provides common helper methods for Taxonomy module tests.
+ *
+ * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
+ * Use \Drupal\Tests\taxonomy\Functional\TaxonomyTestTrait
  */
 trait TaxonomyTestTrait {
 

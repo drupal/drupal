@@ -13,6 +13,7 @@ source:
     - search_tag_weights
     - search_and_or_limit
     - search_default_module
+  source_module: search
 process:
   'index/minimum_word_size': minimum_word_size
   'index/overlap_cjk': overlap_cjk

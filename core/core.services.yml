@@ -316,6 +316,7 @@ services:
       - { name: backend_overridable }
   # @deprecated in Drupal 8.0.x and will be removed before 9.0.0. Use
   #   config.storage.sync instead.
+  # @see https://www.drupal.org/node/2574957
   config.storage.staging:
     class: Drupal\Core\Config\FileStorage
     factory: Drupal\Core\Config\FileStorageFactory::getSync
@@ -471,9 +472,9 @@ services:
     arguments: ['@app.root', '@module_handler', '@cache.discovery']
   theme.negotiator:
     class: Drupal\Core\Theme\ThemeNegotiator
-    arguments: ['@access_check.theme']
+    arguments: ['@access_check.theme', '@class_resolver']
     tags:
-      - { name: service_collector, tag: theme_negotiator, call: addNegotiator }
+      - { name: service_id_collector, tag: theme_negotiator }
   theme.negotiator.default:
     class: Drupal\Core\Theme\DefaultNegotiator
     arguments: ['@config.factory']
@@ -1145,7 +1146,7 @@ services:
     class: Drupal\Core\Access\CsrfRequestHeaderAccessCheck
     arguments: ['@session_configuration', '@csrf_token']
     tags:
-      - { name: access_check }
+      - { name: access_check, needs_incoming_request: TRUE }
   maintenance_mode:
     class: Drupal\Core\Site\MaintenanceMode
     arguments: ['@state', '@current_user']

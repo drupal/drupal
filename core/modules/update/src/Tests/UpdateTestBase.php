@@ -2,6 +2,8 @@
 
 namespace Drupal\update\Tests;
 
+@trigger_error(__NAMESPACE__ . '\UpdateTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\update\Functional\UpdateTestBase', E_USER_DEPRECATED);
+
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
@@ -22,6 +24,9 @@ use Drupal\simpletest\WebTestBase;
  * (via the 'update_test_xml_map' variable), and then performs a series of
  * assertions that the report matches our expectations given the specific
  * initial state and availability scenario.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0.
+ *   Use \Drupal\Tests\update\Functional\UpdateTestBase instead.
  */
 abstract class UpdateTestBase extends WebTestBase {
 
@@ -58,7 +63,7 @@ abstract class UpdateTestBase extends WebTestBase {
    *   (optional) A string containing the URL to fetch update data from.
    *   Defaults to 'update-test'.
    *
-   * @see Drupal\update_test\Controller\UpdateTestController::updateTest()
+   * @see \Drupal\update_test\Controller\UpdateTestController::updateTest()
    */
   protected function refreshUpdateStatus($xml_map, $url = 'update-test') {
     // Tell the Update Manager module to fetch from the URL provided by

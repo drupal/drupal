@@ -48,6 +48,9 @@ use Drupal\user\UserInterface;
  *   },
  *   field_ui_base_route = "entity.entity_test.admin_form",
  * )
+ *
+ * Note that this entity type annotation intentionally omits the "create" link
+ * template. See https://www.drupal.org/node/2293697.
  */
 class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
 

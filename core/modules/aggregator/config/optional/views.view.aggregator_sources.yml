@@ -143,7 +143,8 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - user.permissions
-      max-age: 0
+      max-age: -1
+      tags: {  }
   feed_1:
     display_plugin: feed
     id: feed_1
@@ -401,7 +402,8 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - user.permissions
-      max-age: 0
+      max-age: -1
+      tags: {  }
   page_1:
     display_plugin: page
     id: page_1
@@ -423,4 +425,5 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - user.permissions
-      max-age: 0
+      max-age: -1
+      tags: {  }

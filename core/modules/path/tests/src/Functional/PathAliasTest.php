@@ -356,6 +356,22 @@ class PathAliasTest extends PathTestBase {
     $this->drupalPostForm('node/' . $node_two->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('The alias is already in use.'));
     $this->assertFieldByXPath("//input[@name='path[0][alias]' and contains(@class, 'error')]", $edit['path[0][alias]'], 'Textfield exists and has the error class.');
+
+    // Behavior here differs with the inline_form_errors module enabled.
+    // Enable the inline_form_errors module and try this again. This module
+    // improves validation with a link in the error message(s) to the fields
+    // which have invalid input.
+    $this->assertTrue($this->container->get('module_installer')->install(['inline_form_errors'], TRUE), 'Installed inline_form_errors.');
+    // Attempt to edit the second node again, as before.
+    $this->drupalPostForm('node/' . $node_two->id() . '/edit', $edit, t('Preview'));
+    // This error should still be present next to the field.
+    $this->assertSession()->pageTextContains(t('The alias is already in use.'), 'Field error found with expected text.');
+    // The validation error set for the page should include this text.
+    $this->assertSession()->pageTextContains(t('1 error has been found: URL alias'), 'Form error found with expected text.');
+    // The text 'URL alias' should be a link.
+    $this->assertSession()->linkExists('URL alias');
+    // The link should be to the ID of the URL alias field.
+    $this->assertSession()->linkByHrefExists('#edit-path-0-alias');
   }
 
 }

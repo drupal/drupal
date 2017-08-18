@@ -30,6 +30,15 @@ function entity_test_update_entity_base_field_info(EntityTypeInterface $entity_t
 }
 
 /**
+ * Implements hook_entity_field_storage_info().
+ */
+function entity_test_update_entity_field_storage_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'entity_test_update') {
+    return \Drupal::state()->get('entity_test_update.additional_field_storage_definitions', []);
+  }
+}
+
+/**
  * Implements hook_entity_type_alter().
  */
 function entity_test_update_entity_type_alter(array &$entity_types) {
@@ -69,6 +78,11 @@ function entity_test_update_entity_presave(EntityInterface $entity) {
  *   to have NULL values for its translation metadata fields
  *   (e.g. content_translation_status);
  * - 52 more test entities (with the IDs 51 - 102) crated, translated and saved.
+ *
+ * The 'drupal-8.0.0-rc1-filled.standard.entity_test_update_mul_rev.php.gz' db
+ * dump was created like the multilingual one described above, with one change:
+ * The annotation of the entity_test_update entity type was also manually edited
+ * in order to make it revisionable.
  *
  * @param int $start
  *   (optional) The entity ID to start from. Defaults to 1.

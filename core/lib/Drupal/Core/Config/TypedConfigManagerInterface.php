@@ -72,4 +72,18 @@ interface TypedConfigManagerInterface extends TypedDataManagerInterface {
    */
   public function getDefinition($plugin_id, $exception_on_invalid = TRUE);
 
+  /**
+   * Gets typed data for a given configuration name and its values.
+   *
+   * @param string $config_name
+   *   The machine name of the configuration.
+   * @param array $config_data
+   *   The data associated with the configuration. Note: This configuration
+   *   doesn't yet have to be stored.
+   *
+   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface
+   *   The typed configuration element.
+   */
+  public function createFromNameAndData($config_name, array $config_data);
+
 }

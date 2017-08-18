@@ -10,6 +10,7 @@ use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -87,6 +88,13 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
   protected $serializerFormats = [];
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a new UserAuthenticationController object.
    *
    * @param \Drupal\Core\Flood\FloodInterface $flood
@@ -103,8 +111,10 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *   The serializer.
    * @param array $serializer_formats
    *   The available serialization formats.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(FloodInterface $flood, UserStorageInterface $user_storage, CsrfTokenGenerator $csrf_token, UserAuthInterface $user_auth, RouteProviderInterface $route_provider, Serializer $serializer, array $serializer_formats) {
+  public function __construct(FloodInterface $flood, UserStorageInterface $user_storage, CsrfTokenGenerator $csrf_token, UserAuthInterface $user_auth, RouteProviderInterface $route_provider, Serializer $serializer, array $serializer_formats, LoggerInterface $logger) {
     $this->flood = $flood;
     $this->userStorage = $user_storage;
     $this->csrfToken = $csrf_token;
@@ -112,6 +122,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     $this->serializer = $serializer;
     $this->serializerFormats = $serializer_formats;
     $this->routeProvider = $route_provider;
+    $this->logger = $logger;
   }
 
   /**
@@ -135,7 +146,8 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       $container->get('user.auth'),
       $container->get('router.route_provider'),
       $serializer,
-      $formats
+      $formats,
+      $container->get('logger.factory')->get('user')
     );
   }
 
@@ -205,6 +217,56 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     // Always register an IP-based failed login event.
     $this->flood->register('user.failed_login_ip', $flood_config->get('ip_window'));
     throw new BadRequestHttpException('Sorry, unrecognized username or password.');
+  }
+
+  /**
+   * Resets a user password.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response object.
+   */
+  public function resetPassword(Request $request) {
+    $format = $this->getRequestFormat($request);
+
+    $content = $request->getContent();
+    $credentials = $this->serializer->decode($content, $format);
+
+    // Check if a name or mail is provided.
+    if (!isset($credentials['name']) && !isset($credentials['mail'])) {
+      throw new BadRequestHttpException('Missing credentials.name or credentials.mail');
+    }
+
+    // Load by name if provided.
+    if (isset($credentials['name'])) {
+      $users = $this->userStorage->loadByProperties(['name' => trim($credentials['name'])]);
+    }
+    elseif (isset($credentials['mail'])) {
+      $users = $this->userStorage->loadByProperties(['mail' => trim($credentials['mail'])]);
+    }
+
+    /** @var \Drupal\Core\Session\AccountInterface $account */
+    $account = reset($users);
+    if ($account && $account->id()) {
+      if ($this->userIsBlocked($account->getAccountName())) {
+        throw new BadRequestHttpException('The user has not been activated or is blocked.');
+      }
+
+      // Send the password reset email.
+      $mail = _user_mail_notify('password_reset', $account, $account->getPreferredLangcode());
+      if (empty($mail)) {
+        throw new BadRequestHttpException('Unable to send email. Contact the site administrator if the problem persists.');
+      }
+      else {
+        $this->logger->notice('Password reset instructions mailed to %name at %email.', ['%name' => $account->getAccountName(), '%email' => $account->getEmail()]);
+        return new Response();
+      }
+    }
+
+    // Error if no users found with provided name or mail.
+    throw new BadRequestHttpException('Unrecognized username or email address.');
   }
 
   /**

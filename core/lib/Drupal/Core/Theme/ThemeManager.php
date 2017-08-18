@@ -303,7 +303,7 @@ class ThemeManager implements ThemeManagerInterface {
       unset($preprocess_bubbleable['#cache']['keys']);
       if ($preprocess_bubbleable) {
         // @todo Inject the Renderer in https://www.drupal.org/node/2529438.
-        drupal_render($preprocess_bubbleable);
+        \Drupal::service('renderer')->render($preprocess_bubbleable);
       }
     }
 

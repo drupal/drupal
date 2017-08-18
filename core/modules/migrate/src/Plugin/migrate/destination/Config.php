@@ -14,10 +14,56 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides Configuration Management destination plugin.
  *
- * Persist data to the config system.
+ * Persists data to the config system.
  *
- * When a property is NULL, the default is used unless the configuration option
- * 'store null' is set to TRUE.
+ * Available configuration keys:
+ * - store null: (optional) Boolean, if TRUE, when a property is NULL, NULL is
+ *   stored, otherwise the default is used. Defaults to FALSE.
+ * - translations: (optional) Boolean, if TRUE, the destination will be
+ *   associated with the langcode provided by the source plugin. Defaults to
+ *   FALSE.
+ *
+ * Destination properties expected in the imported row:
+ * - config_name: The machine name of the config.
+ * - langcode: (optional) The language code of the config.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: variable
+ *   variables:
+ *     - node_admin_theme
+ * process:
+ *   use_admin_theme: node_admin_theme
+ * destination:
+ *   plugin: config
+ *   config_name: node.settings
+ * @endcode
+ *
+ * This will add the value of the variable "node_admin_theme" to the config with
+ * the machine name "node.settings" as "node.settings.use_admin_theme".
+ *
+ * @code
+ * source:
+ *   plugin: i18n_variable
+ *   variables:
+ *     - site_offline_message
+ * process:
+ *   langcode: language
+ *   message: site_offline_message
+ * destination:
+ *   plugin: config
+ *   config_name: system.maintenance
+ *   translations: true
+ * @endcode
+ *
+ * This will add the value of the variable "site_offline_message" to the config
+ * with the machine name "system.maintenance" as "system.maintenance.message",
+ * coupled with the relevant langcode as obtained from the "i18n_variable"
+ * source plugin.
+ *
+ * @see \Drupal\migrate_drupal\Plugin\migrate\source\d6\i18nVariable
  *
  * @MigrateDestination(
  *   id = "config"
@@ -147,6 +193,28 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
       $config = $this->language_manager->getLanguageConfigOverride($language, $this->config->getName());
       $config->delete();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDestinationModule() {
+    if (!empty($this->configuration['destination_module'])) {
+      return $this->configuration['destination_module'];
+    }
+    if (!empty($this->pluginDefinition['destination_module'])) {
+      return $this->pluginDefinition['destination_module'];
+    }
+    // Config translations require the config_translation module so set the
+    // migration provider to 'config_translation'. The corresponding non
+    // translated configuration is expected to be handled in a separate
+    // migration.
+    if (isset($this->configuration['translations'])) {
+      return 'config_translation';
+    }
+    // Get the module handling this configuration object from the config_name,
+    // which is of the form <module_name>.<configuration object name>
+    return !empty($this->configuration['config_name']) ? explode('.', $this->configuration['config_name'], 2)[0] : NULL;
   }
 
 }

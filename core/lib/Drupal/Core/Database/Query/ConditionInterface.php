@@ -197,7 +197,7 @@ interface ConditionInterface {
    *
    * @param $conjunction
    *   - AND (default): this is the equivalent of andConditionGroup().
-   *   - OR: this is the equivalent of andConditionGroup().
+   *   - OR: this is the equivalent of orConditionGroup().
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   An object holding a group of conditions.

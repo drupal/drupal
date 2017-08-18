@@ -2,14 +2,10 @@
 
 namespace Drupal\Tests\workflows\Unit;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Drupal\workflows\Entity\Workflow;
+use Drupal\workflow_type_test\Plugin\WorkflowType\TestType;
 use Drupal\workflows\Transition;
-use Drupal\workflows\WorkflowInterface;
 use Drupal\workflows\WorkflowTypeInterface;
-use Drupal\workflows\WorkflowTypeManager;
-use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\workflows\Transition
@@ -19,33 +15,13 @@ use Prophecy\Argument;
 class TransitionTest extends UnitTestCase {
 
   /**
-   * Sets up the Workflow Type manager so that workflow entities can be used.
-   */
-  protected function setUp() {
-    parent::setUp();
-    // Create a container so that the plugin manager and workflow type can be
-    // mocked.
-    $container = new ContainerBuilder();
-    $workflow_type = $this->prophesize(WorkflowTypeInterface::class);
-    $workflow_type->setConfiguration(Argument::any())->will(function ($arguments) {
-      $this->getConfiguration()->willReturn($arguments[0]);
-    });
-    $workflow_type->decorateState(Argument::any())->willReturnArgument(0);
-    $workflow_type->decorateTransition(Argument::any())->willReturnArgument(0);
-    $workflow_manager = $this->prophesize(WorkflowTypeManager::class);
-    $workflow_manager->createInstance('test_type', Argument::any())->willReturn($workflow_type->reveal());
-    $container->set('plugin.manager.workflows.type', $workflow_manager->reveal());
-    \Drupal::setContainer($container);
-  }
-
-  /**
    * @covers ::__construct
    * @covers ::id
    * @covers ::label
    */
   public function testGetters() {
     $state = new Transition(
-      $this->prophesize(WorkflowInterface::class)->reveal(),
+      $this->prophesize(WorkflowTypeInterface::class)->reveal(),
       'draft_published',
       'Publish',
       ['draft'],
@@ -60,7 +36,7 @@ class TransitionTest extends UnitTestCase {
    * @covers ::to
    */
   public function testFromAndTo() {
-    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
+    $workflow = new TestType([], '', []);
     $workflow
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')

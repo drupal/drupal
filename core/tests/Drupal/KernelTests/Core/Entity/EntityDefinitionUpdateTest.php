@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeEvents;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionEvents;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test_update\Entity\EntityTestUpdate;
@@ -776,6 +777,11 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // of a NOT NULL constraint.
     $this->makeBaseFieldEntityKey();
 
+    // Field storage CRUD operations use the last installed entity type
+    // definition so we need to update it before doing any other field storage
+    // updates.
+    $this->entityDefinitionUpdateManager->updateEntityType($this->state->get('entity_test_update.entity_type'));
+
     // Try to apply the update and verify they fail since we have a NULL value.
     $message = 'An error occurs when trying to enabling NOT NULL constraints with NULL data.';
     try {
@@ -815,6 +821,121 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $name = 'new_long_named_entity_reference_base_field';
     $this->entityDefinitionUpdateManager->installFieldStorageDefinition($name, $entity_type_id, 'entity_test', $definitions[$name]);
     $this->assertFalse($this->entityDefinitionUpdateManager->needsUpdates(), 'Entity and field schema data are correctly detected.');
+  }
+
+  /**
+   * Tests adding a base field with initial values.
+   */
+  public function testInitialValue() {
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
+    $db_schema = $this->database->schema();
+
+    // Create two entities before adding the base field.
+    /** @var \Drupal\entity_test\Entity\EntityTestUpdate $entity */
+    $storage->create()->save();
+    $storage->create()->save();
+
+    // Add a base field with an initial value.
+    $this->addBaseField();
+    $storage_definition = BaseFieldDefinition::create('string')
+      ->setLabel(t('A new base field'))
+      ->setInitialValue('test value');
+
+    $this->assertFalse($db_schema->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' does not exist before applying the update.");
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
+    $this->assertTrue($db_schema->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' has been created on the 'entity_test_update' table.");
+
+    // Check that the initial values have been applied.
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
+    $entities = $storage->loadMultiple();
+    $this->assertEquals('test value', $entities[1]->get('new_base_field')->value);
+    $this->assertEquals('test value', $entities[2]->get('new_base_field')->value);
+  }
+
+  /**
+   * Tests adding a base field with initial values inherited from another field.
+   */
+  public function testInitialValueFromField() {
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
+    $db_schema = $this->database->schema();
+
+    // Create two entities before adding the base field.
+    /** @var \Drupal\entity_test\Entity\EntityTestUpdate $entity */
+    $storage->create(['name' => 'First entity'])->save();
+    $storage->create(['name' => 'Second entity'])->save();
+
+    // Add a base field with an initial value inherited from another field.
+    $this->addBaseField();
+    $storage_definition = BaseFieldDefinition::create('string')
+      ->setLabel(t('A new base field'))
+      ->setInitialValueFromField('name');
+
+    $this->assertFalse($db_schema->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' does not exist before applying the update.");
+    $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
+    $this->assertTrue($db_schema->fieldExists('entity_test_update', 'new_base_field'), "New field 'new_base_field' has been created on the 'entity_test_update' table.");
+
+    // Check that the initial values have been applied.
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_update');
+    $entities = $storage->loadMultiple();
+    $this->assertEquals('First entity', $entities[1]->get('new_base_field')->value);
+    $this->assertEquals('Second entity', $entities[2]->get('new_base_field')->value);
+  }
+
+  /**
+   * Tests the error handling when using initial values from another field.
+   */
+  public function testInitialValueFromFieldErrorHandling() {
+    // Check that setting invalid values for 'initial value from field' doesn't
+    // work.
+    try {
+      $this->addBaseField();
+      $storage_definition = BaseFieldDefinition::create('string')
+        ->setLabel(t('A new base field'))
+        ->setInitialValueFromField('field_that_does_not_exist');
+      $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
+      $this->fail('Using a non-existent field as initial value does not work.');
+    }
+    catch (FieldException $e) {
+      $this->assertEquals('Illegal initial value definition on new_base_field: The field field_that_does_not_exist does not exist.', $e->getMessage());
+      $this->pass('Using a non-existent field as initial value does not work.');
+    }
+
+    try {
+      $this->addBaseField();
+      $storage_definition = BaseFieldDefinition::create('integer')
+        ->setLabel(t('A new base field'))
+        ->setInitialValueFromField('name');
+      $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $storage_definition);
+      $this->fail('Using a field of a different type as initial value does not work.');
+    }
+    catch (FieldException $e) {
+      $this->assertEquals('Illegal initial value definition on new_base_field: The field types do not match.', $e->getMessage());
+      $this->pass('Using a field of a different type as initial value does not work.');
+    }
+
+    try {
+      // Add a base field that will not be stored in the shared tables.
+      $initial_field = BaseFieldDefinition::create('string')
+        ->setName('initial_field')
+        ->setLabel(t('An initial field'))
+        ->setCardinality(2);
+      $this->state->set('entity_test_update.additional_base_field_definitions', ['initial_field' => $initial_field]);
+      $this->entityDefinitionUpdateManager->installFieldStorageDefinition('initial_field', 'entity_test_update', 'entity_test', $initial_field);
+
+      // Now add the base field which will try to use the previously added field
+      // as the source of its initial values.
+      $new_base_field = BaseFieldDefinition::create('string')
+        ->setName('new_base_field')
+        ->setLabel(t('A new base field'))
+        ->setInitialValueFromField('initial_field');
+      $this->state->set('entity_test_update.additional_base_field_definitions', ['initial_field' => $initial_field, 'new_base_field' => $new_base_field]);
+      $this->entityDefinitionUpdateManager->installFieldStorageDefinition('new_base_field', 'entity_test_update', 'entity_test', $new_base_field);
+      $this->fail('Using a field that is not stored in the shared tables as initial value does not work.');
+    }
+    catch (FieldException $e) {
+      $this->assertEquals('Illegal initial value definition on new_base_field: Both fields have to be stored in the shared entity tables.', $e->getMessage());
+      $this->pass('Using a field that is not stored in the shared tables as initial value does not work.');
+    }
   }
 
 }

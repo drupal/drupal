@@ -10,6 +10,8 @@ use Drupal\user\EntityOwnerInterface;
  *
  * Content moderation state entities track the moderation state of other content
  * entities.
+ *
+ * @internal
  */
 interface ContentModerationStateInterface extends ContentEntityInterface, EntityOwnerInterface {
 

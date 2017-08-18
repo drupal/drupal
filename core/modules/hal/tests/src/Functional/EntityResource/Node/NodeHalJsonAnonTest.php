@@ -34,11 +34,12 @@ class NodeHalJsonAnonTest extends NodeResourceTestBase {
    * {@inheritdoc}
    */
   protected static $patchProtectedFieldNames = [
+    'revision_timestamp',
     'created',
     'changed',
     'promote',
     'sticky',
-    'revision_timestamp',
+    'path',
     'revision_uid',
   ];
 
@@ -54,7 +55,7 @@ class NodeHalJsonAnonTest extends NodeResourceTestBase {
     return  $normalization + [
       '_links' => [
         'self' => [
-          'href' => $this->baseUrl . '/node/1?_format=hal_json',
+          'href' => $this->baseUrl . '/llama?_format=hal_json',
         ],
         'type' => [
           'href' => $this->baseUrl . '/rest/type/node/camelids',

@@ -29,6 +29,11 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // This test expects unused managed files to be marked as temporary a file.
+    $this->config('file.settings')
+      ->set('make_unused_managed_files_temporary', TRUE)
+      ->save();
+
     // Create the "Basic page" node type.
     // @todo Remove the disabling of new revision creation in
     //   https://www.drupal.org/node/1239558.

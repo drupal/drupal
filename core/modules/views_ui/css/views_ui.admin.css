@@ -147,7 +147,7 @@
   margin-bottom: 2em;
 }
 
-@media screen and (min-width:45em) { /* 720px */
+@media screen and (min-width: 45em) { /* 720px */
   .views-display-columns > * {
     float: left; /* LTR */
     margin-left: 2%; /* LTR */

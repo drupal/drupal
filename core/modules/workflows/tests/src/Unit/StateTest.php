@@ -2,14 +2,10 @@
 
 namespace Drupal\Tests\workflows\Unit;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Drupal\workflows\Entity\Workflow;
+use Drupal\workflow_type_test\Plugin\WorkflowType\TestType;
 use Drupal\workflows\State;
-use Drupal\workflows\WorkflowInterface;
 use Drupal\workflows\WorkflowTypeInterface;
-use Drupal\workflows\WorkflowTypeManager;
-use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\workflows\State
@@ -19,28 +15,6 @@ use Prophecy\Argument;
 class StateTest extends UnitTestCase {
 
   /**
-   * Sets up the Workflow Type manager so that workflow entities can be used.
-   */
-  protected function setUp() {
-    parent::setUp();
-    // Create a container so that the plugin manager and workflow type can be
-    // mocked.
-    $container = new ContainerBuilder();
-    $workflow_type = $this->prophesize(WorkflowTypeInterface::class);
-    $workflow_type->setConfiguration(Argument::any())->will(function ($arguments) {
-      $this->getConfiguration()->willReturn($arguments[0]);
-    });
-    $workflow_type->decorateState(Argument::any())->willReturnArgument(0);
-    $workflow_type->decorateTransition(Argument::any())->willReturnArgument(0);
-    $workflow_type->deleteState(Argument::any())->willReturn(NULL);
-    $workflow_type->deleteTransition(Argument::any())->willReturn(NULL);
-    $workflow_manager = $this->prophesize(WorkflowTypeManager::class);
-    $workflow_manager->createInstance('test_type', Argument::any())->willReturn($workflow_type->reveal());
-    $container->set('plugin.manager.workflows.type', $workflow_manager->reveal());
-    \Drupal::setContainer($container);
-  }
-
-  /**
    * @covers ::__construct
    * @covers ::id
    * @covers ::label
@@ -48,7 +22,7 @@ class StateTest extends UnitTestCase {
    */
   public function testGetters() {
     $state = new State(
-      $this->prophesize(WorkflowInterface::class)->reveal(),
+      $this->prophesize(WorkflowTypeInterface::class)->reveal(),
       'draft',
       'Draft',
       3
@@ -62,16 +36,16 @@ class StateTest extends UnitTestCase {
    * @covers ::canTransitionTo
    */
   public function testCanTransitionTo() {
-    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow
+    $workflow_type = new TestType([], '', []);
+    $workflow_type
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addTransition('publish', 'Publish', ['draft'], 'published');
-    $state = $workflow->getState('draft');
+    $state = $workflow_type->getState('draft');
     $this->assertTrue($state->canTransitionTo('published'));
     $this->assertFalse($state->canTransitionTo('some_other_state'));
 
-    $workflow->deleteTransition('publish');
+    $workflow_type->deleteTransition('publish');
     $this->assertFalse($state->canTransitionTo('published'));
   }
 
@@ -79,12 +53,12 @@ class StateTest extends UnitTestCase {
    * @covers ::getTransitionTo
    */
   public function testGetTransitionTo() {
-    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow
+    $workflow_type = new TestType([], '', []);
+    $workflow_type
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addTransition('publish', 'Publish', ['draft'], 'published');
-    $state = $workflow->getState('draft');
+    $state = $workflow_type->getState('draft');
     $transition = $state->getTransitionTo('published');
     $this->assertEquals('Publish', $transition->label());
   }
@@ -94,9 +68,9 @@ class StateTest extends UnitTestCase {
    */
   public function testGetTransitionToException() {
     $this->setExpectedException(\InvalidArgumentException::class, "Can not transition to 'published' state");
-    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow->addState('draft', 'Draft');
-    $state = $workflow->getState('draft');
+    $workflow_type = new TestType([], '', []);
+    $workflow_type->addState('draft', 'Draft');
+    $state = $workflow_type->getState('draft');
     $state->getTransitionTo('published');
   }
 
@@ -104,15 +78,15 @@ class StateTest extends UnitTestCase {
    * @covers ::getTransitions
    */
   public function testGetTransitions() {
-    $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
-    $workflow
+    $workflow_type = new TestType([], '', []);
+    $workflow_type
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
       ->addState('archived', 'Archived')
       ->addTransition('create_new_draft', 'Create new draft', ['draft'], 'draft')
       ->addTransition('publish', 'Publish', ['draft'], 'published')
       ->addTransition('archive', 'Archive', ['published'], 'archived');
-    $state = $workflow->getState('draft');
+    $state = $workflow_type->getState('draft');
     $transitions = $state->getTransitions();
     $this->assertCount(2, $transitions);
     $this->assertEquals('Create new draft', $transitions['create_new_draft']->label());
@@ -123,10 +97,10 @@ class StateTest extends UnitTestCase {
    * @covers ::labelCallback
    */
   public function testLabelCallback() {
-    $workflow = $this->prophesize(WorkflowInterface::class)->reveal();
+    $workflow_type = $this->prophesize(WorkflowTypeInterface::class)->reveal();
     $states = [
-      new State($workflow, 'draft', 'Draft'),
-      new State($workflow, 'published', 'Published'),
+      new State($workflow_type, 'draft', 'Draft'),
+      new State($workflow_type, 'published', 'Published'),
     ];
     $this->assertEquals(['Draft', 'Published'], array_map([State::class, 'labelCallback'], $states));
   }

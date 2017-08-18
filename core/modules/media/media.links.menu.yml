@@ -1,0 +1,6 @@
+entity.media_type.collection:
+  title: 'Media types'
+  parent: system.admin_structure
+  description: 'Manage media types.'
+  route_name: entity.media_type.collection
+

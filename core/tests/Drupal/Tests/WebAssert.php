@@ -232,6 +232,29 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
+   * Passes if a link with the exactly specified label is found.
+   *
+   * An optional link index may be passed.
+   *
+   * @param string $label
+   *   Text between the anchor tags.
+   * @param int $index
+   *   Link position counting from zero.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use strtr() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   Thrown when element doesn't exist, or the link label is a different one.
+   */
+  public function linkExistsExact($label, $index = 0, $message = '') {
+    $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
+    $links = $this->session->getPage()->findAll('named_exact', ['link', $label]);
+    $this->assert(!empty($links[$index]), $message);
+  }
+
+  /**
    * Passes if a link with the specified label is not found.
    *
    * An optional link index may be passed.
@@ -249,6 +272,27 @@ class WebAssert extends MinkWebAssert {
   public function linkNotExists($label, $message = '') {
     $message = ($message ? $message : strtr('Link with label %label not found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named', ['link', $label]);
+    $this->assert(empty($links), $message);
+  }
+
+  /**
+   * Passes if a link with the exactly specified label is not found.
+   *
+   * An optional link index may be passed.
+   *
+   * @param string $label
+   *   Text between the anchor tags.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use strtr() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   Thrown when element doesn't exist, or the link label is a different one.
+   */
+  public function linkNotExistsExact($label, $message = '') {
+    $message = ($message ? $message : strtr('Link with label %label not found.', ['%label' => $label]));
+    $links = $this->session->getPage()->findAll('named_exact', ['link', $label]);
     $this->assert(empty($links), $message);
   }
 

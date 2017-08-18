@@ -163,6 +163,14 @@ process:
             default: basic_string
           int_phone:
             default: basic_string
+          nodereference:
+            default: entity_reference_label
+            plain: entity_reference_label
+            full: entity_reference_entity_view
+            teaser: entity_reference_entity_view
+          userreference:
+            default: entity_reference_label
+            plain: entity_reference_label
       -
         plugin: field_type_defaults
   "options/settings":
@@ -173,6 +181,18 @@ process:
         - module
         - 'display_settings/format'
       map:
+        nodereference:
+          default: { }
+          plain:
+            link: false
+          full:
+            view_mode: full
+          teaser:
+            view_mode: teaser
+        userreference:
+          default: { }
+          plain:
+            link: false
         link:
           default:
             trim_length: '80'

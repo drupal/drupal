@@ -47,9 +47,9 @@ class FieldLayoutTest extends JavascriptTestBase {
   public function testEntityViewModes() {
     // By default, the field is not visible.
     $this->drupalGet('entity_test/1/test');
-    $this->assertSession()->elementNotExists('css', '.layout-region--content .field--name-field-test-text');
+    $this->assertSession()->elementNotExists('css', '.layout__region--content .field--name-field-test-text');
     $this->drupalGet('entity_test/1');
-    $this->assertSession()->elementNotExists('css', '.layout-region--content .field--name-field-test-text');
+    $this->assertSession()->elementNotExists('css', '.layout__region--content .field--name-field-test-text');
 
     // Change the layout for the "test" view mode. See
     // core.entity_view_mode.entity_test.test.yml.
@@ -65,9 +65,9 @@ class FieldLayoutTest extends JavascriptTestBase {
 
     // Each view mode has a different layout.
     $this->drupalGet('entity_test/1/test');
-    $this->assertSession()->elementExists('css', '.layout-region--content .field--name-field-test-text');
+    $this->assertSession()->elementExists('css', '.layout__region--content .field--name-field-test-text');
     $this->drupalGet('entity_test/1');
-    $this->assertSession()->elementNotExists('css', '.layout-region--content .field--name-field-test-text');
+    $this->assertSession()->elementNotExists('css', '.layout__region--content .field--name-field-test-text');
   }
 
   /**
@@ -90,46 +90,46 @@ class FieldLayoutTest extends JavascriptTestBase {
 
     // The field is moved to the default region for the new layout.
     $this->assertSession()->pageTextContains('Your settings have been saved.');
-    $this->assertEquals(['Top', 'Left', 'Right', 'Bottom', 'Disabled'], $this->getRegionTitles());
+    $this->assertEquals(['Top', 'First', 'Second', 'Bottom', 'Disabled'], $this->getRegionTitles());
 
     $this->drupalGet('entity_test/manage/1/edit');
     // No fields are visible, and the regions don't display when empty.
-    $this->assertFieldInRegion('field_test_text[0][value]', 'left');
-    $this->assertSession()->elementExists('css', '.layout-region--left .field--name-field-test-text');
+    $this->assertFieldInRegion('field_test_text[0][value]', 'first');
+    $this->assertSession()->elementExists('css', '.layout__region--first .field--name-field-test-text');
 
     // After a refresh the new regions are still there.
     $this->drupalGet('entity_test/structure/entity_test/form-display');
-    $this->assertEquals(['Top', 'Left', 'Right', 'Bottom', 'Disabled'], $this->getRegionTitles());
+    $this->assertEquals(['Top', 'First', 'Second', 'Bottom', 'Disabled'], $this->getRegionTitles());
 
-    // Drag the field to the right region.
+    // Drag the field to the second region.
     $field_test_text_row = $this->getSession()->getPage()->find('css', '#field-test-text');
-    $right_region_row = $this->getSession()->getPage()->find('css', '.region-right-message');
-    $field_test_text_row->find('css', '.handle')->dragTo($right_region_row);
+    $second_region_row = $this->getSession()->getPage()->find('css', '.region-second-message');
+    $field_test_text_row->find('css', '.handle')->dragTo($second_region_row);
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your settings have been saved.');
 
     // The new layout is used.
     $this->drupalGet('entity_test/manage/1/edit');
-    $this->assertSession()->elementExists('css', '.layout-region--right .field--name-field-test-text');
-    $this->assertFieldInRegion('field_test_text[0][value]', 'right');
+    $this->assertSession()->elementExists('css', '.layout__region--second .field--name-field-test-text');
+    $this->assertFieldInRegion('field_test_text[0][value]', 'second');
 
-    // Move the field to the right region without tabledrag.
+    // Move the field to the second region without tabledrag.
     $this->drupalGet('entity_test/structure/entity_test/form-display');
     $this->getSession()->getPage()->pressButton('Show row weights');
-    $this->getSession()->getPage()->selectFieldOption('fields[field_test_text][region]', 'right');
+    $this->getSession()->getPage()->selectFieldOption('fields[field_test_text][region]', 'second');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your settings have been saved.');
 
     // The updated region is used.
     $this->drupalGet('entity_test/manage/1/edit');
-    $this->assertFieldInRegion('field_test_text[0][value]', 'right');
+    $this->assertFieldInRegion('field_test_text[0][value]', 'second');
 
     // The layout is still in use without Field UI.
     $this->container->get('module_installer')->uninstall(['field_ui']);
     $this->drupalGet('entity_test/manage/1/edit');
-    $this->assertFieldInRegion('field_test_text[0][value]', 'right');
+    $this->assertFieldInRegion('field_test_text[0][value]', 'second');
   }
 
   /**
@@ -147,23 +147,23 @@ class FieldLayoutTest extends JavascriptTestBase {
     $this->submitForm([], 'Save');
 
     $this->assertSession()->pageTextContains('Your settings have been saved.');
-    $this->assertEquals(['Top', 'Left', 'Right', 'Bottom', 'Disabled'], $this->getRegionTitles());
+    $this->assertEquals(['Top', 'First', 'Second', 'Bottom', 'Disabled'], $this->getRegionTitles());
 
     $this->drupalGet('entity_test/1');
     // No fields are visible, and the regions don't display when empty.
     $this->assertSession()->elementNotExists('css', '.layout--twocol');
-    $this->assertSession()->elementNotExists('css', '.layout-region');
+    $this->assertSession()->elementNotExists('css', '.layout__region');
     $this->assertSession()->elementNotExists('css', '.field--name-field-test-text');
 
     // After a refresh the new regions are still there.
     $this->drupalGet('entity_test/structure/entity_test/display');
-    $this->assertEquals(['Top', 'Left', 'Right', 'Bottom', 'Disabled'], $this->getRegionTitles());
+    $this->assertEquals(['Top', 'First', 'Second', 'Bottom', 'Disabled'], $this->getRegionTitles());
 
-    // Drag the field to the left region.
+    // Drag the field to the first region.
     $this->assertTrue($this->assertSession()->optionExists('fields[field_test_text][region]', 'hidden')->isSelected());
     $field_test_text_row = $this->getSession()->getPage()->find('css', '#field-test-text');
-    $left_region_row = $this->getSession()->getPage()->find('css', '.region-left-message');
-    $field_test_text_row->find('css', '.handle')->dragTo($left_region_row);
+    $first_region_row = $this->getSession()->getPage()->find('css', '.region-first-message');
+    $field_test_text_row->find('css', '.handle')->dragTo($first_region_row);
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertFalse($this->assertSession()->optionExists('fields[field_test_text][region]', 'hidden')->isSelected());
     $this->submitForm([], 'Save');
@@ -172,25 +172,25 @@ class FieldLayoutTest extends JavascriptTestBase {
     // The new layout is used.
     $this->drupalGet('entity_test/1');
     $this->assertSession()->elementExists('css', '.layout--twocol');
-    $this->assertSession()->elementExists('css', '.layout-region--left .field--name-field-test-text');
+    $this->assertSession()->elementExists('css', '.layout__region--first .field--name-field-test-text');
 
-    // Move the field to the right region without tabledrag.
+    // Move the field to the second region without tabledrag.
     $this->drupalGet('entity_test/structure/entity_test/display');
     $this->getSession()->getPage()->pressButton('Show row weights');
-    $this->getSession()->getPage()->selectFieldOption('fields[field_test_text][region]', 'right');
+    $this->getSession()->getPage()->selectFieldOption('fields[field_test_text][region]', 'second');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your settings have been saved.');
 
     // The updated region is used.
     $this->drupalGet('entity_test/1');
-    $this->assertSession()->elementExists('css', '.layout-region--right .field--name-field-test-text');
+    $this->assertSession()->elementExists('css', '.layout__region--second .field--name-field-test-text');
 
     // The layout is still in use without Field UI.
     $this->container->get('module_installer')->uninstall(['field_ui']);
     $this->drupalGet('entity_test/1');
     $this->assertSession()->elementExists('css', '.layout--twocol');
-    $this->assertSession()->elementExists('css', '.layout-region--right .field--name-field-test-text');
+    $this->assertSession()->elementExists('css', '.layout__region--second .field--name-field-test-text');
   }
 
   /**
@@ -258,7 +258,7 @@ class FieldLayoutTest extends JavascriptTestBase {
    *   The machine name of the region.
    */
   protected function assertFieldInRegion($field_selector, $region_name) {
-    $region_element = $this->getSession()->getPage()->find('css', ".layout-region--$region_name");
+    $region_element = $this->getSession()->getPage()->find('css', ".layout__region--$region_name");
     $this->assertNotNull($region_element);
     $this->assertSession()->fieldExists($field_selector, $region_element);
   }

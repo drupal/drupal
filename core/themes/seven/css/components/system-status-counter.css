@@ -71,7 +71,7 @@
 
 @media screen and (min-width: 61em) {
   .system-status-counter__status-icon,
-  .system-status-counter  {
+  .system-status-counter {
     height: 65px;
   }
   .system-status-counter__status-icon {

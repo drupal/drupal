@@ -21,658 +21,6 @@ class MigrateUpgradeForm extends ConfirmFormBase {
   use MigrationConfigurationTrait;
 
   /**
-   * Mapping of known migrations and their source and destination modules.
-   *
-   * @todo https://www.drupal.org/node/2569805 Hardcoding this information is
-   *   not robust - the migrations themselves should hold the necessary
-   *   information.
-   *
-   * @var array[]
-   */
-  protected $moduleUpgradePaths = [
-    'action_settings' => [
-      'source_module' => 'system',
-      'destination_module' => 'action',
-    ],
-    'd6_aggregator_feed' => [
-      'source_module' => 'aggregator',
-      'destination_module' => 'aggregator',
-    ],
-    'd6_aggregator_item' => [
-      'source_module' => 'aggregator',
-      'destination_module' => 'aggregator',
-    ],
-    'd6_aggregator_settings' => [
-      'source_module' => 'aggregator',
-      'destination_module' => 'aggregator',
-    ],
-    'd7_aggregator_feed' => [
-      'source_module' => 'aggregator',
-      'destination_module' => 'aggregator',
-    ],
-    'd7_aggregator_item' => [
-      'source_module' => 'aggregator',
-      'destination_module' => 'aggregator',
-    ],
-    'd7_aggregator_settings' => [
-      'source_module' => 'aggregator',
-      'destination_module' => 'aggregator',
-    ],
-    'd7_blocked_ips' => [
-      'source_module' => 'system',
-      'destination_module' => 'ban',
-    ],
-    'd6_block' => [
-      'source_module' => 'block',
-      'destination_module' => 'block',
-    ],
-    'd7_block' => [
-      'source_module' => 'block',
-      'destination_module' => 'block',
-    ],
-    'block_content_entity_form_display' => [
-      'source_module' => 'block',
-      'destination_module' => 'block_content',
-    ],
-    'block_content_entity_display' => [
-      'source_module' => 'block',
-      'destination_module' => 'block_content',
-    ],
-    'block_content_body_field' => [
-      'source_module' => 'block',
-      'destination_module' => 'block_content',
-    ],
-    'block_content_type' => [
-      'source_module' => 'block',
-      'destination_module' => 'block_content',
-    ],
-    'd6_custom_block' => [
-      'source_module' => 'block',
-      'destination_module' => 'block_content',
-    ],
-    'd7_custom_block' => [
-      'source_module' => 'block',
-      'destination_module' => 'block_content',
-    ],
-    'd6_book' => [
-      'source_module' => 'book',
-      'destination_module' => 'book',
-    ],
-    'd6_book_settings' => [
-      'source_module' => 'book',
-      'destination_module' => 'book',
-    ],
-    'd6_comment' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd6_comment_entity_display' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd6_comment_entity_form_display' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd6_comment_entity_form_display_subject' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd6_comment_field' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd6_comment_field_instance' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd6_comment_type' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd7_comment' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd7_comment_entity_display' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd7_comment_entity_form_display' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd7_comment_entity_form_display_subject' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd7_comment_field' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd7_comment_field_instance' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'd7_comment_type' => [
-      'source_module' => 'comment',
-      'destination_module' => 'comment',
-    ],
-    'contact_category' => [
-      'source_module' => 'contact',
-      'destination_module' => 'contact',
-    ],
-    'd6_contact_settings' => [
-      'source_module' => 'contact',
-      'destination_module' => 'contact',
-    ],
-    'd7_contact_settings' => [
-      'source_module' => 'contact',
-      'destination_module' => 'contact',
-    ],
-    'd6_dblog_settings' => [
-      'source_module' => 'dblog',
-      'destination_module' => 'dblog',
-    ],
-    'd7_dblog_settings' => [
-      'source_module' => 'dblog',
-      'destination_module' => 'dblog',
-    ],
-    'default_language' => [
-      'source_module' => 'locale',
-      'destination_module' => 'language',
-    ],
-    'd6_field' => [
-      'source_module' => 'content',
-      'destination_module' => 'field',
-    ],
-    'd6_field_formatter_settings' => [
-      'source_module' => 'content',
-      'destination_module' => 'field',
-    ],
-    'd6_field_instance' => [
-      'source_module' => 'content',
-      'destination_module' => 'field',
-    ],
-    'd6_field_instance_widget_settings' => [
-      'source_module' => 'content',
-      'destination_module' => 'field',
-    ],
-    'd7_field' => [
-      'source_module' => 'field',
-      'destination_module' => 'field',
-    ],
-    'd7_field_formatter_settings' => [
-      'source_module' => 'field',
-      'destination_module' => 'field',
-    ],
-    'd7_field_instance' => [
-      'source_module' => 'field',
-      'destination_module' => 'field',
-    ],
-    'd7_field_instance_widget_settings' => [
-      'source_module' => 'field',
-      'destination_module' => 'field',
-    ],
-    'd7_view_modes' => [
-      'source_module' => 'field',
-      'destination_module' => 'field',
-    ],
-    'd6_file' => [
-      'source_module' => 'system',
-      'destination_module' => 'file',
-    ],
-    'file_settings' => [
-      'source_module' => 'system',
-      'destination_module' => 'file',
-    ],
-    'd6_upload' => [
-      'source_module' => 'upload',
-      'destination_module' => 'file',
-    ],
-    'd6_upload_entity_display' => [
-      'source_module' => 'upload',
-      'destination_module' => 'file',
-    ],
-    'd6_upload_entity_form_display' => [
-      'source_module' => 'upload',
-      'destination_module' => 'file',
-    ],
-    'd6_upload_field' => [
-      'source_module' => 'upload',
-      'destination_module' => 'file',
-    ],
-    'd6_upload_field_instance' => [
-      'source_module' => 'upload',
-      'destination_module' => 'file',
-    ],
-    'd7_file' => [
-      'source_module' => 'file',
-      'destination_module' => 'file',
-    ],
-    'd6_filter_format' => [
-      'source_module' => 'filter',
-      'destination_module' => 'filter',
-    ],
-    'd7_filter_format' => [
-      'source_module' => 'filter',
-      'destination_module' => 'filter',
-    ],
-    'd7_filter_settings' => [
-      'source_module' => 'filter',
-      'destination_module' => 'filter',
-    ],
-    'd6_forum_settings' => [
-      'source_module' => 'forum',
-      'destination_module' => 'forum',
-    ],
-    'd7_forum_settings' => [
-      'source_module' => 'forum',
-      'destination_module' => 'forum',
-    ],
-    'd7_global_theme_settings' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd6_imagecache_presets' => [
-      'source_module' => 'imagecache',
-      'destination_module' => 'image',
-    ],
-    'd7_image_settings' => [
-      'source_module' => 'image',
-      'destination_module' => 'image',
-    ],
-    'd7_image_styles' => [
-      'source_module' => 'image',
-      'destination_module' => 'image',
-    ],
-    'd6_language_content_settings' => [
-      'source_module' => 'locale',
-      'destination_module' => 'language',
-    ],
-    'd7_language_content_settings' => [
-      'source_module' => 'locale',
-      'destination_module' => 'language',
-    ],
-    'd6_language_negotiation_settings' => [
-      'source_module' => 'locale',
-      'destination_module' => 'language',
-    ],
-    'd7_language_negotiation_settings' => [
-      'source_module' => 'locale',
-      'destination_module' => 'language',
-    ],
-    'language_prefixes_and_domains' => [
-      'source_module' => 'locale',
-      'destination_module' => 'language',
-    ],
-    'd6_language_types' => [
-      'source_module' => 'locale',
-      'destination_module' => 'language',
-    ],
-    'language' => [
-      'source_module' => 'locale',
-      'destination_module' => 'language',
-    ],
-    'd7_language_types' => [
-      'source_module' => 'locale',
-      'destination_module' => 'language',
-    ],
-    'locale_settings' => [
-      'source_module' => 'locale',
-      'destination_module' => 'locale',
-    ],
-    'd6_menu_links' => [
-      'source_module' => 'menu',
-      'destination_module' => 'menu_link_content',
-    ],
-    'menu_settings' => [
-      'source_module' => 'menu',
-      'destination_module' => 'menu_ui',
-    ],
-    'd7_menu_links' => [
-      'source_module' => 'menu',
-      'destination_module' => 'menu_link_content',
-    ],
-    'd6_node' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd6_node_translation' => [
-      'source_module' => 'translation',
-      'destination_module' => 'content_translation',
-    ],
-    'd6_node_revision' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd6_node_setting_promote' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd6_node_setting_status' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd6_node_setting_sticky' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd6_node_settings' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd6_node_type' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd6_view_modes' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd7_node' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd7_node_revision' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd7_node_settings' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd7_node_translation' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd7_node_title_label' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd7_node_type' => [
-      'source_module' => 'node',
-      'destination_module' => 'node',
-    ],
-    'd6_url_alias' => [
-      'source_module' => 'path',
-      'destination_module' => 'path',
-    ],
-    'd7_url_alias' => [
-      'source_module' => 'path',
-      'destination_module' => 'path',
-    ],
-    'search_page' => [
-      'source_module' => 'search',
-      'destination_module' => 'search',
-    ],
-    'd6_search_settings' => [
-      'source_module' => 'search',
-      'destination_module' => 'search',
-    ],
-    'd7_search_settings' => [
-      'source_module' => 'search',
-      'destination_module' => 'search',
-    ],
-    'd7_shortcut' => [
-      'source_module' => 'shortcut',
-      'destination_module' => 'shortcut',
-    ],
-    'd7_shortcut_set' => [
-      'source_module' => 'shortcut',
-      'destination_module' => 'shortcut',
-    ],
-    'd7_shortcut_set_users' => [
-      'source_module' => 'shortcut',
-      'destination_module' => 'shortcut',
-    ],
-    'd6_simpletest_settings' => [
-      'source_module' => 'simpletest',
-      'destination_module' => 'simpletest',
-    ],
-    'd7_simpletest_settings' => [
-      'source_module' => 'simpletest',
-      'destination_module' => 'simpletest',
-    ],
-    'statistics_settings' => [
-      'source_module' => 'statistics',
-      'destination_module' => 'statistics',
-    ],
-    'd6_syslog_settings' => [
-      'source_module' => 'syslog',
-      'destination_module' => 'syslog',
-    ],
-    'd7_syslog_settings' => [
-      'source_module' => 'syslog',
-      'destination_module' => 'syslog',
-    ],
-    'd6_date_formats' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd6_system_cron' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd6_system_date' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd6_system_file' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'system_image' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'system_image_gd' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'system_logging' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'system_maintenance' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd6_system_performance' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'system_rss' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'system_site' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd7_system_authorize' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd7_system_cron' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd7_system_date' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd7_system_file' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd7_system_mail' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd7_system_performance' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd6_menu' => [
-      'source_module' => 'menu',
-      'destination_module' => 'system',
-    ],
-    'd7_menu' => [
-      'source_module' => 'menu',
-      'destination_module' => 'system',
-    ],
-    'taxonomy_settings' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'd6_taxonomy_term' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'd6_taxonomy_vocabulary' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'd6_term_node' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'd6_term_node_revision' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'd6_vocabulary_entity_display' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'd6_vocabulary_entity_form_display' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'd6_vocabulary_field' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'd6_vocabulary_field_instance' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'd7_taxonomy_term' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'd7_taxonomy_vocabulary' => [
-      'source_module' => 'taxonomy',
-      'destination_module' => 'taxonomy',
-    ],
-    'text_settings' => [
-      'source_module' => 'text',
-      'destination_module' => 'text',
-    ],
-    'd7_tracker_node' => [
-      'source_module' => 'tracker',
-      'destination_module' => 'tracker',
-    ],
-    'd7_tracker_settings' => [
-      'source_module' => 'tracker',
-      'destination_module' => 'tracker',
-    ],
-    'd7_tracker_user' => [
-      'source_module' => 'tracker',
-      'destination_module' => 'tracker',
-    ],
-    'update_settings' => [
-      'source_module' => 'update',
-      'destination_module' => 'update',
-    ],
-    'd6_profile_values' => [
-      'source_module' => 'profile',
-      'destination_module' => 'user',
-    ],
-    'd7_theme_settings' => [
-      'source_module' => 'system',
-      'destination_module' => 'system',
-    ],
-    'd6_user' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'd6_user_contact_settings' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'd6_user_mail' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'd6_user_picture_file' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'd6_user_role' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'd6_user_settings' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'd7_user' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'd7_user_flood' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'd7_user_mail' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'd7_user_role' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'user_picture_entity_display' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'user_picture_entity_form_display' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'user_picture_field' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'user_picture_field_instance' => [
-      'source_module' => 'user',
-      'destination_module' => 'user',
-    ],
-    'user_profile_entity_display' => [
-      'source_module' => 'profile',
-      'destination_module' => 'user',
-    ],
-    'user_profile_entity_form_display' => [
-      'source_module' => 'profile',
-      'destination_module' => 'user',
-    ],
-    'user_profile_field' => [
-      'source_module' => 'profile',
-      'destination_module' => 'user',
-    ],
-    'user_profile_field_instance' => [
-      'source_module' => 'profile',
-      'destination_module' => 'user',
-    ],
-    'd6_i18n_user_profile_field_instance' => [
-      'source_module' => 'i18n',
-      'destination_module' => 'user',
-    ],
-  ];
-
-  /**
    * The state service.
    *
    * @var \Drupal\Core\State\StateInterface
@@ -803,6 +151,9 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       $info[] = $this->t('Make sure that the host this site is on has access to the database for your previous site.');
       $info[] = $this->t('If your previous site has private files to be migrated, a copy of your files directory must be accessible on the host this site is on.');
       $info[] = $this->t('In general, enable all modules on this site that are enabled on the previous site. For example, if you have used the book module on the previous site then you must enable the book module on this site for that data to be available on this site.');
+      $info[] = $this->t('Do not add any information on this site (including but not limited to user accounts, taxonomy terms, and node content) before upgrading. Any pre-existing information on the site risks being overwritten by the upgrade process. See <a href=":url">the upgrade preparation guide</a> for more information.', [
+        ':url' => 'https://www.drupal.org/docs/8/upgrade/preparing-an-upgrade#dont_create_content',
+      ]);
       $info[] = $this->t('Put this site into <a href=":url">maintenance mode</a>.', [
         ':url' => Url::fromRoute('system.site_maintenance_mode')->toString(TRUE)->getGeneratedUrl(),
       ]);
@@ -874,6 +225,15 @@ class MigrateUpgradeForm extends ConfirmFormBase {
 
     $default_options = [];
 
+
+    $form['version'] = [
+      '#type' => 'radios',
+      '#default_value' => 7,
+      '#title' => $this->t('Drupal version of the source site'),
+      '#options' => [6 => $this->t('Drupal 6'), 7 => $this->t('Drupal 7')],
+      '#required' => TRUE,
+    ];
+
     $form['database'] = [
       '#type' => 'details',
       '#title' => $this->t('Source database'),
@@ -927,10 +287,38 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       '#title' => $this->t('Source files'),
       '#open' => TRUE,
     ];
-    $form['source']['source_base_path'] = [
+    $form['source']['d6_source_base_path'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Files directory'),
       '#description' => $this->t('To import files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
+      '#states' => [
+        'visible' => [
+          ':input[name="version"]' => ['value' => 6],
+        ],
+      ],
+    ];
+
+    $form['source']['source_base_path'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Public files directory'),
+      '#description' => $this->t('To import public files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
+      '#states' => [
+        'visible' => [
+          ':input[name="version"]' => ['value' => 7],
+        ],
+      ],
+    ];
+
+    $form['source']['source_private_file_path'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Private file directory'),
+      '#default_value' => '',
+      '#description' => $this->t('To import private files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot).'),
+      '#states' => [
+        'visible' => [
+          ':input[name="version"]' => ['value' => 7],
+        ],
+      ],
     ];
 
     $form['actions'] = ['#type' => 'actions'];
@@ -981,6 +369,12 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       if (!$version) {
         $form_state->setErrorByName($database['driver'] . '][0', $this->t('Source database does not contain a recognizable Drupal version.'));
       }
+      elseif ($version != $form_state->getValue('version')) {
+        $form_state->setErrorByName($database['driver'] . '][0', $this->t('Source database is Drupal version @version but version @selected was selected.', [
+          '@version' => $version,
+          '@selected' => $form_state->getValue('version'),
+        ]));
+      }
       else {
         $this->createDatabaseStateSettings($database, $version);
         $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
@@ -996,8 +390,10 @@ class MigrateUpgradeForm extends ConfirmFormBase {
         }
 
         // Store the retrieved migration IDs in form storage.
+        $form_state->set('version', $version);
         $form_state->set('migrations', $migration_array);
         $form_state->set('source_base_path', $form_state->getValue('source_base_path'));
+        $form_state->set('source_private_file_path', $form_state->getValue('source_private_file_path'));
 
         // Store the retrived system data in form storage.
         $form_state->set('system_data', $system_data);
@@ -1044,19 +440,24 @@ class MigrateUpgradeForm extends ConfirmFormBase {
 
     $form['actions']['submit']['#value'] = $this->t('Perform upgrade');
 
+    $version = $form_state->get('version');
+    $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
+
     $table_data = [];
-    $system_data = [];
-    foreach ($form_state->get('migrations') as $migration_id => $migration_label) {
-      // Fetch the system data at the first opportunity.
-      if (empty($system_data)) {
-        $system_data = $form_state->get('system_data');
+    foreach ($migrations as $migration) {
+      $migration_id = $migration->getPluginId();
+      $source_module = $migration->getSourcePlugin()->getSourceModule();
+      if (!$source_module) {
+        drupal_set_message($this->t('Source module not found for @migration_id.', ['@migration_id' => $migration_id]), 'error');
+      }
+      $destination_module = $migration->getDestinationPlugin()->getDestinationModule();
+      if (!$destination_module) {
+        drupal_set_message($this->t('Destination module not found for @migration_id.', ['@migration_id' => $migration_id]), 'error');
       }
 
-      // Handle derivatives.
-      list($migration_id,) = explode(':', $migration_id, 2);
-      $source_module = $this->moduleUpgradePaths[$migration_id]['source_module'];
-      $destination_module = $this->moduleUpgradePaths[$migration_id]['destination_module'];
-      $table_data[$source_module][$destination_module][$migration_id] = $migration_label;
+      if ($source_module && $destination_module) {
+        $table_data[$source_module][$destination_module][$migration_id] = $migration->label();
+      }
     }
     // Sort the table by source module names and within that destination
     // module names.
@@ -1064,6 +465,9 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     foreach ($table_data as $source_module => $destination_module_info) {
       ksort($table_data[$source_module]);
     }
+
+    // Fetch the system data at the first opportunity.
+    $system_data = $form_state->get('system_data');
     $unmigrated_source_modules = array_diff_key($system_data['module'], $table_data);
 
     // Missing migrations.

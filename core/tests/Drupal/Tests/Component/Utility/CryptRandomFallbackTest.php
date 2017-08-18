@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\Component\Utility;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\Crypt;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests random byte generation fallback exception situations.
@@ -14,7 +14,7 @@ use Drupal\Component\Utility\Crypt;
  *
  * @coversDefaultClass \Drupal\Component\Utility\Crypt
  */
-class CryptRandomFallbackTest extends UnitTestCase {
+class CryptRandomFallbackTest extends TestCase {
 
   static protected $functionCalled = 0;
 

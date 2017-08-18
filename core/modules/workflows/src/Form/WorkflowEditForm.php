@@ -2,17 +2,47 @@
 
 namespace Drupal\workflows\Form;
 
+use Drupal\Core\Form\SubformState;
+use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\workflows\State;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\workflows\WorkflowTypeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The form for editing workflows.
  */
 class WorkflowEditForm extends EntityForm {
+
+  /**
+   * The plugin form factory.
+   *
+   * @var \Drupal\Core\Plugin\PluginFormFactoryInterface
+   */
+  protected $pluginFormFactory;
+
+  /**
+   * Creates an instance of WorkflowStateEditForm.
+   *
+   * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $pluginFormFactory
+   *   The plugin form factory.
+   */
+  public function __construct(PluginFormFactoryInterface $pluginFormFactory) {
+    $this->pluginFormFactory = $pluginFormFactory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin_form.factory')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -22,12 +52,14 @@ class WorkflowEditForm extends EntityForm {
 
     /* @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
+    $workflow_type = $workflow->getTypePlugin();
+    $form['#title'] = $this->t('Edit %label workflow', ['%label' => $workflow->label()]);
+
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $workflow->label(),
-      '#description' => $this->t('Label for the Workflow.'),
       '#required' => TRUE,
     ];
 
@@ -65,7 +97,7 @@ class WorkflowEditForm extends EntityForm {
       ],
     ];
 
-    $states = $workflow->getStates();
+    $states = $workflow->getTypePlugin()->getStates();
 
     // Warn the user if there are no states.
     if (empty($states)) {
@@ -83,7 +115,6 @@ class WorkflowEditForm extends EntityForm {
         'edit' => [
           'title' => $this->t('Edit'),
           'url' => Url::fromRoute('entity.workflow.edit_state_form', ['workflow' => $workflow->id(), 'workflow_state' => $state->id()]),
-          'attributes' => ['aria-label' => $this->t('Edit @state state', ['@state' => $state->label()])],
         ]
       ];
       if ($this->entity->access('delete-state:' . $state->id())) {
@@ -93,7 +124,6 @@ class WorkflowEditForm extends EntityForm {
             'workflow' => $workflow->id(),
             'workflow_state' => $state->id()
           ]),
-          'attributes' => ['aria-label' => $this->t('Delete @state state', ['@state' => $state->label()])],
         ];
       }
       $form['states_container']['states'][$state->id()] = [
@@ -142,16 +172,14 @@ class WorkflowEditForm extends EntityForm {
         ],
       ],
     ];
-    foreach ($workflow->getTransitions() as $transition) {
+    foreach ($workflow->getTypePlugin()->getTransitions() as $transition) {
       $links['edit'] = [
         'title' => $this->t('Edit'),
         'url' => Url::fromRoute('entity.workflow.edit_transition_form', ['workflow' => $workflow->id(), 'workflow_transition' => $transition->id()]),
-        'attributes' => ['aria-label' => $this->t('Edit \'@transition\' transition', ['@transition' => $transition->label()])],
       ];
       $links['delete'] = [
         'title' => t('Delete'),
         'url' => Url::fromRoute('entity.workflow.delete_transition_form', ['workflow' => $workflow->id(), 'workflow_transition' => $transition->id()]),
-        'attributes' => ['aria-label' => $this->t('Delete \'@transition\' transition', ['@transition' => $transition->label()])],
       ];
       $form['transitions_container']['transitions'][$transition->id()] = [
         '#attributes' => ['class' => ['draggable']],
@@ -180,7 +208,33 @@ class WorkflowEditForm extends EntityForm {
       '#markup' => $workflow->toLink($this->t('Add a new transition'), 'add-transition-form')->toString(),
     ];
 
+    if ($workflow_type->hasFormClass(WorkflowTypeInterface::PLUGIN_FORM_KEY)) {
+      $form['type_settings'] = [
+        '#tree' => TRUE,
+      ];
+      $subform_state = SubformState::createForSubform($form['type_settings'], $form, $form_state);
+      $form['type_settings'] += $this->pluginFormFactory
+        ->createInstance($workflow_type, WorkflowTypeInterface::PLUGIN_FORM_KEY)
+        ->buildConfigurationForm($form['type_settings'], $subform_state);
+    }
+
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    /* @var \Drupal\workflows\WorkflowInterface $workflow */
+    $workflow = $this->entity;
+    $workflow_type = $workflow->getTypePlugin();
+
+    if ($workflow_type->hasFormClass(WorkflowTypeInterface::PLUGIN_FORM_KEY)) {
+      $subform_state = SubformState::createForSubform($form['type_settings'], $form, $form_state);
+      $this->pluginFormFactory
+        ->createInstance($workflow_type, WorkflowTypeInterface::PLUGIN_FORM_KEY)
+        ->validateConfigurationForm($form['type_settings'], $subform_state);
+    }
   }
 
   /**
@@ -189,6 +243,15 @@ class WorkflowEditForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     /* @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
+    $workflow_type = $workflow->getTypePlugin();
+
+    if ($workflow_type->hasFormClass(WorkflowTypeInterface::PLUGIN_FORM_KEY)) {
+      $subform_state = SubformState::createForSubform($form['type_settings'], $form, $form_state);
+      $this->pluginFormFactory
+        ->createInstance($workflow_type, WorkflowTypeInterface::PLUGIN_FORM_KEY)
+        ->submitConfigurationForm($form['type_settings'], $subform_state);
+    }
+
     $workflow->save();
     drupal_set_message($this->t('Saved the %label Workflow.', ['%label' => $workflow->label()]));
   }
@@ -204,10 +267,10 @@ class WorkflowEditForm extends EntityForm {
     $entity->set('label', $values['label']);
     $entity->set('id', $values['id']);
     foreach ($values['states'] as $state_id => $state_values) {
-      $entity->setStateWeight($state_id, $state_values['weight']);
+      $entity->getTypePlugin()->setStateWeight($state_id, $state_values['weight']);
     }
     foreach ($values['transitions'] as $transition_id => $transition_values) {
-      $entity->setTransitionWeight($transition_id, $transition_values['weight']);
+      $entity->getTypePlugin()->setTransitionWeight($transition_id, $transition_values['weight']);
     }
   }
 

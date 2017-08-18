@@ -53,7 +53,7 @@ function update_manager_download_batch_finished($success, $results) {
       '#title' => t('Downloading updates failed:'),
       '#items' => $results['errors'],
     ];
-    drupal_set_message(drupal_render($item_list), 'error');
+    drupal_set_message(\Drupal::service('renderer')->render($item_list), 'error');
   }
   elseif ($success) {
     drupal_set_message(t('Updates downloaded successfully.'));

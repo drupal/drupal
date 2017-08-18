@@ -20,7 +20,8 @@
   line-height: 1em;
   text-decoration: none;
 }
-.toolbar .toolbar-item:hover, .toolbar .toolbar-item:focus {
+.toolbar .toolbar-item:hover,
+.toolbar .toolbar-item:focus {
   text-decoration: underline;
 }
 
@@ -57,10 +58,10 @@
 .toolbar .toolbar-tray {
   background-color: #ffffff;
 }
-.toolbar .toolbar-tray-horizontal > .toolbar-lining {
+.toolbar-horizontal .toolbar-tray > .toolbar-lining {
   padding-right: 5em; /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-tray-horizontal > .toolbar-lining {
+[dir="rtl"] .toolbar-horizontal .toolbar-tray > .toolbar-lining {
   padding-right: 0;
   padding-left: 5em;
 }
@@ -74,11 +75,11 @@
   border-right: 0 none;
   box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
 }
-.toolbar .toolbar-tray-horizontal {
+.toolbar-horizontal .toolbar-tray {
   border-bottom: 1px solid #aaaaaa;
   box-shadow: -2px 1px 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-tray-horizontal {
+[dir="rtl"] .toolbar-horizontal .toolbar-tray {
   box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.3333);
 }
 .toolbar .toolbar-tray-horizontal .toolbar-tray {
@@ -93,25 +94,24 @@
 .toolbar-tray a:hover,
 .toolbar-tray a:active,
 .toolbar-tray a:focus,
-.toolbar-tray a.is-active
- {
+.toolbar-tray a.is-active {
   color: #000;
   text-decoration: underline;
 }
 .toolbar .toolbar-menu {
   background-color: #ffffff;
 }
-.toolbar .toolbar-tray-horizontal .menu-item + .menu-item {
+.toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
   border-left: 1px solid #dddddd; /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-tray-horizontal .menu-item + .menu-item {
-  border-left: 0 none ;
+[dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
+  border-left: 0 none;
   border-right: 1px solid #dddddd;
 }
-.toolbar .toolbar-tray-horizontal .menu-item:last-child {
+.toolbar-horizontal .toolbar-tray .menu-item:last-child {
   border-right: 1px solid #dddddd; /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-tray-horizontal .menu-item:last-child {
+[dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item:last-child {
   border-left: 1px solid #dddddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item + .menu-item {
@@ -149,10 +149,10 @@
   padding: 0;
   height: 100%;
 }
-.toolbar .toolbar-tray-horizontal .toolbar-toggle-orientation {
+.toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
   border-left: 1px solid #c9c9c9; /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-tray-horizontal .toolbar-toggle-orientation {
+[dir="rtl"] .toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
   border-left: 0 none;
   border-right: 1px solid #c9c9c9;
 }

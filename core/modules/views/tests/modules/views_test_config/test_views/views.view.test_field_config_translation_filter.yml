@@ -1,0 +1,187 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_field_config_translation_filter
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: id
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      fields:
+        nid:
+          id: nid
+          field: nid
+          table: node_field_data
+          plugin_id: field
+          entity_type: node
+          entity_field: nid
+        langcode:
+          id: langcode
+          field: langcode
+          table: node_field_data
+          plugin_id: field
+          entity_type: node
+          entity_field: langcode
+        field_name_1:
+          id: field_name_1
+          table: node__field_name_1
+          field: field_name_1
+          plugin_id: field
+          entity_type: node
+          entity_field: field_name_1
+        field_name_2:
+          id: field_name_2
+          table: node__field_name_2
+          field: field_name_2
+          plugin_id: field
+          entity_type: node
+          entity_field: field_name_2
+        field_name_3:
+          id: field_name_3
+          table: node__field_name_3
+          field: field_name_3
+          plugin_id: field
+          entity_type: node
+          entity_field: field_name_3
+      sorts:
+        nid:
+          id: nid
+          table: node_field_data
+          field: nid
+          order: ASC
+          plugin_id: standard
+          entity_type: node
+          entity_field: nid
+        langcode:
+          id: langcode
+          table: node_field_data
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: node
+          entity_field: langcode
+          plugin_id: standard
+      style:
+        type: html_list
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
+  embed_1:
+    display_options:
+      defaults:
+        fields: true
+        filters: false
+      filters:
+        field_name_1_value:
+          id: field_name_1_value
+          table: node__field_name_1
+          field: field_name_1_value
+          value: 'field name 1: es'
+          plugin_id: string
+          entity_type: node
+          entity_field: field_name_1
+    display_plugin: embed
+    display_title: Embed 1
+    id: embed_1
+    position: 1
+  embed_2:
+    display_options:
+      defaults:
+        filters: false
+      filters:
+        field_name_1_value:
+          id: field_name_1_value
+          table: node__field_name_1
+          field: field_name_1_value
+          value: 'field name 1: fr'
+          plugin_id: string
+          entity_type: node
+          entity_field: field_name_1
+    display_plugin: embed
+    display_title: Embed 2
+    id: embed_2
+    position: 2
+  embed_3:
+    display_options:
+      defaults:
+        filters: false
+      filters:
+        field_name_2_value:
+          id: field_name_2_value
+          table: node__field_name_2
+          field: field_name_2_value
+          value: 'field name 2: es'
+          plugin_id: string
+          entity_type: node
+          entity_field: field_name_2
+    display_plugin: embed
+    display_title: Embed 3
+    id: embed_3
+    position: 3
+  embed_4:
+    display_options:
+      defaults:
+        filters: false
+      filters:
+        field_name_2_value:
+          id: field_name_2_value
+          table: node__field_name_2
+          field: field_name_2_value
+          value: 'field name 2: fr'
+          plugin_id: string
+          entity_type: node
+          entity_field: field_name_2
+    display_plugin: embed
+    display_title: Embed 4
+    id: embed_4
+    position: 4
+  embed_5:
+    display_options:
+      defaults:
+        filters: false
+      filters:
+        field_name_3_value:
+          id: field_name_3_value
+          table: node__field_name_3
+          field: field_name_3_value
+          value: 'field name 3: es'
+          plugin_id: string
+          entity_type: node
+          entity_field: field_name_3
+    display_plugin: embed
+    display_title: Embed 5
+    id: embed_5
+    position: 5
+  embed_6:
+    display_options:
+      defaults:
+        filters: false
+      filters:
+        field_name_3_value:
+          id: field_name_3_value
+          table: node__field_name_3
+          field: field_name_3_value
+          value: 'field name 3: fr'
+          plugin_id: string
+          entity_type: node
+          entity_field: field_name_3
+    display_plugin: embed
+    display_title: Embed 6
+    id: embed_6
+    position: 6

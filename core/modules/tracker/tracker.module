@@ -135,16 +135,21 @@ function tracker_cron() {
 /**
  * Access callback: Determines access permission for a user's own account.
  *
+ * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. As
+ *   internal API, _tracker_user_access() may also be removed in a minor
+ *   release.
+ *
+ * @internal
+ *
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user account to track.
  *
  * @return bool
  *   TRUE if a user is accessing tracking info for their own account and
  *   has permission to access the content.
- *
- * @see tracker_menu()
  */
 function _tracker_myrecent_access(AccountInterface $account) {
+  @trigger_error('_tracker_myrecent_access() is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.', E_USER_DEPRECATED);
   // This path is only allowed for authenticated users looking at their own content.
   return $account->id() && (\Drupal::currentUser()->id() == $account->id()) && $account->hasPermission('access content');
 }
@@ -152,16 +157,21 @@ function _tracker_myrecent_access(AccountInterface $account) {
 /**
  * Access callback: Determines access permission for an account.
  *
+ * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. As
+ *   internal API, _tracker_user_access() may also be removed in a minor
+ *   release.
+ *
+ * @internal
+ *
  * @param int $account
  *   The user account ID to track.
  *
  * @return bool
  *   TRUE if a user has permission to access the account for $account and
  *   has permission to access the content.
- *
- * @see tracker_menu()
  */
 function _tracker_user_access($account) {
+  @trigger_error('_tracker_user_access() is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.', E_USER_DEPRECATED);
   return $account->access('view') && $account->hasPermission('access content');
 }
 

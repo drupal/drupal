@@ -440,6 +440,15 @@ $settings['update_free_access'] = FALSE;
  */
 # $settings['cache_ttl_4xx'] = 3600;
 
+/**
+ * Expiration of cached forms.
+ *
+ * Drupal's Form API stores details of forms in a cache and these entries are
+ * kept for at least 6 hours by default. Expired entries are cleared by cron.
+ *
+ * @see \Drupal\Core\Form\FormCache::setCache()
+ */
+# $settings['form_cache_expiration'] = 21600;
 
 /**
  * Class Loader.

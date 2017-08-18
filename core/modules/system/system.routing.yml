@@ -22,6 +22,14 @@ system.404:
   requirements:
     _access: 'TRUE'
 
+system.4xx:
+  path: '/system/4xx'
+  defaults:
+    _controller: '\Drupal\system\Controller\Http4xxController:on4xx'
+    _title: 'Client error'
+  requirements:
+    _access: 'TRUE'
+
 system.admin:
   path: '/admin'
   defaults:

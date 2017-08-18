@@ -1,0 +1,10 @@
+/**
+ * @file
+ * Theme styles for the content_moderation module.
+ */
+ul.entity-moderation-form {
+  border: 1px dashed #bbb;
+  margin: 2em 0em;
+  background: #fff;
+  padding-left: 1em;
+}

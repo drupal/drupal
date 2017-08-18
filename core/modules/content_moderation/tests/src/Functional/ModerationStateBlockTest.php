@@ -51,25 +51,18 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
   public function testCustomBlockModeration() {
     $this->drupalLogin($this->rootUser);
 
-    $this->drupalGet('admin/structure/block/block-content/types');
-    $this->assertLinkByHref('admin/structure/block/block-content/manage/basic/moderation');
-    $this->drupalGet('admin/structure/block/block-content/manage/basic');
-    $this->assertLinkByHref('admin/structure/block/block-content/manage/basic/moderation');
-    $this->drupalGet('admin/structure/block/block-content/manage/basic/moderation');
-
-    // Enable moderation for custom blocks at
-    // admin/structure/block/block-content/manage/basic/moderation.
-    $edit = ['workflow' => 'editorial'];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('Your settings have been saved.'));
+    // Enable moderation for custom blocks.
+    $edit['bundles[basic]'] = TRUE;
+    $this->drupalPostForm('admin/config/workflow/workflows/manage/editorial/type/block_content', $edit, t('Save'));
 
     // Create a custom block at block/add and save it as draft.
     $body = 'Body of moderated block';
     $edit = [
       'info[0][value]' => 'Moderated block',
+      'moderation_state[0][state]' => 'draft',
       'body[0][value]' => $body,
     ];
-    $this->drupalPostForm('block/add', $edit, t('Save and Create New Draft'));
+    $this->drupalPostForm('block/add', $edit, t('Save'));
     $this->assertText(t('basic Moderated block has been created.'));
 
     // Place the block in the Sidebar First region.
@@ -91,8 +84,9 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $updated_body = 'This is the new body value';
     $edit = [
       'body[0][value]' => $updated_body,
+      'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm('block/' . $block->id(), $edit, t('Save and Create New Draft'));
+    $this->drupalPostForm('block/' . $block->id(), $edit, t('Save'));
     $this->assertText(t('basic Moderated block has been updated.'));
 
     // Navigate to the home page and check that the block shows the updated
@@ -101,18 +95,21 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $this->drupalGet('');
     $this->assertText($updated_body);
 
-    // Publish the block so we can create a forward revision.
-    $this->drupalPostForm('block/' . $block->id(), [], t('Save and Publish'));
+    // Publish the block so we can create a pending revision.
+    $this->drupalPostForm('block/' . $block->id(), [
+      'moderation_state[0][state]' => 'published',
+    ], t('Save'));
 
-    // Create a forward revision.
-    $forward_revision_body = 'This is the forward revision body value';
+    // Create a pending revision.
+    $pending_revision_body = 'This is the pending revision body value';
     $edit = [
-      'body[0][value]' => $forward_revision_body,
+      'body[0][value]' => $pending_revision_body,
+      'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm('block/' . $block->id(), $edit, t('Save and Create New Draft'));
+    $this->drupalPostForm('block/' . $block->id(), $edit, t('Save'));
     $this->assertText(t('basic Moderated block has been updated.'));
 
-    // Navigate to home page and check that the forward revision doesn't show,
+    // Navigate to home page and check that the pending revision doesn't show,
     // since it should not be set as the default revision.
     $this->drupalGet('');
     $this->assertText($updated_body);
@@ -124,10 +121,10 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $this->drupalPostForm('block/' . $block->id() . '/latest', $edit, t('Apply'));
     $this->assertText(t('The moderation state has been updated.'));
 
-    // Navigate to home page and check that the forward revision is now the
+    // Navigate to home page and check that the pending revision is now the
     // default revision and therefore visible.
     $this->drupalGet('');
-    $this->assertText($forward_revision_body);
+    $this->assertText($pending_revision_body);
   }
 
 }

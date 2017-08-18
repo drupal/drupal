@@ -11,7 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *
  * @MigrateSource(
  *   id = "d6_taxonomy_vocabulary",
- *   source_provider = "taxonomy"
+ *   source_module = "taxonomy"
  * )
  */
 class Vocabulary extends DrupalSqlBase {
@@ -69,6 +69,14 @@ class Vocabulary extends DrupalSqlBase {
       ->fetchCol();
     $row->setSourceProperty('node_types', $node_types);
     $row->setSourceProperty('cardinality', ($row->getSourceProperty('tags') == 1 || $row->getSourceProperty('multiple') == 1) ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : 1);
+
+    // If the vid of the vocabulary being migrated is equal to the vid in the
+    // 'forum_nav_vocabulary' variable, set the 'forum_vocabulary' source
+    // property to true so we can know this is the vocabulary used for forums.
+    if ($this->variableGet('forum_nav_vocabulary', 0) == $row->getSourceProperty('vid')) {
+      $row->setSourceProperty('forum_vocabulary', TRUE);
+    }
+
     return parent::prepareRow($row);
   }
 

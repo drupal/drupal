@@ -99,7 +99,7 @@
  * Toolbars.
  */
 .quickedit-toolbar-container {
-  font-family: 'Source Sans Pro','Lucida Grande', sans-serif;
+  font-family: 'Source Sans Pro', 'Lucida Grande', sans-serif;
   padding-bottom: 7px;
   padding-top: 7px;
   -webkit-transition: all 1s;
@@ -174,9 +174,9 @@
   padding: 0.1667em 0.2em;
 }
 
- /**
-  * Info toolgroup.
-  */
+/**
+ * Info toolgroup.
+ */
 .quickedit-toolbar-fullwidth {
   width: 100%;
 }

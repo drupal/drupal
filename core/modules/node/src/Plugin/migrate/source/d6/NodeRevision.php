@@ -7,7 +7,8 @@ use Drupal\Core\Database\Query\SelectInterface;
  * Drupal 6 node revision source from database.
  *
  * @MigrateSource(
- *   id = "d6_node_revision"
+ *   id = "d6_node_revision",
+ *   source_module = "node"
  * )
  */
 class NodeRevision extends Node {

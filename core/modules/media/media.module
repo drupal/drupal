@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @file
+ * Provides media items.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\field\FieldConfigInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function media_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.media':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Media module manages the creation, editing, deletion, settings and display of media. Items are typically images, documents, slideshows, YouTube videos, tweets, Instagram photos, etc. You can reference media items from any other content on your site. For more information, see the <a href=":media">online documentation for the Media module</a>.', [':media' => 'https://www.drupal.org/docs/8/core/modules/media']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Creating media items') . '</dt>';
+      $output .= '<dd>' . t('When a new media item is created, the Media module records basic information about it, including the author, date of creation, and the <a href=":media-type">media type</a>. It also manages the <em>publishing options</em>, which define whether or not the item is published. Default settings can be configured for each type of media on your site.', [':media-type' => Url::fromRoute('entity.media_type.collection')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Creating custom media types') . '</dt>';
+      $output .= '<dd>' . t('The Media module gives users with the <em>Administer media types</em> permission the ability to <a href=":media-new">create new media types</a> in addition to the default ones already configured. Each media type has an associated media source (such as the image source) which support thumbnail generation and metadata extraction. Fields managed by the <a href=":field">Field module</a> may be added for storing that metadata, such as width and height, as well as any other associated values.', [':media-new' => Url::fromRoute('entity.media_type.add_form')->toString(), ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString()]) . '</dd>';
+      $output .= '<dt>' . t('Creating revisions') . '</dt>';
+      $output .= '<dd>' . t('The Media module also enables you to create multiple versions of any media item, and revert to older versions using the <em>Revision information</em> settings.') . '</dd>';
+      $output .= '<dt>' . t('User permissions') . '</dt>';
+      $output .= '<dd>' . t('The Media module makes a number of permissions available, which can be set by role on the <a href=":permissions">permissions page</a>.', [':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-media'])->toString()]) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function media_theme() {
+  return [
+    'media' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function media_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  if ($operation === 'delete' && $entity instanceof FieldConfigInterface && $entity->getTargetEntityTypeId() === 'media') {
+    /** @var \Drupal\media\MediaTypeInterface $media_type */
+    $media_type = \Drupal::entityTypeManager()->getStorage('media_type')->load($entity->getTargetBundle());
+    return AccessResult::forbiddenIf($entity->id() === 'media.' . $media_type->id() . '.' . $media_type->getSource()->getConfiguration()['source_field']);
+  }
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function media_theme_suggestions_media(array $variables) {
+  $suggestions = [];
+  $media = $variables['elements']['#media'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'media__' . $sanitized_view_mode;
+  $suggestions[] = 'media__' . $media->bundle();
+  $suggestions[] = 'media__' . $media->bundle() . '__' . $sanitized_view_mode;
+
+  return $suggestions;
+}
+
+/**
+ * Prepares variables for media templates.
+ *
+ * Default template: media.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An array of elements to display in view mode.
+ *   - media: The media item.
+ *   - name: The label for the media item.
+ *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
+ */
+function template_preprocess_media(array &$variables) {
+  $variables['media'] = $variables['elements']['#media'];
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['name'] = $variables['media']->label();
+
+  // Helpful $content variable for templates.
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}

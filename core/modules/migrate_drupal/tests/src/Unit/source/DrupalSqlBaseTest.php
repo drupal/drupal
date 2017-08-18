@@ -43,7 +43,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
    */
   public function testSourceProviderNotActive() {
     $plugin_definition['requirements_met'] = TRUE;
-    $plugin_definition['source_provider'] = 'module1';
+    $plugin_definition['source_module'] = 'module1';
     /** @var \Drupal\Core\State\StateInterface $state */
     $state = $this->getMock('Drupal\Core\State\StateInterface');
     /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
@@ -57,7 +57,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
     }
     catch (RequirementsException $e) {
       // Ensure requirements are set on the exception.
-      $this->assertEquals(['source_provider' => 'module1'], $e->getRequirements());
+      $this->assertEquals(['source_module' => 'module1'], $e->getRequirements());
       // Re-throw so PHPUnit can assert the exception.
       throw $e;
     }

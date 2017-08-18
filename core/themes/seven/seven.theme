@@ -23,7 +23,7 @@ function seven_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_pre_render_HOOK() for menu-local-tasks templates.
+ * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
  *
  * Use preprocess hook to set #attached to child elements
  * because they will be processed by Twig and drupal_render will
@@ -147,42 +147,29 @@ function seven_preprocess_maintenance_page(&$variables) {
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\NodeForm.
  *
- * Changes vertical tabs to container and adds meta information.
+ * Changes vertical tabs to container.
  */
 function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
-  /** @var \Drupal\node\NodeInterface $node */
-  $node = $form_state->getFormObject()->getEntity();
-
   $form['#theme'] = ['node_edit_form'];
   $form['#attached']['library'][] = 'seven/node-form';
 
   $form['advanced']['#type'] = 'container';
-  $is_new = !$node->isNew() ? format_date($node->getChangedTime(), 'short') : t('Not saved yet');
-  $form['meta'] = [
-    '#attributes' => ['class' => ['entity-meta__header']],
-    '#type' => 'container',
-    '#group' => 'advanced',
-    '#weight' => -100,
-    'published' => [
-      '#type' => 'html_tag',
-      '#tag' => 'h3',
-      '#value' => $node->isPublished() ? t('Published') : t('Not published'),
-      '#access' => !$node->isNew(),
-      '#attributes' => [
-        'class' => ['entity-meta__title'],
-      ],
-    ],
-    'changed' => [
-      '#type' => 'item',
-      '#wrapper_attributes' => ['class' => ['entity-meta__last-saved', 'container-inline']],
-      '#markup' => '<h4 class="label inline">' . t('Last saved') . '</h4> ' . $is_new,
-    ],
-    'author' => [
-      '#type' => 'item',
-      '#wrapper_attributes' => ['class' => ['author', 'container-inline']],
-      '#markup' => '<h4 class="label inline">' . t('Author') . '</h4> ' . $node->getOwner()->getUsername(),
-    ],
-  ];
+  $form['meta']['#type'] = 'container';
+  $form['meta']['#access'] = TRUE;
+  $form['meta']['changed']['#wrapper_attributes']['class'][] = 'container-inline';
+  $form['meta']['author']['#wrapper_attributes']['class'][] = 'container-inline';
+
   $form['revision_information']['#type'] = 'container';
   $form['revision_information']['#group'] = 'meta';
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\media\MediaForm.
+ */
+function seven_form_media_form_alter(&$form, FormStateInterface $form_state) {
+  // @todo Revisit after https://www.drupal.org/node/2892304 is in. It
+  // introduces a footer region to these forms which will allow for us to
+  // display a top border over the published checkbox by defining a
+  // media-edit-form.html.twig template the same way node does.
+  $form['#attached']['library'][] = 'seven/media-form';
 }

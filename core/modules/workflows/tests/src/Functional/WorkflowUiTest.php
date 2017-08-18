@@ -36,10 +36,11 @@ class WorkflowUiTest extends BrowserTestBase {
     // Create a minimal workflow for testing.
     $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_test']);
     $workflow
+      ->getTypePlugin()
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
-      ->addTransition('publish', 'Publish', ['draft', 'published'], 'published')
-      ->save();
+      ->addTransition('publish', 'Publish', ['draft', 'published'], 'published');
+    $workflow->save();
 
     $paths = [
       'admin/config/workflow/workflows',
@@ -80,6 +81,24 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
+   * Test the machine name validation of the state add form.
+   */
+  public function testStateMachineNameValidation() {
+    Workflow::create([
+      'id' => 'test_workflow',
+      'type' => 'workflow_type_test',
+    ])->save();
+
+    $this->drupalLogin($this->createUser(['administer workflows']));
+    $this->drupalPostForm('admin/config/workflow/workflows/manage/test_workflow/add_state', [
+      'label' => 'Test State',
+      'id' => 'Invalid ID',
+    ], 'Save');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
+  }
+
+  /**
    * Tests the creation of a workflow through the UI.
    */
   public function testWorkflowCreation() {
@@ -102,26 +121,26 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->submitForm(['label' => 'Published', 'id' => 'published'], 'Save');
     $this->assertSession()->pageTextContains('Created Published state.');
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertFalse($workflow->getState('published')->canTransitionTo('published'), 'No default transition from published to published exists.');
+    $this->assertFalse($workflow->getTypePlugin()->getState('published')->canTransitionTo('published'), 'No default transition from published to published exists.');
 
     $this->clickLink('Add a new state');
     // Don't create a draft to draft transition by default.
     $this->submitForm(['label' => 'Draft', 'id' => 'draft'], 'Save');
     $this->assertSession()->pageTextContains('Created Draft state.');
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertFalse($workflow->getState('draft')->canTransitionTo('draft'), 'Can not transition from draft to draft');
+    $this->assertFalse($workflow->getTypePlugin()->getState('draft')->canTransitionTo('draft'), 'Can not transition from draft to draft');
 
     $this->clickLink('Add a new transition');
     $this->submitForm(['id' => 'publish', 'label' => 'Publish', 'from[draft]' => 'draft', 'to' => 'published'], 'Save');
     $this->assertSession()->pageTextContains('Created Publish transition.');
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertTrue($workflow->getState('draft')->canTransitionTo('published'), 'Can transition from draft to published');
+    $this->assertTrue($workflow->getTypePlugin()->getState('draft')->canTransitionTo('published'), 'Can transition from draft to published');
 
     $this->clickLink('Add a new transition');
     $this->submitForm(['id' => 'create_new_draft', 'label' => 'Create new draft', 'from[draft]' => 'draft', 'to' => 'draft'], 'Save');
     $this->assertSession()->pageTextContains('Created Create new draft transition.');
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertTrue($workflow->getState('draft')->canTransitionTo('draft'), 'Can transition from draft to draft');
+    $this->assertTrue($workflow->getTypePlugin()->getState('draft')->canTransitionTo('draft'), 'Can transition from draft to draft');
 
     // The fist state to edit on the page should be published.
     $this->clickLink('Edit');
@@ -135,7 +154,7 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->submitForm(['from[published]' => 'published'], 'Save');
     $this->assertSession()->pageTextContains('Saved Create new draft transition.');
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertTrue($workflow->getState('published')->canTransitionTo('draft'), 'Can transition from published to draft');
+    $this->assertTrue($workflow->getTypePlugin()->getState('published')->canTransitionTo('draft'), 'Can transition from published to draft');
 
     // Try creating a duplicate transition.
     $this->clickLink('Add a new transition');
@@ -155,12 +174,12 @@ class WorkflowUiTest extends BrowserTestBase {
 
     // Delete the transition.
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertTrue($workflow->hasTransitionFromStateToState('published', 'published'), 'Can transition from published to published');
+    $this->assertTrue($workflow->getTypePlugin()->hasTransitionFromStateToState('published', 'published'), 'Can transition from published to published');
     $this->clickLink('Delete');
     $this->assertSession()->pageTextContains('Are you sure you want to delete Save and publish from Test?');
     $this->submitForm([], 'Delete');
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertFalse($workflow->hasTransitionFromStateToState('published', 'published'), 'Cannot transition from published to published');
+    $this->assertFalse($workflow->getTypePlugin()->hasTransitionFromStateToState('published', 'published'), 'Cannot transition from published to published');
 
     // Try creating a duplicate state.
     $this->drupalGet('admin/config/workflow/workflows/manage/test');
@@ -170,21 +189,21 @@ class WorkflowUiTest extends BrowserTestBase {
 
     // Ensure that weight changes the state ordering.
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertEquals('published', $workflow->getInitialState()->id());
+    $this->assertEquals('published', $workflow->getTypePlugin()->getInitialState()->id());
     $this->drupalGet('admin/config/workflow/workflows/manage/test');
     $this->submitForm(['states[draft][weight]' => '-1'], 'Save');
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertEquals('draft', $workflow->getInitialState()->id());
+    $this->assertEquals('draft', $workflow->getTypePlugin()->getInitialState()->id());
 
     // Verify that we are still on the workflow edit page.
     $this->assertSession()->addressEquals('admin/config/workflow/workflows/manage/test');
 
     // Ensure that weight changes the transition ordering.
-    $this->assertEquals(['publish', 'create_new_draft'], array_keys($workflow->getTransitions()));
+    $this->assertEquals(['publish', 'create_new_draft'], array_keys($workflow->getTypePlugin()->getTransitions()));
     $this->drupalGet('admin/config/workflow/workflows/manage/test');
     $this->submitForm(['transitions[create_new_draft][weight]' => '-1'], 'Save');
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertEquals(['create_new_draft', 'publish'], array_keys($workflow->getTransitions()));
+    $this->assertEquals(['create_new_draft', 'publish'], array_keys($workflow->getTypePlugin()->getTransitions()));
 
     // Verify that we are still on the workflow edit page.
     $this->assertSession()->addressEquals('admin/config/workflow/workflows/manage/test');
@@ -222,8 +241,8 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('State Draft deleted.');
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertFalse($workflow->hasState('draft'), 'Draft state deleted');
-    $this->assertTrue($workflow->hasState('published'), 'Workflow still has published state');
+    $this->assertFalse($workflow->getTypePlugin()->hasState('draft'), 'Draft state deleted');
+    $this->assertTrue($workflow->getTypePlugin()->hasState('published'), 'Workflow still has published state');
 
     // The last state cannot be deleted so the only delete link on the page will
     // be for the workflow.
@@ -235,66 +254,41 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('There is no Workflow yet.');
     $this->assertNull($workflow_storage->loadUnchanged('test'), 'The test workflow has been deleted');
 
-    // Ensure that workflow types that implement
-    // \Drupal\workflows\WorkflowTypeInterface::initializeWorkflow() are
-    // initialized correctly.
+    // Ensure that workflow types with default configuration are initialized
+    // correctly.
     $this->drupalGet('admin/config/workflow/workflows');
     $this->clickLink('Add workflow');
     $this->submitForm(['label' => 'Test 2', 'id' => 'test2', 'workflow_type' => 'workflow_type_required_state_test'], 'Save');
     $this->assertSession()->addressEquals('admin/config/workflow/workflows/manage/test2');
     $workflow = $workflow_storage->loadUnchanged('test2');
-    $this->assertTrue($workflow->hasState('fresh'), 'The workflow has the "fresh" state');
-    $this->assertTrue($workflow->hasState('rotten'), 'The workflow has the "rotten" state');
-    $this->assertTrue($workflow->hasTransition('rot'), 'The workflow has the "rot" transition');
+    $this->assertTrue($workflow->getTypePlugin()->hasState('fresh'), 'The workflow has the "fresh" state');
+    $this->assertTrue($workflow->getTypePlugin()->hasState('rotten'), 'The workflow has the "rotten" state');
+    $this->assertTrue($workflow->getTypePlugin()->hasTransition('rot'), 'The workflow has the "rot" transition');
     $this->assertSession()->pageTextContains('Fresh');
     $this->assertSession()->pageTextContains('Rotten');
   }
 
   /**
-   * Tests that workflow types can add form fields to states and transitions.
+   * Test the workflow configuration form.
    */
-  public function testWorkflowDecoration() {
-    // Create a minimal workflow for testing.
-    $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_complex_test']);
+  public function testWorkflowConfigurationForm() {
+    $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_complex_test', 'label' => 'Test']);
     $workflow
+      ->getTypePlugin()
       ->addState('published', 'Published')
-      ->addTransition('publish', 'Publish', ['published'], 'published')
-      ->save();
-
-    $this->assertEquals('', $workflow->getState('published')->getExtra());
-    $this->assertEquals('', $workflow->getTransition('publish')->getExtra());
+      ->addTransition('publish', 'Publish', ['published'], 'published');
+    $workflow->save();
 
     $this->drupalLogin($this->createUser(['administer workflows']));
 
-    // Add additional state information when editing.
-    $this->drupalGet('admin/config/workflow/workflows/manage/test/state/published');
-    $this->assertSession()->pageTextContains('Extra information added to state');
-    $this->submitForm(['type_settings[workflow_type_complex_test][extra]' => 'Extra state information'], 'Save');
-
-    // Add additional transition information when editing.
-    $this->drupalGet('admin/config/workflow/workflows/manage/test/transition/publish');
-    $this->assertSession()->pageTextContains('Extra information added to transition');
-    $this->submitForm(['type_settings[workflow_type_complex_test][extra]' => 'Extra transition information'], 'Save');
+    // Add additional information to the workflow via the configuration form.
+    $this->drupalGet('admin/config/workflow/workflows/manage/test');
+    $this->assertSession()->pageTextContains('Example global workflow setting');
+    $this->submitForm(['type_settings[example_setting]' => 'Extra global settings'], 'Save');
 
     $workflow_storage = $this->container->get('entity_type.manager')->getStorage('workflow');
-    /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertEquals('Extra state information', $workflow->getState('published')->getExtra());
-    $this->assertEquals('Extra transition information', $workflow->getTransition('publish')->getExtra());
-
-    // Add additional state information when adding.
-    $this->drupalGet('admin/config/workflow/workflows/manage/test/add_state');
-    $this->assertSession()->pageTextContains('Extra information added to state');
-    $this->submitForm(['label' => 'Draft', 'id' => 'draft', 'type_settings[workflow_type_complex_test][extra]' => 'Extra state information on add'], 'Save');
-
-    // Add additional transition information when adding.
-    $this->drupalGet('admin/config/workflow/workflows/manage/test/add_transition');
-    $this->assertSession()->pageTextContains('Extra information added to transition');
-    $this->submitForm(['id' => 'draft_published', 'label' => 'Publish', 'from[draft]' => 'draft', 'to' => 'published', 'type_settings[workflow_type_complex_test][extra]' => 'Extra transition information on add'], 'Save');
-
-    $workflow = $workflow_storage->loadUnchanged('test');
-    $this->assertEquals('Extra state information on add', $workflow->getState('draft')->getExtra());
-    $this->assertEquals('Extra transition information on add', $workflow->getTransition('draft_published')->getExtra());
+    $this->assertEquals('Extra global settings', $workflow->getTypePlugin()->getConfiguration()['example_setting']);
   }
 
 }

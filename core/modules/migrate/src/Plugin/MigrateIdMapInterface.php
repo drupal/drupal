@@ -268,10 +268,10 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
   public function getQualifiedMapTableName();
 
   /**
-   * Sets the migrate message.
+   * Sets the migrate message service.
    *
    * @param \Drupal\migrate\MigrateMessageInterface $message
-   *   The message to display.
+   *   The migrate message service.
    */
   public function setMessage(MigrateMessageInterface $message);
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\migrate\source\TestSqlBase;
 use Drupal\Core\Database\Database;
 
@@ -23,11 +24,24 @@ class SqlBaseTest extends MigrateTestBase {
   public function testConnectionTypes() {
     $sql_base = new TestSqlBase();
 
-    // Check the default values.
-    $sql_base->setConfiguration([]);
-    $this->assertIdentical($sql_base->getDatabase()->getTarget(), 'default');
-    $this->assertIdentical($sql_base->getDatabase()->getKey(), 'migrate');
+    // Verify that falling back to the default 'migrate' connection (defined in
+    // the base class) works.
+    $this->assertSame($sql_base->getDatabase()->getTarget(), 'default');
+    $this->assertSame($sql_base->getDatabase()->getKey(), 'migrate');
 
+    // Verify the fallback state key overrides the 'migrate' connection.
+    $target = 'test_fallback_target';
+    $key = 'test_fallback_key';
+    $config = ['target' => $target, 'key' => $key];
+    $database_state_key = 'test_fallback_state';
+    \Drupal::state()->set($database_state_key, $config);
+    \Drupal::state()->set('migrate.fallback_state_key', $database_state_key);
+    // Create a test connection using the default database configuration.
+    Database::addConnectionInfo($key, $target, Database::getConnectionInfo('default')['default']);
+    $this->assertSame($sql_base->getDatabase()->getTarget(), $target);
+    $this->assertSame($sql_base->getDatabase()->getKey(), $key);
+
+    // Verify that setting explicit connection information overrides fallbacks.
     $target = 'test_db_target';
     $key = 'test_migrate_connection';
     $config = ['target' => $target, 'key' => $key];
@@ -35,8 +49,8 @@ class SqlBaseTest extends MigrateTestBase {
     Database::addConnectionInfo($key, $target, Database::getConnectionInfo('default')['default']);
 
     // Validate we have injected our custom key and target.
-    $this->assertIdentical($sql_base->getDatabase()->getTarget(), $target);
-    $this->assertIdentical($sql_base->getDatabase()->getKey(), $key);
+    $this->assertSame($sql_base->getDatabase()->getTarget(), $target);
+    $this->assertSame($sql_base->getDatabase()->getKey(), $key);
 
     // Now test we can have SqlBase create the connection from an info array.
     $sql_base = new TestSqlBase();
@@ -51,7 +65,7 @@ class SqlBaseTest extends MigrateTestBase {
     $sql_base->getDatabase();
 
     // Validate the connection has been created with the right values.
-    $this->assertIdentical(Database::getConnectionInfo($key)[$target], $database);
+    $this->assertSame(Database::getConnectionInfo($key)[$target], $database);
 
     // Now, test this all works when using state to store db info.
     $target = 'test_state_db_target';
@@ -63,8 +77,8 @@ class SqlBaseTest extends MigrateTestBase {
     Database::addConnectionInfo($key, $target, Database::getConnectionInfo('default')['default']);
 
     // Validate we have injected our custom key and target.
-    $this->assertIdentical($sql_base->getDatabase()->getTarget(), $target);
-    $this->assertIdentical($sql_base->getDatabase()->getKey(), $key);
+    $this->assertSame($sql_base->getDatabase()->getTarget(), $target);
+    $this->assertSame($sql_base->getDatabase()->getKey(), $key);
 
     // Now test we can have SqlBase create the connection from an info array.
     $sql_base = new TestSqlBase();
@@ -81,7 +95,16 @@ class SqlBaseTest extends MigrateTestBase {
     $sql_base->getDatabase();
 
     // Validate the connection has been created with the right values.
-    $this->assertIdentical(Database::getConnectionInfo($key)[$target], $database);
+    $this->assertSame(Database::getConnectionInfo($key)[$target], $database);
+
+    // Verify that falling back to 'migrate' when the connection is not defined
+    // throws a RequirementsException.
+    \Drupal::state()->delete('migrate.fallback_state_key');
+    $sql_base->setConfiguration([]);
+    Database::renameConnection('migrate', 'fallback_connection');
+    $this->setExpectedException(RequirementsException::class,
+      'No database connection configured for source plugin');
+    $sql_base->getDatabase();
   }
 
 }

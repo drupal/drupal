@@ -28,7 +28,7 @@ Chi Cheng <cloudream@gmail.com>
 Ca-Phun Ung <pazu2k@gmail.com>
 Ariel Flesler <aflesler@gmail.com>
 Maggie Wachs <maggie@filamentgroup.com>
-Scott Jehl <scott@scottjehl.com>
+Scott Jehl <scottjehl@gmail.com>
 Todd Parker <todd@filamentgroup.com>
 Andrew Powell <andrew@shellscape.org>
 Brant Burnett <btburnett3@gmail.com>
@@ -52,7 +52,7 @@ Eyal Kobrigo <kobrigo@hotmail.com>
 Tiago Freire <tiago.freire@gmail.com>
 Diego Tres <diegotres@gmail.com>
 Holger Rüprich <holger@rueprich.de>
-Ziling Zhao <zizhao@cisco.com>
+Ziling Zhao <zilingzhao@gmail.com>
 Mike Alsup <malsup@gmail.com>
 Robson Braga Araujo <robsonbraga@gmail.com>
 Pierre-Henri Ausseil <ph.ausseil@gmail.com>
@@ -80,7 +80,7 @@ Kyle Wilkinson <kai@wikyd.org>
 Khaled AlHourani <me@khaledalhourani.com>
 Marian Rudzynski <mr@impaled.org>
 Jean-Francois Remy <jeff@melix.org>
-Doug Blood
+Doug Blood <dougblood@gmail.com>
 Filippo Cavallarin <filippo.cavallarin@codseq.it>
 Heiko Henning <heiko@thehennings.ch>
 Aliaksandr Rahalevich <saksmlz@gmail.com>
@@ -140,7 +140,8 @@ Wesley Walser <waw325@gmail.com>
 Kouhei Sutou <kou@clear-code.com>
 Karl Kirch <karlkrch@gmail.com>
 Chris Kelly <ckdake@ckdake.com>
-Jay Oster <jay@loyalize.com>
+Jason Oster <jay@kodewerx.org>
+Felix Nagel <info@felixnagel.com>
 Alexander Polomoshnov <alex.polomoshnov@gmail.com>
 David Leal <dgleal@gmail.com>
 Igor Milla <igor.fsp.milla@gmail.com>
@@ -150,12 +151,14 @@ Marwan Al Jubeh <marwan.aljubeh@gmail.com>
 Milan Broum <midlis@googlemail.com>
 Sebastian Sauer <info@dynpages.de>
 Gaëtan Muller <m.gaetan89@gmail.com>
+Michel Weimerskirch <michel@weimerskirch.net>
 William Griffiths <william@ycymro.com>
 Stojce Slavkovski <stojce@gmail.com>
 David Soms <david.soms@gmail.com>
 David De Sloovere <david.desloovere@outlook.com>
 Michael P. Jung <michael.jung@terreon.de>
 Shannon Pekary <spekary@gmail.com>
+Dan Wellman <danwellman@hotmail.com>
 Matthew Edward Hutton <meh@corefiling.co.uk>
 James Khoury <james@jameskhoury.com>
 Rob Loach <robloach@gmail.com>
@@ -208,6 +211,7 @@ Bernhard Sirlinger <bernhard.sirlinger@tele2.de>
 Jared A. Scheel <jared@jaredscheel.com>
 Rafael Xavier de Souza <rxaviers@gmail.com>
 John Chen <zhang.z.chen@intel.com>
+Robert Beuligmann <robertbeuligmann@gmail.com>
 Dale Kocian <dale.kocian@gmail.com>
 Mike Sherov <mike.sherov@gmail.com>
 Andrew Couch <andy@couchand.com>
@@ -251,7 +255,7 @@ Gan Eng Chin <engchin.gan@gmail.com>
 Gabriel Schulhof <gabriel.schulhof@intel.com>
 Alexander Schmitz <arschmitz@gmail.com>
 Vilhjálmur Skúlason <vis@dmm.is>
-Siebrand Mazeland <s.mazeland@xs4all.nl>
+Siebrand Mazeland <siebrand@kitano.nl>
 Mohsen Ekhtiari <mohsenekhtiari@yahoo.com>
 Pere Orga <gotrunks@gmail.com>
 Jasper de Groot <mail@ugomobi.com>
@@ -285,12 +289,45 @@ Simen Bekkhus <sbekkhus91@gmail.com>
 Chen Eshchar <eshcharc@gmail.com>
 Bruno Pérel <brunoperel@gmail.com>
 Mohammed Alshehri <m@dralshehri.com>
+Lisa Seacat DeLuca <ldeluca@us.ibm.com>
 Anne-Gaelle Colom <coloma@westminster.ac.uk>
 Adam Foster <slimfoster@gmail.com>
 Luke Page <luke.a.page@gmail.com>
+Daniel Owens <daniel@matchstickmixup.com>
+Michael Orchard <morchard@scottlogic.co.uk>
 Marcus Warren <marcus@envoke.com>
+Nils Heuermann <nils@world-of-scripts.de>
+Marco Ziech <marco@ziech.net>
 Patricia Juarez <patrixd@gmail.com>
 Ben Mosher <me@benmosher.com>
 Ablay Keldibek <atomio.ak@gmail.com>
-Nils Heuermann <nils@world-of-scripts.de>
-Marco Ziech <marco@ziech.net>
+Thomas Applencourt <thomas.applencourt@irsamc.ups-tlse.fr>
+Jiabao Wu <jiabao.foss@gmail.com>
+Eric Lee Carraway <github@ericcarraway.com>
+Victor Homyakov <vkhomyackov@gmail.com>
+Myeongjin Lee <aranet100@gmail.com>
+Liran Sharir <lsharir@gmail.com>
+Weston Ruter <weston@xwp.co>
+Mani Mishra <manimishra902@gmail.com>
+Hannah Methvin <hannahmethvin@gmail.com>
+Leonardo Balter <leonardo.balter@gmail.com>
+Benjamin Albert <benjamin_a5@yahoo.com>
+Michał Gołębiowski <m.goleb@gmail.com>
+Alyosha Pushak <alyosha.pushak@gmail.com>
+Fahad Ahmad <fahadahmad41@hotmail.com>
+Matt Brundage <github@mattbrundage.com>
+Francesc Baeta <francesc.baeta@gmail.com>
+Piotr Baran <piotros@wp.pl>
+Mukul Hase <mukulhase@gmail.com>
+Konstantin Dinev <kdinev@mail.bw.edu>
+Rand Scullard <rand@randscullard.com>
+Dan Strohl <dan@wjcg.net>
+Maksim Ryzhikov <rv.maksim@gmail.com>
+Amine HADDAD <haddad@allegorie.tv>
+Amanpreet Singh <apsdehal@gmail.com>
+Alexey Balchunas <bleshik@gmail.com>
+Peter Kehl <peter.kehl@gmail.com>
+Peter Dave Hello <hsu@peterdavehello.org>
+Johannes Schäfer <johnschaefer@gmx.de>
+Ville Skyttä <ville.skytta@iki.fi>
+Ryan Oriecuia <ryan.oriecuia@visioncritical.com>

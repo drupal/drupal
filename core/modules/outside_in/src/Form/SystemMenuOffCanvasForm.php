@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * The off-canvas form handler for the SystemMenuBlock.
  *
  * @see outside_in_block_alter()
+ *
+ * @internal
  */
 class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjectionInterface {
 
@@ -33,9 +35,11 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
   protected $plugin;
 
   /**
+   * The menu entity that the block uses and that will be edited in this form.
+   *
    * @var \Drupal\system\MenuInterface
    */
-  protected $entity;
+  protected $menu;
 
   /**
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -81,10 +85,10 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
 
     $form['entity_form'] = [
       '#type' => 'details',
-      '#title' => $this->t('Edit menu %label', ['%label' => $this->entity->label()]),
+      '#title' => $this->t('Edit menu %label', ['%label' => $this->menu->label()]),
       '#open' => TRUE,
     ];
-    $form['entity_form'] += $this->getEntityForm($this->entity)->buildForm([], $form_state);
+    $form['entity_form'] += $this->getEntityForm($this->menu)->buildForm([], $form_state);
 
     // Print the menu link titles as text instead of a link.
     if (!empty($form['entity_form']['links']['links'])) {
@@ -111,7 +115,7 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->plugin->validateConfigurationForm($form, $form_state);
-    $this->getEntityForm($this->entity)->validateForm($form, $form_state);
+    $this->getEntityForm($this->menu)->validateForm($form, $form_state);
   }
 
   /**
@@ -119,22 +123,22 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->plugin->submitConfigurationForm($form, $form_state);
-    $this->getEntityForm($this->entity)->submitForm($form, $form_state);
-    $this->entity->save();
+    $this->getEntityForm($this->menu)->submitForm($form, $form_state);
+    $this->menu->save();
   }
 
   /**
    * Gets the entity form for this menu.
    *
-   * @param \Drupal\system\MenuInterface $entity
+   * @param \Drupal\system\MenuInterface $menu
    *   The menu entity.
    *
    * @return \Drupal\Core\Entity\EntityFormInterface
    *   The entity form.
    */
-  protected function getEntityForm(MenuInterface $entity) {
+  protected function getEntityForm(MenuInterface $menu) {
     $entity_form = $this->entityTypeManager->getFormObject('menu', 'edit');
-    $entity_form->setEntity($entity);
+    $entity_form->setEntity($menu);
     return $entity_form;
   }
 
@@ -143,7 +147,7 @@ class SystemMenuOffCanvasForm extends PluginFormBase implements ContainerInjecti
    */
   public function setPlugin(PluginInspectionInterface $plugin) {
     $this->plugin = $plugin;
-    $this->entity = $this->menuStorage->load($this->plugin->getDerivativeId());
+    $this->menu = $this->menuStorage->load($this->plugin->getDerivativeId());
   }
 
 }

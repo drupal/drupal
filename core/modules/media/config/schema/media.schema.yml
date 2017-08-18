@@ -1,0 +1,60 @@
+media.settings:
+  type: config_object
+  label: 'Media settings'
+  mapping:
+    icon_base_uri:
+      type: string
+      label: 'Full URI to a folder where the media icons will be installed'
+
+media.type.*:
+  type: config_entity
+  label: 'Media type'
+  mapping:
+    id:
+      type: string
+      label: 'Machine name'
+    label:
+      type: label
+      label: 'Name'
+    description:
+      type: text
+      label: 'Description'
+    source:
+      type: string
+      label: 'Source'
+    source_configuration:
+      type: media.source.[%parent.source]
+    queue_thumbnail_downloads:
+      type: boolean
+      label: 'Whether the thumbnail downloads should be queued'
+    new_revision:
+      type: boolean
+      label: 'Whether a new revision should be created by default'
+    field_map:
+      type: sequence
+      label: 'Field map'
+      sequence:
+        type: string
+
+field.formatter.settings.media_thumbnail:
+  type: field.formatter.settings.image
+  label: 'Media thumbnail field display format settings'
+
+media.source.*:
+  type: mapping
+  label: 'Media source settings'
+
+media.source.file:
+  type: media.source.field_aware
+  label: '"File" media source configuration'
+
+media.source.image:
+  type: media.source.field_aware
+  label: '"Image" media source configuration'
+
+media.source.field_aware:
+  type: mapping
+  mapping:
+    source_field:
+      type: string
+      label: 'Source field'

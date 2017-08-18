@@ -249,6 +249,12 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     $this->executeView($view);
 
     $this->assertEqual(count($view->result), 2, 'Search returned two rows');
+
+    // Test that the render() return empty array for empty result.
+    $view = Views::getView('test_display_entity_reference');
+    $view->setDisplay('entity_reference_1');
+    $render = $view->display_handler->render();
+    $this->assertSame([], $render, 'Render returned empty array');
   }
 
 }

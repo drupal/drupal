@@ -154,6 +154,13 @@ class Condition extends ConditionBase {
    *   TRUE when matches else FALSE.
    */
   protected function match(array $condition, $value) {
+    // "IS NULL" and "IS NOT NULL" conditions can also deal with array values,
+    // so we return early for them to avoid problems.
+    if (in_array($condition['operator'], ['IS NULL', 'IS NOT NULL'], TRUE)) {
+      $should_be_set = $condition['operator'] === 'IS NOT NULL';
+      return $should_be_set === isset($value);
+    }
+
     if (isset($value)) {
       // We always want a case-insensitive match.
       if (!is_bool($value)) {
@@ -183,15 +190,11 @@ class Condition extends ConditionBase {
           return strpos($value, $condition['value']) !== FALSE;
         case 'ENDS_WITH':
           return substr($value, -strlen($condition['value'])) === (string) $condition['value'];
-        case 'IS NOT NULL':
-          return TRUE;
-        case 'IS NULL':
-          return FALSE;
         default:
           throw new QueryException('Invalid condition operator.');
       }
     }
-    return $condition['operator'] === 'IS NULL';
+    return FALSE;
   }
 
 }

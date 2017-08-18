@@ -90,6 +90,30 @@ interface ModerationInformationInterface {
   public function getDefaultRevisionId($entity_type_id, $entity_id);
 
   /**
+   * Returns the revision translation affected translation of a revision.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity.
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface
+   *   The revision translation affected translation.
+   */
+  public function getAffectedRevisionTranslation(ContentEntityInterface $entity);
+
+  /**
+   * Determines if pending revisions are allowed.
+   *
+   * @internal
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity.
+   *
+   * @return bool
+   *   If pending revisions are allowed.
+   */
+  public function isPendingRevisionAllowed(ContentEntityInterface $entity);
+
+  /**
    * Determines if an entity is a latest revision.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
@@ -102,15 +126,15 @@ interface ModerationInformationInterface {
   public function isLatestRevision(ContentEntityInterface $entity);
 
   /**
-   * Determines if a forward revision exists for the specified entity.
+   * Determines if a pending revision exists for the specified entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity which may or may not have a forward revision.
+   *   The entity which may or may not have a pending revision.
    *
    * @return bool
-   *   TRUE if this entity has forward revisions available, FALSE otherwise.
+   *   TRUE if this entity has pending revisions available, FALSE otherwise.
    */
-  public function hasForwardRevision(ContentEntityInterface $entity);
+  public function hasPendingRevision(ContentEntityInterface $entity);
 
   /**
    * Determines if an entity is "live".
@@ -125,6 +149,21 @@ interface ModerationInformationInterface {
    *   TRUE if the specified entity is a live revision, FALSE otherwise.
    */
   public function isLiveRevision(ContentEntityInterface $entity);
+
+  /**
+   * Determines if the default revision for the given entity is published.
+   *
+   * The default revision is the same as the entity retrieved by "default" from
+   * the storage handler. If the entity is translated, check if any of the
+   * translations are published.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being saved.
+   *
+   * @return bool
+   *   TRUE if the default revision is published. FALSE otherwise.
+   */
+  public function isDefaultRevisionPublished(ContentEntityInterface $entity);
 
   /**
    * Gets the workflow for the given content entity.

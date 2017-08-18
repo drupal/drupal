@@ -6,6 +6,10 @@ workflow.type_settings.workflow_type_test:
       type: sequence
       sequence:
         type: ignore
+    transitions:
+      type: sequence
+      sequence:
+        type: ignore
 
 workflow.type_settings.workflow_type_required_state_test:
   type: mapping
@@ -15,28 +19,54 @@ workflow.type_settings.workflow_type_required_state_test:
       type: sequence
       sequence:
         type: ignore
+    transitions:
+      type: sequence
+      sequence:
+        type: ignore
+
+# @todo, inline this straight into "workflow.type_settings.workflow_type_complex_test"
+# after https://www.drupal.org/node/2871746 is resolved.
+workflows.state.complex_test_state:
+  type: workflows.state
+  mapping:
+    extra:
+      type: string
+      label: 'Extra information'
+
+workflows.state.complex_test_transition:
+  type: workflows.transition
+  mapping:
+    extra:
+      type: string
+      label: 'Extra information'
 
 workflow.type_settings.workflow_type_complex_test:
   type: mapping
   label: 'Workflow complex test type settings'
   mapping:
+    example_setting:
+      type: string
+      label: 'Example setting'
     states:
       type: sequence
-      label: 'Additional state configuration'
+      label: 'States'
       sequence:
-        type: mapping
+        type: workflows.state.complex_test_state
         label: 'States'
-        mapping:
-          extra:
-            type: string
-            label: 'Extra information'
     transitions:
       type: sequence
-      label: 'Additional transition configuration'
+      label: 'Transitions'
       sequence:
-        type: mapping
         label: 'Transitions'
-        mapping:
-          extra:
-            type: string
-            label: 'Extra information'
+        type: workflows.state.complex_test_transition
+
+workflow.type_settings.predefined_states_workflow_test_type:
+  type: mapping
+  label: 'Predefined states workflow test type'
+  mapping:
+    transitions:
+      type: sequence
+      label: 'Transitions'
+      sequence:
+        label: 'Transitions'
+        type: workflows.transition

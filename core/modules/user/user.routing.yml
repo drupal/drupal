@@ -111,6 +111,15 @@ user.pass:
   options:
     _maintenance_access: TRUE
 
+user.pass.http:
+  path: '/user/password'
+  defaults:
+    _controller: \Drupal\user\Controller\UserAuthenticationController::resetPassword
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _format: 'json'
+
 user.page:
   path: '/user'
   defaults:

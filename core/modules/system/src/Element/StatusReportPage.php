@@ -49,9 +49,7 @@ class StatusReportPage extends RenderElement {
               }
             }
           }
-          $element['#general_info']['#' . $key] = $requirement;
-          unset($element['#requirements'][$key]);
-          break;
+          // Intentional fall-through.
 
         case 'drupal':
         case 'webserver':
@@ -60,7 +58,9 @@ class StatusReportPage extends RenderElement {
         case 'php':
         case 'php_memory_limit':
           $element['#general_info']['#' . $key] = $requirement;
-          unset($element['#requirements'][$key]);
+          if (isset($requirement['severity']) && $requirement['severity'] < REQUIREMENT_WARNING) {
+            unset($element['#requirements'][$key]);
+          }
           break;
       }
     }

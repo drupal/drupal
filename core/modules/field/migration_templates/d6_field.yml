@@ -20,6 +20,12 @@ process:
       - type
       - widget_type
     map:
+      userreference:
+        userreference_select: entity_reference
+        userreference_buttons: entity_reference
+        userreference_autocomplete: entity_reference
+      nodereference:
+        nodereference_select: entity_reference
       number_integer:
         number: integer
         optionwidgets_select: list_integer
@@ -116,5 +122,6 @@ process:
     source:
       - '@type'
       - global_settings
+      - type
 destination:
   plugin: entity:field_storage_config

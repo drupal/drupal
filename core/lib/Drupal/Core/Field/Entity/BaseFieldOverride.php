@@ -16,7 +16,8 @@ use Drupal\Core\Field\FieldException;
  *   id = "base_field_override",
  *   label = @Translation("Base field override"),
  *   handlers = {
- *     "storage" = "Drupal\Core\Field\BaseFieldOverrideStorage"
+ *     "storage" = "Drupal\Core\Field\BaseFieldOverrideStorage",
+ *     "access" = "Drupal\Core\Field\BaseFieldOverrideAccessControlHandler",
  *   },
  *   config_prefix = "base_field_override",
  *   entity_keys = {
@@ -139,6 +140,13 @@ class BaseFieldOverride extends FieldConfigBase {
    */
   public function isComputed() {
     return $this->getBaseFieldDefinition()->isComputed();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getClass() {
+    return $this->getBaseFieldDefinition()->getClass();
   }
 
   /**

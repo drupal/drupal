@@ -134,8 +134,7 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalGet('test-page');
     $this->assertNoLink($node_title);
 
-    // Use not only the save button, but also the two special buttons:
-    // 'Save and publish' as well as 'Save and keep published'.
+    // Make sure the menu links only appear when the node is published.
     // These buttons just appear for 'administer nodes' users.
     $admin_user = $this->drupalCreateUser([
       'access administration pages',
@@ -146,21 +145,20 @@ class MenuNodeTest extends WebTestBase {
       'edit any page content',
     ]);
     $this->drupalLogin($admin_user);
-    foreach (['Save and unpublish' => FALSE, 'Save and keep unpublished' => FALSE, 'Save and publish' => TRUE, 'Save and keep published' => TRUE] as $submit => $visible) {
-      $edit = [
-        'menu[enabled]' => 1,
-        'menu[title]' => $node_title,
-      ];
-      $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, $submit);
-      // Assert that the link exists.
-      $this->drupalGet('test-page');
-      if ($visible) {
-        $this->assertLink($node_title, 0, 'Found a menu link after submitted with ' . $submit);
-      }
-      else {
-        $this->assertNoLink($node_title, 'Found no menu link after submitted with ' . $submit);
-      }
-    }
+    // Assert that the link does not exist if unpublished.
+    $edit = [
+      'menu[enabled]' => 1,
+      'menu[title]' => $node_title,
+      'status[value]' => FALSE,
+    ];
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('test-page');
+    $this->assertNoLink($node_title, 'Found no menu link with the node unpublished');
+    // Assert that the link exists if published.
+    $edit['status[value]'] = TRUE;
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('test-page');
+    $this->assertLink($node_title, 0, 'Found a menu link with the node published');
 
     // Log back in as normal user.
     $this->drupalLogin($this->editor);

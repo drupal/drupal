@@ -119,7 +119,7 @@ class Date extends FieldPluginBase {
       '#type' => 'select',
       '#title' => $this->t('Timezone'),
       '#description' => $this->t('Timezone to be used for date output.'),
-      '#options' => ['' => $this->t('- Default site/user timezone -')] + system_time_zones(FALSE),
+      '#options' => ['' => $this->t('- Default site/user timezone -')] + system_time_zones(FALSE, TRUE),
       '#default_value' => $this->options['timezone'],
     ];
     foreach (array_merge(['custom'], array_keys($date_formats)) as $timezone_date_formats) {

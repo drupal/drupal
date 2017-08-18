@@ -1,0 +1,4 @@
+/*! jQuery UI - v1.12.1 - 2017-03-31
+* http://jqueryui.com
+* Copyright jQuery Foundation and other contributors; Licensed  */
+!function(a){"function"==typeof define&&define.amd?define(["jquery","../version","../effect"],a):a(jQuery)}(function(a){return a.effects.define("bounce",function(b,c){var d,e,f,g=a(this),h=b.mode,i="hide"===h,j="show"===h,k=b.direction||"up",l=b.distance,m=b.times||5,n=2*m+(j||i?1:0),o=b.duration/n,p=b.easing,q="up"===k||"down"===k?"top":"left",r="up"===k||"left"===k,s=0,t=g.queue().length;for(a.effects.createPlaceholder(g),f=g.css(q),l||(l=g["top"===q?"outerHeight":"outerWidth"]()/3),j&&(e={opacity:1},e[q]=f,g.css("opacity",0).css(q,r?2*-l:2*l).animate(e,o,p)),i&&(l/=Math.pow(2,m-1)),e={},e[q]=f;s<m;s++)d={},d[q]=(r?"-=":"+=")+l,g.animate(d,o,p).animate(e,o,p),l=i?2*l:l/2;i&&(d={opacity:0},d[q]=(r?"-=":"+=")+l,g.animate(d,o,p)),g.queue(c),a.effects.unshift(g,t,n+1)})});

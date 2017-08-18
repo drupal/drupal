@@ -22,6 +22,11 @@ class FileFieldRevisionTest extends FileFieldTestBase {
    *    should be deleted also.
    */
   public function testRevisions() {
+    // This test expects unused managed files to be marked as a temporary file
+    // and then deleted up by file_cron().
+    $this->config('file.settings')
+      ->set('make_unused_managed_files_temporary', TRUE)
+      ->save();
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
@@ -63,7 +68,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Save a new version of the node without any changes.
     // Check that the file is still the same as the previous revision.
-    $this->drupalPostForm('node/' . $nid . '/edit', ['revision' => '1'], t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', ['revision' => '1'], t('Save'));
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file_r3 = File::load($node->{$field_name}->target_id);

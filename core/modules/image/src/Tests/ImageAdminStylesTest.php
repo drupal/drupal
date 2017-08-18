@@ -203,6 +203,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertTitle(t('Edit style @name | Drupal', ['@name' => $style_label]));
     $this->assertResponse(200, format_string('Image style %original renamed to %new', ['%original' => $style->id(), '%new' => $style_name]));
 
+    // Check that the available image effects are properly sorted.
+    $option = $this->xpath('//select[@id=:id]//option', [':id' => 'edit-new--2']);
+    $this->assertTrue($option[1] == 'Ajax test', '"Ajax test" is the first selectable effect.');
+
     // Check that the image was flushed after updating the style.
     // This is especially important when renaming the style. Make sure that
     // the old image directory has been deleted.

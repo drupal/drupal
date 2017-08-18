@@ -46,7 +46,7 @@ class RendererBubblingTest extends RendererTestBase {
     $element = [
       '#type' => 'container',
       '#cache' => [
-        'keys' => ['simpletest', 'drupal_render', 'children_attached'],
+        'keys' => ['simpletest', 'renderer', 'children_attached'],
       ],
       '#attached' => ['library' => ['test/parent']],
       '#title' => 'Parent',
@@ -68,7 +68,7 @@ class RendererBubblingTest extends RendererTestBase {
 
     // Load the element from cache and verify the presence of the #attached
     // JavaScript.
-    $element = ['#cache' => ['keys' => ['simpletest', 'drupal_render', 'children_attached']]];
+    $element = ['#cache' => ['keys' => ['simpletest', 'renderer', 'children_attached']]];
     $this->assertTrue(strlen($this->renderer->renderRoot($element)) > 0, 'The element was retrieved from cache.');
     $this->assertEquals($element['#attached']['library'], $expected_libraries, 'The element, child and subchild #attached libraries are included.');
   }

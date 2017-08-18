@@ -717,6 +717,50 @@ class FieldPluginBaseTest extends UnitTestCase {
     $this->assertEquals($expected, $field->getRenderTokens([]));
   }
 
+  /**
+   * Ensures proper token replacement when generating CSS classes.
+   *
+   * @covers ::elementClasses
+   * @covers ::elementLabelClasses
+   * @covers ::elementWrapperClasses
+   */
+  public function testElementClassesWithTokens() {
+    $functions = [
+      'elementClasses' => 'element_class',
+      'elementLabelClasses' => 'element_label_class',
+      'elementWrapperClasses' => 'element_wrapper_class',
+    ];
+
+    $tokens = ['test_token' => 'foo'];
+    $test_class = 'test-class-without-token test-class-with-{{ test_token }}-token';
+    $expected_result = 'test-class-without-token test-class-with-foo-token';
+
+    // Inline template to render the tokens.
+    $build = [
+      '#type' => 'inline_template',
+      '#template' => $test_class,
+      '#context' => $tokens,
+      '#post_render' => [function() {}],
+    ];
+
+    // We're not testing the token rendering itself, just that the function
+    // being tested correctly handles tokens when generating the element's class
+    // attribute.
+    $this->renderer->expects($this->any())
+      ->method('renderPlain')
+      ->with($build)
+      ->willReturn($expected_result);
+
+    foreach ($functions as $callable => $option_name) {
+      $field = $this->setupTestField([$option_name => $test_class]);
+      $field->view->style_plugin = new \stdClass();
+      $field->view->style_plugin->render_tokens[] = $tokens;
+
+      $result = $field->{$callable}(0);
+      $this->assertEquals($expected_result, $result);
+    }
+  }
+
 }
 
 class FieldPluginBaseTestField extends FieldPluginBase {

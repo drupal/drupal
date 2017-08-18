@@ -2,8 +2,8 @@
 
 namespace Drupal\node\Plugin\Action;
 
-use Drupal\Core\Action\ActionBase;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Field\FieldUpdateActionBase;
+use Drupal\node\NodeInterface;
 
 /**
  * Publishes a node.
@@ -14,24 +14,13 @@ use Drupal\Core\Session\AccountInterface;
  *   type = "node"
  * )
  */
-class PublishNode extends ActionBase {
+class PublishNode extends FieldUpdateActionBase {
 
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
-    $entity->setPublished()->save();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    /** @var \Drupal\node\NodeInterface $object */
-    $result = $object->access('update', $account, TRUE)
-      ->andIf($object->status->access('edit', $account, TRUE));
-
-    return $return_as_object ? $result : $result->isAllowed();
+  protected function getFieldsToUpdate() {
+    return ['status' => NodeInterface::PUBLISHED];
   }
 
 }

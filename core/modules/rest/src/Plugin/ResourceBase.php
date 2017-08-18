@@ -100,7 +100,15 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
 
     $definition = $this->getPluginDefinition();
     $canonical_path = isset($definition['uri_paths']['canonical']) ? $definition['uri_paths']['canonical'] : '/' . strtr($this->pluginId, ':', '/') . '/{id}';
-    $create_path = isset($definition['uri_paths']['https://www.drupal.org/link-relations/create']) ? $definition['uri_paths']['https://www.drupal.org/link-relations/create'] : '/' . strtr($this->pluginId, ':', '/');
+    $create_path = isset($definition['uri_paths']['create']) ? $definition['uri_paths']['create'] : '/' . strtr($this->pluginId, ':', '/');
+    // BC: the REST module originally created the POST URL for a resource by
+    // reading the 'https://www.drupal.org/link-relations/create' URI path from
+    // the plugin annotation. For consistency with entity type definitions, that
+    // then changed to reading the 'create' URI path. For any REST Resource
+    // plugins that were using the old mechanism, we continue to support that.
+    if (!isset($definition['uri_paths']['create']) && isset($definition['uri_paths']['https://www.drupal.org/link-relations/create'])) {
+      $create_path = $definition['uri_paths']['https://www.drupal.org/link-relations/create'];
+    }
 
     $route_name = strtr($this->pluginId, ':', '.');
 

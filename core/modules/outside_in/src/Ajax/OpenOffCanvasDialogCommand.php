@@ -8,8 +8,15 @@ use Drupal\Core\Ajax\OpenDialogCommand;
  * Defines an AJAX command to open content in a dialog in a off-canvas dialog.
  *
  * @ingroup ajax
+ *
+ * @internal
  */
 class OpenOffCanvasDialogCommand extends OpenDialogCommand {
+
+  /**
+   * The dialog width to use if none is provided.
+   */
+  const DEFAULT_DIALOG_WIDTH = 300;
 
   /**
    * Constructs an OpenOffCanvasDialogCommand object.
@@ -42,6 +49,15 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     // @todo drupal.ajax.js does not respect drupalAutoButtons properly, pass an
     //   empty set of buttons until https://www.drupal.org/node/2793343 is in.
     $this->dialogOptions['buttons'] = [];
+    if (empty($dialog_options['dialogClass'])) {
+      $this->dialogOptions['dialogClass'] = 'ui-dialog-off-canvas';
+    }
+    // If no width option is provided then use the default width to avoid the
+    // dialog staying at the width of the previous instance when opened
+    // more than once, with different widths, on a single page.
+    if (!isset($this->dialogOptions['width'])) {
+      $this->dialogOptions['width'] = static::DEFAULT_DIALOG_WIDTH;
+    }
   }
 
   /**

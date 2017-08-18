@@ -25,6 +25,11 @@ class EntityTestEntityLevelValidator extends ConstraintValidator {
       $this->context->buildViolation($constraint->message)
         ->addViolation();
     }
+    if ($value->name->value === 'entity-level-violation-with-path') {
+      $this->context->buildViolation($constraint->message)
+        ->atPath('test.form.element')
+        ->addViolation();
+    }
   }
 
 }

@@ -4,7 +4,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\StatementInterface;
-use Drupal\system\Tests\Database\FakeRecord;
+use Drupal\Tests\system\Functional\Database\FakeRecord;
 
 /**
  * Tests the Database system's various fetch capabilities.
@@ -69,7 +69,7 @@ class FetchTest extends DatabaseTestBase {
    */
   public function testQueryFetchClass() {
     $records = [];
-    $result = db_query('SELECT name FROM {test} WHERE age = :age', [':age' => 25], ['fetch' => 'Drupal\system\Tests\Database\FakeRecord']);
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', [':age' => 25], ['fetch' => FakeRecord::class]);
     foreach ($result as $record) {
       $records[] = $record;
       if ($this->assertTrue($record instanceof FakeRecord, 'Record is an object of class FakeRecord.')) {

@@ -77,7 +77,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Turn the "display" option off and check that the file is no longer displayed.
     $edit = [$field_name . '[0][display]' => FALSE];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save'));
 
     $this->assertNoRaw($default_output, 'Field is hidden when "display" option is unchecked.');
 
@@ -87,7 +87,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $field_name . '[0][description]' => $description,
       $field_name . '[0][display]' => TRUE,
     ];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save'));
     $this->assertText($description);
 
     // Ensure the filename in the link's title attribute is escaped.
@@ -167,7 +167,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       'title[0][value]' => $title,
       'files[field_' . $field_name . '_0]' => drupal_realpath($file->uri),
     ];
-    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
+    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertText(t('The description may be used as the label of the link to the file.'));

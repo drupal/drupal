@@ -3,9 +3,9 @@
 namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\Core\Plugin\Context\ContextDefinitionInterface;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * A test for contextual filters exposed as block context.

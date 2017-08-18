@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Theme;
 
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -13,20 +14,11 @@ use Drupal\Core\Routing\RouteMatchInterface;
 class ThemeNegotiator implements ThemeNegotiatorInterface {
 
   /**
-   * Holds arrays of theme negotiators, keyed by priority.
+   * Holds an array of theme negotiator IDs, sorted by priority.
    *
-   * @var array
+   * @var string[]
    */
   protected $negotiators = [];
-
-  /**
-   * Holds the array of theme negotiators sorted by priority.
-   *
-   * Set to NULL if the array needs to be re-calculated.
-   *
-   * @var array|null
-   */
-  protected $sortedNegotiators;
 
   /**
    * The access checker for themes.
@@ -36,47 +28,26 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
   protected $themeAccess;
 
   /**
+   * The class resolver.
+   *
+   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
+   */
+  protected $classResolver;
+
+  /**
    * Constructs a new ThemeNegotiator.
    *
    * @param \Drupal\Core\Theme\ThemeAccessCheck $theme_access
    *   The access checker for themes.
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   *   The class resolver.
+   * @param string[] $negotiators
+   *   An array of negotiator IDs.
    */
-  public function __construct(ThemeAccessCheck $theme_access) {
+  public function __construct(ThemeAccessCheck $theme_access, ClassResolverInterface $class_resolver, array $negotiators) {
     $this->themeAccess = $theme_access;
-  }
-
-  /**
-   * Adds a active theme negotiation service.
-   *
-   * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $negotiator
-   *   The theme negotiator to add.
-   * @param int $priority
-   *   Priority of the theme negotiator.
-   */
-  public function addNegotiator(ThemeNegotiatorInterface $negotiator, $priority) {
-    $this->negotiators[$priority][] = $negotiator;
-    // Force the negotiators to be re-sorted.
-    $this->sortedNegotiators = NULL;
-  }
-
-  /**
-   * Returns the sorted array of theme negotiators.
-   *
-   * @return array|\Drupal\Core\Theme\ThemeNegotiatorInterface[]
-   *   An array of theme negotiator objects.
-   */
-  protected function getSortedNegotiators() {
-    if (!isset($this->sortedNegotiators)) {
-      // Sort the negotiators according to priority.
-      krsort($this->negotiators);
-      // Merge nested negotiators from $this->negotiators into
-      // $this->sortedNegotiators.
-      $this->sortedNegotiators = [];
-      foreach ($this->negotiators as $builders) {
-        $this->sortedNegotiators = array_merge($this->sortedNegotiators, $builders);
-      }
-    }
-    return $this->sortedNegotiators;
+    $this->negotiators = $negotiators;
+    $this->classResolver = $class_resolver;
   }
 
   /**
@@ -90,7 +61,9 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    foreach ($this->getSortedNegotiators() as $negotiator) {
+    foreach ($this->negotiators as $negotiator_id) {
+      $negotiator = $this->classResolver->getInstanceFromDefinition($negotiator_id);
+
       if ($negotiator->applies($route_match)) {
         $theme = $negotiator->determineActiveTheme($route_match);
         if ($theme !== NULL && $this->themeAccess->checkAccess($theme)) {

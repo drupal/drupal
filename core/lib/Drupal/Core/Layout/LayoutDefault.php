@@ -7,11 +7,6 @@ use Drupal\Core\Plugin\PluginBase;
 
 /**
  * Provides a default class for Layout plugins.
- *
- * @internal
- *   The layout system is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 class LayoutDefault extends PluginBase implements LayoutInterface {
 

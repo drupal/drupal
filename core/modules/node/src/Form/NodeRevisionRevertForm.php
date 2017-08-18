@@ -2,6 +2,7 @@
 
 namespace Drupal\node\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -37,16 +38,26 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
   protected $dateFormatter;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * Constructs a new NodeRevisionRevertForm.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   The node storage.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(EntityStorageInterface $node_storage, DateFormatterInterface $date_formatter) {
+  public function __construct(EntityStorageInterface $node_storage, DateFormatterInterface $date_formatter, TimeInterface $time) {
     $this->nodeStorage = $node_storage;
     $this->dateFormatter = $date_formatter;
+    $this->time = $time;
   }
 
   /**
@@ -55,7 +66,8 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager')->getStorage('node'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('datetime.time')
     );
   }
 
@@ -114,6 +126,8 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
 
     $this->revision = $this->prepareRevertedRevision($this->revision, $form_state);
     $this->revision->revision_log = t('Copy of the revision from %date.', ['%date' => $this->dateFormatter->format($original_revision_timestamp)]);
+    $this->revision->setRevisionCreationTime($this->time->getRequestTime());
+    $this->revision->setChangedTime($this->time->getRequestTime());
     $this->revision->save();
 
     $this->logger('content')->notice('@type: reverted %title revision %revision.', ['@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);

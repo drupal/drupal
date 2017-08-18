@@ -12,7 +12,7 @@
   },
   "require": {
     "php": ">=5.5.9",
-    "symfony/dependency-injection": "~2.8"
+    "symfony/dependency-injection": "^2.8"
   },
   "suggest": {
     "symfony/expression-language": "For using expressions in service container configuration"

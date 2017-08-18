@@ -1,0 +1,13 @@
+form:
+  version: VERSION
+  js:
+    js/form.js: {}
+  dependencies:
+    - core/drupal.form
+
+type_form:
+  version: VERSION
+  js:
+    js/type_form.js: {}
+  dependencies:
+    - core/drupal.form

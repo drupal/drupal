@@ -37,9 +37,6 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
     $this->workflow = Workflow::create(['id' => 'test', 'type' => 'content_moderation']);
-    $this->workflow
-      ->addState('draft', 'Draft')
-      ->addState('published', 'Published');
   }
 
   /**
@@ -99,6 +96,28 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
       ['fake_block' => ['fake_custom'], 'fake_node' => ['fake_article', 'fake_page']],
       $workflow_plugin->getConfiguration()['entity_types']
     );
+  }
+
+  /**
+   * @covers ::addEntityTypeAndBundle
+   * @covers ::removeEntityTypeAndBundle
+   */
+  public function testRemoveEntityTypeAndBundle() {
+    /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
+    $workflow_plugin = $this->workflow->getTypePlugin();
+
+    // There should be no bundles for fake_node to start with.
+    $this->assertEquals([], $workflow_plugin->getBundlesForEntityType('fake_node'));
+    // Removing a bundle which is not set on the workflow should not throw an
+    // error and should still result in none being returned.
+    $workflow_plugin->removeEntityTypeAndBundle('fake_node', 'fake_page');
+    $this->assertEquals([], $workflow_plugin->getBundlesForEntityType('fake_node'));
+    // Adding a bundle for fake_node should result it in being returned, but
+    // then removing it will return no bundles for fake_node.
+    $workflow_plugin->addEntityTypeAndBundle('fake_node', 'fake_page');
+    $this->assertEquals(['fake_page'], $workflow_plugin->getBundlesForEntityType('fake_node'));
+    $workflow_plugin->removeEntityTypeAndBundle('fake_node', 'fake_page');
+    $this->assertEquals([], $workflow_plugin->getBundlesForEntityType('fake_node'));
   }
 
 }

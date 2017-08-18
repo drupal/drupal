@@ -142,6 +142,16 @@ class DrupalStandardsListener extends BaseTestListener {
 
   /**
    * {@inheritdoc}
+   *
+   * We must mark this method as belonging to the special legacy group because
+   * it might trigger an E_USER_DEPRECATED error during coverage annotation
+   * validation. The legacy group allows symfony/phpunit-bridge to keep the
+   * deprecation notice as a warning instead of an error, which would fail the
+   * test.
+   *
+   * @group legacy
+   *
+   * @see http://symfony.com/doc/current/components/phpunit_bridge.html#mark-tests-as-legacy
    */
   public function endTest(\PHPUnit_Framework_Test $test, $time) {
     // \PHPUnit_Framework_Test does not have any useful methods of its own for

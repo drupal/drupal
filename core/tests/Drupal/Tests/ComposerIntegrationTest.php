@@ -89,6 +89,51 @@ class ComposerIntegrationTest extends UnitTestCase {
   }
 
   /**
+   * Tests composer.json versions.
+   *
+   * @param string $path
+   *   Path to a composer.json to test.
+   *
+   * @dataProvider providerTestComposerJson
+   */
+  public function testComposerTilde($path) {
+    $content = json_decode(file_get_contents($path), TRUE);
+    $composer_keys = array_intersect(['require', 'require-dev'], array_keys($content));
+    if (empty($composer_keys)) {
+      $this->markTestSkipped("$path has no keys to test");
+    }
+    foreach ($composer_keys as $composer_key) {
+      foreach ($content[$composer_key] as $dependency => $version) {
+        // We allow tildes if the dependency is a Symfony component.
+        // @see https://www.drupal.org/node/2887000
+        if (strpos($dependency, 'symfony/') === 0) {
+          continue;
+        }
+        $this->assertFalse(strpos($version, '~'), "Dependency $dependency in $path contains a tilde, use a caret.");
+      }
+    }
+  }
+
+  /**
+   * Data provider for all the composer.json provided by Drupal core.
+   *
+   * @return array
+   */
+  public function providerTestComposerJson() {
+    $root = realpath(__DIR__ . '/../../../../');
+    $tests = [[$root . '/composer.json']];
+    $directory = new \RecursiveDirectoryIterator($root . '/core');
+    $iterator = new \RecursiveIteratorIterator($directory);
+    /** @var \SplFileInfo $file */
+    foreach ($iterator as $file) {
+      if ($file->getFilename() === 'composer.json' && strpos($file->getPath(), 'core/modules/system/tests/fixtures/HtaccessTest') === FALSE) {
+        $tests[] = [$file->getRealPath()];
+      }
+    }
+    return $tests;
+  }
+
+  /**
    * Tests core's composer.json replace section.
    *
    * Verify that all core modules are also listed in the 'replace' section of

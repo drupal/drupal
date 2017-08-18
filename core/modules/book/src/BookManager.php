@@ -275,6 +275,20 @@ class BookManager implements BookManagerInterface {
       // handle it here if it did not.
       $node->book['pid'] = $node->book['bid'];
     }
+
+    // Prevent changes to the book outline if the node being saved is not the
+    // default revision.
+    $updated = FALSE;
+    if (!$new) {
+      $original = $this->loadBookLink($node->id(), FALSE);
+      if ($node->book['bid'] != $original['bid'] || $node->book['pid'] != $original['pid'] || $node->book['weight'] != $original['weight']) {
+        $updated = TRUE;
+      }
+    }
+    if (($new || $updated) && !$node->isDefaultRevision()) {
+      return FALSE;
+    }
+
     return $this->saveBookLink($node->book, $new);
   }
 

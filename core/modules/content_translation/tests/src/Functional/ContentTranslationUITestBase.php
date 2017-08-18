@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\content_translation\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -10,7 +11,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests the Content Translation UI.
@@ -226,10 +227,10 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
         $language = new Language(['id' => $langcode]);
         $view_url = $entity->url('canonical', ['language' => $language]);
         $elements = $this->xpath('//table//a[@href=:href]', [':href' => $view_url]);
-        $this->assertEqual((string) $elements[0], $entity->getTranslation($langcode)->label(), format_string('Label correctly shown for %language translation.', ['%language' => $langcode]));
+        $this->assertEqual($elements[0]->getText(), $entity->getTranslation($langcode)->label(), new FormattableMarkup('Label correctly shown for %language translation.', ['%language' => $langcode]));
         $edit_path = $entity->url('edit-form', ['language' => $language]);
         $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a[@href=:href]', [':href' => $edit_path]);
-        $this->assertEqual((string) $elements[0], t('Edit'), format_string('Edit link correct for %language translation.', ['%language' => $langcode]));
+        $this->assertEqual($elements[0]->getText(), t('Edit'), new FormattableMarkup('Edit link correct for %language translation.', ['%language' => $langcode]));
       }
     }
   }

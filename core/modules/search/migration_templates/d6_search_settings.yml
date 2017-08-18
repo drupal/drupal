@@ -10,6 +10,7 @@ source:
     - minimum_word_size
     - overlap_cjk
     - search_cron_limit
+  source_module: search
 process:
   'index/minimum_word_size': minimum_word_size
   'index/overlap_cjk': overlap_cjk

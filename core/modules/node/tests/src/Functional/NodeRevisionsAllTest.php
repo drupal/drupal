@@ -11,10 +11,24 @@ use Drupal\node\NodeInterface;
  * @group node
  */
 class NodeRevisionsAllTest extends NodeTestBase {
-  protected $nodes;
-  protected $revisionLogs;
-  protected $profile = "standard";
 
+  /**
+   * A list of nodes created to be used as starting point of different tests.
+   *
+   * @var Drupal\node\NodeInterface[]
+   */
+  protected $nodes;
+
+  /**
+   * Revision logs of nodes created by the setup method.
+   *
+   * @var string[]
+   */
+  protected $revisionLogs;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -130,6 +144,11 @@ class NodeRevisionsAllTest extends NodeTestBase {
     // Confirm that this is not the current version.
     $node = node_revision_load($node->getRevisionId());
     $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the current one.');
+
+    // Confirm that the node can still be updated.
+    $this->drupalPostForm("node/" . $reverted_node->id() . "/edit", ['body[0][value]' => 'We are Drupal.'], t('Save'));
+    $this->assertText(t('Basic page @title has been updated.', ['@title' => $reverted_node->getTitle()]), 'Node was successfully saved after reverting a revision.');
+    $this->assertText('We are Drupal.', 'Node was correctly updated after reverting a revision.');
 
     // Confirm revisions delete properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], t('Delete'));

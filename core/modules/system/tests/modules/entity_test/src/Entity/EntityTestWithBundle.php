@@ -41,6 +41,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "add-form" = "/entity_test_with_bundle/add/{entity_test_bundle}",
  *     "edit-form" = "/entity_test_with_bundle/{entity_test_with_bundle}/edit",
  *     "delete-form" = "/entity_test_with_bundle/{entity_test_with_bundle}/delete",
+ *     "create" = "/entity_test_with_bundle",
  *   },
  * )
  */

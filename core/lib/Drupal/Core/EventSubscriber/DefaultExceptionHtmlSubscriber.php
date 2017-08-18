@@ -80,6 +80,18 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
   }
 
   /**
+   * Handles a 4xx error for HTML.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   *   The event to process.
+   */
+  public function on4xx(GetResponseForExceptionEvent $event) {
+    if (($exception = $event->getException()) && $exception instanceof HttpExceptionInterface) {
+      $this->makeSubrequest($event, '/system/4xx', $exception->getStatusCode());
+    }
+  }
+
+  /**
    * Handles a 401 error for HTML.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event

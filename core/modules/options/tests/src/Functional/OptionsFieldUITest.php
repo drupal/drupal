@@ -328,7 +328,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $edit = [
       $this->fieldName => '1',
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check the node page and see if the values are correct.
     $file_formatters = ['list_default', 'list_key'];

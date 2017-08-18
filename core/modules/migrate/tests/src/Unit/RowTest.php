@@ -193,6 +193,39 @@ class RowTest extends UnitTestCase {
   }
 
   /**
+   * Tests the multiple source IDs.
+   */
+  public function testMultipleSourceIdValues() {
+    // Set values in same order as ids.
+    $multi_source_ids = $this->testSourceIds + [
+        'vid' => 'Node revision',
+        'type' => 'Node type',
+        'langcode' => 'Node language',
+      ];
+    $multi_source_ids_values = $this->testValues + [
+        'vid' => 1,
+        'type' => 'page',
+        'langcode' => 'en',
+      ];
+    $row = new Row($multi_source_ids_values, $multi_source_ids);
+    $this->assertSame(array_keys($multi_source_ids), array_keys($row->getSourceIdValues()));
+
+    // Set values in different order.
+    $multi_source_ids = $this->testSourceIds + [
+        'vid' => 'Node revision',
+        'type' => 'Node type',
+        'langcode' => 'Node language',
+      ];
+    $multi_source_ids_values = $this->testValues + [
+        'langcode' => 'en',
+        'type' => 'page',
+        'vid' => 1,
+      ];
+    $row = new Row($multi_source_ids_values, $multi_source_ids);
+    $this->assertSame(array_keys($multi_source_ids), array_keys($row->getSourceIdValues()));
+  }
+
+  /**
    * Tests getting the source property.
    *
    * @covers ::getSourceProperty

@@ -3,7 +3,10 @@
 namespace Drupal\Tests\hal\Kernel;
 
 use Drupal\Core\Url;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\NodeType;
 
 /**
  * @coversDefaultClass \Drupal\hal\LinkManager\LinkManager
@@ -14,13 +17,30 @@ class HalLinkManagerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal', 'hal_test', 'serialization', 'system'];
+  public static $modules = [ 'hal', 'hal_test', 'serialization', 'system', 'node', 'user', 'field'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('node');
+
+    NodeType::create([
+      'type' => 'page',
+    ])->save();
+    FieldStorageConfig::create([
+      'entity_type' => 'node',
+      'type' => 'entity_reference',
+      'field_name' => 'field_ref',
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => 'node',
+      'bundle' => 'page',
+      'field_name' => 'field_ref',
+    ])->save();
+
     \Drupal::service('router.builder')->rebuild();
   }
 
@@ -56,6 +76,23 @@ class HalLinkManagerTest extends KernelTestBase {
     // Test BC: hook_rest_relation_uri_alter().
     $link = $relation_manager->getRelationUri('node', 'page', 'foobar', ['rest_test' => TRUE]);
     $this->assertSame($link, 'rest_test_relation');
+  }
+
+  /**
+   * @covers ::getRelationInternalIds
+   */
+  public function testGetRelationInternalIds() {
+    /* @var \Drupal\rest\LinkManager\RelationLinkManagerInterface $relation_manager */
+    $relation_manager = \Drupal::service('hal.link_manager.relation');
+    $link = $relation_manager->getRelationUri('node', 'page', 'field_ref');
+    $internal_ids = $relation_manager->getRelationInternalIds($link);
+
+    $this->assertEquals([
+      'entity_type_id' => 'node',
+      'entity_type' => \Drupal::entityTypeManager()->getDefinition('node'),
+      'bundle' => 'page',
+      'field_name' => 'field_ref'
+    ], $internal_ids);
   }
 
   /**

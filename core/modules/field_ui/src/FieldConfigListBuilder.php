@@ -161,6 +161,9 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
         'title' => $this->t('Edit'),
         'weight' => 10,
         'url' => $entity->urlInfo("{$entity->getTargetEntityTypeId()}-field-edit-form"),
+        'attributes' => [
+          'title' => $this->t('Edit field settings.')
+        ],
       ];
     }
     if ($entity->access('delete') && $entity->hasLinkTemplate("{$entity->getTargetEntityTypeId()}-field-delete-form")) {
@@ -168,6 +171,9 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
         'title' => $this->t('Delete'),
         'weight' => 100,
         'url' => $entity->urlInfo("{$entity->getTargetEntityTypeId()}-field-delete-form"),
+        'attributes' => [
+          'title' => $this->t('Delete field.')
+        ],
       ];
     }
 
@@ -177,8 +183,6 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
       'attributes' => ['title' => $this->t('Edit storage settings.')],
       'url' => $entity->urlInfo("{$entity->getTargetEntityTypeId()}-storage-edit-form"),
     ];
-    $operations['edit']['attributes']['title'] = $this->t('Edit field settings.');
-    $operations['delete']['attributes']['title'] = $this->t('Delete field.');
 
     return $operations;
   }

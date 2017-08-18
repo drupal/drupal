@@ -92,9 +92,6 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       ],
       // stale_file_threshold is not handled by the migration.
       'stale_file_threshold' => 2592000,
-      'response' => [
-        'gzip' => TRUE,
-      ],
     ],
     'system.rss' => [
       // channel is not handled by the migration.

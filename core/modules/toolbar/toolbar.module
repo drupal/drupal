@@ -149,7 +149,7 @@ function toolbar_toolbar() {
       ],
     ],
     '#wrapper_attributes' => [
-      'class' => ['hidden', 'home-toolbar-tab'],
+      'class' => ['home-toolbar-tab'],
     ],
     '#attached' => [
       'library' => [
@@ -274,6 +274,18 @@ function toolbar_menu_navigation_links(array $tree) {
     $element->options['attributes']['title'] = $link->getDescription();
   }
   return $tree;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for HTML document templates.
+ */
+function toolbar_preprocess_html(&$variables) {
+  if (!\Drupal::currentUser()->hasPermission('access toolbar')) {
+    return;
+  }
+
+  $variables['attributes'] = new Attribute($variables['attributes']);
+  $variables['attributes']->addClass(['toolbar-tray-open', 'toolbar-horizontal', 'toolbar-fixed', 'toolbar-loading']);
 }
 
 /**

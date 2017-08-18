@@ -10,6 +10,8 @@ use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 /**
  * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
  * @group PHPUnit
+ * @group Test
+ * @group KernelTests
  */
 class KernelTestBaseTest extends KernelTestBase {
 
@@ -137,22 +139,21 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getCompiledContainerBuilder
+   * Tests whether the fixture allows us to install modules and configuration.
    *
-   * The point of this test is to have integration level testing.
+   * @see ::testSubsequentContainerIsolation()
    */
-  public function testCompiledContainer() {
+  public function testContainerIsolation() {
     $this->enableModules(['system', 'user']);
     $this->assertNull($this->installConfig('user'));
   }
 
   /**
-   * @covers ::getCompiledContainerBuilder
-   * @depends testCompiledContainer
+   * Tests whether the fixture can re-install modules and configuration.
    *
-   * The point of this test is to have integration level testing.
+   * @depends testContainerIsolation
    */
-  public function testCompiledContainerIsDestructed() {
+  public function testSubsequentContainerIsolation() {
     $this->enableModules(['system', 'user']);
     $this->assertNull($this->installConfig('user'));
   }
@@ -181,7 +182,7 @@ class KernelTestBaseTest extends KernelTestBase {
     $output = \Drupal::service('renderer')->renderRoot($build);
     $this->assertEquals('core', \Drupal::theme()->getActiveTheme()->getName());
 
-    $this->assertEquals($expected, $build['#children']);
+    $this->assertEquals($expected, $build['#markup']);
     $this->assertEquals($expected, $output);
   }
 
@@ -211,6 +212,14 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testFileDefaultScheme() {
     $this->assertEquals('public', file_default_scheme());
     $this->assertEquals('public', \Drupal::config('system.file')->get('default_scheme'));
+  }
+
+  /**
+   * Tests the assumption that local time is in 'Australia/Sydney'.
+   */
+  public function testLocalTimeZone() {
+    // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
+    $this->assertEquals('Australia/Sydney', date_default_timezone_get());
   }
 
   /**

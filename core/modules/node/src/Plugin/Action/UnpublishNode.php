@@ -2,8 +2,8 @@
 
 namespace Drupal\node\Plugin\Action;
 
-use Drupal\Core\Action\ActionBase;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Field\FieldUpdateActionBase;
+use Drupal\node\NodeInterface;
 
 /**
  * Unpublishes a node.
@@ -14,24 +14,13 @@ use Drupal\Core\Session\AccountInterface;
  *   type = "node"
  * )
  */
-class UnpublishNode extends ActionBase {
+class UnpublishNode extends FieldUpdateActionBase {
 
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
-    $entity->setUnpublished()->save();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    /** @var \Drupal\node\NodeInterface $object */
-    $access = $object->access('update', $account, TRUE)
-      ->andIf($object->status->access('edit', $account, TRUE));
-
-    return $return_as_object ? $access : $access->isAllowed();
+  protected function getFieldsToUpdate() {
+    return ['status' => NodeInterface::NOT_PUBLISHED];
   }
 
 }

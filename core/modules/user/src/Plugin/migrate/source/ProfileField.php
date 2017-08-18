@@ -10,7 +10,7 @@ use Drupal\migrate\Row;
  *
  * @MigrateSource(
  *   id = "profile_field",
- *   source_provider = "profile"
+ *   source_module = "profile"
  * )
  */
 class ProfileField extends DrupalSqlBase {

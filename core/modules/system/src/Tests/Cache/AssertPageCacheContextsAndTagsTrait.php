@@ -9,6 +9,12 @@ use Drupal\Core\Url;
  * Provides test assertions for testing page-level cache contexts & tags.
  *
  * Can be used by test classes that extend \Drupal\simpletest\WebTestBase.
+ *
+ * @deprecated Scheduled for removal in Drupal 9.0.0. Use
+ *  \Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait
+ *  instead.
+ *
+ * @see https://www.drupal.org/node/2896632
  */
 trait AssertPageCacheContextsAndTagsTrait {
 
@@ -91,7 +97,7 @@ trait AssertPageCacheContextsAndTagsTrait {
     // Assert page cache item + expected cache tags.
     $cid_parts = [$url->setAbsolute()->toString(), 'html'];
     $cid = implode(':', $cid_parts);
-    $cache_entry = \Drupal::cache('render')->get($cid);
+    $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
     $this->assertEqual($cache_entry->tags, $expected_tags);
     $this->debugCacheTags($cache_entry->tags, $expected_tags);

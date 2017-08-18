@@ -85,7 +85,7 @@ abstract class AccountForm extends ContentEntityForm {
       '#type' => 'email',
       '#title' => $this->t('Email address'),
       '#description' => $this->t('A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email.'),
-      '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
+      '#required' => !(!$account->getEmail() && $admin),
       '#default_value' => (!$register ? $account->getEmail() : ''),
     ];
 
@@ -222,7 +222,7 @@ abstract class AccountForm extends ContentEntityForm {
       '#open' => TRUE,
       // Display language selector when either creating a user on the admin
       // interface or editing a user account.
-      '#access' => !$register || $user->hasPermission('administer users'),
+      '#access' => !$register || $admin,
     ];
 
     $form['language']['preferred_langcode'] = [

@@ -6,8 +6,6 @@
  * "moono".
  */
 
-
-
 .ckeditor-toolbar {
   border: 1px solid #b6b6b6;
   padding: 0.1667em 0.1667em 0.08em;
@@ -119,7 +117,7 @@
   margin: 3px 6px;
   padding: 3px;
 }
-.ckeditor-toolbar-configuration .fieldset-description{
+.ckeditor-toolbar-configuration .fieldset-description {
   margin-bottom: 1em;
 }
 .ckeditor-toolbar-disabled .ckeditor-toolbar-available,

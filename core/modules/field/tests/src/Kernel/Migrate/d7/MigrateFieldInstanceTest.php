@@ -134,7 +134,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.test_content_type.field_email', 'Email', 'email', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_phone', 'Phone', 'telephone', TRUE, FALSE);
     $this->assertEntity('node.test_content_type.field_date', 'Date', 'datetime', FALSE, FALSE);
-    $this->assertEntity('node.test_content_type.field_date_with_end_time', 'Date With End Time', 'datetime', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_date_with_end_time', 'Date With End Time', 'timestamp', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_file', 'File', 'file', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_float', 'Float', 'float', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_images', 'Images', 'image', TRUE, FALSE);

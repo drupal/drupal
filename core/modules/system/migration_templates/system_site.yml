@@ -16,6 +16,7 @@ source:
     - site_404
     - drupal_weight_select_max
     - admin_compact_mode
+  source_module: system
 process:
   name: site_name
   mail: site_mail

@@ -10,6 +10,7 @@ source:
     - user_email_verification
     - user_register
     - anonymous
+  source_module: user
 process:
   'notify/status_blocked': user_mail_status_blocked_notify
   'notify/status_activated': user_mail_status_activated_notify

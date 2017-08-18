@@ -361,7 +361,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * {@inheritdoc}
    */
   public function getCacheMaxAge() {
-    return CACHE::PERMANENT;
+    return Cache::PERMANENT;
   }
 
 }

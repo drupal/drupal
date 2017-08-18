@@ -33,6 +33,9 @@ cancel-form:
 flush-form:
   uri: https://drupal.org/link-relations/flush-form
   description: A form where a resource of this type can be flushed.
+duplicate-form:
+  uri: https://drupal.org/link-relations/duplicate-form
+  description: A form where a resource of this type can be duplicated.
 
 # All registered relation types.
 # See https://tools.ietf.org/html/rfc5988#section-4.1.

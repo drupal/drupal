@@ -15,5 +15,6 @@ use Symfony\Component\Validator\Constraint;
 class ModerationStateConstraint extends Constraint {
 
   public $message = 'Invalid state transition from %from to %to';
+  public $invalidStateMessage = 'State %state does not exist on %workflow workflow';
 
 }

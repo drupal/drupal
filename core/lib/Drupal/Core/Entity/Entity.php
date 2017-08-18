@@ -13,6 +13,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Defines a base entity class.
@@ -323,7 +324,19 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function uriRelationships() {
-    return array_keys($this->linkTemplates());
+    return array_filter(array_keys($this->linkTemplates()), function ($link_relation_type) {
+      // It's not guaranteed that every link relation type also has a
+      // corresponding route. For some, additional modules or configuration may
+      // be necessary. The interface demands that we only return supported URI
+      // relationships.
+      try {
+        $this->toUrl($link_relation_type)->toString(TRUE)->getGeneratedUrl();
+      }
+      catch (RouteNotFoundException $e) {
+        return FALSE;
+      }
+      return TRUE;
+    });
   }
 
   /**

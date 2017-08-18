@@ -225,12 +225,7 @@
  * For further information on the Theme and Render APIs, see:
  * - https://www.drupal.org/docs/8/theming
  * - https://www.drupal.org/developing/api/8/render
- * - https://www.drupal.org/node/722174
- * - https://www.drupal.org/node/933976
- * - https://www.drupal.org/node/930760
- *
- * @todo Check these links. Some are for Drupal 7, and might need updates for
- *   Drupal 8.
+ * - @link themeable Theme system overview @endlink.
  *
  * @section arrays Render arrays
  * The core structure of the Render API is the render array, which is a
@@ -632,7 +627,7 @@ function hook_preprocess_HOOK(&$variables) {
 function hook_theme_suggestions_HOOK(array $variables) {
   $suggestions = [];
 
-  $suggestions[] = 'node__' . $variables['elements']['#langcode'];
+  $suggestions[] = 'hookname__' . $variables['elements']['#langcode'];
 
   return $suggestions;
 }

@@ -93,7 +93,14 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
   public function hasHandler($entity_type, $handler_type);
 
   /**
-   * Creates a new handler instance for a entity type and handler type.
+   * Returns a handler instance for the given entity type and handler.
+   *
+   * Entity handlers are instantiated once per entity type and then cached
+   * in the entity type manager, and so subsequent calls to getHandler() for
+   * a particular entity type and handler type will return the same object.
+   * This means that properties on a handler may be used as a static cache,
+   * although as the handler is common to all entities of the same type,
+   * any data that is per-entity should be keyed by the entity ID.
    *
    * @param string $entity_type
    *   The entity type for this handler.

@@ -3,7 +3,7 @@
 namespace Drupal\Tests\rdf\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\taxonomy\Tests\TaxonomyTestBase;
+use Drupal\Tests\taxonomy\Functional\TaxonomyTestBase;
 
 /**
  * Tests RDFa markup generation for taxonomy term fields.

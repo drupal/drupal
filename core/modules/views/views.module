@@ -17,7 +17,6 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Entity\View;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\Views;
-use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_help().
@@ -437,21 +436,42 @@ function views_add_contextual_links(&$render_element, $location, $display_id, ar
 /**
  * Implements hook_ENTITY_TYPE_insert() for 'field_config'.
  */
-function views_field_config_insert(FieldConfigInterface $field) {
+function views_field_config_insert(EntityInterface $field) {
   Views::viewsData()->clear();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update() for 'field_config'.
  */
-function views_field_config_update(FieldConfigInterface $field) {
+function views_field_config_update(EntityInterface $entity) {
   Views::viewsData()->clear();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
  */
-function views_field_config_delete(FieldConfigInterface $field) {
+function views_field_config_delete(EntityInterface $entity) {
+  Views::viewsData()->clear();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function views_base_field_override_insert(EntityInterface $entity) {
+  Views::viewsData()->clear();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function views_base_field_override_update(EntityInterface $entity) {
+  Views::viewsData()->clear();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function views_base_field_override_delete(EntityInterface $entity) {
   Views::viewsData()->clear();
 }
 
@@ -614,7 +634,7 @@ function views_pre_render_views_form_views_form($element) {
     $row_id = $substitution['row_id'];
 
     $search[] = $substitution['placeholder'];
-    $replace[] = isset($element[$field_name][$row_id]) ? drupal_render($element[$field_name][$row_id]) : '';
+    $replace[] = isset($element[$field_name][$row_id]) ? \Drupal::service('renderer')->render($element[$field_name][$row_id]) : '';
   }
   // Add in substitutions from hook_views_form_substitutions().
   $substitutions = \Drupal::moduleHandler()->invokeAll('views_form_substitutions');
@@ -628,7 +648,7 @@ function views_pre_render_views_form_views_form($element) {
   }
 
   // Apply substitutions to the rendered output.
-  $output = str_replace($search, $replace, drupal_render($element['output']));
+  $output = str_replace($search, $replace, \Drupal::service('renderer')->render($element['output']));
   $element['output'] = ['#markup' => ViewsRenderPipelineMarkup::create($output)];
 
   return $element;

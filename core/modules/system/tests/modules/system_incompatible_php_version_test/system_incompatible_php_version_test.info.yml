@@ -1,0 +1,7 @@
+name: 'System incompatible PHP version test'
+type: module
+description: 'Support module for testing system dependencies.'
+package: Testing
+version: VERSION
+core: 8.x
+php: 6502

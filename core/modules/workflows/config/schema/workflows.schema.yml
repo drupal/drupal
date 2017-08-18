@@ -14,38 +14,32 @@ workflows.workflow.*:
     type_settings:
       type: workflow.type_settings.[%parent.type]
       label: 'Custom settings for workflow type'
-    states:
+
+workflows.state:
+  type: mapping
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+    weight:
+      type: integer
+      label: 'Weight'
+
+workflows.transition:
+  type: mapping
+  mapping:
+    label:
+      type: label
+      label: 'Transition label'
+    from:
       type: sequence
-      label: 'States'
+      label: 'From state IDs'
       sequence:
-        type: mapping
-        label: 'State'
-        mapping:
-          label:
-            type: label
-            label: 'Label'
-          weight:
-            type: integer
-            label: 'Weight'
-    transitions:
-      type: sequence
-      label: 'Transitions'
-      sequence:
-        type: mapping
-        label: 'Transition from state to state'
-        mapping:
-          label:
-            type: label
-            label: 'Transition label'
-          from:
-            type: sequence
-            label: 'From state IDs'
-            sequence:
-              type: string
-              label: 'From state ID'
-          to:
-            type: string
-            label: 'To state ID'
-          weight:
-            type: integer
-            label: 'Weight'
+        type: string
+        label: 'From state ID'
+    to:
+      type: string
+      label: 'To state ID'
+    weight:
+      type: integer
+      label: 'Weight'

@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Event\MigrateIdMapMessageEvent;
 use Drupal\migrate\MigrateException;
@@ -55,7 +56,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   protected $messageTableName;
 
   /**
-   * The migrate message.
+   * The migrate message service.
    *
    * @var \Drupal\migrate\MigrateMessageInterface
    */
@@ -156,6 +157,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->migration = $migration;
     $this->eventDispatcher = $event_dispatcher;
+    $this->message = new MigrateMessage();
   }
 
   /**
@@ -174,7 +176,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * Retrieves the hash of the source identifier values.
    *
-   * It is public only for testing purposes.
+   * @internal
    *
    * @param array $source_id_values
    *   The source identifiers

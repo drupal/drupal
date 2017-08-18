@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @MigrateSource(
  *   id = "d7_node",
- *   source_provider = "node"
+ *   source_module = "node"
  * )
  */
 class Node extends FieldableEntity {

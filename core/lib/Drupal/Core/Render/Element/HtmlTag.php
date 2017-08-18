@@ -41,6 +41,7 @@ class HtmlTag extends RenderElement {
   static protected $voidElements = [
     'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
     'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr',
+    'rect', 'circle', 'polygon', 'ellipse', 'stop', 'use', 'path',
   ];
 
   /**
@@ -59,7 +60,7 @@ class HtmlTag extends RenderElement {
   }
 
   /**
-   * Pre-render callback: Renders a generic HTML tag with attributes into #markup.
+   * Pre-render callback: Renders a generic HTML tag with attributes.
    *
    * @param array $element
    *   An associative array containing:
@@ -84,21 +85,27 @@ class HtmlTag extends RenderElement {
     // An HTML tag should not contain any special characters. Escape them to
     // ensure this cannot be abused.
     $escaped_tag = HtmlUtility::escape($element['#tag']);
-    $markup = '<' . $escaped_tag . $attributes;
+    $open_tag = '<' . $escaped_tag . $attributes;
+    $close_tag = '</' . $escaped_tag . ">\n";
+    $prefix = isset($element['#prefix']) ? $element['#prefix'] . $open_tag : $open_tag;
+    $suffix = isset($element['#suffix']) ? $close_tag . $element['#suffix'] : $close_tag;
     // Construct a void element.
     if (in_array($element['#tag'], self::$voidElements)) {
-      $markup .= " />\n";
+      $prefix .= " />\n";
+      $suffix = '';
     }
     // Construct all other elements.
     else {
-      $markup .= '>';
-      $markup .= $element['#value'] instanceof MarkupInterface ? $element['#value'] : Xss::filterAdmin($element['#value']);
-      $markup .= '</' . $escaped_tag . ">\n";
+      $prefix .= '>';
+      $markup = $element['#value'] instanceof MarkupInterface ? $element['#value'] : Xss::filterAdmin($element['#value']);
+      $element['#markup'] = Markup::create($markup);
     }
     if (!empty($element['#noscript'])) {
-      $markup = "<noscript>$markup</noscript>";
+      $prefix = '<noscript>' . $prefix;
+      $suffix .= '</noscript>';
     }
-    $element['#markup'] = Markup::create($markup);
+    $element['#prefix'] = Markup::create($prefix);
+    $element['#suffix'] = Markup::create($suffix);
     return $element;
   }
 

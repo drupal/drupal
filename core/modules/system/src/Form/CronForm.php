@@ -112,7 +112,7 @@ class CronForm extends FormBase {
 
     $cron_url = $this->url('system.cron', ['key' => $this->state->get('system.cron_key')], ['absolute' => TRUE]);
     $form['cron_url'] = [
-      '#markup' => '<p>' . t('To run cron from outside the site, go to <a href=":cron">@cron</a>', [':cron' => $cron_url, '@cron' => $cron_url]) . '</p>',
+      '#markup' => '<p>' . t('To run cron from outside the site, go to <a href=":cron" class="system-cron-settings__link">@cron</a>', [':cron' => $cron_url, '@cron' => $cron_url]) . '</p>',
     ];
 
     if (!$this->moduleHandler->moduleExists('automated_cron')) {

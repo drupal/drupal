@@ -3,7 +3,7 @@
 namespace Drupal\Tests\tour\Functional;
 
 use Drupal\Core\Url;
-use Drupal\system\Tests\Cache\PageCacheTagsTestBase;
+use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 use Drupal\tour\Entity\Tour;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;

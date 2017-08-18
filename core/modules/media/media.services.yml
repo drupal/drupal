@@ -1,0 +1,10 @@
+services:
+  plugin.manager.media.source:
+    class: Drupal\media\MediaSourceManager
+    parent: default_plugin_manager
+
+  access_check.media.revision:
+    class: Drupal\media\Access\MediaRevisionAccessCheck
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: access_check, applies_to: _access_media_revision }

@@ -2,11 +2,18 @@
 
 namespace Drupal\system\Tests\Image;
 
+@trigger_error(__FILE__ . ' is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use Drupal\FunctionalTests\Image\ToolkitTestBase instead. See https://www.drupal.org/node/2862641.', E_USER_DEPRECATED);
+
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Base class for image manipulation testing.
+ *
+ * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
+ *   Use Drupal\FunctionalTests\Image\ToolkitTestBase instead.
+ *
+ * @see https://www.drupal.org/node/2862641
  */
 abstract class ToolkitTestBase extends WebTestBase {
 

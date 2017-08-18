@@ -211,7 +211,7 @@ small .admin-link:after {
   background-color: transparent;
 }
 [dir="rtl"] .system-status-report__status-title {
-    padding: 10px 40px 10px 6px;
+  padding: 10px 40px 10px 6px;
 }
 .system-status-report__status-icon:before {
   content: "";
@@ -223,7 +223,7 @@ small .admin-link:after {
   left: 12px; /* LTR */
   top: 12px;
 }
-[dir="rtl"] .system-status-report__status-icon:before  {
+[dir="rtl"] .system-status-report__status-icon:before {
   left: auto;
   right: 12px;
 }
@@ -393,4 +393,9 @@ small .admin-link:after {
 }
 .cron-description__run-cron {
   display: block;
+}
+
+.system-cron-settings__link {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }

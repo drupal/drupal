@@ -235,7 +235,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     // Flag entity level violations.
     foreach ($violations->getEntityViolations() as $violation) {
       /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
-      $form_state->setErrorByName('', $violation->getMessage());
+      $form_state->setErrorByName(str_replace('.', '][', $violation->getPropertyPath()), $violation->getMessage());
     }
     // Let the form display flag violations of its fields.
     $this->getFormDisplay($form_state)->flagWidgetsErrorsFromViolations($violations, $form, $form_state);

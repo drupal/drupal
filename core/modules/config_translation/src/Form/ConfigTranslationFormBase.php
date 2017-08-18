@@ -197,7 +197,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_values = $form_state->getValue(['translation', 'config_names']);
 
-    foreach ($this->mapper->getConfigNames() as $name) {
+    foreach ($form_values as $name => $value) {
       $schema = $this->typedConfigManager->get($name);
 
       // Set configuration values based on form submission and source values.
@@ -205,7 +205,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       $config_translation = $this->languageManager->getLanguageConfigOverride($this->language->getId(), $name);
 
       $element = $this->createFormElement($schema);
-      $element->setConfig($base_config, $config_translation, $form_values[$name]);
+      $element->setConfig($base_config, $config_translation, $value);
 
       // If no overrides, delete language specific configuration file.
       $saved_config = $config_translation->get();

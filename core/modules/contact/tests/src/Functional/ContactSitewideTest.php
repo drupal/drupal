@@ -44,6 +44,27 @@ class ContactSitewideTest extends BrowserTestBase {
    * Tests configuration options and the site-wide contact form.
    */
   public function testSiteWideContact() {
+    // Tests name and email fields for authenticated and anonymous users.
+    $this->drupalLogin($this->drupalCreateUser(['access site-wide contact form']));
+    $this->drupalGet('contact');
+
+    // Ensure that there is no textfield for name.
+    $this->assertFalse($this->xpath('//input[@name=:name]', [':name' => 'name']));
+
+    // Ensure that there is no textfield for email.
+    $this->assertFalse($this->xpath('//input[@name=:name]', [':name' => 'mail']));
+
+    // Logout and retrieve the page as an anonymous user
+    $this->drupalLogout();
+    user_role_grant_permissions('anonymous', ['access site-wide contact form']);
+    $this->drupalGet('contact');
+
+    // Ensure that there is textfield for name.
+    $this->assertTrue($this->xpath('//input[@name=:name]', [':name' => 'name']));
+
+    // Ensure that there is textfield for email.
+    $this->assertTrue($this->xpath('//input[@name=:name]', [':name' => 'mail']));
+
     // Create and log in administrative user.
     $admin_user = $this->drupalCreateUser([
       'access site-wide contact form',

@@ -53,9 +53,6 @@ class SysLog implements LoggerInterface {
   protected function openConnection() {
     if (!$this->connectionOpened) {
       $facility = $this->config->get('facility');
-      if ($facility === '') {
-        $facility = defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER;
-      }
       $this->connectionOpened = openlog($this->config->get('identity'), LOG_NDELAY, $facility);
     }
   }
@@ -85,6 +82,18 @@ class SysLog implements LoggerInterface {
       '!message' => strip_tags($message),
     ]);
 
+    $this->syslogWrapper($level, $entry);
+  }
+
+  /**
+   * A syslog wrapper to make syslog functionality testable.
+   *
+   * @param int $level
+   *   The syslog priority.
+   * @param string $entry
+   *   The message to send to syslog function.
+   */
+  protected function syslogWrapper($level, $entry) {
     syslog($level, $entry);
   }
 

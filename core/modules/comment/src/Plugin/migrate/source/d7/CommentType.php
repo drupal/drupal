@@ -11,7 +11,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @MigrateSource(
  *   id = "d7_comment_type",
- *   source_provider = "comment"
+ *   source_module = "comment"
  * )
  */
 class CommentType extends DrupalSqlBase {

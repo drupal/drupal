@@ -1,0 +1,9 @@
+name: 'Media test views'
+type: module
+description: 'Provides default views for views media tests.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - media
+  - views

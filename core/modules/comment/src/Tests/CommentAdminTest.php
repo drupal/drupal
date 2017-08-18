@@ -2,6 +2,9 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Html;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\RoleInterface;
 use Drupal\comment\Entity\Comment;
 
@@ -90,7 +93,7 @@ class CommentAdminTest extends CommentTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Update'));
     $this->assertText(t('Are you sure you want to delete these comments and all their children?'), 'Confirmation required.');
-    $this->drupalPostForm(NULL, $edit, t('Delete comments'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertText(t('No comments available.'), 'All comments were deleted.');
     // Test message when no comments selected.
     $edit = [
@@ -98,6 +101,15 @@ class CommentAdminTest extends CommentTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Update'));
     $this->assertText(t('Select one or more comments to perform the update on.'));
+
+    // Make sure the label of unpublished node is not visible on listing page.
+    $this->drupalGet('admin/content/comment');
+    $this->postComment($this->node, $this->randomMachineName());
+    $this->drupalGet('admin/content/comment');
+    $this->assertText(Html::escape($this->node->label()));
+    $this->node->setUnpublished()->save();
+    $this->drupalGet('admin/content/comment');
+    $this->assertNoText(Html::escape($this->node->label()));
   }
 
   /**
@@ -213,6 +225,53 @@ class CommentAdminTest extends CommentTestBase {
     // the comment was posted by an anonymous user.
     $this->drupalGet('comment/' . $anonymous_comment->id() . '/edit');
     $this->assertFieldById('edit-mail', $anonymous_comment->getAuthorEmail());
+  }
+
+  /**
+   * Tests commented translation deletion admin view.
+   */
+  public function testCommentedTranslationDeletion() {
+    \Drupal::service('module_installer')->install([
+      'language',
+      'locale',
+    ]);
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+
+    ConfigurableLanguage::createFromLangcode('ur')->save();
+    // Rebuild the container to update the default language container variable.
+    $this->rebuildContainer();
+    // Ensure that doesn't require contact info.
+    $this->setCommentAnonymous('0');
+    $this->drupalLogin($this->webUser);
+    $count_query = \Drupal::entityTypeManager()
+      ->getStorage('comment')
+      ->getQuery()
+      ->count();
+    $before_count = $count_query->execute();
+    // Post 2 anonymous comments without contact info.
+    $comment1 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $comment2 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+
+    $comment1->addTranslation('ur', ['subject' => 'ur ' . $comment1->label()])
+      ->save();
+    $comment2->addTranslation('ur', ['subject' => 'ur ' . $comment1->label()])
+      ->save();
+    $this->drupalLogout();
+    $this->drupalLogin($this->adminUser);
+    // Delete multiple comments in one operation.
+    $edit = [
+      'operation' => 'delete',
+      "comments[{$comment1->id()}]" => 1,
+      "comments[{$comment2->id()}]" => 1,
+    ];
+    $this->drupalPostForm('admin/content/comment', $edit, t('Update'));
+    $this->assertRaw(new FormattableMarkup('@label (Original translation) - <em>The following comment translations will be deleted:</em>', ['@label' => $comment1->label()]));
+    $this->assertRaw(new FormattableMarkup('@label (Original translation) - <em>The following comment translations will be deleted:</em>', ['@label' => $comment2->label()]));
+    $this->assertText('English');
+    $this->assertText('Urdu');
+    $this->drupalPostForm(NULL, [], t('Delete'));
+    $after_count = $count_query->execute();
+    $this->assertEqual($after_count, $before_count, 'No comment or translation found.');
   }
 
 }

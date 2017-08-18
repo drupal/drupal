@@ -94,14 +94,14 @@ abstract class DrupalSqlBase extends SqlBase implements ContainerFactoryPluginIn
    */
   public function checkRequirements() {
     if ($this->pluginDefinition['requirements_met'] === TRUE) {
-      if (isset($this->pluginDefinition['source_provider'])) {
-        if ($this->moduleExists($this->pluginDefinition['source_provider'])) {
-          if (isset($this->pluginDefinition['minimum_schema_version']) && !$this->getModuleSchemaVersion($this->pluginDefinition['source_provider']) < $this->pluginDefinition['minimum_schema_version']) {
+      if (isset($this->pluginDefinition['source_module'])) {
+        if ($this->moduleExists($this->pluginDefinition['source_module'])) {
+          if (isset($this->pluginDefinition['minimum_schema_version']) && !$this->getModuleSchemaVersion($this->pluginDefinition['source_module']) < $this->pluginDefinition['minimum_schema_version']) {
             throw new RequirementsException('Required minimum schema version ' . $this->pluginDefinition['minimum_schema_version'], ['minimum_schema_version' => $this->pluginDefinition['minimum_schema_version']]);
           }
         }
         else {
-          throw new RequirementsException('The module ' . $this->pluginDefinition['source_provider'] . ' is not enabled in the source site.', ['source_provider' => $this->pluginDefinition['source_provider']]);
+          throw new RequirementsException('The module ' . $this->pluginDefinition['source_module'] . ' is not enabled in the source site.', ['source_module' => $this->pluginDefinition['source_module']]);
         }
       }
     }

@@ -172,6 +172,14 @@ input.form-submit:focus {
 .node-form .form-wrapper {
   margin-bottom: 2em;
 }
+.node-form .node-form-footer,
+.node-form .field--name-status {
+  margin-bottom: 0;
+}
+.node-form .form-actions {
+  padding-top: 0;
+  margin-top: 0;
+}
 
 /* Contact Form */
 .contact-form #edit-name {
@@ -316,7 +324,9 @@ input.form-submit:focus {
     -moz-box-sizing: border-box;
   }
 
-  .js .dropbutton .dropbutton-action > input, .js .dropbutton .dropbutton-action > a, .js .dropbutton .dropbutton-action > button {
+  .js .dropbutton .dropbutton-action > input,
+  .js .dropbutton .dropbutton-action > a,
+  .js .dropbutton .dropbutton-action > button {
     text-align: center;
     padding-left: 3em;
   }

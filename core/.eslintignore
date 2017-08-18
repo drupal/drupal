@@ -2,3 +2,5 @@ assets/vendor/**/*
 modules/locale/tests/locale_test.js
 node_modules/**/*
 **/js_test_files/**/*
+*.js
+!*.es6.js

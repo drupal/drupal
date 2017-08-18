@@ -56,9 +56,17 @@ function migrate_drupal_migration_plugins_alter(&$definitions) {
         $source_vid = $row->getSourceProperty('vid');
         $plugin_ids = ['d6_term_node:' . $source_vid, 'd6_term_node_revision:' . $source_vid];
         foreach ($plugin_ids as $plugin_id) {
-          if (isset($definitions[$plugin_id])) {
-            $definitions[$plugin_id]['process'][$row->getDestinationProperty('vid')] = 'tid';
-          }
+          // Match the field name derivation in d6_vocabulary_field.yml.
+          $field_name = substr('field_' . $row->getDestinationProperty('vid'), 0, 32);
+
+          // The Forum module is expecting 'taxonomy_forums' as the field name
+          // for the forum nodes. The 'forum_vocabulary' source property is
+          // evaluated in Drupal\taxonomy\Plugin\migrate\source\d6\Vocabulary
+          // and is set to true if the vocabulary vid being migrated is the
+          // same as the one in the 'forum_nav_vocabulary' variable on the
+          // source site.
+          $destination_vid = $row->getSourceProperty('forum_vocabulary') ? 'taxonomy_forums' : $field_name;
+          $definitions[$plugin_id]['process'][$destination_vid] = 'tid';
         }
       }
     }

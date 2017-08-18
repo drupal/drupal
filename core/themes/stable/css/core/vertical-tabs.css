@@ -8,8 +8,8 @@
   border: 1px solid #ccc;
 }
 [dir="rtl"] .vertical-tabs {
-   margin-left: 0;
-   margin-right: 15em;
+  margin-left: 0;
+  margin-right: 15em;
 }
 .vertical-tabs__menu {
   float: left; /* LTR */

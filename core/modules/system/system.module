@@ -845,7 +845,7 @@ function system_user_timezone(&$form, FormStateInterface $form_state) {
     '#type' => 'select',
     '#title' => t('Time zone'),
     '#default_value' => $account->getTimezone() ? $account->getTimezone() : \Drupal::config('system.date')->get('timezone.default'),
-    '#options' => system_time_zones($account->id() != $user->id()),
+    '#options' => system_time_zones($account->id() != $user->id(), TRUE),
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
   ];
   $user_input = $form_state->getUserInput();
@@ -1355,10 +1355,15 @@ function system_mail($key, &$message, $params) {
 /**
  * Generate an array of time zones and their local time&date.
  *
- * @param $blank
+ * @param mixed $blank
  *   If evaluates true, prepend an empty time zone option to the array.
+ * @param bool $grouped
+ *   (optional) Whether the timezones should be grouped by region.
+ *
+ * @return array
+ *   An array or nested array containing time zones, keyed by the system name.
  */
-function system_time_zones($blank = NULL) {
+function system_time_zones($blank = NULL, $grouped = FALSE) {
   $zonelist = timezone_identifiers_list();
   $zones = $blank ? ['' => t('- None selected -')] : [];
   foreach ($zonelist as $zone) {
@@ -1371,6 +1376,27 @@ function system_time_zones($blank = NULL) {
   }
   // Sort the translated time zones alphabetically.
   asort($zones);
+  if ($grouped) {
+    $grouped_zones = [];
+    foreach ($zones as $key => $value) {
+      $split = explode('/', $value);
+      $city = array_pop($split);
+      $region = array_shift($split);
+      if (!empty($region)) {
+        $grouped_zones[$region][$key] = empty($split) ? $city : $city . ' (' . join('/', $split) . ')';
+      }
+      else {
+        $grouped_zones[$key] = $value;
+      }
+    }
+    foreach ($grouped_zones as $key => $value) {
+      if (is_array($grouped_zones[$key])) {
+        asort($grouped_zones[$key]);
+      }
+    }
+    $zones = $grouped_zones;
+  }
+
   return $zones;
 }
 

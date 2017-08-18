@@ -28,13 +28,52 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
     if (!$this->languageManager->isMultilingual() || !$this->entityType->hasKey('langcode')) {
       return;
     }
-    $langcode_key = $this->entityType->getKey('langcode');
-    $storage = \Drupal::entityManager()->getStorage($this->entityType->id());
-
-    if ($table = $storage->getTableMapping()->getFieldTableName($langcode_key)) {
-      $table_alias = $query->ensureTable($table, $relationship);
+    $langcode_table = $this->getLangcodeTable($query, $relationship);
+    if ($langcode_table) {
+      /** @var \Drupal\views\Plugin\views\query\Sql $query */
+      $table_alias = $query->ensureTable($langcode_table, $relationship);
+      $langcode_key = $this->entityType->getKey('langcode');
       $this->langcodeAlias = $query->addField($table_alias, $langcode_key);
     }
+  }
+
+  /**
+   * Returns the name of the table holding the "langcode" field.
+   *
+   * @param \Drupal\views\Plugin\views\query\QueryPluginBase $query
+   *   The query being executed.
+   * @param string $relationship
+   *   The relationship used by the entity type.
+   *
+   * @return string
+   *   A table name.
+   */
+  protected function getLangcodeTable(QueryPluginBase $query, $relationship) {
+    /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage($this->entityType->id());
+    $langcode_key = $this->entityType->getKey('langcode');
+    $langcode_table = $storage->getTableMapping()->getFieldTableName($langcode_key);
+
+    // If the entity type is revisionable, we need to take into account views of
+    // entity revisions. Usually the view will use the entity data table as the
+    // query base table, however, in case of an entity revision view, we need to
+    // use the revision table or the revision data table, depending on which one
+    // is being used as query base table.
+    if ($this->entityType->isRevisionable()) {
+      $query_base_table = isset($query->relationships[$relationship]['base']) ?
+        $query->relationships[$relationship]['base'] :
+        $this->view->storage->get('base_table');
+      $revision_table = $storage->getRevisionTable();
+      $revision_data_table = $storage->getRevisionDataTable();
+      if ($query_base_table === $revision_table) {
+        $langcode_table = $revision_table;
+      }
+      elseif ($query_base_table === $revision_data_table) {
+        $langcode_table = $revision_data_table;
+      }
+    }
+
+    return $langcode_table;
   }
 
   /**

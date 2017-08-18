@@ -91,6 +91,16 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
+   * Tests failing PHP version requirements.
+   */
+  public function testIncompatiblePhpVersionDependency() {
+    $this->drupalGet('admin/modules');
+    $this->assertRaw('This module requires PHP version 6502.* and is incompatible with PHP version ' . phpversion() . '.', 'User is informed when the PHP dependency requirement of a module is not met.');
+    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[system_incompatible_php_version_test][enable]"]');
+    $this->assert(count($checkbox) == 1, 'Checkbox for the module is disabled.');
+  }
+
+  /**
    * Tests enabling a module that depends on a module which fails hook_requirements().
    */
   public function testEnableRequirementsFailureDependency() {

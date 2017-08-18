@@ -1,0 +1,21 @@
+entity.media.multiple_delete_confirm:
+  path: '/admin/content/media/delete'
+  defaults:
+    _form: '\Drupal\media\Form\MediaDeleteMultipleConfirmForm'
+  requirements:
+    _permission: 'administer media+delete any media'
+
+entity.media.revision:
+  path: '/media/{media}/revisions/{media_revision}/view'
+  defaults:
+    _controller: '\Drupal\Core\Entity\Controller\EntityViewController::viewRevision'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
+  options:
+    parameters:
+      media:
+        type: entity:media
+      media_revision:
+        type: entity_revision:media
+  requirements:
+    _access_media_revision: 'view'
+    media: \d+

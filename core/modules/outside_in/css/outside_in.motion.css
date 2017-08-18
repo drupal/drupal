@@ -4,17 +4,10 @@
  *
  * Motion effects are in a separate file so that they can be easily turned off
  * to improve performance if desired.
- *
- * @todo Move motion effects file into a core Off-Canvas library and add a
- *   configuration option for browser rendering performance to disable this
- *   file: https://www.drupal.org/node/2784443.
  */
-
 
 /* Transition the edit icon in the toolbar. */
 #toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
-  -webkit-transition: all .7s ease;
-  -moz-transition: all .7s ease;
   transition: all .7s ease;
 }
 
@@ -22,23 +15,5 @@
 .dialog-off-canvas__main-canvas .contextual,
 .dialog-off-canvas__main-canvas .js-outside-in-edit-mode .outside-in-editable,
 .dialog-off-canvas__main-canvas.js-tray-open .js-outside-in-edit-mode .outside-in-editable {
-  -webkit-transition: all .7s ease;
-  -moz-transition: all .7s ease;
   transition: all .7s ease;
 }
-
-/* Transition the position of the toolbar. */
-.toolbar-fixed,
-.toolbar-tray-open {
-  -webkit-transition: all .5s ease;
-  -moz-transition: all .5s ease;
-  transition: all .5s ease;
-}
-
-/* Transition the administration tray.
-#toolbar-administration,
-#toolbar-administration * {
-  -webkit-transition: all .7s ease;
-  -moz-transition: all .7s ease;
-  transition: all .7s ease;
-}*/

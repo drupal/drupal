@@ -17,14 +17,20 @@ class MenuAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
+  protected $viewLabelOperation = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    if ($operation === 'view') {
+    // There are no restrictions on viewing the label of a date format.
+    if ($operation === 'view label') {
       return AccessResult::allowed();
     }
     // Locked menus could not be deleted.
-    elseif ($operation == 'delete') {
+    elseif ($operation === 'delete') {
       if ($entity->isLocked()) {
-        return AccessResult::forbidden()->addCacheableDependency($entity);
+        return AccessResult::forbidden('The Menu config entity is locked.')->addCacheableDependency($entity);
       }
       else {
         return parent::checkAccess($entity, $operation, $account)->addCacheableDependency($entity);

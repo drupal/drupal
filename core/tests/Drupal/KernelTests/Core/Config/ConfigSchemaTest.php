@@ -170,7 +170,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
     $expected['mapping']['name']['type'] = 'string';
-    $expected['mapping']['uuid']['type'] = 'string';
+    $expected['mapping']['uuid']['type'] = 'uuid';
     $expected['mapping']['uuid']['label'] = 'UUID';
     $expected['mapping']['langcode']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Language code';
@@ -186,7 +186,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['effects']['sequence']['mapping']['id']['type'] = 'string';
     $expected['mapping']['effects']['sequence']['mapping']['data']['type'] = 'image.effect.[%parent.id]';
     $expected['mapping']['effects']['sequence']['mapping']['weight']['type'] = 'integer';
-    $expected['mapping']['effects']['sequence']['mapping']['uuid']['type'] = 'string';
+    $expected['mapping']['effects']['sequence']['mapping']['uuid']['type'] = 'uuid';
     $expected['mapping']['third_party_settings']['type'] = 'sequence';
     $expected['mapping']['third_party_settings']['label'] = 'Third party settings';
     $expected['mapping']['third_party_settings']['sequence']['type'] = '[%parent.%parent.%type].third_party.[%key]';

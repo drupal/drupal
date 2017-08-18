@@ -2,6 +2,7 @@
 
 namespace Drupal\image\Form;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -58,7 +59,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     $form['preview'] = [
       '#type' => 'item',
       '#title' => $this->t('Preview'),
-      '#markup' => drupal_render($preview_arguments),
+      '#markup' => \Drupal::service('renderer')->render($preview_arguments),
       // Render preview above parent elements.
       '#weight' => -5,
     ];
@@ -143,7 +144,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     $new_effect_options = [];
     $effects = $this->imageEffectManager->getDefinitions();
     uasort($effects, function ($a, $b) {
-      return strcasecmp($a['id'], $b['id']);
+      return Unicode::strcasecmp($a['label'], $b['label']);
     });
     foreach ($effects as $effect => $definition) {
       $new_effect_options[$effect] = $definition['label'];

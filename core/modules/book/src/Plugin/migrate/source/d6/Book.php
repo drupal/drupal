@@ -8,7 +8,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * Drupal 6 book source.
  *
  * @MigrateSource(
- *   id = "d6_book"
+ *   id = "d6_book",
+ *   source_module = "book"
  * )
  */
 class Book extends DrupalSqlBase {

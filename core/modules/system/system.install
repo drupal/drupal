@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\OpCodeCache;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Path\AliasStorage;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
@@ -16,6 +17,7 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -60,7 +62,7 @@ function system_requirements($phase) {
     $enabled_modules = \Drupal::moduleHandler()->getModuleList();
     foreach ($enabled_modules as $module => $data) {
       $info = system_get_info('module', $module);
-      if ($info['package'] === 'Core (Experimental)') {
+      if (isset($info['package']) && $info['package'] === 'Core (Experimental)') {
         $experimental[$module] = $info['name'];
       }
     }
@@ -808,9 +810,46 @@ function system_requirements($phase) {
     }
   }
 
-  // Test Unicode library
-  include_once DRUPAL_ROOT . '/core/includes/unicode.inc';
-  $requirements = array_merge($requirements, unicode_requirements());
+  // Returns Unicode library status and errors.
+  $libraries = [
+    Unicode::STATUS_SINGLEBYTE => t('Standard PHP'),
+    Unicode::STATUS_MULTIBYTE => t('PHP Mbstring Extension'),
+    Unicode::STATUS_ERROR => t('Error'),
+  ];
+  $severities = [
+    Unicode::STATUS_SINGLEBYTE => REQUIREMENT_WARNING,
+    Unicode::STATUS_MULTIBYTE => NULL,
+    Unicode::STATUS_ERROR => REQUIREMENT_ERROR,
+  ];
+  $failed_check = Unicode::check();
+  $library = Unicode::getStatus();
+
+  $requirements['unicode'] = [
+    'title' => t('Unicode library'),
+    'value' => $libraries[$library],
+    'severity' => $severities[$library],
+  ];
+  switch ($failed_check) {
+    case 'mb_strlen':
+      $requirements['unicode']['description'] = t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="http://php.net/mbstring">PHP mbstring extension</a> for improved Unicode support.');
+      break;
+
+    case 'mbstring.func_overload':
+      $requirements['unicode']['description'] = t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      break;
+
+    case 'mbstring.encoding_translation':
+      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      break;
+
+    case 'mbstring.http_input':
+      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      break;
+
+    case 'mbstring.http_output':
+      $requirements['unicode']['description'] = t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      break;
+  }
 
   if ($phase == 'runtime') {
     // Check for update status module.
@@ -928,6 +967,15 @@ function system_requirements($phase) {
         'severity' => REQUIREMENT_ERROR,
       ];
     }
+  }
+  // Check to see if dates will be limited to 1901-2038.
+  if (PHP_INT_SIZE <= 4) {
+    $requirements['limited_date_range'] = [
+      'title' => t('Limited date range'),
+      'value' => t('Your PHP installation has a limited date range.'),
+      'description' => t('You are running on a system where PHP is compiled or limited to using 32-bit integers. This will limit the range of dates and timestamps to the years 1901-2038. Read about the <a href=":url">limitations of 32-bit PHP</a>.', [':url' => 'https://www.drupal.org/docs/8/system-requirements/limitations-of-32-bit-php']),
+      'severity' => REQUIREMENT_WARNING,
+    ];
   }
 
   return $requirements;
@@ -1926,4 +1974,54 @@ function system_update_8400(&$sandbox) {
   }
 
   $sandbox['#finished'] = $sandbox['current'] == $sandbox['max'];
+}
+
+/**
+ * Remove response.gzip (and response) from system module configuration.
+ */
+function system_update_8401() {
+  \Drupal::configFactory()->getEditable('system.performance')
+    ->clear('response.gzip')
+    ->clear('response')
+    ->save();
+}
+
+/**
+ * Add the 'revision_translation_affected' field to all entity types.
+ */
+function system_update_8402() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  // Clear the cached entity type definitions so we get the new
+  // 'revision_translation_affected' entity key.
+  \Drupal::entityTypeManager()->clearCachedDefinitions();
+
+  // Get a list of revisionable and translatable entity types.
+  /** @var \Drupal\Core\Entity\ContentEntityTypeInterface[] $definitions */
+  $definitions = array_filter(\Drupal::entityTypeManager()->getDefinitions(), function (EntityTypeInterface $entity_type) use ($definition_update_manager) {
+    if ($entity_type = $definition_update_manager->getEntityType($entity_type->id())) {
+      return $entity_type->isRevisionable() && $entity_type->isTranslatable();
+    }
+    return FALSE;
+  });
+
+  foreach ($definitions as $entity_type_id => $entity_type) {
+    $field_name = $entity_type->getKey('revision_translation_affected');
+    // Install the 'revision_translation_affected' field if needed.
+    if (!$definition_update_manager->getFieldStorageDefinition($field_name, $entity_type_id)) {
+      $storage_definition = BaseFieldDefinition::create('boolean')
+        ->setLabel(t('Revision translation affected'))
+        ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+        ->setReadOnly(TRUE)
+        ->setRevisionable(TRUE)
+        ->setTranslatable(TRUE)
+        // Mark all pre-existing revisions as affected in order to be consistent
+        // with the previous API return value: if the field was not defined the
+        // value returned was always TRUE.
+        ->setInitialValue(TRUE);
+
+      $definition_update_manager
+        ->installFieldStorageDefinition($field_name, $entity_type_id, $entity_type_id, $storage_definition);
+    }
+  }
 }

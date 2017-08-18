@@ -1,16 +1,6 @@
 services:
   main_content_renderer.off_canvas:
-    class: Drupal\outside_in\Render\MainContent\OffCanvasRender
+    class: Drupal\outside_in\Render\MainContent\OffCanvasRenderer
     arguments: ['@title_resolver', '@renderer']
     tags:
-      - { name: render.main_content_renderer, format: drupal_dialog_off_canvas }
-
-  outside_in.manager:
-    class: Drupal\outside_in\OutsideInManager
-    arguments: ['@router.admin_context', '@current_route_match', '@current_user']
-
-  cache_context.outside_in_is_applied:
-    class: Drupal\outside_in\Cache\Context\OutsideInCacheContext
-    arguments: ['@outside_in.manager']
-    tags:
-      - { name: cache.context}
+      - { name: render.main_content_renderer, format: drupal_dialog.off_canvas }

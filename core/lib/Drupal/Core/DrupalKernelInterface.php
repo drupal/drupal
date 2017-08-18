@@ -15,6 +15,16 @@ use Symfony\Component\HttpFoundation\Request;
 interface DrupalKernelInterface extends HttpKernelInterface, ContainerAwareInterface {
 
   /**
+   * Event fired when the service container finished initializing in subrequest.
+   *
+   * This event allows you to initialize overrides such as language to the
+   * services.
+   *
+   * @var string
+   */
+  const CONTAINER_INITIALIZE_SUBREQUEST_FINISHED = 'kernel.container.finish_container_initialize_subrequest';
+
+  /**
    * Boots the current kernel.
    *
    * @return $this

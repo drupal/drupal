@@ -10,11 +10,6 @@ use Drupal\Core\Plugin\Definition\DependentPluginDefinitionTrait;
 
 /**
  * Provides an implementation of a layout definition and its metadata.
- *
- * @internal
- *   The layout system is currently experimental and should only be leveraged by
- *   experimental modules and development releases of contributed modules.
- *   See https://www.drupal.org/core/experimental for more information.
  */
 class LayoutDefinition extends PluginDefinition implements PluginDefinitionInterface, DerivablePluginDefinitionInterface, DependentPluginDefinitionInterface {
 

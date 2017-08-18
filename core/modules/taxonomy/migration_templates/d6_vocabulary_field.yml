@@ -8,10 +8,12 @@ source:
     entity_type: node
     type: entity_reference
     target_entity_type: taxonomy_term
+    field_prefix: field_
 process:
   entity_type: 'constants/entity_type'
   type: 'constants/type'
-  field_name:
+  # This value is only used in the 'field_name' process pipeline below.
+  raw_field_name:
     -
       plugin: migration_lookup
       migration: d6_taxonomy_vocabulary
@@ -19,6 +21,22 @@ process:
     -
       plugin: skip_on_empty
       method: row
+  field_name:
+    # Prepend field_ to avoid conflicts with base fields, and make sure the
+    # result is no longer than 32 characters.
+    -
+      plugin: concat
+      source:
+        - constants/field_prefix
+        - '@raw_field_name'
+    -
+      plugin: substr
+      length: 32
+    -
+      # This plugin checks if the vocabulary being migrated is the one used for
+      # forums. If it is, the field name is set to 'taxonomy_forums' as it is
+      # what the Forum module is expecting. Otherwise, it is left unchanged.
+      plugin: forum_vocabulary
   'settings/target_type': 'constants/target_entity_type'
   cardinality: cardinality
 destination:

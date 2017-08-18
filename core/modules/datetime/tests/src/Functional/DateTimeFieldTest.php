@@ -208,6 +208,7 @@ class DateTimeFieldTest extends DateTestBase {
    */
   public function testDatetimeField() {
     $field_name = $this->fieldStorage->getName();
+    $field_label = $this->field->label();
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();
@@ -216,7 +217,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
     $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
-    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
     $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
     $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
@@ -352,6 +353,7 @@ class DateTimeFieldTest extends DateTestBase {
    */
   public function testDatelistWidget() {
     $field_name = $this->fieldStorage->getName();
+    $field_label = $this->field->label();
 
     // Ensure field is set to a date only field.
     $this->fieldStorage->setSetting('datetime_type', 'date');
@@ -370,7 +372,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_name, 'Fieldset and label found');
+    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
     $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
     $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
 
@@ -511,7 +513,7 @@ class DateTimeFieldTest extends DateTestBase {
     \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     // Test the widget for validation notifications.
-    foreach ($this->datelistDataProvider() as $data) {
+    foreach ($this->datelistDataProvider($field_label) as $data) {
       list($date_value, $expected) = $data;
 
       // Display creation form.
@@ -562,13 +564,21 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * The data provider for testing the validation of the datelist widget.
    *
+   * @param string $field_label
+   *   The label of the field being tested.
+   *
    * @return array
    *   An array of datelist input permutations to test.
    */
-  protected function datelistDataProvider() {
+  protected function datelistDataProvider($field_label) {
     return [
+      // Nothing selected.
+      [['year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''], [
+        "The $field_label date is required.",
+      ]],
       // Year only selected, validation error on Month, Day, Hour, Minute.
       [['year' => 2012, 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''], [
+        "The $field_label date is incomplete.",
         'A value must be selected for month.',
         'A value must be selected for day.',
         'A value must be selected for hour.',
@@ -576,17 +586,20 @@ class DateTimeFieldTest extends DateTestBase {
       ]],
       // Year and Month selected, validation error on Day, Hour, Minute.
       [['year' => 2012, 'month' => '12', 'day' => '', 'hour' => '', 'minute' => ''], [
+        "The $field_label date is incomplete.",
         'A value must be selected for day.',
         'A value must be selected for hour.',
         'A value must be selected for minute.',
       ]],
       // Year, Month and Day selected, validation error on Hour, Minute.
       [['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '', 'minute' => ''], [
+        "The $field_label date is incomplete.",
         'A value must be selected for hour.',
         'A value must be selected for minute.',
       ]],
       // Year, Month, Day and Hour selected, validation error on Minute only.
       [['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '0', 'minute' => ''], [
+        "The $field_label date is incomplete.",
         'A value must be selected for minute.',
       ]],
     ];

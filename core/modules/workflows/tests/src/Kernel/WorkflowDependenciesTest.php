@@ -33,6 +33,7 @@ class WorkflowDependenciesTest extends KernelTestBase {
     // \Drupal\workflows\Entity\Workflow::onDependencyRemoval() works as
     // expected.
     \Drupal::service('module_installer')->uninstall(['node', 'workflow_third_party_settings_test']);
+    /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = \Drupal::entityTypeManager()->getStorage('workflow')->loadUnchanged($workflow->id());
     $this->assertSame(['workflow_type_test'], $workflow->getDependencies()['module']);
   }

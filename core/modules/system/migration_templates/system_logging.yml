@@ -7,6 +7,7 @@ source:
   plugin: variable
   variables:
     - error_level
+  source_module: system
 process:
   error_level:
     plugin: static_map

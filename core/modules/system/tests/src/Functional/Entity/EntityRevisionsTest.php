@@ -135,28 +135,28 @@ class EntityRevisionsTest extends BrowserTestBase {
     $entity->addTranslation('de', ['name' => 'default revision - de']);
     $entity->save();
 
-    $forward_revision = \Drupal::entityTypeManager()->getStorage('entity_test_mulrev')->loadUnchanged($entity->id());
+    $pending_revision = \Drupal::entityTypeManager()->getStorage('entity_test_mulrev')->loadUnchanged($entity->id());
 
-    $forward_revision->setNewRevision();
-    $forward_revision->isDefaultRevision(FALSE);
+    $pending_revision->setNewRevision();
+    $pending_revision->isDefaultRevision(FALSE);
 
-    $forward_revision->name = 'forward revision - en';
-    $forward_revision->save();
+    $pending_revision->name = 'pending revision - en';
+    $pending_revision->save();
 
-    $forward_revision_translation = $forward_revision->getTranslation('de');
-    $forward_revision_translation->name = 'forward revision - de';
-    $forward_revision_translation->save();
+    $pending_revision_translation = $pending_revision->getTranslation('de');
+    $pending_revision_translation->name = 'pending revision - de';
+    $pending_revision_translation->save();
 
     // Check that the entity revision is upcasted in the correct language.
-    $revision_url = 'entity_test_mulrev/' . $entity->id() . '/revision/' . $forward_revision->getRevisionId() . '/view';
+    $revision_url = 'entity_test_mulrev/' . $entity->id() . '/revision/' . $pending_revision->getRevisionId() . '/view';
 
     $this->drupalGet($revision_url);
-    $this->assertText('forward revision - en');
-    $this->assertNoText('forward revision - de');
+    $this->assertText('pending revision - en');
+    $this->assertNoText('pending revision - de');
 
     $this->drupalGet('de/' . $revision_url);
-    $this->assertText('forward revision - de');
-    $this->assertNoText('forward revision - en');
+    $this->assertText('pending revision - de');
+    $this->assertNoText('pending revision - en');
   }
 
 }

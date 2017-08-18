@@ -370,12 +370,13 @@ function template_preprocess_form(&$variables) {
  * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #rows, #cols,
- *     #placeholder, #required, #attributes, #resizable
+ *     Properties used: #title, #value, #description, #rows, #cols, #maxlength,
+ *     #placeholder, #required, #attributes, #resizable.
  */
 function template_preprocess_textarea(&$variables) {
   $element = $variables['element'];
-  Element::setAttributes($element, ['id', 'name', 'rows', 'cols', 'placeholder']);
+  $attributes = ['id', 'name', 'rows', 'cols', 'maxlength', 'placeholder'];
+  Element::setAttributes($element, $attributes);
   RenderElement::setAttributes($element, ['form-textarea']);
   $variables['wrapper_attributes'] = new Attribute();
   $variables['attributes'] = new Attribute($element['#attributes']);

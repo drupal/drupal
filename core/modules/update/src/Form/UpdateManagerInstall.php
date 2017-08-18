@@ -93,7 +93,7 @@ class UpdateManagerInstall extends FormBase {
     $form['project_url'] = [
       '#type' => 'url',
       '#title' => $this->t('Install from a URL'),
-      '#description' => $this->t('For example: %url', ['%url' => 'http://ftp.drupal.org/files/projects/name.tar.gz']),
+      '#description' => $this->t('For example: %url', ['%url' => 'https://ftp.drupal.org/files/projects/name.tar.gz']),
     ];
 
     $form['information'] = [

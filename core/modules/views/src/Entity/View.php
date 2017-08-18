@@ -19,9 +19,6 @@ use Drupal\views\ViewEntityInterface;
  * @ConfigEntityType(
  *   id = "view",
  *   label = @Translation("View", context = "View entity type"),
- *   handlers = {
- *     "access" = "Drupal\views\ViewAccessControlHandler"
- *   },
  *   admin_permission = "administer views",
  *   entity_keys = {
  *     "id" = "id",

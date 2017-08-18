@@ -5,6 +5,7 @@ namespace Drupal\menu_link_content\Plugin\migrate\process;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -79,6 +80,9 @@ class LinkUri extends ProcessPluginBase implements ContainerFactoryPluginInterfa
             return "entity:$entity_type_id/" . $url->getRouteParameters()[$entity_type_id];
           }
         }
+      }
+      else {
+        throw new MigrateException(sprintf('The path "%s" failed validation.', $path));
       }
     }
     return $path;

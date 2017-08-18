@@ -1,0 +1,13 @@
+services:
+# Provide 2 main content renderer services that use the same class but
+# behave differently depending on the 2nd argument.
+  main_content_renderer.wide_modal:
+    class: Drupal\dialog_renderer_test\Render\MainContent\WideModalRenderer
+    arguments: ['@title_resolver', 'wide']
+    tags:
+      - { name: render.main_content_renderer, format: drupal_modal.wide }
+  main_content_renderer.extra_wide_modal:
+    class: Drupal\dialog_renderer_test\Render\MainContent\WideModalRenderer
+    arguments: ['@title_resolver', 'extra_wide']
+    tags:
+      - { name: render.main_content_renderer, format: drupal_modal.extra_wide }

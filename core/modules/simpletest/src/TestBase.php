@@ -15,6 +15,7 @@ use Drupal\Core\Utility\Error;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\SessionTestTrait;
+use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 
 /**
  * Base class for Drupal tests.
@@ -27,6 +28,7 @@ abstract class TestBase {
   use SessionTestTrait;
   use RandomGeneratorTrait;
   use AssertHelperTrait;
+  use GeneratePermutationsTrait;
   // For backwards compatibility switch the visbility of the methods to public.
   use ConfigTestTrait {
     configImporter as public;
@@ -1341,55 +1343,6 @@ abstract class TestBase {
     $settings = Settings::getAll();
     $settings[$name] = $value;
     new Settings($settings);
-  }
-
-  /**
-   * Converts a list of possible parameters into a stack of permutations.
-   *
-   * Takes a list of parameters containing possible values, and converts all of
-   * them into a list of items containing every possible permutation.
-   *
-   * Example:
-   * @code
-   * $parameters = array(
-   *   'one' => array(0, 1),
-   *   'two' => array(2, 3),
-   * );
-   * $permutations = TestBase::generatePermutations($parameters);
-   * // Result:
-   * $permutations == array(
-   *   array('one' => 0, 'two' => 2),
-   *   array('one' => 1, 'two' => 2),
-   *   array('one' => 0, 'two' => 3),
-   *   array('one' => 1, 'two' => 3),
-   * )
-   * @endcode
-   *
-   * @param $parameters
-   *   An associative array of parameters, keyed by parameter name, and whose
-   *   values are arrays of parameter values.
-   *
-   * @return
-   *   A list of permutations, which is an array of arrays. Each inner array
-   *   contains the full list of parameters that have been passed, but with a
-   *   single value only.
-   */
-  public static function generatePermutations($parameters) {
-    $all_permutations = [[]];
-    foreach ($parameters as $parameter => $values) {
-      $new_permutations = [];
-      // Iterate over all values of the parameter.
-      foreach ($values as $value) {
-        // Iterate over all existing permutations.
-        foreach ($all_permutations as $permutation) {
-          // Add the new parameter value to existing permutations.
-          $new_permutations[] = $permutation + [$parameter => $value];
-        }
-      }
-      // Replace the old permutations with the new permutations.
-      $all_permutations = $new_permutations;
-    }
-    return $all_permutations;
   }
 
   /**

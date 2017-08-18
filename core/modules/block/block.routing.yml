@@ -52,7 +52,7 @@ block.admin_display:
     _permission: 'administer blocks'
 
 block.admin_display_theme:
-  path: 'admin/structure/block/list/{theme}'
+  path: '/admin/structure/block/list/{theme}'
   defaults:
     _controller: '\Drupal\block\Controller\BlockListController::listing'
     _title: 'Block layout'
@@ -61,7 +61,7 @@ block.admin_display_theme:
     _permission: 'administer blocks'
 
 block.admin_library:
-  path: 'admin/structure/block/library/{theme}'
+  path: '/admin/structure/block/library/{theme}'
   defaults:
     _controller: '\Drupal\block\Controller\BlockLibraryController::listBlocks'
     _title: 'Place block'

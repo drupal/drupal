@@ -74,6 +74,7 @@ use Drupal\user\UserInterface;
  *     "edit-form" = "/node/{node}/edit",
  *     "version-history" = "/node/{node}/revisions",
  *     "revision" = "/node/{node}/revisions/{node_revision}/view",
+ *     "create" = "/node",
  *   }
  * )
  */
@@ -339,6 +340,16 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ])
       ->setDisplayConfigurable('form', TRUE);
 
+    $fields['status']
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+        'weight' => 120,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
       ->setDescription(t('The time that the node was created.'))
@@ -388,13 +399,6 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
         'weight' => 16,
       ])
       ->setDisplayConfigurable('form', TRUE);
-
-    $fields['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Revision translation affected'))
-      ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
-      ->setReadOnly(TRUE)
-      ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE);
 
     return $fields;
   }

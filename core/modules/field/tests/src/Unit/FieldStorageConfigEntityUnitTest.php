@@ -8,6 +8,7 @@
 namespace Drupal\Tests\field\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -108,6 +109,104 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
     $dependencies = $field_storage->calculateDependencies()->getDependencies();
     $this->assertEquals(['entity_provider_module', 'entity_test', 'test_module'], $dependencies['module']);
     $this->assertEquals(['stark'], $dependencies['theme']);
+  }
+
+  /**
+   * Tests stored cardinality.
+   *
+   * @covers ::getCardinality
+   */
+  public function testStoredCardinality() {
+    $this->fieldTypeManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('test_field_type')
+      ->willReturn([
+        'class' => TestFieldType::class,
+        // The field type definition has no enforced cardinality.
+        'cardinality' => NULL,
+      ]);
+
+    $field_storage = new FieldStorageConfig([
+      'entity_type' => 'entity_test',
+      'field_name' => 'test_field',
+      'type' => 'test_field_type',
+      'module' => 'test_module',
+    ]);
+    $field_storage->setCardinality(8);
+
+    // Check that the stored cardinality is returned.
+    $this->assertEquals(8, $field_storage->getCardinality());
+  }
+
+  /**
+   * Tests enforced cardinality.
+   *
+   * @covers ::getCardinality
+   */
+  public function testEnforcedCardinality() {
+    $this->fieldTypeManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('test_field_type')
+      ->willReturn([
+        'class' => TestFieldType::class,
+        // This field type defines an enforced cardinality.
+        'cardinality' => 21,
+      ]);
+
+    $field_storage = new FieldStorageConfig([
+      'entity_type' => 'entity_test',
+      'field_name' => 'test_field',
+      'type' => 'test_field_type',
+      'module' => 'test_module',
+    ]);
+    // Custom cardinality tentative.
+    $field_storage->setCardinality(8);
+
+    // Check that the enforced cardinality is returned.
+    $this->assertEquals(21, $field_storage->getCardinality());
+  }
+
+  /**
+   * Tests invalid enforced cardinality.
+   *
+   * @covers ::getCardinality
+   * @dataProvider providerInvalidEnforcedCardinality
+   *
+   * @param mixed $enforced_cardinality
+   *   Enforced cardinality
+   */
+  public function testInvalidEnforcedCardinality($enforced_cardinality) {
+    $this->fieldTypeManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('test_field_type')
+      ->willReturn([
+        'class' => TestFieldType::class,
+        'cardinality' => $enforced_cardinality,
+      ]);
+
+    $field_storage = new FieldStorageConfig([
+      'entity_type' => 'entity_test',
+      'field_name' => 'test_field',
+      'type' => 'test_field_type',
+      'module' => 'test_module',
+    ]);
+
+    $this->setExpectedException(FieldException::class, "Invalid enforced cardinality '$enforced_cardinality'. Allowed values: a positive integer or -1.");
+    $field_storage->getCardinality();
+  }
+
+  /**
+   * Data provider for ::testInvalidEnforcedCardinality()
+   *
+   * @return array
+   *   Test cases.
+   */
+  public function providerInvalidEnforcedCardinality() {
+    return [
+      'zero' => [0],
+      'negative_other_than_-1' => [-70],
+      'non_numeric' => ['abc%$#@!'],
+    ];
   }
 
 }

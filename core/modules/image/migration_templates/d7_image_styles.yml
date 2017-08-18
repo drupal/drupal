@@ -8,7 +8,7 @@ process:
   name: name
   label: label
   effects:
-    plugin: iterator
+    plugin: sub_process
     source: effects
     process:
       id: name

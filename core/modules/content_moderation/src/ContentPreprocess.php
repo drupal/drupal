@@ -9,6 +9,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Determines whether a route is the "Latest version" tab of a node.
+ *
+ * @internal
  */
 class ContentPreprocess implements ContainerInjectionInterface {
 

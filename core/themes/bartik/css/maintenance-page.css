@@ -49,7 +49,7 @@ body.maintenance-page {
 .maintenance-page .site-branding-text a:focus {
   color: #777;
 }
-.maintenance-page  .page-title {
+.maintenance-page .page-title {
   line-height: 1em;
   margin-top: 0;
 }

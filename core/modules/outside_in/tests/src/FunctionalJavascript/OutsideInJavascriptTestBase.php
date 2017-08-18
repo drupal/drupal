@@ -28,7 +28,7 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
    * @param string $theme
    *   The theme.
    */
-  public function enableTheme($theme) {
+  protected function enableTheme($theme) {
     // Enable the theme.
     \Drupal::service('theme_installer')->install([$theme]);
     $theme_config = \Drupal::configFactory()->getEditable('system.theme');
@@ -42,7 +42,7 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
   protected function waitForOffCanvasToOpen() {
     $web_assert = $this->assertSession();
     $web_assert->assertWaitOnAjaxRequest();
-    $web_assert->waitForElementVisible('css', '#drupal-off-canvas');
+    $this->assertElementVisibleAfterWait('css', '#drupal-off-canvas');
   }
 
   /**
@@ -119,15 +119,28 @@ abstract class OutsideInJavascriptTestBase extends JavascriptTestBase {
   }
 
   /**
-   * Waits for Toolbar to load.
+   * Get themes to test.
+   *
+   * @return string[]
+   *   Theme names to test.
    */
-  protected function waitForToolbarToLoad() {
-    $web_assert = $this->assertSession();
-    // Waiting for Toolbar module.
-    // @todo Remove the hack after https://www.drupal.org/node/2542050.
-    $web_assert->waitForElementVisible('css', '.toolbar-fixed');
-    // Waiting for Toolbar animation.
-    $web_assert->assertWaitOnAjaxRequest();
+  protected function getTestThemes() {
+    return ['bartik', 'stark', 'classy', 'stable'];
+  }
+
+  /**
+   * Asserts the specified selector is visible after a wait.
+   *
+   * @param string $selector
+   *   The selector engine name. See ElementInterface::findAll() for the
+   *   supported selectors.
+   * @param string|array $locator
+   *   The selector locator.
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   */
+  protected function assertElementVisibleAfterWait($selector, $locator, $timeout = 10000) {
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible($selector, $locator, $timeout));
   }
 
 }

@@ -46,13 +46,15 @@ class OffCanvasDialogTest extends AjaxTestBase {
           'draggable' => FALSE,
           'drupalAutoButtons' => FALSE,
           'buttons' => [],
+          'dialogClass' => 'ui-dialog-off-canvas',
+          'width' => 300,
         ],
       'effect' => 'fade',
       'speed' => 1000,
     ];
 
     // Emulate going to the JS version of the page and check the JSON response.
-    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog_off_canvas']]);
+    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog.off_canvas']]);
     $this->assertEqual($off_canvas_expected_response, $ajax_result[3], 'off-canvas dialog JSON response matches.');
   }
 

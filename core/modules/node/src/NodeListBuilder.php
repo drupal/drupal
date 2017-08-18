@@ -110,7 +110,7 @@ class NodeListBuilder extends EntityListBuilder {
     $row['title']['data'] = [
       '#type' => 'link',
       '#title' => $entity->label(),
-      '#suffix' => ' ' . drupal_render($mark),
+      '#suffix' => ' ' . \Drupal::service('renderer')->render($mark),
       '#url' => $uri,
     ];
     $row['type'] = node_get_type_label($entity);

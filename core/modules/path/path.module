@@ -5,6 +5,7 @@
  * Enables users to rename URLs.
  */
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
@@ -62,7 +63,7 @@ function path_form_node_form_alter(&$form, FormStateInterface $form_state) {
  * Implements hook_entity_base_field_info().
  */
 function path_entity_base_field_info(EntityTypeInterface $entity_type) {
-  if ($entity_type->id() === 'taxonomy_term' || $entity_type->id() === 'node') {
+  if (in_array($entity_type->id(), ['taxonomy_term', 'node', 'media'], TRUE)) {
     $fields['path'] = BaseFieldDefinition::create('path')
       ->setLabel(t('URL alias'))
       ->setTranslatable(TRUE)
@@ -74,5 +75,19 @@ function path_entity_base_field_info(EntityTypeInterface $entity_type) {
       ->setComputed(TRUE);
 
     return $fields;
+  }
+}
+
+/**
+ * Implements hook_entity_translation_create().
+ */
+function path_entity_translation_create(ContentEntityInterface $translation) {
+  foreach ($translation->getFieldDefinitions() as $field_name => $field_definition) {
+    if ($field_definition->getType() === 'path' && $translation->get($field_name)->pid) {
+      // If there are values and a path ID, update the langcode and unset the
+      // path ID to save this as a new alias.
+      $translation->get($field_name)->langcode = $translation->language()->getId();
+      $translation->get($field_name)->pid = NULL;
+    }
   }
 }

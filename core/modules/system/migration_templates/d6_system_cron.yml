@@ -8,6 +8,7 @@ source:
     - cron_threshold_warning
     - cron_threshold_error
     - cron_last
+  source_module: system
 process:
   'threshold/requirements_warning': cron_threshold_warning
   'threshold/requirements_error': cron_threshold_error

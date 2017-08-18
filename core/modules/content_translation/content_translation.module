@@ -296,8 +296,10 @@ function content_translation_form_alter(array &$form, FormStateInterface $form_s
   $entity = $form_object->getEntity();
   $op = $form_object->getOperation();
 
-  // Let the content translation handler alter the content entity edit form.
-  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1 && ($op == 'edit' || $op == 'default')) {
+  // Let the content translation handler alter the content entity form. This can
+  // be the 'add' or 'edit' form. It also tries a 'default' form in case neither
+  // of the aforementioned forms are defined.
+  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1 && in_array($op, ['edit', 'add', 'default'], TRUE)) {
     $controller = \Drupal::entityManager()->getHandler($entity->getEntityTypeId(), 'translation');
     $controller->entityFormAlter($form, $form_state, $entity);
 

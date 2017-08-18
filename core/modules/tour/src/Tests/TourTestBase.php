@@ -4,8 +4,13 @@ namespace Drupal\tour\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+@trigger_error('\Drupal\tour\Tests\TourTestBase is deprecated in 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\tour\Functional\TourTestBase.', E_USER_DEPRECATED);
+
 /**
  * Base class for testing Tour functionality.
+ *
+ * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Tests\tour\Functional\TourTestBase instead.
  */
 abstract class TourTestBase extends WebTestBase {
 

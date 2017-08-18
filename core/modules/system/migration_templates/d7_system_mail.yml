@@ -1,10 +1,12 @@
 id: d7_system_mail
+label: Drupal 7 system mail configuration
 migration_tags:
   - Drupal 7
 source:
   plugin: variable
   variables:
     - mail_system
+  source_module: system
 process:
   'interface/default':
     plugin: static_map

@@ -25,11 +25,28 @@ class HeadersCacheContext extends RequestStackCacheContextBase implements Calcul
    */
   public function getContext($header = NULL) {
     if ($header === NULL) {
-      return $this->requestStack->getCurrentRequest()->headers->all();
+      $headers = $this->requestStack->getCurrentRequest()->headers->all();
+      // Order headers by name to have less cache variations.
+      ksort($headers);
+      $result = '';
+      foreach ($headers as $name => $value) {
+        if ($result) {
+          $result .= '&';
+        }
+        // Sort values to minimize cache variations.
+        sort($value);
+        $result .= $name . '=' . implode(',', $value);
+      }
+      return $result;
     }
-    else {
-      return $this->requestStack->getCurrentRequest()->headers->get($header);
+    elseif ($this->requestStack->getCurrentRequest()->headers->has($header)) {
+      $value = $this->requestStack->getCurrentRequest()->headers->get($header);
+      if ($value !== '') {
+        return $value;
+      }
+      return '?valueless?';
     }
+    return '';
   }
 
   /**

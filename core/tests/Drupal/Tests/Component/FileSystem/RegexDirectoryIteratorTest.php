@@ -3,14 +3,14 @@
 namespace Drupal\Tests\Component\FileSystem;
 
 use Drupal\Component\FileSystem\RegexDirectoryIterator;
-use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\FileSystem\RegexDirectoryIterator
  * @group FileSystem
  */
-class RegexDirectoryIteratorTest extends UnitTestCase {
+class RegexDirectoryIteratorTest extends TestCase {
 
   /**
    * @covers ::accept

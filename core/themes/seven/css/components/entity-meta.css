@@ -17,6 +17,8 @@
   padding: 1em 1.5em;
 }
 .entity-meta__title {
+  font-size: 1.231em;
+  font-weight: bold;
   text-shadow: 0 1px 0 #fff;
   margin: 0.25em 0;
 }
@@ -55,5 +57,5 @@
   text-shadow: 0 1px 0 white;
 }
 .entity-meta details .summary {
- display: none; /* Hide JS summaries. @todo Rethink summaries. */
+  display: none; /* Hide JS summaries. @todo Rethink summaries. */
 }

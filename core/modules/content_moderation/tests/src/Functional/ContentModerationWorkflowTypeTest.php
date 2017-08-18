@@ -50,6 +50,9 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Create New Draft');
     $this->assertSession()->pageTextContains('Publish');
 
+    $this->assertSession()->linkByHrefNotExists('/admin/config/workflow/workflows/manage/test_workflow/state/draft/delete');
+    $this->assertSession()->linkByHrefNotExists('/admin/config/workflow/workflows/manage/test_workflow/state/published/delete');
+
     // Ensure after a workflow is created, the bundle information can be
     // refreshed.
     $entity_bundle_info->clearCachedBundles();
@@ -59,20 +62,29 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
     $this->submitForm([
       'label' => 'Test State',
       'id' => 'test_state',
-      'type_settings[content_moderation][published]' => TRUE,
-      'type_settings[content_moderation][default_revision]' => FALSE,
+      'type_settings[published]' => TRUE,
+      'type_settings[default_revision]' => FALSE,
     ], 'Save');
     $this->assertSession()->pageTextContains('Created Test State state.');
+    $this->assertSession()->linkByHrefExists('/admin/config/workflow/workflows/manage/test_workflow/state/test_state/delete');
+
+    // Check there is a link to delete a default transition.
+    $this->assertSession()->linkByHrefExists('/admin/config/workflow/workflows/manage/test_workflow/transition/publish/delete');
+    // Delete the transition.
+    $this->drupalGet('/admin/config/workflow/workflows/manage/test_workflow/transition/publish/delete');
+    $this->submitForm([], 'Delete');
+    // The link to delete the transition should now be gone.
+    $this->assertSession()->linkByHrefNotExists('/admin/config/workflow/workflows/manage/test_workflow/transition/publish/delete');
 
     // Ensure that the published settings cannot be changed.
     $this->drupalGet('admin/config/workflow/workflows/manage/test_workflow/state/published');
-    $this->assertSession()->fieldDisabled('type_settings[content_moderation][published]');
-    $this->assertSession()->fieldDisabled('type_settings[content_moderation][default_revision]');
+    $this->assertSession()->fieldDisabled('type_settings[published]');
+    $this->assertSession()->fieldDisabled('type_settings[default_revision]');
 
     // Ensure that the draft settings cannot be changed.
     $this->drupalGet('admin/config/workflow/workflows/manage/test_workflow/state/draft');
-    $this->assertSession()->fieldDisabled('type_settings[content_moderation][published]');
-    $this->assertSession()->fieldDisabled('type_settings[content_moderation][default_revision]');
+    $this->assertSession()->fieldDisabled('type_settings[published]');
+    $this->assertSession()->fieldDisabled('type_settings[default_revision]');
   }
 
 }

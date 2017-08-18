@@ -870,6 +870,16 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // If there is no container and no cached container definition, build a new
     // one from scratch.
     if (!isset($container) && !isset($container_definition)) {
+      // Building the container creates 1000s of objects. Garbage collection of
+      // these objects is expensive. This appears to be causing random
+      // segmentation faults in PHP 5.6 due to
+      // https://bugs.php.net/bug.php?id=72286. Once the container is rebuilt,
+      // garbage collection is re-enabled.
+      $disable_gc = version_compare(PHP_VERSION, '7', '<') && gc_enabled();
+      if ($disable_gc) {
+        gc_collect_cycles();
+        gc_disable();
+      }
       $container = $this->compileContainer();
 
       // Only dump the container if dumping is allowed. This is useful for
@@ -878,6 +888,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       if ($this->allowDumping) {
         $dumper = new $this->phpArrayDumperClass($container);
         $container_definition = $dumper->getArray();
+      }
+      // If garbage collection was disabled prior to rebuilding container,
+      // re-enable it.
+      if ($disable_gc) {
+        gc_enable();
       }
     }
 
@@ -901,6 +916,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // new session into the master request if one was present before.
     if (($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE))) {
       if ($request = $request_stack->getMasterRequest()) {
+        $subrequest = TRUE;
         if ($request->hasSession()) {
           $request->setSession($this->container->get('session'));
         }
@@ -912,6 +928,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     \Drupal::setContainer($this->container);
+
+    // Allow other parts of the codebase to react on container initialization in
+    // subrequest.
+    if (!empty($subrequest)) {
+      $this->container->get('event_dispatcher')->dispatch(self::CONTAINER_INITIALIZE_SUBREQUEST_FINISHED);
+    }
 
     // If needs dumping flag was set, dump the container.
     if ($this->containerNeedsDumping && !$this->cacheDrupalContainer($container_definition)) {

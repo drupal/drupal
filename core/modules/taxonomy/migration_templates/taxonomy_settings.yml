@@ -8,6 +8,7 @@ source:
   variables:
     - taxonomy_override_selector
     - taxonomy_terms_per_page_admin
+  source_module: taxonomy
 process:
   override_selector: taxonomy_override_selector
   terms_per_page_admin: taxonomy_terms_per_page_admin

@@ -22,6 +22,8 @@ Drupal 8
   (Product Manager)
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
   (Framework Manager, Release Manager)
+- Chris McCafferty 'cilefen' https://www.drupal.org/u/cilefen
+  (Release Manager)
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
   (Release Manager)
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
@@ -34,8 +36,8 @@ Provisional membership:
   (Framework Manager - Frontend)
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
   (Product Manager)
-- Chris McCafferty 'cilefen' https://www.drupal.org/u/cilefen
-  (Release Manager)
+- Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
+  (Framework Manager)
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
   (Product Manager)
 
@@ -168,10 +170,8 @@ CSS
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
 
 Database API
-- Larry Garfield 'Crell' https://www.drupal.org/u/crell
 
   MySQL DB driver
-  - Larry Garfield 'Crell' https://www.drupal.org/u/crell
   - David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
 
   PostgreSQL DB driver
@@ -254,6 +254,7 @@ Interface Translation (locale)
 JavaScript
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
 - Kay Leung 'droplet' https://www.drupal.org/u/droplet
+- Matthew Grill 'drpal' https://www.drupal.org/u/drpal
 
 Language
 - Francesco Placella 'plach' https://www.drupal.org/u/plach
@@ -271,6 +272,21 @@ Mail
 Markup
 - ?
 
+Media
+- Sean Blommaert 'seanB' https://www.drupal.org/u/seanb
+- Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
+
+Menu
+- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
+- Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
+
+Menu Link Content
+- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
+- Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
+
+Menu UI
+- ?
+
 Migrate
 - Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
 - Ben Dougherty 'benjy' https://www.drupal.org/u/benjy
@@ -284,19 +300,8 @@ Migrate (Drupal)
 - Mike Ryan 'mikeryan' https://www.drupal.org/u/mikeryan
 - Vicki Spagnolo 'quietone' https://www.drupal.org/u/quietone
 
-Menu
-- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
-- Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
-
-Menu Link Content
-- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
-- Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
-
-Menu UI
-- ?
-
 Node
-- ?
+- Tim Millwood 'timmillwood' https://www.drupal.org/u/timmillwood
 
 Node Access
 - Ken Rickard 'agentrickard' https://www.drupal.org/u/agentrickard
@@ -336,10 +341,9 @@ Render API
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
 
 Request Processing
-- Larry Garfield 'Crell' https://www.drupal.org/u/crell
+- ?
 
 REST
-- Larry Garfield 'Crell' https://www.drupal.org/u/crell
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Responsive Image
@@ -348,7 +352,6 @@ Responsive Image
 - Jelle Sebreghts 'Jelle_S' https://www.drupal.org/u/jelle_s
 
 Routing
-- Larry Garfield 'Crell' https://www.drupal.org/u/crell
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 
 Search
@@ -374,7 +377,7 @@ Statistics
 - Tim Millwood 'timmillwood' https://www.drupal.org/u/timmillwood
 
 Syslog
-- ?
+- Mariano D'Agostino 'dagmar' https://www.drupal.org/u/dagmar
 
 System (module)
 - ?
@@ -431,6 +434,9 @@ Views
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
 
+Workflows
+- Sam Becker 'Sam152' https://www.drupal.org/u/sam152
+
 Topic maintainers
 -----------------
 
@@ -474,11 +480,9 @@ re-architect or otherwise improve large areas of Drupal core. See
 https://www.drupal.org/community-initiatives/drupal-core for more information on
 their responsibilities. The initiative coordinators for Drupal 8 are:
 
-Workflow Initiative
-- Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
-
-PHPUnit Initiative
-- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
+API-first Initiative
+- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+- Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
 
 Layout Initiative
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
@@ -487,9 +491,16 @@ Layout Initiative
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
 
-API-first Initiative
-- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
-- Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
+PHPUnit Initiative
+- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
+
+  Provisional membership:
+  - Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
+  - Michiel Nugter 'michielnugter' https://www.drupal.org/u/michielnugter
+
+Workflow Initiative
+- Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
+
 
 Provisional membership: None at this time.
 
@@ -505,11 +516,11 @@ tools, documentation, and processes to make it easier for new contributors to
 get involved. They organize communications and logistics, and actively
 participate in mentoring.
 
+- Mauricio Dinarte 'dinarcon' https://www.drupal.org/u/dinarcon
 - Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
+- Rachel Lawson 'rachel_norfolk' https://www.drupal.org/u/rachel_norfolk
 - Valery Lourie 'valthebald' https://www.drupal.org/u/valthebald
-- Alina Mackenzie 'alimac' https://www.drupal.org/u/alimac
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
-- Andrea Soper 'ZenDoodles' https://www.drupal.org/u/zendoodles
-- Cathy Theys 'YesCT' https://www.drupal.org/u/yesct
+- Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
 
 Provisional membership: None at this time.

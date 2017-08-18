@@ -245,7 +245,9 @@ function editor_form_filter_admin_format_submit($form, FormStateInterface $form_
     // Ensure the text format is set: when creating a new text format, this
     // would equal the empty string.
     $editor->set('format', $format_id);
-    $editor->setSettings($form_state->getValue(['editor', 'settings']));
+    if ($settings = $form_state->getValue(['editor', 'settings'])) {
+      $editor->setSettings($settings);
+    }
     $editor->save();
   }
 }

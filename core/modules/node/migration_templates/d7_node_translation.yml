@@ -7,6 +7,7 @@ deriver: Drupal\node\Plugin\migrate\D7NodeDeriver
 source:
   plugin: d7_node
   translations: true
+  source_module: translation
 process:
   # If you are using this file to build a custom migration consider removing
   # the nid field to allow incremental migrations.
@@ -32,6 +33,7 @@ destination:
   translations: true
   content_translation_update_definitions:
     - node
+  destination_module: content_translation
 migration_dependencies:
   required:
     - d7_user
@@ -39,4 +41,3 @@ migration_dependencies:
     - language
   optional:
     - d7_field_instance
-provider: migrate_drupal

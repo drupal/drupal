@@ -104,6 +104,9 @@ class MigrateUpgradeImportBatch {
     // @todo Find a way to avoid this in https://www.drupal.org/node/2804611.
     if ($definition['destination']['plugin'] === 'entity:file') {
       // Make sure we have a single trailing slash.
+      if ($definition['source']['plugin'] === 'd7_file_private') {
+        $configuration['source']['constants']['source_base_path'] = rtrim($config['source_private_file_path'], '/') . '/';
+      }
       $configuration['source']['constants']['source_base_path'] = rtrim($config['source_base_path'], '/') . '/';
     }
 

@@ -245,6 +245,7 @@ class SqlContentEntityStorageSchemaConverter {
     $original_base_table = $original_entity_type->getBaseTable();
 
     $revision_id_key = $temporary_entity_type->getKey('revision');
+    $revision_translation_affected_key = $temporary_entity_type->getKey('revision_translation_affected');
 
     // If 'progress' is not set, then this will be the first run of the batch.
     if (!isset($sandbox['progress'])) {
@@ -286,6 +287,11 @@ class SqlContentEntityStorageSchemaConverter {
       try {
         // Set the revision ID to be same as the entity ID.
         $entity->set($revision_id_key, $entity_id);
+
+        // Set the 'revision_translation_affected' flag to TRUE to match the
+        // previous API return value: if the field was not defined the value
+        // returned was always TRUE.
+        $entity->set($revision_translation_affected_key, TRUE);
 
         // Treat the entity as new in order to make the storage do an INSERT
         // rather than an UPDATE.
@@ -370,8 +376,25 @@ class SqlContentEntityStorageSchemaConverter {
     if ($update_cached_definitions) {
       $this->entityDefinitionUpdateManager->installFieldStorageDefinition($revision_field->getName(), $entity_type->id(), $entity_type->getProvider(), $revision_field);
     }
-
     $updated_storage_definitions[$entity_type->getKey('revision')] = $revision_field;
+
+    // Add the 'revision_translation_affected' field if needed.
+    if ($entity_type->isTranslatable()) {
+      $revision_translation_affected_field = BaseFieldDefinition::create('boolean')
+        ->setName($entity_type->getKey('revision_translation_affected'))
+        ->setTargetEntityTypeId($entity_type->id())
+        ->setTargetBundle(NULL)
+        ->setLabel(new TranslatableMarkup('Revision translation affected'))
+        ->setDescription(new TranslatableMarkup('Indicates if the last edit of a translation belongs to current revision.'))
+        ->setReadOnly(TRUE)
+        ->setRevisionable(TRUE)
+        ->setTranslatable(TRUE);
+
+      if ($update_cached_definitions) {
+        $this->entityDefinitionUpdateManager->installFieldStorageDefinition($revision_translation_affected_field->getName(), $entity_type->id(), $entity_type->getProvider(), $revision_translation_affected_field);
+      }
+      $updated_storage_definitions[$entity_type->getKey('revision_translation_affected')] = $revision_translation_affected_field;
+    }
 
     return $updated_storage_definitions;
   }

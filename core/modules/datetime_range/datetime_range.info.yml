@@ -1,7 +1,7 @@
 name: 'Datetime Range'
 type: module
 description: 'Provides the ability to store end dates.'
-package: Core (Experimental)
+package: Field types
 version: VERSION
 core: 8.x
 dependencies:

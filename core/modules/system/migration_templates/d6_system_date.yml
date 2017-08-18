@@ -8,6 +8,7 @@ source:
     - configurable_timezones
     - date_first_day
     - date_default_timezone
+  source_module: system
 process:
   'timezone/user/configurable': configurable_timezones
   first_day: date_first_day

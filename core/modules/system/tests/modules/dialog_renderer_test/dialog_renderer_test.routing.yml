@@ -1,0 +1,15 @@
+dialog_renderer_test.links:
+  path: '/dialog_renderer-test-links'
+  defaults:
+    _controller: '\Drupal\dialog_renderer_test\Controller\TestController::linksDisplay'
+    _title: 'Links'
+  requirements:
+    _access: 'TRUE'
+
+dialog_renderer_test.modal_content:
+  path: '/dialog_renderer-content'
+  defaults:
+    _controller: '\Drupal\dialog_renderer_test\Controller\TestController::modalContent'
+    _title: 'Thing 1'
+  requirements:
+    _access: 'TRUE'

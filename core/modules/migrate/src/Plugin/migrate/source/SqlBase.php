@@ -15,13 +15,37 @@ use Drupal\migrate\Plugin\RequirementsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Sources whose data may be fetched via DBTNG.
+ * Sources whose data may be fetched via a database connection.
  *
- * By default, an existing database connection with key 'migrate' and target
- * 'default' is used. These may be overridden with explicit 'key' and/or
- * 'target' configuration keys. In addition, if the configuration key 'database'
- * is present, it is used as a database connection information array to define
- * the connection.
+ * Database configuration, which may appear either within the source plugin
+ * configuration or in state, is structured as follows:
+ *
+ * 'key' - The database key name (defaults to 'migrate').
+ * 'target' - The database target name (defaults to 'default').
+ * 'database' - Database connection information as accepted by
+ *   Database::addConnectionInfo(). If not present, the key/target is assumed
+ *   to already be defined (e.g., in settings.php).
+ *
+ * This configuration info is obtained in the following order:
+ *
+ * 1. If the source plugin configuration contains a key 'database_state_key',
+ *    its value is taken as the name of a state key which contains an array
+ *    with the above database configuration.
+ * 2. Otherwise, if the source plugin configuration contains 'key', the above
+ *    database configuration is obtained directly from the plugin configuration.
+ * 3. Otherwise, if the state 'migrate.fallback_state_key' exists, its value is
+ *    taken as the name of a state key which contains an array with the above
+ *    database configuration.
+ * 4. Otherwise, if a connection named 'migrate' exists, that is used as the
+ *    database connection.
+ * 5. Otherwise, RequirementsException is thrown.
+ *
+ * It is strongly recommended that database connections be explicitly defined
+ * via 'database_state_key' or in the source plugin configuration. Defining
+ * migrate.fallback_state_key or a 'migrate' connection affects not only any
+ * migrations intended to use that particular connection, but all
+ * SqlBase-derived source plugins which do not have explicit database
+ * configuration.
  */
 abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, RequirementsInterface {
 
@@ -101,16 +125,21 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    */
   public function getDatabase() {
     if (!isset($this->database)) {
-      // See if the database info is in state - if not, fallback to
-      // configuration.
+      // Look first for an explicit state key containing the configuration.
       if (isset($this->configuration['database_state_key'])) {
         $this->database = $this->setUpDatabase($this->state->get($this->configuration['database_state_key']));
       }
+      // Next, use explicit configuration in the source plugin.
+      elseif (isset($this->configuration['key'])) {
+        $this->database = $this->setUpDatabase($this->configuration);
+      }
+      // Next, try falling back to the global state key.
       elseif (($fallback_state_key = $this->state->get('migrate.fallback_state_key'))) {
         $this->database = $this->setUpDatabase($this->state->get($fallback_state_key));
       }
+      // If all else fails, let setUpDatabase() fallback to the 'migrate' key.
       else {
-        $this->database = $this->setUpDatabase($this->configuration);
+        $this->database = $this->setUpDatabase([]);
       }
     }
     return $this->database;
@@ -234,6 +263,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       //      OR above high water).
       $conditions = $this->query->orConditionGroup();
       $condition_added = FALSE;
+      $added_fields = [];
       if (empty($this->configuration['ignore_map']) && $this->mapJoinable()) {
         // Build the join to the map table. Because the source key could have
         // multiple fields, we need to build things up.
@@ -259,18 +289,21 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
         for ($count = 1; $count <= $n; $count++) {
           $map_key = 'sourceid' . $count;
           $this->query->addField($alias, $map_key, "migrate_map_$map_key");
+          $added_fields[] = "$alias.$map_key";
         }
         if ($n = count($this->migration->getDestinationIds())) {
           for ($count = 1; $count <= $n; $count++) {
             $map_key = 'destid' . $count++;
             $this->query->addField($alias, $map_key, "migrate_map_$map_key");
+            $added_fields[] = "$alias.$map_key";
           }
         }
         $this->query->addField($alias, 'source_row_status', 'migrate_map_source_row_status');
+        $added_fields[] = "$alias.source_row_status";
       }
       // 2. If we are using high water marks, also include rows above the mark.
       //    But, include all rows if the high water mark is not set.
-      if ($this->getHighWaterProperty() && ($high_water = $this->getHighWater()) !== '') {
+      if ($this->getHighWaterProperty() && ($high_water = $this->getHighWater())) {
         $high_water_field = $this->getHighWaterField();
         $conditions->condition($high_water_field, $high_water, '>');
         $this->query->orderBy($high_water_field);
@@ -278,6 +311,15 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       }
       if ($condition_added) {
         $this->query->condition($conditions);
+      }
+      // If the query has a group by, our added fields need it too, to keep the
+      // query valid.
+      // @see https://dev.mysql.com/doc/refman/5.7/en/group-by-handling.html
+      $group_by = $this->query->getGroupBy();
+      if ($group_by && $added_fields) {
+        foreach ($added_fields as $added_field) {
+          $this->query->groupBy($added_field);
+        }
       }
     }
 
@@ -354,6 +396,14 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       $source_database_options['driver'] === 'sqlite' &&
       $id_map_database_options['database'] != $source_database_options['database']
     ) {
+      return FALSE;
+    }
+
+    // FALSE if driver is PostgreSQL and database doesn't match.
+    if ($id_map_database_options['driver'] === 'pgsql' &&
+      $source_database_options['driver'] === 'pgsql' &&
+      $id_map_database_options['database'] != $source_database_options['database']
+      ) {
       return FALSE;
     }
 

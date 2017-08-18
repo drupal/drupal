@@ -7,8 +7,8 @@
 
 namespace Drupal\Tests\Component\Utility;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\Variable;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test variable export functionality in Variable component.
@@ -18,7 +18,7 @@ use Drupal\Component\Utility\Variable;
  *
  * @coversDefaultClass \Drupal\Component\Utility\Variable
  */
-class VariableTest extends UnitTestCase {
+class VariableTest extends TestCase {
 
   /**
    * Data provider for testExport().

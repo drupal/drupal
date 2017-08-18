@@ -73,7 +73,7 @@ function template_preprocess_file_widget_multiple(&$variables) {
 
     // Render everything else together in a column, without the normal wrappers.
     $widget['#theme_wrappers'] = [];
-    $information = drupal_render($widget);
+    $information = \Drupal::service('renderer')->render($widget);
     $display = '';
     if ($element['#display_field']) {
       unset($widget['display']['#title']);

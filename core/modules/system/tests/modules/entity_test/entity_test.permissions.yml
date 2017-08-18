@@ -12,6 +12,8 @@ administer entity_test_with_bundle content:
   description: 'administer entity_test_with_bundle content'
 administer entity_test_bundle content:
   title: 'administer entity_test_bundle content'
+view all entity_test_query_access entities:
+  title: 'view all entity_test_query_access entities'
 
 permission_callbacks:
   - \Drupal\entity_test\EntityTestPermissions::entityTestBundlePermissions

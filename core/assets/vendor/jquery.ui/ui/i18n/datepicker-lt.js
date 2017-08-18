@@ -1,37 +1,4 @@
-/* Lithuanian (UTF-8) initialisation for the jQuery UI date picker plugin. */
-/* @author Arturas Paleicikas <arturas@avalon.lt> */
-(function( factory ) {
-	if ( typeof define === "function" && define.amd ) {
-
-		// AMD. Register as an anonymous module.
-		define([ "../datepicker" ], factory );
-	} else {
-
-		// Browser globals
-		factory( jQuery.datepicker );
-	}
-}(function( datepicker ) {
-
-datepicker.regional['lt'] = {
-	closeText: 'Uždaryti',
-	prevText: '&#x3C;Atgal',
-	nextText: 'Pirmyn&#x3E;',
-	currentText: 'Šiandien',
-	monthNames: ['Sausis','Vasaris','Kovas','Balandis','Gegužė','Birželis',
-	'Liepa','Rugpjūtis','Rugsėjis','Spalis','Lapkritis','Gruodis'],
-	monthNamesShort: ['Sau','Vas','Kov','Bal','Geg','Bir',
-	'Lie','Rugp','Rugs','Spa','Lap','Gru'],
-	dayNames: ['sekmadienis','pirmadienis','antradienis','trečiadienis','ketvirtadienis','penktadienis','šeštadienis'],
-	dayNamesShort: ['sek','pir','ant','tre','ket','pen','šeš'],
-	dayNamesMin: ['Se','Pr','An','Tr','Ke','Pe','Še'],
-	weekHeader: 'SAV',
-	dateFormat: 'yy-mm-dd',
-	firstDay: 1,
-	isRTL: false,
-	showMonthAfterYear: true,
-	yearSuffix: ''};
-datepicker.setDefaults(datepicker.regional['lt']);
-
-return datepicker.regional['lt'];
-
-}));
+/*! jQuery UI - v1.12.1 - 2017-03-31
+* http://jqueryui.com
+* Copyright jQuery Foundation and other contributors; Licensed  */
+!function(a){"function"==typeof define&&define.amd?define(["../widgets/datepicker"],a):a(jQuery.datepicker)}(function(a){return a.regional.lt={closeText:"Uždaryti",prevText:"&#x3C;Atgal",nextText:"Pirmyn&#x3E;",currentText:"Šiandien",monthNames:["Sausis","Vasaris","Kovas","Balandis","Gegužė","Birželis","Liepa","Rugpjūtis","Rugsėjis","Spalis","Lapkritis","Gruodis"],monthNamesShort:["Sau","Vas","Kov","Bal","Geg","Bir","Lie","Rugp","Rugs","Spa","Lap","Gru"],dayNames:["sekmadienis","pirmadienis","antradienis","trečiadienis","ketvirtadienis","penktadienis","šeštadienis"],dayNamesShort:["sek","pir","ant","tre","ket","pen","šeš"],dayNamesMin:["Se","Pr","An","Tr","Ke","Pe","Še"],weekHeader:"SAV",dateFormat:"yy-mm-dd",firstDay:1,isRTL:!1,showMonthAfterYear:!0,yearSuffix:""},a.setDefaults(a.regional.lt),a.regional.lt});

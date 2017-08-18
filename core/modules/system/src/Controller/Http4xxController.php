@@ -10,6 +10,18 @@ use Drupal\Core\Controller\ControllerBase;
 class Http4xxController extends ControllerBase {
 
   /**
+   * The default 4xx error content.
+   *
+   * @return array
+   *   A render array containing the message to display for 4xx errors.
+   */
+  public function on4xx() {
+    return [
+      '#markup' => $this->t('A client error happened'),
+    ];
+  }
+
+  /**
    * The default 401 content.
    *
    * @return array

@@ -1,0 +1,118 @@
+/**
+ * @file
+ * Visual styling for buttons in the off canvas tray.
+ *
+ * See seven/css/components/buttons.css
+ */
+
+#drupal-off-canvas button,
+#drupal-off-canvas .button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  margin: 0 0 10px;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  font-family: "Lucida Grande", 'Lucida Sans Unicode', 'liberation sans', sans-serif;
+  line-height: normal;
+  text-transform: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+#drupal-off-canvas button.link {
+  display: inline;
+  background: transparent;
+  font-size: 14px;
+  color: #85bef4;
+  transition: color .5s ease;
+}
+#drupal-off-canvas button.link:hover,
+#drupal-off-canvas button.link:focus {
+  color: #46a0f5;
+  text-decoration: none;
+}
+#drupal-off-canvas input[type="submit"].button {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding: 4px 20px;
+  border: 0;
+  border-radius: 20em;
+  background: #777;
+  font-weight: 600;
+  font-size: 14px;
+  color: #f5f5f5;
+  text-align: center;
+  cursor: pointer;
+  transition: background .5s ease;
+}
+#drupal-off-canvas input[type="submit"].button:hover,
+#drupal-off-canvas input[type="submit"].button:focus,
+#drupal-off-canvas input[type="submit"].button:active {
+  border: 0;
+  color: #fff;
+  text-decoration: none;
+  outline: none;
+  z-index: 10;
+}
+#drupal-off-canvas input[type="submit"].button:focus,
+#drupal-off-canvas input[type="submit"].button:active {
+  box-shadow: 0 3px 3px 2px rgba(0,0,0,0.1);
+}
+#drupal-off-canvas input[type="submit"].button--primary {
+  border: 0;
+  background: #277abd;
+  color: #fff;
+  margin-top: 15px;
+}
+#drupal-off-canvas input[type="submit"].button--primary:hover,
+#drupal-off-canvas input[type="submit"].button--primary:focus,
+#drupal-off-canvas input[type="submit"].button--primary:active {
+  background: #2b8bd8;
+  outline: none;
+}
+#drupal-off-canvas .button-action:before {
+  margin-left: -0.2em; /* LTR */
+  padding-right: 0.2em; /* LTR */
+  font-size: 14px;
+  line-height: 16px;
+}
+[dir="rtl"] #drupal-off-canvas .button-action:before {
+  margin-right: -0.2em;
+  margin-left: 0;
+  padding-right: 0;
+  padding-left: 0.2em;
+}
+#drupal-off-canvas .no-touchevents .button--small {
+  font-size: 13px;
+  padding: 2px 1em;
+}
+#drupal-off-canvas .button:disabled,
+#drupal-off-canvas .button:disabled:active,
+#drupal-off-canvas .button.is-disabled,
+#drupal-off-canvas .button.is-disabled:active {
+  border: 0;
+  background: #555;
+  color: #5c5c5c;
+  font-weight: normal;
+  cursor: default;
+}
+#drupal-off-canvas .button--danger {
+  border-radius: 0;
+  color: #c72100;
+  font-weight: 400;
+  text-decoration: none;
+}
+#drupal-off-canvas .button--danger:hover,
+#drupal-off-canvas .button--danger:focus,
+#drupal-off-canvas .button--danger:active {
+  color: #ff2a00;
+  text-decoration: none;
+  text-shadow: none;
+}
+#drupal-off-canvas .button--danger:disabled,
+#drupal-off-canvas .button--danger.is-disabled {
+  color: #737373;
+  cursor: default;
+}

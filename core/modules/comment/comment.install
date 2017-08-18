@@ -184,3 +184,14 @@ function comment_update_8301() {
   $entity_type->set('entity_keys', $keys);
   $definition_update_manager->updateEntityType($entity_type);
 }
+
+/**
+ * Update the status field.
+ */
+function comment_update_8400() {
+  // The status field was promoted to an entity key in comment_update_8301(),
+  // which makes it NOT NULL in the default SQL storage, which means its storage
+  // definition needs to be updated as well.
+  $entity_definition_update_manager = \Drupal::service('entity.definition_update_manager');
+  $entity_definition_update_manager->updateFieldStorageDefinition($entity_definition_update_manager->getFieldStorageDefinition('status', 'comment'));
+}

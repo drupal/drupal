@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\Component\Datetime;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Datetime\DateTimePlus;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\Datetime\DateTimePlus
  * @group Datetime
  */
-class DateTimePlusTest extends UnitTestCase {
+class DateTimePlusTest extends TestCase {
 
   /**
    * Test creating dates from string and array input.
@@ -293,7 +293,7 @@ class DateTimePlusTest extends UnitTestCase {
    * @see DateTimePlusTest::testDates()
    */
   public function providerTestDates() {
-    return [
+    $dates = [
       // String input.
       // Create date object from datetime string.
       ['2009-03-07 10:30', 'America/Chicago', '2009-03-07T10:30:00-06:00'],
@@ -308,6 +308,19 @@ class DateTimePlusTest extends UnitTestCase {
       // Same during daylight savings time.
       ['2009-06-07 10:30', 'Australia/Canberra', '2009-06-07T10:30:00+10:00'],
     ];
+
+    // On 32-bit systems, timestamps are limited to 1901-2038.
+    if (PHP_INT_SIZE > 4) {
+      // Create a date object in the distant past.
+      // @see https://www.drupal.org/node/2795489#comment-12127088
+      if (version_compare(PHP_VERSION, '5.6.15', '>=')) {
+        $dates[] = ['1809-02-12 10:30', 'America/Chicago', '1809-02-12T10:30:00-06:00'];
+      }
+      // Create a date object in the far future.
+      $dates[] = ['2345-01-02 02:04', 'UTC', '2345-01-02T02:04:00+00:00'];
+    }
+
+    return $dates;
   }
 
   /**
@@ -320,7 +333,7 @@ class DateTimePlusTest extends UnitTestCase {
    * @see DateTimePlusTest::testDates()
    */
   public function providerTestDateArrays() {
-    return [
+    $dates = [
       // Array input.
       // Create date object from date array, date only.
       [['year' => 2010, 'month' => 2, 'day' => 28], 'America/Chicago', '2010-02-28T00:00:00-06:00'],
@@ -331,6 +344,19 @@ class DateTimePlusTest extends UnitTestCase {
       // Create date object from date array with hour.
       [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 10], 'Europe/Berlin', '2010-02-28T10:00:00+01:00'],
     ];
+
+    // On 32-bit systems, timestamps are limited to 1901-2038.
+    if (PHP_INT_SIZE > 4) {
+      // Create a date object in the distant past.
+      // @see https://www.drupal.org/node/2795489#comment-12127088
+      if (version_compare(PHP_VERSION, '5.6.15', '>=')) {
+        $dates[] = [['year' => 1809, 'month' => 2, 'day' => 12], 'America/Chicago', '1809-02-12T00:00:00-06:00'];
+      }
+      // Create a date object in the far future.
+      $dates[] = [['year' => 2345, 'month' => 1, 'day' => 2], 'UTC', '2345-01-02T00:00:00+00:00'];
+    }
+
+    return $dates;
   }
 
   /**

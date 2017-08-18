@@ -5,8 +5,17 @@
  * Field UI test module.
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Field\FieldConfigInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function field_ui_test_field_config_access(FieldConfigInterface $field) {
+  return AccessResult::forbiddenIf($field->getName() == 'highlander');
+}
 
 /**
  * Implements hook_form_FORM_BASE_ID_alter().

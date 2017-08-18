@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Config;
 
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
+use Drupal\Core\Config\Schema\TypedConfigInterface;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
@@ -68,6 +69,24 @@ class TypedConfigTest extends KernelTestBase {
     $this->assertEquals(2, count($sequence->getIterator()));
     // Verify the item metadata is available.
     $this->assertInstanceOf(SequenceDataDefinition::class, $sequence->getDataDefinition());
+
+    // Test accessing typed config objects for simple config and config
+    // entities.
+    $typed_config_manager = \Drupal::service('config.typed');
+    $typed_config = $typed_config_manager->createFromNameAndData('config_test.validation', \Drupal::configFactory()->get('config_test.validation')->get());
+    $this->assertInstanceOf(TypedConfigInterface::class, $typed_config);
+    $this->assertEquals(['llama', 'cat', 'giraffe', 'uuid', '_core'], array_keys($typed_config->getElements()));
+
+    $config_test_entity = \Drupal::entityTypeManager()->getStorage('config_test')->create([
+      'id' => 'asterix',
+      'label' => 'Asterix',
+      'weight' => 11,
+      'style' => 'test_style',
+    ]);
+
+    $typed_config = $typed_config_manager->createFromNameAndData($config_test_entity->getConfigDependencyName(), $config_test_entity->toArray());
+    $this->assertInstanceOf(TypedConfigInterface::class, $typed_config);
+    $this->assertEquals(['uuid', 'langcode', 'status', 'dependencies', 'id', 'label', 'weight', 'style', 'size', 'size_value', 'protected_property'], array_keys($typed_config->getElements()));
   }
 
   /**

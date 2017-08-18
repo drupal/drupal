@@ -144,7 +144,7 @@ interface ModuleHandlerInterface {
    *   // Load node.admin.inc from the node module.
    *   $this->loadInclude('node', 'inc', 'node.admin');
    *   // Load content_types.inc from the node module.
-   *   $this->loadInclude('node', 'inc', ''content_types');
+   *   $this->loadInclude('node', 'inc', 'content_types');
    * @endcode
    *
    * @param string $module

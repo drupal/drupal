@@ -131,9 +131,7 @@ abstract class StorableConfigBase extends ConfigBase {
    */
   protected function getSchemaWrapper() {
     if (!isset($this->schemaWrapper)) {
-      $definition = $this->typedConfigManager->getDefinition($this->name);
-      $data_definition = $this->typedConfigManager->buildDataDefinition($definition, $this->data);
-      $this->schemaWrapper = $this->typedConfigManager->create($data_definition, $this->data);
+      $this->schemaWrapper = $this->typedConfigManager->createFromNameAndData($this->name, $this->data);
     }
     return $this->schemaWrapper;
   }

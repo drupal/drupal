@@ -6,6 +6,7 @@ deriver: Drupal\node\Plugin\migrate\D6NodeDeriver
 source:
   plugin: d6_node
   translations: true
+  source_module: translation
 process:
   # If you are using this file to build a custom migration consider removing
   # the nid field to allow incremental migrations.
@@ -41,6 +42,7 @@ process:
 destination:
   plugin: entity:node
   translations: true
+  destination_module: content_translation
 migration_dependencies:
   required:
     - d6_user
@@ -52,4 +54,3 @@ migration_dependencies:
     - d6_field_instance_widget_settings
     - d6_field_formatter_settings
     - d6_upload_field_instance
-provider: migrate_drupal

@@ -55,6 +55,8 @@ process:
         optionwidgets_onoff: boolean_checkbox
         optionwidgets_buttons: options_buttons
         optionwidgets_select: options_select
+        nodereference_select: options_select
+        userreference_select: options_select
   'options/settings':
     -
       plugin: field_instance_widget_settings
