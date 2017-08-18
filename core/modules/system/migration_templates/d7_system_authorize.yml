@@ -1,4 +1,5 @@
 id: d7_system_authorize
+label: Drupal 7 file transfer authorize configuration
 migration_tags:
   - Drupal 7
 source:
