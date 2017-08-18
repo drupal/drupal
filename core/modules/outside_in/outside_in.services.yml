@@ -4,3 +4,8 @@ services:
     arguments: ['@title_resolver', '@renderer']
     tags:
       - { name: render.main_content_renderer, format: drupal_dialog.off_canvas }
+
+  access_check.outside_in.block.off_canvas_form:
+    class: Drupal\outside_in\Access\BlockPluginHasOffCanvasFormAccessCheck
+    tags:
+      - { name: access_check, applies_to: _access_block_plugin_has_offcanvas_form }
