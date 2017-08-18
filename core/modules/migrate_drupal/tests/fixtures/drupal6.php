@@ -1942,6 +1942,54 @@ $connection->insert('comments')
   'mail' => 'comment3@example.com',
   'homepage' => 'https://www.drupal.org',
 ))
+->values(array(
+  'cid' => '4',
+  'pid' => '0',
+  'nid' => '19',
+  'uid' => '1',
+  'subject' => 'Subject 1',
+  'comment' => 'Comment 1',
+  'hostname' => '127.0.0.1',
+  'timestamp' => '1501955780',
+  'status' => '0',
+  'format' => '1',
+  'thread' => '01/',
+  'name' => 'root',
+  'mail' => '',
+  'homepage' => '',
+))
+->values(array(
+  'cid' => '5',
+  'pid' => '4',
+  'nid' => '19',
+  'uid' => '1',
+  'subject' => 'Subject 2',
+  'comment' => 'Comment 2',
+  'hostname' => '127.0.0.1',
+  'timestamp' => '1501955792',
+  'status' => '0',
+  'format' => '1',
+  'thread' => '01.00/',
+  'name' => 'root',
+  'mail' => '',
+  'homepage' => '',
+))
+->values(array(
+  'cid' => '6',
+  'pid' => '5',
+  'nid' => '19',
+  'uid' => '1',
+  'subject' => 'Subject 3',
+  'comment' => 'Comment 3',
+  'hostname' => '127.0.0.1',
+  'timestamp' => '1501955803',
+  'status' => '0',
+  'format' => '1',
+  'thread' => '01.00.00/',
+  'name' => 'root',
+  'mail' => '',
+  'homepage' => '',
+))
 ->execute();
 
 $connection->schema()->createTable('config', array(
@@ -8345,6 +8393,19 @@ $connection->schema()->createTable('forum', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('forum')
+->fields(array(
+  'nid',
+  'vid',
+  'tid',
+))
+->values(array(
+  'nid' => '19',
+  'vid' => '22',
+  'tid' => '8',
+))
+->execute();
+
 $connection->schema()->createTable('history', array(
   'fields' => array(
     'uid' => array(
@@ -8423,6 +8484,11 @@ $connection->insert('history')
   'uid' => '1',
   'nid' => '18',
   'timestamp' => '1493066711',
+))
+->values(array(
+  'uid' => '1',
+  'nid' => '19',
+  'timestamp' => '1501955803',
 ))
 ->execute();
 
@@ -9564,6 +9630,14 @@ $connection->insert('i18n_strings')
   'type' => 'vocabulary',
   'property' => 'name',
   'objectindex' => '6',
+  'format' => '0',
+))
+->values(array(
+  'lid' => '1673',
+  'objectid' => '7',
+  'type' => 'vocabulary',
+  'property' => 'name',
+  'objectindex' => '7',
   'format' => '0',
 ))
 ->execute();
@@ -22023,6 +22097,13 @@ $connection->insert('locales_source')
   'location' => 'vocabulary:6:name',
   'textgroup' => 'taxonomy',
   'source' => 'Type',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '1673',
+  'location' => 'vocabulary:7:name',
+  'textgroup' => 'taxonomy',
+  'source' => 'Forums',
   'version' => '1',
 ))
 ->execute();
@@ -43185,6 +43266,23 @@ $connection->insert('node')
   'tnid' => '0',
   'translate' => '0',
 ))
+->values(array(
+  'nid' => '19',
+  'vid' => '22',
+  'type' => 'forum',
+  'language' => '',
+  'title' => 'New Forum Topic',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1501955771',
+  'changed' => '1501955771',
+  'comment' => '2',
+  'promote' => '0',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('node_access', array(
@@ -43384,6 +43482,13 @@ $connection->insert('node_comment_statistics')
   'last_comment_uid' => '1',
   'comment_count' => '0',
 ))
+->values(array(
+  'nid' => '19',
+  'last_comment_timestamp' => '1501955803',
+  'last_comment_name' => '',
+  'last_comment_uid' => '1',
+  'comment_count' => '3',
+))
 ->execute();
 
 $connection->schema()->createTable('node_counter', array(
@@ -43458,6 +43563,12 @@ $connection->insert('node_counter')
   'totalcount' => '1',
   'daycount' => '1',
   'timestamp' => '1493066711',
+))
+->values(array(
+  'nid' => '19',
+  'totalcount' => '4',
+  'daycount' => '4',
+  'timestamp' => '1501955803',
 ))
 ->execute();
 
@@ -43763,6 +43874,17 @@ $connection->insert('node_revisions')
   'teaser' => "Yeah, I like animals better than people sometimes... Especially dogs. Dogs are the best. Every time you come home, they act like they haven't seen you in a year. And the good thing about dogs... is they got different dogs for different people. Like pit bulls. The dog of dogs. Pit bull can be the right man's best friend... or the wrong man's worst enemy. You going to give me a dog for a pet, give me a pit bull. Give me... Raoul. Right, Omar?",
   'log' => '',
   'timestamp' => '1494966544',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '19',
+  'vid' => '22',
+  'uid' => '1',
+  'title' => 'New Forum Topic',
+  'body' => 'New Forum Body',
+  'teaser' => 'New Forum Body',
+  'log' => '',
+  'timestamp' => '1501955771',
   'format' => '1',
 ))
 ->execute();
@@ -46041,6 +46163,15 @@ $connection->insert('term_data')
   'language' => 'fr',
   'trid' => '0',
 ))
+->values(array(
+  'tid' => '8',
+  'vid' => '7',
+  'name' => 'General discussion',
+  'description' => '',
+  'weight' => '0',
+  'language' => '',
+  'trid' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('term_hierarchy', array(
@@ -46086,6 +46217,10 @@ $connection->insert('term_hierarchy')
 ))
 ->values(array(
   'tid' => '7',
+  'parent' => '0',
+))
+->values(array(
+  'tid' => '8',
   'parent' => '0',
 ))
 ->values(array(
@@ -46172,6 +46307,11 @@ $connection->insert('term_node')
   'nid' => '1',
   'vid' => '2',
   'tid' => '5',
+))
+->values(array(
+  'nid' => '19',
+  'vid' => '22',
+  'tid' => '8',
 ))
 ->execute();
 
@@ -47651,7 +47791,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'forum_nav_vocabulary',
-  'value' => 's:1:"1";',
+  'value' => 's:1:"7";',
 ))
 ->values(array(
   'name' => 'forum_order',
@@ -48255,6 +48395,20 @@ $connection->insert('vocabulary')
   'weight' => '0',
   'language' => '',
 ))
+->values(array(
+  'vid' => '7',
+  'name' => 'Forums',
+  'description' => '',
+  'help' => '',
+  'relations' => '1',
+  'hierarchy' => '0',
+  'multiple' => '0',
+  'required' => '0',
+  'tags' => '0',
+  'module' => 'taxonomy',
+  'weight' => '0',
+  'language' => '',
+))
 ->execute();
 
 $connection->schema()->createTable('vocabulary_node_types', array(
@@ -48290,7 +48444,7 @@ $connection->insert('vocabulary_node_types')
   'type' => 'article',
 ))
 ->values(array(
-  'vid' => '1',
+  'vid' => '7',
   'type' => 'forum',
 ))
 ->values(array(
