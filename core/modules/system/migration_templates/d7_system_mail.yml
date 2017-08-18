@@ -1,4 +1,5 @@
 id: d7_system_mail
+label: Drupal 7 system mail configuration
 migration_tags:
   - Drupal 7
 source:

@@ -1,4 +1,5 @@
 id: d7_system_date
+label: Drupal 7 system date configuration
 migration_tags:
   - Drupal 7
 source:
