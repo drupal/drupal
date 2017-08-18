@@ -28,8 +28,8 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *     -
  *       channel_machine_name: movies
  *       channel_description: Movies
- *     ids:
- *       channel_machine_name:
+ *   ids:
+ *     channel_machine_name:
  *       type: string
  * @endcode
  *
