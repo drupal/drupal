@@ -223,7 +223,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    *      - ucwords: Make each word in the string uppercase.
    *
    * @return string
-   *    The transformed string.
+   *   The transformed string.
    */
   protected function caseTransform($string, $option) {
     switch ($option) {

@@ -326,7 +326,7 @@ class DateTimePlus {
    *    Should the interval be forced to be positive?
    *
    * @return \DateInterval
-   *    A DateInterval object representing the difference between the two dates.
+   *   A DateInterval object representing the difference between the two dates.
    *
    * @throws \BadMethodCallException
    *    If the input isn't a DateTime or DateTimePlus object.

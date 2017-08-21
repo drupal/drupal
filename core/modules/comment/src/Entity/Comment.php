@@ -560,7 +560,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * @see ::baseFieldDefinitions()
    *
    * @return bool
-   *  TRUE if the comment should be published, FALSE otherwise.
+   *   TRUE if the comment should be published, FALSE otherwise.
    */
   public static function getDefaultStatus() {
     return \Drupal::currentUser()->hasPermission('skip comment approval') ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED;

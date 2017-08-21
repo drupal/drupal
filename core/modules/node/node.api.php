@@ -320,7 +320,7 @@ function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface 
  *   The user object to perform the access check operation on.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
- *    The access result.
+ *   The access result.
  *
  * @ingroup node_access
  */

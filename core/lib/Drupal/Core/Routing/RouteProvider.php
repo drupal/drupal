@@ -138,11 +138,11 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
    * @param Request $request
    *   A request against which to match.
    *
-   * @return \Symfony\Component\Routing\RouteCollection with all urls that
-   *      could potentially match $request. Empty collection if nothing can
-   *      match. The collection will be sorted from highest to lowest fit (match
-   *      of path parts) and then in ascending order by route name for routes
-   *      with the same fit.
+   * @return \Symfony\Component\Routing\RouteCollection
+   *   RouteCollection with all urls that could potentially match $request.
+   *   Empty collection if nothing can match. The collection will be sorted from
+   *   highest to lowest fit (match of path parts) and then in ascending order
+   *   by route name for routes with the same fit.
    */
   public function getRouteCollectionForRequest(Request $request) {
     // Cache both the system path as well as route parameters and matching
