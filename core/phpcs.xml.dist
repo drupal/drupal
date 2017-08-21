@@ -56,7 +56,6 @@
     <exclude name="Drupal.Commenting.FunctionComment.MissingReturnType"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentFullStop"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentIndentation"/>
-    <exclude name="Drupal.Commenting.FunctionComment.ParamCommentNewLine"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentNotCapital"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamMissingDefinition"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamNameNoMatch"/>
