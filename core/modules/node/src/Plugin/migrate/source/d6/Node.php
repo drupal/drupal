@@ -178,24 +178,24 @@ class Node extends DrupalSqlBase {
   }
 
   /**
-   * Gets CCK field values for a node.
+   * Gets field values for a node.
    *
    * @param \Drupal\migrate\Row $node
    *   The node.
    *
    * @return array
-   *   CCK field values, keyed by field name.
+   *   Field values, keyed by field name.
    */
   protected function getFieldValues(Row $node) {
     $values = [];
     foreach ($this->getFieldInfo($node->getSourceProperty('type')) as $field => $info) {
-      $values[$field] = $this->getCckData($info, $node);
+      $values[$field] = $this->getFieldData($info, $node);
     }
     return $values;
   }
 
   /**
-   * Gets CCK field and instance definitions from the database.
+   * Gets field and instance definitions from the database.
    *
    * @param string $node_type
    *   The node type for which to get field info.
@@ -207,7 +207,7 @@ class Node extends DrupalSqlBase {
     if (!isset($this->fieldInfo)) {
       $this->fieldInfo = [];
 
-      // Query the database directly for all CCK field info.
+      // Query the database directly for all field info.
       $query = $this->select('content_node_field_instance', 'cnfi');
       $query->join('content_node_field', 'cnf', 'cnf.field_name = cnfi.field_name');
       $query->fields('cnfi');
@@ -232,7 +232,7 @@ class Node extends DrupalSqlBase {
   }
 
   /**
-   * Retrieves raw CCK field data for a node.
+   * Retrieves raw field data for a node.
    *
    * @param array $field
    *   A field and instance definition from getFieldInfo().
@@ -242,7 +242,7 @@ class Node extends DrupalSqlBase {
    * @return array
    *   The field values, keyed by delta.
    */
-  protected function getCckData(array $field, Row $node) {
+  protected function getFieldData(array $field, Row $node) {
     $field_table = 'content_' . $field['field_name'];
     $node_table = 'content_type_' . $node->getSourceProperty('type');
 
@@ -278,10 +278,9 @@ class Node extends DrupalSqlBase {
 
       return $query
         // This call to isNotNull() is a kludge which relies on the convention
-        // that CCK field schemas usually define their most important
-        // column first. A better way would be to allow cckfield plugins to
-        // alter the query directly before it's run, but this will do for
-        // the time being.
+        // that field schemas usually define their most important column first.
+        // A better way would be to allow field plugins to alter the query
+        // directly before it's run, but this will do for the time being.
         ->isNotNull($field['field_name'] . '_' . $columns[0])
         ->condition('nid', $node->getSourceProperty('nid'))
         ->condition('vid', $node->getSourceProperty('vid'))
@@ -291,6 +290,24 @@ class Node extends DrupalSqlBase {
     else {
       return [];
     }
+  }
+
+  /**
+   * Retrieves raw field data for a node.
+   *
+   * @deprecated in Drupal 8.2.x, to be removed in Drupal 9.0.x. Use
+   *   getFieldData() instead.
+   *
+   * @param array $field
+   *   A field and instance definition from getFieldInfo().
+   * @param \Drupal\migrate\Row $node
+   *   The node.
+   *
+   * @return array
+   *   The field values, keyed by delta.
+   */
+  protected function getCckData(array $field, Row $node) {
+    return $this->getFieldData($field, $node);
   }
 
   /**

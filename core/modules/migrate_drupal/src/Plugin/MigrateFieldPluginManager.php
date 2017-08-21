@@ -7,7 +7,7 @@ use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
- * Plugin manager for migrate cckfield plugins.
+ * Plugin manager for migrate field plugins.
  *
  * @see \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
  * @see \Drupal\migrate\Annotation\MigrateField

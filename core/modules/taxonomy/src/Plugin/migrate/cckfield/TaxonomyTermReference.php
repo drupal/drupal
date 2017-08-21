@@ -2,6 +2,8 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\cckfield;
 
+@trigger_error('TaxonomyTermReference is deprecated in Drupal 8.4.x and will be removed before Drupal 9.0.x. Use \Drupal\taxonomy\Plugin\migrate\field\TaxonomyTermReference instead.', E_USER_DEPRECATED);
+
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 
@@ -13,6 +15,11 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   },
  *   core = {6,7}
  * )
+ *
+ * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use
+ * \Drupal\taxonomy\Plugin\migrate\field\TaxonomyTermReference instead.
+ *
+ * @see https://www.drupal.org/node/2751897
  */
 class TaxonomyTermReference extends CckFieldPluginBase {
 

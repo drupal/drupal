@@ -2,6 +2,8 @@
 
 namespace Drupal\file\Plugin\migrate\cckfield\d7;
 
+@trigger_error('FileField is deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.x. Use \Drupal\file\Plugin\migrate\field\d7\FileField instead.', E_USER_DEPRECATED);
+
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
@@ -11,6 +13,11 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   id = "file",
  *   core = {7}
  * )
+ *
+ * @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use
+ * \Drupal\file\Plugin\migrate\field\d7\FileField instead.
+ *
+ * @see https://www.drupal.org/node/2751897
  */
 class FileField extends CckFieldPluginBase {
 

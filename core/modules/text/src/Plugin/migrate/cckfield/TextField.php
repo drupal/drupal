@@ -2,6 +2,8 @@
 
 namespace Drupal\text\Plugin\migrate\cckfield;
 
+@trigger_error('TextField is deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.x. Use \Drupal\text\Plugin\migrate\field\d6\TextField or \Drupal\text\Plugin\migrate\field\d7\TextField instead.', E_USER_DEPRECATED);
+
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
@@ -16,6 +18,12 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   },
  *   core = {6,7}
  * )
+ *
+ * @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use
+ * \Drupal\text\Plugin\migrate\field\d6\TextField or
+ * \Drupal\text\Plugin\migrate\field\d7\TextField instead.
+ *
+ * @see https://www.drupal.org/node/2751897
  */
 class TextField extends CckFieldPluginBase {
 
