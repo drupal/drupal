@@ -923,7 +923,6 @@ function file_unmanaged_delete_recursive($path, $callback = NULL) {
 }
 
 
-
 /**
  * Moves an uploaded file to a new location.
  *

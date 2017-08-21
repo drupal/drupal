@@ -432,7 +432,6 @@ class DateTimePlus {
   }
 
 
-
   /**
    * Examines getLastErrors() to see what errors to report.
    *

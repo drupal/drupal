@@ -328,7 +328,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $url->setOption('query', []);
 
 
-
     // DX: 406 when ?_format is missing, except when requesting a canonical HTML
     // route.
     $response = $this->request('GET', $url, $request_options);
@@ -371,7 +370,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('GET', $url, $request_options);
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response);
     $this->assertArrayNotHasKey('Link', $response->getHeaders());
-
 
 
     $this->setUpAuthorization('GET');
@@ -999,7 +997,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 400 when unparseable request body.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(400, 'Syntax error', $response);
-
 
 
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;

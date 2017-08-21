@@ -1199,7 +1199,6 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
 
-
   /**
    * Sanitizes the HTML select element's options.
    *
