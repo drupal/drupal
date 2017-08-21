@@ -259,7 +259,7 @@ class OptionsFieldUITest extends FieldTestBase {
    * Helper function to create list field of a given type.
    *
    * @param string $type
-   *   'list_integer', 'list_float' or 'list_string'
+   *   One of 'list_integer', 'list_float' or 'list_string'.
    */
   protected function createOptionsField($type) {
     // Create a field.
