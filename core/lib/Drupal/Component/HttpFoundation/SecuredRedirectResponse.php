@@ -2,7 +2,7 @@
 
 namespace Drupal\Component\HttpFoundation;
 
-use \Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provides a common base class for safe redirects.

@@ -7,7 +7,7 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
-use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * Provides a base class for configuration objects with get/set support.

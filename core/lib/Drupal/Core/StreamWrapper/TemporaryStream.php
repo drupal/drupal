@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use \Drupal\Core\Url;
+use Drupal\Core\Url;
 
 /**
  * Defines a Drupal temporary (temporary://) stream wrapper class.

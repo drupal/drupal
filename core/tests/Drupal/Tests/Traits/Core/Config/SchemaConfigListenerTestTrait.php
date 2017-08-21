@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\Traits\Core\Config;
 
-use \Drupal\Core\Config\Schema\SchemaIncompleteException;
+use Drupal\Core\Config\Schema\SchemaIncompleteException;
 
 /**
  * Adds a test for the configuration schema checker use in tests.

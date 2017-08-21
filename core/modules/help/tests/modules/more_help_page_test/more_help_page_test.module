@@ -5,7 +5,7 @@
  * More Help Page Test module to test the help blocks.
  */
 
-use \Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().

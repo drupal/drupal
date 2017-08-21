@@ -5,7 +5,7 @@
  * Helper module for the Common tests.
  */
 
-use \Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 
 /**
  * Applies #printed to an element to help test #pre_render.

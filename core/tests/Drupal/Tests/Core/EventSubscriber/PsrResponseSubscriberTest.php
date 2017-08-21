@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Tests\UnitTestCase;
-use \Drupal\Core\EventSubscriber\PsrResponseSubscriber;
+use Drupal\Core\EventSubscriber\PsrResponseSubscriber;
 
 /**
  * @coversDefaultClass \Drupal\Core\EventSubscriber\PsrResponseSubscriber
