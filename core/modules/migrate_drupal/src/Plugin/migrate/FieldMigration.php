@@ -141,24 +141,24 @@ class FieldMigration extends Migration implements ContainerFactoryPluginInterfac
 
         try {
           $plugin_id = $this->cckPluginManager->getPluginIdFromFieldType($field_type, [], $this);
-          $Manager = $this->cckPluginManager;
+          $manager = $this->cckPluginManager;
         }
         catch (PluginNotFoundException $ex) {
           try {
             $plugin_id = $this->fieldPluginManager->getPluginIdFromFieldType($field_type, [], $this);
-            $Manager = $this->fieldPluginManager;
+            $manager = $this->fieldPluginManager;
           }
           catch (PluginNotFoundException $ex) {
             continue;
           }
         }
 
-        if (!isset($this->processedFieldTypes[$field_type]) && $Manager->hasDefinition($plugin_id)) {
+        if (!isset($this->processedFieldTypes[$field_type]) && $manager->hasDefinition($plugin_id)) {
           $this->processedFieldTypes[$field_type] = TRUE;
           // Allow the field plugin to alter the migration as necessary so that
           // it knows how to handle fields of this type.
           if (!isset($this->fieldPluginCache[$field_type])) {
-            $this->fieldPluginCache[$field_type] = $Manager->createInstance($plugin_id, [], $this);
+            $this->fieldPluginCache[$field_type] = $manager->createInstance($plugin_id, [], $this);
           }
         }
         $method = $this->pluginDefinition[static::PLUGIN_METHOD];

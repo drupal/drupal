@@ -87,7 +87,7 @@ class SimpleTestBrowserTest extends WebTestBase {
     $this->drupalLogout();
 
     $system_path = $base_url . '/' . drupal_get_path('module', 'system');
-    $HTTP_path = $system_path . '/tests/http.php/user/login';
+    $http_path = $system_path . '/tests/http.php/user/login';
     $https_path = $system_path . '/tests/https.php/user/login';
     // Generate a valid simpletest User-Agent to pass validation.
     $this->assertTrue(preg_match('/test\d+/', $this->databasePrefix, $matches), 'Database prefix contains test prefix.');
@@ -95,14 +95,14 @@ class SimpleTestBrowserTest extends WebTestBase {
     $this->additionalCurlOptions = [CURLOPT_USERAGENT => $test_ua];
 
     // Test pages only available for testing.
-    $this->drupalGet($HTTP_path);
+    $this->drupalGet($http_path);
     $this->assertResponse(200, 'Requesting http.php with a legitimate simpletest User-Agent returns OK.');
     $this->drupalGet($https_path);
     $this->assertResponse(200, 'Requesting https.php with a legitimate simpletest User-Agent returns OK.');
 
     // Now slightly modify the HMAC on the header, which should not validate.
     $this->additionalCurlOptions = [CURLOPT_USERAGENT => $test_ua . 'X'];
-    $this->drupalGet($HTTP_path);
+    $this->drupalGet($http_path);
     $this->assertResponse(403, 'Requesting http.php with a bad simpletest User-Agent fails.');
     $this->drupalGet($https_path);
     $this->assertResponse(403, 'Requesting https.php with a bad simpletest User-Agent fails.');
@@ -110,7 +110,7 @@ class SimpleTestBrowserTest extends WebTestBase {
     // Use a real User-Agent and verify that the special files http.php and
     // https.php can't be accessed.
     $this->additionalCurlOptions = [CURLOPT_USERAGENT => 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12'];
-    $this->drupalGet($HTTP_path);
+    $this->drupalGet($http_path);
     $this->assertResponse(403, 'Requesting http.php with a normal User-Agent fails.');
     $this->drupalGet($https_path);
     $this->assertResponse(403, 'Requesting https.php with a normal User-Agent fails.');
