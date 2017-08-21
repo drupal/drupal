@@ -75,6 +75,10 @@
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/InfoFiles/ClassFilesSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/InfoFiles/DuplicateEntrySniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/InfoFiles/RequiredSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/NamingConventions/ValidVariableNameSniff.php">
+    <!-- Sniff for: LowerStart -->
+    <exclude name="Drupal.NamingConventions.ValidVariableName.LowerCamelName"/>
+  </rule>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Scope/MethodScopeSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/EmptyInstallSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/FunctionTSniff.php">

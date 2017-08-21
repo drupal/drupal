@@ -15,7 +15,7 @@
  *
  * Callback for batch_set().
  *
- * @param $MULTIPLE_PARAMS
+ * @param $multiple_params
  *   Additional parameters specific to the batch. These are specified in the
  *   array passed to batch_set().
  * @param array|\ArrayAccess $context
@@ -54,7 +54,7 @@
  *   It is discouraged to typehint this parameter as an array, to allow an
  *   object implement \ArrayAccess to be passed.
  */
-function callback_batch_operation($MULTIPLE_PARAMS, &$context) {
+function callback_batch_operation($multiple_params, &$context) {
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   $database = \Drupal::database();
 
