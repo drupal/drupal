@@ -16,6 +16,7 @@
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Classes/ClassDeclarationSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Classes/FullyQualifiedNamespaceSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Classes/UnusedUseStatementSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Classes/UseLeadingBackslashSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/CSS/ClassDefinitionNameSpacingSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/CSS/ColourDefinitionSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/ClassCommentSniff.php">

@@ -2,7 +2,7 @@
 
 namespace Drupal\rest\Annotation;
 
-use \Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Defines a REST resource annotation object.

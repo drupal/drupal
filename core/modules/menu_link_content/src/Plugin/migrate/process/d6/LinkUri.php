@@ -2,7 +2,7 @@
 
 namespace Drupal\menu_link_content\Plugin\migrate\process\d6;
 
-use \Drupal\menu_link_content\Plugin\migrate\process\LinkUri as RealLinkUri;
+use Drupal\menu_link_content\Plugin\migrate\process\LinkUri as RealLinkUri;
 
 /**
  * Processes a link path into an 'internal:' or 'entity:' URI.

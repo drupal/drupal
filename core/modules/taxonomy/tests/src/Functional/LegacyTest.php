@@ -4,7 +4,7 @@ namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use \Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Posts an article with a taxonomy term and a date prior to 1970.

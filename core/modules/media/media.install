@@ -5,7 +5,7 @@
  * Install, uninstall and update hooks for Media module.
  */
 
-use \Drupal\user\RoleInterface;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_install().

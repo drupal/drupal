@@ -5,7 +5,7 @@
  * Post update functions for entity_test_schema_converter.
  */
 
-use \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchemaConverter;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchemaConverter;
 
 /**
  * @addtogroup updates-8.4.x

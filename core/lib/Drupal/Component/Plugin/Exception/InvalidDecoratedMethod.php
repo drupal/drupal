@@ -2,7 +2,7 @@
 
 namespace Drupal\Component\Plugin\Exception;
 
-use \BadMethodCallException;
+use BadMethodCallException;
 
 /**
  * Exception thrown when a decorator's _call() method is triggered, but the

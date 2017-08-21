@@ -2,7 +2,7 @@
 
 namespace Drupal\Component\Plugin;
 
-use \Drupal\Component\Plugin\Context\ContextInterface;
+use Drupal\Component\Plugin\Context\ContextInterface;
 
 /**
  * Interface for defining context aware plugins.

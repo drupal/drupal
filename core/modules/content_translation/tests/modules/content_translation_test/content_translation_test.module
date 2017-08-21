@@ -5,7 +5,7 @@
  * Helper module for the Content Translation tests.
  */
 
-use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
