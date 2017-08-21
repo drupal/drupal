@@ -26,7 +26,7 @@ class NormalizerBaseTest extends UnitTestCase {
    * @param mixed $data
    *   The data passed to supportsNormalization.
    * @param string $supported_interface_or_class
-   *   (optional) the supported interface or class to set on the normalizer.
+   *   (optional) The supported interface or class to set on the normalizer.
    */
   public function testSupportsNormalization($expected_return, $data, $supported_interface_or_class = NULL) {
     $normalizer_base = $this->getMockForAbstractClass('Drupal\Tests\serialization\Unit\Normalizer\TestNormalizerBase');

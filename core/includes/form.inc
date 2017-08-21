@@ -787,8 +787,8 @@ function batch_set($batch_definition) {
  *   is omitted and no redirect response was returned by the 'finished'
  *   callback. Any query arguments will be automatically persisted.
  * @param \Drupal\Core\Url $url
- *   (optional - should only be used for separate scripts like update.php)
- *   URL of the batch processing page.
+ *   (optional) URL of the batch processing page. Should only be used for
+ *   separate scripts like update.php.
  * @param $redirect_callback
  *   (optional) Specify a function to be called to redirect to the progressive
  *   processing page.

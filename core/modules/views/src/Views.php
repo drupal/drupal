@@ -283,8 +283,8 @@ class Views {
    *   Filters the views on status. Can either be 'all' (default), 'enabled' or
    *   'disabled'
    * @param mixed $exclude_view
-   *   view or current display to exclude
-   *   either a
+   *   View or current display to exclude.
+   *   Either a:
    *   - views object (containing $exclude_view->storage->name and $exclude_view->current_display)
    *   - views name as string:  e.g. my_view
    *   - views name and display id (separated by ':'): e.g. my_view:default

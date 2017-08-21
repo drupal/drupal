@@ -18,7 +18,7 @@ class AccessResultForbidden extends AccessResult implements AccessResultReasonIn
    * Constructs a new AccessResultForbidden instance.
    *
    * @param null|string $reason
-   *   (optional) a message to provide details about this access result
+   *   (optional) A message to provide details about this access result.
    */
   public function __construct($reason = NULL) {
     $this->reason = $reason;
