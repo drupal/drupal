@@ -160,7 +160,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
    *   display has listed due to access control or other changes.
    *
    * @return array
-   *    An array of all the sanitized columns.
+   *   An array of all the sanitized columns.
    */
   public function sanitizeColumns($columns, $fields = NULL) {
     $sanitized = [];

@@ -80,7 +80,7 @@ class PsrResponseSubscriberTest extends UnitTestCase {
    *    The return Object.
    *
    * @return \Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent|\PHPUnit_Framework_MockObject_MockObject
-   *    A mock object to test.
+   *   A mock object to test.
    */
   protected function createEventMock($controller_result) {
     $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent', [], [], '', NULL);

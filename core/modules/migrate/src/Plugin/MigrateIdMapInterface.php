@@ -229,7 +229,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    *   If unkeyed, the first count($source_id_values) keys will be assumed.
    *
    * @return array
-   *    An array of arrays of destination identifier values.
+   *   An array of arrays of destination identifier values.
    *
    * @throws \Drupal\migrate\MigrateException
    *   Thrown when $source_id_values contains unknown keys, or is the wrong

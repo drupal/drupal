@@ -183,7 +183,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   The HTTP method (GET, POST, PATCH, DELETE).
    *
    * @return string
-   *    The error string.
+   *   The error string.
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     $resource_plugin_id = str_replace('.', ':', static::$resourceConfigId);

@@ -86,7 +86,7 @@ class NumericArgument extends ArgumentPluginBase {
   /**
    * Override for specific title lookups.
    * @return array
-   *    Returns all titles, if it's just one title it's an array with one entry.
+   *   Returns all titles, if it's just one title it's an array with one entry.
    */
   public function titleQuery() {
     return $this->value;

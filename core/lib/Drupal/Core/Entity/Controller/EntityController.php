@@ -177,7 +177,7 @@ class EntityController implements ContainerInjectionInterface {
    *   The entity type ID.
    *
    * @return string
-   *    The title for the entity add page.
+   *   The title for the entity add page.
    */
   public function addTitle($entity_type_id) {
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
@@ -195,7 +195,7 @@ class EntityController implements ContainerInjectionInterface {
    *   The name of the route parameter that holds the bundle.
    *
    * @return string
-   *    The title for the entity add page, if the bundle was found.
+   *   The title for the entity add page, if the bundle was found.
    */
   public function addBundleTitle(RouteMatchInterface $route_match, $entity_type_id, $bundle_parameter) {
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);

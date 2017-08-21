@@ -178,7 +178,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    *    - subquery_order: either ASC or DESC.
    *
    * @return string
-   *    The subquery SQL string, ready for use in the main query.
+   *   The subquery SQL string, ready for use in the main query.
    */
   protected function leftQuery($options) {
     // Either load another view, or create one on the fly.
