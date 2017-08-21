@@ -68,6 +68,7 @@
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ControlSignatureSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Files/EndFileNewlineSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Files/TxtFileLineLengthSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Formatting/MultiLineAssignmentSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Formatting/SpaceInlineIfSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Formatting/SpaceUnaryOperatorSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Functions/DiscouragedFunctionsSniff.php"/>
