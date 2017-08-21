@@ -15,15 +15,15 @@ class ContentEntityNormalizer extends EntityNormalizer {
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($entity, $format = NULL, array $context = []) {
     $context += [
       'account' => NULL,
     ];
 
     $attributes = [];
-    foreach ($object as $name => $field) {
-      if ($field->access('view', $context['account'])) {
-        $attributes[$name] = $this->serializer->normalize($field, $format, $context);
+    foreach ($entity as $name => $field_items) {
+      if ($field_items->access('view', $context['account'])) {
+        $attributes[$name] = $this->serializer->normalize($field_items, $format, $context);
       }
     }
 

@@ -26,9 +26,9 @@ class ComplexDataNormalizer extends NormalizerBase {
    */
   public function normalize($object, $format = NULL, array $context = []) {
     $attributes = [];
-    /** @var \Drupal\Core\TypedData\TypedDataInterface $field */
-    foreach ($object as $name => $field) {
-      $attributes[$name] = $this->serializer->normalize($field, $format, $context);
+    /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
+    foreach ($object as $name => $property) {
+      $attributes[$name] = $this->serializer->normalize($property, $format, $context);
     }
     return $attributes;
   }
