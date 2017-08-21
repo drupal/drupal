@@ -18,18 +18,18 @@ class FieldNormalizer extends SerializationFieldNormalizer {
   /**
    * {@inheritdoc}
    */
-  public function normalize($field, $format = NULL, array $context = []) {
+  public function normalize($field_items, $format = NULL, array $context = []) {
     $normalized_field_items = [];
 
     // Get the field definition.
-    $entity = $field->getEntity();
-    $field_name = $field->getName();
-    $field_definition = $field->getFieldDefinition();
+    $entity = $field_items->getEntity();
+    $field_name = $field_items->getName();
+    $field_definition = $field_items->getFieldDefinition();
 
     // If this field is not translatable, it can simply be normalized without
     // separating it into different translations.
     if (!$field_definition->isTranslatable()) {
-      $normalized_field_items = $this->normalizeFieldItems($field, $format, $context);
+      $normalized_field_items = $this->normalizeFieldItems($field_items, $format, $context);
     }
     // Otherwise, the languages have to be extracted from the entity and passed
     // in to the field item normalizer in the context. The langcode is appended
@@ -38,15 +38,14 @@ class FieldNormalizer extends SerializationFieldNormalizer {
       foreach ($entity->getTranslationLanguages() as $language) {
         $context['langcode'] = $language->getId();
         $translation = $entity->getTranslation($language->getId());
-        $translated_field = $translation->get($field_name);
-        $normalized_field_items = array_merge($normalized_field_items, $this->normalizeFieldItems($translated_field, $format, $context));
+        $translated_field_items = $translation->get($field_name);
+        $normalized_field_items = array_merge($normalized_field_items, $this->normalizeFieldItems($translated_field_items, $format, $context));
       }
     }
 
     // Merge deep so that links set in entity reference normalizers are merged
     // into the links property.
-    $normalized = NestedArray::mergeDeepArray($normalized_field_items);
-    return $normalized;
+    return NestedArray::mergeDeepArray($normalized_field_items);
   }
 
   /**
@@ -62,10 +61,10 @@ class FieldNormalizer extends SerializationFieldNormalizer {
    * @return array
    *   The array of normalized field items.
    */
-  protected function normalizeFieldItems($field, $format, $context) {
+  protected function normalizeFieldItems($field_items, $format, $context) {
     $normalized_field_items = [];
-    if (!$field->isEmpty()) {
-      foreach ($field as $field_item) {
+    if (!$field_items->isEmpty()) {
+      foreach ($field_items as $field_item) {
         $normalized_field_items[] = $this->serializer->normalize($field_item, $format, $context);
       }
     }

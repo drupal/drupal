@@ -74,15 +74,15 @@ class ContentEntityNormalizer extends NormalizerBase {
 
     // If the fields to use were specified, only output those field values.
     if (isset($context['included_fields'])) {
-      $fields = [];
+      $field_items = [];
       foreach ($context['included_fields'] as $field_name) {
-        $fields[] = $entity->get($field_name);
+        $field_items[] = $entity->get($field_name);
       }
     }
     else {
-      $fields = $entity->getFields();
+      $field_items = $entity->getFields();
     }
-    foreach ($fields as $field) {
+    foreach ($field_items as $field) {
       // Continue if the current user does not have access to view this field.
       if (!$field->access('view', $context['account'])) {
         continue;
