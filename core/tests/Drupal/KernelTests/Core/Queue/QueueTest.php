@@ -24,7 +24,7 @@ class QueueTest extends KernelTestBase {
     $queue2 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
     $queue2->createQueue();
 
-    $this->queueTest($queue1, $queue2);
+    $this->runQueueTest($queue1, $queue2);
   }
 
   /**
@@ -37,7 +37,7 @@ class QueueTest extends KernelTestBase {
     $queue2 = new Memory($this->randomMachineName());
     $queue2->createQueue();
 
-    $this->queueTest($queue1, $queue2);
+    $this->runQueueTest($queue1, $queue2);
   }
 
   /**
@@ -48,7 +48,7 @@ class QueueTest extends KernelTestBase {
    * @param \Drupal\Core\Queue\QueueInterface $queue2
    *   An instantiated queue object.
    */
-  protected function queueTest($queue1, $queue2) {
+  protected function runQueueTest($queue1, $queue2) {
     // Create four items.
     $data = [];
     for ($i = 0; $i < 4; $i++) {

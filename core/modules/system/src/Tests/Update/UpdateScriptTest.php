@@ -189,7 +189,7 @@ class UpdateScriptTest extends WebTestBase {
   public function testSuccessfulUpdateFunctionality() {
     $initial_maintenance_mode = $this->container->get('state')->get('system.maintenance_mode');
     $this->assertFalse($initial_maintenance_mode, 'Site is not in maintenance mode.');
-    $this->updateScriptTest($initial_maintenance_mode);
+    $this->runUpdates($initial_maintenance_mode);
     $final_maintenance_mode = $this->container->get('state')->get('system.maintenance_mode');
     $this->assertEqual($final_maintenance_mode, $initial_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
 
@@ -226,7 +226,7 @@ class UpdateScriptTest extends WebTestBase {
     $initial_maintenance_mode = $this->container->get('state')
       ->get('system.maintenance_mode');
     $this->assertTrue($initial_maintenance_mode, 'Site is in maintenance mode.');
-    $this->updateScriptTest($initial_maintenance_mode);
+    $this->runUpdates($initial_maintenance_mode);
     $final_maintenance_mode = $this->container->get('state')
       ->get('system.maintenance_mode');
     $this->assertEqual($final_maintenance_mode, $initial_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
@@ -286,7 +286,7 @@ class UpdateScriptTest extends WebTestBase {
   /**
    * Helper function to run updates via the browser.
    */
-  protected function updateScriptTest($maintenance_mode) {
+  protected function runUpdates($maintenance_mode) {
     $schema_version = drupal_get_installed_schema_version('update_script_test');
     $this->assertEqual($schema_version, 8001, 'update_script_test is initially installed with schema version 8001.');
 
