@@ -698,8 +698,6 @@ class AccessResultTest extends UnitTestCase {
       [$neutral_un, 'OR', $forbidden_un, FALSE, NULL],
 
 
-
-
       // Allowed (ct) AND allowed (ct,cf,un).
       [$allowed_ct, 'AND', $allowed_ct, TRUE, TRUE],
       [$allowed_ct, 'AND', $allowed_cf, TRUE, FALSE],
