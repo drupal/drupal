@@ -17,24 +17,6 @@ process:
   type:
     plugin: field_type
     source: type
-    map:
-      date: datetime
-      datestamp: datetime
-      datetime: datetime
-      email: email
-      entityreference: entity_reference
-      file: file
-      image: image
-      link_field: link
-      list_boolean: boolean
-      list_integer: list_integer
-      list_text: list_string
-      number_integer: integer
-      number_decimal: decimal
-      number_float: float
-      phone: telephone
-      text_long: text_long
-      text_with_summary: text_with_summary
   # Translatable is not migrated and the Drupal 8 default of true is used.
   # If translatable is false in field storage then the field can not be
   # set to translatable via the UI.
