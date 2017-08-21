@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\text\Unit\Migrate;
+namespace Drupal\Tests\text\Unit\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
@@ -13,7 +13,7 @@ use Prophecy\Argument;
  * @group text
  * @group legacy
  */
-class TextFieldTest extends UnitTestCase {
+class TextCckTest extends UnitTestCase {
 
   /**
    * @var \Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface
@@ -163,8 +163,7 @@ class TextFieldTest extends UnitTestCase {
    * @dataProvider getFieldTypeProvider
    */
   public function testGetFieldType($expected_type, $widget_type, array $settings = []) {
-    $row = new Row();
-    $row->setSourceProperty('widget_type', $widget_type);
+    $row = new Row(['widget_type' => $widget_type], ['widget_type' => []]);
     $row->setSourceProperty('global_settings', $settings);
     $this->assertSame($expected_type, $this->plugin->getFieldType($row));
   }
