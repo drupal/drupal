@@ -64,7 +64,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @param string $format
    *   The format to use to make the request.
    *
-   * @return \Psr\Http\Message\ResponseInterface The HTTP response.
+   * @return \Psr\Http\Message\ResponseInterface
    *   The HTTP response.
    */
   protected function loginRequest($name, $pass, $format = 'json') {
@@ -395,7 +395,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @param string $logout_token
    *   The csrf token for user logout.
    *
-   * @return \Psr\Http\Message\ResponseInterface The HTTP response.
+   * @return \Psr\Http\Message\ResponseInterface
    *   The HTTP response.
    */
   protected function logoutRequest($format = 'json', $logout_token = '') {

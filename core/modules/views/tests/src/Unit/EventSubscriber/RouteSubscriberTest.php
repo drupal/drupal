@@ -139,8 +139,8 @@ class RouteSubscriberTest extends UnitTestCase {
   /**
    * Sets up mocks of Views objects needed for testing.
    *
-   * @return array \Drupal\views\Plugin\views\display\DisplayRouterInterface[]|\PHPUnit_Framework_MockObject_MockObject[]
-   *   An array of two mocked view displays
+   * @return \Drupal\views\Plugin\views\display\DisplayRouterInterface[]|\PHPUnit_Framework_MockObject_MockObject[]
+   *   An array of two mocked view displays.
    */
   protected function setupMocks() {
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')

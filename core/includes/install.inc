@@ -114,9 +114,10 @@ function drupal_install_profile_distribution_name() {
 /**
  * Loads the installation profile, extracting its defined version.
  *
- * @return string Distribution version defined in the profile's .info.yml file.
- *   Defaults to \Drupal::VERSION if no version is explicitly provided
- *   by the installation profile.
+ * @return string
+ *   Distribution version defined in the profile's .info.yml file.
+ *   Defaults to \Drupal::VERSION if no version is explicitly provided by the
+ *   installation profile.
  *
  * @see install_profile_info()
  */
