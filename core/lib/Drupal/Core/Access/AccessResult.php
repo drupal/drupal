@@ -87,13 +87,16 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *
    * @param bool $condition
    *   The condition to evaluate.
+   * @param string|null $reason
+   *   (optional) The reason why access is forbidden. Intended for developers,
+   *   hence not translatable
    *
    * @return \Drupal\Core\Access\AccessResult
    *   If $condition is TRUE, isForbidden() will be TRUE, otherwise isNeutral()
    *   will be TRUE.
    */
-  public static function forbiddenIf($condition) {
-    return $condition ? static::forbidden() : static::neutral();
+  public static function forbiddenIf($condition, $reason = NULL) {
+    return $condition ? static::forbidden($reason) : static::neutral();
   }
 
   /**
