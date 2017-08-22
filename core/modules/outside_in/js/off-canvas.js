@@ -45,7 +45,7 @@
 
       Drupal.offCanvas.getContainer($element).attr('data-offset-' + Drupal.offCanvas.getEdge(), '');
 
-      $(window).on('resize.off-canvas scroll.off-canvas', eventData, debounce(Drupal.offCanvas.resetSize, 100)).trigger('resize.off-canvas');
+      $(window).on('resize.off-canvas', eventData, debounce(Drupal.offCanvas.resetSize, 100)).trigger('resize.off-canvas');
     },
     render: function render(_ref3) {
       var settings = _ref3.settings;
