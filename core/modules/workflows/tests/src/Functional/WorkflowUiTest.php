@@ -137,6 +137,8 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->assertTrue($workflow->getTypePlugin()->getState('draft')->canTransitionTo('published'), 'Can transition from draft to published');
 
     $this->clickLink('Add a new transition');
+    $this->assertCount(2, $this->cssSelect('input[name="to"][type="radio"]'));
+    $this->assertCount(0, $this->cssSelect('input[name="to"][checked="checked"][type="radio"]'));
     $this->submitForm(['id' => 'create_new_draft', 'label' => 'Create new draft', 'from[draft]' => 'draft', 'to' => 'draft'], 'Save');
     $this->assertSession()->pageTextContains('Created Create new draft transition.');
     $workflow = $workflow_storage->loadUnchanged('test');
