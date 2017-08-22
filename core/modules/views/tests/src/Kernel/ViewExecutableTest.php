@@ -487,6 +487,37 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $this->assertIdentical($unserialized->current_display, 'page_1', 'The expected display was set on the unserialized view.');
     $this->assertIdentical($unserialized->args, ['test'], 'The expected argument was set on the unserialized view.');
     $this->assertIdentical($unserialized->getCurrentPage(), 2, 'The expected current page was set on the unserialized view.');
+
+    // Get the definition of node's nid field, for example. Only get it not from
+    // the field manager directly, but from the item data definition. It should
+    // be the same base field definition object (the field and item definitions
+    // refer to each other).
+    // See https://bugs.php.net/bug.php?id=66052
+    $field_manager = $this->container->get('entity_field.manager');
+    $nid_definition_before = $field_manager->getBaseFieldDefinitions('node')['nid']
+      ->getItemDefinition()
+      ->getFieldDefinition();
+
+    // Load and execute a view.
+    $view_entity = View::load('content');
+    $view_executable = $view_entity->getExecutable();
+    $view_executable->execute('page_1');
+
+    // Reset the static cache. Don't use clearCachedFieldDefinitions() since
+    // that clears the persistent cache and we need to get the serialized cache
+    // data.
+    $field_manager->useCaches(FALSE);
+    $field_manager->useCaches(TRUE);
+
+    // Serialize the ViewExecutable as part of other data.
+    unserialize(serialize(['SOMETHING UNEXPECTED', $view_executable]));
+
+    // Make sure the serialisation of the ViewExecutable didn't influence the
+    // field definitions.
+    $nid_definition_after = $field_manager->getBaseFieldDefinitions('node')['nid']
+      ->getItemDefinition()
+      ->getFieldDefinition();
+    $this->assertEquals($nid_definition_before->getPropertyDefinitions(), $nid_definition_after->getPropertyDefinitions());
   }
 
 }
