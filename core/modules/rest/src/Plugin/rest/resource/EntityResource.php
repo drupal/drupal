@@ -11,8 +11,6 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Psr\Log\LoggerInterface;
@@ -202,41 +200,6 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   }
 
   /**
-   * Gets the values from the field item list casted to the correct type.
-   *
-   * Values are casted to the correct type so we can determine whether or not
-   * something has changed. REST formats such as JSON support typed data but
-   * Drupal's database API will return values as strings. Currently, only
-   * primitive data types know how to cast their values to the correct type.
-   *
-   * @param \Drupal\Core\Field\FieldItemListInterface $field_item_list
-   *   The field item list to retrieve its data from.
-   *
-   * @return mixed[][]
-   *   The values from the field item list casted to the correct type. The array
-   *   of values returned is a multidimensional array keyed by delta and the
-   *   property name.
-   */
-  protected function getCastedValueFromFieldItemList(FieldItemListInterface $field_item_list) {
-    $value = $field_item_list->getValue();
-
-    foreach ($value as $delta => $field_item_value) {
-      /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
-      $field_item = $field_item_list->get($delta);
-      $properties = $field_item->getProperties(TRUE);
-      // Foreach field value we check whether we know the underlying property.
-      // If we exists we try to cast the value.
-      foreach ($field_item_value as $property_name => $property_value) {
-        if (isset($properties[$property_name]) && ($property = $field_item->get($property_name)) && $property instanceof PrimitiveInterface) {
-          $value[$delta][$property_name] = $property->getCastedValue();
-        }
-      }
-    }
-
-    return $value;
-  }
-
-  /**
    * Responds to entity PATCH requests.
    *
    * @param \Drupal\Core\Entity\EntityInterface $original_entity
@@ -262,35 +225,26 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       throw new AccessDeniedHttpException($entity_access->getReason() ?: $this->generateFallbackAccessDeniedMessage($entity, 'update'));
     }
 
-    // Overwrite the received properties.
-    $entity_keys = $entity->getEntityType()->getKeys();
+    // Overwrite the received fields.
     foreach ($entity->_restSubmittedFields as $field_name) {
       $field = $entity->get($field_name);
+      $original_field = $original_entity->get($field_name);
 
-      // Entity key fields need special treatment: together they uniquely
-      // identify the entity. Therefore it does not make sense to modify any of
-      // them. However, rather than throwing an error, we just ignore them as
-      // long as their specified values match their current values.
-      if (in_array($field_name, $entity_keys, TRUE)) {
-        // @todo Work around the wrong assumption that entity keys need special
-        // treatment, when only read-only fields need it.
-        // This will be fixed in https://www.drupal.org/node/2824851.
-        if ($entity->getEntityTypeId() == 'comment' && $field_name == 'status' && !$original_entity->get($field_name)->access('edit')) {
+      // If the user has access to view the field, we need to check update
+      // access regardless of the field value to avoid information disclosure.
+      // (Otherwise the user may try PATCHing with value after value, until they
+      // send the current value for the field, and then they won't get a 403
+      // response anymore, which indicates that the value they sent in the PATCH
+      // request body matches the current value.)
+      if (!$original_field->access('view')) {
+        if (!$original_field->access('edit')) {
           throw new AccessDeniedHttpException("Access denied on updating field '$field_name'.");
         }
-
-        // Unchanged values for entity keys don't need access checking.
-        if ($this->getCastedValueFromFieldItemList($original_entity->get($field_name)) === $this->getCastedValueFromFieldItemList($entity->get($field_name))) {
-          continue;
-        }
-        // It is not possible to set the language to NULL as it is automatically
-        // re-initialized. As it must not be empty, skip it if it is.
-        elseif (isset($entity_keys['langcode']) && $field_name === $entity_keys['langcode'] && $field->isEmpty()) {
-          continue;
-        }
       }
-
-      if (!$original_entity->get($field_name)->access('edit')) {
+      // Check access for all received fields, but only if they are being
+      // changed. The bundle of an entity, for example, must be provided for
+      // denormalization to succeed, but it may not be changed.
+      elseif (!$original_field->equals($field) && !$original_field->access('edit')) {
         throw new AccessDeniedHttpException("Access denied on updating field '$field_name'.");
       }
       $original_entity->set($field_name, $field->getValue());
