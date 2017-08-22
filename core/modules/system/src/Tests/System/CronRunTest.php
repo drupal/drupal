@@ -105,9 +105,19 @@ class CronRunTest extends WebTestBase {
     // the time will start at 1 January 1970.
     $this->assertNoText('years');
 
-    $this->drupalPostForm(NULL, [], t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'));
+    $cron_last = time() - 200;
+    \Drupal::state()->set('system.cron_last', $cron_last);
+
+    $this->drupalPostForm(NULL, [], 'Save configuration');
+    $this->assertText('The configuration options have been saved.');
     $this->assertUrl('admin/config/system/cron');
+
+    // Check that cron does not run when saving the configuration form.
+    $this->assertEqual($cron_last, \Drupal::state()->get('system.cron_last'), 'Cron does not run when saving the configuration form.');
+
+    // Check that cron runs when triggered manually.
+    $this->drupalPostForm(NULL, [], 'Run cron');
+    $this->assertTrue($cron_last < \Drupal::state()->get('system.cron_last'), 'Cron runs when triggered manually.');
   }
 
   /**

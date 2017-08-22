@@ -16,6 +16,7 @@ use Drupal\Core\Form\ConfigFormBaseTrait;
  * Configure cron settings for this site.
  */
 class CronForm extends FormBase {
+
   use ConfigFormBaseTrait;
 
   /**
@@ -104,6 +105,7 @@ class CronForm extends FormBase {
     $form['run'] = [
       '#type' => 'submit',
       '#value' => t('Run cron'),
+      '#submit' => ['::runCron'],
     ];
     $status = '<p>' . $this->t('Last run: %time ago.', ['%time' => $this->dateFormatter->formatTimeDiffSince($this->state->get('system.cron_last'))]) . '</p>';
     $form['status'] = [
@@ -145,22 +147,25 @@ class CronForm extends FormBase {
   }
 
   /**
-   * Runs cron and reloads the page.
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.cron')
       ->set('logging', $form_state->getValue('logging'))
       ->save();
     drupal_set_message(t('The configuration options have been saved.'));
+  }
 
-    // Run cron manually from Cron form.
+  /**
+   * Form submission handler for running cron manually.
+   */
+  public function runCron(array &$form, FormStateInterface $form_state) {
     if ($this->cron->run()) {
-      drupal_set_message(t('Cron ran successfully.'));
+      drupal_set_message($this->t('Cron ran successfully.'));
     }
     else {
-      drupal_set_message(t('Cron run failed.'), 'error');
+      drupal_set_message($this->t('Cron run failed.'), 'error');
     }
-
   }
 
 }
