@@ -89,7 +89,6 @@ class WorkflowTransitionAddForm extends EntityForm {
       '#type' => 'radios',
       '#title' => $this->t('To'),
       '#required' => TRUE,
-      '#default_value' => [],
       '#options' => $states,
     ];
 
