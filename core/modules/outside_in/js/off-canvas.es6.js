@@ -100,7 +100,7 @@
       Drupal.offCanvas.getContainer($element).attr(`data-offset-${Drupal.offCanvas.getEdge()}`, '');
 
       $(window)
-        .on('resize.off-canvas scroll.off-canvas', eventData, debounce(Drupal.offCanvas.resetSize, 100))
+        .on('resize.off-canvas', eventData, debounce(Drupal.offCanvas.resetSize, 100))
         .trigger('resize.off-canvas');
     },
 
