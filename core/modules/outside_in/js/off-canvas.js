@@ -73,7 +73,6 @@
       var offsets = displace.offsets;
       var $element = event.data.$element;
       var container = Drupal.offCanvas.getContainer($element);
-      var $elementScroll = $element.scrollTop();
 
       var topPosition = offsets.top !== 0 ? '+' + offsets.top : '';
       var adjustedOptions = {
@@ -90,8 +89,6 @@
       });
 
       $element.dialog('option', adjustedOptions).trigger('dialogContentResize.off-canvas');
-
-      $element.scrollTop($elementScroll);
     },
     bodyPadding: function bodyPadding(event) {
       if ($('body').outerWidth() < Drupal.offCanvas.minDisplaceWidth) {
