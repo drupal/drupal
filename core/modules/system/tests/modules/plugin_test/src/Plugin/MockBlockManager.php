@@ -127,7 +127,7 @@ class MockBlockManager extends PluginManagerBase {
    *
    * @param string $data_type
    *   The required data type.
-   * @param mixed string|null $label
+   * @param mixed|string|null $label
    *   The label of this context definition for the UI.
    * @param bool $required
    *   Whether the context definition is required.

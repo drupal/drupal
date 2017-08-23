@@ -59,7 +59,6 @@
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentIndentation"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamMissingDefinition"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamNameNoMatch"/>
-    <exclude name="Drupal.Commenting.FunctionComment.ParamTypeSpaces"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ElseIfSniff.php"/>
