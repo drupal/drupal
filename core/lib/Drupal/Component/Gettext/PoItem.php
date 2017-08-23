@@ -104,7 +104,7 @@ class PoItem {
    * Set the source string or the array of strings if the translation has
    * plurals.
    *
-   * @param string or array $source
+   * @param string|array $source
    */
   public function setSource($source) {
     $this->_source = $source;
@@ -124,7 +124,7 @@ class PoItem {
    * Set the translation string or the array of strings if the translation has
    * plurals.
    *
-   * @param string or array $translation
+   * @param string|array $translation
    */
   public function setTranslation($translation) {
     $this->_translation = $translation;
