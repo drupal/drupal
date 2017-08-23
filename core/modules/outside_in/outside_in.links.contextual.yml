@@ -5,6 +5,6 @@ outside_in.block_configure:
   options:
     attributes:
       class: ['use-ajax']
-      data-dialog-type: 'dialog'
-      data-dialog-renderer: 'off_canvas'
-      data-outside-in-edit: 'TRUE'
+      data-dialog-type: dialog
+      data-dialog-renderer: off_canvas
+      data-outside-in-edit: true
