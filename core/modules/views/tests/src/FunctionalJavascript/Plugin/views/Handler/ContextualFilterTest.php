@@ -24,7 +24,6 @@ class ContextualFilterTest extends JavascriptTestBase {
    */
   public static $testViews = ['test_field_body'];
 
-
   /**
    * {@inheritdoc}
    */
@@ -33,8 +32,13 @@ class ContextualFilterTest extends JavascriptTestBase {
 
     ViewTestData::createTestViews(get_class($this), ['views_test_config']);
 
-    // Disable automatic live preview to make the sequence of calls clearer.
+    // Always show advanced column.
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.advanced_column', TRUE)->save();
+
+    // Disable automatic live preview to make the sequence of calls clearer. And
+    // prevent errors on saving the view with the preview ajax load that are
+    // cancelled.
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.always_live_preview', FALSE)->save();
 
     $account = $this->drupalCreateUser(['administer views']);
     $this->drupalLogin($account);
@@ -44,32 +48,40 @@ class ContextualFilterTest extends JavascriptTestBase {
    * Test adding a contextual filter handler through the UI.
    */
   public function testAddContextualFilterUI() {
-    $web_assert = $this->assertSession();
-
     $this->drupalGet('/admin/structure/views/view/test_field_body');
-    $web_assert->assertWaitOnAjaxRequest();
 
+    $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
 
     $page->clickLink('views-add-argument');
-    $web_assert->assertWaitOnAjaxRequest();
 
-    $page->checkField('name[node_field_data.nid]');
+    $field = $web_assert->waitForField('name[node_field_data.nid]');
+    $this->assertNotEmpty($field);
+    $field->check();
+
     $add_button = $page->find('css', '.ui-dialog-buttonset .button--primary');
     $add_button->click();
-    $web_assert->assertWaitOnAjaxRequest();
 
-    $page->fillField('options[default_action]', 'default');
+    $field_action = $web_assert->waitForField('options[default_action]');
+    $this->assertNotEmpty($field_action);
+    $field_action->setValue('default');
+
     $page->selectFieldOption('options[default_argument_type]', 'node');
     $add_button = $page->find('css', '.ui-dialog-buttonset .button--primary');
     $add_button->click();
-    $web_assert->assertWaitOnAjaxRequest();
+
+    // Wait for the dialog to close.
+    $page->waitFor(10, function () use ($page) {
+      $field = $page->find('css', '.ui-dialog-buttonset .button--primary');
+      return empty($field);
+    });
+
     $page->pressButton('edit-actions-submit');
-    $web_assert->assertWaitOnAjaxRequest();
+
     $page->clickLink('Content: ID');
     // Check that the dialog opens.
-    $web_assert->assertWaitOnAjaxRequest();
-    $page->pressButton('Close');
+    $field_action = $web_assert->waitForField('options[default_action]');
+    $this->assertNotEmpty($field_action);
   }
 
 }
