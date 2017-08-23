@@ -18,7 +18,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\content_moderation\Entity\Handler\BlockContentModerationHandler;
 use Drupal\content_moderation\Entity\Handler\ModerationHandler;
 use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
-use Drupal\content_moderation\Routing\EntityModerationRouteProvider;
+use Drupal\content_moderation\Entity\Routing\EntityModerationRouteProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -121,8 +121,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   /**
    * Adds Moderation configuration to appropriate entity types.
    *
-   * This is an alter hook bridge.
-   *
    * @param EntityTypeInterface[] $entity_types
    *   The master entity type list to alter.
    *
@@ -171,10 +169,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   /**
    * Gets the "extra fields" for a bundle.
    *
-   * This is a hook bridge.
-   *
-   * @see hook_entity_extra_field_info()
-   *
    * @return array
    *   A nested array of 'pseudo-field' elements. Each list is nested within the
    *   following keys: entity type, bundle name, context (either 'form' or
@@ -193,6 +187,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   - delete: (optional) String containing markup (normally a link) used as
    *     the element's 'delete' operation in the administration interface. Only
    *     for 'form' context.
+   *
+   * @see hook_entity_extra_field_info()
    */
   public function entityExtraFieldInfo() {
     $return = [];
@@ -239,6 +235,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @return \Drupal\Core\Field\BaseFieldDefinition[]
    *   New fields added by moderation state.
+   *
+   * @see hook_entity_base_field_info()
    */
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
     if (!$this->moderationInfo->canModerateEntitiesOfEntityType($entity_type)) {
@@ -251,7 +249,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       ->setDescription(t('The moderation state of this piece of content.'))
       ->setComputed(TRUE)
       ->setClass(ModerationStateFieldItemList::class)
-      ->setSetting('target_type', 'moderation_state')
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'region' => 'hidden',

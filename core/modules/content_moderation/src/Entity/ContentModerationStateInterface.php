@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_moderation;
+namespace Drupal\content_moderation\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\user\EntityOwnerInterface;

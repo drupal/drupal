@@ -9,6 +9,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Customizations for node entities.
+ *
+ * @internal
  */
 class NodeModerationHandler extends ModerationHandler {
 

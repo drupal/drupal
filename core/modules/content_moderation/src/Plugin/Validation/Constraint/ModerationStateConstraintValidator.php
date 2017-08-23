@@ -6,7 +6,6 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
-use Drupal\content_moderation\StateTransitionValidation;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -15,13 +14,6 @@ use Symfony\Component\Validator\ConstraintValidator;
  * Checks if a moderation state transition is valid.
  */
 class ModerationStateConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
-
-  /**
-   * The state transition validation.
-   *
-   * @var \Drupal\content_moderation\StateTransitionValidation
-   */
-  protected $validation;
 
   /**
    * The entity type manager.
@@ -42,13 +34,10 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\content_moderation\StateTransitionValidation $validation
-   *   The state transition validation.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    *   The moderation information.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, StateTransitionValidation $validation, ModerationInformationInterface $moderation_information) {
-    $this->validation = $validation;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModerationInformationInterface $moderation_information) {
     $this->entityTypeManager = $entity_type_manager;
     $this->moderationInformation = $moderation_information;
   }
@@ -59,7 +48,6 @@ class ModerationStateConstraintValidator extends ConstraintValidator implements 
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('content_moderation.state_transition_validation'),
       $container->get('content_moderation.moderation_information')
     );
   }

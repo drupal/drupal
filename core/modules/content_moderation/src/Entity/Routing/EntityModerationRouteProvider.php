@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_moderation\Routing;
+namespace Drupal\content_moderation\Entity\Routing;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;

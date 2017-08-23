@@ -11,6 +11,8 @@ use Drupal\Core\Form\FormStateInterface;
  * Much of the logic contained in this handler is an indication of flaws
  * in the Entity API that are insufficiently standardized between entity types.
  * Hopefully over time functionality can be removed from this interface.
+ *
+ * @internal
  */
 interface ModerationHandlerInterface {
 

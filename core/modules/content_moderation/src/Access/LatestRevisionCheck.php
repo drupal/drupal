@@ -2,6 +2,7 @@
 
 namespace Drupal\content_moderation\Access;
 
+use Drupal\Core\Access\AccessException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
@@ -81,10 +82,8 @@ class LatestRevisionCheck implements AccessInterface {
    * @return \Drupal\Core\Entity\ContentEntityInterface
    *   returns the Entity in question.
    *
-   * @throws \Exception
-   *   A generic exception is thrown if the entity couldn't be loaded. This
-   *   almost always implies a developer error, so it should get turned into
-   *   an HTTP 500.
+   * @throws \Drupal\Core\Access\AccessException
+   *   An AccessException is thrown if the entity couldn't be loaded.
    */
   protected function loadEntity(Route $route, RouteMatchInterface $route_match) {
     $entity_type = $route->getOption('_content_moderation_entity_type');
@@ -94,7 +93,7 @@ class LatestRevisionCheck implements AccessInterface {
         return $entity;
       }
     }
-    throw new \Exception(sprintf('%s is not a valid entity route. The LatestRevisionCheck access checker may only be used with a route that has a single entity parameter.', $route_match->getRouteName()));
+    throw new AccessException(sprintf('%s is not a valid entity route. The LatestRevisionCheck access checker may only be used with a route that has a single entity parameter.', $route_match->getRouteName()));
   }
 
 }
