@@ -3,6 +3,7 @@
 namespace Drupal\content_moderation;
 
 use Drupal\content_moderation\Entity\ContentModerationState as ContentModerationStateEntity;
+use Drupal\content_moderation\Entity\ContentModerationStateInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -94,6 +95,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being saved.
+   *
+   * @see hook_entity_presave()
    */
   public function entityPresave(EntityInterface $entity) {
     if (!$this->moderationInfo->isModeratedEntity($entity)) {
@@ -103,7 +106,8 @@ class EntityOperations implements ContainerInjectionInterface {
     if ($entity->moderation_state->value) {
       $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
       /** @var \Drupal\content_moderation\ContentModerationState $current_state */
-      $current_state = $workflow->getTypePlugin()->getState($entity->moderation_state->value);
+      $current_state = $workflow->getTypePlugin()
+        ->getState($entity->moderation_state->value);
 
       // This entity is default if it is new, a new translation, the default
       // revision, or the default revision is not published.
@@ -113,13 +117,13 @@ class EntityOperations implements ContainerInjectionInterface {
         || !$this->moderationInfo->isDefaultRevisionPublished($entity);
 
       // Fire per-entity-type logic for handling the save process.
-      $this->entityTypeManager->getHandler($entity->getEntityTypeId(), 'moderation')->onPresave($entity, $update_default_revision, $current_state->isPublishedState());
+      $this->entityTypeManager
+        ->getHandler($entity->getEntityTypeId(), 'moderation')
+        ->onPresave($entity, $update_default_revision, $current_state->isPublishedState());
     }
   }
 
   /**
-   * Hook bridge.
-   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity that was just saved.
    *
@@ -133,8 +137,6 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Hook bridge.
-   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity that was just saved.
    *
@@ -217,8 +219,6 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Hook bridge.
-   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being deleted.
    *
@@ -232,8 +232,6 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Hook bridge.
-   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity revision being deleted.
    *
@@ -252,8 +250,6 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Hook bridge.
-   *
    * @param \Drupal\Core\Entity\EntityInterface $translation
    *   The entity translation being deleted.
    *
@@ -273,8 +269,6 @@ class EntityOperations implements ContainerInjectionInterface {
 
   /**
    * Act on entities being assembled before rendering.
-   *
-   * This is a hook bridge.
    *
    * @see hook_entity_view()
    * @see EntityFieldManagerInterface::getExtraFields()

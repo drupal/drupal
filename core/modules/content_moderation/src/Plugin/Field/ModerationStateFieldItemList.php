@@ -48,7 +48,7 @@ class ModerationStateFieldItemList extends FieldItemList {
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity the content moderation state entity will be loaded from.
    *
-   * @return \Drupal\content_moderation\ContentModerationStateInterface|null
+   * @return \Drupal\content_moderation\Entity\ContentModerationStateInterface|null
    *   The content_moderation_state revision or FALSE if none exists.
    */
   protected function loadContentModerationStateRevision(ContentEntityInterface $entity) {
@@ -69,7 +69,7 @@ class ModerationStateFieldItemList extends FieldItemList {
       return NULL;
     }
 
-    /** @var \Drupal\content_moderation\ContentModerationStateInterface $content_moderation_state */
+    /** @var \Drupal\content_moderation\Entity\ContentModerationStateInterface $content_moderation_state */
     $content_moderation_state = $content_moderation_storage->loadRevision(key($revisions));
     if ($entity->getEntityType()->hasKey('langcode')) {
       $langcode = $entity->language()->getId();
