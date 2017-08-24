@@ -58,10 +58,10 @@ class ContentModerationPermissionsTest extends KernelTestBase {
         ],
         [
           'use simple_workflow transition publish' => [
-            'title' => 'Use <em class="placeholder">Publish</em> transition from <em class="placeholder">Simple Workflow</em> workflow.',
+            'title' => '<em class="placeholder">Simple Workflow</em> workflow: Use <em class="placeholder">Publish</em> transition.',
           ],
           'use simple_workflow transition create_new_draft' => [
-            'title' => 'Use <em class="placeholder">Create New Draft</em> transition from <em class="placeholder">Simple Workflow</em> workflow.',
+            'title' => '<em class="placeholder">Simple Workflow</em> workflow: Use <em class="placeholder">Create New Draft</em> transition.',
           ],
         ],
       ],
