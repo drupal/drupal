@@ -5,17 +5,17 @@ namespace Drupal\outside_in_test\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 
 /**
- * Block that explicitly provides no "off_canvas" form, thus opting out.
+ * Block that explicitly provides no "settings_tray" form, thus opting out.
  *
  * @Block(
  *   id = "outside_in_test_false",
- *   admin_label = "Settings Tray test block: forms[off_canvas]=FALSE",
+ *   admin_label = "Settings Tray test block: forms[settings_tray]=FALSE",
  *   forms = {
- *     "off_canvas" = FALSE,
+ *     "settings_tray" = FALSE,
  *   },
  * )
  */
-class OffCanvasFormAnnotationIsFalseBlock extends BlockBase {
+class SettingsTrayFormAnnotationIsFalseBlock extends BlockBase {
 
   /**
    * {@inheritdoc}

@@ -111,7 +111,7 @@ class BlockEntityOffCanvasForm extends BlockForm {
    */
   protected function getPluginForm(BlockPluginInterface $block) {
     if ($block instanceof PluginWithFormsInterface) {
-      return $this->pluginFormFactory->createInstance($block, 'off_canvas', 'configure');
+      return $this->pluginFormFactory->createInstance($block, 'settings_tray', 'configure');
     }
     return $block;
   }

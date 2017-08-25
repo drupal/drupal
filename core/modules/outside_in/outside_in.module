@@ -94,15 +94,15 @@ function outside_in_entity_type_build(array &$entity_types) {
  * Implements hook_preprocess_HOOK() for block templates.
  */
 function outside_in_preprocess_block(&$variables) {
-  // Only blocks that have an off_canvas form will have a "Quick Edit" link. We
-  // could wait for the contextual links to be initialized on the client side,
-  // and then add the class and data- attribute below there (via JavaScript).
-  // But that would mean that it would be impossible to show Settings Tray's
-  // clickable regions immediately when the page loads. When latency is high,
-  // this will cause flicker.
-  // @see \Drupal\outside_in\Access\BlockPluginHasOffCanvasFormAccessCheck
-  /** @var \Drupal\outside_in\Access\BlockPluginHasOffCanvasFormAccessCheck $access_checker */
-  $access_checker = \Drupal::service('access_check.outside_in.block.off_canvas_form');
+  // Only blocks that have an settings_tray form will have a "Quick Edit" link.
+  // We could wait for the contextual links to be initialized on the client
+  // side,  and then add the class and data- attribute below there (via
+  // JavaScript). But that would mean that it would be impossible to show
+  // Settings Tray's clickable regions immediately when the page loads. When
+  // latency is high, this will cause flicker.
+  // @see \Drupal\outside_in\Access\BlockPluginHasSettingsTrayFormAccessCheck
+  /** @var \Drupal\outside_in\Access\BlockPluginHasSettingsTrayFormAccessCheck $access_checker */
+  $access_checker = \Drupal::service('access_check.outside_in.block.settings_tray_form');
   /** @var \Drupal\Core\Block\BlockManagerInterface $block_plugin_manager */
   $block_plugin_manager = \Drupal::service('plugin.manager.block');
   /** @var \Drupal\Core\Block\BlockPluginInterface $block_plugin */
@@ -147,15 +147,15 @@ function outside_in_toolbar_alter(&$items) {
 /**
  * Implements hook_block_alter().
  *
- * Ensures every block plugin definition has an 'off_canvas' form specified.
+ * Ensures every block plugin definition has an 'settings_tray' form specified.
  *
- * @see \Drupal\outside_in\Access\BlockPluginHasOffCanvasFormAccessCheck
+ * @see \Drupal\outside_in\Access\BlockPluginHasSettingsTrayFormAccessCheck
  */
 function outside_in_block_alter(&$definitions) {
   foreach ($definitions as &$definition) {
-    // If a block plugin already defines its own off_canvas form, use that form
-    // instead of specifying one here.
-    if (isset($definition['forms']['off_canvas'])) {
+    // If a block plugin already defines its own 'settings_tray' form, use that
+    // form instead of specifying one here.
+    if (isset($definition['forms']['settings_tray'])) {
       continue;
     }
 
@@ -165,11 +165,11 @@ function outside_in_block_alter(&$definitions) {
       // @todo Move these into the corresponding block plugin annotations in
       //   https://www.drupal.org/node/2896356.
       case 'system_menu_block':
-        $definition['forms']['off_canvas'] = SystemMenuOffCanvasForm::class;
+        $definition['forms']['settings_tray'] = SystemMenuOffCanvasForm::class;
         break;
 
       case 'system_branding_block':
-        $definition['forms']['off_canvas'] = SystemBrandingOffCanvasForm::class;
+        $definition['forms']['settings_tray'] = SystemBrandingOffCanvasForm::class;
         break;
 
       // No off-canvas form for the page title block, despite it having
@@ -178,21 +178,21 @@ function outside_in_block_alter(&$definitions) {
       // @todo Move these into the corresponding block plugin annotations in
       //   https://www.drupal.org/node/2896356.
       case 'page_title_block':
-        $definition['forms']['off_canvas'] = FALSE;
+        $definition['forms']['settings_tray'] = FALSE;
         break;
 
       case 'system_main_block':
-        $definition['forms']['off_canvas'] = FALSE;
+        $definition['forms']['settings_tray'] = FALSE;
         break;
 
       case 'help_block':
-        $definition['forms']['off_canvas'] = FALSE;
+        $definition['forms']['settings_tray'] = FALSE;
         break;
 
       // Otherwise, use the block plugin's normal form rather than
       // a custom form for Settings Tray.
       default:
-        $definition['forms']['off_canvas'] = $definition['class'];
+        $definition['forms']['settings_tray'] = $definition['class'];
         break;
     }
   }

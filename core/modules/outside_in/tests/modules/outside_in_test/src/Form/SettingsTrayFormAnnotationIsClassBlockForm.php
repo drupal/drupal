@@ -6,9 +6,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormBase;
 
 /**
- * @see \Drupal\outside_in_test\Plugin\Block\OffCanvasFormAnnotationIsClassBlock
+ * @see \Drupal\outside_in_test\Plugin\Block\SettingsTrayFormAnnotationIsClassBlock
  */
-class OffCanvasFormAnnotationIsClassBlockForm extends PluginFormBase {
+class SettingsTrayFormAnnotationIsClassBlockForm extends PluginFormBase {
 
   /**
    * The block plugin.

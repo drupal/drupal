@@ -34,7 +34,7 @@ class OutsideInTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the three possible forms[off_canvas] annotations: class, FALSE, none.
+   * Tests the 3 possible forms[settings_tray] annotations: class, FALSE, none.
    *
    * There is also functional JS test coverage to ensure that the two blocks
    * that support Settings Tray (the "class" and "none" cases) do work
@@ -44,9 +44,9 @@ class OutsideInTest extends BrowserTestBase {
    */
   public function testPossibleAnnotations() {
     $test_block_plugin_ids = [
-      // Block that explicitly provides an "off_canvas" form class.
+      // Block that explicitly provides an "settings_tray" form class.
       'outside_in_test_class',
-      // Block that explicitly provides no "off_canvas" form, thus opting out.
+      // Block that explicitly provides no "settings_tray" form, thus opting out.
       'outside_in_test_false',
       // Block that does nothing explicit for Settings Tray.
       'outside_in_test_none',
@@ -95,7 +95,7 @@ class OutsideInTest extends BrowserTestBase {
     // Assert that block has been marked as "editable" and contextual that
     // should exist does.
     $web_assert->elementExists('css', $this->getBlockSelector($non_excluded_block) . "[data-drupal-outsidein=\"editable\"]");
-    // Assert that each block that has a "forms[off_canvas] = FALSE" annotation:
+    // Assert that each block that has a "forms[settings_tray] = FALSE" annotation:
     // - is still rendered on the page
     // - but is not marked as "editable" by outside_in_preprocess_block()
     // - and does not have the Settings Tray contextual link.
