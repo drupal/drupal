@@ -42,13 +42,6 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $formBuilder;
 
   /**
-   * The Revision Tracker service.
-   *
-   * @var \Drupal\content_moderation\RevisionTrackerInterface
-   */
-  protected $tracker;
-
-  /**
    * The entity bundle information service.
    *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
@@ -64,16 +57,13 @@ class EntityOperations implements ContainerInjectionInterface {
    *   Entity type manager service.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
-   * @param \Drupal\content_moderation\RevisionTrackerInterface $tracker
-   *   The revision tracker.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info
    *   The entity bundle information service.
    */
-  public function __construct(ModerationInformationInterface $moderation_info, EntityTypeManagerInterface $entity_type_manager, FormBuilderInterface $form_builder, RevisionTrackerInterface $tracker, EntityTypeBundleInfoInterface $bundle_info) {
+  public function __construct(ModerationInformationInterface $moderation_info, EntityTypeManagerInterface $entity_type_manager, FormBuilderInterface $form_builder, EntityTypeBundleInfoInterface $bundle_info) {
     $this->moderationInfo = $moderation_info;
     $this->entityTypeManager = $entity_type_manager;
     $this->formBuilder = $form_builder;
-    $this->tracker = $tracker;
     $this->bundleInfo = $bundle_info;
   }
 
@@ -85,7 +75,6 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('content_moderation.moderation_information'),
       $container->get('entity_type.manager'),
       $container->get('form_builder'),
-      $container->get('content_moderation.revision_tracker'),
       $container->get('entity_type.bundle.info')
     );
   }
@@ -132,7 +121,6 @@ class EntityOperations implements ContainerInjectionInterface {
   public function entityInsert(EntityInterface $entity) {
     if ($this->moderationInfo->isModeratedEntity($entity)) {
       $this->updateOrCreateFromEntity($entity);
-      $this->setLatestRevision($entity);
     }
   }
 
@@ -145,7 +133,6 @@ class EntityOperations implements ContainerInjectionInterface {
   public function entityUpdate(EntityInterface $entity) {
     if ($this->moderationInfo->isModeratedEntity($entity)) {
       $this->updateOrCreateFromEntity($entity);
-      $this->setLatestRevision($entity);
     }
   }
 
@@ -200,22 +187,6 @@ class EntityOperations implements ContainerInjectionInterface {
     $content_moderation_state->set('content_entity_revision_id', $entity_revision_id);
     $content_moderation_state->set('moderation_state', $moderation_state);
     ContentModerationStateEntity::updateOrCreateFromEntity($content_moderation_state);
-  }
-
-  /**
-   * Set the latest revision.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The content entity to create content_moderation_state entity for.
-   */
-  protected function setLatestRevision(EntityInterface $entity) {
-    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    $this->tracker->setLatestRevision(
-      $entity->getEntityTypeId(),
-      $entity->id(),
-      $entity->language()->getId(),
-      $entity->getRevisionId()
-    );
   }
 
   /**

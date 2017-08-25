@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
-use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -49,54 +48,6 @@ class ViewsDataIntegrationTest extends ViewsKernelTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'page');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_mulrevpub', 'entity_test_mulrevpub');
     $workflow->save();
-  }
-
-  /**
-   * Tests content_moderation_views_data().
-   *
-   * @see content_moderation_views_data()
-   */
-  public function testViewsData() {
-    $node = Node::create([
-      'type' => 'page',
-      'title' => 'Test title first revision',
-    ]);
-    $node->moderation_state->value = 'published';
-    $node->save();
-
-    // Create a totally unrelated entity to ensure the extra join information
-    // joins by the correct entity type.
-    $unrelated_entity = EntityTestMulRevPub::create([
-      'id' => $node->id(),
-    ]);
-    $unrelated_entity->save();
-
-    $this->assertEquals($unrelated_entity->id(), $node->id());
-
-    $revision = clone $node;
-    $revision->setNewRevision(TRUE);
-    $revision->isDefaultRevision(FALSE);
-    $revision->title->value = 'Test title second revision';
-    $revision->moderation_state->value = 'draft';
-    $revision->save();
-
-    $view = Views::getView('test_content_moderation_latest_revision');
-    $view->execute();
-
-    // Ensure that the content_revision_tracker contains the right latest
-    // revision ID.
-    // Also ensure that the relationship back to the revision table contains the
-    // right latest revision.
-    $expected_result = [
-      [
-        'nid' => $node->id(),
-        'revision_id' => $revision->getRevisionId(),
-        'title' => $revision->label(),
-        'moderation_state_1' => 'draft',
-        'moderation_state' => 'published',
-      ],
-    ];
-    $this->assertIdenticalResultset($view, $expected_result, ['nid' => 'nid', 'content_revision_tracker_revision_id' => 'revision_id', 'moderation_state' => 'moderation_state', 'moderation_state_1' => 'moderation_state_1']);
   }
 
   /**
