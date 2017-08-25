@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Update;
-
-@trigger_error(__NAMESPACE__ . '\DbUpdatesTrait is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use \Drupal\FunctionalTests\Update\DbUpdatesTrait instead. See https://www.drupal.org/node/2896640.', E_USER_DEPRECATED);
+namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -11,11 +9,7 @@ use Drupal\Core\Url;
  * Provides methods to conditionally enable db update functions and apply
  * pending db updates through the Update UI.
  *
- * This should be used only by classes extending \Drupal\simpletest\WebTestBase.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\FunctionalTests\Update\DbUpdatesTrait.
- * @see https://www.drupal.org/node/2896640
+ * This should be used only by classes extending \Drupal\Tests\BrowserTestBase.
  */
 trait DbUpdatesTrait {
 

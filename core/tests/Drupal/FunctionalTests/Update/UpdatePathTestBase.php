@@ -1,16 +1,20 @@
 <?php
 
-namespace Drupal\system\Tests\Update;
+namespace Drupal\FunctionalTests\Update;
 
-@trigger_error(__NAMESPACE__ . '\UpdatePathTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use \Drupal\FunctionalTests\Update\UpdatePathTestBase instead. See https://www.drupal.org/node/2896640.', E_USER_DEPRECATED);
-
+use Behat\Mink\Driver\GoutteDriver;
+use Behat\Mink\Mink;
+use Behat\Mink\Selector\SelectorsHandler;
+use Behat\Mink\Session;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Test\TestRunnerKernel;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\HiddenFieldSelector;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,13 +40,9 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @ingroup update_api
  *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\FunctionalTests\Update\UpdatePathTestBase.
- * @see https://www.drupal.org/node/2896640
- *
  * @see hook_update_N()
  */
-abstract class UpdatePathTestBase extends WebTestBase {
+abstract class UpdatePathTestBase extends BrowserTestBase {
 
   use SchemaCheckTestTrait;
 
@@ -152,6 +152,16 @@ abstract class UpdatePathTestBase extends WebTestBase {
    * container that would normally be done via the installer.
    */
   protected function setUp() {
+    $request = Request::createFromGlobals();
+
+    // Boot up Drupal into a state where calling the database API is possible.
+    // This is used to initialize the database system, so we can load the dump
+    // files.
+    $autoloader = require $this->root . '/autoload.php';
+    $kernel = TestRunnerKernel::createFromRequest($request, $autoloader);
+    $kernel->loadLegacyIncludes();
+
+    $this->changeDatabasePrefix();
     $this->runDbTasks();
     // Allow classes to set database dump files.
     $this->setDatabaseDumpFiles();
@@ -163,35 +173,19 @@ abstract class UpdatePathTestBase extends WebTestBase {
       parent::setUp();
       return;
     }
-
     // Set the update url. This must be set here rather than in
     // self::__construct() or the old URL generator will leak additional test
     // sites.
     $this->updateUrl = Url::fromRoute('system.db_update');
 
-    // These methods are called from parent::setUp().
-    $this->setBatch();
-    $this->initUserSession();
-    $this->prepareSettings();
+    $this->setupBaseUrl();
 
-    // Load the database(s).
-    foreach ($this->databaseDumpFiles as $file) {
-      if (substr($file, -3) == '.gz') {
-        $file = "compress.zlib://$file";
-      }
-      require $file;
-    }
-
-    $this->initSettings();
-    $request = Request::createFromGlobals();
-    $container = $this->initKernel($request);
-    $this->initConfig($container);
+    // Install Drupal test site.
+    $this->prepareEnvironment();
+    $this->installDrupal();
 
     // Add the config directories to settings.php.
     drupal_install_config_directories();
-
-    // Restore the original Simpletest batch.
-    $this->restoreBatch();
 
     // Set the container. parent::rebuildAll() would normally do this, but this
     // not safe to do here, because the database has not been updated yet.
@@ -200,6 +194,101 @@ abstract class UpdatePathTestBase extends WebTestBase {
     $this->replaceUser1();
 
     require_once \Drupal::root() . '/core/includes/update.inc';
+
+    // Setup Mink.
+    $session = $this->initMink();
+
+    $cookies = $this->extractCookiesFromRequest(\Drupal::request());
+    foreach ($cookies as $cookie_name => $values) {
+      foreach ($values as $value) {
+        $session->setCookie($cookie_name, $value);
+      }
+    }
+
+    // Creates the directory to store browser output in if a file to write
+    // URLs to has been created by \Drupal\Tests\Listeners\HtmlOutputPrinter.
+    $browser_output_file = getenv('BROWSERTEST_OUTPUT_FILE');
+    $this->htmlOutputEnabled = is_file($browser_output_file);
+    if ($this->htmlOutputEnabled) {
+      $this->htmlOutputFile = $browser_output_file;
+      $this->htmlOutputClassName = str_replace("\\", "_", get_called_class());
+      $this->htmlOutputDirectory = DRUPAL_ROOT . '/sites/simpletest/browser_output';
+      if (file_prepare_directory($this->htmlOutputDirectory, FILE_CREATE_DIRECTORY) && !file_exists($this->htmlOutputDirectory . '/.htaccess')) {
+        file_put_contents($this->htmlOutputDirectory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
+      }
+      $this->htmlOutputCounterStorage = $this->htmlOutputDirectory . '/' . $this->htmlOutputClassName . '.counter';
+      $this->htmlOutputTestId = str_replace('sites/simpletest/', '', $this->siteDirectory);
+      if (is_file($this->htmlOutputCounterStorage)) {
+        $this->htmlOutputCounter = max(1, (int) file_get_contents($this->htmlOutputCounterStorage)) + 1;
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function installDrupal() {
+    $this->initUserSession();
+    $this->prepareSettings();
+    $this->doInstall();
+    $this->initSettings();
+
+    $request = Request::createFromGlobals();
+    $container = $this->initKernel($request);
+    $this->initConfig($container);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doInstall() {
+    $this->runDbTasks();
+    // Allow classes to set database dump files.
+    $this->setDatabaseDumpFiles();
+
+    // Load the database(s).
+    foreach ($this->databaseDumpFiles as $file) {
+      if (substr($file, -3) == '.gz') {
+        $file = "compress.zlib://$file";
+      }
+      require $file;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function initMink() {
+    $driver = $this->getDefaultDriverInstance();
+
+    if ($driver instanceof GoutteDriver) {
+      // Turn off curl timeout. Having a timeout is not a problem in a normal
+      // test running, but it is a problem when debugging. Also, disable SSL
+      // peer verification so that testing under HTTPS always works.
+      /** @var \GuzzleHttp\Client $client */
+      $client = $this->container->get('http_client_factory')->fromOptions([
+        'timeout' => NULL,
+        'verify' => FALSE,
+      ]);
+
+      // Inject a Guzzle middleware to generate debug output for every request
+      // performed in the test.
+      $handler_stack = $client->getConfig('handler');
+      $handler_stack->push($this->getResponseLogHandler());
+
+      $driver->getClient()->setClient($client);
+    }
+
+    $selectors_handler = new SelectorsHandler([
+      'hidden_field_selector' => new HiddenFieldSelector()
+    ]);
+    $session = new Session($driver, $selectors_handler);
+    $this->mink = new Mink();
+    $this->mink->registerSession('default', $session);
+    $this->mink->setDefaultSessionName('default');
+    $this->registerSessions();
+
+    return $session;
   }
 
   /**
@@ -254,6 +343,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
     $this->doSelectionTest();
     // Run the update hooks.
     $this->clickLink(t('Apply pending updates'));
+    $this->checkForMetaRefresh();
 
     // Ensure there are no failed updates.
     if ($this->checkFailedUpdates) {
@@ -323,7 +413,7 @@ abstract class UpdatePathTestBase extends WebTestBase {
       ->addArgument(new Reference('language.default'));
     \Drupal::setContainer($container);
 
-    require_once __DIR__ . '/../../../../../includes/install.inc';
+    require_once __DIR__ . '/../../../../includes/install.inc';
     $connection = Database::getConnection();
     $errors = db_installer_object($connection->driver())->runTasks();
     if (!empty($errors)) {

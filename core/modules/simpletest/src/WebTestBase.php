@@ -8,7 +8,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Database\Database;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Session\AccountInterface;
@@ -390,69 +389,6 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Returns the parameters that will be used when Simpletest installs Drupal.
-   *
-   * @see install_drupal()
-   * @see install_state_defaults()
-   *
-   * @return array
-   *   Array of parameters for use in install_drupal().
-   */
-  protected function installParameters() {
-    $connection_info = Database::getConnectionInfo();
-    $driver = $connection_info['default']['driver'];
-    $connection_info['default']['prefix'] = $connection_info['default']['prefix']['default'];
-    unset($connection_info['default']['driver']);
-    unset($connection_info['default']['namespace']);
-    unset($connection_info['default']['pdo']);
-    unset($connection_info['default']['init_commands']);
-    // Remove database connection info that is not used by SQLite.
-    if ($driver == 'sqlite') {
-      unset($connection_info['default']['username']);
-      unset($connection_info['default']['password']);
-      unset($connection_info['default']['host']);
-      unset($connection_info['default']['port']);
-    }
-    $parameters = [
-      'interactive' => FALSE,
-      'parameters' => [
-        'profile' => $this->profile,
-        'langcode' => 'en',
-      ],
-      'forms' => [
-        'install_settings_form' => [
-          'driver' => $driver,
-          $driver => $connection_info['default'],
-        ],
-        'install_configure_form' => [
-          'site_name' => 'Drupal',
-          'site_mail' => 'simpletest@example.com',
-          'account' => [
-            'name' => $this->rootUser->name,
-            'mail' => $this->rootUser->getEmail(),
-            'pass' => [
-              'pass1' => $this->rootUser->pass_raw,
-              'pass2' => $this->rootUser->pass_raw,
-            ],
-          ],
-          // \Drupal\Core\Render\Element\Checkboxes::valueCallback() requires
-          // NULL instead of FALSE values for programmatic form submissions to
-          // disable a checkbox.
-          'enable_update_status_module' => NULL,
-          'enable_update_status_emails' => NULL,
-        ],
-      ],
-    ];
-
-    // If we only have one db driver available, we cannot set the driver.
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    if (count($this->getDatabaseTypes()) == 1) {
-      unset($parameters['forms']['install_settings_form']['driver']);
-    }
-    return $parameters;
-  }
-
-  /**
    * Preserve the original batch, and instantiate the test batch.
    */
   protected function setBatch() {
@@ -477,21 +413,6 @@ abstract class WebTestBase extends TestBase {
     // Restore the original Simpletest batch.
     $batch = &batch_get();
     $batch = $this->originalBatch;
-  }
-
-  /**
-   * Returns all supported database driver installer objects.
-   *
-   * This wraps drupal_get_database_types() for use without a current container.
-   *
-   * @return \Drupal\Core\Database\Install\Tasks[]
-   *   An array of available database driver installer objects.
-   */
-  protected function getDatabaseTypes() {
-    \Drupal::setContainer($this->originalContainer);
-    $database_types = drupal_get_database_types();
-    \Drupal::unsetContainer();
-    return $database_types;
   }
 
   /**
