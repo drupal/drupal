@@ -64,6 +64,18 @@ class TestForm extends FormBase {
       '#default_value' => 2,
     ];
 
+    $form['duplicate_button'] = [
+      '#type' => 'submit',
+      '#name' => 'duplicate_button',
+      '#value' => 'Duplicate button 1',
+    ];
+
+    $form['duplicate_button_2'] = [
+      '#type' => 'submit',
+      '#name' => 'duplicate_button',
+      '#value' => 'Duplicate button 2',
+    ];
+
     $form['save'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
