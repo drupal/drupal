@@ -7,7 +7,7 @@ use Zumba\GastonJS\Exception\DeadClient;
 use Zumba\Mink\Driver\PhantomJSDriver;
 
 /**
- * Runs a browser test using PhantomJS.
+ * Runs a browser test using a driver that supports Javascript.
  *
  * Base class for testing browser interaction implemented in JavaScript.
  */
@@ -142,7 +142,7 @@ abstract class JavascriptTestBase extends BrowserTestBase {
    * {@inheritdoc}
    */
   public function assertSession($name = NULL) {
-    return new JSWebAssert($this->getSession($name), $this->baseUrl);
+    return new WebDriverWebAssert($this->getSession($name), $this->baseUrl);
   }
 
   /**
