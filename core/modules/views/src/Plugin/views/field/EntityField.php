@@ -316,24 +316,33 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   }
 
   /**
-   * Gets the field storage of the used field.
+   * Gets the field storage definition.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface
+   *   The field storage definition used by this handler.
    */
   protected function getFieldStorageDefinition() {
     $entity_type_id = $this->definition['entity_type'];
     $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
 
-    $field_storage = NULL;
     // @todo Unify 'entity field'/'field_name' instead of converting back and
     //   forth. https://www.drupal.org/node/2410779
-    if (isset($this->definition['field_name'])) {
-      $field_storage = $field_storage_definitions[$this->definition['field_name']];
+    if (isset($this->definition['field_name']) && isset($field_storage_definitions[$this->definition['field_name']])) {
+      return $field_storage_definitions[$this->definition['field_name']];
     }
-    elseif (isset($this->definition['entity field'])) {
-      $field_storage = $field_storage_definitions[$this->definition['entity field']];
+
+    if (isset($this->definition['entity field']) && isset($field_storage_definitions[$this->definition['entity field']])) {
+      return $field_storage_definitions[$this->definition['entity field']];
     }
-    return $field_storage;
+
+    // The list of field storage definitions above does not include computed
+    // base fields, so we need to explicitly fetch a list of all base fields in
+    // order to support them.
+    // @see \Drupal\Core\Entity\EntityFieldManager::getFieldStorageDefinitions()
+    $base_fields = $this->entityManager->getBaseFieldDefinitions($entity_type_id);
+    if (isset($this->definition['field_name']) && isset($base_fields[$this->definition['field_name']])) {
+      return $base_fields[$this->definition['field_name']]->getFieldStorageDefinition();
+    }
   }
 
   /**
