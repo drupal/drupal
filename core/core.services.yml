@@ -192,7 +192,7 @@ services:
       - [setContainer, ['@service_container']]
   cache.backend.database:
     class: Drupal\Core\Cache\DatabaseBackendFactory
-    arguments: ['@database', '@cache_tags.invalidator.checksum', '@settings']
+    arguments: ['@database', '@cache_tags.invalidator.checksum']
   cache.backend.apcu:
     class: Drupal\Core\Cache\ApcuBackendFactory
     arguments: ['@app.root', '@site.path', '@cache_tags.invalidator.checksum']

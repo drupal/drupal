@@ -12,13 +12,6 @@ use Drupal\Core\Cache\DatabaseBackend;
 class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
 
   /**
-   * The max rows to use for test bins.
-   *
-   * @var int
-   */
-  protected static $maxRows = 100;
-
-  /**
    * Modules to enable.
    *
    * @var array
@@ -32,7 +25,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    *   A new DatabaseBackend object.
    */
   protected function createCacheBackend($bin) {
-    return new DatabaseBackend($this->container->get('database'), $this->container->get('cache_tags.invalidator.checksum'), $bin, static::$maxRows);
+    return new DatabaseBackend($this->container->get('database'), $this->container->get('cache_tags.invalidator.checksum'), $bin);
   }
 
   /**
@@ -53,49 +46,6 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
     $cached_value_short = $this->randomMachineName();
     $backend->set($cid_short, $cached_value_short);
     $this->assertIdentical($cached_value_short, $backend->get($cid_short)->data, "Backend contains the correct value for short, non-ASCII cache id.");
-  }
-
-  /**
-   * Tests the row count limiting of cache bin database tables.
-   */
-  public function testGarbageCollection() {
-    $backend = $this->getCacheBackend();
-    $max_rows = static::$maxRows;
-
-    $this->assertSame(0, (int) $this->getNumRows());
-
-    // Fill to just the limit.
-    for ($i = 0; $i < $max_rows; $i++) {
-      $backend->set("test$i", $i);
-    }
-    $this->assertSame($max_rows, $this->getNumRows());
-
-    // Garbage collection has no effect.
-    $backend->garbageCollection();
-    $this->assertSame($max_rows, $this->getNumRows());
-
-    // Go one row beyond the limit.
-    $backend->set('test' . ($max_rows + 1), $max_rows + 1);
-    $this->assertSame($max_rows + 1, $this->getNumRows());
-
-    // Garbage collection removes one row: the oldest.
-    $backend->garbageCollection();
-    $this->assertSame($max_rows, $this->getNumRows());
-    $this->assertFalse($backend->get('test0'));
-  }
-
-  /**
-   * Gets the number of rows in the test cache bin database table.
-   *
-   * @return int
-   *   The number of rows in the test cache bin database table.
-   */
-  protected function getNumRows() {
-    $table = 'cache_' . $this->testBin;
-    $connection = $this->container->get('database');
-    $query = $connection->select($table);
-    $query->addExpression('COUNT(cid)', 'cid');
-    return (int) $query->execute()->fetchField();
   }
 
 }
