@@ -16,6 +16,7 @@ use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\entity_test\Entity\EntityTestComputedField;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
@@ -735,6 +736,16 @@ class EntityFieldTest extends EntityKernelTestBase {
     foreach (entity_test_entity_types() as $entity_type) {
       $this->doTestComputedProperties($entity_type);
     }
+  }
+
+  /**
+   * Test computed fields.
+   */
+  public function testComputedFields() {
+    \Drupal::state()->set('entity_test_computed_field_item_list_value', ['foo computed']);
+
+    $entity = EntityTestComputedField::create([]);
+    $this->assertEquals($entity->computed_string_field->value, 'foo computed');
   }
 
   /**
