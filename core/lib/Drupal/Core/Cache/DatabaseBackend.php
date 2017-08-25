@@ -17,6 +17,30 @@ use Drupal\Core\Database\SchemaObjectExistsException;
 class DatabaseBackend implements CacheBackendInterface {
 
   /**
+   * The default maximum number of rows that this cache bin table can store.
+   *
+   * This maximum is introduced to ensure that the database is not filled with
+   * hundred of thousand of cache entries with gigabytes in size.
+   *
+   * Read about how to change it in the @link cache Cache API topic. @endlink
+   */
+  const DEFAULT_MAX_ROWS = 5000;
+
+  /**
+   * -1 means infinite allows numbers of rows for the cache backend.
+   */
+  const MAXIMUM_NONE = -1;
+
+  /**
+   * The maximum number of rows that this cache bin table is allowed to store.
+   *
+   * * @see ::MAXIMUM_NONE
+   *
+   * @var int
+   */
+  protected $maxRows;
+
+  /**
    * @var string
    */
   protected $bin;
@@ -45,14 +69,18 @@ class DatabaseBackend implements CacheBackendInterface {
    *   The cache tags checksum provider.
    * @param string $bin
    *   The cache bin for which the object is created.
+   * @param int $max_rows
+   *   (optional) The maximum number of rows that are allowed in this cache bin
+   *   table.
    */
-  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin) {
+  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, $max_rows = NULL) {
     // All cache tables should be prefixed with 'cache_'.
     $bin = 'cache_' . $bin;
 
     $this->bin = $bin;
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
+    $this->maxRows = $max_rows === NULL ? static::DEFAULT_MAX_ROWS : $max_rows;
   }
 
   /**
@@ -326,6 +354,22 @@ class DatabaseBackend implements CacheBackendInterface {
    */
   public function garbageCollection() {
     try {
+      // Bounded size cache bin, using FIFO.
+      if ($this->maxRows !== static::MAXIMUM_NONE) {
+        $first_invalid_create_time = $this->connection->select($this->bin)
+          ->fields($this->bin, ['created'])
+          ->orderBy("{$this->bin}.created", 'DESC')
+          ->range($this->maxRows, $this->maxRows + 1)
+          ->execute()
+          ->fetchField();
+
+        if ($first_invalid_create_time) {
+          $this->connection->delete($this->bin)
+            ->condition('created', $first_invalid_create_time, '<=')
+            ->execute();
+        }
+      }
+
       $this->connection->delete($this->bin)
         ->condition('expire', Cache::PERMANENT, '<>')
         ->condition('expire', REQUEST_TIME, '<')
@@ -472,10 +516,20 @@ class DatabaseBackend implements CacheBackendInterface {
       ],
       'indexes' => [
         'expire' => ['expire'],
+        'created' => ['created'],
       ],
       'primary key' => ['cid'],
     ];
     return $schema;
+  }
+
+  /**
+   * The maximum number of rows that this cache bin table is allowed to store.
+   *
+   * @return int
+   */
+  public function getMaxRows() {
+    return $this->maxRows;
   }
 
 }

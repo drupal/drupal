@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Path\AliasStorage;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
@@ -2022,6 +2023,22 @@ function system_update_8402() {
 
       $definition_update_manager
         ->installFieldStorageDefinition($field_name, $entity_type_id, $entity_type_id, $storage_definition);
+    }
+  }
+}
+
+/**
+ * Delete all cache_* tables. They are recreated on demand with the new schema.
+ */
+function system_update_8403() {
+  foreach (Cache::getBins() as $bin => $cache_backend) {
+    // Try to delete the table regardless of which cache backend is handling it.
+    // This is to ensure the new schema is used if the configuration for the
+    // backend class is changed after the update hook runs.
+    $table_name = "cache_$bin";
+    $schema = Database::getConnection()->schema();
+    if ($schema->tableExists($table_name)) {
+      $schema->dropTable($table_name);
     }
   }
 }
