@@ -39,8 +39,5 @@ watcher
     fs.stat(`${fileName}.js`, () => {
       fs.unlink(`${fileName}.js`, unlinkHandler);
     });
-    fs.stat(`${fileName}.js.map`, () => {
-      fs.unlink(`${fileName}.js.map`, unlinkHandler);
-    });
   })
   .on('ready', () => log(`Watching '${fileMatch}' for changes.`));
