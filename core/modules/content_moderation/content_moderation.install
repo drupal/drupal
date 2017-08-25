@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Content Moderation module.
+ */
+
+/**
+ * Remove the 'content_revision_tracker' table.
+ */
+function content_moderation_update_8401() {
+  $database_schema = \Drupal::database()->schema();
+  if ($database_schema->tableExists('content_revision_tracker')) {
+    $database_schema->dropTable('content_revision_tracker');
+  }
+}

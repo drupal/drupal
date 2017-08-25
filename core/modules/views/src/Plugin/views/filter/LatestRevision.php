@@ -1,12 +1,10 @@
 <?php
 
-namespace Drupal\content_moderation\Plugin\views\filter;
+namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\views\Plugin\ViewsHandlerManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -34,13 +32,6 @@ class LatestRevision extends FilterPluginBase implements ContainerFactoryPluginI
   protected $joinHandler;
 
   /**
-   * Database Connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a new LatestRevision.
    *
    * @param array $configuration
@@ -53,14 +44,12 @@ class LatestRevision extends FilterPluginBase implements ContainerFactoryPluginI
    *   Entity Type Manager Service.
    * @param \Drupal\views\Plugin\ViewsHandlerManager $join_handler
    *   Views Handler Plugin Manager.
-   * @param \Drupal\Core\Database\Connection $connection
-   *   Database Connection.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ViewsHandlerManager $join_handler, Connection $connection) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ViewsHandlerManager $join_handler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+
     $this->entityTypeManager = $entity_type_manager;
     $this->joinHandler = $join_handler;
-    $this->connection = $connection;
   }
 
   /**
@@ -70,8 +59,7 @@ class LatestRevision extends FilterPluginBase implements ContainerFactoryPluginI
     return new static(
       $configuration, $plugin_id, $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.views.join'),
-      $container->get('database')
+      $container->get('plugin.manager.views.join')
     );
   }
 
@@ -98,39 +86,28 @@ class LatestRevision extends FilterPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function query() {
-    // The table doesn't exist until a moderated node has been saved at least
-    // once. Just in case, disable this filter until then. Note that this means
-    // the view will still show all revisions, not just latest, but this is
-    // sufficiently edge-case-y that it's probably not worth the time to
-    // handle more robustly.
-    if (!$this->connection->schema()->tableExists('content_revision_tracker')) {
-      return;
-    }
-
-    $table = $this->ensureMyTable();
-
     /** @var \Drupal\views\Plugin\views\query\Sql $query */
     $query = $this->query;
+    $query_base_table = $this->relationship ?: $this->view->storage->get('base_table');
 
-    $definition = $this->entityTypeManager->getDefinition($this->getEntityType());
-    $keys = $definition->getKeys();
+    $entity_type = $this->entityTypeManager->getDefinition($this->getEntityType());
+    $keys = $entity_type->getKeys();
 
     $definition = [
-      'table' => 'content_revision_tracker',
-      'type' => 'INNER',
-      'field' => 'entity_id',
-      'left_table' => $table,
+      'table' => $query_base_table,
+      'type' => 'LEFT',
+      'field' => $keys['id'],
+      'left_table' => $query_base_table,
       'left_field' => $keys['id'],
       'extra' => [
-        ['left_field' => $keys['langcode'], 'field' => 'langcode'],
-        ['left_field' => $keys['revision'], 'field' => 'revision_id'],
-        ['field' => 'entity_type', 'value' => $this->getEntityType()],
+        ['left_field' => $keys['revision'], 'field' => $keys['revision'], 'operator' => '>'],
       ],
     ];
 
     $join = $this->joinHandler->createInstance('standard', $definition);
 
-    $query->ensureTable('content_revision_tracker', $this->relationship, $join);
+    $join_table_alias = $query->addTable($query_base_table, $this->relationship, $join);
+    $query->addWhere($this->options['group'], "$join_table_alias.{$keys['id']}", NULL, 'IS NULL');
   }
 
 }

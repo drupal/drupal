@@ -142,6 +142,10 @@ views.filter.language:
   type: views.filter.in_operator
   label: 'Language'
 
+views.filter.latest_revision:
+  type: views_filter
+  label: 'Latest revision'
+
 views.filter_value.date:
   type: views.filter_value.numeric
   label: 'Date'

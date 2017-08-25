@@ -17,13 +17,6 @@ function content_moderation_views_data() {
 }
 
 /**
- * Implements hook_views_data_alter().
- */
-function content_moderation_views_data_alter(array &$data) {
-  _content_moderation_views_data_object()->alterViewsData($data);
-}
-
-/**
  * Creates a ViewsData object to respond to views hooks.
  *
  * @return \Drupal\content_moderation\ViewsData

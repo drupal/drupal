@@ -236,6 +236,13 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
           'type' => 'INNER',
         ];
       }
+
+      // Add a filter for showing only the latest revisions of an entity.
+      $data[$revision_table]['latest_revision'] = [
+        'title' => $this->t('Is Latest Revision'),
+        'help' => $this->t('Restrict the view to only revisions that are the latest revision of their entity.'),
+        'filter' => ['id' => 'latest_revision'],
+      ];
     }
 
     $this->addEntityLinks($data[$base_table]);
