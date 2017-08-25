@@ -606,6 +606,30 @@
  *  $settings['cache']['default'] = 'cache.custom';
  * @endcode
  *
+ * For cache bins that are stored in the database, the number of rows is limited
+ * to 5000 by default. This can be changed for all database cache bins. For
+ * example, to instead limit the number of rows to 50000:
+ * @code
+ * $settings['database_cache_max_rows']['default'] = 50000;
+ * @endcode
+ *
+ * Or per bin (in this example we allow infinite entries):
+ * @code
+ * $settings['database_cache_max_rows']['bins']['dynamic_page_cache'] = -1;
+ * @endcode
+ *
+ * For monitoring reasons it might be useful to figure out the amount of data
+ * stored in tables. The following SQL snippet can be used for that:
+ * @code
+ * SELECT table_name AS `Table`, table_rows AS 'Num. of Rows',
+ * ROUND(((data_length + index_length) / 1024 / 1024), 2) `Size in MB` FROM
+ * information_schema.TABLES WHERE table_schema = '***DATABASE_NAME***' AND
+ * table_name LIKE 'cache_%'  ORDER BY (data_length + index_length) DESC
+ * LIMIT 10;
+ * @encode
+ *
+ * @see \Drupal\Core\Cache\DatabaseBackend
+ *
  * Finally, you can chain multiple cache backends together, see
  * \Drupal\Core\Cache\ChainedFastBackend and \Drupal\Core\Cache\BackendChain.
  *
