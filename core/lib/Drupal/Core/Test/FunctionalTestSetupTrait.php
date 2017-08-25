@@ -6,11 +6,13 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
+use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
@@ -446,6 +448,212 @@ trait FunctionalTestSetupTrait {
     //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
     //   appears to be calling a different container.
     $this->container->get('stream_wrapper_manager')->register();
+  }
+
+  /**
+   * Returns the parameters that will be used when Simpletest installs Drupal.
+   *
+   * @see install_drupal()
+   * @see install_state_defaults()
+   *
+   * @return array
+   *   Array of parameters for use in install_drupal().
+   */
+  protected function installParameters() {
+    $connection_info = Database::getConnectionInfo();
+    $driver = $connection_info['default']['driver'];
+    $connection_info['default']['prefix'] = $connection_info['default']['prefix']['default'];
+    unset($connection_info['default']['driver']);
+    unset($connection_info['default']['namespace']);
+    unset($connection_info['default']['pdo']);
+    unset($connection_info['default']['init_commands']);
+    // Remove database connection info that is not used by SQLite.
+    if ($driver === 'sqlite') {
+      unset($connection_info['default']['username']);
+      unset($connection_info['default']['password']);
+      unset($connection_info['default']['host']);
+      unset($connection_info['default']['port']);
+    }
+    $parameters = [
+      'interactive' => FALSE,
+      'parameters' => [
+        'profile' => $this->profile,
+        'langcode' => 'en',
+      ],
+      'forms' => [
+        'install_settings_form' => [
+          'driver' => $driver,
+          $driver => $connection_info['default'],
+        ],
+        'install_configure_form' => [
+          'site_name' => 'Drupal',
+          'site_mail' => 'simpletest@example.com',
+          'account' => [
+            'name' => $this->rootUser->name,
+            'mail' => $this->rootUser->getEmail(),
+            'pass' => [
+              'pass1' => isset($this->rootUser->pass_raw) ? $this->rootUser->pass_raw : $this->rootUser->passRaw,
+              'pass2' => isset($this->rootUser->pass_raw) ? $this->rootUser->pass_raw : $this->rootUser->passRaw,
+            ],
+          ],
+          // form_type_checkboxes_value() requires NULL instead of FALSE values
+          // for programmatic form submissions to disable a checkbox.
+          'enable_update_status_module' => NULL,
+          'enable_update_status_emails' => NULL,
+        ],
+      ],
+    ];
+
+    // If we only have one db driver available, we cannot set the driver.
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    if (count($this->getDatabaseTypes()) == 1) {
+      unset($parameters['forms']['install_settings_form']['driver']);
+    }
+    return $parameters;
+  }
+
+  /**
+   * Sets up the base URL based upon the environment variable.
+   *
+   * @throws \Exception
+   *   Thrown when no SIMPLETEST_BASE_URL environment variable is provided.
+   */
+  protected function setupBaseUrl() {
+    global $base_url;
+
+    // Get and set the domain of the environment we are running our test
+    // coverage against.
+    $base_url = getenv('SIMPLETEST_BASE_URL');
+    if (!$base_url) {
+      throw new \Exception(
+        'You must provide a SIMPLETEST_BASE_URL environment variable to run some PHPUnit based functional tests.'
+      );
+    }
+
+    // Setup $_SERVER variable.
+    $parsed_url = parse_url($base_url);
+    $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
+    $path = isset($parsed_url['path']) ? rtrim(rtrim($parsed_url['path']), '/') : '';
+    $port = isset($parsed_url['port']) ? $parsed_url['port'] : 80;
+
+    $this->baseUrl = $base_url;
+
+    // If the passed URL schema is 'https' then setup the $_SERVER variables
+    // properly so that testing will run under HTTPS.
+    if ($parsed_url['scheme'] === 'https') {
+      $_SERVER['HTTPS'] = 'on';
+    }
+    $_SERVER['HTTP_HOST'] = $host;
+    $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+    $_SERVER['SERVER_ADDR'] = '127.0.0.1';
+    $_SERVER['SERVER_PORT'] = $port;
+    $_SERVER['SERVER_SOFTWARE'] = NULL;
+    $_SERVER['SERVER_NAME'] = 'localhost';
+    $_SERVER['REQUEST_URI'] = $path . '/';
+    $_SERVER['REQUEST_METHOD'] = 'GET';
+    $_SERVER['SCRIPT_NAME'] = $path . '/index.php';
+    $_SERVER['SCRIPT_FILENAME'] = $path . '/index.php';
+    $_SERVER['PHP_SELF'] = $path . '/index.php';
+    $_SERVER['HTTP_USER_AGENT'] = 'Drupal command line';
+  }
+
+  /**
+   * Prepares the current environment for running the test.
+   *
+   * Also sets up new resources for the testing environment, such as the public
+   * filesystem and configuration directories.
+   *
+   * This method is private as it must only be called once by
+   * BrowserTestBase::setUp() (multiple invocations for the same test would have
+   * unpredictable consequences) and it must not be callable or overridable by
+   * test classes.
+   */
+  protected function prepareEnvironment() {
+    // Bootstrap Drupal so we can use Drupal's built in functions.
+    $this->classLoader = require __DIR__ . '/../../../../../autoload.php';
+    $request = Request::createFromGlobals();
+    $kernel = TestRunnerKernel::createFromRequest($request, $this->classLoader);
+    // TestRunnerKernel expects the working directory to be DRUPAL_ROOT.
+    chdir(DRUPAL_ROOT);
+    $kernel->prepareLegacyRequest($request);
+    $this->prepareDatabasePrefix();
+
+    $this->originalSite = $kernel->findSitePath($request);
+
+    // Create test directory ahead of installation so fatal errors and debug
+    // information can be logged during installation process.
+    file_prepare_directory($this->siteDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+
+    // Prepare filesystem directory paths.
+    $this->publicFilesDirectory = $this->siteDirectory . '/files';
+    $this->privateFilesDirectory = $this->siteDirectory . '/private';
+    $this->tempFilesDirectory = $this->siteDirectory . '/temp';
+    $this->translationFilesDirectory = $this->siteDirectory . '/translations';
+
+    // Ensure the configImporter is refreshed for each test.
+    $this->configImporter = NULL;
+
+    // Unregister all custom stream wrappers of the parent site.
+    $wrappers = \Drupal::service('stream_wrapper_manager')->getWrappers(StreamWrapperInterface::ALL);
+    foreach ($wrappers as $scheme => $info) {
+      stream_wrapper_unregister($scheme);
+    }
+
+    // Reset statics.
+    drupal_static_reset();
+
+    $this->container = NULL;
+
+    // Unset globals.
+    unset($GLOBALS['config_directories']);
+    unset($GLOBALS['config']);
+    unset($GLOBALS['conf']);
+
+    // Log fatal errors.
+    ini_set('log_errors', 1);
+    ini_set('error_log', DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
+
+    // Change the database prefix.
+    $this->changeDatabasePrefix();
+
+    // After preparing the environment and changing the database prefix, we are
+    // in a valid test environment.
+    drupal_valid_test_ua($this->databasePrefix);
+
+    // Reset settings.
+    new Settings([
+      // For performance, simply use the database prefix as hash salt.
+      'hash_salt' => $this->databasePrefix,
+    ]);
+
+    drupal_set_time_limit($this->timeLimit);
+
+    // Save and clean the shutdown callbacks array because it is static cached
+    // and will be changed by the test run. Otherwise it will contain callbacks
+    // from both environments and the testing environment will try to call the
+    // handlers defined by the original one.
+    $callbacks = &drupal_register_shutdown_function();
+    $this->originalShutdownCallbacks = $callbacks;
+    $callbacks = [];
+  }
+
+  /**
+   * Returns all supported database driver installer objects.
+   *
+   * This wraps drupal_get_database_types() for use without a current container.
+   *
+   * @return \Drupal\Core\Database\Install\Tasks[]
+   *   An array of available database driver installer objects.
+   */
+  protected function getDatabaseTypes() {
+    if ($this->originalContainer) {
+      \Drupal::setContainer($this->originalContainer);
+    }
+    $database_types = drupal_get_database_types();
+    if ($this->originalContainer) {
+      \Drupal::unsetContainer();
+    }
+    return $database_types;
   }
 
 }

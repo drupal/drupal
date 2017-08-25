@@ -141,7 +141,7 @@ trait TestSetupTrait {
    * @see \Drupal\simpletest\TestBase::prepareEnvironment()
    * @see drupal_valid_test_ua()
    */
-  private function prepareDatabasePrefix() {
+  protected function prepareDatabasePrefix() {
     $test_db = new TestDatabase();
     $this->siteDirectory = $test_db->getTestSitePath();
     $this->databasePrefix = $test_db->getDatabasePrefix();
@@ -150,7 +150,7 @@ trait TestSetupTrait {
   /**
    * Changes the database connection to the prefixed one.
    */
-  private function changeDatabasePrefix() {
+  protected function changeDatabasePrefix() {
     if (empty($this->databasePrefix)) {
       $this->prepareDatabasePrefix();
     }
@@ -158,7 +158,7 @@ trait TestSetupTrait {
     // If the test is run with argument dburl then use it.
     $db_url = getenv('SIMPLETEST_DB');
     if (!empty($db_url)) {
-      $database = Database::convertDbUrlToConnectionInfo($db_url, DRUPAL_ROOT);
+      $database = Database::convertDbUrlToConnectionInfo($db_url, isset($this->root) ? $this->root : DRUPAL_ROOT);
       Database::addConnectionInfo('default', 'default', $database);
     }
 
