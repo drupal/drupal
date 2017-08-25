@@ -212,14 +212,18 @@ class WorkflowTest extends UnitTestCase {
     $workflow_type
       ->addState('draft', 'Draft')
       ->addState('published', 'Published')
+      ->addState('archived', 'Archived')
       ->addTransition('publish', 'Publish', ['draft', 'published'], 'published')
-      ->addTransition('create_new_draft', 'Create new draft', ['draft', 'published'], 'draft');
-    $this->assertCount(2, $workflow_type->getStates());
-    $this->assertCount(2, $workflow_type->getState('published')->getTransitions());
+      ->addTransition('create_new_draft', 'Create new draft', ['draft', 'published'], 'draft')
+      ->addTransition('archive', 'Archive', ['draft', 'published'], 'archived');
+    $this->assertCount(3, $workflow_type->getStates());
+    $this->assertCount(3, $workflow_type->getState('published')->getTransitions());
     $workflow_type->deleteState('draft');
     $this->assertFalse($workflow_type->hasState('draft'));
-    $this->assertCount(1, $workflow_type->getStates());
-    $this->assertCount(1, $workflow_type->getState('published')->getTransitions());
+    $this->assertCount(2, $workflow_type->getStates());
+    $this->assertCount(2, $workflow_type->getState('published')->getTransitions());
+    $workflow_type->deleteState('published');
+    $this->assertCount(0, $workflow_type->getTransitions());
   }
 
   /**
