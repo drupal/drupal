@@ -1,0 +1,12 @@
+# Schema for the configuration files of the Test theme settings.
+
+test_theme_settings.settings:
+  type: theme_settings
+  label: 'Test theme settings'
+  mapping:
+    custom_logo:
+      type: sequence
+      label: 'Custom logo'
+      sequence:
+        type: integer
+        label: 'fids'
