@@ -7,7 +7,6 @@ use Drupal\Component\Assertion\Handle;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Database\Database;
@@ -78,7 +77,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       ],
       'cache.container' => [
         'class' => 'Drupal\Core\Cache\DatabaseBackend',
-        'arguments' => ['@database', '@cache_tags_provider.container', 'container', DatabaseBackend::MAXIMUM_NONE],
+        'arguments' => ['@database', '@cache_tags_provider.container', 'container'],
       ],
       'cache_tags_provider.container' => [
         'class' => 'Drupal\Core\Cache\DatabaseCacheTagsChecksum',
