@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Routing\RedirectDestinationTrait;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -10,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ingroup entity_api
  */
 class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderInterface, EntityHandlerInterface {
+
+  use RedirectDestinationTrait;
 
   /**
    * The entity storage class.
@@ -143,14 +147,14 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
       $operations['edit'] = [
         'title' => $this->t('Edit'),
         'weight' => 10,
-        'url' => $entity->urlInfo('edit-form'),
+        'url' => $this->ensureDestination($entity->toUrl('edit-form')),
       ];
     }
     if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
       $operations['delete'] = [
         'title' => $this->t('Delete'),
         'weight' => 100,
-        'url' => $entity->urlInfo('delete-form'),
+        'url' => $this->ensureDestination($entity->toUrl('delete-form')),
       ];
     }
 
@@ -248,6 +252,19 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    */
   protected function getTitle() {
     return;
+  }
+
+  /**
+   * Ensures that a destination is present on the given URL.
+   *
+   * @param \Drupal\Core\Url $url
+   *   The URL object to which the destination should be added.
+   *
+   * @return \Drupal\Core\Url
+   *   The updated URL object.
+   */
+  protected function ensureDestination(Url $url) {
+    return $url->mergeOptions(['query' => $this->getRedirectDestination()->getAsArray()]);
   }
 
 }

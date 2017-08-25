@@ -84,7 +84,7 @@ class EntityOperations extends FieldPluginBase {
     $options = parent::defineOptions();
 
     $options['destination'] = [
-      'default' => TRUE,
+      'default' => FALSE,
     ];
 
     return $options;
@@ -99,7 +99,7 @@ class EntityOperations extends FieldPluginBase {
     $form['destination'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Include destination'),
-      '#description' => $this->t('Include a <code>destination</code> parameter in the link to return the user to the original view upon completing the link action.'),
+      '#description' => $this->t('Enforce a <code>destination</code> parameter in the link to return the user to the original view upon completing the link action. Most operations include a destination by default and this setting is no longer needed.'),
       '#default_value' => $this->options['destination'],
     ];
   }

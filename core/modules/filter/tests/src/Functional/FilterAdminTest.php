@@ -4,6 +4,7 @@ namespace Drupal\Tests\filter\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Url;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -135,16 +136,9 @@ class FilterAdminTest extends BrowserTestBase {
 
     // Edit text format.
     $this->drupalGet('admin/config/content/formats');
-    // Cannot use the assertNoLinkByHref method as it does partial url matching
-    // and 'admin/config/content/formats/manage/' . $format_id . '/disable'
-    // exists.
-    // @todo: See https://www.drupal.org/node/2031223 for the above.
-    $edit_link = $this->xpath('//a[@href=:href]', [
-      ':href' => \Drupal::url('entity.filter_format.edit_form', ['filter_format' => $format_id])
-    ]);
-    $this->assertNotEmpty($edit_link, format_string('Link href %href found.',
-      ['%href' => 'admin/config/content/formats/manage/' . $format_id]
-    ));
+    $destination = Url::fromRoute('filter.admin_overview')->toString();
+    $edit_href = Url::fromRoute('entity.filter_format.edit_form', ['filter_format' => $format_id], ['query' => ['destination' => $destination]])->toString();
+    $this->assertSession()->linkByHrefExists($edit_href);
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
     $this->drupalPostForm(NULL, [], t('Save configuration'));
 

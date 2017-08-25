@@ -44,14 +44,15 @@ class ConfigurationTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/system/actions/add/' . Crypt::hashBase64('action_goto_action'), $edit, t('Save'));
     $this->assertResponse(200);
 
+    $action_id = $edit['id'];
+
     // Make sure that the new complex action was saved properly.
     $this->assertText(t('The action has been successfully saved.'), "Make sure we get a confirmation that we've successfully saved the complex action.");
     $this->assertText($action_label, "Make sure the action label appears on the configuration page after we've saved the complex action.");
 
     // Make another POST request to the action edit page.
     $this->clickLink(t('Configure'));
-    preg_match('|admin/config/system/actions/configure/(.+)|', $this->getUrl(), $matches);
-    $aid = $matches[1];
+
     $edit = [];
     $new_action_label = $this->randomMachineName();
     $edit['label'] = $new_action_label;
@@ -73,7 +74,7 @@ class ConfigurationTest extends BrowserTestBase {
     $this->clickLink(t('Delete'));
     $this->assertResponse(200);
     $edit = [];
-    $this->drupalPostForm("admin/config/system/actions/configure/$aid/delete", $edit, t('Delete'));
+    $this->drupalPostForm(NULL, $edit, t('Delete'));
     $this->assertResponse(200);
 
     // Make sure that the action was actually deleted.
@@ -82,7 +83,7 @@ class ConfigurationTest extends BrowserTestBase {
     $this->assertResponse(200);
     $this->assertNoText($new_action_label, "Make sure the action label does not appear on the overview page after we've deleted the action.");
 
-    $action = Action::load($aid);
+    $action = Action::load($action_id);
     $this->assertFalse($action, 'Make sure the action is gone after being deleted.');
   }
 
