@@ -324,9 +324,21 @@ class ThemeSettingsForm extends ConfigFormBase {
       // Process the theme and all its base themes.
       foreach ($theme_keys as $theme) {
         // Include the theme-settings.php file.
-        $filename = DRUPAL_ROOT . '/' . $themes[$theme]->getPath() . '/theme-settings.php';
-        if (file_exists($filename)) {
-          require_once $filename;
+        $theme_path = drupal_get_path('theme', $theme);
+        $theme_settings_file = $theme_path . '/theme-settings.php';
+        $theme_file = $theme_path . '/' . $theme . '.theme';
+        $filenames = [$theme_settings_file, $theme_file];
+        foreach ($filenames as $filename) {
+          if (file_exists($filename)) {
+            require_once $filename;
+
+            // The file must be required for the cached form too.
+            $files = $form_state->getBuildInfo()['files'];
+            if (!in_array($filename, $files)) {
+              $files[] = $filename;
+            }
+            $form_state->addBuildInfo('files', $files);
+          }
         }
 
         // Call theme-specific settings.
