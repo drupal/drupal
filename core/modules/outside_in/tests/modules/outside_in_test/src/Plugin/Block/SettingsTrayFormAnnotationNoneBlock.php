@@ -9,10 +9,10 @@ use Drupal\Core\Block\BlockBase;
  *
  * @Block(
  *   id = "outside_in_test_none",
- *   admin_label = "Settings Tray test block: forms[off_canvas] is not specified",
+ *   admin_label = "Settings Tray test block: forms[settings_tray] is not specified",
  * )
  */
-class OffCanvasFormAnnotationNoneBlock extends BlockBase {
+class SettingsTrayFormAnnotationNoneBlock extends BlockBase {
 
   /**
    * {@inheritdoc}

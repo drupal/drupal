@@ -9,17 +9,17 @@ use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 
 /**
- * Determines whether the requested block has an 'off_canvas' form.
+ * Determines whether the requested block has a 'settings_tray' form.
  *
  * @internal
  */
-class BlockPluginHasOffCanvasFormAccessCheck implements AccessInterface {
+class BlockPluginHasSettingsTrayFormAccessCheck implements AccessInterface {
 
   /**
-   * Checks access for accessing a block's 'off_canvas' form.
+   * Checks access for accessing a block's 'settings_tray' form.
    *
    * @param \Drupal\block\BlockInterface $block
-   *   The block whose 'off_canvas' form is being accessed.
+   *   The block whose 'settings_tray' form is being accessed.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
@@ -31,10 +31,10 @@ class BlockPluginHasOffCanvasFormAccessCheck implements AccessInterface {
   }
 
   /**
-   * Checks access for accessing a block plugin's 'off_canvas' form.
+   * Checks access for accessing a block plugin's 'settings_tray' form.
    *
    * @param \Drupal\Core\Block\BlockPluginInterface $block_plugin
-   *   The block plugin whose 'off_canvas' form is being accessed.
+   *   The block plugin whose 'settings_tray' form is being accessed.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
@@ -42,7 +42,7 @@ class BlockPluginHasOffCanvasFormAccessCheck implements AccessInterface {
    * @see outside_in_preprocess_block()
    */
   public function accessBlockPlugin(BlockPluginInterface $block_plugin) {
-    return AccessResult::allowedIf($block_plugin instanceof PluginWithFormsInterface && $block_plugin->hasFormClass('off_canvas'));
+    return AccessResult::allowedIf($block_plugin instanceof PluginWithFormsInterface && $block_plugin->hasFormClass('settings_tray'));
   }
 
 }

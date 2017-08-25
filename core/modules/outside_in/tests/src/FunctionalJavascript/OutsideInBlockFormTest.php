@@ -5,8 +5,8 @@ namespace Drupal\Tests\outside_in\FunctionalJavascript;
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\outside_in_test\Plugin\Block\OffCanvasFormAnnotationIsClassBlock;
-use Drupal\outside_in_test\Plugin\Block\OffCanvasFormAnnotationNoneBlock;
+use Drupal\outside_in_test\Plugin\Block\SettingsTrayFormAnnotationIsClassBlock;
+use Drupal\outside_in_test\Plugin\Block\SettingsTrayFormAnnotationNoneBlock;
 use Drupal\user\Entity\Role;
 
 /**
@@ -185,7 +185,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       ],
       // This is the functional JS test coverage accompanying
       // \Drupal\Tests\outside_in\Functional\OutsideInTest::testPossibleAnnotations().
-      OffCanvasFormAnnotationIsClassBlock::class => [
+      SettingsTrayFormAnnotationIsClassBlock::class => [
         'block_plugin' => 'outside_in_test_class',
         'new_page_text' => NULL,
         'element_selector' => 'span',
@@ -195,7 +195,7 @@ class OutsideInBlockFormTest extends OutsideInJavascriptTestBase {
       ],
       // This is the functional JS test coverage accompanying
       // \Drupal\Tests\outside_in\Functional\OutsideInTest::testPossibleAnnotations().
-      OffCanvasFormAnnotationNoneBlock::class => [
+      SettingsTrayFormAnnotationNoneBlock::class => [
         'block_plugin' => 'outside_in_test_none',
         'new_page_text' => NULL,
         'element_selector' => 'span',

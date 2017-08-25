@@ -8,15 +8,15 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
-use Drupal\outside_in\Access\BlockPluginHasOffCanvasFormAccessCheck;
+use Drupal\outside_in\Access\BlockPluginHasSettingsTrayFormAccessCheck;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\outside_in\Access\BlockPluginHasOffCanvasFormAccessCheck
+ * @coversDefaultClass \Drupal\outside_in\Access\BlockPluginHasSettingsTrayFormAccessCheck
  * @group outside_in
  */
-class BlockPluginHasOffCanvasFormAccessCheckTest extends UnitTestCase {
+class BlockPluginHasSettingsTrayFormAccessCheckTest extends UnitTestCase {
 
   /**
    * @covers ::access
@@ -36,7 +36,7 @@ class BlockPluginHasOffCanvasFormAccessCheckTest extends UnitTestCase {
     $block = $this->prophesize(BlockInterface::class);
     $block->getPlugin()->willReturn($block_plugin->reveal());
 
-    $access_check = new BlockPluginHasOffCanvasFormAccessCheck();
+    $access_check = new BlockPluginHasSettingsTrayFormAccessCheck();
     $this->assertEquals($expected_access_result, $access_check->access($block->reveal()));
     $this->assertEquals($expected_access_result, $access_check->accessBlockPlugin($block_plugin->reveal()));
   }
@@ -45,49 +45,49 @@ class BlockPluginHasOffCanvasFormAccessCheckTest extends UnitTestCase {
    * Provides test data for ::testAccess().
    */
   public function providerTestAccess() {
-    $annotation_forms_off_canvas_class = [
+    $annotation_forms_settings_tray_class = [
       'forms' => [
-        'off_canvas' => $this->randomMachineName(),
+        'settings_tray' => $this->randomMachineName(),
       ],
     ];
-    $annotation_forms_off_canvas_not_set = [];
-    $annotation_forms_off_canvas_false = [
+    $annotation_forms_settings_tray_not_set = [];
+    $annotation_forms_settings_tray_false = [
       'forms' => [
-        'off_canvas' => FALSE,
+        'settings_tray' => FALSE,
       ],
     ];
     return [
-      'block plugin with forms, forms[off_canvas] set to class' => [
+      'block plugin with forms, forms[settings_tray] set to class' => [
         TRUE,
-        $annotation_forms_off_canvas_class,
+        $annotation_forms_settings_tray_class,
         new AccessResultAllowed(),
       ],
-      'block plugin with forms, forms[off_canvas] not set' => [
+      'block plugin with forms, forms[settings_tray] not set' => [
         TRUE,
-        $annotation_forms_off_canvas_not_set,
+        $annotation_forms_settings_tray_not_set,
         new AccessResultNeutral(),
       ],
-      'block plugin with forms, forms[off_canvas] set to FALSE' => [
+      'block plugin with forms, forms[settings_tray] set to FALSE' => [
         TRUE,
-        $annotation_forms_off_canvas_false,
+        $annotation_forms_settings_tray_false,
         new AccessResultNeutral(),
       ],
       // In practice, all block plugins extend BlockBase, which means they all
       // implement PluginWithFormsInterface, but this may change in the future.
       // This ensures Settings Tray will continue to work correctly.
-      'block plugin without forms, forms[off_canvas] set to class' => [
+      'block plugin without forms, forms[settings_tray] set to class' => [
         FALSE,
-        $annotation_forms_off_canvas_class,
+        $annotation_forms_settings_tray_class,
         new AccessResultNeutral(),
       ],
-      'block plugin without forms, forms[off_canvas] not set' => [
+      'block plugin without forms, forms[settings_tray] not set' => [
         FALSE,
-        $annotation_forms_off_canvas_not_set,
+        $annotation_forms_settings_tray_not_set,
         new AccessResultNeutral(),
       ],
-      'block plugin without forms, forms[off_canvas] set to FALSE' => [
+      'block plugin without forms, forms[settings_tray] set to FALSE' => [
         FALSE,
-        $annotation_forms_off_canvas_false,
+        $annotation_forms_settings_tray_false,
         new AccessResultNeutral(),
       ],
     ];

@@ -27,7 +27,7 @@
  * in its plugin annotation:
  * @code
  * forms = {
- *   "off_canvas" = "\Drupal\some_module\Form\MyBlockOffCanvasForm",
+ *   "settings_tray" = "\Drupal\some_module\Form\MyBlockOffCanvasForm",
  * },
  * @encode
  *
@@ -36,7 +36,7 @@
  * off-canvas form:
  * @code
  * forms = {
- *   "off_canvas" = FALSE,
+ *   "settings_tray" = FALSE,
  * },
  * @encode
  *
@@ -47,7 +47,7 @@
  * this added to its annotation:
  * @code
  * forms = {
- *   "off_canvas" = "\Drupal\system\Plugin\Block\SystemPoweredByBlock",
+ *   "settings_tray" = "\Drupal\system\Plugin\Block\SystemPoweredByBlock",
  * },
  * @encode
  *
