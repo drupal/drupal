@@ -736,7 +736,6 @@ abstract class BrowserTestBase extends TestCase {
     }
 
     $this->drupalGet('user/login');
-    $this->assertSession()->statusCodeEquals(200);
     $this->submitForm([
       'name' => $account->getUsername(),
       'pass' => $account->passRaw,
@@ -761,7 +760,6 @@ abstract class BrowserTestBase extends TestCase {
     // screen.
     $assert_session = $this->assertSession();
     $this->drupalGet('user/logout', ['query' => ['destination' => 'user']]);
-    $assert_session->statusCodeEquals(200);
     $assert_session->fieldExists('name');
     $assert_session->fieldExists('pass');
 

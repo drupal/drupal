@@ -123,7 +123,6 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
 
     // Save the form to create the type.
     $page->pressButton('Save');
-    $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('The media type ' . $media_type_id . ' has been added.');
     $this->drupalGet('admin/structure/media');
     $assert_session->pageTextContains($media_type_id);
