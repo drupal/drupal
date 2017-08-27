@@ -46,12 +46,27 @@
     },
 
     /**
+     * Remove off-canvas dialog events.
+     *
+     * @param {jQuery} $element
+     *   The target element.
+     */
+    removeOffCanvasEvents($element) {
+      $element.off('.off-canvas');
+      $(document).off('.off-canvas');
+      $(window).off('.off-canvas');
+    },
+
+    /**
      * Handler fired before an off-canvas dialog has been opened.
      * @param  {Object} settings
      *   Settings related to the composition of the dialog.
      * @return {undefined}
      */
-    beforeCreate({ settings }) {
+    beforeCreate({ settings, $element }) {
+      // Clean up previous dialog event handlers.
+      Drupal.offCanvas.removeOffCanvasEvents($element);
+
       $('body').addClass('js-tray-open');
       settings.dialogClass += ' ui-dialog-off-canvas';
       // @see http://api.jqueryui.com/position/
@@ -72,11 +87,11 @@
      * Handler fired after an off-canvas dialog has been closed.
      * @return {undefined}
      */
-    beforeClose() {
+    beforeClose({ $element }) {
       $('body').removeClass('js-tray-open');
       // Remove all *.off-canvas events
-      $(document).off('.off-canvas');
-      $(window).off('.off-canvas');
+      Drupal.offCanvas.removeOffCanvasEvents($element);
+
       Drupal.offCanvas.$mainCanvasWrapper.css(`padding-${Drupal.offCanvas.getEdge()}`, 0);
     },
 
