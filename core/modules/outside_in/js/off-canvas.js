@@ -14,8 +14,16 @@
     isOffCanvas: function isOffCanvas($element) {
       return $element.is('#drupal-off-canvas');
     },
+    removeOffCanvasEvents: function removeOffCanvasEvents($element) {
+      $element.off('.off-canvas');
+      $(document).off('.off-canvas');
+      $(window).off('.off-canvas');
+    },
     beforeCreate: function beforeCreate(_ref) {
-      var settings = _ref.settings;
+      var settings = _ref.settings,
+          $element = _ref.$element;
+
+      Drupal.offCanvas.removeOffCanvasEvents($element);
 
       $('body').addClass('js-tray-open');
       settings.dialogClass += ' ui-dialog-off-canvas';
@@ -28,16 +36,18 @@
 
       settings.height = $(window).height();
     },
-    beforeClose: function beforeClose() {
+    beforeClose: function beforeClose(_ref2) {
+      var $element = _ref2.$element;
+
       $('body').removeClass('js-tray-open');
 
-      $(document).off('.off-canvas');
-      $(window).off('.off-canvas');
+      Drupal.offCanvas.removeOffCanvasEvents($element);
+
       Drupal.offCanvas.$mainCanvasWrapper.css('padding-' + Drupal.offCanvas.getEdge(), 0);
     },
-    afterCreate: function afterCreate(_ref2) {
-      var $element = _ref2.$element,
-          settings = _ref2.settings;
+    afterCreate: function afterCreate(_ref3) {
+      var $element = _ref3.$element,
+          settings = _ref3.settings;
 
       var eventData = { settings: settings, $element: $element, offCanvasDialog: this };
 
@@ -47,8 +57,8 @@
 
       $(window).on('resize.off-canvas', eventData, debounce(Drupal.offCanvas.resetSize, 100)).trigger('resize.off-canvas');
     },
-    render: function render(_ref3) {
-      var settings = _ref3.settings;
+    render: function render(_ref4) {
+      var settings = _ref4.settings;
 
       $('.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar').toggleClass('ui-dialog-empty-title', !settings.title);
     },
