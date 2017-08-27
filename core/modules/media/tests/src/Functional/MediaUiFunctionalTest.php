@@ -67,7 +67,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       ->getStorage('media')
       ->loadUnchanged($media_id);
     $this->assertEquals($media->getRevisionLogMessage(), $revision_log_message);
-    $this->assertEquals($media->label(), $media_name);
+    $this->assertEquals($media->getName(), $media_name);
     $assert_session->titleEquals($media_name . ' | Drupal');
 
     // Tests media edit form.
@@ -83,7 +83,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $media = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged($media_id);
-    $this->assertEquals($media->label(), $media_name2);
+    $this->assertEquals($media->getName(), $media_name2);
     $assert_session->titleEquals($media_name2 . ' | Drupal');
 
     // Test that there is no empty vertical tabs element, if the container is
@@ -171,12 +171,12 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     // Go to first media item.
     $this->drupalGet('media/' . $first_media_item->id());
     $assert_session->statusCodeEquals(200);
-    $assert_session->pageTextContains($first_media_item->label());
+    $assert_session->pageTextContains($first_media_item->getName());
 
     // Go to second media item.
     $this->drupalGet('media/' . $second_media_item->id());
     $assert_session->statusCodeEquals(200);
-    $assert_session->pageTextContains($second_media_item->label());
+    $assert_session->pageTextContains($second_media_item->getName());
   }
 
 }

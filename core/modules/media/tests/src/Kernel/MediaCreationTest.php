@@ -50,7 +50,7 @@ class MediaCreationTest extends MediaKernelTestBase {
 
     $this->assertInstanceOf(MediaInterface::class, Media::load($media->id()), 'The new media item has not been created in the database.');
     $this->assertEquals($this->testMediaType->id(), $media->bundle(), 'The media item was not created with the correct type.');
-    $this->assertEquals('Unnamed', $media->label(), 'The media item was not created with the correct name.');
+    $this->assertEquals('Unnamed', $media->getName(), 'The media item was not created with the correct name.');
     $source_field_name = $media->bundle->entity->getSource()->getSourceFieldDefinition($media->bundle->entity)->getName();
     $this->assertEquals('Nation of sheep, ruled by wolves, owned by pigs.', $media->get($source_field_name)->value, 'Source returns incorrect source field value.');
   }
