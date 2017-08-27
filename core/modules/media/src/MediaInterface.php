@@ -14,6 +14,24 @@ use Drupal\user\EntityOwnerInterface;
 interface MediaInterface extends ContentEntityInterface, EntityChangedInterface, RevisionLogInterface, EntityOwnerInterface, EntityPublishedInterface {
 
   /**
+   * Gets the media item name.
+   *
+   * @return string
+   *   The name of the media item.
+   */
+  public function getName();
+
+  /**
+   * Sets the media item name.
+   *
+   * @param string $name
+   *   The name of the media item.
+   *
+   * @return $this
+   */
+  public function setName($name);
+
+  /**
    * Returns the media item creation timestamp.
    *
    * @todo Remove and use the new interface when #2833378 is done.

@@ -57,7 +57,7 @@ class MediaSourceFileTest extends MediaSourceTestBase {
 
     // Load the media and check if the label was properly populated.
     $media = Media::load(1);
-    $this->assertEquals($test_filename, $media->label());
+    $this->assertEquals($test_filename, $media->getName());
 
     // Test the MIME type icon.
     $icon_base = \Drupal::config('media.settings')->get('icon_base_uri');

@@ -25,8 +25,11 @@ class MediaSourceTest extends MediaKernelTestBase {
     $media_source = $media->getSource();
     $this->assertEquals('default_name', $media_source->getPluginDefinition()['default_name_metadata_attribute'], 'Default metadata attribute is not used for the default name.');
     $this->assertEquals('media:' . $media->bundle() . ':' . $media->uuid(), $media_source->getMetadata($media, 'default_name'), 'Value of the default name metadata attribute does not look correct.');
+    $this->assertEquals('media:' . $media->bundle() . ':' . $media->uuid(), $media->getName(), 'Default name was not used correctly by getName().');
+    $this->assertEquals($media->getName(), $media->label(), 'Default name and label are not the same.');
     $media->save();
-    $this->assertEquals('media:' . $media->bundle() . ':' . $media->uuid(), $media->label(), 'Default name was not set correctly.');
+    $this->assertEquals('media:' . $media->bundle() . ':' . $media->uuid(), $media->getName(), 'Default name was not saved correctly.');
+    $this->assertEquals($media->getName(), $media->label(), 'The label changed during save.');
 
     // Make sure that the user-supplied name is used.
     /** @var \Drupal\media\MediaInterface $media */
@@ -39,7 +42,8 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertEquals('default_name', $media_source->getPluginDefinition()['default_name_metadata_attribute'], 'Default metadata attribute is not used for the default name.');
     $this->assertEquals('media:' . $media->bundle() . ':' . $media->uuid(), $media_source->getMetadata($media, 'default_name'), 'Value of the default name metadata attribute does not look correct.');
     $media->save();
-    $this->assertEquals($name, $media->label(), 'User-supplied name was not set correctly.');
+    $this->assertEquals($name, $media->getName(), 'User-supplied name was not set correctly.');
+    $this->assertEquals($media->getName(), $media->label(), 'The user-supplied name does not match the label.');
 
     // Change the default name attribute and see if it is used to set the name.
     $name = 'Old Major';
@@ -51,7 +55,8 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertEquals('alternative_name', $media_source->getPluginDefinition()['default_name_metadata_attribute'], 'Correct metadata attribute is not used for the default name.');
     $this->assertEquals($name, $media_source->getMetadata($media, 'alternative_name'), 'Value of the default name metadata attribute does not look correct.');
     $media->save();
-    $this->assertEquals($name, $media->label(), 'Default name was not set correctly.');
+    $this->assertEquals($name, $media->getName(), 'Default name was not set correctly.');
+    $this->assertEquals($media->getName(), $media->label(), 'The default name does not match the label.');
   }
 
   /**
@@ -263,7 +268,7 @@ class MediaSourceTest extends MediaKernelTestBase {
       'field_media_test' => 'some_value',
     ]);
     $media->save();
-    $this->assertEquals('Boxer', $media->label(), 'Correct name was not set on the media entity.');
+    $this->assertEquals('Boxer', $media->getName(), 'Correct name was not set on the media entity.');
     $this->assertEquals('This will be title.', $media->thumbnail->title, 'Title text was not set on the thumbnail.');
     $this->assertEquals('This will be alt.', $media->thumbnail->alt, 'Alt text was not set on the thumbnail.');
   }
@@ -293,7 +298,7 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertEquals('Inappropriate text.', $violations->get(0)->getMessage(), 'Incorrect constraint validation message found.');
 
     // Fix the violation and make sure it is not reported anymore.
-    $media->set('name', 'I love Drupal!');
+    $media->setName('I love Drupal!');
     $violations = $media->validate();
     $this->assertCount(0, $violations, 'Expected number of validations not found.');
 
@@ -301,6 +306,7 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertEmpty($media->id(), 'Entity ID was found.');
     $media->save();
     $this->assertNotEmpty($media->id(), 'Entity ID was not found.');
+    $this->assertSame($media->getName(), 'I love Drupal!');
 
     // Test source field constraints.
     \Drupal::state()->set('media_source_test_field_constraints', [

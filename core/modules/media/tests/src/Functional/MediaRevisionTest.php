@@ -65,7 +65,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $assert->statusCodeEquals(200);
 
     // Confirm the revision page shows the correct title.
-    $assert->pageTextContains($media->label());
+    $assert->pageTextContains($media->getName());
 
     // Confirm that the last revision is the default revision.
     $this->assertTrue($media->isDefaultRevision(), 'Last revision is the default.');
@@ -168,7 +168,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
    *   A media object with up to date revision information.
    */
   protected function createMediaRevision(MediaInterface $media) {
-    $media->set('name', $this->randomMachineName());
+    $media->setName($this->randomMachineName());
     $media->setNewRevision();
     $media->save();
     return $media;

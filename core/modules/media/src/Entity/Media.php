@@ -88,6 +88,35 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
   /**
    * {@inheritdoc}
    */
+  public function getName() {
+    $name = $this->get('name');
+
+    if ($name->isEmpty()) {
+      $media_source = $this->getSource();
+      return $media_source->getMetadata($this, $media_source->getPluginDefinition()['default_name_metadata_attribute']);
+    }
+    else {
+      return $name->value;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function label() {
+    return $this->getName();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setName($name) {
+    return $this->set('name', $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
@@ -288,10 +317,9 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
           }
         }
 
-        // Try to set a default name for this media item if no label is
-        // provided.
-        if (!$translation->label()) {
-          $translation->set('name', $media_source->getMetadata($translation, $media_source->getPluginDefinition()['default_name_metadata_attribute']));
+        // Try to set a default name for this media item if no name is provided.
+        if ($translation->get('name')->isEmpty()) {
+          $translation->setName($translation->getName());
         }
 
         // Set thumbnail.
