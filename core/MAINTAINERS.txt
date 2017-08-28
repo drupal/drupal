@@ -311,9 +311,6 @@ Node Access
 Options
 - ?
 
-Outside In
-- Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
-
 Page Cache
 - Lorenz Schori 'znerol' https://www.drupal.org/u/znerol
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
@@ -359,6 +356,9 @@ Search
 
 Serialization
 - Damian Lee 'damiankloip' https://www.drupal.org/u/damiankloip
+
+Settings Tray
+- Ted Bowman 'tedbow' https://www.drupal.org/u/tedbow
 
 Seven
 - ?
