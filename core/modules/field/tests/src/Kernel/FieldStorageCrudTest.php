@@ -284,8 +284,9 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   /**
    * Test the deletion of a field storage.
    */
-  public function testDelete() {
-    // TODO: Also test deletion of the data stored in the field ?
+  public function testDeleteNoData() {
+    // Deleting and purging field storages with data is tested in
+    // \Drupal\Tests\field\Kernel\BulkDeleteTest.
 
     // Create two fields (so we can test that only one is deleted).
     $field_storage_definition = [
@@ -317,23 +318,22 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $this->assertTrue(!empty($field_storage) && !$field_storage->isDeleted(), 'A new storage is not marked for deletion.');
     FieldStorageConfig::loadByName('entity_test', $field_storage_definition['field_name'])->delete();
 
-    // Make sure that the field is marked as deleted when it is specifically
-    // loaded.
-    $field_storage = current(entity_load_multiple_by_properties('field_storage_config', ['field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE]));
-    $this->assertTrue($field_storage->isDeleted(), 'A deleted storage is marked for deletion.');
+    // Make sure that the field storage is deleted as it had no data.
+    $field_storages = entity_load_multiple_by_properties('field_storage_config', ['field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE]);
+    $this->assertEquals(0, count($field_storages), 'Field storage was deleted');
 
     // Make sure that this field is marked as deleted when it is
     // specifically loaded.
-    $field = current(entity_load_multiple_by_properties('field_config', ['entity_type' => 'entity_test', 'field_name' => $field_definition['field_name'], 'bundle' => $field_definition['bundle'], 'include_deleted' => TRUE]));
-    $this->assertTrue($field->isDeleted(), 'A field whose storage was deleted is marked for deletion.');
+    $fields = entity_load_multiple_by_properties('field_config', ['entity_type' => 'entity_test', 'field_name' => $field_definition['field_name'], 'bundle' => $field_definition['bundle'], 'include_deleted' => TRUE]);
+    $this->assertEquals(0, count($fields), 'Field storage was deleted');
 
     // Try to load the storage normally and make sure it does not show up.
     $field_storage = FieldStorageConfig::load('entity_test.' . $field_storage_definition['field_name']);
-    $this->assertTrue(empty($field_storage), 'A deleted storage is not loaded by default.');
+    $this->assertTrue(empty($field_storage), 'Field storage was deleted');
 
     // Try to load the field normally and make sure it does not show up.
     $field = FieldConfig::load('entity_test.' . '.' . $field_definition['bundle'] . '.' . $field_definition['field_name']);
-    $this->assertTrue(empty($field), 'A field whose storage was deleted is not loaded by default.');
+    $this->assertTrue(empty($field), 'Field was deleted');
 
     // Make sure the other field and its storage are not deleted.
     $another_field_storage = FieldStorageConfig::load('entity_test.' . $another_field_storage_definition['field_name']);

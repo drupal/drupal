@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\FieldableEntityStorageInterface;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
@@ -409,8 +410,12 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // Keep the field definitions in the state storage so we can use them later
     // during field_purge_batch().
     $deleted_storages = $state->get('field.storage.deleted') ?: [];
+    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     foreach ($field_storages as $field_storage) {
-      if (!$field_storage->deleted) {
+      // Only mark a field for purging if there is data. Otherwise, just remove
+      // it.
+      $target_entity_storage = \Drupal::entityTypeManager()->getStorage($field_storage->getTargetEntityTypeId());
+      if (!$field_storage->deleted && $target_entity_storage instanceof FieldableEntityStorageInterface && $target_entity_storage->countFieldData($field_storage, TRUE)) {
         $config = $field_storage->toArray();
         $config['deleted'] = TRUE;
         $config['bundles'] = $field_storage->getBundles();

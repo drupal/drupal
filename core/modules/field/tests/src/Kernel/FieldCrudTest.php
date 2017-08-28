@@ -269,12 +269,11 @@ class FieldCrudTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test the deletion of a field.
+   * Test the deletion of a field with no data.
    */
-  public function testDeleteField() {
-    // TODO: Test deletion of the data stored in the field also.
-    // Need to check that data for a 'deleted' field / storage doesn't get loaded
-    // Need to check data marked deleted is cleaned on cron (not implemented yet...)
+  public function testDeleteFieldNoData() {
+    // Deleting and purging fields with data is tested in
+    // \Drupal\Tests\field\Kernel\BulkDeleteTest.
 
     // Create two fields for the same field storage so we can test that only one
     // is deleted.
@@ -289,17 +288,18 @@ class FieldCrudTest extends FieldKernelTestBase {
     $this->assertTrue(!empty($field) && empty($field->deleted), 'A new field is not marked for deletion.');
     $field->delete();
 
-    // Make sure the field is marked as deleted when it is specifically loaded.
-    $field = current(entity_load_multiple_by_properties('field_config', ['entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE]));
-    $this->assertTrue($field->isDeleted(), 'A deleted field is marked for deletion.');
+    // Make sure the field was deleted without being marked for purging as there
+    // was no data.
+    $fields = entity_load_multiple_by_properties('field_config', ['entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE]);
+    $this->assertEquals(0, count($fields), 'A deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
     $field = FieldConfig::load('entity_test.' . '.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
-    $this->assertTrue(empty($field), 'A deleted field is not loaded by default.');
+    $this->assertTrue(empty($field), 'Field was deleted');
 
     // Make sure the other field is not deleted.
     $another_field = FieldConfig::load('entity_test.' . $another_field_definition['bundle'] . '.' . $another_field_definition['field_name']);
-    $this->assertTrue(!empty($another_field) && empty($another_field->deleted), 'A non-deleted field is not marked for deletion.');
+    $this->assertTrue(!empty($another_field) && !$another_field->isDeleted(), 'A non-deleted field is not marked for deletion.');
   }
 
   /**
