@@ -1,8 +1,0 @@
-name: 'CSS Test fix'
-type: module
-description: 'Provides CSS fixes for tests.'
-package: Testing
-version: VERSION
-core: 8.x
-dependencies:
-- outside_in

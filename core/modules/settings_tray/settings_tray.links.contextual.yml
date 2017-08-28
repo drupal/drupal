@@ -1,0 +1,10 @@
+settings_tray.block_configure:
+  title: 'Quick edit'
+  route_name: 'entity.block.off_canvas_form'
+  group: 'block'
+  options:
+    attributes:
+      class: ['use-ajax']
+      data-dialog-type: dialog
+      data-dialog-renderer: off_canvas
+      data-settings-tray-edit: true

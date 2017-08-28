@@ -1,0 +1,212 @@
+<?php
+
+/**
+ * @file
+ * Allows configuring blocks and other configuration from the site front-end.
+ */
+
+use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\settings_tray\Block\BlockEntityOffCanvasForm;
+use Drupal\settings_tray\Form\SystemBrandingOffCanvasForm;
+use Drupal\settings_tray\Form\SystemMenuOffCanvasForm;
+
+/**
+ * Implements hook_help().
+ */
+function settings_tray_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.settings_tray':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Settings Tray module provides an \'edit mode\' in which clicking on a block opens a slide-out tray which allows configuration to be altered without leaving the page.For more information, see the <a href=":settings-tray-documentation">online documentation for the Settings Tray module</a>.', [':settings-tray-documentation' => 'https://www.drupal.org/documentation/modules/settings_tray']) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Editing blocks on the same page in the slide-out tray') . '</dt>';
+      $output .= '</dl>';
+      return ['#markup' => $output];
+  }
+}
+
+/**
+ * Implements hook_contextual_links_view_alter().
+ *
+ * Change Configure Blocks into off_canvas links.
+ */
+function settings_tray_contextual_links_view_alter(&$element, $items) {
+  if (isset($element['#links']['settings-trayblock-configure'])) {
+    // Place settings_tray link first.
+    $settings_tray_link = $element['#links']['settings-trayblock-configure'];
+    unset($element['#links']['settings-trayblock-configure']);
+    $element['#links'] = ['settings-trayblock-configure' => $settings_tray_link] + $element['#links'];
+
+    // If this is content block change title to avoid duplicate "Quick Edit".
+    if (isset($element['#links']['block-contentblock-edit'])) {
+      $element['#links']['settings-trayblock-configure']['title'] = t('Quick edit settings');
+    }
+
+    $element['#attached']['library'][] = 'settings_tray/drupal.off_canvas';
+  }
+}
+
+/**
+ * Implements hook_block_view_alter().
+ */
+function settings_tray_block_view_alter(array &$build) {
+  // Force a new 'data-contextual-id' attribute on blocks when this module is
+  // enabled so as not to reuse stale data cached client-side.
+  // @todo Remove when https://www.drupal.org/node/2773591 is fixed.
+  $build['#contextual_links']['settings_tray'] = [
+    'route_parameters' => [],
+  ];
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function settings_tray_element_info_alter(&$type) {
+  if (isset($type['page'])) {
+    $type['page']['#theme_wrappers']['settings_tray_page_wrapper'] = ['#weight' => -1000];
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function settings_tray_theme() {
+  return [
+    'settings_tray_page_wrapper' => [
+      'variables' => ['children' => NULL],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function settings_tray_entity_type_build(array &$entity_types) {
+  /* @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_types['block']
+    ->setFormClass('off_canvas', BlockEntityOffCanvasForm::class)
+    ->setLinkTemplate('off_canvas-form', '/admin/structure/block/manage/{block}/off-canvas');
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for block templates.
+ */
+function settings_tray_preprocess_block(&$variables) {
+  // Only blocks that have an settings_tray form will have a "Quick Edit" link.
+  // We could wait for the contextual links to be initialized on the client
+  // side,  and then add the class and data- attribute below there (via
+  // JavaScript). But that would mean that it would be impossible to show
+  // Settings Tray's clickable regions immediately when the page loads. When
+  // latency is high, this will cause flicker.
+  // @see \Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck
+  /** @var \Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck $access_checker */
+  $access_checker = \Drupal::service('access_check.settings_tray.block.settings_tray_form');
+  /** @var \Drupal\Core\Block\BlockManagerInterface $block_plugin_manager */
+  $block_plugin_manager = \Drupal::service('plugin.manager.block');
+  /** @var \Drupal\Core\Block\BlockPluginInterface $block_plugin */
+  $block_plugin = $block_plugin_manager->createInstance($variables['plugin_id']);
+  if ($access_checker->accessBlockPlugin($block_plugin)->isAllowed()) {
+    // Add class and attributes to all blocks to allow Javascript to target.
+    $variables['attributes']['class'][] = 'settings-tray-editable';
+    $variables['attributes']['data-drupal-settingstray'] = 'editable';
+  }
+}
+
+/**
+ * Implements hook_toolbar_alter().
+ *
+ * Alters the 'contextual' toolbar tab if it exists (meaning the user is allowed
+ * to use contextual links) and if they can administer blocks.
+ *
+ * @todo Remove the "administer blocks" requirement in
+ *   https://www.drupal.org/node/2822965.
+ *
+ * @see contextual_toolbar()
+ */
+function settings_tray_toolbar_alter(&$items) {
+  $items['contextual']['#cache']['contexts'][] = 'user.permissions';
+  if (isset($items['contextual']['tab']) && \Drupal::currentUser()->hasPermission('administer blocks')) {
+    $items['contextual']['#weight'] = -1000;
+    $items['contextual']['#attached']['library'][] = 'settings_tray/drupal.settings_tray';
+    $items['contextual']['tab']['#attributes']['data-drupal-settingstray'] = 'toggle';
+
+    // Set a class on items to mark whether they should be active in edit mode.
+    // @todo Create a dynamic method for modules to set their own items.
+    //   https://www.drupal.org/node/2784589.
+    $edit_mode_items = ['contextual', 'block_place'];
+    foreach ($items as $key => $item) {
+      if (!in_array($key, $edit_mode_items) && (!isset($items[$key]['#wrapper_attributes']['class']) || !in_array('hidden', $items[$key]['#wrapper_attributes']['class']))) {
+        $items[$key]['#wrapper_attributes']['class'][] = 'edit-mode-inactive';
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_block_alter().
+ *
+ * Ensures every block plugin definition has an 'settings_tray' form specified.
+ *
+ * @see \Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck
+ */
+function settings_tray_block_alter(&$definitions) {
+  foreach ($definitions as &$definition) {
+    // If a block plugin already defines its own 'settings_tray' form, use that
+    // form instead of specifying one here.
+    if (isset($definition['forms']['settings_tray'])) {
+      continue;
+    }
+
+    switch ($definition['id']) {
+      // Use specialized forms for certain blocks that do not yet provide the
+      // form with their own annotation.
+      // @todo Move these into the corresponding block plugin annotations in
+      //   https://www.drupal.org/node/2896356.
+      case 'system_menu_block':
+        $definition['forms']['settings_tray'] = SystemMenuOffCanvasForm::class;
+        break;
+
+      case 'system_branding_block':
+        $definition['forms']['settings_tray'] = SystemBrandingOffCanvasForm::class;
+        break;
+
+      // No off-canvas form for the page title block, despite it having
+      // contextual links: it's too confusing that you're editing configuration,
+      // not content, so the title itself cannot actually be changed.
+      // @todo Move these into the corresponding block plugin annotations in
+      //   https://www.drupal.org/node/2896356.
+      case 'page_title_block':
+        $definition['forms']['settings_tray'] = FALSE;
+        break;
+
+      case 'system_main_block':
+        $definition['forms']['settings_tray'] = FALSE;
+        break;
+
+      case 'help_block':
+        $definition['forms']['settings_tray'] = FALSE;
+        break;
+
+      // Otherwise, use the block plugin's normal form rather than
+      // a custom form for Settings Tray.
+      default:
+        $definition['forms']['settings_tray'] = $definition['class'];
+        break;
+    }
+  }
+}
+
+/**
+ * Implements hook_css_alter().
+ */
+function settings_tray_css_alter(&$css, AttachedAssetsInterface $assets) {
+  // @todo Remove once conditional ordering is introduced in
+  //   https://www.drupal.org/node/1945262.
+  $path = drupal_get_path('module', 'settings_tray') . '/css/settings_tray.theme.css';
+  if (isset($css[$path])) {
+    // Use 200 to come after CSS_AGGREGATE_THEME.
+    $css[$path]['group'] = 200;
+  }
+}
