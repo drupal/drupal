@@ -8,8 +8,9 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  * Tests the user profile field instance migration.
  *
  * @group migrate_drupal_6
+ * @group legacy
  */
-class MigrateI18nUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
+class MigrateUserProfileFieldInstanceTranslationTest extends MigrateDrupal6TestBase {
 
   /**
    * {@inheritdoc}
@@ -23,7 +24,7 @@ class MigrateI18nUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->executeMigrations([
       'user_profile_field',
       'user_profile_field_instance',
-      'd6_i18n_user_profile_field_instance',
+      'd6_user_profile_field_instance_translation',
     ]);
     $language_manager = $this->container->get('language_manager');
 

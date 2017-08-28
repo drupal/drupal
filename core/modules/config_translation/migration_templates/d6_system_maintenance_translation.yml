@@ -1,9 +1,9 @@
-id: d6_i18n_system_maintenance
+id: d6_system_maintenance_translation
 label: Maintenance page configuration
 migration_tags:
   - Drupal 6
 source:
-  plugin: i18n_variable
+  plugin: variable_translation
   variables:
     - site_offline_message
   source_module: i18n

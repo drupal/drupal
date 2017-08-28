@@ -9,8 +9,9 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  * Upgrade i18n variables to user.*.yml.
  *
  * @group migrate_drupal_6
+ * @group legacy
  */
-class MigrateI18nUserConfigsTest extends MigrateDrupal6TestBase {
+class MigrateUserConfigsTranslationTest extends MigrateDrupal6TestBase {
 
   use SchemaCheckTestTrait;
 
@@ -23,7 +24,7 @@ class MigrateI18nUserConfigsTest extends MigrateDrupal6TestBase {
     parent::setUp();
     $this->installSchema('locale',
       ['locales_source', 'locales_target', 'locales_location']);
-    $this->executeMigrations(['d6_i18n_user_mail', 'd6_i18n_user_settings']);
+    $this->executeMigrations(['d6_user_mail_translation', 'd6_user_settings_translation']);
   }
 
   /**

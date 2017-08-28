@@ -1,9 +1,9 @@
-id: d6_i18n_user_mail
+id: d6_user_mail_translation
 label: User mail configuration
 migration_tags:
   - Drupal 6
 source:
-  plugin: i18n_variable
+  plugin: variable_translation
   variables:
     - user_mail_status_activated_subject
     - user_mail_status_activated_body

@@ -8,13 +8,12 @@ use Drupal\Tests\migrate\Unit\MigrateSqlSourceTestCase;
  * Tests the variable source plugin.
  *
  * @group migrate_drupal
- * @group legacy
  */
-class i18nVariableTest extends MigrateSqlSourceTestCase {
+class VariableTranslationTest extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\i18nVariable';
+  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\VariableTranslation';
 
   /**
    * Define bare minimum migration configuration.
@@ -23,7 +22,7 @@ class i18nVariableTest extends MigrateSqlSourceTestCase {
     'id' => 'test',
     'highWaterProperty' => ['field' => 'test'],
     'source' => [
-      'plugin' => 'i18n_variable',
+      'plugin' => 'variable_translation',
       'variables' => [
         'site_slogan',
         'site_name',
