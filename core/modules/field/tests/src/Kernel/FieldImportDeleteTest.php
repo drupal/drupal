@@ -3,6 +3,7 @@
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -49,6 +50,14 @@ class FieldImportDeleteTest extends FieldKernelTestBase {
     $field_config_name = "field.field.$field_id";
     $field_config_name_2a = "field.field.$field_id_2a";
     $field_config_name_2b = "field.field.$field_id_2b";
+
+    // Create an entity with data in the first field to make sure that field
+    // needs to be purged.
+    $entity_test = EntityTest::create([
+      'type' => 'entity_test',
+    ]);
+    $entity_test->set($field_name, 'test data');
+    $entity_test->save();
 
     // Create a second bundle for the 'Entity test' entity type.
     entity_test_create_bundle('test_bundle');
@@ -97,10 +106,10 @@ class FieldImportDeleteTest extends FieldKernelTestBase {
     $this->assertIdentical($active->listAll($field_config_name_2a), []);
     $this->assertIdentical($active->listAll($field_config_name_2b), []);
 
-    // Check that the storage definition is preserved in state.
+    // Check that only the first storage definition is preserved in state.
     $deleted_storages = \Drupal::state()->get('field.storage.deleted') ?: [];
     $this->assertTrue(isset($deleted_storages[$field_storage_uuid]));
-    $this->assertTrue(isset($deleted_storages[$field_storage_uuid_2]));
+    $this->assertFalse(isset($deleted_storages[$field_storage_uuid_2]));
 
     // Purge field data, and check that the storage definition has been
     // completely removed once the data is purged.
