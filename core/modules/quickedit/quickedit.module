@@ -11,6 +11,7 @@
  * entities, enabling them for in-place editing.
  */
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -157,9 +158,40 @@ function quickedit_preprocess_field(&$variables) {
  */
 function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   $build['#cache']['contexts'][] = 'user.permissions';
-  if (!\Drupal::currentUser()->hasPermission('access in-place editing')) {
+  if (!\Drupal::currentUser()->hasPermission('access in-place editing') || !_quickedit_entity_is_latest_revision($entity)) {
     return;
   }
 
   $build['#attributes']['data-quickedit-entity-id'] = $entity->getEntityTypeId() . '/' . $entity->id();
+}
+
+/**
+ * Check if a loaded entity is the latest revision.
+ *
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ *   The entity to check.
+ *
+ * @return bool
+ *   TRUE if the loaded entity is the latest revision, FALSE otherwise.
+ *
+ * @todo Remove this method once better support for pending revisions is added
+ * to core https://www.drupal.org/node/2784201.
+ *
+ * @internal
+ */
+function _quickedit_entity_is_latest_revision(ContentEntityInterface $entity) {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_definition = $entity_type_manager->getDefinition($entity->getEntityTypeId());
+  if (!$entity_definition->isRevisionable()) {
+    return TRUE;
+  }
+  $revision_ids = $entity_type_manager
+    ->getStorage($entity->getEntityTypeId())
+    ->getQuery()
+    ->allRevisions()
+    ->condition($entity_definition->getKey('id'), $entity->id())
+    ->sort($entity_definition->getKey('revision'), 'DESC')
+    ->range(0, 1)
+    ->execute();
+  return $entity->getLoadedRevisionId() == array_keys($revision_ids)[0];
 }
