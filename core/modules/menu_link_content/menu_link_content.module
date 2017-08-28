@@ -5,6 +5,7 @@
  * Allows administrators to create custom menu links.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\system\MenuInterface;
 
@@ -80,4 +81,25 @@ function menu_link_content_path_update($path) {
  */
 function menu_link_content_path_delete($path) {
   _menu_link_content_update_path_alias($path['alias']);
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function menu_link_content_entity_predelete(EntityInterface $entity) {
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  foreach ($entity->uriRelationships() as $rel) {
+    $url = $entity->toUrl($rel);
+    // Delete all MenuLinkContent links that point to this entity route.
+    $result = $menu_link_manager->loadLinksByRoute($url->getRouteName(), $url->getRouteParameters());
+
+    if ($result) {
+      foreach ($result as $id => $instance) {
+        if ($instance->isDeletable() && strpos($id, 'menu_link_content:') === 0) {
+          $instance->deleteLink();
+        }
+      }
+    }
+  }
 }
