@@ -7,11 +7,10 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 /**
  * Tests the i18nProfileField source plugin.
  *
- * @covers \Drupal\config_translation\Plugin\migrate\source\d6\I18nProfileField
+ * @covers \Drupal\config_translation\Plugin\migrate\source\d6\ProfileFieldTranslation
  * @group migrate_drupal
- * @group legacy
  */
-class I18nProfileFieldTest extends MigrateSqlSourceTestBase {
+class ProfileFieldTranslationTest extends MigrateSqlSourceTestBase {
 
   /**
    * {@inheritdoc}

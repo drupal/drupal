@@ -2,7 +2,7 @@
 
 namespace Drupal\config_translation\Plugin\migrate\source\d6;
 
-use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+@trigger_error('The ' . __NAMESPACE__ . '\I18nProfileField is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use ' . __NAMESPACE__ . '\ProfileFieldTranslation', E_USER_DEPRECATED);
 
 /**
  * i18n strings profile field source from database.
@@ -11,43 +11,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   id = "d6_i18n_profile_field",
  *   source_module = "i18nprofile"
  * )
+ *
+ * @deprecated in Drupal 8.4.x and will be removed in Drupal 9.0.x. Use
+ * \Drupal\config_translation\Plugin\migrate\source\d6\ProfileFieldTranslation
+ * instead.
+ *
+ * @see https://www.drupal.org/node/2898649
  */
-class I18nProfileField extends DrupalSqlBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
-    $query = $this->select('profile_fields', 'pf')
-      ->fields('pf', ['fid', 'name'])
-      ->fields('i18n', ['property'])
-      ->fields('lt', ['lid', 'translation', 'language']);
-    $query->leftJoin('i18n_strings', 'i18n', 'i18n.objectid = pf.name');
-    $query->leftJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
-    return $query;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fields() {
-    return [
-      'fid' => $this->t('Profile field ID.'),
-      'lid' => $this->t('Locales target language ID.'),
-      'language' => $this->t('Language for this field.'),
-      'translation' => $this->t('Translation of either the title or explanation.'),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getIds() {
-    $ids['fid']['type'] = 'integer';
-    $ids['language']['type'] = 'string';
-    $ids['lid']['type'] = 'integer';
-    $ids['lid']['alias'] = 'lt';
-    return $ids;
-  }
-
-}
+class I18nProfileField extends ProfileFieldTranslation {}

@@ -1,9 +1,9 @@
-id: d6_i18n_system_site
+id: d6_system_site_translation
 label: Site configuration
 migration_tags:
   - Drupal 6
 source:
-  plugin: i18n_variable
+  plugin: variable_translation
   constants:
     slash: '/'
   variables:
