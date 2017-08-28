@@ -3,9 +3,11 @@
 namespace Drupal\Tests\menu_link_content\Functional;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\system\Entity\Menu;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests handling of menu links hierarchies.
@@ -138,6 +140,21 @@ class LinksTest extends BrowserTestBase {
     $link->save();
     // Make sure the changed timestamp is updated.
     $this->assertEqual($link->getChangedTime(), REQUEST_TIME, 'Changing a menu link sets "changed" timestamp.');
+  }
+
+  /**
+   * Tests that menu link pointing to entities get removed on entity remove.
+   */
+  public function testMenuLinkOnEntityDelete() {
+    $user = User::create(['name' => 'username']);
+    $user->save();
+    $menu_link_content = MenuLinkContent::create(['menu_name' => 'menu_test', 'link' => [['uri' => 'entity:user/' . $user->id()]], 'bundle' => 'menu_test']);
+    $menu_link_content->save();
+    $menu_tree_condition = (new MenuTreeParameters())->addCondition('route_name', 'entity.user.canonical');
+    $this->assertCount(1, \Drupal::menuTree()->load('menu_test', $menu_tree_condition));
+
+    $user->delete();
+    $this->assertCount(0, \Drupal::menuTree()->load('menu_test', $menu_tree_condition));
   }
 
   /**
