@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\Extension;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -21,8 +22,8 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
    * Tests the integrity of field plugin definitions.
    */
   public function testFieldPluginDefinitionIntegrity() {
-
-    // Enable all core modules that provide field plugins.
+    // Enable all core modules that provide field plugins, and their
+    // dependencies.
     $modules = system_rebuild_module_data();
     $modules = array_filter($modules, function (Extension $module) {
       // Filter contrib, hidden, already enabled modules and modules in the
@@ -36,7 +37,13 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
       }
       return FALSE;
     });
-    $this->enableModules(array_keys($modules));
+    // Gather the dependencies of the modules.
+    $dependencies = NestedArray::mergeDeepArray(array_map(function (Extension $module) {
+      return array_keys($module->requires);
+    }, $modules));
+    $modules = array_unique(NestedArray::mergeDeep(array_keys($modules), $dependencies));
+
+    $this->enableModules($modules);
 
     /** @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface $field_type_manager */
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
