@@ -2,34 +2,18 @@
 
 namespace Drupal\simpletest;
 
-use Drupal\Component\Render\MarkupInterface;
+use Drupal\Tests\AssertHelperTrait as BaseAssertHelperTrait;
 
 /**
  * Provides helper methods for assertions.
+ *
+ * @deprecated in Drupal 8.4.x. Will be removed before Drupal 9.0.0. Use
+ *   Drupal\Tests\AssertHelperTrait instead.
+ *
+ * @see https://www.drupal.org/node/2884454
  */
 trait AssertHelperTrait {
 
-  /**
-   * Casts MarkupInterface objects into strings.
-   *
-   * @param string|array $value
-   *   The value to act on.
-   *
-   * @return mixed
-   *   The input value, with MarkupInterface objects casted to string.
-   */
-  protected static function castSafeStrings($value) {
-    if ($value instanceof MarkupInterface) {
-      $value = (string) $value;
-    }
-    if (is_array($value)) {
-      array_walk_recursive($value, function (&$item) {
-        if ($item instanceof MarkupInterface) {
-          $item = (string) $item;
-        }
-      });
-    }
-    return $value;
-  }
+  use BaseAssertHelperTrait;
 
 }
