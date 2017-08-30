@@ -17,8 +17,12 @@ use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Url;
 use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\EntityViewTrait;
+use Drupal\Tests\block\Traits\BlockCreationTrait as BaseBlockCreationTrait;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\XdebugRequestTrait;
 use Zend\Diactoros\Uri;
 
@@ -36,7 +40,7 @@ abstract class WebTestBase extends TestBase {
     compareFiles as drupalCompareFiles;
   }
   use AssertPageCacheContextsAndTagsTrait;
-  use BlockCreationTrait {
+  use BaseBlockCreationTrait {
     placeBlock as drupalPlaceBlock;
   }
   use ContentTypeCreationTrait {

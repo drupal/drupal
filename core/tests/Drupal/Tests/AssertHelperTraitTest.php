@@ -1,19 +1,13 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\simpletest\Unit\AssertHelperTraitTest.
- */
-
-namespace Drupal\Tests\simpletest\Unit;
+namespace Drupal\Tests;
 
 use Drupal\Core\Render\Markup;
-use Drupal\simpletest\AssertHelperTrait;
-use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\simpletest\AssertHelperTrait
+ * @coversDefaultClass \Drupal\Tests\AssertHelperTrait
  * @group simpletest
+ * @group Tests
  */
 class AssertHelperTraitTest extends UnitTestCase {
 

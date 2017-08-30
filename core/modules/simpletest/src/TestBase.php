@@ -12,6 +12,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Core\Utility\Error;
+use Drupal\Tests\AssertHelperTrait as BaseAssertHelperTrait;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\SessionTestTrait;
@@ -24,10 +25,10 @@ use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
  */
 abstract class TestBase {
 
+  use BaseAssertHelperTrait;
   use TestSetupTrait;
   use SessionTestTrait;
   use RandomGeneratorTrait;
-  use AssertHelperTrait;
   use GeneratePermutationsTrait;
   // For backwards compatibility switch the visbility of the methods to public.
   use ConfigTestTrait {
