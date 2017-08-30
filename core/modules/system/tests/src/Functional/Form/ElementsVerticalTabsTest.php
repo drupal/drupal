@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Serialization\Json;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the vertical_tabs form element for expected behavior.
  *
  * @group Form
  */
-class ElementsVerticalTabsTest extends WebTestBase {
+class ElementsVerticalTabsTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -49,8 +49,9 @@ class ElementsVerticalTabsTest extends WebTestBase {
    */
   public function testJavaScriptOrdering() {
     $this->drupalGet('form_test/vertical-tabs');
-    $position1 = strpos($this->content, 'core/misc/vertical-tabs.js');
-    $position2 = strpos($this->content, 'core/misc/collapse.js');
+    $content = $this->getSession()->getPage()->getContent();
+    $position1 = strpos($content, 'core/misc/vertical-tabs.js');
+    $position2 = strpos($content, 'core/misc/collapse.js');
     $this->assertTrue($position1 !== FALSE && $position2 !== FALSE && $position1 < $position2, 'vertical-tabs.js is included before collapse.js');
   }
 
@@ -75,7 +76,12 @@ class ElementsVerticalTabsTest extends WebTestBase {
    */
   public function testDefaultTab() {
     $this->drupalGet('form_test/vertical-tabs');
-    $this->assertFieldByName('vertical_tabs__active_tab', 'edit-tab3', t('The default vertical tab is correctly selected.'));
+
+    $value = $this->assertSession()
+      ->elementExists('css', 'input[name="vertical_tabs__active_tab"]')
+      ->getValue();
+
+    $this->assertSame('edit-tab3', $value, t('The default vertical tab is correctly selected.'));
   }
 
   /**

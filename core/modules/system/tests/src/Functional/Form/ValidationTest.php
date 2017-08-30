@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Core\Render\Element;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests form processing and alteration via form validation handlers.
  *
  * @group Form
  */
-class ValidationTest extends WebTestBase {
+class ValidationTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -59,11 +59,13 @@ class ValidationTest extends WebTestBase {
     // Verify that #validate handlers don't run if the CSRF token is invalid.
     $this->drupalLogin($this->drupalCreateUser());
     $this->drupalGet('form-test/validate');
-    $edit = [
-      'name' => 'validate',
-      'form_token' => 'invalid token'
-    ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    // $this->assertSession()->fieldExists() does not recognize hidden fields,
+    // which breaks $this->drupalPostForm() if we try to change the value of a
+    // hidden field such as form_token.
+    $this->assertSession()
+      ->elementExists('css', 'input[name="form_token"]')
+      ->setValue('invalid_token');
+    $this->drupalPostForm(NULL, ['name' => 'validate'], 'Save');
     $this->assertNoFieldByName('name', '#value changed by #validate', 'Form element #value was not altered.');
     $this->assertNoText('Name value: value changed by setValueForElement() in #validate', 'Form element value in $form_state was not altered.');
     $this->assertText('The form has become outdated. Copy any unsaved work in the form below');

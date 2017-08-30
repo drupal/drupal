@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests altering forms to be rebuilt so there are multiple steps.
  *
  * @group Form
  */
-class ArbitraryRebuildTest extends WebTestBase {
+class ArbitraryRebuildTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

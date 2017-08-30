@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
@@ -9,7 +9,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\form_test\Form\FormTestDisabledElementsForm;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\filter\Entity\FilterFormat;
 
@@ -18,7 +18,7 @@ use Drupal\filter\Entity\FilterFormat;
  *
  * @group Form
  */
-class FormTest extends WebTestBase {
+class FormTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -188,7 +188,7 @@ class FormTest extends WebTestBase {
     // Check the page for error messages.
     $errors = $this->xpath('//div[contains(@class, "error")]//li');
     foreach ($errors as $error) {
-      $expected_key = array_search($error[0], $expected);
+      $expected_key = array_search($error->getText(), $expected);
       // If the error message is not one of the expected messages, fail.
       if ($expected_key === FALSE) {
         $this->fail(format_string("Unexpected error message: @error", ['@error' => $error[0]]));
@@ -240,14 +240,17 @@ class FormTest extends WebTestBase {
     $this->drupalLogin($account);
     // Submit again with required fields set but an invalid form token and
     // verify that all the values are retained.
+    $this->drupalGet(Url::fromRoute('form_test.validate_required'));
+    $this->assertSession()
+      ->elementExists('css', 'input[name="form_token"]')
+      ->setValue('invalid token');
     $edit = [
       'textfield' => $this->randomString(),
       'checkboxes[bar]' => TRUE,
       'select' => 'bar',
       'radios' => 'foo',
-      'form_token' => 'invalid token',
     ];
-    $this->drupalPostForm(Url::fromRoute('form_test.validate_required'), $edit, 'Submit');
+    $this->drupalPostForm(NULL, $edit, 'Submit');
     $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
     $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
     // Verify that input elements retained the posted values.
@@ -258,33 +261,42 @@ class FormTest extends WebTestBase {
     $this->assertFieldChecked('edit-radios-foo');
 
     // Check another form that has a textarea input.
+    $this->drupalGet(Url::fromRoute('form_test.required'));
+    $this->assertSession()
+      ->elementExists('css', 'input[name="form_token"]')
+      ->setValue('invalid token');
     $edit = [
       'textfield' => $this->randomString(),
       'textarea' => $this->randomString() . "\n",
-      'form_token' => 'invalid token',
     ];
-    $this->drupalPostForm(Url::fromRoute('form_test.required'), $edit, 'Submit');
+    $this->drupalPostForm(NULL, $edit, 'Submit');
     $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
     $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
     $this->assertFieldByName('textfield', $edit['textfield']);
     $this->assertFieldByName('textarea', $edit['textarea']);
 
     // Check another form that has a number input.
+    $this->drupalGet(Url::fromRoute('form_test.number'));
+    $this->assertSession()
+      ->elementExists('css', 'input[name="form_token"]')
+      ->setValue('invalid token');
     $edit = [
       'integer_step' => mt_rand(1, 100),
-      'form_token' => 'invalid token',
     ];
-    $this->drupalPostForm(Url::fromRoute('form_test.number'), $edit, 'Submit');
+    $this->drupalPostForm(NULL, $edit, 'Submit');
     $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
     $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
     $this->assertFieldByName('integer_step', $edit['integer_step']);
 
     // Check a form with a Url field
+    $this->drupalGet(Url::fromRoute('form_test.url'));
+    $this->assertSession()
+      ->elementExists('css', 'input[name="form_token"]')
+      ->setValue('invalid token');
     $edit = [
       'url' => $this->randomString(),
-      'form_token' => 'invalid token',
     ];
-    $this->drupalPostForm(Url::fromRoute('form_test.url'), $edit, 'Submit');
+    $this->drupalPostForm(NULL, $edit, 'Submit');
     $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
     $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
     $this->assertFieldByName('url', $edit['url']);
@@ -346,17 +358,18 @@ class FormTest extends WebTestBase {
     $this->assertRaw(t('@name field is required.', ['@name' => 'required_checkbox']), 'A required checkbox is actually mandatory');
 
     // Now try to submit the form correctly.
-    $values = Json::decode($this->drupalPostForm(NULL, ['required_checkbox' => 1], t('Submit')));
+    $this->drupalPostForm(NULL, ['required_checkbox' => 1], t('Submit'));
+    $values = Json::decode($this->getSession()->getPage()->getContent());
     $expected_values = [
       'disabled_checkbox_on' => 'disabled_checkbox_on',
-      'disabled_checkbox_off' => '',
+      'disabled_checkbox_off' => 0,
       'checkbox_on' => 'checkbox_on',
-      'checkbox_off' => '',
+      'checkbox_off' => 0,
       'zero_checkbox_on' => '0',
-      'zero_checkbox_off' => '',
+      'zero_checkbox_off' => 0,
     ];
     foreach ($expected_values as $widget => $expected_value) {
-      $this->assertEqual($values[$widget], $expected_value, format_string('Checkbox %widget returns expected value (expected: %expected, got: %value)', [
+      $this->assertSame($values[$widget], $expected_value, format_string('Checkbox %widget returns expected value (expected: %expected, got: %value)', [
         '%widget' => var_export($widget, TRUE),
         '%expected' => var_export($expected_value, TRUE),
         '%value' => var_export($values[$widget], TRUE),
@@ -518,7 +531,8 @@ class FormTest extends WebTestBase {
    * Tests default value handling of #type 'range' elements.
    */
   public function testRange() {
-    $values = json_decode($this->drupalPostForm('form-test/range', [], 'Submit'));
+    $this->drupalPostForm('form-test/range', [], 'Submit');
+    $values = json_decode($this->getSession()->getPage()->getContent());
     $this->assertEqual($values->with_default_value, 18);
     $this->assertEqual($values->float, 10.5);
     $this->assertEqual($values->integer, 6);
@@ -548,7 +562,8 @@ class FormTest extends WebTestBase {
       $edit = [
         'color' => $input,
       ];
-      $result = json_decode($this->drupalPostForm('form-test/color', $edit, 'Submit'));
+      $this->drupalPostForm('form-test/color', $edit, 'Submit');
+      $result = json_decode($this->getSession()->getPage()->getContent());
       $this->assertEqual($result->color, $expected);
     }
 
@@ -592,7 +607,7 @@ class FormTest extends WebTestBase {
     // Submit the form with no input, as the browser does for disabled elements,
     // and fetch the $form_state->getValues() that is passed to the submit handler.
     $this->drupalPostForm('form-test/disabled-elements', [], t('Submit'));
-    $returned_values['normal'] = Json::decode($this->content);
+    $returned_values['normal'] = Json::decode($this->getSession()->getPage()->getContent());
 
     // Do the same with input, as could happen if JavaScript un-disables an
     // element. drupalPostForm() emulates a browser by not submitting input for
@@ -600,8 +615,7 @@ class FormTest extends WebTestBase {
     $this->drupalGet('form-test/disabled-elements');
     $disabled_elements = [];
     foreach ($this->xpath('//*[@disabled]') as $element) {
-      $disabled_elements[] = (string) $element['name'];
-      unset($element['disabled']);
+      $disabled_elements[] = (string) $element->getAttribute('name');
     }
 
     // All the elements should be marked as disabled, including the ones below
@@ -613,8 +627,14 @@ class FormTest extends WebTestBase {
       '@expected' => $expected_count,
     ]));
 
+    // Mink does not "see" hidden elements, so we need to set the value of the
+    // hidden element directly.
+    $this->assertSession()
+      ->elementExists('css', 'input[name="hidden"]')
+      ->setValue($edit['hidden']);
+    unset($edit['hidden']);
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-    $returned_values['hijacked'] = Json::decode($this->content);
+    $returned_values['hijacked'] = Json::decode($this->getSession()->getPage()->getContent());
 
     // Ensure that the returned values match the form's default values in both
     // cases.
@@ -687,6 +707,9 @@ class FormTest extends WebTestBase {
       if (isset($type_map[$item['#type']])) {
         $type = $type_map[$item['#type']];
       }
+      if (isset($item['#value']) && is_object($item['#value'])) {
+        $item['#value'] = (string) $item['#value'];
+      }
       $path = strtr($path, ['!type' => $type]);
       // Verify that the element exists.
       $element = $this->xpath($path, [
@@ -713,12 +736,13 @@ class FormTest extends WebTestBase {
   /**
    * Test Form API protections against input forgery.
    *
-   * @see _form_test_input_forgery()
+   * @see \Drupal\form_test\Form\FormTestInputForgeryForm
    */
   public function testInputForgery() {
     $this->drupalGet('form-test/input-forgery');
-    $checkbox = $this->xpath('//input[@name="checkboxes[two]"]');
-    $checkbox[0]['value'] = 'FORGERY';
+    // The value for checkboxes[two] was changed using post render to simulate
+    // an input forgery.
+    // @see \Drupal\form_test\Form\FormTestInputForgeryForm::postRender
     $this->drupalPostForm(NULL, ['checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE], t('Submit'));
     $this->assertText('An illegal choice has been detected.', 'Input forgery was detected.');
   }

@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Kernel\Form;
 
 use Drupal\Core\Form\FormState;
-use Drupal\simpletest\WebTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the programmatic form submission behavior.
  *
  * @group Form
  */
-class ProgrammaticTest extends WebTestBase {
+class ProgrammaticTest extends KernelTestBase {
 
   /**
    * Modules to enable.
@@ -30,26 +30,26 @@ class ProgrammaticTest extends WebTestBase {
 
     // Test that a programmatic form submission is rejected when a required
     // textfield is omitted and correctly processed when it is provided.
-    $this->submitForm([], FALSE);
-    $this->submitForm(['textfield' => 'test 1'], TRUE);
-    $this->submitForm([], FALSE);
-    $this->submitForm(['textfield' => 'test 2'], TRUE);
+    $this->doSubmitForm([], FALSE);
+    $this->doSubmitForm(['textfield' => 'test 1'], TRUE);
+    $this->doSubmitForm([], FALSE);
+    $this->doSubmitForm(['textfield' => 'test 2'], TRUE);
 
     // Test that a programmatic form submission can turn on and off checkboxes
     // which are, by default, checked.
-    $this->submitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => 1, 2 => 2]], TRUE);
-    $this->submitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => 1, 2 => NULL]], TRUE);
-    $this->submitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => NULL, 2 => 2]], TRUE);
-    $this->submitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => NULL, 2 => NULL]], TRUE);
+    $this->doSubmitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => 1, 2 => 2]], TRUE);
+    $this->doSubmitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => 1, 2 => NULL]], TRUE);
+    $this->doSubmitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => NULL, 2 => 2]], TRUE);
+    $this->doSubmitForm(['textfield' => 'dummy value', 'checkboxes' => [1 => NULL, 2 => NULL]], TRUE);
 
     // Test that a programmatic form submission can correctly click a button
     // that limits validation errors based on user input. Since we do not
     // submit any values for "textfield" here and the textfield is required, we
     // only expect form validation to pass when validation is limited to a
     // different field.
-    $this->submitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'all'], FALSE);
-    $this->submitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'textfield'], FALSE);
-    $this->submitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'field_to_validate'], TRUE);
+    $this->doSubmitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'all'], FALSE);
+    $this->doSubmitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'textfield'], FALSE);
+    $this->doSubmitForm(['op' => 'Submit with limited validation', 'field_to_validate' => 'field_to_validate'], TRUE);
 
     // Restore the current batch status.
     $batch = $current_batch;
@@ -65,7 +65,7 @@ class ProgrammaticTest extends WebTestBase {
    *   A boolean indicating whether or not the form submission is expected to
    *   be valid.
    */
-  private function submitForm($values, $valid_input) {
+  protected function doSubmitForm($values, $valid_input) {
     // Programmatically submit the given values.
     $form_state = (new FormState())->setValues($values);
     \Drupal::formBuilder()->submitForm('\Drupal\form_test\Form\FormTestProgrammaticForm', $form_state);

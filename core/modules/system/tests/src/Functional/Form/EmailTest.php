@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the form API email element.
  *
  * @group Form
  */
-class EmailTest extends WebTestBase {
+class EmailTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -18,8 +18,6 @@ class EmailTest extends WebTestBase {
    * @var array
    */
   public static $modules = ['form_test'];
-
-  protected $profile = 'testing';
 
   /**
    * Tests that #type 'email' fields are properly validated.
@@ -34,14 +32,16 @@ class EmailTest extends WebTestBase {
 
     $edit = [];
     $edit['email_required'] = '  foo.bar@example.com ';
-    $values = Json::decode($this->drupalPostForm('form-test/email', $edit, 'Submit'));
+    $this->drupalPostForm('form-test/email', $edit, 'Submit');
+    $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertIdentical($values['email'], '');
     $this->assertEqual($values['email_required'], 'foo.bar@example.com');
 
     $edit = [];
     $edit['email'] = 'foo@example.com';
     $edit['email_required'] = 'example@drupal.org';
-    $values = Json::decode($this->drupalPostForm('form-test/email', $edit, 'Submit'));
+    $this->drupalPostForm('form-test/email', $edit, 'Submit');
+    $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertEqual($values['email'], 'foo@example.com');
     $this->assertEqual($values['email_required'], 'example@drupal.org');
   }

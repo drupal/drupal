@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the form API URL element.
  *
  * @group Form
  */
-class UrlTest extends WebTestBase {
+class UrlTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -35,14 +35,16 @@ class UrlTest extends WebTestBase {
     $edit = [];
     $edit['url'] = "\n";
     $edit['url_required'] = 'http://example.com/   ';
-    $values = Json::decode($this->drupalPostForm('form-test/url', $edit, 'Submit'));
+    $this->drupalPostForm('form-test/url', $edit, 'Submit');
+    $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertIdentical($values['url'], '');
     $this->assertEqual($values['url_required'], 'http://example.com/');
 
     $edit = [];
     $edit['url'] = 'http://foo.bar.example.com/';
     $edit['url_required'] = 'https://www.drupal.org/node/1174630?page=0&foo=bar#new';
-    $values = Json::decode($this->drupalPostForm('form-test/url', $edit, 'Submit'));
+    $this->drupalPostForm('form-test/url', $edit, 'Submit');
+    $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertEqual($values['url'], $edit['url']);
     $this->assertEqual($values['url_required'], $edit['url_required']);
   }

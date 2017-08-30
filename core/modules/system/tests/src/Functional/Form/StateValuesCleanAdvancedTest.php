@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests proper removal of submitted form values using
@@ -11,7 +12,11 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group Form
  */
-class StateValuesCleanAdvancedTest extends WebTestBase {
+class StateValuesCleanAdvancedTest extends BrowserTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
 
   /**
    * Modules to enable.

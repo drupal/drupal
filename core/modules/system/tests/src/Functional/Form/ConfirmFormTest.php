@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests confirmation forms.
  *
  * @group Form
  */
-class ConfirmFormTest extends WebTestBase {
+class ConfirmFormTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

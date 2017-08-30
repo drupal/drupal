@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the SystemConfigFormTestBase class.
  *
  * @group Form
  */
-class SystemConfigFormTest extends WebTestBase {
+class SystemConfigFormTest extends BrowserTestBase {
 
   /**
    * Modules to enable.

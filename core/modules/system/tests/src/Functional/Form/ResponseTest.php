@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the form API Response element.
  *
  * @group Form
  */
-class ResponseTest extends WebTestBase {
+class ResponseTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -27,7 +27,8 @@ class ResponseTest extends WebTestBase {
       'content' => $this->randomString(),
       'status' => 200,
     ];
-    $content = Json::decode($this->drupalPostForm('form-test/response', $edit, 'Submit'));
+    $this->drupalPostForm('form-test/response', $edit, 'Submit');
+    $content = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertResponse(200);
     $this->assertIdentical($edit['content'], $content, 'Response content matches');
     $this->assertIdentical('invoked', $this->drupalGetHeader('X-Form-Test-Response-Event'), 'Response handled by kernel response subscriber');
@@ -37,7 +38,8 @@ class ResponseTest extends WebTestBase {
       'content' => $this->randomString(),
       'status' => 418,
     ];
-    $content = Json::decode($this->drupalPostForm('form-test/response', $edit, 'Submit'));
+    $this->drupalPostForm('form-test/response', $edit, 'Submit');
+    $content = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertResponse(418);
     $this->assertIdentical($edit['content'], $content, 'Response content matches');
     $this->assertIdentical('invoked', $this->drupalGetHeader('X-Form-Test-Response-Event'), 'Response handled by kernel response subscriber');

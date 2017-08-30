@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests form API checkbox handling of various combinations of #default_value
@@ -10,7 +10,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group Form
  */
-class CheckboxTest extends WebTestBase {
+class CheckboxTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -55,12 +55,18 @@ class CheckboxTest extends WebTestBase {
 
     // Ensure that $form_state->getValues() is populated correctly for a
     // checkboxes group that includes a 0-indexed array of options.
-    $results = json_decode($this->drupalPostForm('form-test/checkboxes-zero/1', [], 'Save'));
+    $this->drupalPostForm('form-test/checkboxes-zero/1', [], 'Save');
+    $results = json_decode($this->getSession()->getPage()->getContent());
     $this->assertIdentical($results->checkbox_off, [0, 0, 0], 'All three in checkbox_off are zeroes: off.');
     $this->assertIdentical($results->checkbox_zero_default, ['0', 0, 0], 'The first choice is on in checkbox_zero_default');
     $this->assertIdentical($results->checkbox_string_zero_default, ['0', 0, 0], 'The first choice is on in checkbox_string_zero_default');
-    $edit = ['checkbox_off[0]' => '0'];
-    $results = json_decode($this->drupalPostForm('form-test/checkboxes-zero/1', $edit, 'Save'));
+    // Due to Mink driver differences, we cannot submit an empty checkbox value
+    // to drupalPostForm(), even if that empty value is the 'true' value for
+    // the checkbox.
+    $this->drupalGet('form-test/checkboxes-zero/1');
+    $this->assertSession()->fieldExists('checkbox_off[0]')->check();
+    $this->drupalPostForm(NULL, NULL, 'Save');
+    $results = json_decode($this->getSession()->getPage()->getContent());
     $this->assertIdentical($results->checkbox_off, ['0', 0, 0], 'The first choice is on in checkbox_off but the rest is not');
 
     // Ensure that each checkbox is rendered correctly for a checkboxes group
@@ -70,18 +76,22 @@ class CheckboxTest extends WebTestBase {
 
     $this->assertIdentical(count($checkboxes), 9, 'Correct number of checkboxes found.');
     foreach ($checkboxes as $checkbox) {
-      $checked = isset($checkbox['checked']);
-      $name = (string) $checkbox['name'];
+      $checked = $checkbox->isChecked();
+      $name = $checkbox->getAttribute('name');
       $this->assertIdentical($checked, $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', format_string('Checkbox %name correctly checked', ['%name' => $name]));
     }
-    $edit = ['checkbox_off[0]' => '0'];
-    $this->drupalPostForm('form-test/checkboxes-zero/0', $edit, 'Save');
+    // Due to Mink driver differences, we cannot submit an empty checkbox value
+    // to drupalPostForm(), even if that empty value is the 'true' value for
+    // the checkbox.
+    $this->drupalGet('form-test/checkboxes-zero/0');
+    $this->assertSession()->fieldExists('checkbox_off[0]')->check();
+    $this->drupalPostForm(NULL, NULL, 'Save');
     $checkboxes = $this->xpath('//input[@type="checkbox"]');
 
     $this->assertIdentical(count($checkboxes), 9, 'Correct number of checkboxes found.');
     foreach ($checkboxes as $checkbox) {
-      $checked = isset($checkbox['checked']);
-      $name = (string) $checkbox['name'];
+      $checked = $checkbox->isChecked();
+      $name = (string) $checkbox->getAttribute('name');
       $this->assertIdentical($checked, $name == 'checkbox_off[0]' || $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', format_string('Checkbox %name correctly checked', ['%name' => $name]));
     }
   }

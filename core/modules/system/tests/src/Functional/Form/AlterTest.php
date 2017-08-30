@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests hook_form_alter() and hook_form_FORM_ID_alter().
  *
  * @group Form
  */
-class AlterTest extends WebTestBase {
+class AlterTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -32,7 +32,7 @@ class AlterTest extends WebTestBase {
       'form_test_form_form_test_alter_form_alter() executed.',
       'system_form_form_test_alter_form_alter() executed.',
     ];
-    $content = preg_replace('/\s+/', ' ', Xss::filter($this->content, []));
+    $content = preg_replace('/\s+/', ' ', Xss::filter($this->getSession()->getPage()->getContent(), []));
     $this->assert(strpos($content, implode(' ', $expected)) !== FALSE, 'Form alter hooks executed in the expected order.');
   }
 
