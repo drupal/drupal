@@ -367,6 +367,30 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
+   * Creates the directory to store browser output.
+   *
+   * Creates the directory to store browser output in if a file to write
+   * URLs to has been created by \Drupal\Tests\Listeners\HtmlOutputPrinter.
+   */
+  protected function initBrowserOutputFile() {
+    $browser_output_file = getenv('BROWSERTEST_OUTPUT_FILE');
+    $this->htmlOutputEnabled = is_file($browser_output_file);
+    if ($this->htmlOutputEnabled) {
+      $this->htmlOutputFile = $browser_output_file;
+      $this->htmlOutputClassName = str_replace("\\", "_", get_called_class());
+      $this->htmlOutputDirectory = DRUPAL_ROOT . '/sites/simpletest/browser_output';
+      if (file_prepare_directory($this->htmlOutputDirectory, FILE_CREATE_DIRECTORY) && !file_exists($this->htmlOutputDirectory . '/.htaccess')) {
+        file_put_contents($this->htmlOutputDirectory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
+      }
+      $this->htmlOutputCounterStorage = $this->htmlOutputDirectory . '/' . $this->htmlOutputClassName . '.counter';
+      $this->htmlOutputTestId = str_replace('sites/simpletest/', '', $this->siteDirectory);
+      if (is_file($this->htmlOutputCounterStorage)) {
+        $this->htmlOutputCounter = max(1, (int) file_get_contents($this->htmlOutputCounterStorage)) + 1;
+      }
+    }
+  }
+
+  /**
    * Provides a Guzzle middleware handler to log every response received.
    *
    * @return callable
@@ -440,23 +464,8 @@ abstract class BrowserTestBase extends TestCase {
       }
     }
 
-    // Creates the directory to store browser output in if a file to write
-    // URLs to has been created by \Drupal\Tests\Listeners\HtmlOutputPrinter.
-    $browser_output_file = getenv('BROWSERTEST_OUTPUT_FILE');
-    $this->htmlOutputEnabled = is_file($browser_output_file);
-    if ($this->htmlOutputEnabled) {
-      $this->htmlOutputFile = $browser_output_file;
-      $this->htmlOutputClassName = str_replace("\\", "_", get_called_class());
-      $this->htmlOutputDirectory = DRUPAL_ROOT . '/sites/simpletest/browser_output';
-      if (file_prepare_directory($this->htmlOutputDirectory, FILE_CREATE_DIRECTORY) && !file_exists($this->htmlOutputDirectory . '/.htaccess')) {
-        file_put_contents($this->htmlOutputDirectory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
-      }
-      $this->htmlOutputCounterStorage = $this->htmlOutputDirectory . '/' . $this->htmlOutputClassName . '.counter';
-      $this->htmlOutputTestId = str_replace('sites/simpletest/', '', $this->siteDirectory);
-      if (is_file($this->htmlOutputCounterStorage)) {
-        $this->htmlOutputCounter = max(1, (int) file_get_contents($this->htmlOutputCounterStorage)) + 1;
-      }
-    }
+    // Set up the browser test output file.
+    $this->initBrowserOutputFile();
   }
 
   /**
