@@ -15,8 +15,9 @@ process:
   langcode: 'constants/langcode'
   field_name: field_name
   type:
-    plugin: field_type
+    plugin: process_field
     source: type
+    method: getFieldType
   # Translatable is not migrated and the Drupal 8 default of true is used.
   # If translatable is false in field storage then the field can not be
   # set to translatable via the UI.
