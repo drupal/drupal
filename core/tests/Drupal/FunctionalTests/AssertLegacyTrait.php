@@ -2,7 +2,6 @@
 
 namespace Drupal\FunctionalTests;
 
-use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Selector\Xpath\Escaper;
 use Drupal\Component\Render\FormattableMarkup;
@@ -220,13 +219,11 @@ trait AssertLegacyTrait {
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
    *   Use $this->assertSession()->fieldExists() or
+   *   $this->assertSession()->buttonExists() or
    *   $this->assertSession()->fieldValueEquals() instead.
    */
   protected function assertFieldByName($name, $value = NULL) {
-    $this->assertSession()->fieldExists($name);
-    if ($value !== NULL) {
-      $this->assertSession()->fieldValueEquals($name, (string) $value);
-    }
+    $this->assertFieldByXPath($this->constructFieldXpath('name', $name), $value);
   }
 
   /**
@@ -242,15 +239,11 @@ trait AssertLegacyTrait {
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
    *   Use $this->assertSession()->fieldNotExists() or
+   *   $this->assertSession()->buttonNotExists() or
    *   $this->assertSession()->fieldValueNotEquals() instead.
    */
   protected function assertNoFieldByName($name, $value = '') {
-    if ($this->getSession()->getPage()->findField($name) && isset($value)) {
-      $this->assertSession()->fieldValueNotEquals($name, (string) $value);
-    }
-    else {
-      $this->assertSession()->fieldNotExists($name);
-    }
+    $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value);
   }
 
   /**
@@ -268,19 +261,11 @@ trait AssertLegacyTrait {
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
    *   Use $this->assertSession()->fieldExists() or
+   *   $this->assertSession()->buttonExists() or
    *   $this->assertSession()->fieldValueEquals() instead.
    */
   protected function assertFieldById($id, $value = '') {
-    $xpath = $this->assertSession()->buildXPathQuery('//textarea[@id=:value]|//input[@id=:value]|//select[@id=:value]', [':value' => $id]);
-    $field = $this->getSession()->getPage()->find('xpath', $xpath);
-
-    if (empty($field)) {
-      throw new ElementNotFoundException($this->getSession()->getDriver(), 'form field', 'id', $field);
-    }
-
-    if ($value !== NULL) {
-      $this->assertEquals($value, $field->getValue());
-    }
+    $this->assertFieldByXPath($this->constructFieldXpath('id', $id), $value);
   }
 
   /**
@@ -290,23 +275,25 @@ trait AssertLegacyTrait {
    *   Name or ID of field to assert.
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
-   *   Use $this->assertSession()->fieldExists() instead.
+   *   Use $this->assertSession()->fieldExists() or
+   *   $this->assertSession()->buttonExists() instead.
    */
   protected function assertField($field) {
-    $this->assertSession()->fieldExists($field);
+    $this->assertFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field));
   }
 
   /**
-   * Asserts that a field exists with the given name or ID does NOT exist.
+   * Asserts that a field does NOT exist with the given name or ID.
    *
    * @param string $field
    *   Name or ID of field to assert.
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
-   *   Use $this->assertSession()->fieldNotExists() instead.
+   *   Use $this->assertSession()->fieldNotExists() or
+   *   $this->assertSession()->buttonNotExists() instead.
    */
   protected function assertNoField($field) {
-    $this->assertSession()->fieldNotExists($field);
+    $this->assertNoFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field));
   }
 
   /**
@@ -427,23 +414,11 @@ trait AssertLegacyTrait {
    *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
    *   Use $this->assertSession()->fieldNotExists() or
+   *   $this->assertSession()->buttonNotExists() or
    *   $this->assertSession()->fieldValueNotEquals() instead.
    */
   protected function assertNoFieldById($id, $value = '') {
-    $xpath = $this->assertSession()->buildXPathQuery('//textarea[@id=:value]|//input[@id=:value]|//select[@id=:value]', [':value' => $id]);
-    $field = $this->getSession()->getPage()->find('xpath', $xpath);
-
-    // Return early if the field could not be found as expected.
-    if ($field === NULL) {
-      return;
-    }
-
-    if (!isset($value)) {
-      throw new ExpectationException(sprintf('Id "%s" appears on this page, but it should not.', $id), $this->getSession()->getDriver());
-    }
-    elseif ($value === $field->getValue()) {
-      throw new ExpectationException(sprintf('Failed asserting that %s is not equal to %s', $field->getValue(), $value), $this->getSession()->getDriver());
-    }
+    $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value);
   }
 
   /**
@@ -585,25 +560,32 @@ trait AssertLegacyTrait {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages with t().
    *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *
    * @deprecated Scheduled for removal in Drupal 9.0.0.
    *   Use $this->xpath() instead and assert that the result is empty.
    */
   protected function assertNoFieldByXPath($xpath, $value = NULL, $message = '') {
     $fields = $this->xpath($xpath);
 
-    // If value specified then check array for match.
-    $found = TRUE;
-    if (isset($value)) {
-      $found = FALSE;
-      if ($fields) {
-        foreach ($fields as $field) {
-          if ($field->getAttribute('value') == $value) {
-            $found = TRUE;
-          }
+    if (!empty($fields)) {
+      if (isset($value)) {
+        $found = FALSE;
+        try {
+          $this->assertFieldsByValue($fields, $value);
+          $found = TRUE;
+        }
+        catch (\Exception $e) {
+        }
+
+        if ($found) {
+          throw new ExpectationException(sprintf('The field resulting from %s was found with the provided value %s.', $xpath, $value), $this->getSession()->getDriver());
         }
       }
+      else {
+        throw new ExpectationException(sprintf('The field resulting from %s was found.', $xpath), $this->getSession()->getDriver());
+      }
     }
-    return $this->assertFalse($fields && $found, $message);
   }
 
   /**
@@ -629,7 +611,15 @@ trait AssertLegacyTrait {
       $found = FALSE;
       if ($fields) {
         foreach ($fields as $field) {
-          if ($field->getAttribute('value') == $value) {
+          if ($field->getAttribute('type') == 'checkbox') {
+            if (is_bool($value)) {
+              $found = $field->isChecked() == $value;
+            }
+            else {
+              $found = TRUE;
+            }
+          }
+          elseif ($field->getAttribute('value') == $value) {
             // Input element with correct value.
             $found = TRUE;
           }
@@ -637,8 +627,12 @@ trait AssertLegacyTrait {
             // Select element with an option.
             $found = TRUE;
           }
-          elseif ($field->getText() == $value) {
-            // Text area with correct text.
+          elseif ($field->getTagName() === 'textarea' && $field->getValue() == $value) {
+            // Text area with correct text. Use getValue() here because
+            // getText() would remove any newlines in the value.
+            $found = TRUE;
+          }
+          elseif ($field->getTagName() !== 'input' && $field->getText() == $value) {
             $found = TRUE;
           }
         }
@@ -786,6 +780,25 @@ trait AssertLegacyTrait {
    */
   protected function buildXPathQuery($xpath, array $args = []) {
     return $this->assertSession()->buildXPathQuery($xpath, $args);
+  }
+
+  /**
+   * Helper: Constructs an XPath for the given set of attributes and value.
+   *
+   * @param string $attribute
+   *   Field attributes.
+   * @param string $value
+   *   Value of field.
+   *
+   * @return string
+   *   XPath for specified values.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $this->getSession()->getPage()->findField() instead.
+   */
+  protected function constructFieldXpath($attribute, $value) {
+    $xpath = '//textarea[@' . $attribute . '=:value]|//input[@' . $attribute . '=:value]|//select[@' . $attribute . '=:value]';
+    return $this->buildXPathQuery($xpath, [':value' => $value]);
   }
 
   /**
