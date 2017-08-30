@@ -4,6 +4,7 @@ namespace Drupal\system\Tests\Form;
 
 use Drupal\Core\Form\FormState;
 use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\system\Functional\Form\StubForm;
 
 /**
  * Tests the tableselect form element for expected behavior.

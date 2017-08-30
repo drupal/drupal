@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that the language select form element prints and submits the right
@@ -13,7 +13,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group Form
  */
-class LanguageSelectElementTest extends WebTestBase {
+class LanguageSelectElementTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -105,10 +105,11 @@ class LanguageSelectElementTest extends WebTestBase {
     // including the order, as the languages sent as a parameter.
     $elements = $this->xpath("//select[@id='" . $id . "']");
     $count = 0;
-    foreach ($elements[0]->option as $option) {
+    /** @var \Behat\Mink\Element\NodeElement $option */
+    foreach ($elements[0]->findAll('css', 'option') as $option) {
       $count++;
       $option_title = current($options);
-      $this->assertEqual((string) $option, $option_title);
+      $this->assertEqual($option->getText(), $option_title);
       next($options);
     }
     $this->assertEqual($count, count($options), format_string('The number of languages and the number of options shown by the language element are the same: @languages languages, @number options', ['@languages' => count($options), '@number' => $count]));

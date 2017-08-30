@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests building and processing of core form elements.
  *
  * @group Form
  */
-class ElementTest extends WebTestBase {
+class ElementTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -53,7 +53,7 @@ class ElementTest extends WebTestBase {
       $expected_values = ['0', 'foo', '1', 'bar', '>'];
       foreach ($elements as $element) {
         $expected = array_shift($expected_values);
-        $this->assertIdentical((string) $element['value'], $expected);
+        $this->assertIdentical((string) $element->getAttribute('value'), $expected);
       }
     }
 
@@ -73,7 +73,7 @@ class ElementTest extends WebTestBase {
       $expected_values = ['0', 'foo', 'bar', '>', '1'];
       foreach ($elements as $element) {
         $expected = array_shift($expected_values);
-        $this->assertIdentical((string) $element['value'], $expected);
+        $this->assertIdentical((string) $element->getAttribute('value'), $expected);
       }
     }
     // Verify that custom #description properties are output.

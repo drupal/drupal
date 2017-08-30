@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests proper removal of submitted form values using
@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group Form
  */
-class StateValuesCleanTest extends WebTestBase {
+class StateValuesCleanTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -25,7 +25,8 @@ class StateValuesCleanTest extends WebTestBase {
    * Tests \Drupal\Core\Form\FormState::cleanValues().
    */
   public function testFormStateValuesClean() {
-    $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
+    $this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit'));
+    $values = Json::decode($this->getSession()->getPage()->getContent());
 
     // Setup the expected result.
     $result = [

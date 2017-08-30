@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\system\Tests\Form;
+namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests form storage from cached pages.
  *
  * @group Form
  */
-class FormStoragePageCacheTest extends WebTestBase {
+class FormStoragePageCacheTest extends BrowserTestBase {
 
   /**
    * @var array
@@ -33,7 +33,7 @@ class FormStoragePageCacheTest extends WebTestBase {
   protected function getFormBuildId() {
     $build_id_fields = $this->xpath('//input[@name="form_build_id"]');
     $this->assertEqual(count($build_id_fields), 1, 'One form build id field on the page');
-    return (string) $build_id_fields[0]['value'];
+    return (string) $build_id_fields[0]->getAttribute('value');
   }
 
   /**
