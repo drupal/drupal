@@ -1267,13 +1267,13 @@ abstract class BrowserTestBase extends TestCase {
    * Checks for meta refresh tag and if found call drupalGet() recursively.
    *
    * This function looks for the http-equiv attribute to be set to "Refresh" and
-   * is case-sensitive.
+   * is case-insensitive.
    *
    * @return string|false
    *   Either the new page content or FALSE.
    */
   protected function checkForMetaRefresh() {
-    $refresh = $this->cssSelect('meta[http-equiv="Refresh"]');
+    $refresh = $this->cssSelect('meta[http-equiv="Refresh"], meta[http-equiv="refresh"]');
     if (!empty($refresh) && (!isset($this->maximumMetaRefreshCount) || $this->metaRefreshCount < $this->maximumMetaRefreshCount)) {
       // Parse the content attribute of the meta tag for the format:
       // "[delay]: URL=[page_to_redirect_to]".

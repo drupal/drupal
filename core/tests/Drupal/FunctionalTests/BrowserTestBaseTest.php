@@ -605,4 +605,22 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertEquals('Australia/Sydney', $value);
   }
 
+  /**
+   * Tests the ::checkForMetaRefresh() method.
+   */
+  public function testCheckForMetaRefresh() {
+    // Disable following redirects in the client.
+    $this->getSession()->getDriver()->getClient()->followRedirects(FALSE);
+    // Set the maximumMetaRefreshCount to zero to make sure the redirect doesn't
+    // happen when doing a drupalGet.
+    $this->maximumMetaRefreshCount = 0;
+    $this->drupalGet('test-meta-refresh');
+    $this->assertNotEmpty($this->cssSelect('meta[http-equiv="refresh"]'));
+    // Allow one redirect to happen.
+    $this->maximumMetaRefreshCount = 1;
+    $this->checkForMetaRefresh();
+    // Check that we are now on the test page.
+    $this->assertSession()->pageTextContains('Test page text.');
+  }
+
 }

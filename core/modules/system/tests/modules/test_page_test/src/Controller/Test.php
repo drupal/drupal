@@ -1,6 +1,9 @@
 <?php
 
 namespace Drupal\test_page_test\Controller;
+
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -106,6 +109,18 @@ class Test {
    */
   public function renderPipeInLink() {
     return ['#markup' => '<a href="http://example.com">foo|bar|baz</a>'];
+  }
+
+  /**
+   * Loads a page that does a redirect.
+   *
+   * Drupal uses Symfony's RedirectResponse for generating redirects. That class
+   * uses a lower-case 'http-equiv="refresh"'.
+   *
+   * @see \Symfony\Component\HttpFoundation\RedirectResponse
+   */
+  public function metaRefresh() {
+    return new RedirectResponse(Url::fromRoute('test_page_test.test_page', [], ['absolute' => TRUE])->toString(), 302);
   }
 
 }
