@@ -82,3 +82,11 @@ test_page_test.field_xpath:
     _form: '\Drupal\test_page_test\Form\TestForm'
   requirements:
     _access: 'TRUE'
+
+test_page_test.meta_refresh:
+  path: '/test-meta-refresh'
+  defaults:
+    _title: 'Page with a redirect'
+    _controller: '\Drupal\test_page_test\Controller\Test::metaRefresh'
+  requirements:
+    _access: 'TRUE'
