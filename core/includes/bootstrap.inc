@@ -11,8 +11,6 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\Core\Render\Markup;
-use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
@@ -459,28 +457,10 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  * @see status-messages.html.twig
  */
 function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) {
-  if (isset($message)) {
-    if (!isset($_SESSION['messages'][$type])) {
-      $_SESSION['messages'][$type] = [];
-    }
-
-    // Convert strings which are safe to the simplest Markup objects.
-    if (!($message instanceof Markup) && $message instanceof MarkupInterface) {
-      $message = Markup::create((string) $message);
-    }
-
-    // Do not use strict type checking so that equivalent string and
-    // MarkupInterface objects are detected.
-    if ($repeat || !in_array($message, $_SESSION['messages'][$type])) {
-      $_SESSION['messages'][$type][] = $message;
-    }
-
-    // Mark this page as being uncacheable.
-    \Drupal::service('page_cache_kill_switch')->trigger();
-  }
-
-  // Messages not set when DB connection fails.
-  return isset($_SESSION['messages']) ? $_SESSION['messages'] : NULL;
+  /* @var \Drupal\Core\Messenger\MessengerInterface $messenger */
+  $messenger = \Drupal::service('messenger');
+  $messenger->addMessage($message, $type, $repeat);
+  return $messenger->all();
 }
 
 /**
@@ -509,10 +489,12 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
  * @see status-messages.html.twig
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
-  if ($messages = drupal_set_message()) {
+  /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
+  $messenger = \Drupal::hasService('messenger') ? \Drupal::service('messenger') : NULL;
+  if ($messenger && ($messages = $messenger->all())) {
     if ($type) {
       if ($clear_queue) {
-        unset($_SESSION['messages'][$type]);
+        $messenger->deleteByType($type);
       }
       if (isset($messages[$type])) {
         return [$type => $messages[$type]];
@@ -520,7 +502,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
     }
     else {
       if ($clear_queue) {
-        unset($_SESSION['messages']);
+        $messenger->deleteAll();
       }
       return $messages;
     }

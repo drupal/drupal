@@ -5,6 +5,7 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -59,6 +60,13 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   protected $bareHtmlPageRenderer;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a new MaintenanceModeSubscriber.
    *
    * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
@@ -73,14 +81,17 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    *   The current user.
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_page_renderer
    *   The bare HTML page renderer.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer) {
+  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, MessengerInterface $messenger) {
     $this->maintenanceMode = $maintenance_mode;
     $this->config = $config_factory;
     $this->stringTranslation = $translation;
     $this->urlGenerator = $url_generator;
     $this->account = $account;
     $this->bareHtmlPageRenderer = $bare_html_page_renderer;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -118,10 +129,10 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         // settings page.
         if ($route_match->getRouteName() != 'system.site_maintenance_mode') {
           if ($this->account->hasPermission('administer site configuration')) {
-            $this->drupalSetMessage($this->t('Operating in maintenance mode. <a href=":url">Go online.</a>', [':url' => $this->urlGenerator->generate('system.site_maintenance_mode')]), 'status', FALSE);
+            $this->messenger->addMessage($this->t('Operating in maintenance mode. <a href=":url">Go online.</a>', [':url' => $this->urlGenerator->generate('system.site_maintenance_mode')]), 'status', FALSE);
           }
           else {
-            $this->drupalSetMessage($this->t('Operating in maintenance mode.'), 'status', FALSE);
+            $this->messenger->addMessage($this->t('Operating in maintenance mode.'), 'status', FALSE);
           }
         }
       }
@@ -138,13 +149,6 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     return SafeMarkup::format($this->config->get('system.maintenance')->get('message'), [
       '@site' => $this->config->get('system.site')->get('name'),
     ]);
-  }
-
-  /**
-   * Wraps the drupal_set_message function.
-   */
-  protected function drupalSetMessage($message = NULL, $type = 'status', $repeat = FALSE) {
-    return drupal_set_message($message, $type, $repeat);
   }
 
   /**
