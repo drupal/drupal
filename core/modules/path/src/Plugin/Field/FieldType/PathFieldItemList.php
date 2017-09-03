@@ -4,7 +4,6 @@ namespace Drupal\path\Plugin\Field\FieldType;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldItemList;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -71,14 +70,6 @@ class PathFieldItemList extends FieldItemList {
     if (!isset($this->list[0]) && $this->definition->isComputed()) {
       $this->list[0] = $this->createItem(0);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function equals(FieldItemListInterface $list_to_compare) {
-    $this->ensureLoaded();
-    return parent::equals($list_to_compare);
   }
 
 }
