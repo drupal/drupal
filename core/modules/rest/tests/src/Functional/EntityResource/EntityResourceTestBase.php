@@ -3,18 +3,13 @@
 namespace Drupal\Tests\rest\Functional\EntityResource;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Random;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Field\Plugin\Field\FieldType\BooleanItem;
-use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\path\Plugin\Field\FieldType\PathItem;
 use Drupal\rest\ResourceResponseInterface;
 use Drupal\Tests\rest\Functional\ResourceTestBase;
 use GuzzleHttp\RequestOptions;
@@ -930,7 +925,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $parseable_valid_request_body_2 = $this->serializer->encode($this->getNormalizedPatchEntity(), static::$format);
     $parseable_invalid_request_body   = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPatchEntity()), static::$format);
     $parseable_invalid_request_body_2 = $this->serializer->encode($this->getNormalizedPatchEntity() + ['field_rest_test' => [['value' => $this->randomString()]]], static::$format);
-    $parseable_invalid_request_body_3 = $this->serializer->encode($this->getNormalizedPatchEntity() + ['field_rest_test' => [['value' => 'All the faith he had had had had no effect on the outcome of his life.', 'format' => NULL]]], static::$format);
 
     // The URL and Guzzle request options that will be used in this test. The
     // request options will be modified/expanded throughout this test:
@@ -1042,33 +1036,22 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assertResourceErrorResponse(403, "Access denied on updating field 'field_rest_test'.", $response);
 
 
-    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_3;
-
-
-    // DX: 403 when entity contains field without 'edit' nor 'view' access, even
-    // when the value for that field matches the current value. This is allowed
-    // in principle, but leads to information disclosure.
-    $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, "Access denied on updating field 'field_rest_test'.", $response);
-
-
-    // DX: 403 when sending PATCH request with updated read-only fields.
-    list($modified_entity, $original_values) = static::getModifiedEntityForPatchTesting($this->entity);
-    // Send PATCH request by serializing the modified entity, assert the error
-    // response, change the modified entity field that caused the error response
-    // back to its original value, repeat.
+    // DX: 403 when sending PATCH request with read-only fields.
+    // First send all fields (the "maximum normalization"). Assert the expected
+    // error message for the first PATCH-protected field. Remove that field from
+    // the normalization, send another request, assert the next PATCH-protected
+    // field error message. And so on.
+    $max_normalization = $this->getNormalizedPatchEntity() + $this->serializer->normalize($this->entity, static::$format);
     for ($i = 0; $i < count(static::$patchProtectedFieldNames); $i++) {
-      $patch_protected_field_name = static::$patchProtectedFieldNames[$i];
-      $request_options[RequestOptions::BODY] = $this->serializer->serialize($modified_entity, static::$format);
+      $max_normalization = $this->removeFieldsFromNormalization($max_normalization, array_slice(static::$patchProtectedFieldNames, 0, $i));
+      $request_options[RequestOptions::BODY] = $this->serializer->serialize($max_normalization, static::$format);
       $response = $this->request('PATCH', $url, $request_options);
-      $this->assertResourceErrorResponse(403, "Access denied on updating field '" . $patch_protected_field_name . "'.", $response);
-      $modified_entity->get($patch_protected_field_name)->setValue($original_values[$patch_protected_field_name]);
+      $this->assertResourceErrorResponse(403, "Access denied on updating field '" . static::$patchProtectedFieldNames[$i] . "'.", $response);
     }
 
-    // 200 for well-formed PATCH request that sends all fields (even including
-    // read-only ones, but with unchanged values).
-    $valid_request_body = $this->getNormalizedPatchEntity() + $this->serializer->normalize($this->entity, static::$format);
-    $request_options[RequestOptions::BODY] = $this->serializer->serialize($valid_request_body, static::$format);
+    // 200 for well-formed request that sends the maximum number of fields.
+    $max_normalization = $this->removeFieldsFromNormalization($max_normalization, static::$patchProtectedFieldNames);
+    $request_options[RequestOptions::BODY] = $this->serializer->serialize($max_normalization, static::$format);
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
 
@@ -1306,57 +1289,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
-   * Clones the given entity and modifies all PATCH-protected fields.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity being tested and to modify.
-   *
-   * @return array
-   *   Contains two items:
-   *   1. The modified entity object.
-   *   2. The original field values, keyed by field name.
-   *
-   * @internal
-   */
-  protected static function getModifiedEntityForPatchTesting(EntityInterface $entity) {
-    $modified_entity = clone $entity;
-    $original_values = [];
-    foreach (static::$patchProtectedFieldNames as $field_name) {
-      $field = $modified_entity->get($field_name);
-      $original_values[$field_name] = $field->getValue();
-      switch ($field->getItemDefinition()->getClass()) {
-        case EntityReferenceItem::class:
-          // EntityReferenceItem::generateSampleValue() picks one of the last 50
-          // entities of the supported type & bundle. We don't care if the value
-          // is valid, we only care that it's different.
-          $field->setValue(['target_id' => 99999]);
-          break;
-        case BooleanItem::class:
-          // BooleanItem::generateSampleValue() picks either 0 or 1. So a 50%
-          // chance of not picking a different value.
-          $field->value = ((int) $field->value) === 1 ? '0' : '1';
-          break;
-        case PathItem::class:
-          // PathItem::generateSampleValue() doesn't set a PID, which causes
-          // PathItem::postSave() to fail. Keep the PID (and other properties),
-          // just modify the alias.
-          $value = $field->getValue();
-          $value['alias'] = str_replace(' ', '-', strtolower((new Random())->sentences(3)));
-          $field->setValue($value);
-          break;
-        default:
-          $original_field = clone $field;
-          while ($field->equals($original_field)) {
-            $field->generateSampleItems();
-          }
-          break;
-      }
-    }
-
-    return [$modified_entity, $original_values];
-  }
-
-  /**
    * Makes the given entity normalization invalid.
    *
    * @param array $normalization
@@ -1371,6 +1303,23 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $normalization[$label_field][1]['value'] = 'Second Title';
 
     return $normalization;
+  }
+
+  /**
+   * Removes fields from a normalization.
+   *
+   * @param array $normalization
+   *   An entity normalization.
+   * @param string[] $field_names
+   *   The field names to remove from the entity normalization.
+   *
+   * @return array
+   *   The updated entity normalization.
+   *
+   * @see ::testPatch
+   */
+  protected function removeFieldsFromNormalization(array $normalization, $field_names) {
+    return array_diff_key($normalization, array_flip($field_names));
   }
 
   /**
