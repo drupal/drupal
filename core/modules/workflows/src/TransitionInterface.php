@@ -6,8 +6,9 @@ namespace Drupal\workflows;
  * A transition value object that describes the transition between two states.
  *
  * @internal
- *   The workflow system is currently experimental and should only be leveraged
- *   by experimental modules and development releases of contributed modules.
+ *   The TransitionInterface should only be used by Workflows and Content
+ *   Moderation.
+ *   @todo Revisit the need for this in https://www.drupal.org/node/2902309.
  */
 interface TransitionInterface {
 

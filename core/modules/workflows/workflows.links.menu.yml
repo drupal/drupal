@@ -1,4 +1,3 @@
-# Workflow menu items definition
 entity.workflow.collection:
   title: 'Workflows'
   route_name: entity.workflow.collection

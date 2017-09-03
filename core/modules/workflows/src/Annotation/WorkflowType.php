@@ -12,7 +12,8 @@ use Drupal\Component\Annotation\Plugin;
  * For a working example, see \Drupal\content_moderation\Plugin\Workflow\ContentModerate
  *
  * @see \Drupal\workflows\WorkflowTypeInterface
- * @see \Drupal\workflows\WorkflowManager
+ * @see \Drupal\workflows\WorkflowTypeManager
+ * @see workflow_type_info_alter()
  * @see plugin_api
  *
  * @Annotation
@@ -33,8 +34,6 @@ class WorkflowType extends Plugin {
   /**
    * The label of the workflow.
    *
-   * Describes how the plugin is used to apply a workflow to something.
-   *
    * @var \Drupal\Core\Annotation\Translation
    *
    * @ingroup plugin_translatable
@@ -53,8 +52,10 @@ class WorkflowType extends Plugin {
   /**
    * A list of optional form classes implementing PluginFormInterface.
    *
-   * Forms which will be used for the workflow UI are 'configure', 'state' and
-   * 'transition'.
+   * Forms which will be used for the workflow UI are:
+   * - 'configure' (\Drupal\workflows\WorkflowTypeInterface::PLUGIN_FORM_KEY)
+   * - 'state' (\Drupal\workflows\StateInterface::PLUGIN_FORM_KEY)
+   * - 'transition' (\Drupal\workflows\TransitionInterface::PLUGIN_FORM_KEY)
    *
    * @see \Drupal\Core\Plugin\PluginWithFormsInterface
    * @see \Drupal\Core\Plugin\PluginFormInterface

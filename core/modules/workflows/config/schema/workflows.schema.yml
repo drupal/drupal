@@ -13,7 +13,6 @@ workflows.workflow.*:
       label: 'Workflow type'
     type_settings:
       type: workflow.type_settings.[%parent.type]
-      label: 'Custom settings for workflow type'
 
 workflows.state:
   type: mapping

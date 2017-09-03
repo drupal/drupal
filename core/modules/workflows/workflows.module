@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provides hook implementations for the Workflow UI module.
+ * Provides hook implementations for the Workflows module.
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -12,7 +12,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
  */
 function workflows_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    // Main module help for the Workflow UI module.
     case 'help.page.workflows':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
