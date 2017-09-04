@@ -309,7 +309,7 @@ class TestDiscovery {
   /**
    * Retrieves information about a test class for UI purposes.
    *
-   * @param string $class
+   * @param string $classname
    *   The test classname.
    * @param string $doc_comment
    *   (optional) The class PHPDoc comment. If not passed in reflection will be

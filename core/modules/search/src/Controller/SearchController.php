@@ -149,8 +149,6 @@ class SearchController extends ControllerBase {
   /**
    * Creates a render array for the search help page.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
    * @param \Drupal\search\SearchPageInterface $entity
    *   The search page entity.
    *

@@ -433,8 +433,8 @@ class StorageComparer implements StorageComparerInterface {
    *
    * @see \Drupal\Core\Config\StorageComparerInterface::extractRenameNames()
    */
-  protected function createRenameName($name1, $name2) {
-    return $name1 . '::' . $name2;
+  protected function createRenameName($old_name, $new_name) {
+    return $old_name . '::' . $new_name;
   }
 
   /**

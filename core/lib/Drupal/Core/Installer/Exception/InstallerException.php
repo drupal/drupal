@@ -20,10 +20,10 @@ class InstallerException extends \RuntimeException {
   /**
    * Constructs a new installer exception.
    *
-   * @param string $title
-   *   The page title.
    * @param string $message
-   *   (optional) The exception message. Defaults to 'Error'.
+   *   The exception message.
+   * @param string $title
+   *   (optional) The page title. Defaults to 'Error'.
    * @param int $code
    *   (optional) The exception code. Defaults to 0.
    * @param \Exception $previous

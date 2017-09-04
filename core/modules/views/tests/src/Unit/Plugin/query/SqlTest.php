@@ -139,7 +139,7 @@ class SqlTest extends UnitTestCase {
    *
    * @param \Drupal\Core\Entity\EntityInterface[][] $entities_by_type
    *   Test entities keyed by entity type and entity ID.
-   * @param \Drupal\Core\Entity\EntityInterface[][] $entities_by_type
+   * @param \Drupal\Core\Entity\EntityInterface[][] $entity_revisions_by_type
    *   Test entities keyed by entity type and revision ID.
    *
    * @return \Prophecy\Prophecy\ObjectProphecy

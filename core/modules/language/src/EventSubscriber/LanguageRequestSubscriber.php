@@ -52,7 +52,7 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
    *   The language manager service.
    * @param \Drupal\language\LanguageNegotiatorInterface $negotiator
    *   The language negotiator.
-   * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translation;
+   * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translation
    *   The translation service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current active user.

@@ -153,7 +153,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   /**
    * Set the current migration status.
    *
-   * @param int $result
+   * @param int $status
    *   One of the STATUS_* constants.
    */
   public function setStatus($status);

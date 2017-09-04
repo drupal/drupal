@@ -278,7 +278,7 @@ function editor_load($format_id) {
  * @param \Drupal\filter\FilterFormatInterface|null $format
  *   The text format whose text editor will be used or NULL if the previously
  *   defined text format is now disabled.
- * @param \Drupal\filter\FilterFormatInterface $original_format|null
+ * @param \Drupal\filter\FilterFormatInterface|null $original_format
  *   (optional) The original text format (i.e. when switching text formats,
  *   $format is the text format that is going to be used, $original_format is
  *   the one that was being used initially, the one that is stored in the

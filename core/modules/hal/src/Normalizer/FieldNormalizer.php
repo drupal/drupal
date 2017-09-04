@@ -51,8 +51,8 @@ class FieldNormalizer extends SerializationFieldNormalizer {
   /**
    * Helper function to normalize field items.
    *
-   * @param \Drupal\Core\Field\FieldItemListInterface $field
-   *   The field object.
+   * @param \Drupal\Core\Field\FieldItemListInterface $field_items
+   *   The field item list object.
    * @param string $format
    *   The format.
    * @param array $context

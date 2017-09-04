@@ -110,7 +110,7 @@ class FieldItemNormalizer extends NormalizerBase {
    * entity. This is the reason for using target_instances, from which the
    * property path can be traversed up to the root.
    *
-   * @param \Drupal\Core\Field\FieldItemInterface $field_item
+   * @param \Drupal\Core\Field\FieldItemInterface $item
    *   The untranslated field item instance.
    * @param $langcode
    *   The langcode.

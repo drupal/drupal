@@ -60,9 +60,6 @@ class UserPasswordForm extends FormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['name'] = [
