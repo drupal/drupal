@@ -147,7 +147,7 @@ abstract class LocalReadOnlyStream extends LocalStream {
    *
    * The file will not be renamed as this is a read-only stream wrapper.
    *
-   * @param string $from_uri,
+   * @param string $from_uri
    *   The uri to the file to rename.
    * @param string $to_uri
    *   The new uri for file.

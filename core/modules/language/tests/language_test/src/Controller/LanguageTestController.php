@@ -53,7 +53,7 @@ class LanguageTestController implements ContainerInjectionInterface {
   /**
    * Route entity upcasting test helper.
    *
-   * @param \Drupal\language\ConfigurableLanguageInterface $language
+   * @param \Drupal\language\ConfigurableLanguageInterface $configurable_language
    *   The ConfigurableLanguage object from the route.
    *
    * @return string

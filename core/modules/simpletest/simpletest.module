@@ -794,7 +794,7 @@ function simpletest_phpunit_xml_to_rows($test_id, $phpunit_xml_file) {
  *
  * @param \SimpleXMLElement $element
  *   The PHPUnit xml to search for test cases.
- * @param \SimpleXMLElement $suite
+ * @param \SimpleXMLElement $parent
  *   (Optional) The parent of the current element. Defaults to NULL.
  *
  * @return array

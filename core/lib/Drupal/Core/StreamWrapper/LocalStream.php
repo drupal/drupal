@@ -380,7 +380,7 @@ abstract class LocalStream implements StreamWrapperInterface {
   /**
    * Support for rename().
    *
-   * @param string $from_uri,
+   * @param string $from_uri
    *   The URI to the file to rename.
    * @param string $to_uri
    *   The new URI for file.

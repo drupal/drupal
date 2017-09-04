@@ -25,10 +25,14 @@ class UserPermissionsRoleSpecificForm extends UserPermissionsForm {
   }
 
   /**
-   * {@inheritdoc}
+   * Builds the user permissions administration form for a specific role.
    *
-   * @param string $role_id
-   *   The user role ID used for this form.
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param \Drupal\user\RoleInterface|null $user_role
+   *   (optional) The user role used for this form. Defaults to NULL.
    */
   public function buildForm(array $form, FormStateInterface $form_state, RoleInterface $user_role = NULL) {
     $this->userRole = $user_role;

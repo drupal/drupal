@@ -35,7 +35,7 @@ class MigrateBlockContentEntityFormDisplayTest extends MigrateDrupal7TestBase {
    *
    * @param string $id
    *   The entity ID.
-   * @param string $component
+   * @param string $component_id
    *   The ID of the form component.
    */
   protected function assertDisplay($id, $component_id) {

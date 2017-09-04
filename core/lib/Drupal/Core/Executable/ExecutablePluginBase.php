@@ -60,8 +60,8 @@ abstract class ExecutablePluginBase extends ContextAwarePluginBase implements Ex
   /**
    * Sets the value of a particular configuration option.
    *
-   * @param string $name
-   *   The name of the configuration option to set.
+   * @param string $key
+   *   The key of the configuration option to set.
    * @param mixed $value
    *   The value to set.
    *

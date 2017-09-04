@@ -51,7 +51,7 @@ function hook_editor_js_settings_alter(array &$settings) {
  * @param \Drupal\filter\FilterFormatInterface $format
  *   The text format configuration entity. Provides context based upon which
  *   one may want to adjust the filtering.
- * @param \Drupal\filter\FilterFormatInterface $original_format|null
+ * @param \Drupal\filter\FilterFormatInterface|null $original_format
  *   (optional) The original text format configuration entity (when switching
  *   text formats/editors). Also provides context based upon which one may want
  *   to adjust the filtering.

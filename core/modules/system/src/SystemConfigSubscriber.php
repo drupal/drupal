@@ -25,7 +25,7 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
   /**
    * Constructs the SystemConfigSubscriber.
    *
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $router_builder
    *   The router builder service.
    */
   public function __construct(RouteBuilderInterface $router_builder) {

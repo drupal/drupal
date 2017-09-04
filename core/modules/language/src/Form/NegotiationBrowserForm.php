@@ -23,9 +23,6 @@ class NegotiationBrowserForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler
    */
   public function __construct(ConfigFactoryInterface $config_factory, ConfigurableLanguageManagerInterface $language_manager ) {
     parent::__construct($config_factory);
