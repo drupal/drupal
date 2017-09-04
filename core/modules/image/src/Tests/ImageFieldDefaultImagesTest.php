@@ -38,7 +38,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       $file->save();
     }
     $default_images = [];
-    foreach (['field_storage', 'field', 'field2', 'field_storage_new', 'field_new'] as $image_target) {
+    foreach (['field_storage', 'field', 'field2', 'field_storage_new', 'field_new', 'field_storage_private', 'field_private'] as $image_target) {
       $file = File::create((array) array_pop($files));
       $file->save();
       $default_images[$image_target] = $file;
@@ -313,6 +313,45 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $file = File::load($default_images['field_storage_new']->id());
     $this->drupalGet('node/add/article');
     $this->assertRaw($file->getFilename());
+
+    // Change the default image for the field storage and also change the upload
+    // destination to the private filesystem at the same time.
+    $default_image_settings = $field_storage->getSetting('default_image');
+    $default_image_settings['uuid'] = $default_images['field_storage_private']->uuid();
+    $field_storage->setSetting('default_image', $default_image_settings);
+    $field_storage->setSetting('uri_scheme', 'private');
+    $field_storage->save();
+
+    // Confirm that the new default is used on the article field storage
+    // settings form.
+    $this->drupalGet("admin/structure/types/manage/article/fields/$field_id/storage");
+    $this->assertFieldByXpath(
+      '//input[@name="settings[default_image][uuid][fids]"]',
+      $default_images['field_storage_private']->id(),
+      format_string(
+        'Updated image field storage default equals expected file ID of @fid.',
+        ['@fid' => $default_images['field_storage_private']->id()]
+      )
+    );
+
+    // Upload a new default for the article's field after setting the field
+    // storage upload destination to 'private'.
+    $default_image_settings = $field->getSetting('default_image');
+    $default_image_settings['uuid'] = $default_images['field_private']->uuid();
+    $field->setSetting('default_image', $default_image_settings);
+    $field->save();
+
+    // Confirm the new field field default is used on the article field
+    // admin form.
+    $this->drupalGet("admin/structure/types/manage/article/fields/$field_id");
+    $this->assertFieldByXpath(
+      '//input[@name="settings[default_image][uuid][fids]"]',
+      $default_images['field_private']->id(),
+      format_string(
+        'Updated article image field default equals expected file ID of @fid.',
+        ['@fid' => $default_images['field_private']->id()]
+      )
+    );
   }
 
   /**
