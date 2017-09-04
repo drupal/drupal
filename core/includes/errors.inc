@@ -164,7 +164,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
   // installer.
   if (\Drupal::hasService('logger.factory')) {
     try {
-      \Drupal::logger('php')->log($error['severity_level'], '%type: @message in %function (line %line of %file) @backtrace_string.', $error);
+      // Provide the PHP backtrace to logger implementations.
+      \Drupal::logger('php')->log($error['severity_level'], '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace]);
     }
     catch (\Exception $e) {
       // We can't log, for example because the database connection is not
