@@ -45,13 +45,17 @@
 # Define binary file attributes.
 # - Do not treat them as text.
 # - Include binary diff in patches instead of "binary files differ."
+*.eot     -text diff
+*.exe     -text diff
 *.gif     -text diff
 *.gz      -text diff
 *.ico     -text diff
 *.jpeg    -text diff
 *.jpg     -text diff
-*.png     -text diff
+*.otf     -text diff
 *.phar    -text diff
-*.exe     -text diff
+*.png     -text diff
 *.svgz    -text diff
 *.ttf     -text diff
+*.woff    -text diff
+*.woff2   -text diff
