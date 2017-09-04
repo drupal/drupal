@@ -318,12 +318,10 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertFalse(entity_load('config_test', '0'), 'Test entity deleted');
 
     // Create a configuration entity with a property that uses AJAX to show
-    // extra form elements.
+    // extra form elements. Test this scenario in a non-JS case by using a
+    // 'js-hidden' submit button.
+    // @see \Drupal\Tests\config\FunctionalJavascript\ConfigEntityTest::testAjaxOnAddPage()
     $this->drupalGet('admin/structure/config_test/add');
-
-    // Test that the dependent element is not shown initially.
-    $this->assertFieldByName('size');
-    $this->assertNoFieldByName('size_value');
 
     $id = strtolower($this->randomMachineName());
     $edit = [
@@ -331,15 +329,7 @@ class ConfigEntityTest extends WebTestBase {
       'label' => $this->randomString(),
       'size' => 'custom',
     ];
-    $this->drupalPostAjaxForm(NULL, $edit, 'size');
 
-    // Check that the dependent element is shown after selecting a 'size' value.
-    $this->assertFieldByName('size');
-    $this->assertFieldByName('size_value');
-
-    // Test the same scenario but it in a non-JS case by using a 'js-hidden'
-    // submit button.
-    $this->drupalGet('admin/structure/config_test/add');
     $this->assertFieldByName('size');
     $this->assertNoFieldByName('size_value');
 
