@@ -129,6 +129,9 @@ class ManyToOne extends InOperator {
     if (empty($this->value)) {
       return;
     }
+    // Form API returns unchecked options in the form of option_id => 0. This
+    // breaks the generated query for "is all of" filters so we remove them.
+    $this->value = array_filter($this->value, 'static::arrayFilterZero');
     $this->helper->addFilter();
   }
 
