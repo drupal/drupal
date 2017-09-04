@@ -10,6 +10,10 @@
   <!--Exclude test files that are intentionally empty, or intentionally violate coding standards.-->
   <exclude-pattern>./modules/system/tests/fixtures/HtaccessTest</exclude-pattern>
 
+  <!-- Exclude third-party code maintained within core that does not follow our standards. -->
+  <!-- @todo This rule may be removed when https://www.drupal.org/node/1848264 is resolved. -->
+  <exclude-pattern>./core/lib/Drupal/Component/Diff/</exclude-pattern>
+
   <!-- Only include specific sniffs that pass. This ensures that, if new sniffs are added, HEAD does not fail.-->
   <!-- Drupal sniffs -->
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Classes/ClassCreateInstanceSniff.php"/>
