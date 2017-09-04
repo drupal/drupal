@@ -11,5 +11,10 @@ use Drupal\Core\Form\FormStateInterface;
  * Changes an exposed "type" filter from a multi-select to checkboxes.
  */
 function views_test_checkboxes_theme_form_views_exposed_form_alter(&$form, FormStateInterface $form_state) {
-  $form['type']['#type'] = 'checkboxes';
+  if (isset($form['type'])) {
+    $form['type']['#type'] = 'checkboxes';
+  }
+  if (isset($form['tid'])) {
+    $form['tid']['#type'] = 'checkboxes';
+  }
 }
