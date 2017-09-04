@@ -108,4 +108,13 @@ class ListDataDefinition extends DataDefinition implements ListDataDefinitionInt
     return $this;
   }
 
+  /**
+   * Magic method: Implements a deep clone.
+   */
+  public function __clone() {
+    // Ensure the itemDefinition property is actually cloned by overwriting the
+    // original reference.
+    $this->itemDefinition = clone $this->itemDefinition;
+  }
+
 }

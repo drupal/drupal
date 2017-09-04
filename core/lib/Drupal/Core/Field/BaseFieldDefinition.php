@@ -838,4 +838,21 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     return $this;
   }
 
+  /**
+   * Magic method: Implements a deep clone.
+   */
+  public function __clone() {
+    parent::__clone();
+
+    // The itemDefinition (\Drupal\Core\Field\TypedData\FieldItemDataDefinition)
+    // has a property fieldDefinition, which is a recursive reference to the
+    // parent BaseFieldDefinition, therefore the reference to the old object has
+    // to be overwritten with a reference to the cloned one.
+    $this->itemDefinition->setFieldDefinition($this);
+    // Reset the static cache of the field property definitions in order to
+    // ensure that the clone will reference different field property definitions
+    // objects.
+    $this->propertyDefinitions = NULL;
+  }
+
 }
