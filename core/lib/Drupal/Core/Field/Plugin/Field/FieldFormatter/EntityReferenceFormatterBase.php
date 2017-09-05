@@ -158,7 +158,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
    * Returns whether the entity referenced by an item needs to be loaded.
    *
    * @param \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $item
-   *    The item to check.
+   *   The item to check.
    *
    * @return bool
    *   TRUE if the entity needs to be loaded.
@@ -175,7 +175,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
    * granting access.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   *    The entity to check.
+   *   The entity to check.
    *
    * @return \Drupal\Core\Access\AccessResult
    *   A cacheable access result.

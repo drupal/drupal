@@ -321,9 +321,9 @@ class DateTimePlus {
    * Returns the difference between two DateTimePlus objects.
    *
    * @param \Drupal\Component\Datetime\DateTimePlus|\DateTime $datetime2
-   *    The date to compare to.
+   *   The date to compare to.
    * @param bool $absolute
-   *    Should the interval be forced to be positive?
+   *   Should the interval be forced to be positive?
    *
    * @return \DateInterval
    *   A DateInterval object representing the difference between the two dates.

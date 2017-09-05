@@ -44,7 +44,7 @@ interface PhpStorageInterface {
    * @param string $name
    *   The virtual file name. Can be a relative path.
    * @param string $code
-   *    The PHP code to be saved.
+   *   The PHP code to be saved.
    *
    * @return bool
    *   TRUE if the save succeeded, FALSE if it failed.

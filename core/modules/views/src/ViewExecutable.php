@@ -1338,8 +1338,8 @@ class ViewExecutable {
    * @todo Some filter needs this function, even it is internal.
    *
    * @param string $key
-   *    The type of handlers (filter etc.) which should be iterated over to
-   *    build the relationship and query information.
+   *   The type of handlers (filter etc.) which should be iterated over to build
+   *   the relationship and query information.
    */
   public function _build($key) {
     $handlers = &$this->$key;

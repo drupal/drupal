@@ -297,9 +297,9 @@ EOD;
    * function it has to be processed by _db_process_field().
    *
    * @param $name
-   *    Name of the field.
+   *   Name of the field.
    * @param $spec
-   *    The field specification, as per the schema data structure format.
+   *   The field specification, as per the schema data structure format.
    */
   protected function createFieldSql($name, $spec) {
     // The PostgreSQL server converts names into lowercase, unless quoted.

@@ -25,7 +25,7 @@ class PsrResponseSubscriber implements EventSubscriberInterface {
    * Constructs a new PathRootsSubscriber instance.
    *
    * @param \Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface $http_foundation_factory
-   *    The httpFoundation factory.
+   *   The httpFoundation factory.
    */
   public function __construct(HttpFoundationFactoryInterface $http_foundation_factory) {
     $this->httpFoundationFactory = $http_foundation_factory;

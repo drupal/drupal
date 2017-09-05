@@ -391,11 +391,11 @@ class UrlHelperTest extends TestCase {
    * @covers ::filterBadProtocol
    *
    * @param string $uri
-   *    Protocol URI.
+   *   Protocol URI.
    * @param string $expected
-   *    Expected escaped value.
+   *   Expected escaped value.
    * @param array $protocols
-   *    Protocols to allow.
+   *   Protocols to allow.
    */
   public function testFilterBadProtocol($uri, $expected, $protocols) {
     UrlHelper::setAllowedProtocols($protocols);
@@ -430,11 +430,11 @@ class UrlHelperTest extends TestCase {
    * @covers ::stripDangerousProtocols
    *
    * @param string $uri
-   *    Protocol URI.
+   *   Protocol URI.
    * @param string $expected
-   *    Expected escaped value.
+   *   Expected escaped value.
    * @param array $protocols
-   *    Protocols to allow.
+   *   Protocols to allow.
    */
   public function testStripDangerousProtocols($uri, $expected, $protocols) {
     UrlHelper::setAllowedProtocols($protocols);
