@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\block\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\block\Entity\Block;
@@ -150,9 +150,9 @@ class BlockTest extends BlockTestBase {
       ]);
       $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
       $this->assertEqual(1, count($links), 'Found one matching link.');
-      $this->assertEqual(t('Place block'), (string) $links[0], 'Found the expected link text.');
+      $this->assertEqual(t('Place block'), $links[0]->getText(), 'Found the expected link text.');
 
-      list($path, $query_string) = explode('?', $links[0]['href'], 2);
+      list($path, $query_string) = explode('?', $links[0]->getAttribute('href'), 2);
       parse_str($query_string, $query_parts);
       $this->assertEqual($weight, $query_parts['weight'], 'Found the expected weight query string.');
 
@@ -164,7 +164,7 @@ class BlockTest extends BlockTestBase {
         'settings[label]' => $title,
       ];
       // Create the block using the link parsed from the library page.
-      $this->drupalPostForm($this->getAbsoluteUrl($links[0]['href']), $edit, t('Save block'));
+      $this->drupalPostForm($this->getAbsoluteUrl($links[0]->getAttribute('href')), $edit, t('Save block'));
 
       // Ensure that the block was created with the expected weight.
       /** @var \Drupal\block\BlockInterface $block */

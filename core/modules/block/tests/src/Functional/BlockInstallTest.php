@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\block\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests block module's installation.
  *
  * @group block
  */
-class BlockInstallTest extends WebTestBase {
+class BlockInstallTest extends BrowserTestBase {
 
   public function testCacheTagInvalidationUponInstallation() {
     // Warm the page cache.

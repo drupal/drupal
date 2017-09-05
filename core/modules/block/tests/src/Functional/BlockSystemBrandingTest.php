@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\block\Functional;
 
 /**
  * Tests branding block display.
@@ -54,7 +54,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
       ->save();
     $this->drupalGet('');
     $site_slogan_element = $this->xpath($site_slogan_xpath);
-    $this->assertEqual($site_slogan_element[0], 'alert("Community carpentry");', 'The site slogan was XSS-filtered.');
+    $this->assertEqual($site_slogan_element[0]->getText(), 'alert("Community carpentry");', 'The site slogan was XSS-filtered.');
 
     // Turn just the logo off.
     $this->config('block.block.site-branding')

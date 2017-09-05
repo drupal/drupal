@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\block\Functional;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 
 /**
@@ -11,7 +11,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group block
  */
-class BlockFormInBlockTest extends WebTestBase {
+class BlockFormInBlockTest extends BrowserTestBase {
 
   /**
    * Modules to install.

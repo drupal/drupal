@@ -1,13 +1,14 @@
 <?php
 
-namespace Drupal\block\Tests\Views;
+namespace Drupal\Tests\block\Functional\Views;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\block\Functional\AssertBlockAppearsTrait;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
-use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\Core\Template\Attribute;
 
@@ -15,11 +16,12 @@ use Drupal\Core\Template\Attribute;
  * Tests the block display plugin.
  *
  * @group block
- * @see \Drupal\block\Plugin\views\display\Block
+ * @see \Drupal\views\Plugin\views\display\Block
  */
 class DisplayBlockTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
+  use AssertBlockAppearsTrait;
 
   /**
    * Modules to install.
@@ -35,8 +37,11 @@ class DisplayBlockTest extends ViewTestBase {
    */
   public static $testViews = ['test_view_block', 'test_view_block2'];
 
-  protected function setUp() {
-    parent::setUp();
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
     ViewTestData::createTestViews(get_class($this), ['block_test_views']);
     $this->enableViewsTestModule();
@@ -67,10 +72,10 @@ class DisplayBlockTest extends ViewTestBase {
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_1',
         'theme' => 'classy',
       ]),
-      ':category' => t('Lists (Views)'),
+      ':category' => 'Lists (Views)',
     ];
     $this->drupalGet('admin/structure/block');
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $elements = $this->xpath($pattern, $arguments);
     $this->assertTrue(!empty($elements), 'The test block appears in the category for its base table.');
 
@@ -95,7 +100,7 @@ class DisplayBlockTest extends ViewTestBase {
     // Test that the blocks are listed under the correct categories.
     $arguments[':category'] = $category;
     $this->drupalGet('admin/structure/block');
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $elements = $this->xpath($pattern, $arguments);
     $this->assertTrue(!empty($elements), 'The test block appears in the custom category.');
 
@@ -104,7 +109,7 @@ class DisplayBlockTest extends ViewTestBase {
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_2',
         'theme' => 'classy',
       ]),
-      ':category' => t('Lists (Views)'),
+      ':category' => 'Lists (Views)',
     ];
     $elements = $this->xpath($pattern, $arguments);
     $this->assertTrue(!empty($elements), 'The first duplicated test block remains in the original category.');
@@ -243,7 +248,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('');
 
     $result = $this->xpath('//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2');
-    $this->assertEqual((string) $result[0], 'Custom title');
+    $this->assertEqual($result[0]->getText(), 'Custom title');
 
     // Don't override the title anymore.
     $plugin = $block->getPlugin();
@@ -252,7 +257,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     $this->drupalGet('');
     $result = $this->xpath('//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2');
-    $this->assertEqual((string) $result[0], 'test_view_block');
+    $this->assertEqual($result[0]->getText(), 'test_view_block');
 
     // Hide the title.
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);
@@ -363,9 +368,10 @@ class DisplayBlockTest extends ViewTestBase {
     // Get server-rendered contextual links.
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()
     $post = ['ids[0]' => $id, 'ids[1]' => $cached_id];
-    $response = $this->drupalPostWithFormat('contextual/render', 'json', $post, ['query' => ['destination' => 'test-page']]);
+    $url = 'contextual/render?_format=json,destination=test-page';
+    $this->getSession()->getDriver()->getClient()->request('POST', $url, $post);
     $this->assertResponse(200);
-    $json = Json::decode($response);
+    $json = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="entityviewedit-form"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1">Edit view</a></li></ul>');
     $this->assertIdentical($json[$cached_id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $cached_block->id() . '">Configure block</a></li><li class="entityviewedit-form"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1">Edit view</a></li></ul>');
   }

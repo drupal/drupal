@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\block\Functional;
 
 use Drupal\Component\Utility\Html;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests blocks are being rendered in order by weight.
  *
  * @group block
  */
-class BlockRenderOrderTest extends WebTestBase {
+class BlockRenderOrderTest extends BrowserTestBase {
 
   /**
    * Modules to install.
