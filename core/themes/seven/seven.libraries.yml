@@ -10,7 +10,6 @@ global-styling:
       css/components/content-header.css: {}
       css/components/breadcrumb.css: {}
       css/components/buttons.css: {}
-      css/components/colors.css: {}
       css/components/messages.css: {}
       css/components/dropbutton.component.css: {}
       css/components/entity-meta.css: {}
@@ -33,6 +32,8 @@ global-styling:
       css/components/system-status-counter.css: {}
       css/components/tabs.css: {}
       css/components/views-ui.css: {}
+    theme:
+      css/theme/colors.css: {}
     layout:
       css/layout/layout.css: {}
   dependencies:

@@ -10,9 +10,15 @@
  *   - content: (optional) The content of the block.
  *   - description: (optional) A description of the block.
  *     (Description should only be output if content is not available).
+ * - attributes: HTML attributes for the containing div element.
  */
 #}
-<div class="panel">
+{%
+  set classes = [
+    'panel',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
   {% if block.title %}
     <h3 class="panel__title">{{ block.title }}</h3>
   {% endif %}

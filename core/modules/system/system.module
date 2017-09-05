@@ -250,7 +250,7 @@ function system_theme() {
       'file' => 'system.admin.inc',
     ],
     'admin_block' => [
-      'variables' => ['block' => NULL],
+      'variables' => ['block' => NULL, 'attributes' => []],
       'file' => 'system.admin.inc',
     ],
     'admin_block_content' => [
