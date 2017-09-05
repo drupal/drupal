@@ -1,17 +1,12 @@
 <?php
 
-namespace Drupal\system\Tests\Menu;
-
-@trigger_error(__NAMESPACE__ . '\AssertBreadcrumbTrait is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait', E_USER_DEPRECATED);
+namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 
 /**
  * Provides test assertions for verifying breadcrumbs.
- *
- * @deprecated Scheduled for removal in Drupal 9.0.0.
- *   Use \Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait instead.
  */
 trait AssertBreadcrumbTrait {
 
@@ -104,9 +99,9 @@ trait AssertBreadcrumbTrait {
     if (!empty($elements)) {
       foreach ($elements as $element) {
         $parts[] = [
-          'text' => (string) $element,
-          'href' => (string) $element['href'],
-          'title' => (string) $element['title'],
+          'text' => $element->getText(),
+          'href' => $element->getAttribute('href'),
+          'title' => $element->getAttribute('title'),
         ];
       }
     }
