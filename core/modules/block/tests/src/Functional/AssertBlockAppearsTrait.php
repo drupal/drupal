@@ -20,7 +20,7 @@ trait AssertBlockAppearsTrait {
    */
   protected function assertBlockAppears(Block $block) {
     $result = $this->findBlockInstance($block);
-    $this->assertTrue(!empty($result), new FormattableMarkup('Ensure the block @id appears on the page', ['@id' => $block->id()]));
+    $this->assertTrue(!empty($result), new FormattableMarkup('The block @id appears on the page', ['@id' => $block->id()]));
   }
 
   /**
@@ -31,7 +31,7 @@ trait AssertBlockAppearsTrait {
    */
   protected function assertNoBlockAppears(Block $block) {
     $result = $this->findBlockInstance($block);
-    $this->assertFalse(!empty($result), new FormattableMarkup('Ensure the block @id does not appear on the page', ['@id' => $block->id()]));
+    $this->assertFalse(!empty($result), new FormattableMarkup('The block @id does not appear on the page', ['@id' => $block->id()]));
   }
 
   /**
