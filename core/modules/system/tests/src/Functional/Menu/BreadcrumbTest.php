@@ -1,9 +1,10 @@
 <?php
 
-namespace Drupal\system\Tests\Menu;
+namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 
 /**
@@ -11,7 +12,9 @@ use Drupal\user\RoleInterface;
  *
  * @group Menu
  */
-class BreadcrumbTest extends MenuTestBase {
+class BreadcrumbTest extends BrowserTestBase {
+
+  use AssertBreadcrumbTrait;
 
   /**
    * Modules to enable.
@@ -358,17 +361,17 @@ class BreadcrumbTest extends MenuTestBase {
     // user is not able to access "Administer".
     $trail = $home;
     $this->assertBreadcrumb('admin', $trail, t('Access denied'));
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Since the 'admin' path is not accessible, we still expect only the Home
     // link.
     $this->assertBreadcrumb('admin/reports', $trail, t('Reports'));
-    $this->assertNoResponse(403);
+    $this->assertSession()->statusCodeNotEquals(403);
 
     // Since the Reports page is accessible, that will show.
     $trail += ['admin/reports' => t('Reports')];
     $this->assertBreadcrumb('admin/reports/dblog', $trail, t('Recent log messages'));
-    $this->assertNoResponse(403);
+    $this->assertSession()->statusCodeNotEquals(403);
 
     // Ensure that the breadcrumb is safe against XSS.
     $this->drupalGet('menu-test/breadcrumb1/breadcrumb2/breadcrumb3');

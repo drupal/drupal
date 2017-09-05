@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\system\Tests\Menu;
+namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests local actions derived from router and added/altered via hooks.
  *
  * @group Menu
  */
-class LocalActionTest extends WebTestBase {
+class LocalActionTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -80,7 +80,7 @@ class LocalActionTest extends WebTestBase {
       // This behaviour is a bug in libxml, see
       // https://bugs.php.net/bug.php?id=49437.
       $this->assertPattern('@<a [^>]*class="[^"]*button-action[^"]*"[^>]*>' . preg_quote($title, '@') . '</@');
-      $this->assertEqual($elements[$index]['href'], $url->toString());
+      $this->assertEqual($elements[$index]->getAttribute('href'), $url->toString());
       $index++;
     }
   }

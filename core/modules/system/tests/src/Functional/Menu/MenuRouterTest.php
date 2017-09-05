@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\system\Tests\Menu;
+namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests menu router and default menu link functionality.
  *
  * @group Menu
  */
-class MenuRouterTest extends WebTestBase {
+class MenuRouterTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
