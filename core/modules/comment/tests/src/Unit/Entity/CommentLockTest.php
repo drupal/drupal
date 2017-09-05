@@ -69,6 +69,14 @@ class CommentLockTest extends UnitTestCase {
       ->method('getThread')
       ->will($this->returnValue(''));
 
+    $anon_user = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $anon_user->expects($this->any())
+      ->method('isAnonymous')
+      ->will($this->returnValue(TRUE));
+    $comment->expects($this->any())
+      ->method('getOwner')
+      ->will($this->returnValue($anon_user));
+
     $parent_entity = $this->getMock('\Drupal\Core\Entity\ContentEntityInterface');
     $parent_entity->expects($this->atLeastOnce())
       ->method('getCacheTagsToInvalidate')
