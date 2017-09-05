@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\block\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the block administration page for a non-default theme.
  *
  * @group block
  */
-class NonDefaultBlockAdminTest extends WebTestBase {
+class NonDefaultBlockAdminTest extends BrowserTestBase {
 
   /**
    * Modules to install.

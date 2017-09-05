@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\block\Functional;
 
 use Drupal\Component\Utility\Html;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that the block configuration UI exists and stores data correctly.
  *
  * @group block
  */
-class BlockUiTest extends WebTestBase {
+class BlockUiTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -105,7 +105,7 @@ class BlockUiTest extends WebTestBase {
       $block = $this->blocks[$delta];
       $label = $block->label();
       $element = $this->xpath('//*[@id="blocks"]/tbody/tr[' . $values['tr'] . ']/td[1]/text()');
-      $this->assertTrue((string) $element[0] == $label, 'The "' . $label . '" block title is set inside the ' . $values['settings']['region'] . ' region.');
+      $this->assertEquals($element[0]->getText(), $label, 'The "' . $label . '" block title is set inside the ' . $values['settings']['region'] . ' region.');
       // Look for a test block region select form element.
       $this->assertField('blocks[' . $values['settings']['id'] . '][region]', 'The block "' . $values['label'] . '" has a region assignment field.');
       // Move the test block to the header region.
@@ -171,7 +171,7 @@ class BlockUiTest extends WebTestBase {
     $pattern = '//tr[.//td/div[text()=:title] and .//td[text()=:category] and .//td//a[contains(@href, :href)]]';
 
     $this->drupalGet('admin/structure/block');
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $elements = $this->xpath($pattern, $arguments);
     $this->assertTrue(!empty($elements), 'The test block appears in the category for its module.');
 
@@ -180,7 +180,7 @@ class BlockUiTest extends WebTestBase {
     $this->container->get('plugin.manager.block')->clearCachedDefinitions();
 
     $this->drupalGet('admin/structure/block');
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $arguments[':category'] = 'Custom category';
     $elements = $this->xpath($pattern, $arguments);
     $this->assertTrue(!empty($elements), 'The test block appears in a custom category controlled by block_test_block_alter().');
@@ -197,7 +197,7 @@ class BlockUiTest extends WebTestBase {
     ];
 
     $this->drupalGet('admin/structure/block');
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $elements = $this->xpath('//tr[.//td/div[text()=:text] and .//td[text()=:category] and .//td//a[contains(@href, :href)]]', $arguments);
     $this->assertTrue(empty($elements), 'The context-aware test block does not appear.');
 
@@ -223,7 +223,7 @@ class BlockUiTest extends WebTestBase {
     $pattern = '//tr[.//td/div[text()=:title] and .//td[text()=:category] and .//td//a[contains(@href, :href)]]';
 
     $this->drupalGet('admin/structure/block');
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $elements = $this->xpath($pattern, $arguments);
     $this->assertTrue(!empty($elements), 'The context-aware test block appears.');
     $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware');

@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\block\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
 use Drupal\system\Entity\Menu;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\views\Entity\View;
 
 /**
@@ -14,7 +14,7 @@ use Drupal\views\Entity\View;
  *
  * @group block
  */
-class BlockXssTest extends WebTestBase {
+class BlockXssTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -29,7 +29,7 @@ class BlockXssTest extends WebTestBase {
   public function testNoUnexpectedEscaping() {
     $this->drupalLogin($this->drupalCreateUser(['administer blocks', 'access administration pages']));
     $this->drupalGet(Url::fromRoute('block.admin_display'));
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $this->assertNoEscaped('<');
   }
 
@@ -58,7 +58,7 @@ class BlockXssTest extends WebTestBase {
     $this->drupalPlaceBlock('test_xss_title');
     $this->drupalLogin($this->drupalCreateUser(['administer blocks', 'access administration pages']));
     $this->drupalGet(Url::fromRoute('block.admin_display'));
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $this->assertNoRaw("<script>alert('XSS category');</script>");
   }
 
@@ -73,7 +73,7 @@ class BlockXssTest extends WebTestBase {
     $this->doBlockContentTest();
 
     $this->drupalGet(Url::fromRoute('block.admin_display'));
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
     $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
   }
 
@@ -101,7 +101,7 @@ class BlockXssTest extends WebTestBase {
     $view->save();
 
     $this->drupalGet(Url::fromRoute('block.admin_display'));
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
 
     // \Drupal\views\Plugin\Derivative\ViewsBlock::getDerivativeDefinitions()
     // has a different code path for an admin label based only on the View
@@ -137,7 +137,7 @@ class BlockXssTest extends WebTestBase {
     ])->save();
 
     $this->drupalGet(Url::fromRoute('block.admin_display'));
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
 
     $this->assertEscaped('<script>alert("menu");</script>');
     $this->assertNoRaw('<script>alert("menu");</script>');
@@ -158,7 +158,7 @@ class BlockXssTest extends WebTestBase {
     ])->save();
 
     $this->drupalGet(Url::fromRoute('block.admin_display'));
-    $this->clickLinkPartialName('Place block');
+    $this->clickLink('Place block');
 
     $this->assertEscaped('<script>alert("block_content");</script>');
     $this->assertNoRaw('<script>alert("block_content");</script>');

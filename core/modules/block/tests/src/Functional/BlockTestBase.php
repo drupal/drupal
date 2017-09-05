@@ -1,21 +1,14 @@
 <?php
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\block\Functional;
 
-@trigger_error(__NAMESPACE__ . '\BlockTestBase is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\block\Functional\BlockTestBase, see https://www.drupal.org/node/2901823.', E_USER_DEPRECATED);
-
-use Drupal\simpletest\WebTestBase;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Provides setup and helper methods for block module tests.
- *
- * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Tests\block\Functional\BlockTestBase.
- *
- * @see https://www.drupal.org/node/2901823
  */
-abstract class BlockTestBase extends WebTestBase {
+abstract class BlockTestBase extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -38,6 +31,9 @@ abstract class BlockTestBase extends WebTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

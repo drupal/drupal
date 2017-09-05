@@ -144,8 +144,8 @@ class TestDiscovery {
    *   An array of tests keyed by the the group name.
    * @code
    *     $groups['block'] => array(
-   *       'Drupal\block\Tests\BlockTest' => array(
-   *         'name' => 'Drupal\block\Tests\BlockTest',
+   *       'Drupal\Tests\block\Functional\BlockTest' => array(
+   *         'name' => 'Drupal\Tests\block\Functional\BlockTest',
    *         'description' => 'Tests block UI CRUD functionality.',
    *         'group' => 'block',
    *       ),

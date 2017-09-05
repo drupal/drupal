@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\block\Tests;
+namespace Drupal\Tests\block\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests display of menu blocks with multiple languages.
  *
  * @group block
  */
-class BlockLanguageCacheTest extends WebTestBase {
+class BlockLanguageCacheTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -57,7 +57,7 @@ class BlockLanguageCacheTest extends WebTestBase {
     // Create the block cache for all languages.
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet('admin/structure/block', ['language' => $langcode]);
-      $this->clickLinkPartialName('Place block');
+      $this->clickLink('Place block');
     }
 
     // Create a menu in the default language.
@@ -69,7 +69,7 @@ class BlockLanguageCacheTest extends WebTestBase {
     // Check that the block is listed for all languages.
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet('admin/structure/block', ['language' => $langcode]);
-      $this->clickLinkPartialName('Place block');
+      $this->clickLink('Place block');
       $this->assertText($edit['label']);
     }
   }
