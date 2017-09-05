@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\comment\Kernel;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -62,6 +63,54 @@ class CommentItemTest extends FieldKernelTestBase {
 
     $mainProperty = $entity->comment[0]->mainPropertyName();
     $this->assertEqual('status', $mainProperty);
+  }
+
+  /**
+   * Tests comment author name.
+   */
+  public function testCommentAuthorName() {
+    $this->installEntitySchema('comment');
+
+    // Create some comments.
+    $comment = Comment::create([
+      'subject' => 'My comment title',
+      'uid' => 1,
+      'name' => 'entity-test',
+      'mail' => 'entity@localhost',
+      'entity_type' => 'entity_test',
+      'comment_type' => 'entity_test',
+      'status' => 1,
+    ]);
+    $comment->save();
+
+    // The entity fields for name and mail have no meaning if the user is not
+    // Anonymous.
+    $this->assertNull($comment->name->value);
+    $this->assertNull($comment->mail->value);
+
+    $comment_anonymous = Comment::create([
+      'subject' => 'Anonymous comment title',
+      'uid' => 0,
+      'name' => 'barry',
+      'mail' => 'test@example.com',
+      'homepage' => 'https://example.com',
+      'entity_type' => 'entity_test',
+      'comment_type' => 'entity_test',
+      'status' => 1,
+    ]);
+    $comment_anonymous->save();
+
+    // The entity fields for name and mail have retained their values when
+    // comment belongs to an anonymous user.
+    $this->assertNotNull($comment_anonymous->name->value);
+    $this->assertNotNull($comment_anonymous->mail->value);
+
+    $comment_anonymous->setOwnerId(1)
+      ->save();
+    // The entity fields for name and mail have no meaning if the user is not
+    // Anonymous.
+    $this->assertNull($comment_anonymous->name->value);
+    $this->assertNull($comment_anonymous->mail->value);
   }
 
 }

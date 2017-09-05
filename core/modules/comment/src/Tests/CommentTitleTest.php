@@ -29,6 +29,12 @@ class CommentTitleTest extends CommentTestBase {
     $subject_text = $this->randomMachineName();
     $comment_text = $this->randomMachineName();
     $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
+
+    // The entity fields for name and mail have no meaning if the user is not
+    // Anonymous.
+    $this->assertNull($comment->name->value);
+    $this->assertNull($comment->mail->value);
+
     // Confirm that the comment was created.
     $regex = '/<a id="comment-' . $comment->id() . '"(.*?)';
     $regex .= $comment->comment_body->value . '(.*?)';
@@ -55,6 +61,12 @@ class CommentTitleTest extends CommentTestBase {
     $subject_text = $this->randomMachineName();
     $comment_text = $this->randomMachineName();
     $comment1 = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
+
+    // The entity fields for name and mail have no meaning if the user is not
+    // Anonymous.
+    $this->assertNull($comment1->name->value);
+    $this->assertNull($comment1->mail->value);
+
     // Confirm that the comment was created.
     $this->assertTrue($this->commentExists($comment1), 'Comment #1. Comment found.');
     // Tests that markup is created for comment with heading.
