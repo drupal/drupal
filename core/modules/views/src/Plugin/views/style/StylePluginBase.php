@@ -385,7 +385,7 @@ abstract class StylePluginBase extends PluginBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    * @param string $type
-   *    The display type, either block or page.
+   *   The display type, either block or page.
    */
   public function wizardForm(&$form, FormStateInterface $form_state, $type) {
   }
@@ -788,7 +788,7 @@ abstract class StylePluginBase extends PluginBase {
    * @param $index
    *   The index count of the row.
    * @param $field
-   *    The id of the field.
+   *   The id of the field.
    */
   public function getFieldValue($index, $field) {
     $this->view->row_index = $index;

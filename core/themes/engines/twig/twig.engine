@@ -128,7 +128,7 @@ function twig_render_template($template_file, array $variables) {
  *
  * @param array|object $element
  *   The parent renderable array to exclude the child items.
- * @param string[] $args, ...
+ * @param string[] ...
  *   The string keys of $element to prevent printing.
  *
  * @return array

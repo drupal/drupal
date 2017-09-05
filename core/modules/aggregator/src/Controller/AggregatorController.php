@@ -25,7 +25,7 @@ class AggregatorController extends ControllerBase {
    * Constructs a \Drupal\aggregator\Controller\AggregatorController object.
    *
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
-   *    The date formatter service.
+   *   The date formatter service.
    */
   public function __construct(DateFormatterInterface $date_formatter) {
     $this->dateFormatter = $date_formatter;

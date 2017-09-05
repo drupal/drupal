@@ -544,11 +544,11 @@ function hook_field_views_data(\Drupal\field\FieldStorageConfigInterface $field_
  * default data that views_field_default_views_data() supplies for the
  * field storage.
  *
- *  @param array $data
- *    The views data for the field storage. This has the same format as the
- *    return value of hook_views_data().
- *  @param \Drupal\field\FieldStorageConfigInterface $field_storage
- *    The field storage config entity.
+ * @param array $data
+ *   The views data for the field storage. This has the same format as the
+ *   return value of hook_views_data().
+ * @param \Drupal\field\FieldStorageConfigInterface $field_storage
+ *   The field storage config entity.
  *
  * @see views_views_data()
  * @see hook_field_views_data()

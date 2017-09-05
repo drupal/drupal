@@ -29,7 +29,7 @@ class MappedDiff extends Diff {
    *   The elements in $mapped_from_lines and $mapped_to_lines are what is
    *   actually compared when computing the diff.
    * @param array $mapped_to_lines
-   *    This array should have the same number of elements as $to_lines.
+   *   This array should have the same number of elements as $to_lines.
    */
   public function __construct($from_lines, $to_lines, $mapped_from_lines, $mapped_to_lines) {
 

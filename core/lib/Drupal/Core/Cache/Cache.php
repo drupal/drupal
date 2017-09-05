@@ -20,9 +20,9 @@ class Cache {
    * Merges arrays of cache contexts and removes duplicates.
    *
    * @param array $a
-   *    Cache contexts array to merge.
+   *   Cache contexts array to merge.
    * @param array $b
-   *    Cache contexts array to merge.
+   *   Cache contexts array to merge.
    *
    * @return string[]
    *   The merged array of cache contexts.
@@ -46,9 +46,9 @@ class Cache {
    * they're constituted from.
    *
    * @param array $a
-   *    Cache tags array to merge.
+   *   Cache tags array to merge.
    * @param array $b
-   *    Cache tags array to merge.
+   *   Cache tags array to merge.
    *
    * @return string[]
    *   The merged array of cache tags.
@@ -67,9 +67,9 @@ class Cache {
    * Ensures infinite max-age (Cache::PERMANENT) is taken into account.
    *
    * @param int $a
-   *    Max age value to merge.
+   *   Max age value to merge.
    * @param int $b
-   *    Max age value to merge.
+   *   Max age value to merge.
    *
    * @return int
    *   The minimum max-age value.

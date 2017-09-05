@@ -24,7 +24,7 @@ class ContextualController implements ContainerInjectionInterface {
    * Constructors a new ContextualController
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
-   *    The renderer.
+   *   The renderer.
    */
   public function __construct(RendererInterface $renderer) {
     $this->renderer = $renderer;

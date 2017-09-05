@@ -77,7 +77,7 @@ class PsrResponseSubscriberTest extends UnitTestCase {
    * Sets up an alias event that return $controllerResult.
    *
    * @param mixed $controller_result
-   *    The return Object.
+   *   The return Object.
    *
    * @return \Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent|\PHPUnit_Framework_MockObject_MockObject
    *   A mock object to test.

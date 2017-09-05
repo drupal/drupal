@@ -81,7 +81,7 @@ class Cron implements CronInterface {
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    * @param \Drupal\Core\Session\AccountSwitcherInterface $account_switcher
-   *    The account switching service.
+   *   The account switching service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    * @param \Drupal\Core\Queue\QueueWorkerManagerInterface $queue_manager

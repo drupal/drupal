@@ -283,8 +283,8 @@ class Token {
    *     modules require special formatting of token text, for example URL
    *     encoding or truncation to a specific length.
    * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
-   *    The bubbleable metadata. This is passed to the token replacement
-   *    implementations so that they can attach their metadata.
+   *   The bubbleable metadata. This is passed to the token replacement
+   *   implementations so that they can attach their metadata.
    *
    * @return array
    *   An associative array of replacement values, keyed by the original 'raw'

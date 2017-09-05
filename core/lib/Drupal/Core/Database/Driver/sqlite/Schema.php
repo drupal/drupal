@@ -149,9 +149,9 @@ class Schema extends DatabaseSchema {
    * to be processed by db_processField().
    *
    * @param $name
-   *    Name of the field.
+   *   Name of the field.
    * @param $spec
-   *    The field specification, as per the schema data structure format.
+   *   The field specification, as per the schema data structure format.
    */
   protected function createFieldSql($name, $spec) {
     if (!empty($spec['auto_increment'])) {
