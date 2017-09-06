@@ -14,10 +14,6 @@ use Drupal\workflows\WorkflowTypeInterface;
  * A base class for Workflow type plugins.
  *
  * @see \Drupal\workflows\Annotation\WorkflowType
- *
- * @internal
- *   The workflow system is currently experimental and should only be leveraged
- *   by experimental modules and development releases of contributed modules.
  */
 abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterface {
 

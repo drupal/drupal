@@ -56,10 +56,6 @@ use Drupal\workflows\WorkflowInterface;
  *     "type_settings",
  *   },
  * )
- *
- * @internal
- *   The workflow system is currently experimental and should only be leveraged
- *   by experimental modules and development releases of contributed modules.
  */
 class Workflow extends ConfigEntityBase implements WorkflowInterface, EntityWithPluginCollectionInterface {
 

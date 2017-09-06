@@ -17,10 +17,6 @@ use Drupal\Component\Annotation\Plugin;
  * @see plugin_api
  *
  * @Annotation
- *
- * @internal
- *   The workflow system is currently experimental and should only be leveraged
- *   by experimental modules and development releases of contributed modules.
  */
 class WorkflowType extends Plugin {
 

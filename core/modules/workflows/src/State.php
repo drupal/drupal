@@ -4,10 +4,6 @@ namespace Drupal\workflows;
 
 /**
  * A value object representing a workflow state.
- *
- * @internal
- *   The workflow system is currently experimental and should only be leveraged
- *   by experimental modules and development releases of contributed modules.
  */
 class State implements StateInterface {
 
