@@ -177,7 +177,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * @return array
    *   An array of the data for this source.
    */
-  protected abstract function initializeIterator();
+  abstract protected function initializeIterator();
 
   /**
    * Gets the module handler.
