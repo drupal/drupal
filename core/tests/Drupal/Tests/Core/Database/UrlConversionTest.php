@@ -94,7 +94,7 @@ class UrlConversionTest extends UnitTestCase {
    *
    * @dataProvider providerGetConnectionInfoAsUrl
    */
-  public function testGetConnectionInfoAsUrl(Array $info, $expected_url) {
+  public function testGetConnectionInfoAsUrl(array $info, $expected_url) {
 
     Database::addConnectionInfo('default', 'default', $info);
     $url = Database::getConnectionInfoAsUrl();
