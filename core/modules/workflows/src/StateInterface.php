@@ -4,6 +4,10 @@ namespace Drupal\workflows;
 
 /**
  * An interface for state value objects.
+ *
+ * @internal
+ *   The StateInterface should only be used by Workflows and Content Moderation.
+ * @todo Revisit the need for this in https://www.drupal.org/node/2902309.
  */
 interface StateInterface {
 
