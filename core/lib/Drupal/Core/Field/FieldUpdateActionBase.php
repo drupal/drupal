@@ -33,7 +33,7 @@ abstract class FieldUpdateActionBase extends ActionBase {
    * @return array
    *   Array of values with field names as keys.
    */
-  protected abstract function getFieldsToUpdate();
+  abstract protected function getFieldsToUpdate();
 
   /**
    * {@inheritdoc}

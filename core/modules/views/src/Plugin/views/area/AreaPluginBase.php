@@ -107,7 +107,7 @@ abstract class AreaPluginBase extends HandlerBase {
    * @return array
    *   In any case we need a valid Drupal render array to return.
    */
-  public abstract function render($empty = FALSE);
+  abstract public function render($empty = FALSE);
 
   /**
    * Does that area have nothing to show.

@@ -48,7 +48,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface
    */
-  protected abstract function getElementDefinition($key);
+  abstract protected function getElementDefinition($key);
 
   /**
    * {@inheritdoc}
