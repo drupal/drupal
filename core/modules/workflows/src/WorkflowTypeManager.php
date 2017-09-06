@@ -13,10 +13,6 @@ use Drupal\workflows\Annotation\WorkflowType;
  * @see \Drupal\workflows\Annotation\WorkflowType
  * @see \Drupal\workflows\WorkflowTypeInterface
  * @see plugin_api
- *
- * @internal
- *   The workflow system is currently experimental and should only be leveraged
- *   by experimental modules and development releases of contributed modules.
  */
 class WorkflowTypeManager extends DefaultPluginManager {
 

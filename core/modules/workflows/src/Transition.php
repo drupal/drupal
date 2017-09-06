@@ -4,10 +4,6 @@ namespace Drupal\workflows;
 
 /**
  * A transition value object that describes the transition between states.
- *
- * @internal
- *   The workflow system is currently experimental and should only be leveraged
- *   by experimental modules and development releases of contributed modules.
  */
 class Transition implements TransitionInterface {
 

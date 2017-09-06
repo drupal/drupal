@@ -8,10 +8,6 @@ use Drupal\Core\Plugin\PluginWithFormsInterface;
 
 /**
  * An interface for Workflow type plugins.
- *
- * @internal
- *   The workflow system is currently experimental and should only be leveraged
- *   by experimental modules and development releases of contributed modules.
  */
 interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInspectionInterface, ConfigurablePluginInterface {
 

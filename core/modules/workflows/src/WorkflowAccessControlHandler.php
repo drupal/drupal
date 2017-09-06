@@ -15,10 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Access controller for the Workflow entity.
  *
  * @see \Drupal\workflows\Entity\Workflow.
- *
- * @internal
- *   The workflow system is currently experimental and should only be leveraged
- *   by experimental modules and development releases of contributed modules.
  */
 class WorkflowAccessControlHandler extends EntityAccessControlHandler implements EntityHandlerInterface {
 
