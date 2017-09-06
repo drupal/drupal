@@ -195,7 +195,7 @@ class DiffEngine {
       }
 
       $x1 = $xoff + (int)(($numer + ($xlim - $xoff) * $chunk) / $nchunks);
-      for ( ; $x < $x1; $x++) {
+      for (; $x < $x1; $x++) {
         $line = $flip ? $this->yv[$x] : $this->xv[$x];
         if (empty($ymatches[$line])) {
           continue;

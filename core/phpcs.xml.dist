@@ -143,6 +143,14 @@
   </rule>
 
   <!-- Squiz sniffs -->
+  <rule ref="Squiz.ControlStructures.ForLoopDeclaration"/>
+  <!-- Disable some error messages that we already cover. -->
+  <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterOpen">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingBeforeClose">
+    <severity>0</severity>
+  </rule>
   <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
   <rule ref="Squiz.Strings.ConcatenationSpacing">
     <properties>
