@@ -1727,7 +1727,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   protected function storageDefinitionIsDeleted(FieldStorageDefinitionInterface $storage_definition) {
     // Configurable fields are marked for deletion.
-    if ($storage_definition instanceOf FieldStorageConfigInterface) {
+    if ($storage_definition instanceof FieldStorageConfigInterface) {
       return $storage_definition->isDeleted();
     }
     // For non configurable fields check whether they are still in the last
