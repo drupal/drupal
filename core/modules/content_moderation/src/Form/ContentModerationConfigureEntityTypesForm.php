@@ -190,9 +190,9 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
   public function getTitle(WorkflowInterface $workflow = NULL, $entity_type_id) {
     $this->entityType = $this->entityTypeManager->getDefinition($entity_type_id);
 
-    $title = $this->t('Select the @entity_type types for the @workflow', ['@entity_type' => $this->entityType->getLabel(), '@workflow' => $workflow->label()]);
+    $title = $this->t('Select the @entity_type types for the @workflow workflow', ['@entity_type' => $this->entityType->getLabel(), '@workflow' => $workflow->label()]);
     if ($bundle_entity_type_id = $this->entityType->getBundleEntityType()) {
-      $title = $this->t('Select the @entity_type_plural_label for the @workflow', ['@entity_type_plural_label' => $this->entityTypeManager->getDefinition($bundle_entity_type_id)->getPluralLabel(), '@workflow' => $workflow->label()]);
+      $title = $this->t('Select the @entity_type_plural_label for the @workflow workflow', ['@entity_type_plural_label' => $this->entityTypeManager->getDefinition($bundle_entity_type_id)->getPluralLabel(), '@workflow' => $workflow->label()]);
     }
 
     return $title;
