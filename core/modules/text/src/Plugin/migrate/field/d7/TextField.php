@@ -2,7 +2,9 @@
 
 namespace Drupal\text\Plugin\migrate\field\d7;
 
-use Drupal\text\Plugin\migrate\field\d6\TextField as D6TextField;
+use Drupal\migrate\Row;
+use Drupal\migrate\MigrateSkipRowException;
+use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
  * @MigrateField(
@@ -15,4 +17,51 @@ use Drupal\text\Plugin\migrate\field\d6\TextField as D6TextField;
  *   core = {7}
  * )
  */
-class TextField extends D6TextField {}
+class TextField extends FieldPluginBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldType(Row $row) {
+    $type = $row->getSourceProperty('type');
+    $plain_text = FALSE;
+    $filtered_text = FALSE;
+
+    foreach ($row->getSourceProperty('instances') as $instance) {
+      // Check if this field has plain text instances, filtered text instances,
+      // or both.
+      $data = unserialize($instance['data']);
+      switch ($data['settings']['text_processing']) {
+        case '0':
+          $plain_text = TRUE;
+          break;
+        case '1':
+          $filtered_text = TRUE;
+          break;
+      }
+    }
+
+    if (in_array($type, ['text', 'text_long'])) {
+      // If a text or text_long field has only plain text instances, migrate it
+      // to a string or string_long field.
+      if ($plain_text && !$filtered_text) {
+        $type = str_replace(['text', 'text_long'], ['string', 'string_long'], $type);
+      }
+      // If a text or text_long field has both plain text and filtered text
+      // instances, skip the row.
+      elseif ($plain_text && $filtered_text) {
+        $field_name = $row->getSourceProperty('field_name');
+        throw new MigrateSkipRowException("Can't migrate source field $field_name configured with both plain text and filtered text processing. See https://www.drupal.org/docs/8/upgrade/known-issues-when-upgrading-from-drupal-6-or-7-to-drupal-8#plain-text");
+      }
+    }
+    elseif ($type == 'text_with_summary' && $plain_text) {
+      // If a text_with_summary field has plain text instances, skip the row
+      // since there's no such thing as a string_with_summary field.
+      $field_name = $row->getSourceProperty('field_name');
+      throw new MigrateSkipRowException("Can't migrate source field $field_name of type text_with_summary configured with plain text processing. See https://www.drupal.org/docs/8/upgrade/known-issues-when-upgrading-from-drupal-6-or-7-to-drupal-8#plain-text");
+    }
+
+    return $type;
+  }
+
+}

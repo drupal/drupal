@@ -57,11 +57,11 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
 
     /** @var \Drupal\field\FieldStorageConfigInterface $field */
     $field = FieldStorageConfig::load($id);
-    $this->assertTrue($field instanceof FieldStorageConfigInterface);
-    $this->assertIdentical($expected_name, $field->getName());
-    $this->assertIdentical($expected_type, $field->getType());
-    $this->assertEqual($expected_translatable, $field->isTranslatable());
-    $this->assertIdentical($expected_entity_type, $field->getTargetEntityTypeId());
+    $this->assertInstanceOf(FieldStorageConfigInterface::class, $field);
+    $this->assertEquals($expected_name, $field->getName());
+    $this->assertEquals($expected_type, $field->getType());
+    $this->assertEquals($expected_translatable, $field->isTranslatable());
+    $this->assertEquals($expected_entity_type, $field->getTargetEntityTypeId());
 
     if ($expected_cardinality === 1) {
       $this->assertFalse($field->isMultiple());
@@ -69,7 +69,7 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     else {
       $this->assertTrue($field->isMultiple());
     }
-    $this->assertIdentical($expected_cardinality, $field->getCardinality());
+    $this->assertEquals($expected_cardinality, $field->getCardinality());
   }
 
   /**
@@ -91,7 +91,7 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.field_tags', 'entity_reference', TRUE, -1);
     $this->assertEntity('node.field_term_reference', 'entity_reference', TRUE, 1);
     $this->assertEntity('node.taxonomy_forums', 'entity_reference', TRUE, 1);
-    $this->assertEntity('node.field_text', 'text', TRUE, 1);
+    $this->assertEntity('node.field_text', 'string', TRUE, 1);
     $this->assertEntity('node.field_text_list', 'list_string', TRUE, 3);
     $this->assertEntity('node.field_boolean', 'boolean', TRUE, 1);
     $this->assertEntity('node.field_email', 'email', TRUE, -1);
@@ -105,24 +105,57 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     // Assert that the taxonomy term reference fields are referencing the
     // correct entity type.
     $field = FieldStorageConfig::load('node.field_term_reference');
-    $this->assertIdentical('taxonomy_term', $field->getSetting('target_type'));
+    $this->assertEquals('taxonomy_term', $field->getSetting('target_type'));
     $field = FieldStorageConfig::load('node.taxonomy_forums');
-    $this->assertIdentical('taxonomy_term', $field->getSetting('target_type'));
+    $this->assertEquals('taxonomy_term', $field->getSetting('target_type'));
 
     // Assert that the entityreference fields are referencing the correct
     // entity type.
     $field = FieldStorageConfig::load('node.field_node_entityreference');
-    $this->assertIdentical('node', $field->getSetting('target_type'));
+    $this->assertEquals('node', $field->getSetting('target_type'));
     $field = FieldStorageConfig::load('node.field_user_entityreference');
-    $this->assertIdentical('user', $field->getSetting('target_type'));
+    $this->assertEquals('user', $field->getSetting('target_type'));
     $field = FieldStorageConfig::load('node.field_term_entityreference');
-    $this->assertIdentical('taxonomy_term', $field->getSetting('target_type'));
+    $this->assertEquals('taxonomy_term', $field->getSetting('target_type'));
+  }
 
-    // Validate that the source count and processed count match up.
-    /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
+  /**
+   * Tests the migration of text fields with different text processing.
+   */
+  public function testTextFields() {
+    // All text and text_long field bases that have only plain text instances
+    // should be migrated to string and string_long fields.
+    // All text_with_summary field bases that have only plain text instances
+    // should not have been migrated since there's no such thing as a
+    // string_with_summary field.
+    $this->assertEntity('node.field_text_plain', 'string', TRUE, 1);
+    $this->assertEntity('node.field_text_long_plain', 'string_long', TRUE, 1);
+    $this->assertNull(FieldStorageConfig::load('node.field_text_sum_plain'));
+
+    // All text, text_long and text_with_summary field bases that have only
+    // filtered text instances should be migrated to text, text_long and
+    // text_with_summary fields.
+    $this->assertEntity('node.field_text_filtered', 'text', TRUE, 1);
+    $this->assertEntity('node.field_text_long_filtered', 'text_long', TRUE, 1);
+    $this->assertEntity('node.field_text_sum_filtered', 'text_with_summary', TRUE, 1);
+
+    // All text, text_long and text_with_summary field bases that have both
+    // plain text and filtered text instances should not have been migrated.
+    $this->assertNull(FieldStorageConfig::load('node.field_text_plain_filtered'));
+    $this->assertNull(FieldStorageConfig::load('node.field_text_long_plain_filtered'));
+    $this->assertNull(FieldStorageConfig::load('node.field_text_sum_plain_filtered'));
+
+    // For each text field bases that were skipped, there should be a log
+    // message with the required steps to fix this.
     $migration = $this->getMigration('d7_field');
-    $this->assertSame($migration->getSourcePlugin()
-      ->count(), $migration->getIdMap()->processedCount());
+    $messages = $migration->getIdMap()->getMessageIterator()->fetchAll();
+    $errors = array_map(function($message) {return $message->message;}, $messages);
+    sort($errors);
+    $this->assertCount(4, $errors);
+    $this->assertEquals($errors[0], 'Can\'t migrate source field field_text_long_plain_filtered configured with both plain text and filtered text processing. See https://www.drupal.org/docs/8/upgrade/known-issues-when-upgrading-from-drupal-6-or-7-to-drupal-8#plain-text');
+    $this->assertEquals($errors[1], 'Can\'t migrate source field field_text_plain_filtered configured with both plain text and filtered text processing. See https://www.drupal.org/docs/8/upgrade/known-issues-when-upgrading-from-drupal-6-or-7-to-drupal-8#plain-text');
+    $this->assertEquals($errors[2], 'Can\'t migrate source field field_text_sum_plain of type text_with_summary configured with plain text processing. See https://www.drupal.org/docs/8/upgrade/known-issues-when-upgrading-from-drupal-6-or-7-to-drupal-8#plain-text');
+    $this->assertEquals($errors[3], 'Can\'t migrate source field field_text_sum_plain_filtered of type text_with_summary configured with plain text processing. See https://www.drupal.org/docs/8/upgrade/known-issues-when-upgrading-from-drupal-6-or-7-to-drupal-8#plain-text');
   }
 
 }
