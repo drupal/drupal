@@ -9,6 +9,10 @@ source:
   constants:
     status: true
 process:
+  type:
+    plugin: process_field
+    source: type
+    method: getFieldType
   entity_type: entity_type
   field_name: field_name
   bundle: bundle
