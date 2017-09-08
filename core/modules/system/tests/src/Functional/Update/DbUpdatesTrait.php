@@ -36,6 +36,7 @@ trait DbUpdatesTrait {
     $this->drupalGet(Url::fromRoute('system.db_update'));
     $this->clickLink($this->t('Continue'));
     $this->clickLink($this->t('Apply pending updates'));
+    $this->checkForMetaRefresh();
   }
 
   /**
