@@ -351,12 +351,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    */
   protected function assertResourceResponse($expected_status_code, $expected_body, ResponseInterface $response) {
     $this->assertSame($expected_status_code, $response->getStatusCode());
-    if ($expected_status_code < 400) {
-      $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
-    }
-    else {
-      $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
-    }
+    $this->assertSame([static::$mimeType], $response->getHeader('Content-Type'));
     if ($expected_body !== FALSE) {
       $this->assertSame($expected_body, (string) $response->getBody());
     }
