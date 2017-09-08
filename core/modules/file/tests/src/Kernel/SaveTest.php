@@ -81,6 +81,22 @@ class SaveTest extends FileManagedUnitTestBase {
     $this->assertEqual(1, count($fids));
     $this->assertEqual([$uppercase_file->id() => $uppercase_file->id()], $fids);
 
+    // Save a file with zero bytes.
+    $file = File::create([
+      'uid' => 1,
+      'filename' => 'no-druplicon.txt',
+      'uri' => 'public://no-druplicon.txt',
+      'filemime' => 'text/plain',
+      'status' => FILE_STATUS_PERMANENT,
+    ]);
+
+    file_put_contents($file->getFileUri(), '');
+
+    // Save it, inserting a new record.
+    $file->save();
+
+    // Check the file size was set to zero.
+    $this->assertSame(0, $file->getSize());
   }
 
 }
