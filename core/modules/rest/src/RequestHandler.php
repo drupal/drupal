@@ -2,8 +2,10 @@
 
 namespace Drupal\rest;
 
+use Drupal\Component\Utility\ArgumentsResolver;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -119,6 +121,110 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
 
     // Determine the request parameters that should be passed to the resource
     // plugin.
+    $argument_resolver = $this->createArgumentResolver($route_match, $unserialized, $request);
+    try {
+      $arguments = $argument_resolver->getArguments([$resource, $method]);
+    }
+    catch (\RuntimeException $exception) {
+      @trigger_error('Passing in arguments the legacy way is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Provide the right parameter names in the method, similar to controllers. See https://www.drupal.org/node/2894819', E_USER_DEPRECATED);
+      $arguments = $this->getLegacyParameters($route_match, $unserialized, $request);
+    }
+
+    // Invoke the operation on the resource plugin.
+    $response = call_user_func_array([$resource, $method], $arguments);
+
+    if ($response instanceof CacheableResponseInterface) {
+      // Add rest config's cache tags.
+      $response->addCacheableDependency($resource_config);
+    }
+
+    return $response;
+  }
+
+  /**
+   * Creates an argument resolver, containing all REST parameters.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   * @param mixed $unserialized
+   *   The unserialized data.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return \Drupal\Component\Utility\ArgumentsResolver
+   *   An instance of the argument resolver containing information like the
+   *   'entity' we process and the 'unserialized' content from the request body.
+   */
+  protected function createArgumentResolver(RouteMatchInterface $route_match, $unserialized, Request $request) {
+    $route = $route_match->getRouteObject();
+
+    // Defaults for the parameters defined on the route object need to be added
+    // to the raw arguments.
+    $raw_route_arguments = $route_match->getRawParameters()->all() + $route->getDefaults();
+
+    $route_arguments = $route_match->getParameters()->all();
+    $upcasted_route_arguments = $route_arguments;
+
+    // For request methods that have request bodies, ResourceInterface plugin
+    // methods historically receive the unserialized request body as the N+1th
+    // method argument, where N is the number of route parameters specified on
+    // the accompanying route. To be able to use the argument resolver, which is
+    // not based on position but on name and typehint, specify commonly used
+    // names here. Similarly, those methods receive the original stored object
+    // as the first method argument.
+
+    $route_arguments_entity = NULL;
+    // Try to find a parameter which is an entity.
+    foreach ($route_arguments as $value) {
+      if ($value instanceof EntityInterface) {
+        $route_arguments_entity = $value;
+        break;
+      }
+    }
+
+    if (in_array($request->getMethod(), ['PATCH', 'POST'], TRUE)) {
+      $upcasted_route_arguments['entity'] = $unserialized;
+      $upcasted_route_arguments['data'] = $unserialized;
+      $upcasted_route_arguments['unserialized'] = $unserialized;
+      $upcasted_route_arguments['original_entity'] = $route_arguments_entity;
+    }
+    else {
+      $upcasted_route_arguments['entity'] = $route_arguments_entity;
+    }
+
+    // Parameters which are not defined on the route object, but still are
+    // essential for access checking are passed as wildcards to the argument
+    // resolver.
+    $wildcard_arguments = [$route, $route_match];
+    $wildcard_arguments[] = $request;
+    if (isset($unserialized)) {
+      $wildcard_arguments[] = $unserialized;
+    }
+
+    return new ArgumentsResolver($raw_route_arguments, $upcasted_route_arguments, $wildcard_arguments);
+  }
+
+  /**
+   * Provides the parameter usable without an argument resolver.
+   *
+   * This creates an list of parameters in a statically defined order.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match
+   * @param mixed $unserialized
+   *   The unserialized data.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @deprecated in Drupal 8.4.0, will be removed before Drupal 9.0.0. Use the
+   *   argument resolver method instead, see ::createArgumentResolver().
+   *
+   * @see https://www.drupal.org/node/2894819
+   *
+   * @return array
+   *   An array of parameters.
+   */
+  protected function getLegacyParameters(RouteMatchInterface $route_match, $unserialized, Request $request) {
     $route_parameters = $route_match->getParameters();
     $parameters = [];
     // Filter out all internal parameters starting with "_".
@@ -128,15 +234,7 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
       }
     }
 
-    // Invoke the operation on the resource plugin.
-    $response = call_user_func_array([$resource, $method], array_merge($parameters, [$unserialized, $request]));
-
-    if ($response instanceof CacheableResponseInterface) {
-      // Add rest config's cache tags.
-      $response->addCacheableDependency($resource_config);
-    }
-
-    return $response;
+    return array_merge($parameters, [$unserialized, $request]);
   }
 
 }

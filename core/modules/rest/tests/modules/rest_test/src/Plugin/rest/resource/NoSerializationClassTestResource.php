@@ -25,7 +25,7 @@ class NoSerializationClassTestResource extends ResourceBase {
    *
    * @return \Drupal\rest\ResourceResponse
    */
-  public function post(array $data = []) {
+  public function post(array $data) {
     return new ResourceResponse($data);
   }
 
