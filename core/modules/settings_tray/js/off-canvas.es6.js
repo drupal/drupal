@@ -107,10 +107,8 @@
       const eventData = { settings, $element, offCanvasDialog: this };
 
       $element
-        .on('dialogresize.off-canvas', eventData, debounce(Drupal.offCanvas.bodyPadding, 100))
         .on('dialogContentResize.off-canvas', eventData, Drupal.offCanvas.handleDialogResize)
-        .on('dialogContentResize.off-canvas', eventData, debounce(Drupal.offCanvas.bodyPadding, 100))
-        .trigger('dialogresize.off-canvas');
+        .on('dialogContentResize.off-canvas', eventData, Drupal.offCanvas.bodyPadding);
 
       Drupal.offCanvas.getContainer($element).attr(`data-offset-${Drupal.offCanvas.getEdge()}`, '');
 
