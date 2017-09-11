@@ -26,7 +26,11 @@ class LoginStatusCheck implements AccessInterface {
   public function access(AccountInterface $account, Route $route) {
     $required_status = filter_var($route->getRequirement('_user_is_logged_in'), FILTER_VALIDATE_BOOLEAN);
     $actual_status = $account->isAuthenticated();
-    return AccessResult::allowedIf($required_status === $actual_status)->addCacheContexts(['user.roles:authenticated']);
+    $access_result = AccessResult::allowedIf($required_status === $actual_status)->addCacheContexts(['user.roles:authenticated']);
+    if (!$access_result->isAllowed()) {
+      $access_result->setReason($required_status === TRUE ? 'This route can only be accessed by authenticated users.' : 'This route can only be accessed by anonymous users.');
+    }
+    return $access_result;
   }
 
 }

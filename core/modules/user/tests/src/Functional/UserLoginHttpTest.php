@@ -181,6 +181,11 @@ class UserLoginHttpTest extends BrowserTestBase {
     $this->assertEquals($account->getRoles(), $result_data['current_user']['roles']);
     $logout_token = $result_data['logout_token'];
 
+    // Logging in while already logged in results in a 403 with helpful message.
+    $response = $this->loginRequest($name, $pass, $format);
+    $this->assertSame(403, $response->getStatusCode());
+    $this->assertSame(['message' => 'This route can only be accessed by anonymous users.'], $this->serializer->decode($response->getBody(), $format));
+
     $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
     $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_IN);
 
