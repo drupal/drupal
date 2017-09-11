@@ -60,6 +60,8 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/' . $media->id());
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(403);
+    $access_result = $media->access('view', NULL, TRUE);
+    $this->assertSame("The 'view media' permission is required and the media item must be published.", $access_result->getReason());
     $this->grantPermissions($role, ['view media']);
     $this->drupalGet('media/' . $media->id());
     $this->assertCacheContext('user.permissions');

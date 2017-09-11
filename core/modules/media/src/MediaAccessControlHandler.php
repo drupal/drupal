@@ -23,9 +23,13 @@ class MediaAccessControlHandler extends EntityAccessControlHandler {
     $is_owner = ($account->id() && $account->id() === $entity->getOwnerId());
     switch ($operation) {
       case 'view':
-        return AccessResult::allowedIf($account->hasPermission('view media') && $entity->isPublished())
+        $access_result = AccessResult::allowedIf($account->hasPermission('view media') && $entity->isPublished())
           ->cachePerPermissions()
           ->addCacheableDependency($entity);
+        if (!$access_result->isAllowed()) {
+          $access_result->setReason("The 'view media' permission is required and the media item must be published.");
+        }
+        return $access_result;
 
       case 'update':
         if ($account->hasPermission('update any media')) {
