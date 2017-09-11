@@ -278,12 +278,12 @@ class ConfigCRUDTest extends KernelTestBase {
     $this->assertIdentical($storage->read($name), $data);
 
     // Test that schema type enforcement can be overridden by trusting the data.
-    $this->assertIdentical(99, $config->get('int'));
+    $this->assertSame(99, $config->get('int'));
     $config->set('int', '99')->save(TRUE);
-    $this->assertIdentical('99', $config->get('int'));
+    $this->assertSame('99', $config->get('int'));
     // Test that re-saving without testing the data enforces the schema type.
     $config->save();
-    $this->assertIdentical($data, $config->get());
+    $this->assertSame($data, $config->get());
 
     // Test that setting an unsupported type for a config object with a schema
     // fails.

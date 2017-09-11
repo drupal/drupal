@@ -59,7 +59,7 @@ class NameMungingTest extends FileTestBase {
   public function testMungeIgnoreInsecure() {
     $this->config('system.file')->set('allow_insecure_uploads', 1)->save();
     $munged_name = file_munge_filename($this->name, '');
-    $this->assertIdentical($munged_name, $this->name, format_string('The original filename (%original) matches the munged filename (%munged) when insecure uploads are enabled.', ['%munged' => $munged_name, '%original' => $this->name]));
+    $this->assertSame($munged_name, $this->name, format_string('The original filename (%original) matches the munged filename (%munged) when insecure uploads are enabled.', ['%munged' => $munged_name, '%original' => $this->name]));
   }
 
   /**
@@ -69,10 +69,10 @@ class NameMungingTest extends FileTestBase {
     // Declare our extension as whitelisted. The declared extensions should
     // be case insensitive so test using one with a different case.
     $munged_name = file_munge_filename($this->nameWithUcExt, $this->badExtension);
-    $this->assertIdentical($munged_name, $this->nameWithUcExt, format_string('The new filename (%munged) matches the original (%original) once the extension has been whitelisted.', ['%munged' => $munged_name, '%original' => $this->nameWithUcExt]));
+    $this->assertSame($munged_name, $this->nameWithUcExt, format_string('The new filename (%munged) matches the original (%original) once the extension has been whitelisted.', ['%munged' => $munged_name, '%original' => $this->nameWithUcExt]));
     // The allowed extensions should also be normalized.
     $munged_name = file_munge_filename($this->name, strtoupper($this->badExtension));
-    $this->assertIdentical($munged_name, $this->name, format_string('The new filename (%munged) matches the original (%original) also when the whitelisted extension is in uppercase.', ['%munged' => $munged_name, '%original' => $this->name]));
+    $this->assertSame($munged_name, $this->name, format_string('The new filename (%munged) matches the original (%original) also when the whitelisted extension is in uppercase.', ['%munged' => $munged_name, '%original' => $this->name]));
   }
 
   /**
@@ -81,7 +81,7 @@ class NameMungingTest extends FileTestBase {
   public function testUnMunge() {
     $munged_name = file_munge_filename($this->name, '', FALSE);
     $unmunged_name = file_unmunge_filename($munged_name);
-    $this->assertIdentical($unmunged_name, $this->name, format_string('The unmunged (%unmunged) filename matches the original (%original)', ['%unmunged' => $unmunged_name, '%original' => $this->name]));
+    $this->assertSame($unmunged_name, $this->name, format_string('The unmunged (%unmunged) filename matches the original (%original)', ['%unmunged' => $unmunged_name, '%original' => $this->name]));
   }
 
 }

@@ -77,7 +77,7 @@ class RegistryTest extends KernelTestBase {
     $registry_base_theme->setThemeManager(\Drupal::theme());
 
     $preprocess_functions = $registry_subsub_theme->get()['theme_test_template_test']['preprocess functions'];
-    $this->assertIdentical([
+    $this->assertSame([
       'template_preprocess',
       'test_basetheme_preprocess_theme_test_template_test',
       'test_subtheme_preprocess_theme_test_template_test',
@@ -85,20 +85,20 @@ class RegistryTest extends KernelTestBase {
     ], $preprocess_functions);
 
     $preprocess_functions = $registry_sub_theme->get()['theme_test_template_test']['preprocess functions'];
-    $this->assertIdentical([
+    $this->assertSame([
       'template_preprocess',
       'test_basetheme_preprocess_theme_test_template_test',
       'test_subtheme_preprocess_theme_test_template_test',
     ], $preprocess_functions);
 
     $preprocess_functions = $registry_base_theme->get()['theme_test_template_test']['preprocess functions'];
-    $this->assertIdentical([
+    $this->assertSame([
       'template_preprocess',
       'test_basetheme_preprocess_theme_test_template_test',
     ], $preprocess_functions);
 
     $preprocess_functions = $registry_base_theme->get()['theme_test_function_suggestions']['preprocess functions'];
-    $this->assertIdentical([
+    $this->assertSame([
        'template_preprocess_theme_test_function_suggestions',
        'test_basetheme_preprocess_theme_test_function_suggestions',
     ], $preprocess_functions, "Theme functions don't have template_preprocess but do have template_preprocess_HOOK");
@@ -125,7 +125,7 @@ class RegistryTest extends KernelTestBase {
       $hook .= "$suggestion";
       $expected_preprocess_functions[] = "test_theme_preprocess_$hook";
       $preprocess_functions = $registry_theme->get()[$hook]['preprocess functions'];
-      $this->assertIdentical($expected_preprocess_functions, $preprocess_functions, "$hook has correct preprocess functions.");
+      $this->assertSame($expected_preprocess_functions, $preprocess_functions, "$hook has correct preprocess functions.");
     } while ($suggestion = array_shift($suggestions));
 
     $expected_preprocess_functions = [
@@ -136,10 +136,10 @@ class RegistryTest extends KernelTestBase {
     ];
 
     $preprocess_functions = $registry_theme->get()['theme_test_preprocess_suggestions__kitten__meerkat']['preprocess functions'];
-    $this->assertIdentical($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a function correctly inherits preprocess functions.');
+    $this->assertSame($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a function correctly inherits preprocess functions.');
 
     $preprocess_functions = $registry_theme->get()['theme_test_preprocess_suggestions__kitten__bearcat']['preprocess functions'];
-    $this->assertIdentical($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a template correctly inherits preprocess functions.');
+    $this->assertSame($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a template correctly inherits preprocess functions.');
 
     $this->assertTrue(isset($registry_theme->get()['theme_test_preprocess_suggestions__kitten__meerkat__tarsier__moose']), 'Preprocess function with an unimplemented lower-level suggestion is added to the registry.');
   }

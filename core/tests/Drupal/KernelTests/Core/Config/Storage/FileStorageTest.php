@@ -68,8 +68,8 @@ class FileStorageTest extends ConfigStorageTestBase {
     // @todo https://www.drupal.org/node/2666954 FileStorage::listAll() is
     //   case-sensitive. However, \Drupal\Core\Config\DatabaseStorage::listAll()
     //   is case-insensitive.
-    $this->assertIdentical(['system.performance'], $this->storage->listAll('system'), 'The FileStorage::listAll() with prefix works.');
-    $this->assertIdentical([], $this->storage->listAll('System'), 'The FileStorage::listAll() is case sensitive.');
+    $this->assertSame(['system.performance'], $this->storage->listAll('system'), 'The FileStorage::listAll() with prefix works.');
+    $this->assertSame([], $this->storage->listAll('System'), 'The FileStorage::listAll() is case sensitive.');
   }
 
   /**

@@ -146,7 +146,7 @@ class ConfigInstallTest extends KernelTestBase {
     $this->assertEqual($collections, $active_storage->getAllCollectionNames());
     $collection_storage = $active_storage->createCollection('entity');
     $data = $collection_storage->read('config_test.dynamic.dotted.default');
-    $this->assertIdentical(['label' => 'entity'], $data);
+    $this->assertSame(['label' => 'entity'], $data);
 
     // Test that the config manager uninstalls configuration from collections
     // as expected.
@@ -185,7 +185,7 @@ class ConfigInstallTest extends KernelTestBase {
     $data = $active_storage->read($name);
     $this->assertTrue(isset($data['uuid']));
     $data = $collection_storage->read($name);
-    $this->assertIdentical(['label' => 'entity'], $data);
+    $this->assertSame(['label' => 'entity'], $data);
   }
 
   /**
@@ -227,7 +227,7 @@ class ConfigInstallTest extends KernelTestBase {
     $this->assertTrue($entity, 'The config_test.dynamic.other_module_test_with_dependency configuration has been created during install.');
     // Ensure that dependencies can be added during module installation by
     // hooks.
-    $this->assertIdentical('config_install_dependency_test', $entity->getDependencies()['module'][0]);
+    $this->assertSame('config_install_dependency_test', $entity->getDependencies()['module'][0]);
   }
 
   /**

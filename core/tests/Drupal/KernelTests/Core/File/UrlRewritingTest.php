@@ -106,13 +106,13 @@ class UrlRewritingTest extends FileTestBase {
     // Shipped file.
     $filepath = 'core/assets/vendor/jquery/jquery.min.js';
     $url = file_create_url($filepath);
-    $this->assertIdentical(base_path() . $filepath, file_url_transform_relative($url));
+    $this->assertSame(base_path() . $filepath, file_url_transform_relative($url));
 
     // Managed file.
     $uri = $this->createUri();
     $url = file_create_url($uri);
     $public_directory_path = \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath();
-    $this->assertIdentical(base_path() . $public_directory_path . '/' . rawurlencode(drupal_basename($uri)), file_url_transform_relative($url));
+    $this->assertSame(base_path() . $public_directory_path . '/' . rawurlencode(drupal_basename($uri)), file_url_transform_relative($url));
   }
 
 }

@@ -37,7 +37,7 @@ class IgnoreReplicaSubscriberTest extends KernelTestBase {
     $db1 = Database::getConnection('default', 'default');
     $db2 = Database::getConnection('replica', 'default');
 
-    $this->assertIdentical($db1, $db2, 'System Init ignores secondaries when requested.');
+    $this->assertSame($db1, $db2, 'System Init ignores secondaries when requested.');
   }
 
 }
