@@ -3,7 +3,6 @@
 namespace Drupal\big_pipe_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
-use Drupal\big_pipe\Tests\BigPipePlaceholderTestCases;
 use Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber;
 
 class BigPipeTestController {
@@ -61,7 +60,7 @@ class BigPipeTestController {
   /**
    * A page with multiple occurrences of the same placeholder.
    *
-   * @see \Drupal\big_pipe\Tests\BigPipeTest::testBigPipeMultipleOccurrencePlaceholders()
+   * @see \Drupal\Tests\big_pipe\Functional\BigPipeTest::testBigPipeMultiOccurrencePlaceholders()
    *
    * @return array
    */
@@ -134,7 +133,7 @@ class BigPipeTestController {
   /**
    * #lazy_builder callback; returns the current count.
    *
-   * @see \Drupal\big_pipe\Tests\BigPipeTest::testBigPipeMultipleOccurrencePlaceholders()
+   * @see \Drupal\Tests\big_pipe\Functional\BigPipeTest::testBigPipeMultiOccurrencePlaceholders()
    *
    * @return array
    *   The render array.
