@@ -196,8 +196,13 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $view->initDisplay();
 
     // Error is triggered while calling the wrong display.
-    $this->setExpectedException(\PHPUnit_Framework_Error::class);
-    $view->setDisplay('invalid');
+    try {
+      $view->setDisplay('invalid');
+      $this->fail('Expected error, when setDisplay() called with invalid display ID');
+    }
+    catch (\PHPUnit_Framework_Error_Warning $e) {
+      $this->assertEquals('setDisplay() called with invalid display ID "invalid".', $e->getMessage());
+    }
 
     $this->assertEqual($view->current_display, 'default', 'If setDisplay is called with an invalid display id the default display should be used.');
     $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('default')));
