@@ -205,8 +205,8 @@ class DbDumpTest extends KernelTestBase {
       $this->assertTrue(Database::getConnection()
         ->schema()
         ->tableExists($table), SafeMarkup::format('Table @table created by the database script.', ['@table' => $table]));
-      $this->assertIdentical($this->originalTableSchemas[$table], $this->getTableSchema($table), SafeMarkup::format('The schema for @table was properly restored.', ['@table' => $table]));
-      $this->assertIdentical($this->originalTableIndexes[$table], $this->getTableIndexes($table), SafeMarkup::format('The indexes for @table were properly restored.', ['@table' => $table]));
+      $this->assertSame($this->originalTableSchemas[$table], $this->getTableSchema($table), SafeMarkup::format('The schema for @table was properly restored.', ['@table' => $table]));
+      $this->assertSame($this->originalTableIndexes[$table], $this->getTableIndexes($table), SafeMarkup::format('The indexes for @table were properly restored.', ['@table' => $table]));
     }
 
     // Ensure the test config has been replaced.

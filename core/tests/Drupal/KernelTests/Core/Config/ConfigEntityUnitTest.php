@@ -80,7 +80,7 @@ class ConfigEntityUnitTest extends KernelTestBase {
     // Compare UUIDs as the objects are not identical since
     // $entity->enforceIsNew is FALSE and $entity_loaded_by_uuid->enforceIsNew
     // is NULL.
-    $this->assertIdentical($entity->uuid(), $entity_loaded_by_uuid->uuid());
+    $this->assertSame($entity->uuid(), $entity_loaded_by_uuid->uuid());
 
     $entities = $this->storage->loadByProperties();
     $this->assertEqual(count($entities), 3, 'Three entities are loaded when no properties are specified.');
@@ -100,12 +100,12 @@ class ConfigEntityUnitTest extends KernelTestBase {
       'style' => 999
     ]);
     $entity->save();
-    $this->assertIdentical('999', $entity->style);
+    $this->assertSame('999', $entity->style);
     $entity->style = 999;
     $entity->trustData()->save();
-    $this->assertIdentical(999, $entity->style);
+    $this->assertSame(999, $entity->style);
     $entity->save();
-    $this->assertIdentical('999', $entity->style);
+    $this->assertSame('999', $entity->style);
   }
 
 }

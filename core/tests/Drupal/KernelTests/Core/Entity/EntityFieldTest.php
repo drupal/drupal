@@ -472,30 +472,30 @@ class EntityFieldTest extends EntityKernelTestBase {
 
     // Make sure provided contextual information is right.
     $entity_adapter = $entity->getTypedData();
-    $this->assertIdentical($entity_adapter->getRoot(), $entity_adapter, 'Entity is root object.');
+    $this->assertSame($entity_adapter->getRoot(), $entity_adapter, 'Entity is root object.');
     $this->assertEqual($entity_adapter->getPropertyPath(), '');
     $this->assertEqual($entity_adapter->getName(), '');
     $this->assertEqual($entity_adapter->getParent(), NULL);
 
     $field = $entity->user_id;
-    $this->assertIdentical($field->getRoot()->getValue(), $entity, 'Entity is root object.');
-    $this->assertIdentical($field->getEntity(), $entity, 'getEntity() returns the entity.');
+    $this->assertSame($field->getRoot()->getValue(), $entity, 'Entity is root object.');
+    $this->assertSame($field->getEntity(), $entity, 'getEntity() returns the entity.');
     $this->assertEqual($field->getPropertyPath(), 'user_id');
     $this->assertEqual($field->getName(), 'user_id');
-    $this->assertIdentical($field->getParent()->getValue(), $entity, 'Parent object matches.');
+    $this->assertSame($field->getParent()->getValue(), $entity, 'Parent object matches.');
 
     $field_item = $field[0];
-    $this->assertIdentical($field_item->getRoot()->getValue(), $entity, 'Entity is root object.');
-    $this->assertIdentical($field_item->getEntity(), $entity, 'getEntity() returns the entity.');
+    $this->assertSame($field_item->getRoot()->getValue(), $entity, 'Entity is root object.');
+    $this->assertSame($field_item->getEntity(), $entity, 'getEntity() returns the entity.');
     $this->assertEqual($field_item->getPropertyPath(), 'user_id.0');
     $this->assertEqual($field_item->getName(), '0');
-    $this->assertIdentical($field_item->getParent(), $field, 'Parent object matches.');
+    $this->assertSame($field_item->getParent(), $field, 'Parent object matches.');
 
     $item_value = $field_item->get('entity');
-    $this->assertIdentical($item_value->getRoot()->getValue(), $entity, 'Entity is root object.');
+    $this->assertSame($item_value->getRoot()->getValue(), $entity, 'Entity is root object.');
     $this->assertEqual($item_value->getPropertyPath(), 'user_id.0.entity');
     $this->assertEqual($item_value->getName(), 'entity');
-    $this->assertIdentical($item_value->getParent(), $field_item, 'Parent object matches.');
+    $this->assertSame($item_value->getParent(), $field_item, 'Parent object matches.');
   }
 
   /**

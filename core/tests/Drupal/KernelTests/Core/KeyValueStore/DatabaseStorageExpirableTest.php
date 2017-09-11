@@ -78,7 +78,7 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
     // Ensure that an item with the same name exists in the other collection.
     $stores[1]->set('foo', $this->objects[5]);
     $result = $stores[0]->getAll();
-    // Not using assertIdentical(), since the order is not defined for getAll().
+    // Not using assertSame(), since the order is not defined for getAll().
     $this->assertEqual(count($result), count($values));
     foreach ($result as $key => $value) {
       $this->assertEqual($values[$key], $value);

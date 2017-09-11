@@ -95,7 +95,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
       'node.type.' . $content_type->id() . '::config_test.dynamic.' . $test_entity_id,
     ];
     $renames = $this->configImporter->getUnprocessedConfiguration('rename');
-    $this->assertIdentical($expected, $renames);
+    $this->assertSame($expected, $renames);
 
     // Try to import the configuration. We expect an exception to be thrown
     // because the staged entity is of a different type.
@@ -138,7 +138,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
       'config_test.old::config_test.new'
     ];
     $renames = $this->configImporter->getUnprocessedConfiguration('rename');
-    $this->assertIdentical($expected, $renames);
+    $this->assertSame($expected, $renames);
 
     // Try to import the configuration. We expect an exception to be thrown
     // because the rename is for simple configuration.

@@ -32,18 +32,18 @@ class ConnectionTest extends DatabaseTestBase {
     // Try to open those targets another time, that should return the same objects.
     $db1b = Database::getConnection('default', 'default');
     $db2b = Database::getConnection('replica', 'default');
-    $this->assertIdentical($db1, $db1b, 'A second call to getConnection() returns the same object.');
-    $this->assertIdentical($db2, $db2b, 'A second call to getConnection() returns the same object.');
+    $this->assertSame($db1, $db1b, 'A second call to getConnection() returns the same object.');
+    $this->assertSame($db2, $db2b, 'A second call to getConnection() returns the same object.');
 
     // Try to open an unknown target.
     $unknown_target = $this->randomMachineName();
     $db3 = Database::getConnection($unknown_target, 'default');
     $this->assertNotNull($db3, 'Opening an unknown target returns a real connection object.');
-    $this->assertIdentical($db1, $db3, 'An unknown target opens the default connection.');
+    $this->assertSame($db1, $db3, 'An unknown target opens the default connection.');
 
     // Try to open that unknown target another time, that should return the same object.
     $db3b = Database::getConnection($unknown_target, 'default');
-    $this->assertIdentical($db3, $db3b, 'A second call to getConnection() returns the same object.');
+    $this->assertSame($db3, $db3b, 'A second call to getConnection() returns the same object.');
   }
 
   /**
@@ -61,7 +61,7 @@ class ConnectionTest extends DatabaseTestBase {
     $db1 = Database::getConnection('default', 'default');
     $db2 = Database::getConnection('replica', 'default');
 
-    $this->assertIdentical($db1, $db2, 'Both targets refer to the same connection.');
+    $this->assertSame($db1, $db2, 'Both targets refer to the same connection.');
   }
 
   /**

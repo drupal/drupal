@@ -341,12 +341,12 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // retrieve a translation referring to it.
     $translation = $entity->getTranslation(LanguageInterface::LANGCODE_NOT_SPECIFIED);
     $this->assertFalse($translation->isNewTranslation(), 'Existing translations are not marked as new.');
-    $this->assertIdentical($entity, $translation, 'The translation object corresponding to a non-default language is the entity object itself when the entity is language-neutral.');
+    $this->assertSame($entity, $translation, 'The translation object corresponding to a non-default language is the entity object itself when the entity is language-neutral.');
     $entity->{$langcode_key}->value = $default_langcode;
     $translation = $entity->getTranslation($default_langcode);
-    $this->assertIdentical($entity, $translation, 'The translation object corresponding to the default language (explicit) is the entity object itself.');
+    $this->assertSame($entity, $translation, 'The translation object corresponding to the default language (explicit) is the entity object itself.');
     $translation = $entity->getTranslation(LanguageInterface::LANGCODE_DEFAULT);
-    $this->assertIdentical($entity, $translation, 'The translation object corresponding to the default language (implicit) is the entity object itself.');
+    $this->assertSame($entity, $translation, 'The translation object corresponding to the default language (implicit) is the entity object itself.');
     $this->assertTrue($entity->{$default_langcode_key}->value, 'The translation object is the default one.');
 
     // Verify that trying to retrieve a translation for a locked language when
@@ -657,7 +657,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $translation = $this->entityManager->getTranslationFromContext($entity2, $default_langcode);
     $translation_build = $controller->view($translation);
     $translation_output = (string) $renderer->renderRoot($translation_build);
-    $this->assertIdentical($entity2_output, $translation_output, 'When the entity has no translation no fallback is applied.');
+    $this->assertSame($entity2_output, $translation_output, 'When the entity has no translation no fallback is applied.');
 
     // Checks that entity translations are rendered properly.
     $controller = $this->entityManager->getViewBuilder($entity_type);

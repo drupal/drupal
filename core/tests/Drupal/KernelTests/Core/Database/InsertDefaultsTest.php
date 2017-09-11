@@ -40,7 +40,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
     }
 
     $num_records_after = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertIdentical($num_records_before, $num_records_after, 'Do nothing as no fields are specified.');
+    $this->assertSame($num_records_before, $num_records_after, 'Do nothing as no fields are specified.');
   }
 
   /**
