@@ -115,7 +115,7 @@ interface LockBackendInterface {
    * @param string $name
    *   Lock name currently being locked.
    * @param int $delay
-   *   Milliseconds to wait for. Defaults to 30.
+   *   Seconds to wait for. Defaults to 30.
    *
    * @return bool
    *   TRUE if the lock holds, FALSE if it may be available. You still need to
