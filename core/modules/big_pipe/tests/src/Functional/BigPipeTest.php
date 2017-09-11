@@ -1,14 +1,16 @@
 <?php
 
-namespace Drupal\big_pipe\Tests;
+namespace Drupal\Tests\big_pipe\Functional;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;
 use Drupal\big_pipe\Render\BigPipe;
+use Drupal\big_pipe_test\BigPipePlaceholderTestCases;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests BigPipe's no-JS detection & response delivery (with and without JS).
@@ -21,7 +23,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group big_pipe
  */
-class BigPipeTest extends WebTestBase {
+class BigPipeTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -95,9 +97,7 @@ class BigPipeTest extends WebTestBase {
     $this->drupalLogout();
 
     // Close the prior connection and remove the collected state.
-    $this->curlClose();
-    $this->curlCookies = [];
-    $this->cookies = [];
+    $this->getSession()->reset();
 
     // 3. Session (anonymous).
     $this->drupalGet(Url::fromRoute('user.login', [], ['query' => ['trigger_session' => 1]]));
@@ -112,9 +112,7 @@ class BigPipeTest extends WebTestBase {
     $this->assertRaw($no_js_to_js_markup);
 
     // Close the prior connection and remove the collected state.
-    $this->curlClose();
-    $this->curlCookies = [];
-    $this->cookies = [];
+    $this->getSession()->reset();
 
     // Edge case: route with '_no_big_pipe' option.
     $this->drupalGet(Url::fromRoute('no_big_pipe'));
@@ -138,7 +136,7 @@ class BigPipeTest extends WebTestBase {
    * - \Drupal\big_pipe\Render\BigPipe
    * - \Drupal\big_pipe\Render\BigPipe::sendPlaceholders()
    *
-   * @see \Drupal\big_pipe\Tests\BigPipePlaceholderTestCases
+   * @see \Drupal\big_pipe_test\BigPipePlaceholderTestCases
    */
   public function testBigPipe() {
     // Simulate production.
@@ -218,7 +216,7 @@ class BigPipeTest extends WebTestBase {
    * - \Drupal\big_pipe\Render\BigPipe
    * - \Drupal\big_pipe\Render\BigPipe::sendNoJsPlaceholders()
    *
-   * @see \Drupal\big_pipe\Tests\BigPipePlaceholderTestCases
+   * @see \Drupal\big_pipe_test\BigPipePlaceholderTestCases
    */
   public function testBigPipeNoJs() {
     // Simulate production.
@@ -369,14 +367,14 @@ class BigPipeTest extends WebTestBase {
         $this->assertNoRaw($expected_placeholder_replacement);
         continue;
       }
-      $this->assertEqual($expected_ajax_response, trim((string) $result[0]));
+      $this->assertEqual($expected_ajax_response, trim($result[0]->getText()));
       $this->assertRaw($expected_placeholder_replacement);
       $pos = strpos($this->getRawContent(), $expected_placeholder_replacement);
       $placeholder_replacement_positions[$pos] = $big_pipe_placeholder_id;
     }
     ksort($placeholder_positions, SORT_NUMERIC);
     $this->assertEqual(array_keys($expected_big_pipe_placeholders), array_values($placeholder_positions));
-    $placeholders = array_map(function(\SimpleXMLElement $element) { return (string) $element['data-big-pipe-placeholder-id']; }, $this->cssSelect('[data-big-pipe-placeholder-id]'));
+    $placeholders = array_map(function(NodeElement $element) { return $element->getAttribute('data-big-pipe-placeholder-id'); }, $this->cssSelect('[data-big-pipe-placeholder-id]'));
     $this->assertEqual(count($expected_big_pipe_placeholders), count(array_unique($placeholders)));
     $expected_big_pipe_placeholders_with_replacements = [];
     foreach ($expected_big_pipe_placeholder_stream_order as $big_pipe_placeholder_id) {
@@ -409,13 +407,13 @@ class BigPipeTest extends WebTestBase {
    * Ensures CSRF tokens can be generated for the current user's session.
    */
   protected function setCsrfTokenSeedInTestEnvironment() {
-    $session_data = $this->container->get('session_handler.write_safe')->read($this->cookies[$this->getSessionName()]['value']);
+    $session_data = $this->container->get('session_handler.write_safe')->read($this->getSession()->getCookie($this->getSessionName()));
     $csrf_token_seed = unserialize(explode('_sf2_meta|', $session_data)[1])['s'];
     $this->container->get('session_manager.metadata_bag')->setCsrfTokenSeed($csrf_token_seed);
   }
 
   /**
-   * @return \Drupal\big_pipe\Tests\BigPipePlaceholderTestCase[]
+   * @return \Drupal\big_pipe_test\BigPipePlaceholderTestCase[]
    */
   protected function getTestCases($has_session = TRUE) {
     return BigPipePlaceholderTestCases::cases($this->container, $this->rootUser);
@@ -446,33 +444,39 @@ class BigPipeTest extends WebTestBase {
    * Asserts whether a cookie exists on the client or not.
    */
   protected function assertCookieExists($cookie_name, $expected, $cookie_label) {
-    $non_deleted_cookies = array_filter($this->cookies, function ($item) { return $item['value'] !== 'deleted'; });
-    $this->assertEqual($expected, isset($non_deleted_cookies[$cookie_name]), $expected ? "$cookie_label cookie exists." : "$cookie_label cookie does not exist.");
+    $this->assertEqual($expected, !empty($this->getSession()->getCookie($cookie_name)), $expected ? "$cookie_label cookie exists." : "$cookie_label cookie does not exist.");
   }
 
   /**
    * Calls ::performMetaRefresh() and asserts the responses.
    */
   protected function assertBigPipeNoJsMetaRefreshRedirect() {
-    $original_url = $this->url;
+    $original_url = $this->getSession()->getCurrentUrl();
+
+    // Disable automatic following of redirects by the HTTP client, so that this
+    // test can analyze the response headers of each redirect response.
+    $this->getSession()->getDriver()->getClient()->followRedirects(FALSE);
     $this->performMetaRefresh();
+    $headers[0] = $this->getSession()->getResponseHeaders();
+    $statuses[0] = $this->getSession()->getStatusCode();
+    $this->performMetaRefresh();
+    $headers[1] = $this->getSession()->getResponseHeaders();
+    $statuses[1] = $this->getSession()->getStatusCode();
+    $this->getSession()->getDriver()->getClient()->followRedirects(TRUE);
 
-    $this->assertEqual($original_url, $this->url, 'Redirected back to the original location.');
-
-    $headers = $this->drupalGetHeaders(TRUE);
-    $this->assertEqual(2, count($headers), 'Two requests were made upon following the <meta> refresh, there are headers for two responses.');
+    $this->assertEqual($original_url, $this->getSession()->getCurrentUrl(), 'Redirected back to the original location.');
 
     // First response: redirect.
-    $this->assertEqual('HTTP/1.1 302 Found', $headers[0][':status'], 'The first response was a 302 (redirect).');
-    $this->assertIdentical(0, strpos($headers[0]['set-cookie'], 'big_pipe_nojs=1'), 'The first response sets the big_pipe_nojs cookie.');
-    $this->assertEqual($original_url, $headers[0]['location'], 'The first response redirected back to the original page.');
-    $this->assertTrue(empty(array_diff(['cookies:big_pipe_nojs', 'session.exists'], explode(' ', $headers[0]['x-drupal-cache-contexts']))), 'The first response varies by the "cookies:big_pipe_nojs" and "session.exists" cache contexts.');
-    $this->assertFalse(isset($headers[0]['surrogate-control']), 'The first response has no "Surrogate-Control" header.');
+    $this->assertEqual(302, $statuses[0], 'The first response was a 302 (redirect).');
+    $this->assertIdentical(0, strpos($headers[0]['Set-Cookie'][0], 'big_pipe_nojs=1'), 'The first response sets the big_pipe_nojs cookie.');
+    $this->assertEqual($original_url, $headers[0]['Location'][0], 'The first response redirected back to the original page.');
+    $this->assertTrue(empty(array_diff(['cookies:big_pipe_nojs', 'session.exists'], explode(' ', $headers[0]['X-Drupal-Cache-Contexts'][0]))), 'The first response varies by the "cookies:big_pipe_nojs" and "session.exists" cache contexts.');
+    $this->assertFalse(isset($headers[0]['Surrogate-Control']), 'The first response has no "Surrogate-Control" header.');
 
     // Second response: redirect followed.
-    $this->assertEqual('HTTP/1.1 200 OK', $headers[1][':status'], 'The second response was a 200.');
-    $this->assertTrue(empty(array_diff(['cookies:big_pipe_nojs', 'session.exists'], explode(' ', $headers[0]['x-drupal-cache-contexts']))), 'The first response varies by the "cookies:big_pipe_nojs" and "session.exists" cache contexts.');
-    $this->assertEqual('no-store, content="BigPipe/1.0"', $headers[1]['surrogate-control'], 'The second response has a "Surrogate-Control" header.');
+    $this->assertEqual(200, $statuses[1], 'The second response was a 200.');
+    $this->assertTrue(empty(array_diff(['cookies:big_pipe_nojs', 'session.exists'], explode(' ', $headers[0]['X-Drupal-Cache-Contexts'][0]))), 'The first response varies by the "cookies:big_pipe_nojs" and "session.exists" cache contexts.');
+    $this->assertEqual('no-store, content="BigPipe/1.0"', $headers[1]['Surrogate-Control'][0], 'The second response has a "Surrogate-Control" header.');
 
     $this->assertNoRaw('<noscript><meta http-equiv="Refresh" content="0; URL=', 'Once the BigPipe no-JS cookie is set, the <meta> refresh is absent: only one redirect ever happens.');
   }

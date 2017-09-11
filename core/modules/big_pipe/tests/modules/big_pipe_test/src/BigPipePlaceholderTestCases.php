@@ -2,10 +2,9 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\big_pipe\Unit\Render\Placeholder\BigPipePlaceholderTestCases.
  */
 
-namespace Drupal\big_pipe\Tests;
+namespace Drupal\big_pipe_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\Core\Session\AccountInterface;
@@ -18,9 +17,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * - Unit test:
  *   \Drupal\Tests\big_pipe\Unit\Render\Placeholder\BigPipeStrategyTest
  * - Integration test for BigPipe with JS on:
- *   \Drupal\big_pipe\Tests\BigPipeTest::testBigPipe()
+ *   \Drupal\Tests\big_pipe\Functional\BigPipeTest::testBigPipe()
  * - Integration test for BigPipe with JS off:
- *   \Drupal\big_pipe\Tests\BigPipeTest::testBigPipeNoJs()
+ *   \Drupal\Tests\big_pipe\Functional\BigPipeTest::testBigPipeNoJs()
  */
 class BigPipePlaceholderTestCases {
 
@@ -32,7 +31,7 @@ class BigPipePlaceholderTestCases {
    * @param \Drupal\Core\Session\AccountInterface|null $user
    *   Optional. Necessary to get the embedded AJAX/HTML responses.
    *
-   * @return \Drupal\big_pipe\Tests\BigPipePlaceholderTestCase[]
+   * @return \Drupal\big_pipe_test\BigPipePlaceholderTestCase[]
    */
   public static function cases(ContainerInterface $container = NULL, AccountInterface $user = NULL) {
     // Define the two types of cacheability that we expect to see. These will be
@@ -90,7 +89,7 @@ class BigPipePlaceholderTestCases {
           'command' => 'insert',
           'method' => 'replaceWith',
           'selector' => '[data-big-pipe-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&args%5B0%5D&token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"]',
-          'data' => '    <div role="contentinfo" aria-label="Status message" class="messages messages--status">' . "\n" . '                  <h2 class="visually-hidden">Status message</h2>' . "\n" . '                    Hello from BigPipe!' . "\n" . '            </div>' . "\n    ",
+          'data' => ' <div role="contentinfo" aria-label="Status message" class="messages messages--status">' . "\n" . ' <h2 class="visually-hidden">Status message</h2>' . "\n" . ' Hello from BigPipe!' . "\n" . ' </div>' . "\n ",
           'settings' => NULL,
         ],
       ];
