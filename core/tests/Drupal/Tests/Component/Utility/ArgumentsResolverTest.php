@@ -96,9 +96,9 @@ class ArgumentsResolverTest extends TestCase {
    * Tests getArgument() with a Route, Request, and Account object.
    */
   public function testGetArgumentOrder() {
-    $a1 = $this->getMock('\Drupal\Tests\Component\Utility\TestInterface1');
+    $a1 = $this->getMock('\Drupal\Tests\Component\Utility\Test1Interface');
     $a2 = $this->getMock('\Drupal\Tests\Component\Utility\TestClass');
-    $a3 = $this->getMock('\Drupal\Tests\Component\Utility\TestInterface2');
+    $a3 = $this->getMock('\Drupal\Tests\Component\Utility\Test2Interface');
 
     $objects = [
       't1' => $a1,
@@ -107,12 +107,12 @@ class ArgumentsResolverTest extends TestCase {
     $wildcards = [$a3];
     $resolver = new ArgumentsResolver([], $objects, $wildcards);
 
-    $callable = function(TestInterface1 $t1, TestClass $tc, TestInterface2 $t2) {};
+    $callable = function(Test1Interface $t1, TestClass $tc, Test2Interface $t2) {};
     $arguments = $resolver->getArguments($callable);
     $this->assertSame([$a1, $a2, $a3], $arguments);
 
     // Test again, but with the arguments in a different order.
-    $callable = function(TestInterface2 $t2, TestClass $tc, TestInterface1 $t1) {};
+    $callable = function(Test2Interface $t2, TestClass $tc, Test1Interface $t1) {};
     $arguments = $resolver->getArguments($callable);
     $this->assertSame([$a3, $a2, $a1], $arguments);
   }
@@ -123,7 +123,7 @@ class ArgumentsResolverTest extends TestCase {
    * Without the typehint, the wildcard object will not be passed to the callable.
    */
   public function testGetWildcardArgumentNoTypehint() {
-    $a = $this->getMock('\Drupal\Tests\Component\Utility\TestInterface1');
+    $a = $this->getMock('\Drupal\Tests\Component\Utility\Test1Interface');
     $wildcards = [$a];
     $resolver = new ArgumentsResolver([], [], $wildcards);
 
@@ -196,13 +196,13 @@ class TestClass {
 /**
  * Provides a test interface.
  */
-interface TestInterface1 {
+interface Test1Interface {
 }
 
 /**
  * Provides a different test interface.
  */
-interface TestInterface2 {
+interface Test2Interface {
 }
 
 function test_access_arguments_resolver_access($foo) {
