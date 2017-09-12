@@ -1,0 +1,6 @@
+services:
+  block_content.uuid_lookup:
+    class: \Drupal\block_content\BlockContentUuidLookup
+    arguments: ['@cache.bootstrap', '@lock', '@entity_type.manager']
+    tags:
+      - { name: needs_destruction }
