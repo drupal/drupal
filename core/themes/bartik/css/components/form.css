@@ -172,7 +172,7 @@ input.form-submit:focus {
 .node-form .form-wrapper {
   margin-bottom: 2em;
 }
-.node-form .node-form-footer,
+.node-form .entity-content-form-footer,
 .node-form .field--name-status {
   margin-bottom: 0;
 }
