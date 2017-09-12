@@ -20,12 +20,12 @@ class ContactFormAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($operation == 'view') {
       // Do not allow access personal form via site-wide route.
-      return AccessResult::allowedIf($account->hasPermission('access site-wide contact form') && $entity->id() !== 'personal')->cachePerPermissions();
+      return AccessResult::allowedIfHasPermission($account, 'access site-wide contact form')->andIf(AccessResult::allowedIf($entity->id() !== 'personal'));
     }
     elseif ($operation == 'delete' || $operation == 'update') {
       // Do not allow the 'personal' form to be deleted, as it's used for
       // the personal contact form.
-      return AccessResult::allowedIf($account->hasPermission('administer contact forms') && $entity->id() !== 'personal')->cachePerPermissions();
+      return AccessResult::allowedIfHasPermission($account, 'administer contact forms')->andIf(AccessResult::allowedIf($entity->id() !== 'personal'));
     }
 
     return parent::checkAccess($entity, $operation, $account);
