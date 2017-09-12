@@ -229,6 +229,11 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
     $this->assertComponent('node.article.default', 'body', 'text_default', 'hidden', 0);
     $this->assertComponent('node.article.default', 'field_tags', 'entity_reference_label', 'above', 10);
     $this->assertComponent('node.article.default', 'field_image', 'image', 'hidden', -1);
+    $this->assertComponent('node.article.default', 'field_text_plain', 'string', 'above', 11);
+    $this->assertComponent('node.article.default', 'field_text_filtered', 'text_default', 'above', 12);
+    $this->assertComponent('node.article.default', 'field_text_long_plain', 'basic_string', 'above', 14);
+    $this->assertComponent('node.article.default', 'field_text_long_filtered', 'text_default', 'above', 15);
+    $this->assertComponent('node.article.default', 'field_text_sum_filtered', 'text_default', 'above', 18);
 
     $this->assertEntity('node.article.teaser');
     $this->assertComponent('node.article.teaser', 'body', 'text_summary_or_trimmed', 'hidden', 0);
@@ -257,6 +262,11 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
 
     $this->assertEntity('node.page.default');
     $this->assertComponent('node.page.default', 'body', 'text_default', 'hidden', 0);
+    $this->assertComponent('node.page.default', 'field_text_plain', 'string', 'above', 1);
+    $this->assertComponent('node.page.default', 'field_text_filtered', 'text_default', 'above', 2);
+    $this->assertComponent('node.page.default', 'field_text_long_plain', 'basic_string', 'above', 4);
+    $this->assertComponent('node.page.default', 'field_text_long_filtered', 'text_default', 'above', 5);
+    $this->assertComponent('node.page.default', 'field_text_sum_filtered', 'text_default', 'above', 8);
 
     $this->assertEntity('node.page.teaser');
     $this->assertComponent('node.page.teaser', 'body', 'text_summary_or_trimmed', 'hidden', 0);

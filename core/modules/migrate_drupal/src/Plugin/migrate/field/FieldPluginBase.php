@@ -48,8 +48,22 @@ abstract class FieldPluginBase extends PluginBase implements MigrateFieldInterfa
   /**
    * {@inheritdoc}
    */
+  public function getFieldFormatterType(Row $row) {
+    return $row->getSourceProperty('formatter/type');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFieldFormatterMap() {
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldWidgetType(Row $row) {
+    return $row->getSourceProperty('widget/type');
   }
 
   /**
@@ -67,8 +81,13 @@ abstract class FieldPluginBase extends PluginBase implements MigrateFieldInterfa
    */
   public function processFieldFormatter(MigrationInterface $migration) {
     $process = [];
+
+    // Some migrate field plugin IDs are prefixed with 'd6_' or 'd7_'. Since the
+    // plugin ID is used in the static map as the module name, we have to remove
+    // this prefix from the plugin ID.
+    $plugin_id = preg_replace('/d[67]_/', '', $this->pluginId);
     foreach ($this->getFieldFormatterMap() as $source_format => $destination_format) {
-      $process[0]['map'][$this->pluginId][$source_format] = $destination_format;
+      $process[0]['map'][$plugin_id][$source_format] = $destination_format;
     }
     $migration->mergeProcessOfProperty('options/type', $process);
   }
