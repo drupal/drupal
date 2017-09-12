@@ -434,6 +434,10 @@ class BrowserTestBaseTest extends BrowserTestBase {
     catch (\PHPUnit_Framework_ExpectationFailedException $e) {
       $this->pass($e->getMessage());
     }
+
+    // Test \Drupal\FunctionalTests\AssertLegacyTrait::getAllOptions.
+    $this->drupalGet('/form-test/select');
+    $this->assertCount(6, $this->getAllOptions($this->cssSelect('select[name="opt_groups"]')[0]));
   }
 
   /**

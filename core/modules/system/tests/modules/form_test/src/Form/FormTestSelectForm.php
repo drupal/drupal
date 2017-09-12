@@ -115,6 +115,14 @@ class FormTestSelectForm extends FormBase {
       '#multiple' => TRUE,
     ];
 
+    $form['opt_groups'] = [
+      '#type' => 'select',
+      '#options' => [
+        'optgroup_one' => ['one' => 'one', 'two' => 'two', 'three' => 'three', 'four' => '<strong>four</strong>'],
+        'optgroup_two' => ['five' => 'five', 'six' => 'six'],
+      ],
+    ];
+
     $form['submit'] = ['#type' => 'submit', '#value' => 'Submit'];
     return $form;
   }
