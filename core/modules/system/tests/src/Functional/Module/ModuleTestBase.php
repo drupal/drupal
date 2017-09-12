@@ -87,8 +87,10 @@ abstract class ModuleTestBase extends BrowserTestBase {
    * @param string $module
    *   The name of the module.
    *
-   * @return bool
-   *   TRUE if configuration has been installed, FALSE otherwise.
+   * @return bool|null
+   *   TRUE if configuration has been installed, FALSE otherwise. Returns NULL
+   *   if the module configuration directory does not exist or does not contain
+   *   any configuration files.
    */
   public function assertModuleConfig($module) {
     $module_config_dir = drupal_get_path('module', $module) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;

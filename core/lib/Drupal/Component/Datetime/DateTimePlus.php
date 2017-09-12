@@ -630,8 +630,9 @@ class DateTimePlus {
    *   - timezone: (optional) String timezone name. Defaults to the timezone
    *     of the date object.
    *
-   * @return string
-   *   The formatted value of the date.
+   * @return string|null
+   *   The formatted value of the date or NULL if there were construction
+   *   errors.
    */
   public function format($format, $settings = []) {
 
