@@ -1274,7 +1274,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    */
   protected function getEntityResourceUrl() {
     $has_canonical_url = $this->entity->hasLinkTemplate('canonical');
-    return $has_canonical_url ? $this->entity->toUrl() : Url::fromUri('base:entity/' . static::$entityTypeId . '/' . $this->entity->id());
+    // Note that the 'canonical' link relation type must be specified explicitly
+    // in the call to ::toUrl(). 'canonical' is the default for
+    // \Drupal\Core\Entity\Entity::toUrl(), but ConfigEntityBase overrides this.
+    return $has_canonical_url ? $this->entity->toUrl('canonical') : Url::fromUri('base:entity/' . static::$entityTypeId . '/' . $this->entity->id());
   }
 
   /**
