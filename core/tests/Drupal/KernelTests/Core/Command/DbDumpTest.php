@@ -70,7 +70,8 @@ class DbDumpTest extends KernelTestBase {
     parent::register($container);
     $container->register('cache_factory', 'Drupal\Core\Cache\DatabaseBackendFactory')
       ->addArgument(new Reference('database'))
-      ->addArgument(new Reference('cache_tags.invalidator.checksum'));
+      ->addArgument(new Reference('cache_tags.invalidator.checksum'))
+      ->addArgument(new Reference('settings'));
   }
 
   /**
