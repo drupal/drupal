@@ -914,6 +914,11 @@ abstract class BrowserTestBase extends TestCase {
    *   POST data.
    * @param array $options
    *   Options to be forwarded to the url generator.
+   *
+   * @return string
+   *   (deprecated) The response content after submit form. It is necessary for
+   *   backwards compatibility and will be removed before Drupal 9.0. You should
+   *   just use the webAssert object for your assertions.
    */
   protected function drupalPostForm($path, $edit, $submit, array $options = []) {
     if (is_object($submit)) {
@@ -932,6 +937,8 @@ abstract class BrowserTestBase extends TestCase {
     }
 
     $this->submitForm($edit, $submit);
+
+    return $this->getSession()->getPage()->getContent();
   }
 
   /**
