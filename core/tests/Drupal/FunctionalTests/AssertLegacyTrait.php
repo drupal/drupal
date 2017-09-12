@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalTests;
 
+use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Selector\Xpath\Escaper;
 use Drupal\Component\Render\FormattableMarkup;
@@ -810,6 +811,23 @@ trait AssertLegacyTrait {
   protected function getRawContent() {
     @trigger_error('AssertLegacyTrait::getRawContent() is scheduled for removal in Drupal 9.0.0. Use $this->getSession()->getPage()->getContent() instead.', E_USER_DEPRECATED);
     return $this->getSession()->getPage()->getContent();
+  }
+
+  /**
+   * Get all option elements, including nested options, in a select.
+   *
+   * @param \Behat\Mink\Element\NodeElement $element
+   *   The element for which to get the options.
+   *
+   * @return \Behat\Mink\Element\NodeElement[]
+   *   Option elements in select.
+   *
+   * @deprecated Scheduled for removal in Drupal 9.0.0.
+   *   Use $element->findAll('xpath', 'option') instead.
+   */
+  protected function getAllOptions(NodeElement $element) {
+    @trigger_error('AssertLegacyTrait::getAllOptions() is scheduled for removal in Drupal 9.0.0. Use $element->findAll(\'xpath\', \'option\') instead.', E_USER_DEPRECATED);
+    return $element->findAll('xpath', '//option');
   }
 
 }
