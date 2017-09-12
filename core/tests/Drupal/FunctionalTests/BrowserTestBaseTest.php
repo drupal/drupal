@@ -3,6 +3,7 @@
 namespace Drupal\FunctionalTests;
 
 use Behat\Mink\Exception\ExpectationException;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -98,13 +99,18 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test drupalPostForm().
     $edit = ['bananas' => 'red'];
-    $this->drupalPostForm('form-test/object-builder', $edit, 'Save');
+    $result = $this->drupalPostForm('form-test/object-builder', $edit, 'Save');
+    $this->assertSame($this->getSession()->getPage()->getContent(), $result);
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('red', $value);
 
     $this->drupalPostForm('form-test/object-builder', NULL, 'Save');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('', $value);
+
+    // Test drupalPostForm() with no-html response.
+    $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
+    $this->assertTrue(1000, $values['beer']);
   }
 
   /**
