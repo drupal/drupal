@@ -89,6 +89,46 @@ class ElementTest extends BrowserTestBase {
   }
 
   /**
+   * Tests correct checked attribute for radios element.
+   */
+  public function testRadiosChecked() {
+    // Verify that there is only one radio option checked.
+    $this->drupalGet('form-test/radios-checked');
+    $elements = $this->xpath('//input[@name="radios" and @checked]');
+    $this->assertCount(1, $elements);
+    $this->assertSame('0', $elements[0]->getValue());
+    $elements = $this->xpath('//input[@name="radios-string" and @checked]');
+    $this->assertCount(1, $elements);
+    $this->assertSame('bar', $elements[0]->getValue());
+    $elements = $this->xpath('//input[@name="radios-boolean-true" and @checked]');
+    $this->assertCount(1, $elements);
+    $this->assertSame('1', $elements[0]->getValue());
+    // A default value of FALSE indicates that nothing is set.
+    $elements = $this->xpath('//input[@name="radios-boolean-false" and @checked]');
+    $this->assertCount(0, $elements);
+    $elements = $this->xpath('//input[@name="radios-boolean-any" and @checked]');
+    $this->assertCount(1, $elements);
+    $this->assertSame('All', $elements[0]->getValue());
+    $elements = $this->xpath('//input[@name="radios-string-zero" and @checked]');
+    $this->assertCount(1, $elements);
+    $this->assertSame('0', $elements[0]->getValue());
+    $elements = $this->xpath('//input[@name="radios-int-non-zero" and @checked]');
+    $this->assertCount(1, $elements);
+    $this->assertSame('10', $elements[0]->getValue());
+    $elements = $this->xpath('//input[@name="radios-int-non-zero-as-string" and @checked]');
+    $this->assertCount(1, $elements);
+    $this->assertSame('100', $elements[0]->getValue());
+    $elements = $this->xpath('//input[@name="radios-empty-string" and @checked]');
+    $this->assertCount(1, $elements);
+    $this->assertSame('0', $elements[0]->getValue());
+    $elements = $this->xpath('//input[@name="radios-empty-array" and @checked]');
+    $this->assertCount(0, $elements);
+    $elements = $this->xpath('//input[@name="radios-key-FALSE" and @checked]');
+    $this->assertCount(1, $elements);
+    $this->assertSame('0', $elements[0]->getValue());
+  }
+
+  /**
    * Tests wrapper ids for checkboxes and radios.
    */
   public function testWrapperIds() {

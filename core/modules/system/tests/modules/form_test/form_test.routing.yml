@@ -294,6 +294,14 @@ form_test.checkboxes_radios:
   requirements:
     _access: 'TRUE'
 
+form_test.radios_checked:
+  path: '/form-test/radios-checked'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestRadiosCheckedForm'
+    _title: 'Radios checked defalt value'
+  requirements:
+    _access: 'TRUE'
+
 form_test.email:
   path: '/form-test/email'
   defaults:
