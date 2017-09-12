@@ -53,7 +53,6 @@
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/FunctionCommentSniff.php">
     <exclude name="Drupal.Commenting.FunctionComment.IncorrectTypeHint"/>
     <exclude name="Drupal.Commenting.FunctionComment.InvalidNoReturn"/>
-    <exclude name="Drupal.Commenting.FunctionComment.InvalidReturnNotVoid"/>
     <exclude name="Drupal.Commenting.FunctionComment.InvalidTypeHint"/>
     <exclude name="Drupal.Commenting.FunctionComment.Missing"/>
     <exclude name="Drupal.Commenting.FunctionComment.MissingParamComment"/>

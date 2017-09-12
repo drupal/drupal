@@ -1810,10 +1810,11 @@ function _install_module_batch($module, $module_name, &$context) {
  * @param string $server_pattern
  *   Server access pattern (to replace language code, version number, etc. in).
  *
- * @return array
+ * @return array|null
  *   Requirements compliance array. If the translation was downloaded
  *   successfully then an empty array is returned. Otherwise the requirements
- *   error with detailed information.
+ *   error with detailed information. NULL if the file already exists for this
+ *   language code.
  */
 function install_check_translations($langcode, $server_pattern) {
   $requirements = [];

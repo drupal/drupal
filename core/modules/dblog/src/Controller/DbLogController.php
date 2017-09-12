@@ -298,8 +298,9 @@ class DbLogController extends ControllerBase {
   /**
    * Builds a query for database log administration filters based on session.
    *
-   * @return array
-   *   An associative array with keys 'where' and 'args'.
+   * @return array|null
+   *   An associative array with keys 'where' and 'args' or NULL if there were
+   *   no filters set.
    */
   protected function buildFilterQuery() {
     if (empty($_SESSION['dblog_overview_filter'])) {

@@ -525,8 +525,8 @@ class ForumTest extends BrowserTestBase {
    * @param bool $container
    *   TRUE if $forum is a container; FALSE otherwise.
    *
-   * @return object
-   *   The created topic node.
+   * @return object|null
+   *   The created topic node or NULL if the forum is a container.
    */
   public function createForumTopic($forum, $container = FALSE) {
     // Generate a random subject/body.
