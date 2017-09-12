@@ -140,13 +140,13 @@ class FieldMigration extends Migration implements ContainerFactoryPluginInterfac
         $field_type = $row->getSourceProperty('type');
 
         try {
-          $plugin_id = $this->cckPluginManager->getPluginIdFromFieldType($field_type, [], $this);
-          $manager = $this->cckPluginManager;
+          $plugin_id = $this->fieldPluginManager->getPluginIdFromFieldType($field_type, [], $this);
+          $manager = $this->fieldPluginManager;
         }
         catch (PluginNotFoundException $ex) {
           try {
-            $plugin_id = $this->fieldPluginManager->getPluginIdFromFieldType($field_type, [], $this);
-            $manager = $this->fieldPluginManager;
+            $plugin_id = $this->cckPluginManager->getPluginIdFromFieldType($field_type, [], $this);
+            $manager = $this->cckPluginManager;
           }
           catch (PluginNotFoundException $ex) {
             continue;

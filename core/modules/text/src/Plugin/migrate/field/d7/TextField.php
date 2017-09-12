@@ -22,6 +22,44 @@ class TextField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
+  public function getFieldFormatterType(Row $row) {
+    $field_type = $this->getFieldType($row);
+    $formatter_type = $row->getSourceProperty('formatter/type');
+
+    switch ($field_type) {
+      case 'string':
+        $formatter_type = str_replace('text_default', 'string', $formatter_type);
+        break;
+      case 'string_long':
+        $formatter_type = str_replace('text_default', 'basic_string', $formatter_type);
+        break;
+    }
+
+    return $formatter_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldWidgetType(Row $row) {
+    $field_type = $this->getFieldType($row);
+    $widget_type = $row->getSourceProperty('widget/type');
+
+    switch ($field_type) {
+      case 'string':
+        $widget_type = str_replace('text_textfield', 'string_textfield', $widget_type);
+        break;
+      case 'string_long':
+        $widget_type = str_replace('text_textarea', 'string_textarea', $widget_type);
+        break;
+    }
+
+    return $widget_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFieldType(Row $row) {
     $type = $row->getSourceProperty('type');
     $plain_text = FALSE;

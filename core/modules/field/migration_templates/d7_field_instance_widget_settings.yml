@@ -31,11 +31,15 @@ process:
   field_name: field_name
   entity_type: entity_type
   'options/weight': 'widget/weight'
+  widget_type:
+    plugin: process_field
+    source: type
+    method: getFieldWidgetType
   'options/type':
     type:
       plugin: static_map
       bypass: true
-      source: 'widget/type'
+      source: '@widget_type'
       map:
         link_field: link_default
         email_textfield: email_default

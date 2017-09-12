@@ -47,11 +47,15 @@ process:
   "options/label": 'formatter/label'
   "options/weight": 'formatter/weight'
   # The formatter to use.
+  formatter_type:
+    plugin: process_field
+    source: type
+    method: getFieldFormatterType
   "options/type":
     -
       plugin: static_map
       bypass: true
-      source: 'formatter/type'
+      source: '@formatter_type'
       map:
         date_default: datetime_default
         email_default: email_mailto
