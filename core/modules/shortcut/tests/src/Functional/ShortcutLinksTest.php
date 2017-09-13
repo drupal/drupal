@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\shortcut\Tests;
+namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Utility\SafeMarkup;
@@ -8,6 +8,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
+use Drupal\Tests\block\Functional\AssertBlockAppearsTrait;
 use Drupal\views\Entity\View;
 
 /**
@@ -16,6 +17,8 @@ use Drupal\views\Entity\View;
  * @group shortcut
  */
 class ShortcutLinksTest extends ShortcutTestBase {
+
+  use AssertBlockAppearsTrait;
 
   /**
    * Modules to enable.
@@ -368,15 +371,15 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->drupalLogin($this->drupalCreateUser(['access toolbar', 'access shortcuts', 'access content overview', 'administer content types']));
     $this->drupalGet(Url::fromRoute('<front>'));
     $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .toolbar-menu a');
-    $this->assertEqual((string) $shortcuts[0], 'Add content');
-    $this->assertEqual((string) $shortcuts[1], 'All content');
+    $this->assertEqual($shortcuts[0]->getText(), 'Add content');
+    $this->assertEqual($shortcuts[1]->getText(), 'All content');
     foreach ($this->set->getShortcuts() as $shortcut) {
       $shortcut->setWeight($shortcut->getWeight() * -1)->save();
     }
     $this->drupalGet(Url::fromRoute('<front>'));
     $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .toolbar-menu a');
-    $this->assertEqual((string) $shortcuts[0], 'All content');
-    $this->assertEqual((string) $shortcuts[1], 'Add content');
+    $this->assertEqual($shortcuts[0]->getText(), 'All content');
+    $this->assertEqual($shortcuts[1]->getText(), 'Add content');
   }
 
   /**

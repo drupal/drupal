@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\shortcut\Tests;
+namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\content_translation\Tests\ContentTranslationUITestBase;
 use Drupal\Core\Entity\EntityChangedInterface;
