@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\shortcut\Tests;
+namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\shortcut\Entity\ShortcutSet;
 
@@ -68,7 +68,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     // Test the contents of each th cell.
     $expected_items = [t('Name'), t('Weight'), t('Operations')];
     foreach ($elements as $key => $element) {
-      $this->assertEqual((string) $element[0], $expected_items[$key]);
+      $this->assertEqual($element->getText(), $expected_items[$key]);
     }
 
     // Look for test shortcuts in the table.

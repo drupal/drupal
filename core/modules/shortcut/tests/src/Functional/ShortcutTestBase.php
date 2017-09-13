@@ -1,23 +1,16 @@
 <?php
 
-namespace Drupal\shortcut\Tests;
-
-@trigger_error(__NAMESPACE__ . '\ShortcutTestBase is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\shortcut\Functional\ShortcutTestBase, see https://www.drupal.org/node/2906736.', E_USER_DEPRECATED);
+namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\shortcut\ShortcutSetInterface;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Defines base class for shortcut test cases.
- *
- * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Tests\shortcut\Functional\ShortcutTestBase.
- *
- * @see https://www.drupal.org/node/2906736
  */
-abstract class ShortcutTestBase extends WebTestBase {
+abstract class ShortcutTestBase extends BrowserTestBase {
 
   /**
    * Modules to enable.
