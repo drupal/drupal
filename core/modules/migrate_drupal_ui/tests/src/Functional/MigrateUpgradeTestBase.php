@@ -114,7 +114,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   public function testMigrateUpgrade() {
     $connection_options = $this->sourceDatabase->getConnectionOptions();
     $this->drupalGet('/upgrade');
-    $this->assertText('Upgrade a site by importing it into a clean and empty new install of Drupal 8. You will lose any existing configuration once you import your site into it. See the online documentation for Drupal site upgrades for more detailed information.');
+    $this->assertSession()->responseContains('Upgrade a site by importing its database and files into a clean and empty new install of Drupal 8.');
 
     $this->drupalPostForm(NULL, [], t('Continue'));
     $this->assertText('Provide credentials for the database of the Drupal site you want to upgrade.');
@@ -158,7 +158,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
 
     // Restart the upgrade process.
     $this->drupalGet('/upgrade');
-    $this->assertSession()->pageTextContains('Upgrade a site by importing it into a clean and empty new install of Drupal 8. You will lose any existing configuration once you import your site into it. See the online documentation for Drupal site upgrades for more detailed information.');
+    $this->assertSession()->responseContains('Upgrade a site by importing its database and files into a clean and empty new install of Drupal 8.');
 
     $this->drupalPostForm(NULL, [], t('Continue'));
     $this->assertSession()->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');

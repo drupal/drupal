@@ -142,16 +142,26 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     }
     else {
       $form['info_header'] = [
-        '#markup' => '<p>' . $this->t('Upgrade a site by importing it into a clean and empty new install of Drupal 8. You will lose any existing configuration once you import your site into it. See the <a href=":url">online documentation for Drupal site upgrades</a> for more detailed information.', [
+        '#markup' => '<p>' . $this->t('Upgrade a site by importing its database and files into a clean and empty new install of Drupal 8. See the <a href=":url">Drupal site upgrades handbook</a> for more information.', [
           ':url' => 'https://www.drupal.org/upgrade/migrate',
         ]),
       ];
 
-      $info[] = $this->t('<strong>Back up the database for this site</strong>. Upgrade will change the database for this site.');
-      $info[] = $this->t('Make sure that the host this site is on has access to the database for your previous site.');
-      $info[] = $this->t('If your previous site has private files to be migrated, a copy of your files directory must be accessible on the host this site is on.');
-      $info[] = $this->t('In general, enable all modules on this site that are enabled on the previous site. For example, if you have used the book module on the previous site then you must enable the book module on this site for that data to be available on this site.');
-      $info[] = $this->t('Do not add any information on this site (including but not limited to user accounts, taxonomy terms, and node content) before upgrading. Any pre-existing information on the site risks being overwritten by the upgrade process. See <a href=":url">the upgrade preparation guide</a> for more information.', [
+      $legend[] = $this->t('<em>Old site:</em> the site you want to upgrade.');
+      $legend[] = $this->t('<em>New site:</em> this empty Drupal 8 installation you will import the old site to.');
+
+      $form['legend'] = [
+        '#theme' => 'item_list',
+        '#title' => $this->t('Definitions'),
+        '#list_type' => 'ul',
+        '#items' => $legend,
+      ];
+
+      $info[] = $this->t('You may need multiple tries for a successful upgrade so <strong>backup the database</strong> for this new site. The upgrade will change it and you may want to revert to its initial state.');
+      $info[] = $this->t('Make sure that <strong>access to the database</strong> for the old site is available from this new site.');
+      $info[] = $this->t('<strong>If the old site has private files</strong>, a copy of its files directory must also be accessible on the host of this new site.');
+      $info[] = $this->t('<strong>Enable all modules on this new site</strong> that are enabled on the old site. For example, if the old site uses the book module, then enable the book module on this new site so that the existing data can be imported to it.');
+      $info[] = $this->t('<strong>Do not add any content to the new site</strong> before upgrading. Any existing content is likely to be overwritten by the upgrade process. See <a href=":url">the upgrade preparation guide</a>.', [
         ':url' => 'https://www.drupal.org/docs/8/upgrade/preparing-an-upgrade#dont_create_content',
       ]);
       $info[] = $this->t('Put this site into <a href=":url">maintenance mode</a>.', [
@@ -160,12 +170,13 @@ class MigrateUpgradeForm extends ConfirmFormBase {
 
       $form['info'] = [
         '#theme' => 'item_list',
+        '#title' => $this->t('Steps to prepare for the upgrade'),
         '#list_type' => 'ol',
         '#items' => $info,
       ];
 
       $form['info_footer'] = [
-        '#markup' => '<p>' . $this->t('This upgrade can take a long time. It is better to import a local copy of your site instead of directly importing from your live site.'),
+        '#markup' => '<p>' . $this->t('The upgrade can take a long time. It is better to upgrade from a local copy of your site instead of directly from your live site.'),
       ];
 
       $validate = [];
