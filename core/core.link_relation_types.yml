@@ -3,6 +3,9 @@
 add-form:
   uri: https://drupal.org/link-relations/add-form
   description: A form where a resource of this type can be created.
+add-page:
+  uri: https://drupal.org/link-relations/add-page
+  description: A page where a resource of this type and related types can be created.
 delete-form:
   uri: https://drupal.org/link-relations/delete-form
   description: A form where a resource of this type can be deleted.
