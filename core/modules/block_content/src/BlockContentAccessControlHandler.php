@@ -19,7 +19,8 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($operation === 'view') {
-      return AccessResult::allowed();
+      return AccessResult::allowedIf($entity->isPublished())->addCacheableDependency($entity)
+        ->orIf(AccessResult::allowedIfHasPermission($account, 'administer blocks'));
     }
     return parent::checkAccess($entity, $operation, $account);
   }

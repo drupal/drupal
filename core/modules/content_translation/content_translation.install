@@ -59,6 +59,7 @@ function content_translation_update_8400() {
   $entity_type_manager = \Drupal::entityTypeManager();
   $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
 
+  $entity_type_manager->clearCachedDefinitions();
   foreach ($content_translation_manager->getSupportedEntityTypes() as $entity_type_id => $entity_type_definition) {
     $storage = $entity_type_manager->getStorage($entity_type_id);
     if ($storage instanceof SqlEntityStorageInterface) {
