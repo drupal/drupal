@@ -116,7 +116,7 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
     ];
     $form['node'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Load default filter from node page, that\'s good for related taxonomy blocks'),
+      '#title' => $this->t("Load default filter from node page, that's good for related taxonomy blocks"),
       '#default_value' => $this->options['node'],
     ];
 
