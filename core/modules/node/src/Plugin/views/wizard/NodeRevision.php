@@ -25,20 +25,6 @@ class NodeRevision extends WizardPluginBase {
   protected $createdColumn = 'changed';
 
   /**
-   * Set default values for the filters.
-   */
-  protected $filters = [
-    'status' => [
-      'value' => TRUE,
-      'table' => 'node_field_revision',
-      'field' => 'status',
-      'plugin_id' => 'boolean',
-      'entity_type' => 'node',
-      'entity_field' => 'status',
-    ]
-  ];
-
-  /**
    * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::rowStyleOptions().
    *
    * Node revisions do not support full posts or teasers, so remove them.

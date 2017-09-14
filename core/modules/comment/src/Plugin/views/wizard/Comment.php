@@ -28,14 +28,6 @@ class Comment extends WizardPluginBase {
    * Set default values for the filters.
    */
   protected $filters = [
-    'status' => [
-      'value' => TRUE,
-      'table' => 'comment_field_data',
-      'field' => 'status',
-      'plugin_id' => 'boolean',
-      'entity_type' => 'comment',
-      'entity_field' => 'status',
-    ],
     'status_node' => [
       'value' => TRUE,
       'table' => 'node_field_data',

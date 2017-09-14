@@ -23,22 +23,6 @@ class Media extends WizardPluginBase {
   protected $createdColumn = 'media_field_data-created';
 
   /**
-   * Set default values for the filters.
-   *
-   * @var array
-   */
-  protected $filters = [
-    'status' => [
-      'value' => '1',
-      'table' => 'media_field_data',
-      'field' => 'status',
-      'plugin_id' => 'boolean',
-      'entity_type' => 'media',
-      'entity_field' => 'status',
-    ],
-  ];
-
-  /**
    * {@inheritdoc}
    */
   public function getAvailableSorts() {

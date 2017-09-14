@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\wizard;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\UrlGeneratorTrait;
@@ -140,7 +141,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $entity_types = \Drupal::entityManager()->getDefinitions();
     foreach ($entity_types as $entity_type_id => $entity_type) {
-      if ($this->base_table == $entity_type->getBaseTable() || $this->base_table == $entity_type->getDataTable()) {
+      if (in_array($this->base_table, [$entity_type->getBaseTable(), $entity_type->getDataTable(), $entity_type->getRevisionTable(), $entity_type->getRevisionDataTable()], TRUE)) {
         $this->entityType = $entity_type;
         $this->entityTypeId = $entity_type_id;
       }
@@ -164,6 +165,21 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   public function getFilters() {
     $filters = [];
+
+    // Add a default filter on the publishing status field, if available.
+    if ($this->entityType && is_subclass_of($this->entityType->getClass(), EntityPublishedInterface::class)) {
+      $field_name = $this->entityType->getKey('published');
+      $this->filters = [
+        $field_name => [
+          'value' => TRUE,
+          'table' => $this->base_table,
+          'field' => $field_name,
+          'plugin_id' => 'boolean',
+          'entity_type' => $this->entityTypeId,
+          'entity_field' => $field_name,
+        ]
+      ] + $this->filters;
+    }
 
     $default = $this->filter_defaults;
 
