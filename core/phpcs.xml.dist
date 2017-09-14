@@ -89,7 +89,6 @@
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Scope/MethodScopeSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/EmptyInstallSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/FunctionTSniff.php">
-    <exclude name="Drupal.Semantics.FunctionT.BackslashSingleQuote"/>
     <exclude name="Drupal.Semantics.FunctionT.NotLiteralString"/>
     <exclude name="Drupal.Semantics.FunctionT.ConcatString"/>
   </rule>

@@ -150,10 +150,10 @@ class TestDrupal6SqlBase extends DrupalSqlBase {
       'owner' => t("A theme's 'parent'. Can be either a theme or an engine."),
       'status' => t('Boolean indicating whether or not this item is enabled.'),
       'throttle' => t('Boolean indicating whether this item is disabled when the throttle.module disables throttleable items.'),
-      'bootstrap' => t('Boolean indicating whether this module is loaded during Drupal\'s early bootstrapping phase (e.g. even before the page cache is consulted).'),
-      'schema_version' => t('The module\'s database schema version number.'),
-      'weight' => t('The order in which this module\'s hooks should be invoked.'),
-      'info' => t('A serialized array containing information from the module\'s .info file.'),
+      'bootstrap' => t("Boolean indicating whether this module is loaded during Drupal's early bootstrapping phase (e.g. even before the page cache is consulted)."),
+      'schema_version' => t("The module's database schema version number."),
+      'weight' => t("The order in which this module's hooks should be invoked."),
+      'info' => t("A serialized array containing information from the module's .info file."),
     ];
   }
 

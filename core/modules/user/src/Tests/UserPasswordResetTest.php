@@ -130,7 +130,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
 
     // Verify that the password reset session has been destroyed.
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('Your current password is missing or incorrect; it\'s required to change the Password.'), 'Password needed to make profile changes.');
+    $this->assertText(t("Your current password is missing or incorrect; it's required to change the Password."), 'Password needed to make profile changes.');
 
     // Log out, and try to log in again using the same one-time link.
     $this->drupalLogout();

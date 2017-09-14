@@ -169,7 +169,7 @@ function user_entity_extra_field_info() {
 
   $fields['user']['user']['display']['member_for'] = [
     'label' => t('Member for'),
-    'description' => t('User module \'member for\' view element.'),
+    'description' => t("User module 'member for' view element."),
     'weight' => 5,
   ];
 
