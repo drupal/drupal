@@ -80,7 +80,7 @@ function color_library_info_alter(&$libraries, $extension) {
         if (isset($libraries[$name]['css'])) {
           // Override stylesheets.
           foreach ($libraries[$name]['css'] as $category => $css_assets) {
-            foreach ($css_assets as $path  => $metadata) {
+            foreach ($css_assets as $path => $metadata) {
               // Loop over the path array with recolored CSS files to find matching
               // paths which could replace the non-recolored paths.
               foreach ($color_paths as $color_path) {

@@ -234,7 +234,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
         if ($base_routes) {
           // Find all the plugins with the same root and that are at the top
           // level or that have a visible parent.
-          foreach ($definitions  as $plugin_id => $task_info) {
+          foreach ($definitions as $plugin_id => $task_info) {
             if (!empty($base_routes[$task_info['base_route']]) && (empty($task_info['parent_id']) || !empty($parents[$task_info['parent_id']]))) {
               // Concat '> ' with root ID for the parent of top-level tabs.
               $parent = empty($task_info['parent_id']) ? '> ' . $task_info['base_route'] : $task_info['parent_id'];

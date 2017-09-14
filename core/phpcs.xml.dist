@@ -148,6 +148,17 @@
   </rule>
 
   <!-- Squiz sniffs -->
+  <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration" />
+  <!-- Disable some error messages that we already cover. -->
+  <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.AsNotLower">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.SpaceAfterOpen">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.SpaceBeforeClose">
+    <severity>0</severity>
+  </rule>
   <rule ref="Squiz.ControlStructures.ForLoopDeclaration"/>
   <!-- Disable some error messages that we already cover. -->
   <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterOpen">
