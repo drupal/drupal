@@ -97,7 +97,7 @@ class Search extends ArgumentPluginBase {
       $search_dataset = $this->query->addTable('node_search_dataset');
       $conditions = $this->searchQuery->conditions();
       $condition_conditions =& $conditions->conditions();
-      foreach ($condition_conditions  as $key => &$condition) {
+      foreach ($condition_conditions as $key => &$condition) {
         // Make sure we just look at real conditions.
         if (is_numeric($key)) {
           // Replace the conditions with the table alias of views.
