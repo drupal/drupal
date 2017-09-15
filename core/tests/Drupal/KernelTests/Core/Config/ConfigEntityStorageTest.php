@@ -51,4 +51,18 @@ class ConfigEntityStorageTest extends KernelTestBase {
     $this->assertIdentical($entity->toArray(), $original_properties);
   }
 
+  /**
+   * Tests the hasData() method for config entity storage.
+   *
+   * @covers \Drupal\Core\Config\Entity\ConfigEntityStorage::hasData
+   */
+  public function testHasData() {
+    $storage = \Drupal::entityTypeManager()->getStorage('config_test');
+    $this->assertFalse($storage->hasData());
+
+    // Add a test config entity and check again.
+    $storage->create(['id' => $this->randomMachineName()])->save();
+    $this->assertTrue($storage->hasData());
+  }
+
 }
