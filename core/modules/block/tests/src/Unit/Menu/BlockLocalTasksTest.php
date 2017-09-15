@@ -16,9 +16,9 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTestBase {
     $this->directoryList = ['block' => 'core/modules/block'];
     parent::setUp();
 
-    $config_factory = $this->getConfigFactoryStub(['system.theme' => [
-      'default' => 'test_c',
-    ]]);
+    $config_factory = $this->getConfigFactoryStub([
+      'system.theme' => ['default' => 'test_c'],
+    ]);
 
     $themes = [];
     $themes['test_a'] = (object) [

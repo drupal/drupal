@@ -54,10 +54,12 @@ class FilterNodeAccessTest extends NodeTestBase {
       $this->drupalLogin($web_user);
       foreach ([0 => 'Public', 1 => 'Private'] as $is_private => $type) {
         $settings = [
-          'body' => [[
-            'value' => $type . ' node',
-            'format' => filter_default_format(),
-          ]],
+          'body' => [
+            [
+              'value' => $type . ' node',
+              'format' => filter_default_format(),
+            ],
+          ],
           'title' => t('@private_public Article created by @user', ['@private_public' => $type, '@user' => $web_user->getUsername()]),
           'type' => 'article',
           'uid' => $web_user->id(),

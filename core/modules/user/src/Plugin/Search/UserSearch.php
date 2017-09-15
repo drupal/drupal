@@ -162,13 +162,15 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
    * {@inheritdoc}
    */
   public function getHelp() {
-    $help = ['list' => [
-      '#theme' => 'item_list',
-      '#items' => [
-        $this->t('User search looks for user names and partial user names. Example: mar would match usernames mar, delmar, and maryjane.'),
-        $this->t('You can use * as a wildcard within your keyword. Example: m*r would match user names mar, delmar, and elementary.'),
+    $help = [
+      'list' => [
+        '#theme' => 'item_list',
+        '#items' => [
+          $this->t('User search looks for user names and partial user names. Example: mar would match usernames mar, delmar, and maryjane.'),
+          $this->t('You can use * as a wildcard within your keyword. Example: m*r would match user names mar, delmar, and elementary.'),
+        ],
       ],
-    ]];
+    ];
 
     return $help;
   }

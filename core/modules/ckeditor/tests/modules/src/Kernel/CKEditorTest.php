@@ -479,7 +479,7 @@ class CKEditorTest extends KernelTestBase {
       ],
       [
         'name' => 'Tools',
-        'items' => ['Source', ],
+        'items' => ['Source'],
       ],
       '/',
     ];

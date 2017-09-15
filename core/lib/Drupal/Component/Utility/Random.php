@@ -143,7 +143,9 @@ class Random {
 
     $vowels = ["a", "e", "i", "o", "u"];
     $cons = ["b", "c", "d", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "u", "v", "w", "tr",
-      "cr", "br", "fr", "th", "dr", "ch", "ph", "wr", "st", "sp", "sw", "pr", "sl", "cl", "sh"];
+      "cr", "br", "fr", "th", "dr", "ch", "ph", "wr", "st", "sp", "sw", "pr",
+      "sl", "cl", "sh",
+    ];
 
     $num_vowels = count($vowels);
     $num_cons = count($cons);
@@ -219,7 +221,8 @@ class Random {
       "utrum", "uxor", "valde", "valetudo", "validus", "vel", "velit",
       "veniam", "venio", "vereor", "vero", "verto", "vicis", "vindico",
       "virtus", "voco", "volutpat", "vulpes", "vulputate", "wisi", "ymo",
-      "zelus"];
+      "zelus",
+    ];
     $dictionary_flipped = array_flip($dictionary);
     $greeking = '';
 

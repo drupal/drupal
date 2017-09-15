@@ -49,20 +49,30 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function providerTestBlockAdminDisplay() {
     return [
-      ['entity.node.canonical', [[
-        'content_translation.local_tasks:entity.node.content_translation_overview',
+      [
         'entity.node.canonical',
-        'entity.node.edit_form',
-        'entity.node.delete_form',
-        'entity.node.version_history',
-      ]]],
-      ['entity.node.content_translation_overview', [[
-        'content_translation.local_tasks:entity.node.content_translation_overview',
-        'entity.node.canonical',
-        'entity.node.edit_form',
-        'entity.node.delete_form',
-        'entity.node.version_history',
-      ]]],
+        [
+          [
+            'content_translation.local_tasks:entity.node.content_translation_overview',
+            'entity.node.canonical',
+            'entity.node.edit_form',
+            'entity.node.delete_form',
+            'entity.node.version_history',
+          ],
+        ],
+      ],
+      [
+        'entity.node.content_translation_overview',
+        [
+          [
+            'content_translation.local_tasks:entity.node.content_translation_overview',
+            'entity.node.canonical',
+            'entity.node.edit_form',
+            'entity.node.delete_form',
+            'entity.node.version_history',
+          ],
+        ],
+      ],
     ];
   }
 

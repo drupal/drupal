@@ -374,12 +374,14 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testCachedGetImplementationsMissingMethod() {
     $this->cacheBackend->expects($this->exactly(1))
       ->method('get')
-      ->will($this->onConsecutiveCalls(
-        (object) ['data' => ['hook' => [
-          'module_handler_test' => [],
-          'module_handler_test_missing' => [],
-        ]]]
-      ));
+      ->will($this->onConsecutiveCalls((object) [
+        'data' => [
+          'hook' => [
+            'module_handler_test' => [],
+            'module_handler_test_missing' => [],
+          ],
+        ],
+      ]));
 
     // Ensure buildImplementationInfo doesn't get called and that we work off cached results.
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
@@ -445,9 +447,8 @@ class ModuleHandlerTest extends UnitTestCase {
       ->method('get')
       ->will($this->onConsecutiveCalls(
         NULL,
-        (object) ['data' =>
-          ['hook_foo' => ['group' => 'hook']]])
-      );
+        (object) ['data' => ['hook_foo' => ['group' => 'hook']]]
+      ));
 
     // Results from building from mocked environment.
     $this->assertEquals([

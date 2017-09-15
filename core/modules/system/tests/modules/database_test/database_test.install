@@ -207,7 +207,8 @@ function database_test_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
-        'default' => 0],
+        'default' => 0,
+      ],
     ],
     'primary key' => ['id'],
     'unique keys' => [

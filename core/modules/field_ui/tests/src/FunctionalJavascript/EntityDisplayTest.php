@@ -25,9 +25,9 @@ class EntityDisplayTest extends JavascriptTestBase {
 
     $entity = EntityTest::create([
       'name' => 'The name for this entity',
-      'field_test_text' => [[
-        'value' => 'The field test text value',
-      ]],
+      'field_test_text' => [
+        ['value' => 'The field test text value'],
+      ],
     ]);
     $entity->save();
     $this->drupalLogin($this->drupalCreateUser([

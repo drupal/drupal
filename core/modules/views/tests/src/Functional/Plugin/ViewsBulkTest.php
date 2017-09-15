@@ -70,9 +70,9 @@ class ViewsBulkTest extends ViewTestBase {
 
     // Create third node now that the admin overview has been rendered.
     $node_3 = $this->drupalCreateNode([
-        'type' => 'page',
-        'title' => 'The third node']
-    );
+      'type' => 'page',
+      'title' => 'The third node',
+    ]);
 
     // Now click 'Apply to selected items' and assert the second node is
     // selected on the confirm form.

@@ -30,9 +30,9 @@ class ConfigDependenciesTest extends KernelTestBase {
     $rest_config = RestResourceConfig::create($configuration);
 
     $result = $config_dependencies->calculateDependencies($rest_config);
-    $this->assertEquals(['module' => [
-      'basic_auth', 'serialization', 'hal',
-    ]], $result);
+    $this->assertEquals([
+      'module' => ['basic_auth', 'serialization', 'hal'],
+    ], $result);
   }
 
   /**

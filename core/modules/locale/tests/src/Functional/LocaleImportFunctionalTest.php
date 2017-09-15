@@ -341,7 +341,8 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
 
     // Import a .po file to translate.
     $this->importPoFile($this->getPoFileWithConfigDe(), [
-      'langcode' => $langcode]);
+      'langcode' => $langcode,
+    ]);
 
     // Check that the 'Anonymous' string is translated.
     $config = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'user.settings');

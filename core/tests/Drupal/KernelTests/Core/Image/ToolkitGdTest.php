@@ -365,7 +365,7 @@ class ToolkitGdTest extends KernelTestBase {
             if ($image->getToolkit()->getType() == $image_original_type || $corner != $this->transparent) {
               $correct_colors = $this->colorsAreEqual($color, $corner);
               $this->assertTrue($correct_colors, SafeMarkup::format('Image %file object after %action action has the correct color placement at corner %corner.',
-                ['%file'   => $file, '%action' => $op, '%corner' => $key]));
+                ['%file' => $file, '%action' => $op, '%corner' => $key]));
             }
           }
         }

@@ -433,8 +433,9 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       'type' => 'test_field',
       'settings' => [
         'changeable' => 0,
-        'unchangeable' => 0
-    ]]);
+        'unchangeable' => 0,
+      ],
+    ]);
     $field_storage->save();
     $field_storage->setSetting('changeable', $field_storage->getSetting('changeable') + 1);
     try {

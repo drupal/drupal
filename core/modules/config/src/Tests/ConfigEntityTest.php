@@ -147,8 +147,8 @@ class ConfigEntityTest extends WebTestBase {
     try {
       $id_length_config_test->save();
       $this->pass(SafeMarkup::format("config_test entity with ID length @length was saved.", [
-        '@length' => strlen($id_length_config_test->id())]
-      ));
+        '@length' => strlen($id_length_config_test->id()),
+      ]));
     }
     catch (ConfigEntityIdLengthException $e) {
       $this->fail($e->getMessage());

@@ -175,10 +175,12 @@ class DialogTest extends AjaxTestBase {
       'edit-preview' => [
         'callback' => '::preview',
         'event' => 'click',
-        'url' => Url::fromRoute('ajax_test.dialog_form', [], ['query' => [
+        'url' => Url::fromRoute('ajax_test.dialog_form', [], [
+          'query' => [
             MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_modal',
             FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
-          ]])->toString(),
+          ],
+        ])->toString(),
         'dialogType' => 'ajax',
         'submit' => [
           '_triggering_element_name' => 'op',

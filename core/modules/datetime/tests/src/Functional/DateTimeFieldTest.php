@@ -573,35 +573,48 @@ class DateTimeFieldTest extends DateTestBase {
   protected function datelistDataProvider($field_label) {
     return [
       // Nothing selected.
-      [['year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''], [
-        "The $field_label date is required.",
-      ]],
+      [
+        ['year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''],
+        ["The $field_label date is required."],
+      ],
       // Year only selected, validation error on Month, Day, Hour, Minute.
-      [['year' => 2012, 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''], [
-        "The $field_label date is incomplete.",
-        'A value must be selected for month.',
-        'A value must be selected for day.',
-        'A value must be selected for hour.',
-        'A value must be selected for minute.',
-      ]],
+      [
+        ['year' => 2012, 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''],
+        [
+          "The $field_label date is incomplete.",
+          'A value must be selected for month.',
+          'A value must be selected for day.',
+          'A value must be selected for hour.',
+          'A value must be selected for minute.',
+        ],
+      ],
       // Year and Month selected, validation error on Day, Hour, Minute.
-      [['year' => 2012, 'month' => '12', 'day' => '', 'hour' => '', 'minute' => ''], [
-        "The $field_label date is incomplete.",
-        'A value must be selected for day.',
-        'A value must be selected for hour.',
-        'A value must be selected for minute.',
-      ]],
+      [
+        ['year' => 2012, 'month' => '12', 'day' => '', 'hour' => '', 'minute' => ''],
+        [
+          "The $field_label date is incomplete.",
+          'A value must be selected for day.',
+          'A value must be selected for hour.',
+          'A value must be selected for minute.',
+        ],
+      ],
       // Year, Month and Day selected, validation error on Hour, Minute.
-      [['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '', 'minute' => ''], [
-        "The $field_label date is incomplete.",
-        'A value must be selected for hour.',
-        'A value must be selected for minute.',
-      ]],
+      [
+        ['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '', 'minute' => ''],
+        [
+          "The $field_label date is incomplete.",
+          'A value must be selected for hour.',
+          'A value must be selected for minute.',
+        ],
+      ],
       // Year, Month, Day and Hour selected, validation error on Minute only.
-      [['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '0', 'minute' => ''], [
-        "The $field_label date is incomplete.",
-        'A value must be selected for minute.',
-      ]],
+      [
+        ['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '0', 'minute' => ''],
+        [
+          "The $field_label date is incomplete.",
+          'A value must be selected for minute.',
+        ],
+      ],
     ];
   }
 

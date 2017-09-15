@@ -53,9 +53,9 @@ class SearchRankingTest extends SearchTestBase {
     foreach ($node_ranks as $node_rank) {
       $settings = [
         'type' => 'page',
-        'comment' => [[
-          'status' => CommentItemInterface::HIDDEN,
-        ]],
+        'comment' => [
+          ['status' => CommentItemInterface::HIDDEN],
+        ],
         'title' => 'Drupal rocks',
         'body' => [['value' => "Drupal's search rocks"]],
         // Node is one day old.

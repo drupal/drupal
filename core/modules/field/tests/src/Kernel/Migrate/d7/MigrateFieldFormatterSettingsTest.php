@@ -122,9 +122,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
                  [
                   'label' => 'hidden',
                   'type' => 'text_default',
-                  'settings' =>
-                     [
-                    ],
+                  'settings' => [],
                   'module' => 'text',
                   'weight' => 0,
                 ],

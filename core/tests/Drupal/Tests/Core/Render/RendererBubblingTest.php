@@ -554,17 +554,23 @@ class RendererBubblingTest extends RendererTestBase {
     $data = [];
 
     // Test element without theme.
-    $data[] = [[
-      'foo' => [
-        '#pre_render' => [__NAMESPACE__ . '\\BubblingTest::bubblingPreRender'],
-      ]]];
+    $data[] = [
+      [
+        'foo' => [
+          '#pre_render' => [__NAMESPACE__ . '\\BubblingTest::bubblingPreRender'],
+        ],
+      ],
+    ];
 
     // Test element with theme.
-    $data[] = [[
-      '#theme' => 'common_test_render_element',
-      'foo' => [
-        '#pre_render' => [__NAMESPACE__ . '\\BubblingTest::bubblingPreRender'],
-      ]]];
+    $data[] = [
+      [
+        '#theme' => 'common_test_render_element',
+        'foo' => [
+          '#pre_render' => [__NAMESPACE__ . '\\BubblingTest::bubblingPreRender'],
+        ],
+      ],
+    ];
 
     return $data;
   }

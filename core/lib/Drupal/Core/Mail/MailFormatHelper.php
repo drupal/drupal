@@ -106,7 +106,8 @@ class MailFormatHelper {
     if (empty(static::$supportedTags)) {
       static::$supportedTags = ['a', 'em', 'i', 'strong', 'b', 'br', 'p',
         'blockquote', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'h1', 'h2', 'h3',
-        'h4', 'h5', 'h6', 'hr'];
+        'h4', 'h5', 'h6', 'hr',
+      ];
     }
 
     // Make sure only supported tags are kept.

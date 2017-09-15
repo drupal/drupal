@@ -161,11 +161,13 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $missing_dependencies = $config_manager->findMissingContentDependencies();
     $this->assertEqual([], $missing_dependencies);
 
-    $expected = [$entity_test->uuid() => [
-      'entity_type' => 'entity_test',
-      'bundle' => $entity_test->bundle(),
-      'uuid' => $entity_test->uuid(),
-    ]];
+    $expected = [
+      $entity_test->uuid() => [
+        'entity_type' => 'entity_test',
+        'bundle' => $entity_test->bundle(),
+        'uuid' => $entity_test->uuid(),
+      ],
+    ];
     // Delete the content entity so that is it now missing.
     $entity_test->delete();
     $missing_dependencies = $config_manager->findMissingContentDependencies();

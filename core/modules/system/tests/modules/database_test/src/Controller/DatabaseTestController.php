@@ -91,7 +91,7 @@ class DatabaseTestController {
       'tid' => ['data' => t('Task ID'), 'field' => 'tid', 'sort' => 'desc'],
       'pid' => ['data' => t('Person ID'), 'field' => 'pid'],
       'task' => ['data' => t('Task'), 'field' => 'task'],
-      'priority' => ['data' => t('Priority'), 'field' => 'priority', ],
+      'priority' => ['data' => t('Priority'), 'field' => 'priority'],
     ];
 
     $query = db_select('test_task', 't');
@@ -123,7 +123,7 @@ class DatabaseTestController {
       'tid' => ['data' => t('Task ID'), 'field' => 'tid', 'sort' => 'desc'],
       'pid' => ['data' => t('Person ID'), 'field' => 'pid'],
       'task' => ['data' => t('Task'), 'field' => 'task'],
-      'priority' => ['data' => t('Priority'), 'field' => 'priority', ],
+      'priority' => ['data' => t('Priority'), 'field' => 'priority'],
     ];
 
     $query = db_select('test_task', 't');

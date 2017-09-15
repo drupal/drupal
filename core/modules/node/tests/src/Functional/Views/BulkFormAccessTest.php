@@ -67,9 +67,9 @@ class BulkFormAccessTest extends NodeTestBase {
     // Create a private node (author may view, edit and delete, others may not).
     $node = $this->drupalCreateNode([
       'type' => 'article',
-      'private' => [[
-        'value' => TRUE,
-      ]],
+      'private' => [
+        ['value' => TRUE],
+      ],
       'uid' => $author->id(),
     ]);
     // Create an account that may view the private node, but not edit it.
@@ -134,9 +134,9 @@ class BulkFormAccessTest extends NodeTestBase {
     // Create a private node (author may view, edit and delete, others may not).
     $private_node = $this->drupalCreateNode([
       'type' => 'article',
-      'private' => [[
-        'value' => TRUE,
-      ]],
+      'private' => [
+        ['value' => TRUE],
+      ],
       'uid' => $author->id(),
     ]);
     // Create an account that may view the private node, but not delete it.
@@ -146,9 +146,9 @@ class BulkFormAccessTest extends NodeTestBase {
     // deleted by the author.
     $own_node = $this->drupalCreateNode([
       'type' => 'article',
-      'private' => [[
-        'value' => TRUE,
-      ]],
+      'private' => [
+        ['value' => TRUE],
+      ],
       'uid' => $account->id(),
     ]);
     $this->drupalLogin($account);

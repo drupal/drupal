@@ -101,13 +101,17 @@ class CKEditorLoadingTest extends BrowserTestBase {
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $ckeditor_plugin = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $editor = Editor::load('filtered_html');
-    $expected = ['formats' => ['filtered_html' => [
-      'format' => 'filtered_html',
-      'editor' => 'ckeditor',
-      'editorSettings' => $this->castSafeStrings($ckeditor_plugin->getJSSettings($editor)),
-      'editorSupportsContentFiltering' => TRUE,
-      'isXssSafe' => FALSE,
-    ]]];
+    $expected = [
+      'formats' => [
+        'filtered_html' => [
+          'format' => 'filtered_html',
+          'editor' => 'ckeditor',
+          'editorSettings' => $this->castSafeStrings($ckeditor_plugin->getJSSettings($editor)),
+          'editorSupportsContentFiltering' => TRUE,
+          'isXssSafe' => FALSE,
+        ],
+      ],
+    ];
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
@@ -138,7 +142,9 @@ class CKEditorLoadingTest extends BrowserTestBase {
           'editorSettings' => $this->castSafeStrings($ckeditor_plugin->getJSSettings($editor)),
           'editorSupportsContentFiltering' => TRUE,
           'isXssSafe' => FALSE,
-    ]]];
+        ],
+      ],
+    ];
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');

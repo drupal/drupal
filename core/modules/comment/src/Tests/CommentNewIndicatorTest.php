@@ -129,10 +129,12 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $response = $this->renderNewCommentsNodeLinks([$this->node->id()]);
     $this->assertResponse(200);
     $json = Json::decode($response);
-    $expected = [$this->node->id() => [
-      'new_comment_count' => 1,
-      'first_new_comment_link' => $this->node->url('canonical', ['fragment' => 'new']),
-    ]];
+    $expected = [
+      $this->node->id() => [
+        'new_comment_count' => 1,
+        'first_new_comment_link' => $this->node->url('canonical', ['fragment' => 'new']),
+      ],
+    ];
     $this->assertIdentical($expected, $json);
 
     // Failing to specify node IDs for the endpoint should return a 404.

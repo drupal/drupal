@@ -553,7 +553,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $bar_config_object->getName()->willReturn('foo');
 
     $this->configFactory->listAll('the_provider.the_config_prefix.')
-      ->willReturn(['the_provider.the_config_prefix.foo' , 'the_provider.the_config_prefix.bar']);
+      ->willReturn(['the_provider.the_config_prefix.foo', 'the_provider.the_config_prefix.bar']);
     $this->configFactory->loadMultiple(['the_provider.the_config_prefix.foo', 'the_provider.the_config_prefix.bar'])
       ->willReturn([$foo_config_object->reveal(), $bar_config_object->reveal()]);
 

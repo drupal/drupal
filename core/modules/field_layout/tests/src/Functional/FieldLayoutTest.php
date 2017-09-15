@@ -28,9 +28,9 @@ class FieldLayoutTest extends BrowserTestBase {
     $this->createNode([
       'type' => 'article',
       'title' => 'The node title',
-      'body' => [[
-        'value' => 'The node body',
-      ]],
+      'body' => [
+        ['value' => 'The node body'],
+      ],
     ]);
     $this->drupalLogin($this->drupalCreateUser([
       'access administration pages',

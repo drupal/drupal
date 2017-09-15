@@ -45,9 +45,7 @@ class NumberFieldTest extends WebTestBase {
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'decimal',
-      'settings' => [
-        'precision' => 8, 'scale' => 4,
-      ]
+      'settings' => ['precision' => 8, 'scale' => 4],
     ])->save();
     FieldConfig::create([
       'field_name' => $field_name,
@@ -143,8 +141,10 @@ class NumberFieldTest extends WebTestBase {
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'settings' => [
-        'min' => $minimum, 'max' => $maximum, 'prefix' => 'ThePrefix',
-      ]
+        'min' => $minimum,
+        'max' => $maximum,
+        'prefix' => 'ThePrefix',
+      ],
     ])->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')

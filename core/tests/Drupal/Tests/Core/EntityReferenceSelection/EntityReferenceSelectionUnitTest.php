@@ -165,7 +165,7 @@ class EntityReferenceSelectionUnitTest extends UnitTestCase {
       'setting3' => 'foobar',
       'handler_settings' => [
         'setting1' => 'foo',
-        'setting2' => ['qux'  => 'qux value'],
+        'setting2' => ['qux' => 'qux value'],
         'setting3' => 'foobar',
       ],
     ];

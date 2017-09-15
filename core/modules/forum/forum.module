@@ -455,11 +455,14 @@ function template_preprocess_forums(&$variables) {
           $variables['topics'][$id]->title_link = \Drupal::l($topic->getTitle(), $topic->urlInfo());
           $variables['topics'][$id]->message = '';
         }
-        $forum_submitted = ['#theme' => 'forum_submitted', '#topic' => (object) [
-          'uid' => $topic->getOwnerId(),
-          'name' => $topic->getOwner()->getDisplayName(),
-          'created' => $topic->getCreatedTime(),
-        ]];
+        $forum_submitted = [
+          '#theme' => 'forum_submitted',
+          '#topic' => (object) [
+            'uid' => $topic->getOwnerId(),
+            'name' => $topic->getOwner()->getDisplayName(),
+            'created' => $topic->getCreatedTime(),
+          ],
+        ];
         $variables['topics'][$id]->submitted = \Drupal::service('renderer')->render($forum_submitted);
         $forum_submitted = [
           '#theme' => 'forum_submitted',

@@ -29,78 +29,102 @@ class DateHelperTest extends UnitTestCase {
 
   public function providerTestWeekDaysOrdered() {
     $data = [];
-    $data[] = [0, [
-      0 => 'Sunday',
-      1 => 'Monday',
-      2 => 'Tuesday',
-      3 => 'Wednesday',
-      4 => 'Thursday',
-      5 => 'Friday',
-      6 => 'Saturday',
-    ]];
-    $data[] = [1, [
-      1 => 'Monday',
-      2 => 'Tuesday',
-      3 => 'Wednesday',
-      4 => 'Thursday',
-      5 => 'Friday',
-      6 => 'Saturday',
-      0 => 'Sunday',
-    ]];
-    $data[] = [2, [
-      2 => 'Tuesday',
-      3 => 'Wednesday',
-      4 => 'Thursday',
-      5 => 'Friday',
-      6 => 'Saturday',
-      0 => 'Sunday',
-      1 => 'Monday',
-    ]];
-    $data[] = [3, [
-      3 => 'Wednesday',
-      4 => 'Thursday',
-      5 => 'Friday',
-      6 => 'Saturday',
-      0 => 'Sunday',
-      1 => 'Monday',
-      2 => 'Tuesday',
-    ]];
-    $data[] = [4, [
-      4 => 'Thursday',
-      5 => 'Friday',
-      6 => 'Saturday',
-      0 => 'Sunday',
-      1 => 'Monday',
-      2 => 'Tuesday',
-      3 => 'Wednesday',
-    ]];
-    $data[] = [5, [
-      5 => 'Friday',
-      6 => 'Saturday',
-      0 => 'Sunday',
-      1 => 'Monday',
-      2 => 'Tuesday',
-      3 => 'Wednesday',
-      4 => 'Thursday',
-    ]];
-    $data[] = [6, [
-      6 => 'Saturday',
-      0 => 'Sunday',
-      1 => 'Monday',
-      2 => 'Tuesday',
-      3 => 'Wednesday',
-      4 => 'Thursday',
-      5 => 'Friday',
-    ]];
-    $data[] = [7, [
-      0 => 'Sunday',
-      1 => 'Monday',
-      2 => 'Tuesday',
-      3 => 'Wednesday',
-      4 => 'Thursday',
-      5 => 'Friday',
-      6 => 'Saturday',
-    ]];
+    $data[] = [
+      0,
+      [
+        0 => 'Sunday',
+        1 => 'Monday',
+        2 => 'Tuesday',
+        3 => 'Wednesday',
+        4 => 'Thursday',
+        5 => 'Friday',
+        6 => 'Saturday',
+      ],
+    ];
+    $data[] = [
+      1,
+      [
+        1 => 'Monday',
+        2 => 'Tuesday',
+        3 => 'Wednesday',
+        4 => 'Thursday',
+        5 => 'Friday',
+        6 => 'Saturday',
+        0 => 'Sunday',
+      ]
+    ];
+    $data[] = [
+      2,
+      [
+        2 => 'Tuesday',
+        3 => 'Wednesday',
+        4 => 'Thursday',
+        5 => 'Friday',
+        6 => 'Saturday',
+        0 => 'Sunday',
+        1 => 'Monday',
+      ],
+    ];
+    $data[] = [
+      3,
+      [
+        3 => 'Wednesday',
+        4 => 'Thursday',
+        5 => 'Friday',
+        6 => 'Saturday',
+        0 => 'Sunday',
+        1 => 'Monday',
+        2 => 'Tuesday',
+      ],
+    ];
+    $data[] = [
+      4,
+      [
+        4 => 'Thursday',
+        5 => 'Friday',
+        6 => 'Saturday',
+        0 => 'Sunday',
+        1 => 'Monday',
+        2 => 'Tuesday',
+        3 => 'Wednesday',
+      ],
+    ];
+    $data[] = [
+      5,
+      [
+        5 => 'Friday',
+        6 => 'Saturday',
+        0 => 'Sunday',
+        1 => 'Monday',
+        2 => 'Tuesday',
+        3 => 'Wednesday',
+        4 => 'Thursday',
+      ],
+    ];
+    $data[] = [
+      6,
+      [
+        6 => 'Saturday',
+        0 => 'Sunday',
+        1 => 'Monday',
+        2 => 'Tuesday',
+        3 => 'Wednesday',
+        4 => 'Thursday',
+        5 => 'Friday',
+      ],
+    ];
+    $data[] = [
+      7,
+      [
+        0 => 'Sunday',
+        1 => 'Monday',
+        2 => 'Tuesday',
+        3 => 'Wednesday',
+        4 => 'Thursday',
+        5 => 'Friday',
+        6 => 'Saturday',
+      ],
+    ];
     return $data;
   }
 

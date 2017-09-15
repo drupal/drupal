@@ -44,8 +44,7 @@ class FileNormalizeTest extends NormalizerTestBase {
 
     $expected_array = [
       'uri' => [
-        [
-          'value' => file_create_url($file->getFileUri())],
+        ['value' => file_create_url($file->getFileUri())],
       ],
     ];
 

@@ -192,12 +192,15 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
         $elements['#cache']['contexts'][] = 'user.roles';
         if ($this->currentUser->hasPermission('post comments')) {
           $output['comment_form'] = [
-            '#lazy_builder' => ['comment.lazy_builders:renderForm', [
-              $entity->getEntityTypeId(),
-              $entity->id(),
-              $field_name,
-              $this->getFieldSetting('comment_type'),
-            ]],
+            '#lazy_builder' => [
+              'comment.lazy_builders:renderForm',
+              [
+                $entity->getEntityTypeId(),
+                $entity->id(),
+                $field_name,
+                $this->getFieldSetting('comment_type'),
+              ],
+            ],
             '#create_placeholder' => TRUE,
           ];
         }

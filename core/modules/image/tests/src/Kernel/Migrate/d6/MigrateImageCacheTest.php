@@ -141,9 +141,11 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
 
     $this->startCollectingMessages();
     $this->executeMigration('d6_imagecache_presets');
-    $this->assertEqual(['error' => [
-     'The Drupal 8 image crop effect does not support numeric values for x and y offsets. Use keywords to set crop effect offsets instead.'
-    ]], $this->migrateMessages);
+    $this->assertEqual([
+      'error' => [
+        'The Drupal 8 image crop effect does not support numeric values for x and y offsets. Use keywords to set crop effect offsets instead.',
+      ],
+    ], $this->migrateMessages);
   }
 
   /**

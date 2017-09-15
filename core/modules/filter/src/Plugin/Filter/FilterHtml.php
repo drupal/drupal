@@ -371,7 +371,9 @@ class FilterHtml extends FilterBase {
       'q' => [$this->t('Quoted inline'), '<q>' . $this->t('Quoted inline') . '</q>'],
       // Assumes and describes tr, td, th.
       'table' => [$this->t('Table'), '<table> <tr><th>' . $this->t('Table header') . '</th></tr> <tr><td>' . $this->t('Table cell') . '</td></tr> </table>'],
-      'tr' => NULL, 'td' => NULL, 'th' => NULL,
+      'tr' => NULL,
+      'td' => NULL,
+      'th' => NULL,
       'del' => [$this->t('Deleted'), '<del>' . $this->t('Deleted') . '</del>'],
       'ins' => [$this->t('Inserted'), '<ins>' . $this->t('Inserted') . '</ins>'],
        // Assumes and describes li.
@@ -380,7 +382,8 @@ class FilterHtml extends FilterBase {
       'li' => NULL,
       // Assumes and describes dt and dd.
       'dl' => [$this->t('Definition lists are similar to other HTML lists. &lt;dl&gt; begins the definition list, &lt;dt&gt; begins the definition term and &lt;dd&gt; begins the definition description.'), '<dl> <dt>' . $this->t('First term') . '</dt> <dd>' . $this->t('First definition') . '</dd> <dt>' . $this->t('Second term') . '</dt> <dd>' . $this->t('Second definition') . '</dd> </dl>'],
-      'dt' => NULL, 'dd' => NULL,
+      'dt' => NULL,
+      'dd' => NULL,
       'h1' => [$this->t('Heading'), '<h1>' . $this->t('Title') . '</h1>'],
       'h2' => [$this->t('Heading'), '<h2>' . $this->t('Subtitle') . '</h2>'],
       'h3' => [$this->t('Heading'), '<h3>' . $this->t('Subtitle three') . '</h3>'],
@@ -396,19 +399,17 @@ class FilterHtml extends FilterBase {
           ['data' => $tips[$tag][0], 'class' => ['description']],
           // The markup must be escaped because this is the example code for the
           // user.
-          ['data' =>
-            [
+          [
+            'data' => [
               '#prefix' => '<code>',
               '#plain_text' => $tips[$tag][1],
-              '#suffix' => '</code>'
+              '#suffix' => '</code>',
             ],
-            'class' => ['type']],
+            'class' => ['type'],
+          ],
           // The markup must not be escaped because this is the example output
           // for the user.
-          ['data' =>
-            ['#markup' => $tips[$tag][1]],
-            'class' => ['get'],
-          ],
+          ['data' => ['#markup' => $tips[$tag][1]], 'class' => ['get']],
         ];
       }
       else {

@@ -73,18 +73,22 @@ class HandlerBaseTest extends UnitTestCase {
     $this->viewsData->expects($this->any())
       ->method('get')
       ->willReturnMap([
-        ['test_entity_type_table', [
-          'table' => ['entity type' => 'test_entity_type'],
-          'test_relationship' => [
-            'relationship' => [
-              'base' => 'test_other_entity_type_table',
-              'base field' => 'id',
+        [
+          'test_entity_type_table',
+          [
+            'table' => ['entity type' => 'test_entity_type'],
+            'test_relationship' => [
+              'relationship' => [
+                'base' => 'test_other_entity_type_table',
+                'base field' => 'id',
+              ],
             ],
           ],
-        ]],
-        ['test_other_entity_type_table', [
-          'table' => ['entity type' => 'test_other_entity_type'],
-        ]],
+        ],
+        [
+          'test_other_entity_type_table',
+          ['table' => ['entity type' => 'test_other_entity_type']],
+        ],
       ]);
     $handler->setViewsData($this->viewsData);
 
