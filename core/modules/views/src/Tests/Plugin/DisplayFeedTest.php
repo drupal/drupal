@@ -45,10 +45,12 @@ class DisplayFeedTest extends PluginTestBase {
     $node_title = 'This "cool" & "neat" article\'s title';
     $node = $this->drupalCreateNode([
       'title' => $node_title,
-      'body' => [0 => [
-        'value' => 'A paragraph',
-        'format' => filter_default_format(),
-      ]],
+      'body' => [
+        0 => [
+          'value' => 'A paragraph',
+          'format' => filter_default_format(),
+        ],
+      ],
     ]);
 
     // Test the site name setting.
@@ -103,10 +105,12 @@ class DisplayFeedTest extends PluginTestBase {
     $node_title = 'This "cool" & "neat" article\'s title';
     $this->drupalCreateNode([
       'title' => $node_title,
-      'body' => [0 => [
-        'value' => 'A paragraph',
-        'format' => filter_default_format(),
-      ]],
+      'body' => [
+        0 => [
+          'value' => 'A paragraph',
+          'format' => filter_default_format(),
+        ],
+      ],
     ]);
 
     $this->drupalGet('test-feed-display-fields.xml');

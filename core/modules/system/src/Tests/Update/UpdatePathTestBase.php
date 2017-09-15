@@ -243,10 +243,14 @@ abstract class UpdatePathTestBase extends WebTestBase {
     }
     // The site might be broken at the time so logging in using the UI might
     // not work, so we use the API itself.
-    drupal_rewrite_settings(['settings' => ['update_free_access' => (object) [
-      'value' => TRUE,
-      'required' => TRUE,
-    ]]]);
+    drupal_rewrite_settings([
+      'settings' => [
+        'update_free_access' => (object) [
+          'value' => TRUE,
+          'required' => TRUE,
+        ],
+      ],
+    ]);
 
     $this->drupalGet($this->updateUrl);
     $this->clickLink(t('Continue'));

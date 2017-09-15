@@ -135,20 +135,24 @@ class DbLogController extends ControllerBase {
       [
         'data' => $this->t('Type'),
         'field' => 'w.type',
-        'class' => [RESPONSIVE_PRIORITY_MEDIUM]],
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+      ],
       [
         'data' => $this->t('Date'),
         'field' => 'w.wid',
         'sort' => 'desc',
-        'class' => [RESPONSIVE_PRIORITY_LOW]],
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
       $this->t('Message'),
       [
         'data' => $this->t('User'),
         'field' => 'ufd.name',
-        'class' => [RESPONSIVE_PRIORITY_MEDIUM]],
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+      ],
       [
         'data' => $this->t('Operations'),
-        'class' => [RESPONSIVE_PRIORITY_LOW]],
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
     ];
 
     $query = $this->database->select('watchdog', 'w')

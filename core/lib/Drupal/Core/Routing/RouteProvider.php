@@ -347,7 +347,8 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
     // dump the route pattern without those optional parts.
     try {
       $routes = $this->connection->query("SELECT name, route, fit FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN ( :patterns[] ) AND number_parts >= :count_parts", [
-        ':patterns[]' => $ancestors, ':count_parts' => count($parts),
+        ':patterns[]' => $ancestors,
+        ':count_parts' => count($parts),
       ])
         ->fetchAll(\PDO::FETCH_ASSOC);
     }

@@ -238,11 +238,13 @@ function locale_translation_http_check($uri) {
   $logger = \Drupal::logger('locale');
   try {
     $actual_uri = NULL;
-    $response = \Drupal::service('http_client_factory')->fromOptions(['allow_redirects' => [
-      'on_redirect' => function(RequestInterface $request, ResponseInterface $response, UriInterface $request_uri) use (&$actual_uri) {
-        $actual_uri = (string) $request_uri;
-      }
-    ]])->head($uri);
+    $response = \Drupal::service('http_client_factory')->fromOptions([
+      'allow_redirects' => [
+        'on_redirect' => function(RequestInterface $request, ResponseInterface $response, UriInterface $request_uri) use (&$actual_uri) {
+          $actual_uri = (string) $request_uri;
+        }
+      ],
+    ])->head($uri);
     $result = [];
 
     // Return the effective URL if it differs from the requested.

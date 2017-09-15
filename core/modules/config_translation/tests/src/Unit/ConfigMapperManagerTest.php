@@ -88,44 +88,52 @@ class ConfigMapperManagerTest extends UnitTestCase {
       [$this->getElement(['aaa' => 'bbb']), FALSE],
       [$this->getElement(['translatable' => FALSE]), FALSE],
       [$this->getElement(['translatable' => TRUE]), TRUE],
-      [$this->getNestedElement([
-        $this->getElement([]),
-      ]), FALSE],
-      [$this->getNestedElement([
-        $this->getElement(['translatable' => TRUE]),
-      ]), TRUE],
-      [$this->getNestedElement([
-        $this->getElement(['aaa' => 'bbb']),
-        $this->getElement(['ccc' => 'ddd']),
-        $this->getElement(['eee' => 'fff']),
-      ]), FALSE],
-      [$this->getNestedElement([
-        $this->getElement(['aaa' => 'bbb']),
-        $this->getElement(['ccc' => 'ddd']),
-        $this->getElement(['translatable' => TRUE]),
-      ]), TRUE],
-      [$this->getNestedElement([
-        $this->getElement(['aaa' => 'bbb']),
+      [$this->getNestedElement([$this->getElement([])]), FALSE],
+      [$this->getNestedElement([$this->getElement(['translatable' => TRUE])]), TRUE],
+      [
         $this->getNestedElement([
+          $this->getElement(['aaa' => 'bbb']),
           $this->getElement(['ccc' => 'ddd']),
           $this->getElement(['eee' => 'fff']),
         ]),
+        FALSE,
+      ],
+      [
         $this->getNestedElement([
-          $this->getElement(['ggg' => 'hhh']),
-          $this->getElement(['iii' => 'jjj']),
-        ]),
-      ]), FALSE],
-      [$this->getNestedElement([
-        $this->getElement(['aaa' => 'bbb']),
-        $this->getNestedElement([
+          $this->getElement(['aaa' => 'bbb']),
           $this->getElement(['ccc' => 'ddd']),
-          $this->getElement(['eee' => 'fff']),
-        ]),
-        $this->getNestedElement([
-          $this->getElement(['ggg' => 'hhh']),
           $this->getElement(['translatable' => TRUE]),
         ]),
-      ]), TRUE],
+        TRUE,
+      ],
+      [
+        $this->getNestedElement([
+          $this->getElement(['aaa' => 'bbb']),
+          $this->getNestedElement([
+            $this->getElement(['ccc' => 'ddd']),
+            $this->getElement(['eee' => 'fff']),
+          ]),
+          $this->getNestedElement([
+            $this->getElement(['ggg' => 'hhh']),
+            $this->getElement(['iii' => 'jjj']),
+          ]),
+        ]),
+        FALSE
+      ],
+      [
+        $this->getNestedElement([
+          $this->getElement(['aaa' => 'bbb']),
+          $this->getNestedElement([
+            $this->getElement(['ccc' => 'ddd']),
+            $this->getElement(['eee' => 'fff']),
+          ]),
+          $this->getNestedElement([
+            $this->getElement(['ggg' => 'hhh']),
+            $this->getElement(['translatable' => TRUE]),
+          ]),
+        ]),
+        TRUE,
+      ],
     ];
   }
 

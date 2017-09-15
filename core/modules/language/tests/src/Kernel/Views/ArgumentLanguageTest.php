@@ -35,9 +35,9 @@ class ArgumentLanguageTest extends LanguageTestBase {
       ]);
       $this->executeView($view, [$langcode]);
 
-      $expected = [[
-        'name' => $name,
-      ]];
+      $expected = [
+        ['name' => $name],
+      ];
       $this->assertIdenticalResultset($view, $expected, ['views_test_data_name' => 'name']);
       $view->destroy();
     }

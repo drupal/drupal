@@ -131,9 +131,11 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         'required' => ['default' => FALSE],
         'remember' => ['default' => FALSE],
         'multiple' => ['default' => FALSE],
-        'remember_roles' => ['default' => [
-          RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID,
-        ]],
+        'remember_roles' => [
+          'default' => [
+            RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID,
+          ],
+        ],
       ],
     ];
 

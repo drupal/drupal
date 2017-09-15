@@ -126,12 +126,15 @@ class CommentViewBuilder extends EntityViewBuilder {
       $display = $displays[$entity->bundle()];
       if ($display->getComponent('links')) {
         $build[$id]['links'] = [
-          '#lazy_builder' => ['comment.lazy_builders:renderLinks', [
-            $entity->id(),
-            $view_mode,
-            $entity->language()->getId(),
-            !empty($entity->in_preview),
-          ]],
+          '#lazy_builder' => [
+            'comment.lazy_builders:renderLinks',
+            [
+              $entity->id(),
+              $view_mode,
+              $entity->language()->getId(),
+              !empty($entity->in_preview),
+            ],
+          ],
           '#create_placeholder' => TRUE,
         ];
       }

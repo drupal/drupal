@@ -196,14 +196,16 @@ class ContentTranslationController extends ControllerBase {
           if (isset($links['edit'])) {
             $links['edit']['title'] = $this->t('Edit');
           }
-          $status = ['data' => [
-            '#type' => 'inline_template',
-            '#template' => '<span class="status">{% if status %}{{ "Published"|t }}{% else %}{{ "Not published"|t }}{% endif %}</span>{% if outdated %} <span class="marker">{{ "outdated"|t }}</span>{% endif %}',
-            '#context' => [
-              'status' => $metadata->isPublished(),
-              'outdated' => $metadata->isOutdated(),
+          $status = [
+            'data' => [
+              '#type' => 'inline_template',
+              '#template' => '<span class="status">{% if status %}{{ "Published"|t }}{% else %}{{ "Not published"|t }}{% endif %}</span>{% if outdated %} <span class="marker">{{ "outdated"|t }}</span>{% endif %}',
+              '#context' => [
+                'status' => $metadata->isPublished(),
+                'outdated' => $metadata->isOutdated(),
+              ],
             ],
-          ]];
+          ];
 
           if ($is_original) {
             $language_name = $this->t('<strong>@language_name (Original language)</strong>', ['@language_name' => $language_name]);

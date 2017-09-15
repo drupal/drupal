@@ -80,7 +80,8 @@ class ViewTestData {
           'type' => 'int',
           'unsigned' => TRUE,
           'not null' => TRUE,
-          'default' => 0],
+          'default' => 0,
+        ],
         'job' => [
           'description' => "The person's job",
           'type' => 'varchar',

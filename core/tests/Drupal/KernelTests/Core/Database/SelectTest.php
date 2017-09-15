@@ -496,8 +496,7 @@ class SelectTest extends DatabaseTestBase {
     ];
     $test_groups[] = [
       'regex' => '#Singer',
-      'expected' => [
-      ],
+      'expected' => [],
     ];
 
     foreach ($test_groups as $test_group) {

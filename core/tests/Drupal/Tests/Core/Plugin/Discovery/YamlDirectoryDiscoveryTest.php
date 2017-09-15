@@ -28,8 +28,7 @@ class YamlDirectoryDiscoveryTest extends UnitTestCase {
         'subdir2' => [
           'plugin3.yml' => "id: plugin3\ntest_provider: module_a",
         ],
-        'subdir3' => [
-        ]
+        'subdir3' => [],
       ],
       'module_b' => [
         'subdir1' => [

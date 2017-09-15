@@ -62,7 +62,8 @@ class EarlyRenderingTestController extends ControllerBase {
       '#pre_render' => [function () {
         $elements = $this->earlyRenderContent();
         return $elements;
-      }],
+      }
+      ],
     ];
   }
 

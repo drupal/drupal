@@ -21,8 +21,9 @@ class Comment extends DrupalSqlBase {
   public function query() {
     $query = $this->select('comments', 'c')
       ->fields('c', ['cid', 'pid', 'nid', 'uid', 'subject',
-        'comment', 'hostname', 'timestamp', 'status', 'thread', 'name',
-        'mail', 'homepage', 'format']);
+      'comment', 'hostname', 'timestamp', 'status', 'thread', 'name',
+      'mail', 'homepage', 'format',
+    ]);
     $query->innerJoin('node', 'n', 'c.nid = n.nid');
     $query->fields('n', ['type']);
     $query->orderBy('c.timestamp');

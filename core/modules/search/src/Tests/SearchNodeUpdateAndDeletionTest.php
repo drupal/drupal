@@ -39,7 +39,8 @@ class SearchNodeUpdateAndDeletionTest extends SearchTestBase {
     $node = $this->drupalCreateNode([
       'title' => 'Someone who says Ni!',
       'body' => [['value' => "We are the knights who say Ni!"]],
-      'type' => 'page']);
+      'type' => 'page',
+    ]);
 
     $node_search_plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
     // Update the search index.
@@ -73,7 +74,8 @@ class SearchNodeUpdateAndDeletionTest extends SearchTestBase {
     $node = $this->drupalCreateNode([
       'title' => 'No dragons here',
       'body' => [['value' => 'Again: No dragons here']],
-      'type' => 'page']);
+      'type' => 'page',
+    ]);
 
     $node_search_plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
     // Update the search index.

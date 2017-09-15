@@ -75,10 +75,12 @@ class ContentEntityFormCorrectUserInputMappingOnFieldDeltaElementsTest extends B
     $storage = $this->container->get('entity_type.manager')->getStorage($this->entityTypeId);
 
     /** @var ContentEntityInterface $entity */
-    $entity = $storage->create([$this->fieldName => [
-      ['shape' => 'rectangle', 'color' => 'green'],
-      ['shape' => 'circle', 'color' => 'blue'],
-    ]]);
+    $entity = $storage->create([
+      $this->fieldName => [
+        ['shape' => 'rectangle', 'color' => 'green'],
+        ['shape' => 'circle', 'color' => 'blue'],
+      ],
+    ]);
     $entity->save();
 
     $this->drupalGet($this->entityTypeId . '/manage/' . $entity->id() . '/edit');

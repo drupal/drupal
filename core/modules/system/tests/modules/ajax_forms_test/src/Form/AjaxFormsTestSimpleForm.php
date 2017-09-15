@@ -31,7 +31,8 @@ class AjaxFormsTestSimpleForm extends FormBase {
       '#options' => [
         'red' => 'red',
         'green' => 'green',
-        'blue' => 'blue'],
+        'blue' => 'blue',
+      ],
       '#ajax' => [
         'callback' => [$object, 'selectCallback'],
       ],

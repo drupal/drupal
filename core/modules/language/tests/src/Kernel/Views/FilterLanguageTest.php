@@ -36,9 +36,9 @@ class FilterLanguageTest extends LanguageTestBase {
       ]);
       $this->executeView($view);
 
-      $expected = [[
-        'name' => $name,
-      ]];
+      $expected = [
+        ['name' => $name],
+      ];
       $this->assertIdenticalResultset($view, $expected, ['views_test_data_name' => 'name']);
 
       $expected = [

@@ -177,12 +177,14 @@ $sites['8888.www.example.org'] = 'example';
 EOD;
 
       // Create the expected directory structure.
-      vfsStream::create(['sites' => [
-        'sites.php' => $sites_php,
-        'example' => [
-          'settings.php' => 'test'
-        ]
-      ]]);
+      vfsStream::create([
+        'sites' => [
+          'sites.php' => $sites_php,
+          'example' => [
+            'settings.php' => 'test',
+          ],
+        ],
+      ]);
 
       $request = new Request();
       $request->server->set('SERVER_NAME', 'www.example.org');

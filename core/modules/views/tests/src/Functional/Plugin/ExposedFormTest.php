@@ -278,8 +278,7 @@ class ExposedFormTest extends ViewTestBase {
    */
   public function testExposedSortAndItemsPerPage() {
     for ($i = 0; $i < 50; $i++) {
-      $entity = EntityTest::create([
-      ]);
+      $entity = EntityTest::create([]);
       $entity->save();
     }
     $contexts = [

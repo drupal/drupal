@@ -67,10 +67,12 @@ trait NodeCreationTrait {
   protected function createNode(array $settings = []) {
     // Populate defaults array.
     $settings += [
-      'body'      => [[
-        'value' => $this->randomMachineName(32),
-        'format' => filter_default_format(),
-      ]],
+      'body'      => [
+        [
+          'value' => $this->randomMachineName(32),
+          'format' => filter_default_format(),
+        ],
+      ],
       'title'     => $this->randomMachineName(8),
       'type'      => 'page',
       'uid'       => \Drupal::currentUser()->id(),

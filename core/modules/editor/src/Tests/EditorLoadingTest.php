@@ -140,13 +140,17 @@ class EditorLoadingTest extends WebTestBase {
     $this->drupalLogin($this->privilegedUser);
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck('body');
-    $expected = ['formats' => ['full_html' => [
-      'format' => 'full_html',
-      'editor' => 'unicorn',
-      'editorSettings' => ['ponyModeEnabled' => TRUE],
-      'editorSupportsContentFiltering' => TRUE,
-      'isXssSafe' => FALSE,
-    ]]];
+    $expected = [
+      'formats' => [
+        'full_html' => [
+          'format' => 'full_html',
+          'editor' => 'unicorn',
+          'editorSettings' => ['ponyModeEnabled' => TRUE],
+          'editorSupportsContentFiltering' => TRUE,
+          'isXssSafe' => FALSE,
+        ],
+      ],
+    ];
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
@@ -174,13 +178,17 @@ class EditorLoadingTest extends WebTestBase {
     $this->drupalLogin($this->untrustedUser);
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck('body');
-    $expected = ['formats' => ['plain_text' => [
-      'format' => 'plain_text',
-      'editor' => 'unicorn',
-      'editorSettings' => ['ponyModeEnabled' => TRUE],
-      'editorSupportsContentFiltering' => TRUE,
-      'isXssSafe' => FALSE,
-    ]]];
+    $expected = [
+      'formats' => [
+        'plain_text' => [
+          'format' => 'plain_text',
+          'editor' => 'unicorn',
+          'editorSettings' => ['ponyModeEnabled' => TRUE],
+          'editorSupportsContentFiltering' => TRUE,
+          'isXssSafe' => FALSE,
+        ],
+      ],
+    ];
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');

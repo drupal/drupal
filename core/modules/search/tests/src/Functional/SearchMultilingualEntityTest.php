@@ -78,16 +78,11 @@ class SearchMultilingualEntityTest extends SearchTestBase {
       // After the third node, we don't care what the settings are. But we
       // need to have at least 5 to make sure the throttling is working
       // correctly. So, let's make 8 total.
-      [
-      ],
-      [
-      ],
-      [
-      ],
-      [
-      ],
-      [
-      ],
+      [],
+      [],
+      [],
+      [],
+      [],
     ];
     $this->searchableNodes = [];
     foreach ($nodes as $setting) {

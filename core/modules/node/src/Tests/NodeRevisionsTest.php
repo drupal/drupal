@@ -168,9 +168,11 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // Confirm that revisions revert properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert", [], t('Revert'));
-    $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.',
-                        ['@type' => 'Basic page', '%title' => $nodes[1]->label(),
-                              '%revision-date' => format_date($nodes[1]->getRevisionCreationTime())]), 'Revision reverted.');
+    $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
+      '@type' => 'Basic page',
+      '%title' => $nodes[1]->label(),
+      '%revision-date' => format_date($nodes[1]->getRevisionCreationTime())
+    ]), 'Revision reverted.');
     $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());
     $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
@@ -191,9 +193,11 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // Confirm revisions delete properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], t('Delete'));
-    $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
-                        ['%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
-                              '@type' => 'Basic page', '%title' => $nodes[1]->label()]), 'Revision deleted.');
+    $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.', [
+      '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
+      '@type' => 'Basic page',
+      '%title' => $nodes[1]->label(),
+    ]), 'Revision deleted.');
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid', [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0, 'Revision not found.');
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid and vid = :vid', [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0, 'Field revision not found.');
 

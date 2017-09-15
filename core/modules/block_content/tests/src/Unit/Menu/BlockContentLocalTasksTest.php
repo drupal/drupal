@@ -19,9 +19,9 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
     ];
     parent::setUp();
 
-    $config_factory = $this->getConfigFactoryStub(['system.theme' => [
-      'default' => 'test_c',
-    ]]);
+    $config_factory = $this->getConfigFactoryStub([
+      'system.theme' => ['default' => 'test_c'],
+    ]);
 
     $themes = [];
     $themes['test_a'] = (object) [

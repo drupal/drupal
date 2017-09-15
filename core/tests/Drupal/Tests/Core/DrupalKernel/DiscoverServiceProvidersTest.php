@@ -52,8 +52,7 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
       'app' => [
         'core' => 'core/core.services.yml',
       ],
-      'site' => [
-      ],
+      'site' => [],
     ];
     $this->assertAttributeSame($expect, 'serviceYamls', $kernel);
   }

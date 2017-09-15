@@ -444,26 +444,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    */
   public function providerTestGetTableMappingSimple() {
     return [
-      [[
-        'id' => 'test_id',
-        'bundle' => NULL,
-        'uuid' => NULL,
-      ]],
-      [[
-        'id' => 'test_id',
-        'bundle' => 'test_bundle',
-        'uuid' => NULL,
-      ]],
-      [[
-        'id' => 'test_id',
-        'bundle' => NULL,
-        'uuid' => 'test_uuid',
-      ]],
-      [[
-        'id' => 'test_id',
-        'bundle' => 'test_bundle',
-        'uuid' => 'test_uuid',
-      ]],
+      [['id' => 'test_id', 'bundle' => NULL, 'uuid' => NULL]],
+      [['id' => 'test_id', 'bundle' => 'test_bundle', 'uuid' => NULL]],
+      [['id' => 'test_id', 'bundle' => NULL, 'uuid' => 'test_uuid']],
+      [['id' => 'test_id', 'bundle' => 'test_bundle', 'uuid' => 'test_uuid']],
     ];
   }
 
@@ -1137,9 +1121,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->cache->expects($this->once())
       ->method('getMultiple')
       ->with([$key])
-      ->will($this->returnValue([$key => (object) [
-          'data' => $entity,
-        ]]));
+      ->will($this->returnValue([$key => (object) ['data' => $entity]]));
     $this->cache->expects($this->never())
       ->method('set');
 

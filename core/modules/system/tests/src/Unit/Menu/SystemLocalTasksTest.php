@@ -61,10 +61,13 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
   public function getSystemAdminRoutes() {
     return [
       ['system.admin_content', [['system.admin_content']]],
-      ['system.theme_settings_theme', [
-        ['system.themes_page', 'system.theme_settings'],
-        ['system.theme_settings_global', 'system.theme_settings_theme:bartik'],
-      ]],
+      [
+        'system.theme_settings_theme',
+        [
+          ['system.themes_page', 'system.theme_settings'],
+          ['system.theme_settings_global', 'system.theme_settings_theme:bartik'],
+        ],
+      ],
     ];
   }
 

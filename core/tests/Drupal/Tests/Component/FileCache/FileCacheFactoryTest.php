@@ -105,51 +105,54 @@ class FileCacheFactoryTest extends TestCase {
     $class = get_class($file_cache);
 
     // Test fallback configuration.
-    $data['fallback-configuration'] = [[
-    ], [], FileCache::class];
+    $data['fallback-configuration'] = [
+      [],
+      [],
+      FileCache::class,
+    ];
 
     // Test default configuration.
-    $data['default-configuration'] = [[
-      'default' => [
-        'class' => $class,
-      ],
-    ], [], $class];
+    $data['default-configuration'] = [
+      ['default' => ['class' => $class]],
+      [],
+      $class,
+    ];
 
     // Test specific per collection setting.
-    $data['collection-setting'] = [[
-      'test_foo_settings' => [
-        'class' => $class,
-      ],
-    ], [], $class];
+    $data['collection-setting'] = [
+      ['test_foo_settings' => ['class' => $class]],
+      [],
+      $class,
+    ];
 
 
     // Test default configuration plus specific per collection setting.
-    $data['default-plus-collection-setting'] = [[
-      'default' => [
-        'class' => '\stdClass',
+    $data['default-plus-collection-setting'] = [
+      [
+        'default' => ['class' => '\stdClass'],
+        'test_foo_settings' => ['class' => $class],
       ],
-      'test_foo_settings' => [
-        'class' => $class,
-      ],
-    ], [], $class];
+      [],
+      $class,
+    ];
 
     // Test default configuration plus class specific override.
-    $data['default-plus-class-override'] = [[
-      'default' => [
-        'class' => '\stdClass',
-      ],
-    ], [ 'class' => $class ], $class];
+    $data['default-plus-class-override'] = [
+      ['default' => ['class' => '\stdClass']],
+      ['class' => $class],
+      $class,
+    ];
 
     // Test default configuration plus class specific override plus specific
     // per collection setting.
-    $data['default-plus-class-plus-collection-setting'] = [[
-      'default' => [
-        'class' => '\stdClass',
+    $data['default-plus-class-plus-collection-setting'] = [
+      [
+        'default' => ['class' => '\stdClass'],
+        'test_foo_settings' => ['class' => $class],
       ],
-      'test_foo_settings' => [
-        'class' => $class,
-      ],
-    ], [ 'class' => '\stdClass'], $class];
+      ['class' => '\stdClass'],
+      $class,
+  ];
 
     return $data;
   }

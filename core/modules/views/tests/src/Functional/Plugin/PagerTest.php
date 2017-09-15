@@ -93,7 +93,7 @@ class PagerTest extends ViewTestBase {
     $this->assertText('20 items');
 
     // add new display and test the settings again, by override it.
-    $edit = [ ];
+    $edit = [];
     // Add a display and override the pager settings.
     $this->drupalPostForm('admin/structure/views/view/test_store_pager_settings/edit', $edit, t('Add Page'));
     $edit = [

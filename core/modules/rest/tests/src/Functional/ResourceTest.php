@@ -41,10 +41,12 @@ class ResourceTest extends BrowserTestBase {
     $this->entity = EntityTest::create([
       'name' => $this->randomMachineName(),
       'user_id' => 1,
-      'field_test_text' => [0 => [
-        'value' => $this->randomString(),
-        'format' => 'plain_text',
-      ]],
+      'field_test_text' => [
+        0 => [
+          'value' => $this->randomString(),
+          'format' => 'plain_text',
+        ],
+      ],
     ]);
     $this->entity->save();
 

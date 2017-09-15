@@ -875,13 +875,16 @@ class RendererPlaceholdersTest extends RendererTestBase {
    */
   public function testScalarLazybuilderCallbackContext() {
     $element = [];
-    $element['#lazy_builder'] = ['\Drupal\Tests\Core\Render\PlaceholdersTest::callback', [
-      'string' => 'foo',
-      'bool' => TRUE,
-      'int' => 1337,
-      'float' => 3.14,
-      'null' => NULL,
-    ]];
+    $element['#lazy_builder'] = [
+      '\Drupal\Tests\Core\Render\PlaceholdersTest::callback',
+      [
+        'string' => 'foo',
+        'bool' => TRUE,
+        'int' => 1337,
+        'float' => 3.14,
+        'null' => NULL,
+      ],
+    ];
 
     $result = $this->renderer->renderRoot($element);
     $this->assertInstanceOf('\Drupal\Core\Render\Markup', $result);
@@ -894,15 +897,18 @@ class RendererPlaceholdersTest extends RendererTestBase {
    */
   public function testNonScalarLazybuilderCallbackContext() {
     $element = [];
-    $element['#lazy_builder'] = ['\Drupal\Tests\Core\Render\PlaceholdersTest::callback', [
-      'string' => 'foo',
-      'bool' => TRUE,
-      'int' => 1337,
-      'float' => 3.14,
-      'null' => NULL,
-      // array is not one of the scalar types.
-      'array' => ['hi!'],
-    ]];
+    $element['#lazy_builder'] = [
+      '\Drupal\Tests\Core\Render\PlaceholdersTest::callback',
+      [
+        'string' => 'foo',
+        'bool' => TRUE,
+        'int' => 1337,
+        'float' => 3.14,
+        'null' => NULL,
+        // array is not one of the scalar types.
+        'array' => ['hi!'],
+      ],
+    ];
 
     $this->setExpectedException(\DomainException::class, "A #lazy_builder callback's context may only contain scalar values or NULL.");
     $this->renderer->renderRoot($element);

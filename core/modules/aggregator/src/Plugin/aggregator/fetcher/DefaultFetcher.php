@@ -84,11 +84,13 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
 
       /** @var \Psr\Http\Message\UriInterface $actual_uri */
       $actual_uri = NULL;
-      $response = $this->httpClientFactory->fromOptions(['allow_redirects' => [
-        'on_redirect' => function(RequestInterface $request, ResponseInterface $response, UriInterface $uri) use (&$actual_uri) {
-          $actual_uri = (string) $uri;
-        }
-      ]])->send($request);
+      $response = $this->httpClientFactory->fromOptions([
+        'allow_redirects' => [
+          'on_redirect' => function(RequestInterface $request, ResponseInterface $response, UriInterface $uri) use (&$actual_uri) {
+            $actual_uri = (string) $uri;
+          }
+        ],
+      ])->send($request);
 
       // In case of a 304 Not Modified, there is no new content, so return
       // FALSE.

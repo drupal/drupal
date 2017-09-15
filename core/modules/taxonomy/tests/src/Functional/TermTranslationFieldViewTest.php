@@ -74,10 +74,12 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
     $node = Node::create([
       'title' => $this->randomMachineName(),
       'type' => 'article',
-      'description' => [[
-        'value' => $this->randomMachineName(),
-        'format' => 'basic_html'
-      ]],
+      'description' => [
+        [
+          'value' => $this->randomMachineName(),
+          'format' => 'basic_html',
+        ],
+      ],
       $this->termFieldName => [['target_id' => $this->term->id()]],
       'langcode' => $this->baseLangcode,
     ]);

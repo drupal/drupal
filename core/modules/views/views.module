@@ -116,8 +116,12 @@ function views_theme($existing, $type, $theme, $path) {
     'row' => ['view' => NULL, 'options' => NULL, 'row' => NULL, 'field_alias' => NULL],
     'exposed_form' => ['view' => NULL, 'options' => NULL],
     'pager' => [
-      'view' => NULL, 'options' => NULL,
-      'tags' => [], 'quantity' => 9, 'element' => 0, 'parameters' => []
+      'view' => NULL,
+      'options' => NULL,
+      'tags' => [],
+      'quantity' => 9,
+      'element' => 0,
+      'parameters' => [],
     ],
   ];
 

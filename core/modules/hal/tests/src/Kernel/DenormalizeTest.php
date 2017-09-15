@@ -62,8 +62,7 @@ class DenormalizeTest extends NormalizerTestBase {
 
     // No type.
     $data_with_no_type = [
-      '_links' => [
-      ],
+      '_links' => [],
     ];
     try {
       $this->serializer->denormalize($data_with_no_type, $this->entityClass, $this->format);

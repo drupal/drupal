@@ -318,7 +318,8 @@ class DatabaseStorage implements StorageInterface {
   public function getAllCollectionNames() {
     try {
       return $this->connection->query('SELECT DISTINCT collection FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection <> :collection ORDER by collection', [
-        ':collection' => StorageInterface::DEFAULT_COLLECTION]
+          ':collection' => StorageInterface::DEFAULT_COLLECTION,
+        ]
       )->fetchCol();
     }
     catch (\Exception $e) {

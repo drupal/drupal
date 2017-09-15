@@ -754,8 +754,7 @@ function install_tasks($install_state) {
       'run' => $install_state['settings_verified'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
       'function' => 'Drupal\Core\Installer\Form\SiteSettingsForm',
     ],
-    'install_write_profile' => [
-    ],
+    'install_write_profile' => [],
     'install_verify_database_ready' => [
       'run' => $install_state['database_ready'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
     ],
@@ -770,10 +769,8 @@ function install_tasks($install_state) {
       'display_name' => t('Install site'),
       'type' => 'batch',
     ],
-    'install_profile_themes' => [
-    ],
-    'install_install_profile' => [
-    ],
+    'install_profile_themes' => [],
+    'install_install_profile' => [],
     'install_import_translations' => [
       'display_name' => t('Set up translations'),
       'display' => $needs_translations,
@@ -813,8 +810,7 @@ function install_tasks($install_state) {
       'type' => 'batch',
       'run' => $needs_translations ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
     ],
-    'install_finished' => [
-    ],
+    'install_finished' => [],
   ];
 
   // Allow the installation profile to modify the full list of tasks.

@@ -715,12 +715,18 @@ class ContainerTest extends TestCase {
       ]),
       'properties' => $this->getCollection(['_someProperty' => 'foo']),
       'calls' => [
-        ['setContainer', $this->getCollection([
-          $this->getServiceCall('service_container'),
-        ])],
-        ['setOtherConfigParameter', $this->getCollection([
-          $this->getParameterCall('some_other_config'),
-        ])],
+        [
+          'setContainer',
+          $this->getCollection([
+            $this->getServiceCall('service_container'),
+          ]),
+        ],
+        [
+          'setOtherConfigParameter',
+          $this->getCollection([
+            $this->getParameterCall('some_other_config'),
+          ]),
+        ],
       ],
       'priority' => 0,
     ];
@@ -824,9 +830,12 @@ class ContainerTest extends TestCase {
         [NULL, 'bar'],
       ],
       'calls' => [
-        ['setContainer', $this->getCollection([
-          $this->getServiceCall('service_container'),
-        ])],
+        [
+          'setContainer',
+          $this->getCollection([
+            $this->getServiceCall('service_container'),
+          ]),
+        ],
       ],
     ];
 

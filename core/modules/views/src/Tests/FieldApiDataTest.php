@@ -335,8 +335,7 @@ class FieldApiDataTest extends FieldTestBase {
     // Filter by 'field name 2: fr', which doesn't exist.
     $view->setDisplay('embed_4');
     $this->executeView($view);
-    $expected = [
-    ];
+    $expected = [];
 
     $this->assertIdenticalResultset($view, $expected, $map);
     $view->destroy();

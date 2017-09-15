@@ -449,8 +449,7 @@ function hook_install_tasks(&$install_state) {
     // tasks are complete, with a link to reload the current page and therefore
     // pass on to the final Drupal installation tasks when the user is ready to
     // do so).
-    'myprofile_final_site_setup' => [
-    ],
+    'myprofile_final_site_setup' => [],
   ];
   return $tasks;
 }
