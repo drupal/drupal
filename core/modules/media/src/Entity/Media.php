@@ -152,7 +152,7 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
    * {@inheritdoc}
    */
   public function setOwnerId($uid) {
-    $this->set('uid', $uid);
+    return $this->set('uid', $uid);
   }
 
   /**
