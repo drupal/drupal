@@ -190,6 +190,13 @@ class KeyValueEntityStorage extends EntityStorageBase {
   /**
    * {@inheritdoc}
    */
+  public function hasData() {
+    return (bool) $this->keyValueStore->getAll();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getQueryServiceName() {
     return 'entity.query.keyvalue';
   }

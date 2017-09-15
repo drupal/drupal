@@ -19,14 +19,6 @@ use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 interface DynamicallyFieldableEntityStorageInterface extends FieldableEntityStorageInterface, FieldStorageDefinitionListenerInterface, FieldDefinitionListenerInterface {
 
   /**
-   * Determines if the storage contains any data.
-   *
-   * @return bool
-   *   TRUE if the storage contains data, FALSE if not.
-   */
-  public function hasData();
-
-  /**
    * Purges a batch of field data.
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
