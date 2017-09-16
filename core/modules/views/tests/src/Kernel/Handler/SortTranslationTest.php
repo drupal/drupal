@@ -42,7 +42,7 @@ class SortTranslationTest extends ViewsKernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
 
-    // $this->installConfig('node');
+    //$this->installConfig('node');
     $this->container->get('kernel')->rebuildContainer();
 
     $node_type = NodeType::create(['type' => 'article']);
