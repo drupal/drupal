@@ -311,7 +311,7 @@ class ViewExecutableTest extends UnitTestCase {
     ];
     $this->assertEquals($expected, $view->buildThemeFunctions('test_hook'));
 
-    // Change the name of the display plugin and make sure that is in the array.
+    //Change the name of the display plugin and make sure that is in the array.
     $view->display_handler->display['display_plugin'] = 'default2';
 
     $expected = [
