@@ -128,8 +128,8 @@ class AccessRoleTest extends AccessTestBase {
     // @todo Fix this in https://www.drupal.org/node/2551037,
     // DisplayPluginBase::applyDisplayCacheabilityMetadata() is not invoked when
     // using buildBasicRenderable() and a Views access plugin returns FALSE.
-    //$this->assertTrue(in_array('user.roles', $build['#cache']['contexts']));
-    //$this->assertEqual([], $build['#cache']['tags']);
+    // $this->assertTrue(in_array('user.roles', $build['#cache']['contexts']));
+    // $this->assertEqual([], $build['#cache']['tags']);
     $this->assertEqual(Cache::PERMANENT, $build['#cache']['max-age']);
     $this->assertEqual($result, '');
   }

@@ -353,7 +353,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
   public function testEntityAutocompleteIdInput() {
     /** @var \Drupal\Core\Form\FormBuilderInterface $form_builder */
     $form_builder = $this->container->get('form_builder');
-    //$form = $form_builder->getForm($this);
+    // $form = $form_builder->getForm($this);
     $form_state = (new FormState())
       ->setMethod('GET')
       ->setValues([

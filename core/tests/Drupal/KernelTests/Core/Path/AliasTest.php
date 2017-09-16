@@ -16,16 +16,16 @@ use Drupal\Core\Path\AliasWhitelist;
 class AliasTest extends PathUnitTestBase {
 
   public function testCRUD() {
-    //Prepare database table.
+    // Prepare database table.
     $connection = Database::getConnection();
     $this->fixtures->createTables($connection);
 
-    //Create Path object.
+    // Create Path object.
     $aliasStorage = new AliasStorage($connection, $this->container->get('module_handler'));
 
     $aliases = $this->fixtures->sampleUrlAliases();
 
-    //Create a few aliases
+    // Create a few aliases
     foreach ($aliases as $idx => $alias) {
       $aliasStorage->save($alias['source'], $alias['alias'], $alias['langcode']);
 
@@ -34,11 +34,11 @@ class AliasTest extends PathUnitTestBase {
 
       $this->assertEqual(count($rows), 1, format_string('Created an entry for %alias.', ['%alias' => $alias['alias']]));
 
-      //Cache the pid for further tests.
+      // Cache the pid for further tests.
       $aliases[$idx]['pid'] = $rows[0]->pid;
     }
 
-    //Load a few aliases
+    // Load a few aliases
     foreach ($aliases as $alias) {
       $pid = $alias['pid'];
       $loadedAlias = $aliasStorage->load(['pid' => $pid]);
@@ -49,7 +49,7 @@ class AliasTest extends PathUnitTestBase {
     $loadedAlias = $aliasStorage->load(['source' => '/node/1']);
     $this->assertEqual($loadedAlias['alias'], '/alias_for_node_1_und', 'The last created alias loaded by default.');
 
-    //Update a few aliases
+    // Update a few aliases
     foreach ($aliases as $alias) {
       $fields = $aliasStorage->save($alias['source'], $alias['alias'] . '_updated', $alias['langcode'], $alias['pid']);
 
@@ -61,7 +61,7 @@ class AliasTest extends PathUnitTestBase {
       $this->assertEqual($pid, $alias['pid'], format_string('Updated entry for pid %pid.', ['%pid' => $pid]));
     }
 
-    //Delete a few aliases
+    // Delete a few aliases
     foreach ($aliases as $alias) {
       $pid = $alias['pid'];
       $aliasStorage->delete(['pid' => $pid]);
@@ -74,11 +74,11 @@ class AliasTest extends PathUnitTestBase {
   }
 
   public function testLookupPath() {
-    //Prepare database table.
+    // Prepare database table.
     $connection = Database::getConnection();
     $this->fixtures->createTables($connection);
 
-    //Create AliasManager and Path object.
+    // Create AliasManager and Path object.
     $aliasManager = $this->container->get('path.alias_manager');
     $aliasStorage = new AliasStorage($connection, $this->container->get('module_handler'));
 
