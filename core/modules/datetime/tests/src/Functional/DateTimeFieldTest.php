@@ -44,6 +44,7 @@ class DateTimeFieldTest extends DateTestBase {
     foreach (static::$timezones as $timezone) {
 
       $this->setSiteTimezone($timezone);
+      $this->assertEquals($timezone, $this->config('system.date')->get('timezone.default'), 'Time zone set to ' . $timezone);
 
       // Display creation form.
       $this->drupalGet('entity_test/add');
@@ -117,7 +118,12 @@ class DateTimeFieldTest extends DateTestBase {
               $expected_iso = format_date($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DATETIME_STORAGE_TIMEZONE);
               $output = $this->renderTestEntity($id);
               $expected_markup = '<time datetime="' . $expected_iso . '" class="datetime">' . $expected . '</time>';
-              $this->assertContains($expected_markup, $output, SafeMarkup::format('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => $new_value, '%expected' => $expected, '%expected_iso' => $expected_iso]));
+              $this->assertContains($expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute in %timezone.', [
+                '%value' => $new_value,
+                '%expected' => $expected,
+                '%expected_iso' => $expected_iso,
+                '%timezone' => $timezone,
+              ]));
               break;
           }
         }
@@ -131,7 +137,10 @@ class DateTimeFieldTest extends DateTestBase {
         ->save();
       $expected = $date->format(DATETIME_DATE_STORAGE_FORMAT);
       $output = $this->renderTestEntity($id);
-      $this->assertContains($expected, $output, SafeMarkup::format('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
+      $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected in %timezone.', [
+        '%expected' => $expected,
+        '%timezone' => $timezone,
+      ]));
 
       // Verify that the 'datetime_custom' formatter works.
       $this->displayOptions['type'] = 'datetime_custom';
@@ -141,7 +150,10 @@ class DateTimeFieldTest extends DateTestBase {
         ->save();
       $expected = $date->format($this->displayOptions['settings']['date_format']);
       $output = $this->renderTestEntity($id);
-      $this->assertContains($expected, $output, SafeMarkup::format('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
+      $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using datetime_custom format displayed as %expected in %timezone.', [
+        '%expected' => $expected,
+        '%timezone' => $timezone,
+      ]));
 
       // Test that allowed markup in custom format is preserved and XSS is
       // removed.
@@ -151,7 +163,10 @@ class DateTimeFieldTest extends DateTestBase {
         ->save();
       $expected = '<strong>' . $date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83))';
       $output = $this->renderTestEntity($id);
-      $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
+      $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected in %timezone.', [
+        '%expected' => $expected,
+        '%timezone' => $timezone,
+      ]));
 
       // Verify that the 'datetime_time_ago' formatter works for intervals in the
       // past.  First update the test entity so that the date difference always
@@ -178,7 +193,10 @@ class DateTimeFieldTest extends DateTestBase {
         '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
       ]);
       $output = $this->renderTestEntity($id);
-      $this->assertContains((string) $expected, $output, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
+      $this->assertContains((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected in %timezone.', [
+        '%expected' => $expected,
+        '%timezone' => $timezone,
+      ]));
 
       // Verify that the 'datetime_time_ago' formatter works for intervals in the
       // future.  First update the test entity so that the date difference always
@@ -199,7 +217,10 @@ class DateTimeFieldTest extends DateTestBase {
         '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']])
       ]);
       $output = $this->renderTestEntity($id);
-      $this->assertContains((string) $expected, $output, SafeMarkup::format('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
+      $this->assertContains((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected in %timezone.', [
+        '%expected' => $expected,
+        '%timezone' => $timezone,
+      ]));
     }
   }
 
@@ -646,6 +667,7 @@ class DateTimeFieldTest extends DateTestBase {
     foreach (static::$timezones as $timezone) {
 
       $this->setSiteTimezone($timezone);
+      $this->assertEquals($timezone, $this->config('system.date')->get('timezone.default'), 'Time zone set to ' . $timezone);
 
       // Set now as default_value.
       $field_edit = [
