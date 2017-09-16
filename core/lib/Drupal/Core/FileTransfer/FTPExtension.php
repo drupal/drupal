@@ -108,7 +108,7 @@ class FTPExtension extends FTP implements ChmodInterface {
     if ($this->isDirectory($path) && $recursive) {
       $filelist = @ftp_nlist($this->connection, $path);
       if (!$filelist) {
-        // empty directory - returns false
+        //empty directory - returns false
         return;
       }
       foreach ($filelist as $file) {

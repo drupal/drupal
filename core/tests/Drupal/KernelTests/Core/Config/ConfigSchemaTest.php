@@ -504,7 +504,7 @@ class ConfigSchemaTest extends KernelTestBase {
 
     $definition2 = \Drupal::service('config.typed')->getDefinition('config_schema_test.wildcard_fallback.something.something');
     // This should be the schema of config_schema_test.wildcard_fallback.* as
-    // well.
+    //well.
     $this->assertSame($definition, $definition2);
   }
 
