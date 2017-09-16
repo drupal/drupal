@@ -383,8 +383,7 @@ EOD;
   }
 
   /**
-   * This maps a generic data type in combination with its data size
-   * to the engine-specific data type.
+   * {@inheritdoc}
    */
   public function getFieldTypeMap() {
     // Put :normal last so it gets preserved by array_flip. This makes
@@ -471,6 +470,9 @@ EOD;
     return (bool) $this->connection->query("SELECT 1 FROM pg_tables WHERE schemaname = :schema AND tablename = :table", [':schema' => $prefixInfo['schema'], ':table' => $prefixInfo['table']])->fetchField();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function renameTable($table, $new_name) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot rename @table to @table_new: table @table doesn't exist.", ['@table' => $table, '@table_new' => $new_name]));
@@ -525,6 +527,9 @@ EOD;
     $this->resetTableInformation($table);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function dropTable($table) {
     if (!$this->tableExists($table)) {
       return FALSE;
@@ -535,6 +540,9 @@ EOD;
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addField($table, $field, $spec, $new_keys = []) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot add field @table.@field: table doesn't exist.", ['@field' => $field, '@table' => $table]));
@@ -583,6 +591,9 @@ EOD;
     $this->resetTableInformation($table);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function dropField($table, $field) {
     if (!$this->fieldExists($table, $field)) {
       return FALSE;
@@ -593,6 +604,9 @@ EOD;
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fieldSetDefault($table, $field, $default) {
     if (!$this->fieldExists($table, $field)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field @table.@field: field doesn't exist.", ['@table' => $table, '@field' => $field]));
@@ -603,6 +617,9 @@ EOD;
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" SET DEFAULT ' . $default);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fieldSetNoDefault($table, $field) {
     if (!$this->fieldExists($table, $field)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot remove default value of field @table.@field: field doesn't exist.", ['@table' => $table, '@field' => $field]));
@@ -611,6 +628,9 @@ EOD;
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function indexExists($table, $name) {
     // Details http://www.postgresql.org/docs/9.1/interactive/view-pg-indexes.html
     $index_name = $this->ensureIdentifiersLength($table, $name, 'idx');
@@ -651,6 +671,9 @@ EOD;
     return (bool) $this->connection->query("SELECT 1 FROM pg_constraint WHERE conname = '$constraint_name'")->fetchField();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addPrimaryKey($table, $fields) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot add primary key to table @table: table doesn't exist.", ['@table' => $table]));
@@ -663,6 +686,9 @@ EOD;
     $this->resetTableInformation($table);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function dropPrimaryKey($table) {
     if (!$this->constraintExists($table, 'pkey')) {
       return FALSE;
@@ -673,6 +699,9 @@ EOD;
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addUniqueKey($table, $name, $fields) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot add unique key @name to table @table: table doesn't exist.", ['@table' => $table, '@name' => $name]));
@@ -685,6 +714,9 @@ EOD;
     $this->resetTableInformation($table);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function dropUniqueKey($table, $name) {
     if (!$this->constraintExists($table, $name . '__key')) {
       return FALSE;
@@ -710,6 +742,9 @@ EOD;
     $this->resetTableInformation($table);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function dropIndex($table, $name) {
     if (!$this->indexExists($table, $name)) {
       return FALSE;
@@ -720,6 +755,9 @@ EOD;
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function changeField($table, $field, $field_new, $spec, $new_keys = []) {
     if (!$this->fieldExists($table, $field)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot change the definition of field @table.@name: field doesn't exist.", ['@table' => $table, '@name' => $field]));
