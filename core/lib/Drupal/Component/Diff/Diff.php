@@ -36,7 +36,7 @@ class Diff {
   public function __construct($from_lines, $to_lines) {
     $eng = new DiffEngine();
     $this->edits = $eng->diff($from_lines, $to_lines);
-    //$this->_check($from_lines, $to_lines);
+    // $this->_check($from_lines, $to_lines);
   }
 
   /**
