@@ -572,7 +572,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function mergeProcessOfProperty($property, array $process_of_property) {
     // If we already have a process value then merge the incoming process array
-    //otherwise simply set it.
+    // otherwise simply set it.
     $current_process = $this->getProcess();
     if (isset($current_process[$property])) {
       $this->process = NestedArray::mergeDeepArray([$current_process, $this->getProcessNormalized([$property => $process_of_property])], TRUE);

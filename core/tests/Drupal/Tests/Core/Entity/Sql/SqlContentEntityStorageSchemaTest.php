@@ -1151,7 +1151,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       // Case 6: same storage class, ::hasData() === TRUE, no structure changes.
       [$updated_entity_type_definition, $original_entity_type_definition, TRUE, FALSE, FALSE],
       // Case 7: different storage class, original storage class exists,
-      //::hasData() === TRUE, no structure changes.
+      // ::hasData() === TRUE, no structure changes.
       [$updated_entity_type_definition, $original_entity_type_definition_other_existing, TRUE, FALSE, FALSE],
     ];
   }

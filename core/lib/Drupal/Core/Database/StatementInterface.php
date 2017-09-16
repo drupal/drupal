@@ -37,7 +37,7 @@ interface StatementInterface extends \Traversable {
    * "the access type must be omitted" if it is protected; i.e., conflicting
    * statements). The access type has to be protected.
    */
-  //protected function __construct(Connection $dbh);
+  // protected function __construct(Connection $dbh);
 
   /**
    * Executes a prepared statement

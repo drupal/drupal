@@ -234,7 +234,7 @@ class MailHandlerTest extends UnitTestCase {
     $results[] = $result + $default_result;
     $data[] = [$message, $sender, $results];
 
-    //For authenticated user.
+    // For authenticated user.
     $results = [];
     $message = $this->getAuthenticatedMockMessage();
     $sender = $this->getMockSender(FALSE, 'user@drupal.org');

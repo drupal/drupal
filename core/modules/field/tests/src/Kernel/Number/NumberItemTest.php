@@ -93,7 +93,7 @@ class NumberItemTest extends FieldKernelTestBase {
     $this->assertEqual($entity->field_float->value, $new_float);
     $this->assertEqual($entity->field_decimal->value, $new_decimal);
 
-    /// Test sample item generation.
+    // Test sample item generation.
     $entity = EntityTest::create();
     $entity->field_integer->generateSampleItems();
     $entity->field_float->generateSampleItems();
