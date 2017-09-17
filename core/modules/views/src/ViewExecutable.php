@@ -1758,7 +1758,7 @@ class ViewExecutable {
 
     // We can't use choose_display() here because that function
     // calls this one.
-    $displays = (array)$displays;
+    $displays = (array) $displays;
     foreach ($displays as $display_id) {
       if ($this->displayHandlers->has($display_id)) {
         if (($display = $this->displayHandlers->get($display_id)) && $display->access($account)) {

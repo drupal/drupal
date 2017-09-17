@@ -71,7 +71,7 @@ trait CookieResourceTestTrait {
     $this->sessionCookie = explode(';', $response->getHeader('Set-Cookie')[0], 2)[0];
 
     // Parse and store the CSRF token and logout token.
-    $data = $this->serializer->decode((string)$response->getBody(), static::$format);
+    $data = $this->serializer->decode((string) $response->getBody(), static::$format);
     $this->csrfToken = $data['csrf_token'];
     $this->logoutToken = $data['logout_token'];
   }

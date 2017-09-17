@@ -108,7 +108,7 @@ class Message extends ContentEntityBase implements MessageInterface {
    * {@inheritdoc}
    */
   public function copySender() {
-    return (bool)$this->get('copy')->value;
+    return (bool) $this->get('copy')->value;
   }
 
   /**

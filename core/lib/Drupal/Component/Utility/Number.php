@@ -50,7 +50,7 @@ class Number {
     // can't be represented with single precision floats are acceptable. The
     // fractional part of a float has 24 bits. That means remainders smaller than
     // $step * 2^-24 are acceptable.
-    $computed_acceptable_error = (double)($step / pow(2.0, 24));
+    $computed_acceptable_error = (double) ($step / pow(2.0, 24));
 
     return $computed_acceptable_error >= $remainder || $remainder >= ($step - $computed_acceptable_error);
   }

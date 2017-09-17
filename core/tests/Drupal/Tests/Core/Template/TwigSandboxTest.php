@@ -85,14 +85,14 @@ class TwigSandboxTest extends UnitTestCase {
       ->with('test')
       ->willReturn(TRUE);
     $result = $this->twig->render('{{ entity.hasLinkTemplate("test") }}', ['entity' => $entity]);
-    $this->assertTrue((bool)$result, 'Sandbox policy allows has* functions to be called.');
+    $this->assertTrue((bool) $result, 'Sandbox policy allows has* functions to be called.');
 
     $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
     $entity->expects($this->atLeastOnce())
       ->method('isNew')
       ->willReturn(TRUE);
     $result = $this->twig->render('{{ entity.isNew }}', ['entity' => $entity]);
-    $this->assertTrue((bool)$result, 'Sandbox policy allows is* functions to be called.');
+    $this->assertTrue((bool) $result, 'Sandbox policy allows is* functions to be called.');
 
     $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
     $entity->expects($this->atLeastOnce())

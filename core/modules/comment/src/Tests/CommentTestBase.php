@@ -192,12 +192,12 @@ abstract class CommentTestBase extends WebTestBase {
       }
 
       $comment_title = $comment_element[0]->xpath('div/h3/a');
-      if (empty($comment_title) || ((string)$comment_title[0]) !== $comment->getSubject()) {
+      if (empty($comment_title) || ((string) $comment_title[0]) !== $comment->getSubject()) {
         return FALSE;
       }
 
       $comment_body = $comment_element[0]->xpath('div/div/p');
-      if (empty($comment_body) || ((string)$comment_body[0]) !== $comment->comment_body->value) {
+      if (empty($comment_body) || ((string) $comment_body[0]) !== $comment->comment_body->value) {
         return FALSE;
       }
 
