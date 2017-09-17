@@ -1383,7 +1383,7 @@ function system_time_zones($blank = NULL, $grouped = FALSE) {
       $city = array_pop($split);
       $region = array_shift($split);
       if (!empty($region)) {
-        $grouped_zones[$region][$key] = empty($split) ? $city : $city . ' (' . join('/', $split) . ')';
+        $grouped_zones[$region][$key] = empty($split) ? $city : $city . ' (' . implode('/', $split) . ')';
       }
       else {
         $grouped_zones[$key] = $value;

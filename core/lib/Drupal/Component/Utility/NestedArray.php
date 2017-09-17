@@ -328,7 +328,7 @@ class NestedArray {
         // Renumber integer keys as array_merge_recursive() does unless
         // $preserve_integer_keys is set to TRUE. Note that PHP automatically
         // converts array keys that are integer strings (e.g., '1') to integers.
-        if (is_integer($key) && !$preserve_integer_keys) {
+        if (is_int($key) && !$preserve_integer_keys) {
           $result[] = $value;
         }
         // Recurse when both values are arrays.
