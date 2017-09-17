@@ -363,7 +363,7 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
 
   // exec in a subshell so that the environment is isolated when running tests
   // via the simpletest UI.
-  $ret = exec(join($command, " "), $output, $status);
+  $ret = exec(implode(" ", $command), $output, $status);
 
   chdir($old_cwd);
   putenv('SIMPLETEST_DB=');

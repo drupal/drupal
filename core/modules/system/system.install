@@ -897,7 +897,7 @@ function system_requirements($phase) {
       $requirements['trusted_host_patterns'] = [
         'title' => t('Trusted Host Settings'),
         'value' => t('Enabled'),
-        'description' => t('The trusted_host_patterns setting is set to allow %trusted_host_patterns', ['%trusted_host_patterns' => join(', ', $trusted_host_patterns)]),
+        'description' => t('The trusted_host_patterns setting is set to allow %trusted_host_patterns', ['%trusted_host_patterns' => implode(', ', $trusted_host_patterns)]),
       ];
     }
   }

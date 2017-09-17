@@ -130,7 +130,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
     $this->assertIdenticalResultset($view, $expected_result, $map);
 
     // Check the number of results given by the display is the expected.
-    $this->assertEqual(sizeof($view->result), $this->blockDisplayResults,
+    $this->assertEqual(count($view->result), $this->blockDisplayResults,
       format_string('There are exactly @results comments. Expected @expected',
         ['@results' => count($view->result), '@expected' => $this->blockDisplayResults]
       )
