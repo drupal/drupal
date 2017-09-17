@@ -1186,7 +1186,7 @@ class FormState implements FormStateInterface {
    */
   public function addCleanValueKey($cleanValueKey) {
     $keys = $this->getCleanValueKeys();
-    $this->setCleanValueKeys(array_merge((array)$keys, [$cleanValueKey]));
+    $this->setCleanValueKeys(array_merge((array) $keys, [$cleanValueKey]));
     return $this;
   }
 

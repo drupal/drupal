@@ -333,7 +333,7 @@ class FileItem extends EntityReferenceItem {
     $file = file_save_data($data, $destination, FILE_EXISTS_ERROR);
     $values = [
       'target_id' => $file->id(),
-      'display' => (int)$settings['display_default'],
+      'display' => (int) $settings['display_default'],
       'description' => $random->sentences(10),
     ];
     return $values;

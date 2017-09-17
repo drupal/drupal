@@ -190,7 +190,7 @@ abstract class CachePluginBase extends PluginBase {
           $query = clone $build_info[$index];
           $query->preExecute();
           $build_info[$index] = [
-            'query' => (string)$query,
+            'query' => (string) $query,
             'arguments' => $query->getArguments(),
           ];
         }

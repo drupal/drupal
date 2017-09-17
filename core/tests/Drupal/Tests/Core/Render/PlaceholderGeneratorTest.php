@@ -30,7 +30,7 @@ class PlaceholderGeneratorTest extends RendererTestBase {
   public function testCreatePlaceholderGeneratesValidHtmlMarkup(array $element) {
     $build = $this->placeholderGenerator->createPlaceholder($element);
 
-    $original_placeholder_markup = (string)$build['#markup'];
+    $original_placeholder_markup = (string) $build['#markup'];
     $processed_placeholder_markup = Html::serialize(Html::load($build['#markup']));
 
     $this->assertEquals($original_placeholder_markup, $processed_placeholder_markup);

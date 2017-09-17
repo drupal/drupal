@@ -172,7 +172,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
     }
     $return = [];
     foreach ($this->sqlQuery->execute() as $row) {
-      $return[] = (array)$row;
+      $return[] = (array) $row;
     }
     return $return;
   }
