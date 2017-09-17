@@ -38,6 +38,7 @@ class WorkflowUiNoTypeTest extends BrowserTestBase {
 
     $this->drupalGet('admin/config/workflow/workflows');
     $this->assertSession()->pageTextContains('There are no workflow types available. In order to create workflows you need to install a module that provides a workflow type. For example, the Content Moderation module provides a workflow type that enables workflows for content entities.');
+    $this->assertSession()->linkExists('Content Moderation');
     $this->assertSession()->pageTextNotContains('Add workflow');
 
     $this->container->get('module_installer')->install(['workflow_type_test']);
