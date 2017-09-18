@@ -22,7 +22,7 @@ class ComplexTestTypeTransitionForm extends WorkflowTypeTransitionFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Extra'),
       '#description' => $this->t('Extra information added to transition'),
-      '#default_value' => isset($configuration['transitions'][$transition->id()]['extra']) ? $configuration['transitions'][$transition->id()]['extra'] : '',
+      '#default_value' => $transition && isset($configuration['transitions'][$transition->id()]['extra']) ? $configuration['transitions'][$transition->id()]['extra'] : '',
     ];
     return $form;
   }

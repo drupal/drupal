@@ -293,4 +293,102 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->assertEquals('Extra global settings', $workflow->getTypePlugin()->getConfiguration()['example_setting']);
   }
 
+  /**
+   * Test a workflow, state, and transition can have a numeric ID and label.
+   */
+  public function testNumericIds() {
+    $this->drupalLogin($this->createUser(['administer workflows']));
+    $this->drupalGet('admin/config/workflow/workflows');
+    $this->clickLink('Add workflow');
+    $this->submitForm(['label' => 123, 'id' => 123, 'workflow_type' => 'workflow_type_complex_test'], 'Save');
+
+    $this->assertSession()->addressEquals('admin/config/workflow/workflows/manage/123/add_state');
+
+    $this->submitForm(['label' => 456, 'id' => 456], 'Save');
+    $this->assertSession()->pageTextContains('Created 456 state.');
+
+    $this->clickLink('Add a new state');
+    $this->submitForm(['label' => 789, 'id' => 789], 'Save');
+    $this->assertSession()->pageTextContains('Created 789 state.');
+
+    $this->clickLink('Add a new transition');
+    $this->submitForm(['id' => 101112, 'label' => 101112, 'from[456]' => 456, 'to' => 789], 'Save');
+    $this->assertSession()->pageTextContains('Created 101112 transition.');
+
+    $workflow = $this->container->get('entity_type.manager')->getStorage('workflow')->loadUnchanged(123);
+    $this->assertEquals(123, $workflow->id());
+    $this->assertEquals(456, $workflow->getTypePlugin()->getState(456)->id());
+    $this->assertEquals(101112, $workflow->getTypePlugin()->getTransition(101112)->id());
+    $this->assertEquals(789, $workflow->getTypePlugin()->getTransition(101112)->to()->id());
+  }
+
+  /**
+   * Test the sorting of states and transitions by weight and label.
+   */
+  public function testSorting() {
+    $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_complex_test', 'label' => 'Test']);
+    $workflow
+      ->getTypePlugin()
+      ->setConfiguration([
+        'states' => [
+          'twoa' => [
+            'label' => 'twoa',
+            'weight' => 2,
+          ],
+          'three' => [
+            'label' => 'three',
+            'weight' => 3,
+          ],
+          'twob' => [
+            'label' => 'twob',
+            'weight' => 2,
+          ],
+          'one' => [
+            'label' => 'one',
+            'weight' => 1,
+          ],
+        ],
+        'transitions' => [
+          'three' => [
+            'label' => 'three',
+            'from' => ['three'],
+            'to' => 'three',
+            'weight' => 3,
+          ],
+          'twoa' => [
+            'label' => 'twoa',
+            'from' => ['twoa'],
+            'to' => 'twoa',
+            'weight' => 2,
+          ],
+          'one' => [
+            'label' => 'one',
+            'from' => ['one'],
+            'to' => 'one',
+            'weight' => 1,
+          ],
+          'twob' => [
+            'label' => 'twob',
+            'from' => ['twob'],
+            'to' => 'twob',
+            'weight' => 2,
+          ],
+        ],
+      ]);
+    $workflow->save();
+
+    $this->drupalLogin($this->createUser(['administer workflows']));
+    $this->drupalGet('admin/config/workflow/workflows/manage/test');
+    $expected_states = ['one', 'twoa', 'twob', 'three'];
+    $elements = $this->xpath('//details[@id="edit-states-container"]//table/tbody/tr');
+    foreach ($elements as $key => $element) {
+      $this->assertEquals($expected_states[$key], $element->find('xpath', 'td')->getText());
+    }
+    $expected_transitions = ['one', 'twoa', 'twob', 'three'];
+    $elements = $this->xpath('//details[@id="edit-transitions-container"]//table/tbody/tr');
+    foreach ($elements as $key => $element) {
+      $this->assertEquals($expected_transitions[$key], $element->find('xpath', 'td')->getText());
+    }
+  }
+
 }

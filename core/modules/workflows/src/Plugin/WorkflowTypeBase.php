@@ -263,7 +263,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   }
 
   /**
-   * Sort states or transitions by weight and label.
+   * Sort states or transitions by weight, label, and key.
    *
    * @param \Drupal\workflows\StateInterface[]|\Drupal\workflows\TransitionInterface[] $objects
    *   Objects to multi-sort.
@@ -273,15 +273,27 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    */
   protected static function labelWeightMultisort($objects) {
     if (count($objects) > 1) {
+      // Separate weights, labels, and keys into arrays.
       $weights = $labels = [];
+      $keys = array_keys($objects);
       foreach ($objects as $id => $object) {
         $weights[$id] = $object->weight();
         $labels[$id] = $object->label();
       }
+      // Sort weights, labels, and keys in the same order as each other.
       array_multisort(
+      // Use the numerical weight as the primary sort.
         $weights, SORT_NUMERIC, SORT_ASC,
-        $labels, SORT_NATURAL, SORT_ASC
+        // When objects have the same weight, sort them alphabetically by label.
+        $labels, SORT_NATURAL, SORT_ASC,
+        // Ensure that the keys (the object IDs) are sorted in the same order as
+        // the weights.
+        $keys
       );
+      // Combine keys and weights to make sure the weights are keyed with the
+      // correct keys.
+      $weights = array_combine($keys, $weights);
+      // Return the objects sorted by weight.
       return array_replace($weights, $objects);
     }
     return $objects;
