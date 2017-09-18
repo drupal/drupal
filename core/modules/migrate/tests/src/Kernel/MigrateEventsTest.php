@@ -7,7 +7,6 @@ use Drupal\migrate\Event\MigrateMapDeleteEvent;
 use Drupal\migrate\Event\MigrateMapSaveEvent;
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\Event\MigratePreRowSaveEvent;
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\KernelTests\KernelTestBase;
@@ -76,7 +75,7 @@ class MigrateEventsTest extends KernelTestBase {
 
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration);
     // As the import runs, events will be dispatched, recording the received
     // information in state.
     $executable->import();
