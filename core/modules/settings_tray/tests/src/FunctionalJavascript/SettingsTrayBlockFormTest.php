@@ -66,144 +66,151 @@ class SettingsTrayBlockFormTest extends SettingsTrayJavascriptTestBase {
    *
    * @dataProvider providerTestBlocks
    */
-  public function testBlocks($block_plugin, $new_page_text, $element_selector, $label_selector, $button_text, $toolbar_item) {
+  public function testBlocks($theme, $block_plugin, $new_page_text, $element_selector, $label_selector, $button_text, $toolbar_item) {
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
-    foreach ($this->getTestThemes() as $theme) {
-      $this->enableTheme($theme);
-      $block = $this->placeBlock($block_plugin);
-      $block_selector = str_replace('_', '-', $this->getBlockSelector($block));
-      $block_id = $block->id();
-      $this->drupalGet('user');
+    $this->enableTheme($theme);
+    $block = $this->placeBlock($block_plugin);
+    $block_selector = str_replace('_', '-', $this->getBlockSelector($block));
+    $block_id = $block->id();
+    $this->drupalGet('user');
 
-      $link = $page->find('css', "$block_selector .contextual-links li a");
-      $this->assertEquals('Quick edit', $link->getText(), "'Quick edit' is the first contextual link for the block.");
-      $this->assertContains("/admin/structure/block/manage/$block_id/off-canvas?destination=user/2", $link->getAttribute('href'));
+    $link = $page->find('css', "$block_selector .contextual-links li a");
+    $this->assertEquals('Quick edit', $link->getText(), "'Quick edit' is the first contextual link for the block.");
+    $this->assertContains("/admin/structure/block/manage/$block_id/off-canvas?destination=user/2", $link->getAttribute('href'));
 
-      if (isset($toolbar_item)) {
-        // Check that you can open a toolbar tray and it will be closed after
-        // entering edit mode.
-        if ($element = $page->find('css', "#toolbar-administration a.is-active")) {
-          // If a tray was open from page load close it.
-          $element->click();
-          $this->waitForNoElement("#toolbar-administration a.is-active");
-        }
-        $page->find('css', $toolbar_item)->click();
-        $this->assertElementVisibleAfterWait('css', "{$toolbar_item}.is-active");
+    if (isset($toolbar_item)) {
+      // Check that you can open a toolbar tray and it will be closed after
+      // entering edit mode.
+      if ($element = $page->find('css', "#toolbar-administration a.is-active")) {
+        // If a tray was open from page load close it.
+        $element->click();
+        $this->waitForNoElement("#toolbar-administration a.is-active");
       }
-      $this->enableEditMode();
-      if (isset($toolbar_item)) {
-        $this->waitForNoElement("{$toolbar_item}.is-active");
-      }
-      $this->openBlockForm($block_selector);
-      switch ($block_plugin) {
-        case 'system_powered_by_block':
-          // Confirm "Display Title" is not checked.
-          $web_assert->checkboxNotChecked('settings[label_display]');
-          // Confirm Title is not visible.
-          $this->assertEquals($this->isLabelInputVisible(), FALSE, 'Label is not visible');
-          $page->checkField('settings[label_display]');
-          $this->assertEquals($this->isLabelInputVisible(), TRUE, 'Label is visible');
-          // Fill out form, save the form.
-          $page->fillField('settings[label]', $new_page_text);
-
-          break;
-
-        case 'system_branding_block':
-          // Fill out form, save the form.
-          $page->fillField('settings[site_information][site_name]', $new_page_text);
-          break;
-
-        case 'settings_tray_test_class':
-          $web_assert->elementExists('css', '[data-drupal-selector="edit-settings-some-setting"]');
-          break;
-      }
-
-      if (isset($new_page_text)) {
-        $page->pressButton($button_text);
-        // Make sure the changes are present.
-        $new_page_text_locator = "$block_selector $label_selector:contains($new_page_text)";
-        $this->assertElementVisibleAfterWait('css', $new_page_text_locator);
-        $web_assert->assertWaitOnAjaxRequest();
-      }
-
-      $this->openBlockForm($block_selector);
-
-      $this->disableEditMode();
-      // Canvas should close when editing module is closed.
-      $this->waitForOffCanvasToClose();
-
-      $this->enableEditMode();
-
-      // Open block form by clicking a element inside the block.
-      // This confirms that default action for links and form elements is
-      // suppressed.
-      $this->openBlockForm("$block_selector {$element_selector}", $block_selector);
-      $web_assert->elementTextContains('css', '.contextual-toolbar-tab button', 'Editing');
-      $web_assert->elementAttributeContains('css', '.dialog-off-canvas__main-canvas', 'class', 'js-settings-tray-edit-mode');
-      // Simulate press the Escape key.
-      $this->getSession()->executeScript('jQuery("body").trigger(jQuery.Event("keyup", { keyCode: 27 }));');
-      $this->waitForOffCanvasToClose();
-      $this->getSession()->wait(100);
-      $this->assertEditModeDisabled();
-      $web_assert->elementTextContains('css', '#drupal-live-announce', 'Exited edit mode.');
-      $web_assert->elementTextNotContains('css', '.contextual-toolbar-tab button', 'Editing');
-      $web_assert->elementAttributeNotContains('css', '.dialog-off-canvas__main-canvas', 'class', 'js-settings-tray-edit-mode');
-      // Delete the block that was placed for the current theme.
-      $block->delete();
+      $page->find('css', $toolbar_item)->click();
+      $this->assertElementVisibleAfterWait('css', "{$toolbar_item}.is-active");
     }
+    $this->enableEditMode();
+    if (isset($toolbar_item)) {
+      $this->waitForNoElement("{$toolbar_item}.is-active");
+    }
+    $this->openBlockForm($block_selector);
+    switch ($block_plugin) {
+      case 'system_powered_by_block':
+        // Confirm "Display Title" is not checked.
+        $web_assert->checkboxNotChecked('settings[label_display]');
+        // Confirm Title is not visible.
+        $this->assertEquals($this->isLabelInputVisible(), FALSE, 'Label is not visible');
+        $page->checkField('settings[label_display]');
+        $this->assertEquals($this->isLabelInputVisible(), TRUE, 'Label is visible');
+        // Fill out form, save the form.
+        $page->fillField('settings[label]', $new_page_text);
+
+        break;
+
+      case 'system_branding_block':
+        // Fill out form, save the form.
+        $page->fillField('settings[site_information][site_name]', $new_page_text);
+        break;
+
+      case 'settings_tray_test_class':
+        $web_assert->elementExists('css', '[data-drupal-selector="edit-settings-some-setting"]');
+        break;
+    }
+
+    if (isset($new_page_text)) {
+      $page->pressButton($button_text);
+      // Make sure the changes are present.
+      $new_page_text_locator = "$block_selector $label_selector:contains($new_page_text)";
+      $this->assertElementVisibleAfterWait('css', $new_page_text_locator);
+      // The page is loaded with the new change but make sure page is
+      // completely loaded.
+      $this->assertPageLoadComplete();
+    }
+
+    $this->openBlockForm($block_selector);
+
+    $this->disableEditMode();
+    // Canvas should close when editing module is closed.
+    $this->waitForOffCanvasToClose();
+
+    $this->enableEditMode();
+
+    // Open block form by clicking a element inside the block.
+    // This confirms that default action for links and form elements is
+    // suppressed.
+    $this->openBlockForm("$block_selector {$element_selector}", $block_selector);
+    $web_assert->elementTextContains('css', '.contextual-toolbar-tab button', 'Editing');
+    $web_assert->elementAttributeContains('css', '.dialog-off-canvas__main-canvas', 'class', 'js-settings-tray-edit-mode');
+    // Simulate press the Escape key.
+    $this->getSession()->executeScript('jQuery("body").trigger(jQuery.Event("keyup", { keyCode: 27 }));');
+    $this->waitForOffCanvasToClose();
+    $this->getSession()->wait(100);
+    $this->assertEditModeDisabled();
+    $web_assert->elementTextContains('css', '#drupal-live-announce', 'Exited edit mode.');
+    $web_assert->elementTextNotContains('css', '.contextual-toolbar-tab button', 'Editing');
+    $web_assert->elementAttributeNotContains('css', '.dialog-off-canvas__main-canvas', 'class', 'js-settings-tray-edit-mode');
   }
 
   /**
    * Dataprovider for testBlocks().
    */
   public function providerTestBlocks() {
-    $blocks = [
-      'block-powered' => [
-        'block_plugin' => 'system_powered_by_block',
-        'new_page_text' => 'Can you imagine anyone showing the label on this block',
-        'element_selector' => 'span a',
-        'label_selector' => 'h2',
-        'button_text' => 'Save Powered by Drupal',
-        'toolbar_item' => '#toolbar-item-user',
-      ],
-      'block-branding' => [
-        'block_plugin' => 'system_branding_block',
-        'new_page_text' => 'The site that will live a very short life',
-        'element_selector' => "a[rel='home']:last-child",
-        'label_selector' => "a[rel='home']:last-child",
-        'button_text' => 'Save Site branding',
-        'toolbar_item' => '#toolbar-item-administration',
-      ],
-      'block-search' => [
-        'block_plugin' => 'search_form_block',
-        'new_page_text' => NULL,
-        'element_selector' => '#edit-submit',
-        'label_selector' => 'h2',
-        'button_text' => 'Save Search form',
-        'toolbar_item' => NULL,
-      ],
-      // This is the functional JS test coverage accompanying
-      // \Drupal\Tests\settings_tray\Functional\SettingsTrayTest::testPossibleAnnotations().
-      SettingsTrayFormAnnotationIsClassBlock::class => [
-        'block_plugin' => 'settings_tray_test_class',
-        'new_page_text' => NULL,
-        'element_selector' => 'span',
-        'label_selector' => NULL,
-        'button_text' => NULL,
-        'toolbar_item' => NULL,
-      ],
-      // This is the functional JS test coverage accompanying
-      // \Drupal\Tests\settings_tray\Functional\SettingsTrayTest::testPossibleAnnotations().
-      SettingsTrayFormAnnotationNoneBlock::class => [
-        'block_plugin' => 'settings_tray_test_none',
-        'new_page_text' => NULL,
-        'element_selector' => 'span',
-        'label_selector' => NULL,
-        'button_text' => NULL,
-        'toolbar_item' => NULL,
-      ],
-    ];
+    $blocks = [];
+    foreach ($this->getTestThemes() as $theme) {
+      $blocks += [
+        "$theme: block-powered" => [
+          'theme' => $theme,
+          'block_plugin' => 'system_powered_by_block',
+          'new_page_text' => 'Can you imagine anyone showing the label on this block',
+          'element_selector' => 'span a',
+          'label_selector' => 'h2',
+          'button_text' => 'Save Powered by Drupal',
+          'toolbar_item' => '#toolbar-item-user',
+        ],
+        "$theme: block-branding" => [
+          'theme' => $theme,
+          'block_plugin' => 'system_branding_block',
+          'new_page_text' => 'The site that will live a very short life',
+          'element_selector' => "a[rel='home']:last-child",
+          'label_selector' => "a[rel='home']:last-child",
+          'button_text' => 'Save Site branding',
+          'toolbar_item' => '#toolbar-item-administration',
+        ],
+        "$theme: block-search" => [
+          'theme' => $theme,
+          'block_plugin' => 'search_form_block',
+          'new_page_text' => NULL,
+          'element_selector' => '#edit-submit',
+          'label_selector' => 'h2',
+          'button_text' => 'Save Search form',
+          'toolbar_item' => NULL,
+        ],
+        // This is the functional JS test coverage accompanying
+        // \Drupal\Tests\settings_tray\Functional\SettingsTrayTest::testPossibleAnnotations().
+        "$theme: " . SettingsTrayFormAnnotationIsClassBlock::class => [
+          'theme' => $theme,
+          'block_plugin' => 'settings_tray_test_class',
+          'new_page_text' => NULL,
+          'element_selector' => 'span',
+          'label_selector' => NULL,
+          'button_text' => NULL,
+          'toolbar_item' => NULL,
+        ],
+        // This is the functional JS test coverage accompanying
+        // \Drupal\Tests\settings_tray\Functional\SettingsTrayTest::testPossibleAnnotations().
+        "$theme: " . SettingsTrayFormAnnotationNoneBlock::class => [
+          'theme' => $theme,
+          'block_plugin' => 'settings_tray_test_none',
+          'new_page_text' => NULL,
+          'element_selector' => 'span',
+          'label_selector' => NULL,
+          'button_text' => NULL,
+          'toolbar_item' => NULL,
+        ],
+      ];
+    }
+
     return $blocks;
   }
 
