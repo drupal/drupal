@@ -4,6 +4,7 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\Plugin\migrate\process\UrlEncode;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 
@@ -55,7 +56,7 @@ class UrlEncodeTest extends MigrateTestCase {
    *   Encoded URL.
    */
   protected function doTransform($value) {
-    $executable = new MigrateExecutable($this->getMigration());
+    $executable = new MigrateExecutable($this->getMigration(), new MigrateMessage());
     $row = new Row();
 
     return (new UrlEncode([], 'urlencode', []))

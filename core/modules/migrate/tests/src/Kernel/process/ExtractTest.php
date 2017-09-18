@@ -4,6 +4,7 @@ namespace Drupal\Tests\migrate\Kernel\process;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
@@ -65,7 +66,7 @@ class ExtractTest extends KernelTestBase {
 
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
-    $executable = new MigrateExecutable($migration);
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
     $result = $executable->import();
 
     // Migration needs to succeed before further assertions are made.
