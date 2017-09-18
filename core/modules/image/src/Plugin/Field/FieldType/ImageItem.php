@@ -3,6 +3,7 @@
 namespace Drupal\image\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -313,12 +314,17 @@ class ImageItem extends FileItem {
     $height = $this->height;
 
     // Determine the dimensions if necessary.
-    if (empty($width) || empty($height)) {
-      $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
-      if ($image->isValid()) {
-        $this->width = $image->getWidth();
-        $this->height = $image->getHeight();
+    if ($this->entity && $this->entity instanceof EntityInterface) {
+      if (empty($width) || empty($height)) {
+        $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
+        if ($image->isValid()) {
+          $this->width = $image->getWidth();
+          $this->height = $image->getHeight();
+        }
       }
+    }
+    else {
+      trigger_error(sprintf("Missing file with ID %s.", $this->target_id), E_USER_WARNING);
     }
   }
 

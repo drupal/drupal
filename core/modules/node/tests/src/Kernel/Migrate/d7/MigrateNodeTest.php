@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
+use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
@@ -13,6 +14,8 @@ use Drupal\node\NodeInterface;
  */
 class MigrateNodeTest extends MigrateDrupal7TestBase {
 
+  use FileMigrationSetupTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -20,6 +23,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     'content_translation',
     'comment',
     'datetime',
+    'file',
     'filter',
     'image',
     'language',
@@ -37,10 +41,11 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->fileMigrationSetup();
+
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installEntitySchema('taxonomy_term');
-    $this->installEntitySchema('file');
     $this->installConfig(static::$modules);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('system', ['sequences']);
