@@ -3,7 +3,6 @@
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -50,7 +49,7 @@ class MigrateSkipRowTest extends KernelTestBase {
 
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration);
     $result = $executable->import();
     $this->assertEqual($result, MigrationInterface::RESULT_COMPLETED);
 
@@ -85,7 +84,7 @@ class MigrateSkipRowTest extends KernelTestBase {
     ];
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration);
     $result = $executable->import();
     $this->assertEquals($result, MigrationInterface::RESULT_COMPLETED);
 

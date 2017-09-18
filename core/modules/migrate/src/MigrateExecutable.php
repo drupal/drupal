@@ -96,16 +96,16 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to run.
    * @param \Drupal\migrate\MigrateMessageInterface $message
-   *   The migrate message service.
+   *   (optional) The migrate message service.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher.
+   *   (optional) The event dispatcher.
    *
    * @throws \Drupal\migrate\MigrateException
    */
-  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message, EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message = NULL, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->migration = $migration;
-    $this->message = $message;
-    $this->migration->getIdMap()->setMessage($message);
+    $this->message = $message ?: new MigrateMessage();
+    $this->migration->getIdMap()->setMessage($this->message);
     $this->eventDispatcher = $event_dispatcher;
     // Record the memory limit in bytes
     $limit = trim(ini_get('memory_limit'));

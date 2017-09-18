@@ -5,7 +5,6 @@ namespace Drupal\Tests\migrate\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -190,7 +189,7 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     ];
 
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration);
     $result = $executable->import();
     $this->assertEquals(MigrationInterface::RESULT_COMPLETED, $result);
 
