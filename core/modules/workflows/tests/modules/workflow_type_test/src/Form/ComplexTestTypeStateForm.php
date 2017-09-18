@@ -22,7 +22,7 @@ class ComplexTestTypeStateForm extends WorkflowTypeStateFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Extra'),
       '#description' => $this->t('Extra information added to state'),
-      '#default_value' => isset($configuration['states'][$state->id()]['extra']) ? $configuration['states'][$state->id()]['extra'] : '',
+      '#default_value' => $state && isset($configuration['states'][$state->id()]['extra']) ? $configuration['states'][$state->id()]['extra'] : '',
     ];
     return $form;
   }
