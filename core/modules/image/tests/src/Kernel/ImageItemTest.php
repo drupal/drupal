@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\image\Kernel;
 
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -127,6 +128,28 @@ class ImageItemTest extends FieldKernelTestBase {
     $entity->image_test->generateSampleItems();
     $this->entityValidateAndSave($entity);
     $this->assertEqual($entity->image_test->entity->get('filemime')->value, 'image/jpeg');
+  }
+
+  /**
+   * Tests a malformed image.
+   */
+  public function testImageItemMalformed() {
+    // Validate entity is an image and don't gather dimensions if it is not.
+    $entity = EntityTest::create();
+    $entity->image_test = NULL;
+    $entity->image_test->target_id = 9999;
+    // PHPUnit re-throws E_USER_WARNING as an exception.
+    try {
+      $entity->save();
+      $this->fail('Exception did not fail');
+    }
+    catch (EntityStorageException $exception) {
+      $this->assertInstanceOf(\PHPUnit_Framework_Error_Warning::class, $exception->getPrevious());
+      $this->assertEquals($exception->getMessage(), 'Missing file with ID 9999.');
+      $this->assertEmpty($entity->image_test->width);
+      $this->assertEmpty($entity->image_test->height);
+    }
+
   }
 
 }

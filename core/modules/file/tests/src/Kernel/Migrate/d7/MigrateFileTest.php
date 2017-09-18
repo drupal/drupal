@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\file\Kernel\Migrate\d7;
 
-use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
@@ -14,6 +13,8 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateFileTest extends MigrateDrupal7TestBase {
 
+  use FileMigrationSetupTrait;
+
   public static $modules = ['file'];
 
   /**
@@ -22,23 +23,7 @@ class MigrateFileTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('file');
-    $this->container->get('stream_wrapper_manager')->registerWrapper('public', 'Drupal\Core\StreamWrapper\PublicStream', StreamWrapperInterface::NORMAL);
-
-    $fs = \Drupal::service('file_system');
-    // The public file directory active during the test will serve as the
-    // root of the fictional Drupal 7 site we're migrating.
-    $fs->mkdir('public://sites/default/files', NULL, TRUE);
-    file_put_contents('public://sites/default/files/cube.jpeg', str_repeat('*', 3620));
-
-    /** @var \Drupal\migrate\Plugin\Migration $migration */
-    $migration = $this->getMigration('d7_file');
-    // Set the source plugin's source_base_path configuration value, which
-    // would normally be set by the user running the migration.
-    $source = $migration->getSourceConfiguration();
-    $source['constants']['source_base_path'] = $fs->realpath('public://');
-    $migration->set('source', $source);
-    $this->executeMigration($migration);
+    $this->fileMigrationSetup();
   }
 
   /**
