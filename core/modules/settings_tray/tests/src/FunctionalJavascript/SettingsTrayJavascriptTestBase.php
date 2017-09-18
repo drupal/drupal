@@ -14,12 +14,34 @@ abstract class SettingsTrayJavascriptTestBase extends JavascriptTestBase {
    */
   protected function drupalGet($path, array $options = [], array $headers = []) {
     $return = parent::drupalGet($path, $options, $headers);
-
-    // After the page loaded we need to additionally wait until the settings
-    // tray Ajax activity is done.
-    $this->assertSession()->assertWaitOnAjaxRequest();
-
+    $this->assertPageLoadComplete();
     return $return;
+  }
+
+  /**
+   * Assert the page is completely loaded.
+   *
+   * Ajax requests may happen after page loads. Also for users who have access
+   * to contextual links the contextual link placeholders will be filled after
+   * the page is received.
+   */
+  protected function assertPageLoadComplete() {
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    if ($this->loggedInUser && $this->loggedInUser->hasPermission('access contextual links')) {
+      $this->assertAllContextualLinksLoaded();
+    }
+  }
+
+  /**
+   * Assert all contextual link areas have be loaded.
+   *
+   * Contextual link placeholders will be filled after
+   * the page is received.
+   *
+   * @todo Move this function to https://www.drupal.org/node/2821724.
+   */
+  protected function assertAllContextualLinksLoaded() {
+    $this->waitForNoElement('[data-contextual-id]:empty');
   }
 
   /**
@@ -72,7 +94,7 @@ abstract class SettingsTrayJavascriptTestBase extends JavascriptTestBase {
    *   (optional) Timeout in milliseconds, defaults to 10000.
    */
   protected function waitForNoElement($selector, $timeout = 10000) {
-    $condition = "(jQuery('$selector').length == 0)";
+    $condition = "(typeof jQuery !== 'undefined' && jQuery('$selector').length === 0)";
     $this->assertJsCondition($condition, $timeout);
   }
 
