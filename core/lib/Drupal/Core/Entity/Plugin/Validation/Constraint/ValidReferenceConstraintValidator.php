@@ -121,16 +121,29 @@ class ValidReferenceConstraintValidator extends ConstraintValidator implements C
 
     // Add violations on deltas with a target_id that is not valid.
     if ($target_ids) {
+      // Get a list of pre-existing references.
+      $previously_referenced_ids = [];
+      if ($value->getParent() && ($entity = $value->getEntity()) && !$entity->isNew()) {
+        $existing_entity = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
+        foreach ($existing_entity->{$value->getFieldDefinition()->getName()}->getValue() as $item) {
+          $previously_referenced_ids[$item['target_id']] = $item['target_id'];
+        }
+      }
+
       $valid_target_ids = $handler->validateReferenceableEntities($target_ids);
       if ($invalid_target_ids = array_diff($target_ids, $valid_target_ids)) {
         // For accuracy of the error message, differentiate non-referenceable
         // and non-existent entities.
-        $target_type = $this->entityTypeManager->getDefinition($target_type_id);
-        $existing_ids = $this->entityTypeManager->getStorage($target_type_id)->getQuery()
-          ->condition($target_type->getKey('id'), $invalid_target_ids, 'IN')
-          ->execute();
+        $existing_entities = $this->entityTypeManager->getStorage($target_type_id)->loadMultiple($invalid_target_ids);
         foreach ($invalid_target_ids as $delta => $target_id) {
-          $message = in_array($target_id, $existing_ids) ? $constraint->message : $constraint->nonExistingMessage;
+          // Check if any of the invalid existing references are simply not
+          // accessible by the user, in which case they need to be excluded from
+          // validation
+          if (isset($previously_referenced_ids[$target_id]) && isset($existing_entities[$target_id]) && !$existing_entities[$target_id]->access('view')) {
+            continue;
+          }
+
+          $message = isset($existing_entities[$target_id]) ? $constraint->message : $constraint->nonExistingMessage;
           $this->context->buildViolation($message)
             ->setParameter('%type', $target_type_id)
             ->setParameter('%id', $target_id)
