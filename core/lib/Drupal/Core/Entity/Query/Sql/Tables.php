@@ -273,7 +273,15 @@ class Tables implements TablesInterface {
           $entity_type = $this->entityManager->getDefinition($entity_type_id);
           $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
           // Add the new entity base table using the table and sql column.
-          $base_table = $this->addNextBaseTable($entity_type, $table, $sql_column);
+          // An additional $field_storage argument is being passed to
+          // addNextBaseTable() in order to improve its functionality, for
+          // example by allowing extra processing based on the field type of the
+          // storage. In order to maintain backwards compatibility in 8.4.x, the
+          // new argument has not been added to the signature of that method,
+          // and it will be added only in 8.5.x.
+          // @todo Add the $field_storage argument to addNextBaseTable() in
+          //   8.5.x. https://www.drupal.org/node/2909425
+          $base_table = $this->addNextBaseTable($entity_type, $table, $sql_column, $field_storage);
           $propertyDefinitions = [];
           $key++;
           $index_prefix .= "$next_index_prefix.";
