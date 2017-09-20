@@ -1,0 +1,4 @@
+contextual_test:
+  title: 'Test Link'
+  route_name: 'contextual_test'
+  group: 'contextual_test'
