@@ -259,7 +259,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    */
   public function generateSampleItems($count = 1) {
     $field_definition = $this->getFieldDefinition();
-    $field_type_class = \Drupal::service('plugin.manager.field.field_type')->getPluginClass($field_definition->getType());
+    $field_type_class = $field_definition->getItemDefinition()->getClass();
     for ($delta = 0; $delta < $count; $delta++) {
       $values[$delta] = $field_type_class::generateSampleValue($field_definition);
     }

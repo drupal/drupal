@@ -18,4 +18,9 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
     //   https://www.drupal.org/node/2618436.
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function createWithSampleValues($bundle = FALSE, array $values = []) {}
+
 }

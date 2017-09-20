@@ -22,6 +22,14 @@ class UserEntityTest extends KernelTestBase {
   public static $modules = ['system', 'user', 'field'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->installEntitySchema('user');
+  }
+
+  /**
    * Tests some of the methods.
    *
    * @see \Drupal\user\Entity\User::getRoles()
@@ -63,6 +71,24 @@ class UserEntityTest extends KernelTestBase {
     $this->assertFalse($user->hasRole('test_role_one'));
     $this->assertTrue($user->hasRole('test_role_two'));
     $this->assertEqual([RoleInterface::AUTHENTICATED_ID, 'test_role_two'], $user->getRoles());
+  }
+
+  /**
+   * Tests that all user fields validate properly.
+   *
+   * @see \Drupal\Core\Field\FieldItemListInterface::generateSampleItems
+   * @see \Drupal\Core\Field\FieldItemInterface::generateSampleValue()
+   * @see \Drupal\Core\Entity\FieldableEntityInterface::validate()
+   */
+  public function testUserValidation() {
+    $user = User::create([]);
+    foreach ($user as $field_name => $field) {
+      if (!in_array($field_name, ['uid'])) {
+        $user->$field_name->generateSampleItems();
+      }
+    }
+    $violations = $user->validate();
+    $this->assertFalse((bool) $violations->count());
   }
 
 }

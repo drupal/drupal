@@ -80,6 +80,40 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function createWithSampleValues($bundle = FALSE, array $values = []) {
+    // ID and revision should never have sample values generated for them.
+    $forbidden_keys = [
+      $this->entityType->getKey('id'),
+    ];
+    if ($revision_key = $this->entityType->getKey('revision')) {
+      $forbidden_keys[] = $revision_key;
+    }
+    if ($bundle_key = $this->entityType->getKey('bundle')) {
+      if (!$bundle) {
+        throw new EntityStorageException("No entity bundle was specified");
+      }
+      if (!array_key_exists($bundle, $this->entityManager->getBundleInfo($this->entityTypeId))) {
+        throw new EntityStorageException(sprintf("Missing entity bundle. The \"%s\" bundle does not exist", $bundle));
+      }
+      $values[$bundle_key] = $bundle;
+      // Bundle is already set
+      $forbidden_keys[] = $bundle_key;
+    }
+    // Forbid sample generation on any keys whose values were submitted.
+    $forbidden_keys = array_merge($forbidden_keys, array_keys($values));
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
+    $entity = $this->create($values);
+    foreach ($entity as $field_name => $value) {
+      if (!in_array($field_name, $forbidden_keys, TRUE)) {
+        $entity->get($field_name)->generateSampleItems();
+      }
+    }
+    return $entity;
+  }
+
+  /**
    * Initializes field values.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
