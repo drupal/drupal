@@ -7,6 +7,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationIsClassBlock;
 use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationNoneBlock;
+use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\user\Entity\Role;
 
 /**
@@ -15,6 +16,8 @@ use Drupal\user\Entity\Role;
  * @group settings_tray
  */
 class SettingsTrayBlockFormTest extends SettingsTrayJavascriptTestBase {
+
+  use ContextualLinkClickTrait;
 
   const TOOLBAR_EDIT_LINK_SELECTOR = '#toolbar-bar div.contextual-toolbar-tab button';
 

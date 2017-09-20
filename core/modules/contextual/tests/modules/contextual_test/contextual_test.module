@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Provides test contextual link on blocks.
+ */
+
+use Drupal\Core\Block\BlockPluginInterface;
+
+/**
+ * Implements hook_block_view_alter().
+ */
+function contextual_test_block_view_alter(array &$build, BlockPluginInterface $block) {
+  $build['#contextual_links']['contextual_test'] = [
+    'route_parameters' => [],
+  ];
+}
