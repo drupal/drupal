@@ -148,6 +148,11 @@ class UrlHelper {
     $scheme_delimiter_position = strpos($url, '://');
     $query_delimiter_position = strpos($url, '?');
     if ($scheme_delimiter_position !== FALSE && ($query_delimiter_position === FALSE || $scheme_delimiter_position < $query_delimiter_position)) {
+      // Split off the fragment, if any.
+      if (strpos($url, '#') !== FALSE) {
+        list($url, $options['fragment']) = explode('#', $url, 2);
+      }
+
       // Split off everything before the query string into 'path'.
       $parts = explode('?', $url);
 
@@ -158,12 +163,7 @@ class UrlHelper {
       }
       // If there is a query string, transform it into keyed query parameters.
       if (isset($parts[1])) {
-        $query_parts = explode('#', $parts[1]);
-        parse_str($query_parts[0], $options['query']);
-        // Take over the fragment, if there is any.
-        if (isset($query_parts[1])) {
-          $options['fragment'] = $query_parts[1];
-        }
+        parse_str($parts[1], $options['query']);
       }
     }
     // Internal URLs.

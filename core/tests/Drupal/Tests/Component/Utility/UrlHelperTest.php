@@ -269,6 +269,14 @@ class UrlHelperTest extends TestCase {
           'fragment' => 'footer',
         ],
       ],
+      'absolute fragment, no query' => [
+        'http://www.example.com/my/path#footer',
+        [
+          'path' => 'http://www.example.com/my/path',
+          'query' => [],
+          'fragment' => 'footer',
+        ],
+      ],
       [
         'http://',
         [
@@ -292,6 +300,14 @@ class UrlHelperTest extends TestCase {
           'query' => [
             'destination' => 'home',
           ],
+          'fragment' => 'footer',
+        ],
+      ],
+      'relative fragment, no query' => [
+        '/my/path#footer',
+        [
+          'path' => '/my/path',
+          'query' => [],
           'fragment' => 'footer',
         ],
       ],
