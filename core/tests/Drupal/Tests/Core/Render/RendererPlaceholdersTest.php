@@ -1080,7 +1080,7 @@ HTML;
         ],
         'placeholders' => [
           'parent-x-parent' => [
-            '#lazy_builder' => [ __NAMESPACE__ . '\\PlaceholdersTest::callback', $args_1],
+            '#lazy_builder' => [__NAMESPACE__ . '\\PlaceholdersTest::callback', $args_1],
           ],
         ],
       ],

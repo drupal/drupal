@@ -16,4 +16,4 @@ namespace Drupal\text\Plugin\Field\FieldFormatter;
  *   }
  * )
  */
-class TextSummaryOrTrimmedFormatter extends TextTrimmedFormatter { }
+class TextSummaryOrTrimmedFormatter extends TextTrimmedFormatter {}

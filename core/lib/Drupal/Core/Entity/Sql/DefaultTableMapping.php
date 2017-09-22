@@ -296,9 +296,15 @@ class DefaultTableMapping implements TableMappingInterface {
    */
   public function getDedicatedTableNames() {
     $table_mapping = $this;
-    $definitions = array_filter($this->fieldStorageDefinitions, function($definition) use ($table_mapping) { return $table_mapping->requiresDedicatedTableStorage($definition); });
-    $data_tables = array_map(function($definition) use ($table_mapping) { return $table_mapping->getDedicatedDataTableName($definition); }, $definitions);
-    $revision_tables = array_map(function($definition) use ($table_mapping) { return $table_mapping->getDedicatedRevisionTableName($definition); }, $definitions);
+    $definitions = array_filter($this->fieldStorageDefinitions, function($definition) use ($table_mapping) {
+      return $table_mapping->requiresDedicatedTableStorage($definition);
+    });
+    $data_tables = array_map(function($definition) use ($table_mapping) {
+      return $table_mapping->getDedicatedDataTableName($definition);
+    }, $definitions);
+    $revision_tables = array_map(function($definition) use ($table_mapping) {
+      return $table_mapping->getDedicatedRevisionTableName($definition);
+    }, $definitions);
     $dedicated_tables = array_merge(array_values($data_tables), array_values($revision_tables));
     return $dedicated_tables;
   }

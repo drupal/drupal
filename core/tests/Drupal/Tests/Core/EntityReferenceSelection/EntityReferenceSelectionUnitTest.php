@@ -213,11 +213,11 @@ class TestSelection extends SelectionPluginBase {
     ] + parent::defaultConfiguration();
   }
 
-  public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) { }
+  public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {}
 
-  public function validateReferenceableEntities(array $ids) { }
+  public function validateReferenceableEntities(array $ids) {}
 
-  public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') { }
+  public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') {}
 
 }
 

@@ -15,4 +15,4 @@ use Symfony\Component\Validator\Constraints\NotNull;
  *   type = false
  * )
  */
-class NotNullConstraint extends NotNull { }
+class NotNullConstraint extends NotNull {}

@@ -179,22 +179,22 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
   /**
    * {@inheritdoc}
    */
-  public function preRender($values) { }
+  public function preRender($values) {}
 
   /**
    * {@inheritdoc}
    */
-  public function postRender(&$output) { }
+  public function postRender(&$output) {}
 
   /**
    * {@inheritdoc}
    */
-  public function preExecute() { }
+  public function preExecute() {}
 
   /**
    * {@inheritdoc}
    */
-  public function postExecute() { }
+  public function postExecute() {}
 
   /**
    * {@inheritdoc}

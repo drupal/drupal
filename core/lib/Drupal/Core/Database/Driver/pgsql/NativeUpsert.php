@@ -100,7 +100,9 @@ class NativeUpsert extends QueryUpsert {
 
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
-    $insert_fields = array_map(function($f) { return $this->connection->escapeField($f); }, $insert_fields);
+    $insert_fields = array_map(function($f) {
+      return $this->connection->escapeField($f);
+    }, $insert_fields);
 
     $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
 

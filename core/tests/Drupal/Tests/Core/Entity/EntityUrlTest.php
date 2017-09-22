@@ -362,7 +362,9 @@ class EntityUrlTest extends UnitTestCase {
   public function providerTestToUrlUriCallback() {
     $test_cases = [];
 
-    $uri_callback = function () { return Url::fromRoute('<none>'); };
+    $uri_callback = function () {
+      return Url::fromRoute('<none>');
+    };
     $test_cases['uri_callback'] = [[], $uri_callback];
     $test_cases['bundle_uri_callback'] = [['uri_callback' => $uri_callback], NULL];
 

@@ -14,4 +14,4 @@ E_USER_DEPRECATED);
  * @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use
  * \Drupal\link\Plugin\migrate\process\d6\FieldLink instead.
  */
-class CckLink extends FieldLink { }
+class CckLink extends FieldLink {}

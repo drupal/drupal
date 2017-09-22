@@ -128,7 +128,9 @@ class Insert extends QueryInsert {
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
-    $insert_fields = array_map(function($f) { return $this->connection->escapeField($f); }, $insert_fields);
+    $insert_fields = array_map(function($f) {
+      return $this->connection->escapeField($f);
+    }, $insert_fields);
 
     // If we're selecting from a SelectQuery, finish building the query and
     // pass it back, as any remaining options are irrelevant.

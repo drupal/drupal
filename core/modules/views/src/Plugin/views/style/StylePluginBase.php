@@ -413,13 +413,15 @@ abstract class StylePluginBase extends PluginBase {
    * interfere with the sorts. If so it should build; if it returns
    * any non-TRUE value, normal sorting will NOT be added to the query.
    */
-  public function buildSort() { return TRUE; }
+  public function buildSort() {
+    return TRUE;
+  }
 
   /**
    * Called by the view builder to let the style build a second set of
    * sorts that will come after any other sorts in the view.
    */
-  public function buildSortPost() { }
+  public function buildSortPost() {}
 
   /**
    * Allow the style to do stuff before each row is rendered.

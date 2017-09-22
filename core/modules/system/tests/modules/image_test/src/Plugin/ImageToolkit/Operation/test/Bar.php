@@ -13,4 +13,4 @@ namespace Drupal\image_test\Plugin\ImageToolkit\Operation\test;
  *   description = @Translation("Bar.")
  * )
  */
-class Bar extends OperationBase { }
+class Bar extends OperationBase {}

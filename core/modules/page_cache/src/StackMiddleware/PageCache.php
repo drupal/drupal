@@ -144,7 +144,7 @@ class PageCache implements HttpKernelInterface {
 
       if ($if_modified_since && $if_none_match
         && $if_none_match == $response->getEtag() // etag must match
-        && $if_modified_since == $last_modified->getTimestamp()) {  // if-modified-since must match
+        && $if_modified_since == $last_modified->getTimestamp()) {// if-modified-since must match
         $response->setStatusCode(304);
         $response->setContent(NULL);
 

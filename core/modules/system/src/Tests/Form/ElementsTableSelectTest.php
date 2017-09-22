@@ -93,7 +93,7 @@ class ElementsTableSelectTest extends WebTestBase {
     // The first two body rows should each have 5 table cells: One for the
     // radio, one cell in the first column, one cell in the second column,
     // and two cells in the third column which has colspan 2.
-    for ( $i = 0; $i <= 1; $i++) {
+    for ($i = 0; $i <= 1; $i++) {
       $this->assertEqual(count($table_body[0]->tr[$i]->td), 5, format_string('There are five cells in row @row.', ['@row' => $i]));
     }
     // The third row should have 3 cells, one for the radio, one spanning the

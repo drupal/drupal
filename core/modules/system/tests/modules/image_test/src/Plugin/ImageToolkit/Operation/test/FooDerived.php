@@ -13,4 +13,4 @@ namespace Drupal\image_test\Plugin\ImageToolkit\Operation\test;
  *   description = @Translation("Foo derived.")
  * )
  */
-class FooDerived extends OperationBase { }
+class FooDerived extends OperationBase {}

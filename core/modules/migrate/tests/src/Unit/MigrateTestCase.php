@@ -147,7 +147,9 @@ abstract class MigrateTestCase extends UnitTestCase {
   protected function createSchemaFromRow(array $row) {
     // SQLite uses loose ("affinity") typing, so it is OK for every column to be
     // a text field.
-    $fields = array_map(function() { return ['type' => 'text']; }, $row);
+    $fields = array_map(function() {
+      return ['type' => 'text'];
+    }, $row);
     return ['fields' => $fields];
   }
 

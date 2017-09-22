@@ -114,12 +114,12 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Provide the default form form for validating options
    */
-  public function validateOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Provide the default form form for submitting options
    */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Return a string to display as the clickable title for the
@@ -175,22 +175,22 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * This is called during the build phase and can directly modify the query.
    */
-  public function query() { }
+  public function query() {}
 
   /**
    * Perform any needed actions just prior to the query executing.
    */
-  public function preExecute(&$query) { }
+  public function preExecute(&$query) {}
 
   /**
    * Perform any needed actions just after the query executing.
    */
-  public function postExecute(&$result) { }
+  public function postExecute(&$result) {}
 
   /**
    * Perform any needed actions just before rendering.
    */
-  public function preRender(&$result) { }
+  public function preRender(&$result) {}
 
   /**
    * Return the renderable array of the pager.
@@ -201,7 +201,7 @@ abstract class PagerPluginBase extends PluginBase {
    *   Any extra GET parameters that should be retained, such as exposed
    *   input.
    */
-  public function render($input) { }
+  public function render($input) {}
 
   /**
    * Determine if there are more records available.
@@ -213,11 +213,11 @@ abstract class PagerPluginBase extends PluginBase {
       && $this->total_items > (intval($this->current_page) + 1) * $this->getItemsPerPage();
   }
 
-  public function exposedFormAlter(&$form, FormStateInterface $form_state) { }
+  public function exposedFormAlter(&$form, FormStateInterface $form_state) {}
 
-  public function exposedFormValidate(&$form, FormStateInterface $form_state) { }
+  public function exposedFormValidate(&$form, FormStateInterface $form_state) {}
 
-  public function exposedFormSubmit(&$form, FormStateInterface $form_state, &$exclude) { }
+  public function exposedFormSubmit(&$form, FormStateInterface $form_state, &$exclude) {}
 
   public function usesExposed() {
     return FALSE;

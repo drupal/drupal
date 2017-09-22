@@ -12,4 +12,4 @@ use Drupal\views\Plugin\views\style\EntityReference as ViewsEntityReference;
  *
  * @see \Drupal\views\Plugin\views\style\EntityReference
  */
-class EntityReference extends ViewsEntityReference { }
+class EntityReference extends ViewsEntityReference {}

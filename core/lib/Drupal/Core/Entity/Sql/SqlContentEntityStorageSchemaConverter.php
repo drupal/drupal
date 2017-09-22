@@ -346,7 +346,9 @@ class SqlContentEntityStorageSchemaConverter {
    *   An array of updated field storage definitions.
    */
   protected function updateFieldStorageDefinitionsToRevisionable(ContentEntityTypeInterface $entity_type, array $storage_definitions, array $fields_to_update = [], $update_cached_definitions = TRUE) {
-    $updated_storage_definitions = array_map(function ($storage_definition) { return clone $storage_definition; }, $storage_definitions);
+    $updated_storage_definitions = array_map(function ($storage_definition) {
+      return clone $storage_definition;
+    }, $storage_definitions);
 
     // Update the 'langcode' field manually, as it is configured in the base
     // content entity field definitions.

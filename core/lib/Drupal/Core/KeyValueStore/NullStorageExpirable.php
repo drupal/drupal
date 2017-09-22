@@ -59,17 +59,17 @@ class NullStorageExpirable implements KeyValueStoreExpirableInterface {
   /**
    * {@inheritdoc}
    */
-  public function set($key, $value) { }
+  public function set($key, $value) {}
 
   /**
    * {@inheritdoc}
    */
-  public function setIfNotExists($key, $value) { }
+  public function setIfNotExists($key, $value) {}
 
   /**
    * {@inheritdoc}
    */
-  public function setMultiple(array $data) { }
+  public function setMultiple(array $data) {}
 
   /**
    * {@inheritdoc}
@@ -80,17 +80,17 @@ class NullStorageExpirable implements KeyValueStoreExpirableInterface {
   /**
    * {@inheritdoc}
    */
-  public function delete($key) { }
+  public function delete($key) {}
 
   /**
    * {@inheritdoc}
    */
-  public function deleteMultiple(array $keys) { }
+  public function deleteMultiple(array $keys) {}
 
   /**
    * {@inheritdoc}
    */
-  public function deleteAll() { }
+  public function deleteAll() {}
 
   /**
    * {@inheritdoc}
@@ -102,16 +102,16 @@ class NullStorageExpirable implements KeyValueStoreExpirableInterface {
   /**
    * {@inheritdoc}
    */
-  public function setMultipleWithExpire(array $data, $expire) { }
+  public function setMultipleWithExpire(array $data, $expire) {}
 
   /**
    * {@inheritdoc}
    */
-  public function setWithExpire($key, $value, $expire) { }
+  public function setWithExpire($key, $value, $expire) {}
 
   /**
    * {@inheritdoc}
    */
-  public function setWithExpireIfNotExists($key, $value, $expire) { }
+  public function setWithExpireIfNotExists($key, $value, $expire) {}
 
 }

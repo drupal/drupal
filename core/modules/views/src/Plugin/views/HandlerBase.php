@@ -350,80 +350,84 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * If a handler has 'extra options' it will get a little settings widget and
    * another form called extra_options.
    */
-  public function hasExtraOptions() { return FALSE; }
+  public function hasExtraOptions() {
+    return FALSE;
+  }
 
   /**
    * Provide defaults for the handler.
    */
-  public function defineExtraOptions(&$option) { }
+  public function defineExtraOptions(&$option) {}
 
   /**
    * Provide a form for setting options.
    */
-  public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Validate the options form.
    */
-  public function validateExtraOptionsForm($form, FormStateInterface $form_state) { }
+  public function validateExtraOptionsForm($form, FormStateInterface $form_state) {}
 
   /**
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  public function submitExtraOptionsForm($form, FormStateInterface $form_state) { }
+  public function submitExtraOptionsForm($form, FormStateInterface $form_state) {}
 
   /**
    * Determine if a handler can be exposed.
    */
-  public function canExpose() { return FALSE; }
+  public function canExpose() {
+    return FALSE;
+  }
 
   /**
    * Set new exposed option defaults when exposed setting is flipped
    * on.
    */
-  public function defaultExposeOptions() { }
+  public function defaultExposeOptions() {}
 
   /**
    * Get information about the exposed form for the form renderer.
    */
-  public function exposedInfo() { }
+  public function exposedInfo() {}
 
   /**
    * Render our chunk of the exposed handler form when selecting
    */
-  public function buildExposedForm(&$form, FormStateInterface $form_state) { }
+  public function buildExposedForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Validate the exposed handler form
    */
-  public function validateExposed(&$form, FormStateInterface $form_state) { }
+  public function validateExposed(&$form, FormStateInterface $form_state) {}
 
   /**
    * Submit the exposed handler form
    */
-  public function submitExposed(&$form, FormStateInterface $form_state) { }
+  public function submitExposed(&$form, FormStateInterface $form_state) {}
 
   /**
    * Form for exposed handler options.
    */
-  public function buildExposeForm(&$form, FormStateInterface $form_state) { }
+  public function buildExposeForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Validate the options form.
    */
-  public function validateExposeForm($form, FormStateInterface $form_state) { }
+  public function validateExposeForm($form, FormStateInterface $form_state) {}
 
   /**
    * Perform any necessary changes to the form exposes prior to storage.
    * There is no need for this function to actually store the data.
    */
-  public function submitExposeForm($form, FormStateInterface $form_state) { }
+  public function submitExposeForm($form, FormStateInterface $form_state) {}
 
   /**
    * Shortcut to display the expose/hide button.
    */
-  public function showExposeButton(&$form, FormStateInterface $form_state) { }
+  public function showExposeButton(&$form, FormStateInterface $form_state) {}
 
   /**
    * Shortcut to display the exposed options form.
@@ -477,7 +481,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function postExecute(&$values) { }
+  public function postExecute(&$values) {}
 
   /**
    * Provides a unique placeholders for handlers.
@@ -531,7 +535,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function adminSummary() { }
+  public function adminSummary() {}
 
   /**
    * Determine if this item is 'exposed', meaning it provides form elements
@@ -546,24 +550,32 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   /**
    * Returns TRUE if the exposed filter works like a grouped filter.
    */
-  public function isAGroup() { return FALSE; }
+  public function isAGroup() {
+    return FALSE;
+  }
 
   /**
    * Define if the exposed input has to be submitted multiple times.
    * This is TRUE when exposed filters grouped are using checkboxes as
    * widgets.
    */
-  public function multipleExposedInput() { return FALSE; }
+  public function multipleExposedInput() {
+    return FALSE;
+  }
 
   /**
    * Take input from exposed handlers and assign to this handler, if necessary.
    */
-  public function acceptExposedInput($input) { return TRUE; }
+  public function acceptExposedInput($input) {
+    return TRUE;
+  }
 
   /**
    * If set to remember exposed input in the session, store it there.
    */
-  public function storeExposedInput($input, $status) { return TRUE; }
+  public function storeExposedInput($input, $status) {
+    return TRUE;
+  }
 
   /**
    * {@inheritdoc}
@@ -587,7 +599,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function validate() { return []; }
+  public function validate() {
+    return [];
+  }
 
   /**
    * {@inheritdoc}

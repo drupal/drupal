@@ -7,4 +7,4 @@ use Drupal\Core\Database\Query\Delete as QueryDelete;
 /**
  * SQLite implementation of \Drupal\Core\Database\Query\Delete.
  */
-class Delete extends QueryDelete { }
+class Delete extends QueryDelete {}

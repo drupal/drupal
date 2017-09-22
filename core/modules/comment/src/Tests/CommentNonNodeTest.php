@@ -156,7 +156,7 @@ class CommentNonNodeTest extends WebTestBase {
     preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
 
     // Get comment.
-    if ($contact !== TRUE) { // If true then attempting to find error message.
+    if ($contact !== TRUE) {// If true then attempting to find error message.
       if ($subject) {
         $this->assertText($subject, 'Comment subject posted.');
       }

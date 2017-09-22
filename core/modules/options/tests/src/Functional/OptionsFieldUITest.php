@@ -94,7 +94,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $node = $this->drupalCreateNode($settings);
 
     // Check that a flat list of values is rejected once the field has data.
-    $this->assertAllowedValuesInput( "Zero\nOne", 'invalid input', 'Unkeyed lists are rejected once the field has data.');
+    $this->assertAllowedValuesInput("Zero\nOne", 'invalid input', 'Unkeyed lists are rejected once the field has data.');
 
     // Check that values can be added but values in use cannot be removed.
     $string = "0|Zero\n1|One\n2|Two";

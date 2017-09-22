@@ -14,11 +14,13 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
  */
 class Status extends FilterPluginBase {
 
-  public function adminSummary() { }
+  public function adminSummary() {}
 
-  protected function operatorForm(&$form, FormStateInterface $form_state) { }
+  protected function operatorForm(&$form, FormStateInterface $form_state) {}
 
-  public function canExpose() { return FALSE; }
+  public function canExpose() {
+    return FALSE;
+  }
 
   public function query() {
     $table = $this->ensureMyTable();

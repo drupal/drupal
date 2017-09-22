@@ -11,4 +11,4 @@ use Drupal\non_installed_module\Plugin\plugin_test\fruit\YummyFruit;
  *   color = "pink",
  * )
  */
-class ExtendingNonInstalledClass extends YummyFruit { }
+class ExtendingNonInstalledClass extends YummyFruit {}

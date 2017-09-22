@@ -97,7 +97,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
     Database::getConnection('default', 'migrate')
       ->update('field_config_instance')
       ->fields([
-        'data' => serialize( [
+        'data' => serialize([
           'label' => 'Body',
           'widget' =>
              [

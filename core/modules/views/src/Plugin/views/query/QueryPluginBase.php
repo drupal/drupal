@@ -54,7 +54,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param $get_count
    *   Provide a countquery if this is true, otherwise provide a normal query.
    */
-  public function query($get_count = FALSE) { }
+  public function query($get_count = FALSE) {}
 
   /**
    * Let modules modify the query just prior to finalizing it.
@@ -62,7 +62,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param view $view
    *   The view which is executed.
    */
-  public function alter(ViewExecutable $view) {  }
+  public function alter(ViewExecutable $view) {}
 
   /**
    * Builds the necessary info to execute the query.
@@ -70,7 +70,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param view $view
    *   The view which is executed.
    */
-  public function build(ViewExecutable $view) { }
+  public function build(ViewExecutable $view) {}
 
   /**
    * Executes the query and fills the associated view object with according
@@ -85,7 +85,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param view $view
    *   The view which is executed.
    */
-  public function execute(ViewExecutable $view) {  }
+  public function execute(ViewExecutable $view) {}
 
   /**
    * Add a signature to the query, if such a thing is feasible.
@@ -96,18 +96,18 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param view $view
    *   The view which is executed.
    */
-  public function addSignature(ViewExecutable $view) { }
+  public function addSignature(ViewExecutable $view) {}
 
   /**
    * Get aggregation info for group by queries.
    *
    * If NULL, aggregation is not allowed.
    */
-  public function getAggregationInfo() { }
+  public function getAggregationInfo() {}
 
-  public function validateOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 
   public function summaryTitle() {
     return $this->t('Settings');

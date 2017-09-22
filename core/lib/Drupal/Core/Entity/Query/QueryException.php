@@ -9,4 +9,4 @@ namespace Drupal\Core\Entity\Query;
  * conditions, and will raise a QueryException when an unsupported
  * condition was specified.
  */
-class QueryException extends \Exception { }
+class QueryException extends \Exception {}

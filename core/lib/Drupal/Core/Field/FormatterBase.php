@@ -125,7 +125,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities_items) { }
+  public function prepareView(array $entities_items) {}
 
   /**
    * Returns the array of field settings.

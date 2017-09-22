@@ -12,4 +12,4 @@ namespace Drupal\Core\Block;
  *
  * @ingroup block_api
  */
-interface MessagesBlockPluginInterface extends BlockPluginInterface { }
+interface MessagesBlockPluginInterface extends BlockPluginInterface {}

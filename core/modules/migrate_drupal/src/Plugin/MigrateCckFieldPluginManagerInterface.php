@@ -12,4 +12,4 @@ namespace Drupal\migrate_drupal\Plugin;
  *
  * @see https://www.drupal.org/node/2751897
  */
-interface MigrateCckFieldPluginManagerInterface extends MigrateFieldPluginManagerInterface { }
+interface MigrateCckFieldPluginManagerInterface extends MigrateFieldPluginManagerInterface {}

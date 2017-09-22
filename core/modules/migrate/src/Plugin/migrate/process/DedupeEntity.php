@@ -22,4 +22,4 @@ Drupal 8.4.x and will be removed before Drupal 9.0.0. Instead, use ' . __NAMESPA
  *
  * @see https://www.drupal.org/node/2873762
  */
-class DedupeEntity extends MakeUniqueEntityField { }
+class DedupeEntity extends MakeUniqueEntityField {}

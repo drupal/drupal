@@ -52,6 +52,8 @@ class GroupByNumeric extends NumericFilter {
     return $this->getField(parent::adminLabel($short));
   }
 
-  public function canGroup() { return FALSE; }
+  public function canGroup() {
+    return FALSE;
+  }
 
 }

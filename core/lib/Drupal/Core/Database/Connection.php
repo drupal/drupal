@@ -187,7 +187,7 @@ abstract class Connection {
    * @return \PDO
    *   A \PDO object.
    */
-  public static function open(array &$connection_options = []) { }
+  public static function open(array &$connection_options = []) {}
 
   /**
    * Destroys this Connection object.
