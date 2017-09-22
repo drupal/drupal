@@ -15,7 +15,7 @@ class NodeRouteProvider implements EntityRouteProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRoutes( EntityTypeInterface $entity_type) {
+  public function getRoutes(EntityTypeInterface $entity_type) {
     $route_collection = new RouteCollection();
     $route = (new Route('/node/{node}'))
       ->addDefaults([

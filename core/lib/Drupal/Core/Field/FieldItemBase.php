@@ -191,27 +191,27 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * {@inheritdoc}
    */
-  public function preSave() { }
+  public function preSave() {}
 
   /**
    * {@inheritdoc}
    */
-  public function postSave($update) { }
+  public function postSave($update) {}
 
   /**
    * {@inheritdoc}
    */
-  public function delete() { }
+  public function delete() {}
 
   /**
    * {@inheritdoc}
    */
-  public static function generateSampleValue(FieldDefinitionInterface $field_definition) { }
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {}
 
   /**
    * {@inheritdoc}
    */
-  public function deleteRevision() { }
+  public function deleteRevision() {}
 
   /**
    * {@inheritdoc}

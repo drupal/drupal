@@ -234,7 +234,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function isDefaultDisplay() { return FALSE; }
+  public function isDefaultDisplay() {
+    return FALSE;
+  }
 
   /**
    * {@inheritdoc}
@@ -394,7 +396,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function attachTo(ViewExecutable $view, $display_id, array &$build) { }
+  public function attachTo(ViewExecutable $view, $display_id, array &$build) {}
 
   /**
    * {@inheritdoc}
@@ -665,17 +667,23 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function hasPath() { return FALSE; }
+  public function hasPath() {
+    return FALSE;
+  }
 
   /**
    * {@inheritdoc}
    */
-  public function usesLinkDisplay() { return !$this->hasPath(); }
+  public function usesLinkDisplay() {
+    return !$this->hasPath();
+  }
 
   /**
    * {@inheritdoc}
    */
-  public function usesExposedFormInBlock() { return $this->hasPath(); }
+  public function usesExposedFormInBlock() {
+    return $this->hasPath();
+  }
 
   /**
    * {@inheritdoc}
@@ -2051,7 +2059,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function renderFilters() { }
+  public function renderFilters() {}
 
   /**
    * {@inheritdoc}
@@ -2325,7 +2333,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function execute() { }
+  public function execute() {}
 
   /**
    * {@inheritdoc}

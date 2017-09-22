@@ -199,7 +199,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
       else {
         // Check for PNG-Signature (cf. http://www.libpng.org/pub/png/book/chapter08.html#png.ch08.div.2) in the
         // response body.
-        $this->assertNoRaw( chr(137) . chr(80) . chr(78) . chr(71) . chr(13) . chr(10) . chr(26) . chr(10), 'No PNG signature found in the response body.');
+        $this->assertNoRaw(chr(137) . chr(80) . chr(78) . chr(71) . chr(13) . chr(10) . chr(26) . chr(10), 'No PNG signature found in the response body.');
       }
     }
     else {

@@ -40,7 +40,7 @@ class UserValidationTest extends KernelTestBase {
    * Tests user name validation.
    */
   public function testUsernames() {
-    $test_cases = [ // '<username>' => array('<description>', 'assert<testName>'),
+    $test_cases = [// '<username>' => array('<description>', 'assert<testName>'),
       'foo'                    => ['Valid username', 'assertNull'],
       'FOO'                    => ['Valid username', 'assertNull'],
       'Foo O\'Bar'             => ['Valid username', 'assertNull'],

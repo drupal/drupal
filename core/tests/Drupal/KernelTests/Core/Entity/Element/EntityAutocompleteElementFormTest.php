@@ -179,12 +179,12 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) { }
+  public function submitForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) { }
+  public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * Tests valid entries in the EntityAutocomplete Form API element.

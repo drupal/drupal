@@ -42,7 +42,7 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
    *
    * This needs to be overridden by every default argument handler to properly do what is needed.
    */
-  public function getArgument() { }
+  public function getArgument() {}
 
   /**
    * Sets the parent argument this plugin is associated with.
@@ -58,28 +58,32 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
    * Retrieve the options when this is a new access
    * control plugin
    */
-  protected function defineOptions() { return []; }
+  protected function defineOptions() {
+    return [];
+  }
 
   /**
    * Provide the default form for setting options.
    */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Provide the default form form for validating options
    */
-  public function validateOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Provide the default form form for submitting options
    */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = []) { }
+  public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = []) {}
 
   /**
    * Determine if the administrator has the privileges to use this
    * plugin
    */
-  public function access() { return TRUE; }
+  public function access() {
+    return TRUE;
+  }
 
   /**
    * If we don't have access to the form but are showing it anyway, ensure that

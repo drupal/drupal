@@ -230,7 +230,9 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
       $migration = $this->getMigration($migration);
     }
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
-    $destination = array_map(function() { return NULL; }, $migration->getDestinationPlugin()->getIds());
+    $destination = array_map(function() {
+      return NULL;
+    }, $migration->getDestinationPlugin()->getIds());
     $row = new Row($row, $migration->getSourcePlugin()->getIds());
     $migration->getIdMap()->saveIdMapping($row, $destination, $status);
   }

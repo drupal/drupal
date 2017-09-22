@@ -104,6 +104,7 @@
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/NamespaceSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/ObjectOperatorIndentSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/ObjectOperatorSpacingSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/OpenBracketSpacingSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/OpenTagNewlineSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/OperatorSpacingSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/ScopeIndentSniff.php"/>

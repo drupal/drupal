@@ -155,7 +155,9 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * @return array
    *   Returns the options of this handler/plugin.
    */
-  protected function defineOptions() { return []; }
+  protected function defineOptions() {
+    return [];
+  }
 
   /**
    * Fills up the options of the plugin with defaults.
@@ -271,17 +273,17 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   /**
    * {@inheritdoc}
    */
-  public function validateOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
    */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
    */
-  public function query() { }
+  public function query() {}
 
   /**
    * {@inheritdoc}
@@ -293,7 +295,9 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   /**
    * {@inheritdoc}
    */
-  public function validate() { return []; }
+  public function validate() {
+    return [];
+  }
 
   /**
    * {@inheritdoc}

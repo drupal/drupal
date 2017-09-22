@@ -41,7 +41,7 @@ class EntityTypeConstraintsTest extends EntityKernelTestBase {
     $this->assertEqual($default_constraints + $extra_constraints, $entity_type->getConstraints());
 
     // Test altering constraints.
-    $altered_constraints = ['Test' => [ 'some_setting' => TRUE]];
+    $altered_constraints = ['Test' => ['some_setting' => TRUE]];
     $this->state->set('entity_test_constraints.alter', $altered_constraints);
     // Clear the cache in state instance in the Drupal container, so it can pick
     // up the modified value.

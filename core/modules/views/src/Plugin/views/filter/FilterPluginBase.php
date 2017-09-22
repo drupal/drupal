@@ -176,7 +176,9 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   /**
    * Determine if a filter can be exposed.
    */
-  public function canExpose() { return TRUE; }
+  public function canExpose() {
+    return TRUE;
+  }
 
   /**
    * Determine if a filter can be converted into a group.
@@ -304,18 +306,20 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * Provide a list of options for the default operator form.
    * Should be overridden by classes that don't override operatorForm
    */
-  public function operatorOptions() { return []; }
+  public function operatorOptions() {
+    return [];
+  }
 
   /**
    * Validate the operator form.
    */
-  protected function operatorValidate($form, FormStateInterface $form_state) { }
+  protected function operatorValidate($form, FormStateInterface $form_state) {}
 
   /**
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  public function operatorSubmit($form, FormStateInterface $form_state) { }
+  public function operatorSubmit($form, FormStateInterface $form_state) {}
 
   /**
    * Shortcut to display the value form.
@@ -343,13 +347,13 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   /**
    * Validate the options form.
    */
-  protected function valueValidate($form, FormStateInterface $form_state) { }
+  protected function valueValidate($form, FormStateInterface $form_state) {}
 
   /**
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  protected function valueSubmit($form, FormStateInterface $form_state) { }
+  protected function valueSubmit($form, FormStateInterface $form_state) {}
 
   /**
    * Shortcut to display the exposed options form.

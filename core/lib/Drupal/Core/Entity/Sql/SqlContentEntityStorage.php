@@ -1540,12 +1540,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * {@inheritdoc}
    */
-  public function onBundleCreate($bundle, $entity_type_id) { }
+  public function onBundleCreate($bundle, $entity_type_id) {}
 
   /**
    * {@inheritdoc}
    */
-  public function onBundleDelete($bundle, $entity_type_id) { }
+  public function onBundleDelete($bundle, $entity_type_id) {}
 
   /**
    * {@inheritdoc}

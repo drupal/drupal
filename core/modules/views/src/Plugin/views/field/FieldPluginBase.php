@@ -1105,7 +1105,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   /**
    * {@inheritdoc}
    */
-  public function preRender(&$values) { }
+  public function preRender(&$values) {}
 
   /**
    * {@inheritdoc}
@@ -1713,14 +1713,14 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * field ID is terms, then the tokens might be {{ terms__tid }} and
    * {{ terms__name }}.
    */
-  protected function addSelfTokens(&$tokens, $item) { }
+  protected function addSelfTokens(&$tokens, $item) {}
 
   /**
    * Document any special tokens this field might use for itself.
    *
    * @see addSelfTokens()
    */
-  protected function documentSelfTokens(&$tokens) { }
+  protected function documentSelfTokens(&$tokens) {}
 
   /**
    * {@inheritdoc}

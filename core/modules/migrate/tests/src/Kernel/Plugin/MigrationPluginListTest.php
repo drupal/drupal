@@ -89,7 +89,9 @@ class MigrationPluginListTest extends KernelTestBase {
     // Any database-based source plugins should fail a requirements test in the
     // absence of a source database connection (e.g., a connection with the
     // 'migrate' key).
-    $source_plugins = array_map(function ($migration_plugin) { return $migration_plugin->getSourcePlugin(); }, $migration_plugins);
+    $source_plugins = array_map(function ($migration_plugin) {
+      return $migration_plugin->getSourcePlugin();
+    }, $migration_plugins);
     foreach ($source_plugins as $id => $source_plugin) {
       if ($source_plugin instanceof RequirementsInterface) {
         try {

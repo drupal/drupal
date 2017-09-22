@@ -10,4 +10,4 @@ use Drupal\Tests\serialization\Kernel\NormalizerTestBase as SerializationNormali
  * @deprecated Scheduled for removal in Drupal 9.0.0.
  *   Use \Drupal\Tests\serialization\Kernel\NormalizerTestBase instead.
  */
-abstract class NormalizerTestBase extends SerializationNormalizerTestBase { }
+abstract class NormalizerTestBase extends SerializationNormalizerTestBase {}

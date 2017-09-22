@@ -168,4 +168,4 @@ class ContextTest extends UnitTestCase {
 /**
  * Test interface used for mocking.
  */
-interface TypedDataCacheableDependencyInterface extends CacheableDependencyInterface, TypedDataInterface { }
+interface TypedDataCacheableDependencyInterface extends CacheableDependencyInterface, TypedDataInterface {}

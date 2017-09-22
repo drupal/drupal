@@ -122,13 +122,13 @@ abstract class RowPluginBase extends PluginBase {
   /**
    * Validate the options form.
    */
-  public function validateOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
@@ -151,7 +151,7 @@ abstract class RowPluginBase extends PluginBase {
    * @param $result
    *   The full array of results from the query.
    */
-  public function preRender($result) { }
+  public function preRender($result) {}
 
   /**
    * Render a row object. This usually passes through to a theme template

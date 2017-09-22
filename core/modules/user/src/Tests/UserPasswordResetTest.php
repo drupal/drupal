@@ -144,7 +144,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
     $edit = ['name' => $this->account->getEmail()];
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-    $this->assertTrue( count($this->drupalGetMails(['id' => 'user_password_reset'])) === $before + 1, 'Email sent when requesting password reset using email address.');
+    $this->assertTrue(count($this->drupalGetMails(['id' => 'user_password_reset'])) === $before + 1, 'Email sent when requesting password reset using email address.');
 
     // Visit the user edit page without pass-reset-token and make sure it does
     // not cause an error.

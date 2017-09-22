@@ -53,27 +53,31 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
   /**
    * Retrieves the options when this is a new access control plugin.
    */
-  protected function defineOptions() { return []; }
+  protected function defineOptions() {
+    return [];
+  }
 
   /**
    * Provides the default form for setting options.
    */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Provides the default form for validating options.
    */
-  public function validateOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Provides the default form for submitting options.
    */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = []) { }
+  public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = []) {}
 
   /**
    * Determines if the administrator has the privileges to use this plugin.
    */
-  public function access() { return TRUE; }
+  public function access() {
+    return TRUE;
+  }
 
   /**
    * Blocks user input when the form is shown but we don´t have access.
@@ -92,7 +96,9 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
   /**
    * Performs validation for a given argument.
    */
-  public function validateArgument($arg) { return TRUE; }
+  public function validateArgument($arg) {
+    return TRUE;
+  }
 
   /**
    * Processes the summary arguments for displaying.
@@ -102,7 +108,7 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
    * for a faster query. But there are use cases where you want to use
    * the old value again, for example the summary.
    */
-  public function processSummaryArguments(&$args) { }
+  public function processSummaryArguments(&$args) {}
 
   /**
    * Returns a context definition for this argument.
@@ -111,7 +117,7 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
    *   A context definition that represents the argument or NULL if that is
    *   not possible.
    */
-  public function getContextDefinition() { }
+  public function getContextDefinition() {}
 
 }
 

@@ -36,45 +36,45 @@ abstract class DisplayExtenderPluginBase extends PluginBase {
   /**
    * Provide a form to edit options for this plugin.
    */
-  public function defineOptionsAlter(&$options) { }
+  public function defineOptionsAlter(&$options) {}
 
   /**
    * Provide a form to edit options for this plugin.
    */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Validate the options form.
    */
-  public function validateOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Handle any special handling on the validate form.
    */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) { }
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Set up any variables on the view prior to execution.
    */
-  public function preExecute() { }
+  public function preExecute() {}
 
   /**
    * Inject anything into the query that the display_extender handler needs.
    */
-  public function query() { }
+  public function query() {}
 
   /**
    * Provide the default summary for options in the views UI.
    *
    * This output is returned as an array.
    */
-  public function optionsSummary(&$categories, &$options) { }
+  public function optionsSummary(&$categories, &$options) {}
 
   /**
    * Static member function to list which sections are defaultable
    * and what items each section contains.
    */
-  public function defaultableSections(&$sections, $section = NULL) { }
+  public function defaultableSections(&$sections, $section = NULL) {}
 
 }
 

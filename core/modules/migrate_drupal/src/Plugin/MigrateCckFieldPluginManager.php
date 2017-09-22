@@ -14,4 +14,4 @@ namespace Drupal\migrate_drupal\Plugin;
  *
  * @ingroup migration
  */
-class MigrateCckFieldPluginManager extends MigrateFieldPluginManager implements MigrateCckFieldPluginManagerInterface { }
+class MigrateCckFieldPluginManager extends MigrateFieldPluginManager implements MigrateCckFieldPluginManagerInterface {}

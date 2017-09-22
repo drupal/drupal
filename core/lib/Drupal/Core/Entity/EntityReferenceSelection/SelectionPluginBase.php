@@ -81,17 +81,17 @@ abstract class SelectionPluginBase extends PluginBase implements SelectionInterf
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) { }
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) { }
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
    */
-  public function entityQueryAlter(SelectInterface $query) { }
+  public function entityQueryAlter(SelectInterface $query) {}
 
   /**
    * Moves the backward compatibility level configurations in the right place.

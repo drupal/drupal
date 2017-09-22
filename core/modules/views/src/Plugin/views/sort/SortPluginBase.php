@@ -28,7 +28,9 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
   /**
    * Determine if a sort can be exposed.
    */
-  public function canExpose() { return TRUE; }
+  public function canExpose() {
+    return TRUE;
+  }
 
   /**
    * Called to add the sort to a query.
@@ -175,9 +177,9 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
     }
   }
 
-  protected function sortValidate(&$form, FormStateInterface $form_state) { }
+  protected function sortValidate(&$form, FormStateInterface $form_state) {}
 
-  public function sortSubmit(&$form, FormStateInterface $form_state) { }
+  public function sortSubmit(&$form, FormStateInterface $form_state) {}
 
   /**
    * Provide a list of options for the default sort form.

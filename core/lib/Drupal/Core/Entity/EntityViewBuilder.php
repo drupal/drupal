@@ -337,7 +337,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * @param string $view_mode
    *   The view mode that should be used to prepare the entity.
    */
-  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) { }
+  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {}
 
   /**
    * {@inheritdoc}

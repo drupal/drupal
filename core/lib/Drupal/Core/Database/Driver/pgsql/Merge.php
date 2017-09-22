@@ -7,4 +7,4 @@ use Drupal\Core\Database\Query\Merge as QueryMerge;
 /**
  * PostgreSQL implementation of \Drupal\Core\Database\Query\Merge.
  */
-class Merge extends QueryMerge { }
+class Merge extends QueryMerge {}
