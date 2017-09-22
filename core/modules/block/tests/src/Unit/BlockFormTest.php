@@ -3,6 +3,8 @@
 namespace Drupal\Tests\block\Unit;
 
 use Drupal\block\BlockForm;
+use Drupal\block\Entity\Block;
+use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -80,6 +82,32 @@ class BlockFormTest extends UnitTestCase {
       ->will($this->returnValue($this->storage));
 
     $this->pluginFormFactory = $this->prophesize(PluginFormFactoryInterface::class);
+  }
+
+  /**
+   * Mocks a block with a block plugin.
+   *
+   * @param string $machine_name
+   *   The machine name of the block plugin.
+   *
+   * @return \Drupal\block\BlockInterface|\PHPUnit_Framework_MockObject_MockObject
+   *   The mocked block.
+   */
+  protected function getBlockMockWithMachineName($machine_name) {
+    $plugin = $this->getMockBuilder(BlockBase::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $plugin->expects($this->any())
+      ->method('getMachineNameSuggestion')
+      ->will($this->returnValue($machine_name));
+
+    $block = $this->getMockBuilder(Block::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $block->expects($this->any())
+      ->method('getPlugin')
+      ->will($this->returnValue($plugin));
+    return $block;
   }
 
   /**

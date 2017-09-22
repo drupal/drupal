@@ -180,6 +180,12 @@ abstract class UnitTestCase extends TestCase {
    *
    * @return \Drupal\block\BlockInterface|\PHPUnit_Framework_MockObject_MockObject
    *   The mocked block.
+   *
+   * @deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Unit test
+   *   base classes should not have dependencies on extensions. Set up mocks in
+   *   individual tests.
+   *
+   * @see https://www.drupal.org/node/2896072
    */
   protected function getBlockMockWithMachineName($machine_name) {
     $plugin = $this->getMockBuilder('Drupal\Core\Block\BlockBase')
@@ -195,6 +201,7 @@ abstract class UnitTestCase extends TestCase {
     $block->expects($this->any())
       ->method('getPlugin')
       ->will($this->returnValue($plugin));
+    @trigger_error(__METHOD__ . ' is deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Unit test base classes should not have dependencies on extensions. Set up mocks in individual tests.', E_USER_DEPRECATED);
     return $block;
   }
 
