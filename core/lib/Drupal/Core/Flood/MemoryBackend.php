@@ -61,6 +61,9 @@ class MemoryBackend implements FloodInterface {
     if (!isset($identifier)) {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
+    if (!isset($this->events[$name][$identifier])) {
+      return $threshold > 0;
+    }
     $limit = microtime(TRUE) - $window;
     $number = count(array_filter($this->events[$name][$identifier], function ($timestamp) use ($limit) {
       return $timestamp > $limit;
