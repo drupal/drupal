@@ -114,6 +114,14 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
+  public function get($property_name) {
+    $this->ensureLoaded();
+    return parent::get($property_name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postSave($update) {
     if (!$update) {
       if ($this->alias) {

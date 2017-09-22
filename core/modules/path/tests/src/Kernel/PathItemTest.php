@@ -70,6 +70,9 @@ class PathItemTest extends KernelTestBase {
     $loaded_node = $node_storage->load($node->id());
     $this->assertFalse($loaded_node->get('path')->isEmpty());
     $this->assertEquals('/foo', $loaded_node->get('path')->alias);
+    $node_storage->resetCache();
+    $loaded_node = $node_storage->load($node->id());
+    $this->assertEquals('/foo', $loaded_node->get('path')[0]->get('alias')->getValue());
 
     $node_storage->resetCache();
     $loaded_node = $node_storage->load($node->id());
