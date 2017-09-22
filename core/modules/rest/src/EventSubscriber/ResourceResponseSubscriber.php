@@ -79,7 +79,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
    * Determines the format to respond in.
    *
    * Respects the requested format if one is specified. However, it is common to
-   * forget to specify a request format in case of a POST or PATCH. Rather than
+   * forget to specify a response format in case of a POST or PATCH. Rather than
    * simply throwing an error, we apply the robustness principle: when POSTing
    * or PATCHing using a certain format, you probably expect a response in that
    * same format.
@@ -94,33 +94,35 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
    */
   public function getResponseFormat(RouteMatchInterface $route_match, Request $request) {
     $route = $route_match->getRouteObject();
-    $acceptable_request_formats = $route->hasRequirement('_format') ? explode('|', $route->getRequirement('_format')) : [];
-    $acceptable_content_type_formats = $route->hasRequirement('_content_type_format') ? explode('|', $route->getRequirement('_content_type_format')) : [];
-    $acceptable_formats = $request->isMethodCacheable() ? $acceptable_request_formats : $acceptable_content_type_formats;
+    $acceptable_response_formats = $route->hasRequirement('_format') ? explode('|', $route->getRequirement('_format')) : [];
+    $acceptable_request_formats = $route->hasRequirement('_content_type_format') ? explode('|', $route->getRequirement('_content_type_format')) : [];
+    $acceptable_formats = $request->isMethodCacheable() ? $acceptable_response_formats : $acceptable_request_formats;
 
     $requested_format = $request->getRequestFormat();
     $content_type_format = $request->getContentType();
 
-    // If an acceptable format is requested, then use that. Otherwise, including
-    // and particularly when the client forgot to specify a format, then use
-    // heuristics to select the format that is most likely expected.
-    if (in_array($requested_format, $acceptable_formats)) {
+    // If an acceptable response format is requested, then use that. Otherwise,
+    // including and particularly when the client forgot to specify a response
+    // format, then use heuristics to select the format that is most likely
+    // expected.
+    if (in_array($requested_format, $acceptable_response_formats, TRUE)) {
       return $requested_format;
     }
+
     // If a request body is present, then use the format corresponding to the
     // request body's Content-Type for the response, if it's an acceptable
     // format for the request.
-    elseif (!empty($request->getContent()) && in_array($content_type_format, $acceptable_content_type_formats)) {
+    if (!empty($request->getContent()) && in_array($content_type_format, $acceptable_request_formats, TRUE)) {
       return $content_type_format;
     }
+
     // Otherwise, use the first acceptable format.
-    elseif (!empty($acceptable_formats)) {
+    if (!empty($acceptable_formats)) {
       return $acceptable_formats[0];
     }
+
     // Sometimes, there are no acceptable formats, e.g. DELETE routes.
-    else {
-      return NULL;
-    }
+    return NULL;
   }
 
   /**
