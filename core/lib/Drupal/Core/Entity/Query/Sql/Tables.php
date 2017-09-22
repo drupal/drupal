@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 
 /**
@@ -273,14 +274,6 @@ class Tables implements TablesInterface {
           $entity_type = $this->entityManager->getDefinition($entity_type_id);
           $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
           // Add the new entity base table using the table and sql column.
-          // An additional $field_storage argument is being passed to
-          // addNextBaseTable() in order to improve its functionality, for
-          // example by allowing extra processing based on the field type of the
-          // storage. In order to maintain backwards compatibility in 8.4.x, the
-          // new argument has not been added to the signature of that method,
-          // and it will be added only in 8.5.x.
-          // @todo Add the $field_storage argument to addNextBaseTable() in
-          //   8.5.x. https://www.drupal.org/node/2909425
           $base_table = $this->addNextBaseTable($entity_type, $table, $sql_column, $field_storage);
           $propertyDefinitions = [];
           $key++;
@@ -403,11 +396,13 @@ class Tables implements TablesInterface {
    *   This is the table being joined, in the above example, {users}.
    * @param string $sql_column
    *   This is the SQL column in the existing table being joined to.
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage
+   *   The field storage definition for the field referencing this column.
    *
    * @return string
    *   The alias of the next entity table joined in.
    */
-  protected function addNextBaseTable(EntityType $entity_type, $table, $sql_column) {
+  protected function addNextBaseTable(EntityType $entity_type, $table, $sql_column, FieldStorageDefinitionInterface $field_storage) {
     $join_condition = '%alias.' . $entity_type->getKey('id') . " = $table.$sql_column";
     return $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
   }
