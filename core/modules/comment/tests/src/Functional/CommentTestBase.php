@@ -1,26 +1,20 @@
 <?php
 
-namespace Drupal\comment\Tests;
-
-@trigger_error(__NAMESPACE__ . '\CommentTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Use \Drupal\Tests\comment\Functional\CommentTestBase instead. See http://www.drupal.org/node/2908490', E_USER_DEPRECATED);
+namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\CommentInterface;
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\node\Entity\NodeType;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Provides setup and helper methods for comment tests.
- *
- * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0.
- *   Use \Drupal\Tests\comment\Functional\CommentTestBase instead.
- *
- * @see https://www.drupal.org/node/2908490
  */
-abstract class CommentTestBase extends WebTestBase {
+abstract class CommentTestBase extends BrowserTestBase {
 
   use CommentTestTrait;
 
@@ -198,13 +192,13 @@ abstract class CommentTestBase extends WebTestBase {
         return FALSE;
       }
 
-      $comment_title = $comment_element[0]->xpath('div/h3/a');
-      if (empty($comment_title) || ((string) $comment_title[0]) !== $comment->getSubject()) {
+      $comment_title = $comment_element[0]->find('xpath', 'div/h3/a');
+      if (empty($comment_title) || $comment_title->getText() !== $comment->getSubject()) {
         return FALSE;
       }
 
-      $comment_body = $comment_element[0]->xpath('div/div/p');
-      if (empty($comment_body) || ((string) $comment_body[0]) !== $comment->comment_body->value) {
+      $comment_body = $comment_element[0]->find('xpath', 'div/div/p');
+      if (empty($comment_body) || $comment_body->getText() !== $comment->comment_body->value) {
         return FALSE;
       }
 
