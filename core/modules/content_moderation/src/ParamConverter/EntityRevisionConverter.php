@@ -75,7 +75,7 @@ class EntityRevisionConverter extends EntityConverter {
         return FALSE;
       }
       $entity_type = $this->entityManager->getDefinition($entity_type_id);
-      return $operation == 'edit' && $entity_type && $entity_type->isRevisionable();
+      return in_array($operation, ['default', 'edit']) && $entity_type && $entity_type->isRevisionable();
     }
   }
 
