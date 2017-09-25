@@ -35,3 +35,4 @@ migration_dependencies:
     - d7_node_type
   optional:
     - d7_field_instance
+    - d7_comment_field_instance

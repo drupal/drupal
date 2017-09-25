@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Tests\file\Kernel\Migrate\d7\FileMigrationSetupTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\node\Entity\Node;
@@ -25,6 +26,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     'datetime',
     'file',
     'filter',
+    'forum',
     'image',
     'language',
     'link',
@@ -47,6 +49,8 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('comment');
     $this->installEntitySchema('taxonomy_term');
     $this->installConfig(static::$modules);
+    $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installSchema('forum', ['forum', 'forum_index']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('system', ['sequences']);
 
@@ -57,6 +61,8 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
       'd7_node_type',
       'd7_language_content_settings',
       'd7_comment_type',
+      'd7_comment_field',
+      'd7_comment_field_instance',
       'd7_taxonomy_vocabulary',
       'd7_field',
       'd7_field_instance',
@@ -92,18 +98,18 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
   protected function assertEntity($id, $type, $langcode, $title, $uid, $status, $created, $changed, $promoted, $sticky) {
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::load($id);
-    $this->assertTrue($node instanceof NodeInterface);
-    $this->assertIdentical($type, $node->getType());
-    $this->assertIdentical($langcode, $node->langcode->value);
-    $this->assertIdentical($title, $node->getTitle());
-    $this->assertIdentical($uid, $node->getOwnerId());
-    $this->assertIdentical($status, $node->isPublished());
-    $this->assertIdentical($created, $node->getCreatedTime());
+    $this->assertInstanceOf(NodeInterface::class, $node);
+    $this->assertEquals($type, $node->getType());
+    $this->assertEquals($langcode, $node->langcode->value);
+    $this->assertEquals($title, $node->getTitle());
+    $this->assertEquals($uid, $node->getOwnerId());
+    $this->assertEquals($status, $node->isPublished());
+    $this->assertEquals($created, $node->getCreatedTime());
     if (isset($changed)) {
-      $this->assertIdentical($changed, $node->getChangedTime());
+      $this->assertEquals($changed, $node->getChangedTime());
     }
-    $this->assertIdentical($promoted, $node->isPromoted());
-    $this->assertIdentical($sticky, $node->isSticky());
+    $this->assertEquals($promoted, $node->isPromoted());
+    $this->assertEquals($sticky, $node->isSticky());
   }
 
   /**
@@ -122,11 +128,11 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
    */
   protected function assertRevision($id, $title, $uid, $log, $timestamp) {
     $revision = \Drupal::entityManager()->getStorage('node')->loadRevision($id);
-    $this->assertTrue($revision instanceof NodeInterface);
-    $this->assertIdentical($title, $revision->getTitle());
-    $this->assertIdentical($uid, $revision->getRevisionUser()->id());
-    $this->assertIdentical($log, $revision->revision_log->value);
-    $this->assertIdentical($timestamp, $revision->getRevisionCreationTime());
+    $this->assertInstanceOf(NodeInterface::class, $revision);
+    $this->assertEquals($title, $revision->getTitle());
+    $this->assertEquals($uid, $revision->getRevisionUser()->id());
+    $this->assertEquals($log, $revision->revision_log->value);
+    $this->assertEquals($timestamp, $revision->getRevisionCreationTime());
   }
 
   /**
@@ -138,53 +144,64 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
 
     $node = Node::load(1);
     $this->assertTrue($node->field_boolean->value);
-    $this->assertIdentical('99-99-99-99', $node->field_phone->value);
-    // Use assertEqual() here instead, since SQLite interprets floats strictly.
-    $this->assertEqual('1', $node->field_float->value);
-    $this->assertIdentical('5', $node->field_integer->value);
-    $this->assertIdentical('Some more text', $node->field_text_list[0]->value);
-    $this->assertIdentical('7', $node->field_integer_list[0]->value);
-    $this->assertIdentical('qwerty', $node->field_text->value);
-    $this->assertIdentical('2', $node->field_file->target_id);
-    $this->assertIdentical('file desc', $node->field_file->description);
+    $this->assertEquals('99-99-99-99', $node->field_phone->value);
+    $this->assertEquals('1', $node->field_float->value);
+    $this->assertEquals('5', $node->field_integer->value);
+    $this->assertEquals('Some more text', $node->field_text_list[0]->value);
+    $this->assertEquals('7', $node->field_integer_list[0]->value);
+    $this->assertEquals('qwerty', $node->field_text->value);
+    $this->assertEquals('2', $node->field_file->target_id);
+    $this->assertEquals('file desc', $node->field_file->description);
     $this->assertTrue($node->field_file->display);
-    $this->assertIdentical('1', $node->field_images->target_id);
-    $this->assertIdentical('alt text', $node->field_images->alt);
-    $this->assertIdentical('title text', $node->field_images->title);
-    $this->assertIdentical('93', $node->field_images->width);
-    $this->assertIdentical('93', $node->field_images->height);
-    $this->assertIdentical('http://google.com', $node->field_link->uri);
-    $this->assertIdentical('Click Here', $node->field_link->title);
+    $this->assertEquals('1', $node->field_images->target_id);
+    $this->assertEquals('alt text', $node->field_images->alt);
+    $this->assertEquals('title text', $node->field_images->title);
+    $this->assertEquals('93', $node->field_images->width);
+    $this->assertEquals('93', $node->field_images->height);
+    $this->assertEquals('http://google.com', $node->field_link->uri);
+    $this->assertEquals('Click Here', $node->field_link->title);
     // Test that an email field is migrated.
-    $this->assertSame('default@example.com', $node->field_email->value);
-    $this->assertSame('another@example.com', $node->field_email[1]->value);
+    $this->assertEquals('default@example.com', $node->field_email->value);
+    $this->assertEquals('another@example.com', $node->field_email[1]->value);
+    $this->assertEquals(CommentItemInterface::OPEN, $node->comment_node_test_content_type->status);
 
     $node = Node::load(2);
-    $this->assertSame('en', $node->langcode->value);
-    $this->assertIdentical("...is that it's the absolute best show ever. Trust me, I would know.", $node->body->value);
-    $this->assertSame('The thing about Deep Space 9', $node->label());
-    $this->assertIdentical('internal:/', $node->field_link->uri);
-    $this->assertIdentical('Home', $node->field_link->title);
+    $this->assertEquals('en', $node->langcode->value);
+    $this->assertEquals("...is that it's the absolute best show ever. Trust me, I would know.", $node->body->value);
+    $this->assertEquals('The thing about Deep Space 9', $node->label());
+    $this->assertEquals('internal:/', $node->field_link->uri);
+    $this->assertEquals('Home', $node->field_link->title);
+    $this->assertEquals(CommentItemInterface::OPEN, $node->comment_node_article->status);
     $this->assertTrue($node->hasTranslation('is'), "Node 2 has an Icelandic translation");
 
     $translation = $node->getTranslation('is');
-    $this->assertSame('is', $translation->langcode->value);
-    $this->assertSame("is - ...is that it's the absolute best show ever. Trust me, I would know.", $translation->body->value);
-    $this->assertSame('is - The thing about Deep Space 9', $translation->label());
-    $this->assertSame('internal:/', $translation->field_link->uri);
-    $this->assertSame('Home', $translation->field_link->title);
+    $this->assertEquals('is', $translation->langcode->value);
+    $this->assertEquals("is - ...is that it's the absolute best show ever. Trust me, I would know.", $translation->body->value);
+    $this->assertEquals('is - The thing about Deep Space 9', $translation->label());
+    $this->assertEquals('internal:/', $translation->field_link->uri);
+    $this->assertEquals(CommentItemInterface::OPEN, $translation->comment_node_article->status);
+    $this->assertEquals('Home', $translation->field_link->title);
 
     // Test that content_translation_source is set.
     $manager = $this->container->get('content_translation.manager');
-    $this->assertSame('en', $manager->getTranslationMetadata($node->getTranslation('is'))->getSource());
+    $this->assertEquals('en', $manager->getTranslationMetadata($node->getTranslation('is'))->getSource());
 
     // Node 3 is a translation of node 2, and should not be imported separately.
     $this->assertNull(Node::load(3), "Node 3 doesn't exist in D8, it was a translation");
 
     // Test that content_translation_source for a source other than English.
     $node = Node::load(4);
-    $this->assertSame('is', $manager->getTranslationMetadata($node->getTranslation('en'))->getSource());
+    $this->assertEquals('is', $manager->getTranslationMetadata($node->getTranslation('en'))->getSource());
+    $this->assertEquals(CommentItemInterface::CLOSED, $node->comment_node_article->status);
 
+    $translation = $node->getTranslation('en');
+    $this->assertEquals(CommentItemInterface::CLOSED, $translation->comment_node_article->status);
+
+    $node = Node::load(6);
+    $this->assertEquals(CommentItemInterface::CLOSED, $node->comment_forum->status);
+
+    $node = Node::load(7);
+    $this->assertEquals(CommentItemInterface::OPEN, $node->comment_forum->status);
   }
 
 }
