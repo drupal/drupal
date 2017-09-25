@@ -6,9 +6,9 @@
  */
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
-
 
 /**
  * Re-save all field storage config objects to add 'custom_storage' property.
@@ -58,4 +58,27 @@ function field_post_update_email_widget_size_setting() {
   }
 
   return t('The new size setting for email widgets has been added.');
+}
+
+/**
+ * Remove the stale 'handler_submit' setting for entity_reference fields.
+ */
+function field_post_update_remove_handler_submit_setting() {
+  $config = \Drupal::configFactory();
+  /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
+  $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+
+  // Iterate on all field configs.
+  foreach ($config->listAll('field.field.') as $field_id) {
+    $field = $config->getEditable($field_id);
+    $class = $field_type_manager->getPluginClass($field->get('field_type'));
+
+    // Deal only with entity reference fields and descendants.
+    if ($class === EntityReferenceItem::class || is_subclass_of($class, EntityReferenceItem::class)) {
+      if ($field->get('settings.handler_submit')) {
+        // Remove 'handler_settings' from settings.
+        $field->clear('settings.handler_submit')->save();
+      }
+    }
+  }
 }
