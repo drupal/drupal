@@ -112,7 +112,7 @@ class Connection extends DatabaseConnection {
     // so backslashes in the password need to be doubled up.
     // The bug was reported against pdo_pgsql 1.0.2, backslashes in passwords
     // will break on this doubling up when the bug is fixed, so check the version
-    //elseif (phpversion('pdo_pgsql') < 'version_this_was_fixed_in') {
+    // elseif (phpversion('pdo_pgsql') < 'version_this_was_fixed_in') {
     else {
       $connection_options['password'] = str_replace('\\', '\\\\', $connection_options['password']);
     }

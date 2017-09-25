@@ -349,7 +349,7 @@ function update_get_available($refresh = FALSE) {
   foreach ($projects as $key => $project) {
     // If there's no data at all, we clearly need to fetch some.
     if (empty($available[$key])) {
-      //update_create_fetch_task($project);
+      // update_create_fetch_task($project);
       \Drupal::service('update.processor')->createFetchTask($project);
       $needs_refresh = TRUE;
       continue;
