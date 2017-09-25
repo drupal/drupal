@@ -496,8 +496,8 @@ function _filter_url($text, $filter) {
   $valid_url_query_chars = '[a-zA-Z0-9!?\*\'@\(\);:&=\+\$\/%#\[\]\-_\.,~|]';
   $valid_url_query_ending_chars = '[a-zA-Z0-9_&=#\/]';
 
-  //full path
-  //and allow @ in a url, but only in the middle. Catch things like http://example.com/@user/
+  // full path
+  // and allow @ in a url, but only in the middle. Catch things like http://example.com/@user/
   $valid_url_path = '(?:(?:' . $valid_url_path_characters . '*(?:' . $valid_url_balanced_parens . $valid_url_path_characters . '*)*' . $valid_url_ending_characters . ')|(?:@' . $valid_url_path_characters . '+\/))';
 
   // Prepare domain name pattern.

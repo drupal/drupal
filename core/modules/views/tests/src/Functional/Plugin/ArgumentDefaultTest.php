@@ -131,7 +131,7 @@ class ArgumentDefaultTest extends ViewTestBase {
   /**
    * @todo Test php default argument.
    */
-  //function testArgumentDefaultPhp() {}
+  // function testArgumentDefaultPhp() {}
 
   /**
    * Test node default argument.

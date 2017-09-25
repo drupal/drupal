@@ -272,7 +272,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
       $this->assertEqual($row->_entity->id(), $this->entities[$index]->id());
 
       // Test the forward relationship.
-      //$this->assertEqual($row->entity_test_entity_test_mul__field_data_test_id, 1);
+      // $this->assertEqual($row->entity_test_entity_test_mul__field_data_test_id, 1);
 
       // Test that the correct relationship entity is on the row.
       $this->assertEqual($row->_relationship_entities['field_test_data_with_a_long_name']->id(), 1);

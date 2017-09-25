@@ -407,7 +407,7 @@ class StandardProfileTest extends BrowserTestBase {
 
     // Tag type.
     // @todo Enable with https://www.drupal.org/node/2072791.
-    //$this->assertEqual($graph->type($this->termUri), 'schema:Thing', 'Tag type was found (schema:Thing).');
+    // $this->assertEqual($graph->type($this->termUri), 'schema:Thing', 'Tag type was found (schema:Thing).');
 
     // Tag name.
     $expected_value = [
@@ -416,7 +416,7 @@ class StandardProfileTest extends BrowserTestBase {
       'lang' => 'en',
     ];
     // @todo Enable with https://www.drupal.org/node/2072791.
-    //$this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "$message_prefix name was found (schema:name).");
+    // $this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "$message_prefix name was found (schema:name).");
   }
 
   /**

@@ -63,6 +63,15 @@
     <exclude name="Drupal.Commenting.FunctionComment.ParamMissingDefinition"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/InlineCommentSniff.php">
+    <!-- Sniff for: NoSpaceBefore -->
+    <exclude name="Drupal.Commenting.InlineComment.DocBlock"/>
+    <exclude name="Drupal.Commenting.InlineComment.InvalidEndChar"/>
+    <exclude name="Drupal.Commenting.InlineComment.NotCapital"/>
+    <exclude name="Drupal.Commenting.InlineComment.SpacingAfter"/>
+    <exclude name="Drupal.Commenting.InlineComment.SpacingBefore"/>
+    <exclude name="Drupal.Commenting.InlineComment.WrongStyle"/>
+  </rule>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ElseIfSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ControlSignatureSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Files/EndFileNewlineSniff.php"/>

@@ -89,7 +89,7 @@ class TriggeringElementTest extends WebTestBase {
     // Ensure that the triggering element was not set to the restricted button.
     // Do this with both a negative and positive assertion, because negative
     // assertions alone can be brittle. See testNoButtonInfoInPost() for why the
-    //triggering element gets set to 'button2'.
+    // triggering element gets set to 'button2'.
     $this->assertNoText('The clicked button is button1.', '$form_state->getTriggeringElement() not set to a restricted button.');
     $this->assertText('The clicked button is button2.', '$form_state->getTriggeringElement() not set to a restricted button.');
   }
