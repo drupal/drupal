@@ -483,6 +483,10 @@ class ModerationFormTest extends ModerationStateTestBase {
       'archived_state' => 'admin/config/workflow/workflows/manage/editorial/state/archived/delete',
       'editorial_workflow' => 'admin/config/workflow/workflows/manage/editorial/delete',
     ];
+    $messages = [
+      'archived_state' => 'This workflow state is in use. You cannot remove this workflow state until you have removed all content using it.',
+      'editorial_workflow' => 'This workflow is in use. You cannot remove this workflow until you have removed all content using it.',
+    ];
     foreach ($paths as $path) {
       $this->drupalGet($path);
       $this->assertSession()->buttonExists('Delete');
@@ -501,6 +505,8 @@ class ModerationFormTest extends ModerationStateTestBase {
     // The workflow is being used, so can't be deleted.
     $this->drupalGet($paths['editorial_workflow']);
     $this->assertSession()->buttonNotExists('Delete');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains($messages['editorial_workflow']);
 
     $node = $this->drupalGetNodeByTitle('Some moderated content');
     $this->drupalPostForm('node/' . $node->id() . '/edit', [
@@ -511,9 +517,11 @@ class ModerationFormTest extends ModerationStateTestBase {
     ], 'Save');
 
     // Now the archived state is being used so it can not be deleted either.
-    foreach ($paths as $path) {
+    foreach ($paths as $type => $path) {
       $this->drupalGet($path);
       $this->assertSession()->buttonNotExists('Delete');
+      $this->assertSession()->statusCodeEquals(200);
+      $this->assertSession()->pageTextContains($messages[$type]);
     }
   }
 
