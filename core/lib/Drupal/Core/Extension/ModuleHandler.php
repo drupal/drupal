@@ -106,7 +106,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, array $module_list = [], CacheBackendInterface $cache_backend) {
+  public function __construct($root, array $module_list, CacheBackendInterface $cache_backend) {
     $this->root = $root;
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {

@@ -152,6 +152,7 @@
   <rule ref="PEAR.Files.IncludingFile.UseRequire">
     <severity>0</severity>
   </rule>
+  <rule ref="PEAR.Functions.ValidDefaultValue"/>
 
   <!-- PSR-2 sniffs -->
   <rule ref="PSR2.Classes.PropertyDeclaration">
