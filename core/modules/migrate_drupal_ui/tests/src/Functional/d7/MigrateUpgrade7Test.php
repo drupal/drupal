@@ -57,7 +57,7 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
       'image_style' => 6,
       'language_content_settings' => 2,
       'migration' => 73,
-      'node' => 3,
+      'node' => 5,
       'node_type' => 6,
       'rdf_mapping' => 7,
       'search_page' => 2,

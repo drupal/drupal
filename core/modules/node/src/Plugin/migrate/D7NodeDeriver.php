@@ -141,6 +141,16 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
         $values['source']['node_type'] = $node_type;
         $values['destination']['default_bundle'] = $node_type;
 
+        // Comment status must be mapped to correct comment type.
+        // Comment type migration creates a separate comment type for each
+        // node type except for Forum which uses 'comment_forum'.
+        $comment_type = 'comment_node_' . $node_type;
+        if ($node_type == 'forum') {
+          $comment_type = 'comment_forum';
+        }
+        $nested_key = $comment_type . '/0/status';
+        $values['process'][$nested_key] = 'comment';
+
         // If this migration is based on the d7_node_revision migration or
         // is for translations of nodes, it should explicitly depend on the
         // corresponding d7_node variant.

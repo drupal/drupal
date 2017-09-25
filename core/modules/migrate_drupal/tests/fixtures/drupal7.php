@@ -7284,6 +7284,39 @@ $connection->schema()->createTable('field_data_taxonomy_forums', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('field_data_taxonomy_forums')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'taxonomy_forums_tid',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'forum',
+  'deleted' => '0',
+  'entity_id' => '6',
+  'revision_id' => '6',
+  'language' => 'und',
+  'delta' => '0',
+  'taxonomy_forums_tid' => '1',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'forum',
+  'deleted' => '0',
+  'entity_id' => '7',
+  'revision_id' => '7',
+  'language' => 'und',
+  'delta' => '0',
+  'taxonomy_forums_tid' => '1',
+))
+->execute();
+
 $connection->schema()->createTable('field_revision_body', array(
   'fields' => array(
     'entity_type' => array(
@@ -10475,6 +10508,39 @@ $connection->schema()->createTable('field_revision_taxonomy_forums', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('field_revision_taxonomy_forums')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'taxonomy_forums_tid',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'forum',
+  'deleted' => '0',
+  'entity_id' => '6',
+  'revision_id' => '6',
+  'language' => 'und',
+  'delta' => '0',
+  'taxonomy_forums_tid' => '1',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'forum',
+  'deleted' => '0',
+  'entity_id' => '7',
+  'revision_id' => '7',
+  'language' => 'und',
+  'delta' => '0',
+  'taxonomy_forums_tid' => '1',
+))
+->execute();
+
 $connection->schema()->createTable('file_managed', array(
   'fields' => array(
     'fid' => array(
@@ -11075,6 +11141,24 @@ $connection->schema()->createTable('forum', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->insert('forum')
+->fields(array(
+  'nid',
+  'vid',
+  'tid',
+))
+->values(array(
+  'nid' => '6',
+  'vid' => '6',
+  'tid' => '1',
+))
+->values(array(
+  'nid' => '7',
+  'vid' => '7',
+  'tid' => '1',
+))
+->execute();
+
 $connection->schema()->createTable('forum_index', array(
   'fields' => array(
     'nid' => array(
@@ -11126,6 +11210,36 @@ $connection->schema()->createTable('forum_index', array(
   ),
   'mysql_character_set' => 'utf8',
 ));
+
+$connection->insert('forum_index')
+->fields(array(
+  'nid',
+  'title',
+  'tid',
+  'sticky',
+  'created',
+  'last_comment_timestamp',
+  'comment_count',
+))
+->values(array(
+  'nid' => '6',
+  'title' => 'Comments are closed :-(',
+  'tid' => '1',
+  'sticky' => '0',
+  'created' => '1504715414',
+  'last_comment_timestamp' => '1504715414',
+  'comment_count' => '0',
+))
+->values(array(
+  'nid' => '7',
+  'title' => 'Comments are open :-)',
+  'tid' => '1',
+  'sticky' => '0',
+  'created' => '1504715432',
+  'last_comment_timestamp' => '1504715432',
+  'comment_count' => '0',
+))
+->execute();
 
 $connection->schema()->createTable('history', array(
   'fields' => array(
@@ -33197,7 +33311,7 @@ $connection->insert('node')
   'status' => '1',
   'created' => '1478755274',
   'changed' => '1478755274',
-  'comment' => '2',
+  'comment' => '1',
   'promote' => '1',
   'sticky' => '0',
   'tnid' => '4',
@@ -33213,10 +33327,42 @@ $connection->insert('node')
   'status' => '1',
   'created' => '1478755314',
   'changed' => '1478755314',
-  'comment' => '2',
+  'comment' => '1',
   'promote' => '1',
   'sticky' => '0',
   'tnid' => '4',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '6',
+  'vid' => '6',
+  'type' => 'forum',
+  'language' => 'en',
+  'title' => 'Comments are closed :-(',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1504715414',
+  'changed' => '1504715414',
+  'comment' => '1',
+  'promote' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '7',
+  'vid' => '7',
+  'type' => 'forum',
+  'language' => 'en',
+  'title' => 'Comments are open :-)',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1504715432',
+  'changed' => '1504715432',
+  'comment' => '2',
+  'promote' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
   'translate' => '0',
 ))
 ->execute();
@@ -33379,6 +33525,22 @@ $connection->insert('node_comment_statistics')
   'last_comment_uid' => '1',
   'comment_count' => '0',
 ))
+->values(array(
+  'nid' => '6',
+  'cid' => '0',
+  'last_comment_timestamp' => '1504715414',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '1',
+  'comment_count' => '0',
+))
+->values(array(
+  'nid' => '7',
+  'cid' => '0',
+  'last_comment_timestamp' => '1504715432',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '1',
+  'comment_count' => '0',
+))
 ->execute();
 
 $connection->schema()->createTable('node_counter', array(
@@ -33453,6 +33615,18 @@ $connection->insert('node_counter')
   'totalcount' => '1',
   'daycount' => '1',
   'timestamp' => '1478755314',
+))
+->values(array(
+  'nid' => '6',
+  'totalcount' => '2',
+  'daycount' => '2',
+  'timestamp' => '1504715439',
+))
+->values(array(
+  'nid' => '7',
+  'totalcount' => '2',
+  'daycount' => '2',
+  'timestamp' => '1504715438',
 ))
 ->execute();
 
@@ -33582,7 +33756,7 @@ $connection->insert('node_revision')
   'log' => '',
   'timestamp' => '1478755274',
   'status' => '1',
-  'comment' => '2',
+  'comment' => '1',
   'promote' => '1',
   'sticky' => '0',
 ))
@@ -33594,8 +33768,32 @@ $connection->insert('node_revision')
   'log' => '',
   'timestamp' => '1478755314',
   'status' => '1',
-  'comment' => '2',
+  'comment' => '1',
   'promote' => '1',
+  'sticky' => '0',
+))
+->values(array(
+  'nid' => '6',
+  'vid' => '6',
+  'uid' => '1',
+  'title' => 'Comments are closed :-(',
+  'log' => '',
+  'timestamp' => '1504715414',
+  'status' => '1',
+  'comment' => '1',
+  'promote' => '0',
+  'sticky' => '0',
+))
+->values(array(
+  'nid' => '7',
+  'vid' => '7',
+  'uid' => '1',
+  'title' => 'Comments are open :-)',
+  'log' => '',
+  'timestamp' => '1504715432',
+  'status' => '1',
+  'comment' => '2',
+  'promote' => '0',
   'sticky' => '0',
 ))
 ->execute();
@@ -44778,6 +44976,18 @@ $connection->insert('taxonomy_index')
   'tid' => '15',
   'sticky' => '0',
   'created' => '1421727515',
+))
+->values(array(
+  'nid' => '6',
+  'tid' => '1',
+  'sticky' => '0',
+  'created' => '1504715414',
+))
+->values(array(
+  'nid' => '7',
+  'tid' => '1',
+  'sticky' => '0',
+  'created' => '1504715432',
 ))
 ->execute();
 
