@@ -107,4 +107,16 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
     \Drupal::entityManager()->clearCachedFieldDefinitions();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function urlRouteParameters($rel) {
+    $uri_route_parameters = parent::urlRouteParameters($rel);
+    if ($rel === 'add-form') {
+      $uri_route_parameters['entity_type_id'] = $this->getTargetType();
+    }
+
+    return $uri_route_parameters;
+  }
+
 }

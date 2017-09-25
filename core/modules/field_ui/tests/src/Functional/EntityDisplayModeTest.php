@@ -2,6 +2,9 @@
 
 namespace Drupal\Tests\field_ui\Functional;
 
+use Drupal\Core\Entity\Entity\EntityFormMode;
+use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -68,6 +71,14 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // Test editing the view mode.
     $this->drupalGet('admin/structure/display-modes/view/manage/entity_test.' . $edit['id']);
 
+    // Test that the link templates added by field_ui_entity_type_build() are
+    // generating valid routes.
+    $view_mode = EntityViewMode::load('entity_test.' . $edit['id']);
+    $this->assertEquals(Url::fromRoute('entity.entity_view_mode.collection')->toString(), $view_mode->toUrl('collection')->toString());
+    $this->assertEquals(Url::fromRoute('entity.entity_view_mode.add_form', ['entity_type_id' => $view_mode->getTargetType()])->toString(), $view_mode->toUrl('add-form')->toString());
+    $this->assertEquals(Url::fromRoute('entity.entity_view_mode.edit_form', ['entity_view_mode' => $view_mode->id()])->toString(), $view_mode->toUrl('edit-form')->toString());
+    $this->assertEquals(Url::fromRoute('entity.entity_view_mode.delete_form', ['entity_view_mode' => $view_mode->id()])->toString(), $view_mode->toUrl('delete-form')->toString());
+
     // Test deleting the view mode.
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the view mode %label?', ['%label' => $edit['label']]));
@@ -113,6 +124,14 @@ class EntityDisplayModeTest extends BrowserTestBase {
 
     // Test editing the form mode.
     $this->drupalGet('admin/structure/display-modes/form/manage/entity_test.' . $edit['id']);
+
+    // Test that the link templates added by field_ui_entity_type_build() are
+    // generating valid routes.
+    $form_mode = EntityFormMode::load('entity_test.' . $edit['id']);
+    $this->assertEquals(Url::fromRoute('entity.entity_form_mode.collection')->toString(), $form_mode->toUrl('collection')->toString());
+    $this->assertEquals(Url::fromRoute('entity.entity_form_mode.add_form', ['entity_type_id' => $form_mode->getTargetType()])->toString(), $form_mode->toUrl('add-form')->toString());
+    $this->assertEquals(Url::fromRoute('entity.entity_form_mode.edit_form', ['entity_form_mode' => $form_mode->id()])->toString(), $form_mode->toUrl('edit-form')->toString());
+    $this->assertEquals(Url::fromRoute('entity.entity_form_mode.delete_form', ['entity_form_mode' => $form_mode->id()])->toString(), $form_mode->toUrl('delete-form')->toString());
 
     // Test deleting the form mode.
     $this->clickLink(t('Delete'));
