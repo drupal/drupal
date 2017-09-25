@@ -56,6 +56,7 @@ abstract class BrowserTestBase extends TestCase {
     createContentType as drupalCreateContentType;
   }
   use ConfigTestTrait;
+  use TestRequirementsTrait;
   use UserCreationTrait {
     createRole as drupalCreateRole;
     createUser as drupalCreateUser;

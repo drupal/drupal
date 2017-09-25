@@ -21,6 +21,7 @@ use Drupal\simpletest\AssertContentTrait;
 use Drupal\Tests\AssertHelperTrait;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
+use Drupal\Tests\TestRequirementsTrait;
 use Drupal\simpletest\TestServiceProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Reference;
@@ -46,9 +47,6 @@ use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
  *
  * @see \Drupal\Tests\KernelTestBase::$modules
  * @see \Drupal\Tests\KernelTestBase::enableModules()
- *
- * @todo Extend ::setRequirementsFromAnnotation() and ::checkRequirements() to
- *   account for '@requires module'.
  */
 abstract class KernelTestBase extends TestCase implements ServiceProviderInterface {
 
@@ -57,6 +55,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use AssertHelperTrait;
   use RandomGeneratorTrait;
   use ConfigTestTrait;
+  use TestRequirementsTrait;
 
   /**
    * {@inheritdoc}
@@ -210,15 +209,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     // Change the current dir to DRUPAL_ROOT.
     chdir(static::getDrupalRoot());
-  }
-
-  /**
-   * Returns the drupal root directory.
-   *
-   * @return string
-   */
-  protected static function getDrupalRoot() {
-    return dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
   }
 
   /**
