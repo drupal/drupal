@@ -150,6 +150,7 @@
   </rule>
 
   <!-- Squiz sniffs -->
+  <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
   <rule ref="Squiz.Arrays.ArrayDeclaration">
     <exclude name="Squiz.Arrays.ArrayDeclaration.NoKeySpecified"/>
     <exclude name="Squiz.Arrays.ArrayDeclaration.KeySpecified"/>

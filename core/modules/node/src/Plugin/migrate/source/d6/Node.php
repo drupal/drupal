@@ -214,7 +214,7 @@ class Node extends DrupalSqlBase {
       $query->fields('cnf');
 
       foreach ($query->execute() as $field) {
-        $this->fieldInfo[ $field['type_name'] ][ $field['field_name'] ] = $field;
+        $this->fieldInfo[$field['type_name']][$field['field_name']] = $field;
       }
 
       foreach ($this->fieldInfo as $type => $fields) {

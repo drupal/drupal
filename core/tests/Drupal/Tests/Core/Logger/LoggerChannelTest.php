@@ -113,14 +113,14 @@ class LoggerChannelTest extends UnitTestCase {
     $request_mock->headers = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
 
     // No request or account.
-    $cases [] = [
+    $cases[] = [
       function ($context) {
         return $context['channel'] == 'test' && empty($context['uid']) && empty($context['ip']);
       },
     ];
     // With account but not request. Since the request is not available the
     // current user should not be used.
-    $cases [] = [
+    $cases[] = [
       function ($context) {
         return $context['uid'] === 0 && empty($context['ip']);
       },
@@ -128,14 +128,14 @@ class LoggerChannelTest extends UnitTestCase {
       $account_mock,
     ];
     // With request but not account.
-    $cases [] = [
+    $cases[] = [
       function ($context) {
         return $context['ip'] === '127.0.0.1' && empty($context['uid']);
       },
       $request_mock,
     ];
     // Both request and account.
-    $cases [] = [
+    $cases[] = [
       function ($context) {
         return $context['ip'] === '127.0.0.1' && $context['uid'] === 1;
       },
