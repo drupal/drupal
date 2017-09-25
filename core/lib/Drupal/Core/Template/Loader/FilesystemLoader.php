@@ -24,7 +24,7 @@ class FilesystemLoader extends \Twig_Loader_Filesystem {
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler service.
    */
-  public function __construct($paths = [], ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
+  public function __construct($paths, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
     parent::__construct($paths);
 
     // Add namespaced paths for modules and themes.

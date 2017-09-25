@@ -72,15 +72,15 @@ trait BookTestTrait {
    * @param $nodes
    *   Nodes that should be in outline.
    * @param $previous
-   *   (optional) Previous link node. Defaults to FALSE.
+   *   Previous link node.
    * @param $up
-   *   (optional) Up link node. Defaults to FALSE.
+   *   Up link node.
    * @param $next
-   *   (optional) Next link node. Defaults to FALSE.
+   *   Next link node.
    * @param array $breadcrumb
    *   The nodes that should be displayed in the breadcrumb.
    */
-  public function checkBookNode(EntityInterface $node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
+  public function checkBookNode(EntityInterface $node, $nodes, $previous, $up, $next, array $breadcrumb) {
     // $number does not use drupal_static as it should not be reset
     // since it uniquely identifies each call to checkBookNode().
     static $number = 0;
