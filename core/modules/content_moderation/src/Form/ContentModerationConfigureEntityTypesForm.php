@@ -178,9 +178,15 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
         $selected_bundles[$bundle_id] = $bundle['label'];
       }
     }
+    $selected_bundles_list = [
+      '#theme' => 'item_list',
+      '#items' => $selected_bundles,
+      '#context' => ['list_style' => 'comma-list'],
+      '#empty' => $this->t('none'),
+    ];
     $response = new AjaxResponse();
     $response->addCommand(new CloseDialogCommand());
-    $response->addCommand(new HtmlCommand('#selected-' . $this->entityType->id(), !empty($selected_bundles) ? implode(', ', $selected_bundles) : $this->t('none')));
+    $response->addCommand(new HtmlCommand('#selected-' . $this->entityType->id(), $selected_bundles_list));
     return $response;
   }
 
