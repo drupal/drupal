@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Link;
 use Drupal\Tests\UnitTestCase;
@@ -14,11 +15,11 @@ use Drupal\Tests\UnitTestCase;
 class EntityLinkTest extends UnitTestCase {
 
   /**
-   * The mocked entity manager.
+   * The mocked entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The tested link generator.
@@ -40,12 +41,12 @@ class EntityLinkTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
     $this->linkGenerator = $this->getMock('Drupal\Core\Utility\LinkGeneratorInterface');
     $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
 
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $this->entityManager);
+    $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('link_generator', $this->linkGenerator);
     $container->set('language_manager', $this->languageManager);
     \Drupal::setContainer($container);
@@ -86,7 +87,7 @@ class EntityLinkTest extends UnitTestCase {
         ['langcode', 'langcode'],
       ]);
 
-    $this->entityManager
+    $this->entityTypeManager
       ->expects($this->any())
       ->method('getDefinition')
       ->with($entity_type_id)
@@ -148,7 +149,7 @@ class EntityLinkTest extends UnitTestCase {
         ['langcode', 'langcode'],
       ]);
 
-    $this->entityManager
+    $this->entityTypeManager
       ->expects($this->any())
       ->method('getDefinition')
       ->with($entity_type_id)

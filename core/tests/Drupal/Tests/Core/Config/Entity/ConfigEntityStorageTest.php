@@ -17,8 +17,8 @@ use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -136,8 +136,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->entityStorage = new ConfigEntityStorage($entity_type, $this->configFactory->reveal(), $this->uuidService->reveal(), $this->languageManager->reveal());
     $this->entityStorage->setModuleHandler($this->moduleHandler->reveal());
 
-    $entity_manager = $this->prophesize(EntityManagerInterface::class);
-    $entity_manager->getDefinition('test_entity_type')->willReturn($entity_type);
+    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
+    $entity_type_manager->getDefinition('test_entity_type')->willReturn($entity_type);
 
     $this->cacheTagsInvalidator = $this->prophesize(CacheTagsInvalidatorInterface::class);
 
@@ -149,7 +149,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->configManager = $this->prophesize(ConfigManagerInterface::class);
 
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $entity_manager->reveal());
+    $container->set('entity_type.manager', $entity_type_manager->reveal());
     $container->set('entity.query.config', $entity_query_factory->reveal());
     $container->set('config.typed', $typed_config_manager->reveal());
     $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator->reveal());

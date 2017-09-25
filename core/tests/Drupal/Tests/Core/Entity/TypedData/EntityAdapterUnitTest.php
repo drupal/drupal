@@ -3,6 +3,9 @@
 namespace Drupal\Tests\Core\Entity\TypedData;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\LanguageInterface;
@@ -52,6 +55,19 @@ class EntityAdapterUnitTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityManager;
+
+  /**
+   * The entity type manager used for testing.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityTypeManager;
+
+  /**
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityFieldManager;
 
   /**
    * The type ID of the entity under test.
@@ -130,8 +146,10 @@ class EntityAdapterUnitTest extends UnitTestCase {
         'uuid' => 'uuid',
     ]));
 
-    $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
-    $this->entityManager->expects($this->any())
+    $this->entityManager = new EntityManager();
+
+    $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
       ->will($this->returnValue($this->entityType));
@@ -183,23 +201,30 @@ class EntityAdapterUnitTest extends UnitTestCase {
       ->method('createFieldItemList')
       ->willReturn($this->fieldItemList);
 
+    $this->entityFieldManager = $this->getMockForAbstractClass(EntityFieldManagerInterface::class);
+
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
+    $container->set('entity_type.manager', $this->entityTypeManager);
+    $container->set('entity_field.manager', $this->entityFieldManager);
     $container->set('uuid', $this->uuid);
     $container->set('typed_data_manager', $this->typedDataManager);
     $container->set('language_manager', $this->languageManager);
     $container->set('plugin.manager.field.field_type', $this->fieldTypePluginManager);
+    // Inject the container into entity.manager so it can defer to
+    // entity_type.manager and other services.
+    $this->entityManager->setContainer($container);
     \Drupal::setContainer($container);
 
     $this->fieldDefinitions = [
       'id' => BaseFieldDefinition::create('integer'),
       'revision_id' => BaseFieldDefinition::create('integer'),
     ];
-
-    $this->entityManager->expects($this->any())
+    $this->entityFieldManager->expects($this->any())
       ->method('getFieldDefinitions')
       ->with($this->entityTypeId, $this->bundle)
       ->will($this->returnValue($this->fieldDefinitions));
+
     $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', [$values, $this->entityTypeId, $this->bundle]);
 
     $this->entityAdapter = EntityAdapter::createFromEntity($this->entity);

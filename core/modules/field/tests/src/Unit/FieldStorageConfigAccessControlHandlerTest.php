@@ -6,8 +6,9 @@ use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\DependencyInjection\Container;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -126,31 +127,37 @@ class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
     $storage_access_control_handler = new FieldStorageConfigAccessControlHandler($storageType);
     $storage_access_control_handler->setModuleHandler($this->moduleHandler);
 
-    $entityManager = $this->getMock(EntityManagerInterface::class);
-    $entityManager
+    $entity_type_manager = $this->getMock(EntityTypeManagerInterface::class);
+    $entity_type_manager
       ->expects($this->any())
       ->method('getDefinition')
       ->willReturnMap([
         ['field_storage_config', TRUE, $storageType],
         ['node', TRUE, $entityType],
       ]);
-    $entityManager
+    $entity_type_manager
       ->expects($this->any())
       ->method('getStorage')
       ->willReturnMap([
         ['field_storage_config', $this->getMock(EntityStorageInterface::class)],
       ]);
-    $entityManager
+    $entity_type_manager
       ->expects($this->any())
       ->method('getAccessControlHandler')
       ->willReturnMap([
         ['field_storage_config', $storage_access_control_handler],
       ]);
 
+    $entity_manager = new EntityManager();
+
     $container = new Container();
-    $container->set('entity.manager', $entityManager);
+    $container->set('entity.manager', $entity_manager);
+    $container->set('entity_type.manager', $entity_type_manager);
     $container->set('uuid', $this->getMock(UuidInterface::class));
     $container->set('cache_contexts_manager', $this->prophesize(CacheContextsManager::class));
+    // Inject the container into entity.manager so it can defer to
+    // entity_type.manager.
+    $entity_manager->setContainer($container);
     \Drupal::setContainer($container);
 
     $this->fieldStorage = new FieldStorageConfig([

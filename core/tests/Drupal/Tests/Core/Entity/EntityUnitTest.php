@@ -5,7 +5,11 @@ namespace Drupal\Tests\Core\Entity;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Language\Language;
+use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -30,11 +34,11 @@ class EntityUnitTest extends UnitTestCase {
   protected $entityType;
 
   /**
-   * The entity manager used for testing.
+   * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The ID of the type of the entity under test.
@@ -94,8 +98,8 @@ class EntityUnitTest extends UnitTestCase {
       ->method('getListCacheTags')
       ->willReturn([$this->entityTypeId . '_list']);
 
-    $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager = $this->getMockForAbstractClass(EntityTypeManagerInterface::class);
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
       ->will($this->returnValue($this->entityType));
@@ -111,7 +115,9 @@ class EntityUnitTest extends UnitTestCase {
     $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidator');
 
     $container = new ContainerBuilder();
-    $container->set('entity.manager', $this->entityManager);
+    // Ensure that Entity doesn't use the deprecated entity.manager service.
+    $container->set('entity.manager', NULL);
+    $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('uuid', $this->uuid);
     $container->set('language_manager', $this->languageManager);
     $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator);
@@ -186,7 +192,7 @@ class EntityUnitTest extends UnitTestCase {
 
     // Set a dummy property on the entity under test to test that the label can
     // be returned form a property if there is no callback.
-    $this->entityManager->expects($this->at(1))
+    $this->entityTypeManager->expects($this->at(1))
       ->method('getDefinition')
       ->with($this->entityTypeId)
       ->will($this->returnValue([
@@ -213,9 +219,10 @@ class EntityUnitTest extends UnitTestCase {
     $access->expects($this->at(1))
       ->method('createAccess')
       ->will($this->returnValue(AccessResult::allowed()));
-    $this->entityManager->expects($this->exactly(2))
+    $this->entityTypeManager->expects($this->exactly(2))
       ->method('getAccessControlHandler')
       ->will($this->returnValue($access));
+
     $this->assertEquals(AccessResult::allowed(), $this->entity->access($operation));
     $this->assertEquals(AccessResult::allowed(), $this->entity->access('create'));
   }
@@ -239,11 +246,11 @@ class EntityUnitTest extends UnitTestCase {
     // Base our mocked entity on a real entity class so we can test if calling
     // Entity::load() on the base class will bubble up to an actual entity.
     $this->entityTypeId = 'entity_test_mul';
-    $methods = get_class_methods('Drupal\entity_test\Entity\EntityTestMul');
+    $methods = get_class_methods(EntityTestMul::class);
     unset($methods[array_search('load', $methods)]);
     unset($methods[array_search('loadMultiple', $methods)]);
     unset($methods[array_search('create', $methods)]);
-    $this->entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTestMul')
+    $this->entity = $this->getMockBuilder(EntityTestMul::class)
       ->disableOriginalConstructor()
       ->setMethods($methods)
       ->getMock();
@@ -260,20 +267,24 @@ class EntityUnitTest extends UnitTestCase {
 
     $class_name = get_class($this->entity);
 
-    $this->entityManager->expects($this->once())
+    $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
+    $entity_type_repository->expects($this->once())
       ->method('getEntityTypeFromClass')
       ->with($class_name)
       ->willReturn($this->entityTypeId);
 
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
+    $storage = $this->getMock(EntityStorageInterface::class);
     $storage->expects($this->once())
       ->method('load')
       ->with(1)
       ->will($this->returnValue($this->entity));
-    $this->entityManager->expects($this->once())
+
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with($this->entityTypeId)
       ->will($this->returnValue($storage));
+
+    \Drupal::getContainer()->set('entity_type.repository', $entity_type_repository);
 
     // Call Entity::load statically and check that it returns the mock entity.
     $this->assertSame($this->entity, $class_name::load(1));
@@ -290,20 +301,24 @@ class EntityUnitTest extends UnitTestCase {
 
     $class_name = get_class($this->entity);
 
-    $this->entityManager->expects($this->once())
+    $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
+    $entity_type_repository->expects($this->once())
       ->method('getEntityTypeFromClass')
       ->with($class_name)
       ->willReturn($this->entityTypeId);
 
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
+    $storage = $this->getMock(EntityStorageInterface::class);
     $storage->expects($this->once())
       ->method('loadMultiple')
       ->with([1])
       ->will($this->returnValue([1 => $this->entity]));
-    $this->entityManager->expects($this->once())
+
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with($this->entityTypeId)
       ->will($this->returnValue($storage));
+
+    \Drupal::getContainer()->set('entity_type.repository', $entity_type_repository);
 
     // Call Entity::loadMultiple statically and check that it returns the mock
     // entity.
@@ -317,20 +332,25 @@ class EntityUnitTest extends UnitTestCase {
     $this->setupTestLoad();
 
     $class_name = get_class($this->entity);
-    $this->entityManager->expects($this->once())
+
+    $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
+    $entity_type_repository->expects($this->once())
       ->method('getEntityTypeFromClass')
       ->with($class_name)
       ->willReturn($this->entityTypeId);
 
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
+    $storage = $this->getMock(EntityStorageInterface::class);
     $storage->expects($this->once())
       ->method('create')
       ->with([])
       ->will($this->returnValue($this->entity));
-    $this->entityManager->expects($this->once())
+
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with($this->entityTypeId)
       ->will($this->returnValue($storage));
+
+    \Drupal::getContainer()->set('entity_type.repository', $entity_type_repository);
 
     // Call Entity::create() statically and check that it returns the mock
     // entity.
@@ -345,10 +365,12 @@ class EntityUnitTest extends UnitTestCase {
     $storage->expects($this->once())
       ->method('save')
       ->with($this->entity);
-    $this->entityManager->expects($this->once())
+
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with($this->entityTypeId)
       ->will($this->returnValue($storage));
+
     $this->entity->save();
   }
 
@@ -361,10 +383,12 @@ class EntityUnitTest extends UnitTestCase {
     // Testing the argument of the delete() method consumes too much memory.
     $storage->expects($this->once())
       ->method('delete');
-    $this->entityManager->expects($this->once())
+
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with($this->entityTypeId)
       ->will($this->returnValue($storage));
+
     $this->entity->delete();
   }
 

@@ -4,7 +4,12 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
@@ -53,6 +58,27 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityManager;
+
+  /**
+   * The entity field manager used for testing.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The entity type bundle manager used for testing.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityTypeBundleInfo;
+
+  /**
+   * The entity type manager used for testing.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityTypeManager;
 
   /**
    * The type ID of the entity under test.
@@ -124,11 +150,17 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
         'uuid' => 'uuid',
     ]));
 
-    $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
-    $this->entityManager->expects($this->any())
+    $this->entityManager = new EntityManager();
+
+    $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
+    $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
       ->will($this->returnValue($this->entityType));
+
+    $this->entityFieldManager = $this->getMock(EntityFieldManagerInterface::class);
+
+    $this->entityTypeBundleInfo = $this->getMock(EntityTypeBundleInfoInterface::class);
 
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
 
@@ -168,10 +200,16 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
+    $container->set('entity_field.manager', $this->entityFieldManager);
+    $container->set('entity_type.bundle.info', $this->entityTypeBundleInfo);
+    $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('uuid', $this->uuid);
     $container->set('typed_data_manager', $this->typedDataManager);
     $container->set('language_manager', $this->languageManager);
     $container->set('plugin.manager.field.field_type', $this->fieldTypePluginManager);
+    // Inject the container into entity.manager so it can defer to
+    // entity_type.manager and other services.
+    $this->entityManager->setContainer($container);
     \Drupal::setContainer($container);
 
     $this->fieldDefinitions = [
@@ -179,14 +217,14 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       'revision_id' => BaseFieldDefinition::create('integer'),
     ];
 
-    $this->entityManager->expects($this->any())
+    $this->entityFieldManager->expects($this->any())
       ->method('getFieldDefinitions')
       ->with($this->entityTypeId, $this->bundle)
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', [$values, $this->entityTypeId, $this->bundle], '', TRUE, TRUE, TRUE, ['isNew']);
+    $this->entity = $this->getMockForAbstractClass(ContentEntityBase::class, [$values, $this->entityTypeId, $this->bundle], '', TRUE, TRUE, TRUE, ['isNew']);
     $values['defaultLangcode'] = [LanguageInterface::LANGCODE_DEFAULT => LanguageInterface::LANGCODE_NOT_SPECIFIED];
-    $this->entityUnd = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', [$values, $this->entityTypeId, $this->bundle]);
+    $this->entityUnd = $this->getMockForAbstractClass(ContentEntityBase::class, [$values, $this->entityTypeId, $this->bundle]);
   }
 
   /**
@@ -283,7 +321,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::isTranslatable
    */
   public function testIsTranslatable() {
-    $this->entityManager->expects($this->any())
+    $this->entityTypeBundleInfo->expects($this->any())
       ->method('getBundleInfo')
       ->with($this->entityTypeId)
       ->will($this->returnValue([
@@ -382,7 +420,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
         $entity->preSave($storage);
       });
 
-    $this->entityManager->expects($this->any())
+    $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->with($this->entityTypeId)
       ->will($this->returnValue($storage));
@@ -434,7 +472,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $access->expects($this->at(3))
       ->method('createAccess')
       ->will($this->returnValue(AccessResult::allowed()));
-    $this->entityManager->expects($this->exactly(4))
+    $this->entityTypeManager->expects($this->exactly(4))
       ->method('getAccessControlHandler')
       ->will($this->returnValue($access));
     $this->assertTrue($this->entity->access($operation));
