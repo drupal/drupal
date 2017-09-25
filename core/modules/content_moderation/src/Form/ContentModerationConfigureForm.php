@@ -94,14 +94,21 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
         }
       }
 
+      $selected_bundles_list = [
+        '#theme' => 'item_list',
+        '#items' => $selected_bundles,
+        '#context' => ['list_style' => 'comma-list'],
+        '#empty' => $this->t('none'),
+      ];
       $form['entity_types_container']['entity_types'][$entity_type->id()] = [
         'type' => [
-          'label' => ['#markup' => '<strong>' . $this->t('@bundle types', ['@bundle' => $entity_type->getLabel()]) . '</strong>'],
-          'selected' => [
-            '#prefix' => '<br/><span id="selected-' . $entity_type->id() . '">',
-            '#markup' => !empty($selected_bundles) ? implode(', ', $selected_bundles) : $this->t('none'),
-            '#suffix' => '</span>',
-          ],
+          '#type' => 'inline_template',
+          '#template' => '<strong>{{ label }}</strong></br><span id="selected-{{ entity_type_id }}">{{ selected_bundles }}</span>',
+          '#context' => [
+            'label' => $this->t('@bundle types', ['@bundle' => $entity_type->getLabel()]),
+            'entity_type_id' => $entity_type->id(),
+            'selected_bundles' => $selected_bundles_list,
+          ]
         ],
         'operations' => [
           '#type' => 'operations',
