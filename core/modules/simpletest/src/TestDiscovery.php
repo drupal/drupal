@@ -189,14 +189,17 @@ class TestDiscovery {
         // abstract class, trait or test fixture.
         continue;
       }
-      // Skip this test class if it requires unavailable modules.
-      // @todo PHPUnit skips tests with unmet requirements when executing a test
-      //   (instead of excluding them upfront). Refactor test runner to follow
-      //   that approach.
+      // Skip this test class if it is a Simpletest-based test and requires
+      // unavailable modules. TestDiscovery should not filter out module
+      // requirements for PHPUnit-based test classes.
+      // @todo Move this behavior to \Drupal\simpletest\TestBase so tests can be
+      //       marked as skipped, instead.
       // @see https://www.drupal.org/node/1273478
-      if (!empty($info['requires']['module'])) {
-        if (array_diff($info['requires']['module'], $this->availableExtensions['module'])) {
-          continue;
+      if ($info['type'] == 'Simpletest') {
+        if (!empty($info['requires']['module'])) {
+          if (array_diff($info['requires']['module'], $this->availableExtensions['module'])) {
+            continue;
+          }
         }
       }
 
