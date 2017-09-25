@@ -36,6 +36,7 @@ class FieldUpdateTest extends UpdatePathTestBase {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.bare.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/drupal-8.views_entity_reference_plugins-2429191.php',
+      __DIR__ . '/../../../fixtures/update/drupal-8.remove_handler_submit_setting-2715589.php',
     ];
   }
 
@@ -139,6 +140,23 @@ class FieldUpdateTest extends UpdatePathTestBase {
     $dependencies = $config->get('dependencies');
     $dependencies += ['module' => []];
     $this->assertEqual(in_array('entity_reference', $dependencies['module']), $present);
+  }
+
+  /**
+   * Tests field_post_update_remove_handler_submit_setting().
+   *
+   * @see field_post_update_remove_handler_submit_setting()
+   */
+  public function testEntityReferenceFieldConfigCleanUpdate() {
+    $field_config = $this->config('field.field.node.article.field_tags');
+    // Check that 'handler_submit' key exists in field config settings.
+    $this->assertEquals('Change handler', $field_config->get('settings.handler_submit'));
+
+    $this->runUpdates();
+
+    $field_config = $this->config('field.field.node.article.field_tags');
+    // Check that 'handler_submit' has been removed from field config settings.
+    $this->assertArrayNotHasKey('handler_submit', $field_config->get('settings'));
   }
 
 }
