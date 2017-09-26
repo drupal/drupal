@@ -38,3 +38,11 @@ ajax_forms_test.image_button_form:
   requirements:
     _access: 'TRUE'
 
+ajax_forms_test.ajax_element_form:
+  path: '/ajax_forms_test_ajax_element_form'
+  defaults:
+    _title: 'AJAX forms elements test'
+    _form: '\Drupal\ajax_forms_test\Form\AjaxFormsTestAjaxElementsForm'
+  requirements:
+    _access: 'TRUE'
+
