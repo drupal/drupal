@@ -266,10 +266,12 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    * Sort states or transitions by weight, label, and key.
    *
    * @param \Drupal\workflows\StateInterface[]|\Drupal\workflows\TransitionInterface[] $objects
-   *   Objects to multi-sort.
+   *   An array of state or transition objects to multi-sort, keyed by the
+   *   state or transition ID.
    *
    * @return \Drupal\workflows\StateInterface[]|\Drupal\workflows\TransitionInterface[]
-   *   An array of sorted transitions or states.
+   *   An array of sorted transitions or states, keyed by the state or
+   *   transition ID.
    */
   protected static function labelWeightMultisort($objects) {
     if (count($objects) > 1) {
