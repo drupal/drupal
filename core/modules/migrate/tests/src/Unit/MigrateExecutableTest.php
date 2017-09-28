@@ -440,6 +440,33 @@ class MigrateExecutableTest extends MigrateTestCase {
   }
 
   /**
+   * Tests the processRow method.
+   */
+  public function testProcessRowEmptyDestination() {
+    $expected = [
+      'test' => 'test destination',
+      'test1' => 'test1 destination',
+      'test2' => NULL,
+    ];
+    $row = new Row();
+    $plugins = [];
+    foreach ($expected as $key => $value) {
+      $plugin = $this->prophesize(MigrateProcessInterface::class);
+      $plugin->getPluginDefinition()->willReturn([]);
+      $plugin->transform(NULL, $this->executable, $row, $key)->willReturn($value);
+      $plugin->multiple()->willReturn(TRUE);
+      $plugins[$key][0] = $plugin->reveal();
+    }
+    $this->migration->method('getProcessPlugins')->willReturn($plugins);
+    $this->executable->processRow($row);
+    foreach ($expected as $key => $value) {
+      $this->assertSame($value, $row->getDestinationProperty($key));
+    }
+    $this->assertCount(2, $row->getDestination());
+    $this->assertSame(['test2'], $row->getEmptyDestinationProperties());
+  }
+
+  /**
    * Returns a mock migration source instance.
    *
    * @return \Drupal\migrate\Plugin\MigrateSourceInterface|\PHPUnit_Framework_MockObject_MockObject
