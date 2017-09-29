@@ -64,7 +64,7 @@ class LoggingTest extends DatabaseTestBase {
 
     db_query('SELECT name FROM {test} WHERE age > :age', [':age' => 25])->fetchCol();
 
-    db_query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo'], ['target' => 'replica']);// ->fetchCol();
+    db_query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo'], ['target' => 'replica'])->fetchCol();
 
     $queries1 = Database::getLog('testing1');
 
