@@ -2,10 +2,9 @@
 
 namespace Drupal\Tests\user\Kernel\Migrate\d7;
 
-use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Database\Database;
-use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\migrate\Kernel\NodeCommentCombinationTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -17,6 +16,8 @@ use Drupal\user\UserInterface;
  * @group user
  */
 class MigrateUserTest extends MigrateDrupal7TestBase {
+
+  use NodeCommentCombinationTrait;
 
   /**
    * {@inheritdoc}
@@ -43,12 +44,12 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
 
     // Prepare to migrate user pictures as well.
     $this->installEntitySchema('file');
-    $this->createType('page');
-    $this->createType('article');
-    $this->createType('blog');
-    $this->createType('book');
-    $this->createType('forum');
-    $this->createType('test_content_type');
+    $this->createNodeCommentCombination('page');
+    $this->createNodeCommentCombination('article');
+    $this->createNodeCommentCombination('blog');
+    $this->createNodeCommentCombination('book');
+    $this->createNodeCommentCombination('forum', 'comment_forum');
+    $this->createNodeCommentCombination('test_content_type');
     Vocabulary::create(['vid' => 'test_vocabulary'])->save();
     $this->executeMigrations([
       'language',
@@ -59,25 +60,6 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
       'd7_field_instance',
       'd7_user',
     ]);
-  }
-
-  /**
-   * Creates a node type with a corresponding comment type.
-   *
-   * @param string $id
-   *   The node type ID.
-   */
-  protected function createType($id) {
-    NodeType::create([
-      'type' => $id,
-      'label' => $this->randomString(),
-    ])->save();
-
-    CommentType::create([
-      'id' => 'comment_node_' . $id,
-      'label' => $this->randomString(),
-      'target_entity_type_id' => 'node',
-    ])->save();
   }
 
   /**

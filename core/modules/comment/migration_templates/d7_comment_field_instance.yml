@@ -12,7 +12,14 @@ process:
   entity_type: 'constants/entity_type'
   label: 'constants/label'
   required: 'constants/required'
-  field_name: bundle
+  field_name:
+    -
+      plugin: migration_lookup
+      source: bundle
+      migration: d7_comment_type
+    -
+      plugin: skip_on_empty
+      method: row
   bundle: node_type
   'default_value/0/status': 'constants/required'
   'settings/default_mode': default_mode

@@ -2,12 +2,11 @@
 
 namespace Drupal\Tests\field\Kernel\Migrate\d7;
 
-use Drupal\comment\Entity\CommentType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Tests\migrate\Kernel\NodeCommentCombinationTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Migrates Drupal 7 field instances.
@@ -16,10 +15,10 @@ use Drupal\node\Entity\NodeType;
  */
 class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
 
+  use NodeCommentCombinationTrait;
+
   /**
-   * The modules to be enabled during the test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $modules = [
     'comment',
@@ -40,33 +39,14 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     parent::setUp();
     $this->installConfig(static::$modules);
-    $this->createType('page');
-    $this->createType('article');
-    $this->createType('blog');
-    $this->createType('book');
-    $this->createType('forum');
-    $this->createType('test_content_type');
+    $this->createNodeCommentCombination('page');
+    $this->createNodeCommentCombination('article');
+    $this->createNodeCommentCombination('blog');
+    $this->createNodeCommentCombination('book');
+    $this->createNodeCommentCombination('forum', 'comment_forum');
+    $this->createNodeCommentCombination('test_content_type');
     Vocabulary::create(['vid' => 'test_vocabulary'])->save();
     $this->executeMigrations(['d7_field', 'd7_field_instance']);
-  }
-
-  /**
-   * Creates a node type with a corresponding comment type.
-   *
-   * @param string $id
-   *   The node type ID.
-   */
-  protected function createType($id) {
-    NodeType::create([
-      'type' => $id,
-      'label' => $this->randomString(),
-    ])->save();
-
-    CommentType::create([
-      'id' => 'comment_node_' . $id,
-      'label' => $this->randomString(),
-      'target_entity_type_id' => 'node',
-    ])->save();
   }
 
   /**
@@ -127,7 +107,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('comment.comment_node_book.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.book.body', 'Body', 'text_with_summary', FALSE, FALSE);
     $this->assertEntity('node.forum.taxonomy_forums', 'Forums', 'entity_reference', TRUE, FALSE);
-    $this->assertEntity('comment.comment_node_forum.comment_body', 'Comment', 'text_long', TRUE, FALSE);
+    $this->assertEntity('comment.comment_forum.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.forum.body', 'Body', 'text_with_summary', FALSE, FALSE);
     $this->assertEntity('comment.comment_node_test_content_type.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.test_content_type.field_boolean', 'Boolean', 'boolean', FALSE, FALSE);

@@ -22,7 +22,14 @@ process:
     map:
       0: true
       1: false
-  bundle: bundle
+  bundle:
+    -
+      plugin: migration_lookup
+      source: bundle
+      migration: d7_comment_type
+    -
+      plugin: skip_on_empty
+      method: row
 destination:
   plugin: component_entity_form_display
 migration_dependencies:

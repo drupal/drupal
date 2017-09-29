@@ -35,7 +35,7 @@ class RollbackFieldInstanceTest extends MigrateFieldInstanceTest {
       'comment.comment_node_book.comment_body',
       'node.book.body',
       'node.forum.taxonomy_forums',
-      'comment.comment_node_forum.comment_body',
+      'comment.comment_forum.comment_body',
       'node.forum.body',
       'comment.comment_node_test_content_type.comment_body',
       'node.test_content_type.field_boolean',

@@ -56,7 +56,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
       'label' => $this->randomMachineName(),
     ])->save();
     CommentType::create([
-      'id' => 'comment_node_forum',
+      'id' => 'comment_forum',
       'label' => $this->randomMachineName(),
     ])->save();
     CommentType::create([
@@ -213,8 +213,8 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
     $this->assertEntity('comment.comment_node_book.default');
     $this->assertComponent('comment.comment_node_book.default', 'comment_body', 'text_default', 'hidden', 0);
 
-    $this->assertEntity('comment.comment_node_forum.default');
-    $this->assertComponent('comment.comment_node_forum.default', 'comment_body', 'text_default', 'hidden', 0);
+    $this->assertEntity('comment.comment_forum.default');
+    $this->assertComponent('comment.comment_forum.default', 'comment_body', 'text_default', 'hidden', 0);
 
     $this->assertEntity('comment.comment_node_page.default');
     $this->assertComponent('comment.comment_node_page.default', 'comment_body', 'text_default', 'hidden', 0);

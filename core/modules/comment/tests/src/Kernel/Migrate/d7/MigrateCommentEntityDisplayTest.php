@@ -53,7 +53,7 @@ class MigrateCommentEntityDisplayTest extends MigrateDrupal7TestBase {
     $this->assertDisplay('node.article.default', 'comment_node_article');
     $this->assertDisplay('node.book.default', 'comment_node_book');
     $this->assertDisplay('node.blog.default', 'comment_node_blog');
-    $this->assertDisplay('node.forum.default', 'comment_node_forum');
+    $this->assertDisplay('node.forum.default', 'comment_forum');
     $this->assertDisplay('node.test_content_type.default', 'comment_node_test_content_type');
   }
 
