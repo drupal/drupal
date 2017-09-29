@@ -163,6 +163,8 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
 
   /**
    * Defines the schema for the {cachetags} table.
+   *
+   * @internal
    */
   public function schemaDefinition() {
     $schema = [

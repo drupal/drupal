@@ -136,6 +136,8 @@ abstract class ViewTestBase extends BrowserTestBase {
 
   /**
    * Returns the schema definition.
+   *
+   * @internal
    */
   protected function schemaDefinition() {
     return ViewTestData::schemaDefinition();

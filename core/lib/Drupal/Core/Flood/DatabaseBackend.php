@@ -185,6 +185,8 @@ class DatabaseBackend implements FloodInterface {
 
   /**
    * Defines the schema for the flood table.
+   *
+   * @internal
    */
   public function schemaDefinition() {
     return [

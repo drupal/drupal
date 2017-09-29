@@ -290,6 +290,8 @@ class FilterCombineTest extends ViewsKernelTestBase {
 
   /**
    * Allow {views_test_data}.job to be NULL.
+   *
+   * @internal
    */
   protected function schemaDefinition() {
     $schema = parent::schemaDefinition();

@@ -461,6 +461,8 @@ class DatabaseBackend implements CacheBackendInterface {
 
   /**
    * Defines the schema for the {cache_*} bin tables.
+   *
+   * @internal
    */
   public function schemaDefinition() {
     $schema = [

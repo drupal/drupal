@@ -180,6 +180,8 @@ class DatabaseStorage implements StorageInterface {
 
   /**
    * Defines the schema for the configuration table.
+   *
+   * @internal
    */
   protected static function schemaDefinition() {
     $schema = [

@@ -58,6 +58,8 @@ class ViewTestData {
 
   /**
    * Returns the schema definition.
+   *
+   * @internal
    */
   public static function schemaDefinition() {
     $schema['views_test_data'] = [
