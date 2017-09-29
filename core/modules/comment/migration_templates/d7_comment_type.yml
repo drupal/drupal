@@ -8,7 +8,14 @@ source:
     entity_type: node
 process:
   target_entity_type_id: 'constants/entity_type'
-  id: bundle
+  id:
+    plugin: static_map
+    source: bundle
+    bypass: true
+    # The Forum module provides its own comment type (comment_forum), which we
+    # want to reuse if it exists.
+    map:
+      comment_node_forum: comment_forum
   label: label
 destination:
   plugin: entity:comment_type

@@ -26,7 +26,15 @@ process:
       plugin: skip_on_empty
       method: row
   entity_type: entity_type
-  bundle: bundle
+  # The bundle needs to be statically mapped in order to support comment types
+  # that might already exist before this migration is run. See
+  # d7_comment_type.yml or more information.
+  bundle:
+    plugin: static_map
+    source: bundle
+    bypass: true
+    map:
+      comment_node_forum: comment_forum
   view_mode:
     -
       plugin: migration_lookup
