@@ -96,9 +96,12 @@ class ParamConverterManager implements ParamConverterManagerInterface {
 
       // If a converter returns NULL it means that the parameter could not be
       // converted.
-      $defaults[$name] = $this->getConverter($definition['converter'])->convert($defaults[$name], $definition, $name, $defaults);
+      $value = $defaults[$name];
+      $defaults[$name] = $this->getConverter($definition['converter'])->convert($value, $definition, $name, $defaults);
       if (!isset($defaults[$name])) {
-        throw new ParamNotConvertedException(sprintf('The "%s" parameter was not converted for the path "%s" (route name: "%s")', $name, $route->getPath(), $defaults[RouteObjectInterface::ROUTE_NAME]));
+        $message = 'The "%s" parameter was not converted for the path "%s" (route name: "%s")';
+        $route_name = $defaults[RouteObjectInterface::ROUTE_NAME];
+        throw new ParamNotConvertedException(sprintf($message, $name, $route->getPath(), $route_name), 0, NULL, $route_name, [$name => $value]);
       }
     }
 
