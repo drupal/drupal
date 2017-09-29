@@ -403,9 +403,13 @@ class MigrateUpgradeForm extends ConfirmFormBase {
         // Store the retrieved migration IDs in form storage.
         $form_state->set('version', $version);
         $form_state->set('migrations', $migration_array);
-        $form_state->set('source_base_path', $form_state->getValue('source_base_path'));
+        if ($version == 6) {
+          $form_state->set('source_base_path', $form_state->getValue('d6_source_base_path'));
+        }
+        else {
+          $form_state->set('source_base_path', $form_state->getValue('source_base_path'));
+        }
         $form_state->set('source_private_file_path', $form_state->getValue('source_private_file_path'));
-
         // Store the retrived system data in form storage.
         $form_state->set('system_data', $system_data);
       }

@@ -131,10 +131,15 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
     $edit = [
       $driver => $connection_options,
-      'source_base_path' => $this->getSourceBasePath(),
       'source_private_file_path' => $this->getSourceBasePath(),
       'version' => $version,
     ];
+    if ($version == 6) {
+      $edit['d6_source_base_path'] = $this->getSourceBasePath();
+    }
+    else {
+      $edit['source_base_path'] = $this->getSourceBasePath();
+    }
     if (count($drivers) !== 1) {
       $edit['driver'] = $driver;
     }
