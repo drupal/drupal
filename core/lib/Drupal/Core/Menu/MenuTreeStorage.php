@@ -1217,6 +1217,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *
    * @return array
    *   The schema API definition for the SQL storage table.
+   *
+   * @internal
    */
   protected static function schemaDefinition() {
     $schema = [

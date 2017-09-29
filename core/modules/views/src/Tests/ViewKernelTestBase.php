@@ -126,6 +126,8 @@ abstract class ViewKernelTestBase extends KernelTestBase {
 
   /**
    * Returns the schema definition.
+   *
+   * @internal
    */
   protected function schemaDefinition() {
     return ViewTestData::schemaDefinition();

@@ -277,6 +277,8 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
 
   /**
    * Defines the schema for the queue table.
+   *
+   * @internal
    */
   public function schemaDefinition() {
     return [

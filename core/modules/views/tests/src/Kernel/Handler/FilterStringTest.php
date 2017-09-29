@@ -39,6 +39,9 @@ class FilterStringTest extends ViewsKernelTestBase {
     return $data;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function schemaDefinition() {
     $schema = parent::schemaDefinition();
     $schema['views_test_data']['fields']['description'] = [

@@ -239,6 +239,8 @@ class DatabaseLockBackend extends LockBackendAbstract {
 
   /**
    * Defines the schema for the semaphore table.
+   *
+   * @internal
    */
   public function schemaDefinition() {
     return [
