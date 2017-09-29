@@ -172,7 +172,7 @@ class SiteInformationForm extends ConfigFormBase {
 
     }
     if (!$this->pathValidator->isValid($form_state->getValue('site_frontpage'))) {
-      $form_state->setErrorByName('site_frontpage', $this->t("The path '%path' is either invalid or you do not have access to it.", ['%path' => $form_state->getValue('site_frontpage')]));
+      $form_state->setErrorByName('site_frontpage', $this->t("Either the path '%path' is invalid or you do not have access to it.", ['%path' => $form_state->getValue('site_frontpage')]));
     }
     // Get the normal paths of both error pages.
     if (!$form_state->isValueEmpty('site_403')) {
@@ -189,11 +189,11 @@ class SiteInformationForm extends ConfigFormBase {
     }
     // Validate 403 error path.
     if (!$form_state->isValueEmpty('site_403') && !$this->pathValidator->isValid($form_state->getValue('site_403'))) {
-      $form_state->setErrorByName('site_403', $this->t("The path '%path' is either invalid or you do not have access to it.", ['%path' => $form_state->getValue('site_403')]));
+      $form_state->setErrorByName('site_403', $this->t("Either the path '%path' is invalid or you do not have access to it.", ['%path' => $form_state->getValue('site_403')]));
     }
     // Validate 404 error path.
     if (!$form_state->isValueEmpty('site_404') && !$this->pathValidator->isValid($form_state->getValue('site_404'))) {
-      $form_state->setErrorByName('site_404', $this->t("The path '%path' is either invalid or you do not have access to it.", ['%path' => $form_state->getValue('site_404')]));
+      $form_state->setErrorByName('site_404', $this->t("Either the path '%path' is invalid or you do not have access to it.", ['%path' => $form_state->getValue('site_404')]));
     }
 
     parent::validateForm($form, $form_state);
