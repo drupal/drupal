@@ -55,6 +55,13 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     // Make sure the thumbnail is displayed.
     $assert_session->elementAttributeContains('css', '.image-style-thumbnail', 'src', 'generic.png');
 
+    // Make sure checkbox changes the visibility of log message field.
+    $this->drupalGet("media/1/edit");
+    $page->uncheckField('revision');
+    $assert_session->elementAttributeContains('css', '.field--name-revision-log-message', 'style', 'display: none');
+    $page->checkField('revision');
+    $assert_session->elementAttributeNotContains('css', '.field--name-revision-log-message', 'style', 'display');
+
     // Load the media and check if the label was properly populated.
     $media = Media::load(1);
     $this->assertEquals($test_filename, $media->getName());
