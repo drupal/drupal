@@ -332,6 +332,7 @@ class QuickEditLoadingTest extends WebTestBase {
 
     $this->drupalGet('node/' . $this->testNode->id());
     $this->assertRaw('data-quickedit-entity-id="node/' . $this->testNode->id() . '"');
+    $this->assertRaw('data-quickedit-field-id="node/' . $this->testNode->id() . '/title/' . $this->testNode->language()->getId() . '/full"');
 
     $this->testNode->title = 'Updated node';
     $this->testNode->setNewRevision(TRUE);
@@ -340,6 +341,7 @@ class QuickEditLoadingTest extends WebTestBase {
 
     $this->drupalGet('node/' . $this->testNode->id());
     $this->assertNoRaw('data-quickedit-entity-id="node/' . $this->testNode->id() . '"');
+    $this->assertNoRaw('data-quickedit-field-id="node/' . $this->testNode->id() . '/title/' . $this->testNode->language()->getId() . '/full"');
   }
 
   /**

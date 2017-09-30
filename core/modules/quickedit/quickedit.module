@@ -129,13 +129,13 @@ function quickedit_preprocess_page_title(&$variables) {
  */
 function quickedit_preprocess_field(&$variables) {
   $variables['#cache']['contexts'][] = 'user.permissions';
-  if (!\Drupal::currentUser()->hasPermission('access in-place editing')) {
-    return;
-  }
-
   $element = $variables['element'];
   /** @var $entity \Drupal\Core\Entity\EntityInterface */
   $entity = $element['#object'];
+
+  if (!\Drupal::currentUser()->hasPermission('access in-place editing') || !_quickedit_entity_is_latest_revision($entity)) {
+    return;
+  }
 
   // Quick Edit module only supports view modes, not dynamically defined
   // "display options" (which \Drupal\Core\Field\FieldItemListInterface::view()
