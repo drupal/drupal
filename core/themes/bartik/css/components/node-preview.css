@@ -7,7 +7,7 @@
   position: fixed;
   z-index: 499;
   width: 100%;
-  padding: 10px;
+  padding: 5px 10px;
 }
 .node-preview-backlink {
   background-color: #419ff1;
@@ -19,13 +19,15 @@
   color: #fff;
   font-size: 0.9em;
   line-height: normal;
-  margin: 0;
+  margin: 5px 10px 5px 0; /* LTR */
   padding: 4px 1em 4px 0.6em; /* LTR */
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+  display: inline-block;
 }
 [dir="rtl"] .node-preview-backlink {
   background: url(../../../../misc/icons/000000/chevron-right.svg) right no-repeat, -webkit-linear-gradient(top, #419ff1, #1076d5);
   background: url(../../../../misc/icons/000000/chevron-right.svg) right no-repeat, linear-gradient(to bottom, #419ff1, #1076d5);
+  margin: 5px 0 5px 10px;
   padding: 4px 0.6em 4px 1em;
   float: right;
 }
@@ -58,4 +60,16 @@
   content: '';
   width: 10px;
   display: inline-block;
+}
+[dir="rtl"] .node-preview-backlink::after {
+  content: '';
+  width: 10px;
+  display: inline-block;
+}
+.node-preview-container .form-item-view-mode {
+  display: inline-block;
+  margin: 5px 0;
+}
+[dir="rtl"] .node-preview-container .form-item-view-mode {
+  margin-right: 0;
 }
