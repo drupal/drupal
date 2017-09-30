@@ -76,14 +76,14 @@
     border: solid transparent;
     border-color: rgba(235, 234, 228, 0);
     border-left-color: #ebeae4; /* LTR */
-    border-width: 1.35em;
+    border-width: 1.269em;
     content: " ";
     height: 0;
     width: 0;
     position: absolute;
     pointer-events: none;
     top: 50%;
-    margin-top: -1.32em;
+    margin-top: -1.269em;
   }
   [dir="rtl"] .task-list .is-active:after {
     left: auto;
