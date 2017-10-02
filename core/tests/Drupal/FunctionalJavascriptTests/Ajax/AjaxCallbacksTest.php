@@ -19,14 +19,28 @@ class AjaxCallbacksTest extends JavascriptTestBase {
   /**
    * Tests if Ajax callback works on date element.
    */
-  public function testDateTimeAjaxCallback() {
+  public function testDateAjaxCallback() {
 
     // Test Ajax callback when date changes.
     $this->drupalGet('ajax_forms_test_ajax_element_form');
-    $this->assertSession()->responseContains('No date selected.');
+    $this->assertSession()->responseContains('No date yet selected');
+    $this->getSession()->getPage()->fillField('edit-date', '2016-01-01');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->responseNotContains('No date yet selected');
+    $this->assertSession()->responseContains('2016-01-01');
+  }
+
+  /**
+   * Tests if Ajax callback works on datetime element.
+   */
+  public function testDateTimeAjaxCallback() {
+
+    // Test Ajax callback when datetime changes.
+    $this->drupalGet('ajax_forms_test_ajax_element_form');
+    $this->assertSession()->responseContains('No datetime selected.');
     $this->getSession()->getPage()->fillField('edit-datetime-date', '2016-01-01');
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->responseNotContains('No date selected.');
+    $this->assertSession()->responseNotContains('No datetime selected.');
     $this->assertSession()->responseContains('2016-01-01');
     $this->getSession()->getPage()->fillField('edit-datetime-time', '12:00:00');
     $this->assertSession()->assertWaitOnAjaxRequest();
