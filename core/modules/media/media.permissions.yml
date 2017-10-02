@@ -27,3 +27,7 @@ create media:
 view all media revisions:
   title: 'View all media revisions'
   description: 'To view a revision, you also need permission to view the media item.'
+
+access media overview:
+  title: 'Access media overview'
+  description: 'Users with this permission can access the media overview page.'

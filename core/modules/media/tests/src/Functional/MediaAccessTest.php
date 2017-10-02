@@ -12,7 +12,7 @@ use Drupal\user\RoleInterface;
  *
  * @group media
  */
-class MediaAccessTest extends MediaFunctionalTestBase {
+class MediaAccessTest extends MediaUiFunctionalTest {
 
   use AssertPageCacheContextsAndTagsTrait;
 
@@ -64,7 +64,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->assertSame("The 'view media' permission is required and the media item must be published.", $access_result->getReason());
     $this->grantPermissions($role, ['view media']);
     $this->drupalGet('media/' . $media->id());
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
 
     // Test 'create media' permission.
@@ -107,6 +107,28 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/' . $media->id() . '/delete');
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
+
+    // Test the 'access media overview' permission.
+    $this->grantPermissions($role, ['access content overview']);
+    $this->drupalGet('admin/content');
+    $assert_session->linkByHrefNotExists('/admin/content/media');
+    $this->assertCacheContext('user');
+
+    // Create a new role, which implicitly checks if the permission exists.
+    $mediaOverviewRole = $this->createRole(['access content overview', 'access media overview']);
+    $this->nonAdminUser->addRole($mediaOverviewRole);
+    $this->nonAdminUser->save();
+
+    $this->drupalGet('admin/content');
+    $assert_session->linkByHrefExists('/admin/content/media');
+    $this->clickLink('Media');
+    $this->assertCacheContext('user.permissions');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->elementExists('css', '.view-media');
+    $assert_session->pageTextContains($this->loggedInUser->getDisplayName());
+    $assert_session->pageTextContains($this->nonAdminUser->getDisplayName());
+    $assert_session->linkByHrefExists('/media/' . $media->id());
+    $assert_session->linkByHrefExists('/media/' . $user_media->id());
   }
 
 }
