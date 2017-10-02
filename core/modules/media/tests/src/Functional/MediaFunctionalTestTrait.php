@@ -45,7 +45,7 @@ trait MediaFunctionalTestTrait {
   /**
    * A non-admin test user account.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\user\UserInterface
    */
   protected $nonAdminUser;
 
