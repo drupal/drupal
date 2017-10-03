@@ -91,7 +91,7 @@ interface CacheBackendInterface {
    *   identify objects used to build the cache item, which should trigger
    *   cache invalidation when updated. For example if a cached item represents
    *   a node, both the node ID and the author's user ID might be passed in as
-   *   tags. For example array('node' => array(123), 'user' => array(92)).
+   *   tags. For example ['node:123', 'node:456', 'user:789'].
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::get()
    * @see \Drupal\Core\Cache\CacheBackendInterface::getMultiple()
