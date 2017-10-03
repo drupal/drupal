@@ -5,6 +5,7 @@ namespace Drupal\taxonomy;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -48,19 +49,30 @@ class TaxonomyPermissions implements ContainerInjectionInterface {
    */
   public function permissions() {
     $permissions = [];
-    foreach ($this->entityManager->getStorage('taxonomy_vocabulary')->loadMultiple() as $vocabulary) {
-      $permissions += [
-        'edit terms in ' . $vocabulary->id() => [
-          'title' => $this->t('Edit terms in %vocabulary', ['%vocabulary' => $vocabulary->label()]),
-        ],
-      ];
-      $permissions += [
-        'delete terms in ' . $vocabulary->id() => [
-          'title' => $this->t('Delete terms from %vocabulary', ['%vocabulary' => $vocabulary->label()]),
-        ],
-      ];
+    foreach (Vocabulary::loadMultiple() as $vocabulary) {
+      $permissions += $this->buildPermissions($vocabulary);
     }
     return $permissions;
+  }
+
+  /**
+   * Builds a standard list of taxonomy term permissions for a given vocabulary.
+   *
+   * @param \Drupal\taxonomy\VocabularyInterface $vocabulary
+   *   The vocabulary.
+   *
+   * @return array
+   *   An array of permission names and descriptions.
+   */
+  protected function buildPermissions(VocabularyInterface $vocabulary) {
+    $id = $vocabulary->id();
+    $args = ['%vocabulary' => $vocabulary->label()];
+
+    return [
+      "create terms in $id" => ['title' => $this->t('%vocabulary: Create terms', $args)],
+      "delete terms in $id" => ['title' => $this->t('%vocabulary: Delete terms', $args)],
+      "edit terms in $id" => ['title' => $this->t('%vocabulary: Edit terms', $args)],
+    ];
   }
 
 }

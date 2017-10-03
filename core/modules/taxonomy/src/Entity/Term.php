@@ -20,6 +20,7 @@ use Drupal\taxonomy\TermInterface;
  *     "storage" = "Drupal\taxonomy\TermStorage",
  *     "storage_schema" = "Drupal\taxonomy\TermStorageSchema",
  *     "view_builder" = "Drupal\taxonomy\TermViewBuilder",
+ *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
  *     "access" = "Drupal\taxonomy\TermAccessControlHandler",
  *     "views_data" = "Drupal\taxonomy\TermViewsData",
  *     "form" = {

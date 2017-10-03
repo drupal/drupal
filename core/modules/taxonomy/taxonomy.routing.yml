@@ -4,7 +4,7 @@ entity.taxonomy_vocabulary.collection:
     _entity_list: 'taxonomy_vocabulary'
     _title: 'Taxonomy'
   requirements:
-    _permission: 'administer taxonomy'
+    _permission: 'access taxonomy overview+administer taxonomy'
 
 entity.taxonomy_term.add_form:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/add'
@@ -74,7 +74,7 @@ entity.taxonomy_vocabulary.overview_form:
     _form: 'Drupal\taxonomy\Form\OverviewTerms'
     _title_callback: 'Drupal\taxonomy\Controller\TaxonomyController::vocabularyTitle'
   requirements:
-    _entity_access: 'taxonomy_vocabulary.view'
+    _entity_access: 'taxonomy_vocabulary.access taxonomy overview'
 
 entity.taxonomy_term.canonical:
   path: '/taxonomy/term/{taxonomy_term}'

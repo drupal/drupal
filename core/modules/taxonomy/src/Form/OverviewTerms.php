@@ -2,10 +2,13 @@
 
 namespace Drupal\taxonomy\Form;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Url;
 use Drupal\taxonomy\VocabularyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -36,17 +39,35 @@ class OverviewTerms extends FormBase {
   protected $storageController;
 
   /**
+   * The term list builder.
+   *
+   * @var \Drupal\Core\Entity\EntityListBuilderInterface
+   */
+  protected $termListBuilder;
+
+  /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs an OverviewTerms object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager, RendererInterface $renderer = NULL) {
     $this->moduleHandler = $module_handler;
     $this->entityManager = $entity_manager;
     $this->storageController = $entity_manager->getStorage('taxonomy_term');
+    $this->termListBuilder = $entity_manager->getListBuilder('taxonomy_term');
+    $this->renderer = $renderer ?: \Drupal::service('renderer');
   }
 
   /**
@@ -55,7 +76,8 @@ class OverviewTerms extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+      $container->get('renderer')
     );
   }
 
@@ -204,17 +226,28 @@ class OverviewTerms extends FormBase {
     }
 
     $errors = $form_state->getErrors();
-    $destination = $this->getDestinationArray();
     $row_position = 0;
     // Build the actual form.
+    $access_control_handler = $this->entityManager->getAccessControlHandler('taxonomy_term');
+    $create_access = $access_control_handler->createAccess($taxonomy_vocabulary->id(), NULL, [], TRUE);
+    if ($create_access->isAllowed()) {
+      $empty = $this->t('No terms available. <a href=":link">Add term</a>.', [':link' => Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $taxonomy_vocabulary->id()])->toString()]);
+    }
+    else {
+      $empty = $this->t('No terms available.');
+    }
     $form['terms'] = [
       '#type' => 'table',
-      '#header' => [$this->t('Name'), $this->t('Weight'), $this->t('Operations')],
-      '#empty' => $this->t('No terms available. <a href=":link">Add term</a>.', [':link' => $this->url('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $taxonomy_vocabulary->id()])]),
+      '#empty' => $empty,
       '#attributes' => [
         'id' => 'taxonomy',
       ],
     ];
+    $this->renderer->addCacheableDependency($form['terms'], $create_access);
+
+    // Only allow access to changing weights if the user has update access for
+    // all terms.
+    $change_weight_access = AccessResult::allowed();
     foreach ($current_page as $key => $term) {
       /** @var $term \Drupal\Core\Entity\EntityInterface */
       $term = $this->entityManager->getTranslationFromContext($term);
@@ -260,39 +293,26 @@ class OverviewTerms extends FormBase {
           ],
         ];
       }
-      $form['terms'][$key]['weight'] = [
-        '#type' => 'weight',
-        '#delta' => $delta,
-        '#title' => $this->t('Weight for added term'),
-        '#title_display' => 'invisible',
-        '#default_value' => $term->getWeight(),
-        '#attributes' => [
-          'class' => ['term-weight'],
-        ],
-      ];
-      $operations = [
-        'edit' => [
-          'title' => $this->t('Edit'),
-          'query' => $destination,
-          'url' => $term->urlInfo('edit-form'),
-        ],
-        'delete' => [
-          'title' => $this->t('Delete'),
-          'query' => $destination,
-          'url' => $term->urlInfo('delete-form'),
-        ],
-      ];
-      if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($term)->isAllowed()) {
-        $operations['translate'] = [
-          'title' => $this->t('Translate'),
-          'query' => $destination,
-          'url' => $term->urlInfo('drupal:content-translation-overview'),
+      $update_access = $term->access('update', NULL, TRUE);
+      $change_weight_access = $change_weight_access->andIf($update_access);
+
+      if ($update_access->isAllowed()) {
+        $form['terms'][$key]['weight'] = [
+          '#type' => 'weight',
+          '#delta' => $delta,
+          '#title' => $this->t('Weight for added term'),
+          '#title_display' => 'invisible',
+          '#default_value' => $term->getWeight(),
+          '#attributes' => ['class' => ['term-weight']],
         ];
       }
-      $form['terms'][$key]['operations'] = [
-        '#type' => 'operations',
-        '#links' => $operations,
-      ];
+
+      if ($operations = $this->termListBuilder->getOperations($term)) {
+        $form['terms'][$key]['operations'] = [
+          '#type' => 'operations',
+          '#links' => $operations,
+        ];
+      }
 
       $form['terms'][$key]['#attributes']['class'] = [];
       if ($parent_fields) {
@@ -322,34 +342,42 @@ class OverviewTerms extends FormBase {
       $row_position++;
     }
 
-    if ($parent_fields) {
+    $form['terms']['#header'] = [$this->t('Name')];
+
+    $this->renderer->addCacheableDependency($form['terms'], $change_weight_access);
+    if ($change_weight_access->isAllowed()) {
+      $form['terms']['#header'][] = $this->t('Weight');
+      if ($parent_fields) {
+        $form['terms']['#tabledrag'][] = [
+          'action' => 'match',
+          'relationship' => 'parent',
+          'group' => 'term-parent',
+          'subgroup' => 'term-parent',
+          'source' => 'term-id',
+          'hidden' => FALSE,
+        ];
+        $form['terms']['#tabledrag'][] = [
+          'action' => 'depth',
+          'relationship' => 'group',
+          'group' => 'term-depth',
+          'hidden' => FALSE,
+        ];
+        $form['terms']['#attached']['library'][] = 'taxonomy/drupal.taxonomy';
+        $form['terms']['#attached']['drupalSettings']['taxonomy'] = [
+          'backStep' => $back_step,
+          'forwardStep' => $forward_step,
+        ];
+      }
       $form['terms']['#tabledrag'][] = [
-        'action' => 'match',
-        'relationship' => 'parent',
-        'group' => 'term-parent',
-        'subgroup' => 'term-parent',
-        'source' => 'term-id',
-        'hidden' => FALSE,
-      ];
-      $form['terms']['#tabledrag'][] = [
-        'action' => 'depth',
-        'relationship' => 'group',
-        'group' => 'term-depth',
-        'hidden' => FALSE,
-      ];
-      $form['terms']['#attached']['library'][] = 'taxonomy/drupal.taxonomy';
-      $form['terms']['#attached']['drupalSettings']['taxonomy'] = [
-        'backStep' => $back_step,
-        'forwardStep' => $forward_step,
+        'action' => 'order',
+        'relationship' => 'sibling',
+        'group' => 'term-weight',
       ];
     }
-    $form['terms']['#tabledrag'][] = [
-      'action' => 'order',
-      'relationship' => 'sibling',
-      'group' => 'term-weight',
-    ];
 
-    if ($taxonomy_vocabulary->getHierarchy() != VocabularyInterface::HIERARCHY_MULTIPLE && count($tree) > 1) {
+    $form['terms']['#header'][] = $this->t('Operations');
+
+    if (($taxonomy_vocabulary->getHierarchy() !== VocabularyInterface::HIERARCHY_MULTIPLE && count($tree) > 1) && $change_weight_access->isAllowed()) {
       $form['actions'] = ['#type' => 'actions', '#tree' => FALSE];
       $form['actions']['submit'] = [
         '#type' => 'submit',

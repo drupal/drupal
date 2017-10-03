@@ -75,13 +75,25 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
 
     case 'entity.taxonomy_vocabulary.overview_form':
       $vocabulary = $route_match->getParameter('taxonomy_vocabulary');
-      switch ($vocabulary->getHierarchy()) {
-        case VocabularyInterface::HIERARCHY_DISABLED:
-          return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', ['%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label()]) . '</p>';
-        case VocabularyInterface::HIERARCHY_SINGLE:
-          return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', ['%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label()]) . '</p>';
-        case VocabularyInterface::HIERARCHY_MULTIPLE:
-          return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', ['%capital_name' => Unicode::ucfirst($vocabulary->label())]) . '</p>';
+      if (\Drupal::currentUser()->hasPermission('administer taxonomy') || \Drupal::currentUser()->hasPermission('edit terms in ' . $vocabulary->id())) {
+        switch ($vocabulary->getHierarchy()) {
+          case VocabularyInterface::HIERARCHY_DISABLED:
+            return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', ['%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label()]) . '</p>';
+          case VocabularyInterface::HIERARCHY_SINGLE:
+            return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', ['%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label()]) . '</p>';
+          case VocabularyInterface::HIERARCHY_MULTIPLE:
+            return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', ['%capital_name' => Unicode::ucfirst($vocabulary->label())]) . '</p>';
+        }
+      }
+      else {
+        switch ($vocabulary->getHierarchy()) {
+          case VocabularyInterface::HIERARCHY_DISABLED:
+            return '<p>' . t('%capital_name contains the following terms.', ['%capital_name' => Unicode::ucfirst($vocabulary->label())]) . '</p>';
+          case VocabularyInterface::HIERARCHY_SINGLE:
+            return '<p>' . t('%capital_name contains terms grouped under parent terms', ['%capital_name' => Unicode::ucfirst($vocabulary->label())]) . '</p>';
+          case VocabularyInterface::HIERARCHY_MULTIPLE:
+            return '<p>' . t('%capital_name contains terms with multiple parents.', ['%capital_name' => Unicode::ucfirst($vocabulary->label())]) . '</p>';
+        }
       }
   }
 }

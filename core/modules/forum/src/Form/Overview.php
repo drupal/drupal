@@ -58,21 +58,30 @@ class Overview extends OverviewTerms {
 
     foreach (Element::children($form['terms']) as $key) {
       if (isset($form['terms'][$key]['#term'])) {
+        /** @var \Drupal\taxonomy\TermInterface $term */
         $term = $form['terms'][$key]['#term'];
         $form['terms'][$key]['term']['#url'] = Url::fromRoute('forum.page', ['taxonomy_term' => $term->id()]);
-        unset($form['terms'][$key]['operations']['#links']['delete']);
-        $route_parameters = $form['terms'][$key]['operations']['#links']['edit']['url']->getRouteParameters();
+
         if (!empty($term->forum_container->value)) {
-          $form['terms'][$key]['operations']['#links']['edit']['title'] = $this->t('edit container');
-          $form['terms'][$key]['operations']['#links']['edit']['url'] = Url::fromRoute('entity.taxonomy_term.forum_edit_container_form', $route_parameters);
+          $title = $this->t('edit container');
+          $url = Url::fromRoute('entity.taxonomy_term.forum_edit_container_form', ['taxonomy_term' => $term->id()]);
         }
         else {
-          $form['terms'][$key]['operations']['#links']['edit']['title'] = $this->t('edit forum');
-          $form['terms'][$key]['operations']['#links']['edit']['url'] = Url::fromRoute('entity.taxonomy_term.forum_edit_form', $route_parameters);
+          $title = $this->t('edit forum');
+          $url = Url::fromRoute('entity.taxonomy_term.forum_edit_form', ['taxonomy_term' => $term->id()]);
         }
-        // We don't want the redirect from the link so we can redirect the
-        // delete action.
-        unset($form['terms'][$key]['operations']['#links']['edit']['query']['destination']);
+
+        // Re-create the operations column and add only the edit link.
+        $form['terms'][$key]['operations'] = [
+          '#type' => 'operations',
+          '#links' => [
+            'edit' => [
+              'title' => $title,
+              'url' => $url,
+            ],
+          ],
+        ];
+
       }
     }
 

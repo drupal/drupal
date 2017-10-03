@@ -41,16 +41,23 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access content']);
         break;
+
       case 'POST':
+        $this->grantPermissionsToTestedRole(['create terms in camelids']);
+        break;
+
       case 'PATCH':
-      case 'DELETE':
         // Grant the 'create url aliases' permission to test the case when
         // the path field is accessible, see
         // \Drupal\Tests\rest\Functional\EntityResource\Node\NodeResourceTestBase
         // for a negative test.
-        // @todo Update once https://www.drupal.org/node/2824408 lands.
-        $this->grantPermissionsToTestedRole(['administer taxonomy', 'create url aliases']);
+        $this->grantPermissionsToTestedRole(['edit terms in camelids', 'create url aliases']);
         break;
+
+      case 'DELETE':
+        $this->grantPermissionsToTestedRole(['delete terms in camelids']);
+        break;
+
     }
   }
 
@@ -168,7 +175,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
       case 'GET':
         return "The 'access content' permission is required.";
       case 'POST':
-        return "The 'administer taxonomy' permission is required.";
+        return "The following permissions are required: 'create terms in camelids' OR 'administer taxonomy'.";
       case 'PATCH':
         return "The following permissions are required: 'edit terms in camelids' OR 'administer taxonomy'.";
       case 'DELETE':

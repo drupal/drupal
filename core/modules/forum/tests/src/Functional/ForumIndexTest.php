@@ -57,6 +57,8 @@ class ForumIndexTest extends BrowserTestBase {
       'parent[0]' => $tid,
     ];
     $this->drupalPostForm('admin/structure/forum/add/forum', $edit, t('Save'));
+    $this->assertSession()->linkExists(t('edit forum'));
+
     $tid_child = $tid + 1;
 
     // Verify that the node appears on the index.
