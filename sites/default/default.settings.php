@@ -479,6 +479,23 @@ ini_set('session.cookie_lifetime', 2000000);
 # $conf['block_cache_bypass_node_grants'] = TRUE;
 
 /**
+ * Expiration of cache_form entries:
+ *
+ * Drupal's Form API stores details of forms in cache_form and these entries are
+ * kept for at least 6 hours by default. Expired entries are cleared by cron.
+ * Busy sites can encounter problems with the cache_form table becoming very
+ * large. It's possible to mitigate this by setting a shorter expiration for
+ * cached forms. In some cases it may be desirable to set a longer cache
+ * expiration, for example to prolong cache_form entries for Ajax forms in
+ * cached HTML.
+ *
+ * @see form_set_cache()
+ * @see system_cron()
+ * @see ajax_get_form()
+ */
+# $conf['form_cache_expiration'] = 21600;
+
+/**
  * String overrides:
  *
  * To override specific strings on your site with or without enabling the Locale
