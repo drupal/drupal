@@ -1536,7 +1536,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
   // evaluates to TRUE.
   if (!variable_get('allow_insecure_uploads', 0) && preg_match('/\.(php|pl|py|cgi|asp|js)(\.|$)/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
     $file->filemime = 'text/plain';
-    $file->uri .= '.txt';
+    // The destination filename will also later be used to create the URI.
     $file->filename .= '.txt';
     // The .txt extension may not be in the allowed list of extensions. We have
     // to add it here or else the file upload will fail.

@@ -1,6 +1,8 @@
 
 Drupal 7.xx, xxxx-xx-xx (development version)
 -----------------------
+- File upload validation functions and hook_file_validate() implementations are
+  now always passed the correct file URI.
 
 Drupal 7.56, 2017-06-21
 -----------------------
