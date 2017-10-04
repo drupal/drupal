@@ -105,7 +105,11 @@ system](https://www.drupal.org/node/2821423) is underway.
 * Previously, [saving a revision of an entity translation could cause draft
   revisions to go "missing"](https://www.drupal.org/node/2766957). Drupal 8.4.0
   prevents this by preventing the moderation state from being set to anything
-  that would make the revision go "missing". [A similar but unrelated bug in
+  that would make the revision go "missing". Going forward, the entity system
+  will also [provide the 'revision_translation_affected' base field by default
+  for all revisionable and translatable entity
+  types](https://www.drupal.org/node/2896845) for tracking such revisions.
+* [A similar but unrelated bug in
   Content Moderation](https://www.drupal.org/node/2862988) has also been fixed
   in this release.
 
@@ -128,6 +132,8 @@ system](https://www.drupal.org/node/2821423) is underway.
   to purge them any more. [Empty field deletion is now performed
   immediately](https://www.drupal.org/node/2884202) instead to avoid this
   scenario.
+* When clearing caches in a translated interface, the field labels would
+  [return to the default language](https://www.drupal.org/node/2650434).
 
 ### New stable modules
 
@@ -170,16 +176,18 @@ these modules. Developers and expert site builders can now add Media as a
 dependency. Work is underway to [provide an update path for existing sites'
 Media Entity data](https://www.drupal.org/node/2880334) and to [port existing
 contributed modules to the improved core
-API](https://www.drupal.org/node/2860796).
+API](https://www.drupal.org/node/2860796). Both versions cannot be used at the
+same time, so we also [prevent the 1.x version of the contributed Media Entity
+module from being enabled at the same time as the core Media
+module](https://www.drupal.org/node/2896427).
 
 Note that **the core Media module is currently marked hidden** and will not
 appear on the 'Extend' (module administration) page. (Enabling a contributed
 module that depends on the core Media module will also enable Media
 automatically.) The module will be displayed to site builders normally once
-user experience issues with it are resolved in a future release.
-
-Similarly, the REST API and normalizations for Media is not final and support
-for decoupled applications will be improved in a future release.
+user experience issues with it are resolved. Similarly, the REST API and
+normalizations for Media is not final and support for decoupled applications
+will also be improved in a future release.
 
 #### Inline Form Errors
 
@@ -350,6 +358,9 @@ either Content Moderation and/or some other module that requires it.
   be thrown. [See the change record for information about how to update
   `phpunit.xml` and how to test deprecated
   code](https://www.drupal.org/node/2811561).
+* BrowserTestBase is [no longer dependent on traits from
+  Simpletest](https://www.drupal.org/node/2803621). Backwards
+  compatibility is preserved.
 * [Resolved random test failures](https://www.drupal.org/node/2866056) due to
   ResourceTestBase's HTTP client timeout of 30 seconds.
 
@@ -374,12 +385,19 @@ either Content Moderation and/or some other module that requires it.
   development version higher than 2.1.0.1](https://www.drupal.org/node/2898808)
   to resolve an upstream incompatibility with jQuery 3. We will update to
   Joyride 2.1.1 once it is available with the needed fix.
-* [zendframework/zend-diactoros has been updated from 1.3.10 to 1.4.0](https://www.drupal.org/node/2874817).
+* [zendframework/zend-diactoros has been updated from 1.3.10 to 1.4.1](https://www.drupal.org/node/2874817).
 * [jQuery UI has been updated from 1.11.4 to 1.12.1](https://www.drupal.org/node/2809427).
 * [jQuery Once has been updated from 2.1.1 to 2.2.0](https://www.drupal.org/node/2899156).
 * [CKEditor has been updated from 4.6.2 to 4.7.2](https://www.drupal.org/node/2904142).
 * [asm89/stack-cors has been updated from 1.0 to 1.1](https://www.drupal.org/node/2853201).
 * [The minimum phpsec/prophecy requirement is now 1.4](https://www.drupal.org/node/2900800).
+* [composer/installers has been updated from 1.2.0 to 1.4.0](https://www.drupal.org/node/2900112).
+* [wikimedia/composer-merge-plugin has been updated from 1.4.0 to 1.4.1](https://www.drupal.org/node/2900112).
+* [guzzlehttp/guzzle has been updated from 6.2.3 to 6.3.0](https://www.drupal.org/node/2900112).
+* [mikey179/vfsstream has been updated from 1.6.4 to 1.6.5](https://www.drupal.org/node/2900112).
+* [phpunit/phpunit has been updated from 4.8.35 to 4.8.36](https://www.drupal.org/node/2900112).
+* [masterminds/html5 has been updated from 2.2.2 to 2.3.0](https://www.drupal.org/node/2909743).
+* [symfony-cmf/routing has been udpated from 1.4.0 to 1.4.1](https://www.drupal.org/node/2909743).
 
 ### Experimental modules
 
@@ -458,6 +476,9 @@ stable in time for 8.4.0! Notable improvements in this release:
   ["forward revisions" has been replaced with that of "pending revisions"](https://www.drupal.org/node/2890364).
   If your contributed module refers to revisions that are not yet published, it
   should use this new term.
+* [The 'Latest revision' views filter has been rewritten to avoid relying on a
+  custom {revision_tracker}](https://www.drupal.org/node/2865579), and that
+  table has been removed from the database schema.
 
 As per the experimental module process, there were some backwards-incompatible
 changes since Drupal 8.3.x. Experimental modules do not offer a supported
@@ -478,33 +499,17 @@ in Drupal core.
 
 The Settings Tray module allows configuring page elements such as blocks and
 menus from the frontend of your site. Settings Tray has improved significantly
-since Drupal 8.3.0. The module reached beta stability following completion of
-[moving the off-canvas dialog renderer into a core
+since Drupal 8.3.0, including numerous user interaction and accessibility
+fixes, better compatibility with stable core modules like Quick Edit and
+Contextual Links, added documentation, and [a CSS
+reset](https://www.drupal.org/node/2826722) for better themer experience.
+
+The module reached beta stability following completion of [moving the
+off-canvas dialog renderer into a core
 component](https://www.drupal.org/node/2784443), and [renaming the machine name
 of the module to settings_tray](https://www.drupal.org/node/2803375), to match
 its user-facing name. We hope to make Settings Tray stable by 8.5.0. To track
 progress, see the ["outside in" roadmap issue](https://www.drupal.org/node/2762505).
-
-* [A CSS reset has been added](https://www.drupal.org/node/2826722) to improve
-  the themer experience.
-* Form validation messages now [appear in the Settings Tray instead of main
-  page](https://www.drupal.org/node/2785047).
-* [The toolbar background in Edit mode now matches the edit
-  button](https://www.drupal.org/node/2894427), instead of the white background
-  that many users found distracting or  misunderstood to be an indication that
-  something was broken.
-* The block title field in the tray is now [labeled more clearly and only shown
-  when the block title itself is shown](https://www.drupal.org/node/2882729).
-* In the contextual links, ["Quick edit" is now listed before
- "Configure"](https://www.drupal.org/node/2784567), and the [custom blocks
-  instead have a "Quick edit settings"
-  link](https://www.drupal.org/node/2786193) (to distinguish them from the
-  links provided by the Quick Edit module, which allow editing the content of
-  the custom block itself).
-* Edit mode [now behaves the same way whether accessed by clicking "Quick edit"
-  or clicking through the toolbar](https://www.drupal.org/node/2847664).
-* Users can now [escape from Edit mode with the ESC
-  key](https://www.drupal.org/node/2784571), for better accessibility.
 
 #### Place Blocks ([alpha stability](https://www.drupal.org/core/experimental#alpha))
 
