@@ -58,14 +58,6 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_data']['sticky']['filter']['type'] = 'yes-no';
     $data['node_field_data']['sticky']['sort']['help'] = $this->t('Whether or not the content is sticky. To list sticky content first, set this to descending.');
 
-    $data['node']['path'] = [
-      'field' => [
-        'title' => $this->t('Path'),
-        'help' => $this->t('The aliased path to this content.'),
-        'id' => 'node_path',
-      ],
-    ];
-
     $data['node']['node_bulk_form'] = [
       'title' => $this->t('Node operations bulk form'),
       'help' => $this->t('Add a form element that lets you run operations on multiple nodes.'),

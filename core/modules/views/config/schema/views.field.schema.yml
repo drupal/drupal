@@ -191,6 +191,12 @@ views.field.entity_link:
     text:
       type: label
       label: 'Text to display'
+    output_url_as_text:
+      type: boolean
+      label: 'Output the URL as text'
+    absolute:
+      type: boolean
+      label: 'Output an absolute link'
 
 views.field.entity_link_delete:
   type: views.field.entity_link

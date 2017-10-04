@@ -58,12 +58,18 @@ class PathPluginTest extends NodeTestBase {
   }
 
   /**
-   * Tests the node path plugin.
+   * Tests the node path plugin functionality when converted to entity link.
    */
   public function testPathPlugin() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $view = Views::getView('test_node_path_plugin');
+
+    // The configured deprecated node path plugin should be converted to the
+    // entity link plugin.
+    $field = $view->getHandler('page_1', 'field', 'path');
+    $this->assertEqual('entity_link', $field['plugin_id']);
+
     $view->initDisplay();
     $view->setDisplay('page_1');
     $view->initStyle();
