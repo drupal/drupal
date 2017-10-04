@@ -5,6 +5,8 @@ Drupal 7.xx, xxxx-xx-xx (development version)
   now always passed the correct file URI.
 - The default form cache expiration of 6 hours is now configurable (API
   addition: https://www.drupal.org/node/2857751).
+- Allowed callers of drupal_http_request() to optionally specify an explicit
+  Host header.
 
 Drupal 7.56, 2017-06-21
 -----------------------
