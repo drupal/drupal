@@ -26,19 +26,20 @@ documentation](https://www.drupal.org/node/2390621) are underway.
 
 ### Known Issues
 
-Drupal 8.4.0-alpha1 includes major version updates for two dependencies:
+Drupal 8.4.0 includes major version updates for two dependencies:
 Symfony 3.2 and jQuery 3. Both updates may introduce backwards compatibility
 issues for some sites or modules, so test carefully. For more information, see
 the "Third-party library updates" section below. Known issues related to the
 Symfony update include:
-  * [Incompatibility with Drush 8.1.11 and earlier](https://www.drupal.org/node/2874827).
-  * [Other error messages with Drush 8.1.12 and higher](https://www.drupal.org/node/2907224).
-  * [Certain file uploads may fail
-    silently](https://www.drupal.org/node/2906030) due to a Symfony 3 backwards
-    compatibility break if they used the `$deep` parameter (which was already
-    deprecated in Symfony 2.8 and is removed in Symfony 3.0. *Check any custom
-    file upload code* that may have used the deprecated parameter and [update
-    it according to the API change record](https://www.drupal.org/node/2743809).
+
+* [Incompatibility with Drush 8.1.11 and earlier](https://www.drupal.org/node/2874827).
+* [Other error messages with Drush 8.1.12 and higher](https://www.drupal.org/node/2907224).
+* [Certain file uploads may fail
+  silently](https://www.drupal.org/node/2906030) due to a Symfony 3 backwards
+  compatibility break if they used the `$deep` parameter (which was already
+  deprecated in Symfony 2.8 and is removed in Symfony 3.0. *Check any custom
+  file upload code* that may have used the deprecated parameter and [update
+  it according to the API change record](https://www.drupal.org/node/2743809).
 
 ### Important fixes since 8.3.x
 
@@ -95,7 +96,7 @@ system](https://www.drupal.org/node/2821423) is underway.
   [path aliases](https://www.drupal.org/node/2856363),
   [menus](https://www.drupal.org/node/2858434),
   and [books](https://www.drupal.org/node/2858431) could leak into the live
-  site. Drupal 8.4.0-alpha1 hotfixes all three issues by preventing changes to
+  site. Drupal 8.4.0 hotfixes all three issues by preventing changes to
   this data from being saved on any revision that is not the default revision.
   These fixes improve revision support for both  stable features and the
   experimental Content Moderation module.
@@ -460,8 +461,7 @@ Drupal versions.
 #### Content Moderation ([beta stability](https://www.drupal.org/core/experimental#beta))
 
 Content Moderation allows workflows from the Workflows module to be applied to
-content. Content Moderation has beta stability in 8.4.0-alpha1, but may become
-stable in time for 8.4.0! Notable improvements in this release:
+content. Content Moderation has beta stability in 8.4.0-alpha1. Notable improvements in this release:
 
 * Workflow states are now [selected from a select list, rather than under a drop-button](https://www.drupal.org/node/2753717), which represents a significant
   usability improvement.
