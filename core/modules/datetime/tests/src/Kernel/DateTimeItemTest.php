@@ -122,22 +122,34 @@ class DateTimeItemTest extends FieldKernelTestBase {
     $this->assertEqual($entity->field_datetime->value, $value);
     $this->assertEqual($entity->field_datetime[0]->value, $value);
     $this->assertEquals(DATETIME_STORAGE_TIMEZONE, $entity->field_datetime->date->getTimeZone()->getName());
+    $this->assertEquals('12:00:00', $entity->field_datetime->date->format('H:i:s'));
+    $entity->field_datetime->date->setDefaultDateTime();
+    $this->assertEquals('12:00:00', $entity->field_datetime->date->format('H:i:s'));
 
     // Verify changing the date value.
     $new_value = '2016-11-04';
     $entity->field_datetime->value = $new_value;
     $this->assertEqual($entity->field_datetime->value, $new_value);
     $this->assertEquals(DATETIME_STORAGE_TIMEZONE, $entity->field_datetime->date->getTimeZone()->getName());
+    $this->assertEquals('12:00:00', $entity->field_datetime->date->format('H:i:s'));
+    $entity->field_datetime->date->setDefaultDateTime();
+    $this->assertEquals('12:00:00', $entity->field_datetime->date->format('H:i:s'));
 
     // Read changed entity and assert changed values.
     $this->entityValidateAndSave($entity);
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->field_datetime->value, $new_value);
     $this->assertEquals(DATETIME_STORAGE_TIMEZONE, $entity->field_datetime->date->getTimeZone()->getName());
+    $this->assertEquals('12:00:00', $entity->field_datetime->date->format('H:i:s'));
+    $entity->field_datetime->date->setDefaultDateTime();
+    $this->assertEquals('12:00:00', $entity->field_datetime->date->format('H:i:s'));
 
     // Test the generateSampleValue() method.
     $entity = EntityTest::create();
     $entity->field_datetime->generateSampleItems();
+    $this->assertEquals('12:00:00', $entity->field_datetime->date->format('H:i:s'));
+    $entity->field_datetime->date->setDefaultDateTime();
+    $this->assertEquals('12:00:00', $entity->field_datetime->date->format('H:i:s'));
     $this->entityValidateAndSave($entity);
   }
 

@@ -110,10 +110,6 @@ class DateTimeTimeAgoFormatter extends FormatterBase implements ContainerFactory
       $date = $item->date;
       $output = [];
       if (!empty($item->date)) {
-        if ($this->getFieldSetting('datetime_type') == 'date') {
-          // A date without time will pick up the current time, use the default.
-          datetime_date_default_time($date);
-        }
         $output = $this->formatDate($date);
       }
       $elements[$delta] = $output;

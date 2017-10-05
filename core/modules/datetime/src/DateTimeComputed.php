@@ -56,12 +56,10 @@ class DateTimeComputed extends TypedData {
         // set the time to 12:00:00 UTC for date-only fields. This is used so
         // that the local date portion is the same, across nearly all time
         // zones.
-        // @see datetime_date_default_time()
+        // @see \Drupal\Component\Datetime\DateTimePlus::setDefaultDateTime()
         // @see http://php.net/manual/en/datetime.createfromformat.php
-        // @todo Update comment and/or code per the chosen solution in
-        //   https://www.drupal.org/node/2830094
         if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATE) {
-          $this->date->setTime(12, 0, 0);
+          $this->date->setDefaultDateTime();
         }
       }
     }

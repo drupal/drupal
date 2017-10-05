@@ -156,4 +156,16 @@ class DrupalDateTimeTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Tests setting the default time for date-only objects.
+   */
+  public function testDefaultDateTime() {
+    $utc = new \DateTimeZone('UTC');
+
+    $date = DrupalDateTime::createFromFormat('Y-m-d H:i:s', '2017-05-23 22:58:00', $utc, ['langcode' => 'en']);
+    $this->assertEquals('22:58:00', $date->format('H:i:s'));
+    $date->setDefaultDateTime();
+    $this->assertEquals('12:00:00', $date->format('H:i:s'));
+  }
+
 }

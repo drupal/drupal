@@ -658,4 +658,15 @@ class DateTimePlus {
     return $value;
   }
 
+  /**
+   * Sets the default time for an object built from date-only data.
+   *
+   * The default time for a date without time can be anything, so long as it is
+   * consistently applied. If we use noon, dates in most timezones will have the
+   * same value for in both the local timezone and UTC.
+   */
+  public function setDefaultDateTime() {
+    $this->dateTimeObject->setTime(12, 0, 0);
+  }
+
 }

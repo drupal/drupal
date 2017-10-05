@@ -100,7 +100,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Formats that display a time component for date-only fields will display
       // the default time, so that is applied before calculating the expected
       // value.
-      datetime_date_default_time($date);
+      $this->massageTestDate($date);
       foreach ($options as $setting => $values) {
         foreach ($values as $new_value) {
           // Update the entity display settings.

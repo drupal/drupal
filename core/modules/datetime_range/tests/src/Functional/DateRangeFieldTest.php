@@ -110,8 +110,8 @@ class DateRangeFieldTest extends DateTestBase {
       // Formats that display a time component for date-only fields will display
       // the default time, so that is applied before calculating the expected
       // value.
-      datetime_date_default_time($start_date);
-      datetime_date_default_time($end_date);
+      $this->massageTestDate($start_date);
+      $this->massageTestDate($end_date);
 
       // Reset display options since these get changed below.
       $this->displayOptions = [
@@ -211,7 +211,7 @@ class DateRangeFieldTest extends DateTestBase {
       $id = $match[1];
       $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
-      datetime_date_default_time($start_date);
+      $this->massageTestDate($start_date);
 
       $this->displayOptions = [
         'type' => 'daterange_default',

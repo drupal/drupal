@@ -5,7 +5,6 @@ namespace Drupal\datetime_range\Plugin\Field\FieldWidget;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldWidget\DateTimeWidgetBase;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 
@@ -58,9 +57,6 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
         $start_date = $item['value'];
         switch ($this->getFieldSetting('datetime_type')) {
           case DateRangeItem::DATETIME_TYPE_DATE:
-            // If this is a date-only field, set it to the default time so the
-            // timezone conversion can be reversed.
-            datetime_date_default_time($start_date);
             $format = DATETIME_DATE_STORAGE_FORMAT;
             break;
 
@@ -88,9 +84,6 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
         $end_date = $item['end_value'];
         switch ($this->getFieldSetting('datetime_type')) {
           case DateRangeItem::DATETIME_TYPE_DATE:
-            // If this is a date-only field, set it to the default time so the
-            // timezone conversion can be reversed.
-            datetime_date_default_time($end_date);
             $format = DATETIME_DATE_STORAGE_FORMAT;
             break;
 
@@ -140,32 +133,6 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
         }
       }
     }
-  }
-
-  /**
-   * Creates a date object for use as a default value.
-   *
-   * This will take a default value, apply the proper timezone for display in
-   * a widget, and set the default time for date-only fields.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   The UTC default date.
-   * @param string $timezone
-   *   The timezone to apply.
-   *
-   * @return \Drupal\Core\Datetime\DrupalDateTime
-   *   A date object for use as a default value in a field widget.
-   */
-  protected function createDefaultValue($date, $timezone) {
-    // The date was created and verified during field_load(), so it is safe to
-    // use without further inspection.
-    if ($this->getFieldSetting('datetime_type') == DateTimeItem::DATETIME_TYPE_DATE) {
-      // A date without time will pick up the current time, use the default
-      // time.
-      datetime_date_default_time($date);
-    }
-    $date->setTimezone(new \DateTimeZone($timezone));
-    return $date;
   }
 
 }

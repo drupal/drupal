@@ -804,4 +804,17 @@ class DateTimePlusTest extends TestCase {
     $date = DateTimePlus::createFromFormat('Y-m-d H:i:s', '11-03-31 17:44:00', 'UTC', ['validate_format' => TRUE]);
   }
 
+
+  /**
+   * Tests setting the default time for date-only objects.
+   */
+  public function testDefaultDateTime() {
+    $utc = new \DateTimeZone('UTC');
+
+    $date = DateTimePlus::createFromFormat('Y-m-d H:i:s', '2017-05-23 22:58:00', $utc);
+    $this->assertEquals('22:58:00', $date->format('H:i:s'));
+    $date->setDefaultDateTime();
+    $this->assertEquals('12:00:00', $date->format('H:i:s'));
+  }
+
 }

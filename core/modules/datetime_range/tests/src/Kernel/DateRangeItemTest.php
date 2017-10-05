@@ -100,6 +100,8 @@ class DateRangeItemTest extends FieldKernelTestBase {
     sleep(1);
     $end_date = $entity->{$field_name}->end_date;
     $this->assertEquals($start_date->getTimestamp(), $end_date->getTimestamp());
+    $this->assertEquals('12:00:00', $start_date->format('H:i:s'));
+    $this->assertEquals('12:00:00', $end_date->format('H:i:s'));
   }
 
 }

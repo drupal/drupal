@@ -50,7 +50,20 @@ function datetime_help($route_name, RouteMatchInterface $route_match) {
  * same value for in both the local timezone and UTC.
  *
  * @param $date
+ *
+ * @deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use
+ *   \Drupal\Component\Datetime\DateTimePlus::setDefaultDateTime() or
+ *   \Drupal\Core\Datetime\DrupalDateTime::setDefaultDateTime() instead.
+ *
+ * @see https://www.drupal.org/node/2880931
  */
 function datetime_date_default_time($date) {
+  @trigger_error('datetime_date_default_time() is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use \Drupal\Component\Datetime\DateTimePlus::setDefaultDateTime() or \Drupal\Core\Datetime\DrupalDateTime::setDefaultDateTime() instead. See https://www.drupal.org/node/2880931.', E_USER_DEPRECATED);
+
+  // For maximum BC before this method is removed, we do not use the
+  // recommendation from the deprecation method. Instead, we call the setTime()
+  // method directly. This allows the method to continue to work with
+  // \DateTime, DateTimePlus, and DrupalDateTime objects (and classes that
+  // may derive from them).
   $date->setTime(12, 0, 0);
 }
