@@ -11,13 +11,6 @@ use Drupal\Tests\BrowserTestBase;
  */
 class UserEditedOwnAccountTest extends BrowserTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = ['user_form_test'];
-
   public function testUserEditedOwnAccount() {
     // Change account setting 'Who can register accounts?' to Administrators
     // only.
