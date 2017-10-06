@@ -68,3 +68,8 @@ system.admin_content:
   title: Content
   route_name: system.admin_content
   base_route: system.admin_content
+
+system.performance_settings:
+  title: 'Performance'
+  route_name: system.performance_settings
+  base_route: system.performance_settings
