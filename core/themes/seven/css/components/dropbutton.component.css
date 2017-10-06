@@ -203,8 +203,21 @@
   -webkit-transition: none;
   transition: none;
 }
-.dropbutton-single .dropbutton-action a.use-ajax {
-  float: left;
+.dropbutton .dropbutton-action .ajax-progress {
+  position: absolute;
+  z-index: 2;
+  top: 0.2em;
+  right: 0.2em;
+  padding: 0 0 0 0.1em;
+}
+.dropbutton-multiple .dropbutton-action .ajax-progress {
+  right: 2.2em;
+  top: 0.15em;
+  margin-right: 0;
+}
+.dropbutton-multiple .secondary-action .ajax-progress {
+  top: auto;
+  bottom: 0.3em;
 }
 
 /**
