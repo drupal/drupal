@@ -321,8 +321,8 @@ class EntityManager implements EntityManagerInterface, ContainerAwareInterface {
    *
    * @see https://www.drupal.org/node/2549139
    */
-  public function getBundleInfo($entity_type) {
-    return $this->container->get('entity_type.bundle.info')->getBundleInfo($entity_type);
+  public function getBundleInfo($entity_type_id) {
+    return $this->container->get('entity_type.bundle.info')->getBundleInfo($entity_type_id);
   }
 
   /**
