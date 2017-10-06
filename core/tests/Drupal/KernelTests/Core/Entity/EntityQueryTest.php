@@ -7,6 +7,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -18,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
  * @group Entity
  */
 class EntityQueryTest extends EntityKernelTestBase {
+
+  use EntityReferenceTestTrait;
 
   /**
    * Modules to enable.
@@ -950,6 +953,56 @@ class EntityQueryTest extends EntityKernelTestBase {
     catch (\Exception $e) {
       $this->pass('SQL Injection attempt in Entity Query condition in operator should result in an exception.');
     }
+  }
+
+  /**
+   * Tests that EntityQuery works when querying the same entity from two fields.
+   */
+  public function testWithTwoEntityReferenceFieldsToSameEntityType() {
+    // Create two entity reference fields referring 'entity_test' entities.
+    $this->createEntityReferenceField('entity_test', 'entity_test', 'ref1', $this->randomMachineName(), 'entity_test');
+    $this->createEntityReferenceField('entity_test', 'entity_test', 'ref2', $this->randomMachineName(), 'entity_test');
+
+    // Create two entities to be referred.
+    $ref1 = EntityTest::create(['type' => 'entity_test']);
+    $ref1->save();
+    $ref2 = EntityTest::create(['type' => 'entity_test']);
+    $ref2->save();
+
+    // Create a main entity referring the previous created entities.
+    $entity = EntityTest::create([
+      'type' => 'entity_test',
+      'ref1' => $ref1->id(),
+      'ref2' => $ref2->id(),
+    ]);
+    $entity->save();
+
+    // Check that works when referring with "{$field_name}".
+    $result = $this->factory->get('entity_test')
+      ->condition('type', 'entity_test')
+      ->condition('ref1', $ref1->id())
+      ->condition('ref2', $ref2->id())
+      ->execute();
+    $this->assertCount(1, $result);
+    $this->assertEquals($entity->id(), reset($result));
+
+    // Check that works when referring with "{$field_name}.target_id".
+    $result = $this->factory->get('entity_test')
+      ->condition('type', 'entity_test')
+      ->condition('ref1.target_id', $ref1->id())
+      ->condition('ref2.target_id', $ref2->id())
+      ->execute();
+    $this->assertCount(1, $result);
+    $this->assertEquals($entity->id(), reset($result));
+
+    // Check that works when referring with "{$field_name}.entity.id".
+    $result = $this->factory->get('entity_test')
+      ->condition('type', 'entity_test')
+      ->condition('ref1.entity.id', $ref1->id())
+      ->condition('ref2.entity.id', $ref2->id())
+      ->execute();
+    $this->assertCount(1, $result);
+    $this->assertEquals($entity->id(), reset($result));
   }
 
 }

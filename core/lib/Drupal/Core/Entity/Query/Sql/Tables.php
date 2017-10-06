@@ -21,10 +21,13 @@ class Tables implements TablesInterface {
   protected $sqlQuery;
 
   /**
-   * Entity table array, key is table name, value is alias.
+   * Entity table array.
    *
    * This array contains at most two entries: one for the data, one for the
-   * properties.
+   * properties. Its keys are unique references to the tables, values are
+   * aliases.
+   *
+   * @see \Drupal\Core\Entity\Query\Sql\Tables::ensureEntityTable().
    *
    * @var array
    */
@@ -304,21 +307,49 @@ class Tables implements TablesInterface {
   }
 
   /**
-   * Join entity table if necessary and return the alias for it.
+   * Joins the entity table, if necessary, and returns the alias for it.
    *
+   * @param string $index_prefix
+   *   The table array index prefix. For a base table this will be empty,
+   *   for a target entity reference like 'field_tags.entity:taxonomy_term.name'
+   *   this will be 'entity:taxonomy_term.target_id.'.
    * @param string $property
+   *   The field property/column.
+   * @param string $type
+   *   The join type, can either be INNER or LEFT.
+   * @param string $langcode
+   *   The langcode we use on the join.
+   * @param string $base_table
+   *   The table to join to. It can be either the table name, its alias or the
+   *   'base_table' placeholder.
+   * @param string $id_field
+   *   The name of the ID field/property for the current entity. For instance:
+   *   tid, nid, etc.
+   * @param array $entity_tables
+   *   Array of entity tables (data and base tables) where decide the entity
+   *   property will be queried from. The first table containing the property
+   *   will be used, so the order is important and the data table is always
+   *   preferred.
    *
    * @return string
+   *   The alias of the joined table.
    *
    * @throws \Drupal\Core\Entity\Query\QueryException
+   *   When an invalid property has been passed.
    */
   protected function ensureEntityTable($index_prefix, $property, $type, $langcode, $base_table, $id_field, $entity_tables) {
     foreach ($entity_tables as $table => $mapping) {
       if (isset($mapping[$property])) {
-        if (!isset($this->entityTables[$index_prefix . $table])) {
-          $this->entityTables[$index_prefix . $table] = $this->addJoin($type, $table, "%alias.$id_field = $base_table.$id_field", $langcode);
+        // Ensure a table joined multiple times through different index prefixes
+        // has unique entityTables entries by concatenating the index prefix
+        // and the base table alias. In this way i.e. if we join to the same
+        // entity table several times for different entity reference fields,
+        // each join gets a separate alias.
+        $key = $index_prefix . ($base_table === 'base_table' ? $table : $base_table);
+        if (!isset($this->entityTables[$key])) {
+          $this->entityTables[$key] = $this->addJoin($type, $table, "%alias.$id_field = $base_table.$id_field", $langcode);
         }
-        return $this->entityTables[$index_prefix . $table];
+        return $this->entityTables[$key];
       }
     }
     throw new QueryException("'$property' not found");
@@ -347,6 +378,23 @@ class Tables implements TablesInterface {
     return $this->fieldTables[$index_prefix . $field_name];
   }
 
+  /**
+   * Adds a join to a given table.
+   *
+   * @param string $type
+   *   The join type.
+   * @param string $table
+   *   The table to join to.
+   * @param string $join_condition
+   *   The condition on which to join to.
+   * @param string $langcode
+   *   The langcode we use on the join.
+   * @param string|null $delta
+   *   (optional) A delta which should be used as additional condition.
+   *
+   * @return string
+   *   Returns the alias of the joined table.
+   */
   protected function addJoin($type, $table, $join_condition, $langcode, $delta = NULL) {
     $arguments = [];
     if ($langcode) {
