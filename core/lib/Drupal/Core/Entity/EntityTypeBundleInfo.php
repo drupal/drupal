@@ -76,9 +76,9 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
   /**
    * {@inheritdoc}
    */
-  public function getBundleInfo($entity_type) {
+  public function getBundleInfo($entity_type_id) {
     $bundle_info = $this->getAllBundleInfo();
-    return isset($bundle_info[$entity_type]) ? $bundle_info[$entity_type] : [];
+    return isset($bundle_info[$entity_type_id]) ? $bundle_info[$entity_type_id] : [];
   }
 
   /**
