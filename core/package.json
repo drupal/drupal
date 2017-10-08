@@ -9,6 +9,8 @@
     "watch:js": "node ./scripts/js/babel-es6-watch.js",
     "watch:js-dev": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-watch.js",
     "lint:core-js": "node ./node_modules/eslint/bin/eslint.js --ext=.es6.js . || exit 0",
+    "lint:core-js-passing": "node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json --ext=.es6.js . || exit 0",
+    "lint:core-js-stats": "node ./node_modules/eslint/bin/eslint.js --format=./scripts/js/eslint-stats-by-type.js --ext=.es6.js . || exit 0",
     "lint:css": "stylelint \"**/*.css\" || exit 0",
     "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0"
   },

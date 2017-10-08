@@ -1,0 +1,30 @@
+{
+  "extends": "./.eslintrc.json",
+  "rules": {
+    "no-var": "off",
+    "no-useless-escape": "off",
+    "no-useless-concat": "off",
+    "no-use-before-define": "off",
+    "no-throw-literal": "off",
+    "no-shadow": "off",
+    "no-restricted-syntax": "off",
+    "no-new": "off",
+    "no-multi-assign": "off",
+    "no-mixed-operators": "off",
+    "no-lonely-if": "off",
+    "no-empty": "off",
+    "no-continue": "off",
+    "no-confusing-arrow": "off",
+    "newline-per-chained-call": "off",
+    "new-cap": "off",
+    "max-len": "off",
+    "default-case": "off",
+    "comma-dangle": "off",
+    "camelcase": "off",
+    "array-callback-return": "off",
+    "vars-on-top": "off",
+    "prefer-rest-params": "off",
+    "padded-blocks": "off",
+    "prefer-const": "off"
+  }
+}
