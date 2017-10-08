@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\views_ui\Tests;
+namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Entity\View;
@@ -80,7 +80,7 @@ class ViewEditTest extends UITestBase {
       $this->fail('Expected error, when setDisplay() called with invalid display ID');
     }
     catch (\Exception $e) {
-      $this->assertEqual('setDisplay() called with invalid display ID "fake_display_name".', $e->getMessage());
+      $this->assertContains('setDisplay() called with invalid display ID "fake_display_name".', $e->getMessage());
     }
 
     $edit = ['display_id' => 'test 1'];
@@ -118,6 +118,8 @@ class ViewEditTest extends UITestBase {
    * Tests the language options on the views edit form.
    */
   public function testEditFormLanguageOptions() {
+    $assert_session = $this->assertSession();
+
     // Language options should not exist without language module.
     $test_views = [
       'test_view' => 'default',
@@ -128,7 +130,7 @@ class ViewEditTest extends UITestBase {
       $this->assertResponse(200);
       $langcode_url = 'admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language';
       $this->assertNoLinkByHref($langcode_url);
-      $this->assertNoLink(t('@type language selected for page', ['@type' => t('Content')]));
+      $assert_session->linkNotExistsExact(t('@type language selected for page', ['@type' => t('Content')]));
       $this->assertNoLink(t('Content language of view row'));
     }
 
@@ -145,12 +147,12 @@ class ViewEditTest extends UITestBase {
       $langcode_url = 'admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language';
       if ($view_name == 'test_view') {
         $this->assertNoLinkByHref($langcode_url);
-        $this->assertNoLink(t('@type language selected for page', ['@type' => t('Content')]));
+        $assert_session->linkNotExistsExact(t('@type language selected for page', ['@type' => t('Content')]));
         $this->assertNoLink(t('Content language of view row'));
       }
       else {
         $this->assertLinkByHref($langcode_url);
-        $this->assertNoLink(t('@type language selected for page', ['@type' => t('Content')]));
+        $assert_session->linkNotExistsExact(t('@type language selected for page', ['@type' => t('Content')]));
         $this->assertLink(t('Content language of view row'));
       }
 
@@ -174,7 +176,7 @@ class ViewEditTest extends UITestBase {
         $elements = $this->xpath('//select[@id="edit-rendering-language"]/option');
         // Compare values inside the option elements with expected values.
         for ($i = 0; $i < count($elements); $i++) {
-          $this->assertEqual($elements[$i]->attributes()->{'value'}, $expected_elements[$i]);
+          $this->assertEqual($elements[$i]->getAttribute('value'), $expected_elements[$i]);
         }
 
         // Check that the selected values are respected even we they are not
@@ -226,7 +228,7 @@ class ViewEditTest extends UITestBase {
         $elements = $this->xpath('//div[@id="edit-options-value"]//input');
         // Compare values inside the option elements with expected values.
         for ($i = 0; $i < count($elements); $i++) {
-          $this->assertEqual($elements[$i]->attributes()->{'value'}, $expected_elements[$i]);
+          $this->assertEqual($elements[$i]->getAttribute('value'), $expected_elements[$i]);
         }
       }
     }
@@ -242,18 +244,6 @@ class ViewEditTest extends UITestBase {
     // Apply changes.
     $edit = [];
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_groupwise_term_ui/default/relationship/tid_representative', $edit, 'Apply');
-  }
-
-  /**
-   * Override the error method so we can test for the expected exception.
-   *
-   * @todo Remove as part of https://www.drupal.org/node/2864613
-   */
-  protected function error($message = '', $group = 'Other', array $caller = NULL) {
-    if ($group === 'User warning') {
-      throw new \Exception($message);
-    }
-    return parent::error($message, $group, $caller);
   }
 
 }
