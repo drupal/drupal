@@ -10,6 +10,7 @@
  * cause the need for many more overrides in this file.
  */
 #drupal-off-canvas *:not(div),
+#drupal-off-canvas *:not(svg *),
 #drupal-off-canvas *:after,
 #drupal-off-canvas *:before {
   all: initial;
