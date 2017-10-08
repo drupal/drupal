@@ -100,8 +100,7 @@ textarea {
 textarea {
   line-height: 1.5;
 }
-textarea.form-textarea,
-select.form-select {
+textarea.form-textarea {
   padding: 4px;
 }
 input.form-text,
@@ -112,8 +111,7 @@ input.form-search,
 input.form-file,
 input.form-number,
 input.form-color,
-textarea.form-textarea,
-select.form-select {
+textarea.form-textarea {
   border: 1px solid #ccc;
   color: #3b3b3b;
 }
