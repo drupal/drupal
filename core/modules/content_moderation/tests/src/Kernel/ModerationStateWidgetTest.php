@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use Drupal\content_moderation\Plugin\Field\FieldWidget\ModerationStateWidget;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
@@ -73,6 +74,19 @@ class ModerationStateWidgetTest extends KernelTestBase {
     // being moderated.
     $entity_form_display->extractFormValues($entity, $form, $form_state);
     $this->assertEquals(0, $entity->moderation_state->count());
+  }
+
+  /**
+   * @covers ::isApplicable
+   */
+  public function testIsApplicable() {
+    // The moderation_state field definition should be applicable to our widget.
+    $fields = $this->container->get('entity_field.manager')->getFieldDefinitions('node', 'test_type');
+    $this->assertTrue(ModerationStateWidget::isApplicable($fields['moderation_state']));
+    $this->assertFalse(ModerationStateWidget::isApplicable($fields['status']));
+    // A config override should still be applicable.
+    $field_config = $fields['moderation_state']->getConfig('moderated');
+    $this->assertTrue(ModerationStateWidget::isApplicable($field_config));
   }
 
 }
