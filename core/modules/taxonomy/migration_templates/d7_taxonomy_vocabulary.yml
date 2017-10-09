@@ -7,10 +7,8 @@ source:
 process:
   vid:
     -
-      plugin: machine_name
-      source: name
-    -
       plugin: make_unique_entity_field
+      source: machine_name
       entity_type: taxonomy_vocabulary
       field: vid
       length: 32
