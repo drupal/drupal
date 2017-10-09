@@ -45365,8 +45365,8 @@ $connection->insert('taxonomy_vocabulary')
 ))
 ->values(array(
   'vid' => '2',
-  'name' => 'Forums',
-  'machine_name' => 'forums',
+  'name' => 'Sujet de discussion',
+  'machine_name' => 'sujet_de_discussion',
   'description' => 'Forum navigation vocabulary',
   'hierarchy' => '1',
   'module' => 'forum',

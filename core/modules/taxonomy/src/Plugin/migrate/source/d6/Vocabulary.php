@@ -70,9 +70,9 @@ class Vocabulary extends DrupalSqlBase {
     $row->setSourceProperty('node_types', $node_types);
     $row->setSourceProperty('cardinality', ($row->getSourceProperty('tags') == 1 || $row->getSourceProperty('multiple') == 1) ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : 1);
 
-    // If the vid of the vocabulary being migrated is equal to the vid in the
+    // If the vocabulary being migrated is the one defined in the
     // 'forum_nav_vocabulary' variable, set the 'forum_vocabulary' source
-    // property to true so we can know this is the vocabulary used for forums.
+    // property to true so we know this is the vocabulary used by Forum.
     if ($this->variableGet('forum_nav_vocabulary', 0) == $row->getSourceProperty('vid')) {
       $row->setSourceProperty('forum_vocabulary', TRUE);
     }
