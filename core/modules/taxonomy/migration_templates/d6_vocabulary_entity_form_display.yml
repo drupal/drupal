@@ -49,10 +49,11 @@ process:
       plugin: substr
       length: 32
     -
-      # This plugin checks if the vocabulary being migrated is the one used for
-      # forums. If it is, the field name is set to 'taxonomy_forums' as it is
-      # what the Forum module is expecting. Otherwise, it is left unchanged.
+      # This plugin checks if the vocabulary being migrated is the one used by
+      # Forum. If so, we use the machine name that Forum expects. Otherwise, we
+      # leave it unchanged.
       plugin: forum_vocabulary
+      machine_name: taxonomy_forums
 destination:
   plugin: component_entity_form_display
 migration_dependencies:
