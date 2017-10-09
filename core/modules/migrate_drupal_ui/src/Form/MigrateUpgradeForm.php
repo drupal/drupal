@@ -142,22 +142,20 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     }
     else {
       $form['info_header'] = [
-        '#markup' => '<p>' . $this->t('Upgrade a site by importing its database and files into a clean and empty new install of Drupal 8. See the <a href=":url">Drupal site upgrades handbook</a> for more information.', [
+        '#markup' => '<p>' . $this->t('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8. See the <a href=":url">Drupal site upgrades handbook</a> for more information.', [
           ':url' => 'https://www.drupal.org/upgrade/migrate',
         ]),
       ];
 
-      $legend[] = $this->t('<em>Old site:</em> the site you want to upgrade.');
-      $legend[] = $this->t('<em>New site:</em> this empty Drupal 8 installation you will import the old site to.');
+      $form['legend']['#markup'] = '';
+      $form['legend']['#markup'] .= '<h3>' . $this->t('Definitions') . '</h3>';
+      $form['legend']['#markup'] .= '<dl>';
+      $form['legend']['#markup'] .= '<dt>' . $this->t('Old site') . '</dt>';
+      $form['legend']['#markup'] .= '<dd>' . $this->t('The site you want to upgrade.') . '</dd>';
+      $form['legend']['#markup'] .= '<dt>' . $this->t('New site') . '</dt>';
+      $form['legend']['#markup'] .= '<dd>' . $this->t('This empty Drupal 8 installation you will import the old site to.') . '</dd>';
+      $form['legend']['#markup'] .= '</dl>';
 
-      $form['legend'] = [
-        '#theme' => 'item_list',
-        '#title' => $this->t('Definitions'),
-        '#list_type' => 'ul',
-        '#items' => $legend,
-      ];
-
-      $info[] = $this->t('You may need multiple tries for a successful upgrade so <strong>backup the database</strong> for this new site. The upgrade will change it and you may want to revert to its initial state.');
       $info[] = $this->t('Make sure that <strong>access to the database</strong> for the old site is available from this new site.');
       $info[] = $this->t('<strong>If the old site has private files</strong>, a copy of its files directory must also be accessible on the host of this new site.');
       $info[] = $this->t('<strong>Enable all modules on this new site</strong> that are enabled on the old site. For example, if the old site uses the book module, then enable the book module on this new site so that the existing data can be imported to it.');
@@ -170,7 +168,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
 
       $form['info'] = [
         '#theme' => 'item_list',
-        '#title' => $this->t('Steps to prepare for the upgrade'),
+        '#title' => $this->t('Preparation steps'),
         '#list_type' => 'ol',
         '#items' => $info,
       ];

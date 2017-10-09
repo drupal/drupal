@@ -119,7 +119,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
   public function testMigrateUpgrade() {
     $connection_options = $this->sourceDatabase->getConnectionOptions();
     $this->drupalGet('/upgrade');
-    $this->assertText('Upgrade a site by importing its database and files into a clean and empty new install of Drupal 8.');
+    $this->assertText('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
 
     $this->drupalPostForm(NULL, [], t('Continue'));
     $this->assertText('Provide credentials for the database of the Drupal site you want to upgrade.');
@@ -160,7 +160,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
 
     // Restart the upgrade process.
     $this->drupalGet('/upgrade');
-    $this->assertText('Upgrade a site by importing its database and files into a clean and empty new install of Drupal 8.');
+    $this->assertText('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.');
 
     $this->drupalPostForm(NULL, [], t('Continue'));
     $this->assertText('Provide credentials for the database of the Drupal site you want to upgrade.');
