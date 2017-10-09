@@ -3,7 +3,6 @@
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\media\Entity\Media;
-use Drupal\media\Entity\MediaType;
 
 /**
  * Tests the file media source.
@@ -11,17 +10,6 @@ use Drupal\media\Entity\MediaType;
  * @group media
  */
 class MediaSourceFileTest extends MediaSourceTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    // We need to test without any default configuration in place.
-    // @TODO: Remove this as part of https://www.drupal.org/node/2883813.
-    MediaType::load('file')->delete();
-  }
 
   /**
    * Tests the file media source.

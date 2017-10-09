@@ -50,7 +50,7 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
         'type' => [
           'href' => $this->baseUrl . '/rest/type/media/camelids',
         ],
-        $this->baseUrl . '/rest/relation/media/camelids/field_media_file_1' => [
+        $this->baseUrl . '/rest/relation/media/camelids/field_media_file' => [
           [
             'href' => $file->url(),
             'lang' => 'en',
@@ -75,7 +75,7 @@ class MediaHalJsonAnonTest extends MediaResourceTestBase {
         ],
       ],
       '_embedded' => [
-        $this->baseUrl . '/rest/relation/media/camelids/field_media_file_1' => [
+        $this->baseUrl . '/rest/relation/media/camelids/field_media_file' => [
           [
             '_links' => [
               'self' => [

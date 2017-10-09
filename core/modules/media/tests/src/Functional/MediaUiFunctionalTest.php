@@ -3,7 +3,6 @@
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\media\Entity\Media;
-use Drupal\media\Entity\MediaType;
 
 /**
  * Ensures that media UI works correctly.
@@ -29,11 +28,6 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     parent::setUp();
     $this->drupalPlaceBlock('local_actions_block');
     $this->drupalPlaceBlock('local_tasks_block');
-
-    // We need to test without any default configuration in place.
-    // @TODO: Remove this when https://www.drupal.org/node/2883813 lands.
-    MediaType::load('file')->delete();
-    MediaType::load('image')->delete();
   }
 
   /**
@@ -59,6 +53,8 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page->fillField('name[0][value]', $media_name);
     $revision_log_message = $this->randomString();
     $page->fillField('revision_log_message[0][value]', $revision_log_message);
+    $source_field = $this->randomString();
+    $page->fillField('field_media_test[0][value]', $source_field);
     $page->pressButton('Save');
     $media_id = $this->container->get('entity.query')->get('media')->execute();
     $media_id = reset($media_id);
