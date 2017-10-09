@@ -16,6 +16,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
   public static $modules = [
     'comment',
     'datetime',
+    'forum',
     'image',
     'link',
     'menu_ui',
@@ -71,17 +72,19 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    *   The value the migrated entity field should have.
    * @param int $expected_term_reference_tid
    *   The term reference id the migrated entity field should have.
+   * @param bool $expected_container_flag
+   *   The term should be a container entity.
    */
-  protected function assertEntity($id, $expected_label, $expected_vid, $expected_description = '', $expected_format = NULL, $expected_weight = 0, $expected_parents = [], $expected_field_integer_value = NULL, $expected_term_reference_tid = NULL) {
+  protected function assertEntity($id, $expected_label, $expected_vid, $expected_description = '', $expected_format = NULL, $expected_weight = 0, $expected_parents = [], $expected_field_integer_value = NULL, $expected_term_reference_tid = NULL, $expected_container_flag = 0) {
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load($id);
-    $this->assertTrue($entity instanceof TermInterface);
-    $this->assertIdentical($expected_label, $entity->label());
-    $this->assertIdentical($expected_vid, $entity->bundle());
-    $this->assertEqual($expected_description, $entity->getDescription());
+    $this->assertInstanceOf(TermInterface::class, $entity);
+    $this->assertEquals($expected_label, $entity->label());
+    $this->assertEquals($expected_vid, $entity->bundle());
+    $this->assertEquals($expected_description, $entity->getDescription());
     $this->assertEquals($expected_format, $entity->getFormat());
-    $this->assertEqual($expected_weight, $entity->getWeight());
-    $this->assertIdentical($expected_parents, $this->getParentIDs($id));
+    $this->assertEquals($expected_weight, $entity->getWeight());
+    $this->assertEquals($expected_parents, $this->getParentIDs($id));
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
     if (!is_null($expected_field_integer_value)) {
       $this->assertTrue($entity->hasField('field_integer'));
@@ -90,6 +93,9 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     if (!is_null($expected_term_reference_tid)) {
       $this->assertTrue($entity->hasField('field_integer'));
       $this->assertEquals($expected_term_reference_tid, $entity->field_term_reference->target_id);
+    }
+    if ($entity->hasField('forum_container')) {
+      $this->assertEquals($expected_container_flag, $entity->forum_container->value);
     }
   }
 
@@ -102,9 +108,17 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertEntity(3, 'Term2', 'test_vocabulary', 'The second term.', 'filtered_html');
     $this->assertEntity(4, 'Term3', 'test_vocabulary', 'The third term.', 'full_html', 0, [3], 6);
     $this->assertEntity(5, 'Custom Forum', 'forums', 'Where the cool kids are.', NULL, 3);
-    $this->assertEntity(6, 'Games', 'forums', '', NULL, 4);
+    $this->assertEntity(6, 'Games', 'forums', '', NULL, 4, [], NULL, NULL, 1);
     $this->assertEntity(7, 'Minecraft', 'forums', '', NULL, 1, [6]);
     $this->assertEntity(8, 'Half Life 3', 'forums', '', NULL, 0, [6]);
+
+    // Verify that we still can create forum containers after the migration.
+    $term = Term::create(['vid' => 'forums', 'name' => 'Forum Container', 'forum_container' => 1]);
+    $term->save();
+
+    // Reset the forums tree data so this new term is included in the tree.
+    unset($this->treeData['forums']);
+    $this->assertEntity(19, 'Forum Container', 'forums', '', NULL, 0, [], NULL, NULL, 1);
   }
 
   /**

@@ -70,6 +70,11 @@ class Term extends FieldableEntity {
       ->fetchCol();
     $row->setSourceProperty('parent', $parents);
 
+    // Determine if this is a forum container.
+    $forum_container_tids = $this->variableGet('forum_containers', []);
+    $current_tid = $row->getSourceProperty('tid');
+    $row->setSourceProperty('is_container', in_array($current_tid, $forum_container_tids));
+
     return parent::prepareRow($row);
   }
 
