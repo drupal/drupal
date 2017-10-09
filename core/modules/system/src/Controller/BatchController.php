@@ -61,11 +61,22 @@ class BatchController implements ContainerInjectionInterface {
       return $output;
     }
     elseif (isset($output)) {
+      $title = isset($output['#title']) ? $output['#title'] : NULL;
       $page = [
         '#type' => 'page',
+        '#title' => $title,
         '#show_messages' => FALSE,
         'content' => $output,
       ];
+
+      // Also inject title as a page header (if available).
+      if ($title) {
+        $page['header'] = [
+          '#type' => 'page_title',
+          '#title' => $title,
+        ];
+      }
+
       return $page;
     }
   }
