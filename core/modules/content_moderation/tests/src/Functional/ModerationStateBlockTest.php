@@ -125,6 +125,13 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     // default revision and therefore visible.
     $this->drupalGet('');
     $this->assertText($pending_revision_body);
+
+    // Check that revision is checked by default when content moderation is
+    // enabled.
+    $this->drupalGet('/block/' . $block->id());
+    $this->assertSession()->checkboxChecked('revision');
+    $this->assertText('Revisions must be required when moderation is enabled.');
+    $this->assertSession()->fieldDisabled('revision');
   }
 
 }
