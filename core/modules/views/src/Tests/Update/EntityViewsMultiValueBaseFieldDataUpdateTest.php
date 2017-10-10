@@ -8,7 +8,7 @@ use Drupal\views\Views;
 /**
  * Tests the upgrade path for views multi-value base field data.
  *
- * @see views_update_8300()
+ * @see views_update_8500()
  *
  * @group Update
  */
