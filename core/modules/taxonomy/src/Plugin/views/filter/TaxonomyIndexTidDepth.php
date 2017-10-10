@@ -55,7 +55,7 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
       $operator = '=';
     }
     else {
-      $operator = 'IN';# " IN (" . implode(', ', array_fill(0, sizeof($this->value), '%d')) . ")";
+      $operator = 'IN';
     }
 
     // The normal use of ensureMyTable() here breaks Views.
