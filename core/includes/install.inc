@@ -531,6 +531,8 @@ function drupal_install_config_directories() {
  *
  * @deprecated in Drupal 8.1.x, will be removed before Drupal 9.0.x. Use
  *   config_get_config_directory() and file_prepare_directory() instead.
+ *
+ * @see https://www.drupal.org/node/2501187
  */
 function install_ensure_config_directory($type) {
   // The config directory must be defined in settings.php.
