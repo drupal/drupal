@@ -25,7 +25,7 @@ class DateTimeTest extends BrowserTestBase {
     parent::setUp();
 
     // Create admin user and log in admin user.
-    $this->drupalLogin ($this->drupalCreateUser([
+    $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
       'administer content types',
       'administer nodes',

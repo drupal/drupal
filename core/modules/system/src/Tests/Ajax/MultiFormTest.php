@@ -44,7 +44,7 @@ class MultiFormTest extends AjaxTestBase {
       ->save();
 
     // Log in a user who can create 'page' nodes.
-    $this->drupalLogin ($this->drupalCreateUser(['create page content']));
+    $this->drupalLogin($this->drupalCreateUser(['create page content']));
   }
 
   /**

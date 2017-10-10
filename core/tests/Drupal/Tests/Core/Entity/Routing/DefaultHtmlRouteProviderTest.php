@@ -136,8 +136,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
         'entity_type_id' => 'the_entity_type_id',
         '_title_callback' => 'Drupal\Core\Entity\Controller\EntityController::addTitle',
       ])
-      ->setRequirement('_entity_create_access', 'the_entity_type_id')
-    ;
+      ->setRequirement('_entity_create_access', 'the_entity_type_id');
     $data['no_add_form_no_bundle'] = [clone $route, $entity_type2->reveal()];
 
     $entity_type3 = $this->getEntityType($entity_type2);

@@ -242,8 +242,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->set('revision_table', 'entity_test_mulrev_revision')
       ->set('revision_data_table', NULL)
       ->set('id', 'entity_test_mulrev')
-      ->setKey('revision', 'revision_id')
-    ;
+      ->setKey('revision', 'revision_id');
     $this->viewsData->setEntityType($entity_type);
 
     $data = $this->viewsData->getViewsData();
@@ -278,8 +277,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->set('revision_data_table', 'entity_test_mulrev_property_revision')
       ->set('id', 'entity_test_mulrev')
       ->set('translatable', TRUE)
-      ->setKey('revision', 'revision_id')
-    ;
+      ->setKey('revision', 'revision_id');
     $this->viewsData->setEntityType($entity_type);
 
     $data = $this->viewsData->getViewsData();
@@ -326,8 +324,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->set('revision_data_table', 'entity_test_mulrev_property_revision')
       ->set('id', 'entity_test_mulrev')
       ->set('translatable', TRUE)
-      ->setKey('revision', 'revision_id')
-    ;
+      ->setKey('revision', 'revision_id');
     $this->viewsData->setEntityType($entity_type);
 
     $data = $this->viewsData->getViewsData();
@@ -560,8 +557,7 @@ class EntityViewsDataTest extends UnitTestCase {
       ->set('data_table', 'entity_test_mul_property_data')
       ->set('base_table', 'entity_test_mul')
       ->set('id', 'entity_test_mul')
-      ->setKey('bundle', 'type')
-    ;
+      ->setKey('bundle', 'type');
     $base_field_definitions = $this->setupBaseFields(EntityTestMul::baseFieldDefinitions($this->baseEntityType));
     $base_field_definitions['type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel('entity test type')

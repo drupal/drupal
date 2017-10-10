@@ -28,7 +28,7 @@ class StorageTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->drupalLogin ($this->drupalCreateUser());
+    $this->drupalLogin($this->drupalCreateUser());
   }
 
   /**
