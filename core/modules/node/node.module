@@ -34,6 +34,8 @@ use Drupal\node\NodeTypeInterface;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.x.
  *   Use \Drupal\node\NodeInterface::NOT_PUBLISHED instead.
+ *
+ * @see https://www.drupal.org/node/2316145
  */
 const NODE_NOT_PUBLISHED = 0;
 
@@ -42,6 +44,8 @@ const NODE_NOT_PUBLISHED = 0;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.x.
  *   Use \Drupal\node\NodeInterface::PUBLISHED instead.
+ *
+ * @see https://www.drupal.org/node/2316145
  */
 const NODE_PUBLISHED = 1;
 
@@ -50,6 +54,8 @@ const NODE_PUBLISHED = 1;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.x.
  *   Use \Drupal\node\NodeInterface::NOT_PROMOTED instead.
+ *
+ * @see https://www.drupal.org/node/2316145
  */
 const NODE_NOT_PROMOTED = 0;
 
@@ -58,6 +64,8 @@ const NODE_NOT_PROMOTED = 0;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.x.
  *   Use \Drupal\node\NodeInterface::PROMOTED instead.
+ *
+ * @see https://www.drupal.org/node/2316145
  */
 const NODE_PROMOTED = 1;
 
@@ -66,6 +74,8 @@ const NODE_PROMOTED = 1;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.x.
  *   Use \Drupal\node\NodeInterface::NOT_STICKY instead.
+ *
+ * @see https://www.drupal.org/node/2316145
  */
 const NODE_NOT_STICKY = 0;
 
@@ -74,6 +84,8 @@ const NODE_NOT_STICKY = 0;
  *
  * @deprecated Scheduled for removal in Drupal 9.0.x.
  *   Use \Drupal\node\NodeInterface::STICKY instead.
+ *
+ * @see https://www.drupal.org/node/2316145
  */
 const NODE_STICKY = 1;
 

@@ -26,6 +26,8 @@ use Drupal\node\NodeInterface;
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0. Use
  *   \Drupal\Core\Config\Entity\ConfigEntityStorage::MAX_ID_LENGTH because the
  *   menu name is a configuration entity ID.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const MENU_MAX_MENU_NAME_LENGTH_UI = 27;
 

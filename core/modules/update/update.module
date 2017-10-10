@@ -23,6 +23,8 @@ use Drupal\Core\Site\Settings;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\update\UpdateManagerInterface::NOT_SECURE instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const UPDATE_NOT_SECURE = 1;
 
@@ -31,6 +33,8 @@ const UPDATE_NOT_SECURE = 1;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\update\UpdateManagerInterface::REVOKED instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const UPDATE_REVOKED = 2;
 
@@ -39,6 +43,8 @@ const UPDATE_REVOKED = 2;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\update\UpdateManagerInterface::NOT_SUPPORTED instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const UPDATE_NOT_SUPPORTED = 3;
 
@@ -47,6 +53,8 @@ const UPDATE_NOT_SUPPORTED = 3;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\update\UpdateManagerInterface::NOT_CURRENT instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const UPDATE_NOT_CURRENT = 4;
 
@@ -55,6 +63,8 @@ const UPDATE_NOT_CURRENT = 4;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\update\UpdateManagerInterface::CURRENT instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const UPDATE_CURRENT = 5;
 
@@ -63,6 +73,8 @@ const UPDATE_CURRENT = 5;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\update\UpdateFetcherInterface::NOT_CHECKED instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const UPDATE_NOT_CHECKED = -1;
 
@@ -71,6 +83,8 @@ const UPDATE_NOT_CHECKED = -1;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\update\UpdateFetcherInterface::UNKNOWN instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const UPDATE_UNKNOWN = -2;
 
@@ -79,6 +93,8 @@ const UPDATE_UNKNOWN = -2;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\update\UpdateFetcherInterface::NOT_FETCHED instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const UPDATE_NOT_FETCHED = -3;
 
@@ -87,6 +103,8 @@ const UPDATE_NOT_FETCHED = -3;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\update\UpdateFetcherInterface::FETCH_PENDING instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const UPDATE_FETCH_PENDING = -4;
 

@@ -33,6 +33,8 @@ use GuzzleHttp\Exception\RequestException;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\user\UserInterface::TIMEZONE_DEFAULT instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const DRUPAL_USER_TIMEZONE_DEFAULT = 0;
 
@@ -41,6 +43,8 @@ const DRUPAL_USER_TIMEZONE_DEFAULT = 0;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\user\UserInterface::TIMEZONE_EMPTY instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const DRUPAL_USER_TIMEZONE_EMPTY = 1;
 
@@ -49,6 +53,8 @@ const DRUPAL_USER_TIMEZONE_EMPTY = 1;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\user\UserInterface::TIMEZONE_SELECT instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const DRUPAL_USER_TIMEZONE_SELECT = 2;
 
@@ -74,6 +80,7 @@ const DRUPAL_REQUIRED = 2;
  *   Use \Drupal\block\BlockRepositoryInterface::REGIONS_VISIBLE instead.
  *
  * @see system_region_list()
+ * @see https://www.drupal.org/node/2831620
  */
 const REGIONS_VISIBLE = 'visible';
 
@@ -84,6 +91,7 @@ const REGIONS_VISIBLE = 'visible';
  *   Use \Drupal\block\BlockRepositoryInterface::REGIONS_ALL instead.
  *
  * @see system_region_list()
+ * @see https://www.drupal.org/node/2831620
  */
 const REGIONS_ALL = 'all';
 

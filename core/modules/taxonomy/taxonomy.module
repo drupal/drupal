@@ -22,6 +22,8 @@ use Drupal\taxonomy\VocabularyInterface;
  *
  * @deprecated in Drupal 8.2.x and will be removed before 9.0.0. Use
  *   \Drupal\taxonomy\VocabularyInterface::HIERARCHY_DISABLED instead.
+ *
+ * @see https://www.drupal.org/node/2807795
  */
 const TAXONOMY_HIERARCHY_DISABLED = 0;
 
@@ -30,6 +32,8 @@ const TAXONOMY_HIERARCHY_DISABLED = 0;
  *
  * @deprecated in Drupal 8.2.x and will be removed before 9.0.0. Use
  *   \Drupal\taxonomy\VocabularyInterface::HIERARCHY_SINGLE instead.
+ *
+ * @see https://www.drupal.org/node/2807795
  */
 const TAXONOMY_HIERARCHY_SINGLE = 1;
 
@@ -38,6 +42,8 @@ const TAXONOMY_HIERARCHY_SINGLE = 1;
  *
  * @deprecated in Drupal 8.2.x and will be removed before 9.0.0. Use
  *   \Drupal\taxonomy\VocabularyInterface::HIERARCHY_MULTIPLE instead.
+ *
+ * @see https://www.drupal.org/node/2807795
  */
 const TAXONOMY_HIERARCHY_MULTIPLE = 2;
 
