@@ -25,7 +25,9 @@ class TaxonomyLocalTasksTest extends LocalTaskIntegrationTestBase {
     $tasks = [
       0 => ['entity.taxonomy_term.canonical', 'entity.taxonomy_term.edit_form'],
     ];
-    if ($subtask) $tasks[] = $subtask;
+    if ($subtask) {
+      $tasks[] = $subtask;
+    }
     $this->assertLocalTasks($route, $tasks);
   }
 
