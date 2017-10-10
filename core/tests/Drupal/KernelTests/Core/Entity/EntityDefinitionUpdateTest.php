@@ -115,7 +115,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
         t('The %field_name field needs to be installed.', ['%field_name' => 'Revision ID']),
       ],
     ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected); // , 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
 
     // Run the update and ensure the revision table is created.
     $this->entityDefinitionUpdateManager->applyUpdates();
