@@ -31,6 +31,8 @@ use Drupal\user\RoleInterface;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\comment\CommentInterface::ANONYMOUS_MAYNOT_CONTACT instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const COMMENT_ANONYMOUS_MAYNOT_CONTACT = 0;
 
@@ -39,6 +41,8 @@ const COMMENT_ANONYMOUS_MAYNOT_CONTACT = 0;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\comment\CommentInterface::ANONYMOUS_MAY_CONTACT instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const COMMENT_ANONYMOUS_MAY_CONTACT = 1;
 
@@ -47,6 +51,8 @@ const COMMENT_ANONYMOUS_MAY_CONTACT = 1;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\comment\CommentInterface::ANONYMOUS_MUST_CONTACT instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const COMMENT_ANONYMOUS_MUST_CONTACT = 2;
 

@@ -13,6 +13,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\aggregator\FeedStorageInterface::CLEAR_NEVER instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const AGGREGATOR_CLEAR_NEVER = 0;
 

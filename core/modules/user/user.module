@@ -31,6 +31,8 @@ use Drupal\user\UserInterface;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\user\UserInterface::USERNAME_MAX_LENGTH instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const USERNAME_MAX_LENGTH = 60;
 
@@ -39,6 +41,8 @@ const USERNAME_MAX_LENGTH = 60;
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\user\UserInterface::REGISTER_ADMINISTRATORS_ONLY instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const USER_REGISTER_ADMINISTRATORS_ONLY = 'admin_only';
 
@@ -47,6 +51,8 @@ const USER_REGISTER_ADMINISTRATORS_ONLY = 'admin_only';
  *
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\user\UserInterface::REGISTER_VISITORS instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const USER_REGISTER_VISITORS = 'visitors';
 
@@ -57,6 +63,8 @@ const USER_REGISTER_VISITORS = 'visitors';
  * @deprecated in Drupal 8.3.x and will be removed before Drupal 9.0.0.
  *   Use \Drupal\user\UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL
  *   instead.
+ *
+ * @see https://www.drupal.org/node/2831620
  */
 const USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 'visitors_admin_approval';
 
