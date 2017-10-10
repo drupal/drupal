@@ -38,7 +38,7 @@ class TextFieldTest extends UnitTestCase {
     // process pipeline created by the plugin, we need to ensure that
     // getProcess() always returns the last input to setProcessOfProperty().
     $migration->setProcessOfProperty(Argument::type('string'), Argument::type('array'))
-      ->will(function($arguments) use ($migration) {
+      ->will(function ($arguments) use ($migration) {
         $migration->getProcess()->willReturn($arguments[1]);
       });
 

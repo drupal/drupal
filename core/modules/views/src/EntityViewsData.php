@@ -307,7 +307,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
 
     // Add the entity type key to each table generated.
     $entity_type_id = $this->entityType->id();
-    array_walk($data, function(&$table_data) use ($entity_type_id){
+    array_walk($data, function (&$table_data) use ($entity_type_id) {
       $table_data['table']['entity type'] = $entity_type_id;
     });
 

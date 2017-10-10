@@ -176,7 +176,7 @@ class AddHandler extends ViewsFormBase {
     $view->getStandardButtons($form, $form_state, 'views_ui_add_handler_form', $this->t('Add and configure @types', ['@types' => $ltitle]));
 
     // Remove the default submit function.
-    $form['actions']['submit']['#submit'] = array_filter($form['actions']['submit']['#submit'], function($var) {
+    $form['actions']['submit']['#submit'] = array_filter($form['actions']['submit']['#submit'], function ($var) {
       return !(is_array($var) && isset($var[1]) && $var[1] == 'standardSubmit');
     });
     $form['actions']['submit']['#submit'][] = [$view, 'submitItemAdd'];

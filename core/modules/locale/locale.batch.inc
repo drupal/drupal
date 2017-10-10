@@ -240,7 +240,7 @@ function locale_translation_http_check($uri) {
     $actual_uri = NULL;
     $response = \Drupal::service('http_client_factory')->fromOptions([
       'allow_redirects' => [
-        'on_redirect' => function(RequestInterface $request, ResponseInterface $response, UriInterface $request_uri) use (&$actual_uri) {
+        'on_redirect' => function (RequestInterface $request, ResponseInterface $response, UriInterface $request_uri) use (&$actual_uri) {
           $actual_uri = (string) $request_uri;
         }
       ],

@@ -166,7 +166,7 @@ class DisplayPathTest extends UITestBase {
     unset($menu_options['@attributes']);
 
     // Convert array to make the next assertion possible.
-    $menu_options = array_map(function($element) {
+    $menu_options = array_map(function ($element) {
       return $element->getText();
     }, $menu_options);
 

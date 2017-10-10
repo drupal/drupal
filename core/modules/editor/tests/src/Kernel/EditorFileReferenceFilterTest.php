@@ -46,7 +46,7 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
   public function testEditorFileReferenceFilter() {
     $filter = $this->filters['editor_file_reference'];
 
-    $test = function($input) use ($filter) {
+    $test = function ($input) use ($filter) {
       return $filter->process($input, 'und');
     };
 

@@ -67,7 +67,7 @@ function locale_translation_get_projects(array $project_names = []) {
       locale_translation_build_projects();
     }
     $projects = \Drupal::service('locale.project')->getAll();
-    array_walk($projects, function(&$project) {
+    array_walk($projects, function (&$project) {
       $project = (object) $project;
     });
   }
@@ -329,7 +329,7 @@ function locale_cron_fill_queue() {
   // Determine which project+language should be updated.
   $last = REQUEST_TIME - $config->get('translation.update_interval_days') * 3600 * 24;
   $projects = \Drupal::service('locale.project')->getAll();
-  $projects = array_filter($projects, function($project) {
+  $projects = array_filter($projects, function ($project) {
     return $project['status'] == 1;
   });
   $files = db_select('locale_file', 'f')

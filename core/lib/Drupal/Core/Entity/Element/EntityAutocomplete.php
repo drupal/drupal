@@ -77,7 +77,7 @@ class EntityAutocomplete extends Textfield {
     // Potentially the #value is set directly, so it contains the 'target_id'
     // array structure instead of a string.
     if ($input !== FALSE && is_array($input)) {
-      $entity_ids = array_map(function(array $item) {
+      $entity_ids = array_map(function (array $item) {
         return $item['target_id'];
       }, $input);
 

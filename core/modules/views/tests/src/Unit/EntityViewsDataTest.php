@@ -612,7 +612,7 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $table_mapping->expects($this->any())
       ->method('getFieldTableName')
-      ->willReturnCallback(function($field) {
+      ->willReturnCallback(function ($field) {
         if ($field == 'uuid') {
           return 'entity_test_mul';
         }
@@ -786,7 +786,7 @@ class EntityViewsDataTest extends UnitTestCase {
 
     $table_mapping->expects($this->any())
       ->method('getFieldTableName')
-      ->willReturnCallback(function($field) {
+      ->willReturnCallback(function ($field) {
         if ($field == 'uuid') {
           return 'entity_test_mulrev';
         }

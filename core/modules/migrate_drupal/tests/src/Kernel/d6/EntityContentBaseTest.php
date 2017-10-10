@@ -114,7 +114,7 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
     $message = $this->prophesize(MigrateMessageInterface::class);
     // Match the expected message. Can't use default argument types, because
     // we need to convert to string from TranslatableMarkup.
-    $argument = Argument::that(function($msg) {
+    $argument = Argument::that(function ($msg) {
       return strpos((string) $msg, "This entity type does not support translation") !== FALSE;
     });
     $message->display($argument, Argument::any())

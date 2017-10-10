@@ -857,7 +857,7 @@ class AccessResultTest extends UnitTestCase {
    * tested in ::testOrIf().
    */
   public function testOrIfCacheabilityMerging() {
-    $merge_both_directions = function(AccessResult $a, AccessResult $b) {
+    $merge_both_directions = function (AccessResult $a, AccessResult $b) {
       // A globally cacheable access result.
       $a->setCacheMaxAge(3600);
       // Another access result that is cacheable per permissions.

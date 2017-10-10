@@ -36,7 +36,7 @@ abstract class NormalizerBase extends SerializerAwareNormalizer implements Norma
 
     $supported = (array) $this->supportedInterfaceOrClass;
 
-    return (bool) array_filter($supported, function($name) use ($data) {
+    return (bool) array_filter($supported, function ($name) use ($data) {
       return $data instanceof $name;
     });
   }
@@ -56,7 +56,7 @@ abstract class NormalizerBase extends SerializerAwareNormalizer implements Norma
 
     $supported = (array) $this->supportedInterfaceOrClass;
 
-    $subclass_check = function($name) use ($type) {
+    $subclass_check = function ($name) use ($type) {
       return (class_exists($name) || interface_exists($name)) && is_subclass_of($type, $name, TRUE);
     };
 

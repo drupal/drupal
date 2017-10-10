@@ -362,7 +362,7 @@ class ViewExecutableTest extends UnitTestCase {
     foreach (['field', 'filter', 'argument', 'sort'] as $handler_type) {
       $display->expects($this->atLeastOnce())
         ->method('setOption')
-        ->with($this->callback(function($argument) {
+        ->with($this->callback(function ($argument) {
           return $argument;
         }), [
           'test_field' => [
@@ -405,7 +405,7 @@ class ViewExecutableTest extends UnitTestCase {
     foreach (['field', 'filter', 'argument', 'sort'] as $handler_type) {
       $display->expects($this->atLeastOnce())
         ->method('setOption')
-        ->with($this->callback(function($argument) {
+        ->with($this->callback(function ($argument) {
           return $argument;
         }), [
           'test_field' => [

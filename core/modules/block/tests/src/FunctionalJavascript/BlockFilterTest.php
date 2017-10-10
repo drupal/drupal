@@ -84,7 +84,7 @@ class BlockFilterTest extends JavascriptTestBase {
    * @return NodeElement[]
    */
   protected function filterVisibleElements(array $elements) {
-    $elements = array_filter($elements, function(NodeElement $element) {
+    $elements = array_filter($elements, function (NodeElement $element) {
       return $element->isVisible();
     });
     return $elements;

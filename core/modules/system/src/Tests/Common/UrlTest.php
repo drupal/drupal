@@ -168,7 +168,7 @@ class UrlTest extends WebTestBase {
     $l = \Drupal::l('foo', Url::fromUri('https://www.drupal.org'));
 
     // Test a renderable array passed to the link generator.
-    $renderer->executeInRenderContext(new RenderContext(), function() use ($renderer, $l) {
+    $renderer->executeInRenderContext(new RenderContext(), function () use ($renderer, $l) {
       $renderable_text = ['#markup' => 'foo'];
       $l_renderable_text = \Drupal::l($renderable_text, Url::fromUri('https://www.drupal.org'));
       $this->assertEqual($l_renderable_text, $l);

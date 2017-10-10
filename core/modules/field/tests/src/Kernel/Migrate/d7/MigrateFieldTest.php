@@ -149,7 +149,7 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     // message with the required steps to fix this.
     $migration = $this->getMigration('d7_field');
     $messages = $migration->getIdMap()->getMessageIterator()->fetchAll();
-    $errors = array_map(function($message) {
+    $errors = array_map(function ($message) {
       return $message->message;
     }, $messages);
     sort($errors);

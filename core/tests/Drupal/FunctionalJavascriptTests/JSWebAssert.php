@@ -64,7 +64,7 @@ JS;
   public function waitForElement($selector, $locator, $timeout = 10000) {
     $page = $this->session->getPage();
 
-    $result = $page->waitFor($timeout / 1000, function() use ($page, $selector, $locator) {
+    $result = $page->waitFor($timeout / 1000, function () use ($page, $selector, $locator) {
       return $page->find($selector, $locator);
     });
 
@@ -90,7 +90,7 @@ JS;
   public function waitForElementVisible($selector, $locator, $timeout = 10000) {
     $page = $this->session->getPage();
 
-    $result = $page->waitFor($timeout / 1000, function() use ($page, $selector, $locator) {
+    $result = $page->waitFor($timeout / 1000, function () use ($page, $selector, $locator) {
       $element = $page->find($selector, $locator);
       if (!empty($element) && $element->isVisible()) {
         return $element;

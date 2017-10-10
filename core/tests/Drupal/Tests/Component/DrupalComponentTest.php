@@ -64,7 +64,7 @@ class DrupalComponentTest extends TestCase {
   protected function assertNoCoreUsage($class_path) {
     $contents = file_get_contents($class_path);
     preg_match_all('/^.*Drupal\\\Core.*$/m', $contents, $matches);
-    $matches = array_filter($matches[0], function($line) {
+    $matches = array_filter($matches[0], function ($line) {
       // Filter references to @see as they don't really matter.
       return strpos($line, '@see') === FALSE;
     });

@@ -126,7 +126,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function getButtons() {
-    $button = function($name, $direction = 'ltr') {
+    $button = function ($name, $direction = 'ltr') {
       // In the markup below, we mostly use the name (which may include spaces),
       // but in one spot we use it as a CSS class, so strip spaces.
       // Note: this uses str_replace() instead of Html::cleanCssIdentifier()
@@ -420,8 +420,8 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
     }
     // Generate setting that accurately reflects allowed tags and attributes.
     else {
-      $get_attribute_values = function($attribute_values, $allowed_values) {
-        $values = array_keys(array_filter($attribute_values, function($value) use ($allowed_values) {
+      $get_attribute_values = function ($attribute_values, $allowed_values) {
+        $values = array_keys(array_filter($attribute_values, function ($value) use ($allowed_values) {
           if ($allowed_values) {
             return $value !== FALSE;
           }
@@ -532,7 +532,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           // getConfig() method, and override the JavaScript at
           // Drupal.editors.ckeditor to somehow make validation of values for
           // attributes other than "class" and "style" work.
-          $allowed_attributes = array_filter($attributes, function($value) {
+          $allowed_attributes = array_filter($attributes, function ($value) {
             return $value !== FALSE;
           });
           if (count($allowed_attributes)) {
@@ -567,7 +567,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           // implies that all of its possible attribute values are disallowed,
           // thus we must look at the disallowed attribute values on allowed
           // attributes.
-          $disallowed_attributes = array_filter($attributes, function($value) {
+          $disallowed_attributes = array_filter($attributes, function ($value) {
             return $value === FALSE;
           });
           if (count($disallowed_attributes)) {

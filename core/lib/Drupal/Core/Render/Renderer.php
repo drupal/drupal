@@ -309,7 +309,7 @@ class Renderer implements RendererInterface {
       if (count($elements['#lazy_builder']) !== 2) {
         throw new \DomainException('The #lazy_builder property must have an array as a value, containing two values: the callback, and the arguments for the callback.');
       }
-      if (count($elements['#lazy_builder'][1]) !== count(array_filter($elements['#lazy_builder'][1], function($v) {
+      if (count($elements['#lazy_builder'][1]) !== count(array_filter($elements['#lazy_builder'][1], function ($v) {
         return is_null($v) || is_scalar($v);
       }))) {
         throw new \DomainException("A #lazy_builder callback's context may only contain scalar values or NULL.");

@@ -42,7 +42,7 @@ class HTTPStatusCode extends AreaPluginBase {
     ] + $options;
 
     // Add the HTTP status code, so it's easier for people to find it.
-    array_walk($options, function($title, $code) use(&$options) {
+    array_walk($options, function ($title, $code) use (&$options) {
       $options[$code] = $this->t('@code (@title)', ['@code' => $code, '@title' => $title]);
     });
 

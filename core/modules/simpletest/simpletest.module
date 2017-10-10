@@ -345,7 +345,7 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
   }
   else {
     // Double escape namespaces so they'll work in a regexp.
-    $escaped_test_classnames = array_map(function($class) {
+    $escaped_test_classnames = array_map(function ($class) {
       return addslashes($class);
     }, $unescaped_test_classnames);
 

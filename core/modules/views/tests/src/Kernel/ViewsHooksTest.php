@@ -106,7 +106,7 @@ class ViewsHooksTest extends ViewsKernelTestBase {
       ],
       '#substitutions' => ['#value' => []],
     ];
-    $element = \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), function() use ($element) {
+    $element = \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), function () use ($element) {
       return views_pre_render_views_form_views_form($element);
     });
     $this->setRawContent((string) $element['output']['#markup']);

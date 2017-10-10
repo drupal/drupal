@@ -44,7 +44,7 @@ class FilterKernelTest extends KernelTestBase {
   public function testAlignFilter() {
     $filter = $this->filters['filter_align'];
 
-    $test = function($input) use ($filter) {
+    $test = function ($input) use ($filter) {
       return $filter->process($input, 'und');
     };
 
@@ -101,7 +101,7 @@ class FilterKernelTest extends KernelTestBase {
     $renderer = \Drupal::service('renderer');
     $filter = $this->filters['filter_caption'];
 
-    $test = function($input) use ($filter, $renderer) {
+    $test = function ($input) use ($filter, $renderer) {
       return $renderer->executeInRenderContext(new RenderContext(), function () use ($input, $filter) {
         return $filter->process($input, 'und');
       });
@@ -266,7 +266,7 @@ class FilterKernelTest extends KernelTestBase {
     $align_filter = $this->filters['filter_align'];
     $caption_filter = $this->filters['filter_caption'];
 
-    $test = function($input) use ($align_filter, $caption_filter, $renderer) {
+    $test = function ($input) use ($align_filter, $caption_filter, $renderer) {
       return $renderer->executeInRenderContext(new RenderContext(), function () use ($input, $align_filter, $caption_filter) {
         return $caption_filter->process($align_filter->process($input, 'und'), 'und');
       });

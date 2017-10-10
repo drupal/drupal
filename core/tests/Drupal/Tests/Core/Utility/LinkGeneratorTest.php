@@ -397,7 +397,7 @@ class LinkGeneratorTest extends UnitTestCase {
   public function testGenerateActive() {
     $this->urlGenerator->expects($this->exactly(5))
       ->method('generateFromRoute')
-      ->willReturnCallback(function($name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
+      ->willReturnCallback(function ($name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
         switch ($name) {
           case 'test_route_1':
             return (new GeneratedUrl())->setGeneratedUrl('/test-route-1');

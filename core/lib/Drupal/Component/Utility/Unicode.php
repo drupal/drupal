@@ -376,7 +376,7 @@ EOD;
    */
   public static function ucwords($text) {
     $regex = '/(^|[' . static::PREG_CLASS_WORD_BOUNDARY . '])([^' . static::PREG_CLASS_WORD_BOUNDARY . '])/u';
-    return preg_replace_callback($regex, function(array $matches) {
+    return preg_replace_callback($regex, function (array $matches) {
       return $matches[1] . Unicode::strtoupper($matches[2]);
     }, $text);
   }

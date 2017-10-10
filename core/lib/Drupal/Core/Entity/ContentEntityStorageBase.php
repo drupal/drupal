@@ -119,10 +119,10 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    */
   public function createTranslation(ContentEntityInterface $entity, $langcode, array $values = []) {
     $translation = $entity->getTranslation($langcode);
-    $definitions = array_filter($translation->getFieldDefinitions(), function(FieldDefinitionInterface $definition) {
+    $definitions = array_filter($translation->getFieldDefinitions(), function (FieldDefinitionInterface $definition) {
       return $definition->isTranslatable();
     });
-    $field_names = array_map(function(FieldDefinitionInterface $definition) {
+    $field_names = array_map(function (FieldDefinitionInterface $definition) {
       return $definition->getName();
     }, $definitions);
     $values[$this->langcodeKey] = $langcode;

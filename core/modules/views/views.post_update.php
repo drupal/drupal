@@ -128,7 +128,7 @@ function views_post_update_cleanup_duplicate_views_data() {
  */
 function views_post_update_field_formatter_dependencies() {
   $views = View::loadMultiple();
-  array_walk($views, function(View $view) {
+  array_walk($views, function (View $view) {
     $view->save();
   });
 }
@@ -138,7 +138,7 @@ function views_post_update_field_formatter_dependencies() {
  */
 function views_post_update_taxonomy_index_tid() {
   $views = View::loadMultiple();
-  array_walk($views, function(View $view) {
+  array_walk($views, function (View $view) {
     $old_dependencies = $view->getDependencies();
     $new_dependencies = $view->calculateDependencies()->getDependencies();
     if ($old_dependencies !== $new_dependencies) {
@@ -152,7 +152,7 @@ function views_post_update_taxonomy_index_tid() {
  */
 function views_post_update_serializer_dependencies() {
   $views = View::loadMultiple();
-  array_walk($views, function(View $view) {
+  array_walk($views, function (View $view) {
     $old_dependencies = $view->getDependencies();
     $new_dependencies = $view->calculateDependencies()->getDependencies();
     if ($old_dependencies !== $new_dependencies) {
@@ -209,7 +209,7 @@ function views_post_update_revision_metadata_fields() {
   // The table names are fixed automatically in
   // \Drupal\views\Entity\View::preSave(), so we just need to re-save all views.
   $views = View::loadMultiple();
-  array_walk($views, function(View $view) {
+  array_walk($views, function (View $view) {
     $view->save();
   });
 }

@@ -88,7 +88,7 @@ class Query extends QueryBase implements QueryInterface {
     foreach ($this->sort as $sort) {
       $direction = $sort['direction'] == 'ASC' ? -1 : 1;
       $field = $sort['field'];
-      uasort($result, function($a, $b) use ($field, $direction) {
+      uasort($result, function ($a, $b) use ($field, $direction) {
         return ($a[$field] <= $b[$field]) ? $direction : -$direction;
       });
     }

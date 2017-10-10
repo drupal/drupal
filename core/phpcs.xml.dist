@@ -218,6 +218,23 @@
   <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingBeforeClose">
     <severity>0</severity>
   </rule>
+  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration" />
+  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.ContentAfterBrace">
+    <severity>0</severity>
+  </rule>
+  <!-- Standard yet to be finalized on this (https://www.drupal.org/node/1539712). -->
+  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.FirstParamSpacing">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.Indent">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.CloseBracketLine">
+    <severity>0</severity>
+  </rule>
   <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
   <rule ref="Squiz.Strings.ConcatenationSpacing">
     <properties>

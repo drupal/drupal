@@ -1030,7 +1030,7 @@ function file_scan_directory($dir, $mask, $options = [], $depth = 0) {
   // performance boost.
   if (!isset($options['nomask'])) {
     $ignore_directories = Settings::get('file_scan_ignore_directories', []);
-    array_walk($ignore_directories, function(&$value) {
+    array_walk($ignore_directories, function (&$value) {
       $value = preg_quote($value, '/');
     });
     $default_nomask = '/^' . implode('|', $ignore_directories) . '$/';

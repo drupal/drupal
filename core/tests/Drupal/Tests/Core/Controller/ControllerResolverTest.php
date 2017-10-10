@@ -74,7 +74,7 @@ class ControllerResolverTest extends UnitTestCase {
    * @group legacy
    */
   public function testGetArguments() {
-    $controller = function(EntityInterface $entity, $user, RouteMatchInterface $route_match, ServerRequestInterface $psr_7) {
+    $controller = function (EntityInterface $entity, $user, RouteMatchInterface $route_match, ServerRequestInterface $psr_7) {
     };
     $mock_entity = $this->getMockBuilder('Drupal\Core\Entity\Entity')
       ->disableOriginalConstructor()

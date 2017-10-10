@@ -15,7 +15,7 @@ trait FileSystemModuleDiscoveryDataProviderTrait {
    */
   public function coreModuleListDataProvider() {
     $module_dirs = array_keys(iterator_to_array(new \FilesystemIterator(__DIR__ . '/../../../modules/')));
-    $module_names = array_map(function($path) {
+    $module_names = array_map(function ($path) {
       return str_replace(__DIR__ . '/../../../modules/', '', $path);
     }, $module_dirs);
     $modules_keyed = array_combine($module_names, $module_names);

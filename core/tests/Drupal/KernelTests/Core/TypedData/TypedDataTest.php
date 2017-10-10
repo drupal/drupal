@@ -399,7 +399,7 @@ class TypedDataTest extends KernelTestBase {
     // Check that an all-pass filter leaves the list untouched.
     $value = ['zero', 'one'];
     $typed_data = $this->createTypedData(ListDataDefinition::create('string'), $value);
-    $typed_data->filter(function(TypedDataInterface $item) {
+    $typed_data->filter(function (TypedDataInterface $item) {
       return TRUE;
     });
     $this->assertEqual($typed_data->count(), 2);
@@ -411,7 +411,7 @@ class TypedDataTest extends KernelTestBase {
     // Check that a none-pass filter empties the list.
     $value = ['zero', 'one'];
     $typed_data = $this->createTypedData(ListDataDefinition::create('string'), $value);
-    $typed_data->filter(function(TypedDataInterface $item) {
+    $typed_data->filter(function (TypedDataInterface $item) {
       return FALSE;
     });
     $this->assertEqual($typed_data->count(), 0);
@@ -419,7 +419,7 @@ class TypedDataTest extends KernelTestBase {
     // Check that filtering correctly renumbers elements.
     $value = ['zero', 'one', 'two'];
     $typed_data = $this->createTypedData(ListDataDefinition::create('string'), $value);
-    $typed_data->filter(function(TypedDataInterface $item) {
+    $typed_data->filter(function (TypedDataInterface $item) {
       return $item->getValue() !== 'one';
     });
     $this->assertEqual($typed_data->count(), 2);

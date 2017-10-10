@@ -25,7 +25,7 @@ class Handle {
         require __DIR__ . '/global_namespace_php5.php';
       }
       // PHP 5 - create a handler to throw the exception directly.
-      assert_options(ASSERT_CALLBACK, function($file = '', $line = 0, $code = '', $message = '') {
+      assert_options(ASSERT_CALLBACK, function ($file = '', $line = 0, $code = '', $message = '') {
         if (empty($message)) {
           $message = $code;
         }

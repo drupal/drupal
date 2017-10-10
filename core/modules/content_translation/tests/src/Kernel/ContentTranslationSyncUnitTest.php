@@ -181,19 +181,19 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
     // their delta.
     $delta_callbacks = [
       // Continuous field values: all values are equal.
-      function($delta) {
+      function ($delta) {
         return TRUE;
       },
       // Alternated field values: only the even ones are equal.
-      function($delta) {
+      function ($delta) {
         return $delta % 2 !== 0;
       },
       // Sparse field values: only the "middle" ones are equal.
-      function($delta) {
+      function ($delta) {
         return $delta === 1 || $delta === 2;
       },
       // Sparse field values: only the "extreme" ones are equal.
-      function($delta) {
+      function ($delta) {
         return $delta === 0 || $delta === 3;
       },
     ];

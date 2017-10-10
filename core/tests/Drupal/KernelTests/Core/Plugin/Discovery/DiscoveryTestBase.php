@@ -71,7 +71,7 @@ abstract class DiscoveryTestBase extends KernelTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertDefinitionIdentical(array $definition, array $expected_definition) {
-    $func = function (&$item){
+    $func = function (&$item) {
       if ($item instanceof TranslatableMarkup) {
         $item = (string) $item;
       }

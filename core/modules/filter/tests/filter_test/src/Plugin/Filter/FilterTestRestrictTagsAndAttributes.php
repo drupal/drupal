@@ -22,7 +22,7 @@ class FilterTestRestrictTagsAndAttributes extends FilterBase {
    * {@inheritdoc}
    */
   public function process($text, $langcode) {
-    $allowed_tags = array_filter($this->settings['restrictions']['allowed'], function($value) {
+    $allowed_tags = array_filter($this->settings['restrictions']['allowed'], function ($value) {
       return is_array($value) || (bool) $value !== FALSE;
     });
     return new FilterProcessResult(Xss::filter($text, array_keys($allowed_tags)));

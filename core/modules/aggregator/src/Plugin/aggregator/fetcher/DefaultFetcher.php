@@ -86,7 +86,7 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
       $actual_uri = NULL;
       $response = $this->httpClientFactory->fromOptions([
         'allow_redirects' => [
-          'on_redirect' => function(RequestInterface $request, ResponseInterface $response, UriInterface $uri) use (&$actual_uri) {
+          'on_redirect' => function (RequestInterface $request, ResponseInterface $response, UriInterface $uri) use (&$actual_uri) {
             $actual_uri = (string) $uri;
           }
         ],

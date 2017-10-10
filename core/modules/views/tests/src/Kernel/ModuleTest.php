@@ -158,13 +158,13 @@ class ModuleTest extends ViewsKernelTestBase {
     $this->assertEquals(array_keys($all_views), array_keys(Views::getAllViews()), 'Views::getAllViews works as expected.');
 
     // Test Views::getEnabledViews().
-    $expected_enabled = array_filter($all_views, function($view) {
+    $expected_enabled = array_filter($all_views, function ($view) {
       return views_view_is_enabled($view);
     });
     $this->assertEquals(array_keys($expected_enabled), array_keys(Views::getEnabledViews()), 'Expected enabled views returned.');
 
     // Test Views::getDisabledViews().
-    $expected_disabled = array_filter($all_views, function($view) {
+    $expected_disabled = array_filter($all_views, function ($view) {
       return views_view_is_disabled($view);
     });
     $this->assertEquals(array_keys($expected_disabled), array_keys(Views::getDisabledViews()), 'Expected disabled views returned.');

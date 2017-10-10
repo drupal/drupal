@@ -86,7 +86,7 @@ class RendererBubblingTest extends RendererTestBase {
     $this->cacheFactory->expects($this->atLeastOnce())
       ->method('get')
       ->with($bin)
-      ->willReturnCallback(function($requested_bin) use ($bin, $custom_cache) {
+      ->willReturnCallback(function ($requested_bin) use ($bin, $custom_cache) {
         if ($requested_bin === $bin) {
           return $custom_cache;
         }
@@ -315,7 +315,7 @@ class RendererBubblingTest extends RendererTestBase {
           'tags' => ['b'],
         ],
         'grandchild' => [
-          '#access_callback' => function() use (&$current_user_role) {
+          '#access_callback' => function () use (&$current_user_role) {
             // Only role A cannot access this subtree.
             return $current_user_role !== 'A';
           },

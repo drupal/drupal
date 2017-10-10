@@ -610,7 +610,7 @@ class TwigExtension extends \Twig_Extension {
       $value = iterator_to_array($value, FALSE);
     }
 
-    return implode($glue, array_map(function($item) use ($env) {
+    return implode($glue, array_map(function ($item) use ($env) {
       // If $item is not marked safe then it will be escaped.
       return $this->escapeFilter($env, $item, 'html', NULL, TRUE);
     }, (array) $value));

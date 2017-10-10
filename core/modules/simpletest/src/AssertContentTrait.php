@@ -874,7 +874,7 @@ trait AssertContentTrait {
     // The string cast is necessary because theme functions return
     // MarkupInterface objects. This means we can assert that $expected
     // matches the theme output without having to worry about 0 == ''.
-    $output = (string) $renderer->executeInRenderContext(new RenderContext(), function() use ($callback, $variables) {
+    $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($callback, $variables) {
       return \Drupal::theme()->render($callback, $variables);
     });
     $this->verbose(

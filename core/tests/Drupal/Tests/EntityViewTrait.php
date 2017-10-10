@@ -35,7 +35,7 @@ trait EntityViewTrait {
    * @see drupal_render()
    */
   protected function buildEntityView(EntityInterface $entity, $view_mode = 'full', $langcode = NULL, $reset = FALSE) {
-    $ensure_fully_built = function(&$elements) use (&$ensure_fully_built) {
+    $ensure_fully_built = function (&$elements) use (&$ensure_fully_built) {
       // If the default values for this element have not been loaded yet, populate
       // them.
       if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {

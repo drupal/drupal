@@ -70,7 +70,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
     //   and caching. This might prove difficult as this is called before the
     //   container has finished building.
     $config_storage = BootstrapConfigStorageFactory::get();
-    $config_ids = array_filter($config_storage->listAll($prefix), function($config_id) use ($prefix) {
+    $config_ids = array_filter($config_storage->listAll($prefix), function ($config_id) use ($prefix) {
       return $config_id != $prefix . LanguageInterface::LANGCODE_NOT_SPECIFIED && $config_id != $prefix . LanguageInterface::LANGCODE_NOT_APPLICABLE;
     });
     return count($config_ids) > 1;

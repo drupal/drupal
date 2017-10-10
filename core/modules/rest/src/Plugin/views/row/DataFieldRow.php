@@ -184,7 +184,7 @@ class DataFieldRow extends RowPluginBase {
    *   A regular one dimensional array of values.
    */
   protected static function extractFromOptionsArray($key, $options) {
-    return array_map(function($item) use ($key) {
+    return array_map(function ($item) use ($key) {
       return isset($item[$key]) ? $item[$key] : NULL;
     }, $options);
   }

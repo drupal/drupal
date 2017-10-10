@@ -44,7 +44,7 @@ class ConditionTest extends UnitTestCase {
     $query_placeholder = $this->prophesize(PlaceholderInterface::class);
 
     $counter = 0;
-    $query_placeholder->nextPlaceholder()->will(function() use (&$counter) {
+    $query_placeholder->nextPlaceholder()->will(function () use (&$counter) {
       return $counter++;
     });
     $query_placeholder->uniqueIdentifier()->willReturn(4);
@@ -85,7 +85,7 @@ class ConditionTest extends UnitTestCase {
     $query_placeholder = $this->prophesize(PlaceholderInterface::class);
 
     $counter = 0;
-    $query_placeholder->nextPlaceholder()->will(function() use (&$counter) {
+    $query_placeholder->nextPlaceholder()->will(function () use (&$counter) {
       return $counter++;
     });
     $query_placeholder->uniqueIdentifier()->willReturn(4);
@@ -153,7 +153,7 @@ class ConditionTest extends UnitTestCase {
     $query_placeholder = $this->prophesize(PlaceholderInterface::class);
 
     $counter = 0;
-    $query_placeholder->nextPlaceholder()->will(function() use (&$counter) {
+    $query_placeholder->nextPlaceholder()->will(function () use (&$counter) {
       return $counter++;
     });
     $query_placeholder->uniqueIdentifier()->willReturn(4);
