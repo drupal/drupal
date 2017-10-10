@@ -69,7 +69,9 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
     $tasks = [
       0 => ['entity.user.canonical', 'entity.user.edit_form'],
     ];
-    if ($subtask) $tasks[] = $subtask;
+    if ($subtask) {
+      $tasks[] = $subtask;
+    }
     $this->assertLocalTasks($route, $tasks);
   }
 

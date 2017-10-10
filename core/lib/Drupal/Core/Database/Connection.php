@@ -503,8 +503,9 @@ abstract class Connection {
    *   A sanitized comment string.
    */
   public function makeComment($comments) {
-    if (empty($comments))
+    if (empty($comments)) {
       return '';
+    }
 
     // Flatten the array of comments.
     $comment = implode('. ', $comments);

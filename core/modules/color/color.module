@@ -796,9 +796,15 @@ function _color_hsl2rgb($hsl) {
  */
 function _color_hue2rgb($m1, $m2, $h) {
   $h = ($h < 0) ? $h + 1 : (($h > 1) ? $h - 1 : $h);
-  if ($h * 6 < 1) return $m1 + ($m2 - $m1) * $h * 6;
-  if ($h * 2 < 1) return $m2;
-  if ($h * 3 < 2) return $m1 + ($m2 - $m1) * (0.66666 - $h) * 6;
+  if ($h * 6 < 1) {
+    return $m1 + ($m2 - $m1) * $h * 6;
+  }
+  if ($h * 2 < 1) {
+    return $m2;
+  }
+  if ($h * 3 < 2) {
+    return $m1 + ($m2 - $m1) * (0.66666 - $h) * 6;
+  }
 
   return $m1;
 }
@@ -822,9 +828,15 @@ function _color_rgb2hsl($rgb) {
 
   $h = 0;
   if ($delta > 0) {
-    if ($max == $r && $max != $g) $h += ($g - $b) / $delta;
-    if ($max == $g && $max != $b) $h += (2 + ($b - $r) / $delta);
-    if ($max == $b && $max != $r) $h += (4 + ($r - $g) / $delta);
+    if ($max == $r && $max != $g) {
+      $h += ($g - $b) / $delta;
+    }
+    if ($max == $g && $max != $b) {
+      $h += (2 + ($b - $r) / $delta);
+    }
+    if ($max == $b && $max != $r) {
+      $h += (4 + ($r - $g) / $delta);
+    }
     $h /= 6;
   }
 

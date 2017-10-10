@@ -73,7 +73,9 @@ class EntityTypeRepositoryTest extends UnitTestCase {
         elseif (!$exception_on_invalid) {
           return NULL;
         }
-        else throw new PluginNotFoundException($entity_type_id);
+        else {
+          throw new PluginNotFoundException($entity_type_id);
+        }
       });
     $this->entityTypeManager->getDefinitions()->willReturn($definitions);
   }

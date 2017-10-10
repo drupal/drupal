@@ -264,7 +264,9 @@ EOD;
       return substr($string, 0, $len);
     }
     // Scan backwards to beginning of the byte sequence.
-    while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0);
+    // @todo Make the code more readable in https://www.drupal.org/node/2911497.
+    while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0) {
+    }
 
     return substr($string, 0, $len);
   }

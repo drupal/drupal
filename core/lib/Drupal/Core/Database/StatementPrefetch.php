@@ -497,8 +497,9 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
-    if (!isset($this->columnNames[$key_index]) || !isset($this->columnNames[$value_index]))
+    if (!isset($this->columnNames[$key_index]) || !isset($this->columnNames[$value_index])) {
       return [];
+    }
 
     $key = $this->columnNames[$key_index];
     $value = $this->columnNames[$value_index];
