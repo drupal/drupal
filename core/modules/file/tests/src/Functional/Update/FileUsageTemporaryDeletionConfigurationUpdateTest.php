@@ -28,7 +28,9 @@ class FileUsageTemporaryDeletionConfigurationUpdateTest extends UpdatePathTestBa
   }
 
   /**
-   * Tests that block context mapping is updated properly.
+   * Tests that make_unused_managed_files_temporary conditions are correct.
+   *
+   * Verify that the before and after conditions for the variable are correct.
    */
   public function testUpdateHookN() {
     $this->assertIdentical($this->config('file.settings')->get('make_unused_managed_files_temporary'), NULL);
