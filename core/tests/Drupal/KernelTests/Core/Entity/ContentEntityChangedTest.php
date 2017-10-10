@@ -74,7 +74,7 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
 
     // We can't assert equality here because the created time is set to the
     // request time, while instances of ChangedTestItem use the current
-    // timestamp every time. Therefor we check if the changed timestamp is
+    // timestamp every time. Therefore we check if the changed timestamp is
     // between the created time and now.
     $this->assertTrue(
       ($entity->getChangedTime() >= $entity->get('created')->value) &&
