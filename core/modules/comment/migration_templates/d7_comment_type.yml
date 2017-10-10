@@ -3,22 +3,31 @@ label: Comment type
 migration_tags:
   - Drupal 7
 source:
-  plugin: d7_comment_type
+  plugin: d7_node_type
   constants:
     entity_type: node
+    id_prefix: 'comment_node_'
+    label_suffix: 'comment'
 process:
   target_entity_type_id: 'constants/entity_type'
   id:
-    plugin: static_map
-    source: bundle
-    bypass: true
-    # The Forum module provides its own comment type (comment_forum), which we
-    # want to reuse if it exists.
-    map:
-      comment_node_forum: comment_forum
-  label: label
+    -
+      plugin: concat
+      source:
+        - 'constants/id_prefix'
+        - type
+    -
+      plugin: static_map
+      bypass: true
+      # The Forum module provides its own comment type (comment_forum), which we
+      # want to reuse if it exists.
+      map:
+        comment_node_forum: comment_forum
+  label:
+    plugin: concat
+    source:
+      - name
+      - 'constants/label_suffix'
+    delimiter: ' '
 destination:
   plugin: entity:comment_type
-migration_dependencies:
-  required:
-    - d7_node_type

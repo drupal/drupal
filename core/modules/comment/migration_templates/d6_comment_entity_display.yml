@@ -3,10 +3,9 @@ label: Comment display configuration
 migration_tags:
   - Drupal 6
 source:
-  plugin: d6_comment_variable
+  plugin: d6_node_type
   constants:
     entity_type: node
-    field_name: comment
     view_mode: default
     options:
       label: hidden
@@ -14,10 +13,17 @@ source:
       weight: 20
 process:
   entity_type: 'constants/entity_type'
-  field_name: 'constants/field_name'
+  field_name:
+    -
+      plugin: migration_lookup
+      source: type
+      migration: d6_comment_type
+    -
+      plugin: skip_on_empty
+      method: row
   view_mode: 'constants/view_mode'
   options: 'constants/options'
-  bundle: node_type
+  bundle: type
 destination:
   plugin: component_entity_display
 migration_dependencies:

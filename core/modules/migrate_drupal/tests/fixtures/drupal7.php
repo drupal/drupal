@@ -46146,7 +46146,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'comment_subject_field_test_content_type',
-  'value' => 'i:1;',
+  'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'comment_test_content_type',

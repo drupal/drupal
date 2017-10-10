@@ -1,22 +1,22 @@
 <?php
 
-namespace Drupal\Tests\comment\Kernel\Migrate\d7;
+namespace Drupal\Tests\comment\Kernel\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
- * Tests the migration of comment form's subject display from Drupal 7.
+ * Tests the migration of comment form's subject display from Drupal 6.
  *
  * @group comment
- * @group migrate_drupal_7
+ * @group migrate_drupal_6
  */
-class MigrateCommentEntityFormDisplaySubjectTest extends MigrateDrupal7TestBase {
+class MigrateCommentEntityFormDisplaySubjectTest extends MigrateDrupal6TestBase {
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'comment', 'text', 'menu_ui'];
+  public static $modules = ['comment'];
 
   /**
    * {@inheritdoc}
@@ -25,8 +25,8 @@ class MigrateCommentEntityFormDisplaySubjectTest extends MigrateDrupal7TestBase 
     parent::setUp();
     $this->installConfig(['comment']);
     $this->executeMigrations([
-      'd7_comment_type',
-      'd7_comment_entity_form_display_subject',
+      'd6_comment_type',
+      'd6_comment_entity_form_display_subject',
     ]);
   }
 
@@ -58,12 +58,16 @@ class MigrateCommentEntityFormDisplaySubjectTest extends MigrateDrupal7TestBase 
    * Tests the migrated display configuration.
    */
   public function testMigration() {
-    $this->assertSubjectVisible('comment.comment_node_page.default');
     $this->assertSubjectVisible('comment.comment_node_article.default');
-    $this->assertSubjectVisible('comment.comment_node_book.default');
-    $this->assertSubjectVisible('comment.comment_node_blog.default');
-    $this->assertSubjectVisible('comment.comment_forum.default');
-    $this->assertSubjectNotVisible('comment.comment_node_test_content_type.default');
+    $this->assertSubjectVisible('comment.comment_node_company.default');
+    $this->assertSubjectVisible('comment.comment_node_employee.default');
+    $this->assertSubjectVisible('comment.comment_node_page.default');
+    $this->assertSubjectVisible('comment.comment_node_sponsor.default');
+    $this->assertSubjectNotVisible('comment.comment_node_story.default');
+    $this->assertSubjectVisible('comment.comment_node_test_event.default');
+    $this->assertSubjectVisible('comment.comment_node_test_page.default');
+    $this->assertSubjectVisible('comment.comment_node_test_planet.default');
+    $this->assertSubjectVisible('comment.comment_node_test_story.default');
   }
 
 }

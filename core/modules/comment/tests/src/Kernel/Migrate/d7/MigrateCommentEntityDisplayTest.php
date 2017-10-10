@@ -6,12 +6,16 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
- * Tests migration of comment display configuration.
+ * Tests the migration of comment entity displays from Drupal 7.
  *
  * @group comment
+ * @group migrate_drupal_7
  */
 class MigrateCommentEntityDisplayTest extends MigrateDrupal7TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static $modules = ['node', 'comment', 'text', 'menu_ui'];
 
   /**
@@ -19,7 +23,7 @@ class MigrateCommentEntityDisplayTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(static::$modules);
+    $this->installConfig(['comment', 'node']);
     $this->executeMigrations([
       'd7_node_type',
       'd7_comment_type',
@@ -30,7 +34,7 @@ class MigrateCommentEntityDisplayTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Asserts a display entity.
+   * Asserts various aspects of a comment component in an entity view display.
    *
    * @param string $id
    *   The entity ID.
@@ -39,10 +43,10 @@ class MigrateCommentEntityDisplayTest extends MigrateDrupal7TestBase {
    */
   protected function assertDisplay($id, $component_id) {
     $component = EntityViewDisplay::load($id)->getComponent($component_id);
-    $this->assertTrue(is_array($component));
-    $this->assertIdentical('hidden', $component['label']);
-    $this->assertIdentical('comment_default', $component['type']);
-    $this->assertIdentical(20, $component['weight']);
+    $this->assertInternalType('array', $component);
+    $this->assertSame('hidden', $component['label']);
+    $this->assertSame('comment_default', $component['type']);
+    $this->assertSame(20, $component['weight']);
   }
 
   /**
