@@ -42,7 +42,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
       'a',
       // Unfortunately, it must also work on list items.
       'li',
-      // … and therefor, on *any* tag, really.
+      // … and therefore, on *any* tag, really.
       'foo',
     ];
     $contents = [

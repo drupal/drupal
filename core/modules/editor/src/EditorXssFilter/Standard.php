@@ -19,7 +19,7 @@ class Standard extends Xss implements EditorXssFilterInterface {
     // Apply XSS filtering, but blacklist the <script>, <style>, <link>, <embed>
     // and <object> tags.
     // The <script> and <style> tags are blacklisted because their contents
-    // can be malicious (and therefor they are inherently unsafe), whereas for
+    // can be malicious (and therefore they are inherently unsafe), whereas for
     // all other tags, only their attributes can make them malicious. Since
     // \Drupal\Component\Utility\Xss::filter() protects against malicious
     // attributes, we take no blacklisting action.
@@ -41,10 +41,10 @@ class Standard extends Xss implements EditorXssFilterInterface {
     // also user frustration: what if a text format is configured to allow
     // <embed>, for example? Then we would strip that tag, even though it is
     // allowed, thereby causing data loss!
-    // Therefor, we want to be smarter still. We want to take into account which
-    // HTML tags are allowed and forbidden by the text format we're filtering
-    // for, and if we're switching from another text format, we want to take
-    // that format's allowed and forbidden tags into account as well.
+    // Therefore, we want to be smarter still. We want to take into account
+    // which HTML tags are allowed and forbidden by the text format we're
+    // filtering for, and if we're switching from another text format, we want
+    // to take that format's allowed and forbidden tags into account as well.
     // In other words: we only expect markup allowed in both the original and
     // the new format to continue to exist.
     $format_restrictions = $format->getHtmlRestrictions();
