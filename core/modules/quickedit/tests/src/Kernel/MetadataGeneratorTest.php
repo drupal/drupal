@@ -172,7 +172,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
         'format' => 'full_html'
       ],
     ];
-    $this->assertEqual($expected, $metadata); // , 'The correct metadata (including custom metadata) is generated.');
+    $this->assertEqual($expected, $metadata, 'The correct metadata (including custom metadata) is generated.');
   }
 
 }
