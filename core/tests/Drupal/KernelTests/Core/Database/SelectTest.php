@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\KernelTests\Core\Database;
+
 use Drupal\Core\Database\InvalidQueryException;
 use Drupal\Core\Database\Database;
 

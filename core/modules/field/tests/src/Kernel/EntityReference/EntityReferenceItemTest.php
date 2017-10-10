@@ -23,7 +23,6 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
 
-
 /**
  * Tests the new entity API for the entity reference field type.
  *

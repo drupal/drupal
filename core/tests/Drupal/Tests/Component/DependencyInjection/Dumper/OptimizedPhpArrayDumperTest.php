@@ -646,6 +646,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
  * define a dummy, else it cannot be tested.
  */
 namespace Symfony\Component\ExpressionLanguage {
+
   if (!class_exists('\Symfony\Component\ExpressionLanguage\Expression')) {
     /**
      * Dummy class to ensure non-existent Symfony component can be tested.

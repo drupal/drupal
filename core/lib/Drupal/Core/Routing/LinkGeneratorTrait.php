@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Routing;
 
-
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 

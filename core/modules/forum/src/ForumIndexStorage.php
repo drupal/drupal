@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\forum;
+
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\node\NodeInterface;

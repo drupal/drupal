@@ -4,7 +4,6 @@ namespace Drupal\field_test\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 
-
 /**
  * Defines the 'test_field_with_dependencies' entity field item.
  *

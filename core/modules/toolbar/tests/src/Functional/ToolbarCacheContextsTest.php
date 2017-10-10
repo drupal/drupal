@@ -7,7 +7,6 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\BrowserTestBase;
 
-
 /**
  * Tests the cache contexts for toolbar.
  *

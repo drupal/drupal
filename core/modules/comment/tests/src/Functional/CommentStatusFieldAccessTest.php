@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\comment\Functional;
 
-
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;

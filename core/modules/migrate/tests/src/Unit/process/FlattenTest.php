@@ -1,8 +1,8 @@
 <?php
 
 namespace Drupal\Tests\migrate\Unit\process;
-use Drupal\migrate\Plugin\migrate\process\Flatten;
 
+use Drupal\migrate\Plugin\migrate\process\Flatten;
 
 /**
  * Tests the flatten plugin.

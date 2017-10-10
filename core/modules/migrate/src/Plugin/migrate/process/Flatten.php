@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\migrate\Plugin\migrate\process;
+
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;

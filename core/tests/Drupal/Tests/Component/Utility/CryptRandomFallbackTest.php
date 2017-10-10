@@ -52,7 +52,7 @@ class CryptRandomFallbackTest extends TestCase {
 
 namespace Drupal\Component\Utility;
 
-use  Drupal\Tests\Component\Utility\CryptRandomFallbackTest;
+use Drupal\Tests\Component\Utility\CryptRandomFallbackTest;
 
 /**
  * Defines a function in same namespace as Drupal\Component\Utility\Crypt.

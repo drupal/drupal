@@ -6,7 +6,6 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
-
 /**
  * Base class for image manipulation testing.
  */

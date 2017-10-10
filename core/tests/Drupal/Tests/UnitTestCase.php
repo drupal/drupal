@@ -10,7 +10,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use PHPUnit\Framework\TestCase;
 
-
 /**
  * Provides a base class and helpers for Drupal unit tests.
  *

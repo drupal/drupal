@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\file\Kernel\Migrate\d7;
 
-
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 

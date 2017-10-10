@@ -9,7 +9,6 @@ use Drupal\Core\Site\Settings;
 use Drupal\simpletest\InstallerTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
-
 /**
  * Tests distribution profile support with existing settings.
  *

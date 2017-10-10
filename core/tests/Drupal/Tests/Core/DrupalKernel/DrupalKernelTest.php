@@ -243,6 +243,7 @@ EOD;
 
 
 namespace {
+
   if (!function_exists('drupal_valid_test_ua')) {
     function drupal_valid_test_ua($new_prefix = NULL) {
       return FALSE;

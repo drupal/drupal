@@ -5,7 +5,6 @@ namespace Drupal\Tests\block\Functional;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Tests\BrowserTestBase;
 
-
 /**
  * Tests form in block caching.
  *

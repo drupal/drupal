@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\views\Plugin\Block;
+
 use Drupal\Core\Cache\Cache;
 
 /**

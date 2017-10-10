@@ -4,7 +4,6 @@ namespace Drupal\Core\Asset;
 
 use Drupal\Core\State\StateInterface;
 
-
 /**
  * Optimizes JavaScript assets.
  */

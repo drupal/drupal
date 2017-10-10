@@ -158,6 +158,10 @@
   <rule ref="PSR2.Classes.PropertyDeclaration">
     <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
   </rule>
+  <rule ref="PSR2.Namespaces.NamespaceDeclaration" />
+  <rule ref="PSR2.Namespaces.UseDeclaration">
+    <exclude name="PSR2.Namespaces.UseDeclaration.UseAfterNamespace"/>
+  </rule>
 
   <!-- Squiz sniffs -->
   <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>

@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\Tests\Core\ProxyBuilder;
+
 use Drupal\Core\ProxyBuilder\ProxyBuilder;
 use Drupal\Tests\UnitTestCase;
 

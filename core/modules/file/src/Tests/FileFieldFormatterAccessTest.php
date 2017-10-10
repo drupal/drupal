@@ -2,7 +2,6 @@
 
 namespace Drupal\file\Tests;
 
-
 /**
  * Tests file formatter access.
  * @group file
