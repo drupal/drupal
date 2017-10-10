@@ -220,34 +220,20 @@ class UserViewsData extends EntityViewsData {
       ],
     ];
 
-    $data['user__roles']['table']['group']  = $this->t('User');
+    // Alter the user roles target_id column.
+    $data['user__roles']['roles_target_id']['field']['id'] = 'user_roles';
+    $data['user__roles']['roles_target_id']['field']['no group by'] = TRUE;
 
-    $data['user__roles']['table']['join'] = [
-      'users_field_data' => [
-        'left_field' => 'uid',
-        'field' => 'entity_id',
-      ],
-    ];
+    $data['user__roles']['roles_target_id']['filter']['id'] = 'user_roles';
+    $data['user__roles']['roles_target_id']['filter']['allow empty'] = TRUE;
 
-    $data['user__roles']['roles_target_id'] = [
-      'title' => $this->t('Roles'),
-      'help' => $this->t('Roles that a user belongs to.'),
-      'field' => [
-        'id' => 'user_roles',
-        'no group by' => TRUE,
-      ],
-      'filter' => [
-        'id' => 'user_roles',
-        'allow empty' => TRUE,
-      ],
-      'argument' => [
-        'id' => 'user__roles_rid',
-        'name table' => 'role',
-        'name field' => 'name',
-        'empty field name' => $this->t('No role'),
-        'zero is null' => TRUE,
-        'numeric' => TRUE,
-      ],
+    $data['user__roles']['roles_target_id']['argument'] = [
+      'id' => 'user__roles_rid',
+      'name table' => 'role',
+      'name field' => 'name',
+      'empty field name' => $this->t('No role'),
+      'zero is null' => TRUE,
+      'numeric' => TRUE,
     ];
 
     $data['user__roles']['permission'] = [

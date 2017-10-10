@@ -5,6 +5,9 @@
  * Contains install and update functions for Views.
  */
 
+use Drupal\Core\Config\Schema\ArrayElement;
+use Drupal\views\Views;
+
 /**
  * Implements hook_install().
  */
@@ -369,4 +372,139 @@ function views_update_8200() {
  */
 function views_update_8201() {
   // Empty update to cause a cache rebuild so that config schema get refreshed.
+}
+
+/**
+ * Update field names for multi-value base fields.
+ */
+function views_update_8500() {
+  // Find all multi-value base fields for content entities.
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_field_manager = \Drupal::service('entity_field.manager');
+  $table_update_info = [];
+
+  foreach ($entity_type_manager->getDefinitions() as $entity_type_id => $entity_type) {
+    if ($entity_type->hasHandlerClass('views_data')) {
+      $base_field_definitions = $entity_field_manager->getBaseFieldDefinitions($entity_type_id);
+
+      $entity_storage = $entity_type_manager->getStorage($entity_type_id);
+      $table_mapping = $entity_storage->getTableMapping($base_field_definitions);
+
+      foreach ($base_field_definitions as $field_name => $base_field_definition) {
+        $base_field_storage_definition = $base_field_definition->getFieldStorageDefinition();
+
+        // Skip single value and custom storage base fields.
+        if (!$base_field_storage_definition->isMultiple() || $base_field_storage_definition->hasCustomStorage()) {
+          continue;
+        }
+
+        // Get the actual table, as well as the column for the main property
+        // name so we can perform an update later on the views.
+        $table_name = $table_mapping->getFieldTableName($field_name);
+        $main_property_name = $base_field_storage_definition->getMainPropertyName();
+
+        $table_update_info[$table_name][$field_name] = $table_mapping->getFieldColumnName($base_field_storage_definition, $main_property_name);
+      }
+    }
+  }
+
+  if (empty($table_update_info)) {
+    return;
+  }
+
+  $config_factory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager */
+  $typed_config_manager = \Drupal::service('config.typed');
+  $views_data = Views::viewsData();
+  $handler_types = ['field', 'argument', 'sort', 'relationship', 'filter'];
+
+  $required_cleanup_handlers = [];
+  foreach ($config_factory->listAll('views.view.') as $id) {
+    $view = $config_factory->getEditable($id);
+    $changed = FALSE;
+
+    foreach ($view->get('display') as $display_id => &$display) {
+      foreach ($handler_types as $handler_type_singular) {
+        $handler_type_plural = $handler_type_singular . 's';
+        $handler_data = $view->get("display.$display_id.display_options.$handler_type_plural");
+
+        if (empty($handler_data)) {
+          continue;
+        }
+
+        foreach ($handler_data as $key => $data) {
+          // If this handler has a table we're interested in, update the field
+          // name.
+          $table = $data['table'];
+          if (isset($table_update_info[$table])) {
+            $path_to_handler = "display.$display_id.display_options.$handler_type_plural.$key";
+            $path_field = "{$path_to_handler}.field";
+            $path_plugin_id = "{$path_to_handler}.plugin_id";
+            $original_field_name = $view->get($path_field);
+
+            // Only if the wrong field name is set do we change the field. It
+            // could already be using the correct field. Like
+            // user__roles/roles_target_id.
+            if (isset($table_update_info[$table][$original_field_name])) {
+              $required_cleanup_handlers[$id][] = $path_to_handler;
+
+              // Set both the new table field as well as new 'plugin_id' field.
+              $view->set($path_field, $table_update_info[$table][$original_field_name]);
+              $view->set($path_plugin_id, $views_data->get($table)[$table_update_info[$table][$original_field_name]][$handler_type_singular]['id']);
+
+              $changed = TRUE;
+            }
+          }
+        }
+      }
+    }
+
+    if ($changed) {
+      $view->save(TRUE);
+    }
+  }
+
+  // Beside of updating the field and plugin ID we also need to truncate orphan
+  // keys so he configuration applies to the config schema.
+  // We cannot do that inline in the other code, due to caching issues with
+  // typed configuration.
+  foreach ($required_cleanup_handlers as $id => $paths_to_handlers) {
+    $changed = FALSE;
+    $typed_view = $typed_config_manager->get($id);
+    $view = $config_factory->getEditable($id);
+    foreach ($paths_to_handlers as $path_to_handler) {
+      /** @var \Drupal\Core\Config\Schema\TypedConfigInterface $typed_view */
+
+      /** @var \Drupal\Core\Config\Schema\ArrayElement $typed_config */
+      $typed_config = $typed_view->get($path_to_handler);
+      $config = $typed_config->getValue();
+
+      // Filter values we want to convert from a string to an array.
+      if (strpos($path_to_handler, 'filters') !== FALSE && $typed_config->get('value') instanceof ArrayElement && is_string($config['value'])) {
+        // An empty string casted to an array is an array with one
+        // element.
+        if ($config['value'] === '') {
+          $config['value'] = [];
+        }
+        else {
+          $config['value'] = (array) $config['value'];
+        }
+      }
+
+      // For all the other fields we try to determine the fields using
+      // config schema and remove everything which is not needed.
+      foreach (array_keys($config) as $config_key) {
+        if (!isset($typed_config->getDataDefinition()['mapping'][$config_key])) {
+          unset($config[$config_key]);
+          $changed = TRUE;
+        }
+      }
+      $typed_config->setValue($config);
+      $view->set($path_to_handler, $typed_config->getValue());
+    }
+
+    if ($changed) {
+      $view->save();
+    }
+  }
 }

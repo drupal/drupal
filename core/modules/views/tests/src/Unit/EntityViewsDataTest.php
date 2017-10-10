@@ -477,7 +477,7 @@ class EntityViewsDataTest extends UnitTestCase {
         ['description', ['value' => 'description__value', 'format' => 'description__format']],
         ['homepage', ['value' => 'homepage']],
         ['user_id', ['target_id' => 'user_id']],
-        ['string', ['value' => 'value']],
+        ['string', ['value' => 'string_value']],
       ]);
     $table_mapping->expects($this->any())
       ->method('getFieldNames')
@@ -534,8 +534,12 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertEquals('users_field_data', $relationship['base']);
     $this->assertEquals('uid', $relationship['base field']);
 
-    $this->assertStringField($data['entity_test__string']['string']);
-    $this->assertField($data['entity_test__string']['string'], 'string');
+    // The string field name should be used as the 'entity field' but the actual
+    // field should reflect what the column mapping is using for multi-value
+    // base fields NOT just the field name. The actual column name returned from
+    // mappings in the test mocks is 'value'.
+    $this->assertStringField($data['entity_test__string']['string_value']);
+    $this->assertField($data['entity_test__string']['string_value'], 'string');
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
@@ -600,7 +604,7 @@ class EntityViewsDataTest extends UnitTestCase {
         ['description', ['value' => 'description__value', 'format' => 'description__format']],
         ['homepage', ['value' => 'homepage']],
         ['user_id', ['target_id' => 'user_id']],
-        ['string', ['value' => 'value']],
+        ['string', ['value' => 'string_value']],
       ]);
     $table_mapping->expects($this->any())
       ->method('getFieldNames')
@@ -690,8 +694,8 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertEquals('users_field_data', $relationship['base']);
     $this->assertEquals('uid', $relationship['base field']);
 
-    $this->assertStringField($data['entity_test_mul__string']['string']);
-    $this->assertField($data['entity_test_mul__string']['string'], 'string');
+    $this->assertStringField($data['entity_test_mul__string']['string_value']);
+    $this->assertField($data['entity_test_mul__string']['string_value'], 'string');
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
@@ -750,8 +754,8 @@ class EntityViewsDataTest extends UnitTestCase {
         ['description', ['value' => 'description__value', 'format' => 'description__format']],
         ['homepage', ['value' => 'homepage']],
         ['user_id', ['target_id' => 'user_id']],
-        ['revision_id', ['value' => 'id']],
-        ['string', ['value' => 'value']],
+        ['revision_id', ['value' => 'revision_id']],
+        ['string', ['value' => 'string_value']],
       ]);
     $table_mapping->expects($this->any())
       ->method('getFieldNames')
@@ -876,8 +880,8 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertEquals('users_field_data', $relationship['base']);
     $this->assertEquals('uid', $relationship['base field']);
 
-    $this->assertStringField($data['entity_test_mulrev__string']['string']);
-    $this->assertField($data['entity_test_mulrev__string']['string'], 'string');
+    $this->assertStringField($data['entity_test_mulrev__string']['string_value']);
+    $this->assertField($data['entity_test_mulrev__string']['string_value'], 'string');
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
@@ -889,8 +893,8 @@ class EntityViewsDataTest extends UnitTestCase {
       ],
     ], $data['entity_test_mulrev__string']['table']['join']['entity_test_mulrev_property_data']);
 
-    $this->assertStringField($data['entity_test_mulrev_revision__string']['string']);
-    $this->assertField($data['entity_test_mulrev_revision__string']['string'], 'string');
+    $this->assertStringField($data['entity_test_mulrev_revision__string']['string_value']);
+    $this->assertField($data['entity_test_mulrev_revision__string']['string_value'], 'string');
     $this->assertEquals([
       'left_field' => 'revision_id',
       'field' => 'entity_id',
