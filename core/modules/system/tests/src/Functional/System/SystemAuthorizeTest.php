@@ -22,7 +22,7 @@ class SystemAuthorizeTest extends BrowserTestBase {
     parent::setUp();
 
     // Create an administrator user.
-    $this->drupalLogin ($this->drupalCreateUser(['administer software updates']));
+    $this->drupalLogin($this->drupalCreateUser(['administer software updates']));
   }
 
   /**

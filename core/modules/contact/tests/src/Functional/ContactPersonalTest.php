@@ -139,7 +139,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->drupalGet('user/' . $this->contactUser->id());
     $contact_link = '/user/' . $this->contactUser->id() . '/contact';
     $this->assertResponse(200);
-    $this->assertNoLinkByHref ($contact_link, 'The "contact" tab is hidden on profiles for users with no email address');
+    $this->assertNoLinkByHref($contact_link, 'The "contact" tab is hidden on profiles for users with no email address');
 
     // Restore original email address.
     $this->contactUser->setEmail($original_email)->save();

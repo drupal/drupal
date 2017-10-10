@@ -13,7 +13,7 @@ class ConfigTest extends BrowserTestBase {
 
   protected function setUp(){
     parent::setUp();
-    $this->drupalLogin ($this->drupalCreateUser(['administer site configuration']));
+    $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
   }
 
   /**

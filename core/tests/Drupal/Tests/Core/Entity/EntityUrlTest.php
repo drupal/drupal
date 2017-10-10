@@ -583,8 +583,7 @@ class EntityUrlTest extends UnitTestCase {
   protected function registerBundleInfo($bundle_info) {
     $this->entityManager
       ->getBundleInfo($this->entityTypeId)
-      ->willReturn([$this->entityTypeId => $bundle_info])
-    ;
+      ->willReturn([$this->entityTypeId => $bundle_info]);
   }
 
 }

@@ -155,6 +155,32 @@
   </rule>
   <rule ref="PEAR.Functions.ValidDefaultValue"/>
 
+  <!-- PEAR sniffs -->
+  <rule ref="PEAR.Functions.FunctionCallSignature"/>
+  <!-- The sniffs inside PEAR.Functions.FunctionCallSignature silenced below are
+    also silenced in Drupal CS' ruleset.xml. The code below is a 1-on-1 copy
+    from that file. -->
+  <!-- Disable some error messages that we already cover. -->
+  <rule ref="PEAR.Functions.FunctionCallSignature.SpaceAfterOpenBracket">
+    <severity>0</severity>
+  </rule>
+  <rule ref="PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket">
+    <severity>0</severity>
+  </rule>
+  <!-- Disable some error messages that we do not want. -->
+  <rule ref="PEAR.Functions.FunctionCallSignature.Indent">
+    <severity>0</severity>
+  </rule>
+  <rule ref="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket">
+    <severity>0</severity>
+  </rule>
+  <rule ref="PEAR.Functions.FunctionCallSignature.CloseBracketLine">
+    <severity>0</severity>
+  </rule>
+  <rule ref="PEAR.Functions.FunctionCallSignature.EmptyLine">
+    <severity>0</severity>
+  </rule>
+
   <!-- PSR-2 sniffs -->
   <rule ref="PSR2.Classes.PropertyDeclaration">
     <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>

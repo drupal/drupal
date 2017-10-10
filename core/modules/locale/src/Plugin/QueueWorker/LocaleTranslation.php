@@ -99,7 +99,7 @@ class LocaleTranslation extends QueueWorkerBase implements ContainerFactoryPlugi
     }
     else {
       $batch_context = $args[$last];
-      unset ($args[$last]);
+      unset($args[$last]);
     }
     $args = array_merge($args, [&$batch_context]);
 

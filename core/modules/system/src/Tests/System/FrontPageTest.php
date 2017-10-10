@@ -30,7 +30,7 @@ class FrontPageTest extends WebTestBase {
     parent::setUp();
 
     // Create admin user, log in admin user, and create one node.
-    $this->drupalLogin ($this->drupalCreateUser([
+    $this->drupalLogin($this->drupalCreateUser([
       'access content',
       'administer site configuration',
     ]));
