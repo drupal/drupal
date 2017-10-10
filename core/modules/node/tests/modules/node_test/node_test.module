@@ -14,7 +14,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 
-
 /**
  * Implements hook_ENTITY_TYPE_view() for node entities.
  */

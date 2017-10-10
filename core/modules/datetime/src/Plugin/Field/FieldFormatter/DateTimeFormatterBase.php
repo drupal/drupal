@@ -13,7 +13,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-
 /**
  * Base class for 'DateTime Field formatter' plugin implementations.
  */

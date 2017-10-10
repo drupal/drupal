@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\entity_test\Entity;
+
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 

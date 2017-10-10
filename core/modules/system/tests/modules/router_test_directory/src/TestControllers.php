@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 
-
 /**
  * Controller routines for testing the routing system.
  */

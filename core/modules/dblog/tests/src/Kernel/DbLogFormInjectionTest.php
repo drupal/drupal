@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\dblog\Kernel;
 
-
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;

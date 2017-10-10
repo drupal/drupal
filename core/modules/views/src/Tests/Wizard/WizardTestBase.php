@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\views\Tests\Wizard;
+
 @trigger_error('\Drupal\views\Tests\Wizard\WizardTestBase is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use \Drupal\Tests\views\Functional\Wizard\WizardTestBase', E_USER_DEPRECATED);
 
 use Drupal\views\Tests\ViewTestBase;

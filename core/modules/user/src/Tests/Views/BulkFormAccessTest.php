@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\user\Tests\Views;
+
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\user\Entity\User;
 

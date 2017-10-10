@@ -9,7 +9,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UpdateException;
 
-
 /**
  * @defgroup update_api Update API
  * @{

@@ -5,7 +5,6 @@ namespace Drupal\KernelTests\Core\Config;
 use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\KernelTests\KernelTestBase;
 
-
 /**
  * Tests the functionality of SchemaCheckTrait.
  *

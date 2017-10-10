@@ -2,7 +2,6 @@
 
 namespace Drupal\responsive_image\Tests;
 
-
 use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\simpletest\WebTestBase;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;

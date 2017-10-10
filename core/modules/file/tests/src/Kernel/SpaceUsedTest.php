@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Tests\file\Kernel;
+
 use Drupal\file\Entity\File;
 
 /**

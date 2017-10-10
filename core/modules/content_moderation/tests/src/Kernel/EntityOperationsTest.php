@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
-
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;

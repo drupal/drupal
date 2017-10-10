@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Tests\field\Kernel;
+
 use Drupal\Core\Field\BaseFieldDefinition;
 
 /**

@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Field\Plugin\DataType;
 
-
 /**
  * Defines the base plugin for deriving data types for field types.
  *

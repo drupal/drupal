@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Tests\taxonomy\Functional;
+
 use Drupal\Component\Utility\Unicode;
 
 use Drupal\Core\Url;

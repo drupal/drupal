@@ -6,7 +6,6 @@ use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\ConfigImportValidateEventSubscriberBase;
 
-
 /**
  * Config subscriber.
  */

@@ -2,7 +2,6 @@
 
 namespace Drupal\config_events_test;
 
-
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\State\StateInterface;

@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Core\Entity\Query;
+
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**

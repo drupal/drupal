@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Component\Datetime;
+
 use Drupal\Component\Utility\ToStringTrait;
 
 /**

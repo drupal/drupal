@@ -10,7 +10,6 @@ use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\argument_default\ArgumentDefaultTest as ArgumentDefaultTestPlugin;
 use Symfony\Component\HttpFoundation\Request;
 
-
 /**
  * Tests pluggable argument_default for views.
  *

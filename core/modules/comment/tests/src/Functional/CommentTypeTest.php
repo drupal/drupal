@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Tests\comment\Functional;
+
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;

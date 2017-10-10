@@ -2,7 +2,6 @@
 
 namespace Drupal\twig_extension_test\TwigExtension;
 
-
 /**
  * A test Twig extension that adds a custom function and a custom filter.
  */

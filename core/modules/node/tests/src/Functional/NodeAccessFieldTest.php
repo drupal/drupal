@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\Tests\node\Functional;
+
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;

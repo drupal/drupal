@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\system\Tests\Module;
+
 use Drupal\Component\Utility\Unicode;
 
 /**

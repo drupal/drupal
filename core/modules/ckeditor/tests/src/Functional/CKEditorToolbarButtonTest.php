@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\ckeditor\Functional;
 
-
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\BrowserTestBase;

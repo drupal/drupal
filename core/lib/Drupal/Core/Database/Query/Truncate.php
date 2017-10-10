@@ -5,7 +5,6 @@ namespace Drupal\Core\Database\Query;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 
-
 /**
  * General class for an abstracted TRUNCATE operation.
  */

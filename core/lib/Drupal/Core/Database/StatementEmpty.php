@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Database;
 
-
 /**
  * Empty implementation of a database statement.
  *

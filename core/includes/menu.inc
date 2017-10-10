@@ -13,7 +13,6 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\Element;
 
-
 /**
  * Prepares variables for single local task link templates.
  *

@@ -2,7 +2,6 @@
 
 namespace Drupal\update;
 
-
 /**
  * Processor of project update information.
  */
