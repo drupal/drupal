@@ -181,7 +181,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $view->dom_id = $dom_id;
 
         $context = new RenderContext();
-        $preview = $this->renderer->executeInRenderContext($context, function() use ($view, $display_id, $args) {
+        $preview = $this->renderer->executeInRenderContext($context, function () use ($view, $display_id, $args) {
           return $view->preview($display_id, $args);
         });
         if (!$context->isEmpty()) {

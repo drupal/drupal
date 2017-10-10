@@ -266,7 +266,7 @@ function views_entity_field_label($entity_type, $field_name) {
   // Sort the field labels by it most used label and return the most used one.
   // If the counts are equal, sort by the label to ensure the result is
   // deterministic.
-  uksort($label_counter, function($a, $b) use ($label_counter) {
+  uksort($label_counter, function ($a, $b) use ($label_counter) {
     if ($label_counter[$a] === $label_counter[$b]) {
       return strcmp($a, $b);
     }

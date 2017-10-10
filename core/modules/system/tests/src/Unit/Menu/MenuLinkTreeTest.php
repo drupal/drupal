@@ -137,7 +137,7 @@ class MenuLinkTreeTest extends UnitTestCase {
       ]
     ];
 
-    $get_built_element = function(MenuLinkTreeElement $element) {
+    $get_built_element = function (MenuLinkTreeElement $element) {
       $return = [
         'attributes' => new Attribute(),
         'title' => $element->link->getTitle(),

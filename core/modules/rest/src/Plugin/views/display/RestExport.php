@@ -407,7 +407,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
    */
   public function render() {
     $build = [];
-    $build['#markup'] = $this->renderer->executeInRenderContext(new RenderContext(), function() {
+    $build['#markup'] = $this->renderer->executeInRenderContext(new RenderContext(), function () {
       return $this->view->style_plugin->render();
     });
 

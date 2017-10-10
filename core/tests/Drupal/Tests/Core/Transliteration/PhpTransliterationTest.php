@@ -40,7 +40,7 @@ class PhpTransliterationTest extends UnitTestCase {
     $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $module_handler->expects($this->any())
       ->method('alter')
-      ->will($this->returnCallback(function($hook, &$overrides, $langcode) {
+      ->will($this->returnCallback(function ($hook, &$overrides, $langcode) {
         if ($langcode == 'zz') {
           // The default transliteration of Ä is A, but change it to Z for testing.
           $overrides[0xC4] = 'Z';

@@ -76,7 +76,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    * @see testRender
    */
   public function providerTestRender() {
-    $create_link_element = function($href, $media = 'all', $browsers = []) {
+    $create_link_element = function ($href, $media = 'all', $browsers = []) {
       return [
         '#type' => 'html_tag',
         '#tag' => 'link',
@@ -88,7 +88,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
         '#browsers' => $browsers,
       ];
     };
-    $create_style_element = function($value, $media, $browsers = []) {
+    $create_style_element = function ($value, $media, $browsers = []) {
       $style_element = [
         '#type' => 'html_tag',
         '#tag' => 'style',
@@ -101,7 +101,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       return $style_element;
     };
 
-    $create_file_css_asset = function($data, $media = 'all', $preprocess = TRUE) {
+    $create_file_css_asset = function ($data, $media = 'all', $preprocess = TRUE) {
       return ['group' => 0, 'type' => 'file', 'media' => $media, 'preprocess' => $preprocess, 'data' => $data, 'browsers' => []];
     };
 

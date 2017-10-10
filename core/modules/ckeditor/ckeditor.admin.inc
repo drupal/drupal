@@ -66,7 +66,7 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
 
   $rtl = $language_interface->getDirection() === LanguageInterface::DIRECTION_RTL ? '_rtl' : '';
 
-  $build_button_item = function($button, $rtl) {
+  $build_button_item = function ($button, $rtl) {
     // Value of the button item.
     if (isset($button['image_alternative' . $rtl])) {
       $value = $button['image_alternative' . $rtl];

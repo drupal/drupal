@@ -1208,7 +1208,7 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
 
     // Value callback expects FIDs to be keys.
     $files = array_filter($files);
-    $fids = array_map(function($file) {
+    $fids = array_map(function ($file) {
       return $file->id();
     }, $files);
 

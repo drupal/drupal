@@ -1344,14 +1344,14 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       $this->dbSchemaHandler->expects($this->any())
         ->method('createTable')
         ->with(
-          $this->callback(function($table_name) use (&$invocation_count, $expected_table_names) {
+          $this->callback(function ($table_name) use (&$invocation_count, $expected_table_names) {
             return $expected_table_names[$invocation_count] == $table_name;
           }),
-          $this->callback(function($table_schema) use (&$invocation_count, $expected_table_schemas) {
+          $this->callback(function ($table_schema) use (&$invocation_count, $expected_table_schemas) {
             return $expected_table_schemas[$invocation_count] == $table_schema;
           })
         )
-        ->will($this->returnCallback(function() use (&$invocation_count) {
+        ->will($this->returnCallback(function () use (&$invocation_count) {
           $invocation_count++;
         }));
     }
@@ -1496,7 +1496,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->willReturn(TRUE);
     $this->dbSchemaHandler->expects($this->atLeastOnce())
       ->method('addIndex')
-      ->with('entity_test', 'entity_test__b588603cb9', [['long_index_name', 10]], $this->callback(function($actual_value) use ($expected)  {
+      ->with('entity_test', 'entity_test__b588603cb9', [['long_index_name', 10]], $this->callback(function ($actual_value) use ($expected) {
         $this->assertEquals($expected['entity_test']['indexes'], $actual_value['indexes']);
         $this->assertEquals($expected['entity_test']['fields'], $actual_value['fields']);
         // If the parameters don't match, the assertions above will throw an

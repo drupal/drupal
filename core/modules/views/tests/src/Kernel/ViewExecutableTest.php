@@ -432,7 +432,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
 
     $count = 0;
     foreach ($view->displayHandlers as $id => $display) {
-      $match = function($value) use ($display) {
+      $match = function ($value) use ($display) {
         return strpos($value, $display->display['display_title']) !== FALSE;
       };
       $this->assertTrue(array_filter($validate[$id], $match), format_string('Error message found for @id display', ['@id' => $id]));

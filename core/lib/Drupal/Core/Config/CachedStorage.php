@@ -278,7 +278,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    */
   protected function getCacheKeys(array $names) {
     $prefix = $this->getCollectionPrefix();
-    $cache_keys = array_map(function($name) use ($prefix) {
+    $cache_keys = array_map(function ($name) use ($prefix) {
       return $prefix . $name;
     }, $names);
 

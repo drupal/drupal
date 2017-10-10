@@ -916,7 +916,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function getTranslationLanguages($include_default = TRUE) {
-    $translations = array_filter($this->translations, function($translation) {
+    $translations = array_filter($this->translations, function ($translation) {
       return $translation['status'];
     });
     unset($translations[LanguageInterface::LANGCODE_DEFAULT]);

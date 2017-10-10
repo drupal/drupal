@@ -54,7 +54,7 @@ class Uid extends NumericArgument {
    *   A list of usernames.
    */
   public function titleQuery() {
-    return array_map(function($account) {
+    return array_map(function ($account) {
       return $account->label();
     }, $this->storage->loadMultiple($this->value));
   }

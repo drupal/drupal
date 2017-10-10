@@ -374,7 +374,7 @@ class BigPipeTest extends BrowserTestBase {
     }
     ksort($placeholder_positions, SORT_NUMERIC);
     $this->assertEqual(array_keys($expected_big_pipe_placeholders), array_values($placeholder_positions));
-    $placeholders = array_map(function(NodeElement $element) {
+    $placeholders = array_map(function (NodeElement $element) {
       return $element->getAttribute('data-big-pipe-placeholder-id');
     }, $this->cssSelect('[data-big-pipe-placeholder-id]'));
     $this->assertEqual(count($expected_big_pipe_placeholders), count(array_unique($placeholders)));

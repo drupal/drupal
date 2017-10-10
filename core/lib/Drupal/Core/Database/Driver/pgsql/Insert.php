@@ -128,7 +128,7 @@ class Insert extends QueryInsert {
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
-    $insert_fields = array_map(function($f) {
+    $insert_fields = array_map(function ($f) {
       return $this->connection->escapeField($f);
     }, $insert_fields);
 

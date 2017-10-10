@@ -56,7 +56,7 @@ class ErrorTestController extends ControllerBase {
    * Generate fatals to test the error handler.
    */
   public function generateFatals() {
-    $function = function(array $test) {
+    $function = function (array $test) {
     };
 
     $function("test-string");

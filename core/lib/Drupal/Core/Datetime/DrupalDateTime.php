@@ -108,7 +108,7 @@ class DrupalDateTime extends DateTimePlus {
       $format = parent::format($format, $settings);
 
       // Translates a formatted date string.
-      $translation_callback = function($matches) use ($langcode) {
+      $translation_callback = function ($matches) use ($langcode) {
         $code = $matches[1];
         $string = $matches[2];
         if (!isset($this->formatTranslationCache[$langcode][$code][$string])) {

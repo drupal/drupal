@@ -139,7 +139,7 @@ class HtmlRenderer implements MainContentRendererInterface {
     // RendererInterface::render() instead of RendererInterface::renderRoot().
     // @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor.
     $render_context = new RenderContext();
-    $this->renderer->executeInRenderContext($render_context, function() use (&$html) {
+    $this->renderer->executeInRenderContext($render_context, function () use (&$html) {
       // RendererInterface::render() renders the $html render array and updates
       // it in place. We don't care about the return value (which is just
       // $html['#markup']), but about the resulting render array.
@@ -216,7 +216,7 @@ class HtmlRenderer implements MainContentRendererInterface {
       // ::renderResponse().
       // @todo Remove this once https://www.drupal.org/node/2359901 lands.
       if (!empty($main_content)) {
-        $this->renderer->executeInRenderContext(new RenderContext(), function() use (&$main_content) {
+        $this->renderer->executeInRenderContext(new RenderContext(), function () use (&$main_content) {
           if (isset($main_content['#cache']['keys'])) {
             // Retain #title, otherwise, dynamically generated titles would be
             // missing for controllers whose entire returned render array is

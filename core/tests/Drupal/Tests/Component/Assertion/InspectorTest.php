@@ -157,7 +157,7 @@ class InspectorTest extends TestCase {
       'strchr',
       [$this, 'callMe'],
       [__CLASS__, 'callMeStatic'],
-      function() {
+      function () {
         return TRUE;
       }
     ]));
@@ -166,7 +166,7 @@ class InspectorTest extends TestCase {
       'strchr',
       [$this, 'callMe'],
       [__CLASS__, 'callMeStatic'],
-      function() {
+      function () {
         return TRUE;
       },
       "I'm not callable"

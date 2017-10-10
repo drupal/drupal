@@ -71,7 +71,7 @@ class EntityModerationForm extends FormBase {
     $transitions = $this->validation->getValidTransitions($entity, $this->currentUser());
 
     // Exclude self-transitions.
-    $transitions = array_filter($transitions, function(Transition $transition) use ($current_state) {
+    $transitions = array_filter($transitions, function (Transition $transition) use ($current_state) {
       return $transition->to()->id() != $current_state;
     });
 

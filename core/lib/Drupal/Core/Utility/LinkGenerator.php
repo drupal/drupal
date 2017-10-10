@@ -112,7 +112,7 @@ class LinkGenerator implements LinkGeneratorInterface {
     }
 
     // Ensure that query values are strings.
-    array_walk($variables['options']['query'], function(&$value) {
+    array_walk($variables['options']['query'], function (&$value) {
       if ($value instanceof MarkupInterface) {
         $value = (string) $value;
       }

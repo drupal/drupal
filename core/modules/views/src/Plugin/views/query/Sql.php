@@ -1469,7 +1469,7 @@ class Sql extends QueryPluginBase {
 
         // Setup the result row objects.
         $view->result = iterator_to_array($result);
-        array_walk($view->result, function(ResultRow $row, $index) {
+        array_walk($view->result, function (ResultRow $row, $index) {
           $row->index = $index;
         });
 

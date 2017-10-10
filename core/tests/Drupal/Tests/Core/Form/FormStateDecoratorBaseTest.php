@@ -1452,7 +1452,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   public function providerPrepareCallback() {
     $function = 'sleep';
     $shorthand_form_method = '::submit()';
-    $closure = function() {};
+    $closure = function () {};
     $static_method_string = __METHOD__;
     $static_method_array = [__CLASS__, __FUNCTION__];
     $object_method_array = [$this, __FUNCTION__];

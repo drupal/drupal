@@ -118,7 +118,7 @@ class ViewsListingTest extends JavascriptTestBase {
    * @return array
    */
   protected function filterVisibleElements($elements) {
-    $elements = array_filter($elements, function($element) {
+    $elements = array_filter($elements, function ($element) {
       return $element->isVisible();
     });
     return $elements;

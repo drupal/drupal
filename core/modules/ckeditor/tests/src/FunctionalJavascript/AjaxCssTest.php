@@ -55,7 +55,7 @@ class AjaxCssTest extends JavascriptTestBase {
     // but not the iframe.
     $page->pressButton('Add CSS to inline CKEditor instance');
 
-    $result = $page->waitFor(10, function() use ($style_color) {
+    $result = $page->waitFor(10, function () use ($style_color) {
       return ($this->getEditorStyle('edit-inline', 'color') == $style_color)
         && ($this->getEditorStyle('edit-iframe-value', 'color') != $style_color);
     });
@@ -70,7 +70,7 @@ class AjaxCssTest extends JavascriptTestBase {
     // but not the main body.
     $page->pressButton('Add CSS to iframe CKEditor instance');
 
-    $result = $page->waitFor(10, function() use ($style_color) {
+    $result = $page->waitFor(10, function () use ($style_color) {
       return ($this->getEditorStyle('edit-inline', 'color') != $style_color)
         && ($this->getEditorStyle('edit-iframe-value', 'color') == $style_color);
     });

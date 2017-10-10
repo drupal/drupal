@@ -247,24 +247,24 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
       ->create(['name' => $this->randomString()]);
 
     // Test content entity autocreation.
-    $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
+    $this->assertUserAutocreate($entity, function (EntityInterface $entity, UserInterface $user) {
       $entity->set('user_id', $user);
     });
-    $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
+    $this->assertUserAutocreate($entity, function (EntityInterface $entity, UserInterface $user) {
       $entity->set('user_id', $user, FALSE);
     });
-    $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
+    $this->assertUserAutocreate($entity, function (EntityInterface $entity, UserInterface $user) {
       $entity->user_id->setValue($user);
     });
-    $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
+    $this->assertUserAutocreate($entity, function (EntityInterface $entity, UserInterface $user) {
       $entity->user_id[0]->get('entity')->setValue($user);
     });
-    $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
+    $this->assertUserAutocreate($entity, function (EntityInterface $entity, UserInterface $user) {
       $entity->user_id->setValue(['entity' => $user, 'target_id' => NULL]);
     });
     try {
       $message = 'Setting both the entity and an invalid target_id property fails.';
-      $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
+      $this->assertUserAutocreate($entity, function (EntityInterface $entity, UserInterface $user) {
         $user->save();
         $entity->user_id->setValue(['entity' => $user, 'target_id' => $this->generateRandomEntityId()]);
       });
@@ -273,32 +273,32 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     catch (\InvalidArgumentException $e) {
       $this->pass($message);
     }
-    $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
+    $this->assertUserAutocreate($entity, function (EntityInterface $entity, UserInterface $user) {
       $entity->user_id = $user;
     });
-    $this->assertUserAutocreate($entity, function(EntityInterface $entity, UserInterface $user) {
+    $this->assertUserAutocreate($entity, function (EntityInterface $entity, UserInterface $user) {
       $entity->user_id->entity = $user;
     });
 
     // Test config entity autocreation.
-    $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
+    $this->assertUserRoleAutocreate($entity, function (EntityInterface $entity, RoleInterface $role) {
       $entity->set('user_role', $role);
     });
-    $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
+    $this->assertUserRoleAutocreate($entity, function (EntityInterface $entity, RoleInterface $role) {
       $entity->set('user_role', $role, FALSE);
     });
-    $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
+    $this->assertUserRoleAutocreate($entity, function (EntityInterface $entity, RoleInterface $role) {
       $entity->user_role->setValue($role);
     });
-    $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
+    $this->assertUserRoleAutocreate($entity, function (EntityInterface $entity, RoleInterface $role) {
       $entity->user_role[0]->get('entity')->setValue($role);
     });
-    $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
+    $this->assertUserRoleAutocreate($entity, function (EntityInterface $entity, RoleInterface $role) {
       $entity->user_role->setValue(['entity' => $role, 'target_id' => NULL]);
     });
     try {
       $message = 'Setting both the entity and an invalid target_id property fails.';
-      $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
+      $this->assertUserRoleAutocreate($entity, function (EntityInterface $entity, RoleInterface $role) {
         $role->save();
         $entity->user_role->setValue(['entity' => $role, 'target_id' => $this->generateRandomEntityId(TRUE)]);
       });
@@ -307,10 +307,10 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     catch (\InvalidArgumentException $e) {
       $this->pass($message);
     }
-    $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
+    $this->assertUserRoleAutocreate($entity, function (EntityInterface $entity, RoleInterface $role) {
       $entity->user_role = $role;
     });
-    $this->assertUserRoleAutocreate($entity, function(EntityInterface $entity, RoleInterface $role) {
+    $this->assertUserRoleAutocreate($entity, function (EntityInterface $entity, RoleInterface $role) {
       $entity->user_role->entity = $role;
     });
 

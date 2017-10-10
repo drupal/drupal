@@ -65,7 +65,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
   public function providerPlaceholders() {
     $args = [$this->randomContextValue()];
 
-    $generate_placeholder_markup = function($cache_keys = NULL) use ($args) {
+    $generate_placeholder_markup = function ($cache_keys = NULL) use ($args) {
       $token_render_array = [
         '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', $args],
       ];

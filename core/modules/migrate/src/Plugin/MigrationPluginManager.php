@@ -64,7 +64,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
-      $directories = array_map(function($directory) {
+      $directories = array_map(function ($directory) {
         return [$directory . '/migration_templates', $directory . '/migrations'];
       }, $this->moduleHandler->getModuleDirectories());
 
@@ -125,7 +125,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    *   An array of migration objects with the given tag.
    */
   public function createInstancesByTag($tag) {
-    $migrations = array_filter($this->getDefinitions(), function($migration) use ($tag) {
+    $migrations = array_filter($this->getDefinitions(), function ($migration) use ($tag) {
       return !empty($migration['migration_tags']) && in_array($tag, $migration['migration_tags']);
     });
     return $this->createInstances(array_keys($migrations));

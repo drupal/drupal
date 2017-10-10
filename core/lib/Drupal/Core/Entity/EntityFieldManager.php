@@ -346,7 +346,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
 
     // Load base field overrides from configuration. These take precedence over
     // base field overrides returned above.
-    $base_field_override_ids = array_map(function($field_name) use ($entity_type_id, $bundle) {
+    $base_field_override_ids = array_map(function ($field_name) use ($entity_type_id, $bundle) {
       return $entity_type_id . '.' . $bundle . '.' . $field_name;
     }, array_keys($base_field_definitions));
     $base_field_overrides = $this->entityTypeManager->getStorage('base_field_override')->loadMultiple($base_field_override_ids);

@@ -25,7 +25,7 @@ class UploadInstance extends DrupalSqlBase {
       ->fields('nt', ['type'])
       ->execute()
       ->fetchCol();
-    $variables = array_map(function($type) {
+    $variables = array_map(function ($type) {
       return 'upload_' . $type;
     }, $node_types);
 

@@ -225,7 +225,7 @@ class UpdateRegistry {
     $this->scanExtensionsAndLoadUpdateFiles();
     $all_functions = $this->getAvailableUpdateFunctions();
 
-    return array_filter($all_functions, function($function_name) use ($module_name) {
+    return array_filter($all_functions, function ($function_name) use ($module_name) {
       list($function_module_name, ) = explode("_{$this->updateType}_", $function_name);
       return $function_module_name === $module_name;
     });
@@ -254,7 +254,7 @@ class UpdateRegistry {
   public function filterOutInvokedUpdatesByModule($module) {
     $existing_update_functions = $this->keyValue->get('existing_updates', []);
 
-    $remaining_update_functions = array_filter($existing_update_functions, function($function_name) use ($module) {
+    $remaining_update_functions = array_filter($existing_update_functions, function ($function_name) use ($module) {
       return strpos($function_name, "{$module}_{$this->updateType}_") !== 0;
     });
 

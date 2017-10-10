@@ -185,7 +185,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $existing_config = $this->getActiveStorages()->listAll();
 
     $list = array_unique(array_merge($storage->listAll(), $optional_profile_config));
-    $list = array_filter($list, function($config_name) use ($existing_config) {
+    $list = array_filter($list, function ($config_name) use ($existing_config) {
       // Only list configuration that:
       // - does not already exist
       // - is a configuration entity (this also excludes config that has an

@@ -512,7 +512,7 @@ class Views {
       throw new \Exception('Invalid plugin type used. Valid types are "plugin" or "handler".');
     }
 
-    return array_keys(array_filter(static::$plugins, function($plugin_type) use ($type) {
+    return array_keys(array_filter(static::$plugins, function ($plugin_type) use ($type) {
       return $plugin_type == $type;
     }));
   }

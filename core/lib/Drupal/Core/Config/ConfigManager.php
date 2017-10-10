@@ -233,7 +233,7 @@ class ConfigManager implements ConfigManagerInterface {
     // dependencies on the config entity classes. Assume data with UUID is a
     // config entity. Only configuration entities can be depended on so we can
     // ignore everything else.
-    $data = array_map(function($config) {
+    $data = array_map(function ($config) {
       $data = $config->get();
       if (isset($data['uuid'])) {
         return $data;

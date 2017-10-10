@@ -306,7 +306,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *   An array of cache keys that match the provided config name.
    */
   protected function getConfigCacheKeys($name) {
-    return array_filter(array_keys($this->cache), function($key) use ($name) {
+    return array_filter(array_keys($this->cache), function ($key) use ($name) {
       // Return TRUE if the key is the name or starts with the configuration
       // name plus the delimiter.
       return $key === $name || strpos($key, $name . ':') === 0;

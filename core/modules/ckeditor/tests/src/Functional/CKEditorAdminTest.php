@@ -179,7 +179,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     // JavaScript's drupalSettings, and Unicode-escaped) is correctly rendered.
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
     // Create function to encode HTML as we expect it in drupalSettings.
-    $json_encode = function($html) {
+    $json_encode = function ($html) {
       return trim(Json::encode($html), '"');
     };
     // Check the Button separator.

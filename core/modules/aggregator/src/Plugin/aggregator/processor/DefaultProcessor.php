@@ -141,7 +141,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
     ];
 
     $lengths = [0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000];
-    $options = array_map(function($length) {
+    $options = array_map(function ($length) {
       return ($length == 0) ? t('Unlimited') : $this->formatPlural($length, '1 character', '@count characters');
     }, array_combine($lengths, $lengths));
 

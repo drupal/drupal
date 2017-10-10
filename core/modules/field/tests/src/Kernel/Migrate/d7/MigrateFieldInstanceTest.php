@@ -174,7 +174,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     // message with the required steps to fix this.
     $migration = $this->getMigration('d7_field_instance');
     $messages = $migration->getIdMap()->getMessageIterator()->fetchAll();
-    $errors = array_map(function($message) {
+    $errors = array_map(function ($message) {
       return $message->message;
     }, $messages);
     $this->assertCount(8, $errors);

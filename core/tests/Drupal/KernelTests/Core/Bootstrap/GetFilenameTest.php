@@ -54,7 +54,7 @@ class GetFilenameTest extends KernelTestBase {
     $non_existing_module = uniqid("", TRUE);
 
     // Set a custom error handler so we can ignore the file not found error.
-    set_error_handler(function($severity, $message, $file, $line) {
+    set_error_handler(function ($severity, $message, $file, $line) {
       // Skip error handling if this is a "file not found" error.
       if (strstr($message, 'is missing from the file system:')) {
         \Drupal::state()->set('get_filename_test_triggered_error', TRUE);

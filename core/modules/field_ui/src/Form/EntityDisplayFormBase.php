@@ -125,7 +125,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    */
   protected function getFieldDefinitions() {
     $context = $this->displayContext;
-    return array_filter($this->entityManager->getFieldDefinitions($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()), function(FieldDefinitionInterface $field_definition) use ($context) {
+    return array_filter($this->entityManager->getFieldDefinitions($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()), function (FieldDefinitionInterface $field_definition) use ($context) {
       return $field_definition->isDisplayConfigurable($context);
     });
   }

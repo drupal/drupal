@@ -101,7 +101,7 @@ class RouteSubscriberTest extends UnitTestCase {
     // should only call the second display.
     $display_1->expects($this->once())
       ->method('collectRoutes')
-      ->willReturnCallback(function() use ($collection) {
+      ->willReturnCallback(function () use ($collection) {
         $collection->add('views.test_id.page_1', new Route('test_route', ['_controller' => 'Drupal\views\Routing\ViewPageController']));
         return ['test_id.page_1' => 'views.test_id.page_1'];
       });
@@ -111,7 +111,7 @@ class RouteSubscriberTest extends UnitTestCase {
 
     $display_2->expects($this->once())
       ->method('collectRoutes')
-      ->willReturnCallback(function() use ($collection) {
+      ->willReturnCallback(function () use ($collection) {
         $collection->add('views.test_id.page_2', new Route('test_route', ['_controller' => 'Drupal\views\Routing\ViewPageController']));
         return ['test_id.page_2' => 'views.test_id.page_2'];
       });

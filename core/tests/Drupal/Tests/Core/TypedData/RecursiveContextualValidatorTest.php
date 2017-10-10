@@ -83,7 +83,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
     $translator = $this->getMock('Drupal\Core\Validation\TranslatorInterface');
     $translator->expects($this->any())
       ->method('trans')
-      ->willReturnCallback(function($id) {
+      ->willReturnCallback(function ($id) {
         return $id;
       });
     $this->contextFactory = new ExecutionContextFactory($translator);
