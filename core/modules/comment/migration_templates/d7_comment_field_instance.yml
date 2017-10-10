@@ -3,7 +3,7 @@ label: Comment field instance configuration
 migration_tags:
   - Drupal 7
 source:
-  plugin: d7_comment_type
+  plugin: d7_node_type
   constants:
     entity_type: node
     label: Comments
@@ -15,20 +15,56 @@ process:
   field_name:
     -
       plugin: migration_lookup
-      source: bundle
+      source: type
       migration: d7_comment_type
     -
       plugin: skip_on_empty
       method: row
-  bundle: node_type
-  'default_value/0/status': 'constants/required'
-  'settings/default_mode': default_mode
-  'settings/per_page': per_page
-  'settings/anonymous': anonymous
-  'settings/form_location': form_location
-  'settings/preview': preview
+  bundle: type
+  'default_value/0/status':
+    # We're using static_map instead of default_value otherwise if the source
+    # is 0, the default value of 1 would be used.
+    plugin: static_map
+    source: comment
+    map:
+      0: 0
+      1: 1
+      2: 2
+    default_value: 2
+  'settings/default_mode':
+    # We're using static_map instead of default_value otherwise if the source
+    # is 0, the default value of 1 would be used.
+    plugin: static_map
+    source: comment_default_mode
+    map:
+      0: 0
+      1: 1
+    default_value: 1
+  'settings/per_page':
+    plugin: default_value
+    source: comment_default_per_page
+    default_value: 50
+  'settings/anonymous':
+    plugin: default_value
+    source: comment_anonymous
+    default_value: 0
+  'settings/form_location':
+    plugin: default_value
+    source: comment_form_location
+    default_value: 0
+  'settings/preview':
+    # We're using static_map instead of default_value otherwise if the source
+    # is 0, the default value of 1 would be used.
+    plugin: static_map
+    source: comment_preview
+    map:
+      0: 0
+      1: 1
+      2: 2
+    default_value: 1
 destination:
   plugin: entity:field_config
 migration_dependencies:
   required:
+    - d7_node_type
     - d7_comment_field

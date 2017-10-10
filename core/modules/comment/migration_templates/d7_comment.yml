@@ -19,7 +19,7 @@ process:
   comment_type:
     -
       plugin: migration_lookup
-      source: comment_type
+      source: node_type
       migration: d7_comment_type
     -
       plugin: skip_on_empty

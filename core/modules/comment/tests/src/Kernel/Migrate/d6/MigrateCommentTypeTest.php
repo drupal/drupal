@@ -6,8 +6,9 @@ use Drupal\comment\Entity\CommentType;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
- * Upgrade comment type.
+ * Tests the migration of comment types from Drupal 6.
  *
+ * @group comment
  * @group migrate_drupal_6
  */
 class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
@@ -22,20 +23,41 @@ class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('node');
-    $this->installEntitySchema('comment');
-    $this->installConfig(['node', 'comment']);
+    $this->installConfig(['comment']);
     $this->executeMigration('d6_comment_type');
   }
 
   /**
-   * Tests the Drupal 6 to Drupal 8 comment type migration.
+   * Asserts a comment type entity.
+   *
+   * @param string $id
+   *   The entity ID.
+   * @param string $label
+   *   The entity label.
    */
-  public function testCommentType() {
-    $comment_type = CommentType::load('comment');
-    $this->assertIdentical('node', $comment_type->getTargetEntityTypeId());
-    $comment_type = CommentType::load('comment_no_subject');
-    $this->assertIdentical('node', $comment_type->getTargetEntityTypeId());
+  protected function assertEntity($id, $label) {
+    $entity = CommentType::load($id);
+    $this->assertInstanceOf(CommentType::class, $entity);
+    $this->assertSame($label, $entity->label());
+    $this->assertSame('node', $entity->getTargetEntityTypeId());
+  }
+
+  /**
+   * Tests the migrated comment types.
+   */
+  public function testMigration() {
+    $this->assertEntity('comment_node_article', 'Article comment');
+    $this->assertEntity('comment_node_company', 'Company comment');
+    $this->assertEntity('comment_node_employee', 'Employee comment');
+    $this->assertEntity('comment_node_event', 'Event comment');
+    $this->assertEntity('comment_forum', 'Forum topic comment');
+    $this->assertEntity('comment_node_page', 'Page comment');
+    $this->assertEntity('comment_node_sponsor', 'Sponsor comment');
+    $this->assertEntity('comment_node_story', 'Story comment');
+    $this->assertEntity('comment_node_test_event', 'Migrate test event comment');
+    $this->assertEntity('comment_node_test_page', 'Migrate test page comment');
+    $this->assertEntity('comment_node_test_planet', 'Migrate test planet comment');
+    $this->assertEntity('comment_node_test_story', 'Migrate test story comment');
   }
 
 }

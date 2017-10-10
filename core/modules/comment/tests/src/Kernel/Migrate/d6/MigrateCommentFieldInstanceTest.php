@@ -1,34 +1,34 @@
 <?php
 
-namespace Drupal\Tests\comment\Kernel\Migrate\d7;
+namespace Drupal\Tests\comment\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
- * Tests the migration of comment field instances from Drupal 7.
+ * Tests the migration of comment field instances from Drupal 6.
  *
  * @group comment
- * @group migrate_drupal_7
+ * @group migrate_drupal_6
  */
-class MigrateCommentFieldInstanceTest extends MigrateDrupal7TestBase {
+class MigrateCommentFieldInstanceTest extends MigrateDrupal6TestBase {
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'comment', 'text', 'menu_ui'];
+  public static $modules = ['comment', 'menu_ui'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(['comment', 'node']);
+    $this->installConfig(['comment']);
+    $this->migrateContentTypes();
     $this->executeMigrations([
-      'd7_node_type',
-      'd7_comment_type',
-      'd7_comment_field',
-      'd7_comment_field_instance',
+      'd6_comment_type',
+      'd6_comment_field',
+      'd6_comment_field_instance',
     ]);
   }
 
@@ -69,15 +69,21 @@ class MigrateCommentFieldInstanceTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Tests the migrated fields.
+   * Test the migrated field instance values.
    */
   public function testMigration() {
-    $this->assertEntity('page', 'comment_node_page', 0, 1, 50, 0, TRUE, 1);
-    $this->assertEntity('article', 'comment_node_article', 2, 1, 50, 0, TRUE, 1);
-    $this->assertEntity('blog', 'comment_node_blog', 2, 1, 50, 0, TRUE, 1);
-    $this->assertEntity('book', 'comment_node_book', 2, 1, 50, 0, TRUE, 1);
-    $this->assertEntity('forum', 'comment_forum', 2, 1, 50, 0, TRUE, 1);
-    $this->assertEntity('test_content_type', 'comment_node_test_content_type', 2, 1, 30, 0, TRUE, 1);
+    $this->assertEntity('article', 'comment_node_article', 2, 1, 50, 0, FALSE, 1);
+    $this->assertEntity('company', 'comment_node_company', 2, 1, 50, 0, FALSE, 1);
+    $this->assertEntity('employee', 'comment_node_employee', 2, 1, 50, 0, FALSE, 1);
+    $this->assertEntity('event', 'comment_node_event', 2, 1, 50, 0, FALSE, 1);
+    $this->assertEntity('forum', 'comment_forum', 2, 1, 50, 0, FALSE, 1);
+    $this->assertEntity('page', 'comment_node_page', 0, 1, 50, 0, FALSE, 1);
+    $this->assertEntity('sponsor', 'comment_node_sponsor', 2, 1, 50, 0, FALSE, 1);
+    $this->assertEntity('story', 'comment_node_story', 2, 0, 70, 1, FALSE, 0);
+    $this->assertEntity('test_event', 'comment_node_test_event', 2, 1, 50, 0, FALSE, 1);
+    $this->assertEntity('test_page', 'comment_node_test_page', 2, 1, 50, 0, FALSE, 1);
+    $this->assertEntity('test_planet', 'comment_node_test_planet', 2, 1, 50, 0, FALSE, 1);
+    $this->assertEntity('test_story', 'comment_node_test_story', 2, 1, 50, 0, FALSE, 1);
   }
 
 }

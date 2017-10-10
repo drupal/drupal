@@ -3,7 +3,7 @@ label: Comment field configuration
 migration_tags:
   - Drupal 7
 source:
-  plugin: d7_comment_type
+  plugin: d7_node_type
   constants:
     entity_type: node
     type: comment
@@ -12,7 +12,7 @@ process:
   field_name:
     -
       plugin: migration_lookup
-      source: bundle
+      source: type
       migration: d7_comment_type
     -
       plugin: skip_on_empty

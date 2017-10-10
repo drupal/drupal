@@ -2,11 +2,16 @@
 
 namespace Drupal\comment\Plugin\migrate\source\d6;
 
+@trigger_error('CommentVariablePerCommentType is deprecated in Drupal 8.4.x and will be removed before Drupal 9.0.x. Use \Drupal\node\Plugin\migrate\source\d6\NodeType instead.', E_USER_DEPRECATED);
+
 /**
  * @MigrateSource(
  *   id = "d6_comment_variable_per_comment_type",
  *   source_module = "comment"
  * )
+ *
+ * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use
+ * \Drupal\node\Plugin\migrate\source\d6\NodeType instead.
  */
 class CommentVariablePerCommentType extends CommentVariable {
 

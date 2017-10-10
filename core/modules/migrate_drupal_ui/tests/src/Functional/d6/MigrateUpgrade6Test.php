@@ -40,18 +40,22 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
       'block_content' => 2,
       'block_content_type' => 1,
       'comment' => 6,
-      'comment_type' => 3,
+      // The 'standard' profile provides the 'comment' comment type, and the
+      // migration creates 12 comment types, one per node type.
+      'comment_type' => 13,
       'contact_form' => 5,
       'configurable_language' => 5,
       'editor' => 2,
-      'field_config' => 72,
-      'field_storage_config' => 48,
+      'field_config' => 84,
+      'field_storage_config' => 58,
       'file' => 7,
       'filter_format' => 7,
       'image_style' => 5,
       'language_content_settings' => 2,
       'migration' => 105,
       'node' => 17,
+      // The 'book' module provides the 'book' node type, and the migration
+      // creates 12 node types.
       'node_type' => 13,
       'rdf_mapping' => 7,
       'search_page' => 2,
@@ -67,9 +71,9 @@ class MigrateUpgrade6Test extends MigrateUpgradeTestBase {
       'menu_link_content' => 4,
       'view' => 16,
       'date_format' => 11,
-      'entity_form_display' => 19,
+      'entity_form_display' => 29,
       'entity_form_mode' => 1,
-      'entity_view_display' => 43,
+      'entity_view_display' => 53,
       'entity_view_mode' => 14,
       'base_field_override' => 38,
     ];

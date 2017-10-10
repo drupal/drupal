@@ -45,6 +45,8 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
       'block_content' => 1,
       'block_content_type' => 1,
       'comment' => 1,
+      // The 'standard' profile provides the 'comment' comment type, and the
+      // migration creates 6 comment types, one per node type.
       'comment_type' => 7,
       // Module 'language' comes with 'en', 'und', 'zxx'. Migration adds 'is'.
       'configurable_language' => 4,

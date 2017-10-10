@@ -3,7 +3,7 @@ label: Comment field instance configuration
 migration_tags:
   - Drupal 6
 source:
-  plugin: d6_comment_variable
+  plugin: d6_node_type
   constants:
     entity_type: node
     label: Comments
@@ -13,13 +13,24 @@ process:
   label: 'constants/label'
   required: 'constants/required'
   field_name:
+    -
+      plugin: migration_lookup
+      source: type
+      migration: d6_comment_type
+    -
+      plugin: skip_on_empty
+      method: row
+  bundle: type
+  'default_value/0/status':
+    # We're using static_map instead of default_value otherwise if the source
+    # is 0, the default value of 1 would be used.
     plugin: static_map
-    source: comment_subject_field
-    default_value: comment
+    source: comment
     map:
-      0: comment_no_subject
-  bundle: node_type
-  'default_value/0/status': comment
+      0: 0
+      1: 1
+      2: 2
+    default_value: 2
   'settings/default_mode':
     plugin: static_map
     source: comment_default_mode
@@ -32,13 +43,31 @@ process:
       3: 1
       # COMMENT_MODE_THREADED_EXPANDED --> COMMENT_MODE_THREADED
       4: 1
-  'settings/per_page': comment_default_per_page
-  'settings/anonymous': comment_anonymous
-  'settings/form_location': comment_form_location
-  'settings/preview': comment_preview
+    default_value: 1
+  'settings/per_page':
+    plugin: default_value
+    source: comment_default_per_page
+    default_value: 50
+  'settings/anonymous':
+    plugin: default_value
+    source: comment_anonymous
+    default_value: 0
+  'settings/form_location':
+    plugin: default_value
+    source: comment_form_location
+    default_value: 0
+  'settings/preview':
+    # We're using static_map instead of default_value otherwise if the source
+    # is 0, the default value of 1 would be used.
+    plugin: static_map
+    source: comment_preview
+    map:
+      0: 0
+      1: 1
+    default_value: 1
 destination:
   plugin: entity:field_config
 migration_dependencies:
   required:
-    - d6_comment_field
     - d6_node_type
+    - d6_comment_field
