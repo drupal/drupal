@@ -554,11 +554,9 @@
               return null;
             }
           }
-        } else {
-          if (row === this.rowObject.element) {
+        } else if (row === this.rowObject.element) {
             return null;
           }
-        }
 
         if (!this.rowObject.isValidSwap(row)) {
           return null;

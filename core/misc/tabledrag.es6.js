@@ -892,11 +892,9 @@
             }
           }
         }
-        else {
-          // Do not allow a row to be swapped with itself.
-          if (row === this.rowObject.element) {
-            return null;
-          }
+        // Do not allow a row to be swapped with itself.
+        else if (row === this.rowObject.element) {
+          return null;
         }
 
         // Check that swapping with this row is allowed.

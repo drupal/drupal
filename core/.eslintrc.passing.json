@@ -10,7 +10,6 @@
     "no-new": "off",
     "no-multi-assign": "off",
     "no-mixed-operators": "off",
-    "no-lonely-if": "off",
     "no-empty": "off",
     "no-continue": "off",
     "new-cap": "off",

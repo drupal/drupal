@@ -121,11 +121,9 @@
               } else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
                   if (context && context.reason === 'mouseleave') {
                     accept = false;
-                  } else {
-                    if (context && context.confirmed) {
+                  } else if (context && context.confirmed) {
                       accept = true;
                     }
-                  }
                 }
           }
         }
