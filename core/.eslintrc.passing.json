@@ -3,7 +3,6 @@
   "rules": {
     "no-var": "off",
     "no-useless-escape": "off",
-    "no-useless-concat": "off",
     "no-use-before-define": "off",
     "no-throw-literal": "off",
     "no-shadow": "off",
