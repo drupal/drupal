@@ -14,7 +14,6 @@
     "no-lonely-if": "off",
     "no-empty": "off",
     "no-continue": "off",
-    "no-confusing-arrow": "off",
     "newline-per-chained-call": "off",
     "new-cap": "off",
     "max-len": "off",
