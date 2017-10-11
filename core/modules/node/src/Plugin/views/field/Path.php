@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\node\Plugin\views\field;
+
 @trigger_error('Drupal\node\Plugin\views\field\Path is deprecated in Drupal 8.5.0 and will be removed before Drupal 9.0.0. Use @ViewsField("entity_link") with \'output_url_as_text\' set.', E_USER_DEPRECATED);
 
 use Drupal\Core\Form\FormStateInterface;
