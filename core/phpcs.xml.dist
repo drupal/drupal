@@ -63,6 +63,15 @@
     <exclude name="Drupal.Commenting.FunctionComment.ParamMissingDefinition"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/VariableCommentSniff.php">
+    <!-- Sniff for: DuplicateVar -->
+    <exclude name="Drupal.Commenting.VariableComment.InlineVariableName"/>
+    <exclude name="Drupal.Commenting.VariableComment.EmptyVar"/>
+    <exclude name="Drupal.Commenting.VariableComment.IncorrectVarType"/>
+    <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
+    <exclude name="Drupal.Commenting.VariableComment.VarOrder"/>
+    <exclude name="Drupal.Commenting.VariableComment.WrongStyle"/>
+  </rule>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/InlineCommentSniff.php">
     <!-- Sniff for: NoSpaceBefore -->
     <exclude name="Drupal.Commenting.InlineComment.DocBlock"/>
