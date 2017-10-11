@@ -22,7 +22,6 @@
     "array-callback-return": "off",
     "vars-on-top": "off",
     "prefer-rest-params": "off",
-    "padded-blocks": "off",
     "prefer-const": "off"
   }
 }

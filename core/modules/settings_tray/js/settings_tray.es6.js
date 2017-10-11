@@ -159,7 +159,6 @@
    * @listens event:drupalContextualLinkAdded
    */
   $(document).on('drupalContextualLinkAdded', (event, data) => {
-
     // When the first contextual link is added to the page set Edit Mode.
     $('body').once('settings_tray.edit_mode_init').each(() => {
       const editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
