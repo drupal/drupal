@@ -105,7 +105,7 @@
       var userInfo = ['name', 'mail', 'homepage'];
       var $forms = $('[data-user-info-from-browser]').once('user-info-from-browser');
       if ($forms.length) {
-        userInfo.map(function (info) {
+        userInfo.forEach(function (info) {
           var $element = $forms.find('[name=' + info + ']');
           var browserData = localStorage.getItem('Drupal.visitor.' + info);
           var emptyOrDefault = $element.val() === '' || $element.attr('data-drupal-default-value') === $element.val();
@@ -115,7 +115,7 @@
         });
       }
       $forms.on('submit', function () {
-        userInfo.map(function (info) {
+        userInfo.forEach(function (info) {
           var $element = $forms.find('[name=' + info + ']');
           if ($element.length) {
             localStorage.setItem('Drupal.visitor.' + info, $element.val());

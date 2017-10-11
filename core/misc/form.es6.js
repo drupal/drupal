@@ -236,7 +236,7 @@
       const userInfo = ['name', 'mail', 'homepage'];
       const $forms = $('[data-user-info-from-browser]').once('user-info-from-browser');
       if ($forms.length) {
-        userInfo.map((info) => {
+        userInfo.forEach((info) => {
           const $element = $forms.find(`[name=${info}]`);
           const browserData = localStorage.getItem(`Drupal.visitor.${info}`);
           const emptyOrDefault = ($element.val() === '' || ($element.attr('data-drupal-default-value') === $element.val()));
@@ -246,7 +246,7 @@
         });
       }
       $forms.on('submit', () => {
-        userInfo.map((info) => {
+        userInfo.forEach((info) => {
           const $element = $forms.find(`[name=${info}]`);
           if ($element.length) {
             localStorage.setItem(`Drupal.visitor.${info}`, $element.val());

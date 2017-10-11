@@ -18,7 +18,6 @@
     "max-len": "off",
     "default-case": "off",
     "camelcase": "off",
-    "array-callback-return": "off",
     "vars-on-top": "off",
     "prefer-rest-params": "off",
     "prefer-const": "off"
