@@ -8,6 +8,8 @@ global-styling:
     component:
       css/components/admin-list.css: {}
       css/components/content-header.css: {}
+      css/components/container-inline.css: {}
+      css/components/container-inline.module.css: {}
       css/components/breadcrumb.css: {}
       css/components/buttons.css: {}
       css/components/messages.css: {}
