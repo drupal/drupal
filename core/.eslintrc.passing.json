@@ -17,7 +17,6 @@
     "new-cap": "off",
     "max-len": "off",
     "default-case": "off",
-    "comma-dangle": "off",
     "camelcase": "off",
     "array-callback-return": "off",
     "vars-on-top": "off",
