@@ -13,7 +13,6 @@
     "no-lonely-if": "off",
     "no-empty": "off",
     "no-continue": "off",
-    "newline-per-chained-call": "off",
     "new-cap": "off",
     "max-len": "off",
     "default-case": "off",

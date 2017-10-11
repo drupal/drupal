@@ -603,8 +603,10 @@
     if (e.trigger) {
       $(e.target)
         .prop('disabled', e.value)
-        .closest('.js-form-item, .js-form-submit, .js-form-wrapper').toggleClass('form-disabled', e.value)
-        .find('select, input, textarea').prop('disabled', e.value);
+        .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
+        .toggleClass('form-disabled', e.value)
+        .find('select, input, textarea')
+        .prop('disabled', e.value);
 
       // Note: WebKit nightlies don't reflect that change correctly.
       // See https://bugs.webkit.org/show_bug.cgi?id=23789
@@ -622,7 +624,11 @@
         }
       }
       else {
-        $(e.target).removeAttr('required aria-required').closest('.js-form-item, .js-form-wrapper').find('label.js-form-required').removeClass('js-form-required form-required');
+        $(e.target)
+          .removeAttr('required aria-required')
+          .closest('.js-form-item, .js-form-wrapper')
+          .find('label.js-form-required')
+          .removeClass('js-form-required form-required');
       }
     }
   });

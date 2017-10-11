@@ -66,9 +66,11 @@
       // Find the parent <li>.
       .closest('.comment-new-comments')
       // Find the preceding <li>, if any, and give it the 'last' class.
-      .prev().addClass('last')
+      .prev()
+      .addClass('last')
       // Go back to the parent <li> and hide it.
-      .end().hide();
+      .end()
+      .hide();
   }
 
   /**
@@ -95,9 +97,11 @@
       // Find the parent <li>.
       .closest('.comment-new-comments')
       // Find the preceding <li>, if any, and remove its 'last' class, if any.
-      .prev().removeClass('last')
+      .prev()
+      .removeClass('last')
       // Go back to the parent <li> and show it.
-      .end().show();
+      .end()
+      .show();
   }
 
   /**

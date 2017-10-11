@@ -218,9 +218,12 @@
         const input = e.target;
         // Remove old bindings.
         if (focused) {
-          $(focused).off('keyup', farb.updateValue)
-            .off('keyup', preview).off('keyup', resetScheme)
-            .parent().removeClass('item-selected');
+          $(focused)
+            .off('keyup', farb.updateValue)
+            .off('keyup', preview)
+            .off('keyup', resetScheme)
+            .parent()
+            .removeClass('item-selected');
         }
 
         // Add new bindings.
@@ -229,8 +232,12 @@
           callback(input, color, true, false);
         });
         farb.setColor(input.value);
-        $(focused).on('keyup', farb.updateValue).on('keyup', preview).on('keyup', resetScheme)
-          .parent().addClass('item-selected');
+        $(focused)
+          .on('keyup', farb.updateValue)
+          .on('keyup', preview)
+          .on('keyup', resetScheme)
+          .parent()
+          .addClass('item-selected');
       }
 
       // Initialize color fields.

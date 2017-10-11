@@ -204,8 +204,13 @@
       // Update .first marker for items. We need recurse from parent to retain
       // the actual DOM element order as jQuery implements sortOrder, but not
       // as public method.
-      this.item.parent().children('.vertical-tabs__menu-item').removeClass('first')
-        .filter(':visible').eq(0).addClass('first');
+      this.item
+        .parent()
+        .children('.vertical-tabs__menu-item')
+        .removeClass('first')
+        .filter(':visible')
+        .eq(0)
+        .addClass('first');
       // Display the details element.
       this.details.removeClass('vertical-tab--hidden').show();
       // Focus this tab.
@@ -225,8 +230,13 @@
       // Update .first marker for items. We need recurse from parent to retain
       // the actual DOM element order as jQuery implements sortOrder, but not
       // as public method.
-      this.item.parent().children('.vertical-tabs__menu-item').removeClass('first')
-        .filter(':visible').eq(0).addClass('first');
+      this.item
+        .parent()
+        .children('.vertical-tabs__menu-item')
+        .removeClass('first')
+        .filter(':visible')
+        .eq(0)
+        .addClass('first');
       // Hide the details element.
       this.details.addClass('vertical-tab--hidden').hide();
       // Focus the first visible tab (if there is one).

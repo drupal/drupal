@@ -89,7 +89,12 @@
           $bundleSettings.nextUntil('.bundle-settings').hide();
         }
         else {
-          $bundleSettings.nextUntil('.bundle-settings', '.field-settings').find('.translatable :input:not(:checked)').closest('.field-settings').nextUntil(':not(.column-settings)').hide();
+          $bundleSettings
+            .nextUntil('.bundle-settings', '.field-settings')
+            .find('.translatable :input:not(:checked)')
+            .closest('.field-settings')
+            .nextUntil(':not(.column-settings)')
+            .hide();
         }
       });
 

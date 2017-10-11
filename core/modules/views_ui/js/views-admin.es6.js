@@ -346,8 +346,15 @@
 
       const $addDisplayDropdown = $(`<li class="add"><a href="#"><span class="icon add"></span>${Drupal.t('Add')}</a><ul class="action-list" style="display:none;"></ul></li>`);
       const $displayButtons = $menu.nextAll('input.add-display').detach();
-      $displayButtons.appendTo($addDisplayDropdown.find('.action-list')).wrap('<li>')
-        .parent().eq(0).addClass('first').end().eq(-1).addClass('last');
+      $displayButtons
+        .appendTo($addDisplayDropdown.find('.action-list'))
+        .wrap('<li>')
+        .parent()
+        .eq(0)
+        .addClass('first')
+        .end()
+        .eq(-1)
+        .addClass('last');
       // Remove the 'Add ' prefix from the button labels since they're being
       // placed in an 'Add' dropdown. @todo This assumes English, but so does
       // $addDisplayDropdown above. Add support for translation.
@@ -1021,7 +1028,11 @@
    */
   Drupal.behaviors.viewsRemoveIconClass = {
     attach(context) {
-      $(context).find('.dropbutton').once('dropbutton-icon').find('.icon').removeClass('icon');
+      $(context)
+        .find('.dropbutton')
+        .once('dropbutton-icon')
+        .find('.icon')
+        .removeClass('icon');
     },
   };
 
