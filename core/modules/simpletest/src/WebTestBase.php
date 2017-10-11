@@ -817,7 +817,7 @@ abstract class WebTestBase extends TestBase {
    *   The result of the request.
    */
   protected function drupalGetWithFormat($path, $format, array $options = [], array $headers = []) {
-    $options += ['query' => ['_format' => $format]];
+    $options = array_merge_recursive(['query' => ['_format' => $format]], $options);
     return $this->drupalGet($path, $options, $headers);
   }
 

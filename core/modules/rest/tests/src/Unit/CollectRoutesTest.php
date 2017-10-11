@@ -84,6 +84,8 @@ class CollectRoutesTest extends UnitTestCase {
       ->method('getSortedProviders')
       ->will($this->returnValue(['basic_auth' => 'data', 'cookie' => 'data']));
 
+    $container->setParameter('serializer.format_providers', ['json']);
+
     \Drupal::setContainer($container);
 
     $this->restExport = RestExport::create($container, [], "test_routes", []);

@@ -15,6 +15,7 @@ use Drupal\user\SharedTempStoreFactory;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
  * Form controller for the Views edit form.
@@ -417,15 +418,25 @@ class ViewEditForm extends ViewFormBase {
         // path.
         elseif ($view->status() && $view->getExecutable()->displayHandlers->get($display['id'])->hasPath()) {
           $path = $view->getExecutable()->displayHandlers->get($display['id'])->getPath();
+
           if ($path && (strpos($path, '%') === FALSE)) {
-            if (!parse_url($path, PHP_URL_SCHEME)) {
-              // @todo Views should expect and store a leading /. See:
-              //   https://www.drupal.org/node/2423913
-              $url = Url::fromUserInput('/' . ltrim($path, '/'));
+            // Wrap this in a try/catch as trying to generate links to some
+            // routes may throw a NotAcceptableHttpException if they do not
+            // respond to HTML, such as RESTExports.
+            try {
+              if (!parse_url($path, PHP_URL_SCHEME)) {
+                // @todo Views should expect and store a leading /. See:
+                //   https://www.drupal.org/node/2423913
+                $url = Url::fromUserInput('/' . ltrim($path, '/'));
+              }
+              else {
+                $url = Url::fromUri("base:$path");
+              }
             }
-            else {
-              $url = Url::fromUri("base:$path");
+            catch (NotAcceptableHttpException $e) {
+              $url = '/' . $path;
             }
+
             $build['top']['actions']['path'] = [
               '#type' => 'link',
               '#title' => $this->t('View @display_title', ['@display_title' => $display_title]),
