@@ -194,7 +194,7 @@
       }
 
       // Create an AJAX object for the form associated with the field.
-      var formSaveAjax = Drupal.quickedit.util.form.ajaxifySaving({
+      let formSaveAjax = Drupal.quickedit.util.form.ajaxifySaving({
         nocssjs: false,
         other_view_modes: fieldModel.findOtherViewModes(),
       }, $submit);

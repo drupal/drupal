@@ -118,13 +118,13 @@
           // visible yet.
           break;
 
-        case 'activating':
+        case 'activating': {
           // The user has indicated he wants to do in-place editing: if
           // something needs to be loaded (CSS/JavaScript/server data/…), then
           // do so at this stage, and once the in-place editor is ready,
           // set the 'active' state. A "loading" indicator will be shown in the
           // UI for as long as the field remains in this state.
-          var loadDependencies = function (callback) {
+          const loadDependencies = function (callback) {
             // Do the loading here.
             callback();
           };
@@ -132,6 +132,7 @@
             fieldModel.set('state', 'active');
           });
           break;
+        }
 
         case 'active':
           // The user can now actually use the in-place editor.

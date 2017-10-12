@@ -58,7 +58,7 @@
    */
   Drupal.quickedit.util.networkErrorModal = function (title, message) {
     const $message = $(`<div>${message}</div>`);
-    var networkErrorModal = Drupal.dialog($message.get(0), {
+    const networkErrorModal = Drupal.dialog($message.get(0), {
       title,
       dialogClass: 'quickedit-network-error',
       buttons: [

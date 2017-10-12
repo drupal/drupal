@@ -70,15 +70,15 @@
           });
           break;
 
-        case 'active':
-          var self = this;
+        case 'active': {
+          const self = this;
 
           // Indicate that this element is being edited by Quick Edit Image.
           this.$el.addClass('quickedit-image-element');
 
           // Render our initial dropzone element. Once the user reverts changes
           // or saves a new image, this element is removed.
-          var $dropzone = this.renderDropzone('upload', Drupal.t('Drop file here or click to upload'));
+          const $dropzone = this.renderDropzone('upload', Drupal.t('Drop file here or click to upload'));
 
           $dropzone.on('dragenter', function (e) {
             $(this).addClass('hover');
@@ -117,6 +117,7 @@
 
           this.renderToolbar(fieldModel);
           break;
+        }
 
         case 'changed':
           break;

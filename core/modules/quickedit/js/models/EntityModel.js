@@ -69,48 +69,52 @@
           break;
 
         case 'committing':
-          var fields = this.get('fields');
+          {
+            var fields = this.get('fields');
 
-          fields.chain().filter(function (fieldModel) {
-            return _.intersection([fieldModel.get('state')], ['active']).length;
-          }).each(function (fieldModel) {
-            fieldModel.set('state', 'candidate');
-          });
+            fields.chain().filter(function (fieldModel) {
+              return _.intersection([fieldModel.get('state')], ['active']).length;
+            }).each(function (fieldModel) {
+              fieldModel.set('state', 'candidate');
+            });
 
-          fields.chain().filter(function (fieldModel) {
-            return _.intersection([fieldModel.get('state')], Drupal.quickedit.app.changedFieldStates).length;
-          }).each(function (fieldModel) {
-            fieldModel.set('state', 'saving');
-          });
-          break;
+            fields.chain().filter(function (fieldModel) {
+              return _.intersection([fieldModel.get('state')], Drupal.quickedit.app.changedFieldStates).length;
+            }).each(function (fieldModel) {
+              fieldModel.set('state', 'saving');
+            });
+            break;
+          }
 
         case 'deactivating':
-          var changedFields = this.get('fields').filter(function (fieldModel) {
-            return _.intersection([fieldModel.get('state')], ['changed', 'invalid']).length;
-          });
-
-          if ((changedFields.length || this.get('fieldsInTempStore').length) && !options.saved && !options.confirmed) {
-            this.set('state', 'opened', { confirming: true });
-
-            _.defer(function () {
-              Drupal.quickedit.app.confirmEntityDeactivation(entityModel);
-            });
-          } else {
-            var invalidFields = this.get('fields').filter(function (fieldModel) {
-              return _.intersection([fieldModel.get('state')], ['invalid']).length;
+          {
+            var changedFields = this.get('fields').filter(function (fieldModel) {
+              return _.intersection([fieldModel.get('state')], ['changed', 'invalid']).length;
             });
 
-            entityModel.set('reload', this.get('fieldsInTempStore').length || invalidFields.length);
+            if ((changedFields.length || this.get('fieldsInTempStore').length) && !options.saved && !options.confirmed) {
+              this.set('state', 'opened', { confirming: true });
 
-            entityModel.get('fields').each(function (fieldModel) {
-              if (_.intersection([fieldModel.get('state')], ['candidate', 'highlighted']).length) {
-                fieldModel.trigger('change:state', fieldModel, fieldModel.get('state'), options);
-              } else {
-                fieldModel.set('state', 'candidate', options);
-              }
-            });
+              _.defer(function () {
+                Drupal.quickedit.app.confirmEntityDeactivation(entityModel);
+              });
+            } else {
+              var invalidFields = this.get('fields').filter(function (fieldModel) {
+                return _.intersection([fieldModel.get('state')], ['invalid']).length;
+              });
+
+              entityModel.set('reload', this.get('fieldsInTempStore').length || invalidFields.length);
+
+              entityModel.get('fields').each(function (fieldModel) {
+                if (_.intersection([fieldModel.get('state')], ['candidate', 'highlighted']).length) {
+                  fieldModel.trigger('change:state', fieldModel, fieldModel.get('state'), options);
+                } else {
+                  fieldModel.set('state', 'candidate', options);
+                }
+              });
+            }
+            break;
           }
-          break;
 
         case 'closing':
           options.reason = 'stop';
@@ -166,36 +170,38 @@
           break;
 
         case 'committing':
-          if (fieldState === 'invalid') {
-            _.defer(function () {
-              entityModel.set('state', 'opened', { reason: 'invalid' });
-            });
-          } else {
-            this._updateInTempStoreAttributes(entityModel, fieldModel);
+          {
+            if (fieldState === 'invalid') {
+              _.defer(function () {
+                entityModel.set('state', 'opened', { reason: 'invalid' });
+              });
+            } else {
+              this._updateInTempStoreAttributes(entityModel, fieldModel);
+            }
+
+            var options = {
+              'accept-field-states': Drupal.quickedit.app.readyFieldStates
+            };
+            if (entityModel.set('isCommitting', true, options)) {
+              entityModel.save({
+                success: function success() {
+                  entityModel.set({
+                    state: 'deactivating',
+                    isCommitting: false
+                  }, { saved: true });
+                },
+                error: function error() {
+                  entityModel.set('isCommitting', false);
+
+                  entityModel.set('state', 'opened', { reason: 'networkerror' });
+
+                  var message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', { '@entity-title': entityModel.get('label') });
+                  Drupal.quickedit.util.networkErrorModal(Drupal.t('Network problem!'), message);
+                }
+              });
+            }
+            break;
           }
-
-          var options = {
-            'accept-field-states': Drupal.quickedit.app.readyFieldStates
-          };
-          if (entityModel.set('isCommitting', true, options)) {
-            entityModel.save({
-              success: function success() {
-                entityModel.set({
-                  state: 'deactivating',
-                  isCommitting: false
-                }, { saved: true });
-              },
-              error: function error() {
-                entityModel.set('isCommitting', false);
-
-                entityModel.set('state', 'opened', { reason: 'networkerror' });
-
-                var message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', { '@entity-title': entityModel.get('label') });
-                Drupal.quickedit.util.networkErrorModal(Drupal.t('Network problem!'), message);
-              }
-            });
-          }
-          break;
 
         case 'deactivating':
           _.defer(function () {

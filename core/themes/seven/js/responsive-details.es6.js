@@ -43,7 +43,7 @@
         detailsToggle(event.matches);
       }
 
-      var $summaries = $details.find('> summary');
+      const $summaries = $details.find('> summary');
       const mql = window.matchMedia('(min-width:48em)');
       mql.addListener(handleDetailsMQ);
       detailsToggle(mql.matches);

@@ -510,9 +510,9 @@
         // Up arrow.
         case 38:
         // Safari up arrow.
-        case 63232:
-          var $previousRow = $(self.rowObject.element).prev('tr:first-of-type');
-          var previousRow = $previousRow.get(0);
+        case 63232: {
+          let $previousRow = $(self.rowObject.element).prev('tr:first-of-type');
+          let previousRow = $previousRow.get(0);
           while (previousRow && $previousRow.is(':hidden')) {
             $previousRow = $(previousRow).prev('tr:first-of-type');
             previousRow = $previousRow.get(0);
@@ -549,7 +549,7 @@
             handle.trigger('focus');
           }
           break;
-
+        }
         // Right arrow.
         case 39:
         // Safari right arrow.
@@ -561,9 +561,9 @@
         // Down arrow.
         case 40:
         // Safari down arrow.
-        case 63233:
-          var $nextRow = $(self.rowObject.group).eq(-1).next('tr:first-of-type');
-          var nextRow = $nextRow.get(0);
+        case 63233: {
+          let $nextRow = $(self.rowObject.group).eq(-1).next('tr:first-of-type');
+          let nextRow = $nextRow.get(0);
           while (nextRow && $nextRow.is(':hidden')) {
             $nextRow = $(nextRow).next('tr:first-of-type');
             nextRow = $nextRow.get(0);
@@ -599,6 +599,7 @@
             handle.trigger('focus');
           }
           break;
+        }
       }
 
       /* eslint-enable no-fallthrough */
@@ -870,7 +871,7 @@
       let row = rows[n];
       let $row = $(row);
       const rowY = $row.offset().top;
-      var rowHeight;
+      let rowHeight;
       // Because Safari does not report offsetHeight on table rows, but does on
       // table cells, grab the firstChild of the row and use that instead.
       // http://jacob.peargrove.com/blog/2006/technical/table-row-offsettop-bug-in-safari.
@@ -1035,8 +1036,8 @@
           targetElement.value = sourceElement.value;
           break;
 
-        case 'order':
-          var siblings = this.rowObject.findSiblings(rowSettings);
+        case 'order': {
+          const siblings = this.rowObject.findSiblings(rowSettings);
           if ($(targetElement).is('select')) {
             // Get a list of acceptable values.
             const values = [];
@@ -1065,6 +1066,7 @@
             });
           }
           break;
+        }
       }
     }
   };

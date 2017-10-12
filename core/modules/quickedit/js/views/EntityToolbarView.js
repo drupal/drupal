@@ -142,20 +142,22 @@
             break;
 
           default:
-            var fieldModels = this.model.get('fields').models;
-            var topMostPosition = 1000000;
-            var topMostField = null;
+            {
+              var fieldModels = this.model.get('fields').models;
+              var topMostPosition = 1000000;
+              var topMostField = null;
 
-            for (var i = 0; i < fieldModels.length; i++) {
-              var pos = fieldModels[i].get('el').getBoundingClientRect().top;
-              if (pos < topMostPosition) {
-                topMostPosition = pos;
-                topMostField = fieldModels[i];
+              for (var i = 0; i < fieldModels.length; i++) {
+                var pos = fieldModels[i].get('el').getBoundingClientRect().top;
+                if (pos < topMostPosition) {
+                  topMostPosition = pos;
+                  topMostField = fieldModels[i];
+                }
               }
+              of = topMostField.get('el');
+              delay = 50;
+              break;
             }
-            of = topMostField.get('el');
-            delay = 50;
-            break;
         }
 
         check++;

@@ -289,39 +289,41 @@
 
         case 38:
         case 63232:
-          var $previousRow = $(self.rowObject.element).prev('tr:first-of-type');
-          var previousRow = $previousRow.get(0);
-          while (previousRow && $previousRow.is(':hidden')) {
-            $previousRow = $(previousRow).prev('tr:first-of-type');
-            previousRow = $previousRow.get(0);
-          }
-          if (previousRow) {
-            self.safeBlur = false;
-            self.rowObject.direction = 'up';
-            keyChange = true;
-
-            if ($(item).is('.tabledrag-root')) {
-              groupHeight = 0;
-              while (previousRow && $previousRow.find('.js-indentation').length) {
-                $previousRow = $(previousRow).prev('tr:first-of-type');
-                previousRow = $previousRow.get(0);
-                groupHeight += $previousRow.is(':hidden') ? 0 : previousRow.offsetHeight;
-              }
-              if (previousRow) {
-                self.rowObject.swap('before', previousRow);
-
-                window.scrollBy(0, -groupHeight);
-              }
-            } else if (self.table.tBodies[0].rows[0] !== previousRow || $previousRow.is('.draggable')) {
-              self.rowObject.swap('before', previousRow);
-              self.rowObject.interval = null;
-              self.rowObject.indent(0);
-              window.scrollBy(0, -parseInt(item.offsetHeight, 10));
+          {
+            var $previousRow = $(self.rowObject.element).prev('tr:first-of-type');
+            var previousRow = $previousRow.get(0);
+            while (previousRow && $previousRow.is(':hidden')) {
+              $previousRow = $(previousRow).prev('tr:first-of-type');
+              previousRow = $previousRow.get(0);
             }
+            if (previousRow) {
+              self.safeBlur = false;
+              self.rowObject.direction = 'up';
+              keyChange = true;
 
-            handle.trigger('focus');
+              if ($(item).is('.tabledrag-root')) {
+                groupHeight = 0;
+                while (previousRow && $previousRow.find('.js-indentation').length) {
+                  $previousRow = $(previousRow).prev('tr:first-of-type');
+                  previousRow = $previousRow.get(0);
+                  groupHeight += $previousRow.is(':hidden') ? 0 : previousRow.offsetHeight;
+                }
+                if (previousRow) {
+                  self.rowObject.swap('before', previousRow);
+
+                  window.scrollBy(0, -groupHeight);
+                }
+              } else if (self.table.tBodies[0].rows[0] !== previousRow || $previousRow.is('.draggable')) {
+                self.rowObject.swap('before', previousRow);
+                self.rowObject.interval = null;
+                self.rowObject.indent(0);
+                window.scrollBy(0, -parseInt(item.offsetHeight, 10));
+              }
+
+              handle.trigger('focus');
+            }
+            break;
           }
-          break;
 
         case 39:
         case 63235:
@@ -331,39 +333,41 @@
 
         case 40:
         case 63233:
-          var $nextRow = $(self.rowObject.group).eq(-1).next('tr:first-of-type');
-          var nextRow = $nextRow.get(0);
-          while (nextRow && $nextRow.is(':hidden')) {
-            $nextRow = $(nextRow).next('tr:first-of-type');
-            nextRow = $nextRow.get(0);
-          }
-          if (nextRow) {
-            self.safeBlur = false;
-            self.rowObject.direction = 'down';
-            keyChange = true;
-
-            if ($(item).is('.tabledrag-root')) {
-              groupHeight = 0;
-              var nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
-              if (nextGroup) {
-                $(nextGroup.group).each(function () {
-                  groupHeight += $(this).is(':hidden') ? 0 : this.offsetHeight;
-                });
-                var nextGroupRow = $(nextGroup.group).eq(-1).get(0);
-                self.rowObject.swap('after', nextGroupRow);
-
-                window.scrollBy(0, parseInt(groupHeight, 10));
-              }
-            } else {
-              self.rowObject.swap('after', nextRow);
-              self.rowObject.interval = null;
-              self.rowObject.indent(0);
-              window.scrollBy(0, parseInt(item.offsetHeight, 10));
+          {
+            var $nextRow = $(self.rowObject.group).eq(-1).next('tr:first-of-type');
+            var nextRow = $nextRow.get(0);
+            while (nextRow && $nextRow.is(':hidden')) {
+              $nextRow = $(nextRow).next('tr:first-of-type');
+              nextRow = $nextRow.get(0);
             }
+            if (nextRow) {
+              self.safeBlur = false;
+              self.rowObject.direction = 'down';
+              keyChange = true;
 
-            handle.trigger('focus');
+              if ($(item).is('.tabledrag-root')) {
+                groupHeight = 0;
+                var nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
+                if (nextGroup) {
+                  $(nextGroup.group).each(function () {
+                    groupHeight += $(this).is(':hidden') ? 0 : this.offsetHeight;
+                  });
+                  var nextGroupRow = $(nextGroup.group).eq(-1).get(0);
+                  self.rowObject.swap('after', nextGroupRow);
+
+                  window.scrollBy(0, parseInt(groupHeight, 10));
+                }
+              } else {
+                self.rowObject.swap('after', nextRow);
+                self.rowObject.interval = null;
+                self.rowObject.indent(0);
+                window.scrollBy(0, parseInt(item.offsetHeight, 10));
+              }
+
+              handle.trigger('focus');
+            }
+            break;
           }
-          break;
       }
 
       if (self.rowObject && self.rowObject.changed === true) {
@@ -539,7 +543,7 @@
       var row = rows[n];
       var $row = $(row);
       var rowY = $row.offset().top;
-      var rowHeight;
+      var rowHeight = void 0;
 
       if (row.offsetHeight === 0) {
         rowHeight = parseInt(row.firstChild.offsetHeight, 10) / 2;
@@ -656,29 +660,31 @@
           break;
 
         case 'order':
-          var siblings = this.rowObject.findSiblings(rowSettings);
-          if ($(targetElement).is('select')) {
-            var values = [];
-            $(targetElement).find('option').each(function () {
-              values.push(this.value);
-            });
-            var maxVal = values[values.length - 1];
+          {
+            var siblings = this.rowObject.findSiblings(rowSettings);
+            if ($(targetElement).is('select')) {
+              var values = [];
+              $(targetElement).find('option').each(function () {
+                values.push(this.value);
+              });
+              var maxVal = values[values.length - 1];
 
-            $(siblings).find(targetClass).each(function () {
-              if (values.length > 0) {
-                this.value = values.shift();
-              } else {
-                this.value = maxVal;
-              }
-            });
-          } else {
-            var weight = parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
-            $(siblings).find(targetClass).each(function () {
-              this.value = weight;
-              weight++;
-            });
+              $(siblings).find(targetClass).each(function () {
+                if (values.length > 0) {
+                  this.value = values.shift();
+                } else {
+                  this.value = maxVal;
+                }
+              });
+            } else {
+              var weight = parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
+              $(siblings).find(targetClass).each(function () {
+                this.value = weight;
+                weight++;
+              });
+            }
+            break;
           }
-          break;
       }
     }
   };

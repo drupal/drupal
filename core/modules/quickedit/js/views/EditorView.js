@@ -38,13 +38,15 @@
           break;
 
         case 'activating':
-          var loadDependencies = function loadDependencies(callback) {
-            callback();
-          };
-          loadDependencies(function () {
-            fieldModel.set('state', 'active');
-          });
-          break;
+          {
+            var loadDependencies = function loadDependencies(callback) {
+              callback();
+            };
+            loadDependencies(function () {
+              fieldModel.set('state', 'active');
+            });
+            break;
+          }
 
         case 'active':
           break;

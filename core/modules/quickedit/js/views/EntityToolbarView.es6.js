@@ -230,10 +230,10 @@
             delay = 250;
             break;
 
-          default:
-            var fieldModels = this.model.get('fields').models;
-            var topMostPosition = 1000000;
-            var topMostField = null;
+          default: {
+            const fieldModels = this.model.get('fields').models;
+            let topMostPosition = 1000000;
+            let topMostField = null;
             // Position against the topmost field.
             for (let i = 0; i < fieldModels.length; i++) {
               const pos = fieldModels[i].get('el').getBoundingClientRect().top;
@@ -245,6 +245,7 @@
             of = topMostField.get('el');
             delay = 50;
             break;
+          }
         }
         // Prepare to check the next possible element to position against.
         check++;

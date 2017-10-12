@@ -50,41 +50,43 @@
           break;
 
         case 'active':
-          var self = this;
+          {
+            var self = this;
 
-          this.$el.addClass('quickedit-image-element');
+            this.$el.addClass('quickedit-image-element');
 
-          var $dropzone = this.renderDropzone('upload', Drupal.t('Drop file here or click to upload'));
+            var $dropzone = this.renderDropzone('upload', Drupal.t('Drop file here or click to upload'));
 
-          $dropzone.on('dragenter', function (e) {
-            $(this).addClass('hover');
-          });
-          $dropzone.on('dragleave', function (e) {
-            $(this).removeClass('hover');
-          });
-
-          $dropzone.on('drop', function (e) {
-            if (e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files.length) {
+            $dropzone.on('dragenter', function (e) {
+              $(this).addClass('hover');
+            });
+            $dropzone.on('dragleave', function (e) {
               $(this).removeClass('hover');
-              self.uploadImage(e.originalEvent.dataTransfer.files[0]);
-            }
-          });
+            });
 
-          $dropzone.on('click', function (e) {
-            $('<input type="file">').trigger('click').on('change', function () {
-              if (this.files.length) {
-                self.uploadImage(this.files[0]);
+            $dropzone.on('drop', function (e) {
+              if (e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files.length) {
+                $(this).removeClass('hover');
+                self.uploadImage(e.originalEvent.dataTransfer.files[0]);
               }
             });
-          });
 
-          $dropzone.on('dragover dragenter dragleave drop click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-          });
+            $dropzone.on('click', function (e) {
+              $('<input type="file">').trigger('click').on('change', function () {
+                if (this.files.length) {
+                  self.uploadImage(this.files[0]);
+                }
+              });
+            });
 
-          this.renderToolbar(fieldModel);
-          break;
+            $dropzone.on('dragover dragenter dragleave drop click', function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            });
+
+            this.renderToolbar(fieldModel);
+            break;
+          }
 
         case 'changed':
           break;

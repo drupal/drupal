@@ -80,7 +80,7 @@
       const message = Drupal.t('Changing the text format to %text_format will permanently remove content that is not allowed in that text format.<br><br>Save your changes before switching the text format to avoid losing data.', {
         '%text_format': $select.find('option:selected').text(),
       });
-      var confirmationDialog = Drupal.dialog(`<div>${message}</div>`, {
+      const confirmationDialog = Drupal.dialog(`<div>${message}</div>`, {
         title: Drupal.t('Change text format?'),
         dialogClass: 'editor-change-text-format-modal',
         resizable: false,

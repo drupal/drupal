@@ -133,12 +133,11 @@
 
     // Traverse through the sibling nodes.
     for (let i = from[mode]; i; i = i[mode]) {
-      var $i;
+      const $i = $(i);
       // Make sure that we're only dealing with elements.
       if (i.nodeType !== 1) {
         continue;
       }
-      $i = $(i);
       // Either add or remove the selected class based on the state of the
       // target checkbox.
       $i.toggleClass('selected', state);

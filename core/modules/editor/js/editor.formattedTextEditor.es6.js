@@ -140,9 +140,9 @@
           }
           break;
 
-        case 'active':
-          var textElement = this.$textElement.get(0);
-          var toolbarView = fieldModel.toolbarView;
+        case 'active': {
+          const textElement = this.$textElement.get(0);
+          const toolbarView = fieldModel.toolbarView;
           this.textEditor.attachInlineEditor(
             textElement,
             this.textFormat,
@@ -155,6 +155,7 @@
             fieldModel.set('state', 'changed');
           });
           break;
+        }
 
         case 'changed':
           break;

@@ -74,12 +74,11 @@
     var mode = from.rowIndex > to.rowIndex ? 'previousSibling' : 'nextSibling';
 
     for (var i = from[mode]; i; i = i[mode]) {
-      var $i;
+      var $i = $(i);
 
       if (i.nodeType !== 1) {
         continue;
       }
-      $i = $(i);
 
       $i.toggleClass('selected', state);
       $i.find('input[type="checkbox"]').prop('checked', state);
