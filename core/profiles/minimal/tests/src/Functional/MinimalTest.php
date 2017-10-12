@@ -37,6 +37,10 @@ class MinimalTest extends BrowserTestBase {
 
     // Ensure that there are no pending entity updates after installation.
     $this->assertFalse($this->container->get('entity.definition_update_manager')->needsUpdates(), 'After installation, entity schema is up to date.');
+
+    // Ensure special configuration overrides are correct.
+    $this->assertFalse($this->config('system.theme.global')->get('features.node_user_picture'), 'Configuration system.theme.global:features.node_user_picture is FALSE.');
+    $this->assertEquals(USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL, $this->config('user.settings')->get('register'));
   }
 
 }
