@@ -183,7 +183,7 @@ class TestMigrationMock extends Migration {
   /**
    * The values passed into set().
    *
-   * @var array $set
+   * @var array
    */
   public $set = [];
 

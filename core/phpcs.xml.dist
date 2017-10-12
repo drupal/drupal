@@ -64,8 +64,7 @@
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/VariableCommentSniff.php">
-    <!-- Sniff for: DuplicateVar -->
-    <exclude name="Drupal.Commenting.VariableComment.InlineVariableName"/>
+    <!-- Sniff for: DuplicateVar, InlineVariableName -->
     <exclude name="Drupal.Commenting.VariableComment.EmptyVar"/>
     <exclude name="Drupal.Commenting.VariableComment.IncorrectVarType"/>
     <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>

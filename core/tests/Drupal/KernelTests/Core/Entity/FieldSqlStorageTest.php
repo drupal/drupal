@@ -68,7 +68,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   /**
    * The table mapping for the tested entity type.
    *
-   * @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping
+   * @var \Drupal\Core\Entity\Sql\DefaultTableMapping
    */
   protected $tableMapping;
 

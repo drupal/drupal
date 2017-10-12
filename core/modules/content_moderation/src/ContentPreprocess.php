@@ -17,7 +17,7 @@ class ContentPreprocess implements ContainerInjectionInterface {
   /**
    * The route match service.
    *
-   * @var \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   * @var \Drupal\Core\Routing\RouteMatchInterface
    */
   protected $routeMatch;
 

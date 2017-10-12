@@ -15,7 +15,7 @@ class FileCacheFactory {
   /**
    * The configuration used to create FileCache objects.
    *
-   * @var array $configuration
+   * @var array
    */
   protected static $configuration;
 

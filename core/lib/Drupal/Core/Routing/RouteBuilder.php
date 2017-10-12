@@ -28,7 +28,7 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   /**
    * The used lock backend instance.
    *
-   * @var \Drupal\Core\Lock\LockBackendInterface $lock
+   * @var \Drupal\Core\Lock\LockBackendInterface
    */
   protected $lock;
 
