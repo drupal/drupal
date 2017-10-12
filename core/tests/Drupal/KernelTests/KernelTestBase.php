@@ -689,7 +689,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * Installs default configuration for a given list of modules.
    *
    * @param string|string[] $modules
-   *   A list of modules for which to install default configuration.
+   *   A module or list of modules for which to install default configuration.
    *
    * @throws \LogicException
    *   If any module in $modules is not enabled.
