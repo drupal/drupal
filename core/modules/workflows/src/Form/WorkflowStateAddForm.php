@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class WorkflowStateAddForm.
+ *
+ * @internal
  */
 class WorkflowStateAddForm extends EntityForm {
 

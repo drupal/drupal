@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Builds a form to test #type 'select' validation.
+ *
+ * @internal
  */
 class FormTestSelectForm extends FormBase {
 

@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure maintenance settings for this site.
+ *
+ * @internal
  */
 class SiteMaintenanceModeForm extends ConfigFormBase {
 

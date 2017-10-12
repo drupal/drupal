@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * Note that hardcoded text provided by this form is not translated. This is
  * because translations are downloaded as a result of submitting this form.
+ *
+ * @internal
  */
 class SelectLanguageForm extends FormBase {
 

@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provides a confirmation form to delete multiple media items at once.
+ *
+ * @internal
  */
 class MediaDeleteMultipleConfirmForm extends ConfirmFormBase {
 

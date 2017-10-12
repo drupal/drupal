@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure statistics settings for this site.
+ *
+ * @internal
  */
 class StatisticsSettingsForm extends ConfigFormBase {
 

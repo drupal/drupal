@@ -7,6 +7,8 @@ use Drupal\views\ViewEntityInterface;
 
 /**
  * Provides a form for editing the Views display.
+ *
+ * @internal
  */
 class Display extends ViewsFormBase {
 

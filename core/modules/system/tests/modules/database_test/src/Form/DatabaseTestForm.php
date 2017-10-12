@@ -8,6 +8,8 @@ use Drupal\user\Entity\User;
 
 /**
  * Form controller for database_test module.
+ *
+ * @internal
  */
 class DatabaseTestForm extends FormBase {
 

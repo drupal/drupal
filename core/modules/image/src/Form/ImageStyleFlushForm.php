@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for image style flush.
+ *
+ * @internal
  */
 class ImageStyleFlushForm extends EntityConfirmFormBase {
 

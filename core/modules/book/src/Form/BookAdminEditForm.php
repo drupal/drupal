@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for administering a single book's hierarchy.
+ *
+ * @internal
  */
 class BookAdminEditForm extends FormBase {
 

@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form for adding a filter format.
+ *
+ * @internal
  */
 class FilterFormatAddForm extends FilterFormatFormBase {
 

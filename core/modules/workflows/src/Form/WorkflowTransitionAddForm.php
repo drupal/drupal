@@ -13,6 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class WorkflowTransitionAddForm.
+ *
+ * @internal
  */
 class WorkflowTransitionAddForm extends EntityForm {
 

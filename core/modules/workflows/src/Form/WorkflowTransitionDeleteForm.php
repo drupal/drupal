@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Builds the form to delete transitions from Workflow entities.
+ *
+ * @internal
  */
 class WorkflowTransitionDeleteForm extends ConfirmFormBase {
 

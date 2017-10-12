@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Builds a form to test select elements when #options is not an array.
+ *
+ * @internal
  */
 class FormTestEmptySelectForm extends FormBase {
 

@@ -4,6 +4,11 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Form constructor for testing #type 'table' elements.
+ *
+ * @internal
+ */
 class FormTestTableForm extends FormTestTableSelectFormBase {
 
   /**

@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * List tests arranged in groups that can be selected and run.
+ *
+ * @internal
  */
 class SimpletestTestForm extends FormBase {
 

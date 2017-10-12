@@ -17,6 +17,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * The form for editing entity types associated with a workflow.
+ *
+ * @internal
  */
 class ContentModerationConfigureEntityTypesForm extends FormBase {
 

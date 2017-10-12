@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a confirmation form for resetting a single modified menu link.
+ *
+ * @internal
  */
 class MenuLinkResetForm extends ConfirmFormBase {
 

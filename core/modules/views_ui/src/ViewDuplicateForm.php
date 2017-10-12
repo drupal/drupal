@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for the Views duplicate form.
+ *
+ * @internal
  */
 class ViewDuplicateForm extends ViewFormBase {
 

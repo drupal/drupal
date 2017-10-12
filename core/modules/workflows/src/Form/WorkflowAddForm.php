@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form for adding workflows.
+ *
+ * @internal
  */
 class WorkflowAddForm extends EntityForm {
 

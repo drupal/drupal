@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base form for vocabulary edit forms.
+ *
+ * @internal
  */
 class VocabularyForm extends BundleEntityFormBase {
 

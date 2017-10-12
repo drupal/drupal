@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Builds the form to delete states from Workflow entities.
+ *
+ * @internal
  */
 class WorkflowStateDeleteForm extends ConfirmFormBase {
 

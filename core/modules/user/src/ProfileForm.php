@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form handler for the profile forms.
+ *
+ * @internal
  */
 class ProfileForm extends AccountForm {
 

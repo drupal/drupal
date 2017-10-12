@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Base form for container term edit forms.
+ *
+ * @internal
  */
 class ContainerForm extends ForumForm {
 

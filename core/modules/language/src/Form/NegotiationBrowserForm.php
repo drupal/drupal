@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure the browser language negotiation method for this site.
+ *
+ * @internal
  */
 class NegotiationBrowserForm extends ConfigFormBase {
 

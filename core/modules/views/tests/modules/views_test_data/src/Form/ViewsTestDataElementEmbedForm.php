@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Simple form page callback to test the view element.
+ *
+ * @internal
  */
 class ViewsTestDataElementEmbedForm extends FormBase {
 

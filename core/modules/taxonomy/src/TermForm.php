@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Base for handler for taxonomy term edit forms.
+ *
+ * @internal
  */
 class TermForm extends ContentEntityForm {
 

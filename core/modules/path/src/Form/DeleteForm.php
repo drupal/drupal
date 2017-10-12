@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds the form to delete a path alias.
+ *
+ * @internal
  */
 class DeleteForm extends ConfirmFormBase {
 

@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds the search form for the search block.
+ *
+ * @internal
  */
 class SearchBlockForm extends FormBase {
 

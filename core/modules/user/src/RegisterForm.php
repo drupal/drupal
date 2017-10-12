@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form handler for the user register forms.
+ *
+ * @internal
  */
 class RegisterForm extends AccountForm {
 

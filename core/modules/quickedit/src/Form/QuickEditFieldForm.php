@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Builds and process a form for editing a single entity field.
+ *
+ * @internal
  */
 class QuickEditFieldForm extends FormBase {
 

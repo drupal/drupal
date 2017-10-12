@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form constructor for the translation import screen.
+ *
+ * @internal
  */
 class ImportForm extends FormBase {
 

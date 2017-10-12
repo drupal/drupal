@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Builds a form to test disabled elements.
+ *
+ * @internal
  */
 class FormTestDisabledElementsForm extends FormBase {
 

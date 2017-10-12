@@ -6,6 +6,8 @@ use Drupal\Core\Entity\ContentEntityDeleteForm;
 
 /**
  * Provides the comment delete confirmation form.
+ *
+ * @internal
  */
 class DeleteForm extends ContentEntityDeleteForm {
 

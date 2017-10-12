@@ -5,6 +5,11 @@ namespace Drupal\form_test\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Form to test page cache storage.
+ *
+ * @internal
+ */
 class FormTestStoragePageCacheForm extends FormBase {
 
   /**

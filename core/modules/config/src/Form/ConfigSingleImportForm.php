@@ -26,6 +26,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a form for importing a single configuration file.
+ *
+ * @internal
  */
 class ConfigSingleImportForm extends ConfirmFormBase {
 

@@ -16,6 +16,8 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * Displays theme configuration for entire site and individual themes.
+ *
+ * @internal
  */
 class ThemeSettingsForm extends ConfigFormBase {
 

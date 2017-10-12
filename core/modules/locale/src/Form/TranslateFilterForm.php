@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a filtered translation edit form.
+ *
+ * @internal
  */
 class TranslateFilterForm extends TranslateFormBase {
 

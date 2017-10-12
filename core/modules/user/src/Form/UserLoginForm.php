@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a user login form.
+ *
+ * @internal
  */
 class UserLoginForm extends FormBase {
 

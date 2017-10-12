@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form to test whether GET forms have a CSRF token.
+ *
+ * @internal
  */
 class FormTestGetForm extends FormBase {
 

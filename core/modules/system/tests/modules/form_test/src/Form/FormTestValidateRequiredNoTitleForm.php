@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form constructor to test the #required property without #title.
+ *
+ * @internal
  */
 class FormTestValidateRequiredNoTitleForm extends FormBase {
 

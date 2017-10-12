@@ -13,6 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Displays the book outline form.
+ *
+ * @internal
  */
 class BookOutlineForm extends ContentEntityForm {
 

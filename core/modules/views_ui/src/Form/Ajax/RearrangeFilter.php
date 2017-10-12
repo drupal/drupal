@@ -8,6 +8,8 @@ use Drupal\views\ViewExecutable;
 
 /**
  * Provides a rearrange form for Views filters.
+ *
+ * @internal
  */
 class RearrangeFilter extends ViewsFormBase {
 

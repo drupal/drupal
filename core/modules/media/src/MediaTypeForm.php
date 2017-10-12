@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for media type forms.
+ *
+ * @internal
  */
 class MediaTypeForm extends EntityForm {
 

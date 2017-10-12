@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form constructor for testing invalid #type 'range' elements.
+ *
+ * @internal
  */
 class FormTestRangeInvalidForm extends FormBase {
 

@@ -19,6 +19,8 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
  * Form controller for the Views edit form.
+ *
+ * @internal
  */
 class ViewEditForm extends ViewFormBase {
 

@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for the "field storage" add page.
+ *
+ * @internal
  */
 class FieldStorageAddForm extends FormBase {
 

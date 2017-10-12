@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a confirmation form before clearing out the logs.
+ *
+ * @internal
  */
 class DblogClearLogConfirmForm extends ConfirmFormBase {
 

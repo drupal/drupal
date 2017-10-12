@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Generate form of id batch_test_multistep_form.
+ *
+ * @internal
  */
 class BatchTestMultiStepForm extends FormBase {
 

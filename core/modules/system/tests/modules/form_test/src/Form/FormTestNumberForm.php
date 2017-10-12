@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Builds a form to test #type 'number' and 'range' validation.
+ *
+ * @internal
  */
 class FormTestNumberForm extends FormBase {
 

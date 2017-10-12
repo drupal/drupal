@@ -8,6 +8,8 @@ use Drupal\views\Views;
 
 /**
  * Form builder for the advanced admin settings page.
+ *
+ * @internal
  */
 class AdvancedSettingsForm extends ConfigFormBase {
 

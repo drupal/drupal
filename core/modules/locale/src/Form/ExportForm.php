@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Form for the Gettext translation files export form.
+ *
+ * @internal
  */
 class ExportForm extends FormBase {
 

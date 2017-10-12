@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a form for configuring an item in the Views UI.
+ *
+ * @internal
  */
 class ConfigHandler extends ViewsFormBase {
 

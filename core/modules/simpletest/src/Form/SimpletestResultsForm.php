@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Note that the UI strings are not translated because this form is also used
  * from run-tests.sh.
  *
+ * @internal
+ *
  * @see simpletest_script_open_browser()
  * @see run-tests.sh
  */

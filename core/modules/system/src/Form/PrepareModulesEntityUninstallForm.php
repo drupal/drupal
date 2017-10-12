@@ -12,6 +12,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides a form removing module content entities data before uninstallation.
+ *
+ * @internal
  */
 class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
 

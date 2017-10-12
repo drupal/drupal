@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for reverting a node revision for a single translation.
+ *
+ * @internal
  */
 class NodeRevisionRevertTranslationForm extends NodeRevisionRevertForm {
 

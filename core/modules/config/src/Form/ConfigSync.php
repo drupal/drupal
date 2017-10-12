@@ -21,6 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Construct the storage changes in a configuration synchronization form.
+ *
+ * @internal
  */
 class ConfigSync extends FormBase {
 

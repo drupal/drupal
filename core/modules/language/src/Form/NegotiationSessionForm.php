@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure the session language negotiation method for this site.
+ *
+ * @internal
  */
 class NegotiationSessionForm extends ConfigFormBase {
 

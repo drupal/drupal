@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the user permissions administration form.
+ *
+ * @internal
  */
 class UserPermissionsForm extends FormBase {
 

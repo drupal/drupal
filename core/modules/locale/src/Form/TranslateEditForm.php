@@ -8,6 +8,8 @@ use Drupal\locale\SourceString;
 
 /**
  * Defines a translation edit form.
+ *
+ * @internal
  */
 class TranslateEditForm extends TranslateFormBase {
 

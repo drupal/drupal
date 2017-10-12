@@ -25,6 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * each module's name, description, and information about which modules it
  * requires. See \Drupal\Core\Extension\InfoParser for info on module.info.yml
  * descriptors.
+ *
+ * @internal
  */
 class ModulesListForm extends FormBase {
 

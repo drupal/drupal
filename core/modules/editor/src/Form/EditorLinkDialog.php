@@ -12,6 +12,8 @@ use Drupal\Core\Ajax\CloseModalDialogCommand;
 
 /**
  * Provides a link dialog for text editors.
+ *
+ * @internal
  */
 class EditorLinkDialog extends FormBase {
 

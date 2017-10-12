@@ -8,6 +8,8 @@ use Drupal\taxonomy\TermForm;
 
 /**
  * Base form for forum term edit forms.
+ *
+ * @internal
  */
 class ForumForm extends TermForm {
 

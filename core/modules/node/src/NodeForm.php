@@ -13,6 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form handler for the node edit forms.
+ *
+ * @internal
  */
 class NodeForm extends ContentEntityForm {
 

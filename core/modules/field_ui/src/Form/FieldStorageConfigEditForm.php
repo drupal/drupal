@@ -12,6 +12,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides a form for the "field storage" edit page.
+ *
+ * @internal
  */
 class FieldStorageConfigEditForm extends EntityForm {
 

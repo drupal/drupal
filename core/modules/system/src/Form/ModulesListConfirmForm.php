@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds a confirmation form for enabling modules with dependencies.
+ *
+ * @internal
  */
 class ModulesListConfirmForm extends ConfirmFormBase {
 

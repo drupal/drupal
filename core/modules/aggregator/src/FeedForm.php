@@ -8,6 +8,8 @@ use Drupal\Core\Url;
 
 /**
  * Form handler for the aggregator feed edit forms.
+ *
+ * @internal
  */
 class FeedForm extends ContentEntityForm {
 

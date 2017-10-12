@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form constructor for testing form state persistence.
+ *
+ * @internal
  */
 class FormTestStatePersistForm extends FormBase {
 

@@ -7,6 +7,8 @@ use Drupal\Core\Url;
 
 /**
  * Form controller for the Views preview form.
+ *
+ * @internal
  */
 class ViewPreviewForm extends ViewFormBase {
 

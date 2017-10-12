@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a confirmation form for deleting a comment type entity.
+ *
+ * @internal
  */
 class CommentTypeDeleteForm extends EntityDeleteForm {
 

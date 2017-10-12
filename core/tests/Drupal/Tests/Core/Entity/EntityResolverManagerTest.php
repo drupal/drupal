@@ -492,6 +492,8 @@ class SimpleTestEntity extends Entity {
 
 /**
  * A basic form with a passed entity with an interface.
+ *
+ * @internal
  */
 class BasicForm extends FormBase {
 

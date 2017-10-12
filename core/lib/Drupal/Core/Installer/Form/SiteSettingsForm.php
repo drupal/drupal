@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form to configure and rewrite settings.php.
+ *
+ * @internal
  */
 class SiteSettingsForm extends FormBase {
 

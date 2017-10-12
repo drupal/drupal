@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines a test form using autocomplete textfields.
+ *
+ * @internal
  */
 class FormTestAutocompleteForm extends FormBase {
 

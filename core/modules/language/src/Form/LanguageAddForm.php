@@ -9,6 +9,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Controller for language addition forms.
+ *
+ * @internal
  */
 class LanguageAddForm extends LanguageFormBase {
 

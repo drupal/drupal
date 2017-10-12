@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form builder for the admin display defaults page.
+ *
+ * @internal
  */
 class BasicSettingsForm extends ConfigFormBase {
 

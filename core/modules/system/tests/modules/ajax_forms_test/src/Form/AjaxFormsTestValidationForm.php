@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form builder: Builds a form that triggers a simple AJAX callback.
+ *
+ * @internal
  */
 class AjaxFormsTestValidationForm extends FormBase {
 

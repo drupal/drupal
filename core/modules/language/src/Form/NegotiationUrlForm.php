@@ -12,6 +12,8 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 
 /**
  * Configure the URL language negotiation method for this site.
+ *
+ * @internal
  */
 class NegotiationUrlForm extends ConfigFormBase {
 

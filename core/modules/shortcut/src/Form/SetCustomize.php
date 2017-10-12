@@ -8,6 +8,8 @@ use Drupal\Core\Render\Element;
 
 /**
  * Builds the shortcut set customize form.
+ *
+ * @internal
  */
 class SetCustomize extends EntityForm {
 

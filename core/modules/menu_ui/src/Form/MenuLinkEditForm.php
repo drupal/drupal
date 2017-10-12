@@ -13,6 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * The menu link plugin defines which class defines the corresponding form.
  *
+ * @internal
+ *
  * @see \Drupal\Core\Menu\MenuLinkInterface::getFormClass()
  */
 class MenuLinkEditForm extends FormBase {

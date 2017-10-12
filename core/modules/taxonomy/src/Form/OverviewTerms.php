@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides terms overview form for a taxonomy vocabulary.
+ *
+ * @internal
  */
 class OverviewTerms extends FormBase {
 

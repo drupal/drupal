@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Builds a form to test the language select form element.
+ *
+ * @internal
  */
 class FormTestLanguageSelectForm extends FormBase {
 

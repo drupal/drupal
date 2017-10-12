@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Provides a generic base class for a content entity deletion form.
  *
+ * @internal
+ *
  * @todo Re-evaluate and streamline the entity deletion form class hierarchy in
  *   https://www.drupal.org/node/2491057.
  */

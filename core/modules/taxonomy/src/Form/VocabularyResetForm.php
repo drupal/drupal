@@ -9,6 +9,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides confirmation form for resetting a vocabulary to alphabetical order.
+ *
+ * @internal
  */
 class VocabularyResetForm extends EntityConfirmFormBase {
 

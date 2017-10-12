@@ -8,6 +8,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for the test config edit forms.
+ *
+ * @internal
  */
 class SessionTestForm extends FormBase {
 

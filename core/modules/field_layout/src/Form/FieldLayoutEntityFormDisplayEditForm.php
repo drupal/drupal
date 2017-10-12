@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Edit form for the EntityFormDisplay entity type.
+ *
+ * @internal
  */
 class FieldLayoutEntityFormDisplayEditForm extends EntityFormDisplayEditForm {
 

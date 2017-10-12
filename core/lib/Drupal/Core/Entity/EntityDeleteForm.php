@@ -9,6 +9,8 @@ use Drupal\Core\Form\FormStateInterface;
  * Provides a generic base class for an entity deletion form.
  *
  * @ingroup entity_api
+ *
+ * @internal
  */
 class EntityDeleteForm extends EntityConfirmFormBase {
 

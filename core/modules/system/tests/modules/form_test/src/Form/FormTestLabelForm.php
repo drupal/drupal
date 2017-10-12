@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * A form for testing form labels and required marks.
+ *
+ * @internal
  */
 class FormTestLabelForm extends FormBase {
 

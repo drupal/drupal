@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for the media edit forms.
+ *
+ * @internal
  */
 class MediaForm extends ContentEntityForm {
 

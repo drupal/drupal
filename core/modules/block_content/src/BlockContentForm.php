@@ -8,6 +8,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form handler for the custom block edit forms.
+ *
+ * @internal
  */
 class BlockContentForm extends ContentEntityForm {
 

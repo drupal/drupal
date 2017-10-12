@@ -4,6 +4,11 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Builds a form to test table select with '#multiple" set to FALSE.
+ *
+ * @internal
+ */
 class FormTestTableSelectMultipleFalseForm extends FormTestTableSelectFormBase {
 
   /**

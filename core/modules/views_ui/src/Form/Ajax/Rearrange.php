@@ -10,6 +10,8 @@ use Drupal\views\ViewExecutable;
 
 /**
  * Provides a rearrange form for Views handlers.
+ *
+ * @internal
  */
 class Rearrange extends ViewsFormBase {
 

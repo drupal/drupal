@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form for adding a search page.
+ *
+ * @internal
  */
 class SearchPageAddForm extends SearchPageFormBase {
 

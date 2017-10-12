@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provides a node deletion confirmation form.
+ *
+ * @internal
  */
 class DeleteMultiple extends ConfirmFormBase {
 

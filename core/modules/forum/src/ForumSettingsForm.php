@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure forum settings for this site.
+ *
+ * @internal
  */
 class ForumSettingsForm extends ConfigFormBase {
 

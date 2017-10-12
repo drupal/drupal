@@ -8,6 +8,8 @@ use Drupal\Core\Url;
 
 /**
  * Provides the filter format disable form.
+ *
+ * @internal
  */
 class FilterDisableForm extends EntityConfirmFormBase {
 

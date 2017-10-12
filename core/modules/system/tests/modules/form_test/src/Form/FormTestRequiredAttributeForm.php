@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Builds a form to test the required attribute.
+ *
+ * @internal
  */
 class FormTestRequiredAttributeForm extends FormBase {
 

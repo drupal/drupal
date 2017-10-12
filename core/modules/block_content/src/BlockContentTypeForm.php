@@ -9,6 +9,8 @@ use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * Base form for category edit forms.
+ *
+ * @internal
  */
 class BlockContentTypeForm extends BundleEntityFormBase {
 

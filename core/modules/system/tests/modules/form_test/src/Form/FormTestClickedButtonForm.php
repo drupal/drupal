@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form builder to test button click detection.
+ *
+ * @internal
  */
 class FormTestClickedButtonForm extends FormBase {
 

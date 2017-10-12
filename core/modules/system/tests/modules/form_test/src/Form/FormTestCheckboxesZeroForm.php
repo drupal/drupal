@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Tests checkboxes zero.
+ *
+ * @internal
  */
 class FormTestCheckboxesZeroForm extends FormBase {
 

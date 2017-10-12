@@ -8,6 +8,8 @@ use Drupal\Core\Url;
 
 /**
  * Test form for JSWebAssert JavaScriptTestBase.
+ *
+ * @internal
  */
 class JsWebAssertTestForm extends FormBase {
 

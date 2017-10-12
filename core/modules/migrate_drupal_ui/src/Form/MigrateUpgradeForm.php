@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a multi-step form for performing direct site upgrades.
+ *
+ * @internal
  */
 class MigrateUpgradeForm extends ConfirmFormBase {
 

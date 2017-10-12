@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the comment multiple delete confirmation form.
+ *
+ * @internal
  */
 class ConfirmDeleteMultiple extends ConfirmFormBase {
 

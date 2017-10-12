@@ -9,6 +9,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the responsive image edit/add forms.
+ *
+ * @internal
  */
 class ResponsiveImageStyleForm extends EntityForm {
 

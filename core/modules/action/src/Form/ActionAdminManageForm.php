@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a configuration form for configurable actions.
+ *
+ * @internal
  */
 class ActionAdminManageForm extends FormBase {
 

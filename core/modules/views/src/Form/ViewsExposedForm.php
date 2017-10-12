@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the views exposed form.
+ *
+ * @internal
  */
 class ViewsExposedForm extends FormBase {
 

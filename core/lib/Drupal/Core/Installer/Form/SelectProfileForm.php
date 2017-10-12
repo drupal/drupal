@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides the profile selection form.
+ *
+ * @internal
  */
 class SelectProfileForm extends FormBase {
 

@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure site information settings for this site.
+ *
+ * @internal
  */
 class SiteInformationForm extends ConfigFormBase {
 

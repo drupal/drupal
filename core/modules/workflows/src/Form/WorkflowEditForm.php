@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The form for editing workflows.
+ *
+ * @internal
  */
 class WorkflowEditForm extends EntityForm {
 

@@ -7,6 +7,8 @@ use Drupal\views\Views;
 
 /**
  * Provides a form for editing the details of a View.
+ *
+ * @internal
  */
 class EditDetails extends ViewsFormBase {
 

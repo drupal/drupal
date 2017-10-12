@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form for adding a date format.
+ *
+ * @internal
  */
 class DateFormatAddForm extends DateFormatFormBase {
 

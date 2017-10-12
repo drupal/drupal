@@ -13,6 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The EntityModerationForm provides a simple UI for changing moderation state.
+ *
+ * @internal
  */
 class EntityModerationForm extends FormBase {
 

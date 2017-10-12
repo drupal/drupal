@@ -7,6 +7,8 @@ use Drupal\Core\Url;
 
 /**
  * Provides a deletion confirmation form for the block instance deletion form.
+ *
+ * @internal
  */
 class BlockDeleteForm extends EntityDeleteForm {
 

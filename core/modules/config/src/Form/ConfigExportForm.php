@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the configuration export form.
+ *
+ * @internal
  */
 class ConfigExportForm extends FormBase {
 

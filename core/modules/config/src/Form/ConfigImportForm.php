@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the configuration import form.
+ *
+ * @internal
  */
 class ConfigImportForm extends FormBase {
 

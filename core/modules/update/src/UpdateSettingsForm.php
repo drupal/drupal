@@ -10,6 +10,8 @@ use Egulias\EmailValidator\EmailValidator;
 
 /**
  * Configure update settings for this site.
+ *
+ * @internal
  */
 class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInterface {
 

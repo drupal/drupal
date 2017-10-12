@@ -4,6 +4,11 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Builds a form to test table selects with different column spans.
+ *
+ * @internal
+ */
 class FormTestTableSelectColspanForm extends FormTestTableSelectFormBase {
 
   /**

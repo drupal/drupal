@@ -9,6 +9,8 @@ use Drupal\views\ViewExecutable;
 
 /**
  * Provides a form for configuring grouping information for a Views UI handler.
+ *
+ * @internal
  */
 class ConfigHandlerGroup extends ViewsFormBase {
 

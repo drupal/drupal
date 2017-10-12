@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a confirmation form for cancelling multiple user accounts.
+ *
+ * @internal
  */
 class UserMultipleCancelConfirm extends ConfirmFormBase {
 

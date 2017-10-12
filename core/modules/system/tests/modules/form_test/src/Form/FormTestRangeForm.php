@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Form constructor for testing #type 'range' elements.
+ *
+ * @internal
  */
 class FormTestRangeForm extends FormBase {
 

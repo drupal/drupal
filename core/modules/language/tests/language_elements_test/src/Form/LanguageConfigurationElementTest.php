@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * A form containing a language select element.
+ *
+ * @internal
  */
 class LanguageConfigurationElementTest extends FormBase {
 

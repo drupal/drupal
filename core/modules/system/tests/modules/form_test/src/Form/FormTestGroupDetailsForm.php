@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Builds a simple form to test the #group property on #type 'details'.
+ *
+ * @internal
  */
 class FormTestGroupDetailsForm extends FormBase {
 

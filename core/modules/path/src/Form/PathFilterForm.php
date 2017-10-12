@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides the path admin overview filter form.
+ *
+ * @internal
  */
 class PathFilterForm extends FormBase {
 

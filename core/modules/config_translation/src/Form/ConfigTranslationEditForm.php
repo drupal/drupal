@@ -7,6 +7,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Defines a form for editing configuration translations.
+ *
+ * @internal
  */
 class ConfigTranslationEditForm extends ConfigTranslationFormBase {
 

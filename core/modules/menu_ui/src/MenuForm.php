@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base form for menu edit forms.
+ *
+ * @internal
  */
 class MenuForm extends EntityForm {
 

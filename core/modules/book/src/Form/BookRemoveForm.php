@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Remove form for book module.
+ *
+ * @internal
  */
 class BookRemoveForm extends ConfirmFormBase {
 

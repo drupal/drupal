@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure regional settings for this site.
+ *
+ * @internal
  */
 class RegionalForm extends ConfigFormBase {
 

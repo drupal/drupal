@@ -5,6 +5,11 @@ namespace Drupal\big_pipe_test\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Form to test BigPipe.
+ *
+ * @internal
+ */
 class BigPipeTestForm extends FormBase {
 
   /**

@@ -12,6 +12,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides forum overview form for the forum vocabulary.
+ *
+ * @internal
  */
 class Overview extends OverviewTerms {
 

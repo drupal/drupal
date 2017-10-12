@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form to add/update content menu links.
+ *
+ * @internal
  */
 class MenuLinkContentForm extends ContentEntityForm {
 

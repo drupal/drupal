@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds the form to break the lock of an edited view.
+ *
+ * @internal
  */
 class BreakLockForm extends EntityConfirmFormBase {
 

@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure simpletest settings for this site.
+ *
+ * @internal
  */
 class SimpletestSettingsForm extends ConfigFormBase {
 

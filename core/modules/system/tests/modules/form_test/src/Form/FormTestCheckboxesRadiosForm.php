@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Form constructor to test expansion of #type checkboxes and radios.
+ *
+ * @internal
  */
 class FormTestCheckboxesRadiosForm extends FormBase {
 

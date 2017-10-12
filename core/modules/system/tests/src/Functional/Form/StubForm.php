@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a stub form for testing purposes.
+ *
+ * @internal
  */
 class StubForm extends FormBase {
 

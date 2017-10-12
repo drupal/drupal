@@ -8,6 +8,8 @@ use Drupal\Core\Url;
 
 /**
  * Provides a test confirmation form.
+ *
+ * @internal
  */
 class ConfirmFormTestForm extends ConfirmFormBase {
 

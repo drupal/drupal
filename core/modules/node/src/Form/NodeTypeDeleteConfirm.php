@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form for content type deletion.
+ *
+ * @internal
  */
 class NodeTypeDeleteConfirm extends EntityDeleteForm {
 

@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure locale settings for this site.
+ *
+ * @internal
  */
 class LocaleSettingsForm extends ConfigFormBase {
 

@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Form constructor for testing #type 'color' elements.
+ *
+ * @internal
  */
 class FormTestColorForm extends FormBase {
 

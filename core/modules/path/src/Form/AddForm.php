@@ -6,6 +6,8 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Provides the path add form.
+ *
+ * @internal
  */
 class AddForm extends PathFormBase {
 

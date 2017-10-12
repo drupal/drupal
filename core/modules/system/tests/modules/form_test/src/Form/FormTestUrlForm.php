@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Form constructor for testing #type 'url' elements.
+ *
+ * @internal
  */
 class FormTestUrlForm extends FormBase {
 

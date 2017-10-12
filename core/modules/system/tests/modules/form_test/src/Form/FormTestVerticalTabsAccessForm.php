@@ -5,6 +5,11 @@ namespace Drupal\form_test\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Builds a form to test vertical tabs access.
+ *
+ * @internal
+ */
 class FormTestVerticalTabsAccessForm extends FormBase {
 
   /**

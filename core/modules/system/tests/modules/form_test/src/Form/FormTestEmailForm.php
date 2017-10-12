@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Form constructor for testing #type 'email' elements.
+ *
+ * @internal
  */
 class FormTestEmailForm extends FormBase {
 

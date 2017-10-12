@@ -17,6 +17,8 @@ use Drupal\form_test\Callbacks;
  *   structure and the alterations should be contained in the rebuilt form.
  * - #validate handlers should be able to alter the $form and the alterations
  *   should be contained in the rebuilt form.
+ *
+ * @internal
  */
 class FormTestValidateForm extends FormBase {
 

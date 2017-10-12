@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the Views edit form.
+ *
+ * @internal
  */
 class ViewAddForm extends ViewFormBase {
 

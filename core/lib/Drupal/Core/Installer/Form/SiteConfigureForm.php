@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the site configuration form.
+ *
+ * @internal
  */
 class SiteConfigureForm extends ConfigFormBase {
 

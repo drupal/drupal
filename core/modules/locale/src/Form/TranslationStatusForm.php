@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a translation status form.
+ *
+ * @internal
  */
 class TranslationStatusForm extends FormBase {
 

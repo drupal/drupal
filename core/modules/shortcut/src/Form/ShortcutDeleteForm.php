@@ -7,6 +7,8 @@ use Drupal\Core\Url;
 
 /**
  * Builds the shortcut link deletion form.
+ *
+ * @internal
  */
 class ShortcutDeleteForm extends ContentEntityDeleteForm {
 

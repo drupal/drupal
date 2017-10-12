@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for action add forms.
+ *
+ * @internal
  */
 class ActionAddForm extends ActionFormBase {
 

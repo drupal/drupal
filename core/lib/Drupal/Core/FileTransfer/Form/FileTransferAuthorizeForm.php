@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provides the file transfer authorization form.
+ *
+ * @internal
  */
 class FileTransferAuthorizeForm extends FormBase {
 

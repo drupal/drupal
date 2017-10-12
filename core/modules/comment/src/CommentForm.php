@@ -18,6 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base handler for comment forms.
+ *
+ * @internal
  */
 class CommentForm extends ContentEntityForm {
 

@@ -6,7 +6,9 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Configure RSS settings for this site.
+ * Configure RSS settings for this site
+ *
+ * @internal
  */
 class RssFeedsForm extends ConfigFormBase {
 

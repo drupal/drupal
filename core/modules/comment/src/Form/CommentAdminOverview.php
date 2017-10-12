@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the comments overview administration form.
+ *
+ * @internal
  */
 class CommentAdminOverview extends FormBase {
 

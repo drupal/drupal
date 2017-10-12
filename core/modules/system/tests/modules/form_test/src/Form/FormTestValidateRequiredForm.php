@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form constructor to test the #required property.
+ *
+ * @internal
  */
 class FormTestValidateRequiredForm extends FormBase {
 

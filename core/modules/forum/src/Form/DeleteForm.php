@@ -9,6 +9,8 @@ use Drupal\taxonomy\TermInterface;
 
 /**
  * Builds the form to delete a forum term.
+ *
+ * @internal
  */
 class DeleteForm extends ConfirmFormBase {
 

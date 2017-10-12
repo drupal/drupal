@@ -14,6 +14,8 @@ use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 
 /**
  * Builds a confirmation form to uninstall selected modules.
+ *
+ * @internal
  */
 class ModulesUninstallConfirmForm extends ConfirmFormBase {
   use ConfigDependencyDeleteFormTrait;

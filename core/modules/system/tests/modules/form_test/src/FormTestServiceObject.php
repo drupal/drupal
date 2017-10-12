@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a test form object.
+ *
+ * @internal
  */
 class FormTestServiceObject extends ConfigFormBase {
 

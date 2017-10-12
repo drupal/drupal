@@ -8,6 +8,8 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Form controller for the test config edit forms.
+ *
+ * @internal
  */
 class ConfigTestForm extends EntityForm {
 

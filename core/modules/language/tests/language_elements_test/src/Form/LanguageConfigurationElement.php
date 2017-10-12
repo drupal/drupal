@@ -8,6 +8,8 @@ use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * A form containing a language configuration element.
+ *
+ * @internal
  */
 class LanguageConfigurationElement extends FormBase {
 

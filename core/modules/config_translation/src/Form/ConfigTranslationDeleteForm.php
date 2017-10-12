@@ -15,6 +15,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Builds a form to delete configuration translation.
+ *
+ * @internal
  */
 class ConfigTranslationDeleteForm extends ConfirmFormBase {
 

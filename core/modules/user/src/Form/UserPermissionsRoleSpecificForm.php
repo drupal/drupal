@@ -7,6 +7,8 @@ use Drupal\user\RoleInterface;
 
 /**
  * Provides the user permissions administration form for a specific role.
+ *
+ * @internal
  */
 class UserPermissionsRoleSpecificForm extends UserPermissionsForm {
 
