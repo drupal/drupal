@@ -22,7 +22,7 @@ class PrivateTempStoreFactory {
   /**
    * The lock object used for this data.
    *
-   * @var \Drupal\Core\Lock\LockBackendInterface $lockBackend
+   * @var \Drupal\Core\Lock\LockBackendInterface
    */
   protected $lockBackend;
 

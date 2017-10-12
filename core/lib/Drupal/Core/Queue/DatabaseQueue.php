@@ -30,7 +30,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
   /**
    * The database connection.
    *
-   * @var \Drupal\Core\Database\Connection $connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 
