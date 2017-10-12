@@ -13,7 +13,49 @@ use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
 
 /**
- * The base class for all source plugins.
+ * The base class for source plugins.
+ *
+ * Available configuration keys:
+ * - cache_counts: (optional) If set, cache the source count.
+ * - skip_count: (optional) If set, do not attempt to count the source.
+ * - track_changes: (optional) If set, track changes to incoming data.
+ * - high_water_property: (optional) It is an array of name & alias values
+ *   (optional table alias). This high_water_property is typically a timestamp
+ *   or serial id showing what was the last imported record. Only content with a
+ *   higher value will be imported.
+ *
+ * The high_water_property and track_changes are mutually exclusive.
+ *
+ * Example:
+ *
+ * @code
+ * source:
+ *   plugin: some_source_plugin_name
+ *   cache_counts: true
+ *   track_changes: true
+ * @endcode
+ *
+ * This example uses the plugin "some_source_plugin_name" and caches the count
+ * of available source records to save calculating it every time count() is
+ * called. Changes to incoming data are watched (because track_changes is true),
+ * which can affect the result of prepareRow().
+ *
+ * Example:
+ *
+ * @code
+ * source:
+ *   plugin: some_source_plugin_name
+ *   skip_count: true
+ *   high_water_property:
+ *     name: changed
+ *     alias: n
+ * @endcode
+ *
+ * In this example, skip_count is true which means count() will not attempt to
+ * count the available source records, but just always return -1 instead. The
+ * high_water_property defines which field marks the last imported row of the
+ * migration. This will get converted into a SQL condition that looks like
+ * 'n.changed' or 'changed' if no alias.
  *
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\Annotation\MigrateSource
