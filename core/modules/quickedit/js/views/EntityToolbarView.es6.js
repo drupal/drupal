@@ -296,7 +296,7 @@
           suggested.top = fenceTop;
         }
         else if ((suggested.top + toolbarHeight) > (fenceTop + fenceHeight)) {
-          suggested.top = fenceTop + fenceHeight - toolbarHeight;
+          suggested.top = (fenceTop + fenceHeight) - toolbarHeight;
         }
         // Position the toolbar.
         info.element.element.css({

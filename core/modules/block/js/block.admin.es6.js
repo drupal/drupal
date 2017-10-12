@@ -91,7 +91,7 @@
           // Just scrolling the document.body will not work in Firefox. The html
           // element is needed as well.
           $('html, body').animate({
-            scrollTop: $('.js-block-placed').offset().top - $container.offset().top + $container.scrollTop(),
+            scrollTop: ($('.js-block-placed').offset().top - $container.offset().top) + $container.scrollTop(),
           }, 500);
         });
       }

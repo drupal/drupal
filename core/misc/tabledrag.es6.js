@@ -713,7 +713,8 @@
         // Stop any current scrolling.
         clearInterval(self.scrollInterval);
         // Continue scrolling if the mouse has moved in the scroll direction.
-        if (scrollAmount > 0 && self.rowObject.direction === 'down' || scrollAmount < 0 && self.rowObject.direction === 'up') {
+        if ((scrollAmount > 0 && self.rowObject.direction === 'down')
+          || (scrollAmount < 0 && self.rowObject.direction === 'up')) {
           self.setScroll(scrollAmount);
         }
 
@@ -827,8 +828,8 @@
       return { x: event.pageX, y: event.pageY };
     }
     return {
-      x: event.clientX + document.body.scrollLeft - document.body.clientLeft,
-      y: event.clientY + document.body.scrollTop - document.body.clientTop,
+      x: (event.clientX + document.body.scrollLeft) - document.body.clientLeft,
+      y: (event.clientY + document.body.scrollTop) - document.body.clientTop,
     };
   };
 
@@ -1119,7 +1120,7 @@
 
     // Return a scroll speed relative to the edge of the screen.
     if (cursorY - scrollY > windowHeight - trigger) {
-      delta = trigger / (windowHeight + scrollY - cursorY);
+      delta = trigger / ((windowHeight + scrollY) - cursorY);
       delta = (delta > 0 && delta < trigger) ? delta : trigger;
       return delta * this.scrollSettings.amount;
     }
@@ -1144,7 +1145,8 @@
       self.checkScroll(self.currentPointerCoords.y);
       const aboveTable = self.scrollY > self.table.topY;
       const belowTable = self.scrollY + self.windowHeight < self.table.bottomY;
-      if (scrollAmount > 0 && belowTable || scrollAmount < 0 && aboveTable) {
+      if ((scrollAmount > 0 && belowTable)
+        || (scrollAmount < 0 && aboveTable)) {
         window.scrollBy(0, scrollAmount);
       }
     }, this.scrollSettings.interval);

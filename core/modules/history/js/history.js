@@ -8,7 +8,8 @@
 (function ($, Drupal, drupalSettings, storage) {
   var currentUserID = parseInt(drupalSettings.user.uid, 10);
 
-  var thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - 30 * 24 * 60 * 60;
+  var secondsIn30Days = 2592000;
+  var thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - secondsIn30Days;
 
   var embeddedLastReadTimestamps = false;
   if (drupalSettings.history && drupalSettings.history.lastReadTimestamps) {

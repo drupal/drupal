@@ -124,7 +124,7 @@
             given[1] /= d;
           }
           else {
-            given[1] = 1 - (1 - given[1]) * d;
+            given[1] = 1 - ((1 - given[1]) * d);
           }
         }
 
@@ -138,7 +138,7 @@
             given[2] /= d;
           }
           else {
-            given[2] = 1 - (1 - given[2]) * d;
+            given[2] = 1 - ((1 - given[2]) * d);
           }
         }
 

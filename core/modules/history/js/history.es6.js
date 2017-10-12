@@ -10,7 +10,8 @@
 
   // Any comment that is older than 30 days is automatically considered read,
   // so for these we don't need to perform a request at all!
-  const thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - 30 * 24 * 60 * 60;
+  const secondsIn30Days = 2592000;
+  const thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - secondsIn30Days;
 
   // Use the data embedded in the page, if available.
   let embeddedLastReadTimestamps = false;
