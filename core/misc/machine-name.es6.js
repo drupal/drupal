@@ -88,7 +88,6 @@
 
       Object.keys(settings.machineName).forEach((source_id) => {
         let machine = '';
-        let eventData;
         const options = settings.machineName[source_id];
 
         const $source = $context.find(source_id).addClass('machine-name-source').once('machine-name');
@@ -129,7 +128,7 @@
           return;
         }
 
-        eventData = {
+        const eventData = {
           $source,
           $target,
           $suffix,

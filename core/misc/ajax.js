@@ -73,16 +73,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   Drupal.AjaxError = function (xmlhttp, uri, customMessage) {
     var statusCode = void 0;
     var statusText = void 0;
-    var pathText = void 0;
     var responseText = void 0;
-    var readyStateText = void 0;
     if (xmlhttp.status) {
       statusCode = '\n' + Drupal.t('An AJAX HTTP error occurred.') + '\n' + Drupal.t('HTTP Result Code: !status', { '!status': xmlhttp.status });
     } else {
       statusCode = '\n' + Drupal.t('An AJAX HTTP request terminated abnormally.');
     }
     statusCode += '\n' + Drupal.t('Debugging information follows.');
-    pathText = '\n' + Drupal.t('Path: !uri', { '!uri': uri });
+    var pathText = '\n' + Drupal.t('Path: !uri', { '!uri': uri });
     statusText = '';
 
     try {
@@ -98,7 +96,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi, '');
     responseText = responseText.replace(/[\n]+\s+/g, '\n');
 
-    readyStateText = xmlhttp.status === 0 ? '\n' + Drupal.t('ReadyState: !readyState', { '!readyState': xmlhttp.readyState }) : '';
+    var readyStateText = xmlhttp.status === 0 ? '\n' + Drupal.t('ReadyState: !readyState', { '!readyState': xmlhttp.readyState }) : '';
 
     customMessage = customMessage ? '\n' + Drupal.t('CustomMessage: !customMessage', { '!customMessage': customMessage }) : '';
 

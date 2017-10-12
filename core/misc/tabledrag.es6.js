@@ -1354,12 +1354,11 @@
    */
   Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow, nextRow) {
     const $prevRow = $(prevRow);
-    let minIndent;
     let maxIndent;
 
     // Minimum indentation:
     // Do not orphan the next row.
-    minIndent = nextRow ? $(nextRow).find('.js-indentation').length : 0;
+    const minIndent = nextRow ? $(nextRow).find('.js-indentation').length : 0;
 
     // Maximum indentation:
     if (!prevRow || $prevRow.is(':not(.draggable)') || $(this.element).is('.tabledrag-root')) {

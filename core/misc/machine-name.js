@@ -51,7 +51,6 @@
 
       Object.keys(settings.machineName).forEach(function (source_id) {
         var machine = '';
-        var eventData = void 0;
         var options = settings.machineName[source_id];
 
         var $source = $context.find(source_id).addClass('machine-name-source').once('machine-name');
@@ -88,7 +87,7 @@
           return;
         }
 
-        eventData = {
+        var eventData = {
           $source: $source,
           $target: $target,
           $suffix: $suffix,

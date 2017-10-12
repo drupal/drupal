@@ -760,7 +760,6 @@
      *   An operator element.
      */
     duplicateGroupsOperator() {
-      let dropdowns;
       let newRow;
       let titleRow;
 
@@ -777,7 +776,7 @@
 
       // Keep a list of the operator dropdowns, so we can sync their behavior
       // later.
-      dropdowns = this.operator;
+      const dropdowns = this.operator;
 
       // Move the operator to a new row just above the second group.
       titleRow = $('tr#views-group-title-2');

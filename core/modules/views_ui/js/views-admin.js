@@ -372,7 +372,6 @@
       event.preventDefault();
     },
     duplicateGroupsOperator: function duplicateGroupsOperator() {
-      var dropdowns = void 0;
       var newRow = void 0;
       var titleRow = void 0;
 
@@ -385,7 +384,7 @@
       this.operator.find('label').add('div.description').addClass('visually-hidden');
       this.operator.find('select').addClass('form-select');
 
-      dropdowns = this.operator;
+      var dropdowns = this.operator;
 
       titleRow = $('tr#views-group-title-2');
       newRow = $('<tr class="filter-group-operator-row"><td colspan="5"></td></tr>');

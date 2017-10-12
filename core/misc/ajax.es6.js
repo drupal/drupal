@@ -117,9 +117,7 @@
   Drupal.AjaxError = function (xmlhttp, uri, customMessage) {
     let statusCode;
     let statusText;
-    let pathText;
     let responseText;
-    let readyStateText;
     if (xmlhttp.status) {
       statusCode = `\n${Drupal.t('An AJAX HTTP error occurred.')}\n${Drupal.t('HTTP Result Code: !status', { '!status': xmlhttp.status })}`;
     }
@@ -127,7 +125,7 @@
       statusCode = `\n${Drupal.t('An AJAX HTTP request terminated abnormally.')}`;
     }
     statusCode += `\n${Drupal.t('Debugging information follows.')}`;
-    pathText = `\n${Drupal.t('Path: !uri', { '!uri': uri })}`;
+    const pathText = `\n${Drupal.t('Path: !uri', { '!uri': uri })}`;
     statusText = '';
     // In some cases, when statusCode === 0, xmlhttp.statusText may not be
     // defined. Unfortunately, testing for it with typeof, etc, doesn't seem to
@@ -155,7 +153,7 @@
     responseText = responseText.replace(/[\n]+\s+/g, '\n');
 
     // We don't need readyState except for status == 0.
-    readyStateText = xmlhttp.status === 0 ? (`\n${Drupal.t('ReadyState: !readyState', { '!readyState': xmlhttp.readyState })}`) : '';
+    const readyStateText = xmlhttp.status === 0 ? (`\n${Drupal.t('ReadyState: !readyState', { '!readyState': xmlhttp.readyState })}`) : '';
 
     customMessage = customMessage ? (`\n${Drupal.t('CustomMessage: !customMessage', { '!customMessage': customMessage })}`) : '';
 
