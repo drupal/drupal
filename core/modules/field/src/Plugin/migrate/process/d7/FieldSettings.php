@@ -26,6 +26,16 @@ class FieldSettings extends ProcessPluginBase {
         }
         break;
 
+      case 'date':
+      case 'datetime':
+      case 'datestamp':
+        if ($value['granularity']['hour'] === 0
+            && $value['granularity']['minute'] === 0
+            && $value['granularity']['second'] === 0) {
+          $value['datetime_type'] = 'date';
+        }
+        break;
+
       case 'taxonomy_term_reference':
         $value['target_type'] = 'taxonomy_term';
         break;

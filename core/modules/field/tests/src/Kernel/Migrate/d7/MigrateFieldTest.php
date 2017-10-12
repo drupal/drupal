@@ -101,6 +101,8 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.field_node_entityreference', 'entity_reference', TRUE, -1);
     $this->assertEntity('node.field_user_entityreference', 'entity_reference', TRUE, 1);
     $this->assertEntity('node.field_term_entityreference', 'entity_reference', TRUE, -1);
+    $this->assertEntity('node.field_date_without_time', 'datetime', TRUE, 1);
+    $this->assertEntity('node.field_datetime_without_time', 'datetime', TRUE, 1);
 
     // Assert that the taxonomy term reference fields are referencing the
     // correct entity type.
@@ -117,6 +119,18 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $this->assertEquals('user', $field->getSetting('target_type'));
     $field = FieldStorageConfig::load('node.field_term_entityreference');
     $this->assertEquals('taxonomy_term', $field->getSetting('target_type'));
+
+    // Make sure that datetime fields get the right datetime_type setting
+    $field = FieldStorageConfig::load('node.field_date');
+    $this->assertEquals('datetime', $field->getSetting('datetime_type'));
+    $field = FieldStorageConfig::load('node.field_date_without_time');
+    $this->assertEquals('date', $field->getSetting('datetime_type'));
+    $field = FieldStorageConfig::load('node.field_datetime_without_time');
+    $this->assertEquals('date', $field->getSetting('datetime_type'));
+    // Except for field_date_with_end_time which is a timestamp and so does not
+    // have a datetime_type setting.
+    $field = FieldStorageConfig::load('node.field_date_with_end_time');
+    $this->assertNull($field->getSetting('datetime_type'));
   }
 
   /**
