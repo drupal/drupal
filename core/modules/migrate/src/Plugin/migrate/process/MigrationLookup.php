@@ -161,10 +161,6 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
     if (!is_array($migration_ids)) {
       $migration_ids = [$migration_ids];
     }
-    if (!is_array($value)) {
-      $value = [$value];
-    }
-    $this->skipOnEmpty($value);
     $self = FALSE;
     /** @var \Drupal\migrate\Plugin\MigrationInterface[] $migrations */
     $destination_ids = NULL;
@@ -176,13 +172,15 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       }
       if (isset($this->configuration['source_ids'][$migration_id])) {
         $configuration = ['source' => $this->configuration['source_ids'][$migration_id]];
-        $source_id_values[$migration_id] = $this->processPluginManager
+        $value = $this->processPluginManager
           ->createInstance('get', $configuration, $this->migration)
           ->transform(NULL, $migrate_executable, $row, $destination_property);
       }
-      else {
-        $source_id_values[$migration_id] = $value;
+      if (!is_array($value)) {
+        $value = [$value];
       }
+      $this->skipOnEmpty($value);
+      $source_id_values[$migration_id] = $value;
       // Break out of the loop as soon as a destination ID is found.
       if ($destination_ids = $migration->getIdMap()->lookupDestinationId($source_id_values[$migration_id])) {
         break;

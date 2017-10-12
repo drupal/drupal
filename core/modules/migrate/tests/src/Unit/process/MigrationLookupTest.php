@@ -11,6 +11,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
+use Drupal\migrate\Row;
 use Prophecy\Argument;
 
 /**
@@ -100,6 +101,8 @@ class MigrationLookupTest extends MigrateProcessTestCase {
       'migration' => 'foobaz',
     ];
     $migration_plugin->id()->willReturn(uniqid());
+    $migration_plugin_manager->createInstances(['foobaz'])
+      ->willReturn(['foobaz' => $migration_plugin->reveal()]);
     $migration = new MigrationLookup($configuration, 'migration_lookup', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
     $this->setExpectedException(MigrateSkipProcessException::class);
     $migration->transform(0, $this->migrateExecutable, $this->row, 'foo');
@@ -236,6 +239,63 @@ class MigrationLookupTest extends MigrateProcessTestCase {
 
     $migration = new MigrationLookup($configuration, '', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
     $migration->transform(1, $this->migrateExecutable, $this->row, '');
+  }
+
+  /**
+   * Tests processing multiple source IDs.
+   */
+  public function testMultipleSourceIds() {
+    $migration_plugin = $this->prophesize(MigrationInterface::class);
+    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
+    $process_plugin_manager = $this->prophesize(MigratePluginManager::class);
+    $foobaz_migration = $this->prophesize(MigrationInterface::class);
+    $get_migration = $this->prophesize(MigrationLookup::class);
+    $id_map = $this->prophesize(MigrateIdMapInterface::class);
+    $destination_plugin = $this->prophesize(MigrateDestinationInterface::class);
+    $source_plugin = $this->prophesize(MigrateSourceInterface::class);
+
+    $migration_plugin_manager->createInstances(['foobaz'])
+      ->willReturn(['foobaz' => $foobaz_migration->reveal()]);
+
+    $process_plugin_manager->createInstance('get', ['source' => ['string_id', 'integer_id']], $migration_plugin->reveal())
+      ->willReturn($get_migration->reveal());
+
+    $foobaz_migration->getIdMap()->willReturn($id_map->reveal());
+    $foobaz_migration->getDestinationPlugin(TRUE)->willReturn($destination_plugin->reveal());
+    $foobaz_migration->getProcess()->willReturn([]);
+    $foobaz_migration->getSourcePlugin()->willReturn($source_plugin->reveal());
+    $foobaz_migration->id()->willReturn('foobaz');
+    $foobaz_migration->getSourceConfiguration()->willReturn([]);
+
+    $get_migration->transform(NULL, $this->migrateExecutable, $this->row, 'foo')
+      ->willReturn(['example_string', 99]);
+
+    $source_plugin_ids = [
+      'string_id' => [
+        'type' => 'string',
+        'max_length' => 128,
+        'is_ascii' => TRUE,
+        'alias' => 'wpt',
+      ],
+      'integer_id' => [
+        'type' => 'integer',
+        'unsigned' => FALSE,
+        'alias' => 'wpt',
+      ],
+    ];
+
+    $stub_row = new Row(['string_id' => 'example_string', 'integer_id' => 99], $source_plugin_ids, TRUE);
+    $destination_plugin->import($stub_row)->willReturn([2]);
+
+    $source_plugin->getIds()->willReturn($source_plugin_ids);
+
+    $configuration = [
+      'migration' => 'foobaz',
+      'source_ids' => ['foobaz' => ['string_id', 'integer_id']],
+    ];
+    $migration = new MigrationLookup($configuration, 'migration', [], $migration_plugin->reveal(), $migration_plugin_manager->reveal(), $process_plugin_manager->reveal());
+    $result = $migration->transform(NULL, $this->migrateExecutable, $this->row, 'foo');
+    $this->assertEquals(2, $result);
   }
 
 }
