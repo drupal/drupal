@@ -212,7 +212,10 @@ class ThemeSettingsForm extends ConfigFormBase {
         '#type' => 'file',
         '#title' => t('Upload logo image'),
         '#maxlength' => 40,
-        '#description' => t("If you don't have direct file access to the server, use this field to upload your logo.")
+        '#description' => t("If you don't have direct file access to the server, use this field to upload your logo."),
+        '#upload_validators' => [
+          'file_validate_is_image' => [],
+        ],
       ];
     }
 
@@ -252,7 +255,12 @@ class ThemeSettingsForm extends ConfigFormBase {
       $form['favicon']['settings']['favicon_upload'] = [
         '#type' => 'file',
         '#title' => t('Upload favicon image'),
-        '#description' => t("If you don't have direct file access to the server, use this field to upload your shortcut icon.")
+        '#description' => t("If you don't have direct file access to the server, use this field to upload your shortcut icon."),
+        '#upload_validators' => [
+          'file_validate_extensions' => [
+            'ico png gif jpg jpeg apng svg',
+          ],
+        ],
       ];
     }
 
@@ -367,37 +375,22 @@ class ThemeSettingsForm extends ConfigFormBase {
     parent::validateForm($form, $form_state);
 
     if ($this->moduleHandler->moduleExists('file')) {
-      // Handle file uploads.
       $validators = ['file_validate_is_image' => []];
 
       // Check for a new uploaded logo.
-      $file = file_save_upload('logo_upload', $validators, FALSE, 0);
-      if (isset($file)) {
-        // File upload was attempted.
-        if ($file) {
-          // Put the temporary file in form_values so we can save it on submit.
-          $form_state->setValue('logo_upload', $file);
-        }
-        else {
-          // File upload failed.
-          $form_state->setErrorByName('logo_upload', $this->t('The logo could not be uploaded.'));
-        }
+      $file = _file_save_upload_from_form($form['logo']['settings']['logo_upload'], $form_state, 0);
+      if ($file) {
+        // Put the temporary file in form_values so we can save it on submit.
+        $form_state->setValue('logo_upload', $file);
       }
 
       $validators = ['file_validate_extensions' => ['ico png gif jpg jpeg apng svg']];
 
       // Check for a new uploaded favicon.
-      $file = file_save_upload('favicon_upload', $validators, FALSE, 0);
-      if (isset($file)) {
-        // File upload was attempted.
-        if ($file) {
-          // Put the temporary file in form_values so we can save it on submit.
-          $form_state->setValue('favicon_upload', $file);
-        }
-        else {
-          // File upload failed.
-          $form_state->setErrorByName('favicon_upload', $this->t('The favicon could not be uploaded.'));
-        }
+      $file = _file_save_upload_from_form($form['favicon']['settings']['favicon_upload'], $form_state, 0);
+      if ($file) {
+        // Put the temporary file in form_values so we can save it on submit.
+        $form_state->setValue('favicon_upload', $file);
       }
 
       // When intending to use the default logo, unset the logo_path.

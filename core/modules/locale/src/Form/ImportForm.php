@@ -108,6 +108,7 @@ class ImportForm extends FormBase {
       ],
       '#size' => 50,
       '#upload_validators' => $validators,
+      '#upload_location' => 'translations://',
       '#attributes' => ['class' => ['file-import-input']],
     ];
     $form['langcode'] = [
@@ -154,7 +155,7 @@ class ImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $this->file = file_save_upload('file', $form['file']['#upload_validators'], 'translations://', 0);
+    $this->file = _file_save_upload_from_form($form['file'], $form_state, 0);
 
     // Ensure we have the file uploaded.
     if (!$this->file) {

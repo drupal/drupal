@@ -674,11 +674,100 @@ function file_cron() {
 }
 
 /**
+ * Saves form file uploads.
+ *
+ * The files will be added to the {file_managed} table as temporary files.
+ * Temporary files are periodically cleaned. Use the 'file.usage' service to
+ * register the usage of the file which will automatically mark it as permanent.
+ *
+ * @param array $element
+ *   The FAPI element whose values are being saved.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param null|int $delta
+ *   (optional) The delta of the file to return the file entity.
+ *   Defaults to NULL.
+ * @param int $replace
+ *   (optional) The replace behavior when the destination file already exists.
+ *   Possible values include:
+ *   - FILE_EXISTS_REPLACE: Replace the existing file.
+ *   - FILE_EXISTS_RENAME: (default) Append _{incrementing number} until the
+ *     filename is unique.
+ *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
+ *
+ * @return array|\Drupal\file\FileInterface|null|false
+ *   An array of file entities or a single file entity if $delta != NULL. Each
+ *   array element contains the file entity if the upload succeeded or FALSE if
+ *   there was an error. Function returns NULL if no file was uploaded.
+ *
+ * @deprecated in Drupal 8.4.x, will be removed before Drupal 9.0.0.
+ *   For backwards compatibility use core file upload widgets in forms.
+ *
+ * @internal
+ *   This function wraps file_save_upload() to allow correct error handling in
+ *   forms.
+ *
+ * @todo Revisit after https://www.drupal.org/node/2244513.
+ */
+function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, $replace = FILE_EXISTS_RENAME) {
+  // Get all errors set before calling this method. This will also clear them
+  // from $_SESSION.
+  $errors_before = drupal_get_messages('error');
+
+  $upload_location = isset($element['#upload_location']) ? $element['#upload_location'] : FALSE;
+  $upload_name = implode('_', $element['#parents']);
+  $upload_validators = isset($element['#upload_validators']) ? $element['#upload_validators'] : [];
+
+  $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $replace);
+
+  // Get new errors that are generated while trying to save the upload. This
+  // will also clear them from $_SESSION.
+  $errors_new = drupal_get_messages('error');
+  if (!empty($errors_new['error'])) {
+    $errors_new = $errors_new['error'];
+
+    if (count($errors_new) > 1) {
+      // Render multiple errors into a single message.
+      // This is needed because only one error per element is supported.
+      $render_array = [
+        'error' => [
+          '#markup' => t('One or more files could not be uploaded.'),
+        ],
+        'item_list' => [
+          '#theme' => 'item_list',
+          '#items' => $errors_new,
+        ],
+      ];
+      $error_message = \Drupal::service('renderer')->renderPlain($render_array);
+    }
+    else {
+      $error_message = reset($errors_new);
+    }
+
+    $form_state->setError($element, $error_message);
+  }
+
+  // Ensure that errors set prior to calling this method are still shown to the
+  // user.
+  if (!empty($errors_before['error'])) {
+    foreach ($errors_before['error'] as $error) {
+      drupal_set_message($error, 'error');
+    }
+  }
+
+  return $result;
+}
+
+/**
  * Saves file uploads to a new location.
  *
  * The files will be added to the {file_managed} table as temporary files.
  * Temporary files are periodically cleaned. Use the 'file.usage' service to
  * register the usage of the file which will automatically mark it as permanent.
+ *
+ * Note that this function does not support correct form error handling. The
+ * file upload widgets in core do support this. It is advised to use these in
+ * any custom form, instead of calling this function.
  *
  * @param string $form_field_name
  *   A string that is the associative array key of the upload form element in
@@ -710,6 +799,10 @@ function file_cron() {
  *   An array of file entities or a single file entity if $delta != NULL. Each
  *   array element contains the file entity if the upload succeeded or FALSE if
  *   there was an error. Function returns NULL if no file was uploaded.
+ *
+ * @see _file_save_upload_from_form()
+ *
+ * @todo: move this logic to a service in https://www.drupal.org/node/2244513.
  */
 function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, $replace = FILE_EXISTS_RENAME) {
   $user = \Drupal::currentUser();
@@ -1200,9 +1293,8 @@ function file_managed_file_save_upload($element, FormStateInterface $form_state)
   $files_uploaded = $element['#multiple'] && count(array_filter($file_upload)) > 0;
   $files_uploaded |= !$element['#multiple'] && !empty($file_upload);
   if ($files_uploaded) {
-    if (!$files = file_save_upload($upload_name, $element['#upload_validators'], $destination)) {
+    if (!$files = _file_save_upload_from_form($element, $form_state)) {
       \Drupal::logger('file')->notice('The file upload failed. %upload', ['%upload' => $upload_name]);
-      $form_state->setError($element, t('Files in the @name field were unable to be uploaded.', ['@name' => $element['#title']]));
       return [];
     }
 
