@@ -29,7 +29,7 @@
  * forms = {
  *   "settings_tray" = "\Drupal\some_module\Form\MyBlockOffCanvasForm",
  * },
- * @encode
+ * @endcode
  *
  * In some cases, a block's content is not configurable (for example, the title,
  * main content, and help blocks). Such blocks can opt out of providing an
@@ -38,7 +38,7 @@
  * forms = {
  *   "settings_tray" = FALSE,
  * },
- * @encode
+ * @endcode
  *
  * Finally, blocks that do not specify an off-canvas form using the annotation
  * above will automatically have it set to their plugin class. For example, the
@@ -49,7 +49,7 @@
  * forms = {
  *   "settings_tray" = "\Drupal\system\Plugin\Block\SystemPoweredByBlock",
  * },
- * @encode
+ * @endcode
  *
  * Therefore, the entire Settings Tray API is just this annotation: it controls
  * what the Settings Tray does for a given block.

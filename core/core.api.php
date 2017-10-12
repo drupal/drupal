@@ -626,7 +626,7 @@
  * information_schema.TABLES WHERE table_schema = '***DATABASE_NAME***' AND
  * table_name LIKE 'cache_%'  ORDER BY (data_length + index_length) DESC
  * LIMIT 10;
- * @encode
+ * @endcode
  *
  * @see \Drupal\Core\Cache\DatabaseBackend
  *
