@@ -20,21 +20,46 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Base class for integration tests.
+ * Base class for functional integration tests.
  *
- * Tests extending this base class can access files and the database, but the
- * entire environment is initially empty. Drupal runs in a minimal mocked
- * environment, comparable to the one in the early installer.
+ * This base class should be useful for testing some types of integrations which
+ * don't require the overhead of a fully-installed Drupal instance, but which
+ * have many dependencies on parts of Drupal which can't or shouldn't be mocked.
  *
- * The module/hook system is functional and operates on a fixed module list.
- * Additional modules needed in a test may be loaded and added to the fixed
- * module list.
+ * This base class partially boots a fixture Drupal. The state of the fixture
+ * Drupal is comparable to the state of a system during the early part of the
+ * installation process.
+ *
+ * Tests extending this base class can access services and the database, but the
+ * system is initially empty. This Drupal runs in a minimal mocked filesystem
+ * which operates within vfsStream.
+ *
+ * Modules specified in the $modules property are added to the service container
+ * for each test. The module/hook system is functional. Additional modules
+ * needed in a test should override $modules. Modules specified in this way will
+ * be added to those specified in superclasses.
+ *
+ * Unlike \Drupal\Tests\BrowserTestBase, the modules are not installed. They are
+ * loaded such that their services and hooks are available, but the install
+ * process has not been performed.
+ *
+ * Other modules can be made available in this way using
+ * KernelTestBase::enableModules().
+ *
+ * Some modules can be brought into a fully-installed state using
+ * KernelTestBase::installConfig(), KernelTestBase::installSchema(), and
+ * KernelTestBase::installEntitySchema(). Alternately, tests which need modules
+ * to be fully installed could inherit from \Drupal\Tests\BrowserTestBase.
+ *
+ * @see \Drupal\Tests\KernelTestBase::$modules
+ * @see \Drupal\Tests\KernelTestBase::enableModules()
+ * @see \Drupal\Tests\KernelTestBase::installConfig()
+ * @see \Drupal\Tests\KernelTestBase::installEntitySchema()
+ * @see \Drupal\Tests\KernelTestBase::installSchema()
+ * @see \Drupal\Tests\BrowserTestBase
  *
  * @deprecated in Drupal 8.0.x, will be removed before Drupal 9.0.0. Use
  *   \Drupal\KernelTests\KernelTestBase instead.
- *
- * @see \Drupal\simpletest\KernelTestBase::$modules
- * @see \Drupal\simpletest\KernelTestBase::enableModules()
  *
  * @ingroup testing
  */
