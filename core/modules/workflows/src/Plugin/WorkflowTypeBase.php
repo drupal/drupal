@@ -7,6 +7,7 @@ use Drupal\Core\Plugin\PluginWithFormsTrait;
 use Drupal\workflows\State;
 use Drupal\workflows\StateInterface;
 use Drupal\workflows\Transition;
+use Drupal\workflows\TransitionInterface;
 use Drupal\workflows\WorkflowInterface;
 use Drupal\workflows\WorkflowTypeInterface;
 
@@ -328,7 +329,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   /**
    * {@inheritdoc}
    */
-  public function getTransitionsForState($state_id, $direction = 'from') {
+  public function getTransitionsForState($state_id, $direction = TransitionInterface::DIRECTION_FROM) {
     $transition_ids = array_keys(array_filter($this->configuration['transitions'], function ($transition) use ($state_id, $direction) {
       return in_array($state_id, (array) $transition[$direction], TRUE);
     }));
