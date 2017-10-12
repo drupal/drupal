@@ -22,7 +22,7 @@ interface MapperInterface {
    *
    * @return object|false
    *   A fully configured plugin instance. The interface of the plugin instance
-   *   will depends on the plugin type. If no instance can be retrieved, FALSE
+   *   will depend on the plugin type. If no instance can be retrieved, FALSE
    *   will be returned.
    */
   public function getInstance(array $options);
