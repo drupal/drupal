@@ -18,7 +18,7 @@
         "symfony/process": "~3.2.8",
         "symfony/polyfill-iconv": "^1.0",
         "symfony/yaml": "~3.2.8",
-        "twig/twig": "^1.23.1",
+        "twig/twig": "^1.35.0",
         "doctrine/common": "^2.5",
         "doctrine/annotations": "^1.2",
         "guzzlehttp/guzzle": "^6.2.1",

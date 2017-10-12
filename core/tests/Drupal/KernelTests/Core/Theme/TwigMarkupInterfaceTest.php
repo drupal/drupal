@@ -57,7 +57,7 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
       'empty GeneratedLink' => ['', new GeneratedLink()],
       'non-empty GeneratedLink' => ['<span><a hef="http://www.example.com">test</a></span>', (new GeneratedLink())->setGeneratedLink('<a hef="http://www.example.com">test</a>')],
       // Test objects that do not implement \Countable.
-      'empty SafeMarkupTestMarkup' => ['<span></span>', SafeMarkupTestMarkup::create('')],
+      'empty SafeMarkupTestMarkup' => ['', SafeMarkupTestMarkup::create('')],
       'non-empty SafeMarkupTestMarkup' => ['<span>test</span>', SafeMarkupTestMarkup::create('test')],
     ];
   }
