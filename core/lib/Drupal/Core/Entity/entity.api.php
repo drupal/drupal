@@ -113,6 +113,17 @@ use Drupal\node\Entity\NodeType;
  * @endcode
  * This involves the same hooks and operations as regular entity loading.
  *
+ * @section entities_revisions_translations Entities, revisions and translations
+ *
+ * A translation is not a revision and a revision is not necessarily a
+ * translation. Revisions and translations are the two axes on the "spreadsheet"
+ * of an entity. If you use the built-in UI and have revisions enabled, then a
+ * new translation change would create a new revision (with a copy of all data
+ * for other languages in that revision). If an entity does not use revisions or
+ * the entity is being modified via the API, then multiple translations can be
+ * modified in a single revision. Conceptually, the revisions are columns on the
+ * spreadsheet and translations are rows.
+ *
  * @section save Save operations
  * To update an existing entity, you will need to load it, change properties,
  * and then save; as described above, when creating a new entity, you will also
