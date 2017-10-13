@@ -218,14 +218,16 @@ class ToolkitGdTest extends KernelTestBase {
       $operations += [
         'rotate_5' => [
           'function' => 'rotate',
-          'arguments' => ['degrees' => 5, 'background' => '#FF00FF'], // Fuchsia background.
+          // Fuchsia background.
+          'arguments' => ['degrees' => 5, 'background' => '#FF00FF'],
           'width' => 41,
           'height' => 23,
           'corners' => array_fill(0, 4, $this->fuchsia),
         ],
         'rotate_90' => [
           'function' => 'rotate',
-          'arguments' => ['degrees' => 90, 'background' => '#FF00FF'], // Fuchsia background.
+          // Fuchsia background.
+          'arguments' => ['degrees' => 90, 'background' => '#FF00FF'],
           'width' => 20,
           'height' => 40,
           'corners' => [$this->transparent, $this->red, $this->green, $this->blue],

@@ -995,7 +995,9 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#default_value' => $this->options['group_info']['remember'],
     ];
 
-    $groups = ['All' => $this->t('- Any -')]; // The string '- Any -' will not be rendered see @theme_views_ui_build_group_filter_form
+    // The string '- Any -' will not be rendered.
+    // @see theme_views_ui_build_group_filter_form()
+    $groups = ['All' => $this->t('- Any -')];
 
     // Provide 3 options to start when we are in a new group.
     if (count($this->options['group_info']['group_items']) == 0) {

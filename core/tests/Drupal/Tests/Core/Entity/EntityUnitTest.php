@@ -392,13 +392,16 @@ class EntityUnitTest extends UnitTestCase {
     $this->cacheTagsInvalidator->expects($this->at(0))
       ->method('invalidateTags')
       ->with([
-        $this->entityTypeId . '_list', // List cache tag.
+        // List cache tag.
+        $this->entityTypeId . '_list',
       ]);
     $this->cacheTagsInvalidator->expects($this->at(1))
       ->method('invalidateTags')
       ->with([
-        $this->entityTypeId . ':' . $this->values['id'], // Own cache tag.
-        $this->entityTypeId . '_list', // List cache tag.
+        // Own cache tag.
+        $this->entityTypeId . ':' . $this->values['id'],
+        // List cache tag.
+        $this->entityTypeId . '_list',
       ]);
 
     // This method is internal, so check for errors on calling it only.

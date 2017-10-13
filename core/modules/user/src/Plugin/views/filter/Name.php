@@ -115,7 +115,8 @@ class Name extends InOperator {
           $this->valueOptions[$account->id()] = $account->label();
         }
         else {
-          $this->valueOptions[$account->id()] = 'Anonymous'; // Intentionally NOT translated.
+          // Intentionally NOT translated.
+          $this->valueOptions[$account->id()] = 'Anonymous';
         }
       }
     }

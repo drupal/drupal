@@ -16,7 +16,8 @@ class CaseSensitivityTest extends DatabaseTestBase {
 
     db_insert('test')
       ->fields([
-        'name' => 'john', // <- A record already exists with name 'John'.
+        // A record already exists with name 'John'.
+        'name' => 'john',
         'age' => 2,
         'job' => 'Baby',
       ])

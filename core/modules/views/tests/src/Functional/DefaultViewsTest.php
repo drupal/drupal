@@ -174,16 +174,19 @@ class DefaultViewsTest extends ViewTestBase {
     // Create additional nodes compared to the one in the setup method.
     // Create two nodes in the same month, and one in each following month.
     $node = [
-      'created' => 280299600, // Sun, 19 Nov 1978 05:00:00 GMT
+      // Sun, 19 Nov 1978 05:00:00 GMT.
+      'created' => 280299600,
     ];
     $this->drupalCreateNode($node);
     $this->drupalCreateNode($node);
     $node = [
-      'created' => 282891600, // Tue, 19 Dec 1978 05:00:00 GMT
+      // Tue, 19 Dec 1978 05:00:00 GMT.
+      'created' => 282891600,
     ];
     $this->drupalCreateNode($node);
     $node = [
-      'created' => 285570000, // Fri, 19 Jan 1979 05:00:00 GMT
+      // Fri, 19 Jan 1979 05:00:00 GMT.
+      'created' => 285570000,
     ];
     $this->drupalCreateNode($node);
 

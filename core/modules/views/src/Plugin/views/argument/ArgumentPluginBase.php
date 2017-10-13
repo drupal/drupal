@@ -325,7 +325,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
               '#suffix' => '</div>',
               '#type' => 'item',
               // Even if the plugin has no options add the key to the form_state.
-              '#input' => TRUE, // trick it into checking input to make #process run
+              // trick it into checking input to make #process run.
+              '#input' => TRUE,
               '#states' => [
                 'visible' => [
                   ':input[name="options[specify_validation]"]' => ['checked' => TRUE],
@@ -498,12 +499,14 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
         'method' => 'defaultDefault',
         'form method' => 'defaultArgumentForm',
         'has default argument' => TRUE,
-        'default only' => TRUE, // this can only be used for missing argument, not validation failure
+        // This can only be used for missing argument, not validation failure.
+        'default only' => TRUE,
       ],
       'not found' => [
         'title' => $this->t('Hide view'),
         'method' => 'defaultNotFound',
-        'hard fail' => TRUE, // This is a hard fail condition
+        // This is a hard fail condition.
+        'hard fail' => TRUE,
       ],
       'summary' => [
         'title' => $this->t('Display a summary'),
@@ -669,7 +672,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
           '#suffix' => '</div>',
           '#id' => 'edit-options-summary-options-' . $id,
           '#type' => 'item',
-          '#input' => TRUE, // trick it into checking input to make #process run
+          // Trick it into checking input to make #process run.
+          '#input' => TRUE,
           '#states' => [
             'visible' => [
               ':input[name="options[default_action]"]' => ['value' => 'summary'],

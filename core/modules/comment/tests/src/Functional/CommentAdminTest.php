@@ -32,7 +32,8 @@ class CommentAdminTest extends CommentTestBase {
       'skip comment approval' => FALSE,
     ]);
     $this->drupalLogin($this->adminUser);
-    $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
+    // Ensure that doesn't require contact info.
+    $this->setCommentAnonymous('0');
 
     // Test that the comments page loads correctly when there are no comments
     $this->drupalGet('admin/content/comment');
@@ -43,7 +44,8 @@ class CommentAdminTest extends CommentTestBase {
     // Post anonymous comment without contact info.
     $subject = $this->randomMachineName();
     $body = $this->randomMachineName();
-    $this->postComment($this->node, $body, $subject, TRUE); // Set $contact to true so that it won't check for id and message.
+    // Set $contact to true so that it won't check for id and message.
+    $this->postComment($this->node, $body, $subject, TRUE);
     $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), 'Comment requires approval.');
 
     // Get unapproved comment id.
@@ -123,13 +125,15 @@ class CommentAdminTest extends CommentTestBase {
       'skip comment approval' => FALSE,
     ]);
     $this->drupalLogin($this->adminUser);
-    $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
+    // Ensure that doesn't require contact info.
+    $this->setCommentAnonymous('0');
     $this->drupalLogout();
 
     // Post anonymous comment without contact info.
     $subject = $this->randomMachineName();
     $body = $this->randomMachineName();
-    $this->postComment($this->node, $body, $subject, TRUE); // Set $contact to true so that it won't check for id and message.
+    // Set $contact to true so that it won't check for id and message.
+    $this->postComment($this->node, $body, $subject, TRUE);
     $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), 'Comment requires approval.');
 
     // Get unapproved comment id.
@@ -205,7 +209,8 @@ class CommentAdminTest extends CommentTestBase {
 
     // Post anonymous comment.
     $this->drupalLogin($this->adminUser);
-    $this->setCommentAnonymous('2'); // Ensure that we need email id before posting comment.
+    // Ensure that we need email id before posting comment.
+    $this->setCommentAnonymous('2');
     $this->drupalLogout();
 
     // Post comment with contact info (required).

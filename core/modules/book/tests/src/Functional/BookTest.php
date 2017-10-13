@@ -152,7 +152,8 @@ class BookTest extends BrowserTestBase {
      *   |- Node 5
      *  |- Node 4
      */
-    $nodes[] = $this->createBookNode($book->id(), $nodes[3]->book['nid']); // Node 5.
+    // Node 5.
+    $nodes[] = $this->createBookNode($book->id(), $nodes[3]->book['nid']);
     $this->drupalLogout();
     $this->drupalLogin($this->webUser);
     // Verify the new outline - make sure we don't get stale cached data.

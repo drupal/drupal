@@ -80,6 +80,7 @@
     <exclude name="Drupal.Commenting.InlineComment.SpacingBefore"/>
     <exclude name="Drupal.Commenting.InlineComment.WrongStyle"/>
   </rule>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/PostStatementCommentSniff.php" />
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ElseIfSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ControlSignatureSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/InlineControlStructureSniff.php"/>

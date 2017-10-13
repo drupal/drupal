@@ -91,9 +91,12 @@ class DownloadTest extends FileManagedTestBase {
     // Tilde (~) is excluded from this test because it is encoded by
     // rawurlencode() in PHP 5.2 but not in PHP 5.3, as per RFC 3986.
     // @see http://php.net/manual/function.rawurlencode.php#86506
-    $basename = " -._!$'\"()*@[]?&+%#,;=:\n\x00" . // "Special" ASCII characters.
-      "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
-      "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
+    // "Special" ASCII characters.
+    $basename = " -._!$'\"()*@[]?&+%#,;=:\n\x00" .
+      // Characters that look like a percent-escaped string.
+      "%23%25%26%2B%2F%3F" .
+      // Characters from various non-ASCII alphabets.
+      "éøïвβ中國書۞";
     $basename_encoded = '%20-._%21%24%27%22%28%29%2A%40%5B%5D%3F%26%2B%25%23%2C%3B%3D%3A__' .
       '%2523%2525%2526%252B%252F%253F' .
       '%C3%A9%C3%B8%C3%AF%D0%B2%CE%B2%E4%B8%AD%E5%9C%8B%E6%9B%B8%DB%9E';

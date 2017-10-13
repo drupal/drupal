@@ -252,7 +252,8 @@ function format_size($size, $langcode = NULL) {
     return \Drupal::translation()->formatPlural($size, '1 byte', '@count bytes', [], ['langcode' => $langcode]);
   }
   else {
-    $size = $size / Bytes::KILOBYTE; // Convert bytes to kilobytes.
+    // Convert bytes to kilobytes.
+    $size = $size / Bytes::KILOBYTE;
     $units = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     foreach ($units as $unit) {
       if (round($size, 2) >= Bytes::KILOBYTE) {

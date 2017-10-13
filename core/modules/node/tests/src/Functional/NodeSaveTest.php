@@ -109,8 +109,10 @@ class NodeSaveTest extends NodeTestBase {
       'uid' => $this->webUser->id(),
       'type' => 'article',
       'title' => $this->randomMachineName(8),
-      'created' => 280299600, // Sun, 19 Nov 1978 05:00:00 GMT
-      'changed' => 979534800, // Drupal 1.0 release.
+      // Sun, 19 Nov 1978 05:00:00 GMT.
+      'created' => 280299600,
+      // Drupal 1.0 release.
+      'changed' => 979534800,
     ];
 
     Node::create($edit)->save();

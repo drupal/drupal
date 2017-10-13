@@ -609,7 +609,8 @@ EOD;
    */
   public static function mimeHeaderEncode($string) {
     if (preg_match('/[^\x20-\x7E]/', $string)) {
-      $chunk_size = 47; // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
+      // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
+      $chunk_size = 47;
       $len = strlen($string);
       $output = '';
       while ($len > 0) {

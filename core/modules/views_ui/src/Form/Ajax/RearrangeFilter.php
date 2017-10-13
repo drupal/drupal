@@ -119,7 +119,8 @@ class RearrangeFilter extends ViewsFormBase {
         ],
       ];
 
-      $form['remove_groups'][$id] = []; // to prevent a notice
+      // To prevent a notice.
+      $form['remove_groups'][$id] = [];
       if ($id != 1) {
         $form['remove_groups'][$id] = [
           '#type' => 'submit',

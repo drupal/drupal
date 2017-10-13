@@ -24,7 +24,8 @@ class InvalidDataTest extends DatabaseTestBase {
           'age' => 63,
           'job' => 'Singer',
         ])->values([
-          'name' => 'John', // <-- Duplicate value on unique field.
+          // Duplicate value on unique field.
+          'name' => 'John',
           'age' => 17,
           'job' => 'Consultant',
         ])

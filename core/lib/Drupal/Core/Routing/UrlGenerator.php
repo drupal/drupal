@@ -65,8 +65,10 @@ class UrlGenerator implements UrlGeneratorInterface {
     // the slash can be used to designate a hierarchical structure and we want allow using it with this meaning
     // some webservers don't allow the slash in encoded form in the path for security reasons anyway
     // see http://stackoverflow.com/questions/4069002/http-400-if-2f-part-of-get-url-in-jboss
-    '%2F', // Map from these encoded characters.
-    '/', // Map to these decoded characters.
+    // Map from these encoded characters.
+    '%2F',
+    // Map to these decoded characters.
+    '/',
   ];
 
   /**

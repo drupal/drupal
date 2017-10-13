@@ -143,7 +143,9 @@ class Date extends FieldPluginBase {
 
     if ($value) {
       $timezone = !empty($this->options['timezone']) ? $this->options['timezone'] : NULL;
-      $time_diff = REQUEST_TIME - $value; // will be positive for a datetime in the past (ago), and negative for a datetime in the future (hence)
+      // Will be positive for a datetime in the past (ago), and negative for a
+      // datetime in the future (hence).
+      $time_diff = REQUEST_TIME - $value;
       switch ($format) {
         case 'raw time ago':
           return $this->dateFormatter->formatTimeDiffSince($value, ['granularity' => is_numeric($custom_format) ? $custom_format : 2]);

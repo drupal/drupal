@@ -194,9 +194,13 @@ class MenuRouterTest extends BrowserTestBase {
    * Test path containing "exotic" characters.
    */
   protected function doTestExoticPath() {
-    $path = "menu-test/ -._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
-      "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
-      "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
+    // "Special" ASCII characters.
+    $path =
+      "menu-test/ -._~!$'\"()*@[]?&+%#,;=:" .
+      // Characters that look like a percent-escaped string.
+      "%23%25%26%2B%2F%3F" .
+      // Characters from various non-ASCII alphabets.
+      "éøïвβ中國書۞";
     $this->drupalGet($path);
     $this->assertRaw('This is the menuTestCallback content.');
     $this->assertNoText(t('The website encountered an unexpected error. Please try again later.'));

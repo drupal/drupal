@@ -117,7 +117,8 @@ class NodeRevisionsTest extends NodeTestBase {
 
       $node->save();
 
-      $node = Node::load($node->id()); // Make sure we get revision information.
+      // Make sure we get revision information.
+      $node = Node::load($node->id());
       $nodes[] = clone $node;
     }
 

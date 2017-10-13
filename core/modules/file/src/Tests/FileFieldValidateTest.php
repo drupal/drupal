@@ -71,8 +71,10 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $field_name = strtolower($this->randomMachineName());
     $this->createFileField($field_name, 'node', $type_name, [], ['required' => '1']);
 
-    $small_file = $this->getTestFile('text', 131072); // 128KB.
-    $large_file = $this->getTestFile('text', 1310720); // 1.2MB
+    // 128KB.
+    $small_file = $this->getTestFile('text', 131072);
+    // 1.2MB
+    $large_file = $this->getTestFile('text', 1310720);
 
     // Test uploading both a large and small file with different increments.
     $sizes = [

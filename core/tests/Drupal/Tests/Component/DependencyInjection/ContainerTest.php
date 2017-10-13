@@ -778,7 +778,8 @@ class ContainerTest extends TestCase {
     $services['invalid_argument_service'] = [
       'class' => '\Drupal\Tests\Component\DependencyInjection\MockService',
       'arguments' => $this->getCollection([
-        1, // Test passing non-strings, too.
+        // Test passing non-strings, too.
+        1,
         (object) [
           'type' => 'invalid',
         ],
