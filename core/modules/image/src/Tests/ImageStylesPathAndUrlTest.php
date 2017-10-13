@@ -193,7 +193,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
       $this->drupalGet($generate_url_noaccess);
       $this->assertResponse(403, 'Confirmed that access is denied for the private image style.');
       // Verify that images are not appended to the response. Currently this test only uses PNG images.
-      if (strpos($generate_url, '.png') === FALSE ) {
+      if (strpos($generate_url, '.png') === FALSE) {
         $this->fail('Confirming that private image styles are not appended require PNG file.');
       }
       else {

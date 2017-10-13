@@ -65,7 +65,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
       'terms[tid:' . $term2->id() . ':0][weight]' => 1,
     ];
 
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid' ) . '/overview', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/overview', $edit, t('Save'));
     // All terms back at the root level, no indentation should be present.
     $this->assertNoPattern('|<div class="js-indentation indentation">&nbsp;</div>|');
 

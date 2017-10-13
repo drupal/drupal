@@ -295,7 +295,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
    * @covers ::set
    */
   public function testSet() {
-    $id_items = [['value' => $this->id + 1] ];
+    $id_items = [['value' => $this->id + 1]];
 
     $this->fieldItemList->expects($this->once())
       ->method('setValue')
@@ -309,7 +309,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
    */
   public function testSetWithoutData() {
     $this->entityAdapter->setValue(NULL);
-    $id_items = [['value' => $this->id + 1] ];
+    $id_items = [['value' => $this->id + 1]];
     $this->setExpectedException(MissingDataException::class);
     $this->entityAdapter->set('id', $id_items);
   }
@@ -372,7 +372,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
     $definition = $this->entityAdapter->getDataDefinition();
     $this->assertInstanceOf('\Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface', $definition);
     $this->assertEquals($definition->getEntityTypeId(), $this->entityTypeId);
-    $this->assertEquals($definition->getBundles(), [$this->bundle ]);
+    $this->assertEquals($definition->getBundles(), [$this->bundle]);
   }
 
   /**

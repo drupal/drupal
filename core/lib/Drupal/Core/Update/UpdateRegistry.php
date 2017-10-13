@@ -226,7 +226,7 @@ class UpdateRegistry {
     $all_functions = $this->getAvailableUpdateFunctions();
 
     return array_filter($all_functions, function ($function_name) use ($module_name) {
-      list($function_module_name, ) = explode("_{$this->updateType}_", $function_name);
+      list($function_module_name,) = explode("_{$this->updateType}_", $function_name);
       return $function_module_name === $module_name;
     });
   }

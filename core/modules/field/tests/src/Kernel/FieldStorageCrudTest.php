@@ -347,7 +347,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     FieldConfig::create($field_definition)->save();
     $field_storage = FieldStorageConfig::load('entity_test.' . $field_storage_definition['field_name']);
     $this->assertTrue(!empty($field_storage) && !$field_storage->isDeleted(), 'A new storage with a previously used name is created.');
-    $field = FieldConfig::load('entity_test.' . $field_definition['bundle'] . '.' . $field_definition['field_name'] );
+    $field = FieldConfig::load('entity_test.' . $field_definition['bundle'] . '.' . $field_definition['field_name']);
     $this->assertTrue(!empty($field) && !$field->isDeleted(), 'A new field for a previously used field name is created.');
 
     // Save an entity with data for the field

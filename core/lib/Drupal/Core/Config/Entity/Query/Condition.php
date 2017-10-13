@@ -50,7 +50,7 @@ class Condition extends ConditionBase {
           // matter and this config object does not match.
           // If OR and it is matching, then the rest of conditions do not
           // matter and this config object does match.
-          if ($and != $match ) {
+          if ($and != $match) {
             break;
           }
         }

@@ -113,7 +113,7 @@ class EntityContentBaseTest extends UnitTestCase {
     $this->storage->getEntityType()->willReturn($entity_type->reveal());
 
     $destination = new EntityTestDestination(
-      ['translations' => TRUE ],
+      ['translations' => TRUE],
       '',
       [],
       $this->migration->reveal(),

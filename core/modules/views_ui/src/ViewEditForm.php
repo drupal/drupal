@@ -262,7 +262,7 @@ class ViewEditForm extends ViewFormBase {
         // options.
         $display_handler = $executable->displayHandlers->get($id);
         if ($attachments = $display_handler->getAttachedDisplays()) {
-          foreach ($attachments as $attachment ) {
+          foreach ($attachments as $attachment) {
             $attached_options = $executable->displayHandlers->get($attachment)->getOption('displays');
             unset($attached_options[$id]);
             $executable->displayHandlers->get($attachment)->setOption('displays', $attached_options);

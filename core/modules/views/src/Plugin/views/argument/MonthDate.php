@@ -24,7 +24,7 @@ class MonthDate extends Date {
    */
   public function summaryName($data) {
     $month = str_pad($data->{$this->name_alias}, 2, '0', STR_PAD_LEFT);
-    return format_date(strtotime("2005" . $month . "15" . " 00:00:00 UTC" ), 'custom', $this->format, 'UTC');
+    return format_date(strtotime("2005" . $month . "15" . " 00:00:00 UTC"), 'custom', $this->format, 'UTC');
   }
 
   /**

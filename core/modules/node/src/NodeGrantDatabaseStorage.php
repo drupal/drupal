@@ -138,7 +138,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
     $grants = static::buildGrantsQueryCondition(node_access_grants('view', $account));
 
-    if (count($grants) > 0 ) {
+    if (count($grants) > 0) {
       $query->condition($grants);
     }
     return $query->execute()->fetchField();

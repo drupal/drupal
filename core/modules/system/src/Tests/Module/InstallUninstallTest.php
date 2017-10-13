@@ -275,7 +275,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $all_update_functions = $post_update_registry->getPendingUpdateFunctions();
     $empty_result = TRUE;
     foreach ($all_update_functions as $function) {
-      list($function_module, ) = explode('_post_update_', $function);
+      list($function_module,) = explode('_post_update_', $function);
       if ($module === $function_module) {
         $empty_result = FALSE;
         break;

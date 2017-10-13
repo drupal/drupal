@@ -118,6 +118,7 @@
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/PregSecuritySniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/TInHookMenuSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/TInHookSchemaSniff.php"/>
+  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/CloseBracketSpacingSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/CommaSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/EmptyLinesSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/NamespaceSniff.php"/>

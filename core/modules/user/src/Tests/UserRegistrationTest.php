@@ -254,7 +254,7 @@ class UserRegistrationTest extends WebTestBase {
     $new_user = reset($accounts);
     $this->assertEqual($new_user->getUsername(), $name, 'Username matches.');
     $this->assertEqual($new_user->getEmail(), $mail, 'Email address matches.');
-    $this->assertTrue(($new_user->getCreatedTime() > REQUEST_TIME - 20 ), 'Correct creation time.');
+    $this->assertTrue(($new_user->getCreatedTime() > REQUEST_TIME - 20), 'Correct creation time.');
     $this->assertEqual($new_user->isActive(), $config_user_settings->get('register') == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
     $this->assertEqual($new_user->getTimezone(), $config_system_date->get('timezone.default'), 'Correct time zone field.');
     $this->assertEqual($new_user->langcode->value, \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Correct language field.');

@@ -24,7 +24,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ConfigurableLanguageManagerInterface $language_manager ) {
+  public function __construct(ConfigFactoryInterface $config_factory, ConfigurableLanguageManagerInterface $language_manager) {
     parent::__construct($config_factory);
     $this->languageManager = $language_manager;
   }

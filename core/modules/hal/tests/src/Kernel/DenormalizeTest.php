@@ -135,7 +135,7 @@ class DenormalizeTest extends NormalizerTestBase {
       ],
       'field_test_text' => [],
     ];
-    $entity = $this->serializer->denormalize($data, get_class($entity), $this->format, ['target_instance' => $entity ]);
+    $entity = $this->serializer->denormalize($data, get_class($entity), $this->format, ['target_instance' => $entity]);
     $this->assertEqual($entity->field_test_text->count(), 0);
   }
 

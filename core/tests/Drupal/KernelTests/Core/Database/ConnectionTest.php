@@ -131,7 +131,7 @@ class ConnectionTest extends DatabaseTestBase {
     try {
       $db->query('SELECT * FROM {test}; SELECT * FROM {test_people}',
         [],
-        ['allow_delimiter_in_query' => TRUE ]
+        ['allow_delimiter_in_query' => TRUE]
       );
       $this->fail('No PDO exception thrown for multiple statements.');
     }

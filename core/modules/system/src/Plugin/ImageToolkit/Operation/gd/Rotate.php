@@ -45,7 +45,7 @@ class Rotate extends GDImageToolkitOperationBase {
     // Validate or set background color argument.
     if (!empty($arguments['background'])) {
       // Validate the background color: Color::hexToRgb does so for us.
-      $background = Color::hexToRgb($arguments['background']) + ['alpha' => 0 ];
+      $background = Color::hexToRgb($arguments['background']) + ['alpha' => 0];
     }
     else {
       // Background color is not specified: use transparent white as background.
