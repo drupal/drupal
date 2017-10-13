@@ -87,19 +87,19 @@ class FieldItemNormalizer extends NormalizerBase {
    *   An array of field item values, keyed by property name.
    */
   protected function normalizedFieldValues(FieldItemInterface $field_item, $format, array $context) {
-    $denormalized = [];
+    $normalized = [];
     // We normalize each individual property, so each can do their own casting,
     // if needed.
     /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
     foreach ($field_item as $property_name => $property) {
-      $denormalized[$property_name] = $this->serializer->normalize($property, $format, $context);
+      $normalized[$property_name] = $this->serializer->normalize($property, $format, $context);
     }
 
     if (isset($context['langcode'])) {
-      $denormalized['lang'] = $context['langcode'];
+      $normalized['lang'] = $context['langcode'];
     }
 
-    return $denormalized;
+    return $normalized;
   }
 
   /**
