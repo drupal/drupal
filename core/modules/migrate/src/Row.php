@@ -78,6 +78,13 @@ class Row {
   protected $isStub = FALSE;
 
   /**
+   * The empty destination properties.
+   *
+   * @var array
+   */
+  protected $emptyDestinationProperties = [];
+
+  /**
    * Constructs a \Drupal\Migrate\Row object.
    *
    * @param array $values
@@ -227,6 +234,26 @@ class Row {
   public function removeDestinationProperty($property) {
     unset($this->rawDestination[$property]);
     NestedArray::unsetValue($this->destination, explode(static::PROPERTY_SEPARATOR, $property));
+  }
+
+  /**
+   * Sets a destination to be empty.
+   *
+   * @param string $property
+   *   The destination property.
+   */
+  public function setEmptyDestinationProperty($property) {
+    $this->emptyDestinationProperties[] = $property;
+  }
+
+  /**
+   * Gets the empty destination properties.
+   *
+   * @return array
+   *   An array of destination properties.
+   */
+  public function getEmptyDestinationProperties() {
+    return $this->emptyDestinationProperties;
   }
 
   /**

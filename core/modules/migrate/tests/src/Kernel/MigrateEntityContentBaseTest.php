@@ -10,6 +10,7 @@ use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
+use Drupal\migrate_entity_test\Entity\StringIdEntityTest;
 
 /**
  * Tests the EntityContentBase destination.
@@ -202,6 +203,67 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     $this->assertEquals(123, $map_row['destid1']);
     $map_row = $id_map_plugin->getRowBySource(['id' => 123456789012, 'version' => 'bar']);
     $this->assertEquals(123456789012, $map_row['destid1']);
+  }
+
+  /**
+   * Tests empty destinations.
+   */
+  public function testEmptyDestinations() {
+    $this->enableModules(['migrate_entity_test']);
+    $this->installEntitySchema('migrate_string_id_entity_test');
+
+    $definition = [
+      'source' => [
+        'plugin' => 'embedded_data',
+        'data_rows' => [
+          ['id' => 123, 'version' => 'foo'],
+          // This integer needs an 'int' schema with 'big' size. If 'destid1'
+          // is not correctly taking the definition from the destination entity
+          // type, the import will fail with an SQL exception.
+          ['id' => 123456789012, 'version' => 'bar'],
+        ],
+        'ids' => [
+          'id' => ['type' => 'integer', 'size' => 'big'],
+          'version' => ['type' => 'string'],
+        ],
+        'constants' => ['null' => NULL],
+      ],
+      'process' => [
+        'id' => 'id',
+        'version' => 'version',
+      ],
+      'destination' => [
+        'plugin' => 'entity:migrate_string_id_entity_test',
+      ],
+    ];
+
+    $migration = \Drupal::service('plugin.manager.migration')
+      ->createStubMigration($definition);
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable->import();
+
+    /** @var \Drupal\migrate_entity_test\Entity\StringIdEntityTest $entity */
+    $entity = StringIdEntityTest::load('123');
+    $this->assertSame('foo', $entity->version->value);
+    $entity = StringIdEntityTest::load('123456789012');
+    $this->assertSame('bar', $entity->version->value);
+
+    // Rerun the migration forcing the version to NULL.
+    $definition['process'] = [
+      'id' => 'id',
+      'version' => 'constants/null',
+    ];
+
+    $migration = \Drupal::service('plugin.manager.migration')
+      ->createStubMigration($definition);
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable->import();
+
+    /** @var \Drupal\migrate_entity_test\Entity\StringIdEntityTest $entity */
+    $entity = StringIdEntityTest::load('123');
+    $this->assertNull($entity->version->value);
+    $entity = StringIdEntityTest::load('123456789012');
+    $this->assertNull($entity->version->value);
   }
 
 }
