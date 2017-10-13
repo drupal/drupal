@@ -231,7 +231,8 @@ abstract class FileTransfer {
    */
   final protected function fixRemotePath($path, $strip_chroot = TRUE) {
     $path = $this->sanitizePath($path);
-    $path = preg_replace('|^([a-z]{1}):|i', '', $path); // Strip out windows driveletter if its there.
+    // Strip out windows driveletter if its there.
+    $path = preg_replace('|^([a-z]{1}):|i', '', $path);
     if ($strip_chroot) {
       if ($this->chroot && strpos($path, $this->chroot) === 0) {
         $path = ($path == $this->chroot) ? '' : substr($path, strlen($this->chroot));
@@ -250,7 +251,8 @@ abstract class FileTransfer {
    *   The modified path.
    */
   public function sanitizePath($path) {
-    $path = str_replace('\\', '/', $path); // Windows path sanitization.
+    // Windows path sanitization.
+    $path = str_replace('\\', '/', $path);
     if (substr($path, -1) == '/') {
       $path = substr($path, 0, -1);
     }

@@ -729,20 +729,28 @@ function _filter_autop($text) {
       }
     }
     elseif (!$ignore) {
-      $chunk = preg_replace('|\n*$|', '', $chunk) . "\n\n"; // just to make things a little easier, pad the end
+      // just to make things a little easier, pad the end
+      $chunk = preg_replace('|\n*$|', '', $chunk) . "\n\n";
       $chunk = preg_replace('|<br />\s*<br />|', "\n\n", $chunk);
-      $chunk = preg_replace('!(<' . $block . '[^>]*>)!', "\n$1", $chunk); // Space things out a little
-      $chunk = preg_replace('!(</' . $block . '>)!', "$1\n\n", $chunk); // Space things out a little
-      $chunk = preg_replace("/\n\n+/", "\n\n", $chunk); // take care of duplicates
+      // Space things out a little
+      $chunk = preg_replace('!(<' . $block . '[^>]*>)!', "\n$1", $chunk);
+      // Space things out a little
+      $chunk = preg_replace('!(</' . $block . '>)!', "$1\n\n", $chunk);
+      // take care of duplicates
+      $chunk = preg_replace("/\n\n+/", "\n\n", $chunk);
       $chunk = preg_replace('/^\n|\n\s*\n$/', '', $chunk);
-      $chunk = '<p>' . preg_replace('/\n\s*\n\n?(.)/', "</p>\n<p>$1", $chunk) . "</p>\n"; // make paragraphs, including one at the end
-      $chunk = preg_replace("|<p>(<li.+?)</p>|", "$1", $chunk); // problem with nested lists
+      // make paragraphs, including one at the end
+      $chunk = '<p>' . preg_replace('/\n\s*\n\n?(.)/', "</p>\n<p>$1", $chunk) . "</p>\n";
+      // problem with nested lists
+      $chunk = preg_replace("|<p>(<li.+?)</p>|", "$1", $chunk);
       $chunk = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $chunk);
       $chunk = str_replace('</blockquote></p>', '</p></blockquote>', $chunk);
-      $chunk = preg_replace('|<p>\s*</p>\n?|', '', $chunk); // under certain strange conditions it could create a P of entirely whitespace
+      // under certain strange conditions it could create a P of entirely whitespace
+      $chunk = preg_replace('|<p>\s*</p>\n?|', '', $chunk);
       $chunk = preg_replace('!<p>\s*(</?' . $block . '[^>]*>)!', "$1", $chunk);
       $chunk = preg_replace('!(</?' . $block . '[^>]*>)\s*</p>!', "$1", $chunk);
-      $chunk = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $chunk); // make line breaks
+      // make line breaks
+      $chunk = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $chunk);
       $chunk = preg_replace('!(</?' . $block . '[^>]*>)\s*<br />!', "$1", $chunk);
       $chunk = preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)>)!', '$1', $chunk);
       $chunk = preg_replace('/&([^#])(?![A-Za-z0-9]{1,8};)/', '&amp;$1', $chunk);

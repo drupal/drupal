@@ -124,7 +124,8 @@ class FilterAPITest extends EntityKernelTestBase {
     $full_html_format = FilterFormat::load('full_html');
     $this->assertIdentical(
       $full_html_format->getHtmlRestrictions(),
-      FALSE, // Every tag is allowed.
+      // Every tag is allowed.
+      FALSE,
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the full_html format.'
     );
     $this->assertIdentical(
@@ -141,7 +142,8 @@ class FilterAPITest extends EntityKernelTestBase {
         'filter_html' => [
           'status' => 1,
           'settings' => [
-            'allowed_html' => '', // Nothing is allowed.
+            // Nothing is allowed.
+            'allowed_html' => '',
           ],
         ],
       ],
@@ -149,7 +151,8 @@ class FilterAPITest extends EntityKernelTestBase {
     $stupid_filtered_html_format->save();
     $this->assertIdentical(
       $stupid_filtered_html_format->getHtmlRestrictions(),
-      ['allowed' => []], // No tag is allowed.
+      // No tag is allowed.
+      ['allowed' => []],
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the stupid_filtered_html format.'
     );
     $this->assertIdentical(

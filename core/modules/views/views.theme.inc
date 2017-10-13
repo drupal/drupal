@@ -90,7 +90,8 @@ function template_preprocess_views_view_fields(&$variables) {
 
   // Loop through the fields for this view.
   $previous_inline = FALSE;
-  $variables['fields'] = []; // ensure it's at least an empty array.
+  // Ensure it's at least an empty array.
+  $variables['fields'] = [];
   /** @var \Drupal\views\ResultRow $row */
   $row = $variables['row'];
   foreach ($view->field as $id => $field) {
@@ -123,7 +124,8 @@ function template_preprocess_views_view_fields(&$variables) {
         $object->raw = $row->{$view->field[$id]->field_alias};
       }
       else {
-        $object->raw = NULL; // make sure it exists to reduce NOTICE
+        // Make sure it exists to reduce NOTICE.
+        $object->raw = NULL;
       }
 
       if (!empty($variables['options']['separator']) && $previous_inline && $object->inline && $object->content) {

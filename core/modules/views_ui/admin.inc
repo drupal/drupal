@@ -255,7 +255,8 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
 
   $form['override']['dropdown'] = [
     '#type' => 'select',
-    '#title' => t('For'), // @TODO: Translators may need more context than this.
+    // @TODO: Translators may need more context than this.
+    '#title' => t('For'),
     '#options' => $display_dropdown,
   ];
   if ($current_display->isDefaulted($section)) {

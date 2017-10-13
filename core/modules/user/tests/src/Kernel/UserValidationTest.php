@@ -40,23 +40,29 @@ class UserValidationTest extends KernelTestBase {
    * Tests user name validation.
    */
   public function testUsernames() {
-    $test_cases = [// '<username>' => array('<description>', 'assert<testName>'),
+    $test_cases = [
+      // '<username>' => ['<description>', 'assert<testName>'].
       'foo'                    => ['Valid username', 'assertNull'],
       'FOO'                    => ['Valid username', 'assertNull'],
       'Foo O\'Bar'             => ['Valid username', 'assertNull'],
       'foo@bar'                => ['Valid username', 'assertNull'],
       'foo@example.com'        => ['Valid username', 'assertNull'],
-      'foo@-example.com'       => ['Valid username', 'assertNull'], // invalid domains are allowed in usernames
+      // invalid domains are allowed in usernames.
+      'foo@-example.com'       => ['Valid username', 'assertNull'],
       'þòøÇßªř€'               => ['Valid username', 'assertNull'],
-      'foo+bar'                => ['Valid username', 'assertNull'], // '+' symbol is allowed
-      'ᚠᛇᚻ᛫ᛒᛦᚦ'                => ['Valid UTF8 username', 'assertNull'], // runes
+      // '+' symbol is allowed.
+      'foo+bar'                => ['Valid username', 'assertNull'],
+      // runes.
+      'ᚠᛇᚻ᛫ᛒᛦᚦ'                => ['Valid UTF8 username', 'assertNull'],
       ' foo'                   => ['Invalid username that starts with a space', 'assertNotNull'],
       'foo '                   => ['Invalid username that ends with a space', 'assertNotNull'],
       'foo  bar'               => ['Invalid username that contains 2 spaces \'&nbsp;&nbsp;\'', 'assertNotNull'],
       ''                       => ['Invalid empty username', 'assertNotNull'],
       'foo/'                   => ['Invalid username containing invalid chars', 'assertNotNull'],
-      'foo' . chr(0) . 'bar'   => ['Invalid username containing chr(0)', 'assertNotNull'], // NULL
-      'foo' . chr(13) . 'bar'  => ['Invalid username containing chr(13)', 'assertNotNull'], // CR
+      // NULL.
+      'foo' . chr(0) . 'bar'   => ['Invalid username containing chr(0)', 'assertNotNull'],
+      // CR.
+      'foo' . chr(13) . 'bar'  => ['Invalid username containing chr(13)', 'assertNotNull'],
       str_repeat('x', USERNAME_MAX_LENGTH + 1) => ['Invalid excessively long username', 'assertNotNull'],
     ];
     foreach ($test_cases as $name => $test_case) {

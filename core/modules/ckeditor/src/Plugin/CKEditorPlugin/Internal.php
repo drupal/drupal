@@ -101,7 +101,8 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
   public function getConfig(Editor $editor) {
     // Reasonable defaults that provide expected basic behavior.
     $config = [
-      'customConfig' => '', // Don't load CKEditor's config.js file.
+      // Don't load CKEditor's config.js file.
+      'customConfig' => '',
       'pasteFromWordPromptCleanup' => TRUE,
       'resize_dir' => 'vertical',
       'justifyClasses' => ['text-align-left', 'text-align-center', 'text-align-right', 'text-align-justify'],

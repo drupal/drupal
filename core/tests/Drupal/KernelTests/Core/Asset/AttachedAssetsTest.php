@@ -299,7 +299,8 @@ class AttachedAssetsTest extends KernelTestBase {
       "-8_2",
       "-8_3",
       "-8_4",
-      "-5_1", // The external script.
+      // The external script.
+      "-5_1",
       "-3_1",
       "-3_2",
       "0_1",

@@ -111,7 +111,8 @@ function locale_schema() {
       'customized' => [
         'type' => 'int',
         'not null' => TRUE,
-        'default' => 0, // LOCALE_NOT_CUSTOMIZED
+        // LOCALE_NOT_CUSTOMIZED
+        'default' => 0,
         'description' => 'Boolean indicating whether the translation is custom to this site.',
       ],
     ],

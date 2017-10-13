@@ -111,8 +111,10 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
     $tests = [
       // ['path', 'accept', 'content-type'],
 
-      ['conneg/negotiate', '', 'text/html'], // 406?
-      ['conneg/negotiate', '', 'text/html'], // 406?
+      // 406?
+      ['conneg/negotiate', '', 'text/html'],
+      // 406?
+      ['conneg/negotiate', '', 'text/html'],
       // ['conneg/negotiate', '*/*', '??'],
       ['conneg/negotiate', 'application/json', 'application/json'],
       ['conneg/negotiate', 'application/xml', 'application/xml'],

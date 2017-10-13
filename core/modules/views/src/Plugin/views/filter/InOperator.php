@@ -88,7 +88,8 @@ class InOperator extends FilterPluginBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Limit list to selected items'),
       '#description' => $this->t('If checked, the only items presented to the user will be the ones selected here.'),
-      '#default_value' => !empty($this->options['expose']['reduce']), // safety
+      // Safety.
+      '#default_value' => !empty($this->options['expose']['reduce']),
     ];
   }
 

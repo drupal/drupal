@@ -84,7 +84,8 @@ class InsertTest extends DatabaseTestBase {
     ]);
     // Check how many records are queued for insertion.
     $this->assertIdentical($query->count(), 1, 'One record is queued for insertion.');
-    $query->execute();  // This should run the insert, but leave the fields intact.
+    // This should run the insert, but leave the fields intact.
+    $query->execute();
 
     // We should be able to specify values in any order if named.
     $query->values([
