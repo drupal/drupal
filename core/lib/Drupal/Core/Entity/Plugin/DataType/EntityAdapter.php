@@ -46,7 +46,7 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
   public static function createFromEntity(EntityInterface $entity) {
     $definition = EntityDataDefinition::create()
       ->setEntityTypeId($entity->getEntityTypeId())
-      ->setBundles([$entity->bundle() ]);
+      ->setBundles([$entity->bundle()]);
     $instance = new static($definition);
     $instance->setValue($entity);
     return $instance;

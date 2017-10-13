@@ -621,7 +621,7 @@ function system_requirements($phase) {
       }
     }
   }
-  if ($phase != 'install' && (empty($GLOBALS['config_directories']) || empty($GLOBALS['config_directories'][CONFIG_SYNC_DIRECTORY]) )) {
+  if ($phase != 'install' && (empty($GLOBALS['config_directories']) || empty($GLOBALS['config_directories'][CONFIG_SYNC_DIRECTORY]))) {
     $requirements['config directories'] = [
       'title' => t('Configuration directories'),
       'value' => t('Not present'),
@@ -1538,7 +1538,7 @@ function system_update_8007() {
   $schema = \Drupal::keyValue('entity.storage_schema.sql')->getAll();
   $schema_copy = $schema;
   foreach ($schema as $item_name => $item) {
-    list($entity_type_id, , ) = explode('.', $item_name);
+    list($entity_type_id, ,) = explode('.', $item_name);
     if (!isset($entity_types[$entity_type_id])) {
       continue;
     }

@@ -345,7 +345,7 @@ function _toolbar_do_get_rendered_subtrees(array $data) {
     // Many routes have dots as route name, while some special ones like <front>
     // have <> characters in them.
     $url = $link->getUrlObject();
-    $id = str_replace(['.', '<', '>'], ['-', '', '' ], $url->isRouted() ? $url->getRouteName() : $url->getUri());
+    $id = str_replace(['.', '<', '>'], ['-', '', ''], $url->isRouted() ? $url->getRouteName() : $url->getUri());
 
     $subtrees[$id] = $output;
   }

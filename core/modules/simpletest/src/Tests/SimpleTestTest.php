@@ -175,7 +175,7 @@ EOD;
         // along by the rethrow.
         assert(FALSE, 'Lorem Ipsum');
       }
-      catch (\AssertionError $e ) {
+      catch (\AssertionError $e) {
         $this->assertEqual($e->getMessage(), 'Lorem Ipsum', 'Runtime assertions Enabled and running.');
       }
     }

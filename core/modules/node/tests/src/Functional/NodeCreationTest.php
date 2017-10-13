@@ -184,7 +184,7 @@ class NodeCreationTest extends NodeTestBase {
     $this->assertNoLinkByHref('/admin/structure/types/add');
 
     // Test /node/add page without content types.
-    foreach (\Drupal::entityManager()->getStorage('node_type')->loadMultiple() as $entity ) {
+    foreach (\Drupal::entityManager()->getStorage('node_type')->loadMultiple() as $entity) {
       $entity->delete();
     }
 

@@ -109,7 +109,7 @@ function hook_toolbar() {
       '#heading' => t('Shopping cart actions'),
       'shopping_cart' => [
         '#theme' => 'item_list',
-        '#items' => [/* An item list renderable array */ ],
+        '#items' => [/* An item list renderable array */],
       ],
     ],
     '#weight' => 150,

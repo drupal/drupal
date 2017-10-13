@@ -61,7 +61,7 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
    * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
    *   The lazy context repository service.
    */
-  public function __construct(EntityTypeInterface $entity_type, ContextHandlerInterface $context_handler, ContextRepositoryInterface $context_repository ) {
+  public function __construct(EntityTypeInterface $entity_type, ContextHandlerInterface $context_handler, ContextRepositoryInterface $context_repository) {
     parent::__construct($entity_type);
     $this->contextHandler = $context_handler;
     $this->contextRepository = $context_repository;

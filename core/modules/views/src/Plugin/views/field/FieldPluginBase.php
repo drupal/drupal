@@ -865,10 +865,10 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $optgroup_arguments = (string) t('Arguments');
       $optgroup_fields = (string) t('Fields');
       foreach ($previous as $id => $label) {
-        $options[$optgroup_fields]["{{ $id }}"] = substr(strrchr($label, ":"), 2 );
+        $options[$optgroup_fields]["{{ $id }}"] = substr(strrchr($label, ":"), 2);
       }
       // Add the field to the list of options.
-      $options[$optgroup_fields]["{{ {$this->options['id']} }}"] = substr(strrchr($this->adminLabel(), ":"), 2 );
+      $options[$optgroup_fields]["{{ {$this->options['id']} }}"] = substr(strrchr($this->adminLabel(), ":"), 2);
 
       foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
         $options[$optgroup_arguments]["{{ arguments.$arg }}"] = $this->t('@argument title', ['@argument' => $handler->adminLabel()]);

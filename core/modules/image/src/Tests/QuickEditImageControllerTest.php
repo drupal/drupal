@@ -139,7 +139,7 @@ class QuickEditImageControllerTest extends WebTestBase {
     foreach ($this->drupalGetTestFiles('image') as $image) {
       /** @var \Drupal\Core\Image\ImageInterface $image_file */
       $image_file = $image_factory->get($image->uri);
-      if ($image_file->getWidth() < 50 || $image_file->getWidth() > 100 ) {
+      if ($image_file->getWidth() < 50 || $image_file->getWidth() > 100) {
         $invalid_image = $image;
         break;
       }
