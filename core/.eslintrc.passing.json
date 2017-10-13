@@ -14,7 +14,6 @@
     "max-len": "off",
     "default-case": "off",
     "camelcase": "off",
-    "vars-on-top": "off",
     "prefer-rest-params": "off"
   }
 }
