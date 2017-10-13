@@ -386,9 +386,14 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $multiple = $plugin->multiple();
         }
       }
-      // No plugins or no value means do not set.
-      if ($plugins && !is_null($value)) {
-        $row->setDestinationProperty($destination, $value);
+      // Ensure all values, including nulls, are migrated.
+      if ($plugins) {
+        if (isset($value)) {
+          $row->setDestinationProperty($destination, $value);
+        }
+        else {
+          $row->setEmptyDestinationProperty($destination);
+        }
       }
       // Reset the value.
       $value = NULL;
