@@ -2,6 +2,7 @@
 
 namespace Drupal\Core;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
@@ -70,6 +71,13 @@ class Cron implements CronInterface {
   protected $queueManager;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * Constructs a cron object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -86,8 +94,10 @@ class Cron implements CronInterface {
    *   A logger instance.
    * @param \Drupal\Core\Queue\QueueWorkerManagerInterface $queue_manager
    *   The queue plugin manager.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, TimeInterface $time = NULL) {
     $this->moduleHandler = $module_handler;
     $this->lock = $lock;
     $this->queueFactory = $queue_factory;
@@ -95,6 +105,7 @@ class Cron implements CronInterface {
     $this->accountSwitcher = $account_switcher;
     $this->logger = $logger;
     $this->queueManager = $queue_manager;
+    $this->time = $time ?: \Drupal::service('datetime.time');
   }
 
   /**
@@ -143,7 +154,8 @@ class Cron implements CronInterface {
    */
   protected function setCronLastTime() {
     // Record cron time.
-    $this->state->set('system.cron_last', REQUEST_TIME);
+    $request_time = $this->time->getRequestTime();
+    $this->state->set('system.cron_last', $request_time);
     $this->logger->notice('Cron run completed.');
   }
 
