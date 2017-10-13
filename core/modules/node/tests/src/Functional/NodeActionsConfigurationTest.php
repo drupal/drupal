@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\system\Entity\Action;
 
@@ -30,7 +29,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
 
     // Make a POST request to admin/config/system/actions.
     $edit = [];
-    $edit['action'] = Crypt::hashBase64('node_assign_owner_action');
+    $edit['action'] = 'node_assign_owner_action';
     $this->drupalPostForm('admin/config/system/actions', $edit, t('Create'));
     $this->assertResponse(200);
 
@@ -40,7 +39,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $edit['label'] = $action_label;
     $edit['id'] = strtolower($action_label);
     $edit['owner_uid'] = $user->id();
-    $this->drupalPostForm('admin/config/system/actions/add/' . Crypt::hashBase64('node_assign_owner_action'), $edit, t('Save'));
+    $this->drupalPostForm('admin/config/system/actions/add/node_assign_owner_action', $edit, t('Save'));
     $this->assertResponse(200);
 
     $action_id = $edit['id'];

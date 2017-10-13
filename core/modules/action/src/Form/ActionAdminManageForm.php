@@ -3,7 +3,6 @@
 namespace Drupal\action\Form;
 
 use Drupal\Core\Form\FormBase;
-use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Action\ActionManager;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -55,8 +54,7 @@ class ActionAdminManageForm extends FormBase {
     $actions = [];
     foreach ($this->manager->getDefinitions() as $id => $definition) {
       if (is_subclass_of($definition['class'], '\Drupal\Core\Plugin\PluginFormInterface')) {
-        $key = Crypt::hashBase64($id);
-        $actions[$key] = $definition['label'] . '...';
+        $actions[$id] = $definition['label'] . '...';
       }
     }
     $form['parent'] = [

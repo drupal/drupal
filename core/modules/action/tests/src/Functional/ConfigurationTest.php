@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\action\Functional;
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\system\Entity\Action;
 use Drupal\Tests\BrowserTestBase;
 
@@ -31,7 +30,7 @@ class ConfigurationTest extends BrowserTestBase {
 
     // Make a POST request to admin/config/system/actions.
     $edit = [];
-    $edit['action'] = Crypt::hashBase64('action_goto_action');
+    $edit['action'] = 'action_goto_action';
     $this->drupalPostForm('admin/config/system/actions', $edit, t('Create'));
     $this->assertResponse(200);
 
@@ -41,7 +40,7 @@ class ConfigurationTest extends BrowserTestBase {
     $edit['label'] = $action_label;
     $edit['id'] = strtolower($action_label);
     $edit['url'] = 'admin';
-    $this->drupalPostForm('admin/config/system/actions/add/' . Crypt::hashBase64('action_goto_action'), $edit, t('Save'));
+    $this->drupalPostForm('admin/config/system/actions/add/action_goto_action', $edit, t('Save'));
     $this->assertResponse(200);
 
     $action_id = $edit['id'];
