@@ -8,7 +8,6 @@
     "no-restricted-syntax": "off",
     "no-new": "off",
     "no-multi-assign": "off",
-    "no-empty": "off",
     "no-continue": "off",
     "new-cap": "off",
     "max-len": "off",

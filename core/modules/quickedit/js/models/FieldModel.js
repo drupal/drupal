@@ -72,9 +72,9 @@
       var currentField = this;
       var otherViewModes = [];
       Drupal.quickedit.collections.fields.where({ logicalFieldID: currentField.get('logicalFieldID') }).forEach(function (field) {
-        if (field === currentField) {} else if (field.get('fieldID') === currentField.get('fieldID')) {} else {
-            otherViewModes.push(field.getViewMode());
-          }
+        if (field !== currentField && field.get('fieldID') !== currentField.get('fieldID')) {
+          otherViewModes.push(field.getViewMode());
+        }
       });
       return otherViewModes;
     }
