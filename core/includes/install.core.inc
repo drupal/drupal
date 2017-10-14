@@ -318,6 +318,14 @@ function install_begin_request($class_loader, &$install_state) {
     header($request->server->get('SERVER_PROTOCOL') . ' 403 Forbidden');
     exit;
   }
+  if ($install_state['interactive'] && drupal_valid_test_ua()) {
+    // Set the default timezone. While this doesn't cause any tests to fail, PHP
+    // complains if 'date.timezone' is not set in php.ini. The Australia/Sydney
+    // timezone is chosen so all tests are run using an edge case scenario
+    // (UTC+10  and DST). This choice is made to prevent timezone related
+    // regressions and reduce the fragility of the testing system in general.
+    date_default_timezone_set('Australia/Sydney');
+  }
 
   $site_path = DrupalKernel::findSitePath($request, FALSE);
   Settings::initialize(dirname(dirname(__DIR__)), $site_path, $class_loader);

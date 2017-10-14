@@ -25,6 +25,10 @@ class InstallerTest extends InstallerTestBase {
     $this->assertRaw(t('Congratulations, you installed @drupal!', [
       '@drupal' => drupal_install_profile_distribution_name(),
     ]));
+
+    // Ensure that the timezone is correct for sites under test after installing
+    // interactively.
+    $this->assertEqual($this->config('system.date')->get('timezone.default'), 'Australia/Sydney');
   }
 
   /**
