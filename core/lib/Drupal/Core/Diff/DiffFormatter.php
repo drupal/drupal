@@ -73,7 +73,7 @@ class DiffFormatter extends DiffFormatterBase {
   /**
    * {@inheritdoc}
    */
-  protected function _lines($lines, $prefix=' ', $color='white') {
+  protected function _lines($lines, $prefix = ' ', $color = 'white') {
   }
 
   /**

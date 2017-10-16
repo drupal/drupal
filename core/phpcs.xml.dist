@@ -276,6 +276,14 @@
   <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.CloseBracketLine">
     <severity>0</severity>
   </rule>
+  <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+    <properties>
+      <property name="equalsSpacing" value="1"/>
+    </properties>
+  </rule>
+  <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.NoSpaceBeforeArg">
+    <severity>0</severity>
+  </rule>
   <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
   <rule ref="Squiz.Strings.ConcatenationSpacing">
     <properties>
