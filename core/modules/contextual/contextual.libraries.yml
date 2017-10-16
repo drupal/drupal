@@ -20,6 +20,7 @@ drupal.contextual-links:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/drupal.ajax
     - core/drupalSettings
     - core/backbone
     - core/modernizr

@@ -27,23 +27,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         }
       }
 
-      $('.use-ajax').once('ajax').each(function () {
-        var element_settings = {};
-
-        element_settings.progress = { type: 'throbber' };
-
-        var href = $(this).attr('href');
-        if (href) {
-          element_settings.url = href;
-          element_settings.event = 'click';
-        }
-        element_settings.dialogType = $(this).data('dialog-type');
-        element_settings.dialogRenderer = $(this).data('dialog-renderer');
-        element_settings.dialog = $(this).data('dialog-options');
-        element_settings.base = $(this).attr('id');
-        element_settings.element = this;
-        Drupal.ajax(element_settings);
-      });
+      Drupal.ajax.bindAjaxLinks(document.body);
 
       $('.use-ajax-submit').once('ajax').each(function () {
         var element_settings = {};
@@ -134,6 +118,28 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   Drupal.ajax.expired = function () {
     return Drupal.ajax.instances.filter(function (instance) {
       return instance && instance.element !== false && !document.body.contains(instance.element);
+    });
+  };
+
+  Drupal.ajax.bindAjaxLinks = function (element) {
+    $(element).find('.use-ajax').once('ajax').each(function (i, ajaxLink) {
+      var $linkElement = $(ajaxLink);
+
+      var elementSettings = {
+        progress: { type: 'throbber' },
+        dialogType: $linkElement.data('dialog-type'),
+        dialog: $linkElement.data('dialog-options'),
+        dialogRenderer: $linkElement.data('dialog-renderer'),
+        base: $linkElement.attr('id'),
+        element: ajaxLink
+      };
+      var href = $linkElement.attr('href');
+
+      if (href) {
+        elementSettings.url = href;
+        elementSettings.event = 'click';
+      }
+      Drupal.ajax(elementSettings);
     });
   };
 

@@ -93,15 +93,27 @@
     setEditModeState(!isInEditMode());
   }
 
+  function prepareAjaxLinks() {
+    Drupal.ajax.instances.filter(function (instance) {
+      return instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
+    }).forEach(function (instance) {
+      if (!('dialogOptions' in instance.options.data)) {
+        instance.options.data.dialogOptions = {};
+      }
+      instance.options.data.dialogOptions.settingsTrayActiveEditableId = $(instance.element).parents('.settings-tray-editable').attr('id');
+      instance.progress = { type: 'fullscreen' };
+    });
+  }
+
   $(document).on('drupalContextualLinkAdded', function (event, data) {
+    prepareAjaxLinks();
+
     $('body').once('settings_tray.edit_mode_init').each(function () {
       var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
       if (editMode) {
         setEditModeState(true);
       }
     });
-
-    Drupal.attachBehaviors(data.$el[0]);
 
     data.$el.find(blockConfigureSelector).on('click.settingstray', function () {
       if (!isInEditMode()) {
@@ -122,16 +134,6 @@
   Drupal.behaviors.toggleEditMode = {
     attach: function attach() {
       $(toggleEditSelector).once('settingstray').on('click.settingstray', toggleEditMode);
-
-      Drupal.ajax.instances.filter(function (instance) {
-        return instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
-      }).forEach(function (instance) {
-        if (!('dialogOptions' in instance.options.data)) {
-          instance.options.data.dialogOptions = {};
-        }
-        instance.options.data.dialogOptions.settingsTrayActiveEditableId = $(instance.element).parents('.settings-tray-editable').attr('id');
-        instance.progress = { type: 'fullscreen' };
-      });
     }
   };
 

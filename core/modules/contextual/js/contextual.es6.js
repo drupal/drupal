@@ -249,4 +249,19 @@
   Drupal.theme.contextualTrigger = function () {
     return '<button class="trigger visually-hidden focusable" type="button"></button>';
   };
+
+  /**
+   * Bind Ajax contextual links when added.
+   *
+   * @param {jQuery.Event} event
+   *   The `drupalContextualLinkAdded` event.
+   * @param {object} data
+   *   An object containing the data relevant to the event.
+   *
+   * @listens event:drupalContextualLinkAdded
+   */
+  $(document).on('drupalContextualLinkAdded', (event, data) => {
+    Drupal.ajax.bindAjaxLinks(data.$el[0]);
+  });
+
 }(jQuery, Drupal, drupalSettings, _, Backbone, window.JSON, window.sessionStorage));

@@ -69,6 +69,17 @@ class ContextualLinksTest extends JavascriptTestBase {
     $this->clickContextualLink('#block-branding', 'Test Link');
     $this->assertSession()->pageTextContains('Everything is contextual!');
 
+    // Test click a contextual link that uses ajax.
+    $this->drupalGet('user');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $current_page_string = 'NOT_RELOADED_IF_ON_PAGE';
+    $this->getSession()->executeScript('document.body.appendChild(document.createTextNode("' . $current_page_string . '"));');
+    $this->clickContextualLink('#block-branding', 'Test Link with Ajax');
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '#drupal-modal'));
+    $this->assertSession()->elementContains('css', '#drupal-modal', 'Everything is contextual!');
+    // Check to make sure that page was not reloaded.
+    $this->assertSession()->pageTextContains($current_page_string);
+
     // Test clicking contextual link with toolbar.
     $this->container->get('module_installer')->install(['toolbar']);
     $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), ['access toolbar']);

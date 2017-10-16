@@ -144,4 +144,8 @@
   Drupal.theme.contextualTrigger = function () {
     return '<button class="trigger visually-hidden focusable" type="button"></button>';
   };
+
+  $(document).on('drupalContextualLinkAdded', function (event, data) {
+    Drupal.ajax.bindAjaxLinks(data.$el[0]);
+  });
 })(jQuery, Drupal, drupalSettings, _, Backbone, window.JSON, window.sessionStorage);
