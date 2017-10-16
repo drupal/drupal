@@ -83,9 +83,15 @@ class Composer {
     // This is, essentially, a null constraint. We only care whether the package
     // is present in the vendor directory yet, but findPackage() requires it.
     $constraint = new Constraint('>', '');
+    // It's possible that there is no classmap specified in a custom project
+    // composer.json file. We need one so we can optimize lookup for some of our
+    // dependencies.
+    $autoload = $package->getAutoload();
+    if (!isset($autoload['classmap'])) {
+      $autoload['classmap'] = [];
+    }
     // Check for our packages, and then optimize them if they're present.
     if ($repository->findPackage('symfony/http-foundation', $constraint)) {
-      $autoload = $package->getAutoload();
       $autoload['classmap'] = array_merge($autoload['classmap'], [
         $vendor_dir . '/symfony/http-foundation/Request.php',
         $vendor_dir . '/symfony/http-foundation/ParameterBag.php',
@@ -93,17 +99,15 @@ class Composer {
         $vendor_dir . '/symfony/http-foundation/ServerBag.php',
         $vendor_dir . '/symfony/http-foundation/HeaderBag.php',
       ]);
-      $package->setAutoload($autoload);
     }
     if ($repository->findPackage('symfony/http-kernel', $constraint)) {
-      $autoload = $package->getAutoload();
       $autoload['classmap'] = array_merge($autoload['classmap'], [
         $vendor_dir . '/symfony/http-kernel/HttpKernel.php',
         $vendor_dir . '/symfony/http-kernel/HttpKernelInterface.php',
         $vendor_dir . '/symfony/http-kernel/TerminableInterface.php',
       ]);
-      $package->setAutoload($autoload);
     }
+    $package->setAutoload($autoload);
   }
 
   /**
