@@ -582,7 +582,7 @@ EOD;
    *   Returns < 0 if $str1 is less than $str2; > 0 if $str1 is greater than
    *   $str2, and 0 if they are equal.
    */
-  public static function strcasecmp($str1 , $str2) {
+  public static function strcasecmp($str1, $str2) {
     return strcmp(static::strtoupper($str1), static::strtoupper($str2));
   }
 
