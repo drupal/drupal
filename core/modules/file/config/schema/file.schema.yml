@@ -73,13 +73,17 @@ field.field_settings.file:
 field.formatter.settings.file_default:
   type: mapping
   label: 'Generic file format settings'
+  mapping:
+    use_description_as_link_text:
+      type: boolean
+      label: 'Replace the file name by its description when available'
 
 field.formatter.settings.file_rss_enclosure:
   type: mapping
   label: 'RSS enclosure format settings'
 
 field.formatter.settings.file_table:
-  type: mapping
+  type: field.formatter.settings.file_default
   label: 'Table of files format settings'
 
 field.formatter.settings.file_url_plain:

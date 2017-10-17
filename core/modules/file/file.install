@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for File module.
  */
 
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+
 /**
  * Implements hook_schema().
  */
@@ -127,4 +129,38 @@ function file_update_8300() {
     ->save();
 
   return t('Files that have no remaining usages are no longer deleted by default.');
+}
+
+/**
+ * Add 'use_description_as_link_text' setting to file field formatters.
+ */
+function file_update_8001() {
+  $displays = EntityViewDisplay::loadMultiple();
+  foreach ($displays as $display) {
+    /** @var \Drupal\Core\Entity\Entity\EntityViewDisplay $display */
+    $fields_settings = $display->get('content');
+    $changed = FALSE;
+    foreach ($fields_settings as $field_name => $settings) {
+      if (!empty($settings['type'])) {
+        switch ($settings['type']) {
+          // The file_table formatter never displayed available descriptions
+          // before, so we disable this option to ensure backward compatibility.
+          case 'file_table':
+            $fields_settings[$field_name]['settings']['use_description_as_link_text'] = FALSE;
+            $changed = TRUE;
+            break;
+
+          // The file_default formatter always displayed available descriptions
+          // before, so we enable this option to ensure backward compatibility.
+          case 'file_default':
+            $fields_settings[$field_name]['settings']['use_description_as_link_text'] = TRUE;
+            $changed = TRUE;
+            break;
+        }
+      }
+    }
+    if ($changed === TRUE) {
+      $display->set('content', $fields_settings)->save();
+    }
+  }
 }

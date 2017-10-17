@@ -129,11 +129,14 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     // Test the file field formatter settings.
     $expected['weight'] = 8;
     $expected['type'] = 'file_default';
-    $expected['settings'] = [];
+    $expected['settings'] = [
+      'use_description_as_link_text' => TRUE
+    ];
     $component = $display->getComponent('field_test_filefield');
     $this->assertIdentical($expected, $component);
     $display = EntityViewDisplay::load('node.story.default');
     $expected['type'] = 'file_url_plain';
+    $expected['settings'] = [];
     $component = $display->getComponent('field_test_filefield');
     $this->assertIdentical($expected, $component);
 

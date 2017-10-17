@@ -1,0 +1,27 @@
+uuid: 44c7a590-ffcc-4534-b01c-b17b8d57ed48
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_file_table_2677990
+    - node.type.article
+  module:
+    - file
+id: node.article.field_file_table_2677990
+field_name: field_file_table_2677990
+entity_type: node
+bundle: article
+label: 'File table'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: txt
+  max_filesize: ''
+  description_field: true
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file
