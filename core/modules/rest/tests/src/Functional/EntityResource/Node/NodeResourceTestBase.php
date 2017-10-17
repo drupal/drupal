@@ -7,6 +7,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\rest\Functional\BcTimestampNormalizerUnixTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
+use GuzzleHttp\RequestOptions;
 
 abstract class NodeResourceTestBase extends EntityResourceTestBase {
 
@@ -213,6 +214,62 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
       return "The 'access content' permission is required.";
     }
     return parent::getExpectedUnauthorizedAccessMessage($method);
+  }
+
+  /**
+   * Tests PATCHing a node's path with and without 'create url aliases'.
+   *
+   * For a positive test, see the similar test coverage for Term.
+   *
+   * @see \Drupal\Tests\rest\Functional\EntityResource\Term\TermResourceTestBase::testPatchPath()
+   */
+  public function testPatchPath() {
+    $this->initAuthentication();
+    $this->provisionEntityResource();
+    $this->setUpAuthorization('GET');
+    $this->setUpAuthorization('PATCH');
+
+    $url = $this->getEntityResourceUrl()->setOption('query', ['_format' => static::$format]);
+
+    // GET node's current normalization.
+    $response = $this->request('GET', $url, $this->getAuthenticationRequestOptions('GET'));
+    $normalization = $this->serializer->decode((string) $response->getBody(), static::$format);
+
+    // @todo In https://www.drupal.org/node/2824851, we will be able to stop
+    //       unsetting these fields from the normalization, because
+    //       EntityResource::patch() will ignore any fields that are sent that
+    //       match the current value (and obviously we're sending the current
+    //       value).
+    $normalization = $this->removeFieldsFromNormalization($normalization, [
+      'revision_timestamp',
+      'revision_uid',
+      'created',
+      'changed',
+      'promote',
+      'sticky',
+    ]);
+
+    // Change node's path alias.
+    $normalization['path'][0]['alias'] .= 's-rule-the-world';
+
+    // Create node PATCH request.
+    $request_options = [];
+    $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
+    $request_options = array_merge_recursive($request_options, $this->getAuthenticationRequestOptions('PATCH'));
+    $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
+
+    // PATCH request: 403 when creating URL aliases unauthorized.
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertResourceErrorResponse(403, "Access denied on updating field 'path'.", $response);
+
+    // Grant permission to create URL aliases.
+    $this->grantPermissionsToTestedRole(['create url aliases']);
+
+    // Repeat PATCH request: 200.
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertResourceResponse(200, FALSE, $response);
+    $updated_normalization = $this->serializer->decode((string) $response->getBody(), static::$format);
+    $this->assertSame($normalization['path'], $updated_normalization['path']);
   }
 
 }
