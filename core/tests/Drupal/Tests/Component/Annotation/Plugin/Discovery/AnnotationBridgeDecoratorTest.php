@@ -35,6 +35,9 @@ class AnnotationBridgeDecoratorTest extends TestCase {
 
 }
 
+/**
+ * {@inheritdoc}
+ */
 class TestAnnotation extends Plugin {
 
   /**
@@ -45,12 +48,17 @@ class TestAnnotation extends Plugin {
   }
 
 }
+
+/**
+ * {@inheritdoc}
+ */
 class ObjectDefinition extends PluginDefinition {
 
   /**
    * ObjectDefinition constructor.
    *
    * @param array $definition
+   *   An array of definition values.
    */
   public function __construct(array $definition) {
     foreach ($definition as $property => $value) {
