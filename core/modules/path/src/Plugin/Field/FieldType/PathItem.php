@@ -31,6 +31,13 @@ class PathItem extends FieldItemBase {
   protected $isLoaded = FALSE;
 
   /**
+   * Whether the alias is currently being set.
+   *
+   * @var bool
+   */
+  protected $isLoading = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
@@ -122,6 +129,17 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
+  public function setValue($values, $notify = TRUE) {
+    // Also ensure that existing values are loaded when setting a value, this
+    // ensures that it is possible to set a new value immediately after loading
+    // an entity.
+    $this->ensureLoaded();
+    return parent::setValue($values, $notify);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postSave($update) {
     if (!$update) {
       if ($this->alias) {
@@ -170,7 +188,9 @@ class PathItem extends FieldItemBase {
    *   https://www.drupal.org/node/2392845.
    */
   protected function ensureLoaded() {
-    if (!$this->isLoaded) {
+    // Make sure to avoid a infinite loop if setValue() has be called from this
+    // block which calls ensureLoaded().
+    if (!$this->isLoaded && !$this->isLoading) {
       $entity = $this->getEntity();
       if (!$entity->isNew()) {
         // @todo Support loading languge neutral aliases in
@@ -180,7 +200,9 @@ class PathItem extends FieldItemBase {
           'langcode' => $this->getLangcode(),
         ]);
         if ($alias) {
+          $this->isLoading = TRUE;
           $this->setValue($alias);
+          $this->isLoading = FALSE;
         }
         else {
           // If there is no existing alias, default the langcode to the current
