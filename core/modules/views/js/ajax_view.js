@@ -26,8 +26,7 @@
     var selector = '.js-view-dom-id-' + settings.view_dom_id;
     this.$view = $(selector);
 
-    var ajaxPath = drupalSettings.views.ajaxPath;
-
+    var ajaxPath = drupalSettings.views.ajax_path;
     if (ajaxPath.constructor.toString().indexOf('Array') !== -1) {
       ajaxPath = ajaxPath[0];
     }

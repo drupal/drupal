@@ -99,6 +99,10 @@
         return farb.pack(farb.HSLToRGB(given));
       }
 
+      function shift_color(given, ref1, ref2) {
+        return shiftColor(given, ref1, ref2);
+      }
+
       function callback(input, color, propagate, colorScheme) {
         var matched = void 0;
 

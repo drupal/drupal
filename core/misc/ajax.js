@@ -172,6 +172,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     this.element = element;
 
+    this.element_settings = elementSettings;
+
     this.elementSettings = elementSettings;
 
     if (this.element && this.element.form) {
