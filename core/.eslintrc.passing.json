@@ -12,7 +12,6 @@
     "new-cap": "off",
     "max-len": "off",
     "default-case": "off",
-    "camelcase": "off",
-    "prefer-rest-params": "off"
+    "camelcase": "off"
   }
 }

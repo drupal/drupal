@@ -559,10 +559,9 @@ window.Drupal = { behaviors: {}, locale: {} };
    *   Any data the theme function returns. This could be a plain HTML string,
    *   but also a complex object.
    */
-  Drupal.theme = function (func) {
-    const args = Array.prototype.slice.apply(arguments, [1]);
+  Drupal.theme = function (func, ...args) {
     if (func in Drupal.theme) {
-      return Drupal.theme[func].apply(this, args);
+      return Drupal.theme[func](...args);
     }
   };
 

@@ -29,9 +29,8 @@
 Drupal.debounce = function (func, wait, immediate) {
   let timeout;
   let result;
-  return function () {
+  return function (...args) {
     const context = this;
-    const args = arguments;
     const later = function () {
       timeout = null;
       if (!immediate) {

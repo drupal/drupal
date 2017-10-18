@@ -181,9 +181,14 @@ window.Drupal = { behaviors: {}, locale: {} };
   };
 
   Drupal.theme = function (func) {
-    var args = Array.prototype.slice.apply(arguments, [1]);
     if (func in Drupal.theme) {
-      return Drupal.theme[func].apply(this, args);
+      var _Drupal$theme;
+
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      return (_Drupal$theme = Drupal.theme)[func].apply(_Drupal$theme, args);
     }
   };
 

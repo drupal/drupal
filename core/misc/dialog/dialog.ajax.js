@@ -26,7 +26,11 @@
       var originalClose = settings.dialog.close;
 
       settings.dialog.close = function (event) {
-        originalClose.apply(settings.dialog, arguments);
+        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        originalClose.apply(settings.dialog, [event].concat(args));
         $(event.target).remove();
       };
     },
