@@ -388,6 +388,13 @@
     this.element = element;
 
     /**
+     * @deprecated See elementSettings.
+     *
+     * @type {Drupal.Ajax~elementSettings}
+     */
+    this.element_settings = elementSettings;
+
+    /**
      * @type {Drupal.Ajax~elementSettings}
      */
     this.elementSettings = elementSettings;

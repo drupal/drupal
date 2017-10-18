@@ -49,7 +49,7 @@
     this.$view = $(selector);
 
     // Retrieve the path to use for views' ajax.
-    let ajaxPath = drupalSettings.views.ajaxPath;
+    let ajaxPath = drupalSettings.views.ajax_path; // eslint-ignore-line camelcase
 
     // If there are multiple views this might've ended up showing up multiple
     // times.

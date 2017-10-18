@@ -145,6 +145,19 @@
         return farb.pack(farb.HSLToRGB(given));
       }
 
+
+      /**
+       * @deprecated See shiftColor().
+       *
+       * @param given
+       * @param ref1
+       * @param ref2
+       * @returns {string}
+       */
+      function shift_color(given, ref1, ref2) {
+        return shiftColor(given, ref1, ref2);
+      }
+
       /**
        * Callback for Farbtastic when a new color is chosen.
        *
