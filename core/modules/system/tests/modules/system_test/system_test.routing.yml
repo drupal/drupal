@@ -196,3 +196,11 @@ system_test.echo_utf8:
     _controller: '\Drupal\system_test\Controller\SystemTestController::simpleEcho'
   requirements:
     _access: 'TRUE'
+
+system_test.custom_cache_control:
+  path: '/system-test/custom-cache-control'
+  defaults:
+    _title: 'Cacheable response with custom cache control'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::getCacheableResponseWithCustomCacheControl'
+  requirements:
+    _access: 'TRUE'
