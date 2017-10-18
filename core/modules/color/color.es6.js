@@ -91,10 +91,10 @@
        * This algorithm ensures relative ordering on the saturation and
        * luminance axes is preserved, and performs a simple hue shift.
        *
-       * It is also symmetrical. If: shift_color(c, a, b) === d, then
-       * shift_color(d, b, a) === c.
+       * It is also symmetrical. If: shiftColor(c, a, b) === d, then
+       * shiftColor(d, b, a) === c.
        *
-       * @function Drupal.color~shift_color
+       * @function Drupal.color~shiftColor
        *
        * @param {string} given
        *   A hex color code to shift.
@@ -106,7 +106,7 @@
        * @return {string}
        *   A hex color, shifted.
        */
-      function shift_color(given, ref1, ref2) {
+      function shiftColor(given, ref1, ref2) {
         let d;
         // Convert to HSL.
         given = farb.RGBToHSL(farb.unpack(given));
@@ -177,14 +177,14 @@
               if (!locks[j - 1] || $(locks[j - 1]).is('.is-unlocked')) {
                 break;
               }
-              matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
+              matched = shiftColor(color, reference[input.key], reference[inputs[j].key]);
               callback(inputs[j], matched, false);
             }
             for (j = i - 1; ; --j) {
               if (!locks[j] || $(locks[j]).is('.is-unlocked')) {
                 break;
               }
-              matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
+              matched = shiftColor(color, reference[input.key], reference[inputs[j].key]);
               callback(inputs[j], matched, false);
             }
 

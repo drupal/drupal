@@ -1134,11 +1134,11 @@
         // Closures! :(
         const $context = $(context);
         const $submit = $context.find('[id^=edit-submit]');
-        const old_value = $submit.val();
+        const oldValue = $submit.val();
 
         $submit.once('views-ui-override-button-text')
           .on('mouseup', function () {
-            $(this).val(old_value);
+            $(this).val(oldValue);
             return true;
           });
 
