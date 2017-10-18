@@ -1,5 +1,5 @@
 id: d7_file_private
-label: Files
+label: Private files
 migration_tags:
   - Drupal 7
 source:
