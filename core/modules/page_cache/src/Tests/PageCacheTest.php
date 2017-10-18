@@ -539,6 +539,19 @@ class PageCacheTest extends WebTestBase {
   }
 
   /**
+   * Test a cacheable response with custom cache control.
+   */
+  public function testCacheableWithCustomCacheControl() {
+    $config = $this->config('system.performance');
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+
+    $this->drupalGet('/system-test/custom-cache-control');
+    $this->assertResponse(200);
+    $this->assertHeader('Cache-Control', 'bar, private');
+  }
+
+  /**
    * Test that URLs are cached in a not normalized form.
    */
   public function testNoUrlNormalization() {

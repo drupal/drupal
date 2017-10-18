@@ -260,9 +260,14 @@ class PageCache implements HttpKernelInterface {
         $expire = $request_time + $cache_ttl_4xx;
       }
     }
-    else {
-      $date = $response->getExpires()->getTimestamp();
+    // The getExpires method could return NULL if Expires header is not set, so
+    // the returned value needs to be checked before calling getTimestamp.
+    elseif ($expires = $response->getExpires()) {
+      $date = $expires->getTimestamp();
       $expire = ($date > $request_time) ? $date : Cache::PERMANENT;
+    }
+    else {
+      $expire = Cache::PERMANENT;
     }
 
     if ($expire === Cache::PERMANENT || $expire > $request_time) {

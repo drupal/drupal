@@ -375,4 +375,11 @@ class SystemTestController extends ControllerBase {
     return $response;
   }
 
+  /**
+   * Returns a cacheable response with a custom cache control.
+   */
+  public function getCacheableResponseWithCustomCacheControl() {
+    return new CacheableResponse('Foo', 200, ['Cache-Control' => 'bar']);
+  }
+
 }
