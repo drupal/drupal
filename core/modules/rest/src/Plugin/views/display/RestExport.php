@@ -124,7 +124,9 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
 
     $this->renderer = $renderer;
-    $this->authenticationProviders = $authentication_providers;
+    // Values of "$this->authenticationProviders" - are module names, defining
+    // authentication providers. Only provider IDs should be used for choosing.
+    $this->authenticationProviders = array_keys($authentication_providers);
     $this->formatProviders = $serializer_format_providers;
   }
 
@@ -472,10 +474,14 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
     $dependencies = parent::calculateDependencies();
 
     $dependencies += ['module' => []];
-    $modules = array_map(function ($authentication_provider) {
-      return $this->authenticationProviders[$authentication_provider];
-    }, $this->getOption('auth'));
-    $dependencies['module'] = array_merge($dependencies['module'], $modules);
+    $dependencies['module'] = array_merge($dependencies['module'], array_filter(array_map(function ($provider) {
+      // During the update path the provider options might be wrong. This can
+      // happen when any update function, like block_update_8300() triggers a
+      // view to be saved.
+      return isset($this->authenticationProviders[$provider])
+        ? $this->authenticationProviders[$provider]
+        : NULL;
+    }, $this->getOption('auth'))));
 
     return $dependencies;
   }
