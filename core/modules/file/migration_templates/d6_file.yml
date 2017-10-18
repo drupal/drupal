@@ -1,7 +1,7 @@
 # Every migration that references a file by Drupal 6 fid should specify this
 # migration as an optional dependency.
 id: d6_file
-label: Files
+label: Public files
 migration_tags:
   - Drupal 6
 source:
