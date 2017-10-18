@@ -72,13 +72,12 @@
     <exclude name="Drupal.Commenting.VariableComment.WrongStyle"/>
   </rule>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/InlineCommentSniff.php">
-    <!-- Sniff for: NoSpaceBefore -->
+    <!-- Sniff for: NoSpaceBefore, WrongStyle -->
     <exclude name="Drupal.Commenting.InlineComment.DocBlock"/>
     <exclude name="Drupal.Commenting.InlineComment.InvalidEndChar"/>
     <exclude name="Drupal.Commenting.InlineComment.NotCapital"/>
     <exclude name="Drupal.Commenting.InlineComment.SpacingAfter"/>
     <exclude name="Drupal.Commenting.InlineComment.SpacingBefore"/>
-    <exclude name="Drupal.Commenting.InlineComment.WrongStyle"/>
   </rule>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/PostStatementCommentSniff.php" />
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ElseIfSniff.php"/>
