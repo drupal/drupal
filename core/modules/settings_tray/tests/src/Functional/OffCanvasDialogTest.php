@@ -1,24 +1,25 @@
 <?php
 
-namespace Drupal\settings_tray\Tests\Ajax;
+namespace Drupal\Tests\settings_tray\Functional;
 
 use Drupal\ajax_test\Controller\AjaxTestController;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
-use Drupal\system\Tests\Ajax\AjaxTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Performs tests on opening and manipulating dialogs via AJAX commands.
  *
  * @group settings_tray
  */
-class OffCanvasDialogTest extends AjaxTestBase {
+class OffCanvasDialogTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['settings_tray'];
+  public static $modules = ['ajax_test', 'settings_tray'];
 
   /**
    * Test sending AJAX requests to open and manipulate off-canvas dialog.
@@ -54,7 +55,8 @@ class OffCanvasDialogTest extends AjaxTestBase {
     ];
 
     // Emulate going to the JS version of the page and check the JSON response.
-    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog.off_canvas']]);
+    $ajax_result = $this->drupalGet('ajax-test/dialog-contents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_dialog.off_canvas']]);
+    $ajax_result = Json::decode($ajax_result);
     $this->assertEqual($off_canvas_expected_response, $ajax_result[3], 'off-canvas dialog JSON response matches.');
   }
 
