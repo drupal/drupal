@@ -21,9 +21,9 @@ class FieldConfigAccessControlHandlerTest extends FieldStorageConfigAccessContro
     parent::setUp();
 
     $this->entity = new FieldConfig([
-      'field_name' => $this->fieldStorage->getName(),
+      'field_name' => $this->entity->getName(),
       'entity_type' => 'node',
-      'fieldStorage' => $this->fieldStorage,
+      'fieldStorage' => $this->entity,
       'bundle' => 'test_bundle',
       'field_type' => 'test_field',
     ], 'node');

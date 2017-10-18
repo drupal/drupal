@@ -1,28 +1,31 @@
 <?php
 
-namespace Drupal\Tests\field\Unit;
+namespace Drupal\Tests\Core\Entity\Access;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\DependencyInjection\Container;
+use Drupal\Core\Entity\Entity\Access\EntityFormDisplayAccessControlHandler;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Field\FormatterPluginManager;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\FieldStorageConfigAccessControlHandler;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the field storage config access controller.
- *
- * @group field
- *
- * @coversDefaultClass \Drupal\field\FieldStorageConfigAccessControlHandler
+ * @coversDefaultClass \Drupal\Core\Entity\Entity\Access\EntityFormDisplayAccessControlHandler
+ * @group Entity
  */
-class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
+class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
 
   /**
    * The field storage config access controller to test.
@@ -46,18 +49,37 @@ class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
   protected $anon;
 
   /**
-   * The mock account with field storage config access.
+   * The mock account with EntityFormDisplay access.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $member;
 
   /**
-   * The FieldStorageConfig entity used for testing.
+   * The mock account with EntityFormDisplay access via parent access check.
    *
-   * @var \Drupal\field\FieldStorageConfigInterface
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $parent_member;
+
+  /**
+   * The EntityFormDisplay entity used for testing.
+   *
+   * @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface
    */
   protected $entity;
+
+
+  /**
+   * Returns a mock Entity Type Manager.
+   *
+   * @return EntityTypeManagerInterface
+   *   The mocked entity type manager.
+   */
+  protected function getEntityTypeManager() {
+    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
+    return $entity_type_manager->reveal();
+  }
 
   /**
    * {@inheritdoc}
@@ -80,32 +102,41 @@ class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
       ->expects($this->any())
       ->method('hasPermission')
       ->will($this->returnValueMap([
-        ['administer node fields', TRUE],
+        ['administer foobar form display', TRUE],
       ]));
     $this->member
       ->expects($this->any())
       ->method('id')
       ->will($this->returnValue(2));
 
-    $storageType = $this->getMock(ConfigEntityTypeInterface::class);
-    $storageType
+    $this->parent_member = $this->getMock(AccountInterface::class);
+    $this->parent_member
       ->expects($this->any())
-      ->method('getProvider')
-      ->will($this->returnValue('field'));
-    $storageType
+      ->method('hasPermission')
+      ->will($this->returnValueMap([
+        ['Llama', TRUE],
+      ]));
+    $this->parent_member
       ->expects($this->any())
-      ->method('getConfigPrefix')
-      ->will($this->returnValue('field.storage'));
+      ->method('id')
+      ->will($this->returnValue(3));
 
-    $entityType = $this->getMock(ConfigEntityTypeInterface::class);
-    $entityType
+    $entity_form_display_entity_type = $this->getMock(ConfigEntityTypeInterface::class);
+    $entity_form_display_entity_type->expects($this->any())
+      ->method('getAdminPermission')
+      ->will($this->returnValue('Llama'));
+    $entity_form_display_entity_type
       ->expects($this->any())
-      ->method('getProvider')
-      ->will($this->returnValue('node'));
-    $entityType
-      ->expects($this->any())
+      ->method('getKey')
+      ->will($this->returnValueMap([
+        ['langcode', 'langcode'],
+      ]));
+    $entity_form_display_entity_type->expects($this->any())
+      ->method('entityClassImplements')
+      ->will($this->returnValue(TRUE));
+    $entity_form_display_entity_type->expects($this->any())
       ->method('getConfigPrefix')
-      ->willReturn('node');
+      ->willReturn('');
 
     $this->moduleHandler = $this->getMock(ModuleHandlerInterface::class);
     $this->moduleHandler
@@ -117,49 +148,60 @@ class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
       ->method('invokeAll')
       ->will($this->returnValue([]));
 
-    $storage_access_control_handler = new FieldStorageConfigAccessControlHandler($storageType);
+    $storage_access_control_handler = new EntityFormDisplayAccessControlHandler($entity_form_display_entity_type);
     $storage_access_control_handler->setModuleHandler($this->moduleHandler);
 
     $entity_type_manager = $this->getMock(EntityTypeManagerInterface::class);
     $entity_type_manager
       ->expects($this->any())
-      ->method('getDefinition')
-      ->willReturnMap([
-        ['field_storage_config', TRUE, $storageType],
-        ['node', TRUE, $entityType],
-      ]);
-    $entity_type_manager
-      ->expects($this->any())
       ->method('getStorage')
       ->willReturnMap([
-        ['field_storage_config', $this->getMock(EntityStorageInterface::class)],
+        ['entity_display', $this->getMock(EntityStorageInterface::class)],
       ]);
     $entity_type_manager
       ->expects($this->any())
       ->method('getAccessControlHandler')
       ->willReturnMap([
-        ['field_storage_config', $storage_access_control_handler],
+        ['entity_display', $storage_access_control_handler],
       ]);
+    $entity_type_manager
+      ->expects($this->any())
+      ->method('getFieldDefinitions')
+      ->willReturn([]);
+    $entity_type_manager
+      ->expects($this->any())
+      ->method('getDefinition')
+      ->will($this->returnValue($entity_form_display_entity_type));
+
+    $entity_field_manager = $this->getMock(EntityFieldManagerInterface::class);
+    $entity_field_manager->expects($this->any())
+      ->method('getFieldDefinitions')
+      ->will($this->returnValue([]));
 
     $entity_manager = new EntityManager();
-
     $container = new Container();
     $container->set('entity.manager', $entity_manager);
     $container->set('entity_type.manager', $entity_type_manager);
+    $container->set('entity_field.manager', $entity_field_manager);
+    $container->set('language_manager', $this->getMock(LanguageManagerInterface::class));
+    $container->set('plugin.manager.field.widget', $this->prophesize(PluginManagerInterface::class));
+    $container->set('plugin.manager.field.field_type', $this->getMock(FieldTypePluginManagerInterface::class));
+    $container->set('plugin.manager.field.formatter', $this->prophesize(FormatterPluginManager::class));
     $container->set('uuid', $this->getMock(UuidInterface::class));
+    $container->set('renderer', $this->getMock(RendererInterface::class));
     $container->set('cache_contexts_manager', $this->prophesize(CacheContextsManager::class));
     // Inject the container into entity.manager so it can defer to
     // entity_type.manager.
     $entity_manager->setContainer($container);
     \Drupal::setContainer($container);
 
-    $this->entity = new FieldStorageConfig([
-      'field_name' => 'test_field',
-      'entity_type' => 'node',
-      'type' => 'boolean',
-      'id' => 'node.test_field',
+    $this->entity = new EntityFormDisplay([
+      'targetEntityType' => 'foobar',
+      'bundle' => 'bazqux',
+      'mode' => 'default',
+      'id' => 'foobar.bazqux.default',
       'uuid' => '6f2f259a-f3c7-42ea-bdd5-111ad1f85ed1',
-    ]);
+    ], 'entity_display');
 
     $this->accessControlHandler = $storage_access_control_handler;
   }
@@ -181,19 +223,22 @@ class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Ensures field storage config access is working properly.
+   * @covers ::access
+   * @covers ::checkAccess
    */
   public function testAccess() {
     $this->assertAllowOperations([], $this->anon);
     $this->assertAllowOperations(['view', 'update', 'delete'], $this->member);
+    $this->assertAllowOperations(['view', 'update', 'delete'], $this->parent_member);
 
-    $this->entity->setLocked(TRUE)->save();
+    $this->entity->enforceIsNew(TRUE)->save();
     // Unfortunately, EntityAccessControlHandler has a static cache, which we
     // therefore must reset manually.
     $this->accessControlHandler->resetCache();
 
     $this->assertAllowOperations([], $this->anon);
     $this->assertAllowOperations(['view', 'update'], $this->member);
+    $this->assertAllowOperations(['view', 'update'], $this->parent_member);
   }
 
 }

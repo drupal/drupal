@@ -21,6 +21,9 @@ use Drupal\Core\TypedData\TranslatableInterface;
  *     "id" = "id",
  *     "status" = "status"
  *   },
+ *   handlers = {
+ *     "access" = "\Drupal\Core\Entity\Entity\Access\EntityViewDisplayAccessControlHandler",
+ *   },
  *   config_export = {
  *     "id",
  *     "targetEntityType",

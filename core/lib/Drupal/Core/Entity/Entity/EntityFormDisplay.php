@@ -23,6 +23,9 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *     "id" = "id",
  *     "status" = "status"
  *   },
+ *   handlers = {
+ *     "access" = "\Drupal\Core\Entity\Entity\Access\EntityFormDisplayAccessControlHandler",
+ *   },
  *   config_export = {
  *     "id",
  *     "targetEntityType",
