@@ -67,7 +67,7 @@
         Drupal.color.callback(context, settings, form, farb, height, width);
       }
 
-      function shift_color(given, ref1, ref2) {
+      function shiftColor(given, ref1, ref2) {
         var d = void 0;
 
         given = farb.RGBToHSL(farb.unpack(given));
@@ -99,6 +99,10 @@
         return farb.pack(farb.HSLToRGB(given));
       }
 
+      function shift_color(given, ref1, ref2) {
+        return shiftColor(given, ref1, ref2);
+      }
+
       function callback(input, color, propagate, colorScheme) {
         var matched = void 0;
 
@@ -116,14 +120,14 @@
               if (!locks[j - 1] || $(locks[j - 1]).is('.is-unlocked')) {
                 break;
               }
-              matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
+              matched = shiftColor(color, reference[input.key], reference[inputs[j].key]);
               callback(inputs[j], matched, false);
             }
             for (j = i - 1;; --j) {
               if (!locks[j] || $(locks[j]).is('.is-unlocked')) {
                 break;
               }
-              matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
+              matched = shiftColor(color, reference[input.key], reference[inputs[j].key]);
               callback(inputs[j], matched, false);
             }
 

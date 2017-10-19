@@ -47,20 +47,20 @@
       }
 
       // Set up gradients if there are some.
-      let color_start;
-      let color_end;
+      let colorStart;
+      let colorEnd;
       for (const i in settings.gradients) {
         if (settings.gradients.hasOwnProperty(i)) {
-          color_start = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`).val());
-          color_end = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`).val());
-          if (color_start && color_end) {
+          colorStart = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`).val());
+          colorEnd = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`).val());
+          if (colorStart && colorEnd) {
             delta = [];
-            for (const j in color_start) {
-              if (color_start.hasOwnProperty(j)) {
-                delta[j] = (color_end[j] - color_start[j]) / (settings.gradients[i].vertical ? height[i] : width[i]);
+            for (const j in colorStart) {
+              if (colorStart.hasOwnProperty(j)) {
+                delta[j] = (colorEnd[j] - colorStart[j]) / (settings.gradients[i].vertical ? height[i] : width[i]);
               }
             }
-            accum = color_start;
+            accum = colorStart;
             // Render gradient lines.
             form.find(`#gradient-${i} > div`).each(gradientLineColor);
           }

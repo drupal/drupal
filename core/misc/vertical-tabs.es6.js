@@ -61,7 +61,7 @@
       $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs').each(function () {
         const $this = $(this).addClass('vertical-tabs__panes');
         const focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
-        let tab_focus;
+        let tabFocus;
 
         // Check if there are some details that can be converted to
         // vertical-tabs.
@@ -71,45 +71,45 @@
         }
 
         // Create the tab column.
-        const tab_list = $('<ul class="vertical-tabs__menu"></ul>');
-        $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tab_list);
+        const tabList = $('<ul class="vertical-tabs__menu"></ul>');
+        $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tabList);
 
         // Transform each details into a tab.
         $details.each(function () {
           const $that = $(this);
-          const vertical_tab = new Drupal.verticalTab({
+          const verticalTab = new Drupal.verticalTab({
             title: $that.find('> summary').text(),
             details: $that,
           });
-          tab_list.append(vertical_tab.item);
+          tabList.append(verticalTab.item);
           $that
             .removeClass('collapsed')
             // prop() can't be used on browsers not supporting details element,
             // the style won't apply to them if prop() is used.
             .attr('open', true)
             .addClass('vertical-tabs__pane')
-            .data('verticalTab', vertical_tab);
+            .data('verticalTab', verticalTab);
           if (this.id === focusID) {
-            tab_focus = $that;
+            tabFocus = $that;
           }
         });
 
-        $(tab_list).find('> li').eq(0).addClass('first');
-        $(tab_list).find('> li').eq(-1).addClass('last');
+        $(tabList).find('> li').eq(0).addClass('first');
+        $(tabList).find('> li').eq(-1).addClass('last');
 
-        if (!tab_focus) {
+        if (!tabFocus) {
           // If the current URL has a fragment and one of the tabs contains an
           // element that matches the URL fragment, activate that tab.
           const $locationHash = $this.find(window.location.hash);
           if (window.location.hash && $locationHash.length) {
-            tab_focus = $locationHash.closest('.vertical-tabs__pane');
+            tabFocus = $locationHash.closest('.vertical-tabs__pane');
           }
           else {
-            tab_focus = $this.find('> .vertical-tabs__pane').eq(0);
+            tabFocus = $this.find('> .vertical-tabs__pane').eq(0);
           }
         }
-        if (tab_focus.length) {
-          tab_focus.data('verticalTab').focus();
+        if (tabFocus.length) {
+          tabFocus.data('verticalTab').focus();
         }
       });
     },
