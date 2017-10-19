@@ -156,4 +156,48 @@ class DrupalDateTimeTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Tests that object methods are chainable.
+   *
+   * @covers ::__call
+   */
+  public function testChainable() {
+    $tz = new \DateTimeZone(date_default_timezone_get());
+    $date = new DrupalDateTime('now', $tz, ['langcode' => 'en']);
+
+    $date->setTimestamp(12345678);
+    $rendered = $date->render();
+    $this->assertEquals('1970-05-24 07:21:18 Australia/Sydney', $rendered);
+
+    $date->setTimestamp(23456789);
+    $rendered = $date->setTimezone(new \DateTimeZone('America/New_York'))->render();
+    $this->assertEquals('1970-09-29 07:46:29 America/New_York', $rendered);
+  }
+
+  /**
+   * Tests that non-chainable methods work.
+   *
+   * @covers ::__call
+   */
+  public function testChainableNonChainable() {
+    $tz = new \DateTimeZone(date_default_timezone_get());
+    $datetime1 = new DrupalDateTime('2009-10-11 12:00:00', $tz, ['langcode' => 'en']);
+    $datetime2 = new DrupalDateTime('2009-10-13 12:00:00', $tz, ['langcode' => 'en']);
+    $interval = $datetime1->diff($datetime2);
+    $this->assertInstanceOf(\DateInterval::class, $interval);
+    $this->assertEquals('+2 days', $interval->format('%R%a days'));
+  }
+
+  /**
+   * Tests that chained calls to non-existent functions throw an exception.
+   *
+   * @covers ::__call
+   */
+  public function testChainableNonCallable() {
+    $this->setExpectedException(\BadMethodCallException::class, 'Call to undefined method Drupal\Core\Datetime\DrupalDateTime::nonexistent()');
+    $tz = new \DateTimeZone(date_default_timezone_get());
+    $date = new DrupalDateTime('now', $tz, ['langcode' => 'en']);
+    $date->setTimezone(new \DateTimeZone('America/New_York'))->nonexistent();
+  }
+
 }

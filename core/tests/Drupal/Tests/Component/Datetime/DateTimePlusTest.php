@@ -804,4 +804,52 @@ class DateTimePlusTest extends TestCase {
     $date = DateTimePlus::createFromFormat('Y-m-d H:i:s', '11-03-31 17:44:00', 'UTC', ['validate_format' => TRUE]);
   }
 
+  /**
+   * Tests that object methods are chainable.
+   *
+   * @covers ::__call
+   */
+  public function testChainable() {
+    $date = new DateTimePlus('now', 'Australia/Sydney');
+
+    $date->setTimestamp(12345678);
+    $rendered = $date->render();
+    $this->assertEquals('1970-05-24 07:21:18 Australia/Sydney', $rendered);
+
+    $date->setTimestamp(23456789);
+    $rendered = $date->setTimezone(new \DateTimeZone('America/New_York'))->render();
+    $this->assertEquals('1970-09-29 07:46:29 America/New_York', $rendered);
+
+    $date = DateTimePlus::createFromFormat('Y-m-d H:i:s', '1970-05-24 07:21:18', new \DateTimeZone('Australia/Sydney'))
+      ->setTimezone(new \DateTimeZone('America/New_York'));
+    $rendered = $date->render();
+    $this->assertInstanceOf(DateTimePlus::class, $date);
+    $this->assertEquals(12345678, $date->getTimestamp());
+    $this->assertEquals('1970-05-23 17:21:18 America/New_York', $rendered);
+  }
+
+  /**
+   * Tests that non-chainable methods work.
+   *
+   * @covers ::__call
+   */
+  public function testChainableNonChainable() {
+    $datetime1 = new DateTimePlus('2009-10-11 12:00:00');
+    $datetime2 = new DateTimePlus('2009-10-13 12:00:00');
+    $interval = $datetime1->diff($datetime2);
+    $this->assertInstanceOf(\DateInterval::class, $interval);
+    $this->assertEquals('+2 days', $interval->format('%R%a days'));
+  }
+
+  /**
+   * Tests that chained calls to non-existent functions throw an exception.
+   *
+   * @covers ::__call
+   */
+  public function testChainableNonCallable() {
+    $this->setExpectedException(\BadMethodCallException::class, 'Call to undefined method Drupal\Component\Datetime\DateTimePlus::nonexistent()');
+    $date = new DateTimePlus('now', 'Australia/Sydney');
+    $date->setTimezone(new \DateTimeZone('America/New_York'))->nonexistent();
+  }
+
 }

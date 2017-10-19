@@ -306,8 +306,25 @@ class DateTimePlus {
    * Implements the magic __call method.
    *
    * Passes through all unknown calls onto the DateTime object.
+   *
+   * @param string $method
+   *   The method to call on the decorated object.
+   * @param array $args
+   *   Call arguments.
+   *
+   * @return mixed
+   *   The return value from the method on the decorated object. If the proxied
+   *   method call returns a DateTime object, then return the original
+   *   DateTimePlus object, which allows function chaining to work properly.
+   *   Otherwise, the value from the proxied method call is returned.
+   *
+   * @throws \Exception
+   *   Thrown when the DateTime object is not set.
+   * @throws \BadMethodCallException
+   *   Thrown when there is no corresponding method on the DateTime object to
+   *   call.
    */
-  public function __call($method, $args) {
+  public function __call($method, array $args) {
     // @todo consider using assert() as per https://www.drupal.org/node/2451793.
     if (!isset($this->dateTimeObject)) {
       throw new \Exception('DateTime object not set.');
@@ -315,7 +332,10 @@ class DateTimePlus {
     if (!method_exists($this->dateTimeObject, $method)) {
       throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_class($this), $method));
     }
-    return call_user_func_array([$this->dateTimeObject, $method], $args);
+
+    $result = call_user_func_array([$this->dateTimeObject, $method], $args);
+
+    return $result === $this->dateTimeObject ? $this : $result;
   }
 
   /**
