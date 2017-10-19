@@ -1354,5 +1354,4 @@
       }
     },
   };
-
 }(jQuery, window, Drupal, drupalSettings));

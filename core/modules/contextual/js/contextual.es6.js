@@ -263,5 +263,4 @@
   $(document).on('drupalContextualLinkAdded', (event, data) => {
     Drupal.ajax.bindAjaxLinks(data.$el[0]);
   });
-
 }(jQuery, Drupal, drupalSettings, _, Backbone, window.JSON, window.sessionStorage));
