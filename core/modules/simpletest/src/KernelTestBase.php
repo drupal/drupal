@@ -146,7 +146,7 @@ abstract class KernelTestBase extends TestBase {
     $path = $this->siteDirectory . '/config_' . CONFIG_SYNC_DIRECTORY;
     $GLOBALS['config_directories'][CONFIG_SYNC_DIRECTORY] = $path;
     // Ensure the directory can be created and is writeable.
-    if (!install_ensure_config_directory(CONFIG_SYNC_DIRECTORY)) {
+    if (!file_prepare_directory($path, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
       throw new \RuntimeException("Failed to create '" . CONFIG_SYNC_DIRECTORY . "' config directory $path");
     }
     // Provide the already resolved path for tests.
