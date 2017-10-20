@@ -1,13 +1,14 @@
 <?php
 
-namespace Drupal\page_cache\Tests;
+namespace Drupal\Tests\page_cache\Functional;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Cache\Cache;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 
 /**
@@ -15,7 +16,9 @@ use Drupal\user\RoleInterface;
  *
  * @group page_cache
  */
-class PageCacheTest extends WebTestBase {
+class PageCacheTest extends BrowserTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   protected $dumpHeaders = TRUE;
 
@@ -79,7 +82,10 @@ class PageCacheTest extends WebTestBase {
    * Test that the page cache doesn't depend on cacheability headers.
    */
   public function testPageCacheTagsIndependentFromCacheabilityHeaders() {
-    $this->setHttpResponseDebugCacheabilityHeaders(FALSE);
+    // Disable the cacheability headers.
+    $this->setContainerParameter('http.response.debug_cacheability_headers', FALSE);
+    $this->rebuildContainer();
+    $this->resetAll();
 
     $path = 'system-test/cache_tags_page';
     $tags = ['system_test_cache_tags_page'];
@@ -185,33 +191,42 @@ class PageCacheTest extends WebTestBase {
     // Verify the page is not printed twice when the cache is cold.
     $this->assertNoPattern('#<html.*<html#');
 
-    $this->drupalHead('');
+    $this->drupalGet('');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $etag = $this->drupalGetHeader('ETag');
     $last_modified = $this->drupalGetHeader('Last-Modified');
 
-    $this->drupalGet('', [], ['If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag]);
+    $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => $etag]);
     $this->assertResponse(304, 'Conditional request returned 304 Not Modified.');
 
-    $this->drupalGet('', [], ['If-Modified-Since: ' . gmdate(DATE_RFC822, strtotime($last_modified)), 'If-None-Match: ' . $etag]);
+    $this->drupalGet('', [], [
+      'If-Modified-Since' => gmdate(DATE_RFC822, strtotime($last_modified)),
+      'If-None-Match' => $etag,
+    ]);
     $this->assertResponse(304, 'Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.');
 
-    $this->drupalGet('', [], ['If-Modified-Since: ' . gmdate(DATE_RFC850, strtotime($last_modified)), 'If-None-Match: ' . $etag]);
+    $this->drupalGet('', [], [
+      'If-Modified-Since' => gmdate(DATE_RFC850, strtotime($last_modified)),
+      'If-None-Match' => $etag,
+    ]);
     $this->assertResponse(304, 'Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.');
 
-    $this->drupalGet('', [], ['If-Modified-Since: ' . $last_modified]);
+    $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => NULL]);
     // Verify the page is not printed twice when the cache is warm.
     $this->assertNoPattern('#<html.*<html#');
     $this->assertResponse(200, 'Conditional request without If-None-Match returned 200 OK.');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
 
-    $this->drupalGet('', [], ['If-Modified-Since: ' . gmdate(DateTimePlus::RFC7231, strtotime($last_modified) + 1), 'If-None-Match: ' . $etag]);
+    $this->drupalGet('', [], [
+      'If-Modified-Since' => gmdate(DateTimePlus::RFC7231, strtotime($last_modified) + 1),
+      'If-None-Match' => $etag,
+    ]);
     $this->assertResponse(200, 'Conditional request with new a If-Modified-Since date newer than Last-Modified returned 200 OK.');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
 
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
-    $this->drupalGet('', [], ['If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag]);
+    $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => $etag]);
     $this->assertResponse(200, 'Conditional request returned 200 OK for authenticated user.');
     $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), 'Absence of Page was not cached.');
   }
@@ -515,24 +530,27 @@ class PageCacheTest extends WebTestBase {
    * Tests that HEAD requests are treated the same as GET requests.
    */
   public function testHead() {
+    /** @var \GuzzleHttp\ClientInterface $client */
+    $client = $this->getSession()->getDriver()->getClient()->getClient();
+
     // GET, then HEAD.
     $url_a = $this->buildUrl('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'bar']]);
-    $response_body = $this->curlExec([CURLOPT_HTTPGET => TRUE, CURLOPT_URL => $url_a, CURLOPT_CUSTOMREQUEST => 'GET', CURLOPT_NOBODY => FALSE]);
+    $response_body = $this->drupalGet($url_a);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
     $this->assertEqual('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">bar</em>', $response_body);
-    $response_body = $this->curlExec([CURLOPT_HTTPGET => FALSE, CURLOPT_URL => $url_a, CURLOPT_CUSTOMREQUEST => 'HEAD', CURLOPT_NOBODY => FALSE]);
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
-    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
-    $this->assertEqual('', $response_body);
+    $response = $client->request('HEAD', $url_a);
+    $this->assertEqual($response->getHeaderLine('X-Drupal-Cache'), 'HIT', 'Page was cached.');
+    $this->assertEqual($response->getHeaderLine('Foo'), 'bar', 'Custom header was sent.');
+    $this->assertEqual('', $response->getBody()->getContents());
 
     // HEAD, then GET.
     $url_b = $this->buildUrl('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'baz']]);
-    $response_body = $this->curlExec([CURLOPT_HTTPGET => FALSE, CURLOPT_URL => $url_b, CURLOPT_CUSTOMREQUEST => 'HEAD', CURLOPT_NOBODY => FALSE]);
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
-    $this->assertEqual($this->drupalGetHeader('Foo'), 'baz', 'Custom header was sent.');
-    $this->assertEqual('', $response_body);
-    $response_body = $this->curlExec([CURLOPT_HTTPGET => TRUE, CURLOPT_URL => $url_b, CURLOPT_CUSTOMREQUEST => 'GET', CURLOPT_NOBODY => FALSE]);
+    $response = $client->request('HEAD', $url_b);
+    $this->assertEqual($response->getHeaderLine('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
+    $this->assertEqual($response->getHeaderLine('Foo'), 'baz', 'Custom header was sent.');
+    $this->assertEqual('', $response->getBody()->getContents());
+    $response_body = $this->drupalGet($url_b);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'baz', 'Custom header was sent.');
     $this->assertEqual('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">baz</em>', $response_body);
@@ -577,18 +595,52 @@ class PageCacheTest extends WebTestBase {
     ];
 
     foreach ($tests as list($url_raw, $url_normalized)) {
-
       // Initialize cache on raw URL.
-      $this->drupalGet($url_raw);
-      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+      $headers = $this->getHeaders($url_raw);
+      $this->assertEquals('MISS', $headers['X-Drupal-Cache']);
+
       // Ensure cache was set.
-      $this->drupalGet($url_raw);
-      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', "Cache was set for {$url_raw} URL.");
+      $headers = $this->getHeaders($url_raw);
+      $this->assertEquals('HIT', $headers['X-Drupal-Cache'], "Cache was set for {$url_raw} URL.");
 
       // Check if the normalized URL is not cached.
-      $this->drupalGet($url_normalized);
-      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', "Cache is missing for {$url_normalized} URL.");
+      $headers = $this->getHeaders($url_normalized);
+      $this->assertEquals('MISS', $headers['X-Drupal-Cache'], "Cache is missing for {$url_normalized} URL.");
     }
+  }
+
+  /**
+   * Retrieves only the headers for an absolute path.
+   *
+   * Executes a cURL request without any modifications to the given URL.
+   * Note that Guzzle always normalizes URLs which prevents testing all
+   * possible edge cases.
+   *
+   * @param string $url
+   *   URL to request.
+   *
+   * @return array
+   *   Array of headers.
+   */
+  protected function getHeaders($url) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, TRUE);
+    curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_USERAGENT, drupal_generate_test_ua($this->databasePrefix));
+    $output = curl_exec($ch);
+    curl_close($ch);
+
+    $headers = [];
+    foreach (explode("\n", $output) as $header) {
+      if (strpos($header, ':')) {
+        list($key, $value) = explode(':', $header, 2);
+        $headers[trim($key)] = trim($value);
+      }
+    }
+
+    return $headers;
   }
 
 }
