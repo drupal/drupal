@@ -213,23 +213,6 @@ theme_settings:
       sequence:
         type: theme_settings.third_party.[%key]
 
-views_field_bulk_form:
-  type: views_field
-  label: 'Bulk operation'
-  mapping:
-    action_title:
-      type: label
-      label: 'Action title'
-    include_exclude:
-      type: string
-      label: 'Available actions'
-    selected_actions:
-      type: sequence
-      label: 'Available actions'
-      sequence:
-        type: string
-        label: 'Action'
-
 # Array of routes with route_name and route_params keys.
 route:
   type: mapping

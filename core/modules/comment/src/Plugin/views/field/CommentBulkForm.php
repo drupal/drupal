@@ -2,7 +2,7 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
-use Drupal\system\Plugin\views\field\BulkForm;
+use Drupal\views\Plugin\views\field\BulkForm;
 
 /**
  * Defines a comment operations bulk form element.

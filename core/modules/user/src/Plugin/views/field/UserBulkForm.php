@@ -3,8 +3,8 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\system\Plugin\views\field\BulkForm;
 use Drupal\user\UserInterface;
+use Drupal\views\Plugin\views\field\BulkForm;
 
 /**
  * Defines a user operations bulk form element.
