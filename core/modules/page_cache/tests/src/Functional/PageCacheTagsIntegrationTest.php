@@ -1,22 +1,22 @@
 <?php
 
-namespace Drupal\page_cache\Tests;
+namespace Drupal\Tests\page_cache\Functional;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\simpletest\WebTestBase;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Enables the page cache and tests its cache tags in various scenarios.
  *
  * @group Cache
- * @see \Drupal\page_cache\Tests\PageCacheTest
+ * @see \Drupal\Tests\page_cache\Functional\PageCacheTest
  * @see \Drupal\node\Tests\NodePageCacheTest
  * @see \Drupal\menu_ui\Tests\MenuTest::testMenuBlockPageCacheTags()
  */
-class PageCacheTagsIntegrationTest extends WebTestBase {
+class PageCacheTagsIntegrationTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 
