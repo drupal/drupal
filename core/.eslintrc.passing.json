@@ -7,7 +7,6 @@
     "no-shadow": "off",
     "no-restricted-syntax": "off",
     "no-new": "off",
-    "no-multi-assign": "off",
     "no-continue": "off",
     "new-cap": "off",
     "max-len": "off",

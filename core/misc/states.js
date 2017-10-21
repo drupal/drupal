@@ -6,9 +6,11 @@
 **/
 
 (function ($, Drupal) {
-  var states = Drupal.states = {
+  var states = {
     postponed: []
   };
+
+  Drupal.states = states;
 
   Drupal.behaviors.states = {
     attach: function attach(context, settings) {
@@ -259,7 +261,8 @@
   };
 
   states.State = function (state) {
-    this.pristine = this.name = state;
+    this.pristine = state;
+    this.name = state;
 
     var process = true;
     do {

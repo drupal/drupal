@@ -18,7 +18,7 @@
     }
 
     var contextualToolbar = Drupal.contextualToolbar;
-    var model = contextualToolbar.model = new contextualToolbar.StateModel({
+    contextualToolbar.model = new contextualToolbar.StateModel({
       isViewing: localStorage.getItem('Drupal.contextualToolbar.isViewing') !== 'false'
     }, {
       contextualCollection: Drupal.contextual.collection
@@ -26,7 +26,7 @@
 
     var viewOptions = {
       el: $('.toolbar .toolbar-bar .contextual-toolbar-tab'),
-      model: model,
+      model: contextualToolbar.model,
       strings: strings
     };
     new contextualToolbar.VisualView(viewOptions);

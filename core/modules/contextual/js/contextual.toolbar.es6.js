@@ -22,7 +22,7 @@
     }
 
     const contextualToolbar = Drupal.contextualToolbar;
-    const model = contextualToolbar.model = new contextualToolbar.StateModel({
+    contextualToolbar.model = new contextualToolbar.StateModel({
       // Checks whether localStorage indicates we should start in edit mode
       // rather than view mode.
       // @see Drupal.contextualToolbar.VisualView.persist
@@ -33,7 +33,7 @@
 
     const viewOptions = {
       el: $('.toolbar .toolbar-bar .contextual-toolbar-tab'),
-      model,
+      model: contextualToolbar.model,
       strings,
     };
     new contextualToolbar.VisualView(viewOptions);

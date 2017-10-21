@@ -12,13 +12,15 @@
    *
    * @namespace Drupal.states
    */
-  const states = Drupal.states = {
+  const states = {
 
     /**
      * An array of functions that should be postponed.
      */
     postponed: [],
   };
+
+  Drupal.states = states;
 
   /**
    * Attaches the states.
@@ -508,7 +510,8 @@
     /**
      * Original unresolved name.
      */
-    this.pristine = this.name = state;
+    this.pristine = state;
+    this.name = state;
 
     // Normalize the state name.
     let process = true;
