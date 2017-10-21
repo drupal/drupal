@@ -95,11 +95,10 @@
       const id = `quickedit-form-for-${fieldModel.id.replace(/[\/\[\]]/g, '_')}`;
 
       // Render form container.
-      const $formContainer = $(Drupal.theme('quickeditFormContainer', {
+      const $formContainer = this.$formContainer = $(Drupal.theme('quickeditFormContainer', {
         id,
         loadingMsg: Drupal.t('Loading…'),
       }));
-      this.$formContainer = $formContainer;
       $formContainer
         .find('.quickedit-form')
         .addClass('quickedit-editable quickedit-highlighted quickedit-editing')

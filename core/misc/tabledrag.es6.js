@@ -1107,16 +1107,14 @@
     const de = document.documentElement;
     const b = document.body;
 
-    const windowHeight = window.innerHeight || (de.clientHeight && de.clientWidth !== 0 ? de.clientHeight : b.offsetHeight);
-    this.windowHeight = windowHeight;
+    const windowHeight = this.windowHeight = window.innerHeight || (de.clientHeight && de.clientWidth !== 0 ? de.clientHeight : b.offsetHeight);
     let scrollY;
     if (document.all) {
-      scrollY = !de.scrollTop ? b.scrollTop : de.scrollTop;
+      scrollY = this.scrollY = !de.scrollTop ? b.scrollTop : de.scrollTop;
     }
     else {
-      scrollY = window.pageYOffset ? window.pageYOffset : window.scrollY;
+      scrollY = this.scrollY = window.pageYOffset ? window.pageYOffset : window.scrollY;
     }
-    this.scrollY = scrollY;
     const trigger = this.scrollSettings.trigger;
     let delta = 0;
 

@@ -16,14 +16,14 @@
 
         $configurationForm.append(drupalSettings.ckeditor.toolbarAdmin);
 
-        Drupal.ckeditor.models.Model = new Drupal.ckeditor.Model({
+        var model = Drupal.ckeditor.models.Model = new Drupal.ckeditor.Model({
           $textarea: $textarea,
           activeEditorConfig: JSON.parse($textarea.val()),
           hiddenEditorConfig: drupalSettings.ckeditor.hiddenCKEditorConfig
         });
 
         var viewDefaults = {
-          model: Drupal.ckeditor.models.Model,
+          model: model,
           el: $('.ckeditor-toolbar-configuration')
         };
         Drupal.ckeditor.views = {

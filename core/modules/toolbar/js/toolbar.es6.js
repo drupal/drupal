@@ -46,21 +46,18 @@
       // Process the administrative toolbar.
       $(context).find('#toolbar-administration').once('toolbar').each(function () {
         // Establish the toolbar models and views.
-        const model = new Drupal.toolbar.ToolbarModel({
+        const model = Drupal.toolbar.models.toolbarModel = new Drupal.toolbar.ToolbarModel({
           locked: JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked')),
           activeTab: document.getElementById(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))),
           height: $('#toolbar-administration').outerHeight(),
         });
-
-        Drupal.toolbar.models.toolbarModel = model;
 
         // Attach a listener to the configured media query breakpoints.
         // Executes it before Drupal.toolbar.views to avoid extra rendering.
         for (const label in options.breakpoints) {
           if (options.breakpoints.hasOwnProperty(label)) {
             const mq = options.breakpoints[label];
-            const mql = window.matchMedia(mq);
-            Drupal.toolbar.mql[label] = mql;
+            const mql = Drupal.toolbar.mql[label] = window.matchMedia(mq);
             // Curry the model and the label of the media query breakpoint to
             // the mediaQueryChangeHandler function.
             mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, model, label));
@@ -91,8 +88,7 @@
         model.trigger('change:activeTray', model, model.get('activeTray'));
 
         // Render collapsible menus.
-        const menuModel = new Drupal.toolbar.MenuModel();
-        Drupal.toolbar.models.menuModel = menuModel;
+        const menuModel = Drupal.toolbar.models.menuModel = new Drupal.toolbar.MenuModel();
         Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView({
           el: $(this).find('.toolbar-menu-administration').get(0),
           model: menuModel,

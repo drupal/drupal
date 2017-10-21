@@ -701,15 +701,13 @@
     var de = document.documentElement;
     var b = document.body;
 
-    var windowHeight = window.innerHeight || (de.clientHeight && de.clientWidth !== 0 ? de.clientHeight : b.offsetHeight);
-    this.windowHeight = windowHeight;
+    var windowHeight = this.windowHeight = window.innerHeight || (de.clientHeight && de.clientWidth !== 0 ? de.clientHeight : b.offsetHeight);
     var scrollY = void 0;
     if (document.all) {
-      scrollY = !de.scrollTop ? b.scrollTop : de.scrollTop;
+      scrollY = this.scrollY = !de.scrollTop ? b.scrollTop : de.scrollTop;
     } else {
-      scrollY = window.pageYOffset ? window.pageYOffset : window.scrollY;
+      scrollY = this.scrollY = window.pageYOffset ? window.pageYOffset : window.scrollY;
     }
-    this.scrollY = scrollY;
     var trigger = this.scrollSettings.trigger;
     var delta = 0;
 

@@ -27,9 +27,14 @@
 
       // Store the original value of this field. Necessary for reverting
       // changes.
+      let $textElement;
       const $fieldItems = this.$el.find('.quickedit-field');
-      const $textElement = $fieldItems.length ? $fieldItems.eq(0) : this.$el;
-      this.$textElement = $textElement;
+      if ($fieldItems.length) {
+        $textElement = this.$textElement = $fieldItems.eq(0);
+      }
+      else {
+        $textElement = this.$textElement = this.$el;
+      }
       editorModel.set('originalValue', $.trim(this.$textElement.text()));
 
       // Sets the state to 'changed' whenever the value changes.

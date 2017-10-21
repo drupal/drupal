@@ -25,8 +25,7 @@
   };
 
   function displace(broadcast) {
-    offsets = calculateOffsets();
-    Drupal.displace.offsets = offsets;
+    offsets = Drupal.displace.offsets = calculateOffsets();
     if (typeof broadcast === 'undefined' || broadcast) {
       $(document).trigger('drupalViewportOffsetChange', offsets);
     }
