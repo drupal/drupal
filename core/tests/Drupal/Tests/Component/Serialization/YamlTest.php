@@ -66,7 +66,6 @@ class YamlTest extends TestCase {
    * @dataProvider providerYamlFilesInCore
    */
   public function testYamlFiles($file) {
-    file_put_contents('/tmp/dup.txt', $file . "\n", FILE_APPEND);
     $data = file_get_contents($file);
     try {
       $this->assertEquals(YamlSymfony::decode($data), YamlPecl::decode($data), $file);
