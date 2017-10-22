@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests config overrides do not appear on forms that extend ConfigFormBase.
@@ -10,7 +10,7 @@ use Drupal\simpletest\WebTestBase;
  * @group config
  * @see \Drupal\Core\Form\ConfigFormBase
  */
-class ConfigFormOverrideTest extends WebTestBase {
+class ConfigFormOverrideTest extends BrowserTestBase {
 
   /**
    * Tests that overrides do not affect forms.
@@ -32,7 +32,7 @@ class ConfigFormOverrideTest extends WebTestBase {
     $this->drupalGet('admin/config/system/site-information');
     $this->assertTitle('Basic site settings | ' . $overridden_name);
     $elements = $this->xpath('//input[@name="site_name"]');
-    $this->assertIdentical((string) $elements[0]['value'], 'Drupal');
+    $this->assertIdentical($elements[0]->getValue(), 'Drupal');
 
     // Submit the form and ensure the site name is not changed.
     $edit = [
@@ -41,7 +41,7 @@ class ConfigFormOverrideTest extends WebTestBase {
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
     $this->assertTitle('Basic site settings | ' . $overridden_name);
     $elements = $this->xpath('//input[@name="site_name"]');
-    $this->assertIdentical((string) $elements[0]['value'], $edit['site_name']);
+    $this->assertIdentical($elements[0]->getValue(), $edit['site_name']);
   }
 
 }

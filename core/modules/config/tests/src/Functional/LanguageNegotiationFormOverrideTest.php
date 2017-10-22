@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests language-negotiation overrides are not on language-negotiation form.
@@ -10,7 +10,7 @@ use Drupal\simpletest\WebTestBase;
  * @group config
  * @see \Drupal\Core\Form\ConfigFormBase
  */
-class LanguageNegotiationFormOverrideTest extends WebTestBase {
+class LanguageNegotiationFormOverrideTest extends BrowserTestBase {
 
   public static $modules = ['language', 'locale', 'locale_test'];
 

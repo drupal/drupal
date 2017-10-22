@@ -1,15 +1,18 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests if configuration overrides correctly affect cacheability metadata.
  *
  * @group config
  */
-class CacheabilityMetadataConfigOverrideIntegrationTest extends WebTestBase {
+class CacheabilityMetadataConfigOverrideIntegrationTest extends BrowserTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * {@inheritdoc}

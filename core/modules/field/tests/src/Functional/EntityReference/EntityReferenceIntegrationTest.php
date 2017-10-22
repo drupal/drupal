@@ -3,11 +3,11 @@
 namespace Drupal\Tests\field\Functional\EntityReference;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\config\Tests\AssertConfigEntityImportTrait;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
+use Drupal\Tests\config\Traits\AssertConfigEntityImportTrait;
 
 /**
  * Tests various Entity reference UI components.

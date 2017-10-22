@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Serialization\Yaml;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the user interface for importing/exporting a single configuration.
  *
  * @group config
  */
-class ConfigSingleImportExportTest extends WebTestBase {
+class ConfigSingleImportExportTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -225,16 +225,16 @@ EOD;
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple');
     $this->assertFieldByXPath('//select[@name="config_type"]//option[@selected="selected"]', t('Simple configuration'), 'The simple configuration option is selected when specified in the URL.');
     // Spot check several known simple configuration files.
-    $element = $this->xpath('//select[@name="config_name"]');
-    $options = $this->getAllOptions($element[0]);
+    $element = $this->xpath('//select[@name="config_name"]')[0];
+    $options = $element->findAll('css', 'option');
     $expected_options = ['system.site', 'user.settings'];
     foreach ($options as &$option) {
-      $option = (string) $option;
+      $option = $option->getValue();
     }
     $this->assertIdentical($expected_options, array_intersect($expected_options, $options), 'The expected configuration files are listed.');
 
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple/system.image');
-    $this->assertFieldByXPath('//textarea[@name="export"]', "toolkit: gd\n_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\n", 'The expected system configuration is displayed.');
+    $this->assertEquals("toolkit: gd\n_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\n", $this->xpath('//textarea[@name="export"]')[0]->getValue(), 'The expected system configuration is displayed.');
 
     $this->drupalGet('admin/config/development/configuration/single/export/date_format');
     $this->assertFieldByXPath('//select[@name="config_type"]//option[@selected="selected"]', t('Date format'), 'The date format entity type is selected when specified in the URL.');
@@ -243,7 +243,7 @@ EOD;
     $this->assertFieldByXPath('//select[@name="config_name"]//option[@selected="selected"]', t('Fallback date format (fallback)'), 'The fallback date format config entity is selected when specified in the URL.');
 
     $fallback_date = \Drupal::entityManager()->getStorage('date_format')->load('fallback');
-    $yaml_text = (string) $this->xpath('//textarea[@name="export"]')[0];
+    $yaml_text = $this->xpath('//textarea[@name="export"]')[0]->getValue();
     $this->assertEqual(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');
   }
 

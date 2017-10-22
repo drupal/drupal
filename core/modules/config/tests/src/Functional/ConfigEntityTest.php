@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityMalformedException;
@@ -8,14 +8,14 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests configuration entities.
  *
  * @group config
  */
-class ConfigEntityTest extends WebTestBase {
+class ConfigEntityTest extends BrowserTestBase {
 
   /**
    * The maximum length for the entity storage used in this test.

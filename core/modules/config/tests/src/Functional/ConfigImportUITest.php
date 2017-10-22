@@ -1,18 +1,18 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\InstallStorage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the user interface for importing/exporting configuration.
+ * Tests the user interface for importing configuration.
  *
  * @group config
  */
-class ConfigImportUITest extends WebTestBase {
+class ConfigImportUITest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -130,6 +130,7 @@ class ConfigImportUITest extends WebTestBase {
     // Verify that there are no further changes to import.
     $this->assertText(t('There are no configuration changes to import.'));
 
+    $this->rebuildContainer();
     // Verify site name has changed.
     $this->assertIdentical($new_site_name, $this->config('system.site')->get('name'));
 

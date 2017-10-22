@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Archiver\Tar;
 use Drupal\Core\Serialization\Yaml;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the user interface for exporting configuration.
  *
  * @group config
  */
-class ConfigExportUITest extends WebTestBase {
+class ConfigExportUITest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -44,7 +44,8 @@ class ConfigExportUITest extends WebTestBase {
     $this->drupalGet('admin/config/development/configuration/full/export');
     $this->assertFieldById('edit-submit', t('Export'));
 
-    // Submit the export form and verify response.
+    // Submit the export form and verify response. This will create a file in
+    // temporary directory with the default name config.tar.gz.
     $this->drupalPostForm('admin/config/development/configuration/full/export', [], t('Export'));
     $this->assertResponse(200, 'User can access the download callback.');
 
@@ -55,14 +56,8 @@ class ConfigExportUITest extends WebTestBase {
     $header_match = (boolean) preg_match('/attachment; filename="config-' . preg_quote($hostname) . '-\d{4}-\d{2}-\d{2}-\d{2}-\d{2}\.tar\.gz"/', $header_content_disposition);
     $this->assertTrue($header_match, "Header with filename matches the expected format.");
 
-    // Get the archived binary file provided to user for download.
-    $archive_data = $this->getRawContent();
-
-    // Temporarily save the archive file.
-    $uri = file_unmanaged_save_data($archive_data, 'temporary://config.tar.gz');
-
     // Extract the archive and verify it's not empty.
-    $file_path = file_directory_temp() . '/' . file_uri_target($uri);
+    $file_path = file_directory_temp() . '/' . 'config.tar.gz';
     $archiver = new Tar($file_path);
     $archive_contents = $archiver->listContents();
     $this->assert(!empty($archive_contents), 'Downloaded archive file is not empty.');
