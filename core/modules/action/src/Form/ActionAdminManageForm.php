@@ -54,7 +54,7 @@ class ActionAdminManageForm extends FormBase {
     $actions = [];
     foreach ($this->manager->getDefinitions() as $id => $definition) {
       if (is_subclass_of($definition['class'], '\Drupal\Core\Plugin\PluginFormInterface')) {
-        $actions[$id] = $definition['label'] . '...';
+        $actions[$id] = $definition['label'];
       }
     }
     $form['parent'] = [
