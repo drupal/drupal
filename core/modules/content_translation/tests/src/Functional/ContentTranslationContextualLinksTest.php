@@ -1,19 +1,18 @@
 <?php
 
-namespace Drupal\content_translation\Tests;
+namespace Drupal\Tests\content_translation\Functional;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that contextual links are available for content translation.
  *
  * @group content_translation
  */
-class ContentTranslationContextualLinksTest extends WebTestBase {
+class ContentTranslationContextualLinksTest extends BrowserTestBase {
 
   /**
    * The bundle being tested.
@@ -118,60 +117,11 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
     $this->drupalLogout();
 
-    // Check that the translate link appears on the node page.
+    // Check that the link leads to the translate page.
     $this->drupalLogin($this->translator);
     $translate_link = 'node/' . $node->id() . '/translations';
-
-    $response = $this->renderContextualLinks(['node:node=1:'], 'node/' . $node->id());
-    $this->assertResponse(200);
-    $json = Json::decode($response);
-    $this->setRawContent($json['node:node=1:']);
-    $this->assertLinkByHref($translate_link, 0, 'The contextual link to translate the node is shown.');
-
-    // Check that the link leads to the translate page.
     $this->drupalGet($translate_link);
     $this->assertRaw(t('Translations of %label', ['%label' => $node->label()]), 'The contextual link leads to the translate page.');
-  }
-
-  /**
-   * Get server-rendered contextual links for the given contextual link ids.
-   *
-   * Copied from \Drupal\contextual\Tests\ContextualDynamicContextTest::renderContextualLinks().
-   *
-   * @param array $ids
-   *   An array of contextual link ids.
-   * @param string $current_path
-   *   The Drupal path for the page for which the contextual links are rendered.
-   *
-   * @return string
-   *   The response body.
-   */
-  protected function renderContextualLinks($ids, $current_path) {
-    // Build POST values.
-    $post = [];
-    for ($i = 0; $i < count($ids); $i++) {
-      $post['ids[' . $i . ']'] = $ids[$i];
-    }
-
-    // Serialize POST values.
-    foreach ($post as $key => $value) {
-      // Encode according to application/x-www-form-urlencoded
-      // Both names and values needs to be urlencoded, according to
-      // http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1
-      $post[$key] = urlencode($key) . '=' . urlencode($value);
-    }
-    $post = implode('&', $post);
-
-    // Perform HTTP request.
-    return $this->curlExec([
-      CURLOPT_URL => \Drupal::url('contextual.render', [], ['absolute' => TRUE, 'query' => ['destination' => $current_path]]),
-      CURLOPT_POST => TRUE,
-      CURLOPT_POSTFIELDS => $post,
-      CURLOPT_HTTPHEADER => [
-        'Accept: application/json',
-        'Content-Type: application/x-www-form-urlencoded',
-      ],
-    ]);
   }
 
 }
