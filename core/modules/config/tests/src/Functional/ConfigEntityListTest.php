@@ -1,18 +1,18 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Routing\RedirectDestinationTrait;
-use Drupal\simpletest\WebTestBase;
 use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the listing of configuration entities.
  *
  * @group config
  */
-class ConfigEntityListTest extends WebTestBase {
+class ConfigEntityListTest extends BrowserTestBase {
 
   use RedirectDestinationTrait;
 
@@ -171,7 +171,7 @@ class ConfigEntityListTest extends WebTestBase {
     // Test the contents of each th cell.
     $expected_items = ['Label', 'Machine name', 'Operations'];
     foreach ($elements as $key => $element) {
-      $this->assertIdentical((string) $element[0], $expected_items[$key]);
+      $this->assertIdentical($element->getText(), $expected_items[$key]);
     }
 
     // Check the number of table row cells.
@@ -181,9 +181,9 @@ class ConfigEntityListTest extends WebTestBase {
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertIdentical((string) $elements[0], 'Default');
-    $this->assertIdentical((string) $elements[1], 'dotted.default');
-    $this->assertTrue($elements[2]->children()->xpath('//ul'), 'Operations list found.');
+    $this->assertIdentical($elements[0]->getText(), 'Default');
+    $this->assertIdentical($elements[1]->getText(), 'dotted.default');
+    $this->assertNotEmpty($elements[2]->find('xpath', '//ul'), 'Operations list found.');
 
     // Add a new entity using the operations link.
     $this->assertLink('Add test configuration');

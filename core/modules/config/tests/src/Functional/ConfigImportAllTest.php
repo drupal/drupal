@@ -1,12 +1,13 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\StorageComparer;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\system\Tests\Module\ModuleTestBase;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\SchemaCheckTestTrait;
+use Drupal\Tests\system\Functional\Module\ModuleTestBase;
 
 /**
  * Tests the largest configuration import possible with all available modules.

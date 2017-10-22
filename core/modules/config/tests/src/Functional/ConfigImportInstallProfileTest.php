@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the importing/exporting configuration based on the install profile.
  *
  * @group config
  */
-class ConfigImportInstallProfileTest extends WebTestBase {
+class ConfigImportInstallProfileTest extends BrowserTestBase {
 
   /**
    * The profile to install as a basis for testing.

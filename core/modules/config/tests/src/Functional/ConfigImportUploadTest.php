@@ -1,15 +1,18 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests importing configuration from an uploaded file.
  *
  * @group config
  */
-class ConfigImportUploadTest extends WebTestBase {
+class ConfigImportUploadTest extends BrowserTestBase {
+
+  use TestFileCreationTrait;
 
   /**
    * A user with the 'import configuration' permission.
@@ -41,7 +44,7 @@ class ConfigImportUploadTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Attempt to upload a non-tar file.
-    $text_file = current($this->drupalGetTestFiles('text'));
+    $text_file = $this->getTestFiles('text')[0];
     $edit = ['files[import_tarball]' => drupal_realpath($text_file->uri)];
     $this->drupalPostForm('admin/config/development/configuration/full/import', $edit, t('Upload'));
     $this->assertText(t('Could not extract the contents of the tar file'));

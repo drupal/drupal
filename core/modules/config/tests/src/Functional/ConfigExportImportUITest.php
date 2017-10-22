@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests the user interface for importing/exporting configuration.
@@ -17,7 +17,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group config
  */
-class ConfigExportImportUITest extends WebTestBase {
+class ConfigExportImportUITest extends BrowserTestBase {
 
   /**
    * The contents of the config export tarball, held between test methods.

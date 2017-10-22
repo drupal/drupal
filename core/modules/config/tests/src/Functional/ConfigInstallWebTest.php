@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\config\Tests;
+namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests installation and removal of configuration objects in install, disable
@@ -13,7 +13,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group config
  */
-class ConfigInstallWebTest extends WebTestBase {
+class ConfigInstallWebTest extends BrowserTestBase {
 
   /**
    * The admin user used in this test.
@@ -51,6 +51,7 @@ class ConfigInstallWebTest extends WebTestBase {
 
     // Install the integration module.
     \Drupal::service('module_installer')->install(['config_integration_test']);
+    $this->resetAll();
 
     // Verify that default module config exists.
     \Drupal::configFactory()->reset($default_config);
@@ -156,7 +157,7 @@ class ConfigInstallWebTest extends WebTestBase {
     // override created still exists.
     $this->drupalGet('admin/appearance');
     $url = $this->xpath("//a[contains(@href,'config_clash_test_theme') and contains(@href,'/install?')]/@href")[0];
-    $this->drupalGet($this->getAbsoluteUrl($url));
+    $this->drupalGet($this->getAbsoluteUrl($url->getText()));
     $this->assertRaw('Unable to install config_clash_test_theme, <em class="placeholder">config_test.dynamic.dotted.default, language/fr/config_test.dynamic.dotted.default</em> already exist in active configuration.');
 
     // Test installing a theme through the API that has existing configuration.
