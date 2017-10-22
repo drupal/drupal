@@ -389,62 +389,6 @@ class FormTest extends FieldTestBase {
     $this->assertNoField("{$field_name}[2][value]", 'No extraneous widget is displayed');
   }
 
-  public function testFieldFormJSAddMore() {
-    $field_storage = $this->fieldStorageUnlimited;
-    $field_name = $field_storage['field_name'];
-    $this->field['field_name'] = $field_name;
-    FieldStorageConfig::create($field_storage)->save();
-    FieldConfig::create($this->field)->save();
-    entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
-      ->setComponent($field_name)
-      ->save();
-
-    // Display creation form -> 1 widget.
-    $this->drupalGet('entity_test/add');
-
-    // Press 'add more' button a couple times -> 3 widgets.
-    // drupalPostAjaxForm() will not work iteratively, so we add those through
-    // non-JS submission.
-    $this->drupalPostForm(NULL, [], t('Add another item'));
-    $this->drupalPostForm(NULL, [], t('Add another item'));
-
-    // Prepare values and weights.
-    $count = 3;
-    $delta_range = $count - 1;
-    $values = $weights = $pattern = $expected_values = $edit = [];
-    for ($delta = 0; $delta <= $delta_range; $delta++) {
-      // Assign unique random values and weights.
-      do {
-        $value = mt_rand(1, 127);
-      } while (in_array($value, $values));
-      do {
-        $weight = mt_rand(-$delta_range, $delta_range);
-      } while (in_array($weight, $weights));
-      $edit["{$field_name}[$delta][value]"] = $value;
-      $edit["{$field_name}[$delta][_weight]"] = $weight;
-      // We'll need three slightly different formats to check the values.
-      $values[$delta] = $value;
-      $weights[$delta] = $weight;
-      $field_values[$weight]['value'] = (string) $value;
-      $pattern[$weight] = "<input [^>]*value=\"$value\" [^>]*";
-    }
-    // Press 'add more' button through Ajax, and place the expected HTML result
-    // as the tested content.
-    $commands = $this->drupalPostAjaxForm(NULL, $edit, $field_name . '_add_more');
-    $this->setRawContent($commands[2]['data']);
-
-    for ($delta = 0; $delta <= $delta_range; $delta++) {
-      $this->assertFieldByName("{$field_name}[$delta][value]", $values[$delta], "Widget $delta is displayed and has the right value");
-      $this->assertFieldByName("{$field_name}[$delta][_weight]", $weights[$delta], "Widget $delta has the right weight");
-    }
-    ksort($pattern);
-    $pattern = implode('.*', array_values($pattern));
-    $this->assertPattern("|$pattern|s", 'Widgets are displayed in the correct order');
-    $this->assertFieldByName("{$field_name}[$delta][value]", '', "New widget is displayed");
-    $this->assertFieldByName("{$field_name}[$delta][_weight]", $delta, "New widget has the right weight");
-    $this->assertNoField("{$field_name}[" . ($delta + 1) . '][value]', 'No extraneous widget is displayed');
-  }
-
   /**
    * Tests widgets handling multiple values.
    */
