@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\block_content\Tests;
+namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
-use Drupal\system\Tests\Menu\AssertBreadcrumbTrait;
+use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
  * Ensures that custom block type functions work correctly.
@@ -108,7 +108,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Verify that title and body fields are displayed.
     $this->drupalGet('block/add/basic');
     $this->assertRaw('Block description', 'Block info field was found.');
-    $this->assertRaw('Body', 'Body field was found.');
+    $this->assertNotEmpty($this->cssSelect('#edit-body-0-value'), 'Body field was found.');
 
     // Change the block type name.
     $edit = [
@@ -137,7 +137,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->drupalPostForm('admin/structure/block/block-content/manage/basic', [], t('Save'));
     // Check that the body field doesn't exist.
     $this->drupalGet('block/add/basic');
-    $this->assertNoRaw('Body', 'Body field was not found.');
+    $this->assertEmpty($this->cssSelect('#edit-body-0-value'), 'Body field was not found.');
   }
 
   /**
@@ -204,7 +204,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
         // block configure form.
         $path = $theme == $default_theme ? 'admin/structure/block' : "admin/structure/block/list/$theme";
         $this->drupalGet($path);
-        $this->clickLinkPartialName('Place block');
+        $this->clickLink('Place block');
         $this->clickLink(t('Add custom block'));
         // The seven theme has markup inside the link, we cannot use clickLink().
         if ($default_theme == 'seven') {
