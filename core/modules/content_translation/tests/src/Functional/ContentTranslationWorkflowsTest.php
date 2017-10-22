@@ -1,10 +1,11 @@
 <?php
 
-namespace Drupal\content_translation\Tests;
+namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\UserInterface;
 
 /**
@@ -13,6 +14,8 @@ use Drupal\user\UserInterface;
  * @group content_translation
  */
 class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * The entity used for testing.
