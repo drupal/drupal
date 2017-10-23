@@ -84,7 +84,7 @@ class EditorAdminTest extends WebTestBase {
 
     // Switch back to 'None' and check the Unicorn Editor's settings are gone.
     $edit = [
-      'editor[editor]' => '',
+      'editor[editor]' => '_none',
     ];
     $this->drupalPostAjaxForm(NULL, $edit, 'editor_configure');
     $unicorn_setting = $this->xpath('//input[@name="editor[settings][ponies_too]" and @type="checkbox" and @checked]');
