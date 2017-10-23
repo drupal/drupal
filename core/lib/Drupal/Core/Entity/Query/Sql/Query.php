@@ -119,6 +119,14 @@ class Query extends QueryBase implements QueryInterface {
       // entity id.
       $this->sqlFields["base_table.$id_field"] = ['base_table', $id_field];
     }
+
+    // Add a self-join to the base revision table if we're querying only the
+    // latest revisions.
+    if ($this->latestRevision && $revision_field) {
+      $this->sqlQuery->leftJoin($base_table, 'base_table_2', "base_table.$id_field = base_table_2.$id_field AND base_table.$revision_field < base_table_2.$revision_field");
+      $this->sqlQuery->isNull("base_table_2.$id_field");
+    }
+
     if ($this->accessCheck) {
       $this->sqlQuery->addTag($this->entityTypeId . '_access');
     }

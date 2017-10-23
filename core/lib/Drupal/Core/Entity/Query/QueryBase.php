@@ -109,6 +109,13 @@ abstract class QueryBase implements QueryInterface {
   protected $allRevisions = FALSE;
 
   /**
+   * Flag indicating whether to query the latest revision.
+   *
+   * @var bool
+   */
+  protected $latestRevision = FALSE;
+
+  /**
    * The query pager data.
    *
    * @var array
@@ -252,6 +259,16 @@ abstract class QueryBase implements QueryInterface {
    */
   public function currentRevision() {
     $this->allRevisions = FALSE;
+    $this->latestRevision = FALSE;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function latestRevision() {
+    $this->allRevisions = TRUE;
+    $this->latestRevision = TRUE;
     return $this;
   }
 
@@ -260,6 +277,7 @@ abstract class QueryBase implements QueryInterface {
    */
   public function allRevisions() {
     $this->allRevisions = TRUE;
+    $this->latestRevision = FALSE;
     return $this;
   }
 

@@ -318,6 +318,16 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Now we get everything.
     $assert = [4 => '4', 5 => '5', 6 => '6', 7 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 12 => '12', 20 => '12', 13 => '13', 21 => '13', 14 => '14', 22 => '14', 15 => '15', 23 => '15'];
     $this->assertIdentical($results, $assert);
+
+    // Check that a query on the latest revisions without any condition returns
+    // the correct results.
+    $results = $this->factory->get('entity_test_mulrev')
+      ->latestRevision()
+      ->sort('id')
+      ->sort('revision_id')
+      ->execute();
+    $expected = [1 => '1', 2 => '2', 3 => '3', 16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15'];
+    $this->assertSame($expected, $results);
   }
 
   /**
@@ -936,6 +946,54 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->allRevisions()
       ->execute();
     $this->assertEqual($result, [16 => '14']);
+
+    // Add another pending revision on the same entity and repeat the checks.
+    $entity->setNewRevision(TRUE);
+    $entity->isDefaultRevision(FALSE);
+    $entity->{$this->figures}->setValue([
+      'color' => 'red',
+      'shape' => 'square'
+    ]);
+    $entity->save();
+
+    // A non-revisioned entity query should still return entity 14.
+    $result = $this->factory->get('entity_test_mulrev')
+      ->condition('id', [14], 'IN')
+      ->execute();
+    $this->assertCount(1, $result);
+    $this->assertSame([14 => '14'], $result);
+
+    // Now check an entity query on the latest revision.
+    $result = $this->factory->get('entity_test_mulrev')
+      ->condition('id', [14], 'IN')
+      ->latestRevision()
+      ->execute();
+    $this->assertCount(1, $result);
+    $this->assertSame([17 => '14'], $result);
+
+    // Verify that field conditions on the default and pending revision still
+    // work as expected.
+    $result = $this->factory->get('entity_test_mulrev')
+      ->condition('id', [14], 'IN')
+      ->condition("$this->figures.color", $current_values[0]['color'])
+      ->execute();
+    $this->assertSame([14 => '14'], $result);
+
+    // Now there are two revisions with same value for the figure color.
+    $result = $this->factory->get('entity_test_mulrev')
+      ->condition('id', [14], 'IN')
+      ->condition("$this->figures.color", 'red')
+      ->allRevisions()
+      ->execute();
+    $this->assertSame([16 => '14', 17 => '14'], $result);
+
+    // Check that querying for the latest revision returns the correct one.
+    $result = $this->factory->get('entity_test_mulrev')
+      ->condition('id', [14], 'IN')
+      ->condition("$this->figures.color", 'red')
+      ->latestRevision()
+      ->execute();
+    $this->assertSame([17 => '14'], $result);
   }
 
   /**
