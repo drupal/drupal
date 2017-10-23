@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\ContentEntityNullStorage;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
@@ -176,11 +177,15 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         ->save();
 
       // Reload entity so that it has the new field.
-      $this->entity = $this->entityStorage->loadUnchanged($this->entity->id());
+      $reloaded_entity = $this->entityStorage->loadUnchanged($this->entity->id());
+      // Some entity types are not stored, hence they cannot be reloaded.
+      if ($reloaded_entity !== NULL) {
+        $this->entity = $reloaded_entity;
 
-      // Set a default value on the field.
-      $this->entity->set('field_rest_test', ['value' => 'All the faith he had had had had no effect on the outcome of his life.']);
-      $this->entity->save();
+        // Set a default value on the field.
+        $this->entity->set('field_rest_test', ['value' => 'All the faith he had had had had no effect on the outcome of his life.']);
+        $this->entity->save();
+      }
     }
   }
 
@@ -846,23 +851,27 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertSame([], $response->getHeader('Location'));
     }
     $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
-    // Assert that the entity was indeed created, and that the response body
-    // contains the serialized created entity.
-    $created_entity = $this->entityStorage->loadUnchanged(static::$firstCreatedEntityId);
-    $created_entity_normalization = $this->serializer->normalize($created_entity, static::$format, ['account' => $this->account]);
-    // @todo Remove this if-test in https://www.drupal.org/node/2543726: execute
-    // its body unconditionally.
-    if (static::$entityTypeId !== 'taxonomy_term') {
-      $this->assertSame($created_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
-    }
-    // Assert that the entity was indeed created using the POSTed values.
-    foreach ($this->getNormalizedPostEntity() as $field_name => $field_normalization) {
-      // Some top-level keys in the normalization may not be fields on the
-      // entity (for example '_links' and '_embedded' in the HAL normalization).
-      if ($created_entity->hasField($field_name)) {
-        // Subset, not same, because we can e.g. send just the target_id for the
-        // bundle in a POST request; the response will include more properties.
-        $this->assertArraySubset(static::castToString($field_normalization), $created_entity->get($field_name)->getValue(), TRUE);
+    // If the entity is stored, perform extra checks.
+    if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
+      // Assert that the entity was indeed created, and that the response body
+      // contains the serialized created entity.
+      $created_entity = $this->entityStorage->loadUnchanged(static::$firstCreatedEntityId);
+      $created_entity_normalization = $this->serializer->normalize($created_entity, static::$format, ['account' => $this->account]);
+      // @todo Remove this if-test in https://www.drupal.org/node/2543726: execute
+      // its body unconditionally.
+      if (static::$entityTypeId !== 'taxonomy_term') {
+        $this->assertSame($created_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
+      }
+      // Assert that the entity was indeed created using the POSTed values.
+      foreach ($this->getNormalizedPostEntity() as $field_name => $field_normalization) {
+        // Some top-level keys in the normalization may not be fields on the
+        // entity (for example '_links' and '_embedded' in the HAL normalization).
+        if ($created_entity->hasField($field_name)) {
+          // Subset, not same, because we can e.g. send just the target_id for the
+          // bundle in a POST request; the response will include more properties.
+          $this->assertArraySubset(static::castToString($field_normalization), $created_entity->get($field_name)
+            ->getValue(), TRUE);
+        }
       }
     }
 
@@ -881,8 +890,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
 
     // 201 for well-formed request.
-    // Delete the first created entity in case there is a uniqueness constraint.
-    $this->entityStorage->load(static::$firstCreatedEntityId)->delete();
+    // If the entity is stored, delete the first created entity (in case there
+    // is a uniqueness constraint).
+    if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
+      $this->entityStorage->load(static::$firstCreatedEntityId)->delete();
+    }
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceResponse(201, FALSE, $response);
     if ($has_canonical_url) {

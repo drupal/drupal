@@ -7,6 +7,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\contact\Plugin\rest\resource\ContactMessageResource;
 use Drupal\user\Entity\User;
 
 /**
@@ -234,4 +235,11 @@ function contact_form_user_admin_settings_submit($form, FormStateInterface $form
   \Drupal::configFactory()->getEditable('contact.settings')
     ->set('user_default_enabled', $form_state->getValue('contact_default_status'))
     ->save();
+}
+
+/**
+ * Implements hook_rest_resource_alter().
+ */
+function contact_rest_resource_alter(&$definitions) {
+  $definitions['entity:contact_message']['class'] = ContactMessageResource::class;
 }
