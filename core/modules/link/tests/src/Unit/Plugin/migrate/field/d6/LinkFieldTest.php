@@ -50,7 +50,7 @@ class LinkFieldTest extends UnitTestCase {
     $this->plugin->processFieldValues($this->migration, 'somefieldname', []);
 
     $expected = [
-      'plugin' => 'd6_field_link',
+      'plugin' => 'field_link',
       'source' => 'somefieldname',
     ];
     $this->assertSame($expected, $this->migration->getProcess());
