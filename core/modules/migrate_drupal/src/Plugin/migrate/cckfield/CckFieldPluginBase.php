@@ -6,6 +6,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\cckfield;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface;
 
 /**
  * The base class for all field plugins.
@@ -17,7 +18,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *
  * @ingroup migration
  */
-abstract class CckFieldPluginBase extends FieldPluginBase {
+abstract class CckFieldPluginBase extends FieldPluginBase implements MigrateCckFieldInterface {
 
   /**
    * Apply any custom processing to the field bundle migrations.
