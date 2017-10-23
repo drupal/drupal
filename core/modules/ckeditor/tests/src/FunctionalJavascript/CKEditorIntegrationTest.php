@@ -118,4 +118,25 @@ class CKEditorIntegrationTest extends JavascriptTestBase {
     self::assertEquals($before_url, $after_url, 'History back works.');
   }
 
+  /**
+   * Tests if the Image button appears and works as expected.
+   */
+  public function testDrupalImageDialog() {
+    $session = $this->getSession();
+    $web_assert = $this->assertSession();
+
+    $this->drupalGet('node/add/page');
+    $this->assertEquals(200, $session->getStatusCode());
+
+    // Asserts the Image button is present in the toolbar.
+    $web_assert->elementExists('css', '#cke_edit-body-0-value .cke_button__drupalimage');
+
+    // Asserts the image dialog opens when clicking the Image button.
+    $this->click('.cke_button__drupalimage');
+    $web_assert->assertWaitOnAjaxRequest();
+
+    $web_assert->elementExists('css', '.ui-dialog');
+    $web_assert->elementContains('css', '.ui-dialog .ui-dialog-titlebar', 'Insert Image');
+  }
+
 }
