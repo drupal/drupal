@@ -125,8 +125,9 @@ function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_s
     '#type' => 'select',
     '#title' => t('Text editor'),
     '#options' => $editor_options,
+    '#empty_value' => '_none',
     '#empty_option' => t('None'),
-    '#default_value' => $editor ? $editor->getEditor() : '',
+    '#default_value' => $editor ? $editor->getEditor() : '_none',
     '#ajax' => [
       'trigger_as' => ['name' => 'editor_configure'],
       'callback' => 'editor_form_filter_admin_form_ajax',
@@ -185,14 +186,20 @@ function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_s
  * Button submit handler for filter_format_form()'s 'editor_configure' button.
  */
 function editor_form_filter_admin_format_editor_configure($form, FormStateInterface $form_state) {
+  $format = $form_state->getFormObject()->getEntity();
   $editor = $form_state->get('editor');
+
+  if (!$editor && !$format->isNew()) {
+    $editor = editor_load($format->id());
+    $form_state->set('editor', $editor);
+  }
+
   $editor_value = $form_state->getValue(['editor', 'editor']);
   if ($editor_value !== NULL) {
-    if ($editor_value === '') {
+    if ($editor_value === '_none') {
       $form_state->set('editor', FALSE);
     }
     elseif (empty($editor) || $editor_value !== $editor->getEditor()) {
-      $format = $form_state->getFormObject()->getEntity();
       $editor = Editor::create([
         'format' => $format->isNew() ? NULL : $format->id(),
         'editor' => $editor_value,
@@ -223,7 +230,7 @@ function editor_form_filter_admin_format_validate($form, FormStateInterface $for
   // 'Configure' button won't be clicked automatically. So, when the user has
   // selected a text editor and has then clicked 'Save configuration', we should
   // point out that the user must still configure the text editor.
-  if ($form_state->getValue(['editor', 'editor']) !== '' && !$form_state->get('editor')) {
+  if ($form_state->getValue(['editor', 'editor']) !== '_none' && !$form_state->get('editor')) {
     $form_state->setErrorByName('editor][editor', t('You must configure the selected text editor.'));
   }
 }
