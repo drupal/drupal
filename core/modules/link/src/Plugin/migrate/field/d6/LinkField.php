@@ -39,7 +39,7 @@ class LinkField extends FieldPluginBase {
    */
   public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
     $process = [
-      'plugin' => 'd6_field_link',
+      'plugin' => 'field_link',
       'source' => $field_name,
     ];
     $migration->mergeProcessOfProperty($field_name, $process);
