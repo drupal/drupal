@@ -1,26 +1,29 @@
 <?php
 
-namespace Drupal\config_translation\Tests;
+namespace Drupal\Tests\config_translation\Functional;
 
-use Drupal\Component\Serialization\Json;
+use Behat\Mink\Element\NodeElement;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Translate settings and entities to various languages.
  *
  * @group config_translation
  */
-class ConfigTranslationUiTest extends WebTestBase {
+class ConfigTranslationUiTest extends BrowserTestBase {
+
+  use AssertMailTrait;
 
   /**
    * Modules to enable.
@@ -198,7 +201,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
 
     $textarea = current($this->xpath('//textarea'));
-    $lid = (string) $textarea[0]['name'];
+    $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $fr_site_name_label,
     ];
@@ -389,7 +392,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     }
 
     // We get all emails so no need to check inside the loop.
-    $captured_emails = $this->drupalGetMails();
+    $captured_emails = $this->getMails();
 
     // Check language specific auto reply text in email body.
     foreach ($captured_emails as $email) {
@@ -587,13 +590,6 @@ class ConfigTranslationUiTest extends WebTestBase {
    */
   public function testViewsTranslationUI() {
     $this->drupalLogin($this->adminUser);
-
-    // Assert contextual link related to views.
-    $ids = ['entity.view.edit_form:view=frontpage:location=page&name=frontpage&display_id=page_1'];
-    $response = $this->renderContextualLinks($ids, 'node');
-    $this->assertResponse(200);
-    $json = Json::decode($response);
-    $this->assertTrue(strpos($json[$ids[0]], 'Translate view'), 'Translate view contextual link added.');
 
     $description = 'All content promoted to the front page.';
     $human_readable_name = 'Frontpage';
@@ -1155,17 +1151,17 @@ class ConfigTranslationUiTest extends WebTestBase {
       ':id' => $id,
     ]);
     $textarea = reset($textarea);
-    $passed = $this->assertTrue($textarea instanceof \SimpleXMLElement, SafeMarkup::format('Disabled field @id exists.', [
+    $this->assertTrue($textarea instanceof NodeElement, SafeMarkup::format('Disabled field @id exists.', [
       '@id' => $id,
     ]));
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $passed = $passed && $this->assertEqual((string) $textarea, $expected, SafeMarkup::format('Disabled textarea @id hides text in an inaccessible text format.', [
+    $this->assertEqual($textarea->getText(), $expected, SafeMarkup::format('Disabled textarea @id hides text in an inaccessible text format.', [
       '@id' => $id,
     ]));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
     $select = $this->xpath('//select[@id=:id]', [':id' => $select_id]);
-    return $passed && $this->assertFalse($select, SafeMarkup::format('Field @id does not exist.', [
+    return $this->assertFalse($select, SafeMarkup::format('Field @id does not exist.', [
       '@id' => $id,
     ]));
   }

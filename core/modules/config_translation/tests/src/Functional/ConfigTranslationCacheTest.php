@@ -1,19 +1,19 @@
 <?php
 
-namespace Drupal\config_translation\Tests;
+namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Translate settings and entities to various languages.
  *
  * @group config_translation
  */
-class ConfigTranslationCacheTest extends WebTestBase {
+class ConfigTranslationCacheTest extends BrowserTestBase {
 
   /**
    * Modules to enable.
