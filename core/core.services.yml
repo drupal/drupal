@@ -823,16 +823,6 @@ services:
     tags:
       - { name: service_collector, tag: non_lazy_route_filter, call: addRouteFilter }
     deprecated: The "%service_id%" service is deprecated. You should use the 'router.no_access_checks' service instead.
-  route_filter.lazy_collector:
-    class: Drupal\Core\Routing\LazyRouteFilter
-    tags:
-      - { name: non_lazy_route_filter }
-    parent: container.trait
-  route_filter_subscriber:
-    class: Drupal\Core\EventSubscriber\RouteFilterSubscriber
-    arguments: ['@route_filter.lazy_collector']
-    tags:
-      - { name: event_subscriber }
   url_generator.non_bubbling:
     class: Drupal\Core\Routing\UrlGenerator
     arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@request_stack', '%filter_protocols%']
@@ -866,8 +856,11 @@ services:
     class: \Drupal\Core\Routing\Router
     arguments: ['@router.route_provider', '@path.current', '@url_generator']
     tags:
+      # @todo Try to combine those tags together, see https://www.drupal.org/node/2915772.
       - { name: service_collector, tag: non_lazy_route_enhancer, call: addRouteEnhancer }
+      - { name: service_collector, tag: route_enhancer, call: addRouteEnhancer  }
       - { name: service_collector, tag: non_lazy_route_filter, call: addRouteFilter }
+      - { name: service_collector, tag: route_filter, call: addRouteFilter }
     calls:
       - [setContext, ['@router.request_context']]
   router.path_roots_subscriber:
@@ -997,21 +990,11 @@ services:
     arguments: ['@form_ajax_response_builder', '@string_translation']
     tags:
       - { name: event_subscriber }
-  route_enhancer.lazy_collector:
-    class: Drupal\Core\Routing\LazyRouteEnhancer
-    tags:
-      - { name: non_lazy_route_enhancer, priority: 5000 }
-    parent: container.trait
-  route_enhancer_subscriber:
-    class: Drupal\Core\EventSubscriber\RouteEnhancerSubscriber
-    arguments: ['@route_enhancer.lazy_collector']
-    tags:
-      - { name: event_subscriber }
   route_enhancer.param_conversion:
     class: Drupal\Core\Routing\Enhancer\ParamConversionEnhancer
     arguments: ['@paramconverter_manager']
     tags:
-      - { name: route_enhancer }
+      - { name: route_enhancer, priority: 5000 }
       - { name: event_subscriber }
   route_enhancer.form:
     class: Drupal\Core\Routing\Enhancer\FormRouteEnhancer

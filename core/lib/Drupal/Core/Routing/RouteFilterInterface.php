@@ -2,13 +2,18 @@
 
 namespace Drupal\Core\Routing;
 
-use Symfony\Cmf\Component\Routing\NestedMatcher\RouteFilterInterface as BaseRouteFilterInterface;
 use Symfony\Component\Routing\Route;
+
+@trigger_error('\Drupal\Core\Routing\Enhancer\RouteFilterInterface is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, you should use \Drupal\Core\Routing\FilterInterface. See https://www.drupal.org/node/2894934', E_USER_DEPRECATED);
 
 /**
  * A route filter service to filter down the collection of route instances.
+ *
+ * @deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead,
+ * you should use \Drupal\Core\Routing\FilterInterface.
+ * See https://www.drupal.org/node/2894934
  */
-interface RouteFilterInterface extends BaseRouteFilterInterface {
+interface RouteFilterInterface extends FilterInterface {
 
   /**
    * Determines if the route filter applies to the given route.

@@ -2,20 +2,25 @@
 
 namespace Drupal\Core\Entity\Enhancer;
 
-use Drupal\Core\Routing\Enhancer\RouteEnhancerInterface;
+use Drupal\Core\Routing\EnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Routing\Route;
 
 /**
  * Enhances an entity form route with the appropriate controller.
  */
-class EntityRouteEnhancer implements RouteEnhancerInterface {
+class EntityRouteEnhancer implements EnhancerInterface {
 
   /**
    * {@inheritdoc}
    */
   public function enhance(array $defaults, Request $request) {
+    $route = $defaults[RouteObjectInterface::ROUTE_OBJECT];
+    if (!$this->applies($route)) {
+      return $defaults;
+    }
+
     if (empty($defaults['_controller'])) {
       if (!empty($defaults['_entity_form'])) {
         $defaults = $this->enhanceEntityForm($defaults, $request);
@@ -31,9 +36,14 @@ class EntityRouteEnhancer implements RouteEnhancerInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Returns whether the enhancer runs on the current route.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The current route.
+   *
+   * @return bool
    */
-  public function applies(Route $route) {
+  protected function applies(Route $route) {
     return !$route->hasDefault('_controller') &&
       ($route->hasDefault('_entity_form')
         || $route->hasDefault('_entity_list')

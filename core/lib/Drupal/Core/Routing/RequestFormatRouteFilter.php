@@ -4,20 +4,12 @@ namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides a route filter, which filters by the request format.
  */
-class RequestFormatRouteFilter implements RouteFilterInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function applies(Route $route) {
-    return $route->hasRequirement('_format');
-  }
+class RequestFormatRouteFilter implements FilterInterface {
 
   /**
    * {@inheritdoc}
@@ -27,22 +19,34 @@ class RequestFormatRouteFilter implements RouteFilterInterface {
     $default_format = static::getDefaultFormat($collection);
     $format = $request->getRequestFormat($default_format);
 
+    $routes_with_requirement = [];
+    $routes_without_requirement = [];
+    $result_collection = new RouteCollection();
     /** @var \Symfony\Component\Routing\Route $route */
     foreach ($collection as $name => $route) {
-      // If the route has no _format specification, we move it to the end. If it
-      // does, then no match means the route is removed entirely.
-      if ($supported_formats = array_filter(explode('|', $route->getRequirement('_format')))) {
-        if (!in_array($format, $supported_formats)) {
-          $collection->remove($name);
-        }
+      if (!$route->hasRequirement('_format')) {
+        $routes_without_requirement[$name] = $route;
+        continue;
       }
       else {
-        $collection->add($name, $route);
+        $routes_with_requirement[$name] = $route;
       }
     }
 
-    if (count($collection)) {
-      return $collection;
+    foreach ($routes_with_requirement as $name => $route) {
+      // If the route has no _format specification, we move it to the end. If it
+      // does, then no match means the route is removed entirely.
+      if (($supported_formats = array_filter(explode('|', $route->getRequirement('_format')))) && in_array($format, $supported_formats, TRUE)) {
+        $result_collection->add($name, $route);
+      }
+    }
+
+    foreach ($routes_without_requirement as $name => $route) {
+      $result_collection->add($name, $route);
+    }
+
+    if (count($result_collection)) {
+      return $result_collection;
     }
 
     // We do not throw a

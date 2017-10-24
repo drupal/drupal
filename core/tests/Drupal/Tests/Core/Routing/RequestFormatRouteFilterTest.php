@@ -16,25 +16,6 @@ use Symfony\Component\Routing\RouteCollection;
 class RequestFormatRouteFilterTest extends UnitTestCase {
 
   /**
-   * @covers ::applies
-   */
-  public function testAppliesWithoutFormat() {
-    $route_filter = new RequestFormatRouteFilter();
-    $route = new Route('/test');
-    $this->assertFalse($route_filter->applies($route));
-  }
-
-  /**
-   * @covers ::applies
-   */
-  public function testAppliesWithFormat() {
-    $route_filter = new RequestFormatRouteFilter();
-    $route = new Route('/test');
-    $route->setRequirement('_format', 'json');
-    $this->assertTrue($route_filter->applies($route));
-  }
-
-  /**
    * @covers ::filter
    * @dataProvider filterProvider
    */
@@ -65,6 +46,7 @@ class RequestFormatRouteFilterTest extends UnitTestCase {
     $sole_route_match_single_format->add('sole_route_single_format', $route_with_format);
 
     return [
+      'nothing requested' => [clone $collection, '', ['test_0']],
       'xml requested' => [clone $collection, 'xml', ['test_2', 'test_0']],
       'json requested' => [clone $collection, 'json', ['test_1', 'test_2', 'test_0']],
       'html format requested' => [clone $collection, 'html', ['test_0']],

@@ -2,18 +2,25 @@
 
 namespace Drupal\Core\Routing\Enhancer;
 
+use Drupal\Core\Routing\EnhancerInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
  * Enhancer to add a wrapping controller for _form routes.
  */
-class FormRouteEnhancer implements RouteEnhancerInterface {
+class FormRouteEnhancer implements EnhancerInterface {
 
   /**
-   * {@inheritdoc}
+   * Returns whether the enhancer runs on the current route.
+   *
+   * @param \Drupal\Core\Routing\Enhancer\Route $route
+   *   The current route.
+   *
+   * @return bool
    */
-  public function applies(Route $route) {
+  protected function applies(Route $route) {
     return $route->hasDefault('_form') && !$route->hasDefault('_controller');
   }
 
@@ -21,6 +28,11 @@ class FormRouteEnhancer implements RouteEnhancerInterface {
    * {@inheritdoc}
    */
   public function enhance(array $defaults, Request $request) {
+    $route = $defaults[RouteObjectInterface::ROUTE_OBJECT];
+    if (!$this->applies($route)) {
+      return $defaults;
+    }
+
     $defaults['_controller'] = 'controller.form:getContentResult';
     return $defaults;
   }
