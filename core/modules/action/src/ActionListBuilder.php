@@ -108,12 +108,12 @@ class ActionListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
+    $build['action_admin_manage_form'] = \Drupal::formBuilder()->getForm('Drupal\action\Form\ActionAdminManageForm');
     $build['action_header']['#markup'] = '<h3>' . $this->t('Available actions:') . '</h3>';
     $build['action_table'] = parent::render();
     if (!$this->hasConfigurableActions) {
       unset($build['action_table']['table']['#header']['operations']);
     }
-    $build['action_admin_manage_form'] = \Drupal::formBuilder()->getForm('Drupal\action\Form\ActionAdminManageForm');
     return $build;
   }
 

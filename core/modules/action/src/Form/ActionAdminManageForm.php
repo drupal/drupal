@@ -57,6 +57,7 @@ class ActionAdminManageForm extends FormBase {
         $actions[$id] = $definition['label'];
       }
     }
+    asort($actions);
     $form['parent'] = [
       '#type' => 'details',
       '#title' => $this->t('Create an advanced action'),
@@ -68,7 +69,7 @@ class ActionAdminManageForm extends FormBase {
       '#title' => $this->t('Action'),
       '#title_display' => 'invisible',
       '#options' => $actions,
-      '#empty_option' => $this->t('Choose an advanced action'),
+      '#empty_option' => $this->t('- Select -'),
     ];
     $form['parent']['actions'] = [
       '#type' => 'actions'
