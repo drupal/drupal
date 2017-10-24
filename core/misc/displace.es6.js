@@ -73,7 +73,8 @@
    * @fires event:drupalViewportOffsetChange
    */
   function displace(broadcast) {
-    offsets = Drupal.displace.offsets = calculateOffsets();
+    offsets = calculateOffsets();
+    Drupal.displace.offsets = offsets;
     if (typeof broadcast === 'undefined' || broadcast) {
       $(document).trigger('drupalViewportOffsetChange', offsets);
     }

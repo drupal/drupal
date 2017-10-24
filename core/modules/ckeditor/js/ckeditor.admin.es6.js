@@ -34,7 +34,7 @@
         $configurationForm.append(drupalSettings.ckeditor.toolbarAdmin);
 
         // Create a configuration model.
-        const model = Drupal.ckeditor.models.Model = new Drupal.ckeditor.Model({
+        Drupal.ckeditor.models.Model = new Drupal.ckeditor.Model({
           $textarea,
           activeEditorConfig: JSON.parse($textarea.val()),
           hiddenEditorConfig: drupalSettings.ckeditor.hiddenCKEditorConfig,
@@ -42,7 +42,7 @@
 
         // Create the configuration Views.
         const viewDefaults = {
-          model,
+          model: Drupal.ckeditor.models.Model,
           el: $('.ckeditor-toolbar-configuration'),
         };
         Drupal.ckeditor.views = {
