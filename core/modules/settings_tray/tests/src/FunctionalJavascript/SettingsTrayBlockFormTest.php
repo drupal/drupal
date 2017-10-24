@@ -8,6 +8,7 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationIsClassBlock;
 use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationNoneBlock;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
+use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
 use Drupal\user\Entity\Role;
 
 /**
@@ -15,7 +16,7 @@ use Drupal\user\Entity\Role;
  *
  * @group settings_tray
  */
-class SettingsTrayBlockFormTest extends SettingsTrayJavascriptTestBase {
+class SettingsTrayBlockFormTest extends OffCanvasTestBase {
 
   use ContextualLinkClickTrait;
 
@@ -144,7 +145,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayJavascriptTestBase {
     // suppressed.
     $this->openBlockForm("$block_selector {$element_selector}", $block_selector);
     $web_assert->elementTextContains('css', '.contextual-toolbar-tab button', 'Editing');
-    $web_assert->elementAttributeContains('css', '.dialog-off-canvas__main-canvas', 'class', 'js-settings-tray-edit-mode');
+    $web_assert->elementAttributeContains('css', '.dialog-off-canvas-main-canvas', 'class', 'js-settings-tray-edit-mode');
     // Simulate press the Escape key.
     $this->getSession()->executeScript('jQuery("body").trigger(jQuery.Event("keyup", { keyCode: 27 }));');
     $this->waitForOffCanvasToClose();
@@ -152,7 +153,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayJavascriptTestBase {
     $this->assertEditModeDisabled();
     $web_assert->elementTextContains('css', '#drupal-live-announce', 'Exited edit mode.');
     $web_assert->elementTextNotContains('css', '.contextual-toolbar-tab button', 'Editing');
-    $web_assert->elementAttributeNotContains('css', '.dialog-off-canvas__main-canvas', 'class', 'js-settings-tray-edit-mode');
+    $web_assert->elementAttributeNotContains('css', '.dialog-off-canvas-main-canvas', 'class', 'js-settings-tray-edit-mode');
   }
 
   /**
@@ -277,7 +278,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayJavascriptTestBase {
     $this->assertNotEmpty($contextual_link);
     // When page first loads Edit Mode is not triggered until first contextual
     // link is added.
-    $this->assertElementVisibleAfterWait('css', '.dialog-off-canvas__main-canvas.js-settings-tray-edit-mode');
+    $this->assertElementVisibleAfterWait('css', '.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode');
     // Ensure that all other Ajax activity is completed.
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->click($block_selector);
@@ -414,7 +415,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayJavascriptTestBase {
     // The toolbar edit button should read "Editing".
     $web_assert->elementContains('css', static::TOOLBAR_EDIT_LINK_SELECTOR, 'Editing');
     // The main canvas element should have the "js-settings-tray-edit-mode" class.
-    $web_assert->elementExists('css', '.dialog-off-canvas__main-canvas.js-settings-tray-edit-mode');
+    $web_assert->elementExists('css', '.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode');
   }
 
   /**
@@ -430,7 +431,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayJavascriptTestBase {
     $web_assert->elementContains('css', static::TOOLBAR_EDIT_LINK_SELECTOR, 'Edit');
     // The main canvas element should NOT have the "js-settings-tray-edit-mode"
     // class.
-    $web_assert->elementNotExists('css', '.dialog-off-canvas__main-canvas.js-settings-tray-edit-mode');
+    $web_assert->elementNotExists('css', '.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode');
   }
 
   /**
@@ -563,6 +564,17 @@ class SettingsTrayBlockFormTest extends SettingsTrayJavascriptTestBase {
       $this->disableEditMode();
       $block->delete();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getTestThemes() {
+    // Remove 'seven' theme. Setting Tray "Edit Mode" will not work with 'seven'
+    // because it removes all contextual links the off-canvas dialog should.
+    return array_filter(parent::getTestThemes(), function ($theme) {
+      return $theme !== 'seven';
+    });
   }
 
 }

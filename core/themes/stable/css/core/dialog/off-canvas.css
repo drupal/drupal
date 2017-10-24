@@ -1,0 +1,55 @@
+/**
+ * @file
+ * CSS for off-canvas dialog.
+ */
+
+/* Position the off-canvas dialog container outside the right of the viewport. */
+.ui-dialog-off-canvas {
+  box-sizing: border-box;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Wrap the form that's inside the off-canvas dialog. */
+.ui-dialog-off-canvas .ui-dialog-content {
+  padding: 0 20px;
+  /* Prevent horizontal scrollbar. */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+[dir="rtl"] .ui-dialog-off-canvas .ui-dialog-content {
+  text-align: right;
+}
+
+/* Position the off-canvas dialog container outside the right of the viewport. */
+.ui-dialog-off-canvas {
+  box-sizing: border-box;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Wrap the form that's inside the off-canvas dialog. */
+.ui-dialog-off-canvas #drupal-off-canvas {
+  padding: 0 20px;
+  /* Prevent horizontal scrollbar. */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+[dir="rtl"] .ui-dialog-off-canvas #drupal-off-canvas {
+  text-align: right;
+}
+
+/*
+ * Force the off-canvas dialog to be 100% width at the same breakpoint the
+ * dialog system uses to expand dialog widths.
+ */
+@media all and (max-width: 48em) { /* 768px */
+  .ui-dialog.ui-dialog-off-canvas {
+    width: 100% !important;
+  }
+  /* When off-canvas dialog is at 100% width stop the body from scrolling */
+  .js-off-canvas-dialog-open {
+    height: 100%;
+    overflow-y: hidden;
+  }
+}

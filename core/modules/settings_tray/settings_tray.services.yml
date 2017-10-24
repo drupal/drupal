@@ -1,10 +1,4 @@
 services:
-  main_content_renderer.off_canvas:
-    class: Drupal\settings_tray\Render\MainContent\OffCanvasRenderer
-    arguments: ['@title_resolver', '@renderer']
-    tags:
-      - { name: render.main_content_renderer, format: drupal_dialog.off_canvas }
-
   access_check.settings_tray.block.settings_tray_form:
     class: Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck
     tags:

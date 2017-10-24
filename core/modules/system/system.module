@@ -276,6 +276,9 @@ function system_theme() {
       ],
       'template' => 'entity-add-list',
     ],
+    'off_canvas_page_wrapper' => [
+      'variables' => ['children' => NULL],
+    ],
   ]);
 }
 
@@ -1522,4 +1525,13 @@ function system_path_delete($path) {
 function system_query_entity_reference_alter(AlterableInterface $query) {
   $handler = $query->getMetadata('entity_reference_selection_handler');
   $handler->entityQueryAlter($query);
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function system_element_info_alter(&$type) {
+  if (isset($type['page'])) {
+    $type['page']['#theme_wrappers']['off_canvas_page_wrapper'] = ['#weight' => -1000];
+  }
 }

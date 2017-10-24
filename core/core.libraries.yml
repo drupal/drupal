@@ -908,3 +908,31 @@ underscore:
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
+
+drupal.dialog.off_canvas:
+  version: VERSION
+  js:
+    misc/dialog/off-canvas.js: {}
+  css:
+    base:
+      misc/dialog/off-canvas.reset.css: {}
+      misc/dialog/off-canvas.base.css: {}
+      misc/dialog/off-canvas.css: {}
+      # Add group setting to make sure this CSS load before any jQuery UI Dialog
+      # CSS.
+      misc/dialog/off-canvas.theme.css: { group: 200 }
+    component:
+      misc/dialog/off-canvas.motion.css: {}
+      misc/dialog/off-canvas.button.css: {}
+      misc/dialog/off-canvas.form.css: {}
+      misc/dialog/off-canvas.table.css: {}
+      misc/dialog/off-canvas.details.css: {}
+      misc/dialog/off-canvas.tabledrag.css: {}
+      misc/dialog/off-canvas.dropbutton.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.ajax
+    - core/drupal.announce
+    - core/drupal.dialog
+    - core/drupal.dialog.ajax

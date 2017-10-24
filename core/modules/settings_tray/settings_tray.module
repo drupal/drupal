@@ -44,7 +44,7 @@ function settings_tray_contextual_links_view_alter(&$element, $items) {
       $element['#links']['settings-trayblock-configure']['title'] = t('Quick edit settings');
     }
 
-    $element['#attached']['library'][] = 'settings_tray/drupal.off_canvas';
+    $element['#attached']['library'][] = 'core/drupal.dialog.off_canvas';
   }
 }
 
@@ -57,26 +57,6 @@ function settings_tray_block_view_alter(array &$build) {
   // @todo Remove when https://www.drupal.org/node/2773591 is fixed.
   $build['#contextual_links']['settings_tray'] = [
     'route_parameters' => [],
-  ];
-}
-
-/**
- * Implements hook_element_info_alter().
- */
-function settings_tray_element_info_alter(&$type) {
-  if (isset($type['page'])) {
-    $type['page']['#theme_wrappers']['settings_tray_page_wrapper'] = ['#weight' => -1000];
-  }
-}
-
-/**
- * Implements hook_theme().
- */
-function settings_tray_theme() {
-  return [
-    'settings_tray_page_wrapper' => [
-      'variables' => ['children' => NULL],
-    ],
   ];
 }
 
