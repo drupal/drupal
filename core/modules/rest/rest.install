@@ -84,3 +84,39 @@ function rest_update_8203() {
   $rest_settings->set('bc_entity_resource_permissions', TRUE)
     ->save(TRUE);
 }
+
+/**
+ * Ensure the right REST authentication method is used.
+ *
+ * This fixes the bug in https://www.drupal.org/node/2825204.
+ */
+function rest_update_8401() {
+  $config_factory = \Drupal::configFactory();
+  $auth_providers = \Drupal::service('authentication_collector')->getSortedProviders();
+  $process_auth = function ($auth_option) use ($auth_providers) {
+    foreach ($auth_providers as $provider_id => $provider_data) {
+      // The provider belongs to the module that declares it as a service.
+      if (strtok($provider_data->_serviceId, '.') === $auth_option) {
+        return $provider_id;
+      }
+    }
+
+    return $auth_option;
+  };
+
+  foreach ($config_factory->listAll('views.view.') as $view_config_name) {
+    $save = FALSE;
+    $view = $config_factory->getEditable($view_config_name);
+    $displays = $view->get('display');
+    foreach ($displays as $display_name => $display) {
+      if ('rest_export' === $display['display_plugin'] && !empty($display['display_options']['auth'])) {
+        $displays[$display_name]['display_options']['auth'] = array_map($process_auth, $display['display_options']['auth']);
+        $save = TRUE;
+      }
+    }
+    if ($save) {
+      $view->set('display', $displays);
+      $view->save(TRUE);
+    }
+  }
+}
