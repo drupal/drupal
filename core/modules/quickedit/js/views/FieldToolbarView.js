@@ -19,7 +19,7 @@
 
       this.$root = this.$el;
 
-      this._id = 'quickedit-toolbar-for-' + this.model.id.replace(/[\/\[\]]/g, '_');
+      this._id = 'quickedit-toolbar-for-' + this.model.id.replace(/[/[\]]/g, '_');
 
       this.listenTo(this.model, 'change:state', this.stateChange);
     },

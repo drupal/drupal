@@ -144,7 +144,7 @@
           // should be returned to the same state it was in before the columns
           // were revealed, so it is necessary to remove the display none value
           // from the style attribute.
-          const match = /^display\s*\:\s*none$/;
+          const match = /^display\s*:\s*none$/;
           for (let i = 0; i < properties.length; i++) {
             const prop = properties[i];
             prop.trim();

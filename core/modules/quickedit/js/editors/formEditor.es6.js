@@ -92,7 +92,7 @@
       const fieldModel = this.fieldModel;
 
       // Generate a DOM-compatible ID for the form container DOM element.
-      const id = `quickedit-form-for-${fieldModel.id.replace(/[\/\[\]]/g, '_')}`;
+      const id = `quickedit-form-for-${fieldModel.id.replace(/[/[\]]/g, '_')}`;
 
       // Render form container.
       const $formContainer = $(Drupal.theme('quickeditFormContainer', {

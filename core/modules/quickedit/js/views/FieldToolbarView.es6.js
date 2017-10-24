@@ -47,7 +47,7 @@
       this.$root = this.$el;
 
       // Generate a DOM-compatible ID for the form container DOM element.
-      this._id = `quickedit-toolbar-for-${this.model.id.replace(/[\/\[\]]/g, '_')}`;
+      this._id = `quickedit-toolbar-for-${this.model.id.replace(/[/[\]]/g, '_')}`;
 
       this.listenTo(this.model, 'change:state', this.stateChange);
     },

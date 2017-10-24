@@ -194,7 +194,7 @@
               .find('input')
               .addClass('error')
               .attr('aria-invalid', 'true');
-            $(`<div class=\"description\" >${Drupal.t('Please provide a name for the button group.')}</div>`).insertAfter(form.elements[0]);
+            $(`<div class="description" >${Drupal.t('Please provide a name for the button group.')}</div>`).insertAfter(form.elements[0]);
           }
           return true;
         }

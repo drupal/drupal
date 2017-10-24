@@ -79,7 +79,7 @@
             var properties = $cell.attr('style').split(';');
             var newProps = [];
 
-            var match = /^display\s*\:\s*none$/;
+            var match = /^display\s*:\s*none$/;
             for (var i = 0; i < properties.length; i++) {
               var prop = properties[i];
               prop.trim();

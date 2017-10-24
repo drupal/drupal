@@ -154,8 +154,8 @@
             },
             // HTML segments for tip layout.
             template: {
-              link: '<a href=\"#close\" class=\"joyride-close-tip\">&times;</a>',
-              button: '<a href=\"#\" class=\"button button--primary joyride-next-tip\"></a>',
+              link: '<a href="#close" class="joyride-close-tip">&times;</a>',
+              button: '<a href="#" class="button button--primary joyride-next-tip"></a>',
             },
           });
           this.model.set({ isActive: true, activeTour: $tour });

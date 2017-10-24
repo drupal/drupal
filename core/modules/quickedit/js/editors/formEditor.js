@@ -57,7 +57,7 @@
     loadForm: function loadForm() {
       var fieldModel = this.fieldModel;
 
-      var id = 'quickedit-form-for-' + fieldModel.id.replace(/[\/\[\]]/g, '_');
+      var id = 'quickedit-form-for-' + fieldModel.id.replace(/[/[\]]/g, '_');
 
       var $formContainer = $(Drupal.theme('quickeditFormContainer', {
         id: id,

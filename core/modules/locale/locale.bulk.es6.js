@@ -23,7 +23,7 @@
           .on('change', function () {
             // If the filename is fully the language code or the filename
             // ends with a language code, pre-select that one.
-            const matches = $(this).val().match(/([^.][\.]*)([\w-]+)\.po$/);
+            const matches = $(this).val().match(/([^.][.]*)([\w-]+)\.po$/);
             if (matches && $langcode.find(`option[value="${matches[2]}"]`).length) {
               $langcode.val(matches[2]);
             }

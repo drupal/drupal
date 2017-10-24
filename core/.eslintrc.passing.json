@@ -1,7 +1,6 @@
 {
   "extends": "./.eslintrc.json",
   "rules": {
-    "no-useless-escape": "off",
     "no-use-before-define": "off",
     "no-throw-literal": "off",
     "no-shadow": "off",

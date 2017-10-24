@@ -73,7 +73,7 @@
     save: function save() {
       var fieldModel = this.fieldModel;
       var editorModel = this.model;
-      var backstageId = 'quickedit_backstage-' + this.fieldModel.id.replace(/[\/\[\]\_\s]/g, '-');
+      var backstageId = 'quickedit_backstage-' + this.fieldModel.id.replace(/[/[\]_\s]/g, '-');
 
       function fillAndSubmitForm(value) {
         var $form = $('#' + backstageId).find('form');
