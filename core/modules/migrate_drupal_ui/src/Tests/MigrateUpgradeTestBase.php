@@ -149,7 +149,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
     $this->assertResponse(200);
-    $this->assertText('Are you sure?');
+    $this->assertText('Upgrade analysis report');
     // Ensure we get errors about missing modules.
     $this->assertText(t('Source module not found for module_no_annotation.'));
     $this->assertText(t('Source module not found for modules_available_test.'));
@@ -168,7 +168,7 @@ abstract class MigrateUpgradeTestBase extends WebTestBase {
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
     $this->assertResponse(200);
-    $this->assertText('Are you sure?');
+    $this->assertText('Upgrade analysis report');
     // Ensure there are no errors about the missing modules.
     $this->assertNoText(t('Source module not found for module_no_annotation.'));
     $this->assertNoText(t('Source module not found for modules_available_test.'));

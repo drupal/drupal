@@ -152,7 +152,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
     $this->assertResponse(200);
-    $this->assertText('Are you sure?');
+    $this->assertText('Upgrade analysis report');
     // Ensure we get errors about missing modules.
     $this->assertSession()->pageTextContains(t('Source module not found for migration_provider_no_annotation.'));
     $this->assertSession()->pageTextContains(t('Source module not found for migration_provider_test.'));
@@ -171,7 +171,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
 
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Are you sure?');
+    $this->assertSession()->pageTextContains('Upgrade analysis report');
     // Ensure there are no errors about the missing modules from the test module.
     $this->assertSession()->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
     $this->assertSession()->pageTextNotContains(t('Source module not found for migration_provider_test.'));
