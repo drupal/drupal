@@ -39,10 +39,8 @@ class NodeTranslationHandler extends ContentTranslationHandler {
         }
       }
       if (isset($status_translatable)) {
-        foreach (['publish', 'unpublish', 'submit'] as $button) {
-          if (isset($form['actions'][$button])) {
-            $form['actions'][$button]['#value'] .= ' ' . ($status_translatable ? t('(this translation)') : t('(all translations)'));
-          }
+        if (isset($form['actions']['submit'])) {
+          $form['actions']['submit']['#value'] .= ' ' . ($status_translatable ? t('(this translation)') : t('(all translations)'));
         }
       }
     }
