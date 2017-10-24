@@ -44,6 +44,29 @@ class DependencySerializationTest extends UnitTestCase {
     $this->assertEmpty($dependencySerialization->getServiceIds());
   }
 
+  /**
+   * @covers ::__sleep
+   * @covers ::__wakeup
+   */
+  public function testSerializationWithMissingService() {
+    // Create a pseudo service and dependency injected object.
+    $service = new \stdClass();
+    $service->_serviceId = 'test_service_not_existing';
+    $container = new Container();
+    $container->set('test_service', $service);
+    $container->set('service_container', $container);
+    \Drupal::setContainer($container);
+
+    $dependencySerialization = new DependencySerializationTestDummy($service);
+    $dependencySerialization->setContainer($container);
+
+    $string = serialize($dependencySerialization);
+    /** @var \Drupal\Tests\Core\DependencyInjection\DependencySerializationTestDummy $dependencySerialization */
+    $dependencySerialization = unserialize($string);
+
+    $this->assertSame($container, $dependencySerialization->container);
+  }
+
 }
 
 /**
