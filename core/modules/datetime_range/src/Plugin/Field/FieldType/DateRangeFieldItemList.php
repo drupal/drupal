@@ -8,6 +8,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
  * Represents a configurable entity daterange field.
@@ -105,18 +106,18 @@ class DateRangeFieldItemList extends DateTimeFieldItemList {
       // only provide a default value for the first item, as do all fields.
       // Otherwise, there is no way to clear out unwanted values on multiple
       // value fields.
-      $storage_format = $definition->getSetting('datetime_type') == DateRangeItem::DATETIME_TYPE_DATE ? DATETIME_DATE_STORAGE_FORMAT : DATETIME_DATETIME_STORAGE_FORMAT;
+      $storage_format = $definition->getSetting('datetime_type') == DateRangeItem::DATETIME_TYPE_DATE ? DateTimeItemInterface::DATE_STORAGE_FORMAT : DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
       $default_values = [[]];
 
       if (!empty($default_value[0]['default_date_type'])) {
-        $start_date = new DrupalDateTime($default_value[0]['default_date'], DATETIME_STORAGE_TIMEZONE);
+        $start_date = new DrupalDateTime($default_value[0]['default_date'], DateTimeItemInterface::STORAGE_TIMEZONE);
         $start_value = $start_date->format($storage_format);
         $default_values[0]['value'] = $start_value;
         $default_values[0]['start_date'] = $start_date;
       }
 
       if (!empty($default_value[0]['default_end_date_type'])) {
-        $end_date = new DrupalDateTime($default_value[0]['default_end_date'], DATETIME_STORAGE_TIMEZONE);
+        $end_date = new DrupalDateTime($default_value[0]['default_end_date'], DateTimeItemInterface::STORAGE_TIMEZONE);
         $end_value = $end_date->format($storage_format);
         $default_values[0]['end_value'] = $end_value;
         $default_values[0]['end_date'] = $end_date;

@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\datetime\DateTimeComputed;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
  * Plugin implementation of the 'daterange' field type.
@@ -96,12 +97,12 @@ class DateRangeItem extends DateTimeItem {
     $start = REQUEST_TIME - mt_rand(0, 86400 * 365) - 86400;
     $end = $start + 86400;
     if ($type == static::DATETIME_TYPE_DATETIME) {
-      $values['value'] = gmdate(DATETIME_DATETIME_STORAGE_FORMAT, $start);
-      $values['end_value'] = gmdate(DATETIME_DATETIME_STORAGE_FORMAT, $end);
+      $values['value'] = gmdate(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $start);
+      $values['end_value'] = gmdate(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $end);
     }
     else {
-      $values['value'] = gmdate(DATETIME_DATE_STORAGE_FORMAT, $start);
-      $values['end_value'] = gmdate(DATETIME_DATE_STORAGE_FORMAT, $end);
+      $values['value'] = gmdate(DateTimeItemInterface::DATE_STORAGE_FORMAT, $start);
+      $values['end_value'] = gmdate(DateTimeItemInterface::DATE_STORAGE_FORMAT, $end);
     }
     return $values;
   }

@@ -5,6 +5,7 @@ namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
  * Plugin implementation of the 'Custom' formatter for 'datetime' fields.
@@ -24,7 +25,7 @@ class DateTimeCustomFormatter extends DateTimeFormatterBase {
    */
   public static function defaultSettings() {
     return [
-      'date_format' => DATETIME_DATETIME_STORAGE_FORMAT,
+      'date_format' => DateTimeItemInterface::DATETIME_STORAGE_FORMAT,
     ] + parent::defaultSettings();
   }
 

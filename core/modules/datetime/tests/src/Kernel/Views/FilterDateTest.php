@@ -3,6 +3,7 @@
 namespace Drupal\Tests\datetime\Kernel\Views;
 
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\views\Views;
@@ -42,11 +43,11 @@ class FilterDateTest extends DateTimeHandlerTestBase {
 
     $dates = [
       // Tomorrow.
-      \Drupal::service('date.formatter')->format(static::$date + 86400, 'custom', DATETIME_DATE_STORAGE_FORMAT, DATETIME_STORAGE_TIMEZONE),
+      \Drupal::service('date.formatter')->format(static::$date + 86400, 'custom', DateTimeItemInterface::DATE_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE),
       // Today.
-      \Drupal::service('date.formatter')->format(static::$date, 'custom', DATETIME_DATE_STORAGE_FORMAT, DATETIME_STORAGE_TIMEZONE),
+      \Drupal::service('date.formatter')->format(static::$date, 'custom', DateTimeItemInterface::DATE_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE),
       // Yesterday.
-      \Drupal::service('date.formatter')->format(static::$date - 86400, 'custom', DATETIME_DATE_STORAGE_FORMAT, DATETIME_STORAGE_TIMEZONE),
+      \Drupal::service('date.formatter')->format(static::$date - 86400, 'custom', DateTimeItemInterface::DATE_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE),
     ];
 
     foreach ($dates as $date) {

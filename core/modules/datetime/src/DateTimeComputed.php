@@ -7,6 +7,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedData;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
  * A computed property for dates of date time field items.
@@ -46,9 +47,9 @@ class DateTimeComputed extends TypedData {
     $value = $item->{($this->definition->getSetting('date source'))};
 
     $datetime_type = $item->getFieldDefinition()->getSetting('datetime_type');
-    $storage_format = $datetime_type === DateTimeItem::DATETIME_TYPE_DATE ? DATETIME_DATE_STORAGE_FORMAT : DATETIME_DATETIME_STORAGE_FORMAT;
+    $storage_format = $datetime_type === DateTimeItem::DATETIME_TYPE_DATE ? DateTimeItemInterface::DATE_STORAGE_FORMAT : DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
     try {
-      $date = DrupalDateTime::createFromFormat($storage_format, $value, DATETIME_STORAGE_TIMEZONE);
+      $date = DrupalDateTime::createFromFormat($storage_format, $value, DateTimeItemInterface::STORAGE_TIMEZONE);
       if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
         $this->date = $date;
         // If the format did not include an explicit time portion, then the

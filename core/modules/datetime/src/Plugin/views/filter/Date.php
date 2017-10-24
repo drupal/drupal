@@ -5,6 +5,7 @@ namespace Drupal\datetime\Plugin\views\filter;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Plugin\views\filter\Date as NumericDate;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -38,7 +39,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
    *
    * @see \Drupal\views\Plugin\views\query\Sql::getDateFormat()
    */
-  protected $dateFormat = DATETIME_DATETIME_STORAGE_FORMAT;
+  protected $dateFormat = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
 
   /**
    * The request stack used to determin current time.
@@ -69,7 +70,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
     // Date format depends on field storage format.
     $definition = $this->getFieldStorageDefinition();
     if ($definition->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
-      $this->dateFormat = DATETIME_DATE_STORAGE_FORMAT;
+      $this->dateFormat = DateTimeItemInterface::DATE_STORAGE_FORMAT;
     }
   }
 
@@ -99,8 +100,8 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
 
     // Convert to ISO format and format for query. UTC timezone is used since
     // dates are stored in UTC.
-    $a = $this->query->getDateFormat("'" . $this->dateFormatter->format($a, 'custom', DATETIME_DATETIME_STORAGE_FORMAT, DATETIME_STORAGE_TIMEZONE) . "'", $this->dateFormat, TRUE);
-    $b = $this->query->getDateFormat("'" . $this->dateFormatter->format($b, 'custom', DATETIME_DATETIME_STORAGE_FORMAT, DATETIME_STORAGE_TIMEZONE) . "'", $this->dateFormat, TRUE);
+    $a = $this->query->getDateFormat("'" . $this->dateFormatter->format($a, 'custom', DateTimeItemInterface::DATETIME_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE) . "'", $this->dateFormat, TRUE);
+    $b = $this->query->getDateFormat("'" . $this->dateFormatter->format($b, 'custom', DateTimeItemInterface::DATETIME_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE) . "'", $this->dateFormat, TRUE);
 
     // This is safe because we are manually scrubbing the values.
     $operator = strtoupper($this->operator);
@@ -116,7 +117,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
     $value = intval(strtotime($this->value['value'], $origin));
 
     // Convert to ISO. UTC is used since dates are stored in UTC.
-    $value = $this->query->getDateFormat("'" . $this->dateFormatter->format($value, 'custom', DATETIME_DATETIME_STORAGE_FORMAT, DATETIME_STORAGE_TIMEZONE) . "'", $this->dateFormat, TRUE);
+    $value = $this->query->getDateFormat("'" . $this->dateFormatter->format($value, 'custom', DateTimeItemInterface::DATETIME_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE) . "'", $this->dateFormat, TRUE);
 
     // This is safe because we are manually scrubbing the value.
     $field = $this->query->getDateFormat($field, $this->dateFormat, TRUE);

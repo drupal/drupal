@@ -21,7 +21,7 @@ use Drupal\Core\Field\FieldItemBase;
  *   constraints = {"DateTimeFormat" = {}}
  * )
  */
-class DateTimeItem extends FieldItemBase {
+class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
 
   /**
    * {@inheritdoc}
@@ -109,10 +109,10 @@ class DateTimeItem extends FieldItemBase {
     // type.
     $timestamp = REQUEST_TIME - mt_rand(0, 86400 * 365);
     if ($type == DateTimeItem::DATETIME_TYPE_DATE) {
-      $values['value'] = gmdate(DATETIME_DATE_STORAGE_FORMAT, $timestamp);
+      $values['value'] = gmdate(static::DATE_STORAGE_FORMAT, $timestamp);
     }
     else {
-      $values['value'] = gmdate(DATETIME_DATETIME_STORAGE_FORMAT, $timestamp);
+      $values['value'] = gmdate(static::DATETIME_STORAGE_FORMAT, $timestamp);
     }
     return $values;
   }

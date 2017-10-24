@@ -5,6 +5,7 @@ namespace Drupal\datetime_range\Plugin\Field\FieldWidget;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime\Plugin\Field\FieldWidget\DateTimeWidgetBase;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 
@@ -57,7 +58,7 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
         $start_date = $item['value'];
         switch ($this->getFieldSetting('datetime_type')) {
           case DateRangeItem::DATETIME_TYPE_DATE:
-            $format = DATETIME_DATE_STORAGE_FORMAT;
+            $format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
             break;
 
           case DateRangeItem::DATETIME_TYPE_ALLDAY:
@@ -67,15 +68,15 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
             // we need to explicitly set the timezone.
             $start_date->setTimeZone(timezone_open(drupal_get_user_timezone()));
             $start_date->setTime(0, 0, 0);
-            $format = DATETIME_DATETIME_STORAGE_FORMAT;
+            $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
             break;
 
           default:
-            $format = DATETIME_DATETIME_STORAGE_FORMAT;
+            $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
             break;
         }
         // Adjust the date for storage.
-        $start_date->setTimezone(new \DateTimezone(DATETIME_STORAGE_TIMEZONE));
+        $start_date->setTimezone(new \DateTimezone(DateTimeItemInterface::STORAGE_TIMEZONE));
         $item['value'] = $start_date->format($format);
       }
 
@@ -84,7 +85,7 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
         $end_date = $item['end_value'];
         switch ($this->getFieldSetting('datetime_type')) {
           case DateRangeItem::DATETIME_TYPE_DATE:
-            $format = DATETIME_DATE_STORAGE_FORMAT;
+            $format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
             break;
 
           case DateRangeItem::DATETIME_TYPE_ALLDAY:
@@ -94,15 +95,15 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
             // we need to explicitly set the timezone.
             $end_date->setTimeZone(timezone_open(drupal_get_user_timezone()));
             $end_date->setTime(23, 59, 59);
-            $format = DATETIME_DATETIME_STORAGE_FORMAT;
+            $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
             break;
 
           default:
-            $format = DATETIME_DATETIME_STORAGE_FORMAT;
+            $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
             break;
         }
         // Adjust the date for storage.
-        $end_date->setTimezone(new \DateTimezone(DATETIME_STORAGE_TIMEZONE));
+        $end_date->setTimezone(new \DateTimezone(DateTimeItemInterface::STORAGE_TIMEZONE));
         $item['end_value'] = $end_date->format($format);
       }
     }

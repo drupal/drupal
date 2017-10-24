@@ -96,13 +96,13 @@ class DateTimeFieldItemList extends FieldItemList {
         // A default date only value should be in the format used for date
         // storage but in the user's local timezone.
         $date = new DrupalDateTime($default_value[0]['default_date'], drupal_get_user_timezone());
-        $format = DATETIME_DATE_STORAGE_FORMAT;
+        $format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
       }
       else {
         // A default date+time value should be in the format and timezone used
         // for date storage.
-        $date = new DrupalDateTime($default_value[0]['default_date'], DATETIME_STORAGE_TIMEZONE);
-        $format = DATETIME_DATETIME_STORAGE_FORMAT;
+        $date = new DrupalDateTime($default_value[0]['default_date'], DateTimeItemInterface::STORAGE_TIMEZONE);
+        $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
       }
       $value = $date->format($format);
       // We only provide a default value for the first item, as do all fields.

@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
  * Base class for the 'datetime_*' widgets.
@@ -28,7 +29,7 @@ class DateTimeWidgetBase extends WidgetBase {
     if ($this->getFieldSetting('datetime_type') == DateTimeItem::DATETIME_TYPE_DATE) {
       // A date-only field should have no timezone conversion performed, so
       // use the same timezone as for storage.
-      $element['value']['#date_timezone'] = DATETIME_STORAGE_TIMEZONE;
+      $element['value']['#date_timezone'] = DateTimeItemInterface::STORAGE_TIMEZONE;
     }
 
     if ($items[$delta]->date) {
@@ -54,15 +55,15 @@ class DateTimeWidgetBase extends WidgetBase {
         $date = $item['value'];
         switch ($this->getFieldSetting('datetime_type')) {
           case DateTimeItem::DATETIME_TYPE_DATE:
-            $format = DATETIME_DATE_STORAGE_FORMAT;
+            $format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
             break;
 
           default:
-            $format = DATETIME_DATETIME_STORAGE_FORMAT;
+            $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
             break;
         }
         // Adjust the date for storage.
-        $date->setTimezone(new \DateTimezone(DATETIME_STORAGE_TIMEZONE));
+        $date->setTimezone(new \DateTimezone(DateTimeItemInterface::STORAGE_TIMEZONE));
         $item['value'] = $date->format($format);
       }
     }

@@ -21,7 +21,8 @@ use Drupal\migrate\Row;
  *
  * Examples:
  *
- * Example usage for date only fields (DATETIME_DATE_STORAGE_FORMAT):
+ * Example usage for date only fields
+ * (DateTimeItemInterface::DATE_STORAGE_FORMAT):
  * @code
  * process:
  *   field_date:
@@ -34,7 +35,8 @@ use Drupal\migrate\Row;
  * If the source value was '01/05/1955' the transformed value would be
  * 1955-01-05.
  *
- * Example usage for datetime fields (DATETIME_DATETIME_STORAGE_FORMAT):
+ * Example usage for datetime fields
+ * (DateTimeItemInterface::DATETIME_STORAGE_FORMAT):
  * @code
  * process:
  *   field_time:
@@ -65,6 +67,7 @@ use Drupal\migrate\Row;
  *
  * @see \DateTime::createFromFormat()
  * @see \Drupal\Component\Datetime\DateTimePlus::__construct()
+ * @see \Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
  * @MigrateProcessPlugin(
