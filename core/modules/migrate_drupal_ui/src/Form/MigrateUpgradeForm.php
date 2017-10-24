@@ -486,16 +486,23 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     $unmigrated_source_modules = array_diff_key($system_data['module'], $table_data);
 
     // Missing migrations.
-    $form['missing_module_list_title'] = [
-      '#type' => 'item',
-      '#title' => $this->t('Missing upgrade paths'),
+    $missing_module_list = [
+      '#type' => 'details',
+      '#open' => TRUE,
+      '#title' => [
+        '#type' => 'html_tag',
+        '#tag' => 'span',
+        '#value' => $this->t('Missing upgrade paths'),
+        '#attributes' => ['id' => ['warning']],
+      ],
       '#description' => $this->t('The following items will not be upgraded. For more information see <a href=":migrate">Upgrading from Drupal 6 or 7 to Drupal 8</a>.', [':migrate' => 'https://www.drupal.org/upgrade/migrate']),
+      '#weight' => 2,
     ];
-    $form['missing_module_list'] = [
+    $missing_module_list['module_list'] = [
       '#type' => 'table',
       '#header' => [
-        $this->t('Source'),
-        $this->t('Destination'),
+        $this->t('Source module: Drupal @version', ['@version' => $version]),
+        $this->t('Upgrade module: Drupal 8'),
       ],
     ];
     $missing_count = 0;
@@ -503,24 +510,39 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     foreach ($unmigrated_source_modules as $source_module => $module_data) {
       if ($module_data['status']) {
         $missing_count++;
-        $form['missing_module_list'][$source_module] = [
-          'source_module' => ['#plain_text' => $source_module],
+        $missing_module_list['module_list'][$source_module] = [
+          'source_module' => [
+            '#type' => 'html_tag',
+            '#tag' => 'span',
+            '#value' => $source_module,
+            '#attributes' => [
+              'class' => [
+                'upgrade-analysis-report__status-icon',
+                'upgrade-analysis-report__status-icon--warning',
+              ],
+            ],
+          ],
           'destination_module' => ['#plain_text' => 'Missing'],
         ];
       }
     }
     // Available migrations.
-    $form['available_module_list'] = [
-      '#tree' => TRUE,
+    $available_module_list = [
       '#type' => 'details',
-      '#title' => $this->t('Available upgrade paths'),
+      '#title' => [
+        '#type' => 'html_tag',
+        '#tag' => 'span',
+        '#value' => $this->t('Available upgrade paths'),
+        '#attributes' => ['id' => ['checked']],
+      ],
+      '#weight' => 3,
     ];
 
-    $form['available_module_list']['module_list'] = [
+    $available_module_list['module_list'] = [
       '#type' => 'table',
       '#header' => [
-        $this->t('Source'),
-        $this->t('Destination'),
+        $this->t('Source module: Drupal @version', ['@version' => $version]),
+        $this->t('Upgrade module: Drupal 8'),
       ],
     ];
 
@@ -534,20 +556,53 @@ class MigrateUpgradeForm extends ConfirmFormBase {
           '#plain_text' => $destination_module,
         ];
       }
-      $form['available_module_list']['module_list'][$source_module] = [
-        'source_module' => ['#plain_text' => $source_module],
+      $available_module_list['module_list'][$source_module] = [
+        'source_module' => [
+          '#type' => 'html_tag',
+          '#tag' => 'span',
+          '#value' => $source_module,
+          '#attributes' => [
+            'class' => [
+              'upgrade-analysis-report__status-icon',
+              'upgrade-analysis-report__status-icon--checked',
+            ],
+          ],
+        ],
         'destination_module' => $destination_details,
       ];
     }
-    $form['counts'] = [
-      '#title' => 'Upgrade analysis report',
-      '#theme' => 'item_list',
-      '#items' => [
-        $this->formatPlural($available_count, '@count available upgrade path', '@count available upgrade paths'),
-        $this->formatPlural($missing_count, '@count missing upgrade path', '@count missing upgrade paths'),
-      ],
-      '#weight' => -15,
+
+    $counters = [];
+    $general_info = [];
+
+    if ($missing_count) {
+      $counters[] = [
+        '#theme' => 'status_report_counter',
+        '#amount' => $missing_count,
+        '#text' => $this->formatPlural($missing_count, 'Missing upgrade path', 'Missing upgrade paths'),
+        '#severity' => 'warning',
+        '#weight' => 0,
+      ];
+      $general_info[] = $missing_module_list;
+    }
+    if ($available_count) {
+      $counters[] = [
+        '#theme' => 'status_report_counter',
+        '#amount' => $available_count,
+        '#text' => $this->formatPlural($available_count, 'Available upgrade path', 'Available upgrade paths'),
+        '#severity' => 'checked',
+        '#weight' => 1,
+      ];
+      $general_info[] = $available_module_list;
+    }
+
+    $form['status_report_page'] = [
+      '#theme' => 'status_report_page',
+      '#counters' => $counters,
+      '#general_info' => $general_info,
     ];
+
+    $form['#attached']['library'][] = 'migrate_drupal_ui/base';
 
     return $form;
   }
@@ -599,7 +654,7 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure?');
+    return $this->t('Upgrade analysis report');
   }
 
   /**

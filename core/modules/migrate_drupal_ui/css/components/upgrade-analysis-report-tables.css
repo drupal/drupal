@@ -1,0 +1,20 @@
+/**
+ * @file
+ * Styles for the upgrade analysis report tables.
+ */
+.upgrade-analysis-report__status-icon:before {
+  content: "";
+  background-size: 16px;
+  background-position: left center;
+  background-repeat: no-repeat;
+  width: 32px;
+  height: 14px;
+  display: inline-block;
+}
+
+.upgrade-analysis-report__status-icon--warning:before {
+  background-image: url(../../../../misc/icons/e29700/warning.svg);
+}
+.upgrade-analysis-report__status-icon--checked:before {
+  background-image: url(../../../../misc/icons/73b355/check.svg);
+}
