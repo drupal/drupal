@@ -7,9 +7,12 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\Core\Database\Query\ConditionInterface;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\migrate\Exception\RequirementsException;
-use Drupal\migrate\Plugin\migrate\source\TestSqlBase;
 use Drupal\Core\Database\Database;
+use Drupal\migrate\Plugin\migrate\source\SqlBase;
+use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
  * Tests the functionality of SqlBase.
@@ -19,10 +22,27 @@ use Drupal\Core\Database\Database;
 class SqlBaseTest extends MigrateTestBase {
 
   /**
+   * The (probably mocked) migration under test.
+   *
+   * @var \Drupal\migrate\Plugin\MigrationInterface
+   */
+  protected $migration;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->migration = $this->getMock(MigrationInterface::class);
+    $this->migration->method('id')->willReturn('fubar');
+  }
+
+  /**
    * Tests different connection types.
    */
   public function testConnectionTypes() {
-    $sql_base = new TestSqlBase();
+    $sql_base = new TestSqlBase([], $this->migration);
 
     // Verify that falling back to the default 'migrate' connection (defined in
     // the base class) works.
@@ -53,7 +73,7 @@ class SqlBaseTest extends MigrateTestBase {
     $this->assertSame($sql_base->getDatabase()->getKey(), $key);
 
     // Now test we can have SqlBase create the connection from an info array.
-    $sql_base = new TestSqlBase();
+    $sql_base = new TestSqlBase([], $this->migration);
 
     $target = 'test_db_target2';
     $key = 'test_migrate_connection2';
@@ -81,7 +101,7 @@ class SqlBaseTest extends MigrateTestBase {
     $this->assertSame($sql_base->getDatabase()->getKey(), $key);
 
     // Now test we can have SqlBase create the connection from an info array.
-    $sql_base = new TestSqlBase();
+    $sql_base = new TestSqlBase([], $this->migration);
 
     $target = 'test_state_db_target2';
     $key = 'test_state_migrate_connection2';
@@ -107,9 +127,55 @@ class SqlBaseTest extends MigrateTestBase {
     $sql_base->getDatabase();
   }
 
-}
+  /**
+   * Tests that SqlBase respects high-water values.
+   *
+   * @param mixed $high_water
+   *   (optional) The high-water value to set.
+   * @param array $query_result
+   *   (optional) The expected query results.
+   *
+   * @dataProvider highWaterDataProvider
+   */
+  public function testHighWater($high_water = NULL, array $query_result = []) {
+    $configuration = [
+      'high_water_property' => [
+        'name' => 'order',
+      ],
+    ];
+    $source = new TestSqlBase($configuration, $this->migration);
 
-namespace Drupal\migrate\Plugin\migrate\source;
+    if ($high_water) {
+      $source->getHighWaterStorage()->set($this->migration->id(), $high_water);
+    }
+
+    $query_result = new \ArrayIterator($query_result);
+
+    $query = $this->getMock(SelectInterface::class);
+    $query->method('execute')->willReturn($query_result);
+    $query->expects($this->atLeastOnce())->method('orderBy')->with('order', 'ASC');
+
+    $condition_group = $this->getMock(ConditionInterface::class);
+    $query->method('orConditionGroup')->willReturn($condition_group);
+
+    $source->setQuery($query);
+    $source->rewind();
+  }
+
+  /**
+   * Data provider for ::testHighWater().
+   *
+   * @return array
+   *   The scenarios to test.
+   */
+  public function highWaterDataProvider() {
+    return [
+      'no high-water value set' => [],
+      'high-water value set' => [33],
+    ];
+  }
+
+}
 
 /**
  * A dummy source to help with testing SqlBase.
@@ -119,10 +185,22 @@ namespace Drupal\migrate\Plugin\migrate\source;
 class TestSqlBase extends SqlBase {
 
   /**
-   * Overrides the constructor so we can create one easily.
+   * The query to execute.
+   *
+   * @var \Drupal\Core\Database\Query\SelectInterface
    */
-  public function __construct() {
-    $this->state = \Drupal::state();
+  protected $query;
+
+  /**
+   * Overrides the constructor so we can create one easily.
+   *
+   * @param array $configuration
+   *   The plugin instance configuration.
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+   *   (optional) The migration being run.
+   */
+  public function __construct(array $configuration = [], MigrationInterface $migration = NULL) {
+    parent::__construct($configuration, 'sql_base', [], $migration, \Drupal::state());
   }
 
   /**
@@ -156,6 +234,25 @@ class TestSqlBase extends SqlBase {
   /**
    * {@inheritdoc}
    */
-  public function query() {}
+  public function query() {
+    return $this->query;
+  }
+
+  /**
+   * Sets the query to execute.
+   *
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
+   *   The query to execute.
+   */
+  public function setQuery(SelectInterface $query) {
+    $this->query = $query;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHighWaterStorage() {
+    return parent::getHighWaterStorage();
+  }
 
 }

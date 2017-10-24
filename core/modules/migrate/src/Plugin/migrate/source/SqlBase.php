@@ -303,11 +303,17 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       }
       // 2. If we are using high water marks, also include rows above the mark.
       //    But, include all rows if the high water mark is not set.
-      if ($this->getHighWaterProperty() && ($high_water = $this->getHighWater())) {
+      if ($this->getHighWaterProperty()) {
         $high_water_field = $this->getHighWaterField();
-        $conditions->condition($high_water_field, $high_water, '>');
+        $high_water = $this->getHighWater();
+        if ($high_water) {
+          $conditions->condition($high_water_field, $high_water, '>');
+          $condition_added = TRUE;
+        }
+        // Always sort by the high water field, to ensure that the first run
+        // (before we have a high water value) also has the results in a
+        // consistent order.
         $this->query->orderBy($high_water_field);
-        $condition_added = TRUE;
       }
       if ($condition_added) {
         $this->query->condition($conditions);
