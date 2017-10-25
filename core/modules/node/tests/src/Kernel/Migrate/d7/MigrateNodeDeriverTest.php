@@ -19,21 +19,31 @@ class MigrateNodeDeriverTest extends MigrateDrupal7TestBase {
   protected $pluginManager;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
     $this->pluginManager = $this->container->get('plugin.manager.migration');
+    $this->moduleHandler = $this->container->get('module_handler');
   }
 
   /**
    * Test node translation migrations with translation disabled.
    */
   public function testNoTranslations() {
+    // Enabling node module for this test.
+    $this->enableModules(['node']);
     // Without content_translation, there should be no translation migrations.
     $migrations = $this->pluginManager->createInstances('d7_node_translation');
-    $this->assertSame([], $migrations,
-      "No node translation migrations without content_translation");
+    $this->assertTrue($this->moduleHandler->moduleExists('node'));
+    $this->assertEmpty($migrations);
   }
 
   /**
