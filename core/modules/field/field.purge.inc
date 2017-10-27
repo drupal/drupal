@@ -90,6 +90,7 @@ function field_purge_batch($batch_size, $field_storage_uuid = NULL) {
     // providing module was uninstalled).
     // @todo Revisit after https://www.drupal.org/node/2080823.
     if (!isset($info[$entity_type])) {
+      \Drupal::logger('field')->warning("Cannot remove field @field_name because the entity type is unknown: %entity_type", ['@field_name' => $field->getName(), '%entity_type' => $entity_type]);
       continue;
     }
 
