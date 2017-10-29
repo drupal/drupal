@@ -33,6 +33,7 @@ display:
           relationship: none
           table: node__field_date
           order: DESC
+          granularity: second
           plugin_id: datetime
         id:
           field: nid

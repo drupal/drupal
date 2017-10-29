@@ -154,8 +154,8 @@ views.filter_value.date:
       type: string
       label: 'Type'
 
-views.filter_value.datetime:
-  type: views.filter_value.numeric
+views.filter.date:
+  type: views.filter.numeric
   label: 'Date'
   mapping:
     type:
