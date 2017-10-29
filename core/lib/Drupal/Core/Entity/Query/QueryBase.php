@@ -264,7 +264,13 @@ abstract class QueryBase implements QueryInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Queries the latest revision.
+   *
+   * The latest revision is the most recent revision of an entity. This will be
+   * either the default revision, or a pending revision if one exists and it is
+   * newer than the default.
+   *
+   * @return $this
    */
   public function latestRevision() {
     $this->allRevisions = TRUE;
