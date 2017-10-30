@@ -112,6 +112,15 @@ class Layout extends Plugin {
   public $icon;
 
   /**
+   * The icon map.
+   *
+   * @var string[][] optional
+   *
+   * @see \Drupal\Core\Layout\Icon\IconBuilderInterface::build()
+   */
+  public $icon_map;
+
+  /**
    * An associative array of regions in this layout.
    *
    * The key of the array is the machine name of the region, and the value is

@@ -87,6 +87,8 @@ trait FieldLayoutEntityDisplayFormTrait {
       '#tree' => TRUE,
     ];
 
+    $form['field_layouts']['settings_wrapper']['icon'] = $layout_plugin->getPluginDefinition()->getIcon();
+
     if ($layout_plugin instanceof PluginFormInterface) {
       $form['field_layouts']['settings_wrapper']['layout_settings'] = [];
       $subform_state = SubformState::createForSubform($form['field_layouts']['settings_wrapper']['layout_settings'], $form, $form_state);

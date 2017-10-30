@@ -72,6 +72,7 @@ libraries-override:
         misc/dialog/off-canvas.details.css: css/core/dialog/off-canvas.details.css
         misc/dialog/off-canvas.tabledrag.css: css/core/dialog/off-canvas.tabledrag.css
         misc/dialog/off-canvas.dropbutton.css: css/core/dialog/off-canvas.dropbutton.css
+        misc/dialog/off-canvas.layout.css: css/core/dialog/off-canvas.layout.css
 
   core/drupal.dropbutton:
     css:

@@ -929,6 +929,7 @@ drupal.dialog.off_canvas:
       misc/dialog/off-canvas.details.css: {}
       misc/dialog/off-canvas.tabledrag.css: {}
       misc/dialog/off-canvas.dropbutton.css: {}
+      misc/dialog/off-canvas.layout.css: {}
   dependencies:
     - core/jquery
     - core/drupal
