@@ -272,6 +272,8 @@ function language_get_default_langcode($entity_type, $bundle) {
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
  *   Use \Drupal::config('language.negotiation')->get('url.prefixes') instead.
+ *
+ * @see https://www.drupal.org/node/2912748
  */
 function language_negotiation_url_prefixes() {
   return \Drupal::config('language.negotiation')->get('url.prefixes');
@@ -301,6 +303,8 @@ function language_negotiation_url_prefixes_update() {
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
  *   Use \Drupal::config('language.negotiation')->get('url.domains') instead.
+ *
+ * @see https://www.drupal.org/node/2912748
  */
 function language_negotiation_url_domains() {
   return \Drupal::config('language.negotiation')->get('url.domains');
