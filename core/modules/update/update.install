@@ -108,15 +108,17 @@ function _update_requirement_check($project, $type) {
   if ($status != UPDATE_CURRENT) {
     $requirement['reason'] = $status;
     $requirement['severity'] = REQUIREMENT_ERROR;
-    // Append the available updates link to the message from
-    // _update_message_text(), and format the two translated strings together in
-    // a single paragraph.
+    // When updates are available, append the available updates link to the
+    // message from _update_message_text(), and format the two translated
+    // strings together in a single paragraph.
     $requirement['description'][] = ['#markup' => _update_message_text($type, $status)];
-    if (_update_manager_access()) {
-      $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href=":available_updates">available updates</a> page for more information and to install your missing updates.', [':available_updates' => \Drupal::url('update.report_update')])];
-    }
-    else {
-      $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href=":available_updates">available updates</a> page for more information.', [':available_updates' => \Drupal::url('update.status')])];
+    if (!in_array($status, [UPDATE_UNKNOWN, UPDATE_NOT_CHECKED, UPDATE_NOT_FETCHED, UPDATE_FETCH_PENDING])) {
+      if (_update_manager_access()) {
+        $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href=":available_updates">available updates</a> page for more information and to install your missing updates.', [':available_updates' => \Drupal::url('update.report_update')])];
+      }
+      else {
+        $requirement['description'][] = ['#prefix' => ' ', '#markup' => t('See the <a href=":available_updates">available updates</a> page for more information.', [':available_updates' => \Drupal::url('update.status')])];
+      }
     }
   }
   switch ($status) {
@@ -136,6 +138,7 @@ function _update_requirement_check($project, $type) {
     case UPDATE_UNKNOWN:
     case UPDATE_NOT_CHECKED:
     case UPDATE_NOT_FETCHED:
+    case UPDATE_FETCH_PENDING:
       $requirement_label = isset($project['reason']) ? $project['reason'] : t('Can not determine status');
       $requirement['severity'] = REQUIREMENT_WARNING;
       break;
