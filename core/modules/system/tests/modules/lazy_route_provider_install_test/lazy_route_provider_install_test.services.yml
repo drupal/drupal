@@ -1,5 +1,0 @@
-services:
-  plugin.manager.lazy_route_provider_install_test:
-    class: '\Drupal\lazy_route_provider_install_test\PluginManager'
-    parent: default_plugin_manager
-    arguments: ['@url_generator']

@@ -1,6 +1,0 @@
-name: 'Lazy route provider install test'
-description: 'Helps test a bug triggered by the url_generator maintaining a stale route provider.'
-type: module
-package: Testing
-version: VERSION
-core: 8.x
