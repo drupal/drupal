@@ -8,7 +8,9 @@ use Drupal\migrate\Plugin\MigrationInterface;
 /**
  * @MigrateField(
  *   id = "file",
- *   core = {7}
+ *   core = {7},
+ *   source_module = "file",
+ *   destination_module = "file"
  * )
  */
 class FileField extends D6FileField {

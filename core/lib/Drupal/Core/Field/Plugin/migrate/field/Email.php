@@ -11,7 +11,9 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *   core = {6,7},
  *   type_map = {
  *     "email" = "email"
- *   }
+ *   },
+ *   source_module = "email",
+ *   destination_module = "core"
  * )
  */
 class Email extends FieldPluginBase {

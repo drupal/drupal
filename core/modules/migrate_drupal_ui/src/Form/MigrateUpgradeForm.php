@@ -3,12 +3,14 @@
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
+use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Drupal\migrate_drupal_ui\Batch\MigrateUpgradeImportBatch;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -51,6 +53,20 @@ class MigrateUpgradeForm extends ConfirmFormBase {
   protected $pluginManager;
 
   /**
+   * The field plugin manager.
+   *
+   * @var \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface
+   */
+  protected $fieldPluginManager;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs the MigrateUpgradeForm.
    *
    * @param \Drupal\Core\State\StateInterface $state
@@ -61,12 +77,18 @@ class MigrateUpgradeForm extends ConfirmFormBase {
    *   The renderer service.
    * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $plugin_manager
    *   The migration plugin manager.
+   * @param \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface $field_plugin_manager
+   *   The field plugin manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(StateInterface $state, DateFormatterInterface $date_formatter, RendererInterface $renderer, MigrationPluginManagerInterface $plugin_manager) {
+  public function __construct(StateInterface $state, DateFormatterInterface $date_formatter, RendererInterface $renderer, MigrationPluginManagerInterface $plugin_manager, MigrateFieldPluginManagerInterface $field_plugin_manager, ModuleHandlerInterface $module_handler) {
     $this->state = $state;
     $this->dateFormatter = $date_formatter;
     $this->renderer = $renderer;
     $this->pluginManager = $plugin_manager;
+    $this->fieldPluginManager = $field_plugin_manager;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -77,7 +99,9 @@ class MigrateUpgradeForm extends ConfirmFormBase {
       $container->get('state'),
       $container->get('date.formatter'),
       $container->get('renderer'),
-      $container->get('plugin.manager.migration')
+      $container->get('plugin.manager.migration'),
+      $container->get('plugin.manager.migrate.field'),
+      $container->get('module_handler')
     );
   }
 
@@ -439,7 +463,12 @@ class MigrateUpgradeForm extends ConfirmFormBase {
   }
 
   /**
-   * Confirmation form for missing migrations, etc.
+   * Confirmation form showing available and missing migration paths.
+   *
+   * The confirmation form uses the source_module and destination_module
+   * properties on the source, destination and field plugins as well as the
+   * system data from the source to determine if there is a migration path for
+   * each module in the source.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
@@ -456,8 +485,9 @@ class MigrateUpgradeForm extends ConfirmFormBase {
     $form['actions']['submit']['#value'] = $this->t('Perform upgrade');
 
     $version = $form_state->get('version');
-    $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
 
+    // Get the source_module and destination_module for each migration.
+    $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
     $table_data = [];
     foreach ($migrations as $migration) {
       $migration_id = $migration->getPluginId();
@@ -474,6 +504,15 @@ class MigrateUpgradeForm extends ConfirmFormBase {
         $table_data[$source_module][$destination_module][$migration_id] = $migration->label();
       }
     }
+
+    // Get the source_module and destination_module from the field plugins.
+    $definitions = $this->fieldPluginManager->getDefinitions();
+    foreach ($definitions as $definition) {
+      $source_module = $definition['source_module'];
+      $destination_module = $definition['destination_module'];
+      $table_data[$source_module][$destination_module][$definition['id']] = $definition['id'];
+    }
+
     // Sort the table by source module names and within that destination
     // module names.
     ksort($table_data);
@@ -483,6 +522,11 @@ class MigrateUpgradeForm extends ConfirmFormBase {
 
     // Fetch the system data at the first opportunity.
     $system_data = $form_state->get('system_data');
+    // Remove core profiles from the system data.
+    foreach (['standard', 'minimal'] as $profile) {
+      unset($system_data['module'][$profile]);
+    }
+
     $unmigrated_source_modules = array_diff_key($system_data['module'], $table_data);
 
     // Missing migrations.

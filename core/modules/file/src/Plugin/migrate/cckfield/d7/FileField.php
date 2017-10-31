@@ -11,7 +11,9 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
 /**
  * @MigrateCckField(
  *   id = "file",
- *   core = {7}
+ *   core = {7},
+ *   source_module = "file",
+ *   destination_module = "file"
  * )
  *
  * @deprecated in Drupal 8.3.x, to be removed before Drupal 9.0.x. Use

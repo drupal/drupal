@@ -16,7 +16,9 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *     "datestamp" =  "timestamp",
  *     "datetime" =  "datetime",
  *   },
- *   core = {6}
+ *   core = {6},
+ *   source_module = "date",
+ *   destination_module = "datetime"
  * )
  *
  * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use

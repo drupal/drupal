@@ -11,7 +11,9 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *   core = {6},
  *   type_map = {
  *     "link_field" = "link"
- *   }
+ *   },
+ *   source_module = "link",
+ *   destination_module = "link"
  * )
  */
 class LinkField extends FieldPluginBase {

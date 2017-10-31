@@ -12,7 +12,9 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *     "number_decimal" = "decimal",
  *     "number_float" = "float",
  *   },
- *   core = {7}
+ *   core = {7},
+ *   source_module = "number",
+ *   destination_module = "core"
  * )
  */
 class NumberField extends FieldPluginBase {}

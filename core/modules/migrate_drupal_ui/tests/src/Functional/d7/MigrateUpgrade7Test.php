@@ -84,6 +84,74 @@ class MigrateUpgrade7Test extends MigrateUpgradeTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getAvailablePaths() {
+    return [
+      'aggregator',
+      'block',
+      'comment',
+      'contact',
+      'date',
+      'dblog',
+      'email',
+      'entityreference',
+      'field',
+      'field_sql_storage',
+      'file',
+      'filefield',
+      'filter',
+      'forum',
+      'image',
+      'imagefield',
+      'link',
+      'list',
+      'locale',
+      'menu',
+      'node',
+      'node_reference',
+      'number',
+      'options',
+      'optionwidgets',
+      'path',
+      'phone',
+      'search',
+      'shortcut',
+      'statistics',
+      'system',
+      'taxonomy',
+      'text',
+      'translation',
+      'user',
+      'user_reference',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getMissingPaths() {
+    return [
+      'blog',
+      'book',
+      'color',
+      'contextual',
+      'date_api',
+      'entity',
+      'field_ui',
+      'help',
+      'php',
+      'rdf',
+      'simpletest',
+      'syslog',
+      'toolbar',
+      'tracker',
+      'trigger',
+      'update',
+    ];
+  }
+
+  /**
    * Executes all steps of migrations upgrade.
    */
   public function testMigrateUpgrade() {

@@ -11,7 +11,9 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *   type_map = {
  *     "taxonomy_term_reference" = "entity_reference"
  *   },
- *   core = {6,7}
+ *   core = {6,7},
+ *   source_module = "taxonomy",
+ *   destination_module = "core",
  * )
  */
 class TaxonomyTermReference extends FieldPluginBase {

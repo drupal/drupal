@@ -49,6 +49,26 @@ class MigrateField extends Plugin {
    *
    * @var int[]
    */
-  public $core = [];
+  public $core;
+
+  /**
+   * Identifies the system providing the data the field plugin will read.
+   *
+   * The source_module is expected to be the name of a Drupal module that must
+   * must be installed in the source database.
+   *
+   * @var string
+   */
+  public $source_module;
+
+  /**
+   * Identifies the system handling the data the destination plugin will write.
+   *
+   * The destination_module is expected to be the name of a Drupal module on the
+   * destination site that must be installed.
+   *
+   * @var string
+   */
+  public $destination_module;
 
 }

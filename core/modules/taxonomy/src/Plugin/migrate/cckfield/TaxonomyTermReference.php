@@ -13,7 +13,9 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   type_map = {
  *     "taxonomy_term_reference" = "entity_reference"
  *   },
- *   core = {6,7}
+ *   core = {6,7},
+ *   source_module = "taxonomy",
+ *   destination_module = "core",
  * )
  *
  * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use

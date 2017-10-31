@@ -11,7 +11,9 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *   core = {6},
  *   type_map = {
  *     "file" = "file"
- *   }
+ *   },
+ *   source_module = "foo",
+ *   destination_module = "bar"
  * )
  */
 class D6FileField extends CckFieldPluginBase {

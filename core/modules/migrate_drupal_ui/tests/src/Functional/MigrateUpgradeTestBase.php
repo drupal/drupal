@@ -178,6 +178,22 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains(t('Destination module not found for migration_provider_test'));
     // Ensure there are no errors about any other missing migration providers.
     $this->assertSession()->pageTextNotContains(t('module not found'));
+
+    // Test the available migration paths.
+    $all_available = $this->getAvailablePaths();
+    $session = $this->assertSession();
+    foreach ($all_available as $available) {
+      $session->elementExists('xpath', "//span[contains(@class, 'checked') and text() = '$available']");
+      $session->elementNotExists('xpath', "//span[contains(@class, 'warning') and text() = '$available']");
+    }
+
+    // Test the missing migration paths.
+    $all_missing = $this->getMissingPaths();
+    foreach ($all_missing as $missing) {
+      $session->elementExists('xpath', "//span[contains(@class, 'warning') and text() = '$missing']");
+      $session->elementNotExists('xpath', "//span[contains(@class, 'checked') and text() = '$missing']");
+    }
+
     $this->drupalPostForm(NULL, [], t('Perform upgrade'));
     $this->assertText(t('Congratulations, you upgraded Drupal!'));
 
@@ -258,5 +274,21 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    *   An array of expected counts keyed by entity type ID.
    */
   abstract protected function getEntityCounts();
+
+  /**
+   * Gets the available upgrade paths.
+   *
+   * @return string[]
+   *   An array of available upgrade paths.
+   */
+  abstract protected function getAvailablePaths();
+
+  /**
+   * Gets the missing upgrade paths.
+   *
+   * @return string[]
+   *   An array of missing upgrade paths.
+   */
+  abstract protected function getMissingPaths();
 
 }

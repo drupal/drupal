@@ -6,10 +6,9 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
  * @MigrateField(
- *   id = "d6_no_core_version_specified"
+ *   id = "d6_no_core_version_specified",
+ *   source_module = "foo",
+ *   destination_module = "bar",
  * )
  */
-class D6NoCoreVersionSpecified extends FieldPluginBase {
-
-
-}
+class D6NoCoreVersionSpecified extends FieldPluginBase {}

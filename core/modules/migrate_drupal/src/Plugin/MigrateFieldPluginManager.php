@@ -3,6 +3,7 @@
 namespace Drupal\migrate_drupal\Plugin;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\migrate\Plugin\Exception\BadPluginDefinitionException;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Plugin\MigrationInterface;
 
@@ -51,6 +52,19 @@ class MigrateFieldPluginManager extends MigratePluginManager implements MigrateF
       }
     }
     throw new PluginNotFoundException($field_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processDefinition(&$definition, $plugin_id) {
+    parent::processDefinition($definition, $plugin_id);
+
+    foreach (['core', 'source_module', 'destination_module'] as $required_property) {
+      if (empty($definition[$required_property])) {
+        throw new BadPluginDefinitionException($plugin_id, $required_property);
+      }
+    }
   }
 
 }
