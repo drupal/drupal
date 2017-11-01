@@ -31,12 +31,6 @@ class GlossaryViewTest extends JavascriptTestBase {
   public static $testViews = ['test_glossary'];
 
   /**
-   * @var
-   * The additional language to use.
-   */
-  protected $language;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -99,7 +93,7 @@ class GlossaryViewTest extends JavascriptTestBase {
    * Test that the glossary also works on a language prefixed URL.
    */
   public function testGlossaryLanguagePrefix() {
-    $this->language = ConfigurableLanguage::createFromLangcode('nl')->save();
+    ConfigurableLanguage::createFromLangcode('nl')->save();
 
     $config = $this->config('language.negotiation');
     $config->set('url.prefixes', ['en' => 'en', 'nl' => 'nl'])
