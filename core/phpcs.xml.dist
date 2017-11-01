@@ -63,26 +63,17 @@
     <exclude name="Drupal.Commenting.FunctionComment.ParamMissingDefinition"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
-  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/VariableCommentSniff.php">
-    <!-- Sniff for: DuplicateVar, InlineVariableName -->
-    <exclude name="Drupal.Commenting.VariableComment.EmptyVar"/>
-    <exclude name="Drupal.Commenting.VariableComment.IncorrectVarType"/>
-    <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
-    <exclude name="Drupal.Commenting.VariableComment.VarOrder"/>
-    <exclude name="Drupal.Commenting.VariableComment.WrongStyle"/>
-  </rule>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/InlineCommentSniff.php">
-    <!-- Sniff for: NoSpaceBefore, WrongStyle -->
+    <!-- Sniff for: NoSpaceBefore -->
     <exclude name="Drupal.Commenting.InlineComment.DocBlock"/>
     <exclude name="Drupal.Commenting.InlineComment.InvalidEndChar"/>
     <exclude name="Drupal.Commenting.InlineComment.NotCapital"/>
     <exclude name="Drupal.Commenting.InlineComment.SpacingAfter"/>
     <exclude name="Drupal.Commenting.InlineComment.SpacingBefore"/>
+    <exclude name="Drupal.Commenting.InlineComment.WrongStyle"/>
   </rule>
-  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Commenting/PostStatementCommentSniff.php" />
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ElseIfSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/ControlSignatureSniff.php"/>
-  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/ControlStructures/InlineControlStructureSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Files/EndFileNewlineSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Files/FileEncodingSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Files/TxtFileLineLengthSniff.php"/>
@@ -117,7 +108,6 @@
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/PregSecuritySniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/TInHookMenuSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/Semantics/TInHookSchemaSniff.php"/>
-  <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/CloseBracketSpacingSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/CommaSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/EmptyLinesSniff.php"/>
   <rule ref="../vendor/drupal/coder/coder_sniffer/Drupal/Sniffs/WhiteSpace/NamespaceSniff.php"/>
@@ -164,39 +154,9 @@
   </rule>
   <rule ref="PEAR.Functions.ValidDefaultValue"/>
 
-  <!-- PEAR sniffs -->
-  <rule ref="PEAR.Functions.FunctionCallSignature"/>
-  <!-- The sniffs inside PEAR.Functions.FunctionCallSignature silenced below are
-    also silenced in Drupal CS' ruleset.xml. The code below is a 1-on-1 copy
-    from that file. -->
-  <!-- Disable some error messages that we already cover. -->
-  <rule ref="PEAR.Functions.FunctionCallSignature.SpaceAfterOpenBracket">
-    <severity>0</severity>
-  </rule>
-  <rule ref="PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket">
-    <severity>0</severity>
-  </rule>
-  <!-- Disable some error messages that we do not want. -->
-  <rule ref="PEAR.Functions.FunctionCallSignature.Indent">
-    <severity>0</severity>
-  </rule>
-  <rule ref="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket">
-    <severity>0</severity>
-  </rule>
-  <rule ref="PEAR.Functions.FunctionCallSignature.CloseBracketLine">
-    <severity>0</severity>
-  </rule>
-  <rule ref="PEAR.Functions.FunctionCallSignature.EmptyLine">
-    <severity>0</severity>
-  </rule>
-
   <!-- PSR-2 sniffs -->
   <rule ref="PSR2.Classes.PropertyDeclaration">
     <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
-  </rule>
-  <rule ref="PSR2.Namespaces.NamespaceDeclaration" />
-  <rule ref="PSR2.Namespaces.UseDeclaration">
-    <exclude name="PSR2.Namespaces.UseDeclaration.UseAfterNamespace"/>
   </rule>
 
   <!-- Squiz sniffs -->
@@ -256,31 +216,6 @@
     <severity>0</severity>
   </rule>
   <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingBeforeClose">
-    <severity>0</severity>
-  </rule>
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration" />
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine">
-    <severity>0</severity>
-  </rule>
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.ContentAfterBrace">
-    <severity>0</severity>
-  </rule>
-  <!-- Standard yet to be finalized on this (https://www.drupal.org/node/1539712). -->
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.FirstParamSpacing">
-    <severity>0</severity>
-  </rule>
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.Indent">
-    <severity>0</severity>
-  </rule>
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.CloseBracketLine">
-    <severity>0</severity>
-  </rule>
-  <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
-    <properties>
-      <property name="equalsSpacing" value="1"/>
-    </properties>
-  </rule>
-  <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.NoSpaceBeforeArg">
     <severity>0</severity>
   </rule>
   <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
