@@ -67,9 +67,10 @@ class HtmlTest extends TestCase {
       [$id1, $id1, []],
       // Verify that valid UTF-8 characters are not stripped from the identifier.
       [$id2, $id2, []],
-      // Verify that invalid characters (including non-breaking space) are stripped from the identifier.
-      [$id3, $id3],
       // Verify that double underscores are not stripped from the identifier.
+      [$id3, $id3],
+      // Verify that invalid characters (including non-breaking space) are
+      // stripped from the identifier.
       ['invalididentifier', 'invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', []],
       // Verify that an identifier starting with a digit is replaced.
       ['_cssidentifier', '1cssidentifier', []],
