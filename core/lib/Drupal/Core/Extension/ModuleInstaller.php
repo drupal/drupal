@@ -194,6 +194,17 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // Update the kernel to include it.
         $this->updateKernel($module_filenames);
 
+        // Replace the route provider service with a version that will rebuild
+        // if routes used during installation. This ensures that a module's
+        // routes are available during installation. This has to occur before
+        // any services that depend on it are instantiated otherwise those
+        // services will have the old route provider injected. Note that, since
+        // the container is rebuilt by updating the kernel, the route provider
+        // service is the regular one even though we are in a loop and might
+        // have replaced it before.
+        \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));
+        \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.lazy_builder'));
+
         // Allow modules to react prior to the installation of a module.
         $this->moduleHandler->invokeAll('module_preinstall', [$module]);
 
@@ -282,10 +293,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
         //   causes a circular service dependency.
         // @see https://www.drupal.org/node/2208429
         \Drupal::service('theme_handler')->refreshInfo();
-
-        // In order to make uninstalling transactional if anything uses routes.
-        \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));
-        \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.lazy_builder'));
 
         // Allow the module to perform install tasks.
         $this->moduleHandler->invoke($module, 'install');
