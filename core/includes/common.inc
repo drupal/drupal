@@ -1002,6 +1002,8 @@ function show(&$element) {
  *
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  *   Use \Drupal::service('element_info')->getInfo() instead.
+ *
+ * @see https://www.drupal.org/node/2235461
  */
 function element_info($type) {
   return \Drupal::service('element_info')->getInfo($type);
@@ -1020,6 +1022,8 @@ function element_info($type) {
  *
  * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
  *   Use \Drupal::service('element_info')->getInfoProperty() instead.
+ *
+ * @see https://www.drupal.org/node/2235461
  */
 function element_info_property($type, $property_name, $default = NULL) {
   return \Drupal::service('element_info')->getInfoProperty($type, $property_name, $default);
