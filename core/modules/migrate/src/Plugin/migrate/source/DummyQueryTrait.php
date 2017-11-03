@@ -27,7 +27,7 @@ trait DummyQueryTrait {
   /**
    * {@inheritdoc}
    */
-  public function count() {
+  public function count($refresh = FALSE) {
     return 1;
   }
 

@@ -365,7 +365,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function count() {
+  public function count($refresh = FALSE) {
     return $this->query()->countQuery()->execute()->fetchField();
   }
 
