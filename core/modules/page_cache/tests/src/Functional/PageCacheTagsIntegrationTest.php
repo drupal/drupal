@@ -76,6 +76,9 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       // condition.
       'url.path',
       'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT,
+      // These two cache contexts are added by BigPipe.
+      'cookies:big_pipe_nojs',
+      'session.exists',
     ];
 
     // Full node page 1.
