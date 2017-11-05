@@ -218,4 +218,15 @@ interface DataDefinitionInterface {
    */
   public function addConstraint($constraint_name, $options = NULL);
 
+  /**
+   * Determines whether the data value is internal.
+   *
+   * This can be used in a scenario when it is not desirable to expose this data
+   * value to an external system.
+   *
+   * @return bool
+   *   Whether the data value is internal.
+   */
+  public function isInternal();
+
 }

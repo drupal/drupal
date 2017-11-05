@@ -23,6 +23,8 @@ use Symfony\Component\Serializer\Serializer;
  */
 class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
 
+  use InternalTypedDataTestTrait;
+
   /**
    * The mock serializer.
    *
@@ -122,6 +124,10 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
       ->willReturn($entity_reference)
       ->shouldBeCalled();
 
+    $this->fieldItem->getProperties(TRUE)
+      ->willReturn(['target_id' => $this->getTypedDataProperty(FALSE)])
+      ->shouldBeCalled();
+
     $normalized = $this->normalizer->normalize($this->fieldItem->reveal());
 
     $expected = [
@@ -144,6 +150,10 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
 
     $this->fieldItem->get('entity')
       ->willReturn($entity_reference->reveal())
+      ->shouldBeCalled();
+
+    $this->fieldItem->getProperties(TRUE)
+      ->willReturn(['target_id' => $this->getTypedDataProperty(FALSE)])
       ->shouldBeCalled();
 
     $normalized = $this->normalizer->normalize($this->fieldItem->reveal());

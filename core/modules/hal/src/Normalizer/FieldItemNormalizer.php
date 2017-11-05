@@ -3,6 +3,7 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\TypedData\TypedDataInternalPropertiesHelper;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
 /**
@@ -91,7 +92,7 @@ class FieldItemNormalizer extends NormalizerBase {
     // We normalize each individual property, so each can do their own casting,
     // if needed.
     /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
-    foreach ($field_item as $property_name => $property) {
+    foreach (TypedDataInternalPropertiesHelper::getNonInternalProperties($field_item) as $property_name => $property) {
       $normalized[$property_name] = $this->serializer->normalize($property, $format, $context);
     }
 

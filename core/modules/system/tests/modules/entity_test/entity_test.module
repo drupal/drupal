@@ -109,6 +109,11 @@ function entity_test_entity_type_alter(array &$entity_types) {
 function entity_test_entity_base_field_info(EntityTypeInterface $entity_type) {
   $fields = [];
 
+  if ($entity_type->id() === 'entity_test' && \Drupal::state()->get('entity_test.internal_field')) {
+    $fields['internal_string_field'] = BaseFieldDefinition::create('string')
+      ->setLabel('Internal field')
+      ->setInternal(TRUE);
+  }
   if ($entity_type->id() == 'entity_test_mulrev' && \Drupal::state()->get('entity_test.field_test_item')) {
     $fields['field_test_item'] = BaseFieldDefinition::create('field_test')
       ->setLabel(t('Field test'))

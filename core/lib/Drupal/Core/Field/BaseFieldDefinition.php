@@ -855,4 +855,12 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     $this->propertyDefinitions = NULL;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isInternal() {
+    // All fields are not internal unless explicitly set.
+    return !empty($this->definition['internal']);
+  }
+
 }

@@ -352,4 +352,28 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
     return array_keys($vars);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isInternal() {
+    // Respect the definition, otherwise default to TRUE for computed fields.
+    if (isset($this->definition['internal'])) {
+      return $this->definition['internal'];
+    }
+    return $this->isComputed();
+  }
+
+  /**
+   * Sets the whether the data value should be internal.
+   *
+   * @param bool $internal
+   *   Whether the data value should be internal.
+   *
+   * @return $this
+   */
+  public function setInternal($internal) {
+    $this->definition['internal'] = $internal;
+    return $this;
+  }
+
 }
