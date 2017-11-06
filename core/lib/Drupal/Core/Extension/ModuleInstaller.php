@@ -505,34 +505,30 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The name of the module for which to remove all registered cache bins.
    */
   protected function removeCacheBins($module) {
-    // Remove any cache bins defined by a module.
     $service_yaml_file = drupal_get_path('module', $module) . "/$module.services.yml";
-    if (file_exists($service_yaml_file)) {
-      $definitions = Yaml::decode(file_get_contents($service_yaml_file));
-      if (isset($definitions['services'])) {
-        foreach ($definitions['services'] as $id => $definition) {
-          if (isset($definition['tags'])) {
-            foreach ($definition['tags'] as $tag) {
-              // This works for the default cache registration and even in some
-              // cases when a non-default "super" factory is used. That should
-              // be extremely rare.
-              if ($tag['name'] == 'cache.bin' && isset($definition['factory_service']) && isset($definition['factory_method']) && !empty($definition['arguments'])) {
-                try {
-                  $factory = \Drupal::service($definition['factory_service']);
-                  if (method_exists($factory, $definition['factory_method'])) {
-                    $backend = call_user_func_array([$factory, $definition['factory_method']], $definition['arguments']);
-                    if ($backend instanceof CacheBackendInterface) {
-                      $backend->removeBin();
-                    }
-                  }
-                }
-                catch (\Exception $e) {
-                  watchdog_exception('system', $e, 'Failed to remove cache bin defined by the service %id.', ['%id' => $id]);
-                }
-              }
-            }
+    if (!file_exists($service_yaml_file)) {
+      return;
+    }
+
+    $definitions = Yaml::decode(file_get_contents($service_yaml_file));
+
+    $cache_bin_services = array_filter(
+      isset($definitions['services']) ? $definitions['services'] : [],
+      function ($definition) {
+        $tags = isset($definition['tags']) ? $definition['tags'] : [];
+        foreach ($tags as $tag) {
+          if (isset($tag['name']) && ($tag['name'] == 'cache.bin')) {
+            return TRUE;
           }
         }
+        return FALSE;
+      }
+    );
+
+    foreach (array_keys($cache_bin_services) as $service_id) {
+      $backend = $this->kernel->getContainer()->get($service_id);
+      if ($backend instanceof CacheBackendInterface) {
+        $backend->removeBin();
       }
     }
   }
