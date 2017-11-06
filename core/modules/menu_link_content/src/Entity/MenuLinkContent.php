@@ -316,7 +316,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setDefaultValue(0)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
-        'type' => 'integer',
+        'type' => 'number_integer',
         'weight' => 0,
       ])
       ->setDisplayOptions('form', [
