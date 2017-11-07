@@ -38,9 +38,8 @@ use Drupal\migrate\Row;
  *
  * @section sec_migrations Migration plugins
  * Migration plugin definitions are stored in a module's 'migrations' directory.
- * For backwards compatibility we also scan the 'migration_templates' directory.
  * Examples of migration plugin definitions can be found in
- * 'core/modules/action/migration_templates'. The plugin class is
+ * 'core/modules/action/migrations'. The plugin class is
  * \Drupal\migrate\Plugin\Migration, with interface
  * \Drupal\migrate\Plugin\MigrationInterface. Migration plugins are managed by
  * the \Drupal\migrate\Plugin\MigrationPluginManager class. Migration plugins

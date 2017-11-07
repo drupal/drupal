@@ -1,0 +1,8 @@
+id: migration_templates_test
+label: Migration templates test
+source:
+  plugin: embedded_data
+process:
+  id: id
+destination:
+  plugin: null
