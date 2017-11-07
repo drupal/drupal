@@ -15,6 +15,10 @@ access site in maintenance mode:
 view the administration theme:
   title: 'View the administration theme'
   description: 'This is only used when the site is configured to use a separate administration theme on the Appearance page.'
+# Note that the 'access content' permission is moved to the Node section of the
+# permission form when the Node module is enabled.
+access content:
+  title: 'View published content'
 access site reports:
   title: 'View site reports'
   restrict access: true

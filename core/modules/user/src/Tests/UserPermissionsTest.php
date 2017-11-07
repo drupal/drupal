@@ -164,4 +164,24 @@ class UserPermissionsTest extends WebTestBase {
     $this->assertNotEqual($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
   }
 
+  /**
+   * Verify 'access content' is listed in the correct location.
+   */
+  public function testAccessContentPermission() {
+    $this->drupalLogin($this->adminUser);
+
+    // When Node is not installed the 'access content' permission is listed next
+    // to 'access site reports'.
+    $this->drupalGet('admin/people/permissions');
+    $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
+    $this->assertEqual('edit-permissions-access-site-reports', $next_row[0]->attributes()['data-drupal-selector']);
+
+    // When Node is installed the 'access content' permission is listed next to
+    // to 'view own unpublished content'.
+    \Drupal::service('module_installer')->install(['node']);
+    $this->drupalGet('admin/people/permissions');
+    $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
+    $this->assertEqual('edit-permissions-view-own-unpublished-content', $next_row[0]->attributes()['data-drupal-selector']);
+  }
+
 }
