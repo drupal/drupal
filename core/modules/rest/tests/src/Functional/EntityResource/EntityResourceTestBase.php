@@ -383,18 +383,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // 200 for well-formed HEAD request.
     $response = $this->request('HEAD', $url, $request_options);
     $this->assertResourceResponse(200, '', $response);
-    // @todo Entity resources with URLs that begin with '/admin/' are marked as
-    //   administrative (see https://www.drupal.org/node/2874938), which
-    //   excludes them from Dynamic Page Cache (see
-    //   https://www.drupal.org/node/2877528). When either of those issues is
-    //   fixed, remove the if-test and the 'else' block.
-    if (strpos($this->entity->getEntityType()->getLinkTemplate('canonical'), '/admin/') !== 0) {
-      $this->assertTrue($response->hasHeader('X-Drupal-Dynamic-Cache'));
-      $this->assertSame(['MISS'], $response->getHeader('X-Drupal-Dynamic-Cache'));
-    }
-    else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Dynamic-Cache'));
-    }
+    $this->assertTrue($response->hasHeader('X-Drupal-Dynamic-Cache'));
+    $this->assertSame(['MISS'], $response->getHeader('X-Drupal-Dynamic-Cache'));
     if (!$this->account) {
       $this->assertSame(['MISS'], $response->getHeader('X-Drupal-Cache'));
     }
@@ -407,50 +397,40 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Same for Dynamic Page Cache hit.
     $response = $this->request('GET', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
-    // @todo Entity resources with URLs that begin with '/admin/' are marked as
-    //   administrative (see https://www.drupal.org/node/2874938), which
-    //   excludes them from Dynamic Page Cache (see
-    //   https://www.drupal.org/node/2877528). When either of those issues is
-    //   fixed, remove the if-test and the 'else' block.
-    if (strpos($this->entity->getEntityType()->getLinkTemplate('canonical'), '/admin/') !== 0) {
-      $this->assertTrue($response->hasHeader('X-Drupal-Dynamic-Cache'));
-      if (!static::$auth) {
-        $this->assertSame(['HIT'], $response->getHeader('X-Drupal-Cache'));
-        $this->assertSame(['MISS'], $response->getHeader('X-Drupal-Dynamic-Cache'));
-      }
-      else {
-        $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
-        $this->assertSame(['HIT'], $response->getHeader('X-Drupal-Dynamic-Cache'));
-        // Assert that Dynamic Page Cache did not store a ResourceResponse object,
-        // which needs serialization after every cache hit. Instead, it should
-        // contain a flattened response. Otherwise performance suffers.
-        // @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber::flattenResponse()
-        $cache_items = $this->container->get('database')
-          ->query("SELECT cid, data FROM {cache_dynamic_page_cache} WHERE cid LIKE :pattern", [
-            ':pattern' => '%[route]=rest.%',
-          ])
-          ->fetchAllAssoc('cid');
-        $this->assertCount(2, $cache_items);
-        $found_cache_redirect = FALSE;
-        $found_cached_response = FALSE;
-        foreach ($cache_items as $cid => $cache_item) {
-          $cached_data = unserialize($cache_item->data);
-          if (!isset($cached_data['#cache_redirect'])) {
-            $found_cached_response = TRUE;
-            $cached_response = $cached_data['#response'];
-            $this->assertNotInstanceOf(ResourceResponseInterface::class, $cached_response);
-            $this->assertInstanceOf(CacheableResponseInterface::class, $cached_response);
-          }
-          else {
-            $found_cache_redirect = TRUE;
-          }
-        }
-        $this->assertTrue($found_cache_redirect);
-        $this->assertTrue($found_cached_response);
-      }
+    $this->assertTrue($response->hasHeader('X-Drupal-Dynamic-Cache'));
+    if (!static::$auth) {
+      $this->assertSame(['HIT'], $response->getHeader('X-Drupal-Cache'));
+      $this->assertSame(['MISS'], $response->getHeader('X-Drupal-Dynamic-Cache'));
     }
     else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Dynamic-Cache'));
+      $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+      $this->assertSame(['HIT'], $response->getHeader('X-Drupal-Dynamic-Cache'));
+      // Assert that Dynamic Page Cache did not store a ResourceResponse object,
+      // which needs serialization after every cache hit. Instead, it should
+      // contain a flattened response. Otherwise performance suffers.
+      // @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber::flattenResponse()
+      $cache_items = $this->container->get('database')
+        ->query("SELECT cid, data FROM {cache_dynamic_page_cache} WHERE cid LIKE :pattern", [
+          ':pattern' => '%[route]=rest.%',
+        ])
+        ->fetchAllAssoc('cid');
+      $this->assertCount(2, $cache_items);
+      $found_cache_redirect = FALSE;
+      $found_cached_response = FALSE;
+      foreach ($cache_items as $cid => $cache_item) {
+        $cached_data = unserialize($cache_item->data);
+        if (!isset($cached_data['#cache_redirect'])) {
+          $found_cached_response = TRUE;
+          $cached_response = $cached_data['#response'];
+          $this->assertNotInstanceOf(ResourceResponseInterface::class, $cached_response);
+          $this->assertInstanceOf(CacheableResponseInterface::class, $cached_response);
+        }
+        else {
+          $found_cache_redirect = TRUE;
+        }
+      }
+      $this->assertTrue($found_cache_redirect);
+      $this->assertTrue($found_cached_response);
     }
     $cache_tags_header_value = $response->getHeader('X-Drupal-Cache-Tags')[0];
     $this->assertEquals($this->getExpectedCacheTags(), empty($cache_tags_header_value) ? [] : explode(' ', $cache_tags_header_value));
