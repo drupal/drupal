@@ -2,6 +2,7 @@
 
 namespace Drupal\rest\EventSubscriber;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Render\RenderContext;
@@ -19,6 +20,15 @@ use Symfony\Component\Serializer\SerializerInterface;
  * Response subscriber that serializes and removes ResourceResponses' data.
  */
 class ResourceResponseSubscriber implements EventSubscriberInterface {
+
+  /**
+   * Name of key for bubbling cacheability metadata via serialization context.
+   *
+   * @see \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
+   * @see \Symfony\Component\Serializer\SerializerInterface::serialize()
+   * @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber::renderResponseBody()
+   */
+  const SERIALIZATION_CONTEXT_CACHEABILITY = 'cacheability';
 
   /**
    * The serializer.
@@ -128,11 +138,19 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
   /**
    * Renders a resource response body.
    *
-   * Serialization can invoke rendering (e.g., generating URLs), but the
-   * serialization API does not provide a mechanism to collect the
-   * bubbleable metadata associated with that (e.g., language and other
-   * contexts), so instead, allow those to "leak" and collect them here in
-   * a render context.
+   * During serialization, encoders and normalizers are able to explicitly
+   * bubble cacheability metadata via the 'cacheability' key-value pair in the
+   * received context. This bubbled cacheability metadata will be applied to the
+   * the response.
+   *
+   * In versions of Drupal prior to 8.5, implicit bubbling of cacheability
+   * metadata was allowed because there was no explicit cacheability metadata
+   * bubbling API. To maintain backwards compatibility, we continue to support
+   * this, but support for this will be dropped in Drupal 9.0.0. This is
+   * especially useful when interacting with APIs that implicitly invoke
+   * rendering (for example: generating URLs): this allows those to "leak", and
+   * we collect their bubbled cacheability metadata automatically in a render
+   * context.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
@@ -152,14 +170,25 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
 
     // If there is data to send, serialize and set it as the response body.
     if ($data !== NULL) {
+      $serialization_context = [
+        'request' => $request,
+        static::SERIALIZATION_CONTEXT_CACHEABILITY => new CacheableMetadata(),
+      ];
+
+      // @deprecated In Drupal 8.5.0, will be removed before Drupal 9.0.0. Use
+      // explicit cacheability metadata bubbling instead. (The wrapping call to
+      // executeInRenderContext() will be removed before Drupal 9.0.0.)
       $context = new RenderContext();
       $output = $this->renderer
-        ->executeInRenderContext($context, function () use ($serializer, $data, $format) {
-          return $serializer->serialize($data, $format);
+        ->executeInRenderContext($context, function () use ($serializer, $data, $format, $serialization_context) {
+          return $serializer->serialize($data, $format, $serialization_context);
         });
-
-      if ($response instanceof CacheableResponseInterface && !$context->isEmpty()) {
-        $response->addCacheableDependency($context->pop());
+      if ($response instanceof CacheableResponseInterface) {
+        if (!$context->isEmpty()) {
+          @trigger_error('Implicit cacheability metadata bubbling (onto the global render context) in normalizers is deprecated since Drupal 8.5.0 and will be removed in Drupal 9.0.0. Use the "cacheability" serialization context instead, for explicit cacheability metadata bubbling. See https://www.drupal.org/node/2918937', E_USER_DEPRECATED);
+          $response->addCacheableDependency($context->pop());
+        }
+        $response->addCacheableDependency($serialization_context[static::SERIALIZATION_CONTEXT_CACHEABILITY]);
       }
 
       $response->setContent($output);

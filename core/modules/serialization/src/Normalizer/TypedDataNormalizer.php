@@ -18,6 +18,7 @@ class TypedDataNormalizer extends NormalizerBase {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
+    $this->addCacheableDependency($context, $object);
     return $object->getValue();
   }
 

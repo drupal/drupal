@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\rest\Functional\EntityResource\EntityTest;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
@@ -82,6 +83,20 @@ class EntityTestJsonInternalPropertyNormalizerTest extends EntityTestResourceTes
         ],
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedCacheContexts() {
+    return Cache::mergeContexts(parent::getExpectedCacheContexts(), ['request_format']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedCacheTags() {
+    return Cache::mergeTags(parent::getExpectedCacheTags(), ['you_are_it', 'no_tag_backs']);
   }
 
 }
