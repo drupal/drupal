@@ -116,9 +116,9 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility = [];
     $settings = [
       'id' => 'system_menu_block',
-      'label' => 'zu - Test Title 02',
+      'label' => '',
       'provider' => 'system',
-      'label_display' => 'visible',
+      'label_display' => '0',
       'level' => 1,
       'depth' => 0,
     ];

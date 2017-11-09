@@ -746,7 +746,7 @@ $connection->insert('blocks')
   'throttle' => '0',
   'visibility' => '0',
   'pages' => '',
-  'title' => 'zu - Test Title 02',
+  'title' => '',
   'cache' => '-1',
 ))
 ->values(array(
@@ -8529,23 +8529,6 @@ $connection->schema()->createTable('i18n_blocks', array(
   ),
   'mysql_character_set' => 'utf8',
 ));
-
-$connection->insert('i18n_blocks')
-->fields(array(
-  'ibid',
-  'module',
-  'delta',
-  'type',
-  'language',
-))
-->values(array(
-  'ibid' => '1',
-  'module' => 'user',
-  'delta' => '1',
-  'type' => '0',
-  'language' => 'zu',
-))
-->execute();
 
 $connection->schema()->createTable('i18n_strings', array(
   'fields' => array(
