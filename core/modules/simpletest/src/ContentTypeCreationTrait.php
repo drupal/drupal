@@ -10,7 +10,7 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait as BaseContentTypeCreation
  * This trait is meant to be used only by test classes.
  *
  * @deprecated in Drupal 8.4.x. Will be removed before Drupal 9.0.0. Use
- *   Drupal\Tests\ContentTypeCreationTrait instead.
+ *   \Drupal\Tests\node\Traits\ContentTypeCreationTrait instead.
  *
  * @see https://www.drupal.org/node/2884454
  */
