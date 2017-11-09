@@ -11,45 +11,36 @@ Core committers
 ---------------
 
 The Drupal Core committers oversee the development of Drupal as a whole. The
-core committers for Drupal are (per major version, in alphabetical order):
+core committers for Drupal are (in alphabetical order):
 
-Drupal 8
-- Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
-  (Framework Manager)
+BDFL
 - Dries Buytaert 'dries' https://www.drupal.org/u/dries
-  (BDFL, Product Manager)
+
+Product managers
+- Dries Buytaert 'dries' https://www.drupal.org/u/dries
 - Angela Byron 'webchick' https://www.drupal.org/u/webchick
-  (Product Manager)
-- Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
-  (Framework Manager, Release Manager)
-- Chris McCafferty 'cilefen' https://www.drupal.org/u/cilefen
-  (Release Manager)
-- Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
-  (Release Manager)
-- Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
-  (Framework Manager)
-- Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
-  (Framework Manager - Frontend)
-
-Provisional membership:
-- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
-  (Framework Manager - Frontend)
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
-  (Product Manager)
-- Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
-  (Framework Manager)
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
-  (Product Manager)
 
-Drupal 7
-- Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
-  (Framework Manager)
-- David Rothstein 'David_Rothstein' https://www.drupal.org/u/david_rothstein
-  (Release Manager, Framework Manager, Product Manager)
-- Stefan Ruijsenaars 'stefan.r' https://www.drupal.org/u/stefanr-0
-  (Release Manager, Product Manager)
+Framework managers
+
+  Backend
+  - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
+  - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+  - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
+  - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
+
+  Frontend
+  - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+  - Scott Reeves 'Cottser' https://www.drupal.org/u/cottser
+
+Release managers
+- Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+- Chris McCafferty 'cilefen' https://www.drupal.org/u/cilefen
+- Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 
 Provisional membership: None at this time.
+
 
 Subsystem maintainers
 ---------------------
