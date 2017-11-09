@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
@@ -168,6 +169,13 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
       // @see https://www.drupal.org/node/2603788#comment-10504916
       if ($response->isSuccessful()) {
         $response->setStatusCode($status_code);
+      }
+
+      // Persist the exception's cacheability metadata, if any. If the exception
+      // itself isn't cacheable, then this will make the response uncacheable:
+      // max-age=0 will be set.
+      if ($response instanceof CacheableResponseInterface) {
+        $response->addCacheableDependency($exception);
       }
 
       // Persist any special HTTP headers that were set on the exception.

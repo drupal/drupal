@@ -414,14 +414,20 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
           ':pattern' => '%[route]=rest.%',
         ])
         ->fetchAllAssoc('cid');
-      $this->assertCount(2, $cache_items);
+      $this->assertTrue(count($cache_items) >= 2);
       $found_cache_redirect = FALSE;
-      $found_cached_response = FALSE;
+      $found_cached_200_response = FALSE;
+      $other_cached_responses_are_4xx = TRUE;
       foreach ($cache_items as $cid => $cache_item) {
         $cached_data = unserialize($cache_item->data);
         if (!isset($cached_data['#cache_redirect'])) {
-          $found_cached_response = TRUE;
           $cached_response = $cached_data['#response'];
+          if ($cached_response->getStatusCode() === 200) {
+            $found_cached_200_response = TRUE;
+          }
+          elseif (!$cached_response->isClientError()) {
+            $other_cached_responses_are_4xx = FALSE;
+          }
           $this->assertNotInstanceOf(ResourceResponseInterface::class, $cached_response);
           $this->assertInstanceOf(CacheableResponseInterface::class, $cached_response);
         }
@@ -430,7 +436,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         }
       }
       $this->assertTrue($found_cache_redirect);
-      $this->assertTrue($found_cached_response);
+      $this->assertTrue($found_cached_200_response);
+      $this->assertTrue($other_cached_responses_are_4xx);
     }
     $cache_tags_header_value = $response->getHeader('X-Drupal-Cache-Tags')[0];
     $this->assertEquals($this->getExpectedCacheTags(), empty($cache_tags_header_value) ? [] : explode(' ', $cache_tags_header_value));

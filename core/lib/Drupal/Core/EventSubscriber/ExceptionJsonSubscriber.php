@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableJsonResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
@@ -35,7 +37,16 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
   public function on4xx(GetResponseForExceptionEvent $event) {
     /** @var \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $exception */
     $exception = $event->getException();
-    $response = new JsonResponse(['message' => $event->getException()->getMessage()], $exception->getStatusCode(), $exception->getHeaders());
+
+    // If the exception is cacheable, generate a cacheable response.
+    if ($exception instanceof CacheableDependencyInterface) {
+      $response = new CacheableJsonResponse(['message' => $event->getException()->getMessage()], $exception->getStatusCode(), $exception->getHeaders());
+      $response->addCacheableDependency($exception);
+    }
+    else {
+      $response = new JsonResponse(['message' => $event->getException()->getMessage()], $exception->getStatusCode(), $exception->getHeaders());
+    }
+
     $event->setResponse($response);
   }
 

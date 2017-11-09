@@ -7,6 +7,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\basic_auth\Traits\BasicAuthTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests for BasicAuth authentication provider.
@@ -178,6 +179,47 @@ class BasicAuthTest extends BrowserTestBase {
     $this->basicAuthGet($url, $account->getUsername(), $account->pass_raw);
     $this->assertResponse('403', 'The used authentication method is not allowed on this route.');
     $this->assertText('Access denied', "A user friendly access denied message is displayed");
+  }
+
+  /**
+   * Tests the cacheability of Basic Auth's 401 response.
+   *
+   * @see \Drupal\basic_auth\Authentication\Provider\BasicAuth::challengeException()
+   */
+  public function testCacheabilityOf401Response() {
+    $session = $this->getSession();
+    $url = Url::fromRoute('router_test.11');
+
+    $assert_response_cacheability = function ($expected_page_cache_header_value, $expected_dynamic_page_cache_header_value) use ($session, $url) {
+      $this->drupalGet($url);
+      $this->assertSession()->statusCodeEquals(401);
+      $this->assertSame($expected_page_cache_header_value, $session->getResponseHeader('X-Drupal-Cache'));
+      $this->assertSame($expected_dynamic_page_cache_header_value, $session->getResponseHeader('X-Drupal-Dynamic-Cache'));
+    };
+
+    // 1. First request: cold caches, both Page Cache and Dynamic Page Cache are
+    // now primed.
+    $assert_response_cacheability('MISS', 'MISS');
+    // 2. Second request: Page Cache HIT, we don't even hit Dynamic Page Cache.
+    // This is going to keep happening.
+    $assert_response_cacheability('HIT', 'MISS');
+    // 3. Third request: after clearing Page Cache, we now see that Dynamic Page
+    // Cache is a HIT too.
+    $this->container->get('cache.page')->deleteAll();
+    $assert_response_cacheability('MISS', 'HIT');
+    // 4. Fourth request: warm caches.
+    $assert_response_cacheability('HIT', 'HIT');
+
+    // If the permissions of the 'anonymous' role change, it may no longer be
+    // necessary to be authenticated to access this route. Therefore the cached
+    // 401 responses should be invalidated.
+    $this->grantPermissions(Role::load(Role::ANONYMOUS_ID), [$this->randomMachineName()]);
+    $assert_response_cacheability('MISS', 'MISS');
+    $assert_response_cacheability('HIT', 'MISS');
+    // Idem for when the 'system.site' config changes.
+    $this->config('system.site')->save();
+    $assert_response_cacheability('MISS', 'MISS');
+    $assert_response_cacheability('HIT', 'MISS');
   }
 
   /**

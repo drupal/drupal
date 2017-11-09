@@ -7,47 +7,7 @@ namespace Drupal\Core\Cache;
  */
 trait RefinableCacheableDependencyTrait {
 
-  /**
-   * Cache contexts.
-   *
-   * @var string[]
-   */
-  protected $cacheContexts = [];
-
-  /**
-   * Cache tags.
-   *
-   * @var string[]
-   */
-  protected $cacheTags = [];
-
-  /**
-   * Cache max-age.
-   *
-   * @var int
-   */
-  protected $cacheMaxAge = Cache::PERMANENT;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheTags() {
-    return $this->cacheTags;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheContexts() {
-    return $this->cacheContexts;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheMaxAge() {
-    return $this->cacheMaxAge;
-  }
+  use CacheableDependencyTrait;
 
   /**
    * {@inheritdoc}
