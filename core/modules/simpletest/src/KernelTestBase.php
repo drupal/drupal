@@ -226,7 +226,6 @@ EOD;
     $this->kernel->shutdown();
     $this->kernel->boot();
 
-
     // Save the original site directory path, so that extensions in the
     // site-specific directory can still be discovered in the test site
     // environment.

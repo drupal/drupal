@@ -54,7 +54,6 @@ class CommentThreadingTest extends CommentTestBase {
     // Confirm that there is a link to the parent comment.
     $this->assertParentLink($comment1_3->id(), $comment1->id());
 
-
     // Reply to comment #1_3 creating comment #1_3_4.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment1_3->id());
     $comment1_3_4 = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);

@@ -76,7 +76,6 @@ class EngineTwigTest extends WebTestBase {
     /** @var \Drupal\Core\Utility\LinkGenerator $link_generator */
     $link_generator = $this->container->get('link_generator');
 
-
     $generated_url = Url::fromRoute('user.register', [], ['absolute' => TRUE])->toString(TRUE)->getGeneratedUrl();
     $expected = [
       'link via the linkgenerator: ' . $link_generator->generate('register', new Url('user.register', [], ['absolute' => TRUE])),

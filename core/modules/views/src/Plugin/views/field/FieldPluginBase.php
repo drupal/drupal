@@ -857,7 +857,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         ],
       ];
 
-
       // Get a list of the available fields and arguments for token replacement.
 
       // Setup the tokens for fields.

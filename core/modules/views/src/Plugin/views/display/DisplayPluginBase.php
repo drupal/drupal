@@ -164,7 +164,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       }
     }
 
-
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->display = &$display;
 

@@ -526,7 +526,6 @@ function file_unmanaged_prepare($source, &$destination = NULL, $replace = FILE_E
     $destination = file_build_uri(drupal_basename($source));
   }
 
-
   // Prepare the destination directory.
   if (file_prepare_directory($destination)) {
     // The destination is already a directory, so append the source basename.

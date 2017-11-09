@@ -191,7 +191,6 @@ abstract class PathFormBase extends FormBase {
       }
     }
 
-
     if (!$this->pathValidator->isValid(trim($source, '/'))) {
       $form_state->setErrorByName('source', t("Either the path '@link_path' is invalid or you do not have access to it.", ['@link_path' => $source]));
     }

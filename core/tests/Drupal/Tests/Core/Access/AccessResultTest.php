@@ -620,7 +620,6 @@ class AccessResultTest extends UnitTestCase {
       [$allowed_un, 'OR', $neutral_cf, FALSE, NULL],
       [$allowed_un, 'OR', $neutral_un, FALSE, NULL],
 
-
       // Forbidden (ct) OR allowed (ct,cf,un).
       [$forbidden_ct, 'OR', $allowed_ct, TRUE, TRUE],
       [$forbidden_ct, 'OR', $allowed_cf, TRUE, TRUE],
@@ -659,7 +658,6 @@ class AccessResultTest extends UnitTestCase {
       [$forbidden_un, 'OR', $forbidden_ct, FALSE, NULL],
       [$forbidden_un, 'OR', $forbidden_cf, FALSE, NULL],
       [$forbidden_un, 'OR', $forbidden_un, FALSE, NULL],
-
 
       // Neutral (ct) OR allowed (ct,cf,un).
       [$neutral_ct, 'OR', $allowed_ct, TRUE, TRUE],
@@ -700,7 +698,6 @@ class AccessResultTest extends UnitTestCase {
       [$neutral_un, 'OR', $forbidden_cf, FALSE, NULL],
       [$neutral_un, 'OR', $forbidden_un, FALSE, NULL],
 
-
       // Allowed (ct) AND allowed (ct,cf,un).
       [$allowed_ct, 'AND', $allowed_ct, TRUE, TRUE],
       [$allowed_ct, 'AND', $allowed_cf, TRUE, FALSE],
@@ -740,7 +737,6 @@ class AccessResultTest extends UnitTestCase {
       [$allowed_un, 'AND', $neutral_cf, FALSE, NULL],
       [$allowed_un, 'AND', $neutral_un, FALSE, NULL],
 
-
       // Forbidden (ct) AND allowed (ct,cf,un).
       [$forbidden_ct, 'AND', $allowed_ct, TRUE, TRUE],
       [$forbidden_ct, 'AND', $allowed_cf, TRUE, TRUE],
@@ -779,7 +775,6 @@ class AccessResultTest extends UnitTestCase {
       [$forbidden_un, 'AND', $forbidden_ct, FALSE, NULL],
       [$forbidden_un, 'AND', $forbidden_cf, FALSE, NULL],
       [$forbidden_un, 'AND', $forbidden_un, FALSE, NULL],
-
 
       // Neutral (ct) AND allowed (ct,cf,un).
       [$neutral_ct, 'AND', $allowed_ct, TRUE, TRUE],

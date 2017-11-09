@@ -98,7 +98,6 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
     $this->assertViewsCacheTags($view, $base_tags, $do_assert_views_caches, $base_tags);
     $this->assertViewsCacheTagsFromStaticRenderArray($view, $base_tags, $do_assert_views_caches);
 
-
     // Non-empty result (1 entity).
     /** @var \Drupal\Core\Entity\EntityInterface[] $entities */
     $entities[] = $entity = EntityTest::create();
@@ -108,7 +107,6 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
     $tags_with_entity = Cache::mergeTags($base_tags, $entities[0]->getCacheTags());
     $this->assertViewsCacheTags($view, $tags_with_entity, $do_assert_views_caches, $tags_with_entity);
     $this->assertViewsCacheTagsFromStaticRenderArray($view, $tags_with_entity, $do_assert_views_caches);
-
 
     // Paged result (more entities than the items-per-page limit).
     for ($i = 0; $i < 5; $i++) {
@@ -258,7 +256,6 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
     $render_tags_with_entity = Cache::mergeTags($render_tags_with_entity, ['entity_test_view']);
     $this->assertViewsCacheTags($view, $result_tags_with_entity, $do_assert_views_caches, $render_tags_with_entity);
     $this->assertViewsCacheTagsFromStaticRenderArray($view, $render_tags_with_entity, $do_assert_views_caches);
-
 
     // Paged result (more entities than the items-per-page limit).
     for ($i = 0; $i < 5; $i++) {

@@ -306,16 +306,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $url = $this->getEntityResourceUrl();
     $request_options = [];
 
-
     // DX: 404 when resource not provisioned, 403 if canonical route. HTML
     // response because missing ?_format query string.
     $response = $this->request('GET', $url, $request_options);
     $this->assertSame($has_canonical_url ? 403 : 404, $response->getStatusCode());
     $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
 
-
     $url->setOption('query', ['_format' => static::$format]);
-
 
     // DX: 404 when resource not provisioned, 403 if canonical route. Non-HTML
     // response because ?_format query string is present.
@@ -327,11 +324,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertResourceErrorResponse(404, 'No route found for "GET ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
     }
 
-
     $this->provisionEntityResource();
     // Simulate the developer again forgetting the ?_format query string.
     $url->setOption('query', []);
-
 
     // DX: 406 when ?_format is missing, except when requesting a canonical HTML
     // route.
@@ -343,9 +338,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assert406Response($response);
     }
 
-
     $url->setOption('query', ['_format' => static::$format]);
-
 
     // DX: forgetting authentication: authentication provider-specific error
     // response.
@@ -370,15 +363,12 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     unset($request_options[RequestOptions::HEADERS]['REST-test-auth-global']);
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('GET'));
 
-
     // DX: 403 when unauthorized.
     $response = $this->request('GET', $url, $request_options);
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response);
     $this->assertArrayNotHasKey('Link', $response->getHeaders());
 
-
     $this->setUpAuthorization('GET');
-
 
     // 200 for well-formed HEAD request.
     $response = $this->request('HEAD', $url, $request_options);
@@ -506,10 +496,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // PrimitiveDataNormalizer.
       $this->rebuildAll();
 
-
       $response = $this->request('GET', $url, $request_options);
       $this->assertResourceResponse(200, FALSE, $response);
-
 
       // Again do an identical comparison, but this time transform the expected
       // normalized entity's values to strings. This ensures the BC layer for
@@ -540,10 +528,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // TimestampItemNormalizer.
       $this->rebuildAll();
 
-
       $response = $this->request('GET', $url, $request_options);
       $this->assertResourceResponse(200, FALSE, $response);
-
 
       // This ensures the BC layer for bc_timestamp_normalizer_unix works as
       // expected. This method should be using
@@ -562,62 +548,48 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->rebuildAll();
     }
 
-
     // BC: rest_update_8203().
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
     $this->refreshTestStateAfterRestConfigChange();
-
 
     // DX: 403 when unauthorized.
     $response = $this->request('GET', $url, $request_options);
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response);
 
-
     $this->grantPermissionsToTestedRole(['restful get entity:' . static::$entityTypeId]);
-
 
     // 200 for well-formed request.
     $response = $this->request('GET', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
 
-
     $this->resourceConfigStorage->load(static::$resourceConfigId)->disable()->save();
     $this->refreshTestStateAfterRestConfigChange();
-
 
     // DX: upon disabling a resource, it's immediately no longer available.
     $this->assertResourceNotAvailable($url, $request_options);
 
-
     $this->resourceConfigStorage->load(static::$resourceConfigId)->enable()->save();
     $this->refreshTestStateAfterRestConfigChange();
-
 
     // DX: upon re-enabling a resource, immediate 200.
     $response = $this->request('GET', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
 
-
     $this->resourceConfigStorage->load(static::$resourceConfigId)->delete();
     $this->refreshTestStateAfterRestConfigChange();
-
 
     // DX: upon deleting a resource, it's immediately no longer available.
     $this->assertResourceNotAvailable($url, $request_options);
 
-
     $this->provisionEntityResource();
     $url->setOption('query', ['_format' => 'non_existing_format']);
-
 
     // DX: 406 when requesting unsupported format.
     $response = $this->request('GET', $url, $request_options);
     $this->assert406Response($response);
     $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
 
-
     $request_options[RequestOptions::HEADERS]['Accept'] = static::$mimeType;
-
 
     // DX: 406 when requesting unsupported format but specifying Accept header:
     // should result in a text/plain response.
@@ -625,11 +597,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assert406Response($response);
     $this->assertSame(['text/plain; charset=UTF-8'], $response->getHeader('Content-Type'));
 
-
     $url = Url::fromRoute('rest.entity.' . static::$entityTypeId . '.GET.' . static::$format);
     $url->setRouteParameter(static::$entityTypeId, 987654321);
     $url->setOption('query', ['_format' => static::$format]);
-
 
     // DX: 404 when GETting non-existing entity.
     $response = $this->request('GET', $url, $request_options);
@@ -712,26 +682,21 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $url = $this->getEntityResourcePostUrl();
     $request_options = [];
 
-
     // DX: 404 when resource not provisioned. HTML response because missing
     // ?_format query string.
     $response = $this->request('POST', $url, $request_options);
     $this->assertSame(404, $response->getStatusCode());
     $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
 
-
     $url->setOption('query', ['_format' => static::$format]);
-
 
     // DX: 404 when resource not provisioned.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(404, 'No route found for "POST ' . str_replace($this->baseUrl, '', $this->getEntityResourcePostUrl()->setAbsolute()->toString()) . '"', $response);
 
-
     $this->provisionEntityResource();
     // Simulate the developer again forgetting the ?_format query string.
     $url->setOption('query', []);
-
 
     // DX: 415 when no Content-Type request header. HTML response because
     // missing ?_format query string.
@@ -740,33 +705,25 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
     $this->assertContains('A client error happened', (string) $response->getBody());
 
-
     $url->setOption('query', ['_format' => static::$format]);
-
 
     // DX: 415 when no Content-Type request header.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(415, 'No "Content-Type" request header specified', $response);
 
-
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
-
 
     // DX: 400 when no request body.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(400, 'No entity content received.', $response);
 
-
     $request_options[RequestOptions::BODY] = $unparseable_request_body;
-
 
     // DX: 400 when unparseable request body.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(400, 'Syntax error', $response);
 
-
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
-
 
     if (static::$auth) {
       // DX: forgetting authentication: authentication provider-specific error
@@ -775,17 +732,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertResponseWhenMissingAuthentication($response);
     }
 
-
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('POST'));
-
 
     // DX: 403 when unauthorized.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
 
-
     $this->setUpAuthorization('POST');
-
 
     // DX: 422 when invalid entity: multiple values sent for single-value field.
     $response = $this->request('POST', $url, $request_options);
@@ -793,9 +746,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
     $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: $label_field_capitalized: this field cannot hold more than 1 values.\n", $response);
 
-
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_2;
-
 
     // DX: 422 when invalid entity: UUID field too long.
     // @todo Fix this in https://www.drupal.org/node/2149851.
@@ -804,34 +755,26 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\nuuid.0.value: UUID: may not be longer than 128 characters.\n", $response);
     }
 
-
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_3;
-
 
     // DX: 403 when entity contains field without 'edit' access.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(403, "Access denied on creating field 'field_rest_test'.", $response);
 
-
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body;
-
 
     // Before sending a well-formed request, allow the normalization and
     // authentication provider edge cases to also be tested.
     $this->assertNormalizationEdgeCases('POST', $url, $request_options);
     $this->assertAuthenticationEdgeCases('POST', $url, $request_options);
 
-
     $request_options[RequestOptions::HEADERS]['Content-Type'] = 'text/xml';
-
 
     // DX: 415 when request body in existing but not allowed format.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(415, 'No route found that matches "Content-Type: text/xml"', $response);
 
-
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
-
 
     // 201 for well-formed request.
     $response = $this->request('POST', $url, $request_options);
@@ -868,19 +811,15 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       }
     }
 
-
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
     $this->refreshTestStateAfterRestConfigChange();
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body_2;
-
 
     // DX: 403 when unauthorized.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('POST'), $response);
 
-
     $this->grantPermissionsToTestedRole(['restful post entity:' . static::$entityTypeId]);
-
 
     // 201 for well-formed request.
     // If the entity is stored, delete the first created entity (in case there
@@ -939,7 +878,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $url = $this->getEntityResourceUrl();
     $request_options = [];
 
-
     // DX: 404 when resource not provisioned, 405 if canonical route. Plain text
     // or HTML response because missing ?_format query string.
     $response = $this->request('PATCH', $url, $request_options);
@@ -954,9 +892,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
     }
 
-
     $url->setOption('query', ['_format' => static::$format]);
-
 
     // DX: 404 when resource not provisioned, 405 if canonical route.
     $response = $this->request('PATCH', $url, $request_options);
@@ -967,11 +903,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertResourceErrorResponse(404, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
     }
 
-
     $this->provisionEntityResource();
     // Simulate the developer again forgetting the ?_format query string.
     $url->setOption('query', []);
-
 
     // DX: 415 when no Content-Type request header.
     $response = $this->request('PATCH', $url, $request_options);
@@ -979,33 +913,25 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
     $this->assertContains('A client error happened', (string) $response->getBody());
 
-
     $url->setOption('query', ['_format' => static::$format]);
-
 
     // DX: 415 when no Content-Type request header.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(415, 'No "Content-Type" request header specified', $response);
 
-
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
-
 
     // DX: 400 when no request body.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(400, 'No entity content received.', $response);
 
-
     $request_options[RequestOptions::BODY] = $unparseable_request_body;
-
 
     // DX: 400 when unparseable request body.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(400, 'Syntax error', $response);
 
-
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
-
 
     if (static::$auth) {
       // DX: forgetting authentication: authentication provider-specific error
@@ -1014,17 +940,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertResponseWhenMissingAuthentication($response);
     }
 
-
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('PATCH'));
-
 
     // DX: 403 when unauthorized.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('PATCH'), $response);
 
-
     $this->setUpAuthorization('PATCH');
-
 
     // DX: 422 when invalid entity: multiple values sent for single-value field.
     $response = $this->request('PATCH', $url, $request_options);
@@ -1032,14 +954,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
     $this->assertResourceErrorResponse(422, "Unprocessable Entity: validation failed.\n$label_field: $label_field_capitalized: this field cannot hold more than 1 values.\n", $response);
 
-
     $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_2;
-
 
     // DX: 403 when entity contains field without 'edit' access.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(403, "Access denied on updating field 'field_rest_test'.", $response);
-
 
     // DX: 403 when sending PATCH request with read-only fields.
     // First send all fields (the "maximum normalization"). Assert the expected
@@ -1060,26 +979,20 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
 
-
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body;
-
 
     // Before sending a well-formed request, allow the normalization and
     // authentication provider edge cases to also be tested.
     $this->assertNormalizationEdgeCases('PATCH', $url, $request_options);
     $this->assertAuthenticationEdgeCases('PATCH', $url, $request_options);
 
-
     $request_options[RequestOptions::HEADERS]['Content-Type'] = 'text/xml';
-
 
     // DX: 415 when request body in existing but not allowed format.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(415, 'No route found that matches "Content-Type: text/xml"', $response);
 
-
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
-
 
     // 200 for well-formed request.
     $response = $this->request('PATCH', $url, $request_options);
@@ -1105,19 +1018,15 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // is not sent in the PATCH request.
     $this->assertSame('All the faith he had had had had no effect on the outcome of his life.', $updated_entity->get('field_rest_test')->value);
 
-
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
     $this->refreshTestStateAfterRestConfigChange();
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body_2;
-
 
     // DX: 403 when unauthorized.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('PATCH'), $response);
 
-
     $this->grantPermissionsToTestedRole(['restful patch entity:' . static::$entityTypeId]);
-
 
     // 200 for well-formed request.
     $response = $this->request('PATCH', $url, $request_options);
@@ -1146,7 +1055,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $url = $this->getEntityResourceUrl();
     $request_options = [];
 
-
     // DX: 404 when resource not provisioned, but 405 if canonical route. Plain
     // text  or HTML response because missing ?_format query string.
     $response = $this->request('DELETE', $url, $request_options);
@@ -1161,9 +1069,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
     }
 
-
     $url->setOption('query', ['_format' => static::$format]);
-
 
     // DX: 404 when resource not provisioned, 405 if canonical route.
     $response = $this->request('DELETE', $url, $request_options);
@@ -1177,7 +1083,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     $this->provisionEntityResource();
 
-
     if (static::$auth) {
       // DX: forgetting authentication: authentication provider-specific error
       // response.
@@ -1185,22 +1090,17 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertResponseWhenMissingAuthentication($response);
     }
 
-
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('PATCH'));
-
 
     // DX: 403 when unauthorized.
     $response = $this->request('DELETE', $url, $request_options);
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('DELETE'), $response);
 
-
     $this->setUpAuthorization('DELETE');
-
 
     // Before sending a well-formed request, allow the authentication provider's
     // edge cases to also be tested.
     $this->assertAuthenticationEdgeCases('DELETE', $url, $request_options);
-
 
     // 204 for well-formed request.
     $response = $this->request('DELETE', $url, $request_options);
@@ -1213,20 +1113,16 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->assertSame('', (string) $response->getBody());
     $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
 
-
     $this->config('rest.settings')->set('bc_entity_resource_permissions', TRUE)->save(TRUE);
     $this->refreshTestStateAfterRestConfigChange();
     $this->entity = $this->createEntity();
     $url = $this->getEntityResourceUrl()->setOption('query', $url->getOption('query'));
 
-
     // DX: 403 when unauthorized.
     $response = $this->request('DELETE', $url, $request_options);
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('DELETE'), $response);
 
-
     $this->grantPermissionsToTestedRole(['restful delete entity:' . static::$entityTypeId]);
-
 
     // 204 for well-formed request.
     $response = $this->request('DELETE', $url, $request_options);
@@ -1254,16 +1150,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         $normalization[$bundle_field_name] = 'bad_bundle_name';
         $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
 
-
         // DX: 422 when incorrect entity type bundle is specified.
         $response = $this->request($method, $url, $request_options);
         $this->assertResourceErrorResponse(422, '"bad_bundle_name" is not a valid bundle type for denormalization.', $response);
       }
 
-
       unset($normalization[$bundle_field_name]);
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
-
 
       // DX: 422 when no entity type bundle is specified.
       $response = $this->request($method, $url, $request_options);

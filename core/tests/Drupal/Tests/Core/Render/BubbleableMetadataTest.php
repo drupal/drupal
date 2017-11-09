@@ -163,7 +163,6 @@ class BubbleableMetadataTest extends UnitTestCase {
       ],
     ];
 
-
     $expected_when_empty_metadata = [
       '#cache' => [
         'contexts' => [],
@@ -227,7 +226,6 @@ class BubbleableMetadataTest extends UnitTestCase {
         ],
       ],
     ];
-
 
     $data[] = [$empty_render_array, $empty_metadata];
     $data[] = [$nonempty_render_array, $nonempty_metadata];

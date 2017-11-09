@@ -81,7 +81,6 @@ class HistoryTimestampTest extends ViewsKernelTestBase {
         'timestamp' => REQUEST_TIME + 100,
       ])->execute();
 
-
     $column_map = [
       'nid' => 'nid',
     ];

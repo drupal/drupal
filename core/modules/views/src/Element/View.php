@@ -53,7 +53,6 @@ class View extends RenderElement {
     // possible to manipulate the $element.
     $view->element['#pre_rendered'] = TRUE;
 
-
     if (isset($element['#response'])) {
       $view->setResponse($element['#response']);
     }

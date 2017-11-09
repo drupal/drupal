@@ -56,7 +56,6 @@ class BackendCompilerPass implements CompilerPassInterface {
       }
     }
 
-
     foreach ($container->findTaggedServiceIds('backend_overridable') as $id => $attributes) {
       // If the service is already an alias it is not the original backend, so
       // we don't want to fallback to other storages any longer.

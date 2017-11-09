@@ -165,7 +165,6 @@ class ViewEditForm extends ViewFormBase {
       ],
     ];
 
-
     $form['displays']['top'] = $this->renderDisplayTop($view);
 
     // The rest requires a display to be selected.

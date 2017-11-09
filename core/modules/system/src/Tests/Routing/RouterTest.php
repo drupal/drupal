@@ -53,7 +53,6 @@ class RouterTest extends WebTestBase {
     // a page inception style.  This test verifies that is not happening.
     $this->assertNoPattern('#</body>.*</body>#s', 'There was no double-page effect from a misrendered subrequest.');
 
-
     // Confirm that route-level access check's cacheability is applied to the
     // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags headers.
     // 1. controller result: render array, globally cacheable route access.

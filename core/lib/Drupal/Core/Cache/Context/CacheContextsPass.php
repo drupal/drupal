@@ -36,7 +36,6 @@ class CacheContextsPass implements CompilerPassInterface {
       }
     }
 
-
     $container->setParameter('cache_contexts', $cache_contexts);
   }
 

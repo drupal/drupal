@@ -173,7 +173,6 @@ class StyleTest extends ViewTestBase {
     $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_age = '28';
     $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_id = '3';
 
-
     // Alter the results to support the stripped case.
     if ($stripped) {
 
@@ -193,7 +192,6 @@ class StyleTest extends ViewTestBase {
       $view->style_plugin->options['grouping'][0] = ['field' => 'job', 'rendered' => TRUE, 'rendered_strip' => TRUE];
       $view->style_plugin->options['grouping'][1] = ['field' => 'age', 'rendered' => TRUE, 'rendered_strip' => TRUE];
     }
-
 
     // The newer api passes the value of the grouping as well.
     $sets_new_rendered = $view->style_plugin->renderGrouping($view->result, $view->style_plugin->options['grouping'], TRUE);

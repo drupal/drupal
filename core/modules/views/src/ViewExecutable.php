@@ -619,7 +619,6 @@ class ViewExecutable {
 
     $this->offset = $offset;
 
-
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
       $this->pager->setOffset($offset);

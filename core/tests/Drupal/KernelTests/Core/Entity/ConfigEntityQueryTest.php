@@ -635,7 +635,6 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $entity->enforceIsNew();
     $entity->save();
 
-
     $expected[] = $entity->getConfigDependencyName();
     $this->assertEqual($expected, $key_value->get('style:test'));
 

@@ -61,7 +61,6 @@ class ForumNodeAccessTest extends BrowserTestBase {
     $public_node = $this->drupalGetNodeByTitle($public_node_title);
     $this->assertTrue(!empty($public_node), 'New public forum node found in database.');
 
-
     // Enable the new and active forum blocks.
     $this->drupalPlaceBlock('forum_active_block');
     $this->drupalPlaceBlock('forum_new_block');

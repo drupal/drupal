@@ -462,7 +462,6 @@ class LocalTaskManagerTest extends UnitTestCase {
       $mock->getCacheTags()->willReturn(isset($info['cache_tags']) ? $info['cache_tags'] : []);
       $mock->getCacheMaxAge()->willReturn(isset($info['cache_max_age']) ? $info['cache_max_age'] : Cache::PERMANENT);
 
-
       $access_manager_map[] = [$info['route_name'], [], $this->account, TRUE, $info['access']];
 
       $map[] = [$info['id'], [], $mock->reveal()];

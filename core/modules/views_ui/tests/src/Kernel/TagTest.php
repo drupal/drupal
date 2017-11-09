@@ -52,7 +52,6 @@ class TagTest extends ViewsKernelTestBase {
       $this->assertTrue(in_array($match, $suggestions), 'Make sure the returned array has the proper format.');
     }
 
-
     // Make sure that matching by a certain prefix works.
     $request->query->set('q', 'autocomplete_tag_test_even');
     $result = $controller->autocompleteTag($request);

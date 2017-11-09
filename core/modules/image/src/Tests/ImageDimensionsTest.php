@@ -173,7 +173,6 @@ class ImageDimensionsTest extends WebTestBase {
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
 
-
     // Add a crop effect.
     $effect = [
       'id' => 'image_crop',

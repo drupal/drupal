@@ -58,7 +58,6 @@ class ViewTest extends UnitTestCase {
     ]);
     $this->viewHandler->view->storage = $view_this;
 
-
     $this->viewHandler->options['view_to_insert'] = 'other:default';
     $this->assertArrayEquals(['config' => ['view.other']], $this->viewHandler->calculateDependencies());
 

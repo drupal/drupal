@@ -439,7 +439,6 @@ class EntityFieldManagerTest extends UnitTestCase {
       })
       ->shouldBeCalled();
 
-
     $this->assertSame($expected, $this->entityFieldManager->getFieldStorageDefinitions('test_entity_type'));
     $this->entityFieldManager->testClearEntityFieldInfo();
     $this->assertSame($expected, $this->entityFieldManager->getFieldStorageDefinitions('test_entity_type'));

@@ -446,7 +446,6 @@ class BigPipe {
         }
       }
 
-
       // Create a new HtmlResponse. Ensure the CSS and (non-bottom) JS is sent
       // before the HTML they're associated with. In other words: ensure the
       // critical assets for this placeholder's markup are loaded first.
@@ -482,7 +481,6 @@ class BigPipe {
           continue;
         }
       }
-
 
       // Send this embedded HTML response.
       $this->sendChunk($html_response);

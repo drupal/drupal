@@ -104,7 +104,6 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       $this->options['expose']['multiple'] = TRUE;
     }
 
-
     // If there are relationships in the view, allow empty should be true
     // so that we can do IS NULL checks on items. Not all filters respect
     // allow empty, but string and numeric do and that covers enough.

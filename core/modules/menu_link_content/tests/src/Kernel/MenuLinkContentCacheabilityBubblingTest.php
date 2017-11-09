@@ -59,7 +59,6 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
     $menu_tree = \Drupal::menuTree();
     $renderer = \Drupal::service('renderer');
 
-
     $default_menu_cacheability = (new BubbleableMetadata())
       ->setCacheMaxAge(Cache::PERMANENT)
       ->setCacheTags(['config:system.menu.tools'])

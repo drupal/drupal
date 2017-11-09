@@ -46,7 +46,6 @@ class EntityViewsMultiValueBaseFieldDataUpdateTest extends UpdatePathTestBase {
       // Check the table is still correct.
       $this->assertEqual('user__roles', $handler_config['table']);
 
-
       // The plugin ID should be updated as well.
       $this->assertEqual($type === 'arguments' ? 'user__roles_rid' : 'user_roles', $handler_config['plugin_id']);
     }
