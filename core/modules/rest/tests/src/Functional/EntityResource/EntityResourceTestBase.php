@@ -483,10 +483,16 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // GET requests - depending on web server configuration. This would usually
     // be 'Transfer-Encoding: chunked'.
     $ignored_headers = ['Date', 'Content-Length', 'X-Drupal-Cache', 'X-Drupal-Dynamic-Cache', 'Transfer-Encoding'];
-    foreach ($ignored_headers as $ignored_header) {
-      unset($head_headers[$ignored_header]);
-      unset($get_headers[$ignored_header]);
-    }
+    $header_cleaner = function ($headers) use ($ignored_headers) {
+      foreach ($headers as $header => $value) {
+        if (strpos($header, 'X-Drupal-Assertion-') === 0 || in_array($header, $ignored_headers)) {
+          unset($headers[$header]);
+        }
+      }
+      return $headers;
+    };
+    $get_headers = $header_cleaner($get_headers);
+    $head_headers = $header_cleaner($head_headers);
     $this->assertSame($get_headers, $head_headers);
 
     // BC: serialization_update_8302().

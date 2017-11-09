@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Contains functions for testing calling deprecated functions in tests.
+ */
+
+/**
+ * A deprecated function.
+ *
+ * @return string
+ *   A known return value of 'known_return_value'.
+ *
+ * @deprecated in Drupal 8.4.x. Might be removed before Drupal 9.0.0. This is
+ *   the deprecation message for deprecated_test_function().
+ */
+function deprecation_test_function() {
+  @trigger_error('This is the deprecation message for deprecation_test_function().', E_USER_DEPRECATED);
+  return 'known_return_value';
+}

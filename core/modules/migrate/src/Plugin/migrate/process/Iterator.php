@@ -2,8 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-@trigger_error('The ' . __NAMESPACE__ . '\Iterator is deprecated in
-Drupal 8.4.x and will be removed before Drupal 9.0.0. Instead, use ' . __NAMESPACE__ . '\SubProcess', E_USER_DEPRECATED);
+@trigger_error('The ' . __NAMESPACE__ . '\Iterator is deprecated in Drupal 8.4.x and will be removed before Drupal 9.0.0. Instead, use ' . __NAMESPACE__ . '\SubProcess', E_USER_DEPRECATED);
 
 /**
  * Iterates and processes an associative array.

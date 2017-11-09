@@ -29,6 +29,8 @@
     <env name="SIMPLETEST_DB" value=""/>
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value=""/>
+    <!-- To disable deprecation testing uncomment the next line. -->
+    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/> -->
   </php>
   <testsuites>
     <testsuite name="unit">
@@ -45,6 +47,10 @@
     </testsuite>
   </testsuites>
   <listeners>
+    <listener class="\Drupal\Tests\Listeners\DeprecationListener">
+    </listener>
+    <!-- The Symfony deprecation listener has to come after the Drupal
+    deprecation listener -->
     <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
     </listener>
     <listener class="\Drupal\Tests\Listeners\DrupalStandardsListener">

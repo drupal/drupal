@@ -41,7 +41,15 @@ class TestHttpClientMiddleware {
                   // the header.
                   $parameters = unserialize(urldecode($header_value));
                   if (count($parameters) === 3) {
-                    throw new \Exception($parameters[1] . ': ' . $parameters[0] . "\n" . Error::formatBacktrace([$parameters[2]]));
+                    if ($parameters[1] === 'User deprecated function') {
+                      // Fire the same deprecation message to allow it to be
+                      // collected by
+                      // \Symfony\Bridge\PhpUnit\DeprecationErrorHandler::collectDeprecations().
+                      @trigger_error((string) $parameters[0], E_USER_DEPRECATED);
+                    }
+                    else {
+                      throw new \Exception($parameters[1] . ': ' . $parameters[0] . "\n" . Error::formatBacktrace([$parameters[2]]));
+                    }
                   }
                   else {
                     throw new \Exception('Error thrown with the wrong amount of parameters.');

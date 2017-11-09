@@ -305,6 +305,10 @@ All arguments are long options.
   --non-html  Removes escaping from output. Useful for reading results on the
               CLI.
 
+  --suppress-deprecations
+
+              Stops tests from failing if deprecation errors are triggered.
+
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
@@ -369,6 +373,7 @@ function simpletest_script_parse_args() {
     'test_names' => array(),
     'repeat' => 1,
     'die-on-fail' => FALSE,
+    'suppress-deprecations' => FALSE,
     'browser' => FALSE,
     // Used internally.
     'test-id' => 0,
@@ -784,6 +789,12 @@ function simpletest_script_run_one_test($test_id, $test_class) {
       $methods = array();
     }
     $test = new $class_name($test_id);
+    if ($args['suppress-deprecations']) {
+      putenv('SYMFONY_DEPRECATIONS_HELPER=disabled');
+    }
+    else {
+      putenv('SYMFONY_DEPRECATIONS_HELPER=strict');
+    }
     if (is_subclass_of($test_class, TestCase::class)) {
       $status = simpletest_script_run_phpunit($test_id, $test_class);
     }
@@ -834,7 +845,7 @@ function simpletest_script_command($test_id, $test_class) {
   }
   $command .= ' --php ' . escapeshellarg($php);
   $command .= " --test-id $test_id";
-  foreach (array('verbose', 'keep-results', 'color', 'die-on-fail') as $arg) {
+  foreach (array('verbose', 'keep-results', 'color', 'die-on-fail', 'suppress-deprecations') as $arg) {
     if ($args[$arg]) {
       $command .= ' --' . $arg;
     }

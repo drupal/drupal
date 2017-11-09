@@ -83,6 +83,19 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
       '@backtrace_string' => (new \Exception())->getTraceAsString(),
     ], $recoverable || $to_string);
   }
+  // If the site is a test site then fail for user deprecations so they can be
+  // caught by the deprecation error handler.
+  elseif (DRUPAL_TEST_IN_CHILD_SITE && $error_level === E_USER_DEPRECATED) {
+    $backtrace = debug_backtrace();
+    $caller = Error::getLastCaller($backtrace);
+    _drupal_error_header(
+      Markup::create(Xss::filterAdmin($message)),
+      'User deprecated function',
+      $caller['function'],
+      $caller['file'],
+      $caller['line']
+    );
+  }
 }
 
 /**
@@ -136,25 +149,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
   // When running inside the testing framework, we relay the errors
   // to the tested site by the way of HTTP headers.
   if (DRUPAL_TEST_IN_CHILD_SITE && !headers_sent() && (!defined('SIMPLETEST_COLLECT_ERRORS') || SIMPLETEST_COLLECT_ERRORS)) {
-    // $number does not use drupal_static as it should not be reset
-    // as it uniquely identifies each PHP error.
-    static $number = 0;
-    $assertion = [
-      $error['@message'],
-      $error['%type'],
-      [
-        'function' => $error['%function'],
-        'file' => $error['%file'],
-        'line' => $error['%line'],
-      ],
-    ];
-    // For non-fatal errors (e.g. PHP notices) _drupal_log_error can be called
-    // multiple times per request. In that case the response is typically
-    // generated outside of the error handler, e.g., in a controller. As a
-    // result it is not possible to use a Response object here but instead the
-    // headers need to be emitted directly.
-    header('X-Drupal-Assertion-' . $number . ': ' . rawurlencode(serialize($assertion)));
-    $number++;
+    _drupal_error_header($error['@message'], $error['%type'], $error['%function'], $error['%file'], $error['%line']);
   }
 
   $response = new Response();
@@ -324,4 +319,40 @@ function _drupal_get_error_level() {
   // possibly in an edge-case error situation while trying to serve a regular
   // request on a public site, so use the non-verbose default value.
   return $error_level ?: ERROR_REPORTING_DISPLAY_ALL;
+}
+
+/**
+ * Adds error information to headers so that tests can access it.
+ *
+ * @param $message
+ *   The error message.
+ * @param $type
+ *   The type of error.
+ * @param $function
+ *   The function that emitted the error.
+ * @param $file
+ *   The file that emitted the error.
+ * @param $line
+ *   The line number in file that emitted the error.
+ */
+function _drupal_error_header($message, $type, $function, $file, $line) {
+  // $number does not use drupal_static as it should not be reset
+  // as it uniquely identifies each PHP error.
+  static $number = 0;
+  $assertion = [
+    $message,
+    $type,
+    [
+      'function' => $function,
+      'file' => $file,
+      'line' => $line,
+    ],
+  ];
+  // For non-fatal errors (e.g. PHP notices) _drupal_log_error can be called
+  // multiple times per request. In that case the response is typically
+  // generated outside of the error handler, e.g., in a controller. As a
+  // result it is not possible to use a Response object here but instead the
+  // headers need to be emitted directly.
+  header('X-Drupal-Assertion-' . $number . ': ' . rawurlencode(serialize($assertion)));
+  $number++;
 }

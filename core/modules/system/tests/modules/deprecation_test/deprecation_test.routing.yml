@@ -1,0 +1,6 @@
+deprecation_test.route:
+  path: '/this-calls-a-deprecated-method'
+  defaults:
+    _controller: \Drupal\deprecation_test\DeprecatedController::deprecatedMethod
+  requirements:
+    _access: 'TRUE'

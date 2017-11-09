@@ -2,8 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-@trigger_error('The ' . __NAMESPACE__ . '\Migration is deprecated in
-Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use ' . __NAMESPACE__ . '\MigrationLookup', E_USER_DEPRECATED);
+@trigger_error('The ' . __NAMESPACE__ . '\Migration is deprecated in Drupal 8.4.0 and will be removed before Drupal 9.0.0. Instead, use ' . __NAMESPACE__ . '\MigrationLookup', E_USER_DEPRECATED);
 
 /**
  * Calculates the value of a property based on a previous migration.

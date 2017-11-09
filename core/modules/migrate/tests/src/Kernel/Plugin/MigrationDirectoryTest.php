@@ -8,6 +8,7 @@ use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
  * Tests that migrations exist in the migration_templates directory.
  *
  * @group migrate
+ * @group legacy
  */
 class MigrationDirectoryTest extends MigrateDrupalTestBase {
 
@@ -18,6 +19,8 @@ class MigrationDirectoryTest extends MigrateDrupalTestBase {
 
   /**
    * Tests that migrations in the migration_templates directory are created.
+   *
+   * @expectedDeprecationMessage Use of the /migration_templates directory to store migration configuration files is deprecated in Drupal 8.1.0 and will be removed before Drupal 9.0.0.
    */
   public function testMigrationDirectory() {
     /** @var \Drupal\migrate\Plugin\MigrationPluginManager $plugin_manager */
