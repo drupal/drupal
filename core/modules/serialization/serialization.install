@@ -33,7 +33,8 @@ function serialization_requirements($phase) {
 /**
  * @see hal_update_8301()
  */
-function serialization_update_8301() {}
+function serialization_update_8301() {
+}
 
 /**
  * Add serialization.settings::bc_primitives_as_strings configuration.

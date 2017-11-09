@@ -557,7 +557,7 @@ abstract class FormStateDecoratorBase implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
-  public function isValueEmpty($key)  {
+  public function isValueEmpty($key) {
     return $this->decoratedFormState->isValueEmpty($key);
   }
 

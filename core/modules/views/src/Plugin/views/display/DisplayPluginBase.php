@@ -1471,7 +1471,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           '#title' => $this->t('Show contextual links'),
           '#default_value' => $this->getOption('show_admin_links'),
         ];
-      break;
+        break;
       case 'use_more':
         $form['#title'] .= $this->t('Add a more link to the bottom of the display.');
         $form['use_more'] = [
@@ -1866,7 +1866,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         if (preg_match('/[^a-zA-Z0-9-_ ]/', $css_class)) {
           $form_state->setError($form['css_class'], $this->t('CSS classes must be alphanumeric or dashes only.'));
         }
-      break;
+        break;
       case 'display_id':
         if ($form_state->getValue('display_id')) {
           if (preg_match('/[^a-z0-9_]/', $form_state->getValue('display_id'))) {

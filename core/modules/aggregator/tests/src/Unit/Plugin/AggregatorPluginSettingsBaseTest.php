@@ -109,5 +109,6 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
 namespace Drupal\Core\Form;
 
 if (!function_exists('drupal_set_message')) {
-  function drupal_set_message() {}
+  function drupal_set_message() {
+  }
 }
