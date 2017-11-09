@@ -53,9 +53,12 @@ interface MigrateSourceInterface extends \Countable, \Iterator, PluginInspection
    *   An associative array of field definitions keyed by field ID. Values are
    *   associative arrays with a structure that contains the field type ('type'
    *   key). The other keys are the field storage settings as they are returned
-   *   by FieldStorageDefinitionInterface::getSettings(). As an example, for a
-   *   composite source primary key that is defined by an integer and a
-   *   string, the returned value might look like:
+   *   by FieldStorageDefinitionInterface::getSettings().
+   *
+   *   Examples:
+   *
+   *   A composite source primary key that is defined by an integer and a string
+   *   might look like this:
    *   @code
    *     return [
    *       'id' => [
@@ -70,6 +73,7 @@ interface MigrateSourceInterface extends \Countable, \Iterator, PluginInspection
    *       ],
    *     ];
    *   @endcode
+   *
    *   If 'type' points to a field plugin with multiple columns and needs to
    *   refer to a column different than 'value', the key of that column will be
    *   appended as a suffix to the plugin name, separated by dot ('.'). Example:
@@ -80,9 +84,13 @@ interface MigrateSourceInterface extends \Countable, \Iterator, PluginInspection
    *       ],
    *     ];
    *   @endcode
-   *   Additional custom keys/values, that are not part of field storage
-   *   definition, can be passed in definitions. The most common setting, passed
-   *   along the ID definition, is 'alias' used by SqlBase source plugin:
+   *
+   *   Additional custom keys/values that are not part of field storage
+   *   definition can be added as shown below. The most common setting
+   *   passed along to the ID definition is 'alias', used by the SqlBase source
+   *   plugin in order to distinguish between ambiguous column names - for
+   *   example, when a SQL source query joins two tables with the same column
+   *   names.
    *   @code
    *     return [
    *       'nid' => [
