@@ -586,7 +586,8 @@ class Container implements ContainerInterface, ResettableContainerInterface {
   /**
    * Ensure that cloning doesn't work.
    */
-  private function __clone() {
+  private function __clone()
+  {
   }
 
 }

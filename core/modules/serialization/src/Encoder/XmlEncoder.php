@@ -60,7 +60,7 @@ class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, Dec
   /**
    * {@inheritdoc}
    */
-  public function encode($data, $format, array $context = []) {
+  public function encode($data, $format, array $context = []){
     return $this->getBaseEncoder()->encode($data, $format, $context);
   }
 
@@ -74,7 +74,7 @@ class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, Dec
   /**
    * {@inheritdoc}
    */
-  public function decode($data, $format, array $context = []) {
+  public function decode($data, $format, array $context = []){
     return $this->getBaseEncoder()->decode($data, $format, $context);
   }
 
