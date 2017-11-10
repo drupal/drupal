@@ -49,7 +49,7 @@ class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProv
   /**
    * {@inheritdoc}
    */
-  public function preLoadRoutes($names){
+  public function preLoadRoutes($names) {
     return $this->lazyLoadItself()->preLoadRoutes($names);
   }
 

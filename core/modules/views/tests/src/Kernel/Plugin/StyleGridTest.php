@@ -69,11 +69,16 @@ class StyleGridTest extends PluginKernelTestBase {
     }
     $width = '0';
     switch ($columns) {
-      case 5: $width = '20'; break;
-      case 4: $width = '25'; break;
-      case 3: $width = '33.3333'; break;
-      case 2: $width = '50'; break;
-      case 1: $width = '100'; break;
+      case 5: $width = '20';
+        break;
+      case 4: $width = '25';
+        break;
+      case 3: $width = '33.3333';
+        break;
+      case 2: $width = '50';
+        break;
+      case 1: $width = '100';
+        break;
     }
     // Ensure last column exists.
     $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, :columns) and starts-with(@style, :width)]', [':columns' => 'col-' . $columns, ':width' => 'width: ' . $width]);

@@ -113,7 +113,7 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getDisplayModesLink() {;
+  protected function getDisplayModesLink() {
     return [
       '#type' => 'link',
       '#title' => t('Manage view modes'),

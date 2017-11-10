@@ -43,7 +43,7 @@ class ResourcePluginManager extends DefaultPluginManager {
    *
    * @see https://www.drupal.org/node/2874934
    */
-  public function getInstance(array $options){
+  public function getInstance(array $options) {
     if (isset($options['id'])) {
       return $this->createInstance($options['id']);
     }
