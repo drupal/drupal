@@ -7,6 +7,7 @@ Drupal 7.xx, xxxx-xx-xx (development version)
   addition: https://www.drupal.org/node/2857751).
 - Allowed callers of drupal_http_request() to optionally specify an explicit
   Host header.
+- Allowed the + character to appear in usernames.
 
 Drupal 7.56, 2017-06-21
 -----------------------

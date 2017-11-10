@@ -637,7 +637,7 @@ function user_validate_name($name) {
   if (strpos($name, '  ') !== FALSE) {
     return t('The username cannot contain multiple spaces in a row.');
   }
-  if (preg_match('/[^\x{80}-\x{F7} a-z0-9@_.\'-]/i', $name)) {
+  if (preg_match('/[^\x{80}-\x{F7} a-z0-9@+_.\'-]/i', $name)) {
     return t('The username contains an illegal character.');
   }
   if (preg_match('/[\x{80}-\x{A0}' .         // Non-printable ISO-8859-1 + NBSP

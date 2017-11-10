@@ -276,6 +276,7 @@ class UserValidationTestCase extends DrupalWebTestCase {
       'foo@example.com'        => array('Valid username', 'assertNull'),
       'foo@-example.com'       => array('Valid username', 'assertNull'), // invalid domains are allowed in usernames
       'þòøÇßªř€'               => array('Valid username', 'assertNull'),
+      'foo+bar'                => array('Valid username', 'assertNull'), // '+' symbol is allowed
       'ᚠᛇᚻ᛫ᛒᛦᚦ'                => array('Valid UTF8 username', 'assertNull'), // runes
       ' foo'                   => array('Invalid username that starts with a space', 'assertNotNull'),
       'foo '                   => array('Invalid username that ends with a space', 'assertNotNull'),
@@ -2386,7 +2387,13 @@ class UserUserSearchTestCase extends DrupalWebTestCase {
   }
 
   function testUserSearch() {
+    // Verify that a user without 'administer users' permission cannot search
+    // for users by email address. Additionally, ensure that the username has a
+    // plus sign to ensure searching works with that.
     $user1 = $this->drupalCreateUser(array('access user profiles', 'search content', 'use advanced search'));
+    $edit['name'] = 'foo+bar';
+    $edit['mail'] = $edit['name'] . '@example.com';
+    user_save($user1, $edit);
     $this->drupalLogin($user1);
     $keys = $user1->mail;
     $edit = array('keys' => $keys);
