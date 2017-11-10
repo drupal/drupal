@@ -209,9 +209,6 @@ function valid_email_address($mail) {
  *   Drupal\Core\Template\Attribute, call
  *   \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() instead.
  *
- * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
- * @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
- *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
  *   Use UrlHelper::stripDangerousProtocols() or UrlHelper::filterBadProtocol()
  *   instead. UrlHelper::stripDangerousProtocols() can be used in conjunction
@@ -220,6 +217,10 @@ function valid_email_address($mail) {
  *   UrlHelper::filterBadProtocol() is functionality equivalent to check_url()
  *   apart from the fact it is protected from double escaping bugs. Note that
  *   this method no longer marks its output as safe.
+ *
+ * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
+ * @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
+ * @see https://www.drupal.org/node/2560027
  */
 function check_url($uri) {
   return Html::escape(UrlHelper::stripDangerousProtocols($uri));
