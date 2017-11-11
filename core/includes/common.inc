@@ -148,12 +148,13 @@ const LOCALE_PLURAL_DELIMITER = PluralTranslatableMarkup::DELIMITER;
  *     If the query parameter isn't present, then the URL of the current
  *     request is returned.
  *
- * @see \Drupal\Core\EventSubscriber\RedirectResponseSubscriber::checkRedirectUrl()
- *
  * @ingroup form_api
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
  *   Use the redirect.destination service.
+ *
+ * @see \Drupal\Core\EventSubscriber\RedirectResponseSubscriber::checkRedirectUrl()
+ * @see https://www.drupal.org/node/2448603
  */
 function drupal_get_destination() {
   return \Drupal::destination()->getAsArray();
