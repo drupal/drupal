@@ -93,8 +93,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
 
       // Add dependencies to the list. The new modules will be processed as
-      // the while loop continues.
-      while (list($module) = each($module_list)) {
+      // the foreach loop continues.
+      foreach ($module_list as $module => $value) {
         foreach (array_keys($module_data[$module]->requires) as $dependency) {
           if (!isset($module_data[$dependency])) {
             // The dependency does not exist.
@@ -340,9 +340,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     if ($uninstall_dependents) {
       // Add dependent modules to the list. The new modules will be processed as
-      // the while loop continues.
+      // the foreach loop continues.
       $profile = drupal_get_profile();
-      while (list($module) = each($module_list)) {
+      foreach ($module_list as $module => $value) {
         foreach (array_keys($module_data[$module]->required_by) as $dependent) {
           if (!isset($module_data[$dependent])) {
             // The dependent module does not exist.

@@ -388,7 +388,7 @@ class ModulesListForm extends FormBase {
     }
 
     // Add all dependencies to a list.
-    while (list($module) = each($modules['install'])) {
+    foreach ($modules['install'] as $module => $value) {
       foreach (array_keys($data[$module]->requires) as $dependency) {
         if (!isset($modules['install'][$dependency]) && !$this->moduleHandler->moduleExists($dependency)) {
           $modules['dependencies'][$module][$dependency] = $data[$dependency]->info['name'];

@@ -201,28 +201,29 @@ class DiffEngine {
           continue;
         }
         $matches = $ymatches[$line];
-        reset($matches);
-        while (list ($junk, $y) = each($matches)) {
-          if (empty($this->in_seq[$y])) {
-            $k = $this->_lcs_pos($y);
-            $this::USE_ASSERTS && assert($k > 0);
-            $ymids[$k] = $ymids[$k - 1];
-            break;
+        foreach ($matches as $y) {
+          if (!isset($found_empty)) {
+            if (empty($this->in_seq[$y])) {
+              $k = $this->_lcs_pos($y);
+              $this::USE_ASSERTS && assert($k > 0);
+              $ymids[$k] = $ymids[$k - 1];
+              $found_empty = TRUE;
+            }
           }
-        }
-        while (list ($junk, $y) = each($matches)) {
-          if ($y > $this->seq[$k - 1]) {
-            $this::USE_ASSERTS && assert($y < $this->seq[$k]);
-            // Optimization: this is a common case:
-            // next match is just replacing previous match.
-            $this->in_seq[$this->seq[$k]] = FALSE;
-            $this->seq[$k] = $y;
-            $this->in_seq[$y] = 1;
-          }
-          elseif (empty($this->in_seq[$y])) {
-            $k = $this->_lcs_pos($y);
-            $this::USE_ASSERTS && assert($k > 0);
-            $ymids[$k] = $ymids[$k - 1];
+          else {
+            if ($y > $this->seq[$k - 1]) {
+              $this::USE_ASSERTS && assert($y < $this->seq[$k]);
+              // Optimization: this is a common case:
+              // next match is just replacing previous match.
+              $this->in_seq[$this->seq[$k]] = FALSE;
+              $this->seq[$k] = $y;
+              $this->in_seq[$y] = 1;
+            }
+            elseif (empty($this->in_seq[$y])) {
+              $k = $this->_lcs_pos($y);
+              $this::USE_ASSERTS && assert($k > 0);
+              $ymids[$k] = $ymids[$k - 1];
+            }
           }
         }
       }

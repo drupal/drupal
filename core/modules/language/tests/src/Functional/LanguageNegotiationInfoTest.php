@@ -160,11 +160,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     foreach ($this->languageManager()->getDefinedLanguageTypesInfo() as $type => $info) {
       if (!in_array($type, $configurable) && isset($info['fixed'])) {
         $negotiation = $this->config('language.types')->get('negotiation.' . $type . '.enabled');
-        $equal = count($info['fixed']) == count($negotiation);
-        while ($equal && list($id) = each($negotiation)) {
-          list(, $info_id) = each($info['fixed']);
-          $equal = $info_id == $id;
-        }
+        $equal = array_keys($negotiation) === array_values($info['fixed']);
         $this->assertTrue($equal, format_string('language negotiation for %type is properly set up', ['%type' => $type]));
       }
     }
