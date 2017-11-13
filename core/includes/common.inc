@@ -177,6 +177,8 @@ function drupal_get_destination() {
  *
  * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
  *   Use \Drupal::service('email.validator')->isValid().
+ *
+ * @see https://www.drupal.org/node/2912661
  */
 function valid_email_address($mail) {
   return \Drupal::service('email.validator')->isValid($mail);
