@@ -342,7 +342,7 @@ abstract class BrowserTestBase extends TestCase {
   protected function getDefaultDriverInstance() {
     // Get default driver params from environment if availables.
     if ($arg_json = getenv('MINK_DRIVER_ARGS')) {
-      $this->minkDefaultDriverArgs = json_decode($arg_json);
+      $this->minkDefaultDriverArgs = json_decode($arg_json, TRUE);
     }
 
     // Get and check default driver class from environment if availables.
