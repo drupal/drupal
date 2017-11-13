@@ -28,10 +28,24 @@ class FieldItemListTest extends UnitTestCase {
     $container->set('plugin.manager.field.field_type', $field_type_manager);
     \Drupal::setContainer($container);
 
+    // Set up three properties, one of them being computed.
+    $property_definitions['0'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['0']->expects($this->any())
+      ->method('isComputed')
+      ->willReturn(FALSE);
+    $property_definitions['1'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['1']->expects($this->any())
+      ->method('isComputed')
+      ->willReturn(FALSE);
+    $property_definitions['2'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['2']->expects($this->any())
+      ->method('isComputed')
+      ->willReturn(TRUE);
+
     $field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $field_storage_definition->expects($this->any())
-      ->method('getColumns')
-      ->willReturn([0 => '0', 1 => '1']);
+      ->method('getPropertyDefinitions')
+      ->will($this->returnValue($property_definitions));
     $field_definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
     $field_definition->expects($this->any())
       ->method('getFieldStorageDefinition')
@@ -95,6 +109,30 @@ class FieldItemListTest extends UnitTestCase {
     // types.
     $datasets[] = [TRUE, $field_item_b, $field_item_e];
 
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_f */
+    $field_item_f = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_f->setValue(['0' => 1, '1' => 2, '2' => 3]);
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_g */
+    $field_item_g = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_g->setValue(['0' => 1, '1' => 2, '2' => 4]);
+
+    // Tests field item lists where both have same values for the non-computed
+    // properties ('0' and '1') and a different value for the computed one
+    // ('2').
+    $datasets[] = [TRUE, $field_item_f, $field_item_g];
+
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_h */
+    $field_item_h = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_h->setValue(['0' => 1, '1' => 2, '3' => 3]);
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_i */
+    $field_item_i = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_i->setValue(['0' => 1, '1' => 2, '3' => 4]);
+
+    // Tests field item lists where both have same values for the non-computed
+    // properties ('0' and '1') and a different value for a property that does
+    // not exist ('3').
+    $datasets[] = [TRUE, $field_item_h, $field_item_i];
+
     return $datasets;
   }
 
@@ -114,10 +152,20 @@ class FieldItemListTest extends UnitTestCase {
     $container->set('plugin.manager.field.field_type', $field_type_manager);
     \Drupal::setContainer($container);
 
+    // Set up the properties of the field item.
+    $property_definitions['0'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['0']->expects($this->any())
+      ->method('isComputed')
+      ->willReturn(FALSE);
+    $property_definitions['1'] = $this->getMock('Drupal\Core\TypedData\DataDefinitionInterface');
+    $property_definitions['1']->expects($this->any())
+      ->method('isComputed')
+      ->willReturn(FALSE);
+
     $field_storage_definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $field_storage_definition->expects($this->any())
-      ->method('getColumns')
-      ->willReturn([0 => '0', 1 => '1']);
+      ->method('getPropertyDefinitions')
+      ->will($this->returnValue($property_definitions));
     $field_definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
     $field_definition->expects($this->any())
       ->method('getFieldStorageDefinition')
