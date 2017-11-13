@@ -138,34 +138,42 @@ EOF;
    *   The directory path.
    * @param int $mode
    *   The mode, permissions, the directory should have.
-   * @param bool $is_backwards_recursive
-   *   Internal use only.
    *
    * @return bool
    *   TRUE if the directory exists or has been created, FALSE otherwise.
    */
-  protected function createDirectory($directory, $mode = 0777, $is_backwards_recursive = FALSE) {
+  protected function createDirectory($directory, $mode = 0777) {
     // If the directory exists already, there's nothing to do.
     if (is_dir($directory)) {
       return TRUE;
     }
-    // Otherwise, try to create the directory and ensure to set its permissions,
-    // because mkdir() obeys the umask of the current process.
-    if (is_dir($parent = dirname($directory))) {
-      // If the parent directory exists, then the backwards recursion must end,
-      // regardless of whether the subdirectory could be created.
-      if ($status = mkdir($directory)) {
-        // Only try to chmod() if the subdirectory could be created.
-        $status = chmod($directory, $mode);
-      }
-      return $is_backwards_recursive ? TRUE : $status;
+
+    // If the parent directory doesn't exist, try to create it.
+    $parent_exists = is_dir($parent = dirname($directory));
+    if (!$parent_exists) {
+      $parent_exists = $this->createDirectory($parent, $mode);
     }
-    // If the parent directory and the requested directory does not exist and
-    // could not be created above, walk the requested directory path back up
-    // until an existing directory is hit, and from there, recursively create
-    // the sub-directories. Only if that recursion succeeds, create the final,
-    // originally requested subdirectory.
-    return $this->createDirectory($parent, $mode, TRUE) && mkdir($directory) && chmod($directory, $mode);
+
+    // If parent exists, try to create the directory and ensure to set its
+    // permissions, because mkdir() obeys the umask of the current process.
+    if ($parent_exists) {
+      // We hide warnings and ignore the return because there may have been a
+      // race getting here and the directory could already exist.
+      @mkdir($directory);
+      // Only try to chmod() if the subdirectory could be created.
+      if (is_dir($directory)) {
+        // Avoid writing permissions if possible.
+        if (fileperms($directory) !== $mode) {
+          return chmod($directory, $mode);
+        }
+        return TRUE;
+      }
+      else {
+        // Something failed and the directory doesn't exist.
+        trigger_error('mkdir(): Permission Denied', E_USER_WARNING);
+      }
+    }
+    return FALSE;
   }
 
   /**
