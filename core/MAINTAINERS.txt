@@ -29,6 +29,7 @@ Framework managers
   - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
   - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
   - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
+  - (provisional) Francesco Placella 'plach' https://www.drupal.org/u/plach
 
   Frontend
   - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
@@ -38,8 +39,6 @@ Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Chris McCafferty 'cilefen' https://www.drupal.org/u/cilefen
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
-
-Provisional membership: None at this time.
 
 
 Subsystem maintainers
@@ -480,10 +479,8 @@ Media Initiative
 
 PHPUnit Initiative
 - Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
-
-  Provisional membership:
-  - Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
-  - Michiel Nugter 'michielnugter' https://www.drupal.org/u/michielnugter
+  - (provisional) Michiel Nugter 'michielnugter' https://www.drupal.org/u/michielnugter
+  - (provisional) Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
 
 Workflow Initiative
 - Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
