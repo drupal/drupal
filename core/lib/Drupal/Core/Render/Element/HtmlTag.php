@@ -87,19 +87,19 @@ class HtmlTag extends RenderElement {
     $escaped_tag = HtmlUtility::escape($element['#tag']);
     $open_tag = '<' . $escaped_tag . $attributes;
     $close_tag = '</' . $escaped_tag . ">\n";
-    $prefix = isset($element['#prefix']) ? $element['#prefix'] . $open_tag : $open_tag;
-    $suffix = isset($element['#suffix']) ? $close_tag . $element['#suffix'] : $close_tag;
     // Construct a void element.
     if (in_array($element['#tag'], self::$voidElements)) {
-      $prefix .= " />\n";
-      $suffix = '';
+      $open_tag .= ' />';
+      $close_tag = "\n";
     }
     // Construct all other elements.
     else {
-      $prefix .= '>';
+      $open_tag .= '>';
       $markup = $element['#value'] instanceof MarkupInterface ? $element['#value'] : Xss::filterAdmin($element['#value']);
       $element['#markup'] = Markup::create($markup);
     }
+    $prefix = isset($element['#prefix']) ? $element['#prefix'] . $open_tag : $open_tag;
+    $suffix = isset($element['#suffix']) ? $close_tag . $element['#suffix'] : $close_tag;
     if (!empty($element['#noscript'])) {
       $prefix = '<noscript>' . $prefix;
       $suffix .= '</noscript>';
