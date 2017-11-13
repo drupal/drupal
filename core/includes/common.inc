@@ -863,6 +863,7 @@ function drupal_pre_render_links($element) {
  *   'renderer' service instead.
  *
  * @see \Drupal\Core\Render\RendererInterface::renderRoot()
+ * @see https://www.drupal.org/node/2912696
  */
 function drupal_render_root(&$elements) {
   return \Drupal::service('renderer')->renderRoot($elements);
@@ -875,6 +876,7 @@ function drupal_render_root(&$elements) {
  *   'renderer' service instead.
  *
  * @see \Drupal\Core\Render\RendererInterface::render()
+ * @see https://www.drupal.org/node/2912696
  */
 function drupal_render(&$elements, $is_recursive_call = FALSE) {
   return \Drupal::service('renderer')->render($elements, $is_recursive_call);
