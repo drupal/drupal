@@ -171,6 +171,24 @@ class PathItemTest extends KernelTestBase {
     $this->assertEquals('/foobar', $loaded_node->get('path')->alias);
     $stored_alias = $alias_storage->lookupPathAlias('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
     $this->assertEquals('/foobar', $stored_alias);
+
+    // Check that \Drupal\Core\Field\FieldItemList::equals() for the path field
+    // type.
+    $node = Node::create([
+      'title' => $this->randomString(),
+      'type' => 'foo',
+      'path' => ['alias' => '/foo'],
+    ]);
+    $second_node = Node::create([
+      'title' => $this->randomString(),
+      'type' => 'foo',
+      'path' => ['alias' => '/foo'],
+    ]);
+    $this->assertTrue($node->get('path')->equals($second_node->get('path')));
+
+    // Change the alias for the second node to a different one and try again.
+    $second_node->get('path')->alias = '/foobar';
+    $this->assertFalse($node->get('path')->equals($second_node->get('path')));
   }
 
 }

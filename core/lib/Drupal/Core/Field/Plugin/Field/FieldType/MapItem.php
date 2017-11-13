@@ -12,7 +12,8 @@ use Drupal\Core\Field\FieldItemBase;
  *   id = "map",
  *   label = @Translation("Map"),
  *   description = @Translation("An entity field for storing a serialized array of values."),
- *   no_ui = TRUE
+ *   no_ui = TRUE,
+ *   list_class = "\Drupal\Core\Field\MapFieldItemList",
  * )
  */
 class MapItem extends FieldItemBase {
