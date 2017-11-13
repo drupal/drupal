@@ -211,7 +211,6 @@ class UrlGeneratorTest extends UnitTestCase {
       ->method('processOutbound')
       ->with($this->anything());
 
-
     // Check that the two generate methods return the same result.
     $this->assertGenerateFromRoute('test_1', [], [], $url, (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
 
@@ -231,7 +230,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->routeProcessorManager->expects($this->exactly(3))
       ->method('processOutbound')
       ->with($this->anything());
-
 
     // Check that the two generate methods return the same result.
     $this->assertGenerateFromRoute('test_1', [], [], $url, (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));

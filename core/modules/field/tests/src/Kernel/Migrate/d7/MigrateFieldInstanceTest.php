@@ -128,7 +128,6 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('comment.comment_node_test_content_type.field_integer', 'Integer', 'integer', FALSE, FALSE);
     $this->assertEntity('user.user.field_file', 'File', 'file', FALSE, FALSE);
 
-
     $this->assertLinkFields('node.test_content_type.field_link', DRUPAL_OPTIONAL);
     $this->assertLinkFields('node.article.field_link', DRUPAL_DISABLED);
     $this->assertLinkFields('node.blog.field_link', DRUPAL_REQUIRED);

@@ -96,7 +96,6 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
 
     // Formatting will vary on date storage.
 
-
     // Convert to ISO format and format for query. UTC timezone is used since
     // dates are stored in UTC.
     $a = $this->query->getDateFormat("'" . $this->dateFormatter->format($a, 'custom', DATETIME_DATETIME_STORAGE_FORMAT, DATETIME_STORAGE_TIMEZONE) . "'", $this->dateFormat, TRUE);

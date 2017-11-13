@@ -166,7 +166,6 @@ class NodeRevisionsTest extends NodeTestBase {
     $expected = '<li class="entitynodedelete-form"><a href="' . base_path() . 'node/' . $node->id() . '/delete">Delete</a></li>';
     $this->assertTrue(strstr($json[$ids[0]], $expected), 'The "Delete" contextual link is shown for the default revision.');
 
-
     // Confirm that revisions revert properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert", [], t('Revert'));
     $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
@@ -190,7 +189,6 @@ class NodeRevisionsTest extends NodeTestBase {
 
     $this->assertFalse(strstr($json[$ids[0]], '<li class="entitynodeedit-form">'), 'The "Edit" contextual link is not shown for a non-default revision.');
     $this->assertFalse(strstr($json[$ids[0]], '<li class="entitynodedelete-form">'), 'The "Delete" contextual link is not shown for a non-default revision.');
-
 
     // Confirm revisions delete properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], t('Delete'));

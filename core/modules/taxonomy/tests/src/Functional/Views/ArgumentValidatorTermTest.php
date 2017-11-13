@@ -65,7 +65,6 @@ class ArgumentValidatorTermTest extends TaxonomyTestBase {
     $view = Views::getView('test_argument_validator_term');
     $view->initHandlers();
 
-
     // Test the single validator for term IDs.
     $view->argument['tid']->validator->options['type'] = 'tid';
 
@@ -82,7 +81,6 @@ class ArgumentValidatorTermTest extends TaxonomyTestBase {
     $this->assertEqual('', $view->argument['tid']->getTitle());
     $view->argument['tid']->validated_title = NULL;
     $view->argument['tid']->argument_validated = NULL;
-
 
     // Test the multiple validator for term IDs.
     $view->argument['tid']->validator->options['type'] = 'tids';

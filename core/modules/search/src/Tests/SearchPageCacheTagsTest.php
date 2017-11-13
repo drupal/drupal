@@ -122,7 +122,6 @@ class SearchPageCacheTagsTest extends SearchTestBase {
     $this->container->get('module_installer')->install(['field_ui', 'entity_reference']);
     $this->resetAll();
 
-
     // Creates a new content type that will have an entity reference.
     $type_name = 'entity_reference_test';
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);

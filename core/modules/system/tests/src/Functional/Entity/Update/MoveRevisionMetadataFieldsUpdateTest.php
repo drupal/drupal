@@ -65,7 +65,6 @@ class MoveRevisionMetadataFieldsUpdateTest extends UpdatePathTestBase {
       $this->assertEqual($entity_rev_second->getRevisionLogMessage(), 'second revision');
       $this->assertEqual($entity_rev_second->getRevisionCreationTime(), '1476268518');
 
-
       // Test that the views using revision metadata fields are updated
       // properly.
       $view = View::load($entity_type_id . '_for_2248983');

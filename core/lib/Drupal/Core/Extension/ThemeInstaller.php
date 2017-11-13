@@ -265,7 +265,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
     $extension_config->save(TRUE);
     $this->state->set('system.theme.data', $current_theme_data);
 
-
     // @todo Remove system_list().
     $this->themeHandler->refreshInfo();
     $this->resetSystem();

@@ -171,7 +171,6 @@ function views_views_data() {
     }
   }
 
-
   // Field modules can implement hook_field_views_data() to override the default
   // behavior for adding fields.
   $module_handler = \Drupal::moduleHandler();

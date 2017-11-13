@@ -532,7 +532,6 @@ class RouteProviderTest extends KernelTestBase {
 
     $request = Request::create($path, 'GET');
 
-
     $routes = $provider->getRoutesByPattern($path);
     $this->assertFalse(count($routes), 'No path found with this pattern.');
 

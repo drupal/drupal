@@ -54,7 +54,6 @@ class GarbageCollectionTest extends KernelTestBase {
         ->execute();
     }
 
-
     // Perform a new set operation and then trigger garbage collection.
     $store->setWithExpire('autumn', 'winter', rand(500, 1000000));
     system_cron();

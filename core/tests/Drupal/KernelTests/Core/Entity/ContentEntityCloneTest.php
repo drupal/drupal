@@ -131,7 +131,6 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     }
     $this->assertTrue($different_references, 'The entity object and the cloned entity object reference different field item list objects.');
 
-
     // Reload the entity, initialize one translation, clone it and check that
     // both entity objects reference different field instances.
     $entity = $this->reloadEntity($entity);

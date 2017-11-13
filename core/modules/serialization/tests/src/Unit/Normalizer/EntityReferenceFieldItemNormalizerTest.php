@@ -241,7 +241,6 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
       ->willReturn('field_reference')
       ->shouldBeCalled();
 
-
     $this->assertDenormalize($data);
   }
 
@@ -260,7 +259,6 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
       ->getName()
       ->willReturn('field_reference')
       ->shouldBeCalled();
-
 
     $this->assertDenormalize($data);
   }

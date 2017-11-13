@@ -1064,7 +1064,6 @@ function _system_rebuild_module_data() {
     _system_rebuild_module_data_ensure_required($module, $modules);
   }
 
-
   if ($profile && isset($modules[$profile])) {
     // The installation profile is required, if it's a valid module.
     $modules[$profile]->info['required'] = TRUE;

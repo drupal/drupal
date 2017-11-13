@@ -819,7 +819,6 @@ class EntityQueryTest extends EntityKernelTestBase {
     )->execute();
     $this->assertIdentical(count($result), 1, 'Case sensitive, exact match.');
 
-
     // Check the case insensitive field, ENDS_WITH operator.
     $result = \Drupal::entityQuery('entity_test_mulrev')->condition(
       'field_ci', $fixtures[1]['lowercase'], 'ENDS_WITH'
@@ -841,7 +840,6 @@ class EntityQueryTest extends EntityKernelTestBase {
       'field_cs', $fixtures[1]['uppercase'], 'ENDS_WITH'
     )->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, exact match.');
-
 
     // Check the case insensitive field, CONTAINS operator, use the inner 8
     // characters of the uppercase and lowercase strings.

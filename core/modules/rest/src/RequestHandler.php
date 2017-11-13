@@ -74,7 +74,6 @@ class RequestHandler implements ContainerAwareInterface, ContainerInjectionInter
     $method = strtolower($route_match->getRouteObject()->getMethods()[0]);
     assert(count($route_match->getRouteObject()->getMethods()) === 1);
 
-
     $resource_config_id = $route_match->getRouteObject()->getDefault('_rest_resource_config');
     /** @var \Drupal\rest\RestResourceConfigInterface $resource_config */
     $resource_config = $this->resourceStorage->load($resource_config_id);

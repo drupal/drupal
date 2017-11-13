@@ -1128,7 +1128,6 @@ function drupal_flush_all_caches() {
   // to reset the theme manager.
   \Drupal::theme()->resetActiveTheme();
 
-
   // Rebuild and reboot a new kernel. A simple DrupalKernel reboot is not
   // sufficient, since the list of enabled modules might have been adjusted
   // above due to changed code.

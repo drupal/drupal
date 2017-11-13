@@ -269,7 +269,6 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       $element['#attributes']['data-disable-refocus'] = "true";
     }
 
-
     // Add a reasonable default event handler if none was specified.
     if (isset($element['#ajax']) && !isset($element['#ajax']['event'])) {
       switch ($element['#type']) {

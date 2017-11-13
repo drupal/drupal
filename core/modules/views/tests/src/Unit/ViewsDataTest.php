@@ -236,7 +236,6 @@ class ViewsDataTest extends UnitTestCase {
       ->method('alter')
       ->with('views_data', $expected_views_data);
 
-
     // The cache should only be called once (before the clear() call) as get
     // will get all table data in the first get().
     $this->cacheBackend->expects($this->at(0))

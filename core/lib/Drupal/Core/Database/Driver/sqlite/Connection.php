@@ -124,7 +124,6 @@ class Connection extends DatabaseConnection {
       throw $e;
     }
 
-
     // Create functions needed by SQLite.
     $pdo->sqliteCreateFunction('if', [__CLASS__, 'sqlFunctionIf']);
     $pdo->sqliteCreateFunction('greatest', [__CLASS__, 'sqlFunctionGreatest']);

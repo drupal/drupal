@@ -165,7 +165,6 @@ class EntityUpdateToRevisionableAndPublishableTest extends UpdatePathTestBase {
     ];
     $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
 
-
     $entity_type->set('translatable', TRUE);
     $entity_type->set('data_table', 'entity_test_update_data');
     $entity_type->set('revision_table', 'entity_test_update_revision');

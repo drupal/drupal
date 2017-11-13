@@ -46,7 +46,6 @@ class EditorUpdateTest extends UpdatePathTestBase {
     $this->assertTrue($editor_full_html->get('status'));
     $this->assertNotIdentical($format_full_html->get('status'), $editor_full_html->get('status'));
 
-
     // Run updates.
     $this->runUpdates();
 

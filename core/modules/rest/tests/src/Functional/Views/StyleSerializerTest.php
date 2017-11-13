@@ -124,7 +124,6 @@ class StyleSerializerTest extends ViewTestBase {
 
     $this->assertIdentical($actual_json, json_encode($expected), 'The expected JSON output was found.');
 
-
     // Test that the rendered output and the preview output are the same.
     $view->destroy();
     $view->setDisplay('rest_export_1');

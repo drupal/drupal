@@ -97,7 +97,6 @@ trait HalEntityNormalizationTrait {
     if ($this->entity->getEntityType()->hasKey('bundle')) {
       $normalization = $this->getNormalizedPostEntity();
 
-
       $normalization['_links']['type'] = Url::fromUri('base:rest/type/' . static::$entityTypeId . '/bad_bundle_name');
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
 
@@ -105,10 +104,8 @@ trait HalEntityNormalizationTrait {
       $response = $this->request($method, $url, $request_options);
       $this->assertResourceErrorResponse(422, 'No entity type(s) specified', $response);
 
-
       unset($normalization['_links']['type']);
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
-
 
       // DX: 422 when no entity type bundle is specified.
       $response = $this->request($method, $url, $request_options);

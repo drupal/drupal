@@ -100,7 +100,6 @@ D rupal is an open source content management platform powering millions of websi
 </rss>
 RSS;
 
-
     $data['invalid-feed'] = [$invalid_feed, $invalid_feed];
     return $data;
   }
