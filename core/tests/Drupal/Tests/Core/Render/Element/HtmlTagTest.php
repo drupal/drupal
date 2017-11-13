@@ -202,6 +202,22 @@ class HtmlTagTest extends RendererTestBase {
     ];
     $tags['linearGradient'] = [$element, '<linearGradient><stop offset="5%" stop-color="#F60" />' . "\n" . '<stop offset="95%" stop-color="#FF6" />' . "\n" . '</linearGradient>' . "\n"];
 
+    // Simple link.
+    $element = [
+      '#tag' => 'link',
+    ];
+    $tags['link'] = [HtmlTag::preRenderConditionalComments($element), '<link />' . "\n"];
+
+    // Conditional link.
+    $element = [
+      '#tag' => 'link',
+      '#browsers' => [
+        'IE' => TRUE,
+        '!IE' => FALSE,
+      ],
+    ];
+    $tags['conditional-link'] = [HtmlTag::preRenderConditionalComments($element), "\n" . '<!--[if IE]>' . "\n" . '<link />' . "\n" . '<![endif]-->' . "\n"];
+
     return $tags;
   }
 
