@@ -11,7 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class ConfigTest extends BrowserTestBase {
 
-  protected function setUp(){
+  protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
   }

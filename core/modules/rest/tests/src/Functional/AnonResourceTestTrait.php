@@ -31,6 +31,7 @@ trait AnonResourceTestTrait {
   /**
    * {@inheritdoc}
    */
-  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options) {}
+  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options) {
+  }
 
 }

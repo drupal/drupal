@@ -451,7 +451,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  public function fieldDisabled($field, TraversableElement $container = NULL)  {
+  public function fieldDisabled($field, TraversableElement $container = NULL) {
     $container = $container ?: $this->session->getPage();
     $node = $container->findField($field);
 

@@ -21,7 +21,7 @@ class UrlRewritingTest extends FileTestBase {
   /**
    * Tests the rewriting of shipped file URLs by hook_file_url_alter().
    */
-  public function testShippedFileURL()  {
+  public function testShippedFileURL() {
     // Test generating a URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
 

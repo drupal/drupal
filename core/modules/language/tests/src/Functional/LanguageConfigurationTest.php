@@ -198,7 +198,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
    * @return int
    *   Maximum weight of configurable languages.
    */
-  protected function getHighestConfigurableLanguageWeight(){
+  protected function getHighestConfigurableLanguageWeight() {
     $max_weight = 0;
 
     $storage = $this->container->get('entity_type.manager')
