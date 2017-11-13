@@ -422,6 +422,8 @@ function base_path() {
  *
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
  *   Use \Drupal\Core\Asset\AssetCollectionOptimizerInterface::deleteAll().
+ *
+ * @see https://www.drupal.org/node/2317841
  */
 function drupal_clear_css_cache() {
   \Drupal::service('asset.css.collection_optimizer')->deleteAll();
@@ -739,6 +741,8 @@ function drupal_attach_tabledrag(&$element, array $options) {
  *
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
  *   Use \Drupal\Core\Asset\AssetCollectionOptimizerInterface::deleteAll().
+ *
+ * @see https://www.drupal.org/node/2317841
  */
 function drupal_clear_js_cache() {
   \Drupal::service('asset.js.collection_optimizer')->deleteAll();
